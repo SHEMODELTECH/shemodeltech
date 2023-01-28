@@ -206,7 +206,7 @@ h6 {
 .navbar .dropdown ul a:hover,
 .navbar .dropdown ul .active:hover,
 .navbar .dropdown ul li:hover>a {
-  color: #16df7e;
+  color: #800285;
 }
 
 .navbar .dropdown:hover>ul {
@@ -631,7 +631,7 @@ section {
 .counts .counters span {
   font-size: 48px;
   display: block;
-  color: #16df7e;
+  color: #800285;
   font-weight: 700;
 }
 
@@ -664,7 +664,7 @@ section {
 }
 
 .services .icon-box .icon i {
-  color: #16df7e;
+  color: #800285;
   font-size: 36px;
   transition: 0.3s;
 }
@@ -691,7 +691,7 @@ section {
 }
 
 .services .icon-box:hover h4 a {
-  color: #16df7e;
+  color: #800285;
 }
 
 /*--------------------------------------------------------------
