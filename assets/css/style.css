@@ -56,7 +56,7 @@ h6 {
 }
 
 .back-to-top:hover {
-  background: #33eb92;
+  background: #800285;
   color: #fff;
 }
 
@@ -81,7 +81,7 @@ h6 {
 }
 
 #header .logo {
-  font-size: 32px;
+  font-size: 100px;
   margin: 0;
   padding: 0;
   line-height: 1;
@@ -134,7 +134,7 @@ h6 {
   font-family: "Raleway", sans-serif;
   font-size: 16px;
   font-weight: 700;
-  color: #6a7489;
+  color: #800285 ;
   white-space: nowrap;
   transition: 0.3s;
 }
