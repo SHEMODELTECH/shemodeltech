@@ -565,7 +565,7 @@ section {
 }
 
 .featured-services .icon i {
-  color: #800285;
+  color: #000000;
   font-size: 36px;
 }
 
@@ -576,16 +576,16 @@ section {
 }
 
 .featured-services .title a {
-  color: #800285;
+  color: #000000;
   transition: 0.3s;
 }
 
 .featured-services .icon-box:hover {
-  border-color: #800285;
+  border-color: #000000;
 }
 
 .featured-services .icon-box:hover .title a {
-  color: #800285;
+  color: #000000;
 }
 
 .featured-services .description {
