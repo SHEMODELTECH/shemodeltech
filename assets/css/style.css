@@ -90,7 +90,7 @@ h6 {
 }
 
 #header .logo a {
-  color: #5f687b;
+  color: #800285;
 }
 
 #header .logo img {
@@ -134,7 +134,7 @@ h6 {
   font-family: "Raleway", sans-serif;
   font-size: 16px;
   font-weight: 700;
-  color: #800285 ;
+  color: #000000;
   white-space: nowrap;
   transition: 0.3s;
 }
@@ -242,7 +242,7 @@ h6 {
 * Mobile Navigation 
 */
 .mobile-nav-toggle {
-  color: #5f687b;
+  color: #800285;
   font-size: 28px;
   cursor: pointer;
   display: none;
@@ -306,7 +306,7 @@ h6 {
 .navbar-mobile a:hover,
 .navbar-mobile .active,
 .navbar-mobile li:hover>a {
-  color: #16df7e;
+  color: #800285;
 }
 
 .navbar-mobile .getstarted,
@@ -342,7 +342,7 @@ h6 {
 .navbar-mobile .dropdown ul a:hover,
 .navbar-mobile .dropdown ul .active:hover,
 .navbar-mobile .dropdown ul li:hover>a {
-  color: #16df7e;
+  color: #800285;
 }
 
 .navbar-mobile .dropdown>.dropdown-active {
@@ -383,12 +383,12 @@ h6 {
   border-radius: 4px;
   transition: 0.5s;
   color: #fff;
-  background: #16df7e;
+  background: #800285;
   box-shadow: 0 8px 28px rgba(22, 223, 126, 0.45);
 }
 
 #hero .btn-get-started:hover {
-  background: #206bfb;
+  background: #000000;
   box-shadow: 0 8px 28px rgba(32, 107, 251, 0.45);
 }
 
@@ -397,7 +397,7 @@ h6 {
   display: inline-block;
   transition: 0.5s;
   margin-left: 25px;
-  color: #5f687b;
+  color: #000000;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -411,7 +411,7 @@ h6 {
 }
 
 #hero .btn-watch-video:hover i {
-  color: #16df7e;
+  color: #800285;
 }
 
 #hero .animated {
