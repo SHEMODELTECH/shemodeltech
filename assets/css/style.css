@@ -599,7 +599,7 @@ section {
 .about .content h3 {
   font-weight: 700;
   font-size: 32px;
-  color: #5f687b;
+  color: #000000;
 }
 
 .about .content ul {
@@ -614,7 +614,7 @@ section {
 .about .content ul i {
   font-size: 20px;
   padding-right: 4px;
-  color: #16df7e;
+  color: #800285;
 }
 
 .about .content p:last-child {
@@ -930,7 +930,7 @@ section {
 # Cta
 --------------------------------------------------------------*/
 .cta {
-  background: #93008D;
+  background: #800285;
   background-size: cover;
   padding: 60px 0;
 }
@@ -961,8 +961,8 @@ section {
 }
 
 .cta .cta-btn:hover {
-  background: #206bfb;
-  border-color: #206bfb;
+  background: #800285;
+  border-color: #800285;
 }
 
 /*--------------------------------------------------------------
