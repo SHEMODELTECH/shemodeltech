@@ -552,7 +552,7 @@ section {
 
 .featured-services .icon-box {
   padding: 20px;
-  color: #5f687b;
+  color: #800285;
   background: #f9f9fa;
   border-radius: 4px;
   border: 1px solid #f9f9fa;
@@ -565,7 +565,7 @@ section {
 }
 
 .featured-services .icon i {
-  color: #16df7e;
+  color: #800285;
   font-size: 36px;
 }
 
@@ -576,16 +576,16 @@ section {
 }
 
 .featured-services .title a {
-  color: #5f687b;
+  color: #800285;
   transition: 0.3s;
 }
 
 .featured-services .icon-box:hover {
-  border-color: #eaecef;
+  border-color: #800285;
 }
 
 .featured-services .icon-box:hover .title a {
-  color: #16df7e;
+  color: #800285;
 }
 
 .featured-services .description {
