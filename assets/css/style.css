@@ -150,7 +150,7 @@ h6 {
 .navbar .active,
 .navbar .active:focus,
 .navbar li:hover>a {
-  color: #93008D;
+  color: #800285;
 }
 
 .navbar .getstarted,
@@ -159,7 +159,7 @@ h6 {
   margin-left: 30px;
   border-radius: 4px;
   line-height: 1;
-  color: #5f687b;
+  color: #000000;
   font-size: 14px;
   font-weight: 500;
   border: 1px solid #cdd1d9;
@@ -167,7 +167,7 @@ h6 {
 
 .navbar .getstarted:hover,
 .navbar .getstarted:focus:hover {
-  background: #206bfb;
+  background: #800285;
   color: #fff;
   border-color: #206bfb;
 }
