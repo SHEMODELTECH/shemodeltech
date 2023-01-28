@@ -917,13 +917,13 @@ section {
 .testimonials .swiper-pagination .swiper-pagination-bullet {
   width: 12px;
   height: 12px;
-  background-color: #fff;
+  background-color: #93008D;
   opacity: 1;
   border: 1px solid #16df7e;
 }
 
 .testimonials .swiper-pagination .swiper-pagination-bullet-active {
-  background-color: #16df7e;
+  background-color: #93008D;
 }
 
 /*--------------------------------------------------------------
