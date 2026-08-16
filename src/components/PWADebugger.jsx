@@ -198,7 +198,7 @@ const PWADebugger = () => {
         <div className="flex gap-1 sm:gap-2 flex-wrap justify-end">
           <button 
             onClick={handleForceInstallCheck}
-            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 px-2 py-1 rounded text-[10px] sm:text-xs whitespace-nowrap transition-colors"
+            className="bg-pink-600 hover:bg-pink-700 active:bg-pink-800 px-2 py-1 rounded text-[10px] sm:text-xs whitespace-nowrap transition-colors"
           >
             Force Check
           </button>
@@ -222,13 +222,13 @@ const PWADebugger = () => {
       <div className="mb-2 sm:mb-3 p-2 bg-gray-800 rounded">
         <h4 className="text-orange-500 font-semibold mb-1 text-[10px] sm:text-xs">📱 PWA Status</h4>
         <div className="grid grid-cols-2 gap-1 text-[10px] sm:text-xs">
-          <span className={isInstallable ? 'text-blue-400' : 'text-red-400'}>
+          <span className={isInstallable ? 'text-pink-400' : 'text-red-400'}>
             Installable: {isInstallable ? '✅' : '❌'}
           </span>
-          <span className={isInstalled ? 'text-blue-400' : 'text-gray-400'}>
+          <span className={isInstalled ? 'text-pink-400' : 'text-gray-400'}>
             Installed: {isInstalled ? '✅' : '❌'}
           </span>
-          <span className={isOnline ? 'text-blue-400' : 'text-red-400'}>
+          <span className={isOnline ? 'text-pink-400' : 'text-red-400'}>
             Online: {isOnline ? '✅' : '❌'}
           </span>
           <span className={installing ? 'text-orange-500' : 'text-gray-400'}>
@@ -251,7 +251,7 @@ const PWADebugger = () => {
 
       {/* Quick Checks */}
       <div className="mb-2 sm:mb-3 p-2 bg-gray-800 rounded">
-        <h4 className="text-blue-400 font-semibold mb-1 text-[10px] sm:text-xs">🔧 Quick Checks</h4>
+        <h4 className="text-pink-400 font-semibold mb-1 text-[10px] sm:text-xs">🔧 Quick Checks</h4>
         <div className="space-y-0.5 text-[10px] sm:text-xs">
           <div>HTTPS: {debugInfo.environment?.isHTTPS ? '✅' : '❌'}</div>
           <div>Manifest: {debugInfo.capabilities?.hasManifest ? '✅' : '❌'}</div>

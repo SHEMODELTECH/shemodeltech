@@ -192,7 +192,7 @@ const MentionTextarea = ({
             <button
               type="button"
               onClick={() => setShowLinkModal(true)}
-              className="flex items-center gap-1 px-2 py-1 bg-blue-600/20 hover:bg-blue-600/30 active:bg-blue-600/40 border border-blue-600/40 rounded text-orange-300 hover:text-orange-200 transition-colors text-[10px] xs:text-xs"
+              className="flex items-center gap-1 px-2 py-1 bg-pink-600/20 hover:bg-pink-600/30 active:bg-pink-600/40 border border-pink-600/40 rounded text-orange-300 hover:text-orange-200 transition-colors text-[10px] xs:text-xs"
               title="Insert Link"
               aria-label="Insert link"
             >
@@ -236,10 +236,10 @@ const MentionTextarea = ({
               key={user.uid}
               onClick={() => selectSuggestion(user, index)}
               className={`flex items-center gap-2 xs:gap-3 w-full px-3 xs:px-4 py-2 xs:py-3 text-left hover:bg-gray-100 active:bg-gray-200 transition-colors ${
-                index === selectedSuggestionIndex ? 'bg-blue-600/20 text-orange-300' : 'text-gray-900'
+                index === selectedSuggestionIndex ? 'bg-pink-600/20 text-orange-300' : 'text-gray-900'
               }`}
             >
-              <div className="w-7 h-7 xs:w-8 xs:h-8 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center text-white font-bold text-xs xs:text-sm flex-shrink-0">
+              <div className="w-7 h-7 xs:w-8 xs:h-8 rounded-full overflow-hidden bg-pink-600 flex items-center justify-center text-white font-bold text-xs xs:text-sm flex-shrink-0">
                 {user.photoURL ? (
                   <img 
                     src={user.photoURL} 

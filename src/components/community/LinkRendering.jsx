@@ -133,8 +133,8 @@ export const RichTextContent = ({ content, className = "", style = {} }) => {
               href={sanitizedUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`text-blue-600 hover:text-orange-300 active:text-orange-200 underline hover:no-underline transition-all duration-200 font-medium break-words ${
-                part.isMarkdown ? 'bg-blue-600/10 px-0.5 xs:px-1 rounded' : ''
+              className={`text-pink-600 hover:text-orange-300 active:text-orange-200 underline hover:no-underline transition-all duration-200 font-medium break-words ${
+                part.isMarkdown ? 'bg-pink-600/10 px-0.5 xs:px-1 rounded' : ''
               }`}
               onClick={(e) => {
                 if (sanitizedUrl === '#') {
@@ -210,7 +210,7 @@ export const TruncatedRichContent = ({ content, postId, limit = 300, expandedPos
       {shouldTruncate && (
         <button
           onClick={() => onToggleExpansion(postId)}
-          className="inline-flex items-center mt-2 xs:mt-2.5 sm:mt-3 text-blue-600 hover:text-orange-300 active:text-orange-200 font-semibold text-xs sm:text-sm transition-colors"
+          className="inline-flex items-center mt-2 xs:mt-2.5 sm:mt-3 text-pink-600 hover:text-orange-300 active:text-orange-200 font-semibold text-xs sm:text-sm transition-colors"
           aria-label={isExpanded ? 'Show less content' : 'Read more content'}
         >
           {isExpanded ? (

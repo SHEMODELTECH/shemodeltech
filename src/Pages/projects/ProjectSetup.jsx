@@ -32,7 +32,7 @@ const industryTracks = [
 const roleTemplates = ROLE_TEMPLATES;
 const experienceLevels = EXPERIENCE_LEVELS;
 
-const inputClass = "w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 text-sm focus:border-blue-500 focus:outline-none transition-all";
+const inputClass = "w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 text-sm focus:border-pink-500 focus:outline-none transition-all";
 const labelClass = "block text-gray-700 font-semibold mb-2 text-sm";
 
 // Turn a stored role into the editable shape the dropdown understands: known
@@ -252,7 +252,7 @@ const ProjectSetup = () => {
     setSaving(false);
   };
 
-  if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div></div>;
+  if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
   if (!authorized) return null;
 
   return (
@@ -307,10 +307,10 @@ const ProjectSetup = () => {
       <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 sm:p-6 space-y-4 mt-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">Team Roles</h2>
-          <button onClick={addRole} className="text-blue-600 text-sm font-semibold">+ Add role</button>
+          <button onClick={addRole} className="text-pink-600 text-sm font-semibold">+ Add role</button>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+        <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
           <p className="text-gray-700 text-xs"><strong>No solo projects:</strong> a project needs a team of at least {MIN_TEAM_SIZE}. You count as one, so your roles must add up to at least {MIN_MEMBERS} {MIN_MEMBERS === 1 ? 'person' : 'people'} besides you.</p>
         </div>
 
@@ -321,7 +321,7 @@ const ProjectSetup = () => {
         ) : (
           <>
             <p className="text-gray-500 text-xs -mt-2">Intermediate and Advanced roles can only be filled by members who've earned the matching badge level in that track. Use Beginner or Any Level for roles open to newcomers.</p>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
               <p className="text-gray-700 text-xs"><strong>Note:</strong> add or remove roles to fit your project. Keep at least one Beginner or Any Level role so newcomers can join.</p>
             </div>
           </>
@@ -395,7 +395,7 @@ const ProjectSetup = () => {
       </div>
 
       <div className="flex gap-3 mt-6">
-        <button onClick={handleOpen} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-3 rounded-lg transition-all disabled:opacity-50">
+        <button onClick={handleOpen} disabled={saving} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-3 rounded-lg transition-all disabled:opacity-50">
           {saving ? (isEditing ? 'Saving…' : 'Opening…') : (isEditing ? 'Save changes' : 'Open for Applications')}
         </button>
         <button onClick={handleSaveExit} disabled={saving} className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-sm px-5 py-3 rounded-lg transition-all">

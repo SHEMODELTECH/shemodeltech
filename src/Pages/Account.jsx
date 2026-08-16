@@ -94,7 +94,7 @@ const Account = () => {
     fetch();
   }, [currentUser]);
 
-  if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div></div>;
+  if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -107,9 +107,9 @@ const Account = () => {
         <h2 className="text-base font-bold text-gray-900 mb-1">Project Payments</h2>
         <p className="text-gray-400 text-xs mb-4">Money across your paid projects. Disbursed is what members confirmed receiving (including dispute-adjusted amounts). Pending is the total still to be sent out - the amount owed to all persons on your ongoing projects.</p>
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <p className="text-blue-700 text-xs uppercase tracking-wider font-semibold">Disbursed</p>
-            <p className="text-2xl font-black text-blue-700 mt-1">{formatMoney(disbursements.disbursedTotal)}</p>
+          <div className="bg-pink-50 border border-pink-200 rounded-xl p-4">
+            <p className="text-pink-700 text-xs uppercase tracking-wider font-semibold">Disbursed</p>
+            <p className="text-2xl font-black text-pink-700 mt-1">{formatMoney(disbursements.disbursedTotal)}</p>
             <p className="text-gray-400 text-xs mt-0.5">confirmed received by members</p>
           </div>
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -133,7 +133,7 @@ const Account = () => {
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                     r.state === 'completed' ? 'bg-green-100 text-green-700'
                     : r.state === 'disputed' ? 'bg-red-100 text-red-700'
-                    : r.state === 'awaiting' ? 'bg-blue-100 text-blue-700'
+                    : r.state === 'awaiting' ? 'bg-pink-100 text-pink-700'
                     : 'bg-amber-100 text-amber-700'}`}>
                     {r.state === 'completed' ? 'Completed' : r.state === 'disputed' ? 'Disputed' : r.state === 'awaiting' ? 'Awaiting Confirmations' : 'Ongoing'}
                   </span>
@@ -175,7 +175,7 @@ const Account = () => {
                     r.state === 'paid' ? 'bg-green-100 text-green-700'
                     : r.state === 'disputed' ? 'bg-red-100 text-red-700'
                     : r.state === 'forfeited' ? 'bg-gray-200 text-gray-500'
-                    : r.state === 'awaiting' ? 'bg-blue-100 text-blue-700'
+                    : r.state === 'awaiting' ? 'bg-pink-100 text-pink-700'
                     : 'bg-amber-100 text-amber-700'}`}>
                     {r.state === 'paid' ? 'Paid' : r.state === 'disputed' ? 'Disputed' : r.state === 'forfeited' ? 'Forfeited' : r.state === 'awaiting' ? 'Awaiting Confirmation' : 'Pending'}
                   </span>
@@ -201,7 +201,7 @@ const Account = () => {
         </div>
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <p className="text-gray-500 text-xs uppercase tracking-wider font-semibold">Badges Earned</p>
-          <p className="text-2xl font-bold text-blue-700 mt-1">{stats.badges}</p>
+          <p className="text-2xl font-bold text-pink-700 mt-1">{stats.badges}</p>
           <p className="text-gray-400 text-xs mt-0.5">verified credentials</p>
         </div>
       </div>
@@ -212,7 +212,7 @@ const Account = () => {
         {memberProjects.length === 0 ? (
           <div className="text-center py-6">
             <p className="text-gray-400 text-sm mb-3">You haven't joined any projects yet.</p>
-            <button onClick={() => navigate('/projects')} className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
+            <button onClick={() => navigate('/projects')} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
               Browse Projects
             </button>
           </div>
@@ -221,7 +221,7 @@ const Account = () => {
             {memberProjects.map(p => (
               <div key={p.id} onClick={() => navigate(`/projects/${p.id}`)} className="flex items-center justify-between gap-2 min-w-0 p-3 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer hover:bg-gray-100 transition-all">
                 <p className="text-gray-900 text-sm font-medium truncate min-w-0">{p.title}</p>
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full text-gray-900 flex-shrink-0 whitespace-nowrap ${p.status === 'completed' ? 'bg-blue-100' : (p.status === 'rejected' || p.status === 'cancelled') ? 'bg-red-100' : 'bg-amber-100'}`}>
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full text-gray-900 flex-shrink-0 whitespace-nowrap ${p.status === 'completed' ? 'bg-pink-100' : (p.status === 'rejected' || p.status === 'cancelled') ? 'bg-red-100' : 'bg-amber-100'}`}>
                   {p.status === 'completed' ? 'Completed' : p.status === 'rejected' ? 'Rejected' : p.status === 'cancelled' ? 'Closed' : 'Active'}
                 </span>
               </div>
@@ -236,7 +236,7 @@ const Account = () => {
         {ownerProjects.length === 0 ? (
           <div className="text-center py-6">
             <p className="text-gray-400 text-sm mb-3">You haven't posted any projects yet.</p>
-            <button onClick={() => navigate('/projects/submit')} className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
+            <button onClick={() => navigate('/projects/submit')} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
               Post a Project
             </button>
           </div>
@@ -248,7 +248,7 @@ const Account = () => {
                   <p className="text-gray-900 text-sm font-medium truncate min-w-0">{p.title}</p>
                   <p className="text-gray-400 text-xs">{p.memberCount} {p.memberCount === 1 ? 'member' : 'members'}</p>
                 </div>
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full text-gray-900 flex-shrink-0 whitespace-nowrap ${p.status === 'completed' ? 'bg-blue-100' : (p.status === 'rejected' || p.status === 'cancelled') ? 'bg-red-100' : 'bg-amber-100'}`}>
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full text-gray-900 flex-shrink-0 whitespace-nowrap ${p.status === 'completed' ? 'bg-pink-100' : (p.status === 'rejected' || p.status === 'cancelled') ? 'bg-red-100' : 'bg-amber-100'}`}>
                   {p.status === 'completed' ? 'Completed' : p.status === 'rejected' ? 'Rejected' : p.status === 'cancelled' ? 'Closed' : 'Active'}
                 </span>
               </div>

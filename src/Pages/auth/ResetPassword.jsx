@@ -66,7 +66,7 @@ const ResetPassword = () => {
 
           {checking ? (
             <div className="flex justify-center py-10">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
             </div>
           ) : done ? (
             <div className="text-center py-4">
@@ -75,13 +75,13 @@ const ResetPassword = () => {
               </div>
               <p className="text-gray-900 font-semibold mb-1">Password updated</p>
               <p className="text-gray-500 text-sm mb-6">Your password has been changed successfully.</p>
-              <button onClick={() => navigate('/login')} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Sign in now</button>
-              <p className="text-gray-500 text-sm mt-4">You can now sign in with your new password. <button onClick={() => navigate('/login')} className="text-blue-600 font-semibold hover:underline">Sign in here</button></p>
+              <button onClick={() => navigate('/login')} className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Sign in now</button>
+              <p className="text-gray-500 text-sm mt-4">You can now sign in with your new password. <button onClick={() => navigate('/login')} className="text-pink-600 font-semibold hover:underline">Sign in here</button></p>
             </div>
           ) : !validCode ? (
             <div className="text-center py-4">
               <p className="text-gray-600 text-sm mb-6">This reset link is invalid or has expired. Please request a new password reset email.</p>
-              <button onClick={() => navigate('/login')} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Back to sign in</button>
+              <button onClick={() => navigate('/login')} className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Back to sign in</button>
             </div>
           ) : (
             <>
@@ -94,7 +94,7 @@ const ResetPassword = () => {
                   type="password" value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="New password"
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-pink-500 focus:outline-none"
                 />
                 <ul className="text-[11px] space-y-0.5 -mt-1">
                   {[
@@ -112,11 +112,11 @@ const ResetPassword = () => {
                   type="password" value={confirm}
                   onChange={e => setConfirm(e.target.value)}
                   placeholder="Confirm new password"
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-pink-500 focus:outline-none"
                 />
                 <button
                   type="submit" disabled={submitting}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm disabled:opacity-50 transition-all"
+                  className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm disabled:opacity-50 transition-all"
                 >
                   {submitting ? 'Updating…' : 'Update password'}
                 </button>

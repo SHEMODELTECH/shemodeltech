@@ -5,7 +5,32 @@
 /* Import responsive utilities */
 @import './styles/responsive-utilities.css';
 
+/* Readability: scale the root so every rem-based Tailwind size grows
+ proportionally, instead of hardcoding an 18px floor on each element.
+ A flat floor would break dense UI (table cells, badges, form labels)
+ because those need to stay smaller than body copy to read as secondary.
+
+ At 17.6px root: text-base = 17.6px, text-lg = 19.8px, text-sm = 15.4px.
+ Body copy therefore clears ~18px while hierarchy is preserved.
+ Mobile stays at 16px, small screens need the density. */
+html {
+ font-size: 16px;
+}
+@media (min-width: 640px) {
+ html { font-size: 17.6px; }
+}
+
 body {
-  background-color: #000000;
-  color: #ffffff;
+ background-color: #ffffff;
+ color: #111827;
+ -webkit-font-smoothing: antialiased;
+}
+
+/* Marketing and long-form copy: never below 18px on desktop. */
+@media (min-width: 640px) {
+ .prose-readable p,
+ .prose-readable li {
+ font-size: 1.125rem;
+ line-height: 1.7;
+ }
 }

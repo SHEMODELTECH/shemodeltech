@@ -45,7 +45,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-5 md:p-6 border-b border-gray-200 flex-shrink-0">
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
-            <span className="text-blue-600 mr-1.5 sm:mr-2">🔄</span>
+            <span className="text-pink-600 mr-1.5 sm:mr-2">🔄</span>
             <span>Repost</span>
           </h3>
           <button
@@ -70,7 +70,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
               onChange={setRepostComment}
               onMentionSelect={handleMentionSelect}
               placeholder="What do you think about this post? Use @ to mention someone..."
-              className="w-full p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded-xl text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 resize-none min-h-[80px] sm:min-h-[100px] transition-colors"
+              className="w-full p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded-xl text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 resize-none min-h-[80px] sm:min-h-[100px] transition-colors"
               rows="4"
             />
             
@@ -80,8 +80,8 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
                 <div className="text-xs sm:text-sm text-gray-600 mb-1.5 sm:mb-2">People you mentioned:</div>
                 <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {taggedUsers.map((user) => (
-                    <div key={user.uid} className="flex items-center space-x-1.5 sm:space-x-2 bg-blue-500/10 rounded-full px-2 sm:px-3 py-1">
-                      <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-blue-500 flex items-center justify-center text-gray-900 font-bold text-[8px] sm:text-xs flex-shrink-0">
+                    <div key={user.uid} className="flex items-center space-x-1.5 sm:space-x-2 bg-pink-500/10 rounded-full px-2 sm:px-3 py-1">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full overflow-hidden bg-gradient-to-r from-pink-500 to-pink-500 flex items-center justify-center text-gray-900 font-bold text-[8px] sm:text-xs flex-shrink-0">
                         {user.photoURL ? (
                           <img 
                             src={user.photoURL} 
@@ -99,7 +99,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
                           {getProfessionalDisplayName(user)}
                         </span>
                         {user.profile?.title && (
-                          <span className="text-blue-600/70 text-[10px] sm:text-xs truncate">
+                          <span className="text-pink-600/70 text-[10px] sm:text-xs truncate">
                             {user.profile.title}
                           </span>
                         )}
@@ -123,7 +123,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
           {/* Original Post Preview with Professional Names */}
           <div className="bg-white/40 border border-gray-200 rounded-xl p-3 sm:p-4">
             <div className="flex items-start sm:items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center text-gray-900 font-bold flex-shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-pink-400 to-pink-500 rounded-full flex items-center justify-center text-gray-900 font-bold flex-shrink-0">
                 {post.authorPhoto ? (
                   <img 
                     src={post.authorPhoto} 
@@ -150,7 +150,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
                 </div>
                 {/* Show professional title */}
                 {post.authorTitle && (
-                  <div className="text-blue-600 text-xs sm:text-sm truncate">
+                  <div className="text-pink-600 text-xs sm:text-sm truncate">
                     {post.authorTitle}
                   </div>
                 )}
@@ -187,7 +187,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
                 <span className="inline-flex flex-wrap gap-x-1">
                   {post.taggedUsers.map((user, index) => (
                     <span key={user.uid || index}>
-                      <span className="text-blue-600/70">
+                      <span className="text-pink-600/70">
                         @{getMentionHandle(user)}
                       </span>
                       {index < post.taggedUsers.length - 1 && <span className="text-gray-400">,</span>}
@@ -223,7 +223,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
               <button
                 onClick={handleRepost}
                 disabled={isSubmitting}
-                className="flex-1 sm:flex-none px-4 sm:px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                className="flex-1 sm:flex-none px-4 sm:px-6 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center">

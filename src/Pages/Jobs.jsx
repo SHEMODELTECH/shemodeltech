@@ -193,10 +193,10 @@ const Jobs = () => {
 
   const getTypeBadge = (jobType) => {
     const map = {
-      'full-time':  { label: 'Full-time',       cls: 'bg-blue-100 text-gray-900' },
-      'part-time':  { label: 'Part-time',       cls: 'bg-blue-100 text-gray-900' },
+      'full-time':  { label: 'Full-time',       cls: 'bg-pink-100 text-gray-900' },
+      'part-time':  { label: 'Part-time',       cls: 'bg-pink-100 text-gray-900' },
       'contract':   { label: 'Contract',        cls: 'bg-purple-100 text-gray-900' },
-      'freelance':  { label: 'Freelance',       cls: 'bg-blue-100 text-gray-900' },
+      'freelance':  { label: 'Freelance',       cls: 'bg-pink-100 text-gray-900' },
       'internship': { label: 'Internship',      cls: 'bg-green-100 text-gray-900' },
       'remote':     { label: 'Virtual / Online', cls: 'bg-teal-100 text-gray-900' },
     };
@@ -206,7 +206,7 @@ const Jobs = () => {
   const getCategoryBadge = (cat) => {
     const map = {
       'job':         { label: 'Job',         cls: 'bg-orange-100 text-orange-700' },
-      'freelance':   { label: 'Freelance',   cls: 'bg-blue-100 text-blue-700' },
+      'freelance':   { label: 'Freelance',   cls: 'bg-pink-100 text-pink-700' },
       'scholarship': { label: 'Scholarship', cls: 'bg-emerald-100 text-emerald-700' },
       'grant':       { label: 'Grant',       cls: 'bg-violet-100 text-violet-700' },
       'partnership': { label: 'Partnership', cls: 'bg-pink-100 text-pink-700' },
@@ -377,7 +377,7 @@ const Jobs = () => {
                             {post.workAuth === 'provided' || post.workAuthProvided ? (
                               <span className="bg-green-100 text-gray-900 px-2.5 py-1 rounded-lg text-xs font-semibold">Visa/sponsorship provided</span>
                             ) : post.workAuth === 'required' ? (
-                              <span className="bg-blue-100 text-gray-900 px-2.5 py-1 rounded-lg text-xs font-semibold">Must be authorized to work</span>
+                              <span className="bg-pink-100 text-gray-900 px-2.5 py-1 rounded-lg text-xs font-semibold">Must be authorized to work</span>
                             ) : post.workAuth === 'not_required' ? (
                               <span className="bg-teal-100 text-gray-900 px-2.5 py-1 rounded-lg text-xs font-semibold">Work authorization not required</span>
                             ) : null}
@@ -388,11 +388,11 @@ const Jobs = () => {
                           {isOwnPost && (
                             <div className="flex gap-1 flex-shrink-0">
                               <button onClick={() => navigate(`/jobs/${post.id}/edit`)}
-                                className="text-blue-500 hover:text-blue-600 px-2 py-1 text-xs font-semibold min-h-[44px] flex items-center">
+                                className="text-pink-500 hover:text-pink-600 px-2 py-1 text-xs font-semibold min-h-[44px] flex items-center">
                                 Edit
                               </button>
                               <button onClick={() => handleMarkClosed(post.id, post.status)}
-                                className={`${isClosed ? 'text-blue-400' : 'text-orange-500'} px-2 py-1 text-xs font-semibold hover:opacity-75 min-h-[44px] flex items-center`}>
+                                className={`${isClosed ? 'text-pink-400' : 'text-orange-500'} px-2 py-1 text-xs font-semibold hover:opacity-75 min-h-[44px] flex items-center`}>
                                 {isClosed ? 'Reopen' : 'Close'}
                               </button>
                               <button onClick={() => handleDeletePost(post.id)}
@@ -422,7 +422,7 @@ const Jobs = () => {
                             </span>
                           )}
                           {post.salaryRange && (
-                            <span className="flex items-center gap-1 text-blue-500">
+                            <span className="flex items-center gap-1 text-pink-500">
                               <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>

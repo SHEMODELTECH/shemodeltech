@@ -185,17 +185,17 @@ const ProjectVault = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setViewingCert(null)}>
             <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl overflow-hidden" onClick={e => e.stopPropagation()}>
               <div id="certificate-content" className="p-8 text-center bg-white">
-                <div className="border-2 border-blue-200 rounded-xl p-8 flex flex-col justify-between">
+                <div className="border-2 border-pink-200 rounded-xl p-8 flex flex-col justify-between">
                   <div>
                     <img src="/Images/512X512.png" alt="She Model Tech" className="w-16 h-16 mx-auto mb-3" />
-                    <p className="text-blue-600 text-xs font-semibold uppercase tracking-widest">Certificate of Completion</p>
-                    <div className="w-16 h-1 mx-auto mt-3 rounded-full" style={{ background: 'linear-gradient(90deg,#2563eb,#f97316)' }} />
+                    <p className="text-pink-600 text-xs font-semibold uppercase tracking-widest">Certificate of Completion</p>
+                    <div className="w-16 h-1 mx-auto mt-3 rounded-full" style={{ background: 'linear-gradient(90deg,#F544CB,#8948EB)' }} />
                   </div>
                   <div className="my-4">
                     <p className="text-gray-500 text-sm mb-1">This certifies that</p>
                     <p className="text-gray-900 text-2xl font-bold mb-1">{currentUser?.displayName || 'Member'}</p>
                     <p className="text-gray-500 text-sm mb-4">has successfully completed the project</p>
-                    <p className="text-blue-600 text-lg font-bold mb-1">{viewingCert.projectTitle}</p>
+                    <p className="text-pink-600 text-lg font-bold mb-1">{viewingCert.projectTitle}</p>
                     <p className="text-gray-600 text-sm mb-1">serving as <span className="font-semibold">{viewingCert.role}</span></p>
                     {getBadgeImage(viewingCert.badgeCategory) && (
                       <div className="flex justify-center mt-3 mb-1">
@@ -256,17 +256,17 @@ const ProjectVault = () => {
                         @page{size:8.5in 11in;margin:0}
                         *{box-sizing:border-box}html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
                         .page{width:8.5in;height:11in;padding:0.5in;margin:0 auto;display:flex;overflow:hidden;page-break-after:avoid;break-after:avoid;page-break-before:avoid;break-before:avoid;page-break-inside:avoid;break-inside:avoid}
-                        .border{flex:1;min-height:0;border:3px solid #bfdbfe;border-radius:16px;padding:0.4in 0.55in;display:flex;overflow:hidden;position:relative;page-break-inside:avoid;break-inside:avoid}
-                        .border::before{content:'';position:absolute;inset:9px;border:1px solid #dbeafe;border-radius:11px;pointer-events:none}
+                        .border{flex:1;min-height:0;border:3px solid #FBCFE8;border-radius:16px;padding:0.4in 0.55in;display:flex;overflow:hidden;position:relative;page-break-inside:avoid;break-inside:avoid}
+                        .border::before{content:'';position:absolute;inset:9px;border:1px solid #FCE7F3;border-radius:11px;pointer-events:none}
                         .inner{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;position:relative;z-index:1;overflow:hidden}
                         .top{display:flex;flex-direction:column;align-items:center}
                         img.logo{width:1in;height:1in;margin-bottom:0.15in}
-                        .subtitle{color:#2563eb;font-size:15pt;font-weight:800;text-transform:uppercase;letter-spacing:4px}
-                        .rule{width:80px;height:3px;background:linear-gradient(90deg,#2563eb,#f97316);border-radius:2px;margin:0.12in auto 0}
+                        .subtitle{color:#F544CB;font-size:15pt;font-weight:800;text-transform:uppercase;letter-spacing:4px}
+                        .rule{width:80px;height:3px;background:linear-gradient(90deg,#F544CB,#8948EB);border-radius:2px;margin:0.12in auto 0}
                         .middle{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:0;overflow:hidden}
                         .label{color:#6b7280;font-size:12pt;margin:0.07in 0}
                         .name{font-size:34pt;font-weight:800;color:#111827;margin:0.08in 0;font-family:Georgia,'Times New Roman',serif;line-height:1.15}
-                        .project{color:#2563eb;font-size:20pt;font-weight:700;margin:0.08in 0;max-width:85%;line-height:1.25}
+                        .project{color:#F544CB;font-size:20pt;font-weight:700;margin:0.08in 0;max-width:85%;line-height:1.25}
                         .role{color:#374151;font-size:13pt;margin-top:0.03in}
                         .meta{color:#9ca3af;font-size:10pt;margin-top:0.1in}
                         .bottom{display:flex;flex-direction:column;align-items:center;width:100%}
@@ -313,7 +313,7 @@ const ProjectVault = () => {
                       printWindow.document.close();
                       setTimeout(() => { printWindow.print(); }, 500);
                     }}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-2.5 rounded-lg transition-all"
+                    className="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm py-2.5 rounded-lg transition-all"
                   >
                     Download Certificate
                   </button>
@@ -328,13 +328,13 @@ const ProjectVault = () => {
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div>
           </div>
         ) : (completedProjects.length === 0 && awaitingProjects.length === 0) ? (
           <div className="bg-white border border-gray-200 rounded-xl p-10 text-center">
             <p className="text-gray-900 font-semibold text-lg mb-2">No completed projects yet</p>
             <p className="text-gray-400 text-sm mb-4">Complete your first project to see it here with a certificate.</p>
-            <a href="/projects" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-all">Browse Projects</a>
+            <a href="/projects" className="inline-block bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-all">Browse Projects</a>
           </div>
         ) : (
           <div className="space-y-6">
@@ -389,7 +389,7 @@ const ProjectVault = () => {
                                 setRefreshKey(k => k + 1);
                               } catch (e) { toast.error(e.message || 'Action failed.'); }
                               setBusy(false);
-                            }} className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all disabled:opacity-50">
+                            }} className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all disabled:opacity-50">
                               I've Paid Everyone
                             </button>
                           )}
@@ -416,7 +416,7 @@ const ProjectVault = () => {
                             </>
                           )}
                           {/* Everyone: open the dispute room */}
-                          <button onClick={() => navigate(`/disputes/${project.id}`)} className={`text-xs font-semibold px-4 py-2 rounded-lg border transition-all ${disputed ? 'bg-red-600 hover:bg-red-700 text-white border-red-600' : 'text-blue-600 border-blue-200 hover:bg-blue-50'}`}>
+                          <button onClick={() => navigate(`/disputes/${project.id}`)} className={`text-xs font-semibold px-4 py-2 rounded-lg border transition-all ${disputed ? 'bg-red-600 hover:bg-red-700 text-white border-red-600' : 'text-pink-600 border-pink-200 hover:bg-pink-50'}`}>
                             {disputed ? 'Open Dispute Room' : 'View Details'}
                           </button>
                         </div>
@@ -424,14 +424,14 @@ const ProjectVault = () => {
                         {/* Dispute History */}
                         {(project.disputeHistory || []).length > 0 && (
                           <div className="mt-3">
-                            <button onClick={() => toggleHistory(project.id)} className="text-blue-600 text-xs font-medium hover:underline">
+                            <button onClick={() => toggleHistory(project.id)} className="text-pink-600 text-xs font-medium hover:underline">
                               {expandedHistory[project.id] ? 'Hide history' : 'View history'}
                             </button>
                             {expandedHistory[project.id] && (
                               <div className="mt-2 space-y-1.5">
                                 {project.disputeHistory.map((h, i) => (
                                   <div key={i} className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded">
-                                    <span className="text-gray-700">{h.memberName} - <span className={h.action === 'disputed' ? 'text-red-600 font-semibold' : h.action === 'confirmed' ? 'text-blue-600 font-semibold' : 'text-gray-600 font-semibold'}>{h.action.replace(/_/g, ' ')}</span></span>
+                                    <span className="text-gray-700">{h.memberName} - <span className={h.action === 'disputed' ? 'text-red-600 font-semibold' : h.action === 'confirmed' ? 'text-pink-600 font-semibold' : 'text-gray-600 font-semibold'}>{h.action.replace(/_/g, ' ')}</span></span>
                                     <span className="text-gray-400">{new Date(h.at || h.timestamp).toLocaleDateString()}</span>
                                   </div>
                                 ))}
@@ -459,9 +459,9 @@ const ProjectVault = () => {
                           {project.isRejected ? (
                             <span className="text-xs font-medium px-2 py-0.5 bg-red-50 text-red-600 rounded-md flex-shrink-0">Rejected</span>
                           ) : (
-                            <span className="text-xs font-medium px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md flex-shrink-0">Completed</span>
+                            <span className="text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-700 rounded-md flex-shrink-0">Completed</span>
                           )}
-                          {project.isOwner && <span className="text-[10px] font-semibold px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full flex-shrink-0">Owner</span>}
+                          {project.isOwner && <span className="text-[10px] font-semibold px-2 py-0.5 bg-pink-100 text-pink-700 rounded-full flex-shrink-0">Owner</span>}
                         </div>
                         <p className="text-gray-400 text-xs">{project.category || 'General'}</p>
                         {project.isRejected ? (
@@ -476,7 +476,7 @@ const ProjectVault = () => {
                         {!project.isRejected && (
                           <button
                             onClick={() => handleViewCertificate(project)}
-                            className="text-blue-600 hover:text-blue-700 text-sm font-medium border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-all"
+                            className="text-pink-600 hover:text-pink-700 text-sm font-medium border border-pink-200 px-3 py-1.5 rounded-lg hover:bg-pink-50 transition-all"
                           >
                             View Certificate
                           </button>
@@ -486,14 +486,14 @@ const ProjectVault = () => {
                     {/* Dispute/Confirmation History */}
                     {(project.disputeHistory || []).length > 0 && (
                       <div className="mt-3 pt-3 border-t border-gray-100">
-                        <button onClick={() => toggleHistory(project.id)} className="text-blue-600 text-xs font-medium hover:underline">
+                        <button onClick={() => toggleHistory(project.id)} className="text-pink-600 text-xs font-medium hover:underline">
                           {expandedHistory[project.id] ? 'Hide payment history' : 'View payment history'}
                         </button>
                         {expandedHistory[project.id] && (
                           <div className="mt-2 space-y-1.5">
                             {project.disputeHistory.map((h, i) => (
                               <div key={i} className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded">
-                                <span className="text-gray-700">{h.memberName} - <span className={h.action === 'disputed' ? 'text-red-600 font-semibold' : h.action === 'confirmed' ? 'text-blue-600 font-semibold' : 'text-gray-600 font-semibold'}>{h.action}</span></span>
+                                <span className="text-gray-700">{h.memberName} - <span className={h.action === 'disputed' ? 'text-red-600 font-semibold' : h.action === 'confirmed' ? 'text-pink-600 font-semibold' : 'text-gray-600 font-semibold'}>{h.action}</span></span>
                                 <span className="text-gray-400">{new Date(h.timestamp).toLocaleDateString()}</span>
                               </div>
                             ))}

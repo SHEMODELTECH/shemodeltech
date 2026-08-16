@@ -51,13 +51,13 @@ const AIRecommendations = ({ currentUser }) => {
     <div className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 mb-6">
       <div className="flex items-center justify-between gap-3 mb-1">
         <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900">
-          <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-orange-400 text-white flex items-center justify-center"><Spark /></span>
+          <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 text-white flex items-center justify-center"><Spark /></span>
           Your best matches
         </h2>
         <button
           onClick={() => load(true)}
           disabled={refreshing || loading}
-          className="text-blue-600 hover:text-blue-700 text-xs font-semibold px-2 py-1 rounded-lg transition-all disabled:opacity-50"
+          className="text-pink-600 hover:text-pink-700 text-xs font-semibold px-2 py-1 rounded-lg transition-all disabled:opacity-50"
           title="Refresh recommendations"
         >
           {refreshing ? 'Refreshing…' : 'Refresh'}
@@ -65,7 +65,7 @@ const AIRecommendations = ({ currentUser }) => {
       </div>
       <p className="text-gray-400 text-xs mb-4">
         Picked for you by AI from your skills, badges, and interests.{' '}
-        <Link to="/settings" className="text-blue-500 hover:text-blue-600 hover:underline">Keep your profile fresh</Link> for sharper matches.
+        <Link to="/settings" className="text-pink-500 hover:text-pink-600 hover:underline">Keep your profile fresh</Link> for sharper matches.
       </p>
 
       {loading ? (
@@ -77,13 +77,13 @@ const AIRecommendations = ({ currentUser }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {/* Best project */}
           {project && (
-            <div className="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition-all flex flex-col">
+            <div className="border border-gray-200 rounded-xl p-4 hover:border-pink-300 transition-all flex flex-col">
               <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wide mb-1.5">Best project for you</p>
               <div className="flex items-start justify-between gap-2">
-                <Link to={`/projects/${project.id}`} className="text-sm font-bold text-gray-900 hover:text-blue-600 leading-snug">
+                <Link to={`/projects/${project.id}`} className="text-sm font-bold text-gray-900 hover:text-pink-600 leading-snug">
                   {project.title}
                 </Link>
-                <span className="flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">
+                <span className="flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-600 border border-pink-100">
                   {project.match}% match
                 </span>
               </div>
@@ -97,7 +97,7 @@ const AIRecommendations = ({ currentUser }) => {
               </p>
               <button
                 onClick={() => navigate(`/projects/${project.id}`)}
-                className="mt-3 self-start bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all"
+                className="mt-3 self-start bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all"
               >
                 {project.needsLead ? 'View & apply to lead →' : 'View & apply →'}
               </button>
@@ -108,7 +108,7 @@ const AIRecommendations = ({ currentUser }) => {
           {course && (
             <div className="border border-gray-200 rounded-xl p-4 hover:border-orange-300 transition-all flex flex-col">
               <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wide mb-1.5">Best course for you</p>
-              <Link to="/foundations" className="text-sm font-bold text-gray-900 hover:text-blue-600 leading-snug">
+              <Link to="/foundations" className="text-sm font-bold text-gray-900 hover:text-pink-600 leading-snug">
                 {course.title}
               </Link>
               <div className="mt-1.5">

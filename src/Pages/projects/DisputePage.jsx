@@ -248,7 +248,7 @@ const DisputePage = () => {
   });
 
   if (loading || !profileLoaded) {
-    return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div></div>;
+    return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
   }
 
   // ---------------------------------------------------------------- LIST ----
@@ -264,7 +264,7 @@ const DisputePage = () => {
         {disputes.length === 0 ? (
           <div className="bg-white border border-gray-200 rounded-xl p-10 text-center">
             <p className="text-gray-900 font-semibold text-lg mb-2">{isAdmin ? 'No open disputes' : 'Nothing awaiting confirmation'}</p>
-            <p className="text-gray-400 text-sm">Completed paid projects with confirmed payments live in the <Link to="/project-vault" className="text-blue-600 hover:underline">Project Vault</Link>.</p>
+            <p className="text-gray-400 text-sm">Completed paid projects with confirmed payments live in the <Link to="/project-vault" className="text-pink-600 hover:underline">Project Vault</Link>.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -297,7 +297,7 @@ const DisputePage = () => {
       <div className="max-w-3xl mx-auto text-center py-20">
         <p className="text-gray-900 font-bold text-lg mb-2">This dispute room is private</p>
         <p className="text-gray-500 text-sm mb-4">Only the admin, the project owner, and that project's members can access it.</p>
-        <Link to="/dashboard" className="text-blue-600 text-sm font-semibold hover:underline">Back to Dashboard</Link>
+        <Link to="/dashboard" className="text-pink-600 text-sm font-semibold hover:underline">Back to Dashboard</Link>
       </div>
     );
   }
@@ -319,7 +319,7 @@ const DisputePage = () => {
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <span className="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full">PAID PROJECT</span>
-            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${isResolvedOrComplete ? 'bg-blue-100 text-blue-700' : hasOpenDispute(project) ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
+            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${isResolvedOrComplete ? 'bg-pink-100 text-pink-700' : hasOpenDispute(project) ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
               {isResolvedOrComplete ? 'RESOLVED - IN VAULT' : hasOpenDispute(project) ? 'DISPUTE OPEN' : 'AWAITING CONFIRMATIONS'}
             </span>
           </div>
@@ -357,7 +357,7 @@ const DisputePage = () => {
                       <p className="text-red-700 text-xs mt-2 bg-red-100/60 rounded-md p-2"><strong>Dispute reason:</strong> {e.disputeReason}</p>
                     )}
                     {wasAdjusted && (
-                      <p className="text-blue-700 text-[10px] mt-1.5">Adjusted amount - once confirmed, this is what shows in the member's Account earnings.</p>
+                      <p className="text-pink-700 text-[10px] mt-1.5">Adjusted amount - once confirmed, this is what shows in the member's Account earnings.</p>
                     )}
 
                     {/* Row actions */}
@@ -383,13 +383,13 @@ const DisputePage = () => {
                           adjusting === email ? (
                             <div className="flex items-center gap-2 w-full">
                               <input type="number" min="0" step="0.01" value={adjustAmount} onChange={ev => setAdjustAmount(ev.target.value)}
-                                className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none" placeholder={`New amount (was ${formatMoney(effective)})`} />
-                              <button onClick={() => handleAdjust(email)} disabled={busy} className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg disabled:opacity-50">Save</button>
+                                className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none" placeholder={`New amount (was ${formatMoney(effective)})`} />
+                              <button onClick={() => handleAdjust(email)} disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg disabled:opacity-50">Save</button>
                               <button onClick={() => { setAdjusting(null); setAdjustAmount(''); }} className="text-gray-500 text-xs px-2">Cancel</button>
                             </div>
                           ) : (
                             <button onClick={() => { setAdjusting(email); setAdjustAmount(String(effective)); }} disabled={busy}
-                              className="text-blue-600 border border-blue-200 hover:bg-blue-50 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all">
+                              className="text-pink-600 border border-pink-200 hover:bg-pink-50 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all">
                               Adjust Amount
                             </button>
                           )
@@ -416,7 +416,7 @@ const DisputePage = () => {
             {/* Owner: mark all paid (after adjustments this resets and must be clicked again) */}
             {isOwner && !isResolvedOrComplete && !project.ownerPaidAll && (
               <button onClick={handleOwnerPaidAll} disabled={busy}
-                className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 rounded-lg transition-all disabled:opacity-50">
+                className="w-full mt-3 bg-pink-600 hover:bg-pink-700 text-white text-sm font-bold py-2.5 rounded-lg transition-all disabled:opacity-50">
                 I've Paid Everyone - Ask Members to Confirm
               </button>
             )}
@@ -447,7 +447,7 @@ const DisputePage = () => {
               <div className="space-y-1.5">
                 {project.disputeHistory.map((h, i) => (
                   <div key={i} className="flex items-start gap-2 text-xs">
-                    <span className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${h.action === 'disputed' ? 'bg-red-500' : h.action === 'confirmed' ? 'bg-green-500' : h.action === 'resolved' ? 'bg-blue-500' : 'bg-gray-300'}`} />
+                    <span className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${h.action === 'disputed' ? 'bg-red-500' : h.action === 'confirmed' ? 'bg-green-500' : h.action === 'resolved' ? 'bg-pink-500' : 'bg-gray-300'}`} />
                     <p className="text-gray-600 leading-relaxed">
                       <span className="font-semibold text-gray-900">{h.memberName}</span> {h.action.replace(/_/g, ' ')}{h.reason ? ` - "${h.reason}"` : ''}{h.note ? ` - ${h.note}` : ''}
                       <span className="text-gray-400"> · {formatTime(h.at)}</span>
@@ -460,23 +460,23 @@ const DisputePage = () => {
 
           {/* Admin resolution */}
           {isAdmin && !isResolvedOrComplete && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+            <div className="bg-pink-50 border border-pink-200 rounded-xl p-5">
               <h2 className="text-base font-bold text-gray-900 mb-1">Admin Resolution</h2>
               <p className="text-gray-600 text-xs mb-3">When the conversation reaches an outcome, mark this resolved. Remaining entries confirm at their current (adjusted) amounts, everyone is notified, and the project moves to the Project Vault.</p>
               {showResolve ? (
                 <div>
                   <textarea value={resolveNote} onChange={e => setResolveNote(e.target.value)} rows={2}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none resize-none mb-2"
+                    className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none resize-none mb-2"
                     placeholder="Resolution note (optional but recommended)..." />
                   <div className="flex gap-2">
-                    <button onClick={handleResolve} disabled={busy} className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg disabled:opacity-50">
+                    <button onClick={handleResolve} disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-4 py-2 rounded-lg disabled:opacity-50">
                       Mark Resolved & Move to Vault
                     </button>
                     <button onClick={() => setShowResolve(false)} className="text-gray-500 text-xs px-2">Cancel</button>
                   </div>
                 </div>
               ) : (
-                <button onClick={() => setShowResolve(true)} className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg">
+                <button onClick={() => setShowResolve(true)} className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-4 py-2 rounded-lg">
                   Resolve Dispute
                 </button>
               )}
@@ -494,14 +494,14 @@ const DisputePage = () => {
               const mine = m.authorUid === currentUser.uid;
               return (
                 <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'}`}>
-                    <p className={`text-[10px] font-bold mb-0.5 ${mine ? 'text-blue-100' : 'text-gray-500'}`}>
+                  <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-pink-600 text-white' : 'bg-gray-100 text-gray-900'}`}>
+                    <p className={`text-[10px] font-bold mb-0.5 ${mine ? 'text-pink-100' : 'text-gray-500'}`}>
                       {m.authorName}
-                      {m.authorRole === 'admin' && <span className="ml-1 bg-blue-100 text-blue-700 px-1 py-0 rounded font-black">ADMIN</span>}
-                      {m.authorRole === 'owner' && <span className={`ml-1 px-1 py-0 rounded font-black ${mine ? 'bg-blue-500 text-white' : 'bg-amber-100 text-amber-700'}`}>OWNER</span>}
+                      {m.authorRole === 'admin' && <span className="ml-1 bg-pink-100 text-pink-700 px-1 py-0 rounded font-black">ADMIN</span>}
+                      {m.authorRole === 'owner' && <span className={`ml-1 px-1 py-0 rounded font-black ${mine ? 'bg-pink-500 text-white' : 'bg-amber-100 text-amber-700'}`}>OWNER</span>}
                     </p>
                     <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{m.text}</p>
-                    <p className={`text-[9px] mt-1 ${mine ? 'text-blue-200' : 'text-gray-400'}`}>{formatTime(m.createdAt)}</p>
+                    <p className={`text-[9px] mt-1 ${mine ? 'text-pink-200' : 'text-gray-400'}`}>{formatTime(m.createdAt)}</p>
                   </div>
                 </div>
               );
@@ -511,10 +511,10 @@ const DisputePage = () => {
           <div className="flex gap-2">
             <input type="text" value={newMessage} onChange={e => setNewMessage(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-              className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 min-h-[44px] text-gray-900 text-sm focus:border-blue-500 focus:outline-none transition-all"
+              className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 min-h-[44px] text-gray-900 text-sm focus:border-pink-500 focus:outline-none transition-all"
               placeholder="Write a message..." />
             <button onClick={handleSendMessage} disabled={sending || !newMessage.trim()}
-              className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 rounded-xl transition-all disabled:opacity-50">
+              className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-bold px-5 rounded-xl transition-all disabled:opacity-50">
               Send
             </button>
           </div>

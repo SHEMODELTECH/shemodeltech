@@ -175,7 +175,7 @@ const AppLayout = ({ children }) => {
                   <button
                     onClick={() => setProjectsOpen(o => !o)}
                     className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                      anyChildActive ? 'text-blue-700 bg-blue-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      anyChildActive ? 'text-pink-700 bg-pink-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   >
                     <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={item.icon} /></svg>
@@ -189,7 +189,7 @@ const AppLayout = ({ children }) => {
                           key={child.path}
                           to={child.path}
                           className={`block px-3 py-2 rounded-lg text-sm transition-all ${
-                            isActive(child.path) ? 'bg-blue-600 text-white font-semibold shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100 font-medium'
+                            isActive(child.path) ? 'bg-pink-600 text-white font-semibold shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100 font-medium'
                           }`}
                         >
                           {child.label}
@@ -207,7 +207,7 @@ const AppLayout = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  active ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  active ? 'bg-pink-600 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
                 {item.icon && (
@@ -231,7 +231,7 @@ const AppLayout = ({ children }) => {
               {currentUser.photoURL ? (
                 <img src={currentUser.photoURL} alt="" className="w-8 h-8 rounded-full object-cover border border-gray-200" />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">
+                <div className="w-8 h-8 rounded-full bg-pink-600 flex items-center justify-center text-white text-sm font-bold">
                   {currentUser.displayName?.[0] || 'U'}
                 </div>
               )}
@@ -298,7 +298,7 @@ const AppLayout = ({ children }) => {
 
           <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-6 flex-shrink-0 pr-1 lg:pr-2">
             {/* Messaging - desktop only; on mobile it lives in the bottom bar. */}
-            <Link to="/messages" className={`relative hidden lg:flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/messages' ? 'text-blue-600' : 'text-gray-500'}`}>
+            <Link to="/messages" className={`relative hidden lg:flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/messages' ? 'text-pink-600' : 'text-gray-500'}`}>
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
@@ -310,7 +310,7 @@ const AppLayout = ({ children }) => {
               )}
             </Link>
             {/* Notifications */}
-            <Link to="/notifications" className={`relative flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/notifications' ? 'text-blue-600' : 'text-gray-500'}`}>
+            <Link to="/notifications" className={`relative flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/notifications' ? 'text-pink-600' : 'text-gray-500'}`}>
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
@@ -323,7 +323,7 @@ const AppLayout = ({ children }) => {
             </Link>
             {/* Me */}
             {currentUser && (
-              <Link to={`/profile/${currentUser.email}`} className={`flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname.startsWith('/profile') ? 'text-blue-600' : 'text-gray-500'}`}>
+              <Link to={`/profile/${currentUser.email}`} className={`flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname.startsWith('/profile') ? 'text-pink-600' : 'text-gray-500'}`}>
                 {currentUser.photoURL ? (
                   <img src={currentUser.photoURL} alt="" className="w-7 h-7 rounded-full object-cover" />
                 ) : (
@@ -350,7 +350,7 @@ const AppLayout = ({ children }) => {
         <nav className={`lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 ${sidebarOpen ? 'hidden' : 'flex'} items-stretch justify-around pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_8px_rgba(0,0,0,0.04)]`}>
           {mobileTabs.map((tab) => {
             const active = tab.path ? isActive(tab.path) : false;
-            const cls = `relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[60px] active:bg-gray-50 transition-colors ${active ? 'text-blue-600' : 'text-gray-500'}`;
+            const cls = `relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[60px] active:bg-gray-50 transition-colors ${active ? 'text-pink-600' : 'text-gray-500'}`;
             return (
               <Link key={tab.path} to={tab.path} className={cls}>
                 <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">

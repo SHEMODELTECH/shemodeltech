@@ -19,7 +19,7 @@ const PWAUpdateBanner = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
         {/* Left section with icon and text */}
         <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">

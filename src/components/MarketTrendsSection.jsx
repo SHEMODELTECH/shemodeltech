@@ -4,12 +4,12 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
   // If no market trends data is available, show a clear message
   if (!marketTrends || marketTrends.length === 0) {
     return (
-      <div className="bg-blue-50 p-3 sm:p-4 md:p-5 rounded-lg">
+      <div className="bg-pink-50 p-3 sm:p-4 md:p-5 rounded-lg">
         <div className="flex items-start">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 mt-0.5 mr-2 sm:mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-pink-600 mt-0.5 mr-2 sm:mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <p className="text-blue-700 text-sm sm:text-base">
+          <p className="text-pink-700 text-sm sm:text-base">
             Market trends data is not available for this analysis. Please retake the assessment
             to get the latest market insights or consult industry resources for current trends.
           </p>
@@ -23,9 +23,9 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
     if (!text) return 'text-gray-600';
     const lowerText = text.toLowerCase();
     if (lowerText.includes('high') || lowerText.includes('strong') || lowerText.includes('growing') || lowerText.includes('increase')) {
-      return 'text-blue-600';
+      return 'text-pink-600';
     } else if (lowerText.includes('moderate') || lowerText.includes('stable')) {
-      return 'text-blue-600';
+      return 'text-pink-600';
     } else if (lowerText.includes('low') || lowerText.includes('declin') || lowerText.includes('decrease')) {
       return 'text-red-600';
     }
@@ -44,7 +44,7 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
       <div className="grid grid-cols-1 gap-1 sm:gap-2">
         {ranges.map((range, idx) => (
           <div key={idx} className="flex items-center">
-            <span className="font-semibold text-blue-700 text-xs sm:text-sm md:text-base">{range}</span>
+            <span className="font-semibold text-pink-700 text-xs sm:text-sm md:text-base">{range}</span>
           </div>
         ))}
       </div>
@@ -181,7 +181,7 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
       {/* Job Market Outlook */}
       {jobMarketTrend && (
         <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-3 sm:mb-4">Job Market Outlook</h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-pink-800 mb-3 sm:mb-4">Job Market Outlook</h3>
           <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4">
             <p className="text-gray-700 text-sm sm:text-base break-words">{jobMarketTrend.details}</p>
           </div>
@@ -211,7 +211,7 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
       {/* Salary Trends */}
       {salaryTrend && (
         <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-3 sm:mb-4">Salary Trends</h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-pink-800 mb-3 sm:mb-4">Salary Trends</h3>
           <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4">
             <p className="text-gray-700 text-sm sm:text-base break-words">{salaryTrend.details}</p>
           </div>
@@ -219,21 +219,21 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
             <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
               <h4 className="font-semibold text-base sm:text-lg mb-2">Entry Level</h4>
-              <div className="text-blue-700 font-semibold">
+              <div className="text-pink-700 font-semibold">
                 {formatSalaryRange(salaryTrend.entryLevel || salaryTrend.details)}
               </div>
             </div>
             
             <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
               <h4 className="font-semibold text-base sm:text-lg mb-2">Mid Level</h4>
-              <div className="text-blue-700 font-semibold">
+              <div className="text-pink-700 font-semibold">
                 {formatSalaryRange(salaryTrend.midLevel || salaryTrend.details)}
               </div>
             </div>
             
             <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
               <h4 className="font-semibold text-base sm:text-lg mb-2">Senior Level</h4>
-              <div className="text-blue-700 font-semibold">
+              <div className="text-pink-700 font-semibold">
                 {formatSalaryRange(salaryTrend.seniorLevel || salaryTrend.details)}
               </div>
             </div>
@@ -244,7 +244,7 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
       {/* Regional Opportunities */}
       {marketTrends.find(trend => trend.aspect === 'REGIONAL OPPORTUNITIES' || trend.aspect === 'Regional Opportunities') && (
         <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-3 sm:mb-4">Regional Opportunities</h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-pink-800 mb-3 sm:mb-4">Regional Opportunities</h3>
           <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
             <p className="text-gray-700 text-sm sm:text-base break-words">
               {marketTrends.find(trend => 
@@ -258,7 +258,7 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
       {/* Emerging Technologies */}
       {techTrend && (
         <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-3 sm:mb-4">Emerging Technologies</h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-pink-800 mb-3 sm:mb-4">Emerging Technologies</h3>
           <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4">
             <p className="text-gray-700 text-sm sm:text-base break-words">{techTrend.details}</p>
           </div>
@@ -266,7 +266,7 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
           {technologies.length > 0 && (
             <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 sm:mt-4">
               {technologies.map((tech, techIndex) => (
-                <span key={techIndex} className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm break-all">
+                <span key={techIndex} className="px-2 sm:px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-xs sm:text-sm break-all">
                   {tech}
                 </span>
               ))}
@@ -278,7 +278,7 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
       {/* Industry Sector Analysis */}
       {industryTrend && (
         <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-3 sm:mb-4">Top Hiring Industries</h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-pink-800 mb-3 sm:mb-4">Top Hiring Industries</h3>
           <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4">
             <p className="text-gray-700 text-sm sm:text-base break-words">{industryTrend.details}</p>
           </div>
@@ -286,7 +286,7 @@ const MarketTrendsSection = ({ marketTrends, careerPaths }) => {
           {industries.length > 0 && (
             <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 sm:mt-4">
               {industries.map((industry, indIndex) => (
-                <span key={indIndex} className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm break-all">
+                <span key={indIndex} className="px-2 sm:px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-xs sm:text-sm break-all">
                   {industry}
                 </span>
               ))}

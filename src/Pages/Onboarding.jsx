@@ -240,14 +240,14 @@ const Onboarding = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
       </div>
     );
   }
 
   const progress = (step / TOTAL_STEPS) * 100;
-  const inputClass = "w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none text-sm transition-all";
-  const labelClass = "block text-blue-600 font-semibold mb-2 text-sm";
+  const inputClass = "w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none text-sm transition-all";
+  const labelClass = "block text-pink-600 font-semibold mb-2 text-sm";
 
   const renderIndividualStep = () => {
     switch (step) {
@@ -262,7 +262,7 @@ const Onboarding = () => {
               {experienceLevels.map(option => (
                 <button key={option.id} type="button" onClick={() => setFormData(p => ({ ...p, experienceLevel: option.id }))}
                   className={`p-5 rounded-xl border-2 text-left transition-all duration-200 active:scale-[0.97] ${
-                    formData.experienceLevel === option.id ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
+                    formData.experienceLevel === option.id ? 'border-pink-500 bg-pink-50 shadow-sm' : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
                   }`}>
                   <div className={`text-base font-bold mb-1 ${formData.experienceLevel === option.id ? 'text-gray-900' : 'text-gray-700'}`}>{option.label}</div>
                   <div className="text-gray-500 text-xs">{option.desc}</div>
@@ -358,7 +358,7 @@ const Onboarding = () => {
                 return (
                   <button key={option.id} type="button" onClick={() => toggleInterest(option.id)}
                     className={`p-4 rounded-xl border-2 text-left transition-all duration-200 active:scale-[0.97] ${
-                      sel ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
+                      sel ? 'border-pink-500 bg-pink-50 shadow-sm' : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
                     }`}>
                     <div className={`text-base font-bold mb-1 ${sel ? 'text-gray-900' : 'text-gray-700'}`}>{option.label}</div>
                     <div className="text-gray-500 text-xs">{option.desc}</div>
@@ -386,7 +386,7 @@ const Onboarding = () => {
                           : [...p.industryInterests, t.value],
                       }))}
                       className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all active:scale-95 ${
-                        sel ? 'border-blue-500 bg-blue-600 text-white' : 'border-gray-300 bg-white text-gray-600 hover:border-blue-400'
+                        sel ? 'border-pink-500 bg-pink-600 text-white' : 'border-gray-300 bg-white text-gray-600 hover:border-pink-400'
                       }`}
                     >
                       {t.label}
@@ -487,7 +487,7 @@ const Onboarding = () => {
                 return (
                   <button key={option.id} type="button" onClick={() => toggleInterest(option.id)}
                     className={`p-4 rounded-xl border-2 text-left transition-all duration-200 active:scale-[0.97] ${
-                      sel ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
+                      sel ? 'border-pink-500 bg-pink-50 shadow-sm' : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
                     }`}>
                     <div className={`text-base font-bold mb-1 ${sel ? 'text-gray-900' : 'text-gray-700'}`}>{option.label}</div>
                     <div className="text-gray-500 text-xs">{option.desc}</div>
@@ -511,8 +511,8 @@ const Onboarding = () => {
       <div className="mb-4">
         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${
           isCompany
-            ? 'bg-blue-50 text-blue-600 border-blue-200'
-            : 'bg-blue-50 text-blue-600 border-blue-200'
+            ? 'bg-pink-50 text-pink-600 border-pink-200'
+            : 'bg-pink-50 text-pink-600 border-pink-200'
         }`}>
           {isCompany ? 'Company Account' : 'Individual Account'}
         </span>
@@ -520,7 +520,7 @@ const Onboarding = () => {
 
       <div className="w-full max-w-lg mx-4 bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
         <div className="w-full h-1 bg-gray-100">
-          <div className="h-full bg-blue-600 transition-all duration-500" style={{ width: `${progress}%` }} />
+          <div className="h-full bg-pink-600 transition-all duration-500" style={{ width: `${progress}%` }} />
         </div>
 
         <div className="p-4 sm:p-6 md:p-8">
@@ -537,10 +537,10 @@ const Onboarding = () => {
               <button onClick={handleBack} className="px-5 py-2.5 min-h-[44px] text-gray-500 hover:text-gray-700 font-semibold rounded-xl text-sm transition-all" title="Choose a different account type">← Change account type</button>
             )}
             {step < TOTAL_STEPS ? (
-              <button onClick={handleNext} className="px-8 py-2.5 min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition-all">Next</button>
+              <button onClick={handleNext} className="px-8 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-xl text-sm transition-all">Next</button>
             ) : (
               <button onClick={handleComplete} disabled={saving}
-                className="px-8 py-2.5 min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                className="px-8 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-xl text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                 {saving ? (<span className="flex items-center gap-2"><span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>Setting up...</span>) : "Get Started"}
               </button>
             )}
@@ -550,7 +550,7 @@ const Onboarding = () => {
 
       <div className="flex gap-2 mt-6">
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-          <div key={i} className={`rounded-full transition-all duration-300 ${i + 1 === step ? 'w-6 h-2 bg-blue-600' : i + 1 < step ? 'w-2 h-2 bg-blue-400' : 'w-2 h-2 bg-gray-200'}`} />
+          <div key={i} className={`rounded-full transition-all duration-300 ${i + 1 === step ? 'w-6 h-2 bg-pink-600' : i + 1 < step ? 'w-2 h-2 bg-pink-400' : 'w-2 h-2 bg-gray-200'}`} />
         ))}
       </div>
 

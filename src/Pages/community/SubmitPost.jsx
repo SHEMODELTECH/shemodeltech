@@ -444,7 +444,7 @@ const SubmitPost = () => {
     return (
       <div className="min-h-screen overflow-x-hidden bg-white text-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-pink-500 mx-auto mb-4"></div>
           <p className="text-gray-400 text-sm sm:text-base">Loading...</p>
         </div>
       </div>
@@ -464,7 +464,7 @@ const SubmitPost = () => {
                 className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg"
               />
               <div>
-                <h1 className="text-base sm:text-xl font-bold text-blue-600 font-bold">
+                <h1 className="text-base sm:text-xl font-bold text-pink-600 font-bold">
                   Create Post
                 </h1>
                 <p className="text-[10px] sm:text-xs text-gray-400 hidden xs:block">Share with the community</p>
@@ -490,12 +490,12 @@ const SubmitPost = () => {
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           
           {/* Post Form Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl border border-blue-600/10 shadow-2xl overflow-hidden">
+          <div className="bg-white rounded-xl sm:rounded-2xl border border-pink-600/10 shadow-2xl overflow-hidden">
             <div className="p-4 sm:p-6 lg:p-8">
               
               {/* Author Info - Responsive */}
               <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center text-white font-bold flex-shrink-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-pink-600 flex items-center justify-center text-white font-bold flex-shrink-0">
                   {currentUser.photoURL ? (
                     <img 
                       src={currentUser.photoURL} 
@@ -517,7 +517,7 @@ const SubmitPost = () => {
                     
                   </p>
                   {currentUser.profile?.title && (
-                    <p className="text-xs sm:text-sm text-blue-600 truncate">{currentUser.profile.title}</p>
+                    <p className="text-xs sm:text-sm text-pink-600 truncate">{currentUser.profile.title}</p>
                   )}
                 </div>
               </div>
@@ -534,7 +534,7 @@ const SubmitPost = () => {
                   onChange={(e) => handleChange('title', e.target.value)}
                   placeholder="Give your post a title..."
                   maxLength={200}
-                  className="w-full p-2.5 sm:p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-colors text-sm sm:text-base"
+                  className="w-full p-2.5 sm:p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-colors text-sm sm:text-base"
                 />
                 <div className="flex justify-between items-center mt-1">
                   <p className="text-[10px] sm:text-xs text-gray-400">Make your post stand out</p>
@@ -551,7 +551,7 @@ const SubmitPost = () => {
                   value={formData.content}
                   onChange={(value) => handleChange('content', value)}
                   placeholder="What's on your mind? Share your thoughts... Use @ to mention someone"
-                  className="w-full p-2.5 sm:p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-colors resize-none text-sm sm:text-base"
+                  className="w-full p-2.5 sm:p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-colors resize-none text-sm sm:text-base"
                   rows={8}
                   onMentionSelect={handleMentionSelect}
                   showLinkButton={true}
@@ -586,8 +586,8 @@ const SubmitPost = () => {
                   onDrop={handleDrop}
                   className={`relative border-2 border-dashed rounded-lg p-4 sm:p-6 lg:p-8 text-center transition-all duration-300 ${
                     dragActive 
-                      ? 'border-blue-500 bg-blue-600/10' 
-                      : 'border-gray-200 bg-gray-100 hover:border-blue-600/40 hover:bg-gray-50'
+                      ? 'border-pink-500 bg-pink-600/10' 
+                      : 'border-gray-200 bg-gray-100 hover:border-pink-600/40 hover:bg-gray-50'
                   }`}
                 >
                   <input
@@ -611,7 +611,7 @@ const SubmitPost = () => {
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="inline-flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-600/40 rounded-lg text-blue-500 hover:text-orange-200 transition-all duration-300 text-sm"
+                        className="inline-flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-600/40 rounded-lg text-pink-500 hover:text-orange-200 transition-all duration-300 text-sm"
                       >
                         <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -675,13 +675,13 @@ const SubmitPost = () => {
                                 <div className="text-[10px] sm:text-xs">Failed</div>
                               </div>
                             ) : uploadProgress[index] === 100 ? (
-                              <div className="text-blue-600 text-center">
+                              <div className="text-pink-600 text-center">
                                 <div className="text-xl sm:text-2xl mb-1">✅</div>
                                 <div className="text-[10px] sm:text-xs">Uploaded</div>
                               </div>
                             ) : (
                               <div className="text-center">
-                                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-500 mx-auto mb-1.5 sm:mb-2"></div>
+                                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-pink-500 mx-auto mb-1.5 sm:mb-2"></div>
                                 <div className="text-gray-900 text-[10px] sm:text-xs">Uploading...</div>
                               </div>
                             )}
@@ -695,7 +695,7 @@ const SubmitPost = () => {
             </div>
 
             {/* Footer Actions - Responsive */}
-            <div className="p-4 sm:p-6 bg-gray-100 border-t border-blue-600/10">
+            <div className="p-4 sm:p-6 bg-gray-100 border-t border-pink-600/10">
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between space-y-2 sm:space-y-0 sm:space-x-4">
                 <div className="text-gray-400 text-xs sm:text-sm">
                   {selectedFiles.length > 0 && (
@@ -716,7 +716,7 @@ const SubmitPost = () => {
                   <button
                     type="submit"
                     disabled={submitting || uploading || !formData.content.trim()}
-                    className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                   >
                     {submitting ? (
                       <span className="flex items-center justify-center">

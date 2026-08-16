@@ -68,13 +68,13 @@ const Navbar = () => {
 
   const getNavButtonClass = (path) => `px-2.5 lg:px-3 xl:px-4 py-2 rounded-lg text-xs lg:text-sm xl:text-base font-semibold transition-all duration-300 border ${
     isActive(path)
-      ? 'bg-blue-600 text-white border-blue-600'
+      ? 'bg-pink-600 text-white border-pink-600'
       : 'text-gray-700 bg-transparent border-gray-200 hover:bg-gray-50'
   }`;
 
   const getMobileNavButtonClass = (path) => `block w-full text-left px-4 py-3 rounded-lg text-base font-semibold transition-all min-h-[44px] border ${
     isActive(path)
-      ? 'bg-blue-600 text-white border-blue-600'
+      ? 'bg-pink-600 text-white border-pink-600'
       : 'text-gray-700 bg-transparent border-gray-200 hover:bg-gray-50'
   }`;
 
@@ -121,9 +121,9 @@ const Navbar = () => {
                 </Link>
                 <Link to={`/profile/${currentUser.email}`} className="flex items-center gap-2 lg:gap-3 p-1.5 lg:p-2 rounded-lg hover:bg-gray-100 transition-colors">
                   {currentUser.photoURL ? (
-                    <img src={currentUser.photoURL} alt="Profile" className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover border-2 border-blue-600" />
+                    <img src={currentUser.photoURL} alt="Profile" className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover border-2 border-pink-600" />
                   ) : (
-                    <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold">
                       {currentUser.displayName?.[0] || currentUser.email?.[0] || 'U'}
                     </div>
                   )}
@@ -183,9 +183,9 @@ const Navbar = () => {
                   </Link>
                   <Link to={`/profile/${currentUser.email}`} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition-all min-h-[44px]">
                     {currentUser.photoURL ? (
-                      <img src={currentUser.photoURL} alt="Profile" className="w-10 h-10 rounded-full object-cover border-2 border-blue-600" />
+                      <img src={currentUser.photoURL} alt="Profile" className="w-10 h-10 rounded-full object-cover border-2 border-pink-600" />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
+                      <div className="w-10 h-10 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold">
                         {currentUser.displayName?.[0] || currentUser.email?.[0] || 'U'}
                       </div>
                     )}

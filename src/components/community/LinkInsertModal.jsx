@@ -113,9 +113,9 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
         onKeyDown={handleKeyDown}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 xs:p-5 sm:p-6 border-b border-blue-600/10">
+        <div className="flex items-center justify-between p-4 xs:p-5 sm:p-6 border-b border-pink-600/10">
           <h3 className="text-base xs:text-lg font-bold text-gray-900 flex items-center gap-1.5 xs:gap-2">
-            <svg className="w-4 h-4 xs:w-5 xs:h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 xs:w-5 xs:h-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
             </svg>
             Insert Link
@@ -137,7 +137,7 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
           {/* URL Input */}
           <div>
             <label className="block text-gray-900 font-medium text-sm xs:text-base mb-1.5 xs:mb-2">
-              URL <span className="text-blue-600">*</span>
+              URL <span className="text-pink-600">*</span>
             </label>
             <input
               type="url"
@@ -147,7 +147,7 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
               className={`w-full p-2.5 xs:p-3 bg-gray-50 border rounded-lg text-sm xs:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-colors ${
                 urlError 
                   ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20' 
-                  : 'border-gray-200 focus:border-blue-500 focus:ring-orange-400/20'
+                  : 'border-gray-200 focus:border-pink-500 focus:ring-orange-400/20'
               }`}
               autoFocus
             />
@@ -177,7 +177,7 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
               value={linkData.text}
               onChange={(e) => setLinkData(prev => ({ ...prev, text: e.target.value }))}
               placeholder="Link text (optional - will use domain if empty)"
-              className="w-full p-2.5 xs:p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm xs:text-base text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 transition-colors"
+              className="w-full p-2.5 xs:p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm xs:text-base text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 transition-colors"
             />
             <p className="text-gray-400 text-[10px] xs:text-xs mt-1">
               Leave empty to auto-generate from URL
@@ -186,9 +186,9 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
 
           {/* Preview */}
           {linkData.url && (
-            <div className="p-2.5 xs:p-3 bg-blue-600/10 border border-gray-200 rounded-lg">
+            <div className="p-2.5 xs:p-3 bg-pink-600/10 border border-gray-200 rounded-lg">
               <p className="text-orange-300 text-xs xs:text-sm font-medium mb-1">Preview:</p>
-              <div className="text-blue-600 hover:text-orange-300 underline cursor-pointer text-xs xs:text-sm break-all">
+              <div className="text-pink-600 hover:text-orange-300 underline cursor-pointer text-xs xs:text-sm break-all">
                 {linkData.text || linkData.url}
               </div>
             </div>
@@ -196,7 +196,7 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 xs:p-5 sm:p-6 border-t border-blue-600/10 bg-gray-100">
+        <div className="p-4 xs:p-5 sm:p-6 border-t border-pink-600/10 bg-gray-100">
           <div className="flex gap-2 xs:gap-3">
             <button
               onClick={handleClose}
@@ -208,7 +208,7 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
             <button
               onClick={handleInsert}
               disabled={!linkData.url.trim() || validating}
-              className="flex-1 px-3 xs:px-4 py-2 xs:py-2.5 text-sm xs:text-base bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 active:from-blue-700 active:to-blue-800 text-gray-900 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-3 xs:px-4 py-2 xs:py-2.5 text-sm xs:text-base bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 active:from-pink-700 active:to-pink-800 text-gray-900 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {validating ? (
                 <span className="flex items-center justify-center gap-1.5 xs:gap-2">

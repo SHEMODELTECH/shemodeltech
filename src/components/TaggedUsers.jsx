@@ -35,9 +35,9 @@ export const TaggedUsers = ({ taggedUsers = [] }) => {
       <div className="flex items-center flex-wrap gap-1 sm:gap-2">
         {taggedUsers.map((user, index) => (
           <div key={user.uid || index} className="flex items-center">
-            <div className="flex items-center space-x-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 transition-colors group cursor-pointer">
+            <div className="flex items-center space-x-1 bg-pink-500/10 hover:bg-pink-500/20 rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 transition-colors group cursor-pointer">
               {/* User Avatar with Professional Initials */}
-              <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-blue-500 flex items-center justify-center text-gray-900 font-bold text-[8px] sm:text-xs flex-shrink-0">
+              <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full overflow-hidden bg-gradient-to-r from-pink-500 to-pink-500 flex items-center justify-center text-gray-900 font-bold text-[8px] sm:text-xs flex-shrink-0">
                 {user.photoURL ? (
                   <img 
                     src={user.photoURL} 
@@ -52,7 +52,7 @@ export const TaggedUsers = ({ taggedUsers = [] }) => {
               </div>
               
               {/* Professional Display Name with @ handle */}
-              <span className="text-blue-600 hover:text-orange-400 transition-colors text-xs sm:text-sm whitespace-nowrap">
+              <span className="text-pink-600 hover:text-orange-400 transition-colors text-xs sm:text-sm whitespace-nowrap">
                 @{getMentionHandle(user)}
               </span>
             </div>

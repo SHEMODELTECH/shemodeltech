@@ -258,14 +258,14 @@ const ProjectDetail = () => {
     setSubmittingApp(false);
   };
 
-  const inputClass = "w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none text-sm transition-all";
+  const inputClass = "w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none text-sm transition-all";
 
   if (loading) {
     return (
       <>
         
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
         </div>
       </>
     );
@@ -278,7 +278,7 @@ const ProjectDetail = () => {
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
           <div className="text-center">
             <p className="text-gray-900 text-lg font-bold mb-4">Project not found</p>
-            <Link to="/projects" className="text-blue-600 hover:text-blue-500 font-semibold text-sm">Back to Projects</Link>
+            <Link to="/projects" className="text-pink-600 hover:text-pink-500 font-semibold text-sm">Back to Projects</Link>
           </div>
         </div>
       </>
@@ -303,7 +303,7 @@ const ProjectDetail = () => {
                 <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900">{project.projectTitle}</h1>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <ProjectPayBadge isPaid={!!project.isPaid} size="md" />
-                  <span className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-bold border ${project.status === 'lead_recruitment' ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-blue-600/20 text-blue-500 border-blue-600/30'}`}>
+                  <span className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-bold border ${project.status === 'lead_recruitment' ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-pink-600/20 text-pink-500 border-pink-600/30'}`}>
                     {project.status === 'lead_recruitment' ? 'Looking for a Lead' : project.isPaid ? 'Paid Project' : 'Collaborative Project'}
                   </span>
                 </div>
@@ -350,7 +350,7 @@ const ProjectDetail = () => {
               {/* Goals */}
               {project.projectGoals && (
                 <div className="mb-6">
-                  <h3 className="text-blue-600 font-semibold text-sm mb-2">Project Goals</h3>
+                  <h3 className="text-pink-600 font-semibold text-sm mb-2">Project Goals</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">{project.projectGoals}</p>
                 </div>
               )}
@@ -383,7 +383,7 @@ const ProjectDetail = () => {
                           <span className="text-amber-700 text-xs font-black bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-full">{formatMoney(role.payAmount)} / person</span>
                         )}
                         {role.experienceLevel && role.experienceLevel !== 'any-level' && (
-                          <span className="text-blue-500 text-xs font-bold capitalize">{role.experienceLevel}</span>
+                          <span className="text-pink-500 text-xs font-bold capitalize">{role.experienceLevel}</span>
                         )}
                         {(() => {
                           const filled = roleFill[role.role] || 0;
@@ -410,23 +410,23 @@ const ProjectDetail = () => {
                   No one is leading this project yet. Apply to lead it - as the lead, you'll shape the idea, decide which roles and how many people the team needs, then open it up for others to join. Leading is its own skill path and earns a Leadership badge on completion. No badge is required to apply.
                 </p>
                 <p className="text-gray-500 text-xs mb-4">
-                  New to how roles work? <a href="/about#how-it-works" className="text-blue-600 underline">Learn about roles on She Model Tech</a>.
+                  New to how roles work? <a href="/about#how-it-works" className="text-pink-600 underline">Learn about roles on She Model Tech</a>.
                 </p>
                 {!currentUser ? (
-                  <button onClick={() => navigate('/login')} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all">
+                  <button onClick={() => navigate('/login')} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all">
                     Sign in to lead this project
                   </button>
                 ) : memberProfile?.isCompany ? (
-                  <p className="text-gray-500 text-xs">Company accounts can't lead collaborative projects or earn badges. To hire a team, <button onClick={() => navigate('/projects/submit')} className="text-blue-600 underline">post a paid project</button> instead.</p>
+                  <p className="text-gray-500 text-xs">Company accounts can't lead collaborative projects or earn badges. To hire a team, <button onClick={() => navigate('/projects/submit')} className="text-pink-600 underline">post a paid project</button> instead.</p>
                 ) : memberProfile && !checkProfileComplete(memberProfile).complete ? (
                   <div>
                     <p className="text-amber-700 text-xs mb-2">Complete your profile first: {checkProfileComplete(memberProfile).missing.join(', ')}.</p>
-                    <button onClick={() => navigate('/settings?tab=profile')} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2 rounded-lg transition-all">
+                    <button onClick={() => navigate('/settings?tab=profile')} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2 rounded-lg transition-all">
                       Complete Profile
                     </button>
                   </div>
                 ) : (
-                  <button onClick={handleApplyToLead} disabled={submittingApp} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50">
+                  <button onClick={handleApplyToLead} disabled={submittingApp} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50">
                     Apply to Lead This Project
                   </button>
                 )}
@@ -448,7 +448,7 @@ const ProjectDetail = () => {
                   <div className="text-center py-4">
                     <p className="text-gray-900 font-semibold text-sm mb-1">Company accounts hire teams - they don't join them</p>
                     <p className="text-gray-500 text-xs mb-3 max-w-md mx-auto">Company accounts can't apply to projects or earn badges. Instead, post a paid project: set the pay per person for every role and hire verified talent for your own team.</p>
-                    <button onClick={() => navigate('/projects/submit')} className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
+                    <button onClick={() => navigate('/projects/submit')} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
                       Post a Paid Project
                     </button>
                   </div>
@@ -456,7 +456,7 @@ const ProjectDetail = () => {
                   <div className="text-center py-4">
                     <p className="text-amber-700 font-semibold text-sm mb-1">Complete your profile to apply</p>
                     <p className="text-gray-500 text-xs mb-3">Please fill in: {checkProfileComplete(memberProfile).missing.join(', ')}. A complete profile is how recruiters and project owners find you.</p>
-                    <button onClick={() => navigate('/settings?tab=profile')} className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
+                    <button onClick={() => navigate('/settings?tab=profile')} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
                       Complete Profile
                     </button>
                   </div>
@@ -464,19 +464,19 @@ const ProjectDetail = () => {
                   <div className="text-center py-4">
                     <p className="text-green-600 font-bold text-base mb-1">You have been approved!</p>
                     <p className="text-gray-500 text-xs mb-3">You can click "Open Workspace" below to join your project team.</p>
-                    <button onClick={() => navigate(`/projects/${projectId}/workspace`)} className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-5 py-2 rounded-lg transition-all">
+                    <button onClick={() => navigate(`/projects/${projectId}/workspace`)} className="bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm px-5 py-2 rounded-lg transition-all">
                       Open Workspace
                     </button>
                   </div>
                 ) : hasApplied ? (
                   <div className="text-center py-4">
-                    <p className="text-blue-600 font-bold text-sm">You have already applied to this project</p>
+                    <p className="text-pink-600 font-bold text-sm">You have already applied to this project</p>
                     <p className="text-gray-500 text-xs mt-1">The project owner will review your application</p>
                   </div>
                 ) : (wasRejected && project.applicationsOpen === false) ? (
                   <div className="text-center py-4">
                     <p className="text-gray-700 font-bold text-sm mb-1">You were not approved to join this project</p>
-                    <p className="text-gray-500 text-xs">Applications are now closed. You can apply to other projects on the <button onClick={() => navigate('/projects')} className="text-blue-600 font-semibold hover:underline">projects page</button>, or visit your <button onClick={() => navigate('/my-workspaces')} className="text-blue-600 font-semibold hover:underline">workspace</button>.</p>
+                    <p className="text-gray-500 text-xs">Applications are now closed. You can apply to other projects on the <button onClick={() => navigate('/projects')} className="text-pink-600 font-semibold hover:underline">projects page</button>, or visit your <button onClick={() => navigate('/my-workspaces')} className="text-pink-600 font-semibold hover:underline">workspace</button>.</p>
                   </div>
                 ) : project.applicationsOpen === false ? (
                   <div className="text-center py-4">
@@ -489,7 +489,7 @@ const ProjectDetail = () => {
                       <p className="text-gray-500 text-xs mb-3">Your previous application wasn't approved. You're welcome to apply again while applications are open.</p>
                     )}
                     <button onClick={() => setShowApplyForm(true)}
-                      className="px-8 py-3 min-h-[48px] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
+                      className="px-8 py-3 min-h-[48px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
                       {wasRejected ? 'Apply Again' : 'Apply to This Project'}
                     </button>
                   </div>
@@ -497,7 +497,7 @@ const ProjectDetail = () => {
                   <div className="space-y-4">
                     <h3 className="text-gray-900 font-bold text-base">Apply to this project</h3>
                     <div>
-                      <label className="block text-blue-600 font-semibold mb-2 text-sm">Role you are applying for *</label>
+                      <label className="block text-pink-600 font-semibold mb-2 text-sm">Role you are applying for *</label>
                       <select value={applyForm.role} onChange={e => setApplyForm(p => ({ ...p, role: e.target.value }))}
                         className={inputClass + " appearance-none"}>
                         <option value="">Select a role</option>
@@ -538,23 +538,23 @@ const ProjectDetail = () => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-blue-600 font-semibold mb-2 text-sm">Your Relevant Skills *</label>
+                      <label className="block text-pink-600 font-semibold mb-2 text-sm">Your Relevant Skills *</label>
                       <input type="text" value={applyForm.skills} onChange={e => setApplyForm(p => ({ ...p, skills: e.target.value }))}
                         className={inputClass} placeholder="e.g., React, Python, UI/UX Design" />
                     </div>
                     <div>
-                      <label className="block text-blue-600 font-semibold mb-2 text-sm">Message to Project Owner</label>
+                      <label className="block text-pink-600 font-semibold mb-2 text-sm">Message to Project Owner</label>
                       <textarea value={applyForm.message} onChange={e => setApplyForm(p => ({ ...p, message: e.target.value }))}
                         className={inputClass + " resize-none"} rows="3" placeholder="Why are you interested in this project?" />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-blue-600 font-semibold mb-2 text-sm">Portfolio / Resume URL</label>
+                        <label className="block text-pink-600 font-semibold mb-2 text-sm">Portfolio / Resume URL</label>
                         <input type="url" value={applyForm.portfolioUrl} onChange={e => setApplyForm(p => ({ ...p, portfolioUrl: e.target.value }))}
                           className={inputClass} placeholder="https://your-portfolio.com or resume link" />
                       </div>
                       <div>
-                        <label className="block text-blue-600 font-semibold mb-2 text-sm">LinkedIn URL</label>
+                        <label className="block text-pink-600 font-semibold mb-2 text-sm">LinkedIn URL</label>
                         <input type="url" value={applyForm.linkedinUrl} onChange={e => setApplyForm(p => ({ ...p, linkedinUrl: e.target.value }))}
                           className={inputClass} placeholder="https://linkedin.com/in/..." />
                       </div>
@@ -565,7 +565,7 @@ const ProjectDetail = () => {
                         Cancel
                       </button>
                       <button onClick={handleApply} disabled={submittingApp}
-                        className="px-8 py-2.5 min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg disabled:opacity-50">
+                        className="px-8 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg disabled:opacity-50">
                         {submittingApp ? 'Submitting...' : 'Submit Application'}
                       </button>
                     </div>
@@ -579,7 +579,7 @@ const ProjectDetail = () => {
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
                 <p className="text-amber-800 font-semibold text-sm mb-1">Finish setting up your project</p>
                 <p className="text-gray-600 text-xs mb-3">You're the lead. Refine the details and open the team roles so others can apply.</p>
-                <button onClick={() => navigate(`/projects/${projectId}/setup`)} className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-4 py-2 rounded-lg transition-all">
+                <button onClick={() => navigate(`/projects/${projectId}/setup`)} className="bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm px-4 py-2 rounded-lg transition-all">
                   Continue Setup
                 </button>
               </div>
@@ -587,11 +587,11 @@ const ProjectDetail = () => {
 
             {/* Owner notice */}
             {isOwner && project.status !== 'setup' && (
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
-                <p className="text-blue-700 font-semibold text-sm mb-1">You are the owner of this project</p>
+              <div className="bg-pink-50 border border-pink-200 rounded-xl p-5">
+                <p className="text-pink-700 font-semibold text-sm mb-1">You are the owner of this project</p>
                 <p className="text-gray-500 text-xs mb-3">Manage applications, project completion, and badge assignment from your dashboard.</p>
                 <div className="flex gap-2 flex-wrap">
-                  <button onClick={() => navigate(`/projects/${projectId}/workspace`)} className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-4 py-2 rounded-lg transition-all">
+                  <button onClick={() => navigate(`/projects/${projectId}/workspace`)} className="bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm px-4 py-2 rounded-lg transition-all">
                     Open Workspace
                   </button>
                   <button onClick={() => navigate('/projects/owner-dashboard')} className="bg-white border border-gray-300 text-gray-700 font-medium text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-all">
@@ -606,7 +606,7 @@ const ProjectDetail = () => {
               <div className="bg-green-50 border border-green-200 rounded-xl p-5">
                 <p className="text-green-700 font-semibold text-sm mb-1">You have been approved!</p>
                 <p className="text-gray-500 text-xs mb-3">You can click "Open Workspace" below to join your project team.</p>
-                <button onClick={() => navigate(`/projects/${projectId}/workspace`)} className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-4 py-2 rounded-lg transition-all">
+                <button onClick={() => navigate(`/projects/${projectId}/workspace`)} className="bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm px-4 py-2 rounded-lg transition-all">
                   Open Workspace
                 </button>
               </div>
@@ -616,7 +616,7 @@ const ProjectDetail = () => {
             {!currentUser && project.status === 'active' && (
               <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 text-center">
                 <p className="text-gray-600 text-sm mb-3">Sign in to apply for this project</p>
-                <Link to="/login" className="inline-flex px-6 py-2.5 min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-sm transition-all items-center">
+                <Link to="/login" className="inline-flex px-6 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-lg text-sm transition-all items-center">
                   Sign In
                 </Link>
               </div>

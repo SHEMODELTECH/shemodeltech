@@ -113,9 +113,9 @@ const SubmitApplication = () => {
               
               {/* Animated Badge */}
               <div className="flex items-center justify-center gap-1.5 xs:gap-2 sm:gap-3 mb-4 xs:mb-5 sm:mb-6 md:mb-8 animate-pulse">
-                <div className="h-1.5 w-1.5 xs:h-2 xs:w-2 sm:h-3 sm:w-3 md:h-4 md:w-4 bg-blue-400 rounded-full" 
+                <div className="h-1.5 w-1.5 xs:h-2 xs:w-2 sm:h-3 sm:w-3 md:h-4 md:w-4 bg-pink-400 rounded-full" 
                      ></div>
-                <span className="text-blue-500 uppercase tracking-wider xs:tracking-widest text-[10px] xs:text-xs sm:text-sm md:text-base lg:text-lg font-black" 
+                <span className="text-pink-500 uppercase tracking-wider xs:tracking-widest text-[10px] xs:text-xs sm:text-sm md:text-base lg:text-lg font-black" 
                       style={{
                         textShadow: '0 0 20px rgba(34,197,94,0.7), 2px 2px 4px rgba(0,0,0,0.9)',
                         fontFamily: '"Inter", sans-serif',
@@ -123,7 +123,7 @@ const SubmitApplication = () => {
                       }}>
                   Join Our Platform
                 </span>
-                <div className="h-1.5 w-1.5 xs:h-2 xs:w-2 sm:h-3 sm:w-3 md:h-4 md:w-4 bg-blue-400 rounded-full" 
+                <div className="h-1.5 w-1.5 xs:h-2 xs:w-2 sm:h-3 sm:w-3 md:h-4 md:w-4 bg-pink-400 rounded-full" 
                      ></div>
               </div>
               
@@ -138,7 +138,7 @@ const SubmitApplication = () => {
                     filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.9))'
                   }}>
                 Submit Your{' '}
-                <span className="block mt-1 xs:mt-2 sm:mt-3 md:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-500 to-orange-400"
+                <span className="block mt-1 xs:mt-2 sm:mt-3 md:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-500 to-orange-400"
                       style={{
                         textShadow: 'none',
                         filter: 'drop-shadow(0 0 20px rgba(34,197,94,0.45))',
@@ -154,10 +154,10 @@ const SubmitApplication = () => {
                    fontFamily: '"Inter", sans-serif'
                  }}>
                 Apply to join our platform of talented developers and tech professionals. 
-                <span className="text-blue-500 font-semibold block sm:inline mt-1 sm:mt-0"> Get access to exclusive opportunities</span> and connect with industry leaders.
+                <span className="text-pink-500 font-semibold block sm:inline mt-1 sm:mt-0"> Get access to exclusive opportunities</span> and connect with industry leaders.
               </p>
               
-              <div className="h-0.5 xs:h-1 sm:h-1.5 md:h-2 w-12 xs:w-16 sm:w-20 md:w-24 lg:w-32 bg-gradient-to-r from-blue-500 to-orange-400 mx-auto rounded-full shadow-2xl mb-6 xs:mb-8 sm:mb-10 md:mb-12 lg:mb-16"
+              <div className="h-0.5 xs:h-1 sm:h-1.5 md:h-2 w-12 xs:w-16 sm:w-20 md:w-24 lg:w-32 bg-gradient-to-r from-pink-500 to-orange-400 mx-auto rounded-full shadow-2xl mb-6 xs:mb-8 sm:mb-10 md:mb-12 lg:mb-16"
                    ></div>
             </div>
           </section>
@@ -168,11 +168,11 @@ const SubmitApplication = () => {
               
               {/* Status Messages */}
               {submitStatus === 'success' && (
-                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-blue-500/12 to-orange-500/12 border border-blue-500/30 rounded-lg xs:rounded-xl">
+                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-pink-500/12 to-orange-500/12 border border-pink-500/30 rounded-lg xs:rounded-xl">
                   <div className="flex items-start xs:items-center">
-                    <div className="text-blue-400 text-xl xs:text-2xl mr-3 xs:mr-4 flex-shrink-0">✓</div>
+                    <div className="text-pink-400 text-xl xs:text-2xl mr-3 xs:mr-4 flex-shrink-0">✓</div>
                     <div className="flex-1">
-                      <h3 className="text-blue-400 font-bold text-base xs:text-lg mb-1 xs:mb-2">Application Submitted Successfully</h3>
+                      <h3 className="text-pink-400 font-bold text-base xs:text-lg mb-1 xs:mb-2">Application Submitted Successfully</h3>
                       <p className="text-gray-700 text-xs xs:text-sm sm:text-base">Thank you for your application. Our team will review it and get back to you within 3-5 business days.</p>
                     </div>
                   </div>
@@ -206,7 +206,7 @@ const SubmitApplication = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-5 sm:gap-6">
                     {/* First Name */}
                     <div>
-                      <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                      <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                         First Name *
                       </label>
                       <input
@@ -215,14 +215,14 @@ const SubmitApplication = () => {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-all duration-300"
+                        className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-all duration-300"
                         placeholder="Enter your first name"
                       />
                     </div>
 
                     {/* Last Name */}
                     <div>
-                      <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                      <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                         Last Name *
                       </label>
                       <input
@@ -231,14 +231,14 @@ const SubmitApplication = () => {
                         value={formData.lastName}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-all duration-300"
+                        className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-all duration-300"
                         placeholder="Enter your last name"
                       />
                     </div>
 
                     {/* Email (pre-filled) */}
                     <div>
-                      <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                      <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                         Email Address
                       </label>
                       <input
@@ -252,7 +252,7 @@ const SubmitApplication = () => {
 
                     {/* Phone */}
                     <div>
-                      <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                      <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                         Phone Number *
                       </label>
                       <input
@@ -261,7 +261,7 @@ const SubmitApplication = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-all duration-300"
+                        className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-all duration-300"
                         placeholder="+1 (555) 123-4567"
                       />
                     </div>
@@ -280,7 +280,7 @@ const SubmitApplication = () => {
 
                   {/* Experience */}
                   <div>
-                    <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                    <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                       Professional Experience *
                     </label>
                     <textarea
@@ -289,14 +289,14 @@ const SubmitApplication = () => {
                       onChange={handleInputChange}
                       required
                       rows={5}
-                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-all duration-300 resize-vertical"
+                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-all duration-300 resize-vertical"
                       placeholder="Describe your professional experience, including roles, companies, and key achievements..."
                     />
                   </div>
 
                   {/* Skills */}
                   <div>
-                    <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                    <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                       Technical Skills & Technologies *
                     </label>
                     <textarea
@@ -305,14 +305,14 @@ const SubmitApplication = () => {
                       onChange={handleInputChange}
                       required
                       rows={4}
-                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-all duration-300 resize-vertical"
+                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-all duration-300 resize-vertical"
                       placeholder="List your technical skills, programming languages, frameworks, tools, and technologies you're proficient in..."
                     />
                   </div>
 
                   {/* Portfolio */}
                   <div>
-                    <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                    <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                       Portfolio/Website URL
                     </label>
                     <input
@@ -320,7 +320,7 @@ const SubmitApplication = () => {
                       name="portfolio"
                       value={formData.portfolio}
                       onChange={handleInputChange}
-                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-all duration-300"
+                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-all duration-300"
                       placeholder="https://your-portfolio.com"
                     />
                   </div>
@@ -338,7 +338,7 @@ const SubmitApplication = () => {
 
                   {/* Motivation */}
                   <div>
-                    <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                    <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                       Why do you want to join our platform? *
                     </label>
                     <textarea
@@ -347,21 +347,21 @@ const SubmitApplication = () => {
                       onChange={handleInputChange}
                       required
                       rows={5}
-                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-all duration-300 resize-vertical"
+                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white placeholder-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-all duration-300 resize-vertical"
                       placeholder="Tell us why you're interested in joining our platform and what you hope to achieve..."
                     />
                   </div>
 
                   {/* Availability */}
                   <div>
-                    <label className="block text-blue-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
+                    <label className="block text-pink-500 font-semibold mb-2 xs:mb-3 text-sm xs:text-base sm:text-lg">
                       Availability for Projects
                     </label>
                     <select
                       name="availability"
                       value={formData.availability}
                       onChange={handleInputChange}
-                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20 transition-all duration-300 appearance-none cursor-pointer"
+                      className="w-full bg-white/10 border border-white/20 rounded-lg xs:rounded-xl px-3 xs:px-4 sm:px-5 md:px-6 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-sm xs:text-base text-white focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400/20 transition-all duration-300 appearance-none cursor-pointer"
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
                         backgroundRepeat: 'no-repeat',
@@ -382,8 +382,8 @@ const SubmitApplication = () => {
                 </div>
 
                 {/* Application Guidelines */}
-                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg xs:rounded-xl p-4 xs:p-5 sm:p-6">
-                  <h3 className="text-blue-500 font-bold text-base xs:text-lg mb-3 xs:mb-4">Application Guidelines</h3>
+                <div className="bg-pink-500/10 border border-pink-500/30 rounded-lg xs:rounded-xl p-4 xs:p-5 sm:p-6">
+                  <h3 className="text-pink-500 font-bold text-base xs:text-lg mb-3 xs:mb-4">Application Guidelines</h3>
                   <ul className="text-gray-600 space-y-1.5 xs:space-y-2 text-xs xs:text-sm">
                     <li>• <strong>Be authentic:</strong> Tell us your real story and motivations</li>
                     <li>• <strong>Showcase your skills:</strong> Highlight relevant experience and projects</li>
@@ -398,13 +398,13 @@ const SubmitApplication = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting || !formData.firstName.trim() || !formData.lastName.trim() || !formData.experience.trim() || !formData.motivation.trim()}
-                    className="group relative bg-gradient-to-r from-blue-500 to-orange-500 text-white px-6 xs:px-8 sm:px-10 md:px-12 py-3 xs:py-4 sm:py-5 md:py-6 rounded-full font-black text-sm xs:text-base sm:text-lg md:text-xl transition-all duration-500 shadow-2xl overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                    className="group relative bg-gradient-to-r from-pink-500 to-orange-500 text-white px-6 xs:px-8 sm:px-10 md:px-12 py-3 xs:py-4 sm:py-5 md:py-6 rounded-full font-black text-sm xs:text-base sm:text-lg md:text-xl transition-all duration-500 shadow-2xl overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                     style={{
                       boxShadow: '0 0 40px rgba(34,197,94,0.18), 0 20px 40px rgba(0,0,0,0.3)',
                       fontFamily: '"Inter", sans-serif'
                     }}
                   >
-                    <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
                     <span className="relative flex items-center justify-center">
                       {isSubmitting ? (
                         <>
@@ -462,7 +462,7 @@ const SubmitApplication = () => {
             </div>
 
             <div className="text-center sm:text-left">
-              <h4 className="text-base xs:text-lg sm:text-xl font-black text-blue-400 mb-3 xs:mb-4 sm:mb-5 md:mb-6"
+              <h4 className="text-base xs:text-lg sm:text-xl font-black text-pink-400 mb-3 xs:mb-4 sm:mb-5 md:mb-6"
                   style={{
                     textShadow: '0 0 15px rgba(34,197,94,0.8), 2px 2px 4px rgba(0,0,0,0.8)',
                     fontFamily: '"Inter", sans-serif'
@@ -471,25 +471,25 @@ const SubmitApplication = () => {
               </h4>
               <ul className="space-y-1.5 xs:space-y-2 sm:space-y-3">
                 <li>
-                  <Link to="/" className="text-gray-600 hover:text-blue-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
+                  <Link to="/" className="text-gray-600 hover:text-pink-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
                         style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
                     Home
                   </Link>
                 </li>
                 <li>
-                  <Link to="/projects" className="text-gray-600 hover:text-blue-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
+                  <Link to="/projects" className="text-gray-600 hover:text-pink-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
                         style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
                     Projects
                   </Link>
                 </li>
                 <li>
-                  <Link to="/community" className="text-gray-600 hover:text-blue-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
+                  <Link to="/community" className="text-gray-600 hover:text-pink-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
                         style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
                     Home
                   </Link>
                 </li>
                 <li>
-                  <Link to="/career/contact" className="text-gray-600 hover:text-blue-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
+                  <Link to="/career/contact" className="text-gray-600 hover:text-pink-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
                         style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
                     Hire Talents
                   </Link>
@@ -498,7 +498,7 @@ const SubmitApplication = () => {
             </div>
 
             <div className="text-center sm:text-left sm:col-span-2 md:col-span-1">
-              <h4 className="text-base xs:text-lg sm:text-xl font-black text-blue-400 mb-3 xs:mb-4 sm:mb-5 md:mb-6"
+              <h4 className="text-base xs:text-lg sm:text-xl font-black text-pink-400 mb-3 xs:mb-4 sm:mb-5 md:mb-6"
                   style={{
                     textShadow: '0 0 15px rgba(34,197,94,0.8), 2px 2px 4px rgba(0,0,0,0.8)',
                     fontFamily: '"Inter", sans-serif'
@@ -507,25 +507,25 @@ const SubmitApplication = () => {
               </h4>
               <ul className="space-y-1.5 xs:space-y-2 sm:space-y-3">
                 <li>
-                  <Link to="/career/support" className="text-gray-600 hover:text-blue-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
+                  <Link to="/career/support" className="text-gray-600 hover:text-pink-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
                         style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
                     Support
                   </Link>
                 </li>
                 <li>
-                  <Link to="/career/about" className="text-gray-600 hover:text-blue-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
+                  <Link to="/career/about" className="text-gray-600 hover:text-pink-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
                         style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link to="/career/terms" className="text-gray-600 hover:text-blue-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
+                  <Link to="/career/terms" className="text-gray-600 hover:text-pink-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
                         style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
                     Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link to="/career/privacy" className="text-gray-600 hover:text-blue-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
+                  <Link to="/career/privacy" className="text-gray-600 hover:text-pink-400 transition-colors duration-300 text-xs xs:text-sm sm:text-base font-medium"
                         style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
                     Privacy Policy
                   </Link>

@@ -267,7 +267,7 @@ const SimpleChatbot = () => {
         {/* Chat Interface or Prompt */}
         {!isOpen ? (
           <div className="text-center">
-            <div className="bg-gradient-to-br from-blue-950/30 via-gray-900/40 to-black/60 rounded-2xl border border-gray-200 shadow-2xl p-6 sm:p-8 md:p-12">
+            <div className="bg-gradient-to-br from-pink-950/30 via-gray-900/40 to-black/60 rounded-2xl border border-gray-200 shadow-2xl p-6 sm:p-8 md:p-12">
               
               {/* Large Chat Icon */}
               <div className="text-5xl sm:text-6xl md:text-8xl mb-4 sm:mb-6 ">💬</div>
@@ -278,7 +278,7 @@ const SimpleChatbot = () => {
                     fontFamily: '"Inter", sans-serif'
                   }}>
                 Chat With{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-400 to-blue-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-pink-400 to-pink-300">
                   Our Team
                 </span>
               </h2>
@@ -299,7 +299,7 @@ const SimpleChatbot = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
                 <button
                   onClick={() => setIsOpen(true)}
-                  className="group relative bg-gradient-to-r from-blue-500 via-blue-600 to-blue-500 text-gray-900 px-10 sm:px-14 py-5 sm:py-6 rounded-full font-bold text-lg sm:text-xl transition-all duration-300 shadow-2xl overflow-hidden"
+                  className="group relative bg-gradient-to-r from-pink-500 via-pink-600 to-pink-500 text-gray-900 px-10 sm:px-14 py-5 sm:py-6 rounded-full font-bold text-lg sm:text-xl transition-all duration-300 shadow-2xl overflow-hidden"
                   style={{
                     boxShadow: '0 10px 50px rgba(249, 115, 22, 0.4), 0 0 30px rgba(249, 115, 22, 0.2)',
                     fontFamily: '"Inter", sans-serif'
@@ -311,23 +311,23 @@ const SimpleChatbot = () => {
                     </svg>
                     Start Chatting
                   </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-orange-600 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-orange-600 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
                 </button>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-6">
-                <div className="inline-flex items-center bg-blue-600/20 rounded-full px-3 sm:px-5 py-2 sm:py-2.5 border border-blue-500/30">
-                  <span className="text-blue-500 font-bold text-xs sm:text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
+                <div className="inline-flex items-center bg-pink-600/20 rounded-full px-3 sm:px-5 py-2 sm:py-2.5 border border-pink-500/30">
+                  <span className="text-pink-500 font-bold text-xs sm:text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
                     🏢 Business Solutions
                   </span>
                 </div>
-                <div className="inline-flex items-center bg-blue-600/15 rounded-full px-3 sm:px-5 py-2 sm:py-2.5 border border-blue-500/25">
-                  <span className="text-blue-400 font-bold text-xs sm:text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
+                <div className="inline-flex items-center bg-pink-600/15 rounded-full px-3 sm:px-5 py-2 sm:py-2.5 border border-pink-500/25">
+                  <span className="text-pink-400 font-bold text-xs sm:text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
                     💬 General Inquiries
                   </span>
                 </div>
-                <div className="inline-flex items-center bg-blue-600/20 rounded-full px-3 sm:px-5 py-2 sm:py-2.5 border border-blue-500/30">
-                  <span className="text-blue-500 font-bold text-xs sm:text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
+                <div className="inline-flex items-center bg-pink-600/20 rounded-full px-3 sm:px-5 py-2 sm:py-2.5 border border-pink-500/30">
+                  <span className="text-pink-500 font-bold text-xs sm:text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
                     👤 Real Human Follow-up
                   </span>
                 </div>
@@ -336,11 +336,11 @@ const SimpleChatbot = () => {
           </div>
         ) : (
           /* Chat Window */
-          <div className="bg-gradient-to-br from-blue-950/30 via-gray-900/40 to-black/60 rounded-2xl border border-gray-200 shadow-2xl overflow-hidden">
+          <div className="bg-gradient-to-br from-pink-950/30 via-gray-900/40 to-black/60 rounded-2xl border border-gray-200 shadow-2xl overflow-hidden">
             <div className="max-w-4xl mx-auto">
               
               {/* Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-3 sm:p-4 md:p-6 text-gray-900 flex items-center justify-between">
+              <div className="bg-gradient-to-r from-pink-600 to-pink-500 p-3 sm:p-4 md:p-6 text-gray-900 flex items-center justify-between">
                 <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center text-xl sm:text-2xl md:text-3xl">
                     🤖
@@ -367,7 +367,7 @@ const SimpleChatbot = () => {
                     <div className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-[85%] sm:max-w-[75%] p-3 sm:p-4 rounded-xl sm:rounded-2xl ${
                         msg.type === 'user' 
-                          ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-gray-900' 
+                          ? 'bg-gradient-to-r from-pink-600 to-pink-500 text-gray-900' 
                           : 'bg-gray-100 text-gray-900 border border-gray-200'
                       }`}>
                         {msg.text.includes('http') ? (
@@ -379,7 +379,7 @@ const SimpleChatbot = () => {
                                   href={part} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="underline hover:text-blue-500 transition-colors font-semibold break-all"
+                                  className="underline hover:text-pink-500 transition-colors font-semibold break-all"
                                 >
                                   {part}
                                 </a>
@@ -401,7 +401,7 @@ const SimpleChatbot = () => {
                           <button
                             key={optIdx}
                             onClick={() => handleOptionClick(option)}
-                            className="text-left px-4 py-3 rounded-xl bg-gradient-to-r from-blue-500/20 to-blue-500/20 border border-blue-500/30 text-gray-900 hover:from-blue-500/40 hover:to-blue-500/40 hover:border-blue-500/50 transition-all duration-300 text-xs sm:text-sm md:text-base font-medium"
+                            className="text-left px-4 py-3 rounded-xl bg-gradient-to-r from-pink-500/20 to-pink-500/20 border border-pink-500/30 text-gray-900 hover:from-pink-500/40 hover:to-pink-500/40 hover:border-pink-500/50 transition-all duration-300 text-xs sm:text-sm md:text-base font-medium"
                           >
                             {option}
                           </button>
@@ -435,12 +435,12 @@ const SimpleChatbot = () => {
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={step === 3 ? "Or type your answer..." : "Type your message..."}
                     disabled={step >= 99}
-                    className="flex-1 px-3 sm:px-4 md:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl bg-gray-100 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-50 text-base"
+                    className="flex-1 px-3 sm:px-4 md:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl bg-gray-100 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-400 disabled:bg-gray-50 text-base"
                   />
                   <button
                     type="submit"
                     disabled={!inputValue.trim() || step >= 99}
-                    className="bg-gradient-to-r from-blue-600 to-blue-500 text-gray-900 px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold hover:opacity-90 disabled:opacity-50 transition-all text-base"
+                    className="bg-gradient-to-r from-pink-600 to-pink-500 text-gray-900 px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold hover:opacity-90 disabled:opacity-50 transition-all text-base"
                   >
                     Send
                   </button>

@@ -163,7 +163,7 @@ const UserProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div>
       </div>
     );
   }
@@ -181,7 +181,7 @@ const UserProfile = () => {
             <button onClick={() => navigate(-1)} className="flex-1 bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg font-medium text-sm hover:bg-gray-200 transition-all">
               Go Back
             </button>
-            <button onClick={() => navigate('/members-directory')} className="flex-1 bg-blue-600 text-white px-4 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-700 transition-all">
+            <button onClick={() => navigate('/members-directory')} className="flex-1 bg-pink-600 text-white px-4 py-2.5 rounded-lg font-medium text-sm hover:bg-pink-700 transition-all">
               Browse Members
             </button>
           </div>
@@ -213,7 +213,7 @@ const UserProfile = () => {
 
         {/* Profile Card */}
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
-          <div className="h-20 bg-gradient-to-r from-blue-50 to-blue-100" />
+          <div className="h-20 bg-gradient-to-r from-pink-50 to-pink-100" />
 
           <div className="px-6 pb-6">
             {/* Avatar + Actions */}
@@ -223,13 +223,13 @@ const UserProfile = () => {
                   <button
                     type="button"
                     onClick={() => setPhotoLightbox(true)}
-                    className="rounded-full cursor-zoom-in hover:ring-2 hover:ring-blue-300 transition-all"
+                    className="rounded-full cursor-zoom-in hover:ring-2 hover:ring-pink-300 transition-all"
                     aria-label={`View ${displayName}'s profile picture`}
                   >
                     <img src={profile.photoURL} alt={displayName} className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm" />
                   </button>
                 ) : (
-                  <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center border-4 border-white shadow-sm">
+                  <div className="w-20 h-20 rounded-full bg-pink-600 flex items-center justify-center border-4 border-white shadow-sm">
                     <span className="text-2xl text-white font-bold">{initials}</span>
                   </div>
                 )}
@@ -245,7 +245,7 @@ const UserProfile = () => {
                     <FollowButton targetUser={profile} currentUser={currentUser} size="sm" />
                     <button
                       onClick={() => navigate(`/messages?to=${profile.uid}`)}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all"
+                      className="flex items-center gap-1.5 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg text-sm font-medium transition-all"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -291,9 +291,9 @@ const UserProfile = () => {
                     <p className="text-xl font-bold text-gray-900">{completedCount}</p>
                     <p className="text-gray-500 text-xs">Certificates</p>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-center">
-                    <p className="text-xl font-bold text-blue-700">{completedCount}</p>
-                    <p className="text-blue-500 text-xs">Projects Done</p>
+                  <div className="bg-pink-50 border border-pink-200 rounded-lg px-4 py-3 text-center">
+                    <p className="text-xl font-bold text-pink-700">{completedCount}</p>
+                    <p className="text-pink-500 text-xs">Projects Done</p>
                   </div>
                 </>
               )}
@@ -311,7 +311,7 @@ const UserProfile = () => {
                 const bd = badgeData.find(b => b.id === badge.id || b.title === badge.title || b.id === badge.id?.toLowerCase());
                 const contribStyle = {
                   excellent: 'bg-green-100 text-green-700',
-                  good: 'bg-blue-100 text-blue-700',
+                  good: 'bg-pink-100 text-pink-700',
                   fair: 'bg-amber-100 text-amber-700',
                 }[badge.contribution] || 'bg-gray-100 text-gray-600';
                 // Tier is derived from how many badges this user has in this track
@@ -364,19 +364,19 @@ const UserProfile = () => {
             {profile.linkedinUrl && (
               <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
                 <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">LinkedIn</p>
-                <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm font-medium hover:underline truncate block">{profile.linkedinUrl}</a>
+                <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm font-medium hover:underline truncate block">{profile.linkedinUrl}</a>
               </div>
             )}
             {profile.githubUrl && (
               <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
                 <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">GitHub</p>
-                <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm font-medium hover:underline truncate block">{profile.githubUrl}</a>
+                <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm font-medium hover:underline truncate block">{profile.githubUrl}</a>
               </div>
             )}
             {profile.portfolioUrl && (
               <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
                 <p className="text-gray-500 text-xs uppercase tracking-wider mb-0.5">Portfolio</p>
-                <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm font-medium hover:underline truncate block">{profile.portfolioUrl}</a>
+                <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm font-medium hover:underline truncate block">{profile.portfolioUrl}</a>
               </div>
             )}
             {profile.emailPublic && profile.email && (
@@ -405,7 +405,7 @@ const UserProfile = () => {
                   : "This member hasn't filled in their profile yet."}
               </p>
               {isOwnProfile && (
-                <button onClick={() => navigate('/settings')} className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all">
+                <button onClick={() => navigate('/settings')} className="mt-3 px-4 py-2 bg-pink-600 text-white rounded-lg text-sm font-medium hover:bg-pink-700 transition-all">
                   Complete Your Profile
                 </button>
               )}

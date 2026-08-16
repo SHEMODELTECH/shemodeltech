@@ -319,7 +319,7 @@ const ProjectOwnerDashboard = () => {
       <>
         
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
         </div>
       </>
     );
@@ -334,10 +334,10 @@ const ProjectOwnerDashboard = () => {
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-black text-gray-900">My <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500">Projects</span></h1>
+                <h1 className="text-2xl sm:text-3xl font-black text-gray-900">My <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">Projects</span></h1>
                 <p className="text-gray-400 text-sm mt-1">{myProjects.length} project{myProjects.length !== 1 ? 's' : ''} posted</p>
               </div>
-              <Link to="/projects/submit" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
+              <Link to="/projects/submit" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
                 Post New Project
               </Link>
             </div>
@@ -345,9 +345,9 @@ const ProjectOwnerDashboard = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
               {[
-                ['Total Projects', myProjects.length, 'from-blue-500 to-blue-600'],
-                ['Team Members', myProjects.reduce((s, p) => s + (p.approvedMembers?.length || 0), 0), 'from-blue-500 to-blue-600'],
-                ['Completed', myProjects.filter(p => p.status === 'completed' || p.reviewStatus === 'rejected').length, 'from-blue-500 to-blue-600'],
+                ['Total Projects', myProjects.length, 'from-pink-500 to-pink-600'],
+                ['Team Members', myProjects.reduce((s, p) => s + (p.approvedMembers?.length || 0), 0), 'from-pink-500 to-pink-600'],
+                ['Completed', myProjects.filter(p => p.status === 'completed' || p.reviewStatus === 'rejected').length, 'from-pink-500 to-pink-600'],
               ].map(([label, val, grad]) => (
                 <div key={label} className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                   <p className="text-gray-500 text-[10px] uppercase tracking-wider font-semibold">{label}</p>
@@ -360,7 +360,7 @@ const ProjectOwnerDashboard = () => {
               <div className="text-center py-20">
                 <p className="text-gray-400 text-lg font-semibold mb-2">No projects yet</p>
                 <p className="text-gray-500 text-sm mb-6">Post your first project to get started</p>
-                <Link to="/projects/submit" className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-gray-900 font-bold rounded-xl text-sm">Post a Project</Link>
+                <Link to="/projects/submit" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-gray-900 font-bold rounded-xl text-sm">Post a Project</Link>
               </div>
             ) : (
               <div className="space-y-6">
@@ -409,14 +409,14 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                 Paid Project
               </span>
             ) : (
-            <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-600/20 text-blue-500">
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-pink-600/20 text-pink-500">
               Collaborative
             </span>
             )}
           </div>
         </div>
         <div className="flex gap-2">
-          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${isRejected ? 'bg-red-50 text-red-600 border-red-200' : isAwaitingPayment ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-blue-600/20 text-blue-500 border-blue-600/30'}`}>
+          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${isRejected ? 'bg-red-50 text-red-600 border-red-200' : isAwaitingPayment ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-pink-600/20 text-pink-500 border-pink-600/30'}`}>
             {isRejected ? 'Rejected' : isCompleted ? 'Completed' : isAwaitingPayment ? 'Awaiting Payment Confirmation' : 'Active'}
           </span>
         </div>
@@ -430,11 +430,11 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
             {approvedApps.map(app => (
               <div key={app.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-3">
                 <div>
-                  <Link to={`/profile/${encodeURIComponent(app.applicantEmail)}`} className="text-gray-900 text-sm font-semibold hover:text-blue-600 hover:underline">{app.applicantName}</Link>
+                  <Link to={`/profile/${encodeURIComponent(app.applicantEmail)}`} className="text-gray-900 text-sm font-semibold hover:text-pink-600 hover:underline">{app.applicantName}</Link>
                   <p className="text-gray-500 text-xs">{app.role}{project.isPaid && (Number(app.payAmount) || 0) > 0 ? ` · $${Number(app.payAmount).toLocaleString()} on completion` : ''}</p>
                   <div className="flex items-center gap-3 mt-1">
-                    {app.portfolioUrl && <a href={app.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-[10px] hover:underline">Portfolio</a>}
-                    {app.linkedinUrl && <a href={app.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-[10px] hover:underline">LinkedIn</a>}
+                    {app.portfolioUrl && <a href={app.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-[10px] hover:underline">Portfolio</a>}
+                    {app.linkedinUrl && <a href={app.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-[10px] hover:underline">LinkedIn</a>}
                   </div>
                 </div>
                 {!isCompleted && (
@@ -459,7 +459,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
         {isAwaitingPayment && (
           <>
             {!project.ownerPaidAll && (
-              <button onClick={() => onMarkAllPaid(project)} className="px-4 py-2 min-h-[40px] bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-all flex items-center">
+              <button onClick={() => onMarkAllPaid(project)} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs transition-all flex items-center">
                 I've Paid Everyone
               </button>
             )}
@@ -474,7 +474,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
           </Link>
         )}
         {!isCompleted && !isAwaitingPayment && (
-          <Link to={`/projects/${project.id}/complete`} className="px-4 py-2 min-h-[40px] bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-all flex items-center">
+          <Link to={`/projects/${project.id}/complete`} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs transition-all flex items-center">
             {project.isPaid ? (
               project.reviewStatus === 'approved' ? 'Mark Work Done'
               : project.reviewStatus === 'submitted' ? 'Review Pending'
@@ -491,7 +491,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
           </Link>
         )}
         {!isCompleted && !isAwaitingPayment && (
-          <button onClick={() => onToggleApplications(project)} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs transition-all ${project.applicationsOpen === false ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-orange-50 border border-orange-200 text-orange-700 hover:bg-orange-100'}`}>
+          <button onClick={() => onToggleApplications(project)} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs transition-all ${project.applicationsOpen === false ? 'bg-pink-600 hover:bg-pink-700 text-white' : 'bg-orange-50 border border-orange-200 text-orange-700 hover:bg-orange-100'}`}>
             {project.applicationsOpen === false ? 'Open Applications' : 'Close Applications'}
           </button>
         )}
@@ -505,7 +505,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
           )
         )}
         {!isCompleted && pendingApps.length > 0 && (
-          <button onClick={() => setShowApps(!showApps)} className="px-4 py-2 min-h-[40px] bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-all">
+          <button onClick={() => setShowApps(!showApps)} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs transition-all">
             Applications ({pendingApps.length})
           </button>
         )}
@@ -514,22 +514,22 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
       {/* Pending Applications */}
       {showApps && pendingApps.length > 0 && (
         <div className="space-y-3 pt-4 border-t border-gray-200">
-          <p className="text-blue-600 text-xs font-semibold">Pending Applications</p>
+          <p className="text-pink-600 text-xs font-semibold">Pending Applications</p>
           {pendingApps.map(app => (
             <div key={app.id} className="bg-gray-50 border border-gray-200 rounded-xl p-4">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div>
-                  <Link to={`/profile/${encodeURIComponent(app.applicantEmail)}`} className="text-gray-900 font-semibold text-sm hover:text-blue-600 hover:underline">{app.applicantName}</Link>
+                  <Link to={`/profile/${encodeURIComponent(app.applicantEmail)}`} className="text-gray-900 font-semibold text-sm hover:text-pink-600 hover:underline">{app.applicantName}</Link>
                   <p className="text-gray-400 text-xs mt-1">Role: <span className="text-gray-900">{app.role}</span></p>
                   <p className="text-gray-400 text-xs">Skills: <span className="text-gray-900">{app.skills}</span></p>
                   {app.message && <p className="text-gray-600 text-xs mt-2 italic">"{app.message}"</p>}
                   <div className="flex items-center gap-3 mt-2">
-                    {app.portfolioUrl && <a href={app.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-xs hover:underline">Portfolio / Resume</a>}
-                    {app.linkedinUrl && <a href={app.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-xs hover:underline">LinkedIn</a>}
+                    {app.portfolioUrl && <a href={app.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-xs hover:underline">Portfolio / Resume</a>}
+                    {app.linkedinUrl && <a href={app.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-xs hover:underline">LinkedIn</a>}
                   </div>
                 </div>
                 <div className="flex gap-2 flex-shrink-0">
-                  <button onClick={() => onApprove(app)} className="px-3 py-1.5 min-h-[36px] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs transition-all">
+                  <button onClick={() => onApprove(app)} className="px-3 py-1.5 min-h-[36px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-lg text-xs transition-all">
                     Approve
                   </button>
                   <button onClick={() => onReject(app)} className="px-3 py-1.5 min-h-[36px] bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-lg text-xs transition-all border border-red-200">
@@ -552,7 +552,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
               {app.feedbackRequest?.message && requestingFor !== app.id && (
                 <div className="mt-3 bg-amber-50 border border-amber-100 rounded-lg p-3">
                   <p className="text-amber-800 text-xs"><span className="font-semibold">You asked:</span> "{app.feedbackRequest.message}"</p>
-                  <Link to={`/messages?with=${app.applicantUid}`} className="inline-block mt-1.5 text-blue-600 text-xs font-semibold hover:underline">
+                  <Link to={`/messages?with=${app.applicantUid}`} className="inline-block mt-1.5 text-pink-600 text-xs font-semibold hover:underline">
                     Open conversation →
                   </Link>
                 </div>
@@ -567,7 +567,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                     onChange={e => setRequestText(e.target.value)}
                     rows={2}
                     placeholder='e.g. "Send me your portfolio."'
-                    className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none resize-none"
+                    className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none resize-none"
                   />
                   <div className="flex gap-2 justify-end">
                     <button onClick={() => setRequestingFor(null)} className="text-gray-500 text-xs font-semibold px-3 py-1.5">Cancel</button>

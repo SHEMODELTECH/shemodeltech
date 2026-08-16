@@ -63,7 +63,7 @@ const Logout = () => {
               <p className="text-gray-500 text-sm mb-6">{error}</p>
               <button
                 onClick={handleLogout}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors"
+                className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 Try again
               </button>
@@ -71,7 +71,7 @@ const Logout = () => {
           ) : isLoggingOut ? (
             <>
               <div className="w-12 h-12 mx-auto mb-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
               </div>
               <h1 className="text-xl font-bold text-gray-900 mb-1">Signing you out…</h1>
               <p className="text-gray-500 text-sm">One moment.</p>
@@ -92,7 +92,7 @@ const Logout = () => {
                     Redirecting to home in <span className="font-bold text-gray-900">{countdown}</span> second{countdown !== 1 ? 's' : ''}…
                   </p>
                   <div className="mt-2 bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-blue-600 h-full rounded-full transition-all duration-1000" style={{ width: `${((3 - countdown) / 3) * 100}%` }}></div>
+                    <div className="bg-pink-600 h-full rounded-full transition-all duration-1000" style={{ width: `${((3 - countdown) / 3) * 100}%` }}></div>
                   </div>
                 </div>
               )}
@@ -100,7 +100,7 @@ const Logout = () => {
               <div className="space-y-2.5">
                 <Link
                   to="/"
-                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors"
+                  className="block w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-xl transition-colors"
                 >
                   Go to home
                 </Link>

@@ -151,21 +151,21 @@ const TestDailyDigest = () => {
               <button 
                 onClick={testDebugMode}
                 disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors disabled:opacity-50"
+                className="bg-pink-600 hover:bg-pink-700 text-white p-3 rounded-lg transition-colors disabled:opacity-50"
               >
                 🐛 Test Debug Mode
               </button>
               <button 
                 onClick={testManualSend}
                 disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors disabled:opacity-50"
+                className="bg-pink-600 hover:bg-pink-700 text-white p-3 rounded-lg transition-colors disabled:opacity-50"
               >
                 📧 Test Manual Send
               </button>
               <button 
                 onClick={testWithApiKey}
                 disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors disabled:opacity-50"
+                className="bg-pink-600 hover:bg-pink-700 text-white p-3 rounded-lg transition-colors disabled:opacity-50"
               >
                 🔑 Test With API Key
               </button>
@@ -181,7 +181,7 @@ const TestDailyDigest = () => {
             {response && (
               <div className="bg-black/30 rounded-lg p-4 border border-white/20">
                 <h4 className="text-white mb-2">Response:</h4>
-                <pre className="text-blue-400 text-sm overflow-x-auto whitespace-pre-wrap">
+                <pre className="text-pink-400 text-sm overflow-x-auto whitespace-pre-wrap">
                   {response}
                 </pre>
               </div>

@@ -130,7 +130,7 @@ const NotificationsPage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div>
       </div>
     );
   }
@@ -142,12 +142,12 @@ const NotificationsPage = () => {
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Notifications</h1>
           {notifications.filter(n => !n.isRead).length > 0 && (
-            <p className="text-blue-600 text-sm mt-0.5">{notifications.filter(n => !n.isRead).length} unread</p>
+            <p className="text-pink-600 text-sm mt-0.5">{notifications.filter(n => !n.isRead).length} unread</p>
           )}
         </div>
         <div className="flex items-center gap-2">
           {notifications.filter(n => !n.isRead).length > 0 && (
-            <button onClick={markAllAsRead} disabled={processing} className="px-3 py-2 text-sm font-medium text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-all disabled:opacity-50">
+            <button onClick={markAllAsRead} disabled={processing} className="px-3 py-2 text-sm font-medium text-pink-600 border border-pink-200 rounded-lg hover:bg-pink-50 transition-all disabled:opacity-50">
               Mark all read
             </button>
           )}
@@ -166,12 +166,12 @@ const NotificationsPage = () => {
             key={tab.key}
             onClick={() => setFilter(tab.key)}
             className={`flex items-center gap-1 px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-all whitespace-nowrap flex-shrink-0 ${
-              filter === tab.key ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'
+              filter === tab.key ? 'border-pink-600 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
             {tab.label}
             {tab.count > 0 && (
-              <span className={`px-1.5 py-0.5 rounded-full text-xs ${filter === tab.key ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}`}>
+              <span className={`px-1.5 py-0.5 rounded-full text-xs ${filter === tab.key ? 'bg-pink-100 text-pink-700' : 'bg-gray-100 text-gray-500'}`}>
                 {tab.count}
               </span>
             )}
@@ -195,7 +195,7 @@ const NotificationsPage = () => {
               key={n.id}
               onClick={() => handleClick(n)}
               className={`bg-white border rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:bg-gray-50 transition-all ${
-                n.isRead ? 'border-gray-200' : 'border-blue-200 bg-blue-50/30'
+                n.isRead ? 'border-gray-200' : 'border-pink-200 bg-pink-50/30'
               }`}
             >
               {/* Avatar */}
@@ -203,7 +203,7 @@ const NotificationsPage = () => {
                 {(n.mentionedByPhoto || n.followedByPhoto) ? (
                   <img src={n.mentionedByPhoto || n.followedByPhoto} alt="" className="w-10 h-10 rounded-full object-cover border border-gray-200" />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">
+                  <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold text-sm">
                     {(n.mentionedByName || n.followedByName || n.fromName || 'U')[0].toUpperCase()}
                   </div>
                 )}
@@ -219,7 +219,7 @@ const NotificationsPage = () => {
 
               {/* Unread dot + delete */}
               <div className="flex items-center gap-2 flex-shrink-0">
-                {!n.isRead && <div className="w-2 h-2 rounded-full bg-blue-600"></div>}
+                {!n.isRead && <div className="w-2 h-2 rounded-full bg-pink-600"></div>}
                 <button
                   onClick={(e) => { e.stopPropagation(); deleteNotification(n.id); }}
                   className="p-1 rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors"

@@ -102,7 +102,7 @@ const GenerateProject = () => {
   };
 
   if (checking) {
-    return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div></div>;
+    return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
   }
   if (!isAdmin) return null;
 
@@ -112,7 +112,7 @@ const GenerateProject = () => {
       <p className="text-gray-500 text-sm mb-6">Auto-generate a software or AI project (no physical prototypes). It publishes in lead recruitment - anyone can apply to lead, and the confirmed lead refines it and opens the team.</p>
 
       <button onClick={handleGenerate} disabled={generating}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50">
+        className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50">
         {generating ? 'Generating…' : draft ? 'Regenerate' : 'Generate a Project'}
       </button>
 
@@ -152,7 +152,7 @@ const GenerateProject = () => {
           </div>
           <div className="flex gap-3 pt-2">
             <button onClick={handlePublish} disabled={saving}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50">
+              className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50">
               {saving ? 'Publishing…' : 'Publish in Lead Recruitment'}
             </button>
             <button onClick={() => setDraft(null)} disabled={saving}

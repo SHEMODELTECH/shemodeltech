@@ -9,11 +9,11 @@ import { db } from '../firebase/config';
 import { toast } from 'react-toastify';
 
 const statusColors = {
-  submitted: { bg: 'bg-blue-500/20', text: 'text-blue-300', border: 'border-blue-500/30', label: 'Submitted' },
+  submitted: { bg: 'bg-pink-500/20', text: 'text-pink-300', border: 'border-pink-500/30', label: 'Submitted' },
   reviewed: { bg: 'bg-orange-500/20', text: 'text-orange-500', border: 'border-orange-500/30', label: 'Under Review' },
-  accepted: { bg: 'bg-blue-500/20', text: 'text-blue-500', border: 'border-blue-500/30', label: 'Accepted' },
+  accepted: { bg: 'bg-pink-500/20', text: 'text-pink-500', border: 'border-pink-500/30', label: 'Accepted' },
   rejected: { bg: 'bg-red-500/20', text: 'text-red-300', border: 'border-red-500/30', label: 'Rejected' },
-  interview: { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30', label: 'Interview' },
+  interview: { bg: 'bg-pink-500/20', text: 'text-pink-400', border: 'border-pink-500/30', label: 'Interview' },
 };
 
 const MyApplications = () => {
@@ -76,7 +76,7 @@ const MyApplications = () => {
           {/* Header */}
           <div className="text-center mb-10">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-2" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
-              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-orange-400">Applications</span>
+              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-orange-400">Applications</span>
             </h1>
             <p className="text-gray-400 text-sm sm:text-base">Track and manage your job applications</p>
           </div>
@@ -85,8 +85,8 @@ const MyApplications = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             {[
               { label: 'Total', value: statCounts.total, color: 'text-white' },
-              { label: 'Pending', value: statCounts.submitted, color: 'text-blue-400' },
-              { label: 'Accepted', value: statCounts.accepted, color: 'text-blue-400' },
+              { label: 'Pending', value: statCounts.submitted, color: 'text-pink-400' },
+              { label: 'Accepted', value: statCounts.accepted, color: 'text-pink-400' },
               { label: 'Rejected', value: statCounts.rejected, color: 'text-red-400' },
             ].map((s, i) => (
               <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">

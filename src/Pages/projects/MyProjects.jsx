@@ -12,11 +12,11 @@ const formatTimeline = (t) => ({ '1-week': '1 Week', '2-weeks': '2 Weeks', '1-mo
 
 const statusColors = {
   submitted: 'bg-orange-500/20 text-orange-500 border-orange-500/30',
-  approved: 'bg-blue-600/20 text-blue-500 border-blue-600/30',
+  approved: 'bg-pink-600/20 text-pink-500 border-pink-600/30',
   rejected: 'bg-red-500/20 text-red-300 border-red-500/30',
   removed: 'bg-red-500/20 text-red-300 border-red-500/30',
-  completed: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  active: 'bg-blue-600/20 text-blue-500 border-blue-600/30',
+  completed: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
+  active: 'bg-pink-600/20 text-pink-500 border-pink-600/30',
 };
 
 const MyProjects = () => {
@@ -86,7 +86,7 @@ const MyProjects = () => {
       <>
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
           <div className="text-center">
-            <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <div className="w-8 h-8 border-2 border-pink-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
             <p className="text-gray-400 text-sm">Loading your projects...</p>
           </div>
         </div>
@@ -103,17 +103,17 @@ const MyProjects = () => {
           {/* Header */}
           <div className="text-center mb-10">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-2" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
-              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-500">Projects</span>
+              My <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-500">Projects</span>
             </h1>
             <p className="text-gray-400 text-sm sm:text-base">Manage your applications, posted projects, and earned badges</p>
 
             {/* Stats - directly under header like finance */}
             <div className="flex flex-wrap justify-center gap-4 xs:gap-6 mt-6">
               {[
-                { label: 'Applied', value: statCounts.applied, color: 'text-blue-600' },
-                { label: 'Approved', value: statCounts.approved, color: 'text-blue-600' },
-                { label: 'Posted', value: statCounts.posted, color: 'text-blue-500' },
-                { label: 'Completed', value: statCounts.completed, color: 'text-blue-400' },
+                { label: 'Applied', value: statCounts.applied, color: 'text-pink-600' },
+                { label: 'Approved', value: statCounts.approved, color: 'text-pink-600' },
+                { label: 'Posted', value: statCounts.posted, color: 'text-pink-500' },
+                { label: 'Completed', value: statCounts.completed, color: 'text-pink-400' },
                 { label: 'Badges', value: statCounts.badges, color: 'text-orange-500' },
               ].map((s, i) => (
                 <div key={i} className="text-center">
@@ -137,7 +137,7 @@ const MyProjects = () => {
                   ].map(t => (
                     <button key={t.id} onClick={() => setTab(t.id)}
                       className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all min-h-[40px] ${
-                        tab === t.id ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'
+                        tab === t.id ? 'bg-pink-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'
                       }`}>
                       {t.label}
                     </button>
@@ -148,7 +148,7 @@ const MyProjects = () => {
                 <div>
                   <p className="text-gray-900 font-semibold text-sm mb-2">Sort By</p>
                   <select value={sortBy} onChange={e => setSortBy(e.target.value)}
-                    className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 text-sm focus:border-blue-500 focus:outline-none">
+                    className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-gray-900 text-sm focus:border-pink-500 focus:outline-none">
                     <option value="newest">Newest</option>
                     <option value="oldest">Oldest</option>
                   </select>
@@ -162,11 +162,11 @@ const MyProjects = () => {
                 <p className="text-gray-900 font-semibold text-sm mb-2">Filter by Status</p>
                 <div className="flex flex-wrap gap-2">
                   <button onClick={() => setProjectFilter('ongoing')}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all min-h-[40px] ${projectFilter === 'ongoing' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all min-h-[40px] ${projectFilter === 'ongoing' ? 'bg-pink-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
                     Ongoing
                   </button>
                   <button onClick={() => setProjectFilter('completed')}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all min-h-[40px] ${projectFilter === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all min-h-[40px] ${projectFilter === 'completed' ? 'bg-pink-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
                     Completed
                   </button>
                 </div>
@@ -185,7 +185,7 @@ const MyProjects = () => {
                   {applications.length === 0 ? "You haven't applied to any projects yet" : `No ${projectFilter} applications match`}
                 </p>
                 {applications.length === 0 && (
-                  <Link to="/projects" className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-gray-900 font-bold rounded-xl text-sm transition-all hover:from-blue-500 hover:to-blue-600">
+                  <Link to="/projects" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-gray-900 font-bold rounded-xl text-sm transition-all hover:from-pink-500 hover:to-pink-600">
                     Browse Projects
                   </Link>
                 )}
@@ -222,7 +222,7 @@ const MyProjects = () => {
                         </p>
                         <Link
                           to={app.feedbackRequest.requestedByUid ? `/messages?with=${app.feedbackRequest.requestedByUid}` : '/messages'}
-                          className="inline-block mt-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-all"
+                          className="inline-block mt-2 bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-all"
                         >
                           Open conversation →
                         </Link>
@@ -245,7 +245,7 @@ const MyProjects = () => {
                   {postedProjects.length === 0 ? "You haven't posted any projects yet" : `No ${projectFilter} projects match`}
                 </p>
                 {postedProjects.length === 0 && (
-                  <Link to="/projects/submit" className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-gray-900 font-bold rounded-xl text-sm transition-all hover:from-blue-600 hover:to-blue-700">
+                  <Link to="/projects/submit" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-gray-900 font-bold rounded-xl text-sm transition-all hover:from-pink-600 hover:to-pink-700">
                     Post a Project
                   </Link>
                 )}
@@ -264,10 +264,10 @@ const MyProjects = () => {
                           </span>
                         </div>
                         {project.timeline && (
-                          <p className="text-blue-500 text-xs font-semibold mb-1">{formatTimeline(project.timeline)}</p>
+                          <p className="text-pink-500 text-xs font-semibold mb-1">{formatTimeline(project.timeline)}</p>
                         )}
                         <div className="flex flex-wrap items-center gap-3 mt-2 text-gray-500 text-xs">
-                          <span className="font-bold text-blue-500">
+                          <span className="font-bold text-pink-500">
                             Collaborative
                           </span>
                           {project.createdAt?.toDate && (
@@ -288,7 +288,7 @@ const MyProjects = () => {
               <div className="text-center py-16">
                 <p className="text-gray-900 text-xl font-bold mb-2">No Badges Earned Yet</p>
                 <p className="text-gray-400 text-sm mb-6">Complete projects to earn tech badges</p>
-                <Link to="/projects" className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-gray-900 font-bold rounded-xl text-sm transition-all hover:from-blue-500 hover:to-blue-600">
+                <Link to="/projects" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-gray-900 font-bold rounded-xl text-sm transition-all hover:from-pink-500 hover:to-pink-600">
                   Browse Projects
                 </Link>
               </div>
@@ -297,7 +297,7 @@ const MyProjects = () => {
                 {badges.map(badge => (
                   <div key={badge.id} className="bg-gray-50 border border-gray-200 rounded-xl p-5 hover:bg-white/[0.07] transition-all">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-gray-900 flex-shrink-0">
+                      <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-pink-600 rounded-xl flex items-center justify-center text-gray-900 flex-shrink-0">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                         </svg>
@@ -325,7 +325,7 @@ const MyProjects = () => {
 
           {/* Back to Dashboard */}
           <div className="mt-10 text-center">
-            <Link to="/dashboard" className="text-blue-600 hover:text-blue-500 text-sm font-semibold">
+            <Link to="/dashboard" className="text-pink-600 hover:text-pink-500 text-sm font-semibold">
               ← Back to Dashboard
             </Link>
           </div>

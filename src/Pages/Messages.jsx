@@ -53,7 +53,7 @@ const Avatar = ({ user, size = 'md' }) => {
   return user?.photoURL ? (
     <img src={user.photoURL} alt="" className={`${sz} rounded-full object-cover flex-shrink-0 border-2 border-gray-200`} />
   ) : (
-    <div className={`${sz} rounded-full bg-blue-600 flex items-center justify-center text-gray-900 font-bold flex-shrink-0`}>
+    <div className={`${sz} rounded-full bg-pink-600 flex items-center justify-center text-gray-900 font-bold flex-shrink-0`}>
       {initial}
     </div>
   );
@@ -251,7 +251,7 @@ const Messages = () => {
       <>
         
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-4 border-pink-600 border-t-transparent rounded-full animate-spin" />
         </div>
       </>
     );
@@ -281,7 +281,7 @@ const Messages = () => {
               <div className="px-4 py-3.5 border-b border-gray-200 flex-shrink-0">
                 <h1 className="text-base sm:text-lg font-bold text-gray-900">Messages</h1>
                 {totalUnread > 0 && (
-                  <p className="text-xs text-blue-600 font-medium mt-0.5">{totalUnread} unread</p>
+                  <p className="text-xs text-pink-600 font-medium mt-0.5">{totalUnread} unread</p>
                 )}
               </div>
 
@@ -311,7 +311,7 @@ const Messages = () => {
                       className={`
                         w-full flex items-center gap-3 px-4 py-3.5 border-b border-gray-100
                         hover:bg-gray-50 active:bg-gray-100 transition-colors text-left
-                        ${activeConvId === conv.id ? 'bg-blue-50 border-l-[3px] border-l-orange-500' : ''}
+                        ${activeConvId === conv.id ? 'bg-pink-50 border-l-[3px] border-l-orange-500' : ''}
                       `}
                     >
                       <Avatar user={conv.otherUser} />
@@ -325,7 +325,7 @@ const Messages = () => {
                         </p>
                       </div>
                       {unreadCounts[conv.id] > 0 && (
-                        <span className="flex-shrink-0 bg-blue-600 text-white text-xs rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center font-bold">
+                        <span className="flex-shrink-0 bg-pink-600 text-white text-xs rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center font-bold">
                           {unreadCounts[conv.id] > 9 ? '9+' : unreadCounts[conv.id]}
                         </span>
                       )}
@@ -362,7 +362,7 @@ const Messages = () => {
                     </div>
                     <button
                       onClick={() => navigate(`/profile/${activeUser.email || activeUser.uid}`)}
-                      className="flex-shrink-0 text-xs text-blue-600 hover:text-blue-700 font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors min-h-[36px]"
+                      className="flex-shrink-0 text-xs text-pink-600 hover:text-pink-700 font-semibold px-3 py-1.5 rounded-lg hover:bg-pink-50 transition-colors min-h-[36px]"
                     >
                       Profile
                     </button>
@@ -386,7 +386,7 @@ const Messages = () => {
                               <div className={`
                                 px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words overflow-hidden
                                 ${isOwn
-                                  ? 'bg-blue-600 text-white rounded-br-sm'
+                                  ? 'bg-pink-600 text-white rounded-br-sm'
                                   : 'bg-white text-gray-900 border border-gray-200 rounded-bl-sm shadow-sm'}
                               `} style={{ overflowWrap: 'anywhere' }}>
                                 {msg.text}
@@ -413,12 +413,12 @@ const Messages = () => {
                         }}
                         placeholder="Type a message..."
                         maxLength={2000}
-                        className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent min-h-[44px] placeholder-gray-400"
+                        className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent min-h-[44px] placeholder-gray-400"
                       />
                       <button
                         onClick={sendMessage}
                         disabled={!newMessage.trim() || sending}
-                        className="w-11 h-11 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-orange-700 disabled:opacity-40 disabled:cursor-not-allowed text-gray-900 transition-colors flex-shrink-0 flex items-center justify-center"
+                        className="w-11 h-11 rounded-xl bg-pink-600 hover:bg-pink-700 active:bg-orange-700 disabled:opacity-40 disabled:cursor-not-allowed text-gray-900 transition-colors flex-shrink-0 flex items-center justify-center"
                         aria-label="Send"
                       >
                         {sending ? (
@@ -435,8 +435,8 @@ const Messages = () => {
               ) : (
                 /* Empty state - desktop only */
                 <div className="flex-col flex-1 items-center justify-center text-center p-10 bg-gray-50 hidden md:flex">
-                  <div className="w-20 h-20 mb-4 bg-blue-50 rounded-full flex items-center justify-center">
-                    <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 mb-4 bg-pink-50 rounded-full flex items-center justify-center">
+                    <svg className="w-10 h-10 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                   </div>

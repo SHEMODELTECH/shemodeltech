@@ -121,7 +121,7 @@ const ProjectsListing = () => {
     setFilters({ industryTrack: '', timeline: '', payType: '' });
   };
 
-  const selectClass = "bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 min-h-[44px] text-gray-900 text-sm focus:border-blue-500 focus:outline-none transition-all appearance-none";
+  const selectClass = "bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 min-h-[44px] text-gray-900 text-sm focus:border-pink-500 focus:outline-none transition-all appearance-none";
 
   return (
     <>
@@ -146,17 +146,17 @@ const ProjectsListing = () => {
                   </Link>
                 )}
                 <Link to="/projects/submit"
-                  className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
+                  className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
                   Post a Project
                 </Link>
               </div>
             </div>
 
             {/* How leading works */}
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
+            <div className="bg-pink-50 border border-pink-200 rounded-2xl p-4 mb-6">
               <p className="text-gray-800 text-sm font-semibold mb-1">Two ways to lead a project</p>
               <p className="text-gray-600 text-sm">
-                <span className="font-semibold">Apply to lead</span> an available project below, or <Link to="/projects/submit" className="text-blue-600 font-semibold hover:underline">create your own project</Link> to lead. As a lead you review and shape the project, set the dates and roles, and your team builds it with you.
+                <span className="font-semibold">Apply to lead</span> an available project below, or <Link to="/projects/submit" className="text-pink-600 font-semibold hover:underline">create your own project</Link> to lead. As a lead you review and shape the project, set the dates and roles, and your team builds it with you.
               </p>
             </div>
 
@@ -164,7 +164,7 @@ const ProjectsListing = () => {
             <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 mb-6 space-y-3">
               <input
                 type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none text-sm transition-all"
+                className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none text-sm transition-all"
                 placeholder="Search projects..."
               />
               <div className="flex flex-wrap gap-2">
@@ -188,7 +188,7 @@ const ProjectsListing = () => {
                   <option value="free">Free (Collaborative) Projects</option>
                 </select>
                 {(searchQuery || filters.industryTrack || filters.timeline || filters.payType) && (
-                  <button onClick={clearFilters} className="text-blue-600 hover:text-blue-500 text-xs font-semibold px-3 py-2 transition-colors">Clear All</button>
+                  <button onClick={clearFilters} className="text-pink-600 hover:text-pink-500 text-xs font-semibold px-3 py-2 transition-colors">Clear All</button>
                 )}
               </div>
             </div>
@@ -196,7 +196,7 @@ const ProjectsListing = () => {
             {/* Loading */}
             {loading && (
               <div className="flex justify-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
               </div>
             )}
 
@@ -214,7 +214,7 @@ const ProjectsListing = () => {
                 {filteredProjects.map(project => (
                   <div key={project.id}
                     onClick={() => navigate(`/projects/${project.id}`)}
-                    className="bg-white rounded-xl p-4 sm:p-5 border border-blue-200 cursor-pointer hover:border-blue-400 hover:shadow-sm transition-all duration-200 active:scale-[0.99]"
+                    className="bg-white rounded-xl p-4 sm:p-5 border border-pink-200 cursor-pointer hover:border-pink-400 hover:shadow-sm transition-all duration-200 active:scale-[0.99]"
                   >
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <h3 className="text-gray-900 font-bold text-sm sm:text-base line-clamp-2">{project.projectTitle}</h3>
@@ -224,7 +224,7 @@ const ProjectsListing = () => {
                         project.status === 'lead_recruitment' ? 'bg-amber-100 text-gray-900'
                         : project.status === 'setup' ? 'bg-purple-100 text-gray-900'
                         : project.applicationsOpen === false ? 'bg-gray-200 text-gray-700'
-                        : 'bg-blue-100 text-gray-900'}`}>
+                        : 'bg-pink-100 text-gray-900'}`}>
                         {project.status === 'lead_recruitment' ? 'Needs a Lead'
                           : project.status === 'setup' ? 'Being set up'
                           : project.applicationsOpen === false ? 'Closed'
@@ -252,7 +252,7 @@ const ProjectsListing = () => {
                       ) : project.status === 'lead_recruitment' ? (
                         <span className="px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm font-semibold">Apply to lead</span>
                       ) : (
-                        <span className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-semibold">Join the Project</span>
+                        <span className="px-3 py-1.5 bg-pink-600 text-white rounded-lg text-sm font-semibold">Join the Project</span>
                       )}
                     </div>
 

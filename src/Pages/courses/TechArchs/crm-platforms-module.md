@@ -2,7 +2,7 @@
 
 **Purpose:** Build business solutions without extensive programming.
 
-**Tools needed for this module:** A web browser and an email address to sign up for free tiers or trials — [HubSpot CRM](https://www.hubspot.com/products/crm) (free tier), a [Salesforce Trailhead Playground](https://trailhead.salesforce.com) (free sandbox org) or free trial, and [Zoho CRM](https://www.zoho.com/crm/) (free tier). No coding environment or installs are required, everything happens in the browser. You won't need all three set up at once, each topic only needs its own account.
+**Tools needed for this module:** A web browser and an email address to sign up for free tiers or trials, [HubSpot CRM](https://www.hubspot.com/products/crm) (free tier), a [Salesforce Trailhead Playground](https://trailhead.salesforce.com) (free sandbox org) or free trial, and [Zoho CRM](https://www.zoho.com/crm/) (free tier). No coding environment or installs are required, everything happens in the browser. You won't need all three set up at once, each topic only needs its own account.
 
 ### Topic 1: HubSpot
 
@@ -20,18 +20,18 @@
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#c2410c', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
-    C["<b>Contact</b><br/><br/>Person record<br/>with properties"]
-    T["<b>Trigger</b><br/><br/>Form submitted /<br/>property changed"]
-    W["<b>Workflow</b><br/><br/>Visual, drag-and-<br/>drop automation"]
-    P["<b>Pipeline</b><br/><br/>Deal or ticket<br/>stages"]
+ C["<b>Contact</b><br/><br/>Person record<br/>with properties"]
+ T["<b>Trigger</b><br/><br/>Form submitted /<br/>property changed"]
+ W["<b>Workflow</b><br/><br/>Visual, drag-and-<br/>drop automation"]
+ P["<b>Pipeline</b><br/><br/>Deal or ticket<br/>stages"]
 
-    C ==> T ==> W ==> P
+ C ==> T ==> W ==> P
 
-    style C fill:#c2410c,color:#fff,stroke:#7c2d12,stroke-width:4px
-    style T fill:#ffedd5,color:#1a202c,stroke:#c2410c,stroke-width:4px
-    style W fill:#ffedd5,color:#1a202c,stroke:#c2410c,stroke-width:4px
-    style P fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    linkStyle default stroke-width:4px,stroke:#333333
+ style C fill:#c2410c,color:#fff,stroke:#7c2d12,stroke-width:4px
+ style T fill:#ffedd5,color:#1a202c,stroke:#c2410c,stroke-width:4px
+ style W fill:#ffedd5,color:#1a202c,stroke:#c2410c,stroke-width:4px
+ style P fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+ linkStyle default stroke-width:4px,stroke:#333333
 ```
 - HubSpot's free tier is genuinely usable for small teams, but workflow automation, custom reporting, and advanced permissions are gated behind paid tiers, a common low-code tradeoff between accessibility and depth
 - Because marketing, sales, and service data live in the same contact record, a workflow triggered by a marketing action (like a form fill) can immediately affect a sales pipeline, without any integration work
@@ -78,19 +78,19 @@ You have a HubSpot contact, a deal in a pipeline, and a working workflow that tr
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#1d4ed8', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
-    O["<b>Object</b><br/><br/>Standard or<br/>custom data table"]
-    F["<b>Field</b><br/><br/>Text, number,<br/>lookup, etc."]
-    FL["<b>Flow Builder</b><br/><br/>Visual, record-<br/>triggered automation"]
-    PL["<b>Page Layout</b><br/><br/>Drag-and-drop<br/>screen design"]
+ O["<b>Object</b><br/><br/>Standard or<br/>custom data table"]
+ F["<b>Field</b><br/><br/>Text, number,<br/>lookup, etc."]
+ FL["<b>Flow Builder</b><br/><br/>Visual, record-<br/>triggered automation"]
+ PL["<b>Page Layout</b><br/><br/>Drag-and-drop<br/>screen design"]
 
-    O ==> F ==> FL
-    O ==> PL
+ O ==> F ==> FL
+ O ==> PL
 
-    style O fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
-    style F fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style FL fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style PL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    linkStyle default stroke-width:4px,stroke:#333333
+ style O fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
+ style F fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
+ style FL fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
+ style PL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+ linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Because you can create entirely new objects (not just add fields to existing ones), Salesforce's low-code ceiling is much higher than HubSpot's or Zoho's, entire custom applications can be built without traditional code
 - That same flexibility means Salesforce orgs can become complex quickly, larger teams often have a dedicated "Salesforce admin" role just to manage objects, flows, and permissions
@@ -137,20 +137,20 @@ You have a custom field on a standard Salesforce object and a working record-tri
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0f766e', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
-    M["<b>Module</b><br/><br/>Leads, Contacts,<br/>Deals, or custom"]
-    WR["<b>Workflow Rule</b><br/><br/>Condition triggers<br/>an action"]
-    BP["<b>Blueprint</b><br/><br/>Enforced, ordered<br/>process stages"]
-    E["<b>Zoho Ecosystem</b><br/><br/>Books, Forms,<br/>Desk, etc."]
+ M["<b>Module</b><br/><br/>Leads, Contacts,<br/>Deals, or custom"]
+ WR["<b>Workflow Rule</b><br/><br/>Condition triggers<br/>an action"]
+ BP["<b>Blueprint</b><br/><br/>Enforced, ordered<br/>process stages"]
+ E["<b>Zoho Ecosystem</b><br/><br/>Books, Forms,<br/>Desk, etc."]
 
-    M ==> WR
-    M ==> BP
-    BP ==> E
+ M ==> WR
+ M ==> BP
+ BP ==> E
 
-    style M fill:#0f766e,color:#fff,stroke:#134e4a,stroke-width:4px
-    style WR fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style BP fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style E fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    linkStyle default stroke-width:4px,stroke:#333333
+ style M fill:#0f766e,color:#fff,stroke:#134e4a,stroke-width:4px
+ style WR fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
+ style BP fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
+ style E fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+ linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Blueprint's key difference from a simple workflow rule is enforcement, a record literally cannot skip a required stage, which matters for compliance-sensitive processes like loan approvals or refund sign-offs
 - Zoho is generally the most budget-friendly of the three at comparable feature levels, a major reason smaller businesses and budget-conscious teams choose it over Salesforce

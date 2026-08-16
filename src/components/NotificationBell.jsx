@@ -232,7 +232,7 @@ const NotificationBell = () => {
       {/* 🔔 NOTIFICATION BELL BUTTON - Fully Responsive */}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative text-gray-900 hover:text-blue-600 transition-all duration-300 group p-1 sm:p-0"
+        className="relative text-gray-900 hover:text-pink-600 transition-all duration-300 group p-1 sm:p-0"
         aria-label={`${unreadCount} unread notifications`}
         title={`${unreadCount} unread notifications`}
       >
@@ -260,7 +260,7 @@ const NotificationBell = () => {
 
         {/* Glow effect */}
         {unreadCount > 0 && (
-          <span className="absolute inset-0 rounded-full bg-blue-500/10 animate-pulse"></span>
+          <span className="absolute inset-0 rounded-full bg-pink-500/10 animate-pulse"></span>
         )}
       </button>
 
@@ -285,7 +285,7 @@ const NotificationBell = () => {
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-blue-600 hover:text-orange-400 text-[11px] xs:text-xs font-medium transition-colors px-2 py-1 hover:bg-gray-50 rounded hidden xs:block"
+                  className="text-pink-600 hover:text-orange-400 text-[11px] xs:text-xs font-medium transition-colors px-2 py-1 hover:bg-gray-50 rounded hidden xs:block"
                 >
                   Mark all read
                 </button>
@@ -307,7 +307,7 @@ const NotificationBell = () => {
             <div className="xs:hidden px-3 py-2 border-b border-gray-200 bg-gray-900/50">
               <button
                 onClick={markAllAsRead}
-                className="text-blue-600 hover:text-orange-400 text-xs font-medium transition-colors w-full text-left"
+                className="text-pink-600 hover:text-orange-400 text-xs font-medium transition-colors w-full text-left"
               >
                 ✓ Mark all as read
               </button>
@@ -318,7 +318,7 @@ const NotificationBell = () => {
           <div className="overflow-y-auto max-h-[calc(100vh-12rem)] xs:max-h-60 sm:max-h-80 overscroll-contain">
             {loading ? (
               <div className="p-6 xs:p-8 sm:p-10 text-center">
-                <div className="animate-spin rounded-full h-6 w-6 xs:h-8 xs:w-8 border-b-2 border-blue-500 mx-auto mb-3"></div>
+                <div className="animate-spin rounded-full h-6 w-6 xs:h-8 xs:w-8 border-b-2 border-pink-500 mx-auto mb-3"></div>
                 <p className="text-gray-400 text-xs xs:text-sm">Loading notifications...</p>
               </div>
             ) : notifications.length === 0 ? (
@@ -334,12 +334,12 @@ const NotificationBell = () => {
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification)}
                     className={`p-3 xs:p-3.5 sm:p-4 hover:bg-gray-50 active:bg-gray-100 cursor-pointer transition-all duration-200 group ${
-                      !notification.isRead ? 'bg-blue-500/5 border-l-2 xs:border-l-[3px] border-blue-500' : ''
+                      !notification.isRead ? 'bg-pink-500/5 border-l-2 xs:border-l-[3px] border-pink-500' : ''
                     } ${navigating === notification.id ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     <div className="flex items-start gap-2 xs:gap-2.5 sm:gap-3">
                       {/* Notification Icon - Responsive size */}
-                      <div className="flex-shrink-0 w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 bg-blue-600/20 rounded-full flex items-center justify-center group-hover:bg-blue-600/30 transition-colors">
+                      <div className="flex-shrink-0 w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 bg-pink-600/20 rounded-full flex items-center justify-center group-hover:bg-pink-600/30 transition-colors">
                         <span className="text-sm xs:text-base">
                           {getNotificationIcon(notification.type)}
                         </span>
@@ -369,7 +369,7 @@ const NotificationBell = () => {
                             }
                           </span>
                           {!notification.isRead && (
-                            <div className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-blue-500 rounded-full flex-shrink-0 animate-pulse"></div>
+                            <div className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-pink-500 rounded-full flex-shrink-0 animate-pulse"></div>
                           )}
                         </div>
 
@@ -377,7 +377,7 @@ const NotificationBell = () => {
                         <p className="text-gray-600 text-xs xs:text-sm mb-1.5 xs:mb-2 line-clamp-2">
                           {getNotificationAction(notification.type)}
                           {notification.groupTitle && (notification.type === 'group_post' || notification.type === 'group_member_joined') && (
-                            <span className="text-blue-600 font-medium"> {notification.groupTitle}</span>
+                            <span className="text-pink-600 font-medium"> {notification.groupTitle}</span>
                           )}
                           {notification.badgeLevel && notification.type === 'badge_awarded' && (
                             <span className="text-orange-500 font-medium"> {notification.badgeLevel}</span>
@@ -399,16 +399,16 @@ const NotificationBell = () => {
                           
                           <div className="flex items-center gap-1.5 xs:gap-2 min-w-0">
                             {notification.postTitle && (
-                              <span className="text-blue-600 text-[11px] xs:text-xs truncate max-w-[60px] xs:max-w-20 sm:max-w-24">
+                              <span className="text-pink-600 text-[11px] xs:text-xs truncate max-w-[60px] xs:max-w-20 sm:max-w-24">
                                 "{notification.postTitle}"
                               </span>
                             )}
                             
                             {/* Loading/Click indicator - Responsive */}
                             {navigating === notification.id ? (
-                              <div className="w-3 h-3 xs:w-3.5 xs:h-3.5 border border-blue-500 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                              <div className="w-3 h-3 xs:w-3.5 xs:h-3.5 border border-pink-500 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
                             ) : (
-                              <div className="text-gray-400 group-hover:text-blue-600 transition-colors opacity-0 group-hover:opacity-100 flex items-center text-[11px] xs:text-xs flex-shrink-0">
+                              <div className="text-gray-400 group-hover:text-pink-600 transition-colors opacity-0 group-hover:opacity-100 flex items-center text-[11px] xs:text-xs flex-shrink-0">
                                 <span className="hidden sm:inline mr-1">View</span>
                                 <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -430,7 +430,7 @@ const NotificationBell = () => {
             <div className="p-3 xs:p-3 sm:p-4 border-t border-gray-200 bg-gray-100 sticky bottom-0">
               <button
                 onClick={handleViewAllNotifications}
-                className="w-full text-center text-blue-600 hover:text-orange-400 text-xs xs:text-sm font-medium transition-colors py-1 hover:bg-gray-50 rounded"
+                className="w-full text-center text-pink-600 hover:text-orange-400 text-xs xs:text-sm font-medium transition-colors py-1 hover:bg-gray-50 rounded"
               >
                 View all notifications
               </button>

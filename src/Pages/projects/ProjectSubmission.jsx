@@ -351,8 +351,8 @@ const ProjectSubmission = () => {
     return tomorrow.toISOString().split('T')[0];
   };
 
-  const inputClass = "w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none text-sm transition-all";
-  const labelClass = "block text-blue-600 font-semibold mb-2 text-sm";
+  const inputClass = "w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none text-sm transition-all";
+  const labelClass = "block text-pink-600 font-semibold mb-2 text-sm";
   const selectClass = inputClass + " appearance-none";
 
   if (authLoading || !currentUser) {
@@ -360,7 +360,7 @@ const ProjectSubmission = () => {
       <>
         
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto"></div>
         </div>
       </>
     );
@@ -376,7 +376,7 @@ const ProjectSubmission = () => {
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>
-                Post a <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500">Project</span>
+                Post a <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">Project</span>
               </h1>
               <p className="text-gray-400 text-sm sm:text-base">Create a project and build your team</p>
             </div>
@@ -386,7 +386,7 @@ const ProjectSubmission = () => {
                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5">
                   <p className="text-amber-800 text-sm font-semibold mb-1">Complete your profile to post a project</p>
                   <p className="text-gray-600 text-xs mb-3">Recruiters discover talent through complete profiles. Please fill in: {profileGate.missing.join(', ')}.</p>
-                  <button type="button" onClick={() => navigate('/settings?tab=profile')} className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-2 rounded-lg transition-all">
+                  <button type="button" onClick={() => navigate('/settings?tab=profile')} className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-medium px-4 py-2 rounded-lg transition-all">
                     Complete Profile
                   </button>
                 </div>
@@ -421,7 +421,7 @@ const ProjectSubmission = () => {
                 </div>
                 )}
                 {projectKind === 'paid' && (
-                  <div className="mt-3 bg-blue-50 border border-blue-200 rounded-xl p-3">
+                  <div className="mt-3 bg-pink-50 border border-pink-200 rounded-xl p-3">
                     <p className="text-gray-700 text-xs leading-relaxed"><strong>How paid projects work:</strong> the pay per person you set for each role is visible to everyone before they apply. The project can only be closed once the work is verified done and every member confirms they were paid. Paid projects award no badges.</p>
                   </div>
                 )}
@@ -497,7 +497,7 @@ const ProjectSubmission = () => {
                   </span>
                 </div>
                 <p className="text-gray-500 text-xs -mt-2">Set an experience level per role. Intermediate and Advanced roles can only be filled by members who've earned the matching badge level in that track - keeping your team realistic and your project outcomes protected. Use Beginner or Any Level for roles open to newcomers.</p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
                   <p className="text-gray-700 text-xs"><strong>Note:</strong> add or remove roles to fit your project. Keep at least one Beginner or Any Level role so newcomers can join.</p>
                   <p className="text-gray-700 text-xs mt-2"><strong>No solo projects:</strong> a project is a team effort, so it needs at least {MIN_TEAM_SIZE} people. You count as one, so your roles must add up to at least {MIN_MEMBERS} {MIN_MEMBERS === 1 ? 'person' : 'people'} besides you - and you'll need that many approved members on the team before you can submit for review or complete the project.</p>
                 </div>
@@ -567,7 +567,7 @@ const ProjectSubmission = () => {
                 ))}
 
                 {teamRoles.length < 10 && (
-                  <button type="button" onClick={addRole} className="w-full py-2.5 border border-dashed border-gray-200 rounded-xl text-blue-600 text-sm font-semibold hover:bg-gray-50 transition-all min-h-[44px]">
+                  <button type="button" onClick={addRole} className="w-full py-2.5 border border-dashed border-gray-200 rounded-xl text-pink-600 text-sm font-semibold hover:bg-gray-50 transition-all min-h-[44px]">
                     + Add Another Role
                   </button>
                 )}
@@ -605,7 +605,7 @@ const ProjectSubmission = () => {
 
               {/* Submit */}
               <button type="submit" disabled={isSubmitting}
-                className="w-full py-3.5 min-h-[48px] bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-sm sm:text-base transition-all shadow-lg hover:shadow-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed">
+                className="w-full py-3.5 min-h-[48px] bg-pink-600 hover:bg-pink-700 text-white font-black rounded-xl text-sm sm:text-base transition-all shadow-lg hover:shadow-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed">
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>

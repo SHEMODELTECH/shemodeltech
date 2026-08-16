@@ -45,7 +45,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h3 className="text-xl font-bold text-gray-900 flex items-center">
-            <span className="text-blue-600 mr-2">🔄</span>
+            <span className="text-pink-600 mr-2">🔄</span>
             Repost
           </h3>
           <button
@@ -70,7 +70,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
               onChange={setRepostComment}
               onMentionSelect={handleMentionSelect}
               placeholder="What do you think about this post? Use @ to mention someone..."
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 resize-none min-h-[100px] transition-colors"
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 resize-none min-h-[100px] transition-colors"
               rows={4}
             />
             
@@ -80,8 +80,8 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
                 <div className="text-sm text-gray-600 mb-2">People you mentioned:</div>
                 <div className="flex flex-wrap gap-2">
                   {taggedUsers.map((user) => (
-                    <div key={user.uid} className="flex items-center space-x-2 bg-blue-500/10 rounded-full px-3 py-1">
-                      <div className="w-5 h-5 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-blue-500 flex items-center justify-center text-gray-900 font-bold text-xs">
+                    <div key={user.uid} className="flex items-center space-x-2 bg-pink-500/10 rounded-full px-3 py-1">
+                      <div className="w-5 h-5 rounded-full overflow-hidden bg-gradient-to-r from-pink-500 to-pink-500 flex items-center justify-center text-gray-900 font-bold text-xs">
                         {user.photoURL ? (
                           <img 
                             src={user.photoURL} 
@@ -116,7 +116,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
           {/* Original Post Preview */}
           <div className="bg-white/40 border border-gray-200 rounded-xl p-4">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center text-gray-900 font-bold">
+              <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-500 rounded-full flex items-center justify-center text-gray-900 font-bold">
                 {post.authorPhoto ? (
                   <img 
                     src={post.authorPhoto} 
@@ -160,7 +160,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
               <div className="mt-3 text-sm">
                 <span className="text-gray-400">Originally tagged: </span>
                 {post.taggedUsers.map((user, index) => (
-                  <span key={user.uid || index} className="text-blue-600/70">
+                  <span key={user.uid || index} className="text-pink-600/70">
                     @{getUserDisplayText(user)}
                     {index < post.taggedUsers.length - 1 && ', '}
                   </span>
@@ -190,7 +190,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
               <button
                 onClick={handleRepost}
                 disabled={isSubmitting}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <span className="flex items-center">

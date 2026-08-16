@@ -12,10 +12,10 @@ const Footer = ({ dark = false }) => {
             <span className={`font-bold text-base sm:text-lg tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>She Model Tech</span>
           </div>
           <div className={`flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm ${dark ? 'text-gray-500' : 'text-gray-500'}`}>
-            <Link to="/about" className={`${dark ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors font-medium`}>About</Link>
-            <Link to="/terms" className={`${dark ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors font-medium`}>Terms</Link>
-            <Link to="/privacy" className={`${dark ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors font-medium`}>Privacy</Link>
-            <Link to="/support" className={`${dark ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors font-medium`}>Support</Link>
+            <Link to="/about" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>About</Link>
+            <Link to="/terms" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>Terms</Link>
+            <Link to="/privacy" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>Privacy</Link>
+            <Link to="/support" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>Support</Link>
           </div>
           <p className={`text-xs ${dark ? 'text-gray-600' : 'text-gray-400'}`}>{new Date().getFullYear()} She Model Tech. All rights reserved.</p>
         </div>

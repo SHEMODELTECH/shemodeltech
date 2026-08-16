@@ -1,5 +1,5 @@
 // =================================================================
-// api/email/send-weekly-digest.js — She Model Tech Weekly Digest
+// api/email/send-weekly-digest.js, She Model Tech Weekly Digest
 // Cron: Sundays 9 AM. A clean, professional weekly summary.
 // =================================================================
 
@@ -8,114 +8,114 @@ const { subDays } = require('date-fns');
 const admin = require('firebase-admin');
 
 if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        type: 'service_account',
-        project_id: process.env.FIREBASE_PROJECT_ID || 'she-model-tech',
-        private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        client_email: process.env.FIREBASE_CLIENT_EMAIL,
-      }),
-      projectId: process.env.FIREBASE_PROJECT_ID || 'she-model-tech',
-    });
-  } catch (err) {
-    console.error('Firebase Admin init failed:', err.message);
-    throw err;
-  }
+ try {
+ admin.initializeApp({
+ credential: admin.credential.cert({
+ type: 'service_account',
+ project_id: process.env.FIREBASE_PROJECT_ID || 'she-model-tech',
+ private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+ client_email: process.env.FIREBASE_CLIENT_EMAIL,
+ }),
+ projectId: process.env.FIREBASE_PROJECT_ID || 'she-model-tech',
+ });
+ } catch (err) {
+ console.error('Firebase Admin init failed:', err.message);
+ throw err;
+ }
 }
 
 const db = admin.firestore();
 const SITE = 'https://shemodeltech.com';
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-API-Key');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+ res.setHeader('Access-Control-Allow-Origin', '*');
+ res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+ res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-API-Key');
+ if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const isVercelCron = req.headers['x-vercel-cron'] || req.headers['user-agent']?.includes('vercel');
-  const isDev = process.env.NODE_ENV === 'development' || req.headers.host?.includes('localhost');
-  const apiKey = req.headers['x-api-key'] || req.query.apiKey;
-  const validKey = process.env.DAILY_DIGEST_API_KEY;
-  if (!isDev && !isVercelCron && validKey && apiKey !== validKey) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+ const isVercelCron = req.headers['x-vercel-cron'] || req.headers['user-agent']?.includes('vercel');
+ const isDev = process.env.NODE_ENV === 'development' || req.headers.host?.includes('localhost');
+ const apiKey = req.headers['x-api-key'] || req.query.apiKey;
+ const validKey = process.env.DAILY_DIGEST_API_KEY;
+ if (!isDev && !isVercelCron && validKey && apiKey !== validKey) {
+ return res.status(401).json({ error: 'Unauthorized' });
+ }
 
-  try {
-    console.log('Starting She Model Tech weekly digest...');
+ try {
+ console.log('Starting She Model Tech weekly digest...');
 
-    const sevenDaysAgo = subDays(new Date(), 7);
+ const sevenDaysAgo = subDays(new Date(), 7);
 
-    const safeFetch = async (col, dateField, since, lim = 20) => {
-      try {
-        const snap = await db.collection(col).where(dateField, '>=', since).orderBy(dateField, 'desc').limit(lim).get();
-        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      } catch (e) { console.warn(`${col}:`, e.message); return []; }
-    };
+ const safeFetch = async (col, dateField, since, lim = 20) => {
+ try {
+ const snap = await db.collection(col).where(dateField, '>=', since).orderBy(dateField, 'desc').limit(lim).get();
+ return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+ } catch (e) { console.warn(`${col}:`, e.message); return []; }
+ };
 
-    const safeCount = async (col, dateField, since) => {
-      try {
-        const snap = await db.collection(col).where(dateField, '>=', since).get();
-        return snap.size;
-      } catch (e) { return 0; }
-    };
+ const safeCount = async (col, dateField, since) => {
+ try {
+ const snap = await db.collection(col).where(dateField, '>=', since).get();
+ return snap.size;
+ } catch (e) { return 0; }
+ };
 
-    // Fetch this week's platform content (only what She Model Tech actually has).
-    const [projects, jobs] = await Promise.all([
-      safeFetch('projects', 'createdAt', sevenDaysAgo),
-      safeFetch('hub_posts', 'createdAt', sevenDaysAgo),
-    ]);
-    const newMembersCount = await safeCount('users', 'createdAt', sevenDaysAgo);
+ // Fetch this week's platform content (only what She Model Tech actually has).
+ const [projects, jobs] = await Promise.all([
+ safeFetch('projects', 'createdAt', sevenDaysAgo),
+ safeFetch('hub_posts', 'createdAt', sevenDaysAgo),
+ ]);
+ const newMembersCount = await safeCount('users', 'createdAt', sevenDaysAgo);
 
-    console.log(`Week: ${projects.length} projects, ${jobs.length} jobs, ${newMembersCount} new members`);
+ console.log(`Week: ${projects.length} projects, ${jobs.length} jobs, ${newMembersCount} new members`);
 
-    // Subscribers (weekly digest opt-in, fall back to daily).
-    const usersSnap = await db.collection('users').where('emailPreferences.weeklyDigest', '==', true).get();
-    let users = usersSnap.docs
-      .map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }))
-      .filter(u => u.email?.includes('@'));
+ // Subscribers (weekly digest opt-in, fall back to daily).
+ const usersSnap = await db.collection('users').where('emailPreferences.weeklyDigest', '==', true).get();
+ let users = usersSnap.docs
+ .map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }))
+ .filter(u => u.email?.includes('@'));
 
-    if (users.length === 0) {
-      const fallbackSnap = await db.collection('users').where('emailPreferences.dailyDigest', '==', true).get();
-      users = fallbackSnap.docs
-        .map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }))
-        .filter(u => u.email?.includes('@'));
-      if (users.length === 0) {
-        return res.json({ success: true, message: 'No subscribers' });
-      }
-    }
-    console.log(`${users.length} weekly subscribers`);
+ if (users.length === 0) {
+ const fallbackSnap = await db.collection('users').where('emailPreferences.dailyDigest', '==', true).get();
+ users = fallbackSnap.docs
+ .map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }))
+ .filter(u => u.email?.includes('@'));
+ if (users.length === 0) {
+ return res.json({ success: true, message: 'No subscribers' });
+ }
+ }
+ console.log(`${users.length} weekly subscribers`);
 
-    // Per-user weekly activity — only She Model Tech's real notification types.
-    for (const user of users) {
-      try {
-        const notifSnap = await db.collection('notifications')
-          .where('userId', '==', user.uid)
-          .where('createdAt', '>=', sevenDaysAgo)
-          .orderBy('createdAt', 'desc').limit(100).get();
-        const notifs = notifSnap.docs.map(d => d.data());
+ // Per-user weekly activity, only She Model Tech's real notification types.
+ for (const user of users) {
+ try {
+ const notifSnap = await db.collection('notifications')
+ .where('userId', '==', user.uid)
+ .where('createdAt', '>=', sevenDaysAgo)
+ .orderBy('createdAt', 'desc').limit(100).get();
+ const notifs = notifSnap.docs.map(d => d.data());
 
-        user.applications = notifs.filter(n => n.type === 'project_application');
-        user.approvals = notifs.filter(n => n.type === 'application_approved');
-        user.badges = notifs.filter(n => n.type === 'project_completed' || n.type === 'badge_awarded');
+ user.applications = notifs.filter(n => n.type === 'project_application');
+ user.approvals = notifs.filter(n => n.type === 'application_approved');
+ user.badges = notifs.filter(n => n.type === 'project_completed' || n.type === 'badge_awarded');
 
-        const convSnap = await db.collection('conversations')
-          .where('participants', 'array-contains', user.uid).get();
-        user.unreadMessages = 0;
-        convSnap.docs.forEach(d => { user.unreadMessages += (d.data().unreadBy?.[user.uid] || 0); });
-      } catch (e) {
-        user.applications = []; user.approvals = []; user.badges = []; user.unreadMessages = 0;
-      }
-    }
+ const convSnap = await db.collection('conversations')
+ .where('participants', 'array-contains', user.uid).get();
+ user.unreadMessages = 0;
+ convSnap.docs.forEach(d => { user.unreadMessages += (d.data().unreadBy?.[user.uid] || 0); });
+ } catch (e) {
+ user.applications = []; user.approvals = []; user.badges = []; user.unreadMessages = 0;
+ }
+ }
 
-    // ── Weekly email template (clean, on-brand, no emojis) ──────────
-    const generateEmail = (user) => {
-      const name = user.displayName || user.email.split('@')[0];
-      const weekStart = subDays(new Date(), 7).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      const weekEnd = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      const totalActivity = user.applications.length + user.approvals.length + user.badges.length + user.unreadMessages;
+ // ── Weekly email template (clean, on-brand, no emojis) ──────────
+ const generateEmail = (user) => {
+ const name = user.displayName || user.email.split('@')[0];
+ const weekStart = subDays(new Date(), 7).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+ const weekEnd = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+ const totalActivity = user.applications.length + user.approvals.length + user.badges.length + user.unreadMessages;
 
-      return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+ return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style>
 body{font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;background:#ffffff;line-height:1.6;color:#111827}
 .c{background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb}
@@ -181,29 +181,29 @@ ${jobs.slice(0,4).map(j => `<div class="it">
 <div class="ft"><p><b>She Model Tech</b></p><p><a href="${SITE}/proof-wall">Proof Wall</a> · <a href="${SITE}/projects">Projects</a> · <a href="${SITE}/settings">Email settings</a></p>
 <p style="margin-top:6px">Weekly digest · ${new Date().getFullYear()} She Model Tech</p></div>
 </div></body></html>`;
-    };
+ };
 
-    // Send emails
-    let successful = 0, failed = 0;
-    for (const user of users) {
-      try {
-        const eng = user.applications.length + user.approvals.length + user.badges.length + user.unreadMessages;
-        const range = `${subDays(new Date(),7).toLocaleDateString('en-US',{month:'short',day:'numeric'})} to ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
-        const subj = eng > 0
-          ? `Your She Model Tech week: ${eng} update${eng>1?'s':''} (${range})`
-          : `Your She Model Tech weekly recap (${range})`;
-        await sendMail({ to: user.email, subject: subj, html: generateEmail(user) });
-        successful++;
-      } catch (err) { console.error(`${user.email}:`, err.message); failed++; }
-    }
+ // Send emails
+ let successful = 0, failed = 0;
+ for (const user of users) {
+ try {
+ const eng = user.applications.length + user.approvals.length + user.badges.length + user.unreadMessages;
+ const range = `${subDays(new Date(),7).toLocaleDateString('en-US',{month:'short',day:'numeric'})} to ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+ const subj = eng > 0
+ ? `Your She Model Tech week: ${eng} update${eng>1?'s':''} (${range})`
+ : `Your She Model Tech weekly recap (${range})`;
+ await sendMail({ to: user.email, subject: subj, html: generateEmail(user) });
+ successful++;
+ } catch (err) { console.error(`${user.email}:`, err.message); failed++; }
+ }
 
-    try { await db.collection('email_logs').add({ type: 'weekly_digest', timestamp: new Date(), stats: { recipients: users.length, successful, failed } }); } catch (_) {}
+ try { await db.collection('email_logs').add({ type: 'weekly_digest', timestamp: new Date(), stats: { recipients: users.length, successful, failed } }); } catch (_) {}
 
-    console.log(`Weekly digest: ${successful} sent, ${failed} failed`);
-    return res.json({ success: true, stats: { recipients: users.length, successful, failed } });
+ console.log(`Weekly digest: ${successful} sent, ${failed} failed`);
+ return res.json({ success: true, stats: { recipients: users.length, successful, failed } });
 
-  } catch (error) {
-    console.error('Weekly digest error:', error);
-    return res.status(500).json({ success: false, error: error.message });
-  }
+ } catch (error) {
+ console.error('Weekly digest error:', error);
+ return res.status(500).json({ success: false, error: error.message });
+ }
 };

@@ -16,10 +16,10 @@ import { MIN_TEAM_SIZE, membersMeetMinTeamSize, MIN_TEAM_SIZE_MEMBERS_ERROR } fr
 import { sendPush } from '../../utils/pushNotifications';
 
 const badgeCategories = {
-  'mentorship': { id: 'techmo', name: 'TechPO (Mentor)', color: 'from-blue-500 to-blue-600' },
-  'quality-assurance': { id: 'techqa', name: 'TechQA (QA Tester)', color: 'from-blue-500 to-blue-600' },
-  'development': { id: 'techdev', name: 'TechDev (Developer)', color: 'from-blue-500 to-blue-600' },
-  'leadership': { id: 'techleads', name: 'TechLeads (Leader)', color: 'from-blue-500 to-blue-600' },
+  'mentorship': { id: 'techmo', name: 'TechPO (Mentor)', color: 'from-pink-500 to-pink-600' },
+  'quality-assurance': { id: 'techqa', name: 'TechQA (QA Tester)', color: 'from-pink-500 to-pink-600' },
+  'development': { id: 'techdev', name: 'TechDev (Developer)', color: 'from-pink-500 to-pink-600' },
+  'leadership': { id: 'techleads', name: 'TechLeads (Leader)', color: 'from-pink-500 to-pink-600' },
   'design': { id: 'techarchs', name: 'TechArchs (Designer)', color: 'from-orange-500 to-orange-600' },
   'security': { id: 'techguard', name: 'TechGuard (Security)', color: 'from-red-500 to-red-600' },
 };
@@ -449,13 +449,13 @@ const ProjectCompletion = () => {
     }
   };
 
-  const inputClass = "w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none text-sm transition-all";
+  const inputClass = "w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none text-sm transition-all";
 
   if (loading) {
     return (
       <>
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
         </div>
       </>
     );
@@ -484,7 +484,7 @@ const ProjectCompletion = () => {
 
             <div className="text-center mb-8">
               <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">
-                Complete <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500">Project</span>
+                Complete <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">Project</span>
               </h1>
               <p className="text-gray-400 text-sm">{project.projectTitle}</p>
             </div>
@@ -499,10 +499,10 @@ const ProjectCompletion = () => {
                     <p className="text-gray-500 text-xs">No badges can be assigned, and this project cannot be re-submitted.</p>
                   </div>
                 ) : isUnderReview ? (
-                  <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center">
-                    <h2 className="text-lg font-bold text-blue-700 mb-1">Submitted for review</h2>
+                  <div className="bg-pink-50 border border-pink-200 rounded-2xl p-6 text-center">
+                    <h2 className="text-lg font-bold text-pink-700 mb-1">Submitted for review</h2>
                     <p className="text-gray-600 text-sm">Your project is with the She Model Tech team. You will be notified once it is reviewed. Badges can be assigned only after approval.</p>
-                    <p className="text-gray-400 text-xs mt-3">Submission link: <a href={project.reviewSubmissionUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{project.reviewSubmissionUrl}</a></p>
+                    <p className="text-gray-400 text-xs mt-3">Submission link: <a href={project.reviewSubmissionUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:underline">{project.reviewSubmissionUrl}</a></p>
                   </div>
                 ) : (
                   <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
@@ -561,11 +561,11 @@ const ProjectCompletion = () => {
 
             {/* Step 4: Done */}
             {step === 4 && (
-              <div className="bg-blue-600/10 border border-gray-200 rounded-2xl p-8 text-center">
-                <svg className="w-16 h-16 text-blue-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="bg-pink-600/10 border border-gray-200 rounded-2xl p-8 text-center">
+                <svg className="w-16 h-16 text-pink-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h2 className="text-xl font-bold text-blue-500 mb-2">
+                <h2 className="text-xl font-bold text-pink-500 mb-2">
                   {project?.isPaid && project?.status === 'awaiting_payment_confirmation' ? 'Work Marked Done' : 'Project Completed'}
                 </h2>
                 <p className="text-gray-400 text-sm mb-6">
@@ -580,11 +580,11 @@ const ProjectCompletion = () => {
                     Back to Dashboard
                   </Link>
                   {project?.isPaid ? (
-                    <Link to="/project-vault" className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all">
+                    <Link to="/project-vault" className="px-6 py-2.5 bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all">
                       Payment Confirmations
                     </Link>
                   ) : (
-                    <Link to="/projects" className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-gray-900 font-bold rounded-xl text-sm transition-all">
+                    <Link to="/projects" className="px-6 py-2.5 bg-gradient-to-r from-pink-500 to-pink-600 text-gray-900 font-bold rounded-xl text-sm transition-all">
                       Browse Projects
                     </Link>
                   )}
@@ -631,7 +631,7 @@ const ProjectCompletion = () => {
                 </div>
 
                 <button onClick={() => setStep(2)} disabled={!hasTeam}
-                  className="w-full py-3.5 min-h-[48px] bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-sm transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                  className="w-full py-3.5 min-h-[48px] bg-pink-600 hover:bg-pink-700 text-white font-black rounded-xl text-sm transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
                   {hasTeam ? 'Proceed to Evaluation' : `Needs a team of ${MIN_TEAM_SIZE}+ to complete`}
                 </button>
               </div>
@@ -671,7 +671,7 @@ const ProjectCompletion = () => {
                           ) : (
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" checked={ev.awardBadge} onChange={e => updateEval(index, 'awardBadge', e.target.checked)}
-                              className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-400" />
+                              className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-400" />
                             <span className="text-gray-600 text-xs font-semibold">Award Badge</span>
                           </label>
                           )}
@@ -739,7 +739,7 @@ const ProjectCompletion = () => {
                         Back
                       </button>
                       <button onClick={handleComplete} disabled={submitting}
-                        className="flex-1 py-3.5 min-h-[48px] bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-sm transition-all shadow-lg disabled:opacity-50">
+                        className="flex-1 py-3.5 min-h-[48px] bg-pink-600 hover:bg-pink-700 text-white font-black rounded-xl text-sm transition-all shadow-lg disabled:opacity-50">
                         {submitting ? 'Completing Project...' : project?.isPaid ? 'Mark Work Done & Request Payment Confirmations' : 'Complete Project & Award Badges'}
                       </button>
                     </div>

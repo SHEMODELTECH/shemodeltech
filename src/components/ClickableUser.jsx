@@ -92,7 +92,7 @@ export const ClickableUserAvatar = ({
   return (
     <button
       onClick={handleClick}
-      className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-blue-500 flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400/50 relative flex-shrink-0 ${className}`}
+      className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-r from-pink-500 to-pink-500 flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400/50 relative flex-shrink-0 ${className}`}
       title={`View profile of ${user.displayName || user.firstName + ' ' + user.lastName || user.email?.split('@')[0] || 'user'}`}
       aria-label={`View profile of ${user.displayName || user.firstName + ' ' + user.lastName || user.email?.split('@')[0] || 'user'}`}
       {...props}
@@ -115,7 +115,7 @@ export const ClickableUserAvatar = ({
       
       {/* Online status indicator */}
       {showOnlineStatus && (
-        <div className={`absolute ${onlineStatusSize[size]} bg-blue-500 rounded-full border-white`}></div>
+        <div className={`absolute ${onlineStatusSize[size]} bg-pink-500 rounded-full border-white`}></div>
       )}
     </button>
   );
@@ -208,7 +208,7 @@ export const ClickableUserName = ({
       </button>
       
       {showTitle && getUserTitle() && (
-        <span className="text-xs sm:text-sm text-blue-600 truncate">
+        <span className="text-xs sm:text-sm text-pink-600 truncate">
           {getUserTitle()}
         </span>
       )}

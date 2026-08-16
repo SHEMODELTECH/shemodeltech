@@ -50,7 +50,7 @@ const Support = () => {
     { q: 'Is my data safe?', a: 'Yes. All data is stored securely with encrypted connections. See our Privacy Policy for full details.' },
   ];
 
-  const inputClass = "w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-all";
+  const inputClass = "w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-all";
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -58,11 +58,11 @@ const Support = () => {
       <p className="text-gray-500 text-sm mb-8">Find answers or contact us.</p>
 
       {/* Direct contact - open to every member */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
+      <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-8">
         <p className="text-gray-900 text-sm font-semibold">Email us directly</p>
         <p className="text-gray-600 text-xs">
           Every member can reach the team at{' '}
-          <a href={`mailto:${BRAND.supportEmail}`} className="text-blue-600 font-medium hover:underline">{BRAND.supportEmail}</a>, or use the form below.
+          <a href={`mailto:${BRAND.supportEmail}`} className="text-pink-600 font-medium hover:underline">{BRAND.supportEmail}</a>, or use the form below.
         </p>
       </div>
 
@@ -93,7 +93,7 @@ const Support = () => {
         <h2 className="text-lg font-bold text-gray-900 mb-4">Contact Us</h2>
         {submitted ? (
           <div className="text-center py-8">
-            <svg className="w-12 h-12 text-blue-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-12 h-12 text-pink-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p className="text-gray-900 font-semibold mb-1">Message sent!</p>
@@ -119,7 +119,7 @@ const Support = () => {
               <label className="block text-gray-700 text-xs font-medium mb-1">Message *</label>
               <textarea value={form.message} onChange={handleChange('message')} rows={4} className={inputClass + " resize-none"} placeholder="Describe your issue or question..." required />
             </div>
-            <button type="submit" disabled={sending} className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50">
+            <button type="submit" disabled={sending} className="bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50">
               {sending ? 'Sending...' : 'Send Message'}
             </button>
           </form>

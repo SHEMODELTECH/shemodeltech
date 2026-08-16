@@ -43,7 +43,7 @@ const AuthAction = () => {
           <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-sm p-6 sm:p-8 text-center">
             {status === 'working' && (
               <>
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto my-8"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto my-8"></div>
                 <p className="text-gray-500 text-sm">Confirming, one moment…</p>
               </>
             )}
@@ -54,14 +54,14 @@ const AuthAction = () => {
                 </div>
                 <p className="text-gray-900 font-semibold mb-1">{mode === 'recoverEmail' ? 'Email change reversed' : 'Email verified'}</p>
                 <p className="text-gray-500 text-sm mb-6">Your account is all set - you can sign in now.</p>
-                <button onClick={() => navigate('/login')} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Sign in now</button>
+                <button onClick={() => navigate('/login')} className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Sign in now</button>
               </>
             )}
             {status === 'error' && (
               <>
                 <p className="text-gray-900 font-semibold mb-1">This link has expired</p>
                 <p className="text-gray-500 text-sm mb-6">It may already have been used. Please sign in, or request a new email.</p>
-                <button onClick={() => navigate('/login')} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Go to sign in</button>
+                <button onClick={() => navigate('/login')} className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Go to sign in</button>
               </>
             )}
           </div>

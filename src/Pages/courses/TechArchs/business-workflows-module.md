@@ -2,7 +2,7 @@
 
 **Purpose:** Build business solutions without extensive programming.
 
-**Tools needed for this module:** A web browser and an email address to sign up for free tiers — a form tool like [Google Forms](https://forms.google.com) or [Jotform](https://www.jotform.com), and a general automation platform like [Zapier](https://zapier.com) or [Make](https://www.make.com) (both have usable free tiers). No coding environment or installs are required, everything happens in the browser. You won't need every tool set up at once, each topic only needs its own account.
+**Tools needed for this module:** A web browser and an email address to sign up for free tiers, a form tool like [Google Forms](https://forms.google.com) or [Jotform](https://www.jotform.com), and a general automation platform like [Zapier](https://zapier.com) or [Make](https://www.make.com) (both have usable free tiers). No coding environment or installs are required, everything happens in the browser. You won't need every tool set up at once, each topic only needs its own account.
 
 ### Topic 1: Forms
 
@@ -20,18 +20,18 @@
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#6d28d9', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
-    F["<b>Field</b><br/><br/>Text, dropdown,<br/>date, file, etc."]
-    CL["<b>Conditional<br/>Logic</b><br/><br/>Show/hide based<br/>on an answer"]
-    V["<b>Validation</b><br/><br/>Enforces format<br/>before submit"]
-    S["<b>Submission</b><br/><br/>Structured row of<br/>data, ready to use"]
+ F["<b>Field</b><br/><br/>Text, dropdown,<br/>date, file, etc."]
+ CL["<b>Conditional<br/>Logic</b><br/><br/>Show/hide based<br/>on an answer"]
+ V["<b>Validation</b><br/><br/>Enforces format<br/>before submit"]
+ S["<b>Submission</b><br/><br/>Structured row of<br/>data, ready to use"]
 
-    F ==> CL ==> V ==> S
+ F ==> CL ==> V ==> S
 
-    style F fill:#6d28d9,color:#fff,stroke:#4c1d95,stroke-width:4px
-    style CL fill:#ede9fe,color:#1a202c,stroke:#6d28d9,stroke-width:4px
-    style V fill:#ede9fe,color:#1a202c,stroke:#6d28d9,stroke-width:4px
-    style S fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    linkStyle default stroke-width:4px,stroke:#333333
+ style F fill:#6d28d9,color:#fff,stroke:#4c1d95,stroke-width:4px
+ style CL fill:#ede9fe,color:#1a202c,stroke:#6d28d9,stroke-width:4px
+ style V fill:#ede9fe,color:#1a202c,stroke:#6d28d9,stroke-width:4px
+ style S fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+ linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A well-built form is what makes everything downstream (approvals, notifications, integrations) reliable, messy or missing data at the form stage causes problems everywhere else in a workflow
 - Most no-code form tools store submissions in a connected spreadsheet automatically, which is often the simplest possible "database" for a small workflow, no separate setup required
@@ -78,19 +78,19 @@ You have a working form with conditional logic and validation, and a test submis
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#b91c1c', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
-    S["<b>Submission</b><br/><br/>Request enters<br/>the workflow"]
-    A["<b>Approver</b><br/><br/>Fixed or dynamic<br/>routing"]
-    D["<b>Decision Branch</b><br/><br/>Approved / rejected<br/>path"]
-    E["<b>Escalation</b><br/><br/>Reminder or reroute<br/>if no response"]
+ S["<b>Submission</b><br/><br/>Request enters<br/>the workflow"]
+ A["<b>Approver</b><br/><br/>Fixed or dynamic<br/>routing"]
+ D["<b>Decision Branch</b><br/><br/>Approved / rejected<br/>path"]
+ E["<b>Escalation</b><br/><br/>Reminder or reroute<br/>if no response"]
 
-    S ==> A ==> D
-    A -.-> E
+ S ==> A ==> D
+ A -.-> E
 
-    style S fill:#e2e8f0,color:#1a202c,stroke:#b91c1c,stroke-width:4px
-    style A fill:#b91c1c,color:#fff,stroke:#7f1d1d,stroke-width:4px
-    style D fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style E fill:#fee2e2,color:#1a202c,stroke:#b91c1c,stroke-width:4px
-    linkStyle default stroke-width:4px,stroke:#333333
+ style S fill:#e2e8f0,color:#1a202c,stroke:#b91c1c,stroke-width:4px
+ style A fill:#b91c1c,color:#fff,stroke:#7f1d1d,stroke-width:4px
+ style D fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+ style E fill:#fee2e2,color:#1a202c,stroke:#b91c1c,stroke-width:4px
+ linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Dynamic approver routing (like "route to the requester's manager, whoever that is") is what makes an approval step scale across a whole organization, without building a separate flow for every team
 - Skipping escalation rules is a common beginner mistake, without one, a single unresponsive approver can silently stall every request behind them
@@ -137,19 +137,19 @@ You have a working approval step that routes a submission to an approver and upd
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0369a1', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
-    T["<b>Trigger Event</b><br/><br/>Submission, status<br/>change, schedule"]
-    C["<b>Channel</b><br/><br/>Email, Slack,<br/>SMS, push"]
-    DC["<b>Dynamic Content</b><br/><br/>Real data inserted<br/>into the message"]
-    R["<b>Recipient List</b><br/><br/>Fixed, dynamic,<br/>or group"]
+ T["<b>Trigger Event</b><br/><br/>Submission, status<br/>change, schedule"]
+ C["<b>Channel</b><br/><br/>Email, Slack,<br/>SMS, push"]
+ DC["<b>Dynamic Content</b><br/><br/>Real data inserted<br/>into the message"]
+ R["<b>Recipient List</b><br/><br/>Fixed, dynamic,<br/>or group"]
 
-    T ==> C ==> DC
-    T ==> R
+ T ==> C ==> DC
+ T ==> R
 
-    style T fill:#e2e8f0,color:#1a202c,stroke:#0369a1,stroke-width:4px
-    style C fill:#0369a1,color:#fff,stroke:#075985,stroke-width:4px
-    style DC fill:#e0f2fe,color:#1a202c,stroke:#0369a1,stroke-width:4px
-    style R fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    linkStyle default stroke-width:4px,stroke:#333333
+ style T fill:#e2e8f0,color:#1a202c,stroke:#0369a1,stroke-width:4px
+ style C fill:#0369a1,color:#fff,stroke:#075985,stroke-width:4px
+ style DC fill:#e0f2fe,color:#1a202c,stroke:#0369a1,stroke-width:4px
+ style R fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+ linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Dynamic content is what separates a genuinely useful notification from a generic, easily-ignored one, specific details make people act on a message instead of skimming past it
 - Sending too many notifications for minor events is a common design mistake, it trains people to ignore the channel entirely, undermining the ones that actually matter
@@ -196,18 +196,18 @@ You have working notifications on both the approved and rejected paths of your w
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#166534', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
-    TR["<b>Trigger</b><br/><br/>Event in<br/>App A"]
-    CN["<b>Connector</b><br/><br/>Pre-built bridge<br/>to each app"]
-    DM["<b>Data Mapping</b><br/><br/>Field from A →<br/>field in B"]
-    AC["<b>Action</b><br/><br/>Result in<br/>App B (or C, D...)"]
+ TR["<b>Trigger</b><br/><br/>Event in<br/>App A"]
+ CN["<b>Connector</b><br/><br/>Pre-built bridge<br/>to each app"]
+ DM["<b>Data Mapping</b><br/><br/>Field from A →<br/>field in B"]
+ AC["<b>Action</b><br/><br/>Result in<br/>App B (or C, D...)"]
 
-    TR ==> CN ==> DM ==> AC
+ TR ==> CN ==> DM ==> AC
 
-    style TR fill:#e2e8f0,color:#1a202c,stroke:#166534,stroke-width:4px
-    style CN fill:#166534,color:#fff,stroke:#14532d,stroke-width:4px
-    style DM fill:#dcfce7,color:#1a202c,stroke:#166534,stroke-width:4px
-    style AC fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    linkStyle default stroke-width:4px,stroke:#333333
+ style TR fill:#e2e8f0,color:#1a202c,stroke:#166534,stroke-width:4px
+ style CN fill:#166534,color:#fff,stroke:#14532d,stroke-width:4px
+ style DM fill:#dcfce7,color:#1a202c,stroke:#166534,stroke-width:4px
+ style AC fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+ linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Integrations are what turn separate tools (a form, an approval step, a CRM, a chat app) into one connected workflow, without them, each tool is an isolated island requiring manual copy-paste between them
 - Most no-code platforms charge based on the number of "tasks" (individual actions run) per month, which matters when designing a multi-step workflow that might trigger dozens of times a day

@@ -40,14 +40,14 @@ export const UserQuickLinksSidebar = ({ currentUser, onNavigate, isMobile = fals
       {/* Profile Card */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-3">
         {/* Banner */}
-        <div className="h-14 bg-gradient-to-r from-blue-50 to-blue-100" />
+        <div className="h-14 bg-gradient-to-r from-pink-50 to-pink-100" />
         {/* Avatar + Name */}
         <div className="px-4 pb-4 -mt-6">
           <button onClick={() => handleLinkClick(`/profile/${currentUser.email}`)} className="block mb-2">
             {currentUser.photoURL ? (
               <img src={currentUser.photoURL} alt="" className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm" />
             ) : (
-              <div className="w-14 h-14 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold border-2 border-white shadow-sm">
+              <div className="w-14 h-14 rounded-full bg-pink-600 flex items-center justify-center text-white text-lg font-bold border-2 border-white shadow-sm">
                 {currentUser.displayName?.[0] || 'U'}
               </div>
             )}
@@ -59,7 +59,7 @@ export const UserQuickLinksSidebar = ({ currentUser, onNavigate, isMobile = fals
         </div>
         {/* Divider */}
         <div className="border-t border-gray-100 px-4 py-3">
-          <button onClick={() => handleLinkClick(`/profile/${currentUser.email}`)} className="text-blue-600 text-xs font-medium hover:underline">
+          <button onClick={() => handleLinkClick(`/profile/${currentUser.email}`)} className="text-pink-600 text-xs font-medium hover:underline">
             View profile
           </button>
         </div>
@@ -242,14 +242,14 @@ export const FollowSuggestionsSidebar = ({ currentUser, isMobile = false }) => {
       },
       achiever: { 
         label: 'Achiever', 
-        color: 'text-blue-600', 
-        bg: 'bg-blue-600/20', 
+        color: 'text-pink-600', 
+        bg: 'bg-pink-600/20', 
         border: 'border-gray-200',
       },
       newcomer: { 
         label: 'Newcomer', 
-        color: 'text-blue-600', 
-        bg: 'bg-blue-600/20', 
+        color: 'text-pink-600', 
+        bg: 'bg-pink-600/20', 
         border: 'border-gray-200',
       }
     };
@@ -269,7 +269,7 @@ export const FollowSuggestionsSidebar = ({ currentUser, isMobile = false }) => {
         {/* Header */}
         <div className="px-4 pt-4 pb-3">
           <h3 className="text-gray-900 font-semibold text-sm flex items-center gap-2">
-            <svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             Discover People
@@ -278,15 +278,15 @@ export const FollowSuggestionsSidebar = ({ currentUser, isMobile = false }) => {
         </div>
 
         {/* Stats */}
-        <div className="mx-4 mb-3 p-3 bg-blue-50 border border-blue-100 rounded-lg">
+        <div className="mx-4 mb-3 p-3 bg-pink-50 border border-pink-100 rounded-lg">
           <div className="grid grid-cols-2 gap-3 text-center">
-            <button onClick={() => window.location.href = '/my-connections?tab=following'} className="hover:bg-blue-100 rounded-lg p-1 transition-colors">
-              <div className="text-lg font-bold text-blue-600">{userCounts.following}</div>
-              <div className="text-xs text-blue-500">Following</div>
+            <button onClick={() => window.location.href = '/my-connections?tab=following'} className="hover:bg-pink-100 rounded-lg p-1 transition-colors">
+              <div className="text-lg font-bold text-pink-600">{userCounts.following}</div>
+              <div className="text-xs text-pink-500">Following</div>
             </button>
-            <button onClick={() => window.location.href = '/my-connections?tab=followers'} className="hover:bg-blue-100 rounded-lg p-1 transition-colors">
-              <div className="text-lg font-bold text-blue-600">{userCounts.followers}</div>
-              <div className="text-xs text-blue-500">Followers</div>
+            <button onClick={() => window.location.href = '/my-connections?tab=followers'} className="hover:bg-pink-100 rounded-lg p-1 transition-colors">
+              <div className="text-lg font-bold text-pink-600">{userCounts.followers}</div>
+              <div className="text-xs text-pink-500">Followers</div>
             </button>
           </div>
         </div>
@@ -295,7 +295,7 @@ export const FollowSuggestionsSidebar = ({ currentUser, isMobile = false }) => {
         <div className="px-4 pb-4">
           {loading ? (
             <div className="text-center py-6">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500 mx-auto mb-2"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-pink-500 mx-auto mb-2"></div>
               <p className="text-gray-400 text-xs">Finding people...</p>
             </div>
           ) : suggestedUsers.length === 0 ? (

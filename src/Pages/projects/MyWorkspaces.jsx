@@ -56,7 +56,7 @@ const MyWorkspaces = () => {
     fetchProjects();
   }, [currentUser]);
 
-  if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div></div>;
+  if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -70,7 +70,7 @@ const MyWorkspaces = () => {
           </svg>
           <p className="text-gray-900 font-semibold mb-1">No active workspaces</p>
           <p className="text-gray-500 text-sm mb-4">Join a project to access its workspace.</p>
-          <button onClick={() => navigate('/projects')} className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition-all">
+          <button onClick={() => navigate('/projects')} className="bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition-all">
             Browse Projects
           </button>
         </div>
@@ -80,7 +80,7 @@ const MyWorkspaces = () => {
             <div
               key={project.id}
               onClick={() => navigate(`/projects/${project.id}/workspace`)}
-              className="bg-white border border-blue-200 rounded-xl p-4 cursor-pointer hover:border-blue-400 hover:shadow-sm transition-all"
+              className="bg-white border border-pink-200 rounded-xl p-4 cursor-pointer hover:border-pink-400 hover:shadow-sm transition-all"
             >
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
@@ -89,9 +89,9 @@ const MyWorkspaces = () => {
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                   {project.isOwner && (
-                    <span className="text-[10px] font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Owner</span>
+                    <span className="text-[10px] font-semibold bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full">Owner</span>
                   )}
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-md ${project.status === 'active' ? 'bg-blue-50 text-blue-700' : 'bg-orange-50 text-orange-700'}`}>
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-md ${project.status === 'active' ? 'bg-pink-50 text-pink-700' : 'bg-orange-50 text-orange-700'}`}>
                     {project.status === 'active' ? 'Active' : 'Completing'}
                   </span>
                   <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -245,8 +245,8 @@ You now have a functioning HubSpot CRM with contacts, companies, deals, tasks, a
 
 The complete course will continue with:
 
-- Module 2 — Salesforce CRM
-- Module 3 — Zoho CRM
+- Module 2, Salesforce CRM
+- Module 3, Zoho CRM
 - Capstone Project
 - Course Completion Checklist
 

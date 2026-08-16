@@ -58,14 +58,14 @@ const DatabaseSetup = () => {
           <button
             onClick={runSetup}
             disabled={isRunning}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold disabled:opacity-50"
+            className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold disabled:opacity-50"
           >
             {isRunning ? 'Running Setup...' : 'Run Database Setup'}
           </button>
         </div>
 
         {setupStatus && (
-          <div className={`p-4 rounded-lg ${setupStatus.includes('Success') ? 'bg-blue-900/50' : 'bg-red-900/50'}`}>
+          <div className={`p-4 rounded-lg ${setupStatus.includes('Success') ? 'bg-pink-900/50' : 'bg-red-900/50'}`}>
             <pre className="whitespace-pre-wrap">{setupStatus}</pre>
           </div>
         )}

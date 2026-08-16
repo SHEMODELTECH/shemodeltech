@@ -23,11 +23,11 @@ const SERVICES = [
       bg: "bg-white",
       text: "text-gray-900",
       subtext: "text-gray-600",
-      checkBg: "bg-blue-100",
-      checkColor: "text-blue-600",
-      btnBg: "bg-blue-600 hover:bg-blue-700",
+      checkBg: "bg-pink-100",
+      checkColor: "text-pink-600",
+      btnBg: "bg-pink-600 hover:bg-pink-700",
       btnText: "text-white",
-      iconBg: "bg-blue-100"
+      iconBg: "bg-pink-100"
     }
   },
   {
@@ -46,11 +46,11 @@ const SERVICES = [
       bg: "bg-gray-950",
       text: "text-white",
       subtext: "text-gray-600",
-      checkBg: "bg-blue-900/50",
-      checkColor: "text-blue-400",
+      checkBg: "bg-pink-900/50",
+      checkColor: "text-pink-400",
       btnBg: "bg-orange-500 hover:bg-orange-600",
       btnText: "text-white",
-      iconBg: "bg-blue-900/50"
+      iconBg: "bg-pink-900/50"
     }
   },
   {
@@ -66,13 +66,13 @@ const SERVICES = [
       "Scalable backend integrations"
     ],
     theme: {
-      bg: "bg-blue-700",
+      bg: "bg-pink-700",
       text: "text-white",
-      subtext: "text-blue-600",
+      subtext: "text-pink-600",
       checkBg: "bg-white/20",
       checkColor: "text-white",
-      btnBg: "bg-white hover:bg-blue-50",
-      btnText: "text-blue-700",
+      btnBg: "bg-white hover:bg-pink-50",
+      btnText: "text-pink-700",
       iconBg: "bg-white/20"
     }
   },
@@ -92,11 +92,11 @@ const SERVICES = [
       bg: "bg-gray-100",
       text: "text-gray-900",
       subtext: "text-gray-600",
-      checkBg: "bg-blue-100",
-      checkColor: "text-blue-600",
+      checkBg: "bg-pink-100",
+      checkColor: "text-pink-600",
       btnBg: "bg-orange-500 hover:bg-orange-600",
       btnText: "text-white",
-      iconBg: "bg-blue-100"
+      iconBg: "bg-pink-100"
     }
   },
   {
@@ -138,11 +138,11 @@ const SERVICES = [
       bg: "bg-white",
       text: "text-gray-900",
       subtext: "text-gray-600",
-      checkBg: "bg-blue-100",
-      checkColor: "text-blue-700",
+      checkBg: "bg-pink-100",
+      checkColor: "text-pink-700",
       btnBg: "bg-orange-500 hover:bg-orange-600",
       btnText: "text-white",
-      iconBg: "bg-blue-100"
+      iconBg: "bg-pink-100"
     }
   }
 ];
@@ -343,12 +343,12 @@ const CareerHome = () => {
 
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-white/90 max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-12 md:mb-16"
                style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)', fontFamily: '"Inter", sans-serif', fontWeight: '300' }}>
-              We build and transform <span className="text-blue-400 font-semibold">web and mobile applications</span> into <span className="text-blue-400 font-semibold">intelligent systems</span> that automate operations, enhance customer experience, and drive <span className="text-orange-400 font-semibold">measurable growth</span>
+              We build and transform <span className="text-pink-400 font-semibold">web and mobile applications</span> into <span className="text-pink-400 font-semibold">intelligent systems</span> that automate operations, enhance customer experience, and drive <span className="text-orange-400 font-semibold">measurable growth</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center mb-6 sm:mb-8 md:mb-10">
               <button onClick={handleContactUs}
-                className="group relative bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 text-white px-8 sm:px-10 md:px-14 py-4 sm:py-5 md:py-6 rounded-full font-bold text-base sm:text-lg md:text-xl transition-all duration-300 shadow-2xl overflow-hidden w-full sm:w-auto max-w-sm hover:shadow-blue-500/50"
+                className="group relative bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 text-white px-8 sm:px-10 md:px-14 py-4 sm:py-5 md:py-6 rounded-full font-bold text-base sm:text-lg md:text-xl transition-all duration-300 shadow-2xl overflow-hidden w-full sm:w-auto max-w-sm hover:shadow-pink-500/50"
                 style={{ boxShadow: "0 10px 50px rgba(249, 115, 22, 0.4), 0 0 30px rgba(249, 115, 22, 0.2)", fontFamily: '"Inter", sans-serif' }}>
                 <span className="relative drop-shadow-lg">Start Your Transformation</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
@@ -375,7 +375,7 @@ const CareerHome = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-6 sm:mb-8"
                 style={{ fontFamily: '"Inter", sans-serif' }}>
               We Don't Just Build Software.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600">
                 We Build Intelligent Ecosystems.
               </span>
             </h2>
@@ -388,12 +388,12 @@ const CareerHome = () => {
 
         {/* ===== CORE VALUES ===== */}
         <section className="w-full px-4 sm:px-6 lg:px-8 mb-16 sm:mb-24 md:mb-32 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-black to-blue-600/10 -z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 via-black to-pink-600/10 -z-10"></div>
           <div className="text-center mb-10 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6"
                 style={{ fontFamily: '"Inter", sans-serif' }}>
               Our Core{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600">Values</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600">Values</span>
             </h2>
             <p className="text-gray-700 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
                style={{ fontFamily: '"Inter", sans-serif' }}>
@@ -403,7 +403,7 @@ const CareerHome = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 w-full max-w-6xl mx-auto">
             {CORE_VALUES.map((item, index) => (
               <div key={index} className="group transition-all duration-300">
-                <div className="bg-gradient-to-br from-blue-500/30 via-gray-900/40 to-black/60 rounded-xl p-4 sm:p-6 md:p-8 border border-blue-500/20 shadow-xl hover:border-orange-400/40 transition-all duration-300 text-center h-full flex flex-col">
+                <div className="bg-gradient-to-br from-pink-500/30 via-gray-900/40 to-black/60 rounded-xl p-4 sm:p-6 md:p-8 border border-pink-500/20 shadow-xl hover:border-orange-400/40 transition-all duration-300 text-center h-full flex flex-col">
                   <div className="text-3xl sm:text-4xl md:text-5xl mb-2 sm:mb-3 transform">{item.icon}</div>
                   <h3 className="text-lg sm:text-xl md:text-2xl font-black mb-1 sm:mb-2 text-white group-hover:text-orange-400 transition-colors"
                       style={{ fontFamily: '"Inter", sans-serif' }}>{item.value}</h3>
@@ -421,7 +421,7 @@ const CareerHome = () => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6"
                 style={{ fontFamily: '"Inter", sans-serif' }}>
               Our{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600">Services</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600">Services</span>
             </h2>
             <p className="text-gray-700 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
                style={{ fontFamily: '"Inter", sans-serif' }}>
@@ -479,7 +479,7 @@ const CareerHome = () => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6"
                 style={{ fontFamily: '"Inter", sans-serif' }}>
               Business{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600">Outcomes We Drive</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600">Outcomes We Drive</span>
             </h2>
             <p className="text-gray-700 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
                style={{ fontFamily: '"Inter", sans-serif' }}>
@@ -488,7 +488,7 @@ const CareerHome = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full max-w-6xl mx-auto">
             {OUTCOMES.map((outcome, index) => (
-              <div key={index} className="bg-gradient-to-br from-blue-500/30 via-gray-900/40 to-black/60 rounded-xl p-3 sm:p-4 md:p-5 border border-blue-500/20 hover:border-orange-400/40 transition-all duration-300 text-center group">
+              <div key={index} className="bg-gradient-to-br from-pink-500/30 via-gray-900/40 to-black/60 rounded-xl p-3 sm:p-4 md:p-5 border border-pink-500/20 hover:border-orange-400/40 transition-all duration-300 text-center group">
                 <div className="text-orange-400 text-base sm:text-lg md:text-xl mb-1.5 sm:mb-2">✓</div>
                 <p className="text-white text-sm sm:text-base md:text-lg font-medium" style={{ fontFamily: '"Inter", sans-serif' }}>{outcome}</p>
               </div>
@@ -502,35 +502,35 @@ const CareerHome = () => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6"
                 style={{ fontFamily: '"Inter", sans-serif' }}>
               Trusted by{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600">Industry Leaders</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600">Industry Leaders</span>
             </h2>
             <p className="text-gray-700 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
                style={{ fontFamily: '"Inter", sans-serif' }}>
               From startups to established enterprises, we've delivered exceptional digital solutions
             </p>
           </div>
-          <div className="w-full relative overflow-hidden bg-gradient-to-r from-blue-500/40 via-gray-900/50 to-blue-600/40 rounded-2xl border border-blue-500/20 py-5 sm:py-8">
+          <div className="w-full relative overflow-hidden bg-gradient-to-r from-pink-500/40 via-gray-900/50 to-pink-600/40 rounded-2xl border border-pink-500/20 py-5 sm:py-8">
             <div className="flex animate-scroll">
               {[0, 1].map((set) => (
                 <div key={set} className="flex space-x-6 sm:space-x-12 px-4 sm:px-6">
                   <div className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[180px] md:min-w-[240px]">
-                    <div className="text-blue-400 text-sm sm:text-base font-bold mb-1 tracking-wider">BUSINESS WEBSITE</div>
+                    <div className="text-pink-400 text-sm sm:text-base font-bold mb-1 tracking-wider">BUSINESS WEBSITE</div>
                     <div className="text-white text-base sm:text-lg md:text-xl font-bold text-center">Content Phase Media</div>
                   </div>
                   <div className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[180px] md:min-w-[240px]">
-                    <div className="text-blue-400 text-sm sm:text-base font-bold mb-1 tracking-wider">BUSINESS WEBSITE</div>
+                    <div className="text-pink-400 text-sm sm:text-base font-bold mb-1 tracking-wider">BUSINESS WEBSITE</div>
                     <div className="text-white text-base sm:text-lg md:text-xl font-bold text-center">Filomos Global Services</div>
                   </div>
                   <div className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[180px] md:min-w-[240px]">
-                    <div className="text-blue-400 text-sm sm:text-base font-bold mb-1 tracking-wider">BUSINESS WEBSITE</div>
+                    <div className="text-pink-400 text-sm sm:text-base font-bold mb-1 tracking-wider">BUSINESS WEBSITE</div>
                     <div className="text-white text-base sm:text-lg md:text-xl font-bold text-center">Timeless Venture Group</div>
                   </div>
                   <div className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[180px] md:min-w-[240px]">
-                    <div className="text-blue-400 text-sm sm:text-base font-bold mb-1 tracking-wider">RESEARCH WEBSITE</div>
+                    <div className="text-pink-400 text-sm sm:text-base font-bold mb-1 tracking-wider">RESEARCH WEBSITE</div>
                     <div className="text-white text-base sm:text-lg md:text-xl font-bold text-center">DEPA Lab</div>
                   </div>
                   <div className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[180px] md:min-w-[240px]">
-                    <div className="text-blue-400 text-sm sm:text-base font-bold mb-1 tracking-wider">STUDENT PLATFORM</div>
+                    <div className="text-pink-400 text-sm sm:text-base font-bold mb-1 tracking-wider">STUDENT PLATFORM</div>
                     <div className="text-white text-base sm:text-lg md:text-xl font-bold text-center">She Model Tech Careers</div>
                   </div>
                 </div>
@@ -545,15 +545,15 @@ const CareerHome = () => {
 
             {/* Header */}
             <div className="text-center mb-10 sm:mb-14">
-              <div className="inline-flex items-center bg-blue-500/10 rounded-full px-5 py-2 border border-blue-400/25 mb-6">
-                <span className="text-blue-500 font-bold text-sm sm:text-base" style={{ fontFamily: '"Inter", sans-serif' }}>
+              <div className="inline-flex items-center bg-pink-500/10 rounded-full px-5 py-2 border border-pink-400/25 mb-6">
+                <span className="text-pink-500 font-bold text-sm sm:text-base" style={{ fontFamily: '"Inter", sans-serif' }}>
                    How We Work Together
                 </span>
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6"
                   style={{ fontFamily: '"Inter", sans-serif' }}>
                 Our{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600">
                   Engagement Process
                 </span>
               </h2>
@@ -568,13 +568,13 @@ const CareerHome = () => {
 
               {/* Step 1 */}
               <div className="relative group">
-                <div className="bg-gradient-to-br from-blue-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-blue-500/20 hover:border-blue-400/50 transition-all duration-300 h-full flex flex-col">
-                  <div className="text-blue-400 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>Step 01</div>
+                <div className="bg-gradient-to-br from-pink-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-pink-500/20 hover:border-pink-400/50 transition-all duration-300 h-full flex flex-col">
+                  <div className="text-pink-400 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>Step 01</div>
                   <h3 className="text-white text-lg sm:text-xl font-black mb-3" style={{ fontFamily: '"Inter", sans-serif' }}>
                     Consultation Fee
                   </h3>
                   <p className="text-gray-600 text-sm sm:text-base leading-relaxed flex-grow" style={{ fontFamily: '"Inter", sans-serif' }}>
-                    We begin every engagement with a paid consultation. This fee is <span className="text-blue-400 font-semibold">credited toward your project</span> if you choose to build with us - so your investment starts working immediately.
+                    We begin every engagement with a paid consultation. This fee is <span className="text-pink-400 font-semibold">credited toward your project</span> if you choose to build with us - so your investment starts working immediately.
                   </p>
                 </div>
                 {/* Connector arrow */}
@@ -583,8 +583,8 @@ const CareerHome = () => {
 
               {/* Step 2 */}
               <div className="relative group">
-                <div className="bg-gradient-to-br from-blue-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-blue-500/20 hover:border-orange-400/50 transition-all duration-300 h-full flex flex-col">
-                  <div className="text-blue-400 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>Step 02</div>
+                <div className="bg-gradient-to-br from-pink-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-pink-500/20 hover:border-orange-400/50 transition-all duration-300 h-full flex flex-col">
+                  <div className="text-pink-400 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>Step 02</div>
                   <h3 className="text-white text-lg sm:text-xl font-black mb-3" style={{ fontFamily: '"Inter", sans-serif' }}>
                     Custom Proposal Delivered
                   </h3>
@@ -597,7 +597,7 @@ const CareerHome = () => {
 
               {/* Step 3 */}
               <div className="group">
-                <div className="bg-gradient-to-br from-blue-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-blue-500/20 hover:border-orange-400/50 transition-all duration-300 h-full flex flex-col">
+                <div className="bg-gradient-to-br from-pink-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-pink-500/20 hover:border-orange-400/50 transition-all duration-300 h-full flex flex-col">
                   <div className="text-orange-400 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>Step 03</div>
                   <h3 className="text-white text-lg sm:text-xl font-black mb-3" style={{ fontFamily: '"Inter", sans-serif' }}>
                     Build & Transform Together
@@ -611,7 +611,7 @@ const CareerHome = () => {
             </div>
 
             {/* Note + CTA bar */}
-            <div className="bg-gradient-to-r from-blue-500/30 via-gray-900/40 to-blue-600/30 rounded-2xl border border-white/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="bg-gradient-to-r from-pink-500/30 via-gray-900/40 to-pink-600/30 rounded-2xl border border-white/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="text-center sm:text-left">
                 <p className="text-white font-bold text-base sm:text-lg mb-1" style={{ fontFamily: '"Inter", sans-serif' }}>
                   Transparency is one of our core values.
@@ -635,19 +635,19 @@ const CareerHome = () => {
 
         {/* ===== FAQ ===== */}
         <section className="w-full px-4 sm:px-6 lg:px-8 mb-16 sm:mb-24 relative">
-          <div className="absolute inset-0 bg-gradient-to-tl from-blue-500/20 via-black to-blue-600/10 -z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-pink-500/20 via-black to-pink-600/10 -z-10"></div>
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6"
                 style={{ fontFamily: '"Inter", sans-serif' }}>
               Frequently Asked{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600">Questions</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600">Questions</span>
             </h2>
           </div>
           <div className="w-full max-w-4xl mx-auto">
             {FAQs.map((faq, index) => (
               <div key={index} className="mb-3">
                 <button
-                  className="w-full text-left p-4 sm:p-5 transition-all duration-300 rounded-xl bg-gradient-to-br from-blue-500/30 via-gray-900/40 to-black/60 border border-blue-500/20 hover:border-blue-400/40"
+                  className="w-full text-left p-4 sm:p-5 transition-all duration-300 rounded-xl bg-gradient-to-br from-pink-500/30 via-gray-900/40 to-black/60 border border-pink-500/20 hover:border-pink-400/40"
                   onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
                   aria-expanded={expandedFAQ === index}>
                   <div className="flex justify-between items-center">
@@ -658,9 +658,9 @@ const CareerHome = () => {
                     <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-lg" style={{ fontFamily: '"Inter", sans-serif' }}>{faq.answer}</p>
                     {/* Terms of Service nudge on relevant FAQ items */}
                     {(index === 2 || index === 3 || index === 10 || index === 11) && expandedFAQ === index && (
-                      <div className="mt-4 flex items-center gap-3 bg-blue-950/40 border border-blue-500/25 rounded-xl px-4 py-3">
-                        <span className="text-blue-400 text-lg flex-shrink-0">📋</span>
-                        <p className="text-blue-400 text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
+                      <div className="mt-4 flex items-center gap-3 bg-pink-950/40 border border-pink-500/25 rounded-xl px-4 py-3">
+                        <span className="text-pink-400 text-lg flex-shrink-0">📋</span>
+                        <p className="text-pink-400 text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
                           For complete details, please{' '}
                           <a href="/solutions/terms" className="text-orange-400 hover:text-orange-300 font-semibold underline underline-offset-2 transition-colors">
                             review our full Terms of Service
@@ -688,27 +688,27 @@ const CareerHome = () => {
           <div className="border-t border-white/10 pt-6 sm:pt-8">
             <div className="flex flex-col space-y-5">
               <div className="text-center">
-                <p className="text-blue-400 font-bold text-base sm:text-lg" style={{ fontFamily: '"Inter", sans-serif' }}>She Model Tech</p>
+                <p className="text-pink-400 font-bold text-base sm:text-lg" style={{ fontFamily: '"Inter", sans-serif' }}>She Model Tech</p>
                 <p className="text-gray-400 text-sm sm:text-base" style={{ fontFamily: '"Inter", sans-serif' }}>Building Intelligent Digital Systems &bull; Empowering Tech Professionals</p>
               </div>
               <div className="flex justify-center items-center gap-4 sm:gap-6">
                 <a href="https://www.instagram.com/she-model-techhq/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-500 via-blue-400 to-blue-600 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-pink-500 via-pink-400 to-pink-600 flex items-center justify-center">
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
                   </div>
                 </a>
                 <a href="https://www.linkedin.com/company/ascivan/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center">
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
                   </div>
                 </a>
               </div>
               <div className="flex flex-wrap justify-center items-center gap-4">
-                <a href="/solutions/privacy" className="text-gray-600 hover:text-blue-400 text-base transition-colors font-medium">Privacy Policy</a>
+                <a href="/solutions/privacy" className="text-gray-600 hover:text-pink-400 text-base transition-colors font-medium">Privacy Policy</a>
                 <span className="text-gray-500">•</span>
-                <a href="/solutions/terms" className="text-gray-600 hover:text-blue-400 text-base transition-colors font-medium">Terms of Service</a>
+                <a href="/solutions/terms" className="text-gray-600 hover:text-pink-400 text-base transition-colors font-medium">Terms of Service</a>
                 <span className="text-gray-500">•</span>
-                <a href="/" className="text-gray-600 hover:text-blue-400 text-base transition-colors font-medium">Student Platform</a>
+                <a href="/" className="text-gray-600 hover:text-pink-400 text-base transition-colors font-medium">Student Platform</a>
               </div>
               <div className="text-center">
                 <p className="text-gray-600 text-sm sm:text-base">© {new Date().getFullYear()} She Model Tech. All rights reserved.</p>

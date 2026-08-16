@@ -125,7 +125,7 @@ const SearchPage = () => {
           value={term}
           onChange={e => setTerm(e.target.value)}
           placeholder="Search members, projects, courses…"
-          className="w-full bg-white border border-gray-300 rounded-xl pl-11 pr-10 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none shadow-sm"
+          className="w-full bg-white border border-gray-300 rounded-xl pl-11 pr-10 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none shadow-sm"
         />
         {term && (
           <button onClick={() => setTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-700" aria-label="Clear search">
@@ -136,7 +136,7 @@ const SearchPage = () => {
 
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
         </div>
       ) : !q ? (
         <div className="text-center py-14">
@@ -157,12 +157,12 @@ const SearchPage = () => {
                   <button
                     key={u.uid}
                     onClick={() => navigate(`/profile/${u.email || u.uid}`)}
-                    className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/40 transition-all text-left"
+                    className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl hover:border-pink-300 hover:bg-pink-50/40 transition-all text-left"
                   >
                     {u.photoURL ? (
                       <img src={u.photoURL} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
                     ) : (
-                      <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                      <div className="w-9 h-9 rounded-full bg-pink-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                         {(u.displayName || u.companyName || '?')[0]}
                       </div>
                     )}
@@ -187,7 +187,7 @@ const SearchPage = () => {
                   <button
                     key={p.id}
                     onClick={() => navigate(`/projects/${p.id}`)}
-                    className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/40 transition-all text-left"
+                    className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl hover:border-pink-300 hover:bg-pink-50/40 transition-all text-left"
                   >
                     <div className="min-w-0 flex-1">
                       <p className="text-gray-900 text-sm font-semibold truncate">{p.projectTitle || 'Untitled project'}</p>
@@ -210,7 +210,7 @@ const SearchPage = () => {
                   <button
                     key={`${c.trackId}-${c.slug}-${i}`}
                     onClick={() => navigate('/foundations')}
-                    className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/40 transition-all text-left"
+                    className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl hover:border-pink-300 hover:bg-pink-50/40 transition-all text-left"
                   >
                     <div className="w-9 h-9 rounded-lg bg-green-50 border border-green-200 flex items-center justify-center flex-shrink-0">
                       <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

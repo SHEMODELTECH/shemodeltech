@@ -430,7 +430,7 @@ const PostJobs = () => {
                         onClick={() => setFormData(prev => ({ ...prev, workAuth: 'required' }))}
                         className={`text-left p-4 rounded-xl border transition-all ${
                           formData.workAuth === 'required'
-                            ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500'
+                            ? 'border-pink-500 bg-pink-50 ring-1 ring-pink-500'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >

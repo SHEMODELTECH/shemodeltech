@@ -191,7 +191,7 @@ const MembersDirectory = () => {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
         <div className="bg-gradient-to-br from-black/40 via-gray-900/40 to-black/40 rounded-2xl p-5 sm:p-8 border border-gray-200 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-pink-600 mx-auto mb-4"></div>
           <p className="text-gray-900 text-lg">
             {authLoading ? 'Checking authentication...' : 'Loading member directory...'}
           </p>
@@ -234,12 +234,12 @@ const MembersDirectory = () => {
                 placeholder="Search by name, skill, or city..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none"
               />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none"
+                className="bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:border-pink-500 focus:outline-none"
               >
                 <option value="recent">Recently Active</option>
                 <option value="name">Name A-Z</option>
@@ -252,7 +252,7 @@ const MembersDirectory = () => {
               </button>
             </div>
             <p className="text-gray-500 text-xs mt-2">
-              <span className="text-blue-600 font-medium">{filteredMembers.length}</span> members found
+              <span className="text-pink-600 font-medium">{filteredMembers.length}</span> members found
               {filteredMembers.length > 0 && (
                 <span> -- Showing {startIndex + 1}-{Math.min(endIndex, filteredMembers.length)} of {filteredMembers.length}</span>
               )}
@@ -275,19 +275,19 @@ const MembersDirectory = () => {
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                   {currentMembers.map((member) => (
-                    <div key={member.email} className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer" onClick={() => openMemberModal(member)}>
+                    <div key={member.email} className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-pink-300 hover:shadow-sm transition-all cursor-pointer" onClick={() => openMemberModal(member)}>
                         
                         {/* Avatar */}
                         <div className="relative inline-block mb-3">
                           {member.photoURL ? (
                             <img src={member.photoURL} alt={member.name} className="w-16 h-16 rounded-full object-cover border-2 border-gray-100 mx-auto" />
                           ) : (
-                            <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg mx-auto">
+                            <div className="w-16 h-16 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold text-lg mx-auto">
                               {member.name?.charAt(0)?.toUpperCase() || '?'}
                             </div>
                           )}
                           {member.isActive && (
-                            <div className="absolute bottom-0 right-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-white"></div>
+                            <div className="absolute bottom-0 right-0 w-4 h-4 bg-pink-500 rounded-full border-2 border-white"></div>
                           )}
                         </div>
                         
@@ -304,7 +304,7 @@ const MembersDirectory = () => {
                         <div className="flex items-center justify-center gap-2 mt-3">
                           <button
                             onClick={(e) => { e.stopPropagation(); navigate(`/profile/${encodeURIComponent(member.email)}`); }}
-                            className="flex-1 px-3 py-2 rounded-lg text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all"
+                            className="flex-1 px-3 py-2 rounded-lg text-xs font-medium bg-pink-600 text-white hover:bg-pink-700 transition-all"
                           >
                             View Profile
                           </button>
@@ -357,7 +357,7 @@ const MembersDirectory = () => {
                                 onClick={() => goToPage(pageNum)}
                                 className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
                                   currentPage === pageNum
-                                    ? 'bg-blue-600 text-white'
+                                    ? 'bg-pink-600 text-white'
                                     : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
                                 }`}
                               >
@@ -401,17 +401,17 @@ const MembersDirectory = () => {
                     <img 
                       src={selectedMember.photoURL} 
                       alt={`${selectedMember.name}'s profile`}
-                      className="w-20 h-20 rounded-full object-cover ring-4 ring-blue-400/50"
+                      className="w-20 h-20 rounded-full object-cover ring-4 ring-pink-400/50"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-500 flex items-center justify-center ring-4 ring-blue-400/50">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-pink-500 flex items-center justify-center ring-4 ring-pink-400/50">
                       <span className="text-2xl text-gray-900 font-bold">
                         {selectedMember.name?.charAt(0)?.toUpperCase() || '?'}
                       </span>
                     </div>
                   )}
                   {selectedMember.isActive && (
-                    <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-blue-500 rounded-full border-4 border-white flex items-center justify-center">
+                    <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-pink-500 rounded-full border-4 border-white flex items-center justify-center">
                       <div className="w-3 h-3 bg-white rounded-full"></div>
                     </div>
                   )}
@@ -420,7 +420,7 @@ const MembersDirectory = () => {
                   <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-1">{selectedMember.name}</h2>
                   
                   {selectedMember.university && (
-                    <p className="text-blue-600 text-sm font-semibold">{selectedMember.university}</p>
+                    <p className="text-pink-600 text-sm font-semibold">{selectedMember.university}</p>
                   )}
                   {selectedMember.major && (
                     <p className="text-gray-400 text-sm">{selectedMember.major}</p>
@@ -428,10 +428,10 @@ const MembersDirectory = () => {
                   
                   <div className="flex items-center mt-2">
                     <div className={`w-3 h-3 rounded-full mr-2 ${
-                      selectedMember.isActive ? 'bg-blue-500' : 'bg-gray-400'
+                      selectedMember.isActive ? 'bg-pink-500' : 'bg-gray-400'
                     }`}></div>
                     <span className={`text-sm font-medium ${
-                      selectedMember.isActive ? 'text-blue-600' : 'text-gray-400'
+                      selectedMember.isActive ? 'text-pink-600' : 'text-gray-400'
                     }`}>
                       {selectedMember.isActive ? 'Recently Active' : 'Less Active'}
                     </span>
@@ -457,7 +457,7 @@ const MembersDirectory = () => {
               
               {/* Info */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h3 className="text-blue-600 font-semibold mb-4 text-lg">About</h3>
+                <h3 className="text-pink-600 font-semibold mb-4 text-lg">About</h3>
                 <div className="space-y-3">
                   {selectedMember.specialization && (
                     <div className="flex justify-between">
@@ -490,8 +490,8 @@ const MembersDirectory = () => {
               </div>
 
               {/* Connect Section */}
-              <div className="bg-blue-50 rounded-xl p-6 border border-gray-200">
-                <h3 className="text-blue-600 font-semibold mb-4 text-lg">Connect</h3>
+              <div className="bg-pink-50 rounded-xl p-6 border border-gray-200">
+                <h3 className="text-pink-600 font-semibold mb-4 text-lg">Connect</h3>
                 <p className="text-gray-600 mb-4">
                   Want to connect with {selectedMember.name}? Follow them or view their full profile.
                 </p>
@@ -510,7 +510,7 @@ const MembersDirectory = () => {
                   
                   <button
                     onClick={() => { closeMemberModal(); navigate(`/profile/${encodeURIComponent(selectedMember.email)}`); }}
-                    className="flex-1 px-6 py-3 rounded-xl font-bold transition-all duration-300 bg-blue-600 text-white hover:bg-blue-700"
+                    className="flex-1 px-6 py-3 rounded-xl font-bold transition-all duration-300 bg-pink-600 text-white hover:bg-pink-700"
                   >
                     View Profile
                   </button>

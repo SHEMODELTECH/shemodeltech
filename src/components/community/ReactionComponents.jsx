@@ -97,7 +97,7 @@ export const ReactionAvatars = ({ postId, userIds = [], reactionCount, onClick }
               className="relative group"
               style={{ zIndex: MAX_AVATARS - index }}
             >
-              <div className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 rounded-full border border-gray-800 xs:border-2 overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center cursor-pointer">
+              <div className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 rounded-full border border-gray-800 xs:border-2 overflow-hidden bg-gradient-to-r from-pink-500 to-pink-600 flex items-center justify-center cursor-pointer">
                 {user.photoURL ? (
                   <img 
                     src={user.photoURL} 
@@ -123,7 +123,7 @@ export const ReactionAvatars = ({ postId, userIds = [], reactionCount, onClick }
                   }
                 </div>
                 {user.profile?.title && (
-                  <div className="text-blue-600 text-[9px] xs:text-xs truncate hidden sm:block">
+                  <div className="text-pink-600 text-[9px] xs:text-xs truncate hidden sm:block">
                     {user.profile.title}
                   </div>
                 )}
@@ -179,7 +179,7 @@ export const ReactionsModal = ({ isOpen, onClose, postId, reactions, reactionCou
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 xs:p-5 sm:p-6 border-b border-blue-600/10">
+        <div className="flex items-center justify-between p-4 xs:p-5 sm:p-6 border-b border-pink-600/10">
           <h3 className="text-base xs:text-lg font-bold text-gray-900 flex items-center gap-1.5 xs:gap-2">
             <svg className="w-4 h-4 xs:w-5 xs:h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
@@ -212,7 +212,7 @@ export const ReactionsModal = ({ isOpen, onClose, postId, reactions, reactionCou
         <div className="overflow-y-auto max-h-56 xs:max-h-60 sm:max-h-80 overscroll-contain">
           {reactionUsers.length === 0 ? (
             <div className="p-6 xs:p-8 sm:p-10 text-center">
-              <div className="animate-spin rounded-full h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 border-b-2 border-blue-500 mx-auto mb-3 xs:mb-4"></div>
+              <div className="animate-spin rounded-full h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 border-b-2 border-pink-500 mx-auto mb-3 xs:mb-4"></div>
               <p className="text-gray-400 text-xs xs:text-sm">Loading reactions...</p>
             </div>
           ) : (
@@ -222,7 +222,7 @@ export const ReactionsModal = ({ isOpen, onClose, postId, reactions, reactionCou
                   key={user.uid || index} 
                   className="flex items-center gap-2 xs:gap-2.5 sm:gap-3 p-2 xs:p-2.5 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-200 transition-colors"
                 >
-                  <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-gradient-to-r from-pink-500 to-pink-600 flex items-center justify-center flex-shrink-0">
                     {user.photoURL ? (
                       <img 
                         src={user.photoURL} 
@@ -246,7 +246,7 @@ export const ReactionsModal = ({ isOpen, onClose, postId, reactions, reactionCou
                       }
                     </p>
                     {user.profile?.title && (
-                      <p className="text-blue-600 text-xs xs:text-sm truncate">
+                      <p className="text-pink-600 text-xs xs:text-sm truncate">
                         {user.profile.title}
                       </p>
                     )}
@@ -263,7 +263,7 @@ export const ReactionsModal = ({ isOpen, onClose, postId, reactions, reactionCou
         </div>
 
         {/* Footer */}
-        <div className="p-3 xs:p-3.5 sm:p-4 border-t border-blue-600/10 bg-gray-100">
+        <div className="p-3 xs:p-3.5 sm:p-4 border-t border-pink-600/10 bg-gray-100">
           <p className="text-gray-400 text-[10px] xs:text-xs text-center">
             She Model Tech Community
           </p>

@@ -364,7 +364,7 @@ const ProjectWorkspace = () => {
             <div key={ruid} className="flex items-center gap-1.5">
               {photo
                 ? <img src={photo} alt={name} className="w-4 h-4 rounded-full object-cover" />
-                : <span className="w-4 h-4 rounded-full bg-blue-500 text-white text-[8px] font-bold flex items-center justify-center">{(name || '?').charAt(0).toUpperCase()}</span>}
+                : <span className="w-4 h-4 rounded-full bg-pink-500 text-white text-[8px] font-bold flex items-center justify-center">{(name || '?').charAt(0).toUpperCase()}</span>}
               <span>{name}</span>
             </div>
           );
@@ -388,7 +388,7 @@ const ProjectWorkspace = () => {
             return meta.photo ? (
               <img key={uid} src={meta.photo} alt={name} title={name} className="w-5 h-5 rounded-full object-cover border border-white" />
             ) : (
-              <span key={uid} title={name} className="w-5 h-5 rounded-full bg-blue-500 text-white text-[9px] font-bold flex items-center justify-center border border-white">{(name || '?').charAt(0).toUpperCase()}</span>
+              <span key={uid} title={name} className="w-5 h-5 rounded-full bg-pink-500 text-white text-[9px] font-bold flex items-center justify-center border border-white">{(name || '?').charAt(0).toUpperCase()}</span>
             );
           })}
         </div>
@@ -397,9 +397,9 @@ const ProjectWorkspace = () => {
     );
   };
 
-  const inputCls = "w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none";
+  const inputCls = "w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none";
 
-  if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div></div>;
+  if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
   if (!project) return <div className="text-center py-20"><p className="text-gray-900 font-semibold">Project not found</p></div>;
   if (project.reviewStatus === 'rejected') return (
     <div className="max-w-2xl mx-auto text-center py-20 px-4">
@@ -437,7 +437,7 @@ const ProjectWorkspace = () => {
       {/* Tabs */}
       <div className="flex gap-1 mb-6 border-b border-gray-200">
         {tabs.map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-all ${activeTab === tab.id ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-all ${activeTab === tab.id ? 'border-pink-600 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
             {tab.label}
           </button>
         ))}
@@ -459,12 +459,12 @@ const ProjectWorkspace = () => {
                     {post.authorPhoto ? (
                       <img src={post.authorPhoto} alt={post.authorName} className="w-10 h-10 rounded-full object-cover border border-gray-200" />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">{(post.authorName || 'U')[0].toUpperCase()}</div>
+                      <div className="w-10 h-10 rounded-full bg-pink-600 flex items-center justify-center text-white text-sm font-bold">{(post.authorName || 'U')[0].toUpperCase()}</div>
                     )}
                   </a>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <a href={`/profile/${encodeURIComponent(post.authorEmail || '')}`} className="text-gray-900 text-sm font-semibold hover:text-blue-600 hover:underline">{post.authorName}</a>
+                      <a href={`/profile/${encodeURIComponent(post.authorEmail || '')}`} className="text-gray-900 text-sm font-semibold hover:text-pink-600 hover:underline">{post.authorName}</a>
                       <span className="text-gray-400 text-xs">{formatTime(post.createdAt)}</span>
                       {post.editedAt && <span className="text-gray-400 text-[10px] italic">edited</span>}
                     </div>
@@ -477,7 +477,7 @@ const ProjectWorkspace = () => {
                       <div className="mt-2 space-y-2">
                         <textarea value={editText} onChange={e => setEditText(e.target.value)} className={inputCls + " resize-none"} rows={2} />
                         <div className="flex gap-2">
-                          <button onClick={() => handleEdit(post.id)} className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg">Save</button>
+                          <button onClick={() => handleEdit(post.id)} className="bg-pink-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg">Save</button>
                           <button onClick={() => setEditingPost(null)} className="text-gray-500 text-xs px-3 py-1.5">Cancel</button>
                         </div>
                       </div>
@@ -485,7 +485,7 @@ const ProjectWorkspace = () => {
                       <>
                         <p className="text-gray-700 text-sm mt-1 whitespace-pre-wrap">{post.text}</p>
                         {post.imageUrl && <img src={post.imageUrl} alt="attachment" onClick={() => setLightbox(post.imageUrl)} className="w-full max-h-96 object-contain bg-gray-50 mt-3 rounded-lg border border-gray-200 cursor-zoom-in hover:opacity-95 transition-opacity" />}
-                        {post.link && <a href={post.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-xs hover:underline mt-2 block truncate">{post.link}</a>}
+                        {post.link && <a href={post.link} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-xs hover:underline mt-2 block truncate">{post.link}</a>}
                       </>
                     )}
                     {/* Reactions */}
@@ -501,7 +501,7 @@ const ProjectWorkspace = () => {
                               onClick={() => handleReact(post.id, emoji)}
                               onMouseEnter={() => count > 0 && setShowReactors(key)}
                               onMouseLeave={() => setShowReactors(null)}
-                              className={`text-xs px-1.5 py-0.5 rounded-full border transition-all ${reacted ? 'border-blue-300 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}
+                              className={`text-xs px-1.5 py-0.5 rounded-full border transition-all ${reacted ? 'border-pink-300 bg-pink-50' : 'border-gray-200 hover:bg-gray-50'}`}
                             >
                               {emoji}{count > 0 && <span className="ml-0.5 text-gray-600">{count}</span>}
                             </button>
@@ -513,7 +513,7 @@ const ProjectWorkspace = () => {
                           </div>
                         );
                       })}
-                      <button onClick={() => { setReplyTo(post.id); setReplyText(''); }} className="text-gray-500 text-xs hover:text-blue-600 ml-2">Reply</button>
+                      <button onClick={() => { setReplyTo(post.id); setReplyText(''); }} className="text-gray-500 text-xs hover:text-pink-600 ml-2">Reply</button>
                       {post.authorId === currentUser?.uid && (
                         <>
                           <button onClick={() => { setEditingPost(post.id); setEditText(post.text); }} className="text-gray-400 text-xs hover:text-gray-600 ml-1">Edit</button>
@@ -534,7 +534,7 @@ const ProjectWorkspace = () => {
                             )}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                <a href={`/profile/${encodeURIComponent(reply.authorEmail || '')}`} className="text-gray-900 text-xs font-semibold hover:text-blue-600 hover:underline">{reply.authorName}</a>
+                                <a href={`/profile/${encodeURIComponent(reply.authorEmail || '')}`} className="text-gray-900 text-xs font-semibold hover:text-pink-600 hover:underline">{reply.authorName}</a>
                                 <span className="text-gray-400 text-[10px]">{formatTime(reply.createdAt)}</span>
                                 {reply.editedAt && <span className="text-gray-400 text-[10px] italic">edited</span>}
                               </div>
@@ -544,7 +544,7 @@ const ProjectWorkspace = () => {
                                   const c = (reply.reactions?.[emoji] || []).length;
                                   const r = (reply.reactions?.[emoji] || []).includes(currentUser?.uid);
                                   return c > 0 || r ? (
-                                    <button key={emoji} onClick={() => handleReact(reply.id, emoji)} className={`text-[10px] px-1 py-0.5 rounded-full border ${r ? 'border-blue-300 bg-blue-50' : 'border-gray-200'}`}>
+                                    <button key={emoji} onClick={() => handleReact(reply.id, emoji)} className={`text-[10px] px-1 py-0.5 rounded-full border ${r ? 'border-pink-300 bg-pink-50' : 'border-gray-200'}`}>
                                       {emoji}{c > 0 && <span className="ml-0.5">{c}</span>}
                                     </button>
                                   ) : null;
@@ -562,7 +562,7 @@ const ProjectWorkspace = () => {
                     {replyTo === post.id && (
                       <div className="mt-3 flex gap-2">
                         <input value={replyText} onChange={e => setReplyText(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleReply(post.id)} className={inputCls + " text-xs"} placeholder="Write a reply..." />
-                        <button onClick={() => handleReply(post.id)} className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex-shrink-0">Reply</button>
+                        <button onClick={() => handleReply(post.id)} className="bg-pink-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex-shrink-0">Reply</button>
                       </div>
                     )}
                 </div>
@@ -587,7 +587,7 @@ const ProjectWorkspace = () => {
                 Image
                 <input type="file" accept="image/*" onChange={handleImageSelect} className="hidden" />
               </label>
-              <button onClick={handlePost} disabled={posting || uploadingImage || (!newPost.trim() && !newPostLink.trim() && !newPostImage)} className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg disabled:opacity-50 transition-all flex-shrink-0">
+              <button onClick={handlePost} disabled={posting || uploadingImage || (!newPost.trim() && !newPostLink.trim() && !newPostImage)} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg disabled:opacity-50 transition-all flex-shrink-0">
                 {uploadingImage ? 'Uploading...' : posting ? 'Posting...' : 'Post'}
               </button>
             </div>
@@ -602,7 +602,7 @@ const ProjectWorkspace = () => {
               Hidden from the UI for now; backend logic (foundationsContributions.js)
               and the /foundations?contribute=1&fromWorkspace=1 target flow are untouched. */}
           {false && isCollaborator && (
-            <div className="bg-gradient-to-br from-blue-50 to-orange-50 border border-blue-200 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-pink-50 to-orange-50 border border-pink-200 rounded-xl p-5">
               <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-base font-bold text-gray-900 mb-1">Teach what your team learned</h3>
@@ -610,7 +610,7 @@ const ProjectWorkspace = () => {
                 </div>
                 <button
                   onClick={() => navigate('/foundations?contribute=1&fromWorkspace=1')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-lg transition-all flex-shrink-0"
+                  className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2 rounded-lg transition-all flex-shrink-0"
                 >
                   Contribute a lesson
                 </button>
@@ -623,19 +623,19 @@ const ProjectWorkspace = () => {
             <h3 className="text-base font-bold text-gray-900">Project Resources</h3>
             {resources.submissionUrl ? (
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div><p className="text-gray-500 text-xs font-medium">Project Submission URL</p><a href={resources.submissionUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline truncate block">{resources.submissionUrl}</a></div>
+                <div><p className="text-gray-500 text-xs font-medium">Project Submission URL</p><a href={resources.submissionUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm hover:underline truncate block">{resources.submissionUrl}</a></div>
               </div>
             ) : <p className="text-gray-400 text-xs">No submission URL set</p>}
 
             {resources.meetingUrl ? (
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div><p className="text-gray-500 text-xs font-medium">Meeting URL</p><a href={resources.meetingUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline truncate block">{resources.meetingUrl}</a></div>
+                <div><p className="text-gray-500 text-xs font-medium">Meeting URL</p><a href={resources.meetingUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm hover:underline truncate block">{resources.meetingUrl}</a></div>
               </div>
             ) : <p className="text-gray-400 text-xs">No meeting URL set</p>}
 
             {resources.detailsUrl ? (
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div><p className="text-gray-500 text-xs font-medium">Project Details URL</p><a href={resources.detailsUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline truncate block">{resources.detailsUrl}</a></div>
+                <div><p className="text-gray-500 text-xs font-medium">Project Details URL</p><a href={resources.detailsUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-sm hover:underline truncate block">{resources.detailsUrl}</a></div>
               </div>
             ) : <p className="text-gray-400 text-xs">No details URL set</p>}
 
@@ -676,7 +676,7 @@ const ProjectWorkspace = () => {
                 <label className="block text-gray-500 text-xs font-medium mb-1">Important Notes</label>
                 <textarea value={resources.notes} onChange={e => setResources(p => ({ ...p, notes: e.target.value }))} className={inputCls + " resize-none"} rows={3} placeholder="Any important updates or notes for the team..." />
               </div>
-              <button onClick={handleSaveResources} disabled={savingResources} className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition-all disabled:opacity-50">
+              <button onClick={handleSaveResources} disabled={savingResources} className="bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition-all disabled:opacity-50">
                 {savingResources ? 'Saving...' : 'Save Resources'}
               </button>
             </div>
@@ -717,22 +717,22 @@ const ProjectWorkspace = () => {
                     {member.photoURL ? (
                       <img src={member.photoURL} alt="" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                         {(member.applicantName || member.displayName || 'U')[0].toUpperCase()}
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <a href={`/profile/${encodeURIComponent(member.applicantEmail)}`} className="text-gray-900 text-sm font-semibold hover:text-blue-600 hover:underline">
+                      <a href={`/profile/${encodeURIComponent(member.applicantEmail)}`} className="text-gray-900 text-sm font-semibold hover:text-pink-600 hover:underline">
                         {member.displayName || member.applicantName}
                       </a>
                       <p className="text-gray-500 text-xs">{member.role}</p>
                       <div className="flex items-center gap-3 mt-0.5">
-                        {member.portfolioUrl && <a href={member.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-[10px] hover:underline">Portfolio</a>}
-                        {member.linkedinUrl && <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-[10px] hover:underline">LinkedIn</a>}
+                        {member.portfolioUrl && <a href={member.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-[10px] hover:underline">Portfolio</a>}
+                        {member.linkedinUrl && <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-[10px] hover:underline">LinkedIn</a>}
                       </div>
                     </div>
                     {member.isOwner && (
-                      <span className="text-[10px] font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full flex-shrink-0">Owner</span>
+                      <span className="text-[10px] font-semibold bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full flex-shrink-0">Owner</span>
                     )}
                     {project?.isPaid && !member.isOwner && (Number(member.payAmount) || 0) > 0 && (
                       <span className="text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full flex-shrink-0">{formatMoney(member.payAmount)}</span>
@@ -772,7 +772,7 @@ const ProjectWorkspace = () => {
             )}
             <label className="block text-gray-600 text-xs font-semibold mb-1">Reason for leaving * (required)</label>
             <textarea value={leaveReason} onChange={e => setLeaveReason(e.target.value)} rows={3}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm focus:border-blue-500 focus:outline-none resize-none mb-4"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm focus:border-pink-500 focus:outline-none resize-none mb-4"
               placeholder="Explain why you're leaving this project..." />
             <div className="flex gap-2">
               <button onClick={() => setShowLeaveModal(false)} disabled={leaving} className="flex-1 py-2.5 text-gray-600 text-sm font-semibold border border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
@@ -787,8 +787,8 @@ const ProjectWorkspace = () => {
       )}
 
       {/* Info notice */}
-      <div className="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
-        <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="mt-8 bg-pink-50 border border-pink-200 rounded-xl p-4 flex items-start gap-3">
+        <svg className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div>

@@ -180,11 +180,11 @@ export const MentionTextarea = ({
                 key={user.uid}
                 onClick={() => selectSuggestion(user, index)}
                 className={`flex items-center space-x-2 sm:space-x-3 w-full px-2 sm:px-3 py-2 sm:py-3 text-left hover:bg-gray-100 rounded-lg transition-colors ${
-                  index === selectedSuggestionIndex ? 'bg-blue-600/20 text-orange-400' : 'text-gray-900'
+                  index === selectedSuggestionIndex ? 'bg-pink-600/20 text-orange-400' : 'text-gray-900'
                 }`}
               >
                 {/* User Avatar */}
-                <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-blue-500 flex items-center justify-center text-gray-900 font-bold text-xs sm:text-sm flex-shrink-0">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full overflow-hidden bg-gradient-to-r from-pink-500 to-pink-500 flex items-center justify-center text-gray-900 font-bold text-xs sm:text-sm flex-shrink-0">
                   {user.photoURL ? (
                     <img 
                       src={user.photoURL} 
@@ -209,7 +209,7 @@ export const MentionTextarea = ({
                 </div>
                 
                 {/* Mention Preview - Hidden on very small screens */}
-                <div className="hidden xs:block text-xs sm:text-sm text-blue-600 bg-blue-500/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded flex-shrink-0 max-w-[80px] sm:max-w-[120px] truncate">
+                <div className="hidden xs:block text-xs sm:text-sm text-pink-600 bg-pink-500/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded flex-shrink-0 max-w-[80px] sm:max-w-[120px] truncate">
                   {formatUserForMention(user)}
                 </div>
               </button>

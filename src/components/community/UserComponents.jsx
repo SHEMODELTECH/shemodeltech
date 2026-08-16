@@ -73,7 +73,7 @@ export const TaggedUsers = ({ taggedUsers = [], onRemoveTag }) => {
   if (!taggedUsers.length) return null;
   
   return (
-    <div className={`${onRemoveTag ? 'mt-3 xs:mt-4 p-3 xs:p-4 bg-blue-600/10 border border-gray-200 rounded-lg xs:rounded-xl' : 'flex flex-wrap items-center gap-1 xs:gap-1.5 sm:gap-2 mt-2 xs:mt-2.5 sm:mt-3 text-xs sm:text-sm'}`}>
+    <div className={`${onRemoveTag ? 'mt-3 xs:mt-4 p-3 xs:p-4 bg-pink-600/10 border border-gray-200 rounded-lg xs:rounded-xl' : 'flex flex-wrap items-center gap-1 xs:gap-1.5 sm:gap-2 mt-2 xs:mt-2.5 sm:mt-3 text-xs sm:text-sm'}`}>
       {onRemoveTag && (
         <div className="flex items-center justify-between mb-2 xs:mb-3">
           <h4 className="text-orange-300 font-medium text-xs xs:text-sm flex items-center gap-1 xs:gap-2">
@@ -98,8 +98,8 @@ export const TaggedUsers = ({ taggedUsers = [], onRemoveTag }) => {
         {taggedUsers.map((user, index) => (
           <span key={user.uid || index} className={onRemoveTag ? "" : "flex items-center"}>
             {onRemoveTag ? (
-              <div className="flex items-center gap-1.5 xs:gap-2 bg-blue-600/20 border border-blue-600/40 rounded-lg px-2 xs:px-3 py-1.5 xs:py-2 text-orange-300">
-                <div className="w-5 h-5 xs:w-6 xs:h-6 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
+              <div className="flex items-center gap-1.5 xs:gap-2 bg-pink-600/20 border border-pink-600/40 rounded-lg px-2 xs:px-3 py-1.5 xs:py-2 text-orange-300">
+                <div className="w-5 h-5 xs:w-6 xs:h-6 rounded-full overflow-hidden bg-pink-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
                   {user.photoURL ? (
                     <img 
                       src={user.photoURL} 
@@ -121,7 +121,7 @@ export const TaggedUsers = ({ taggedUsers = [], onRemoveTag }) => {
                 <button
                   type="button"
                   onClick={() => onRemoveTag(index)}
-                  className="text-blue-600 hover:text-orange-200 active:text-orange-300 ml-0.5 xs:ml-1 font-bold text-sm xs:text-base transition-colors flex-shrink-0"
+                  className="text-pink-600 hover:text-orange-200 active:text-orange-300 ml-0.5 xs:ml-1 font-bold text-sm xs:text-base transition-colors flex-shrink-0"
                   title="Remove tag"
                   aria-label="Remove tag"
                 >
@@ -132,7 +132,7 @@ export const TaggedUsers = ({ taggedUsers = [], onRemoveTag }) => {
               <>
                 <button
                   onClick={() => handleUserClick(user)}
-                  className="text-blue-600 hover:text-orange-300 active:text-orange-200 transition-colors tagged-user-link px-0.5 xs:px-1 py-0.5 rounded text-xs xs:text-sm"
+                  className="text-pink-600 hover:text-orange-300 active:text-orange-200 transition-colors tagged-user-link px-0.5 xs:px-1 py-0.5 rounded text-xs xs:text-sm"
                   title={`View profile of ${user.displayName || user.email?.split('@')[0]}`}
                 >
                   @{user.displayName || user.email?.split('@')[0]}
@@ -155,7 +155,7 @@ export const TaggedUsersSmall = ({ taggedUsers = [], onRemoveTag }) => {
   if (!taggedUsers.length) return null;
   
   return (
-    <div className="mt-2 xs:mt-3 p-2 xs:p-2.5 sm:p-3 bg-blue-600/10 border border-gray-200 rounded-lg">
+    <div className="mt-2 xs:mt-3 p-2 xs:p-2.5 sm:p-3 bg-pink-600/10 border border-gray-200 rounded-lg">
       <div className="flex items-center justify-between mb-1 xs:mb-1.5 sm:mb-2">
         <h4 className="text-orange-300 font-medium text-[10px] xs:text-xs sm:text-sm flex items-center gap-1">
           <svg className="w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-3.5 sm:h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -175,9 +175,9 @@ export const TaggedUsersSmall = ({ taggedUsers = [], onRemoveTag }) => {
         {taggedUsers.map((user, index) => (
           <div 
             key={user.uid || index} 
-            className="flex items-center gap-1 bg-blue-600/20 border border-blue-600/40 rounded px-1.5 xs:px-2 py-0.5 xs:py-1 text-orange-300"
+            className="flex items-center gap-1 bg-pink-600/20 border border-pink-600/40 rounded px-1.5 xs:px-2 py-0.5 xs:py-1 text-orange-300"
           >
-            <div className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center text-white font-bold text-[8px] xs:text-[9px] sm:text-xs flex-shrink-0">
+            <div className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 rounded-full overflow-hidden bg-pink-600 flex items-center justify-center text-white font-bold text-[8px] xs:text-[9px] sm:text-xs flex-shrink-0">
               {user.photoURL ? (
                 <img 
                   src={user.photoURL} 
@@ -196,7 +196,7 @@ export const TaggedUsersSmall = ({ taggedUsers = [], onRemoveTag }) => {
             <button
               type="button"
               onClick={() => onRemoveTag(index)}
-              className="text-blue-600 hover:text-orange-200 active:text-orange-300 ml-0.5 font-bold text-xs xs:text-sm transition-colors flex-shrink-0"
+              className="text-pink-600 hover:text-orange-200 active:text-orange-300 ml-0.5 font-bold text-xs xs:text-sm transition-colors flex-shrink-0"
               title="Remove tag"
               aria-label="Remove tag"
             >

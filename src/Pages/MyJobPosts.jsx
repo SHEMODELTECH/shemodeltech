@@ -162,7 +162,7 @@ const MyJobPosts = () => {
     }
     
     if (post.status === 'active') {
-      return { label: 'Active', color: 'bg-blue-500', textColor: 'text-white' };
+      return { label: 'Active', color: 'bg-pink-500', textColor: 'text-white' };
     }
     
     return { label: 'Unknown', color: 'bg-gray-500', textColor: 'text-white' };
@@ -177,7 +177,7 @@ const MyJobPosts = () => {
           style={{ backgroundColor: '#000000' }}
         >
           <div className="bg-gradient-to-br from-black/40 via-gray-900/40 to-black/40 rounded-xl xs:rounded-2xl p-6 xs:p-7 sm:p-8 border border-white/20 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 xs:h-14 xs:w-14 sm:h-16 sm:w-16 border-b-2 border-blue-400 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 xs:h-14 xs:w-14 sm:h-16 sm:w-16 border-b-2 border-pink-400 mx-auto mb-4"></div>
             <p className="text-white text-base xs:text-lg">Loading...</p>
           </div>
         </div>
@@ -208,7 +208,7 @@ const MyJobPosts = () => {
                     filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.9))'
                   }}>
                 My{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-500 to-orange-500">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-500 to-orange-500">
                   Job Posts
                 </span>
               </h1>
@@ -219,11 +219,11 @@ const MyJobPosts = () => {
               {/* Stats */}
               <div className="flex justify-center gap-4 xs:gap-5 sm:gap-6 mb-6 xs:mb-7 sm:mb-8">
                 <div className="text-center">
-                  <div className="text-2xl xs:text-3xl font-bold text-blue-400">{myPosts.length}</div>
+                  <div className="text-2xl xs:text-3xl font-bold text-pink-400">{myPosts.length}</div>
                   <div className="text-gray-400 text-xs xs:text-sm">Total Posts</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl xs:text-3xl font-bold text-blue-400">
+                  <div className="text-2xl xs:text-3xl font-bold text-pink-400">
                     {myPosts.filter(p => p.status === 'active').length}
                   </div>
                   <div className="text-gray-400 text-xs xs:text-sm">Active</div>
@@ -251,7 +251,7 @@ const MyJobPosts = () => {
                         onClick={() => setSelectedCategory(cat.id)}
                         className={`px-3 xs:px-4 py-2 rounded-lg font-medium transition-all text-xs xs:text-sm min-h-[44px] ${
                           selectedCategory === cat.id
-                            ? 'bg-blue-500 text-white shadow-md'
+                            ? 'bg-pink-500 text-white shadow-md'
                             : 'bg-white/10 text-gray-600 hover:bg-white/20 active:bg-white/30'
                         }`}
                       >
@@ -268,7 +268,7 @@ const MyJobPosts = () => {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="bg-white/10 text-white border border-white/20 rounded-lg px-4 py-2.5 text-sm font-medium min-h-[44px] min-w-[180px] cursor-pointer hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent appearance-none"
+                      className="bg-white/10 text-white border border-white/20 rounded-lg px-4 py-2.5 text-sm font-medium min-h-[44px] min-w-[180px] cursor-pointer hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent appearance-none"
                       style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', backgroundSize: '16px', paddingRight: '36px' }}
                     >
                       <option value="newest" className="bg-gray-900 text-white">Newest</option>
@@ -285,7 +285,7 @@ const MyJobPosts = () => {
             <section>
               {loading ? (
                 <div className="text-center py-12 xs:py-14 sm:py-16">
-                  <div className="animate-spin rounded-full h-12 w-12 xs:h-14 xs:w-14 sm:h-16 sm:w-16 border-b-2 border-blue-400 mx-auto mb-4"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 xs:h-14 xs:w-14 sm:h-16 sm:w-16 border-b-2 border-pink-400 mx-auto mb-4"></div>
                   <p className="text-white text-base xs:text-lg">Loading your posts...</p>
                 </div>
               ) : filteredPosts.length === 0 ? (
@@ -311,13 +311,13 @@ const MyJobPosts = () => {
                     return (
                       <div
                         key={post.id}
-                        className="bg-gradient-to-br from-black/40 via-gray-900/40 to-black/40 rounded-xl xs:rounded-2xl p-4 xs:p-5 sm:p-6 border border-white/20 hover:border-blue-400/40 transition-all"
+                        className="bg-gradient-to-br from-black/40 via-gray-900/40 to-black/40 rounded-xl xs:rounded-2xl p-4 xs:p-5 sm:p-6 border border-white/20 hover:border-pink-400/40 transition-all"
                       >
                         {/* Header */}
                         <div className="flex items-start justify-between mb-3 xs:mb-4 gap-2">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-2 flex-wrap">
-                              <span className="px-2.5 xs:px-3 py-1 bg-blue-500/20 text-blue-500 rounded-full text-xs xs:text-sm font-semibold whitespace-nowrap">
+                              <span className="px-2.5 xs:px-3 py-1 bg-pink-500/20 text-pink-500 rounded-full text-xs xs:text-sm font-semibold whitespace-nowrap">
                                 {getCategoryBadge(post.category)}
                               </span>
                               <span className={`px-2.5 xs:px-3 py-1 ${statusBadge.color} ${statusBadge.textColor} rounded-full text-xs xs:text-sm font-semibold whitespace-nowrap`}>
@@ -358,7 +358,7 @@ const MyJobPosts = () => {
                             href={post.externalLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex-1 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-3 xs:px-4 py-2 rounded-lg font-semibold text-center transition-all text-xs xs:text-sm min-h-[44px] flex items-center justify-center"
+                            className="flex-1 bg-pink-500 hover:bg-pink-600 active:bg-pink-700 text-white px-3 xs:px-4 py-2 rounded-lg font-semibold text-center transition-all text-xs xs:text-sm min-h-[44px] flex items-center justify-center"
                           >
                             View Link
                           </a>

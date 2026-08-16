@@ -64,7 +64,7 @@ const AccountTypeSelection = () => {
   if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
       </div>
     );
   }
@@ -77,10 +77,10 @@ const AccountTypeSelection = () => {
         <div className="w-full max-w-lg">
           {/* Header */}
           <div className="text-center mb-8">
-            <p className="text-blue-600 uppercase tracking-widest text-xs font-semibold mb-3">Getting Started</p>
+            <p className="text-pink-600 uppercase tracking-widest text-xs font-semibold mb-3">Getting Started</p>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
               How will you use{' '}
-              <span className="text-blue-600">She Model Tech</span>?
+              <span className="text-pink-600">She Model Tech</span>?
             </h1>
             <p className="text-gray-500 text-sm sm:text-base px-4">
               Choose your account type. This helps us personalize your experience.
@@ -94,13 +94,13 @@ const AccountTypeSelection = () => {
               onClick={() => setSelected('individual')}
               className={`relative p-5 sm:p-6 rounded-2xl border-2 text-left transition-all duration-300 active:scale-[0.97] ${
                 selected === 'individual'
-                  ? 'border-blue-500 bg-blue-50 shadow-sm'
+                  ? 'border-pink-500 bg-pink-50 shadow-sm'
                   : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
               }`}
             >
               {selected === 'individual' && (
                 <div className="absolute top-3 right-3">
-                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center">
                     <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
@@ -120,13 +120,13 @@ const AccountTypeSelection = () => {
               onClick={() => setSelected('company')}
               className={`relative p-5 sm:p-6 rounded-2xl border-2 text-left transition-all duration-300 active:scale-[0.97] ${
                 selected === 'company'
-                  ? 'border-blue-500 bg-blue-50 shadow-sm'
+                  ? 'border-pink-500 bg-pink-50 shadow-sm'
                   : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
               }`}
             >
               {selected === 'company' && (
                 <div className="absolute top-3 right-3">
-                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center">
                     <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
@@ -147,7 +147,7 @@ const AccountTypeSelection = () => {
             <button
               onClick={handleContinue}
               disabled={!selected || saving}
-              className="w-full sm:w-auto px-10 py-3.5 min-h-[48px] bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-sm sm:text-base transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-10 py-3.5 min-h-[48px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-sm sm:text-base transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {saving ? (
                 <span className="flex items-center justify-center gap-2">

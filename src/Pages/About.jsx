@@ -30,7 +30,7 @@ const About = () => {
           </Link>
           <div className="flex items-center gap-4">
             <Link to="/support" className="text-gray-600 hover:text-gray-900 text-sm font-medium">Support</Link>
-            <Link to="/login" className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all">Get Started</Link>
+            <Link to="/login" className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all">Get Started</Link>
           </div>
         </div>
       </nav>
@@ -41,7 +41,7 @@ const About = () => {
         <section className="text-center mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
             <span className="text-gray-900">About</span>{' '}
-            <span className="text-blue-600">She Model Tech</span>
+            <span className="text-pink-600">She Model Tech</span>
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-4">
             SHE MODEL TECH is a collaborative tech talent development platform where individuals build in-demand technology skills by working together on real-world projects. Through cross-functional collaboration, members gain practical experience, discover the right career path in tech, and develop the expertise needed to thrive in today's technology industry.
@@ -52,14 +52,14 @@ const About = () => {
         {/* The path: Ascend Achieve Advance */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            <span className="text-blue-600">Ascend</span>, <span className="text-orange-500">Achieve</span>, <span className="text-gray-900">Advance</span>
+            <span className="text-pink-600">Ascend</span>, <span className="text-orange-500">Achieve</span>, <span className="text-gray-900">Advance</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center mb-3">
-                <span className="text-blue-600 font-extrabold">1</span>
+              <div className="w-9 h-9 rounded-lg bg-pink-50 border border-pink-100 flex items-center justify-center mb-3">
+                <span className="text-pink-600 font-extrabold">1</span>
               </div>
-              <h3 className="text-blue-600 font-bold text-lg mb-2">Ascend</h3>
+              <h3 className="text-pink-600 font-bold text-lg mb-2">Ascend</h3>
               <p className="text-gray-500 text-sm">Start your journey in tech. Whether you're discovering your path, switching careers, or beginning a new journey in technology, SHE MODEL TECH helps you explore different career paths by collaborating on real-world projects. Through hands-on experience in different roles, you can quickly identify where your interests, strengths, and potential align.</p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -101,7 +101,7 @@ const About = () => {
 
         {/* For Startups and Organisations */}
         <section className="mb-12">
-          <div className="bg-blue-50 rounded-xl border border-blue-100 p-6 sm:p-8">
+          <div className="bg-pink-50 rounded-xl border border-pink-100 p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">For Startups and Organisations</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
               SHE MODEL TECH also connects startups and organisations with emerging tech talent ready to contribute to real-world projects. Instead of building teams from scratch, organisations can collaborate with skilled individuals to accelerate innovation, validate ideas, develop products, and solve real business challenges.
@@ -160,7 +160,7 @@ const About = () => {
               { num: '4', title: 'Complete and earn badges', desc: 'When the project is done, the owner evaluates the team. Badges are awarded based on your role and contribution, building a verified portfolio of proven work.' },
             ].map((step, i) => (
               <div key={i} className="flex gap-4 items-start">
-                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">{step.num}</div>
+                <div className="w-8 h-8 rounded-full bg-pink-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">{step.num}</div>
                 <div>
                   <h3 className="text-gray-900 font-semibold text-base">{step.title}</h3>
                   <p className="text-gray-500 text-sm mt-0.5">{step.desc}</p>
@@ -174,7 +174,7 @@ const About = () => {
         <section className="text-center">
           <p className="text-gray-500 mb-4">Ready to start building your tech career?</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link to="/login" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-all">
+            <Link to="/login" className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg transition-all">
               Join She Model Tech
             </Link>
             <button onClick={() => navigate('/support')} className="border border-gray-300 text-gray-700 font-medium px-6 py-3 rounded-lg hover:bg-gray-50 transition-all">
@@ -188,9 +188,9 @@ const About = () => {
       <footer className="border-t border-gray-200 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-gray-500 text-sm">
-            <Link to="/terms" className="hover:text-blue-600">Terms</Link>
-            <Link to="/privacy" className="hover:text-blue-600">Privacy</Link>
-            <Link to="/support" className="hover:text-blue-600">Support</Link>
+            <Link to="/terms" className="hover:text-pink-600">Terms</Link>
+            <Link to="/privacy" className="hover:text-pink-600">Privacy</Link>
+            <Link to="/support" className="hover:text-pink-600">Support</Link>
           </div>
           <p className="text-gray-400 text-xs">{new Date().getFullYear()} She Model Tech. All rights reserved.</p>
         </div>
