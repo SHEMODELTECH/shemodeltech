@@ -125,7 +125,8 @@ const LandingPage = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20">
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-10 sm:h-12 w-auto" />
+            <img src="/Images/512X512.png" alt="" aria-hidden="true" className="h-9 sm:h-11 w-auto" />
+              <span className="font-bold text-gray-900 text-base sm:text-lg tracking-tight">She Model Tech</span>
           </Link>
           <div className="hidden sm:flex items-center gap-6">
             <Link to="/about" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">About</Link>
@@ -172,9 +173,9 @@ const LandingPage = () => {
       {/* HERO */}
       <section className="relative pt-32 sm:pt-40 pb-20 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-50/60 via-white to-white" />
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <div id="hero-title" data-animate className={`fade-up delay-1 mb-8 mt-2 flex justify-center ${isVisible('hero-title') ? 'visible' : ''}`}>
-            <BrandLockup align="center" className="max-w-2xl w-full" />
+            <BrandLockup align="center" className="max-w-3xl w-full" />
           </div>
 
           <p id="hero-desc" data-animate className={`fade-up delay-2 text-gray-600 text-lg sm:text-xl max-w-2xl mx-auto mb-10 font-normal leading-relaxed ${isVisible('hero-desc') ? 'visible' : ''}`}>
@@ -340,8 +341,9 @@ const LandingPage = () => {
       <footer className="border-t border-gray-200 bg-white py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center">
-              <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-10 sm:h-12 w-auto" />
+            <div className="flex items-center gap-2">
+              <img src="/Images/512X512.png" alt="" aria-hidden="true" className="h-9 sm:h-11 w-auto" />
+              <span className="font-bold text-gray-900 text-base sm:text-lg tracking-tight">She Model Tech</span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-gray-500 text-sm">
               <Link to="/about" className="hover:text-blue-600 transition-colors font-medium">About</Link>

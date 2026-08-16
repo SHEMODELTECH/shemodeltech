@@ -85,7 +85,8 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16 sm:h-20">
 
             <Link to="/" className="flex-shrink-0 group flex items-center gap-2">
-              <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-10 sm:h-12 w-auto" />
+              <img src="/Images/512X512.png" alt="" aria-hidden="true" className="h-9 sm:h-11 w-auto" />
+              <span className="font-bold text-gray-900 text-base sm:text-lg tracking-tight">She Model Tech</span>
             </Link>
 
             <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">

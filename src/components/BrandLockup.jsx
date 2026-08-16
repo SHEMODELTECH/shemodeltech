@@ -46,36 +46,40 @@ const BrandLockup = ({ align = 'center', showShapes = true, className = '' }) =>
     paintOrder: 'stroke fill',
   };
 
+  // The words are OUTLINED - their fill is transparent - so any shape behind
+  // them shows straight through the letterforms. Decorative shapes must
+  // therefore sit fully OUTSIDE the text's bounding box, not merely behind it.
+  // Padding here reserves that space; the shapes are positioned into it.
   return (
-    <div className={`relative ${isCenter ? 'text-center' : 'text-left'} ${className}`}>
+    <div className={`relative px-8 sm:px-16 py-10 sm:py-14 ${isCenter ? 'text-center' : 'text-left'} ${className}`}>
       {showShapes && (
         <>
-          {/* Green arc, upper left */}
+          {/* Green arc - clear of the left edge of the words */}
           <img
             src={BRAND.shapes.arcGreen}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none select-none absolute -top-6 -left-4 sm:-left-10 w-10 sm:w-16 opacity-95"
+            className="pointer-events-none select-none absolute top-2 left-0 w-8 sm:w-14 opacity-95"
           />
-          {/* Sparkle, upper right of the wordmark */}
+          {/* Sparkle - above and right, never over a letter */}
           <img
             src={BRAND.shapes.sparkle}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none select-none absolute top-4 right-2 sm:right-10 w-8 sm:w-14"
+            className="pointer-events-none select-none absolute top-0 right-0 w-7 sm:w-12"
           />
-          {/* Pink wave, lower right */}
+          {/* Pink wave - sits BELOW the last word, not behind it */}
           <img
             src={BRAND.shapes.wavePink}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none select-none absolute -bottom-2 right-0 sm:-right-6 w-28 sm:w-52 opacity-95"
+            className="pointer-events-none select-none absolute bottom-0 right-0 w-24 sm:w-40 opacity-95"
           />
         </>
       )}
 
       <h1
-        className="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+        className="relative z-20 text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
         aria-label={BRAND.taglineWords.join(' ')}
       >
         {BRAND.taglineWords.map((word, i) => (
