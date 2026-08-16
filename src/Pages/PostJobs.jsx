@@ -323,7 +323,7 @@ const PostJobs = () => {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-2 sm:mb-3">
                 {isEditing ? 'Edit your ' : 'Post an '}<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Opportunity</span>
               </h1>
-              <p className="text-gray-600 text-base">{isEditing ? 'Update the details of your job listing and save your changes.' : 'Reach a global pool of verified tech talent ready for remote and onsite roles'}</p>
+              <p className="text-gray-600 text-base">{isEditing ? 'Update the details of your job listing and save your changes.' : 'Reach verified women in tech who have already shipped real projects'}</p>
             </section>
 
             {/* Form */}

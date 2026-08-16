@@ -86,7 +86,7 @@ const Onboarding = () => {
   ];
 
   const companyInterests = [
-    { id: 'jobs', label: 'Post Jobs', desc: 'Post opportunities for tech talent' },
+    { id: 'jobs', label: 'Post Jobs', desc: 'Post opportunities for women in tech' },
     { id: 'projects', label: 'Post Projects', desc: 'Find collaborators for projects' },
     { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
     { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },

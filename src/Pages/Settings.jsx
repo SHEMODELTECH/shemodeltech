@@ -27,11 +27,11 @@ const skillTrackOpts = [
 const individualInterestOpts = [
   { id: 'projects', label: 'Projects', desc: 'Join real-world collaborative projects' },
   { id: 'jobs', label: 'Jobs', desc: 'Full-time, freelance, and contract roles' },
-  { id: 'community', label: 'Community', desc: 'Connect with tech professionals' },
+  { id: 'community', label: 'Community', desc: 'Connect with women in tech' },
   { id: 'badges', label: 'Badges', desc: 'Earn verified TechTalent credentials' },
 ];
 const companyInterestOpts = [
-  { id: 'jobs', label: 'Post Jobs', desc: 'Post opportunities for tech talent' },
+  { id: 'jobs', label: 'Post Jobs', desc: 'Post opportunities for women in tech' },
   { id: 'projects', label: 'Post Projects', desc: 'Find collaborators for projects' },
   { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
   { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },
@@ -834,7 +834,7 @@ const IncludedTab = () => {
           />
           <FeatureItem
             label="Full Talent Board access"
-            detail="Browse and search the whole directory of tech professionals, and get listed yourself once you earn your first badge."
+            detail="Browse and search the whole directory of verified women, and get listed yourself once you earn your first badge."
           />
           <FeatureItem
             label="Unlimited messaging"

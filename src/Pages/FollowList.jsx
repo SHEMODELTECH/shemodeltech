@@ -119,7 +119,7 @@ const FollowList = () => {
             {activeTab === 'following' ? 'Not following anyone yet' : 'No followers yet'}
           </p>
           <p className="text-gray-500 text-sm mb-4">
-            {activeTab === 'following' ? 'Discover and follow tech professionals.' : 'Share your work and engage with the community to gain followers.'}
+            {activeTab === 'following' ? 'Discover and follow women in the community.' : 'Share your work and engage with the community to gain followers.'}
           </p>
           <button onClick={() => navigate('/members-directory')} className="bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition-all">
             Discover People

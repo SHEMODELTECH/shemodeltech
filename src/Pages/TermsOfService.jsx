@@ -2,7 +2,7 @@ import React from 'react';
 
 const TermsOfService = () => {
   const sections = [
-    { title: '1. Acceptance of Terms', content: 'By accessing or using She Model Tech ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Platform. She Model Tech is a project-based platform for tech professionals to collaborate, earn badges, and build their careers.' },
+    { title: '1. Acceptance of Terms', content: 'By accessing or using She Model Tech ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Platform. She Model Tech is a project-based platform for women in tech to collaborate, earn badges, and build their careers.' },
     { title: '2. Eligibility', content: 'You must be at least 18 years old to use She Model Tech. By creating an account, you represent that you are at least 18 and have the legal capacity to enter into these terms.' },
     { title: '3. User Accounts', content: 'You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account. You agree to provide accurate information during registration and to keep it updated. Notify us immediately of any unauthorized use.' },
     { title: '4. Acceptable Use', content: 'You agree not to: post false, misleading, or fraudulent content; harass, abuse, or threaten other users; use the Platform for any illegal purpose; scrape or extract data from the Platform; impersonate another person; post spam or malware; or violate any applicable laws.' },

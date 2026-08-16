@@ -108,10 +108,10 @@ const AccountTypeSelection = () => {
                 </div>
               )}
               <div className={`text-base sm:text-lg font-bold mb-1.5 ${selected === 'individual' ? 'text-gray-900' : 'text-gray-700'}`}>
-                Individual
+                Member
               </div>
               <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
-                I am a tech professional looking for projects, career tools, badges, and community.
+                I want to build real tech experience, join a project team, and earn verified badges.
               </p>
             </button>
 
@@ -137,7 +137,7 @@ const AccountTypeSelection = () => {
                 Company / Organisation
               </div>
               <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
-                I am posting projects, hiring, or representing an organization that supports tech professionals.
+                I am hiring, sponsoring a cohort, or representing an organisation that supports women in tech.
               </p>
             </button>
           </div>

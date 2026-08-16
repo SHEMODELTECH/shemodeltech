@@ -211,7 +211,7 @@ const MembersDirectory = () => {
           {/* Header */}
           <div className="mb-6">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Members</h1>
-            <p className="text-gray-500 text-sm">Discover and connect with tech professionals in the community.</p>
+            <p className="text-gray-500 text-sm">Discover and connect with women in the community.</p>
           </div>
 
           {/* Stats */}

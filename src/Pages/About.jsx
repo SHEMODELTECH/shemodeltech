@@ -44,7 +44,7 @@ const About = () => {
             <span className="text-pink-600">She Model Tech</span>
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-4">
-            SHE MODEL TECH is a collaborative tech talent development platform where individuals build in-demand technology skills by working together on real-world projects. Through cross-functional collaboration, members gain practical experience, discover the right career path in tech, and develop the expertise needed to thrive in today's technology industry.
+            She Model Tech is where women build real tech experience. You join a team, ship a real product, and earn verified badges that show employers exactly what you built. Not a course certificate, evidence.
           </p>
         
         </section>
@@ -60,21 +60,21 @@ const About = () => {
                 <span className="text-pink-600 font-extrabold">1</span>
               </div>
               <h3 className="text-pink-600 font-bold text-lg mb-2">Ascend</h3>
-              <p className="text-gray-500 text-sm">Start your journey in tech. Whether you're discovering your path, switching careers, or beginning a new journey in technology, SHE MODEL TECH helps you explore different career paths by collaborating on real-world projects. Through hands-on experience in different roles, you can quickly identify where your interests, strengths, and potential align.</p>
+              <p className="text-gray-500 text-sm">Find your path. Try real roles on real projects and see where your strengths actually are.</p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="w-9 h-9 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center mb-3">
                 <span className="text-orange-500 font-extrabold">2</span>
               </div>
               <h3 className="text-orange-500 font-bold text-lg mb-2">Achieve</h3>
-              <p className="text-gray-500 text-sm">Build your skills through collaboration. Track your progress as you complete real-world projects and earn verified badges that recognize your growth at every stage. As you advance from one level to the next, you build practical experience, strengthen your confidence, and grow through meaningful collaboration with peers on real-world projects.</p>
+              <p className="text-gray-500 text-sm">Build the proof. Complete projects with your team and earn verified badges at every level.</p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="w-9 h-9 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center mb-3">
                 <span className="text-gray-900 font-extrabold">3</span>
               </div>
               <h3 className="text-gray-900 font-bold text-lg mb-2">Advance</h3>
-              <p className="text-gray-500 text-sm">Earn recognition for your expertise. Expert badges are awarded after successfully completing a defined number of real-world projects within a specific field. These achievements showcase your verified experience and demonstrate your capabilities to employers, startups, organizations, and clients, both within and beyond the SHE MODEL TECH ecosystem.</p>
+              <p className="text-gray-500 text-sm">Get hired. Expert badges carry commit-backed evidence employers can verify themselves.</p>
             </div>
           </div>
         </section>
@@ -84,7 +84,7 @@ const About = () => {
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
             <p className="text-gray-600 leading-relaxed">
-              To empower the next generation of technology professionals by making real collaboration the way women learn, prove, and advance in tech.
+              To make real collaboration the way women learn, prove, and advance in tech.
             </p>
           </div>
         </section>
@@ -94,7 +94,7 @@ const About = () => {
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Vision</h2>
             <p className="text-gray-600 leading-relaxed">
-              To become the world's leading collaborative platform where aspiring and experienced technology professionals learn, build, innovate, and grow together while solving meaningful real-world problems.
+              To become the place where a woman's tech ability is a matter of record, not a claim she has to keep defending.
             </p>
           </div>
         </section>
@@ -104,7 +104,7 @@ const About = () => {
           <div className="bg-pink-50 rounded-xl border border-pink-100 p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">For Startups and Organisations</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              SHE MODEL TECH also connects startups and organisations with emerging tech talent ready to contribute to real-world projects. Instead of building teams from scratch, organisations can collaborate with skilled individuals to accelerate innovation, validate ideas, develop products, and solve real business challenges.
+              She Model Tech connects companies with women who have already shipped something real. Every graduate has built a product on a team, in a named role, with commit history behind it.
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">
               Everyone here is verified by the work they have actually shipped, so you hire on evidence, not on resumes. Browse the Talent Board, see real project history and verified badges, and reach out to the people whose proof matches what you need.
