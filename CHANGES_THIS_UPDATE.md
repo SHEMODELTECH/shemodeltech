@@ -738,3 +738,35 @@ year should be able to reach you. Only the self-serve checkout is inert.
 
 Flipping `MEMBERSHIP_ENFORCED` to true reverts every one of these to a live
 button with real pricing, with no further edits.
+
+---
+
+## 17. Admins and editors bypass all "coming soon" gating
+
+Reviewers need to exercise checkout, sponsorship and hosting BEFORE launch. A
+paywall they cannot get past means those paths ship untested, and the first
+person to hit a bug in them would be a paying customer.
+
+`usePaidFeaturesVisible(uid)` in `permissions.js` is the single question every
+paid surface now asks: **enforced OR reviewer**. Wired into:
+- all four `ComingSoon` components (ribbon, button, price, notice)
+- the Sponsor page's inline gates
+- the HostCohort gate
+- `companyAccess.isPartner()` - reviewers always have partner capabilities
+- `canHostCohort()` - reviewers bypass verification AND subscription
+- `canApplyToCompanyCohort()` - reviewers bypass the badge requirement
+
+Reviewers see a purple **"Reviewer preview"** notice instead of "coming soon",
+so a preview is never mistaken for the member-facing experience.
+
+### Permission caching (required by the above)
+The Partner page renders ten permission-aware components. Naively each would
+issue its own Firestore read on mount: ten round trips to answer one question.
+
+`permissions.js` now has a module-level cache keyed by uid, plus an in-flight
+map so concurrent mounts share a single read. Two deliberate details:
+- **Failures are not cached.** A transient network error must not lock someone
+  out of the admin panel for the whole session.
+- **`clearPermissionCache()` is called on logout** (`AuthContext`), so on a
+  shared device the next person to sign in cannot inherit the previous user's
+  role.

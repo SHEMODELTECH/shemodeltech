@@ -16,13 +16,21 @@
 //
 // When you flip MEMBERSHIP_ENFORCED to true, every one of these reverts to a
 // live button and real pricing with no further edits.
+//
+// ADMINS AND EDITORS ALWAYS SEE THE LIVE VERSION.
+// Reviewers need to exercise checkout, sponsorship and hosting before launch.
+// A paywall they cannot get past means those paths ship untested, and the
+// first person to hit a bug in them would be a paying customer.
 
 import React from 'react';
-import { MEMBERSHIP_ENFORCED } from '../config/membership';
+import { useAuth } from '../context/AuthContext';
+import { usePaidFeaturesVisible } from '../utils/permissions';
 
 /** Corner ribbon. Place inside a `relative` card. */
 export const ComingSoonRibbon = ({ label = 'Coming soon' }) => {
-  if (MEMBERSHIP_ENFORCED) return null;
+  const { currentUser } = useAuth();
+  const { visible } = usePaidFeaturesVisible(currentUser?.uid);
+  if (visible) return null;
   return (
     <span className="absolute -top-3 right-4 z-10 bg-pink-600 text-white text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full shadow-sm">
       {label}
@@ -42,7 +50,9 @@ export const ComingSoonButton = ({
   className = '',
   disabled = false,
 }) => {
-  if (!MEMBERSHIP_ENFORCED) {
+  const { currentUser } = useAuth();
+  const { visible } = usePaidFeaturesVisible(currentUser?.uid);
+  if (!visible) {
     return (
       <button
         type="button"
@@ -67,7 +77,9 @@ export const ComingSoonButton = ({
  * the first price a company sees is the one they remember.
  */
 export const Price = ({ amount, interval, note, className = '' }) => {
-  if (!MEMBERSHIP_ENFORCED) {
+  const { currentUser } = useAuth();
+  const { visible } = usePaidFeaturesVisible(currentUser?.uid);
+  if (!visible) {
     return (
       <div className={className}>
         <p className="text-2xl font-bold text-gray-400">Pricing to be announced</p>
@@ -90,7 +102,23 @@ export const Price = ({ amount, interval, note, className = '' }) => {
 
 /** Explains why everything is greyed out. One per page, not per card. */
 export const ComingSoonNotice = () => {
-  if (MEMBERSHIP_ENFORCED) return null;
+  const { currentUser } = useAuth();
+  const { visible, isReviewer } = usePaidFeaturesVisible(currentUser?.uid);
+
+  // Reviewers see a note explaining WHY the paid flows are live for them, so
+  // nobody mistakes a preview for the member-facing experience.
+  if (isReviewer) {
+    return (
+      <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-8">
+        <p className="text-purple-900 text-sm font-bold mb-1">Reviewer preview</p>
+        <p className="text-purple-800 text-xs leading-relaxed">
+          Paid features are live for you so you can test them. Everyone else sees
+          &ldquo;coming soon&rdquo; until membership is switched on.
+        </p>
+      </div>
+    );
+  }
+  if (visible) return null;
   return (
     <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-8">
       <p className="text-gray-900 text-sm font-bold mb-1">Everything below is free right now</p>

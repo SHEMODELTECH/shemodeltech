@@ -40,6 +40,9 @@ export const COMPANY_TIER = {
 export const FREE_COMPANY_DM_LIMIT = 5;
 
 export const isPartner = (company) => {
+  // Admins and editors always have full capabilities - they need to exercise
+  // every paid surface before launch.
+  if (company?.role === 'admin' || company?.role === 'editor') return true;
   // While membership is dormant, every company has full access. One flag in
   // membership.js turns enforcement on everywhere.
   if (!MEMBERSHIP_ENFORCED) return true;

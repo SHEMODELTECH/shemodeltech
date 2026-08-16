@@ -20,6 +20,7 @@ import {
   serverTimestamp
 } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
+import { clearPermissionCache } from "../utils/permissions";
 
 const AuthContext = createContext();
 
@@ -247,6 +248,9 @@ export const AuthProvider = ({ children }) => {
   // Sign out function
   const logout = async () => {
     try {
+      // Drop the cached role first: on a shared device the next person to sign
+      // in must not inherit this user's permissions.
+      clearPermissionCache();
       await signOut(auth);
     } catch (error) {
       console.error("Error signing out", error);

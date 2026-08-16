@@ -121,6 +121,9 @@ const ProjectSubmission = () => {
   // subscription that can be revoked.
 
   const [userProfile, setUserProfile] = useState(null);
+  // null = not loaded yet. We must distinguish "not a company" from "we don't
+  // know yet", or the form flashes on screen before the redirect fires.
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const posterIsCompany = !!userProfile?.isCompany;
 
   // Company accounts no longer post paid projects here - that made us look
@@ -155,7 +158,8 @@ const ProjectSubmission = () => {
         const result = checkProfileComplete(data);
         setProfileGate({ checked: true, ...result });
       })
-      .catch(() => setProfileGate({ checked: true, complete: true, missing: [] }));
+      .catch(() => setProfileGate({ checked: true, complete: true, missing: [] }))
+      .finally(() => setProfileLoaded(true));
   }, [currentUser]);
 
   useEffect(() => {
@@ -394,7 +398,10 @@ const ProjectSubmission = () => {
   const labelClass = 'block text-pink-600 font-semibold mb-2 text-sm';
   const selectClass = inputClass + ' appearance-none';
 
-  if (authLoading || !currentUser) {
+  // Hold the loader until the account type is known, and keep holding it while
+  // a company is being redirected. Rendering the form first and navigating
+  // away in an effect shows the wrong page for a beat.
+  if (authLoading || !currentUser || !profileLoaded || posterIsCompany) {
     return (
       <>
         <div

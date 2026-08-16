@@ -75,8 +75,13 @@ export const WORK_RECORD_TYPE = 'verified_work_experience';
 // Eligibility
 // ---------------------------------------------------------------------
 
-/** A company must hold an active subscription to host its own cohort. */
+/**
+ * A company must be verified and hold an active subscription to host.
+ * Admins and editors bypass both, so the hosting flow can be tested before
+ * launch without creating a fake verified company.
+ */
 export const canHostCohort = (company) => {
+  if (company?.role === 'admin' || company?.role === 'editor') return { allowed: true };
   if (!company?.isCompany) {
     return { allowed: false, reason: 'Only company accounts can host a cohort.' };
   }
@@ -97,7 +102,12 @@ export const canHostCohort = (company) => {
 };
 
 /** Members need at least one earned badge to apply to paid company work. */
-export const canApplyToCompanyCohort = async (uid) => {
+export const canApplyToCompanyCohort = async (uid, viewer = null) => {
+  // Reviewers bypass the badge requirement so the apply flow can be tested
+  // before anyone has earned a badge.
+  if (viewer?.role === 'admin' || viewer?.role === 'editor') {
+    return { allowed: true, badgeCount: 0 };
+  }
   try {
     const snap = await getDocs(
       query(collection(db, 'member_badges'), where('memberUid', '==', uid))

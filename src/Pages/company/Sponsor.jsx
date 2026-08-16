@@ -14,7 +14,7 @@ import { db, auth } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { SPONSORSHIP_TIERS, formatPrice } from '../../config/payments';
-import { MEMBERSHIP_ENFORCED, PAYMENT_LINKS } from '../../config/membership';
+import { PAYMENT_LINKS } from '../../config/membership';
 import {
   SPONSOR_ENTITLEMENTS,
   SPONSOR_LIMITS,
@@ -23,6 +23,7 @@ import {
 } from '../../utils/sponsorships';
 import { BRAND } from '../../config/brand';
 import { ComingSoonRibbon, ComingSoonNotice } from '../../components/ComingSoon';
+import { usePaidFeaturesVisible } from '../../utils/permissions';
 
 const Sponsor = () => {
   const { currentUser } = useAuth();
@@ -30,6 +31,8 @@ const Sponsor = () => {
   const [profile, setProfile] = useState(null);
   const [selected, setSelected] = useState(SPONSORSHIP_TIERS[0].id);
   const [busy, setBusy] = useState(false);
+  // Admins/editors see live pricing and checkout so they can test it.
+  const { visible: paidLive } = usePaidFeaturesVisible(currentUser?.uid);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -114,7 +117,7 @@ const Sponsor = () => {
                 <p className="font-bold text-gray-900 text-sm">{t.name}</p>
                 <p className="text-gray-500 text-xs mt-0.5">{t.blurb}</p>
               </div>
-              {MEMBERSHIP_ENFORCED && (
+              {paidLive && (
                 <span className="font-bold text-gray-900 shrink-0">{formatPrice(t.amount)}</span>
               )}
             </div>
@@ -124,7 +127,7 @@ const Sponsor = () => {
 
       {/* Where the money goes. Hidden while dormant: the split is quoted from
           a price we have not committed to yet. */}
-      {MEMBERSHIP_ENFORCED && (
+      {paidLive && (
         <>
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
             <p className="text-gray-900 text-xs font-bold mb-2">Where your money goes</p>
@@ -163,7 +166,7 @@ const Sponsor = () => {
         </p>
       </div>
 
-      {!MEMBERSHIP_ENFORCED ? (
+      {!paidLive ? (
         <div className="bg-pink-50 border border-pink-200 rounded-xl p-5 text-center">
           <p className="text-gray-900 text-sm font-bold mb-1">Sponsorship opens soon</p>
           <p className="text-gray-600 text-xs mb-3 leading-relaxed">

@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 import { createCompanyCohort, canHostCohort } from '../../utils/companyCohorts';
 import { formatMoney } from '../../utils/paidProjects';
 import { ComingSoonRibbon } from '../../components/ComingSoon';
-import { MEMBERSHIP_ENFORCED } from '../../config/membership';
+import { usePaidFeaturesVisible } from '../../utils/permissions';
 
 const blankRole = () => ({ title: '', count: 1, payAmount: '', skills: '' });
 
@@ -28,6 +28,7 @@ const HostCohort = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const { visible: paidLive } = usePaidFeaturesVisible(currentUser?.uid);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -96,11 +97,10 @@ const HostCohort = () => {
             <li>Write your own brief and set your own timeline</li>
             <li>Hire every role, including the project lead</li>
             <li>Review applicants and interview whoever you like</li>
-            <li>Applicants have already earned a verified badge with us</li>
             <li>You own the work outright</li>
           </ul>
         </div>
-        {MEMBERSHIP_ENFORCED ? (
+        {paidLive ? (
           <button
             onClick={() => navigate('/partner')}
             className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-3 rounded-lg"
@@ -108,20 +108,14 @@ const HostCohort = () => {
             See Talent Access
           </button>
         ) : (
-          <>
-            <button
-              type="button"
-              disabled
-              aria-disabled="true"
-              className="bg-gray-200 text-gray-500 font-semibold text-sm px-6 py-3 rounded-lg cursor-not-allowed"
-            >
-              Coming soon
-            </button>
-            <p className="text-gray-500 text-xs mt-3 leading-relaxed">
-              Hosting opens alongside paid plans next year. We&rsquo;re running our first free
-              cohorts now, so there are verified graduates to hire when it does.
-            </p>
-          </>
+          <button
+            type="button"
+            disabled
+            aria-disabled="true"
+            className="bg-gray-200 text-gray-500 font-semibold text-sm px-6 py-3 rounded-lg cursor-not-allowed"
+          >
+            Coming soon
+          </button>
         )}
       </div>
     );
