@@ -28,21 +28,31 @@
 // nothing auto-removes a lead.
 
 import {
-  collection, doc, getDoc, getDocs, updateDoc, addDoc, query, where,
-  orderBy, limit, serverTimestamp, arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  addDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  serverTimestamp,
+  arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 // Tuning
-export const QUIET_DAYS = 10;            // no workspace visit = concerning
-export const CHECKIN_INTERVAL_DAYS = 7;  // lead confirms once a week
-export const MAX_MISSED_CHECKINS = 2;    // two misses = auto-flag
-export const MIN_FLAGS_TO_ESCALATE = 2;  // independent members required
+export const QUIET_DAYS = 10; // no workspace visit = concerning
+export const CHECKIN_INTERVAL_DAYS = 7; // lead confirms once a week
+export const MAX_MISSED_CHECKINS = 2; // two misses = auto-flag
+export const MIN_FLAGS_TO_ESCALATE = 2; // independent members required
 
 export const LEAD_HEALTH = {
   OK: 'ok',
-  QUIET: 'quiet',           // passive signal only - watch, don't act
-  AT_RISK: 'at_risk',       // multiple signals - reviewer should look
+  QUIET: 'quiet', // passive signal only - watch, don't act
+  AT_RISK: 'at_risk', // multiple signals - reviewer should look
   UNRESPONSIVE: 'unresponsive', // confirmed by a reviewer
 };
 
@@ -72,7 +82,9 @@ export const assessLeadHealth = async (project) => {
       const pa = snap.data().projectActivity || {};
       daysQuiet = daysSince(pa[project.id] || snap.data().lastActiveAt);
     }
-  } catch (_) { /* treat as unknown, not as guilt */ }
+  } catch (_) {
+    /* treat as unknown, not as guilt */
+  }
 
   if (daysQuiet !== Infinity && daysQuiet >= QUIET_DAYS) {
     reasons.push(`Lead hasn't opened the workspace in ${daysQuiet} days`);
@@ -86,7 +98,7 @@ export const assessLeadHealth = async (project) => {
 
   // Signal 3: member flags (unique members only)
   const flags = project.leadFlags || [];
-  const uniqueFlaggers = [...new Set(flags.map(f => f.byUid))];
+  const uniqueFlaggers = [...new Set(flags.map((f) => f.byUid))];
   if (uniqueFlaggers.length >= MIN_FLAGS_TO_ESCALATE) {
     reasons.push(`${uniqueFlaggers.length} team members raised a concern`);
   }
@@ -133,7 +145,7 @@ export const flagLeadUnresponsive = async (projectId, member, reason) => {
   const data = snap.data();
 
   const existing = data.leadFlags || [];
-  if (existing.some(f => f.byUid === member.uid)) {
+  if (existing.some((f) => f.byUid === member.uid)) {
     throw new Error('You have already raised a concern on this project.');
   }
 
@@ -147,7 +159,7 @@ export const flagLeadUnresponsive = async (projectId, member, reason) => {
     updatedAt: serverTimestamp(),
   });
 
-  const uniqueCount = new Set([...existing.map(f => f.byUid), member.uid]).size;
+  const uniqueCount = new Set([...existing.map((f) => f.byUid), member.uid]).size;
   if (uniqueCount >= MIN_FLAGS_TO_ESCALATE) {
     await updateDoc(ref, { leadHealth: LEAD_HEALTH.AT_RISK });
     try {
@@ -159,7 +171,9 @@ export const flagLeadUnresponsive = async (projectId, member, reason) => {
         read: false,
         createdAt: serverTimestamp(),
       });
-    } catch (_) { /* non-blocking */ }
+    } catch (_) {
+      /* non-blocking */
+    }
   }
   return { escalated: uniqueCount >= MIN_FLAGS_TO_ESCALATE, flags: uniqueCount };
 };
@@ -171,9 +185,7 @@ export const flagLeadUnresponsive = async (projectId, member, reason) => {
  *
  * Firestore rules allow only admin/editor to change `submitterId`.
  */
-export const reassignLead = async ({
-  projectId, newLead, reviewer, reason,
-}) => {
+export const reassignLead = async ({ projectId, newLead, reviewer, reason }) => {
   const ref = doc(db, 'projects', projectId);
   const snap = await getDoc(ref);
   if (!snap.exists()) throw new Error('Project not found');
@@ -204,10 +216,18 @@ export const reassignLead = async ({
   const notify = async (uid, title, body) => {
     try {
       await addDoc(collection(db, 'notifications'), {
-        userId: uid, recipientId: uid, type: 'lead_reassigned',
-        title, body, projectId, read: false, createdAt: serverTimestamp(),
+        userId: uid,
+        recipientId: uid,
+        type: 'lead_reassigned',
+        title,
+        body,
+        projectId,
+        read: false,
+        createdAt: serverTimestamp(),
       });
-    } catch (_) { /* non-blocking */ }
+    } catch (_) {
+      /* non-blocking */
+    }
   };
 
   const teamUids = new Set([...(data.members || [])]);
@@ -248,7 +268,9 @@ export const getReassignmentCandidates = async (project) => {
         photoURL: u.photoURL || null,
         daysSinceActive: health === Infinity ? null : health,
       });
-    } catch (_) { /* skip */ }
+    } catch (_) {
+      /* skip */
+    }
   }
   // Most recently active first - the likeliest to actually pick it up.
   return out.sort((a, b) => (a.daysSinceActive ?? 999) - (b.daysSinceActive ?? 999));
@@ -280,7 +302,7 @@ export const getProjectsNeedingReview = async (max = 50) => {
   );
   const order = { [LEAD_HEALTH.AT_RISK]: 0, [LEAD_HEALTH.QUIET]: 1 };
   return snap.docs
-    .map(d => {
+    .map((d) => {
       const project = { id: d.id, ...d.data() };
       return {
         project,

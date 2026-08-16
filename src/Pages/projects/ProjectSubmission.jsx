@@ -1,16 +1,38 @@
-// src/Pages/projects/ProjectSubmission.jsx - Post a Project
+// src/Pages/projects/ProjectSubmission.jsx - Post a collaborative project
+//
+// MEMBERS POST COLLABORATIVE PROJECTS ONLY.
+// The paid-project option was removed: member-to-member payment made this a
+// freelancer marketplace and put us in the middle of disputes we had no
+// leverage to resolve. Paid work now comes from companies only, either as a
+// sponsored cohort or a company-hosted project, where a subscription gives us
+// real recourse if someone isn't paid.
+// Company accounts are redirected to /company/host-cohort.
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
-import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+} from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { toast } from 'react-toastify';
 import usePosterName from '../../hooks/usePosterName';
 import { checkProfileComplete } from '../../utils/profileCompletion';
-import { formatMoney, computeTotalBudget } from '../../utils/paidProjects';
-import { ROLE_TEMPLATES, MIN_TEAM_SIZE, MIN_MEMBERS, rolesMeetMinTeamSize, MIN_TEAM_SIZE_ROLES_ERROR } from '../../utils/projectRoles';
+import {
+  ROLE_TEMPLATES,
+  MIN_TEAM_SIZE,
+  MIN_MEMBERS,
+  rolesMeetMinTeamSize,
+  MIN_TEAM_SIZE_ROLES_ERROR,
+} from '../../utils/projectRoles';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -78,14 +100,26 @@ const ProjectSubmission = () => {
     // Pricing
   });
 
-  // Team roles - dynamic list, payment per role when paid
+  // Team roles - dynamic list
   const [teamRoles, setTeamRoles] = useState([
-    { role: '', customRole: '', skills: '', count: 1, experienceLevel: 'any-level', description: '', detailsLink: '', payAmount: '' }
+    {
+      role: '',
+      customRole: '',
+      skills: '',
+      count: 1,
+      experienceLevel: 'any-level',
+      description: '',
+      detailsLink: '',
+      payAmount: '',
+    },
   ]);
 
-  // Project kind: 'free' (collaborative, badge-earning) or 'paid' (members are
-  // paid per person and NO badge is awarded). Anyone can post either kind.
-  const [projectKind, setProjectKind] = useState('free');
+  // Members post COLLABORATIVE projects only. Paid work comes from companies:
+  // a sponsored cohort or a company-hosted project. Member-to-member payment
+  // would make us a freelancer marketplace and put us in the middle of
+  // disputes we have no leverage to resolve; a company at least holds a
+  // subscription that can be revoked.
+
   const [userProfile, setUserProfile] = useState(null);
   const posterIsCompany = !!userProfile?.isCompany;
 
@@ -104,7 +138,10 @@ const ProjectSubmission = () => {
 
   useEffect(() => {
     if (!authLoading && !currentUser) {
-      navigate('/login', { replace: true, state: { from: '/projects/submit', message: 'Please sign in to post a project' } });
+      navigate('/login', {
+        replace: true,
+        state: { from: '/projects/submit', message: 'Please sign in to post a project' },
+      });
     }
   }, [currentUser, authLoading, navigate]);
 
@@ -112,7 +149,7 @@ const ProjectSubmission = () => {
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid))
-      .then(snap => {
+      .then((snap) => {
         const data = snap.exists() ? snap.data() : null;
         setUserProfile(data);
         const result = checkProfileComplete(data);
@@ -123,7 +160,7 @@ const ProjectSubmission = () => {
 
   useEffect(() => {
     if (currentUser && !formData.contactEmail) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         contactEmail: currentUser.email || '',
         contactName: profilePosterName || currentUser.displayName || '',
@@ -135,11 +172,11 @@ const ProjectSubmission = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRoleChange = (index, field, value) => {
-    setTeamRoles(prev => {
+    setTeamRoles((prev) => {
       const updated = [...prev];
       updated[index] = { ...updated[index], [field]: value };
       return updated;
@@ -148,13 +185,25 @@ const ProjectSubmission = () => {
 
   const addRole = () => {
     if (teamRoles.length < 10) {
-      setTeamRoles(prev => [...prev, { role: '', customRole: '', skills: '', count: 1, experienceLevel: 'any-level', description: '', detailsLink: '', payAmount: '' }]);
+      setTeamRoles((prev) => [
+        ...prev,
+        {
+          role: '',
+          customRole: '',
+          skills: '',
+          count: 1,
+          experienceLevel: 'any-level',
+          description: '',
+          detailsLink: '',
+          payAmount: '',
+        },
+      ]);
     }
   };
 
   const removeRole = (index) => {
     if (teamRoles.length > 1) {
-      setTeamRoles(prev => prev.filter((_, i) => i !== index));
+      setTeamRoles((prev) => prev.filter((_, i) => i !== index));
     }
   };
 
@@ -175,16 +224,18 @@ const ProjectSubmission = () => {
     if (formData.startDate && formData.endDate) {
       const start = new Date(formData.startDate);
       const end = new Date(formData.endDate);
-      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
       if (start < today) errors.push('Start date cannot be in the past');
       if (end <= start) errors.push('End date must be after the start date');
     }
 
-    const validRoles = teamRoles.filter(r => r.role.trim());
+    const validRoles = teamRoles.filter((r) => r.role.trim());
     if (validRoles.length === 0) errors.push('At least one team role is required');
     for (const r of validRoles) {
       if (!r.skills.trim()) errors.push(`Skills required for "${r.role}" role`);
-      if (!r.count || r.count < 1) errors.push(`Number of people for "${r.role}" must be at least 1`);
+      if (!r.count || r.count < 1)
+        errors.push(`Number of people for "${r.role}" must be at least 1`);
     }
     // No solo projects: the roles must offer enough seats for a real team
     // (you count as one person, so the roles cover everyone else).
@@ -192,21 +243,10 @@ const ProjectSubmission = () => {
       errors.push(MIN_TEAM_SIZE_ROLES_ERROR);
     }
 
-    if (posterIsCompany && projectKind !== 'paid') {
-      errors.push('Company accounts can only post paid projects.');
-    }
-
-    if (projectKind === 'paid') {
-      // Paid projects: every role needs a pay amount.
-      for (const r of validRoles) {
-        const pay = parseFloat(r.payAmount);
-        if (!pay || pay <= 0) errors.push(`Pay per person is required for the "${r.role}" role`);
-      }
-    } else {
-      // Free projects: at least one open role (Beginner / Any Level) so
-      // newcomers always have a way in. Paid projects are exempt - the
-      // poster chooses exactly the levels they need.
-      const hasOpenRole = validRoles.some(r => {
+    // At least one open role (Beginner / Any Level) so newcomers always have
+    // a way in. This is the point of collaborative projects.
+    {
+      const hasOpenRole = validRoles.some((r) => {
         const lvl = (r.experienceLevel || 'any-level').toLowerCase();
         return lvl === 'any-level' || lvl === 'beginner' || lvl === '';
       });
@@ -250,37 +290,34 @@ const ProjectSubmission = () => {
       return;
     }
 
-    // Paid projects lock their roles and pay amounts once posted (you can add
-    // new roles later, but you can't edit existing ones). Confirm before saving.
-    if (projectKind === 'paid') {
-      const ok = window.confirm(
-        "Please double-check every role, its pay-per-person amount, and the number of people.\n\nOnce you post this paid project, these roles and amounts are LOCKED - you won't be able to edit them. You'll only be able to ADD new roles later.\n\nIs everything correct?"
-      );
-      if (!ok) { setIsSubmitting(false); return; }
-    }
-
     try {
       // Check for duplicate project name
       try {
-        const dupQ = query(collection(db, 'projects'), where('projectTitle', '==', formData.projectTitle.trim()));
+        const dupQ = query(
+          collection(db, 'projects'),
+          where('projectTitle', '==', formData.projectTitle.trim())
+        );
         const dupSnap = await getDocs(dupQ);
         if (!dupSnap.empty) {
           toast.error('A project with this name already exists. Please choose a different title.');
           setIsSubmitting(false);
           return;
         }
-      } catch (e) { console.log('Duplicate check skipped:', e.message); }
+      } catch (e) {
+        console.log('Duplicate check skipped:', e.message);
+      }
 
-      const isPaidProject = projectKind === 'paid';
-      const validRoles = teamRoles.filter(r => (r.role === '__other__' ? r.customRole?.trim() : r.role.trim())).map(r => ({
-        role: r.role === '__other__' ? r.customRole.trim() : r.role.trim(),
-        skills: r.skills.trim(),
-        count: parseInt(r.count) || 1,
-        experienceLevel: r.experienceLevel || 'any-level',
-        description: r.description?.trim() || '',
-        detailsLink: r.detailsLink?.trim() || '',
-        payAmount: isPaidProject ? (parseFloat(r.payAmount) || 0) : 0,
-      }));
+      const validRoles = teamRoles
+        .filter((r) => (r.role === '__other__' ? r.customRole?.trim() : r.role.trim()))
+        .map((r) => ({
+          role: r.role === '__other__' ? r.customRole.trim() : r.role.trim(),
+          skills: r.skills.trim(),
+          count: parseInt(r.count) || 1,
+          experienceLevel: r.experienceLevel || 'any-level',
+          description: r.description?.trim() || '',
+          detailsLink: r.detailsLink?.trim() || '',
+          payAmount: 0,
+        }));
 
       const submissionData = {
         projectTitle: formData.projectTitle.trim(),
@@ -299,11 +336,11 @@ const ProjectSubmission = () => {
         // Team
         teamRoles: validRoles,
         maxTeamSize: totalTeamSize,
-        // Paid project (Phase A): per-person pay set by the poster, visible to
-        // everyone. Paid projects never award badges - members are paid instead.
-        isPaid: isPaidProject,
+        // Kept at zero: members post collaborative, badge-earning projects
+        // only. Paid work is company-hosted (see /company/host-cohort).
+        isPaid: false,
         payCurrency: 'USD',
-        totalBudget: isPaidProject ? computeTotalBudget(validRoles) : 0,
+        totalBudget: 0,
         paymentConfirmations: {},
         leaveReasons: [],
         // Meta
@@ -332,11 +369,12 @@ const ProjectSubmission = () => {
           description: `Project "${formData.projectTitle}" created`,
           metadata: { teamSize: teamRoles.reduce((s, r) => s + (parseInt(r.count) || 1), 0) },
         });
-      } catch (e) { console.log('Activity log skipped:', e.message); }
+      } catch (e) {
+        console.log('Activity log skipped:', e.message);
+      }
 
       toast.success('Project posted successfully!');
       setTimeout(() => navigate('/projects'), 1500);
-
     } catch (error) {
       console.error('Error posting project:', error);
       toast.error('Error posting project: ' + error.message);
@@ -351,15 +389,18 @@ const ProjectSubmission = () => {
     return tomorrow.toISOString().split('T')[0];
   };
 
-  const inputClass = "w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none text-sm transition-all";
-  const labelClass = "block text-pink-600 font-semibold mb-2 text-sm";
-  const selectClass = inputClass + " appearance-none";
+  const inputClass =
+    'w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 min-h-[44px] text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none text-sm transition-all';
+  const labelClass = 'block text-pink-600 font-semibold mb-2 text-sm';
+  const selectClass = inputClass + ' appearance-none';
 
   if (authLoading || !currentUser) {
     return (
       <>
-        
-        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
+        <div
+          className="min-h-screen flex items-center justify-center"
+          style={{ backgroundColor: '#ffffff' }}
+        >
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto"></div>
         </div>
       </>
@@ -368,85 +409,89 @@ const ProjectSubmission = () => {
 
   return (
     <>
-      
       <div className="min-h-screen overflow-x-hidden " style={{ backgroundColor: '#ffffff' }}>
         <main className="pb-16 sm:pb-20 md:pb-24">
           <div className="max-w-6xl mx-auto">
-
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>
-                Post a <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">Project</span>
+              <h1
+                className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2"
+                style={{ fontFamily: '"Inter", sans-serif' }}
+              >
+                Post a{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">
+                  Project
+                </span>
               </h1>
-              <p className="text-gray-400 text-sm sm:text-base">Create a project and build your team</p>
+              <p className="text-gray-400 text-sm sm:text-base">
+                Create a project and build your team
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {profileGate.checked && !profileGate.complete && (
                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5">
-                  <p className="text-amber-800 text-sm font-semibold mb-1">Complete your profile to post a project</p>
-                  <p className="text-gray-600 text-xs mb-3">Recruiters discover talent through complete profiles. Please fill in: {profileGate.missing.join(', ')}.</p>
-                  <button type="button" onClick={() => navigate('/settings?tab=profile')} className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-medium px-4 py-2 rounded-lg transition-all">
+                  <p className="text-amber-800 text-sm font-semibold mb-1">
+                    Complete your profile to post a project
+                  </p>
+                  <p className="text-gray-600 text-xs mb-3">
+                    Recruiters discover talent through complete profiles. Please fill in:{' '}
+                    {profileGate.missing.join(', ')}.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/settings?tab=profile')}
+                    className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-medium px-4 py-2 rounded-lg transition-all"
+                  >
                     Complete Profile
                   </button>
                 </div>
               )}
-              {/* Project Type: Free (collaborative) or Paid. Company accounts are
-                  paid-only - no free projects, no badges. */}
-              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 sm:p-6 mb-5">
-                <label className={labelClass}>Project Type *</label>
-                {posterIsCompany ? (
-                  <div className="mt-1">
-                    <div className="text-left rounded-xl border-2 border-amber-500 bg-amber-50 p-4">
-                      <span className="inline-flex items-center bg-amber-100 text-amber-800 border border-amber-200 font-bold rounded-full text-[10px] px-2 py-0.5 mb-2">PAID</span>
-                      <p className="text-gray-900 text-sm font-bold">Paid Project <span className="text-orange-500 text-[10px] font-black align-middle ml-1">PRO</span></p>
-                      <p className="text-gray-500 text-xs mt-1">You pay each member on completion. You set the pay per person for every role, visible to applicants before they join. No badges are awarded - members are compensated instead.</p>
-                    </div>
-                    <p className="text-gray-400 text-xs mt-2">Company accounts post paid projects only. Free collaborative projects, and the badges they award, are for talent members.</p>
-                  </div>
-                ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
-                  <button type="button" onClick={() => setProjectKind('free')}
-                    className={`text-left rounded-xl border-2 p-4 transition-all ${projectKind === 'free' ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-white hover:border-gray-300'}`}>
-                    <span className="inline-flex items-center bg-green-100 text-green-800 border border-green-200 font-bold rounded-full text-[10px] px-2 py-0.5 mb-2">FREE</span>
-                    <p className="text-gray-900 text-sm font-bold">Collaborative Project</p>
-                    <p className="text-gray-500 text-xs mt-1">Members build for experience and earn verified badges on completion.</p>
-                  </button>
-                  <button type="button" onClick={() => setProjectKind('paid')}
-                    className={`text-left rounded-xl border-2 p-4 transition-all ${projectKind === 'paid' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 bg-white hover:border-gray-300'}`}>
-                    <span className="inline-flex items-center bg-amber-100 text-amber-800 border border-amber-200 font-bold rounded-full text-[10px] px-2 py-0.5 mb-2">PAID</span>
-                    <p className="text-gray-900 text-sm font-bold">Paid Project <span className="text-orange-500 text-[10px] font-black align-middle ml-1">PRO</span></p>
-                    <p className="text-gray-500 text-xs mt-1">You pay each member on completion. You set the pay per person for every role. No badges are awarded - members are compensated instead.</p>
-                  </button>
-                </div>
-                )}
-                {projectKind === 'paid' && (
-                  <div className="mt-3 bg-pink-50 border border-pink-200 rounded-xl p-3">
-                    <p className="text-gray-700 text-xs leading-relaxed"><strong>How paid projects work:</strong> the pay per person you set for each role is visible to everyone before they apply. The project can only be closed once the work is verified done and every member confirms they were paid. Paid projects award no badges.</p>
-                  </div>
-                )}
-              </div>
 
               <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 sm:p-6 space-y-5">
-
                 {/* Project Title */}
                 <div>
                   <label className={labelClass}>Project Title *</label>
-                  <input type="text" name="projectTitle" value={formData.projectTitle} onChange={handleInputChange} className={inputClass} placeholder="e.g., Student Housing Finder App" maxLength={120} />
+                  <input
+                    type="text"
+                    name="projectTitle"
+                    value={formData.projectTitle}
+                    onChange={handleInputChange}
+                    className={inputClass}
+                    placeholder="e.g., Student Housing Finder App"
+                    maxLength={120}
+                  />
                 </div>
 
                 {/* Description */}
                 <div>
                   <label className={labelClass}>Project Description *</label>
-                  <textarea name="projectDescription" value={formData.projectDescription} onChange={handleInputChange} className={inputClass + " resize-none"} rows="4" placeholder="Describe the project, its purpose, and what the team will build..." maxLength={2000} />
+                  <textarea
+                    name="projectDescription"
+                    value={formData.projectDescription}
+                    onChange={handleInputChange}
+                    className={inputClass + ' resize-none'}
+                    rows="4"
+                    placeholder="Describe the project, its purpose, and what the team will build..."
+                    maxLength={2000}
+                  />
                 </div>
 
                 {/* Industry Track */}
                 <div>
                   <label className={labelClass}>Industry Track *</label>
-                  <select name="industryTrack" value={formData.industryTrack} onChange={handleInputChange} className={selectClass}>
+                  <select
+                    name="industryTrack"
+                    value={formData.industryTrack}
+                    onChange={handleInputChange}
+                    className={selectClass}
+                  >
                     <option value="">Select industry</option>
-                    {industryTracks.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                    {industryTracks.map((t) => (
+                      <option key={t.value} value={t.value}>
+                        {t.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -454,37 +499,87 @@ const ProjectSubmission = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className={labelClass}>Timeline *</label>
-                    <select name="timeline" value={formData.timeline} onChange={handleInputChange} className={selectClass}>
+                    <select
+                      name="timeline"
+                      value={formData.timeline}
+                      onChange={handleInputChange}
+                      className={selectClass}
+                    >
                       <option value="">Select</option>
-                      {timelineOptions.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                      {timelineOptions.map((t) => (
+                        <option key={t.value} value={t.value}>
+                          {t.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div>
                     <label className={labelClass}>Start Date *</label>
-                    <input type="date" name="startDate" value={formData.startDate} onChange={handleInputChange} className={inputClass} min={getMinDate()} />
+                    <input
+                      type="date"
+                      name="startDate"
+                      value={formData.startDate}
+                      onChange={handleInputChange}
+                      className={inputClass}
+                      min={getMinDate()}
+                    />
                   </div>
                   <div>
                     <label className={labelClass}>End Date *</label>
-                    <input type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} className={inputClass} min={formData.startDate || getMinDate()} />
+                    <input
+                      type="date"
+                      name="endDate"
+                      value={formData.endDate}
+                      onChange={handleInputChange}
+                      className={inputClass}
+                      min={formData.startDate || getMinDate()}
+                    />
                   </div>
                 </div>
 
                 {/* Goals */}
                 <div>
                   <label className={labelClass}>Project Goals</label>
-                  <textarea name="projectGoals" value={formData.projectGoals} onChange={handleInputChange} className={inputClass + " resize-none"} rows="2" placeholder="What should the team achieve by the end?" maxLength={1000} />
+                  <textarea
+                    name="projectGoals"
+                    value={formData.projectGoals}
+                    onChange={handleInputChange}
+                    className={inputClass + ' resize-none'}
+                    rows="2"
+                    placeholder="What should the team achieve by the end?"
+                    maxLength={1000}
+                  />
                 </div>
 
                 {/* Submission + project links */}
                 <div>
                   <label className={labelClass}>Project Submission Link *</label>
-                  <input type="url" name="submissionUrl" value={formData.submissionUrl} onChange={handleInputChange} className={inputClass} placeholder="https://github.com/... (folder with all the work, team, and final solutions)" />
-                  <p className="text-gray-400 text-xs mt-1">A GitHub repo is recommended (free). This is where the team's work lives and what gets reviewed.</p>
+                  <input
+                    type="url"
+                    name="submissionUrl"
+                    value={formData.submissionUrl}
+                    onChange={handleInputChange}
+                    className={inputClass}
+                    placeholder="https://github.com/... (folder with all the work, team, and final solutions)"
+                  />
+                  <p className="text-gray-400 text-xs mt-1">
+                    A GitHub repo is recommended (free). This is where the team's work lives and
+                    what gets reviewed.
+                  </p>
                 </div>
                 <div>
                   <label className={labelClass}>Project Link - Full Description *</label>
-                  <input type="url" name="projectLink" value={formData.projectLink} onChange={handleInputChange} className={inputClass} placeholder="https://docs.google.com/... (a doc, slides, etc. describing the project)" />
-                  <p className="text-gray-400 text-xs mt-1">A full description of the project - Google Doc, a .docx, a slide deck, etc.</p>
+                  <input
+                    type="url"
+                    name="projectLink"
+                    value={formData.projectLink}
+                    onChange={handleInputChange}
+                    className={inputClass}
+                    placeholder="https://docs.google.com/... (a doc, slides, etc. describing the project)"
+                  />
+                  <p className="text-gray-400 text-xs mt-1">
+                    A full description of the project - Google Doc, a .docx, a slide deck, etc.
+                  </p>
                 </div>
               </div>
 
@@ -492,22 +587,48 @@ const ProjectSubmission = () => {
               <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 sm:p-6 space-y-5">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-bold text-gray-900">Team Roles</h2>
-                  <span className={`text-xs ${totalTeamSize >= MIN_MEMBERS ? 'text-gray-400' : 'text-red-500 font-semibold'}`}>
-                    Total team: {totalTeamSize + 1} {totalTeamSize + 1 === 1 ? 'person' : 'people'} (you + {totalTeamSize})
+                  <span
+                    className={`text-xs ${totalTeamSize >= MIN_MEMBERS ? 'text-gray-400' : 'text-red-500 font-semibold'}`}
+                  >
+                    Total team: {totalTeamSize + 1} {totalTeamSize + 1 === 1 ? 'person' : 'people'}{' '}
+                    (you + {totalTeamSize})
                   </span>
                 </div>
-                <p className="text-gray-500 text-xs -mt-2">Set an experience level per role. Intermediate and Advanced roles can only be filled by members who've earned the matching badge level in that track - keeping your team realistic and your project outcomes protected. Use Beginner or Any Level for roles open to newcomers.</p>
+                <p className="text-gray-500 text-xs -mt-2">
+                  Set an experience level per role. Intermediate and Advanced roles can only be
+                  filled by members who've earned the matching badge level in that track - keeping
+                  your team realistic and your project outcomes protected. Use Beginner or Any Level
+                  for roles open to newcomers.
+                </p>
                 <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
-                  <p className="text-gray-700 text-xs"><strong>Note:</strong> add or remove roles to fit your project. Keep at least one Beginner or Any Level role so newcomers can join.</p>
-                  <p className="text-gray-700 text-xs mt-2"><strong>No solo projects:</strong> a project is a team effort, so it needs at least {MIN_TEAM_SIZE} people. You count as one, so your roles must add up to at least {MIN_MEMBERS} {MIN_MEMBERS === 1 ? 'person' : 'people'} besides you - and you'll need that many approved members on the team before you can submit for review or complete the project.</p>
+                  <p className="text-gray-700 text-xs">
+                    <strong>Note:</strong> add or remove roles to fit your project. Keep at least
+                    one Beginner or Any Level role so newcomers can join.
+                  </p>
+                  <p className="text-gray-700 text-xs mt-2">
+                    <strong>No solo projects:</strong> a project is a team effort, so it needs at
+                    least {MIN_TEAM_SIZE} people. You count as one, so your roles must add up to at
+                    least {MIN_MEMBERS} {MIN_MEMBERS === 1 ? 'person' : 'people'} besides you - and
+                    you'll need that many approved members on the team before you can submit for
+                    review or complete the project.
+                  </p>
                 </div>
 
                 {teamRoles.map((role, index) => (
-                  <div key={index} className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3">
+                  <div
+                    key={index}
+                    className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="text-gray-900 text-sm font-semibold">Role {index + 1}</span>
                       {teamRoles.length > 1 && (
-                        <button type="button" onClick={() => removeRole(index)} className="text-red-400 hover:text-red-300 text-xs font-semibold transition-colors">Remove</button>
+                        <button
+                          type="button"
+                          onClick={() => removeRole(index)}
+                          className="text-red-400 hover:text-red-300 text-xs font-semibold transition-colors"
+                        >
+                          Remove
+                        </button>
                       )}
                     </div>
                     <div className="space-y-3">
@@ -516,72 +637,122 @@ const ProjectSubmission = () => {
                           <label className="block text-gray-400 text-xs mb-1">Role Title *</label>
                           {role.role === '__other__' ? (
                             <div className="flex gap-1">
-                              <input type="text" value={role.customRole || ''} onChange={e => handleRoleChange(index, 'customRole', e.target.value)} className={inputClass} placeholder="Enter custom role" />
-                              <button type="button" onClick={() => { handleRoleChange(index, 'role', ''); handleRoleChange(index, 'customRole', ''); }} className="text-gray-400 hover:text-gray-600 text-xs px-2 flex-shrink-0">✕</button>
+                              <input
+                                type="text"
+                                value={role.customRole || ''}
+                                onChange={(e) =>
+                                  handleRoleChange(index, 'customRole', e.target.value)
+                                }
+                                className={inputClass}
+                                placeholder="Enter custom role"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleRoleChange(index, 'role', '');
+                                  handleRoleChange(index, 'customRole', '');
+                                }}
+                                className="text-gray-400 hover:text-gray-600 text-xs px-2 flex-shrink-0"
+                              >
+                                ✕
+                              </button>
                             </div>
                           ) : (
-                            <select value={role.role} onChange={e => handleRoleChange(index, 'role', e.target.value)} className={selectClass}>
+                            <select
+                              value={role.role}
+                              onChange={(e) => handleRoleChange(index, 'role', e.target.value)}
+                              className={selectClass}
+                            >
                               <option value="">Select role</option>
-                              {roleTemplates.map(r => <option key={r} value={r}>{r}</option>)}
+                              {roleTemplates.map((r) => (
+                                <option key={r} value={r}>
+                                  {r}
+                                </option>
+                              ))}
                               <option value="__other__">Other (type your own)</option>
                             </select>
                           )}
                         </div>
                         <div>
-                          <label className="block text-gray-400 text-xs mb-1">People Needed *</label>
-                          <input type="number" min="1" max="20" value={role.count} onChange={e => handleRoleChange(index, 'count', e.target.value)} className={inputClass} />
+                          <label className="block text-gray-400 text-xs mb-1">
+                            People Needed *
+                          </label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="20"
+                            value={role.count}
+                            onChange={(e) => handleRoleChange(index, 'count', e.target.value)}
+                            className={inputClass}
+                          />
                         </div>
                         <div>
-                          <label className="block text-gray-400 text-xs mb-1">Skills Required *</label>
-                          <input type="text" value={role.skills} onChange={e => handleRoleChange(index, 'skills', e.target.value)} className={inputClass} placeholder="e.g., React, Node.js" />
+                          <label className="block text-gray-400 text-xs mb-1">
+                            Skills Required *
+                          </label>
+                          <input
+                            type="text"
+                            value={role.skills}
+                            onChange={(e) => handleRoleChange(index, 'skills', e.target.value)}
+                            className={inputClass}
+                            placeholder="e.g., React, Node.js"
+                          />
                         </div>
                         <div>
-                          <label className="block text-gray-400 text-xs mb-1">Experience Level</label>
-                          <select value={role.experienceLevel || 'any-level'} onChange={e => handleRoleChange(index, 'experienceLevel', e.target.value)} className={selectClass}>
+                          <label className="block text-gray-400 text-xs mb-1">
+                            Experience Level
+                          </label>
+                          <select
+                            value={role.experienceLevel || 'any-level'}
+                            onChange={(e) =>
+                              handleRoleChange(index, 'experienceLevel', e.target.value)
+                            }
+                            className={selectClass}
+                          >
                             <option value="any-level">Any Level</option>
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
                           </select>
                         </div>
-                        {projectKind === 'paid' && (
-                          <div>
-                            <label className="block text-amber-700 text-xs font-semibold mb-1">Pay per Person (USD) *</label>
-                            <input type="number" min="1" step="0.01" value={role.payAmount || ''} onChange={e => handleRoleChange(index, 'payAmount', e.target.value)} className={inputClass} placeholder="e.g., 500" />
-                            <p className="text-gray-400 text-[10px] mt-0.5">Paid to each person in this role on completion. Visible to all applicants.</p>
-                          </div>
-                        )}
                       </div>
                       {/* Role Description */}
                       <div>
                         <label className="block text-gray-400 text-xs mb-1">Role Description</label>
-                        <textarea value={role.description || ''} onChange={e => handleRoleChange(index, 'description', e.target.value)} className={inputClass + " resize-none"} rows={2} placeholder="Describe what this role will do, responsibilities, deliverables..." />
+                        <textarea
+                          value={role.description || ''}
+                          onChange={(e) => handleRoleChange(index, 'description', e.target.value)}
+                          className={inputClass + ' resize-none'}
+                          rows={2}
+                          placeholder="Describe what this role will do, responsibilities, deliverables..."
+                        />
                       </div>
                       {/* Role Details Link */}
                       <div>
-                        <label className="block text-gray-400 text-xs mb-1">Details Link (optional)</label>
-                        <input type="url" value={role.detailsLink || ''} onChange={e => handleRoleChange(index, 'detailsLink', e.target.value)} className={inputClass} placeholder="https://docs.google.com/... or any URL with more details" />
+                        <label className="block text-gray-400 text-xs mb-1">
+                          Details Link (optional)
+                        </label>
+                        <input
+                          type="url"
+                          value={role.detailsLink || ''}
+                          onChange={(e) => handleRoleChange(index, 'detailsLink', e.target.value)}
+                          className={inputClass}
+                          placeholder="https://docs.google.com/... or any URL with more details"
+                        />
                       </div>
                     </div>
                   </div>
                 ))}
 
                 {teamRoles.length < 10 && (
-                  <button type="button" onClick={addRole} className="w-full py-2.5 border border-dashed border-gray-200 rounded-xl text-pink-600 text-sm font-semibold hover:bg-gray-50 transition-all min-h-[44px]">
+                  <button
+                    type="button"
+                    onClick={addRole}
+                    className="w-full py-2.5 border border-dashed border-gray-200 rounded-xl text-pink-600 text-sm font-semibold hover:bg-gray-50 transition-all min-h-[44px]"
+                  >
                     + Add Another Role
                   </button>
                 )}
-
-                {projectKind === 'paid' && (
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-900 text-sm font-bold">Total Project Budget</p>
-                      <p className="text-gray-500 text-xs">Pay per person x people needed, across all roles.</p>
-                    </div>
-                    <p className="text-amber-700 text-xl font-black">{formatMoney(computeTotalBudget(teamRoles.map(r => ({ ...r, payAmount: parseFloat(r.payAmount) || 0 }))))}</p>
-                  </div>
-                )}
-
               </div>
 
               {/* ── CONTACT INFO ── */}
@@ -590,32 +761,63 @@ const ProjectSubmission = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className={labelClass}>Your Name</label>
-                    <input type="text" name="contactName" value={formData.contactName} onChange={handleInputChange} className={inputClass} placeholder="Your name" />
+                    <input
+                      type="text"
+                      name="contactName"
+                      value={formData.contactName}
+                      onChange={handleInputChange}
+                      className={inputClass}
+                      placeholder="Your name"
+                    />
                   </div>
                   <div>
                     <label className={labelClass}>Email *</label>
-                    <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleInputChange} className={inputClass} placeholder="you@email.com" />
+                    <input
+                      type="email"
+                      name="contactEmail"
+                      value={formData.contactEmail}
+                      onChange={handleInputChange}
+                      className={inputClass}
+                      placeholder="you@email.com"
+                    />
                   </div>
                 </div>
                 <div>
                   <label className={labelClass}>Company / Organisation</label>
-                  <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className={inputClass} placeholder="Optional" />
+                  <input
+                    type="text"
+                    name="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    className={inputClass}
+                    placeholder="Optional"
+                  />
                 </div>
               </div>
 
               {/* Submit */}
-              <button type="submit" disabled={isSubmitting}
-                className="w-full py-3.5 min-h-[48px] bg-pink-600 hover:bg-pink-700 text-white font-black rounded-xl text-sm sm:text-base transition-all shadow-lg hover:shadow-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3.5 min-h-[48px] bg-pink-600 hover:bg-pink-700 text-white font-black rounded-xl text-sm sm:text-base transition-all shadow-lg hover:shadow-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
                     Posting Project...
                   </span>
-                ) : 'Post Project'}
+                ) : (
+                  'Post Project'
+                )}
               </button>
             </form>
 
-            <style jsx>{`select option { background-color: #111; color: white; }`}</style>
+            <style jsx>{`
+              select option {
+                background-color: #111;
+                color: white;
+              }
+            `}</style>
           </div>
         </main>
       </div>

@@ -17,8 +17,17 @@
 // platform fully (courses, community, profile) and go on the waitlist.
 
 import {
-  collection, doc, addDoc, getDoc, getDocs, updateDoc, query,
-  where, orderBy, limit, serverTimestamp,
+  collection,
+  doc,
+  addDoc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
@@ -40,12 +49,12 @@ export const DEFAULT_PROJECTS_PER_COHORT = 6;
 export const COHORT_FUNDING = { COMMUNITY: 'community', SPONSORED: 'sponsored' };
 
 export const COHORT_STATUS = {
-  DRAFT: 'draft',                 // projects generated, not yet revealed
+  DRAFT: 'draft', // projects generated, not yet revealed
   LEAD_RECRUITMENT: 'lead_recruitment', // lead applications open
-  LEAD_REVIEW: 'lead_review',     // applications closed, interviewing
+  LEAD_REVIEW: 'lead_review', // applications closed, interviewing
   TEAM_FORMATION: 'team_formation', // leads assigned, contributors applying
-  BUILDING: 'building',           // teams locked, cohort running
-  GRACE: 'grace',                 // past end date, inside the grace window
+  BUILDING: 'building', // teams locked, cohort running
+  GRACE: 'grace', // past end date, inside the grace window
   COMPLETE: 'complete',
 };
 
@@ -68,19 +77,17 @@ export const buildSchedule = (startDate) => {
     endDate: iso(end),
     graceEndDate: iso(addDays(end, GRACE_PERIOD_DAYS)),
     // Staffing milestones for the NEXT cohort, relative to this one's start.
-    revealDate: iso(addWeeks(start, 1)),          // week 2
-    leadApplyCloseDate: iso(addWeeks(start, 2)),  // week 3
+    revealDate: iso(addWeeks(start, 1)), // week 2
+    leadApplyCloseDate: iso(addWeeks(start, 2)), // week 3
     leadsAssignedByDate: iso(addWeeks(start, 3)), // week 4
-    teamOpenDate: iso(addWeeks(start, 4)),        // week 5
-    teamLockDate: iso(addWeeks(start, 6)),        // week 7
+    teamOpenDate: iso(addWeeks(start, 4)), // week 5
+    teamLockDate: iso(addWeeks(start, 6)), // week 7
   };
 };
 
 /** Next sequential cohort number. */
 export const getNextCohortNumber = async () => {
-  const snap = await getDocs(
-    query(collection(db, 'cohorts'), orderBy('number', 'desc'), limit(1))
-  );
+  const snap = await getDocs(query(collection(db, 'cohorts'), orderBy('number', 'desc'), limit(1)));
   if (snap.empty) return 1;
   return (snap.docs[0].data().number || 0) + 1;
 };
@@ -144,10 +151,8 @@ export const setCohortStatus = async (cohortId, status) =>
 
 /** All projects belonging to a cohort. */
 export const getCohortProjects = async (cohortId) => {
-  const snap = await getDocs(
-    query(collection(db, 'projects'), where('cohortId', '==', cohortId))
-  );
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const snap = await getDocs(query(collection(db, 'projects'), where('cohortId', '==', cohortId)));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
 
 /**
@@ -157,15 +162,11 @@ export const getCohortProjects = async (cohortId) => {
 export const getCohortStats = async (cohortId) => {
   const projects = await getCohortProjects(cohortId);
   const completed = projects.filter(
-    p => p.status === 'completed' || p.status === 'awaiting_payment_confirmation'
+    (p) => p.status === 'completed' || p.status === 'awaiting_payment_confirmation'
   );
-  const lapsed = projects.filter(p => p.status === 'lapsed');
-  const memberCount = projects.reduce(
-    (n, p) => n + 1 + (p.members?.length || 0), 0
-  );
-  const completedMembers = completed.reduce(
-    (n, p) => n + 1 + (p.members?.length || 0), 0
-  );
+  const lapsed = projects.filter((p) => p.status === 'lapsed');
+  const memberCount = projects.reduce((n, p) => n + 1 + (p.members?.length || 0), 0);
+  const completedMembers = completed.reduce((n, p) => n + 1 + (p.members?.length || 0), 0);
   return {
     projects: projects.length,
     completed: completed.length,
@@ -173,9 +174,7 @@ export const getCohortStats = async (cohortId) => {
     inProgress: projects.length - completed.length - lapsed.length,
     memberCount,
     completedMembers,
-    completionRate: projects.length
-      ? Math.round((completed.length / projects.length) * 100)
-      : 0,
+    completionRate: projects.length ? Math.round((completed.length / projects.length) * 100) : 0,
   };
 };
 

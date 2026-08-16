@@ -1,10 +1,10 @@
 // src/utils/aiRecommendations.js
-// AI-powered "Recommended for you": projects + Foundations courses matched to a
+// AI-powered "Recommended for you": projects matched to a
 // member's profile (academic background, roles, skills, badges, interests).
 //
 // How it works:
 //   1. Gather the member's profile, earned badges, and past applications.
-//   2. Gather candidates: open active projects + the Foundations course catalog
+//   2. Gather candidates: open active projects
 //      (compact fields only - titles/summaries, never full markdown).
 //   3. Ask Claude (Haiku, via the existing /api/claude-proxy) to pick the best
 //      matches and return STRICT JSON with a one-line personalized reason each.
@@ -18,13 +18,10 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { CLAUDE_API_CONFIG } from '../config/claudeApiConfig';
-import { COURSES_BY_TRACK } from './foundationsCoursesData';
-import { trackMeta } from './foundationsCourses';
 import { getIndustryLabel } from './industryTracks';
 
 const CACHE_HOURS = 24;
 const MAX_PROJECT_CANDIDATES = 20;
-const MAX_COURSE_CANDIDATES = 36;
 
 // ---------- Gathering ----------
 
@@ -132,27 +129,10 @@ const gatherProjectCandidates = async (currentUser, appliedProjectIds) => {
   }
 };
 
-const gatherCourseCandidates = (userDoc) => {
-  const completed = userDoc?.foundationsCourses || {}; // { trackId: { slug: true } }
-  const out = [];
-  Object.keys(COURSES_BY_TRACK).forEach(trackId => {
-    if (trackId === 'company') return;
-    (COURSES_BY_TRACK[trackId] || []).forEach(c => {
-      if (completed[trackId] && completed[trackId][c.slug]) return; // skip finished
-      out.push({
-        track: trackId,
-        slug: c.slug,
-        title: c.title,
-        summary: truncate(c.summary, 140),
-      });
-    });
-  });
-  return out.slice(0, MAX_COURSE_CANDIDATES);
-};
 
 // ---------- Prompt + parse ----------
 
-const buildPrompt = (profile, projects, courses) => `You are the recommendation engine for She Model Tech, a platform where people learn tech skills through Foundations courses and prove them by building real projects in teams.
+const buildPrompt = (profile, projects) => `You are the recommendation engine for She Model Tech, a platform where women prove their tech skills by building real products in teams.
 
 MEMBER PROFILE
 - Academic background: ${profile.education}
@@ -167,19 +147,16 @@ MEMBER PROFILE
 OPEN PROJECTS (candidates)
 ${projects.map(p => `- id:${p.id} | ${p.title} | industry:${p.industry} | ${p.paid ? 'PAID' : 'collaborative'} | ${p.needsLead ? 'NEEDS A LEAD (member can apply to lead it)' : 'accepting collaborators'} | roles: ${p.roles} | ${p.description}`).join('\n') || '(none available)'}
 
-FOUNDATIONS COURSES (candidates)
-${courses.map(c => `- track:${c.track} slug:${c.slug} | ${c.title} | ${c.summary}`).join('\n') || '(none available)'}
 
 TASK
 Pick the SINGLE best match of each kind FOR THIS SPECIFIC MEMBER:
 - Exactly 1 project: the strongest fit (only from the candidate list, referenced by its exact id).
-- Exactly 1 course: the strongest fit (only from the candidate list, referenced by its exact track and slug).
 For each pick, write "reason": ONE short sentence (max 18 words) that references something concrete from THEIR profile (their background, a skill, a badge, or an interest). For the project also give "match": an integer 50-99 estimating fit.
-Strongly prefer projects in industries they're interested in. Prefer projects with a role at or near their experience level. Prefer a course in their track or one that fills a gap their goals imply. If a candidate list is empty, return an empty array for it.
+Strongly prefer projects in industries they're interested in. Prefer projects with a role at or near their experience level. If the candidate list is empty, return an empty array.
 
 OUTPUT
 Respond with ONLY valid JSON, no markdown fences, no preamble, exactly this shape:
-{"projects":[{"id":"...","match":85,"reason":"..."}],"courses":[{"track":"...","slug":"...","reason":"..."}]}`;
+{"projects":[{"id":"...","match":85,"reason":"..."}]}`;
 
 const parseModelJson = (text) => {
   if (!text) return null;
@@ -197,7 +174,7 @@ const parseModelJson = (text) => {
  * Get AI recommendations for the signed-in member.
  * @param {object} currentUser - Firebase auth user
  * @param {object} opts - { force: boolean } to bypass the 24h cache
- * @returns {Promise<{projects: Array, courses: Array, generatedAt: number} | null>}
+ * @returns {Promise<{projects: Array, generatedAt: number} | null>}
  */
 export const getAIRecommendations = async (currentUser, opts = {}) => {
   if (!currentUser?.uid) return null;
@@ -205,16 +182,14 @@ export const getAIRecommendations = async (currentUser, opts = {}) => {
   const { userDoc, appliedProjectIds, profile } = await gatherProfile(currentUser);
   if (userDoc?.isCompany) return null; // individuals only
 
-  const [projectCandidates, courseCandidates] = await Promise.all([
+  const [projectCandidates] = await Promise.all([
     gatherProjectCandidates(currentUser, appliedProjectIds),
-    Promise.resolve(gatherCourseCandidates(userDoc)),
   ]);
 
   const key = fingerprint({
     v: 2, // bump when the recommendation shape/logic changes to invalidate old caches
     profile,
     p: projectCandidates.map(p => p.id),
-    c: courseCandidates.length,
   });
 
   // Serve from cache if fresh and the inputs haven't changed.
@@ -224,7 +199,7 @@ export const getAIRecommendations = async (currentUser, opts = {}) => {
     return { ...cached.data, generatedAt: cached.generatedAt, fromCache: true };
   }
 
-  if (projectCandidates.length === 0 && courseCandidates.length === 0) return null;
+  if (projectCandidates.length === 0) return null;
 
   // Call Claude through the existing server-side proxy (the key never touches the client).
   const response = await fetch('/api/claude-proxy', {
@@ -233,7 +208,7 @@ export const getAIRecommendations = async (currentUser, opts = {}) => {
     body: JSON.stringify({
       model: CLAUDE_API_CONFIG.models.default,
       max_tokens: 400,
-      messages: [{ role: 'user', content: buildPrompt(profile, projectCandidates, courseCandidates) }],
+      messages: [{ role: 'user', content: buildPrompt(profile, projectCandidates) }],
     }),
   });
   if (!response.ok) throw new Error(`Recommendation service error (${response.status})`);
@@ -244,7 +219,6 @@ export const getAIRecommendations = async (currentUser, opts = {}) => {
 
   // Validate against real candidates - drop anything the model invented.
   const projById = new Map(projectCandidates.map(p => [p.id, p]));
-  const courseByKey = new Map(courseCandidates.map(c => [`${c.track}/${c.slug}`, c]));
 
   const projects = (Array.isArray(parsed.projects) ? parsed.projects : [])
     .filter(r => r && projById.has(r.id))
@@ -262,21 +236,8 @@ export const getAIRecommendations = async (currentUser, opts = {}) => {
       };
     });
 
-  const courses = (Array.isArray(parsed.courses) ? parsed.courses : [])
-    .filter(r => r && courseByKey.has(`${r.track}/${r.slug}`))
-    .slice(0, 1)
-    .map(r => {
-      const c = courseByKey.get(`${r.track}/${r.slug}`);
-      return {
-        track: c.track,
-        trackLabel: trackMeta(c.track).label,
-        slug: c.slug,
-        title: c.title,
-        reason: truncate(r.reason, 160) || 'Builds on your current skills.',
-      };
-    });
 
-  const result = { projects, courses };
+  const result = { projects };
   const generatedAt = Date.now();
 
   // Cache on the user doc (best-effort; a cache failure shouldn't break the UI).

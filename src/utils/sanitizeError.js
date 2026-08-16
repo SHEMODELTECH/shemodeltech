@@ -24,7 +24,10 @@ export const sanitizeErrorMessage = (message) => {
     .trim();
 
   // Tidy up double spaces / dangling punctuation left behind by the removals.
-  cleaned = cleaned.replace(/\s{2,}/g, ' ').replace(/\s+([.,!?])/g, '$1').trim();
+  cleaned = cleaned
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s+([.,!?])/g, '$1')
+    .trim();
   if (cleaned && !/[.!?]$/.test(cleaned)) cleaned += '.';
 
   // If all that's left is something meaningless like "Error.", fall back.
@@ -47,7 +50,8 @@ export const sanitizeErrorMessage = (message) => {
  * @returns {string}
  */
 export const formatPasswordRequirementError = (rawMessage) => {
-  const fallback = 'Your password doesn\'t meet the requirements. Use at least 8 characters with a letter, a number, and a symbol (e.g. ! @ # $ %).';
+  const fallback =
+    "Your password doesn't meet the requirements. Use at least 8 characters with a letter, a number, and a symbol (e.g. ! @ # $ %).";
   if (typeof rawMessage !== 'string') return fallback;
   const match = rawMessage.match(/\[([^\]]+)\]/);
   if (match && match[1]) {

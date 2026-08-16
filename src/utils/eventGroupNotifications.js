@@ -1,7 +1,16 @@
 // src/utils/eventGroupNotifications.js
 // 🔥 FINAL COMPLETE VERSION - Client-side functions for event group join notifications
 
-import { collection, doc, getDoc, getDocs, query, where, addDoc, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  addDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { toast } from 'react-toastify';
 
@@ -11,7 +20,11 @@ import { toast } from 'react-toastify';
  * @param {Object} applicantData - Data about the person requesting to join
  * @param {string} applicationMessage - Optional message from the applicant
  */
-export const sendEventGroupJoinNotification = async (eventGroupId, applicantData, applicationMessage = '') => {
+export const sendEventGroupJoinNotification = async (
+  eventGroupId,
+  applicantData,
+  applicationMessage = ''
+) => {
   try {
     console.log('📧 Sending event group join notification...', { eventGroupId, applicantData });
 
@@ -20,10 +33,10 @@ export const sendEventGroupJoinNotification = async (eventGroupId, applicantData
     if (!eventGroupDoc.exists()) {
       throw new Error('Event group not found');
     }
-    
+
     const eventGroupData = {
       id: eventGroupDoc.id,
-      ...eventGroupDoc.data()
+      ...eventGroupDoc.data(),
     };
 
     // 2. Get event group admins
@@ -33,9 +46,9 @@ export const sendEventGroupJoinNotification = async (eventGroupId, applicantData
       where('role', '==', 'admin'),
       where('status', '==', 'active')
     );
-    
+
     const adminsSnapshot = await getDocs(adminsQuery);
-    
+
     if (adminsSnapshot.empty) {
       console.warn('No active admins found for event group:', eventGroupId);
       // Fallback: try to get the event group creator
@@ -45,12 +58,12 @@ export const sendEventGroupJoinNotification = async (eventGroupId, applicantData
           eventGroupData,
           applicantData: {
             ...applicantData,
-            applicationMessage
+            applicationMessage,
           },
           adminData: {
             email: creatorEmail,
-            name: 'Event Group Admin'
-          }
+            name: 'Event Group Admin',
+          },
         });
         return true;
       } else {
@@ -61,25 +74,24 @@ export const sendEventGroupJoinNotification = async (eventGroupId, applicantData
     // 3. Send email to all admins
     const emailPromises = adminsSnapshot.docs.map(async (adminDoc) => {
       const adminData = adminDoc.data();
-      
+
       return sendNotificationEmail({
         eventGroupData,
         applicantData: {
           ...applicantData,
-          applicationMessage
+          applicationMessage,
         },
         adminData: {
           email: adminData.userEmail,
-          name: adminData.userName || 'Event Group Admin'
-        }
+          name: adminData.userName || 'Event Group Admin',
+        },
       });
     });
 
     await Promise.all(emailPromises);
-    
+
     console.log('✅ Successfully sent event group join notifications');
     return true;
-
   } catch (error) {
     console.error('❌ Error sending event group join notification:', error);
     throw error;
@@ -99,8 +111,8 @@ const sendNotificationEmail = async ({ eventGroupData, applicantData, adminData 
       body: JSON.stringify({
         eventGroupData,
         applicantData,
-        adminData
-      })
+        adminData,
+      }),
     });
 
     const result = await response.json();
@@ -111,7 +123,6 @@ const sendNotificationEmail = async ({ eventGroupData, applicantData, adminData 
 
     console.log('✅ Email notification sent successfully:', result);
     return result;
-
   } catch (error) {
     console.error('❌ Error sending notification email:', error);
     throw error;
@@ -125,9 +136,18 @@ const sendNotificationEmail = async ({ eventGroupData, applicantData, adminData 
  * @param {string} eventRole - The role they want in the event (optional)
  * @param {string} applicationMessage - Message from the applicant (optional)
  */
-export const requestToJoinEventGroup = async (eventGroupId, currentUser, eventRole = 'Attendee', applicationMessage = '') => {
+export const requestToJoinEventGroup = async (
+  eventGroupId,
+  currentUser,
+  eventRole = 'Attendee',
+  applicationMessage = ''
+) => {
   try {
-    console.log('🎪 Processing event group join request...', { eventGroupId, currentUser, eventRole });
+    console.log('🎪 Processing event group join request...', {
+      eventGroupId,
+      currentUser,
+      eventRole,
+    });
 
     // 1. Check if user is already a member or has pending application
     const existingMemberQuery = query(
@@ -135,12 +155,12 @@ export const requestToJoinEventGroup = async (eventGroupId, currentUser, eventRo
       where('eventGroupId', '==', eventGroupId),
       where('userEmail', '==', currentUser.email)
     );
-    
+
     const existingMemberSnapshot = await getDocs(existingMemberQuery);
-    
+
     if (!existingMemberSnapshot.empty) {
       const existingMember = existingMemberSnapshot.docs[0].data();
-      
+
       if (existingMember.status === 'active') {
         toast.info('You are already a member of this event group!');
         return { success: false, reason: 'already_member' };
@@ -160,41 +180,43 @@ export const requestToJoinEventGroup = async (eventGroupId, currentUser, eventRo
       status: 'pending',
       appliedAt: serverTimestamp(),
       applicationMessage: applicationMessage.trim(),
-      appliedBy: currentUser.uid
+      appliedBy: currentUser.uid,
     };
 
     console.log('📝 Creating membership application...', applicationData);
-    
+
     const docRef = await addDoc(collection(db, 'event_group_members'), applicationData);
-    
+
     console.log('✅ Membership application created with ID:', docRef.id);
 
     // 3. Send email notification to admins
     try {
-      await sendEventGroupJoinNotification(eventGroupId, {
-        userEmail: currentUser.email,
-        userName: currentUser.displayName || currentUser.email,
-        userPhoto: currentUser.photoURL || null,
-        eventRole: eventRole,
-        applicationMessage: applicationMessage.trim(),
-        appliedAt: new Date(),
-        appliedBy: currentUser.uid
-      }, applicationMessage);
+      await sendEventGroupJoinNotification(
+        eventGroupId,
+        {
+          userEmail: currentUser.email,
+          userName: currentUser.displayName || currentUser.email,
+          userPhoto: currentUser.photoURL || null,
+          eventRole: eventRole,
+          applicationMessage: applicationMessage.trim(),
+          appliedAt: new Date(),
+          appliedBy: currentUser.uid,
+        },
+        applicationMessage
+      );
 
       console.log('✅ Email notification sent to group admins');
-      
     } catch (emailError) {
       console.error('⚠️ Application created but email notification failed:', emailError);
       // Don't fail the entire operation if email fails
     }
 
     toast.success('🎉 Your request to join the event group has been submitted!');
-    return { 
-      success: true, 
+    return {
+      success: true,
       applicationId: docRef.id,
-      message: 'Application submitted successfully. Group admins will review your request.' 
+      message: 'Application submitted successfully. Group admins will review your request.',
     };
-
   } catch (error) {
     console.error('❌ Error processing event group join request:', error);
     toast.error('Failed to submit join request: ' + error.message);
@@ -214,10 +236,10 @@ export const sendEventGroupApprovalNotification = async (eventGroupId, memberDat
     if (!eventGroupDoc.exists()) {
       throw new Error('Event group not found');
     }
-    
+
     const eventGroupData = {
       id: eventGroupDoc.id,
-      ...eventGroupDoc.data()
+      ...eventGroupDoc.data(),
     };
 
     // Create notification record
@@ -233,13 +255,12 @@ export const sendEventGroupApprovalNotification = async (eventGroupId, memberDat
       data: {
         eventGroupTitle: eventGroupData.eventTitle || eventGroupData.title,
         eventGroupId: eventGroupId,
-        memberRole: memberData.eventRole || 'Attendee'
-      }
+        memberRole: memberData.eventRole || 'Attendee',
+      },
     });
 
     console.log('✅ Approval notification created for:', memberData.userEmail);
     return true;
-
   } catch (error) {
     console.error('❌ Error sending approval notification:', error);
     throw error;
@@ -261,9 +282,9 @@ export const getUserEventGroupStatus = async (eventGroupId, userEmail) => {
       where('eventGroupId', '==', eventGroupId),
       where('userEmail', '==', userEmail)
     );
-    
+
     const memberSnapshot = await getDocs(memberQuery);
-    
+
     if (memberSnapshot.empty) {
       console.log('👤 User not found in event group');
       return null;
@@ -272,10 +293,9 @@ export const getUserEventGroupStatus = async (eventGroupId, userEmail) => {
     // Get the most recent membership record (in case there are multiple)
     const memberDoc = memberSnapshot.docs[0];
     const memberData = memberDoc.data();
-    
+
     console.log('✅ Found user membership status:', memberData.status);
     return memberData.status;
-
   } catch (error) {
     console.error('❌ Error checking user event group status:', error);
     throw error;
@@ -297,10 +317,9 @@ export const isUserEventGroupAdmin = async (eventGroupId, userEmail) => {
       where('role', '==', 'admin'),
       where('status', '==', 'active')
     );
-    
+
     const adminSnapshot = await getDocs(adminQuery);
     return !adminSnapshot.empty;
-
   } catch (error) {
     console.error('❌ Error checking admin status:', error);
     return false;
@@ -321,9 +340,9 @@ export const getUserEventGroups = async (userEmail) => {
       where('userEmail', '==', userEmail),
       where('status', '==', 'active')
     );
-    
+
     const memberSnapshot = await getDocs(memberQuery);
-    
+
     if (memberSnapshot.empty) {
       console.log('👤 User not a member of any event groups');
       return [];
@@ -333,24 +352,23 @@ export const getUserEventGroups = async (userEmail) => {
     const eventGroupPromises = memberSnapshot.docs.map(async (memberDoc) => {
       const memberData = memberDoc.data();
       const eventGroupDoc = await getDoc(doc(db, 'event_groups', memberData.eventGroupId));
-      
+
       if (eventGroupDoc.exists()) {
         return {
           id: eventGroupDoc.id,
           ...eventGroupDoc.data(),
           memberRole: memberData.role || 'member',
-          joinedAt: memberData.joinedAt?.toDate()
+          joinedAt: memberData.joinedAt?.toDate(),
         };
       }
       return null;
     });
 
     const eventGroups = await Promise.all(eventGroupPromises);
-    const validEventGroups = eventGroups.filter(group => group !== null);
-    
+    const validEventGroups = eventGroups.filter((group) => group !== null);
+
     console.log('✅ Found user event groups:', validEventGroups.length);
     return validEventGroups;
-
   } catch (error) {
     console.error('❌ Error getting user event groups:', error);
     throw error;
@@ -364,5 +382,5 @@ export default {
   sendEventGroupApprovalNotification,
   getUserEventGroupStatus,
   isUserEventGroupAdmin,
-  getUserEventGroups
+  getUserEventGroups,
 };

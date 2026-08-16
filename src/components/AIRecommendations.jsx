@@ -1,6 +1,6 @@
 // src/components/AIRecommendations.jsx
-// "Your best matches" - the single best AI-matched project and Foundations
-// course for this member, based on their profile (background, roles, skills,
+// "Your best matches" - the single best AI-matched project
+// for this member, based on their profile (background, roles, skills,
 // badges, interests, industry interests).
 // Individuals only; fails quietly (renders nothing) if the AI is unavailable.
 
@@ -42,10 +42,9 @@ const AIRecommendations = ({ currentUser }) => {
 
   // Nothing to show: stay out of the way (no error boxes on the dashboard).
   if (failed && !recs) return null;
-  if (!loading && (!recs || (recs.projects.length === 0 && recs.courses.length === 0))) return null;
+  if (!loading && (!recs || recs.projects.length === 0)) return null;
 
   const project = recs?.projects?.[0] || null;
-  const course = recs?.courses?.[0] || null;
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 mb-6">
@@ -104,27 +103,6 @@ const AIRecommendations = ({ currentUser }) => {
             </div>
           )}
 
-          {/* Best course */}
-          {course && (
-            <div className="border border-gray-200 rounded-xl p-4 hover:border-orange-300 transition-all flex flex-col">
-              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wide mb-1.5">Best course for you</p>
-              <Link to="/foundations" className="text-sm font-bold text-gray-900 hover:text-pink-600 leading-snug">
-                {course.title}
-              </Link>
-              <div className="mt-1.5">
-                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-orange-50 text-orange-700 border border-orange-100">{course.trackLabel}</span>
-              </div>
-              <p className="text-gray-600 text-xs mt-2 leading-relaxed flex-1">
-                <Spark className="w-3 h-3 inline text-orange-400 mr-1 -mt-0.5" />{course.reason}
-              </p>
-              <button
-                onClick={() => navigate('/foundations')}
-                className="mt-3 self-start bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all"
-              >
-                Start learning →
-              </button>
-            </div>
-          )}
         </div>
       )}
     </div>

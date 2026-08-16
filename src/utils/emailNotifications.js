@@ -13,7 +13,7 @@
 const sendEmailNotification = async (endpoint, data) => {
   try {
     console.log(`📧 Sending email notification via ${endpoint}...`);
-    
+
     const response = await fetch(`/api/notifications/${endpoint}`, {
       method: 'POST',
       headers: {
@@ -23,7 +23,7 @@ const sendEmailNotification = async (endpoint, data) => {
     });
 
     const result = await response.json();
-    
+
     if (result.success) {
       console.log(`✅ Email notification sent successfully:`, result.results);
       return { success: true, results: result.results };
@@ -31,7 +31,6 @@ const sendEmailNotification = async (endpoint, data) => {
       console.error(`❌ Email notification failed:`, result.error);
       return { success: false, error: result.error };
     }
-    
   } catch (error) {
     console.error(`💥 Error sending email notification:`, error);
     return { success: false, error: error.message };
@@ -44,7 +43,7 @@ const sendEmailNotification = async (endpoint, data) => {
  */
 export const notifyProjectApproved = async (projectData) => {
   return await sendEmailNotification('send-project-approved', {
-    projectData: projectData
+    projectData: projectData,
   });
 };
 
@@ -54,7 +53,7 @@ export const notifyProjectApproved = async (projectData) => {
  */
 export const notifyProjectReviewApproved = async (completionData) => {
   return await sendEmailNotification('send-project-review-approved', {
-    completionData: completionData
+    completionData: completionData,
   });
 };
 
@@ -64,7 +63,7 @@ export const notifyProjectReviewApproved = async (completionData) => {
  */
 export const notifyEventPublished = async (eventData) => {
   return await sendEmailNotification('send-event-published', {
-    eventData: eventData
+    eventData: eventData,
   });
 };
 
@@ -74,7 +73,7 @@ export const notifyEventPublished = async (eventData) => {
  */
 export const notifyApplicationApproved = async (applicationData) => {
   return await sendEmailNotification('send-application-approved', {
-    applicationData: applicationData
+    applicationData: applicationData,
   });
 };
 
@@ -84,7 +83,7 @@ export const notifyApplicationApproved = async (applicationData) => {
  */
 export const notifyAdminsProjectSubmitted = async (projectData) => {
   return await sendEmailNotification('send-project-submitted-admin', {
-    projectData: projectData
+    projectData: projectData,
   });
 };
 
@@ -98,7 +97,7 @@ export const notifyBadgeAwarded = async (badgeData, projectData, memberData) => 
   return await sendEmailNotification('send-badge-awarded', {
     badgeData,
     projectData,
-    memberData
+    memberData,
   });
 };
 
@@ -108,11 +107,15 @@ export const notifyBadgeAwarded = async (badgeData, projectData, memberData) => 
  * @param {object} projectData - Project data
  * @param {string} rejectionReason - Reason for rejection
  */
-export const notifyApplicationRejected = async (applicationData, projectData, rejectionReason = '') => {
+export const notifyApplicationRejected = async (
+  applicationData,
+  projectData,
+  rejectionReason = ''
+) => {
   return await sendEmailNotification('send-application-rejected', {
     applicationData,
     projectData,
-    rejectionReason
+    rejectionReason,
   });
 };
 
@@ -131,37 +134,42 @@ export const notifyNewApplicationToOwner = async (data) => {
  * @param {string} successMessage - Success message for toast/console
  * @param {boolean} showToast - Whether to show toast notifications (default: false)
  */
-export const safeEmailNotification = async (notificationFunction, data, successMessage = '', showToast = false) => {
+export const safeEmailNotification = async (
+  notificationFunction,
+  data,
+  successMessage = '',
+  showToast = false
+) => {
   try {
     const result = await notificationFunction(data);
-    
+
     if (result.success) {
       const message = successMessage || 'Email notification sent successfully';
       console.log(`✅ ${message}`);
-      
+
       if (showToast && window.toast) {
         window.toast.success(message);
       }
-      
+
       return result;
     } else {
       const errorMessage = `Email notification failed: ${result.error}`;
       console.warn(`⚠️ ${errorMessage}`);
-      
+
       if (showToast && window.toast) {
         window.toast.warn('Email notification failed, but action completed successfully');
       }
-      
+
       return result;
     }
   } catch (error) {
     const errorMessage = `Email notification error: ${error.message}`;
     console.error(`❌ ${errorMessage}`);
-    
+
     if (showToast && window.toast) {
       window.toast.warn('Email notification failed, but action completed successfully');
     }
-    
+
     return { success: false, error: error.message };
   }
 };
@@ -173,12 +181,17 @@ export const safeEmailNotification = async (notificationFunction, data, successM
  * @param {object} mentioner - User who did the mentioning
  * @param {object} postData - Optional post data for context
  */
-export const notifyUserMentioned = async (notificationData, mentionedUser, mentioner, postData = null) => {
+export const notifyUserMentioned = async (
+  notificationData,
+  mentionedUser,
+  mentioner,
+  postData = null
+) => {
   return await sendEmailNotification('send-mention-email', {
     notificationData,
-    mentionedUser, 
+    mentionedUser,
     mentioner,
-    postData
+    postData,
   });
 };
 
@@ -190,13 +203,22 @@ export const notifyUserMentioned = async (notificationData, mentionedUser, menti
  * @param {object} postData - Optional post data
  * @param {boolean} showToast - Whether to show toast notifications
  */
-export const safeMentionNotification = async (notificationData, mentionedUser, mentioner, postData = null, showToast = false) => {
-  const successMessage = `Mention notification sent to ${mentionedUser.firstName && mentionedUser.lastName 
-    ? `${mentionedUser.firstName} ${mentionedUser.lastName}` 
-    : mentionedUser.displayName || mentionedUser.email}`;
-    
+export const safeMentionNotification = async (
+  notificationData,
+  mentionedUser,
+  mentioner,
+  postData = null,
+  showToast = false
+) => {
+  const successMessage = `Mention notification sent to ${
+    mentionedUser.firstName && mentionedUser.lastName
+      ? `${mentionedUser.firstName} ${mentionedUser.lastName}`
+      : mentionedUser.displayName || mentionedUser.email
+  }`;
+
   return await safeEmailNotification(
-    (data) => notifyUserMentioned(data.notificationData, data.mentionedUser, data.mentioner, data.postData),
+    (data) =>
+      notifyUserMentioned(data.notificationData, data.mentionedUser, data.mentioner, data.postData),
     { notificationData, mentionedUser, mentioner, postData },
     successMessage,
     showToast

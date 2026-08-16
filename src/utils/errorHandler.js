@@ -6,25 +6,25 @@ import { useState } from 'react';
  * User-friendly error messages for common Firebase error codes
  */
 const USER_FRIENDLY_MESSAGES = {
-  'permission-denied': 'You don\'t have permission to perform this action.',
+  'permission-denied': "You don't have permission to perform this action.",
   'network-request-failed': 'Please check your internet connection and try again.',
   'internal-error': 'Something went wrong. Please try again later.',
-  'unavailable': 'Service is temporarily unavailable. Please try again.',
+  unavailable: 'Service is temporarily unavailable. Please try again.',
   'deadline-exceeded': 'Request timed out. Please try again.',
   'not-found': 'The requested resource was not found.',
   'already-exists': 'This item already exists.',
-  'cancelled': 'Operation was cancelled.',
+  cancelled: 'Operation was cancelled.',
   'data-loss': 'Data may have been lost. Please try again.',
   'failed-precondition': 'Operation failed due to system state.',
   'invalid-argument': 'Invalid data provided. Please check your input.',
   'out-of-range': 'Value is out of acceptable range.',
   'resource-exhausted': 'System is temporarily overloaded. Please try again.',
-  'unauthenticated': 'Please log in to continue.',
-  'aborted': 'Operation was aborted. Please try again.',
+  unauthenticated: 'Please log in to continue.',
+  aborted: 'Operation was aborted. Please try again.',
   'quota-exceeded': 'Service limit reached. Please try again later.',
   'rate-limited': 'Too many requests. Please slow down and try again.',
   'index-not-ready': 'Database is being optimized. Please try again in a few minutes.',
-  'default': 'An unexpected error occurred. Please try again.'
+  default: 'An unexpected error occurred. Please try again.',
 };
 
 /**
@@ -40,25 +40,25 @@ export const handleFirebaseError = (error, context = '') => {
       error,
       code: error?.code,
       message: error?.message,
-      stack: error?.stack
+      stack: error?.stack,
     });
   }
 
   let userMessage = USER_FRIENDLY_MESSAGES.default;
-  
+
   // Handle Firebase error codes
   if (error?.code) {
     userMessage = USER_FRIENDLY_MESSAGES[error.code] || USER_FRIENDLY_MESSAGES.default;
-    
+
     // Special handling for index errors
     if (error.code === 'failed-precondition' && error.message?.includes('index')) {
       userMessage = USER_FRIENDLY_MESSAGES['index-not-ready'];
     }
-  } 
+  }
   // Handle generic error messages
   else if (error?.message) {
     const message = error.message.toLowerCase();
-    
+
     if (message.includes('firestore') || message.includes('internal assertion')) {
       userMessage = USER_FRIENDLY_MESSAGES['internal-error'];
     } else if (message.includes('network') || message.includes('offline')) {
@@ -101,7 +101,7 @@ export const useErrorHandler = () => {
 
   const executeWithErrorHandling = async (operation, context = '') => {
     setIsLoading(true);
-    
+
     try {
       const result = await operation();
       setIsLoading(false);
@@ -126,38 +126,40 @@ export const useErrorHandler = () => {
  */
 export const retryOperation = async (operation, maxRetries = 3, delay = 1000, context = '') => {
   let lastError;
-  
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await operation();
     } catch (error) {
       lastError = error;
-      
+
       // Don't retry for certain error types
-      if (error.code === 'permission-denied' || 
-          error.code === 'unauthenticated' || 
-          error.code === 'not-found' ||
-          error.code === 'invalid-argument') {
+      if (
+        error.code === 'permission-denied' ||
+        error.code === 'unauthenticated' ||
+        error.code === 'not-found' ||
+        error.code === 'invalid-argument'
+      ) {
         handleFirebaseError(error, `${context} (non-retryable)`);
         throw error;
       }
-      
+
       if (attempt === maxRetries) {
         handleFirebaseError(error, `${context} (final attempt)`);
         throw error;
       }
-      
+
       // Log retry attempt in development
       if (process.env.NODE_ENV === 'development') {
         console.warn(`Retry attempt ${attempt} for ${context}:`, error);
       }
-      
+
       // Exponential backoff
       const backoffDelay = delay * Math.pow(2, attempt - 1);
-      await new Promise(resolve => setTimeout(resolve, backoffDelay));
+      await new Promise((resolve) => setTimeout(resolve, backoffDelay));
     }
   }
-  
+
   throw lastError;
 };
 
@@ -168,13 +170,13 @@ export const retryOperation = async (operation, maxRetries = 3, delay = 1000, co
  */
 export const showSuccessMessage = (message, options = {}) => {
   toast.success(message, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    ...options
+    ...options,
   });
 };
 
@@ -185,13 +187,13 @@ export const showSuccessMessage = (message, options = {}) => {
  */
 export const showInfoMessage = (message, options = {}) => {
   toast.info(message, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    ...options
+    ...options,
   });
 };
 
@@ -202,13 +204,13 @@ export const showInfoMessage = (message, options = {}) => {
  */
 export const showWarningMessage = (message, options = {}) => {
   toast.warn(message, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 4000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    ...options
+    ...options,
   });
 };
 
@@ -219,13 +221,13 @@ export const showWarningMessage = (message, options = {}) => {
  */
 export const showErrorMessage = (message, options = {}) => {
   toast.error(message, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    ...options
+    ...options,
   });
 };
 
@@ -245,12 +247,12 @@ export const logError = (error, context = '', additionalData = {}) => {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       url: window.location.href,
-      ...additionalData
+      ...additionalData,
     };
-    
+
     console.error('Error details:', errorInfo);
   }
-  
+
   // In production, you might want to send this to an error reporting service
   // like Sentry, LogRocket, or similar
 };
@@ -278,27 +280,27 @@ export const handlePromise = async (promise, context = '') => {
  */
 export const validateInput = (validations) => {
   const errors = [];
-  
+
   Object.entries(validations).forEach(([field, rules]) => {
     const { value, required, minLength, maxLength, pattern, custom } = rules;
-    
+
     if (required && (!value || value.toString().trim() === '')) {
       errors.push(`${field} is required`);
       return;
     }
-    
+
     if (value && minLength && value.toString().length < minLength) {
       errors.push(`${field} must be at least ${minLength} characters`);
     }
-    
+
     if (value && maxLength && value.toString().length > maxLength) {
       errors.push(`${field} must be no more than ${maxLength} characters`);
     }
-    
+
     if (value && pattern && !pattern.test(value.toString())) {
       errors.push(`${field} format is invalid`);
     }
-    
+
     if (value && custom && typeof custom === 'function') {
       const customError = custom(value);
       if (customError) {
@@ -306,9 +308,9 @@ export const validateInput = (validations) => {
       }
     }
   });
-  
+
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 };

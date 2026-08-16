@@ -1,4 +1,4 @@
-// src/utils/blobStorage.js - Vercel Blob Storage Utilities (Server-Side API) 
+// src/utils/blobStorage.js - Vercel Blob Storage Utilities (Server-Side API)
 /**
  * Convert file to base64 for API transmission
  * @param {File} file - File to convert
@@ -31,7 +31,7 @@ const generateUniqueFilename = (originalName) => {
     .replace(/[^a-zA-Z0-9.-]/g, '_')
     .replace(/_{2,}/g, '_')
     .toLowerCase();
-  
+
   return `${sanitizedBase}_${timestamp}_${randomString}.${extension}`;
 };
 
@@ -60,7 +60,7 @@ export const uploadImageToBlob = async (file, folder = 'posts') => {
 
     // Convert file to base64
     const base64Data = await fileToBase64(file);
-    
+
     // Generate unique filename
     const uniqueFilename = generateUniqueFilename(file.name);
     const filepath = `${folder}/${uniqueFilename}`;
@@ -76,8 +76,8 @@ export const uploadImageToBlob = async (file, folder = 'posts') => {
         contentType: file.type,
         fileData: base64Data,
         originalName: file.name,
-        size: file.size
-      })
+        size: file.size,
+      }),
     });
 
     if (!response.ok) {
@@ -98,9 +98,8 @@ export const uploadImageToBlob = async (file, folder = 'posts') => {
       deletehash: result.pathname, // Use pathname for deletion
       pathname: result.pathname,
       contentType: result.contentType,
-      uploadedAt: result.uploadedAt || new Date().toISOString()
+      uploadedAt: result.uploadedAt || new Date().toISOString(),
     };
-
   } catch (error) {
     console.error('Error uploading to Vercel Blob:', error);
     throw new Error(error.message || 'Failed to upload image');
@@ -132,8 +131,8 @@ export const deleteImageFromBlob = async (urlOrPathname) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        url: pathname
-      })
+        url: pathname,
+      }),
     });
 
     if (!response.ok) {
@@ -142,7 +141,6 @@ export const deleteImageFromBlob = async (urlOrPathname) => {
     } else {
       console.log('Image deleted successfully from Vercel Blob');
     }
-    
   } catch (error) {
     console.error('Error deleting from Vercel Blob:', error);
     // Don't throw error - deletion failures shouldn't break the app
@@ -167,23 +165,23 @@ export const uploadMultipleImagesToBlob = async (files, folder = 'posts', onProg
   for (let i = 0; i < files.length; i++) {
     try {
       if (onProgress) onProgress(i, 0, total);
-      
+
       const result = await uploadImageToBlob(files[i], folder);
       results.push(result);
-      
+
       if (onProgress) onProgress(i, 100, total);
     } catch (error) {
       console.error(`Error uploading file ${i} (${files[i].name}):`, error);
-      results.push({ 
-        error: error.message, 
+      results.push({
+        error: error.message,
         filename: files[i].name,
-        failed: true 
+        failed: true,
       });
-      
+
       if (onProgress) onProgress(i, -1, total);
     }
   }
-  
+
   return results;
 };
 
@@ -227,8 +225,8 @@ export const createImagePreview = (file) => {
  */
 export const cleanupImagePreviews = (urls) => {
   if (!urls || !Array.isArray(urls)) return;
-  
-  urls.forEach(url => {
+
+  urls.forEach((url) => {
     if (url && url.startsWith('blob:')) {
       try {
         URL.revokeObjectURL(url);
@@ -246,12 +244,12 @@ export const cleanupImagePreviews = (urls) => {
  */
 export const formatFileSize = (bytes) => {
   if (bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 };
 
 /**
@@ -264,10 +262,10 @@ export const getOptimizedImageUrl = (url, options = {}) => {
   // For now, return original URL
   // Can be extended to add query parameters for image optimization
   const { width, height, quality } = options;
-  
+
   // Future: Add Vercel Image Optimization parameters
   // Example: ?w=800&q=75
-  
+
   return url;
 };
 
@@ -279,11 +277,11 @@ export const getOptimizedImageUrl = (url, options = {}) => {
 export const validateMultipleImages = (files) => {
   const validFiles = [];
   const errors = [];
-  
+
   if (!files || files.length === 0) {
     return { validFiles, errors };
   }
-  
+
   files.forEach((file, index) => {
     const error = validateImageFile(file);
     if (error) {
@@ -292,7 +290,7 @@ export const validateMultipleImages = (files) => {
       validFiles.push(file);
     }
   });
-  
+
   return { validFiles, errors };
 };
 
@@ -303,7 +301,7 @@ export const validateMultipleImages = (files) => {
  */
 export const isValidImageUrl = async (url) => {
   if (!url) return false;
-  
+
   try {
     const response = await fetch(url, { method: 'HEAD' });
     const contentType = response.headers.get('content-type');
@@ -323,17 +321,17 @@ export const getImageDimensions = (file) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
-    
+
     img.onload = () => {
       URL.revokeObjectURL(url);
       resolve({ width: img.width, height: img.height });
     };
-    
+
     img.onerror = () => {
       URL.revokeObjectURL(url);
       reject(new Error('Failed to load image'));
     };
-    
+
     img.src = url;
   });
 };
@@ -351,31 +349,31 @@ export const compressImage = async (file, maxWidth = 1920, quality = 0.8) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const url = URL.createObjectURL(file);
-    
+
     img.onload = () => {
       URL.revokeObjectURL(url);
-      
+
       let width = img.width;
       let height = img.height;
-      
+
       // Calculate new dimensions
       if (width > maxWidth) {
         height = (height * maxWidth) / width;
         width = maxWidth;
       }
-      
+
       canvas.width = width;
       canvas.height = height;
-      
+
       // Draw and compress
       ctx.drawImage(img, 0, 0, width, height);
-      
+
       canvas.toBlob(
         (blob) => {
           if (blob) {
             const compressedFile = new File([blob], file.name, {
               type: file.type,
-              lastModified: Date.now()
+              lastModified: Date.now(),
             });
             resolve(compressedFile);
           } else {
@@ -386,12 +384,12 @@ export const compressImage = async (file, maxWidth = 1920, quality = 0.8) => {
         quality
       );
     };
-    
+
     img.onerror = () => {
       URL.revokeObjectURL(url);
       reject(new Error('Failed to load image for compression'));
     };
-    
+
     img.src = url;
   });
 };
@@ -409,5 +407,5 @@ export default {
   getOptimizedImageUrl,
   isValidImageUrl,
   getImageDimensions,
-  compressImage
+  compressImage,
 };

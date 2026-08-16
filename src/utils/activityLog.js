@@ -6,7 +6,7 @@ import { db } from '../firebase/config';
  * Logs an activity to the project's activityLog array in Firestore.
  * All logs are compressed into a single array on the project document
  * to minimize reads/writes.
- * 
+ *
  * Activity types:
  * - project_created, project_updated, project_completed
  * - member_applied, member_approved, member_rejected

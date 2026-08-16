@@ -16,14 +16,14 @@ const BREAKPOINTS = {
 
 /**
  * useResponsive Hook
- * 
+ *
  * Provides reactive breakpoint detection and device information
- * 
+ *
  * @returns {Object} Responsive state and utility functions
- * 
+ *
  * @example
  * const { isMobile, isTablet, isDesktop, width, height } = useResponsive();
- * 
+ *
  * if (isMobile) {
  *   return <MobileView />;
  * }
@@ -79,18 +79,24 @@ export const useResponsive = () => {
    * @param {string} breakpoint - 'sm', 'md', 'lg', 'xl', '2xl'
    * @returns {boolean}
    */
-  const isAbove = useCallback((breakpoint) => {
-    return windowSize.width >= BREAKPOINTS[breakpoint];
-  }, [windowSize.width]);
+  const isAbove = useCallback(
+    (breakpoint) => {
+      return windowSize.width >= BREAKPOINTS[breakpoint];
+    },
+    [windowSize.width]
+  );
 
   /**
    * Check if current width is below a specific breakpoint
    * @param {string} breakpoint - 'sm', 'md', 'lg', 'xl', '2xl'
    * @returns {boolean}
    */
-  const isBelow = useCallback((breakpoint) => {
-    return windowSize.width < BREAKPOINTS[breakpoint];
-  }, [windowSize.width]);
+  const isBelow = useCallback(
+    (breakpoint) => {
+      return windowSize.width < BREAKPOINTS[breakpoint];
+    },
+    [windowSize.width]
+  );
 
   /**
    * Check if current width is between two breakpoints
@@ -98,28 +104,31 @@ export const useResponsive = () => {
    * @param {string} max - Maximum breakpoint
    * @returns {boolean}
    */
-  const isBetween = useCallback((min, max) => {
-    return windowSize.width >= BREAKPOINTS[min] && windowSize.width < BREAKPOINTS[max];
-  }, [windowSize.width]);
+  const isBetween = useCallback(
+    (min, max) => {
+      return windowSize.width >= BREAKPOINTS[min] && windowSize.width < BREAKPOINTS[max];
+    },
+    [windowSize.width]
+  );
 
   return {
     // Window dimensions
     width: windowSize.width,
     height: windowSize.height,
-    
+
     // Device categories
     ...breakpoints,
-    
+
     // Orientation
     orientation,
     isPortrait: orientation === 'portrait',
     isLandscape: orientation === 'landscape',
-    
+
     // Utility functions
     isAbove,
     isBelow,
     isBetween,
-    
+
     // Breakpoint values
     breakpoints: BREAKPOINTS,
   };
@@ -127,12 +136,12 @@ export const useResponsive = () => {
 
 /**
  * useMediaQuery Hook
- * 
+ *
  * Listen to a custom media query
- * 
+ *
  * @param {string} query - CSS media query string
  * @returns {boolean} Whether the media query matches
- * 
+ *
  * @example
  * const isPrint = useMediaQuery('print');
  * const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
@@ -144,13 +153,13 @@ export const useMediaQuery = (query) => {
     if (typeof window === 'undefined') return;
 
     const mediaQuery = window.matchMedia(query);
-    
+
     // Set initial value
     setMatches(mediaQuery.matches);
 
     // Create event listener
     const handler = (event) => setMatches(event.matches);
-    
+
     // Modern browsers
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handler);
@@ -167,9 +176,9 @@ export const useMediaQuery = (query) => {
 
 /**
  * useViewportHeight Hook
- * 
+ *
  * Get accurate viewport height accounting for mobile browser chrome
- * 
+ *
  * @returns {number} Viewport height in pixels
  */
 export const useViewportHeight = () => {
@@ -183,7 +192,7 @@ export const useViewportHeight = () => {
 
     updateVh();
     window.addEventListener('resize', updateVh);
-    
+
     return () => window.removeEventListener('resize', updateVh);
   }, []);
 
@@ -192,9 +201,9 @@ export const useViewportHeight = () => {
 
 /**
  * useTouchDevice Hook
- * 
+ *
  * Detect if the device supports touch
- * 
+ *
  * @returns {boolean} Whether the device supports touch
  */
 export const useTouchDevice = () => {
@@ -203,9 +212,7 @@ export const useTouchDevice = () => {
   useEffect(() => {
     const checkTouch = () => {
       setIsTouch(
-        'ontouchstart' in window ||
-        navigator.maxTouchPoints > 0 ||
-        navigator.msMaxTouchPoints > 0
+        'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
       );
     };
 
@@ -217,9 +224,9 @@ export const useTouchDevice = () => {
 
 /**
  * useScrollLock Hook
- * 
+ *
  * Lock/unlock body scroll (useful for modals)
- * 
+ *
  * @param {boolean} locked - Whether scroll should be locked
  */
 export const useScrollLock = (locked = false) => {
@@ -249,9 +256,9 @@ export const useScrollLock = (locked = false) => {
 
 /**
  * useDebounce Hook
- * 
+ *
  * Debounce a value (useful for window resize events)
- * 
+ *
  * @param {*} value - Value to debounce
  * @param {number} delay - Delay in milliseconds
  * @returns {*} Debounced value

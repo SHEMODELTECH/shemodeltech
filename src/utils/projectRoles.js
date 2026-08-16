@@ -2,13 +2,13 @@
 // Canonical role options shared by the project CREATE page (ProjectSubmission)
 // and the project EDIT page (ProjectSetup) so the two never drift apart.
 //
-// The first six mirror the She Model Tech Foundations tracks - the platform's key roles -
+// The first six mirror the six badge tracks - the platform's key roles -
 // so posted roles line up with the paths talent actually train on. The remaining
 // entries are common supporting roles. On both pages a project owner who doesn't
 // find a fitting role can pick "Other (type your own)" (the '__other__' value) and
 // write their own.
 export const ROLE_TEMPLATES = [
-  // Six key She Model Tech roles (match the Foundations tracks)
+  // Six key She Model Tech roles (match the six badge tracks)
   'Coding Developer',
   'Low/No-Code Developer',
   'Quality Tester',

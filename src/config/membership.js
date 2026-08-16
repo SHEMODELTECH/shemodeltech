@@ -48,9 +48,9 @@ export const ACTIVATION_MODE = 'manual';
 // Paste your payment link here when you go live. Leave null to hide the
 // buttons entirely.
 export const PAYMENT_LINKS = {
- monthly: process.env.REACT_APP_PAYMENT_LINK_MONTHLY || null,
- annual: process.env.REACT_APP_PAYMENT_LINK_ANNUAL || null,
- sponsorship: process.env.REACT_APP_PAYMENT_LINK_SPONSOR || null,
+  monthly: process.env.REACT_APP_PAYMENT_LINK_MONTHLY || null,
+  annual: process.env.REACT_APP_PAYMENT_LINK_ANNUAL || null,
+  sponsorship: process.env.REACT_APP_PAYMENT_LINK_SPONSOR || null,
 };
 
 // ── EARLY BIRD TRIAL ──────────────────────────────────────────────────
@@ -75,11 +75,12 @@ export const ENFORCEMENT_START_DATE = null;
 // explicit now is what makes charging later feel expected rather than like a
 // bait and switch.
 export const TRIAL_NOTICE = {
- badge: 'Early access',
- short: `Free early access. ${TRIAL_MONTHS} months on us when paid plans begin.`,
- body: 'Every feature is free while we build our first cohorts of verified '
- + `graduates. When paid plans begin, you'll get ${TRIAL_MONTHS} months free `
- + 'before anything is charged.',
+  badge: 'Early access',
+  short: `Free early access. ${TRIAL_MONTHS} months on us when paid plans begin.`,
+  body:
+    'Every feature is free while we build our first cohorts of verified ' +
+    `graduates. When paid plans begin, you'll get ${TRIAL_MONTHS} months free ` +
+    'before anything is charged.',
 };
 
 /**
@@ -87,35 +88,35 @@ export const TRIAL_NOTICE = {
  * Returns null while dormant (nothing is being consumed yet).
  */
 export const trialEndsAt = (company) => {
- if (!MEMBERSHIP_ENFORCED || !ENFORCEMENT_START_DATE) return null;
- // Whichever is later: enforcement day, or the day they joined.
- const enforcement = new Date(ENFORCEMENT_START_DATE);
- const joined = company?.createdAt
- ? new Date(company.createdAt.seconds ? company.createdAt.seconds * 1000 : company.createdAt)
- : enforcement;
- const start = joined > enforcement ? joined : enforcement;
- const end = new Date(start);
- end.setMonth(end.getMonth() + TRIAL_MONTHS);
- return end;
+  if (!MEMBERSHIP_ENFORCED || !ENFORCEMENT_START_DATE) return null;
+  // Whichever is later: enforcement day, or the day they joined.
+  const enforcement = new Date(ENFORCEMENT_START_DATE);
+  const joined = company?.createdAt
+    ? new Date(company.createdAt.seconds ? company.createdAt.seconds * 1000 : company.createdAt)
+    : enforcement;
+  const start = joined > enforcement ? joined : enforcement;
+  const end = new Date(start);
+  end.setMonth(end.getMonth() + TRIAL_MONTHS);
+  return end;
 };
 
 /** Is this company inside its free trial right now? */
 export const isInTrial = (company) => {
- const end = trialEndsAt(company);
- if (!end) return false;
- return new Date() <= end;
+  const end = trialEndsAt(company);
+  if (!end) return false;
+  return new Date() <= end;
 };
 
 export const trialDaysLeft = (company) => {
- const end = trialEndsAt(company);
- if (!end) return null;
- return Math.max(0, Math.ceil((end - new Date()) / 86400000));
+  const end = trialEndsAt(company);
+  if (!end) return null;
+  return Math.max(0, Math.ceil((end - new Date()) / 86400000));
 };
 
 export const ACTIVATION_STATUS = {
- CLAIMED: 'claimed', // company says they paid; awaiting confirmation
- ACTIVATED: 'activated',
- REJECTED: 'rejected', // no matching payment found
+  CLAIMED: 'claimed', // company says they paid; awaiting confirmation
+  ACTIVATED: 'activated',
+  REJECTED: 'rejected', // no matching payment found
 };
 
 /**
@@ -127,9 +128,10 @@ export const isGatingActive = () => MEMBERSHIP_ENFORCED;
 
 /** Copy for pricing surfaces while dormant. */
 export const DORMANT_NOTICE = {
- badge: 'Early access',
- title: 'Free early access',
- body: 'We\u2019re building our first cohorts of verified graduates. Every feature '
- + 'below is free for your company while we do. When paid plans begin, '
- + `you\u2019ll get ${TRIAL_MONTHS} months free before anything is charged.`,
+  badge: 'Early access',
+  title: 'Free early access',
+  body:
+    'We\u2019re building our first cohorts of verified graduates. Every feature ' +
+    'below is free for your company while we do. When paid plans begin, ' +
+    `you\u2019ll get ${TRIAL_MONTHS} months free before anything is charged.`,
 };

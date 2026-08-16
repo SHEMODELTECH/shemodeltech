@@ -14,23 +14,25 @@
  Body copy therefore clears ~18px while hierarchy is preserved.
  Mobile stays at 16px, small screens need the density. */
 html {
- font-size: 16px;
+  font-size: 16px;
 }
 @media (min-width: 640px) {
- html { font-size: 17.6px; }
+  html {
+    font-size: 17.6px;
+  }
 }
 
 body {
- background-color: #ffffff;
- color: #111827;
- -webkit-font-smoothing: antialiased;
+  background-color: #ffffff;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Marketing and long-form copy: never below 18px on desktop. */
 @media (min-width: 640px) {
- .prose-readable p,
- .prose-readable li {
- font-size: 1.125rem;
- line-height: 1.7;
- }
+  .prose-readable p,
+  .prose-readable li {
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
 }

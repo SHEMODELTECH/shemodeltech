@@ -1,13 +1,13 @@
 // src/utils/repostUtils.js - Repost utility functions
 
-import { 
-  collection, 
-  addDoc, 
-  updateDoc, 
-  doc, 
-  serverTimestamp, 
-  increment, 
-  arrayUnion 
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  serverTimestamp,
+  increment,
+  arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
@@ -28,10 +28,10 @@ export const createRepost = async (currentUser, repostData) => {
 
   try {
     // 🔥 FIXED: Helper function to convert undefined to null for Firestore
-    const sanitizeForFirestore = (value) => value === undefined ? null : value;
-    
+    const sanitizeForFirestore = (value) => (value === undefined ? null : value);
+
     const originalPost = repostData.originalPost;
-    
+
     // Create the repost document
     const repostDoc = {
       // Repost-specific fields
@@ -49,10 +49,10 @@ export const createRepost = async (currentUser, repostData) => {
         authorInitials: sanitizeForFirestore(originalPost.authorInitials) || '',
         authorTitle: sanitizeForFirestore(originalPost.authorTitle) || '',
         createdAt: originalPost.createdAt || null,
-        images: originalPost.images || []
+        images: originalPost.images || [],
       },
       repostComment: repostData.comment || '',
-      
+
       // Author information for the reposter
       authorId: currentUser.uid,
       authorName: currentUser.displayName || currentUser.email,
@@ -62,21 +62,24 @@ export const createRepost = async (currentUser, repostData) => {
       authorInitials: sanitizeForFirestore(currentUser.initials) || '',
       authorTitle: sanitizeForFirestore(currentUser.profile?.title) || '',
       authorRole: currentUser.role || 'student',
-      
+
       // Tagging fields
       taggedUsers: repostData.taggedUsers || [],
       taggedUserIds: repostData.taggedUserIds || [],
-      mentions: repostData.taggedUsers?.map(user => `@${user.displayName || user.email?.split('@')[0]}`) || [],
-      
+      mentions:
+        repostData.taggedUsers?.map(
+          (user) => `@${user.displayName || user.email?.split('@')[0]}`
+        ) || [],
+
       // Standard post fields
       likes: [],
       likeCount: 0,
       repostCount: 0,
       reposts: [],
-      
+
       // Timestamps
       createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
+      updatedAt: serverTimestamp(),
     };
 
     // Add the repost to the posts collection
@@ -87,22 +90,23 @@ export const createRepost = async (currentUser, repostData) => {
     await updateDoc(originalPostRef, {
       repostCount: increment(1),
       reposts: arrayUnion(currentUser.uid),
-      updatedAt: serverTimestamp()
+      updatedAt: serverTimestamp(),
     });
 
     console.log('✅ Repost created successfully:', docRef.id);
 
     return {
       id: docRef.id,
-      ...repostDoc
+      ...repostDoc,
     };
-
   } catch (error) {
     console.error('❌ Error creating repost:', error);
-    
+
     // Provide more specific error messages
     if (error.code === 'permission-denied') {
-      throw new Error('Permission denied: Unable to create repost. Please check your authentication.');
+      throw new Error(
+        'Permission denied: Unable to create repost. Please check your authentication.'
+      );
     } else if (error.code === 'invalid-argument') {
       throw new Error('Invalid data: Please check that all required fields are properly filled.');
     } else if (error.message.includes('undefined')) {
@@ -172,7 +176,7 @@ export const validateRepostData = (repostData) => {
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 };
 
@@ -192,7 +196,7 @@ export const formatRepostForDisplay = (repost) => {
     originalAuthor: repost.originalPost?.authorName || 'Unknown',
     repostAuthor: repost.authorName || 'Unknown',
     hasComment: !!(repost.repostComment && repost.repostComment.trim()),
-    tagCount: repost.taggedUsers?.length || 0
+    tagCount: repost.taggedUsers?.length || 0,
   };
 };
 
@@ -205,9 +209,9 @@ export const handleRepostError = (error) => {
   console.error('Repost operation error:', error);
 
   let userMessage = 'Failed to process repost. Please try again.';
-  
+
   if (error.code === 'permission-denied') {
-    userMessage = 'You don\'t have permission to repost this content.';
+    userMessage = "You don't have permission to repost this content.";
   } else if (error.code === 'not-found') {
     userMessage = 'The original post could not be found.';
   } else if (error.code === 'invalid-argument') {
@@ -219,6 +223,6 @@ export const handleRepostError = (error) => {
   return {
     success: false,
     error: userMessage,
-    details: error.message
+    details: error.message,
   };
 };

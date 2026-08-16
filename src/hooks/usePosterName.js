@@ -7,7 +7,7 @@ import { db } from '../firebase/config';
  * Hook that fetches user profile and returns the appropriate poster name.
  * - Company accounts → company name
  * - Individual accounts → displayName (first + last)
- * 
+ *
  * @param {object} currentUser - Firebase auth user
  * @returns {{ posterName: string, isCompany: boolean, loading: boolean }}
  */
@@ -31,7 +31,12 @@ const usePosterName = (currentUser) => {
             setPosterName(data.companyProfile.companyName);
             setIsCompany(true);
           } else {
-            setPosterName(data.displayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User');
+            setPosterName(
+              data.displayName ||
+                currentUser.displayName ||
+                currentUser.email?.split('@')[0] ||
+                'User'
+            );
             setIsCompany(false);
           }
         } else {

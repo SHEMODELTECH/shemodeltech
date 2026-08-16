@@ -17,67 +17,67 @@
 // ───────────────────────────────────────────────────────────────────────
 
 export const BRAND = {
- // Display name
- name: 'She Model Tech',
- shortName: 'She Model Tech',
+  // Display name
+  name: 'She Model Tech',
+  shortName: 'She Model Tech',
 
- // Legal / footer entity line
- legalName: 'She Model Tech',
+  // Legal / footer entity line
+  legalName: 'She Model Tech',
 
- // Live domain.
- domain: 'shemodeltech.com',
- url: 'https://shemodeltech.com',
+  // Live domain.
+  domain: 'shemodeltech.com',
+  url: 'https://shemodeltech.com',
 
- // Support inbox.
- supportEmail: 'shemodeltech@gmail.com',
+  // Support inbox.
+  supportEmail: 'shemodeltech@gmail.com',
 
- // Social handles. TODO: update once the new accounts exist.
- // GitHub organisation - teams add us as a collaborator on their project repo.
- github: 'https://github.com/SHEMODELTECH',
- githubOrg: 'SHEMODELTECH',
+  // Social handles. TODO: update once the new accounts exist.
+  // GitHub organisation - teams add us as a collaborator on their project repo.
+  github: 'https://github.com/SHEMODELTECH',
+  githubOrg: 'SHEMODELTECH',
 
- socials: {
- linkedin: 'https://www.linkedin.com/company/ascivanhq/',
- },
+  socials: {
+    linkedin: 'https://www.linkedin.com/company/ascivanhq/',
+  },
 
- // Logo assets
- logo: {
- // Square mark - navbars, avatars, app icons, favicons
- mark: '/Images/512X512.png',
- // Full horizontal lockup (mark + wordmark) - hero, footer, emails
- full: '/Images/she-model-tech-logo.png',
- },
+  // Logo assets
+  logo: {
+    // Square mark - navbars, avatars, app icons, favicons
+    mark: '/Images/512X512.png',
+    // Full horizontal lockup (mark + wordmark) - hero, footer, emails
+    full: '/Images/she-model-tech-logo.png',
+  },
 
- // Tagline, as it appears on the logo lockup.
- tagline: 'Achieve · Ascend · Advance',
- taglineWords: ['Achieve', 'Ascend', 'Advance'],
+  // Tagline, as it appears on the logo lockup.
+  tagline: 'Achieve · Ascend · Advance',
+  taglineWords: ['Achieve', 'Ascend', 'Advance'],
 
- // Brand palette, sampled from the logo and the brand shape assets.
- colors: {
- pink: '#F544CB', // primary - tagline "Connect", wave
- pinkDeep: '#F72585', // logo hair
- magenta: '#EB48D5', // wave shape
- purple: '#8948EB', // burst shape, logo accent
- green: '#00E78E', // tagline accent
- mint: '#48EB94', // bar + arc shapes
- mintPale: '#E5F2E4', // soft star fill / tinted backgrounds
- ink: '#353331', // outlines and body text
- },
+  // Brand palette, sampled from the logo and the brand shape assets.
+  colors: {
+    pink: '#F544CB', // primary - tagline "Connect", wave
+    pinkDeep: '#F72585', // logo hair
+    magenta: '#EB48D5', // wave shape
+    purple: '#8948EB', // burst shape, logo accent
+    green: '#00E78E', // tagline accent
+    mint: '#48EB94', // bar + arc shapes
+    mintPale: '#E5F2E4', // soft star fill / tinted backgrounds
+    ink: '#353331', // outlines and body text
+  },
 
- // Decorative brand shapes (public/Images/brand/)
- shapes: {
- starMint: '/Images/brand/shape-star-mint.png',
- burstPurple: '/Images/brand/shape-burst-purple.png',
- barGreen: '/Images/brand/shape-bar-green.png',
- arcGreen: '/Images/brand/shape-arc-green.png',
- sparkle: '/Images/brand/shape-sparkle.png',
- wavePink: '/Images/brand/shape-wave-pink.png',
- },
+  // Decorative brand shapes (public/Images/brand/)
+  shapes: {
+    starMint: '/Images/brand/shape-star-mint.png',
+    burstPurple: '/Images/brand/shape-burst-purple.png',
+    barGreen: '/Images/brand/shape-bar-green.png',
+    arcGreen: '/Images/brand/shape-arc-green.png',
+    sparkle: '/Images/brand/shape-sparkle.png',
+    wavePink: '/Images/brand/shape-wave-pink.png',
+  },
 
- // Photography
- images: {
- teamHero: '/Images/brand/team-hero.png',
- },
+  // Photography
+  images: {
+    teamHero: '/Images/brand/team-hero.png',
+  },
 };
 
 export default BRAND;

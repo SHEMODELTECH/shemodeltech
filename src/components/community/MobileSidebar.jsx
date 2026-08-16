@@ -13,25 +13,21 @@ export const MobileSidebarToggle = ({ leftSidebarOpen, onToggleLeftSidebar }) =>
       <button
         onClick={onToggleLeftSidebar}
         className={`w-11 h-11 xs:w-12 xs:h-12 rounded-full shadow-2xl border-2 transition-all duration-300 flex items-center justify-center group active:scale-95 ${
-          leftSidebarOpen 
-            ? 'bg-pink-600 border-pink-500 text-gray-900' 
+          leftSidebarOpen
+            ? 'bg-pink-600 border-pink-500 text-gray-900'
             : 'bg-white border-gray-200 text-pink-600 hover:bg-pink-600 hover:text-gray-900'
         }`}
         aria-label="Toggle quick actions"
         title="Quick Actions"
       >
-        <svg 
-          className="h-5 w-5 xs:h-6 xs:w-6 transition-transform duration-300" 
-          fill="none" 
-          viewBox="0 0 24 24" 
+        <svg
+          className="h-5 w-5 xs:h-6 xs:w-6 transition-transform duration-300"
+          fill="none"
+          viewBox="0 0 24 24"
           stroke="currentColor"
           strokeWidth={2}
         >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            d="M13 10V3L4 14h7v7l9-11h-7z" 
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       </button>
     </div>
@@ -63,20 +59,27 @@ export const MobileSidebarDrawer = ({ isOpen, onClose, children, title, position
   return (
     <div className="fixed inset-0 z-[90] lg:hidden">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-gray-500"
-        onClick={onClose}
-      />
-      
+      <div className="absolute inset-0 bg-gray-500" onClick={onClose} />
+
       {/* Drawer */}
-      <div 
+      <div
         className={`absolute top-0 ${positionClass} h-full w-72 xs:w-80 max-w-[85vw] bg-white ${borderClass} border-gray-200 shadow-2xl transition-transform duration-300 overflow-hidden ${slideClass}`}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-3 xs:p-4 border-b border-pink-600/10 bg-gray-100">
           <h3 className="text-gray-900 font-bold text-base xs:text-lg flex items-center gap-1.5 xs:gap-2">
-            <svg className="w-4 h-4 xs:w-5 xs:h-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <svg
+              className="w-4 h-4 xs:w-5 xs:h-5 text-pink-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
             </svg>
             <span className="truncate">{title}</span>
           </h3>
@@ -85,8 +88,18 @@ export const MobileSidebarDrawer = ({ isOpen, onClose, children, title, position
             className="text-gray-400 hover:text-gray-900 active:text-gray-600 transition-colors p-1 xs:p-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 flex-shrink-0"
             aria-label="Close sidebar"
           >
-            <svg className="h-5 w-5 xs:h-6 xs:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="h-5 w-5 xs:h-6 xs:w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>

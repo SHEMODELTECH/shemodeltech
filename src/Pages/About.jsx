@@ -84,7 +84,7 @@ const About = () => {
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
             <p className="text-gray-600 leading-relaxed">
-              To empower the next generation of technology professionals by making collaboration the foundation of learning, innovation, and career development.
+              To empower the next generation of technology professionals by making real collaboration the way women learn, prove, and advance in tech.
             </p>
           </div>
         </section>

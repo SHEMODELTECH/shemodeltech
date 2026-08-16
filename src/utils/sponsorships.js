@@ -28,22 +28,29 @@
 // is invoiced manually until billing ships.
 
 import {
- collection, doc, addDoc, getDoc, getDocs, updateDoc, query, where,
- serverTimestamp,
+  collection,
+  doc,
+  addDoc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  query,
+  where,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export const SPONSORSHIP_STATUS = {
- PLEDGED: 'pledged', // agreed, not yet paid
- FUNDED: 'funded', // money received, REQUIRED before the cohort starts
- DISTRIBUTED: 'distributed', // stipends paid out to members
- CANCELLED: 'cancelled',
+  PLEDGED: 'pledged', // agreed, not yet paid
+  FUNDED: 'funded', // money received, REQUIRED before the cohort starts
+  DISTRIBUTED: 'distributed', // stipends paid out to members
+  CANCELLED: 'cancelled',
 };
 
 // How a team is funded. Shown as a tag on the project, with the sponsor logo.
 export const FUNDING_TYPE = {
- COMMUNITY: 'community', // unsponsored, the default, still fully free
- SPONSORED: 'sponsored', // a company funded stipends for this team
+  COMMUNITY: 'community', // unsponsored, the default, still fully free
+  SPONSORED: 'sponsored', // a company funded stipends for this team
 };
 
 // Share retained for programme costs and overhead. Passing through 100% means
@@ -52,37 +59,37 @@ export const FUNDING_TYPE = {
 export const OVERHEAD_RATE = 0.22;
 
 export const SPONSOR_ENTITLEMENTS = [
- 'Read-only progress updates on the team you funded',
- 'Your name and logo on the project and the cohort page',
- 'Acknowledgement in the weekly community email',
- 'An impact report when the cohort completes',
- 'A two-week first look at the graduates you funded',
- 'An invitation to the cohort demo day',
+  'Read-only progress updates on the team you funded',
+  'Your name and logo on the project and the cohort page',
+  'Acknowledgement in the weekly community email',
+  'An impact report when the cohort completes',
+  'A two-week first look at the graduates you funded',
+  'An invitation to the cohort demo day',
 ];
 
 // Stated explicitly, because sponsors drift toward involvement once they've
 // paid. Set this expectation at the point of sale, in writing.
 export const SPONSOR_LIMITS = [
- 'No access to the project workspace',
- 'No seat on the team',
- 'No specifying requirements or reviewing deliverables',
- 'The team owns its code and its decisions',
+  'No access to the project workspace',
+  'No seat on the team',
+  'No specifying requirements or reviewing deliverables',
+  'The team owns its code and its decisions',
 ];
 
 /** Split a sponsorship into stipends and overhead. */
 export const computeStipends = (amount, memberCount) => {
- const total = Number(amount) || 0;
- const overhead = Math.round(total * OVERHEAD_RATE);
- const pool = total - overhead;
- const perMember = memberCount > 0 ? Math.floor(pool / memberCount) : 0;
- return {
- total,
- overhead,
- stipendPool: pool,
- perMember,
- // Rounding remainder stays with the organisation.
- remainder: pool - perMember * memberCount,
- };
+  const total = Number(amount) || 0;
+  const overhead = Math.round(total * OVERHEAD_RATE);
+  const pool = total - overhead;
+  const perMember = memberCount > 0 ? Math.floor(pool / memberCount) : 0;
+  return {
+    total,
+    overhead,
+    stipendPool: pool,
+    perMember,
+    // Rounding remainder stays with the organisation.
+    remainder: pool - perMember * memberCount,
+  };
 };
 
 /**
@@ -91,40 +98,46 @@ export const computeStipends = (amount, memberCount) => {
  * eight weeks, which we cannot do.
  */
 export const createSponsorship = async ({
- cohortId, projectId, company, amount, contactName, contactEmail, notes,
+  cohortId,
+  projectId,
+  company,
+  amount,
+  contactName,
+  contactEmail,
+  notes,
 }) => {
- const ref = await addDoc(collection(db, 'sponsorships'), {
- cohortId,
- projectId: projectId || null, // null = not yet allocated to a team
- companyId: company.id || null,
- companyName: company.name,
- companyLogo: company.logoUrl || null,
- companyWebsite: company.website || null,
- amount: Number(amount) || 0,
- currency: 'USD',
- status: SPONSORSHIP_STATUS.PLEDGED,
- contactName: contactName || null,
- contactEmail: contactEmail || null,
- notes: notes || null,
- // First-look window opens when the cohort completes.
- firstLookDays: 14,
- createdAt: serverTimestamp(),
- });
- return ref.id;
+  const ref = await addDoc(collection(db, 'sponsorships'), {
+    cohortId,
+    projectId: projectId || null, // null = not yet allocated to a team
+    companyId: company.id || null,
+    companyName: company.name,
+    companyLogo: company.logoUrl || null,
+    companyWebsite: company.website || null,
+    amount: Number(amount) || 0,
+    currency: 'USD',
+    status: SPONSORSHIP_STATUS.PLEDGED,
+    contactName: contactName || null,
+    contactEmail: contactEmail || null,
+    notes: notes || null,
+    // First-look window opens when the cohort completes.
+    firstLookDays: 14,
+    createdAt: serverTimestamp(),
+  });
+  return ref.id;
 };
 
 /** Mark funds received, and tag the team so the badge shows on the project. */
 export const markFunded = async (sponsorshipId) => {
- const snap = await getDoc(doc(db, 'sponsorships', sponsorshipId));
- if (!snap.exists()) throw new Error('Sponsorship not found.');
- const s = snap.data();
+  const snap = await getDoc(doc(db, 'sponsorships', sponsorshipId));
+  if (!snap.exists()) throw new Error('Sponsorship not found.');
+  const s = snap.data();
 
- await updateDoc(doc(db, 'sponsorships', sponsorshipId), {
- status: SPONSORSHIP_STATUS.FUNDED,
- fundedAt: serverTimestamp(),
- });
+  await updateDoc(doc(db, 'sponsorships', sponsorshipId), {
+    status: SPONSORSHIP_STATUS.FUNDED,
+    fundedAt: serverTimestamp(),
+  });
 
- if (s.projectId) await tagProjectAsSponsored(s.projectId, s, sponsorshipId);
+  if (s.projectId) await tagProjectAsSponsored(s.projectId, s, sponsorshipId);
 };
 
 /**
@@ -133,40 +146,41 @@ export const markFunded = async (sponsorshipId) => {
  * members, they should know who funded their stipend.
  */
 export const tagProjectAsSponsored = async (projectId, sponsorship, sponsorshipId) =>
- updateDoc(doc(db, 'projects', projectId), {
- fundingType: FUNDING_TYPE.SPONSORED,
- sponsorshipId,
- sponsorName: sponsorship.companyName,
- sponsorLogo: sponsorship.companyLogo || null,
- sponsorWebsite: sponsorship.companyWebsite || null,
- updatedAt: serverTimestamp(),
- });
+  updateDoc(doc(db, 'projects', projectId), {
+    fundingType: FUNDING_TYPE.SPONSORED,
+    sponsorshipId,
+    sponsorName: sponsorship.companyName,
+    sponsorLogo: sponsorship.companyLogo || null,
+    sponsorWebsite: sponsorship.companyWebsite || null,
+    updatedAt: serverTimestamp(),
+  });
 
 /** Allocate a pledged sponsorship to a specific team. */
 export const allocateToProject = async (sponsorshipId, projectId) => {
- const snap = await getDoc(doc(db, 'sponsorships', sponsorshipId));
- if (!snap.exists()) throw new Error('Sponsorship not found.');
- const s = snap.data();
- await updateDoc(doc(db, 'sponsorships', sponsorshipId), {
- projectId, updatedAt: serverTimestamp(),
- });
- if (s.status === SPONSORSHIP_STATUS.FUNDED) {
- await tagProjectAsSponsored(projectId, s, sponsorshipId);
- }
+  const snap = await getDoc(doc(db, 'sponsorships', sponsorshipId));
+  if (!snap.exists()) throw new Error('Sponsorship not found.');
+  const s = snap.data();
+  await updateDoc(doc(db, 'sponsorships', sponsorshipId), {
+    projectId,
+    updatedAt: serverTimestamp(),
+  });
+  if (s.status === SPONSORSHIP_STATUS.FUNDED) {
+    await tagProjectAsSponsored(projectId, s, sponsorshipId);
+  }
 };
 
 export const getSponsorshipsForCohort = async (cohortId) => {
- const snap = await getDocs(query(
- collection(db, 'sponsorships'), where('cohortId', '==', cohortId)
- ));
- return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const snap = await getDocs(
+    query(collection(db, 'sponsorships'), where('cohortId', '==', cohortId))
+  );
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
 
 export const getSponsorshipsForCompany = async (companyId) => {
- const snap = await getDocs(query(
- collection(db, 'sponsorships'), where('companyId', '==', companyId)
- ));
- return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const snap = await getDocs(
+    query(collection(db, 'sponsorships'), where('companyId', '==', companyId))
+  );
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
 
 /**
@@ -175,32 +189,32 @@ export const getSponsorshipsForCompany = async (companyId) => {
  * not the forum, not the code in progress. Sponsors watch; they don't review.
  */
 export const getSponsorProgress = async (sponsorshipId) => {
- const sSnap = await getDoc(doc(db, 'sponsorships', sponsorshipId));
- if (!sSnap.exists()) return null;
- const s = sSnap.data();
- if (!s.projectId) return { sponsorship: s, project: null };
+  const sSnap = await getDoc(doc(db, 'sponsorships', sponsorshipId));
+  if (!sSnap.exists()) return null;
+  const s = sSnap.data();
+  if (!s.projectId) return { sponsorship: s, project: null };
 
- const pSnap = await getDoc(doc(db, 'projects', s.projectId));
- if (!pSnap.exists()) return { sponsorship: s, project: null };
- const p = pSnap.data();
+  const pSnap = await getDoc(doc(db, 'projects', s.projectId));
+  if (!pSnap.exists()) return { sponsorship: s, project: null };
+  const p = pSnap.data();
 
- return {
- sponsorship: s,
- project: {
- id: s.projectId,
- title: p.projectTitle || p.title,
- track: p.industryTrack,
- status: p.status,
- reviewStatus: p.reviewStatus,
- startDate: p.startDate,
- endDate: p.endDate,
- teamSize: 1 + (p.members?.length || 0),
- leadName: p.submitterName || null,
- // Only revealed once the work is approved, nothing half-finished.
- repoUrl: p.reviewStatus === 'approved' ? p.reviewRepoUrl : null,
- completedAt: p.completedAt || null,
- },
- };
+  return {
+    sponsorship: s,
+    project: {
+      id: s.projectId,
+      title: p.projectTitle || p.title,
+      track: p.industryTrack,
+      status: p.status,
+      reviewStatus: p.reviewStatus,
+      startDate: p.startDate,
+      endDate: p.endDate,
+      teamSize: 1 + (p.members?.length || 0),
+      leadName: p.submitterName || null,
+      // Only revealed once the work is approved, nothing half-finished.
+      repoUrl: p.reviewStatus === 'approved' ? p.reviewRepoUrl : null,
+      completedAt: p.completedAt || null,
+    },
+  };
 };
 
 /**
@@ -209,39 +223,39 @@ export const getSponsorProgress = async (sponsorshipId) => {
  * to everyone, and this only affects timing of outreach.
  */
 export const isInFirstLookWindow = (sponsorship, cohort) => {
- if (!cohort?.endDate) return false;
- const end = new Date(cohort.endDate);
- const close = new Date(end.getTime() + (sponsorship.firstLookDays || 14) * 86400000);
- const now = new Date();
- return now >= end && now <= close;
+  if (!cohort?.endDate) return false;
+  const end = new Date(cohort.endDate);
+  const close = new Date(end.getTime() + (sponsorship.firstLookDays || 14) * 86400000);
+  const now = new Date();
+  return now >= end && now <= close;
 };
 
 /** The renewal document: what their money produced. */
 export const buildImpactReport = async (sponsorshipId) => {
- const progress = await getSponsorProgress(sponsorshipId);
- if (!progress?.project) return null;
- const { sponsorship, project } = progress;
+  const progress = await getSponsorProgress(sponsorshipId);
+  if (!progress?.project) return null;
+  const { sponsorship, project } = progress;
 
- const badgeSnap = await getDocs(query(
- collection(db, 'member_badges'), where('projectId', '==', project.id)
- ));
- const badges = badgeSnap.docs.map(d => d.data());
- const split = computeStipends(sponsorship.amount, project.teamSize);
+  const badgeSnap = await getDocs(
+    query(collection(db, 'member_badges'), where('projectId', '==', project.id))
+  );
+  const badges = badgeSnap.docs.map((d) => d.data());
+  const split = computeStipends(sponsorship.amount, project.teamSize);
 
- return {
- sponsor: sponsorship.companyName,
- project: project.title,
- track: project.track,
- womenSupported: project.teamSize,
- completed: ['completed', 'awaiting_payment_confirmation'].includes(project.status),
- badgesEarned: badges.length,
- badgeBreakdown: badges.reduce((acc, b) => {
- acc[b.badgeCategory] = (acc[b.badgeCategory] || 0) + 1;
- return acc;
- }, {}),
- stipendPerMember: split.perMember,
- totalToMembers: split.stipendPool,
- repoUrl: project.repoUrl,
- period: `${project.startDate} to ${project.endDate}`,
- };
+  return {
+    sponsor: sponsorship.companyName,
+    project: project.title,
+    track: project.track,
+    womenSupported: project.teamSize,
+    completed: ['completed', 'awaiting_payment_confirmation'].includes(project.status),
+    badgesEarned: badges.length,
+    badgeBreakdown: badges.reduce((acc, b) => {
+      acc[b.badgeCategory] = (acc[b.badgeCategory] || 0) + 1;
+      return acc;
+    }, {}),
+    stipendPerMember: split.perMember,
+    totalToMembers: split.stipendPool,
+    repoUrl: project.repoUrl,
+    period: `${project.startDate} to ${project.endDate}`,
+  };
 };

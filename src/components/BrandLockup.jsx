@@ -28,8 +28,7 @@ const BrandLockup = ({ align = 'center', showShapes = false, className = '' }) =
     fontWeight: 900,
     letterSpacing: '-0.03em',
     lineHeight: 0.92,
-    fontFamily:
-      '"Archivo Black","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif',
+    fontFamily: '"Archivo Black","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif',
   };
 
   // Outlined (hollow) words - transparent fill, dark hairline outline.

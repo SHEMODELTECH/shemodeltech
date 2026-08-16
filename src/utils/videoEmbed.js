@@ -1,6 +1,6 @@
 // src/utils/videoEmbed.js
 // Turn a YouTube or Vimeo URL into an embeddable player URL, so community videos
-// play INSIDE Foundations. We host nothing - the video streams from the provider's
+// play inline. We host nothing - the video streams from the provider's
 // CDN, so there is no cost or speed impact to our site. Non-video links return null.
 
 // Pull a YouTube video id from the common URL shapes.

@@ -632,3 +632,109 @@ services, and finding that out on this page is far cheaper than in week six.
 While `MEMBERSHIP_ENFORCED` is false the page shows "talk to us about
 sponsoring" with a mailto instead of checkout. If `PAYMENT_LINKS.sponsorship`
 is set, that takes priority over Stripe.
+
+---
+
+## 14. Foundations courses removed
+
+Learning is a different product with a different quality bar. A shallow course
+library sitting beside genuinely verified project work undermines the thing
+that makes the badges credible. Removed entirely rather than half-supported.
+
+**Deleted:** `src/Pages/Foundations.jsx`, `src/utils/foundationsCourses.js`,
+`foundationsCoursesData.js`, `foundationsContributions.js`, and the
+`src/Pages/courses/` content tree.
+
+**Unwired from:** the `/foundations` route, sidebar nav (both member and
+company variants), global search (course index, results section, placeholder
+copy), AI recommendations (now projects only, prompt rewritten), the admin
+contributions review tab (~180 lines), the dashboard cold-start nudge, the
+workspace "contribute a lesson" button, and `deleteUserContent`.
+
+**Copy rewritten:** Support FAQ ("I'm new to tech, where do I start?" now
+points at joining a cohort, since you learn by building here), Settings
+"What's included", Terms §10, the About mission line, and the dashboard
+account panel.
+
+**Firestore:** the `foundationsContributions` rule block removed. The
+collection is now unused and can be deleted.
+
+### Repairs made during this change
+Three self-inflicted issues, all fixed and verified:
+
+1. **Em-dash script flattened indentation across 57 files.** The regex
+   collapsed every run of multiple spaces, including leading indentation.
+   Code was never broken (JS ignores whitespace) but formatting was mangled.
+   Fixed by running Prettier over the affected files; a `.prettierrc` is now
+   committed so formatting is reproducible.
+2. **Line-range deletion over-cut the dashboard**, removing the stats cards,
+   AI recommendations, first-project prompt and track discovery along with the
+   Foundations block. Restored from the original, minus Foundations.
+3. **Orphaned JSX/catch tails** in `ProjectWorkspace.jsx` and
+   `deleteUserContent.js` from the same over-cutting. Repaired.
+
+Verified: build compiles, **zero new ESLint warnings vs baseline**, and the
+dashboard section-by-section matches the original.
+
+---
+
+## 15. Members can no longer post paid projects
+
+A gap left over from the earlier company-side change: company accounts were
+correctly redirected to `/company/host-cohort`, but **individual members still
+saw a "Paid Project" option** with pay-per-role fields (and a stale "PRO"
+label from the retired premium tier). That is exactly the freelancer-
+marketplace behaviour the model moved away from.
+
+Removed from `ProjectSubmission.jsx`:
+- the Free/Paid project type selector
+- per-role pay amount inputs
+- the total budget summary
+- the "roles and pay are locked" confirmation dialog
+- paid-branch validation and the company-must-post-paid rule
+
+`projectKind` is gone; submissions always write `isPaid: false`,
+`totalBudget: 0`, `payAmount: 0`. The open-role rule (at least one Beginner or
+Any Level role) now applies to every project, which is the point of
+collaborative work.
+
+**Why removed rather than badge-gated:** member-to-member payment puts us in
+the middle of disputes with no way to resolve them. If a member doesn't pay
+another member, the complaint lands on us and we have no leverage. A company
+holds a subscription and hosting access that can be revoked, so the same
+dispute has a real remedy. There is also no revenue upside, since the model
+takes nothing from member-to-member payment.
+
+Paid work now comes from companies only: a sponsored cohort, or a
+company-hosted project.
+
+Verified: build compiles, zero new ESLint warnings vs baseline.
+
+---
+
+## 16. "Coming soon" pattern on every paid surface
+
+`src/components/ComingSoon.jsx` - one reusable pattern, driven by the same
+`MEMBERSHIP_ENFORCED` flag:
+
+- `<ComingSoonRibbon />` - corner tag on the card
+- `<ComingSoonButton />` - renders a real `<button disabled aria-disabled>`,
+  not a styled div, so assistive tech announces it as unavailable rather than
+  as a working control
+- `<Price />` - **hides the amount entirely** while dormant, showing "Pricing
+  to be announced". The first price a company sees is the one they remember,
+  so anchoring a number that may change before launch is worse than showing
+  none
+- `<ComingSoonNotice />` - one per page, explaining why everything is greyed
+
+Applied to: `/partner` (Talent Access + sponsorship cards),
+`/sponsor` (tier list, and the "where your money goes" split, which is
+meaningless without a committed price), and `/company/host-cohort` (the
+hosting gate).
+
+The `/sponsor` page itself stays reachable and its "talk to us about
+sponsoring" mailto stays live - a company that wants to fund a cohort this
+year should be able to reach you. Only the self-serve checkout is inert.
+
+Flipping `MEMBERSHIP_ENFORCED` to true reverts every one of these to a live
+button with real pricing, with no further edits.

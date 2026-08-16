@@ -7,20 +7,20 @@ import { showWarningMessage } from '../utils/errorHandler';
  * ClickableUserAvatar Component
  * Renders a clickable user avatar that navigates to the user's profile
  */
-export const ClickableUserAvatar = ({ 
-  user, 
-  size = "md", 
-  className = "", 
+export const ClickableUserAvatar = ({
+  user,
+  size = 'md',
+  className = '',
   showOnlineStatus = false,
   onClick,
-  ...props 
+  ...props
 }) => {
   const navigate = useNavigate();
 
   const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // If custom onClick is provided, use it
     if (onClick) {
       onClick(user);
@@ -52,7 +52,7 @@ export const ClickableUserAvatar = ({
     md: 'w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10',
     lg: 'w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12',
     xl: 'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16',
-    '2xl': 'w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20'
+    '2xl': 'w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20',
   };
 
   const textSizeClasses = {
@@ -61,7 +61,7 @@ export const ClickableUserAvatar = ({
     md: 'text-sm sm:text-base',
     lg: 'text-base sm:text-lg',
     xl: 'text-lg sm:text-xl',
-    '2xl': 'text-xl sm:text-2xl'
+    '2xl': 'text-xl sm:text-2xl',
   };
 
   const onlineStatusSize = {
@@ -70,7 +70,7 @@ export const ClickableUserAvatar = ({
     md: 'w-2.5 h-2.5 sm:w-3 sm:h-3 -bottom-0.5 -right-0.5 border sm:border-2',
     lg: 'w-3 h-3 sm:w-3.5 sm:h-3.5 -bottom-0.5 -right-0.5 border-2',
     xl: 'w-3.5 h-3.5 sm:w-4 sm:h-4 -bottom-1 -right-1 border-2',
-    '2xl': 'w-4 h-4 sm:w-5 sm:h-5 -bottom-1 -right-1 border-2 sm:border-3'
+    '2xl': 'w-4 h-4 sm:w-5 sm:h-5 -bottom-1 -right-1 border-2 sm:border-3',
   };
 
   // Generate initials
@@ -98,9 +98,9 @@ export const ClickableUserAvatar = ({
       {...props}
     >
       {user.photoURL ? (
-        <img 
-          src={user.photoURL} 
-          alt="Profile" 
+        <img
+          src={user.photoURL}
+          alt="Profile"
           className="w-full h-full object-cover"
           onError={(e) => {
             // If image fails to load, hide it and show initials
@@ -108,14 +108,14 @@ export const ClickableUserAvatar = ({
           }}
         />
       ) : (
-        <span className={`text-gray-900 font-bold ${textSizeClasses[size]}`}>
-          {getInitials()}
-        </span>
+        <span className={`text-gray-900 font-bold ${textSizeClasses[size]}`}>{getInitials()}</span>
       )}
-      
+
       {/* Online status indicator */}
       {showOnlineStatus && (
-        <div className={`absolute ${onlineStatusSize[size]} bg-pink-500 rounded-full border-white`}></div>
+        <div
+          className={`absolute ${onlineStatusSize[size]} bg-pink-500 rounded-full border-white`}
+        ></div>
       )}
     </button>
   );
@@ -125,20 +125,20 @@ export const ClickableUserAvatar = ({
  * ClickableUserName Component
  * Renders a clickable user name that navigates to the user's profile
  */
-export const ClickableUserName = ({ 
-  user, 
-  className = "", 
+export const ClickableUserName = ({
+  user,
+  className = '',
   showTitle = true,
   maxLength = null,
   onClick,
-  ...props 
+  ...props
 }) => {
   const navigate = useNavigate();
 
   const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // If custom onClick is provided, use it
     if (onClick) {
       onClick(user);
@@ -166,7 +166,7 @@ export const ClickableUserName = ({
   // Get display name
   const getDisplayName = () => {
     let name = '';
-    
+
     if (user.firstName && user.lastName) {
       name = `${user.firstName} ${user.lastName}`;
     } else if (user.displayName) {
@@ -206,11 +206,9 @@ export const ClickableUserName = ({
       >
         {getDisplayName()}
       </button>
-      
+
       {showTitle && getUserTitle() && (
-        <span className="text-xs sm:text-sm text-pink-600 truncate">
-          {getUserTitle()}
-        </span>
+        <span className="text-xs sm:text-sm text-pink-600 truncate">{getUserTitle()}</span>
       )}
     </div>
   );
@@ -220,21 +218,21 @@ export const ClickableUserName = ({
  * ClickableUserCard Component
  * A combination of avatar and name in a card format
  */
-export const ClickableUserCard = ({ 
-  user, 
-  size = "md", 
-  className = "",
+export const ClickableUserCard = ({
+  user,
+  size = 'md',
+  className = '',
   showTitle = true,
   showOnlineStatus = false,
   horizontal = true,
-  onClick
+  onClick,
 }) => {
   const navigate = useNavigate();
 
   const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // If custom onClick is provided, use it
     if (onClick) {
       onClick(user);
@@ -264,13 +262,13 @@ export const ClickableUserCard = ({
       className={`flex ${horizontal ? 'flex-row items-center space-x-2 sm:space-x-3' : 'flex-col items-center space-y-2'} p-2 sm:p-3 rounded-lg hover:bg-gray-100 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-400/50 cursor-pointer w-full ${className}`}
       aria-label={`View profile of ${user.displayName || user.firstName + ' ' + user.lastName || user.email?.split('@')[0] || 'user'}`}
     >
-      <ClickableUserAvatar 
+      <ClickableUserAvatar
         user={user}
         size={size}
         showOnlineStatus={showOnlineStatus}
         onClick={(e) => e.stopPropagation()} // Prevent double click
       />
-      
+
       <ClickableUserName
         user={user}
         showTitle={showTitle}

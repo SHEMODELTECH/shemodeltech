@@ -27,13 +27,13 @@ const shuffle = (arr) => {
 // so a batch feels diverse rather than 30 near-identical projects.
 const pickVaried = (count) => {
   const byTrack = {};
-  PROJECT_TEMPLATES.forEach(t => {
+  PROJECT_TEMPLATES.forEach((t) => {
     const k = t.industryTrack || 'other';
     (byTrack[k] = byTrack[k] || []).push(t);
   });
   // Shuffle within each track, then round-robin across tracks.
   const tracks = shuffle(Object.keys(byTrack));
-  const queues = tracks.map(k => shuffle(byTrack[k]));
+  const queues = tracks.map((k) => shuffle(byTrack[k]));
   const picked = [];
   let exhausted = false;
   while (picked.length < count && !exhausted) {
@@ -64,17 +64,17 @@ const pickVaried = (count) => {
  *                                    live cohort.
  * @returns {Promise<{created:number, errors:number, ids:string[]}>}
  */
-export const batchGenerateProjects = async (
-  count = DEFAULT_PROJECTS_PER_COHORT,
-  opts = {}
-) => {
+export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT, opts = {}) => {
   const {
-    cohortId = null, cohortNumber = null,
-    startDate = null, endDate = null,
+    cohortId = null,
+    cohortNumber = null,
+    startDate = null,
+    endDate = null,
     draft = true,
   } = opts;
   const templates = pickVaried(count);
-  let created = 0, errors = 0;
+  let created = 0,
+    errors = 0;
   const ids = [];
 
   for (const t of templates) {
@@ -115,15 +115,18 @@ export const batchGenerateProjects = async (
       });
       ids.push(newRef.id);
       // Proof Wall: only announce projects that are actually visible.
-      if (!draft) try {
-        await logProof({
-          type: 'lead',
-          actorName: 'She Model Tech',
-          projectId: newRef.id,
-          projectTitle: t.projectTitle,
-          meta: 'Open to anyone, apply to lead',
-        });
-      } catch (_) { /* non-blocking */ }
+      if (!draft)
+        try {
+          await logProof({
+            type: 'lead',
+            actorName: 'She Model Tech',
+            projectId: newRef.id,
+            projectTitle: t.projectTitle,
+            meta: 'Open to anyone, apply to lead',
+          });
+        } catch (_) {
+          /* non-blocking */
+        }
       created++;
     } catch (e) {
       console.error('Batch generate failed for', t.projectTitle, e.message);

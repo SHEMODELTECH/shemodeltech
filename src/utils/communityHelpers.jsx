@@ -5,7 +5,7 @@ import {
   validateImageFile as blobValidateImageFile,
   createImagePreview as blobCreateImagePreview,
   cleanupImagePreviews as blobCleanupImagePreviews,
-  formatFileSize as blobFormatFileSize
+  formatFileSize as blobFormatFileSize,
 } from './blobStorage';
 
 export const formatDate = (dateValue) => {
@@ -37,7 +37,7 @@ export const formatTime = (dateValue) => {
     return '';
   }
   if (isNaN(date.getTime())) return '';
-  return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
 export const copyToClipboard = async (text) => {
@@ -156,8 +156,8 @@ export const uploadImageToStorage = async (file, folder = 'posts') => {
         contentType: compressedType,
         fileData: base64Data,
         originalName: file.name,
-        size: file.size
-      })
+        size: file.size,
+      }),
     });
 
     if (!response.ok) {
@@ -172,7 +172,7 @@ export const uploadImageToStorage = async (file, folder = 'posts') => {
       type: compressedType,
       size: file.size,
       name: file.name,
-      contentType: result.contentType || compressedType
+      contentType: result.contentType || compressedType,
     };
   } catch (error) {
     console.error('Error uploading image:', error);
@@ -185,7 +185,7 @@ export const deleteImageFromStorage = async (urlOrPathname) => {
     const response = await fetch('/api/blob-storage', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: urlOrPathname })
+      body: JSON.stringify({ url: urlOrPathname }),
     });
     if (!response.ok) console.error('Failed to delete image:', await response.text());
   } catch (error) {
@@ -241,18 +241,34 @@ export const formatRelativeTime = (dateValue) => {
   if (isNaN(date.getTime())) return 'Unknown time';
   const diffInSeconds = Math.floor((new Date() - date) / 1000);
   if (diffInSeconds < 60) return 'just now';
-  if (diffInSeconds < 3600) { const m = Math.floor(diffInSeconds / 60); return `${m} ${m === 1 ? 'minute' : 'minutes'} ago`; }
-  if (diffInSeconds < 86400) { const h = Math.floor(diffInSeconds / 3600); return `${h} ${h === 1 ? 'hour' : 'hours'} ago`; }
-  if (diffInSeconds < 604800) { const d = Math.floor(diffInSeconds / 86400); return `${d} ${d === 1 ? 'day' : 'days'} ago`; }
-  if (diffInSeconds < 2592000) { const w = Math.floor(diffInSeconds / 604800); return `${w} ${w === 1 ? 'week' : 'weeks'} ago`; }
-  if (diffInSeconds < 31536000) { const mo = Math.floor(diffInSeconds / 2592000); return `${mo} ${mo === 1 ? 'month' : 'months'} ago`; }
-  const y = Math.floor(diffInSeconds / 31536000); return `${y} ${y === 1 ? 'year' : 'years'} ago`;
+  if (diffInSeconds < 3600) {
+    const m = Math.floor(diffInSeconds / 60);
+    return `${m} ${m === 1 ? 'minute' : 'minutes'} ago`;
+  }
+  if (diffInSeconds < 86400) {
+    const h = Math.floor(diffInSeconds / 3600);
+    return `${h} ${h === 1 ? 'hour' : 'hours'} ago`;
+  }
+  if (diffInSeconds < 604800) {
+    const d = Math.floor(diffInSeconds / 86400);
+    return `${d} ${d === 1 ? 'day' : 'days'} ago`;
+  }
+  if (diffInSeconds < 2592000) {
+    const w = Math.floor(diffInSeconds / 604800);
+    return `${w} ${w === 1 ? 'week' : 'weeks'} ago`;
+  }
+  if (diffInSeconds < 31536000) {
+    const mo = Math.floor(diffInSeconds / 2592000);
+    return `${mo} ${mo === 1 ? 'month' : 'months'} ago`;
+  }
+  const y = Math.floor(diffInSeconds / 31536000);
+  return `${y} ${y === 1 ? 'year' : 'years'} ago`;
 };
 
 export const extractHashtags = (text) => {
   if (!text) return [];
   const matches = text.match(/#(\w+)/g);
-  return matches ? matches.map(tag => tag.substring(1)) : [];
+  return matches ? matches.map((tag) => tag.substring(1)) : [];
 };
 
 export const extractUrls = (text) => {
@@ -266,15 +282,23 @@ export const isValidImageUrl = async (url) => {
     const response = await fetch(url, { method: 'HEAD' });
     const contentType = response.headers.get('content-type');
     return response.ok && contentType && contentType.startsWith('image/');
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 };
 
 export const getImageDimensions = (file) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
-    img.onload = () => { URL.revokeObjectURL(url); resolve({ width: img.width, height: img.height }); };
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Failed to load image')); };
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve({ width: img.width, height: img.height });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Failed to load image'));
+    };
     img.src = url;
   });
 };
@@ -289,28 +313,37 @@ export const compressImage = async (file, maxWidth = 1920, quality = 0.8) => {
       URL.revokeObjectURL(url);
       let width = img.width;
       let height = img.height;
-      if (width > maxWidth) { height = (height * maxWidth) / width; width = maxWidth; }
+      if (width > maxWidth) {
+        height = (height * maxWidth) / width;
+        width = maxWidth;
+      }
       canvas.width = width;
       canvas.height = height;
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         (blob) => {
-          if (blob) resolve(new File([blob], file.name, { type: file.type, lastModified: Date.now() }));
+          if (blob)
+            resolve(new File([blob], file.name, { type: file.type, lastModified: Date.now() }));
           else reject(new Error('Compression failed'));
         },
         file.type,
         quality
       );
     };
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Failed to load image for compression')); };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Failed to load image for compression'));
+    };
     img.src = url;
   });
 };
 
-export const batchUploadImages = async (files, onProgress, folder = 'posts') => uploadMultipleImages(files, onProgress, folder);
+export const batchUploadImages = async (files, onProgress, folder = 'posts') =>
+  uploadMultipleImages(files, onProgress, folder);
 
 export const validateMultipleImages = (files) => {
-  const validFiles = [], errors = [];
+  const validFiles = [],
+    errors = [];
   if (!files || files.length === 0) return { validFiles, errors };
   files.forEach((file, index) => {
     const error = validateImageFile(file);
@@ -329,10 +362,28 @@ export const formatBytesDetailed = (bytes, decimals = 2) => {
 };
 
 export default {
-  formatDate, formatTime, formatRelativeTime, copyToClipboard, formatFileSize,
-  formatBytesDetailed, createImagePreview, cleanupImagePreviews, validateImageFile,
-  uploadImageToStorage, deleteImageFromStorage, uploadMultipleImages, truncateText,
-  isUserOnline, getOptimizedImageUrl, extractHashtags, extractUrls, sanitizeFilename,
-  generateUniqueFilename, isValidImageUrl, getImageDimensions, compressImage,
-  batchUploadImages, validateMultipleImages
+  formatDate,
+  formatTime,
+  formatRelativeTime,
+  copyToClipboard,
+  formatFileSize,
+  formatBytesDetailed,
+  createImagePreview,
+  cleanupImagePreviews,
+  validateImageFile,
+  uploadImageToStorage,
+  deleteImageFromStorage,
+  uploadMultipleImages,
+  truncateText,
+  isUserOnline,
+  getOptimizedImageUrl,
+  extractHashtags,
+  extractUrls,
+  sanitizeFilename,
+  generateUniqueFilename,
+  isValidImageUrl,
+  getImageDimensions,
+  compressImage,
+  batchUploadImages,
+  validateMultipleImages,
 };

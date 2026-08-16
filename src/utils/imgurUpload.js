@@ -7,9 +7,11 @@
  */
 export const uploadToImgur = async (file) => {
   const clientId = process.env.REACT_APP_IMGUR_CLIENT_ID;
-  
+
   if (!clientId) {
-    throw new Error('Imgur Client ID not configured. Please add REACT_APP_IMGUR_CLIENT_ID to your .env file');
+    throw new Error(
+      'Imgur Client ID not configured. Please add REACT_APP_IMGUR_CLIENT_ID to your .env file'
+    );
   }
 
   // Validate file
@@ -30,9 +32,9 @@ export const uploadToImgur = async (file) => {
     const response = await fetch('https://api.imgur.com/3/image', {
       method: 'POST',
       headers: {
-        'Authorization': `Client-ID ${clientId}`,
+        Authorization: `Client-ID ${clientId}`,
       },
-      body: formData
+      body: formData,
     });
 
     const result = await response.json();
@@ -46,7 +48,7 @@ export const uploadToImgur = async (file) => {
       deleteHash: result.data.deletehash, // Save this for potential deletion
       id: result.data.id,
       filename: file.name,
-      size: file.size
+      size: file.size,
     };
   } catch (error) {
     console.error('Imgur upload error:', error);
@@ -92,11 +94,11 @@ export const validateImageFile = (file) => {
  */
 export const formatFileSize = (bytes) => {
   if (bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
+
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
@@ -114,7 +116,7 @@ export const createFilePreview = (file) => {
  * @param {string[]} urls - Array of object URLs to revoke
  */
 export const cleanupPreviews = (urls) => {
-  urls.forEach(url => {
+  urls.forEach((url) => {
     if (url.startsWith('blob:')) {
       URL.revokeObjectURL(url);
     }

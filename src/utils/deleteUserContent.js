@@ -1,18 +1,18 @@
 // src/utils/deleteUserContent.js
 // Utility to delete all user-generated content when a user deletes their account
 
-import { 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
-  deleteDoc, 
-  doc, 
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+  doc,
   writeBatch,
   updateDoc,
   arrayRemove,
   arrayUnion,
-  increment
+  increment,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { deleteUser as firebaseDeleteUser } from 'firebase/auth';
@@ -20,7 +20,7 @@ import { deleteUser as firebaseDeleteUser } from 'firebase/auth';
 /**
  * Delete all content created by a user across all Firestore collections
  * Call this BEFORE deleting the Firebase Auth account
- * 
+ *
  * @param {string} userId - The user's UID
  * @param {string} userEmail - The user's email
  * @returns {object} - Summary of deleted items
@@ -34,7 +34,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
     likes: 0,
     reposts: 0,
     userDoc: 0,
-    errors: []
+    errors: [],
   };
 
   const normalizedEmail = userEmail?.toLowerCase()?.trim() || '';
@@ -44,23 +44,20 @@ export const deleteAllUserContent = async (userId, userEmail) => {
     // 1. DELETE USER'S COMMUNITY POSTS & THEIR REPLIES
     // ─────────────────────────────────────────────
     try {
-      const postsQuery = query(
-        collection(db, 'posts'),
-        where('authorId', '==', userId)
-      );
+      const postsQuery = query(collection(db, 'posts'), where('authorId', '==', userId));
       const postsSnapshot = await getDocs(postsQuery);
 
       for (const postDoc of postsSnapshot.docs) {
         // Delete all replies under this post
         const repliesQuery = query(collection(db, 'posts', postDoc.id, 'replies'));
         const repliesSnapshot = await getDocs(repliesQuery);
-        
+
         const batch = writeBatch(db);
         repliesSnapshot.docs.forEach((replyDoc) => {
           batch.delete(replyDoc.ref);
           summary.replies++;
         });
-        
+
         // Delete the post itself
         batch.delete(postDoc.ref);
         await batch.commit();
@@ -79,7 +76,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
       // We need to search all posts for replies by this user
       const allPostsQuery = query(collection(db, 'posts'));
       const allPostsSnapshot = await getDocs(allPostsQuery);
-      
+
       let otherRepliesDeleted = 0;
       for (const postDoc of allPostsSnapshot.docs) {
         const repliesQuery = query(
@@ -87,7 +84,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
           where('authorId', '==', userId)
         );
         const repliesSnapshot = await getDocs(repliesQuery);
-        
+
         if (repliesSnapshot.docs.length > 0) {
           const batch = writeBatch(db);
           repliesSnapshot.docs.forEach((replyDoc) => {
@@ -113,11 +110,11 @@ export const deleteAllUserContent = async (userId, userEmail) => {
         where('likes', 'array-contains', userId)
       );
       const likedPostsSnapshot = await getDocs(likedPostsQuery);
-      
+
       for (const postDoc of likedPostsSnapshot.docs) {
         await updateDoc(postDoc.ref, {
           likes: arrayRemove(userId),
-          likeCount: increment(-1)
+          likeCount: increment(-1),
         });
         summary.likes++;
       }
@@ -136,11 +133,11 @@ export const deleteAllUserContent = async (userId, userEmail) => {
         where('reposts', 'array-contains', userId)
       );
       const repostedPostsSnapshot = await getDocs(repostedPostsQuery);
-      
+
       for (const postDoc of repostedPostsSnapshot.docs) {
         await updateDoc(postDoc.ref, {
           reposts: arrayRemove(userId),
-          repostCount: increment(-1)
+          repostCount: increment(-1),
         });
         summary.reposts++;
       }
@@ -160,7 +157,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
         where('userId', '==', userId)
       );
       const receivedSnapshot = await getDocs(receivedNotifQuery);
-      
+
       for (const notifDoc of receivedSnapshot.docs) {
         await deleteDoc(notifDoc.ref);
         summary.notifications++;
@@ -172,7 +169,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
         where('mentionedBy', '==', userId)
       );
       const sentSnapshot = await getDocs(sentNotifQuery);
-      
+
       for (const notifDoc of sentSnapshot.docs) {
         await deleteDoc(notifDoc.ref);
         summary.notifications++;
@@ -185,7 +182,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
           where('recipientEmail', '==', normalizedEmail)
         );
         const emailSnapshot = await getDocs(emailNotifQuery);
-        
+
         for (const notifDoc of emailSnapshot.docs) {
           await deleteDoc(notifDoc.ref);
           summary.notifications++;
@@ -203,24 +200,18 @@ export const deleteAllUserContent = async (userId, userEmail) => {
     // ─────────────────────────────────────────────
     try {
       // Where this user is the follower
-      const followingQuery = query(
-        collection(db, 'follows'),
-        where('followerId', '==', userId)
-      );
+      const followingQuery = query(collection(db, 'follows'), where('followerId', '==', userId));
       const followingSnapshot = await getDocs(followingQuery);
-      
+
       for (const followDoc of followingSnapshot.docs) {
         await deleteDoc(followDoc.ref);
         summary.follows++;
       }
 
       // Where this user is being followed
-      const followersQuery = query(
-        collection(db, 'follows'),
-        where('followingId', '==', userId)
-      );
+      const followersQuery = query(collection(db, 'follows'), where('followingId', '==', userId));
       const followersSnapshot = await getDocs(followersQuery);
-      
+
       for (const followDoc of followersSnapshot.docs) {
         await deleteDoc(followDoc.ref);
         summary.follows++;
@@ -239,7 +230,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
       const badgeQueries = [
         query(collection(db, 'member_badges'), where('memberId', '==', userId)),
       ];
-      
+
       if (normalizedEmail) {
         badgeQueries.push(
           query(collection(db, 'member_badges'), where('memberEmail', '==', normalizedEmail))
@@ -267,7 +258,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
       const certQueries = [
         query(collection(db, 'certificates'), where('recipientId', '==', userId)),
       ];
-      
+
       if (normalizedEmail) {
         certQueries.push(
           query(collection(db, 'certificates'), where('recipientEmail', '==', normalizedEmail))
@@ -292,10 +283,8 @@ export const deleteAllUserContent = async (userId, userEmail) => {
     // 9. REMOVE USER FROM GROUP MEMBERSHIPS
     // ─────────────────────────────────────────────
     try {
-      const memberQueries = [
-        query(collection(db, 'group_members'), where('userId', '==', userId)),
-      ];
-      
+      const memberQueries = [query(collection(db, 'group_members'), where('userId', '==', userId))];
+
       if (normalizedEmail) {
         memberQueries.push(
           query(collection(db, 'group_members'), where('userEmail', '==', normalizedEmail))
@@ -323,10 +312,13 @@ export const deleteAllUserContent = async (userId, userEmail) => {
       const appQueries = [
         query(collection(db, 'project_applications'), where('applicantId', '==', userId)),
       ];
-      
+
       if (normalizedEmail) {
         appQueries.push(
-          query(collection(db, 'project_applications'), where('applicantEmail', '==', normalizedEmail))
+          query(
+            collection(db, 'project_applications'),
+            where('applicantEmail', '==', normalizedEmail)
+          )
         );
       }
 
@@ -351,10 +343,13 @@ export const deleteAllUserContent = async (userId, userEmail) => {
     //  Completed/rejected projects are left intact so the team keeps their proof.
     // ─────────────────────────────────────────────
     try {
-      let cancelled = 0, leftTeams = 0;
+      let cancelled = 0,
+        leftTeams = 0;
 
       // (a) Projects this user OWNS.
-      const ownedSnap = await getDocs(query(collection(db, 'projects'), where('submitterId', '==', userId)));
+      const ownedSnap = await getDocs(
+        query(collection(db, 'projects'), where('submitterId', '==', userId))
+      );
       for (const pDoc of ownedSnap.docs) {
         const data = pDoc.data();
         const isCompleted = data.status === 'completed';
@@ -371,7 +366,9 @@ export const deleteAllUserContent = async (userId, userEmail) => {
       }
 
       // (b) Projects this user is a MEMBER of (remove from roster + note).
-      const memberSnap = await getDocs(query(collection(db, 'projects'), where('members', 'array-contains', userId)));
+      const memberSnap = await getDocs(
+        query(collection(db, 'projects'), where('members', 'array-contains', userId))
+      );
       for (const pDoc of memberSnap.docs) {
         // Don't bother if this is their own already-cancelled project.
         if (pDoc.data().submitterId === userId) continue;
@@ -395,23 +392,6 @@ export const deleteAllUserContent = async (userId, userEmail) => {
     }
 
     // ─────────────────────────────────────────────
-    // 10b. PRESERVE FOUNDATIONS CONTRIBUTIONS (do NOT delete)
-    // Published community lessons remain part of She Model Tech's Foundations, credited to
-    // the author. We keep the content but mark it so the UI degrades gracefully
-    // (name stays as plain credit, profile link is no longer rendered).
-    // ─────────────────────────────────────────────
-    try {
-      const contribSnap = await getDocs(query(collection(db, 'foundationsContributions'), where('authorId', '==', userId)));
-      for (const c of contribSnap.docs) {
-        await updateDoc(c.ref, { authorLeft: true });
-      }
-      console.log(`✅ Preserved ${contribSnap.size} Foundations contributions (author left)`);
-    } catch (error) {
-      console.error('Error preserving contributions:', error);
-      summary.errors.push(`Contributions: ${error.message}`);
-    }
-
-    // ─────────────────────────────────────────────
     // 11. DELETE USER DOCUMENT FROM 'users' COLLECTION
     // ─────────────────────────────────────────────
     try {
@@ -427,7 +407,6 @@ export const deleteAllUserContent = async (userId, userEmail) => {
 
     console.log('🏁 User content deletion complete:', summary);
     return summary;
-
   } catch (error) {
     console.error('Fatal error during user content deletion:', error);
     summary.errors.push(`Fatal: ${error.message}`);
@@ -437,7 +416,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
 
 /**
  * Full account deletion: deletes all content then the Firebase Auth account
- * 
+ *
  * @param {object} user - Firebase Auth user object (currentUser)
  * @returns {object} - Summary of what was deleted
  */

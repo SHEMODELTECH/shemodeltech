@@ -30,8 +30,7 @@ export const isAdminRole = (role) => role === ROLES.ADMIN;
  * Can review: approve/reject/request-changes on project submissions, decide
  * lead applications, run cohorts, reassign leads. Admins are always reviewers.
  */
-export const isReviewerRole = (role) =>
-  role === ROLES.ADMIN || role === ROLES.EDITOR;
+export const isReviewerRole = (role) => role === ROLES.ADMIN || role === ROLES.EDITOR;
 
 /** Human label for a role. */
 export const roleLabel = (role) => {
@@ -48,7 +47,7 @@ export const fetchPermissions = async (uid) => {
   if (!uid) return { role: null, isAdmin: false, isReviewer: false };
   try {
     const snap = await getDoc(doc(db, 'users', uid));
-    const role = snap.exists() ? (snap.data().role || ROLES.MEMBER) : ROLES.MEMBER;
+    const role = snap.exists() ? snap.data().role || ROLES.MEMBER : ROLES.MEMBER;
     return {
       role,
       isAdmin: isAdminRole(role),
@@ -67,7 +66,10 @@ export const fetchPermissions = async (uid) => {
  */
 export const usePermissions = (uid) => {
   const [perms, setPerms] = useState({
-    role: null, isAdmin: false, isReviewer: false, loading: true,
+    role: null,
+    isAdmin: false,
+    isReviewer: false,
+    loading: true,
   });
 
   useEffect(() => {
@@ -76,10 +78,12 @@ export const usePermissions = (uid) => {
       setPerms({ role: null, isAdmin: false, isReviewer: false, loading: false });
       return undefined;
     }
-    fetchPermissions(uid).then(p => {
+    fetchPermissions(uid).then((p) => {
       if (!cancelled) setPerms({ ...p, loading: false });
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [uid]);
 
   return perms;
