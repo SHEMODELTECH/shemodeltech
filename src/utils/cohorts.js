@@ -23,6 +23,7 @@ import {
   getDoc,
   getDocs,
   updateDoc,
+  deleteDoc,
   query,
   where,
   orderBy,
@@ -148,6 +149,75 @@ export const createCohort = async ({ startDate, projectCount, createdBy }) => {
 
 export const setCohortStatus = async (cohortId, status) =>
   updateDoc(doc(db, 'cohorts', cohortId), { status, updatedAt: serverTimestamp() });
+
+/**
+ * Edit a cohort. Changing the start date recomputes the whole schedule, and
+ * pushes the new endDate onto every project in the cohort - otherwise the
+ * deadline reminders and grace period would still fire on the old dates.
+ */
+export const updateCohort = async (cohortId, { name, startDate, projectCount }) => {
+  const updates = { updatedAt: serverTimestamp() };
+  if (name) updates.name = name;
+  if (projectCount) updates.projectCount = Number(projectCount);
+
+  if (startDate) {
+    Object.assign(updates, buildSchedule(startDate));
+    const projects = await getCohortProjects(cohortId);
+    for (const p of projects) {
+      // eslint-disable-next-line no-await-in-loop
+      await updateDoc(doc(db, 'projects', p.id), {
+        startDate: updates.startDate,
+        endDate: updates.endDate,
+        updatedAt: serverTimestamp(),
+      });
+    }
+  }
+  await updateDoc(doc(db, 'cohorts', cohortId), updates);
+};
+
+/**
+ * Delete a cohort and every project in it.
+ *
+ * Refuses once anyone has joined: deleting a project out from under a team
+ * destroys their work and their route to a badge. Remove the members first,
+ * or cancel the cohort instead of deleting it.
+ */
+export const deleteCohort = async (cohortId) => {
+  const projects = await getCohortProjects(cohortId);
+  const withTeams = projects.filter((p) => (p.members?.length || 0) > 0 || p.leadConfirmed);
+  if (withTeams.length) {
+    throw new Error(
+      `${withTeams.length} project${withTeams.length === 1 ? ' has a lead or members' : 's have leads or members'}. ` +
+        'Delete those individually first, or cancel the cohort instead.'
+    );
+  }
+  for (const p of projects) {
+    // eslint-disable-next-line no-await-in-loop
+    await deleteDoc(doc(db, 'projects', p.id));
+  }
+  await deleteDoc(doc(db, 'cohorts', cohortId));
+  return { deletedProjects: projects.length };
+};
+
+/** Edit a generated brief before it is revealed. */
+export const updateCohortProject = async (
+  projectId,
+  { projectTitle, projectDescription, industryTrack }
+) => {
+  const updates = { updatedAt: serverTimestamp() };
+  if (projectTitle !== undefined) updates.projectTitle = projectTitle;
+  if (projectDescription !== undefined) updates.projectDescription = projectDescription;
+  if (industryTrack !== undefined) updates.industryTrack = industryTrack;
+  await updateDoc(doc(db, 'projects', projectId), updates);
+};
+
+/** Delete one project from a cohort. Refuses if a team is already on it. */
+export const deleteCohortProject = async (project) => {
+  if ((project.members?.length || 0) > 0) {
+    throw new Error('This project has approved members. Removing it would destroy their work.');
+  }
+  await deleteDoc(doc(db, 'projects', project.id));
+};
 
 /** All projects belonging to a cohort. */
 export const getCohortProjects = async (cohortId) => {

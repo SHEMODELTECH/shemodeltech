@@ -29,6 +29,10 @@ import {
   COHORT_STATUS,
   DEFAULT_PROJECTS_PER_COHORT,
   daysUntil,
+  updateCohort,
+  deleteCohort,
+  updateCohortProject,
+  deleteCohortProject,
 } from '../../utils/cohorts';
 import { batchGenerateProjects } from '../../utils/batchGenerateProjects';
 
@@ -63,6 +67,11 @@ const CohortManager = () => {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(null);
   const [showNew, setShowNew] = useState(false);
+  const [openCohort, setOpenCohort] = useState(null); // cohort id whose briefs are open
+  const [editingProject, setEditingProject] = useState(null);
+  const [draft, setDraft] = useState({ projectTitle: '', projectDescription: '' });
+  const [editingCohort, setEditingCohort] = useState(null);
+  const [cohortDraft, setCohortDraft] = useState({ name: '', startDate: '' });
   const [startDate, setStartDate] = useState('');
   const [count, setCount] = useState(DEFAULT_PROJECTS_PER_COHORT);
 
@@ -162,6 +171,62 @@ const CohortManager = () => {
       await load();
     } catch (e) {
       toast.error('Could not reveal the cohort.');
+    }
+    setBusy(null);
+  };
+
+  const saveProject = async (project) => {
+    setBusy(project.id);
+    try {
+      await updateCohortProject(project.id, draft);
+      toast.success('Brief updated.');
+      setEditingProject(null);
+      await load();
+    } catch (e) {
+      toast.error(e.message || 'Could not save the brief.');
+    }
+    setBusy(null);
+  };
+
+  const removeProject = async (project) => {
+    if (
+      !window.confirm(`Delete "${project.projectTitle || project.title}"? This cannot be undone.`)
+    )
+      return;
+    setBusy(project.id);
+    try {
+      await deleteCohortProject(project);
+      toast.success('Project deleted.');
+      await load();
+    } catch (e) {
+      toast.error(e.message);
+    }
+    setBusy(null);
+  };
+
+  const saveCohort = async (cohort) => {
+    setBusy(cohort.id);
+    try {
+      await updateCohort(cohort.id, cohortDraft);
+      toast.success('Cohort updated. Project deadlines moved to match.');
+      setEditingCohort(null);
+      await load();
+    } catch (e) {
+      toast.error(e.message || 'Could not update the cohort.');
+    }
+    setBusy(null);
+  };
+
+  const removeCohort = async (cohort) => {
+    if (!window.confirm(`Delete ${cohort.name} and all its projects? This cannot be undone.`))
+      return;
+    setBusy(cohort.id);
+    try {
+      const res = await deleteCohort(cohort.id);
+      toast.success(`Deleted ${cohort.name} and ${res.deletedProjects} projects.`);
+      await load();
+    } catch (e) {
+      toast.error(e.message);
     }
     setBusy(null);
   };
@@ -327,7 +392,157 @@ const CohortManager = () => {
                 >
                   Lead applications
                 </Link>
+                {projects.length > 0 && (
+                  <button
+                    onClick={() => setOpenCohort(openCohort === cohort.id ? null : cohort.id)}
+                    className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 text-xs font-semibold px-4 py-2 rounded-lg"
+                  >
+                    {openCohort === cohort.id ? 'Hide' : 'Review'} {projects.length} brief
+                    {projects.length === 1 ? '' : 's'}
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setEditingCohort(cohort.id);
+                    setCohortDraft({ name: cohort.name, startDate: cohort.startDate });
+                  }}
+                  className="text-gray-500 hover:text-gray-800 text-xs font-semibold px-2 py-2"
+                >
+                  Edit dates
+                </button>
+                <button
+                  onClick={() => removeCohort(cohort)}
+                  disabled={busy === cohort.id}
+                  className="text-gray-400 hover:text-red-600 text-xs font-semibold px-2 py-2"
+                >
+                  Delete
+                </button>
               </div>
+
+              {/* Edit cohort dates. Moving the start date recomputes the whole
+                  schedule AND pushes the new deadline onto every project, so
+                  reminders and grace never fire on stale dates. */}
+              {editingCohort === cohort.id && (
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-3">
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    <input
+                      value={cohortDraft.name}
+                      onChange={(e) => setCohortDraft((d) => ({ ...d, name: e.target.value }))}
+                      className="flex-1 min-w-[10rem] px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
+                    />
+                    <input
+                      type="date"
+                      value={cohortDraft.startDate}
+                      onChange={(e) => setCohortDraft((d) => ({ ...d, startDate: e.target.value }))}
+                      className="px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
+                    />
+                  </div>
+                  <p className="text-gray-500 text-[11px] mb-2">
+                    Changing the start date moves every deadline in this cohort, including on
+                    projects already generated.
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => saveCohort(cohort)}
+                      disabled={busy === cohort.id}
+                      className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold px-4 py-2 rounded-lg"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingCohort(null)}
+                      className="text-gray-500 text-xs px-2"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Brief review: edit a weak brief before it goes live. */}
+              {openCohort === cohort.id && (
+                <div className="border border-gray-200 rounded-lg divide-y divide-gray-100 mb-3">
+                  {projects.map((pr) => (
+                    <div key={pr.id} className="p-3">
+                      {editingProject === pr.id ? (
+                        <>
+                          <input
+                            value={draft.projectTitle}
+                            onChange={(e) =>
+                              setDraft((d) => ({ ...d, projectTitle: e.target.value }))
+                            }
+                            className="w-full px-3 py-2 mb-2 rounded-lg border border-gray-300 text-sm font-semibold outline-none focus:border-pink-500"
+                          />
+                          <textarea
+                            value={draft.projectDescription}
+                            onChange={(e) =>
+                              setDraft((d) => ({ ...d, projectDescription: e.target.value }))
+                            }
+                            rows={5}
+                            className="w-full px-3 py-2 mb-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500 resize-y"
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => saveProject(pr)}
+                              disabled={busy === pr.id}
+                              className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold px-4 py-2 rounded-lg"
+                            >
+                              Save brief
+                            </button>
+                            <button
+                              onClick={() => setEditingProject(null)}
+                              className="text-gray-500 text-xs px-2"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="flex items-start justify-between gap-3 flex-wrap">
+                            <div className="min-w-0">
+                              <p className="font-semibold text-gray-900 text-sm">
+                                {pr.projectTitle || pr.title}
+                              </p>
+                              <p className="text-gray-400 text-[11px]">
+                                {pr.industryTrack}
+                                {pr.isActive === false ? ' · hidden' : ' · live'}
+                                {pr.leadConfirmed ? ` · led by ${pr.submitterName}` : ''}
+                                {pr.members?.length ? ` · ${pr.members.length} members` : ''}
+                              </p>
+                            </div>
+                            <div className="flex gap-2 shrink-0">
+                              <button
+                                onClick={() => {
+                                  setEditingProject(pr.id);
+                                  setDraft({
+                                    projectTitle: pr.projectTitle || pr.title || '',
+                                    projectDescription:
+                                      pr.projectDescription || pr.description || '',
+                                  });
+                                }}
+                                className="text-pink-600 hover:underline text-xs font-semibold"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => removeProject(pr)}
+                                disabled={busy === pr.id}
+                                className="text-gray-400 hover:text-red-600 text-xs font-semibold"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-gray-600 text-xs mt-1.5 line-clamp-3">
+                            {pr.projectDescription || pr.description}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {drafts > 0 && (
                 <p className="text-amber-700 text-xs mb-3">
