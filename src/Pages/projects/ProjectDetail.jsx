@@ -410,7 +410,7 @@ const ProjectDetail = () => {
                   No one is leading this project yet. Apply to lead it - as the lead, you'll shape the idea, decide which roles and how many people the team needs, then open it up for others to join. Leading is its own skill path and earns a Leadership badge on completion. No badge is required to apply.
                 </p>
                 <p className="text-gray-500 text-xs mb-4">
-                  New to how roles work? <a href="/about#how-it-works" className="text-pink-600 underline">Learn about roles on She Model Tech</a>.
+                  New to how roles work? <a href="/support" className="text-pink-600 underline">See how it works</a>.
                 </p>
                 {!currentUser ? (
                   <button onClick={() => navigate('/login')} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all">

@@ -46,36 +46,6 @@ const LandingPage = () => {
 
   const isVisible = (id) => visibleSections.has(id);
 
-  const features = [
-    {
-      title: 'Discover your career path in tech',
-      desc: 'Explore different technology domains and collaborate in various roles on real-world projects.',
-    },
-    {
-      title: 'Build practical, industry-relevant skills',
-      desc: 'Learn through hands-on collaboration instead of working on isolated or theoretical projects.',
-    },
-    {
-      title: 'Gain real-world experience',
-      desc: 'Contribute to projects that mirror the way technology teams operate in professional environments.',
-    },
-    {
-      title: 'Collaborate across disciplines',
-      desc: 'Work with software engineers, AI engineers, designers, data scientists, cybersecurity professionals, product managers, and other technology specialists.',
-    },
-    {
-      title: 'Develop a strong professional portfolio',
-      desc: 'Build it through meaningful collaborative projects that demonstrate your skills and experience.',
-    },
-    {
-      title: 'Transition into new technology careers with confidence',
-      desc: 'Gain practical experience across multiple domains.',
-    },
-    {
-      title: 'Continuously upskill and stay relevant',
-      desc: 'Keep pace with an ever-evolving technology landscape.',
-    },
-  ];
 
   const badges = [
     {
@@ -116,12 +86,6 @@ const LandingPage = () => {
     },
   ];
 
-  const stats = [
-    { value: '6', label: 'Skill Tracks' },
-    { value: '24', label: 'Badge Levels' },
-    { value: '100+', label: 'Projects' },
-    { value: 'Free', label: 'To Get Started' },
-  ];
 
   const steps = [
     {
@@ -308,8 +272,7 @@ const LandingPage = () => {
             className={`fade-up delay-2 text-gray-600 text-lg sm:text-2xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed ${isVisible('hero-desc') ? 'visible' : ''}`}
           >
             She Model Tech is where women build real tech experience. Join a team, ship a real
-            project, and earn verified badges that show employers exactly what you did. Free,
-            always.
+            project, and earn verified badges that show employers exactly what you did.
           </p>
 
           <div
@@ -339,56 +302,6 @@ const LandingPage = () => {
           >
             No credit card required. Sign in with Google or email.
           </p>
-        </div>
-      </section>
-
-      {/* STATS */}
-      <section className="py-12 border-y border-gray-200 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {stats.map((s, i) => (
-              <div
-                key={i}
-                id={`stat-${i}`}
-                data-animate
-                className={`fade-up delay-${i + 1} text-center ${isVisible(`stat-${i}`) ? 'visible' : ''}`}
-              >
-                <div className="text-3xl sm:text-4xl font-800 text-gray-900">{s.value}</div>
-                <div className="text-gray-500 text-sm mt-1">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6">
-        <div
-          id="features-head"
-          data-animate
-          className={`fade-up text-center mb-14 ${isVisible('features-head') ? 'visible' : ''}`}
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-800 text-gray-900 mb-4">
-            What You Can Do with SHE MODEL TECH
-          </h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-base">
-            From real collaborative projects to verified credentials, She Model Tech gives you
-            everything you need to build and prove your skills.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {features.map((f, i) => (
-            <div
-              key={i}
-              id={`feature-${i}`}
-              data-animate
-              className={`fade-up delay-${i + 1} border border-gray-200 rounded-2xl p-7 hover:border-pink-300 hover:shadow-sm transition-all ${isVisible(`feature-${i}`) ? 'visible' : ''}`}
-            >
-              <h3 className="text-xl font-700 text-gray-900 mb-2">{f.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
-            </div>
-          ))}
         </div>
       </section>
 
