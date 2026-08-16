@@ -1,5 +1,6 @@
 // src/Pages/LandingPage.jsx
 import BrandLockup from '../components/BrandLockup';
+import { BRAND } from '../config/brand';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -173,6 +174,23 @@ const LandingPage = () => {
       {/* HERO */}
       <section className="relative pt-32 sm:pt-40 pb-20 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-50/60 via-white to-white" />
+
+        {/* Decorative brand shapes.
+            These sit on the SECTION, not on the wordmark, so they span the
+            full page width and stay fully visible. Positioned as percentages
+            of the section (never fixed offsets), so they scale with the
+            viewport instead of drifting under the text on narrow screens.
+            Hidden below sm: there isn't room for them without collision. */}
+        <div className="absolute inset-0 pointer-events-none select-none hidden sm:block" aria-hidden="true">
+          <img src={BRAND.shapes.arcGreen} alt=""
+            className="absolute left-[6%] top-[18%] w-12 lg:w-16" />
+          <img src={BRAND.shapes.sparkle} alt=""
+            className="absolute right-[10%] top-[12%] w-9 lg:w-12" />
+          <img src={BRAND.shapes.wavePink} alt=""
+            className="absolute right-[4%] top-[46%] w-32 lg:w-44" />
+          <img src={BRAND.shapes.barGreen} alt=""
+            className="absolute left-[3%] bottom-[16%] w-24 lg:w-32 opacity-80" />
+        </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <div id="hero-title" data-animate className={`fade-up delay-1 mb-8 mt-2 flex justify-center ${isVisible('hero-title') ? 'visible' : ''}`}>
             <BrandLockup align="center" className="max-w-3xl w-full" />

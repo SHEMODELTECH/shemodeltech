@@ -3,7 +3,7 @@
 // Cron: Sundays 9 AM. A clean, professional weekly summary.
 // =================================================================
 
-const nodemailer = require('nodemailer');
+const { sendMail } = require('../../lib/mailer');
 const { subDays } = require('date-fns');
 const admin = require('firebase-admin');
 
@@ -43,12 +43,6 @@ module.exports = async function handler(req, res) {
 
   try {
     console.log('Starting She Model Tech weekly digest...');
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
-    });
-    await transporter.verify();
 
     const sevenDaysAgo = subDays(new Date(), 7);
 
@@ -198,11 +192,10 @@ ${jobs.slice(0,4).map(j => `<div class="it">
         const subj = eng > 0
           ? `Your She Model Tech week: ${eng} update${eng>1?'s':''} (${range})`
           : `Your She Model Tech weekly recap (${range})`;
-        await transporter.sendMail({ from: { name: 'She Model Tech', address: process.env.EMAIL_USER }, to: user.email, subject: subj, html: generateEmail(user) });
+        await sendMail({ to: user.email, subject: subj, html: generateEmail(user) });
         successful++;
       } catch (err) { console.error(`${user.email}:`, err.message); failed++; }
     }
-    transporter.close();
 
     try { await db.collection('email_logs').add({ type: 'weekly_digest', timestamp: new Date(), stats: { recipients: users.length, successful, failed } }); } catch (_) {}
 

@@ -2,7 +2,7 @@
 // Consolidated notification router - handles all notification types in a single serverless function
 // This replaces 6 separate files to stay within Vercel Hobby plan's 12 function limit
 
-const nodemailer = require('nodemailer');
+const { sendMail } = require('../../lib/mailer');
 
 // Brand/config - override via Vercel env vars, never hardcode again.
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
@@ -13,15 +13,6 @@ const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
 // SHARED UTILITIES
 // ============================================================
 
-function createTransporter() {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD
-    }
-  });
-}
 
 function checkEnvVars() {
   const missing = [];
@@ -716,13 +707,7 @@ module.exports = async function handler(req, res) {
         return res.status(404).json({ success: false, error: `Unknown notification type: ${type}` });
     }
 
-    // Create transporter and send
-    const transporter = createTransporter();
-    await transporter.verify();
-    console.log('✅ Transporter verified');
-
-    const result = await transporter.sendMail({
-      from: { name: 'She Model Tech', address: process.env.EMAIL_USER },
+    const result = await sendMail({
       to: emailConfig.to,
       cc: emailConfig.cc || [],
       replyTo: emailConfig.replyTo || undefined,
@@ -732,7 +717,6 @@ module.exports = async function handler(req, res) {
     });
 
     console.log(`✅ ${type} email sent:`, result.messageId);
-    transporter.close();
 
     return res.status(200).json({
       success: true,

@@ -27,7 +27,7 @@
 //  - Fail-soft: one bad project or one bad address never aborts the run.
 
 const admin = require('../../lib/firebaseAdmin');
-const nodemailer = require('nodemailer');
+const { sendMail } = require('../../lib/mailer');
 
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
@@ -65,14 +65,7 @@ const daysSinceTs = (ts) => {
 // ---------------------------------------------------------------------
 // Email
 // ---------------------------------------------------------------------
-const makeTransport = () =>
-  nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
-    pool: true,           // reuse one connection instead of one per message
-    maxConnections: EMAIL_CONCURRENCY,
-    maxMessages: 100,
-  });
+
 
 const shell = (title, body, cta) => `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#353331">
@@ -192,7 +185,6 @@ module.exports = async (req, res) => {
   }
 
   const db = admin.firestore();
-  const transporter = makeTransport();
   const stats = {
     scanned: 0, reminders: 0, graceMoved: 0, graceNudges: 0,
     lapsed: 0, healthUpdated: 0, missedCheckins: 0, errors: 0, skipped: 0,
@@ -315,10 +307,7 @@ module.exports = async (req, res) => {
                 const { subject, html } = isGrace
                   ? graceEmail(project, graceWindow - graceUsed + 1, p.isLead)
                   : reminderEmail(project, daysLeft, p.isLead);
-                await transporter.sendMail({
-                  from: { name: BRAND_NAME, address: process.env.EMAIL_USER },
-                  to: p.email, subject, html,
-                });
+                await sendMail({ to: p.email, subject, html });
               });
 
               const sent = results.filter(r => r.status === 'fulfilled').length;
@@ -344,11 +333,11 @@ module.exports = async (req, res) => {
       }
     }
 
-    try { transporter.close(); } catch (_) { /* noop */ }
+    try { } catch (_) { /* noop */ }
     return res.status(200).json({ ok: true, ...stats });
   } catch (err) {
     console.error('project-reminders failed:', err);
-    try { transporter.close(); } catch (_) { /* noop */ }
+    try { } catch (_) { /* noop */ }
     return res.status(500).json({ error: err.message, ...stats });
   }
 };

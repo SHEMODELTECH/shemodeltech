@@ -13,7 +13,7 @@ app.use(cors({ origin: true }));
 app.use(express.json());
 
 // Initialize Nodemailer transporter for certificate emails
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: functions.config().email?.user,

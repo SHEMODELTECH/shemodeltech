@@ -2,7 +2,7 @@
 // Generates the Firebase reset code with the Admin SDK, then emails a link to
 // She Model Tech's OWN /reset-password page via Gmail SMTP - so the reset flow lives
 // entirely on shemodeltech.com and never touches the default firebaseapp.com page.
-const nodemailer = require('nodemailer');
+const { sendMail } = require('../../lib/mailer');
 const admin = require('firebase-admin');
 
 if (!admin.apps.length) {
@@ -54,12 +54,6 @@ module.exports = async function handler(req, res) {
 
     const resetUrl = `${SITE}/reset-password?oobCode=${encodeURIComponent(oobCode)}`;
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
-    });
-    await transporter.verify();
-
     const html = `
       <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:520px;margin:0 auto;padding:8px;color:#111827">
         <div style="text-align:center;padding:24px 0">
@@ -90,8 +84,7 @@ module.exports = async function handler(req, res) {
         </p>
       </div>`;
 
-    await transporter.sendMail({
-      from: { name: 'She Model Tech', address: process.env.EMAIL_USER },
+    await sendMail({
       to: email,
       subject: 'Reset your She Model Tech password',
       html,

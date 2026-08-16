@@ -4,7 +4,7 @@
 // so nobody is bombarded. No pending items = no email that day.
 // =================================================================
 
-const nodemailer = require('nodemailer');
+const { sendMail } = require('../../lib/mailer');
 const admin = require('firebase-admin');
 
 if (!admin.apps.length) {
@@ -49,11 +49,6 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
-    });
-    await transporter.verify();
 
     // Pull all projects once and index by id.
     const projectsSnap = await db.collection('projects').get();
@@ -199,8 +194,7 @@ module.exports = async function handler(req, res) {
       const isNudgeOnly = items.length === 1 && !!items[0].suggestions;
       const html = renderEmail(name, items, isNudgeOnly);
       try {
-        await transporter.sendMail({
-          from: { name: 'She Model Tech', address: process.env.EMAIL_USER },
+        await sendMail({
           to: user.email,
           subject: items.length === 1 ? items[0].headline : `You have ${items.length} things to pick up on She Model Tech`,
           html,
@@ -208,8 +202,6 @@ module.exports = async function handler(req, res) {
         sent++;
       } catch (e) { console.error(`${user.email}:`, e.message); failed++; }
     }
-
-    transporter.close();
     try { await db.collection('email_logs').add({ type: 'daily_reminder', timestamp: new Date(), stats: { sent, skipped, failed } }); } catch (_) {}
 
     return res.json({ success: true, stats: { sent, skipped, failed } });

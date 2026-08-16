@@ -14,10 +14,12 @@ const C = BRAND.colors;
 
 /**
  * @param {'left'|'center'} align
- * @param {boolean} showShapes  render the decorative brand shapes
+ * @param {boolean} showShapes  render shapes INSIDE the lockup box. Off by
+ *   default: shapes scoped to this box clip at its edges. Full-bleed layouts
+ *   should render them on the section instead (see LandingPage hero).
  * @param {string}  className   extra classes on the wrapper
  */
-const BrandLockup = ({ align = 'center', showShapes = true, className = '' }) => {
+const BrandLockup = ({ align = 'center', showShapes = false, className = '' }) => {
   const isCenter = align === 'center';
 
   // Shared type treatment: heavy, tight, uppercase-height grotesque.
@@ -46,12 +48,12 @@ const BrandLockup = ({ align = 'center', showShapes = true, className = '' }) =>
     paintOrder: 'stroke fill',
   };
 
-  // The words are OUTLINED - their fill is transparent - so any shape behind
-  // them shows straight through the letterforms. Decorative shapes must
-  // therefore sit fully OUTSIDE the text's bounding box, not merely behind it.
-  // Padding here reserves that space; the shapes are positioned into it.
+  // The words are OUTLINED - their fill is transparent - so anything behind
+  // them shows straight THROUGH the letterforms. z-index cannot fix that;
+  // shapes must be positioned clear of the text entirely. In the hero they
+  // live on the section for exactly this reason.
   return (
-    <div className={`relative px-8 sm:px-16 py-10 sm:py-14 ${isCenter ? 'text-center' : 'text-left'} ${className}`}>
+    <div className={`relative ${isCenter ? 'text-center' : 'text-left'} ${className}`}>
       {showShapes && (
         <>
           {/* Green arc - clear of the left edge of the words */}

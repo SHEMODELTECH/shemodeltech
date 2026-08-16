@@ -3,7 +3,7 @@
 // link to She Model Tech's OWN /auth/action page via Gmail SMTP - so verifying lands
 // on the branded page (with a "Sign in now" button) instead of the default
 // firebaseapp.com page that offers no way forward.
-const nodemailer = require('nodemailer');
+const { sendMail } = require('../../lib/mailer');
 const admin = require('firebase-admin');
 
 if (!admin.apps.length) {
@@ -57,12 +57,6 @@ module.exports = async function handler(req, res) {
     // "Sign in now" button, so the flow never dead-ends.
     const verifyUrl = `${SITE}/auth/action?mode=verifyEmail&oobCode=${encodeURIComponent(oobCode)}`;
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
-    });
-    await transporter.verify();
-
     const html = `
       <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:520px;margin:0 auto;padding:8px;color:#111827">
         <div style="text-align:center;padding:24px 0">
@@ -93,8 +87,7 @@ module.exports = async function handler(req, res) {
         </p>
       </div>`;
 
-    await transporter.sendMail({
-      from: { name: 'She Model Tech', address: process.env.EMAIL_USER },
+    await sendMail({
       to: email,
       subject: 'Verify your email to activate your She Model Tech account',
       html,
