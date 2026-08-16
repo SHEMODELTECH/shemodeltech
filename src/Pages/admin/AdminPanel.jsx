@@ -5,7 +5,7 @@
 // delete/role management.
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   collection,
@@ -627,6 +627,31 @@ const AdminPanel = () => {
       <p className="text-gray-500 text-sm mb-6">
         Manage projects, users, and content across She Model Tech.
       </p>
+
+      {/* Cohort tools live on their own pages, not as tabs here. Without
+          these links they were unreachable from the dashboard, so the only
+          generator anyone could find was the legacy one that does not tag
+          projects to a cohort. */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        <Link
+          to="/admin/cohorts"
+          className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
+        >
+          Cohorts &amp; project generation
+        </Link>
+        <Link
+          to="/admin/lead-applications"
+          className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
+        >
+          Lead applications
+        </Link>
+        <Link
+          to="/admin/activations"
+          className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
+        >
+          Access &amp; activation
+        </Link>
+      </div>
 
       {/* Tabs */}
       <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200">
