@@ -1,0 +1,91 @@
+// src/components/BrandLockup.jsx
+// The "Achieve / Ascend / Advance" brand lockup: heavy grotesque type,
+// outlined words with one solid pink word, and the decorative brand shapes
+// arranged around it. Words come from BRAND.taglineWords so the lockup and
+// the logo can never drift apart.
+//
+// Uses -webkit-text-stroke for the outlined words, with a paint-order fallback
+// so the stroke sits outside the glyph rather than eating into it.
+
+import React from 'react';
+import { BRAND } from '../config/brand';
+
+const C = BRAND.colors;
+
+/**
+ * @param {'left'|'center'} align
+ * @param {boolean} showShapes  render the decorative brand shapes
+ * @param {string}  className   extra classes on the wrapper
+ */
+const BrandLockup = ({ align = 'center', showShapes = true, className = '' }) => {
+  const isCenter = align === 'center';
+
+  // Shared type treatment: heavy, tight, uppercase-height grotesque.
+  const wordBase = {
+    display: 'block',
+    fontWeight: 900,
+    letterSpacing: '-0.03em',
+    lineHeight: 0.92,
+    fontFamily:
+      '"Archivo Black","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif',
+  };
+
+  // Outlined (hollow) words - transparent fill, dark hairline outline.
+  const outlined = {
+    ...wordBase,
+    color: 'transparent',
+    WebkitTextStroke: `1.5px ${C.ink}`,
+    paintOrder: 'stroke fill',
+  };
+
+  // Solid word - pink fill with the same dark outline.
+  const solid = {
+    ...wordBase,
+    color: C.pink,
+    WebkitTextStroke: `1.5px ${C.ink}`,
+    paintOrder: 'stroke fill',
+  };
+
+  return (
+    <div className={`relative ${isCenter ? 'text-center' : 'text-left'} ${className}`}>
+      {showShapes && (
+        <>
+          {/* Green arc, upper left */}
+          <img
+            src={BRAND.shapes.arcGreen}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute -top-6 -left-4 sm:-left-10 w-10 sm:w-16 opacity-95"
+          />
+          {/* Sparkle, upper right of the wordmark */}
+          <img
+            src={BRAND.shapes.sparkle}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute top-4 right-2 sm:right-10 w-8 sm:w-14"
+          />
+          {/* Pink wave, lower right */}
+          <img
+            src={BRAND.shapes.wavePink}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute -bottom-2 right-0 sm:-right-6 w-28 sm:w-52 opacity-95"
+          />
+        </>
+      )}
+
+      <h1
+        className="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+        aria-label={BRAND.taglineWords.join(' ')}
+      >
+        {BRAND.taglineWords.map((word, i) => (
+          <span key={word} style={i === 1 ? solid : outlined} aria-hidden="true">
+            {word}
+          </span>
+        ))}
+      </h1>
+    </div>
+  );
+};
+
+export default BrandLockup;

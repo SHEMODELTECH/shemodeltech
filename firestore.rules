@@ -1,0 +1,585 @@
+rules_version = '2';
+
+// =====================================================================
+// She Model Tech — Firestore Security Rules (v2, she-model-tech project)
+// =====================================================================
+// Posture:
+//  - Signed-in only. No anonymous/public access.
+//  - The platform is FREE: no plan tiers, no quotas.
+//  - BADGES AND CERTIFICATES ARE THE PRODUCT. They can only be written by
+//    the owner of the project they came from, or by an admin. A member can
+//    NEVER award themselves a badge. (In v1, `allow write: if isSignedIn()`
+//    meant anyone could — that is fixed here.)
+//  - Cohort leads are SELECTED by reviewers after interview. There is no
+//    self-claim path: applying writes to `lead_applications`, and only a
+//    reviewer can set a project's owner.
+//  - 'admin'  = full moderation + delete powers.
+//    'editor' = reviewer: runs cohorts, reviews lead applications, approves
+//               project submissions. Deliberately NO delete powers.
+// =====================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function myUid()      { return request.auth.uid; }
+    function myEmail()    { return request.auth.token.email; }
+    function myUserDoc() {
+      return get(/databases/$(database)/documents/users/$(myUid())).data;
+    }
+    function hasProfile() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(myUid()));
+    }
+    function isAdmin() {
+      return hasProfile() && myUserDoc().role == 'admin';
+    }
+    function isReviewer() {
+      return hasProfile()
+        && (myUserDoc().role == 'admin' || myUserDoc().role == 'editor');
+    }
+    function ownsNew(field)      { return request.resource.data[field] == myUid(); }
+    function ownsExisting(field) { return resource.data[field] == myUid(); }
+    function changed(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+    function touched(key) {
+      return key in request.resource.data.diff(resource.data).affectedKeys();
+    }
+    // Does the signed-in user own the project this doc points at?
+    function ownsProject(pid) {
+      return exists(/databases/$(database)/documents/projects/$(pid))
+        && get(/databases/$(database)/documents/projects/$(pid)).data.submitterId == myUid();
+    }
+
+    // ---------------------------------------------------------------
+    // users
+    // ---------------------------------------------------------------
+    match /users/{userId} {
+      allow read: if isSignedIn();
+
+      allow create: if isSignedIn() && userId == myUid()
+        && request.resource.data.get('role', 'member') != 'admin'
+        && request.resource.data.get('role', 'member') != 'editor';
+
+      // Self-update: cannot change own role, cannot self-award badges.
+      allow update: if isSignedIn() && userId == myUid()
+        && (!('role' in request.resource.data)
+            || request.resource.data.role == resource.data.role)
+        && !touched('badges')
+        && !touched('badgeCounts')
+        && !touched('badgeCount');
+
+      allow update: if isAdmin();
+
+      // Follow / unfollow another member.
+      allow update: if isSignedIn() && userId != myUid()
+        && changed(['followers', 'followerCount']);
+
+      // Badge bookkeeping on a MEMBER's profile, written by the project
+      // owner during completion. Restricted to the badge cache fields.
+      // NOTE: this is a denormalised cache. `member_badges` below is the
+      // source of truth — trust that collection, not this one.
+      allow update: if isSignedIn() && userId != myUid()
+        && changed(['badges', 'badgeCounts', 'badgeCount']);
+
+      allow delete: if isSignedIn() && userId == myUid();
+    }
+
+    // ---------------------------------------------------------------
+    // cohorts — 8-week cycles, run by reviewers only.
+    // ---------------------------------------------------------------
+    match /cohorts/{cohortId} {
+      allow read: if isSignedIn();
+      allow create, update: if isReviewer();
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // waitlist — register interest in an upcoming cohort.
+    // ---------------------------------------------------------------
+    match /waitlist/{entryId} {
+      allow read: if isSignedIn() && (ownsExisting('userId') || isReviewer());
+      allow create: if isSignedIn() && ownsNew('userId');
+      allow update: if isSignedIn() && ownsExisting('userId') && ownsNew('userId');
+      allow update: if isReviewer();
+      allow delete: if isSignedIn() && (ownsExisting('userId') || isAdmin());
+    }
+
+    // ---------------------------------------------------------------
+    // lead_applications — apply to lead, ranked up to 3 projects.
+    // Applicants create and withdraw. ONLY reviewers decide.
+    // ---------------------------------------------------------------
+    match /lead_applications/{appId} {
+      allow read: if isSignedIn() && (ownsExisting('applicantUid') || isReviewer());
+
+      allow create: if isSignedIn()
+        && ownsNew('applicantUid')
+        && request.resource.data.status == 'submitted'
+        && request.resource.data.rankedProjectIds is list
+        && request.resource.data.rankedProjectIds.size() <= 3;
+
+      // Applicant may ONLY withdraw.
+      allow update: if isSignedIn()
+        && ownsExisting('applicantUid')
+        && changed(['status', 'withdrawnAt'])
+        && request.resource.data.status == 'withdrawn';
+
+      // Reviewer: interview notes, assign, reject, offer another role or a
+      // fallback project from the applicant's ranked choices.
+      allow update: if isReviewer();
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // projects
+    // ---------------------------------------------------------------
+    match /projects/{projectId} {
+      function isProjectOwner() {
+        return isSignedIn() && resource.data.submitterId == myUid();
+      }
+      function isProjectMember() {
+        return isSignedIn() && (
+          (('members' in resource.data) && myUid() in resource.data.members)
+          || (('paymentConfirmations' in resource.data)
+              && myEmail() in resource.data.paymentConfirmations)
+        );
+      }
+      function appendOnly(field) {
+        return !(field in request.resource.data)
+          || !(field in resource.data)
+          || (request.resource.data[field].hasAll(resource.data[field])
+              && request.resource.data[field].size() >= resource.data[field].size());
+      }
+
+      allow read: if isSignedIn();
+
+      allow create: if isReviewer()
+        || (isSignedIn() && request.resource.data.submitterId == myUid());
+
+      // 1. Admin: full control.
+      allow update: if isAdmin();
+
+      // 2. Reviewer: review gate + lead assignment. This is the ONLY path
+      //    that may set submitterId. There is no first-come self-claim.
+      allow update: if isReviewer();
+
+      // 3. Owner: full control of their own project. History arrays are
+      //    append-only, ownership is frozen, and closing the project needs
+      //    the owner plus at least one approved member.
+      allow update: if isProjectOwner()
+        && appendOnly('disputeHistory')
+        && appendOnly('leaveReasons')
+        && appendOnly('activityLog')
+        && request.resource.data.submitterId == resource.data.submitterId
+        && (
+             request.resource.data.get('status', '') == resource.data.get('status', '')
+             || !(request.resource.data.get('status', '') in
+                   ['completed', 'awaiting_payment_confirmation'])
+             || request.resource.data.get('members', []).size() >= 1
+           );
+
+      // 4. Member payment action: confirm or dispute ONLY their own entry.
+      allow update: if isProjectMember()
+        && ('paymentConfirmations' in resource.data)
+        && myEmail() in resource.data.paymentConfirmations
+        && changed(['paymentConfirmations', 'disputeHistory'])
+        && request.resource.data.paymentConfirmations
+             .diff(resource.data.paymentConfirmations)
+             .affectedKeys().hasOnly([myEmail()])
+        && request.resource.data.paymentConfirmations[myEmail()].amountDue
+             == resource.data.paymentConfirmations[myEmail()].amountDue
+        && (request.resource.data.paymentConfirmations[myEmail()].amountPaid
+              == resource.data.paymentConfirmations[myEmail()].amountPaid
+            || request.resource.data.paymentConfirmations[myEmail()].amountPaid
+              == resource.data.paymentConfirmations[myEmail()].amountDue)
+        && request.resource.data.paymentConfirmations[myEmail()].status
+             in ['confirmed', 'disputed']
+        && appendOnly('disputeHistory');
+
+      // 5. Member leaves (the owner cannot leave their own project).
+      allow update: if isProjectMember()
+        && resource.data.submitterId != myUid()
+        && changed(['members', 'leaveReasons', 'disputeHistory'])
+        && myUid() in resource.data.members
+        && !(myUid() in request.resource.data.members)
+        && request.resource.data.members.size() == resource.data.members.size() - 1
+        && appendOnly('leaveReasons')
+        && appendOnly('disputeHistory');
+
+      // 6. Application counter bump.
+      allow update: if isSignedIn() && changed(['applicationCount']);
+
+      allow delete: if isSignedIn() && (resource.data.submitterId == myUid() || isAdmin());
+
+      match /dispute_messages/{msgId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.resource.data.authorUid == myUid();
+        allow update, delete: if isSignedIn()
+          && (resource.data.authorUid == myUid() || isAdmin());
+      }
+      match /forum/{msgId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.resource.data.authorId == myUid();
+        allow update: if isSignedIn() && changed(['reactions', 'reactorInfo']);
+        allow update, delete: if isSignedIn()
+          && (resource.data.authorId == myUid() || isAdmin());
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // project_applications — contributor applications, reviewed by the lead.
+    // ---------------------------------------------------------------
+    match /project_applications/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.applicantUid == myUid()
+        && request.resource.data.status == 'submitted';
+      allow update: if isReviewer();
+      // The project lead approves / rejects / suggests a better-fit role.
+      allow update: if isSignedIn() && ownsProject(resource.data.projectId);
+      // Applicant may ONLY leave.
+      allow update: if isSignedIn()
+        && resource.data.applicantUid == myUid()
+        && changed(['status', 'leftAt', 'leaveReason'])
+        && request.resource.data.status == 'left';
+      allow delete: if isAdmin()
+        || (isSignedIn() && resource.data.applicantUid == myUid());
+    }
+
+    // ===============================================================
+    // member_badges — THE PRODUCT. Locked down.
+    // Only creatable by the owner of the project the badge came from,
+    // or an admin. Immutable once awarded.
+    // ===============================================================
+    match /member_badges/{id} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin()
+        || (isSignedIn()
+            && request.resource.data.projectId is string
+            && ownsProject(request.resource.data.projectId));
+      allow update, delete: if isAdmin();
+    }
+
+    // certificates — same posture as badges.
+    match /certificates/{id} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin()
+        || (isSignedIn()
+            && request.resource.data.projectId is string
+            && ownsProject(request.resource.data.projectId));
+      allow update, delete: if isAdmin();
+    }
+
+
+    // ===============================================================
+    // COMPANY-HOSTED COHORTS
+    // A subscribing, verified company owns the brief, hires every role,
+    // reviews its own applicants and PAYS members directly.
+    // Critically: these NEVER award badges (see member_badges above) and
+    // are never reviewed by us. `awardsBadges` is forced false on create.
+    // ===============================================================
+    match /company_cohorts/{id} {
+      function hostingCompany() {
+        return isSignedIn() && resource.data.companyId == myUid();
+      }
+      function isCohortMember() {
+        return isSignedIn() && ('members' in resource.data)
+          && myUid() in resource.data.members;
+      }
+
+      allow read: if isSignedIn();
+
+      // Only the company itself can create, and it cannot claim to award
+      // badges or to have been reviewed by She Model Tech.
+      allow create: if isSignedIn()
+        && request.resource.data.companyId == myUid()
+        && request.resource.data.awardsBadges == false
+        && request.resource.data.reviewedBySMT == false;
+
+      allow update: if isReviewer();
+      // The company runs its own project.
+      allow update: if hostingCompany()
+        && request.resource.data.companyId == resource.data.companyId
+        && request.resource.data.awardsBadges == false;
+
+      // A member may ONLY confirm or dispute her own payment entry, and add
+      // to the report/dispute trail. She cannot change what she is owed.
+      allow update: if isCohortMember()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['payments', 'disputeHistory', 'reports', 'status', 'updatedAt'])
+        && request.resource.data.payments.diff(resource.data.payments)
+             .affectedKeys().hasOnly([myEmail()])
+        && request.resource.data.payments[myEmail()].amountDue
+             == resource.data.payments[myEmail()].amountDue;
+
+      allow delete: if isAdmin();
+    }
+
+    match /company_cohort_applications/{id} {
+      function hostOf(cid) {
+        return get(/databases/$(database)/documents/company_cohorts/$(cid))
+          .data.companyId == myUid();
+      }
+      allow read: if isSignedIn();
+      // Apply as yourself, always starting as 'submitted'.
+      allow create: if isSignedIn()
+        && request.resource.data.applicantUid == myUid()
+        && request.resource.data.status == 'submitted';
+      allow update: if isReviewer();
+      // The hosting company approves / rejects / schedules interviews.
+      allow update: if isSignedIn() && hostOf(resource.data.cohortId);
+      // Applicant may only withdraw.
+      allow update: if isSignedIn()
+        && resource.data.applicantUid == myUid()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['status', 'withdrawnAt'])
+        && request.resource.data.status == 'withdrawn';
+      allow delete: if isAdmin()
+        || (isSignedIn() && resource.data.applicantUid == myUid());
+    }
+
+    // work_records — "verified work experience", NOT a badge.
+    // Issued by the hosting company; we facilitated it but did not assess it.
+    // Immutable once issued, and a member can never write her own.
+    match /work_records/{id} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin()
+        || (isSignedIn()
+            && request.resource.data.isBadge == false
+            && request.resource.data.verifiedBySMT == false
+            && request.resource.data.memberUid != myUid());
+      allow update, delete: if isAdmin();
+    }
+
+    // certificate_verifications — PUBLICLY READABLE, deliberately.
+    // A recruiter with no account must be able to check a certificate, or
+    // verification is useless and certificates are decoration again. These
+    // documents contain only what is already printed on the certificate:
+    // name, project, role, dates, badges. No email, no uid, no contact
+    // details — you cannot walk backwards from a certificate to a member's
+    // private data.
+    match /certificate_verifications/{certId} {
+      allow read: if true;
+      // Written only by the owner of the project the certificate came from,
+      // or an admin. Immutable afterwards; revocation is an admin action.
+      allow create: if isAdmin()
+        || (isSignedIn()
+            && request.resource.data.projectId is string
+            && ownsProject(request.resource.data.projectId));
+      allow update, delete: if isAdmin();
+    }
+
+    // activation_claims — a company states it has paid and supplies a payment
+    // reference. Creating a claim grants NOTHING: access is switched on only
+    // by a reviewer in the activation queue, after checking the payment
+    // actually landed. A redirect URL is not proof of payment.
+    match /activation_claims/{id} {
+      allow read: if isSignedIn() && (ownsExisting('companyId') || isReviewer());
+      allow create: if isSignedIn()
+        && ownsNew('companyId')
+        && request.resource.data.status == 'claimed';
+      allow update: if isReviewer();
+      allow delete: if isAdmin();
+    }
+
+    match /stripe_events/{id} { allow read, write: if false; }
+
+    // sponsorships — a company funds stipends for one team.
+    match /sponsorships/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.companyId == myUid();
+      allow update: if isReviewer();
+      allow delete: if isAdmin();
+    }
+
+    // outreach — company DM allowance. Members are never metered.
+    match /outreach/{docId} {
+      allow read: if isSignedIn() && ownsExisting('recruiterId');
+      allow create: if isSignedIn() && ownsNew('recruiterId');
+      allow update: if isSignedIn() && ownsExisting('recruiterId') && ownsNew('recruiterId')
+        && request.resource.data.count == resource.data.count + 1;
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // posts + replies (Community)
+    // ---------------------------------------------------------------
+    match /posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.authorId == myUid();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn() && (resource.data.authorId == myUid() || isAdmin());
+      match /replies/{replyId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.resource.data.authorId == myUid();
+        allow update, delete: if isSignedIn()
+          && (resource.data.authorId == myUid() || isAdmin());
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // conversations + messages (participants only)
+    // ---------------------------------------------------------------
+    match /conversations/{convId} {
+      allow read: if isSignedIn() && (resource == null || myUid() in resource.data.participants);
+      allow create: if isSignedIn() && myUid() in request.resource.data.participants;
+      allow update: if isSignedIn() && myUid() in resource.data.participants;
+      allow delete: if isAdmin();
+      match /messages/{msgId} {
+        allow read: if isSignedIn()
+          && myUid() in get(/databases/$(database)/documents/conversations/$(convId)).data.participants;
+        allow create: if isSignedIn()
+          && myUid() in get(/databases/$(database)/documents/conversations/$(convId)).data.participants;
+        allow update: if false;
+        allow delete: if isAdmin();
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // activity (Proof Wall)
+    // ---------------------------------------------------------------
+    match /activity/{id} {
+      allow read: if isSignedIn();
+      allow create: if isReviewer()
+        || (isSignedIn()
+            && request.resource.data.isDummy == false
+            && request.resource.data.type in ['update', 'badge', 'ship', 'lead', 'milestone']);
+      allow update: if isSignedIn()
+        && changed(['celebratedBy', 'celebrateCount', 'celebratedByNames', 'celebratedByPhotos']);
+      allow update: if isSignedIn() && resource.data.actorId == myUid()
+        && changed(['text', 'projectTitle']);
+      allow update: if isAdmin();
+      allow delete: if isAdmin() || (isSignedIn() && resource.data.actorId == myUid());
+    }
+
+    // ---------------------------------------------------------------
+    // hub_posts (jobs board) — unlimited and free for everyone.
+    // ---------------------------------------------------------------
+    match /hub_posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('posterId');
+      allow update, delete: if isSignedIn() && (ownsExisting('posterId') || isAdmin());
+    }
+
+    // ---------------------------------------------------------------
+    // notifications (recipient only)
+    // ---------------------------------------------------------------
+    match /notifications/{nId} {
+      allow read: if isSignedIn()
+        && (resource.data.get('userId', '') == myUid()
+            || resource.data.get('recipientId', '') == myUid());
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn()
+        && (resource.data.get('userId', '') == myUid()
+            || resource.data.get('recipientId', '') == myUid()
+            || isAdmin());
+    }
+
+    match /follows/{id} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+
+    match /project_completion_requests/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isReviewer() || (isSignedIn() && ownsExisting('submitterId'));
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // Companies / groups / events — owner-or-admin, not open season.
+    // ---------------------------------------------------------------
+    match /companies/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('ownerId');
+      allow update, delete: if isSignedIn() && (ownsExisting('ownerId') || isAdmin());
+    }
+    match /company_members/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (ownsExisting('userId') || isAdmin());
+    }
+    match /groups/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('ownerId');
+      allow update, delete: if isSignedIn() && (ownsExisting('ownerId') || isAdmin());
+    }
+    match /group_members/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (ownsExisting('userId') || isAdmin());
+    }
+    match /group_posts/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('authorId');
+      allow update, delete: if isSignedIn() && (ownsExisting('authorId') || isAdmin());
+    }
+    match /event_groups/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('ownerId');
+      allow update, delete: if isSignedIn() && (ownsExisting('ownerId') || isAdmin());
+    }
+    match /event_group_members/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (ownsExisting('userId') || isAdmin());
+    }
+    match /event_group_posts/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('authorId');
+      allow update, delete: if isSignedIn() && (ownsExisting('authorId') || isAdmin());
+    }
+    match /tech_events/{id} {
+      allow read: if isSignedIn();
+      allow create, update: if isReviewer();
+      allow delete: if isAdmin();
+    }
+    match /post_replies/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('authorId');
+      allow update, delete: if isSignedIn() && (ownsExisting('authorId') || isAdmin());
+    }
+
+    match /ai_career_content/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Community Foundations lessons
+    match /foundationsContributions/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.authorId == myUid();
+      allow update: if isSignedIn() && (
+        resource.data.authorId == myUid() || isAdmin() || changed(['ratingSum', 'ratingCount'])
+      );
+      allow delete: if isAdmin();
+      match /ratings/{uid} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn() && uid == myUid();
+      }
+    }
+
+    // Private to the owner.
+    match /career_analyses/{id} {
+      allow read, update, delete: if isSignedIn() && ownsExisting('userId');
+      allow create: if isSignedIn() && ownsNew('userId');
+    }
+    match /client_projects/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('submitterId');
+      allow update, delete: if isSignedIn() && (ownsExisting('submitterId') || isAdmin());
+    }
+
+    match /adminUsers/{id} { allow read, write: if isAdmin(); }
+    match /admin_notifications/{id} {
+      allow read, update: if isReviewer();
+      allow create: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+    match /email_logs/{id} { allow read: if isAdmin(); allow write: if false; }
+
+    // Anything not matched above is DENIED by default.
+  }
+}

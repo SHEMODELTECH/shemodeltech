@@ -1,0 +1,39 @@
+{
+  "framework": "create-react-app",
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "installCommand": "npm install",
+  "devCommand": "npm start",
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/__/(.*)",
+      "dest": "https://she-model-tech.firebaseapp.com/__/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/email/send-weekly-digest",
+      "schedule": "0 9 * * 0"
+    },
+    {
+      "path": "/api/email/send-daily-digest",
+      "schedule": "0 9 * * 1-5"
+    },
+    {
+      "path": "/api/cron/project-reminders",
+      "schedule": "0 8 * * *"
+    }
+  ]
+}

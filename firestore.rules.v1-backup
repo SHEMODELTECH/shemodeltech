@@ -1,0 +1,202 @@
+rules_version = '2';
+
+// =====================================================================
+// She Model Tech — Complete Firestore Security Rules (v1 production)
+// =====================================================================
+// Replaces the UNSAFE `allow read, write: if true` ruleset.
+//
+// Posture:
+//  - Public/anonymous access is REMOVED. You must be signed in.
+//  - No user can grant themselves role:admin.
+//  - The platform is free for everyone: there are no plan tiers and no
+//    outreach or job-post quotas to enforce.
+//  - Users edit only their OWN profile/content; reads open to signed-in users
+//    (needed for talent board, directory, messaging, project teams, feed).
+//
+// Safe starting posture, not maximally strict. Closes dangerous holes without
+// breaking features. Tighten per-collection over time.
+// =====================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function myUid() { return request.auth.uid; }
+    function myUserDoc() {
+      return get(/databases/$(database)/documents/users/$(myUid())).data;
+    }
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(myUid()))
+        && myUserDoc().role == 'admin';
+    }
+    function ownsNew(field) { return request.resource.data[field] == myUid(); }
+    function ownsExisting(field) { return resource.data[field] == myUid(); }
+
+    // users (privileged fields protected)
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && userId == myUid();
+      allow update: if isSignedIn() && userId == myUid()
+        && (!('role' in request.resource.data)
+            || request.resource.data.role == resource.data.role)
+        && (!('membershipPlan' in request.resource.data)
+            || request.resource.data.membershipPlan == resource.data.membershipPlan);
+      // Admins can update anyone, including role.
+      allow update: if isAdmin();
+      // Anyone signed in may update ANOTHER user's doc ONLY to follow/unfollow
+      // (i.e. only the followers / followerCount fields may change).
+      allow update: if isSignedIn() && userId != myUid()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['followers', 'followerCount']);
+      allow delete: if isSignedIn() && userId == myUid();
+    }
+
+    // outreach / jobposts_quota: retired. The platform is free and nothing is
+    // metered, so these collections are no longer written. No rule = deny.
+
+    // projects + forum subcollection
+    match /projects/{projectId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn() && (resource.data.submitterId == myUid() || isAdmin());
+      match /forum/{msgId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn();
+        // Reactions: any signed-in member may update ONLY the reaction fields.
+        allow update: if isSignedIn()
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['reactions', 'reactorInfo']);
+        // Full edit/delete restricted to the author (or admin).
+        allow update, delete: if isSignedIn() && (resource.data.authorId == myUid() || isAdmin());
+      }
+    }
+
+    // posts + replies subcollection
+    match /posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn() && (resource.data.authorId == myUid() || isAdmin());
+      match /replies/{replyId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn();
+        allow update, delete: if isSignedIn() && (resource.data.authorId == myUid() || isAdmin());
+      }
+    }
+
+    // conversations + messages (participants only)
+    match /conversations/{convId} {
+      allow read: if isSignedIn() && (resource == null || myUid() in resource.data.participants);
+      allow create: if isSignedIn() && myUid() in request.resource.data.participants;
+      allow update: if isSignedIn() && myUid() in resource.data.participants;
+      allow delete: if isAdmin();
+      match /messages/{msgId} {
+        allow read: if isSignedIn()
+          && myUid() in get(/databases/$(database)/documents/conversations/$(convId)).data.participants;
+        allow create: if isSignedIn()
+          && myUid() in get(/databases/$(database)/documents/conversations/$(convId)).data.participants;
+        allow update: if false;
+        allow delete: if isAdmin();
+      }
+    }
+
+    // activity (Proof Wall) — readable by all signed-in users.
+    // Members may create their own 'update' posts (actorId must be them).
+    // Admins can create/delete anything (seeding, bulk-delete of dummy items).
+    match /activity/{id} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin()
+        || (isSignedIn()
+            && request.resource.data.isDummy == false
+            && request.resource.data.type in ['update', 'badge', 'ship', 'lead', 'milestone']);
+      // Love reaction: any signed-in user, but ONLY the reaction fields may change.
+      allow update: if isSignedIn()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['celebratedBy', 'celebrateCount', 'celebratedByNames', 'celebratedByPhotos']);
+      // Edit own update post: author may change text/projectTitle only.
+      allow update: if isSignedIn() && resource.data.actorId == myUid()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['text', 'projectTitle']);
+      allow update: if isAdmin();
+      allow delete: if isAdmin()
+        || (isSignedIn() && resource.data.actorId == myUid());
+    }
+
+    // hub_posts (jobs board)
+    match /hub_posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && ownsNew('posterId');
+      allow update, delete: if isSignedIn() && (ownsExisting('posterId') || isAdmin());
+    }
+
+    // notifications (recipient only)
+    match /notifications/{nId} {
+      allow read: if isSignedIn()
+        && (resource.data.userId == myUid() || resource.data.recipientId == myUid());
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn()
+        && (resource.data.userId == myUid() || resource.data.recipientId == myUid() || isAdmin());
+    }
+
+    match /follows/{id} { allow read: if isSignedIn(); allow create, update, delete: if isSignedIn(); }
+
+    match /applications/{id} { allow read, create, update, delete: if isSignedIn(); }
+    match /project_applications/{id} { allow read, create, update, delete: if isSignedIn(); }
+    match /project_completion_requests/{id} { allow read, create, update, delete: if isSignedIn(); }
+
+    match /member_badges/{id} { allow read: if isSignedIn(); allow write: if isSignedIn(); }
+    match /certificates/{id} { allow read: if isSignedIn(); allow write: if isSignedIn(); }
+
+    match /companies/{id} { allow read: if isSignedIn(); allow write: if isSignedIn(); }
+    match /company_members/{id} { allow read: if isSignedIn(); allow write: if isSignedIn(); }
+
+    match /groups/{id} { allow read, write: if isSignedIn(); }
+    match /group_members/{id} { allow read, write: if isSignedIn(); }
+    match /group_posts/{id} { allow read, write: if isSignedIn(); }
+    match /event_groups/{id} { allow read, write: if isSignedIn(); }
+    match /event_group_members/{id} { allow read, write: if isSignedIn(); }
+    match /event_group_posts/{id} { allow read, write: if isSignedIn(); }
+    match /tech_events/{id} { allow read, write: if isSignedIn(); }
+    match /post_replies/{id} { allow read, write: if isSignedIn(); }
+    // directory_access: retired - the members directory is open to everyone.
+
+    match /ai_career_content/{id} { allow read: if isSignedIn(); allow write: if isAdmin(); }
+
+    // Community Foundations lessons: anyone signed in can read & submit; authors edit
+    // their own; admins moderate. Ratings subcollection: one per user.
+    match /foundationsContributions/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.authorId == myUid();
+      // Authors/admins can edit content; any signed-in user may update only the
+      // rating aggregate fields (so learners can rate without owning the doc).
+      allow update: if isSignedIn() && (
+        resource.data.authorId == myUid() || isAdmin() ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ratingSum', 'ratingCount'])
+      );
+      allow delete: if isAdmin();
+      match /ratings/{uid} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn() && uid == myUid();
+      }
+    }
+
+    match /career_analyses/{id} { allow read, write: if isSignedIn(); }
+    match /client_projects/{id} { allow read, write: if isSignedIn(); }
+
+    // payments: read own; client writes denied (server Admin SDK bypasses rules)
+    match /payments/{id} {
+      allow read: if isSignedIn() && (resource.data.userId == myUid() || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /adminUsers/{id} { allow read, write: if isAdmin(); }
+    match /admin_notifications/{id} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isSignedIn();
+    }
+
+    // Anything not matched above is DENIED by default (safe).
+  }
+}

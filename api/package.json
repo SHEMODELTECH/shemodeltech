@@ -1,0 +1,10 @@
+{
+  "name": "api-functions",
+  "version": "1.0.0",
+  "description": "API functions for Tech Career Analyzer",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "@vercel/blob": "^2.1.0",
+    "firebase-admin": "^11.11.1"
+  }
+}
