@@ -1,7 +1,7 @@
 // src/Pages/Messages.jsx - Follow-based messaging system (fully responsive)
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
@@ -275,9 +275,10 @@ const Messages = () => {
               ${mobileView === 'list' ? 'flex' : 'hidden md:flex'}
             `}>
 
-              {/* Sidebar header. Conversations can ONLY be started from a
-                  member's profile (open a profile -> Message), so there is
-                  no member search / new-conversation picker here. */}
+              {/* Sidebar header. Conversations are started from a member's
+                  profile (open a profile -> Message). The empty state links
+                  to the Talent Board and Proof Wall, because telling someone
+                  to "go find a profile" without a route there is a dead end. */}
               <div className="px-4 py-3.5 border-b border-gray-200 flex-shrink-0">
                 <h1 className="text-base sm:text-lg font-bold text-gray-900">Messages</h1>
                 {totalUnread > 0 && (
@@ -295,9 +296,23 @@ const Messages = () => {
                       </svg>
                     </div>
                     <p className="text-sm font-semibold text-gray-700">No conversations yet</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Start a conversation from a member's profile - open their profile and tap Message
+                    <p className="text-xs text-gray-500 mt-1 mb-4">
+                      Open someone&rsquo;s profile and tap Message to start a conversation.
                     </p>
+                    <div className="flex flex-col gap-2 w-full max-w-[200px]">
+                      <Link
+                        to="/talent-board"
+                        className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-all"
+                      >
+                        Browse the Talent Board
+                      </Link>
+                      <Link
+                        to="/proof-wall"
+                        className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs font-semibold px-4 py-2.5 rounded-lg transition-all"
+                      >
+                        See who&rsquo;s building
+                      </Link>
+                    </div>
                   </div>
                 ) : (
                   conversations.map(conv => (

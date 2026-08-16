@@ -493,7 +493,9 @@ const ProofWall = () => {
       load(filter);
     } catch (e) {
       console.error(e);
-      toast.error('Could not share your update.');
+      // Show the real reason. A generic message here cost real debugging time
+      // when the actual cause (image storage not configured) was known.
+      toast.error(e?.message ? `Could not share your update: ${e.message}` : 'Could not share your update.');
       setUploadingImg(false);
     }
     setPosting(false);

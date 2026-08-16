@@ -344,7 +344,7 @@ const Settings = () => {
             </p>
           </div>
           <div>
-            <label className={labelCls}>Courses, Certifications & Skills</label>
+            <label className={labelCls}>Courses, Certifications &amp; Skills</label>
             <input
               type="text"
               value={form.skills}

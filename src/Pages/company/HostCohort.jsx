@@ -181,35 +181,35 @@ const HostCohort = () => {
 
       {roles.map((r, i) => (
         <div key={i} className="bg-gray-50 border border-gray-200 rounded-xl p-3 mb-2">
-          <div className="flex gap-2 mb-2">
+          <div className="flex flex-wrap gap-2 mb-2">
             <input
               value={r.title}
               onChange={(e) => setRole(i, 'title', e.target.value)}
               placeholder="Role, e.g. Frontend Developer"
-              className="flex-1 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
+              className="flex-1 min-w-[10rem] px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
             />
             <input
               type="number"
               min="1"
               value={r.count}
               onChange={(e) => setRole(i, 'count', e.target.value)}
-              className="w-16 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
+              className="w-16 shrink-0 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <input
               type="number"
               min="1"
               value={r.payAmount}
               onChange={(e) => setRole(i, 'payAmount', e.target.value)}
               placeholder="Pay per person (USD)"
-              className="w-48 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
+              className="w-full sm:w-48 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
             />
             <input
               value={r.skills}
               onChange={(e) => setRole(i, 'skills', e.target.value)}
               placeholder="Skills (optional)"
-              className="flex-1 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
+              className="flex-1 min-w-[10rem] px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
             />
             {roles.length > 1 && (
               <button

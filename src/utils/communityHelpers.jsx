@@ -162,7 +162,11 @@ export const uploadImageToStorage = async (file, folder = 'posts') => {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+      // `message` carries the real cause (missing token, blob rejected the
+      // request, file too large). `error` is only a generic label, so
+      // surfacing that alone made every failure look identical.
+      const detail = errorData.message || errorData.error;
+      throw new Error(detail || `Upload failed with status ${response.status}`);
     }
 
     const result = await response.json();

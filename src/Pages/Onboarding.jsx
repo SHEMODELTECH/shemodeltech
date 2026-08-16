@@ -159,7 +159,6 @@ const Onboarding = () => {
         if (!formData.primarySkillTrack) { toast.error('Please select your track'); return; }
         if (!formData.highestEducation) { toast.error('Please select your highest level of education'); return; }
         if (!formData.specialization.trim()) { toast.error('Please enter your course of study or area of concentration'); return; }
-        if (!formData.skills.trim()) { toast.error('Please list your courses, certifications, or skills'); return; }
       }
       if (step === 3 && !formData.country.trim()) { toast.error('Please enter your current country'); return; }
       // interests optional now: shown on profile, editable later
@@ -304,9 +303,9 @@ const Onboarding = () => {
               <p className="text-xs text-gray-500 mt-1">Your field of study. If you're in high school, your area of concentration.</p>
             </div>
             <div>
-              <label className={labelClass}>Courses, Certifications & Skills *</label>
+              <label className={labelClass}>Courses, Certifications &amp; Skills <span className="text-gray-400 font-normal">(optional)</span></label>
               <input type="text" value={formData.skills} onChange={e => setFormData(p => ({ ...p, skills: e.target.value }))} className={inputClass} placeholder="e.g., Python, AWS Certified, CS50, React" />
-              <p className="text-xs text-gray-500 mt-1">Any courses or certifications you've taken, and skills you have. Separate with commas.</p>
+              <p className="text-xs text-gray-500 mt-1">Anything you've studied or can already do. Leave it blank if you're just starting out, that's fine.</p>
             </div>
             <div>
               <label className={labelClass}>LinkedIn URL</label>
