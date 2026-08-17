@@ -235,9 +235,9 @@ const Account = () => {
         <h2 className="text-base font-bold text-gray-900 mb-3">Projects I Own</h2>
         {ownerProjects.length === 0 ? (
           <div className="text-center py-6">
-            <p className="text-gray-400 text-sm mb-3">You haven't posted any projects yet.</p>
-            <button onClick={() => navigate('/projects/submit')} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
-              Post a Project
+            <p className="text-gray-400 text-sm mb-3">You aren&rsquo;t leading a project yet.</p>
+            <button onClick={() => navigate('/projects')} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all">
+              Apply to lead a project
             </button>
           </div>
         ) : (

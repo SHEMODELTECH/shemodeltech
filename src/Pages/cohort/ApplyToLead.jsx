@@ -8,8 +8,8 @@
 // you want on a team. Ranking turns "rejected" into "offered her second choice".
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { collection, query, where, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -37,6 +37,7 @@ const ApplyToLead = () => {
   const [existing, setExisting] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [onWaitlist, setOnWaitlist] = useState(false);
 
   useEffect(() => {
     if (!currentUser) {
@@ -51,7 +52,21 @@ const ApplyToLead = () => {
         if (cancelled) return;
         setCohort(c);
         if (!c) {
-          setLoading(false);
+          // No cohort forming: check whether she's already waiting, so we
+          // don't offer to add her twice.
+          try {
+            const wl = await getDocs(
+              query(
+                collection(db, 'waitlist'),
+                where('userId', '==', currentUser.uid),
+                where('interest', '==', 'lead')
+              )
+            );
+            if (!cancelled) setOnWaitlist(!wl.empty);
+          } catch (_) {
+            /* non-blocking */
+          }
+          if (!cancelled) setLoading(false);
           return;
         }
 
@@ -81,6 +96,35 @@ const ApplyToLead = () => {
     };
   }, [currentUser, navigate]);
 
+  // Telling someone "come back later" without a way to be told when is a dead
+  // end, and she will not remember to check.
+  const joinWaitlist = async () => {
+    setSaving(true);
+    try {
+      const existingEntry = await getDocs(
+        query(
+          collection(db, 'waitlist'),
+          where('userId', '==', currentUser.uid),
+          where('interest', '==', 'lead')
+        )
+      );
+      if (existingEntry.empty) {
+        await addDoc(collection(db, 'waitlist'), {
+          userId: currentUser.uid,
+          email: currentUser.email,
+          name: currentUser.displayName || currentUser.email,
+          interest: 'lead',
+          createdAt: serverTimestamp(),
+        });
+      }
+      setOnWaitlist(true);
+      toast.success("You're on the list. We'll email you when applications open.");
+    } catch (e) {
+      toast.error('Could not add you to the waitlist.');
+    }
+    setSaving(false);
+  };
+
   const toggle = (id) => {
     setRanked((prev) => {
       if (prev.includes(id)) return prev.filter((p) => p !== id);
@@ -97,10 +141,20 @@ const ApplyToLead = () => {
     return i === -1 ? null : i + 1;
   };
 
-  const canSubmit = useMemo(
-    () => ranked.length > 0 && pitch.trim().length >= 40 && !saving,
-    [ranked, pitch, saving]
-  );
+  // Say WHY the button is disabled. A greyed-out button with no explanation
+  // reads as broken, and the reason ("your pitch is too short") is trivially
+  // knowable, so withholding it just wastes the applicant's time.
+  const blockedReason = useMemo(() => {
+    if (ranked.length === 0) return 'Choose at least one project above.';
+    if (pitch.trim().length < 40) {
+      return `Your pitch needs ${40 - pitch.trim().length} more character${
+        40 - pitch.trim().length === 1 ? '' : 's'
+      }.`;
+    }
+    return null;
+  }, [ranked, pitch]);
+
+  const canSubmit = !blockedReason && !saving;
 
   const submit = async () => {
     setSaving(true);
@@ -151,9 +205,23 @@ const ApplyToLead = () => {
           Lead applications open about two weeks into each cycle. Join the waitlist and we&rsquo;ll
           email you the moment the next set of projects goes live.
         </p>
-        <Link to="/cohort" className="text-pink-600 font-semibold hover:underline">
-          See the current cohort
-        </Link>
+        {onWaitlist ? (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-5">
+            <p className="text-green-800 font-semibold text-sm">You&rsquo;re on the waitlist</p>
+            <p className="text-gray-600 text-xs mt-1">
+              We&rsquo;ll email {currentUser?.email} when applications open.
+            </p>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={joinWaitlist}
+            disabled={saving}
+            className="bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 text-white font-semibold text-sm px-6 py-3 rounded-lg transition-all"
+          >
+            {saving ? 'Adding you…' : 'Join the waitlist'}
+          </button>
+        )}
       </div>
     );
   }
@@ -282,10 +350,12 @@ const ApplyToLead = () => {
         type="button"
         onClick={submit}
         disabled={!canSubmit}
+        title={blockedReason || undefined}
         className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold text-sm px-8 py-3 rounded-lg transition-all"
       >
         {saving ? 'Submitting…' : 'Submit application'}
       </button>
+      {blockedReason && <p className="text-gray-500 text-xs mt-2">{blockedReason}</p>}
     </div>
   );
 };

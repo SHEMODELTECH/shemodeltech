@@ -45,7 +45,6 @@ const Support = lazy(() => import('./Pages/Support'));
 const TermsOfService = lazy(() => import('./Pages/TermsOfService'));
 const PrivacyPolicy = lazy(() => import('./Pages/PrivacyPolicy'));
 const ProjectsListing = lazy(() => import('./Pages/projects/ProjectsListing'));
-const ProjectSubmission = lazy(() => import('./Pages/projects/ProjectSubmission'));
 const ProjectDetail = lazy(() => import('./Pages/projects/ProjectDetail'));
 const ProjectSetup = lazy(() => import('./Pages/projects/ProjectSetup'));
 const GenerateProject = lazy(() => import('./Pages/admin/GenerateProject'));
@@ -270,14 +269,14 @@ function App() {
                     </SidebarRoute>
                   }
                 />
-                <Route
-                  path="/projects/submit"
-                  element={
-                    <SidebarRoute>
-                      <ProjectSubmission />
-                    </SidebarRoute>
-                  }
-                />
+                {/* Members no longer create their own projects. Everything
+                    flows through cohorts, so the interview gate always applies:
+                    a lead is chosen after a conversation, because a whole team
+                    depends on whoever takes it on. Self-created projects
+                    bypassed that entirely and produced untagged projects that
+                    sat outside cohort stats, reminders and the grace period.
+                    Companies host their own at /company/host-cohort. */}
+                <Route path="/projects/submit" element={<Navigate to="/projects" replace />} />
                 <Route
                   path="/projects/:projectId/setup"
                   element={

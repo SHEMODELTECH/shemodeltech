@@ -31,8 +31,6 @@ const individualInterestOpts = [
   { id: 'badges', label: 'Badges', desc: 'Earn verified TechTalent credentials' },
 ];
 const companyInterestOpts = [
-  { id: 'jobs', label: 'Post Jobs', desc: 'Post opportunities for women in tech' },
-  { id: 'projects', label: 'Post Projects', desc: 'Find collaborators for projects' },
   { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
   { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },
 ];

@@ -35,6 +35,7 @@ import {
   deleteCohortProject,
 } from '../../utils/cohorts';
 import { batchGenerateProjects } from '../../utils/batchGenerateProjects';
+import { logActivity as logProof } from '../../utils/activityFeed';
 
 const PHASES = [
   { id: COHORT_STATUS.DRAFT, label: 'Draft', hint: 'Projects generated, hidden from members' },
@@ -167,6 +168,26 @@ const CohortManager = () => {
       drafts.forEach((p) => batch.update(doc(db, 'projects', p.id), { isActive: true }));
       await batch.commit();
       await setCohortStatus(cohort.id, COHORT_STATUS.LEAD_RECRUITMENT);
+
+      // Announce each project on the Proof Wall. Generation deliberately
+      // skips this for drafts (nothing should be advertised while hidden),
+      // so reveal is the moment it has to happen, otherwise the "Needs a
+      // lead" feed stays empty even though the projects are live.
+      for (const p of drafts) {
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await logProof({
+            type: 'lead',
+            actorName: 'She Model Tech',
+            projectId: p.id,
+            projectTitle: p.projectTitle || p.title,
+            meta: 'Open to anyone, apply to lead',
+          });
+        } catch (_) {
+          /* non-blocking: a missing feed post must not fail the reveal */
+        }
+      }
+
       toast.success('Cohort revealed. Lead applications are open.');
       await load();
     } catch (e) {

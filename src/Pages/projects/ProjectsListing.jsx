@@ -145,18 +145,15 @@ const ProjectsListing = () => {
                     Generate
                   </Link>
                 )}
-                <Link to="/projects/submit"
-                  className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
-                  Post a Project
-                </Link>
+                
               </div>
             </div>
 
             {/* How leading works */}
             <div className="bg-pink-50 border border-pink-200 rounded-2xl p-4 mb-6">
-              <p className="text-gray-800 text-sm font-semibold mb-1">Two ways to lead a project</p>
+              <p className="text-gray-800 text-sm font-semibold mb-1">How projects work here</p>
               <p className="text-gray-600 text-sm">
-                <span className="font-semibold">Apply to lead</span> an available project below, or <Link to="/projects/submit" className="text-pink-600 font-semibold hover:underline">create your own project</Link> to lead. As a lead you review and shape the project, set the dates and roles, and your team builds it with you.
+                <span className="font-semibold">Apply to lead</span> a project below, or join one as a contributor. Leads are chosen after a short chat, because a whole team depends on whoever takes it on. As a lead you shape the project, set the roles, and your team builds it with you.
               </p>
             </div>
 

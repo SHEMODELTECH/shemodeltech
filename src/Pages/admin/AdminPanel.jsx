@@ -14,23 +14,14 @@ import {
   getDoc,
   updateDoc,
   deleteDoc,
-  addDoc,
   query,
   orderBy,
   limit,
-  serverTimestamp,
   where,
 } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { isReviewerRole, isAdminRole, roleLabel } from '../../utils/permissions';
 import { toast } from 'react-toastify';
-import { generateProject } from '../../utils/projectGenerator';
-import { getRandomTemplate, TEMPLATE_COUNT } from '../../utils/projectTemplates';
-import {
-  seedDummyActivity,
-  deleteDummyActivity,
-  countDummyActivity,
-} from '../../utils/activityFeed';
 import {
   REVIEW_STATUS,
   approveProjectReview,
@@ -39,7 +30,6 @@ import {
   getProjectMemberEmails,
 } from '../../utils/projectReview';
 import { clearAllTestData } from '../../utils/adminDataReset';
-import { batchGenerateProjects } from '../../utils/batchGenerateProjects';
 import { sendPush } from '../../utils/pushNotifications';
 
 const fmtDate = (ts) => {
@@ -81,12 +71,6 @@ const AdminPanel = () => {
   const [loadingData, setLoadingData] = useState(true);
 
   // Generate tab
-  const [generating, setGenerating] = useState(false);
-  const [publishing, setPublishing] = useState(false);
-  const [draft, setDraft] = useState(null);
-  const [useAI, setUseAI] = useState(false); // default: free template library
-  const [seeding, setSeeding] = useState(false);
-  const [dummyCount, setDummyCount] = useState(null);
 
   const [userSearch, setUserSearch] = useState('');
 
@@ -99,35 +83,7 @@ const AdminPanel = () => {
 
   // --- Danger Zone: clear test data ---
   const [clearing, setClearing] = useState(false);
-  const [batchCount, setBatchCount] = useState(24);
-  const [batchRunning, setBatchRunning] = useState(false);
 
-
-
-
-
-
-  const runBatchGenerate = async () => {
-    const n = parseInt(batchCount, 10) || 24;
-    if (
-      !window.confirm(
-        `Publish ${n} starter projects to the board? They will be open for lead recruitment.`
-      )
-    )
-      return;
-    setBatchRunning(true);
-    try {
-      const { created, errors } = await batchGenerateProjects(n);
-      if (created > 0)
-        toast.success(
-          `Published ${created} project${created !== 1 ? 's' : ''}${errors ? ` (${errors} failed)` : ''}.`
-        );
-      else toast.error('No projects were created. Check your permissions and rules.');
-    } catch (e) {
-      toast.error('Batch generation failed: ' + e.message);
-    }
-    setBatchRunning(false);
-  };
   const [clearConfirm, setClearConfirm] = useState('');
   const [alsoResetUsers, setAlsoResetUsers] = useState(true);
   const [clearProgress, setClearProgress] = useState('');
@@ -230,8 +186,7 @@ const AdminPanel = () => {
       alert('Could not update the request.');
     }
   };
-  useEffect(() => {
-  }, [tab, isAdmin]);
+  useEffect(() => {}, [tab, isAdmin]);
 
   // Collect owner + approved member uids for a project (for push notifications).
   const getProjectRecipientUids = async (project) => {
@@ -383,14 +338,6 @@ const AdminPanel = () => {
     if (isAdmin) loadData();
   }, [isAdmin, loadData]);
 
-  const refreshDummyCount = useCallback(async () => {
-    setDummyCount(await countDummyActivity());
-  }, []);
-
-  useEffect(() => {
-    if (tab === 'seed') refreshDummyCount();
-  }, [tab, refreshDummyCount]);
-
   // --- Actions ---
   const toggleAdmin = async (u) => {
     if (!isAdmin) {
@@ -468,111 +415,6 @@ const AdminPanel = () => {
     }
   };
 
-  const handleSeedDummy = async () => {
-    setSeeding(true);
-    try {
-      const n = await seedDummyActivity();
-      toast.success(`Added ${n} sample activity items to the Proof Wall.`);
-      await refreshDummyCount();
-    } catch (e) {
-      console.error(e);
-      toast.error('Could not seed sample activity.');
-    }
-    setSeeding(false);
-  };
-
-  const handleDeleteDummy = async () => {
-    if (!isAdmin) {
-      toast.error('Only admins can do this.');
-      return;
-    }
-    if (
-      !window.confirm('Delete ALL sample (dummy) activity items? Real activity is never touched.')
-    )
-      return;
-    setSeeding(true);
-    try {
-      const n = await deleteDummyActivity();
-      toast.success(`Deleted ${n} sample activity items.`);
-      await refreshDummyCount();
-    } catch (e) {
-      console.error(e);
-      toast.error('Could not delete sample activity.');
-    }
-    setSeeding(false);
-  };
-
-  const handleGenerate = async () => {
-    setGenerating(true);
-    try {
-      if (useAI) {
-        // AI generation (requires a funded Anthropic API key on the server)
-        setDraft(await generateProject());
-        toast.success('Generated with AI - review and publish.');
-      } else {
-        // Free, instant: pick from the built-in template library
-        setDraft(getRandomTemplate());
-        toast.success('Loaded a project - review and publish.');
-      }
-    } catch (e) {
-      console.error(e);
-      toast.error(
-        useAI ? 'AI generation failed (check API credits).' : 'Could not load a template.'
-      );
-    }
-    setGenerating(false);
-  };
-
-  const handlePublish = async () => {
-    if (!draft) return;
-    setPublishing(true);
-    try {
-      const newRef = await addDoc(collection(db, 'projects'), {
-        projectTitle: draft.projectTitle,
-        projectDescription: draft.projectDescription,
-        projectGoals: draft.projectGoals || null,
-        industryTrack: draft.industryTrack,
-        timeline: 'flexible',
-        proposedRoles: draft.proposedRoles,
-        teamRoles: [],
-        maxTeamSize: 0,
-        status: 'lead_recruitment',
-        isActive: true,
-        isGenerated: true,
-        leadConfirmed: false,
-        submitterId: null,
-        submitterEmail: null,
-        submitterName: 'She Model Tech (Auto-generated)',
-        isCompanyPost: false,
-        viewCount: 0,
-        applicationCount: 0,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-      // Proof Wall: log a "needs a lead" event so it shows under that filter.
-      try {
-        const { logActivity: logProof } = await import('../../utils/activityFeed');
-        await logProof({
-          type: 'lead',
-          actorName: 'She Model Tech',
-          projectId: newRef.id,
-          projectTitle: draft.projectTitle,
-          meta: 'Open to anyone, apply to lead',
-        });
-      } catch (e) {
-        console.log('Proof log skipped:', e.message);
-      }
-      toast.success('Published in lead recruitment.');
-      setDraft(null);
-      loadData();
-      setTab('projects');
-    } catch (e) {
-      console.error(e);
-      toast.error('Publish failed.');
-    }
-    setPublishing(false);
-  };
-
   if (checking) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -595,8 +437,6 @@ const AdminPanel = () => {
     ['reviews', 'Reviews'],
     ['projects', 'Projects'],
     ['users', 'Users'],
-    ['generate', 'Generate'],
-    ['seed', 'Seed'],
     ['moderation', 'Moderation'],
     ['deletions', 'Deletion Requests'],
     ['danger', 'Danger Zone'],
@@ -1000,170 +840,7 @@ const AdminPanel = () => {
 
       {/* GENERATE */}
 
-      {!loadingData && tab === 'generate' && (
-        <div>
-          {/* Batch generator, top up the board with varied starter projects in one click */}
-          <div className="bg-pink-50 border border-pink-200 rounded-xl p-5 mb-6">
-            <h2 className="text-base font-bold text-gray-900 mb-1">
-              Batch generate starter projects
-            </h2>
-            <p className="text-gray-600 text-sm mb-4">
-              Instantly populate the board with a varied set of beginner-friendly projects across
-              different tracks, so new members always have something to join. Each opens for lead
-              recruitment.
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <label className="text-sm text-gray-700 font-medium">How many:</label>
-              <select
-                value={batchCount}
-                onChange={(e) => setBatchCount(parseInt(e.target.value, 10))}
-                className="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:border-pink-500 focus:outline-none"
-              >
-                <option value={12}>12 projects</option>
-                <option value={24}>24 projects</option>
-                <option value={30}>30 projects</option>
-              </select>
-              <button
-                onClick={runBatchGenerate}
-                disabled={batchRunning}
-                className="bg-pink-600 hover:bg-pink-700 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2 rounded-lg transition-all"
-              >
-                {batchRunning ? 'Publishing…' : `Generate ${batchCount} projects`}
-              </button>
-            </div>
-          </div>
-
-          <p className="text-gray-500 text-sm mb-4">
-            Or publish a single software or AI project (no physical prototypes) into lead
-            recruitment - anyone can apply to lead, then the confirmed lead refines it and opens the
-            team.
-          </p>
-
-          {/* Source toggle */}
-          <div className="flex items-center gap-3 mb-4 p-3 bg-gray-50 border border-gray-200 rounded-xl">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={useAI}
-                onChange={(e) => {
-                  setUseAI(e.target.checked);
-                  setDraft(null);
-                }}
-                className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500"
-              />
-              <span className="text-sm text-gray-700 font-medium">Use AI generation</span>
-            </label>
-            <span className="text-xs text-gray-400">
-              {useAI
-                ? 'Writes a fresh project via Claude (needs Anthropic API credits).'
-                : `Free - picks from ${TEMPLATE_COUNT} built-in project templates. No cost.`}
-            </span>
-          </div>
-
-          <button
-            onClick={handleGenerate}
-            disabled={generating}
-            className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50"
-          >
-            {generating
-              ? 'Loading…'
-              : draft
-                ? useAI
-                  ? 'Regenerate'
-                  : 'Load another'
-                : useAI
-                  ? 'Generate a Project'
-                  : 'Load a Project'}
-          </button>
-          {draft && (
-            <div className="mt-5 bg-white border border-gray-200 rounded-xl p-5 space-y-3">
-              <div>
-                <p className="text-gray-400 text-xs uppercase font-semibold">Title</p>
-                <p className="text-gray-900 font-bold">{draft.projectTitle}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs uppercase font-semibold">Industry</p>
-                <p className="text-gray-700 text-sm capitalize">{draft.industryTrack}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs uppercase font-semibold">Description</p>
-                <p className="text-gray-700 text-sm">{draft.projectDescription}</p>
-              </div>
-              {draft.projectGoals && (
-                <div>
-                  <p className="text-gray-400 text-xs uppercase font-semibold">Goals</p>
-                  <p className="text-gray-700 text-sm">{draft.projectGoals}</p>
-                </div>
-              )}
-              <div>
-                <p className="text-gray-400 text-xs uppercase font-semibold mb-1">Proposed Roles</p>
-                <div className="space-y-1">
-                  {draft.proposedRoles.map((r, i) => (
-                    <div key={i} className="text-xs text-gray-600 bg-gray-50 rounded px-2 py-1">
-                      {r.role} · <span className="capitalize">{r.experienceLevel}</span> · {r.count}{' '}
-                      {r.count === 1 ? 'person' : 'people'}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex gap-3 pt-1">
-                <button
-                  onClick={handlePublish}
-                  disabled={publishing}
-                  className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2 rounded-lg disabled:opacity-50"
-                >
-                  {publishing ? 'Publishing…' : 'Publish in Lead Recruitment'}
-                </button>
-                <button
-                  onClick={() => setDraft(null)}
-                  disabled={publishing}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-sm px-4 py-2 rounded-lg"
-                >
-                  Discard
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
       {/* SEED (dummy Proof Wall content) */}
-      {!loadingData && tab === 'seed' && (
-        <div>
-          <p className="text-gray-500 text-sm mb-2">
-            Seed the Proof Wall with sample activity so it doesn't look empty at launch. Every
-            sample item is flagged as dummy and can be safely bulk-deleted later, without touching
-            any real activity.
-          </p>
-          <p className="text-gray-400 text-xs mb-5">
-            {dummyCount === null
-              ? 'Checking how many sample items exist…'
-              : `${dummyCount} sample item${dummyCount === 1 ? '' : 's'} currently on the wall.`}
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={handleSeedDummy}
-              disabled={seeding}
-              className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-all disabled:opacity-50"
-            >
-              {seeding ? 'Working…' : 'Add sample activity'}
-            </button>
-            {isAdmin && (
-              <button
-                onClick={handleDeleteDummy}
-                disabled={seeding || dummyCount === 0}
-                className="bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-sm px-5 py-2.5 rounded-lg transition-all disabled:opacity-40"
-              >
-                {seeding ? 'Working…' : 'Delete all sample activity'}
-              </button>
-            )}
-          </div>
-          <p className="text-gray-400 text-xs mt-4 leading-relaxed">
-            Tip: add sample activity now for launch, then once real members start earning badges and
-            shipping projects, come back and delete it all in one click.
-          </p>
-        </div>
-      )}
 
       {/* MODERATION */}
       {!loadingData && tab === 'moderation' && (

@@ -335,10 +335,10 @@ const ProjectOwnerDashboard = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-gray-900">My <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">Projects</span></h1>
-                <p className="text-gray-400 text-sm mt-1">{myProjects.length} project{myProjects.length !== 1 ? 's' : ''} posted</p>
+                <p className="text-gray-400 text-sm mt-1">{myProjects.length} project{myProjects.length !== 1 ? 's' : ''} you lead</p>
               </div>
-              <Link to="/projects/submit" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
-                Post New Project
+              <Link to="/projects" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
+                Apply to lead a project
               </Link>
             </div>
 
@@ -360,7 +360,7 @@ const ProjectOwnerDashboard = () => {
               <div className="text-center py-20">
                 <p className="text-gray-400 text-lg font-semibold mb-2">No projects yet</p>
                 <p className="text-gray-500 text-sm mb-6">Post your first project to get started</p>
-                <Link to="/projects/submit" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-gray-900 font-bold rounded-xl text-sm">Post a Project</Link>
+                <Link to="/projects" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-xl text-sm">Browse projects</Link>
               </div>
             ) : (
               <div className="space-y-6">
