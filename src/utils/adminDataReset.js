@@ -12,6 +12,11 @@ import {
 } from 'firebase/firestore';
 
 // Top-level collections that hold test CONTENT (safe to wipe).
+// Retired collections are deliberately NOT listed: directory_access,
+// jobposts_quota, outreach, hub_posts, applications and
+// foundationsContributions no longer have security rules, so attempting to
+// clear them throws "Missing or insufficient permissions" and buries any real
+// error in the console. They are inert (deny by default) and hold nothing.
 const CONTENT_COLLECTIONS = [
   'projects',               // (also has forum subcollection - handled below)
   'project_applications',
@@ -20,11 +25,10 @@ const CONTENT_COLLECTIONS = [
   'posts',                  // (also has replies subcollection - handled below)
   'post_replies',
   'conversations',          // (also has messages subcollection - handled below)
-  'notifications',
+  'notifications',          // client can only delete its own; expect partial
   'admin_notifications',
   'member_badges',
   'certificates',
-  'payments',
   'follows',
   'groups',
   'group_members',
@@ -33,14 +37,11 @@ const CONTENT_COLLECTIONS = [
   'event_group_members',
   'event_group_posts',
   'tech_events',
-  'directory_access',
   'career_analyses',
   'client_projects',
   'ai_career_content',
   'companies',
   'company_members',
-  'outreach',
-  'jobposts_quota',
 ];
 
 // Subcollections to clear under each parent doc before deleting the parent.
