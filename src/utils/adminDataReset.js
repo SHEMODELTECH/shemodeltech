@@ -16,12 +16,10 @@ const CONTENT_COLLECTIONS = [
   'projects',               // (also has forum subcollection - handled below)
   'project_applications',
   'project_completion_requests',
-  'applications',
   'activity',
   'posts',                  // (also has replies subcollection - handled below)
   'post_replies',
   'conversations',          // (also has messages subcollection - handled below)
-  'hub_posts',
   'notifications',
   'admin_notifications',
   'member_badges',

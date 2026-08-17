@@ -188,7 +188,7 @@ export const scheduleInterview = async ({ appId, scheduledAt, meetLink, reviewer
     body: `We'd love to talk about you leading a project. ${
       scheduledAt ? `Scheduled for ${new Date(scheduledAt).toLocaleString()}.` : ''
     }`,
-    link: meetLink || '/cohort',
+    link: meetLink || '/cohort/apply-to-lead',
   });
 };
 
@@ -288,7 +288,7 @@ export const rejectAsLeadInviteAsContributor = async ({
       `We had more strong lead applicants than projects. We'd love you on ${projectTitle}${
         suggestedRole ? ` as ${suggestedRole}` : ''
       }.`,
-    link: suggestedProjectId ? `/projects/${suggestedProjectId}` : '/cohort',
+    link: suggestedProjectId ? `/projects/${suggestedProjectId}` : '/projects',
   });
 };
 
@@ -306,7 +306,7 @@ export const rejectApplication = async ({ appId, applicant, reason, reviewer }) 
     body:
       reason ||
       'You weren\u2019t selected to lead this cohort, but you can apply again next cycle.',
-    link: '/cohort',
+    link: '/projects',
   });
 };
 

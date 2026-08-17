@@ -7,7 +7,7 @@
 // nothing, and the person confident enough to apply to lead is exactly who
 // you want on a team. Ranking turns "rejected" into "offered her second choice".
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { collection, query, where, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -38,6 +38,8 @@ const ApplyToLead = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [onWaitlist, setOnWaitlist] = useState(false);
+  const pitchRef = useRef(null);
+  const projectsRef = useRef(null);
 
   useEffect(() => {
     if (!currentUser) {
@@ -154,9 +156,17 @@ const ApplyToLead = () => {
     return null;
   }, [ranked, pitch]);
 
-  const canSubmit = !blockedReason && !saving;
-
   const submit = async () => {
+    if (blockedReason) {
+      toast.error(blockedReason);
+      if (ranked.length === 0) {
+        projectsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        pitchRef.current?.focus();
+        pitchRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
     setSaving(true);
     try {
       await applyToLead({
@@ -173,7 +183,10 @@ const ApplyToLead = () => {
         availabilityHours: hours ? Number(hours) : null,
       });
       toast.success('Application submitted. We\u2019ll be in touch to arrange a short chat.');
-      navigate('/cohort');
+      // Back to this page: it renders the "your application is in" state
+      // once an application exists.
+      navigate('/cohort/apply-to-lead', { replace: true });
+      setExisting({ status: 'submitted', rankedProjectIds: ranked, pitch });
     } catch (e) {
       toast.error(e.message || 'Could not submit your application.');
     }
@@ -264,7 +277,7 @@ const ApplyToLead = () => {
         we&rsquo;ll look at your second and third rather than turning you away.
       </p>
 
-      <div className="space-y-2 mb-8">
+      <div ref={projectsRef} className="space-y-2 mb-8">
         {projects.length === 0 && (
           <p className="text-gray-500 text-sm">No projects are open for leads right now.</p>
         )}
@@ -311,6 +324,7 @@ const ApplyToLead = () => {
       </p>
       <textarea
         value={pitch}
+        ref={pitchRef}
         onChange={(e) => setPitch(e.target.value)}
         rows={5}
         className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:border-pink-500 text-sm outline-none resize-y mb-1"
@@ -343,19 +357,24 @@ const ApplyToLead = () => {
         value={hours}
         onChange={(e) => setHours(e.target.value)}
         placeholder="e.g. 6"
-        className="w-32 px-3.5 py-2.5 rounded-lg border border-gray-300 focus:border-pink-500 text-sm outline-none mb-8"
+        className="block w-32 px-3.5 py-2.5 rounded-lg border border-gray-300 focus:border-pink-500 text-sm outline-none mb-8"
       />
 
-      <button
-        type="button"
-        onClick={submit}
-        disabled={!canSubmit}
-        title={blockedReason || undefined}
-        className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold text-sm px-8 py-3 rounded-lg transition-all"
-      >
-        {saving ? 'Submitting…' : 'Submit application'}
-      </button>
-      {blockedReason && <p className="text-gray-500 text-xs mt-2">{blockedReason}</p>}
+      {/* The button is NEVER disabled. A greyed-out button that does nothing
+          reads as a broken page: you cannot tell "you missed a field" from
+          "this site is broken". Clicking now validates, says exactly what is
+          missing, and scrolls to the offending field. */}
+      <div className="border-t border-gray-100 pt-6">
+        <button
+          type="button"
+          onClick={submit}
+          disabled={saving}
+          className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 disabled:bg-gray-300 text-white font-semibold text-sm px-8 py-3.5 rounded-lg transition-all"
+        >
+          {saving ? 'Submitting…' : 'Submit application'}
+        </button>
+        {blockedReason && <p className="text-gray-500 text-xs mt-2">{blockedReason}</p>}
+      </div>
     </div>
   );
 };

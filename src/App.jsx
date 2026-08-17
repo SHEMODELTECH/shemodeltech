@@ -56,9 +56,7 @@ const MyProjects = lazy(() => import('./Pages/projects/MyProjects'));
 const ProjectWorkspace = lazy(() => import('./Pages/projects/ProjectWorkspace'));
 const MyWorkspaces = lazy(() => import('./Pages/projects/MyWorkspaces'));
 const TalentBoard = lazy(() => import('./Pages/TalentBoard'));
-const Jobs = lazy(() => import('./Pages/Jobs'));
 const ProofWall = lazy(() => import('./Pages/ProofWall'));
-const PostJobs = lazy(() => import('./Pages/PostJobs'));
 const ProjectVault = lazy(() => import('./Pages/ProjectVault'));
 const Settings = lazy(() => import('./Pages/Settings'));
 const FollowList = lazy(() => import('./Pages/FollowList'));
@@ -376,6 +374,10 @@ function App() {
                 />
                 {/* Legacy paid-membership URL - everything is free now. */}
                 <Route path="/premium-success" element={<Navigate to="/dashboard" replace />} />
+                {/* /cohort was linked from several places but never existed, so
+                    a successful application landed on a 404. Redirect rather
+                    than remove: notifications sent before this fix still use it. */}
+                <Route path="/cohort" element={<Navigate to="/projects" replace />} />
                 {/* Cohort: apply to lead (ranked choices, reviewed by admin/editor) */}
                 <Route
                   path="/cohort/apply-to-lead"
@@ -534,30 +536,10 @@ function App() {
                 {/* Legacy redirects */}
                 <Route path="/user/dashboard" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/payment" element={<Navigate to="/dashboard" replace />} />
-                <Route
-                  path="/jobs"
-                  element={
-                    <SidebarRoute>
-                      <Jobs />
-                    </SidebarRoute>
-                  }
-                />
-                <Route
-                  path="/jobs/post"
-                  element={
-                    <SidebarRoute>
-                      <PostJobs />
-                    </SidebarRoute>
-                  }
-                />
-                <Route
-                  path="/jobs/:jobId/edit"
-                  element={
-                    <SidebarRoute>
-                      <PostJobs />
-                    </SidebarRoute>
-                  }
-                />
+                {/* Job board removed: a free board on a platform with no
+                    traffic teaches companies we are a worse LinkedIn. */}
+                <Route path="/jobs" element={<Navigate to="/projects" replace />} />
+                <Route path="/jobs/post" element={<Navigate to="/partner" replace />} />
                 <Route path="/housing" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/finance" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/banking" element={<Navigate to="/dashboard" replace />} />

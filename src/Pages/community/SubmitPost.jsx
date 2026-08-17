@@ -75,7 +75,7 @@ const SubmitPost = () => {
   useEffect(() => {
     if (!currentUser) {
       showWarningMessage('Please login to create posts');
-      navigate('/auth/login');
+      navigate('/login');
     }
   }, [currentUser, navigate]);
 

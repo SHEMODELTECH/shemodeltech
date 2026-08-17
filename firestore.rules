@@ -453,14 +453,10 @@ service cloud.firestore {
  allow delete: if isAdmin() || (isSignedIn() && resource.data.actorId == myUid());
  }
 
- // ---------------------------------------------------------------
- // hub_posts (jobs board), unlimited and free for everyone.
- // ---------------------------------------------------------------
- match /hub_posts/{postId} {
- allow read: if isSignedIn();
- allow create: if isSignedIn() && ownsNew('posterId');
- allow update, delete: if isSignedIn() && (ownsExisting('posterId') || isAdmin());
- }
+    // hub_posts / applications: the job board was removed. A free board on a
+    // platform with no traffic teaches companies we are a worse LinkedIn and
+    // lets them extract contacts without engaging. Companies now sponsor a
+    // cohort or host a paid project. No rule = deny.
 
  // ---------------------------------------------------------------
  // notifications (recipient only)

@@ -239,7 +239,7 @@ const CompanyCohortDetail = () => {
         <div className="bg-pink-50 border border-pink-200 rounded-xl p-5">
           <p className="text-gray-900 text-sm font-bold mb-1">Earn a badge first</p>
           <p className="text-gray-600 text-xs mb-3 leading-relaxed">{eligibility.reason}</p>
-          <Link to="/cohort" className="text-pink-700 text-sm font-semibold hover:underline">
+          <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">
             See the current cohort
           </Link>
         </div>

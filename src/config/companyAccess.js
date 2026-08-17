@@ -67,7 +67,6 @@ export const companyCapabilities = (company) => {
   return {
     tier: partner ? COMPANY_TIER.PARTNER : COMPANY_TIER.FREE,
     // Always free
-    canPostRoles: true,
     canPostToWall: true,
     canReactToPosts: true,
     canReplyToMembers: true, // never block a reply to an inbound message
@@ -93,7 +92,6 @@ export const PARTNER_FEATURES = [
 ];
 
 export const FREE_FEATURES = [
-  'Post roles and opportunities',
   'Post to the community Activity Wall',
   `Message up to ${FREE_COMPANY_DM_LIMIT} members`,
   'Reply to any member who contacts you',
