@@ -164,6 +164,35 @@ const ProjectDetail = () => {
   // up to 3 projects. (The old behaviour auto-confirmed whoever clicked
   // first, which in a cohort means one flaky lead can sink a whole team's
   // eight weeks, with no way to choose between two good candidates.)
+  // A woman who has already applied should not be invited to apply again -
+  // she cannot tell whether her first application went through, and applying
+  // twice is blocked at the data layer anyway, so the button would only ever
+  // produce an error.
+  const [myLeadApp, setMyLeadApp] = useState(null);
+
+  useEffect(() => {
+    if (!currentUser || !project?.cohortId) return;
+    let dead = false;
+    getDocs(
+      query(
+        collection(db, 'lead_applications'),
+        where('cohortId', '==', project.cohortId),
+        where('applicantUid', '==', currentUser.uid)
+      )
+    )
+      .then((snap) => {
+        if (dead || snap.empty) return;
+        const live = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .find((a) => a.status !== 'withdrawn');
+        setMyLeadApp(live || null);
+      })
+      .catch(() => {});
+    return () => {
+      dead = true;
+    };
+  }, [currentUser, project?.cohortId]);
+
   const handleApplyToLead = async () => {
     if (!currentUser) {
       navigate('/login');
@@ -576,6 +605,27 @@ const ProjectDetail = () => {
                       className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2 rounded-lg transition-all"
                     >
                       Complete Profile
+                    </button>
+                  </div>
+                ) : myLeadApp ? (
+                  <div className="bg-white border border-pink-200 rounded-xl p-4">
+                    <p className="text-gray-900 text-sm font-semibold mb-1">
+                      {myLeadApp.rankedProjectIds?.includes(projectId)
+                        ? 'You already applied to lead this project'
+                        : 'You already have a lead application in for this cohort'}
+                    </p>
+                    <p className="text-gray-600 text-xs mb-3">
+                      {myLeadApp.status === 'interview_scheduled'
+                        ? 'Your interview is scheduled. Check your email for the link.'
+                        : myLeadApp.status === 'assigned'
+                          ? 'You have been assigned a project to lead.'
+                          : 'We review applications and arrange a short chat before assigning leads. You will hear from us by email.'}
+                    </p>
+                    <button
+                      onClick={() => navigate('/cohort/apply-to-lead')}
+                      className="text-pink-600 text-sm font-semibold hover:underline"
+                    >
+                      View your application
                     </button>
                   </div>
                 ) : (
