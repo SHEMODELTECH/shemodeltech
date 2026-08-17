@@ -685,6 +685,31 @@ module.exports = async function handler(req, res) {
         break;
       }
 
+      // Generic: mirrors an in-app notification to email. Used by cohort
+      // decisions (assigned / interview / offered a role / not selected) so a
+      // member is not left refreshing a page waiting for news.
+      case 'send-generic': {
+        const { to, subject, heading, body, ctaLabel, ctaUrl } = req.body;
+        if (!to || !subject || !body) {
+          return res.status(400).json({ success: false, error: 'to, subject and body are required' });
+        }
+        emailConfig = {
+          to,
+          subject,
+          text: `${heading || subject}\n\n${body}\n\n${ctaUrl ? `${ctaLabel || 'Open'}: ${ctaUrl}` : ''}`,
+          html: `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#353331">
+  <h1 style="font-size:20px;margin:0 0 16px">${heading || subject}</h1>
+  <p style="font-size:15px;line-height:1.6;color:#444">${body}</p>
+  ${ctaUrl ? `<p style="margin:24px 0"><a href="${ctaUrl}" style="background:#F544CB;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${ctaLabel || 'Open She Model Tech'}</a></p>` : ''}
+  <hr style="border:none;border-top:1px solid #eee;margin:28px 0"/>
+  <p style="color:#9ca3af;font-size:12px">${BRAND_NAME} &middot; <a href="${SITE}" style="color:#9ca3af">shemodeltech.com</a><br/>
+  Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:#9ca3af">${SUPPORT_EMAIL}</a></p>
+</div>`,
+        };
+        break;
+      }
+
       case 'send-mention-email': {
         const { notificationData: mentionNotif, mentionedUser, mentioner, postData: mentionPost } = req.body;
         if (!mentionedUser?.email || !mentioner) {

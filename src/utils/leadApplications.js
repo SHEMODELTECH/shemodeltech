@@ -182,14 +182,18 @@ export const scheduleInterview = async ({ appId, scheduledAt, meetLink, reviewer
 
   const snap = await getDoc(doc(db, 'lead_applications', appId));
   const app = snap.data();
-  await notify(app.applicantUid, {
-    type: 'lead_interview_scheduled',
-    title: 'Your lead interview is scheduled',
-    body: `We'd love to talk about you leading a project. ${
-      scheduledAt ? `Scheduled for ${new Date(scheduledAt).toLocaleString()}.` : ''
-    }`,
-    link: meetLink || '/cohort/apply-to-lead',
-  });
+  await notify(
+    app.applicantUid,
+    {
+      type: 'lead_interview_scheduled',
+      title: 'Your lead interview is scheduled',
+      body: `We'd love to talk about you leading a project. ${
+        scheduledAt ? `Scheduled for ${new Date(scheduledAt).toLocaleString()}.` : ''
+      }`,
+      link: meetLink || '/cohort/apply-to-lead',
+    },
+    app.applicantEmail
+  );
 };
 
 /** Save private notes during or after the interview. Reviewer-only. */
@@ -237,12 +241,16 @@ export const assignAsLead = async ({ appId, projectId, applicant, reviewer }) =>
     decidedAt: serverTimestamp(),
   });
 
-  await notify(applicant.applicantUid, {
-    type: 'lead_assigned',
-    title: `You're leading "${project.projectTitle || project.title}"`,
-    body: 'Open your project to refine the brief and open roles for your team.',
-    link: `/projects/${projectId}/setup`,
-  });
+  await notify(
+    applicant.applicantUid,
+    {
+      type: 'lead_assigned',
+      title: `You're leading "${project.projectTitle || project.title}"`,
+      body: 'Open your project to refine the brief and open roles for your team.',
+      link: `/projects/${projectId}/setup`,
+    },
+    applicant.applicantEmail
+  );
 };
 
 /**
@@ -280,16 +288,20 @@ export const rejectAsLeadInviteAsContributor = async ({
     }
   }
 
-  await notify(applicant.applicantUid, {
-    type: 'lead_role_offered',
-    title: 'We\u2019d like you on a team this cohort',
-    body:
-      message ||
-      `We had more strong lead applicants than projects. We'd love you on ${projectTitle}${
-        suggestedRole ? ` as ${suggestedRole}` : ''
-      }.`,
-    link: suggestedProjectId ? `/projects/${suggestedProjectId}` : '/projects',
-  });
+  await notify(
+    applicant.applicantUid,
+    {
+      type: 'lead_role_offered',
+      title: 'We\u2019d like you on a team this cohort',
+      body:
+        message ||
+        `We had more strong lead applicants than projects. We'd love you on ${projectTitle}${
+          suggestedRole ? ` as ${suggestedRole}` : ''
+        }.`,
+      link: suggestedProjectId ? `/projects/${suggestedProjectId}` : '/projects',
+    },
+    applicant.applicantEmail
+  );
 };
 
 /** Straight rejection, with a reason. Used sparingly. */
@@ -300,14 +312,18 @@ export const rejectApplication = async ({ appId, applicant, reason, reviewer }) 
     decidedBy: reviewer?.email || null,
     decidedAt: serverTimestamp(),
   });
-  await notify(applicant.applicantUid, {
-    type: 'lead_not_selected',
-    title: 'Update on your lead application',
-    body:
-      reason ||
-      'You weren\u2019t selected to lead this cohort, but you can apply again next cycle.',
-    link: '/projects',
-  });
+  await notify(
+    applicant.applicantUid,
+    {
+      type: 'lead_not_selected',
+      title: 'Update on your lead application',
+      body:
+        reason ||
+        'You weren\u2019t selected to lead this cohort, but you can apply again next cycle.',
+      link: '/projects',
+    },
+    applicant.applicantEmail
+  );
 };
 
 /**
@@ -326,8 +342,21 @@ export const getFallbackCandidates = (applications, unassignedProjectId) =>
     .sort((a, b) => a.rank - b.rank);
 
 // ---------------------------------------------------------------------
-const notify = async (uid, payload) => {
+/**
+ * Notify a member in the app AND by email.
+ *
+ * In-app alone is not enough here: a woman waiting on a lead decision is not
+ * sitting on the site refreshing, so a bell she never sees is the same as no
+ * decision at all. Email is the channel that actually reaches her.
+ *
+ * @param {string} uid
+ * @param {object} payload  { type, title, body, link }
+ * @param {string} [email]  recipient address; skips email if omitted
+ */
+const notify = async (uid, payload, email) => {
   if (!uid) return;
+
+  // In-app first: it is the record, and must not fail because email fails.
   try {
     await addDoc(collection(db, 'notifications'), {
       userId: uid,
@@ -339,5 +368,26 @@ const notify = async (uid, payload) => {
     });
   } catch (e) {
     console.error('notify failed:', e); // never block the decision on a notification
+  }
+
+  if (!email) return;
+  try {
+    const site = window.location.origin;
+    await fetch('/api/notifications/send-generic', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: email,
+        subject: payload.title || 'Update from She Model Tech',
+        heading: payload.title,
+        body: payload.body || '',
+        ctaLabel: 'Open She Model Tech',
+        ctaUrl: payload.link
+          ? `${site}${payload.link.startsWith('http') ? '' : ''}${payload.link}`
+          : site,
+      }),
+    });
+  } catch (e) {
+    console.error('notify email failed:', e); // non-blocking
   }
 };

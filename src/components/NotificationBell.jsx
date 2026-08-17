@@ -3,15 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { 
-  collection, 
-  query, 
-  where, 
-  orderBy, 
-  onSnapshot, 
-  updateDoc, 
-  doc 
-} from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 const NotificationBell = () => {
@@ -32,21 +24,26 @@ const NotificationBell = () => {
       where('userId', '==', currentUser.uid)
     );
 
-    const unsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
-      const notificationsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : new Date()
-      }))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    const unsubscribe = onSnapshot(
+      notificationsQuery,
+      (snapshot) => {
+        const notificationsData = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : new Date(),
+          }))
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-      setNotifications(notificationsData);
-      setUnreadCount(notificationsData.filter(n => !n.isRead).length);
-      setLoading(false);
-    }, (error) => {
-      console.error('Error fetching notifications:', error);
-      setLoading(false);
-    });
+        setNotifications(notificationsData);
+        setUnreadCount(notificationsData.filter((n) => !n.isRead).length);
+        setLoading(false);
+      },
+      (error) => {
+        console.error('Error fetching notifications:', error);
+        setLoading(false);
+      }
+    );
 
     return unsubscribe;
   }, [currentUser]);
@@ -55,7 +52,7 @@ const NotificationBell = () => {
   const markAsRead = async (notificationId) => {
     try {
       await updateDoc(doc(db, 'notifications', notificationId), {
-        isRead: true
+        isRead: true,
       });
     } catch (error) {
       console.error('Error marking notification as read:', error);
@@ -65,11 +62,11 @@ const NotificationBell = () => {
   // Mark all as read
   const markAllAsRead = async () => {
     try {
-      const unreadNotifications = notifications.filter(n => !n.isRead);
+      const unreadNotifications = notifications.filter((n) => !n.isRead);
       await Promise.all(
-        unreadNotifications.map(notification =>
+        unreadNotifications.map((notification) =>
           updateDoc(doc(db, 'notifications', notification.id), {
-            isRead: true
+            isRead: true,
           })
         )
       );
@@ -98,7 +95,7 @@ const NotificationBell = () => {
       setShowDropdown(false);
 
       // Small delay for visual feedback
-      await new Promise(resolve => setTimeout(resolve, 150));
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
       // Navigate based on notification type
       switch (notification.type) {
@@ -135,9 +132,11 @@ const NotificationBell = () => {
         case 'project_needs_changes':
         case 'project_review_rejected':
           if (notification.projectId) {
-            navigate(notification.forOwner
-              ? `/projects/${notification.projectId}/complete`
-              : `/projects/${notification.projectId}/workspace`);
+            navigate(
+              notification.forOwner
+                ? `/projects/${notification.projectId}/complete`
+                : `/projects/${notification.projectId}/workspace`
+            );
           } else {
             navigate('/notifications');
           }
@@ -180,48 +179,84 @@ const NotificationBell = () => {
   const timeAgo = (date) => {
     const now = new Date();
     const diffInMinutes = Math.floor((now - date) / (1000 * 60));
-    
+
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    
+
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours < 24) return `${diffInHours}h ago`;
-    
+
     const diffInDays = Math.floor(diffInHours / 24);
     if (diffInDays < 7) return `${diffInDays}d ago`;
-    
+
     return date.toLocaleDateString();
   };
 
   // Get notification icon based on type
   const getNotificationIcon = (type) => {
     switch (type) {
-      case 'reply_mention': return '💬';
-      case 'repost_mention': return '🔄';
-      case 'like': return '❤️';
-      case 'follow': return '👥';
-      case 'group_post': return '📝';
-      case 'group_reply': return '💬';
-      case 'group_member_joined': return '👥';
-      case 'badge_awarded': return '🏆';
-      case 'group_completed': return '🎉';
-      default: return '🔔';
+      case 'reply_mention':
+        return '💬';
+      case 'repost_mention':
+        return '🔄';
+      case 'like':
+        return '❤️';
+      case 'follow':
+        return '👥';
+      case 'group_post':
+        return '📝';
+      case 'group_reply':
+        return '💬';
+      case 'group_member_joined':
+        return '👥';
+      case 'badge_awarded':
+        return '🏆';
+      case 'group_completed':
+        return '🎉';
+      case 'lead_assigned':
+        return '🚀';
+      case 'lead_interview_scheduled':
+        return '📅';
+      case 'lead_role_offered':
+        return '🤝';
+      case 'lead_not_selected':
+        return '📋';
+      case 'lead_reassigned':
+        return '🔄';
+      case 'work_record_issued':
+        return '📄';
+      case 'access_activated':
+        return '✅';
+      default:
+        return '🔔';
     }
   };
 
   // Get notification action text
   const getNotificationAction = (type) => {
     switch (type) {
-      case 'reply_mention': return 'mentioned you in a reply';
-      case 'repost_mention': return 'mentioned you in a repost';
-      case 'like': return 'liked your post';
-      case 'follow': return 'started following you';
-      case 'group_post': return 'posted in';
-      case 'group_reply': return 'replied to your post';
-      case 'group_member_joined': return 'joined';
-      case 'badge_awarded': return 'awarded you a badge';
-      case 'group_completed': return 'project completed';
-      default: return 'sent you a notification';
+      case 'reply_mention':
+        return 'mentioned you in a reply';
+      case 'repost_mention':
+        return 'mentioned you in a repost';
+      case 'like':
+        return 'liked your post';
+      case 'follow':
+        return 'started following you';
+      case 'group_post':
+        return 'posted in';
+      case 'group_reply':
+        return 'replied to your post';
+      case 'group_member_joined':
+        return 'joined';
+      case 'badge_awarded':
+        return 'awarded you a badge';
+      case 'group_completed':
+        return 'project completed';
+      default:
+        return 'sent you a notification';
+      // NOTE: notifications carrying an explicit `title` bypass this entirely
+      // (see the render below), so newer types do not need a case here.
     }
   };
 
@@ -237,17 +272,17 @@ const NotificationBell = () => {
         title={`${unreadCount} unread notifications`}
       >
         {/* Bell Icon - Responsive sizes */}
-        <svg 
-          className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 transition-all duration-300 group-hover:text-orange-400" 
-          fill="none" 
-          viewBox="0 0 24 24" 
+        <svg
+          className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 transition-all duration-300 group-hover:text-orange-400"
+          fill="none"
+          viewBox="0 0 24 24"
           stroke="currentColor"
           strokeWidth={2}
         >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" 
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
           />
         </svg>
 
@@ -267,7 +302,6 @@ const NotificationBell = () => {
       {/* 📋 NOTIFICATIONS DROPDOWN - Fully Responsive */}
       {showDropdown && (
         <div className="fixed xs:absolute left-2 right-2 xs:left-auto xs:right-0 top-16 xs:top-full mt-0 xs:mt-2 w-auto xs:w-80 sm:w-96 md:w-[26rem] lg:w-[28rem] bg-gray-900/98 xs:bg-gray-900/95 border border-gray-200 rounded-xl xs:rounded-2xl shadow-2xl z-[9999] max-h-[calc(100vh-5rem)] xs:max-h-[85vh] sm:max-h-96 overflow-hidden">
-          
           {/* Header - Responsive padding and text */}
           <div className="flex items-center justify-between p-3 xs:p-3 sm:p-4 border-b border-gray-200 sticky top-0 bg-gray-900/95 z-10">
             <h3 className="text-gray-900 font-bold text-sm xs:text-base flex items-center gap-1.5 xs:gap-2">
@@ -280,7 +314,7 @@ const NotificationBell = () => {
                 </span>
               )}
             </h3>
-            
+
             <div className="flex items-center gap-1.5 xs:gap-2">
               {unreadCount > 0 && (
                 <button
@@ -295,8 +329,18 @@ const NotificationBell = () => {
                 className="text-gray-400 hover:text-gray-900 transition-colors p-1 rounded hover:bg-gray-100"
                 aria-label="Close notifications"
               >
-                <svg className="h-4 w-4 xs:h-5 xs:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="h-4 w-4 xs:h-5 xs:w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -324,8 +368,12 @@ const NotificationBell = () => {
             ) : notifications.length === 0 ? (
               <div className="p-6 xs:p-8 sm:p-10 text-center">
                 <div className="text-3xl xs:text-4xl mb-3">🔔</div>
-                <p className="text-gray-400 text-sm xs:text-base font-medium mb-1">No notifications yet</p>
-                <p className="text-gray-500 text-xs xs:text-sm">You'll see updates about mentions, likes, and replies here</p>
+                <p className="text-gray-400 text-sm xs:text-base font-medium mb-1">
+                  No notifications yet
+                </p>
+                <p className="text-gray-500 text-xs xs:text-sm">
+                  You'll see updates about mentions, likes, and replies here
+                </p>
               </div>
             ) : (
               <div className="divide-y divide-white/5">
@@ -334,7 +382,9 @@ const NotificationBell = () => {
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification)}
                     className={`p-3 xs:p-3.5 sm:p-4 hover:bg-gray-50 active:bg-gray-100 cursor-pointer transition-all duration-200 group ${
-                      !notification.isRead ? 'bg-pink-500/5 border-l-2 xs:border-l-[3px] border-pink-500' : ''
+                      !notification.isRead
+                        ? 'bg-pink-500/5 border-l-2 xs:border-l-[3px] border-pink-500'
+                        : ''
                     } ${navigating === notification.id ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     <div className="flex items-start gap-2 xs:gap-2.5 sm:gap-3">
@@ -349,40 +399,74 @@ const NotificationBell = () => {
                       <div className="flex-1 min-w-0">
                         {/* User info - Responsive */}
                         <div className="flex items-center gap-1.5 xs:gap-2 mb-1">
-                          {(notification.mentionedByPhoto || notification.followedByPhoto) ? (
-                            <img 
-                              src={notification.mentionedByPhoto || notification.followedByPhoto} 
-                              alt="Profile" 
+                          {notification.mentionedByPhoto || notification.followedByPhoto ? (
+                            <img
+                              src={notification.mentionedByPhoto || notification.followedByPhoto}
+                              alt="Profile"
                               className="w-4 h-4 xs:w-5 xs:h-5 rounded-full object-cover"
                             />
                           ) : (
                             <div className="w-4 h-4 xs:w-5 xs:h-5 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
                               <span className="text-[10px] xs:text-xs text-gray-900 font-bold">
-                                {(notification.mentionedByFirstName || notification.mentionedByName || notification.followedByName || 'U').charAt(0).toUpperCase()}
+                                {(
+                                  notification.mentionedByFirstName ||
+                                  notification.mentionedByName ||
+                                  notification.followedByName ||
+                                  'U'
+                                )
+                                  .charAt(0)
+                                  .toUpperCase()}
                               </span>
                             </div>
                           )}
                           <span className="text-gray-900 font-medium text-xs xs:text-sm truncate">
-                            {notification.mentionedByFirstName && notification.mentionedByLastName 
+                            {notification.mentionedByFirstName && notification.mentionedByLastName
                               ? `${notification.mentionedByFirstName} ${notification.mentionedByLastName}`
-                              : notification.mentionedByName || notification.followedByName || 'A member'
-                            }
+                              : notification.mentionedByName ||
+                                notification.followedByName ||
+                                'A member'}
                           </span>
                           {!notification.isRead && (
                             <div className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-pink-500 rounded-full flex-shrink-0 animate-pulse"></div>
                           )}
                         </div>
 
-                        {/* Action text - Responsive */}
-                        <p className="text-gray-600 text-xs xs:text-sm mb-1.5 xs:mb-2 line-clamp-2">
-                          {getNotificationAction(notification.type)}
-                          {notification.groupTitle && (notification.type === 'group_post' || notification.type === 'group_member_joined') && (
-                            <span className="text-pink-600 font-medium"> {notification.groupTitle}</span>
-                          )}
-                          {notification.badgeLevel && notification.type === 'badge_awarded' && (
-                            <span className="text-orange-500 font-medium"> {notification.badgeLevel}</span>
-                          )}
-                        </p>
+                        {/* Action text.
+                            Notifications that carry an explicit `title`/`body`
+                            render those directly. The type-based switch below
+                            only covers older notification shapes; without this
+                            branch, every newer type showed the useless fallback
+                            "sent you a notification" with no context at all. */}
+                        {notification.title ? (
+                          <>
+                            <p className="text-gray-900 text-xs xs:text-sm font-semibold mb-0.5">
+                              {notification.title}
+                            </p>
+                            {notification.body && (
+                              <p className="text-gray-600 text-xs xs:text-sm mb-1.5 xs:mb-2 line-clamp-2">
+                                {notification.body}
+                              </p>
+                            )}
+                          </>
+                        ) : (
+                          <p className="text-gray-600 text-xs xs:text-sm mb-1.5 xs:mb-2 line-clamp-2">
+                            {getNotificationAction(notification.type)}
+                            {notification.groupTitle &&
+                              (notification.type === 'group_post' ||
+                                notification.type === 'group_member_joined') && (
+                                <span className="text-pink-600 font-medium">
+                                  {' '}
+                                  {notification.groupTitle}
+                                </span>
+                              )}
+                            {notification.badgeLevel && notification.type === 'badge_awarded' && (
+                              <span className="text-orange-500 font-medium">
+                                {' '}
+                                {notification.badgeLevel}
+                              </span>
+                            )}
+                          </p>
+                        )}
 
                         {/* Preview content - Responsive */}
                         {(notification.replyContent || notification.repostComment) && (
@@ -396,22 +480,32 @@ const NotificationBell = () => {
                           <span className="text-gray-500 text-[11px] xs:text-xs whitespace-nowrap">
                             {timeAgo(notification.createdAt)}
                           </span>
-                          
+
                           <div className="flex items-center gap-1.5 xs:gap-2 min-w-0">
                             {notification.postTitle && (
                               <span className="text-pink-600 text-[11px] xs:text-xs truncate max-w-[60px] xs:max-w-20 sm:max-w-24">
                                 "{notification.postTitle}"
                               </span>
                             )}
-                            
+
                             {/* Loading/Click indicator - Responsive */}
                             {navigating === notification.id ? (
                               <div className="w-3 h-3 xs:w-3.5 xs:h-3.5 border border-pink-500 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
                             ) : (
                               <div className="text-gray-400 group-hover:text-pink-600 transition-colors opacity-0 group-hover:opacity-100 flex items-center text-[11px] xs:text-xs flex-shrink-0">
                                 <span className="hidden sm:inline mr-1">View</span>
-                                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                <svg
+                                  className="h-3 w-3"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                  />
                                 </svg>
                               </div>
                             )}
@@ -441,8 +535,8 @@ const NotificationBell = () => {
 
       {/* Click outside to close - Responsive overlay */}
       {showDropdown && (
-        <div 
-          className="fixed inset-0 z-[9998] bg-gray-100 xs:bg-transparent" 
+        <div
+          className="fixed inset-0 z-[9998] bg-gray-100 xs:bg-transparent"
           onClick={() => setShowDropdown(false)}
         />
       )}
