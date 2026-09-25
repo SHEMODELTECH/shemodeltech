@@ -39,12 +39,60 @@ const firstParagraph = (md) => {
     if (!line) continue;
     // Skip headings, rules, list markers, code fences, blockquotes.
     if (/^(#|---|\*\*\*|```|>|[-*+]\s|\d+\.\s)/.test(line)) continue;
-    // Strip simple markdown emphasis so the card summary reads cleanly.
-    const clean = line.replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '').trim();
+    // Setup notes and document boilerplate don't describe the course.
+    if (/^\*\*(Tools needed|Prerequisites|Time)/i.test(line)) continue;
+    if (/^(This (document|is a bonus|course turns)|Follow the projects in order|Every step follows|(\*\*)?A note on)/i.test(line)) continue;
+    // A one-line generic purpose ("Plan, build, and deliver...") is shared by a
+    // whole track, so it doesn't tell courses apart; use the next paragraph.
+    if (/^\*\*Purpose[^*]*:\*\*/i.test(line) && line.replace(/^\*\*Purpose[^*]*:\*\*\s*/i, '')
+      .replace(/^\*\*Who this is for:\*\*\s*(\w)/i, (m, c) => 'For ' + c.toLowerCase())
+      .replace(/^\*\*Goal:\*\*\s*/i, '').length < 60) continue;
+    // Strip simple markdown so the card summary reads cleanly.
+    const clean = line
+      .replace(/^\*\*Purpose[^*]*:\*\*\s*/i, '')
+      .replace(/^\*\*Who this is for:\*\*\s*(\w)/i, (m, c) => 'For ' + c.toLowerCase())
+      .replace(/^\*\*Goal:\*\*\s*/i, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '').trim();
     return clean.length > 240 ? clean.slice(0, 237).trimEnd() + '...' : clean;
   }
   return '';
 };
+
+// Shift every heading up one level (## -> #, ### -> ##, ...), outside code fences.
+const promoteHeadings = (md) => {
+  let inFence = false;
+  return md
+    .split('\n')
+    .map((line) => {
+      if (/^\s*```/.test(line)) inFence = !inFence;
+      if (!inFence && /^#{2,6}\s/.test(line)) return line.slice(1);
+      return line;
+    })
+    .join('\n');
+};
+
+// "Module 1: QA Fundamentals" -> "QA Fundamentals"; "Module: APIs" -> "APIs".
+// Also drops track-code suffixes: "Agile (TechPO: Product & ...)" -> "Agile",
+// and "TechLeads (Business & Leadership)" -> "Business & Leadership".
+const cleanCourseTitle = (t) => {
+  if (!t) return t;
+  let x = t.replace(/^Module(\s+\d+)?\s*:\s*/i, '').trim();
+  const whole = x.match(/^Tech\w+\s*\(([^)]+)\)$/);
+  if (whole) return whole[1].trim();
+  x = x.replace(/\s*\((Low-Code \/ No-Code )?Tech\w+[^)]*\)\s*$/, '').trim();
+  x = x.replace(/:\s*A Practical Beginner's Course\s*$/i, '').replace(/:\s*Hands-?On Project Tutorials\s*$/i, '').trim();
+  // "TechQA: A Practical Beginner's Course" leaves just the track code.
+  if (/^Tech\w+$/.test(x)) return 'Start here: course overview';
+  return x;
+};
+
+// Level shown on the course card, read from the authored title.
+const courseLevel = (t) =>
+  /advanced/i.test(t) ? 'Advanced' : /beginner/i.test(t) ? 'Beginner' : /hands-?on/i.test(t) ? 'Project-based' : '';
+
+const prettySlug = (slug) =>
+  slug.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
 const readOrder = (md) => {
   const m = md.match(/<!--\s*order:\s*(\d+)\s*-->/i);
@@ -71,11 +119,17 @@ const build = () => {
     const dir = path.join(COURSES_DIR, track);
     const files = fs.readdirSync(dir).filter((f) => f.toLowerCase().endsWith('.md'));
     const courses = files.map((file) => {
-      const md = fs.readFileSync(path.join(dir, file), 'utf8');
+      const raw = fs.readFileSync(path.join(dir, file), 'utf8');
       const slug = file.replace(/\.md$/i, '');
+      // Some courses are written as a single "## Module ..." document with
+      // "### Topic" sections and no "# " title. Promote their headings one
+      // level so every course reads the same: one title, then the sections
+      // that fill the reader's contents list.
+      const md = firstHeading(raw) ? raw : promoteHeadings(raw);
       return {
         slug,
-        title: firstHeading(md) || slug,
+        title: cleanCourseTitle(firstHeading(md)) || prettySlug(slug),
+        level: courseLevel(firstHeading(md) || ''),
         summary: firstParagraph(md),
         projects: countProjects(md),
         order: readOrder(md),

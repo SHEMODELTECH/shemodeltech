@@ -25,6 +25,7 @@ const UserProfile = lazy(() => import('./Pages/user/UserProfile'));
 const SearchPage = lazy(() => import('./Pages/SearchPage'));
 const FollowersFollowing = lazy(() => import('./Pages/user/FollowersFollowing'));
 const NotificationsPage = lazy(() => import('./Pages/Notifications'));
+const Foundations = lazy(() => import('./Pages/Foundations'));
 const Messages = lazy(() => import('./Pages/Messages'));
 const MembersDirectory = lazy(() => import('./Pages/MembersDirectory'));
 const ApplyToLead = lazy(() => import('./Pages/cohort/ApplyToLead'));
@@ -500,6 +501,14 @@ function App() {
                   element={
                     <SidebarRoute>
                       <NotificationsPage />
+                    </SidebarRoute>
+                  }
+                />
+                <Route
+                  path="/foundations"
+                  element={
+                    <SidebarRoute>
+                      <Foundations />
                     </SidebarRoute>
                   }
                 />

@@ -215,9 +215,14 @@ const CompanyCohortDetail = () => {
             so you&rsquo;re ready for paid work. You can see the roles and pay below; you&rsquo;ll
             be able to apply once you have a badge.
           </p>
-          <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">
-            Find a project to earn your badge &rarr;
-          </Link>
+          <div className="flex flex-wrap gap-x-5 gap-y-1">
+            <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">
+              Find a project to earn your badge
+            </Link>
+            <Link to="/foundations" className="text-pink-700 text-sm font-semibold hover:underline">
+              Build your skills in Foundations
+            </Link>
+          </div>
         </div>
       )}
       <div className="space-y-2 mb-8">
