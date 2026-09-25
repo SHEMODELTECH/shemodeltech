@@ -145,9 +145,83 @@ You have a project where a deliberately introduced, unrelated bug was caught by 
 
 ---
 
+### Topic 8.3: Test Reports and Flaky Tests
+
+#### Concept
+
+A pipeline that says only "failed" slows everyone down. Teams need **test reports** that show exactly which test failed and why, kept with each pipeline run. They also need to deal with **flaky tests**: tests that pass and fail on the same code. A flaky test teaches people to ignore red builds, which defeats the purpose of automated testing.
+
+- A **test report** records every test's result in a standard format, commonly **JUnit XML**, which most CI tools and dashboards can read
+- An **artifact** is a file a pipeline saves from a run, such as a test report or screenshots, so you can download it after the run ends
+- A **flaky test** passes and fails without any code change, usually because of timing, test order, shared data, or an unreliable external service
+- **Quarantining** moves a known flaky test out of the blocking suite while it's fixed, with a tracking ticket, so it can't block every merge in the meantime
+- **Retries** can hide flakiness; use them sparingly, and always record when a test only passed on retry
+
+#### Structure at a Glance
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#c93a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+flowchart LR
+    RUN["<b>Pipeline run</b><br/><br/>Tests execute<br/>on every change"]
+    REP["<b>Test report</b><br/><br/>JUnit XML<br/>per test"]
+    ART["<b>Artifact</b><br/><br/>Saved with<br/>the run"]
+    TRI["<b>Triage</b><br/><br/>Real failure<br/>or flaky?"]
+
+    RUN ==> REP ==> ART ==> TRI
+
+    style RUN fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
+    style REP fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
+    style ART fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style TRI fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    linkStyle default stroke-width:4px,stroke:#333333
+```
+- The first question on any red build is whether it's a real failure or a flaky test; reports and history answer it in minutes instead of hours
+- Fix the cause of flakiness (wait for the right condition, isolate test data) rather than adding sleeps, which make tests slower and still unreliable
+
+#### Where you'd actually use this
+
+Merges keep failing on a login test that passes when re-run. The saved reports show it fails about one run in ten, always right after a test that changes the same user account. Isolating each test's data fixes the flakiness, and the team starts trusting red builds again.
+
+#### Lab
+
+1. **Reuse the repository and workflow from Topic 8.1.** If your tests use pytest, change the test step to write a JUnit report:
+   ```bash
+   pytest --junitxml=report.xml
+   ```
+   (Most test runners, including Jest and Playwright, can write JUnit XML too.)
+2. **Save the report as an artifact** by adding this step after your tests in the workflow file:
+   ```yaml
+   - name: Upload test report
+     if: always()
+     uses: actions/upload-artifact@v4
+     with:
+       name: test-report
+       path: report.xml
+   ```
+3. **Push a change, open the finished run on GitHub,** and download the `test-report` artifact. Find one test's result inside it.
+4. **Create a deliberately flaky test** (for example, one that fails when a random number is below 0.3), push it, and re-run the workflow several times to watch it pass and fail on the same code.
+5. **Write a short triage note:** how you confirmed it was flaky, what the cause was, and how you'd fix or quarantine it. Then remove the flaky test.
+
+#### Checkpoint
+Your workflow saves a JUnit report as an artifact on every run, even when tests fail, and you've written a triage note for a flaky test you watched pass and fail on the same code.
+
+#### Quiz
+1. What is a flaky test?
+2. Why are flaky tests harmful to a team?
+3. What is a pipeline artifact?
+4. Why use `if: always()` on the upload step?
+5. Why is quarantining better than simply deleting a flaky test?
+
+*Answers: 1) A test that passes and fails on the same code without any change, often because of timing, test order, shared data, or an unreliable external service. 2) People learn to ignore red builds, so real failures get missed. 3) A file saved from a pipeline run, such as a test report, that you can download after the run finishes. 4) So the report is saved even when tests fail, which is exactly when you need it. 5) The test's coverage isn't lost: it's tracked with a ticket, fixed, and returned to the blocking suite.*
+
+---
+
 ## Module 8 Completion Checklist
 - [ ] Built a working GitHub Actions pipeline triggered automatically on push
 - [ ] Seen the pipeline both fail on a broken test and pass again after a fix, traced to a specific commit
 - [ ] Added a new test for a new feature and confirmed an unrelated, deliberately introduced bug was caught by an existing regression test
 - [ ] Designated and configured a smoke test subset that runs before the full regression suite
 - [ ] Can explain why passing regression tests doesn't confirm a new feature works, and why test flakiness needs to be fixed rather than ignored
+- [ ] Configured the pipeline to save a JUnit test report as an artifact on every run
+- [ ] Watched a deliberately flaky test pass and fail on the same code
+- [ ] Written a triage note and removed the flaky test

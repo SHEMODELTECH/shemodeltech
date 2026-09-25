@@ -1,9 +1,23 @@
 <!-- order: 20 -->
 # Robotics AI Engineer: Hands-On Project Tutorials
 
-This document turns every project in the **Robotics AI Engineer Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing. Projects use simulation so you can complete this course without owning physical robot hardware.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing. Projects use simulation so you can complete this course without owning physical robot hardware.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
 
 ---
 
@@ -11,11 +25,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 **Goal:** Before writing any code, learn to see a robot as a system of interacting parts, so every later project has a place to plug into.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir robot_system_diagram_project
-cd robot_system_diagram_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `robot_system_diagram_project`.
 
 **Step 2: Define your example robot's task.**
 Write one sentence: what does your robot do? Example: "A small wheeled robot that navigates a room and avoids obstacles."
@@ -73,17 +84,14 @@ robot_system_diagram_project/
 
 **Goal:** Get real (or simulated) sensor data flowing through code, the first hands-on contact with the "sense" part of your Project 1 loop.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir sensor_processing_project
-cd sensor_processing_project
-pip install --break-system-packages numpy matplotlib
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `sensor_processing_project`.
+```python
+%pip install numpy matplotlib
 ```
 
 **Step 2: Simulate a basic distance sensor.**
-```bash
-nano sensor_processing.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import numpy as np
 
@@ -137,9 +145,7 @@ def handle_dropout(data):
 **interpolation** estimates a missing value based on the values around it.
 
 **Step 8: Document filter parameter choices.**
-```bash
-nano filtering_notes.md
-```
+Add a **text cell** headed `filtering_notes` and write your notes in it.
 Note: what window size did you use for the moving average, and what tradeoff does a larger vs. smaller window involve?
 
 ### Final Project Structure
@@ -172,20 +178,17 @@ sensor_processing_project/
 
 **Goal:** Build the math layer that perception and control both depend on, translating between different frames of reference.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir coordinate_transform_project
-cd coordinate_transform_project
-pip install --break-system-packages numpy
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `coordinate_transform_project`.
+```python
+%pip install numpy
 ```
 
 **Step 2: Understand coordinate frames.**
 A **coordinate frame** is a reference point and set of axes that positions are measured relative to, e.g., the "world frame" (fixed to the room) vs. the "robot frame" (fixed to and moving with the robot).
 
 **Step 3: Represent a 2D position and rotation.**
-```bash
-nano transforms.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import numpy as np
 
@@ -236,9 +239,7 @@ plt.savefig("coordinate_transform.png")
 ```
 
 **Step 8: Document the transform functions for reuse.**
-```bash
-nano README.md
-```
+Add a **text cell** headed `README` and write your notes in it.
 Note function signatures and what each parameter means.
 
 ### Final Project Structure
@@ -270,17 +271,14 @@ coordinate_transform_project/
 
 **Goal:** Give the robot the ability to "see", the "sense" component of your Project 1 loop, now actually working.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir object_detection_project
-cd object_detection_project
-pip install --break-system-packages opencv-python numpy
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `object_detection_project`.
+```python
+%pip install opencv-python numpy
 ```
 
 **Step 2: Load a test camera frame.**
-```bash
-nano object_detection.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import cv2
 frame = cv2.imread("test_frame.jpg")
@@ -356,17 +354,14 @@ object_detection_project/
 
 **Goal:** Give the robot the ability to decide where to go, the "think" component of your Project 1 loop.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir path_planning_project
-cd path_planning_project
-pip install --break-system-packages numpy matplotlib
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `path_planning_project`.
+```python
+%pip install numpy matplotlib
 ```
 
 **Step 2: Represent the environment as a grid.**
-```bash
-nano path_planning.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import numpy as np
 
@@ -463,20 +458,17 @@ path_planning_project/
 
 **Goal:** Let the robot learn behavior instead of following fixed rules, an alternative to Project 5's hand-coded planning.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir rl_agent_project
-cd rl_agent_project
-pip install --break-system-packages numpy gymnasium
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `rl_agent_project`.
+```python
+%pip install numpy gymnasium
 ```
 
 **Step 2: Understand the RL problem framing.**
 An **agent** takes **actions** in an **environment**, receiving a **reward** signal after each action; the goal is to learn a **policy** (a strategy for choosing actions) that maximizes total reward over time.
 
 **Step 3: Load a simple simulated environment.**
-```bash
-nano rl_agent.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import gymnasium as gym
 env = gym.make("FrozenLake-v1", is_slippery=False)
@@ -535,9 +527,7 @@ plt.savefig("learning_curve.png")
 ```
 
 **Step 8: Compare RL to your Project 5 A* planner.**
-```bash
-nano rl_vs_astar_notes.md
-```
+Add a **text cell** headed `rl_vs_astar_notes` and write your notes in it.
 Write 3–4 sentences: when would you choose RL over A* planning, and vice versa?
 
 ### Final Project Structure
@@ -569,25 +559,18 @@ rl_agent_project/
 
 **Goal:** Validate a robot behavior for safety and reliability, the discipline that separates "it worked once" from "it's ready to test on real hardware."
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir behavior_testing_project
-cd behavior_testing_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `behavior_testing_project`.
 
 **Step 2: Choose a behavior to test.**
 Use your Project 5 A* planner or Project 6 RL agent, combined with Project 4's detection logic if relevant.
 
 **Step 3: Define success criteria.**
-```bash
-nano test_plan.md
-```
+Add a **text cell** headed `test_plan` and write your notes in it.
 Write specific, measurable pass/fail conditions (e.g., "reaches goal within 200 steps," "never enters an obstacle cell").
 
 **Step 4: Run repeated trials.**
-```bash
-nano run_tests.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 results = []
 for trial in range(20):
@@ -607,9 +590,7 @@ print(f"Success rate: {success_rate*100}%, avg steps: {avg_steps}")
 ```
 
 **Step 7: Investigate every failure.**
-```bash
-nano failure_analysis.md
-```
+Add a **text cell** headed `failure_analysis` and write your notes in it.
 For each failed trial, note what specifically went wrong (got stuck, collided, timed out).
 
 **Step 8: Add a safety check based on Project 1's consideration.**
@@ -645,10 +626,7 @@ behavior_testing_project/
 **Goal:** Combine every project above into one complete, working simulated robot, this is an integration exercise, not a new build.
 
 **Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
+Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 Copy in the final versions of your code from Projects 2–7.
 
 **Step 2: Start from your Project 1 sense-think-act diagram.**
@@ -670,9 +648,7 @@ Implement a simple simulated robot that updates its position based on the planne
 Reuse your success criteria and randomized trials, but now test the complete sense-think-act loop rather than isolated pieces.
 
 **Step 8: Write the final capstone report.**
-```bash
-nano capstone_report.md
-```
+Add a **text cell** headed `capstone_report` and write your notes in it.
 Combine your Project 1 diagram, test results, and known limitations into one write-up: what you built, how reliable it is, and what you'd improve next.
 
 ### Final Project Structure

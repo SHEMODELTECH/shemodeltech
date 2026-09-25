@@ -1,9 +1,23 @@
 <!-- order: 15 -->
 # AI Data Engineer: Hands-On Project Tutorials
 
-This document turns every project in the **AI Data Engineer Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
 
 ---
 
@@ -11,16 +25,11 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 **Goal:** Before writing any code, learn to see data movement as a pipeline of stages, so every later project has a place to plug into.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir data_pipeline_map_project
-cd data_pipeline_map_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `data_pipeline_map_project`.
 
 **Step 2: Define the AI use case.**
-```bash
-nano use_case.md
-```
+Add a **text cell** headed `use_case` and write your notes in it.
 Write one sentence: what AI application will consume this data, and what does it need to work? Example: "A customer support chatbot needs cleaned, labeled support tickets to fine-tune on."
 
 **Step 3: Identify the data source.**
@@ -75,20 +84,17 @@ data_pipeline_map_project/
 
 **Goal:** Get hands-on with real, messy data, the unavoidable first technical task in almost every AI data role.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir data_cleaning_project
-cd data_cleaning_project
-pip install --break-system-packages pandas
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `data_cleaning_project`.
+```python
+%pip install pandas
 ```
 
 **Step 2: Get a messy dataset.**
 Download a real-world CSV with known issues (missing values, inconsistent casing, duplicate rows), or intentionally mess up a clean one for practice.
 
 **Step 3: Load and inspect the data.**
-```bash
-nano clean_data.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import pandas as pd
 df = pd.read_csv("raw_data.csv")
@@ -160,19 +166,14 @@ data_cleaning_project/
 
 **Goal:** Decide how cleaned data should be structured and stored, the step between "I have clean data" and "a model can reliably use this data."
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir schema_design_project
-cd schema_design_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `schema_design_project`.
 
 **Step 2: Identify your entities.**
 An **entity** is a distinct "thing" your data describes, e.g., for a support-ticket dataset: `tickets`, `customers`, `labels`.
 
 **Step 3: Define fields for each entity.**
-```bash
-nano schema.md
-```
+Add a **text cell** headed `schema` and write your notes in it.
 For each entity, list its fields and types: `ticket_id (string), text (string), created_at (datetime), label (string)`.
 
 **Step 4: Define relationships between entities.**
@@ -243,20 +244,17 @@ schema_design_project/
 
 **Goal:** Automate the move from raw data to stored data, connecting Project 2's cleaning and Project 3's schema into a repeatable process.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir etl_pipeline_project
-cd etl_pipeline_project
-pip install --break-system-packages pandas sqlalchemy
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `etl_pipeline_project`.
+```python
+%pip install pandas sqlalchemy
 ```
 
 **Step 2: Understand ETL.**
 **ETL** stands for **Extract** (pull raw data from a source), **Transform** (clean and reshape it), **Load** (write it into storage). **ELT** does the same steps in a different order, transforming after loading.
 
 **Step 3: Write the Extract step.**
-```bash
-nano etl.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import pandas as pd
 
@@ -334,11 +332,8 @@ etl_pipeline_project/
 
 **Goal:** Take cleaned, stored data (Project 4's output) and turn it into something a model can actually be trained on.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir labeled_dataset_project
-cd labeled_dataset_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `labeled_dataset_project`.
 
 **Step 2: Load your Project 4 pipeline's output.**
 ```python
@@ -347,9 +342,7 @@ df = pd.read_csv("cleaned_data.csv")  # or read from your Project 4 database
 ```
 
 **Step 3: Define labeling criteria.**
-```bash
-nano labeling_guide.md
-```
+Add a **text cell** headed `labeling_guide` and write your notes in it.
 Write clear rules for what each label means, with 2–3 examples per label.
 
 **Step 4: Apply labels.**
@@ -417,20 +410,17 @@ labeled_dataset_project/
 
 **Goal:** Extend your data engineering skills to unstructured text and the retrieval systems behind modern AI applications like RAG chatbots.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir vector_store_project
-cd vector_store_project
-pip install --break-system-packages sentence-transformers chromadb
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `vector_store_project`.
+```python
+%pip install sentence-transformers chromadb
 ```
 
 **Step 2: Gather a document set.**
 Collect 10–20 text documents (articles, FAQs, or paragraphs) into a folder.
 
 **Step 3: Chunk the documents.**
-```bash
-nano build_vector_store.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def chunk_text(text, chunk_size=200, overlap=50):
     words = text.split()
@@ -475,9 +465,7 @@ print(results["documents"])
 Try 5 different queries and manually judge whether the top results are actually relevant.
 
 **Step 8: Document your chunking and embedding choices.**
-```bash
-nano vector_store_notes.md
-```
+Add a **text cell** headed `vector_store_notes` and write your notes in it.
 Record chunk size, overlap, embedding model used, and your retrieval evaluation results.
 
 ### Final Project Structure
@@ -509,22 +497,15 @@ vector_store_project/
 
 **Goal:** Add quality control on top of your pipeline, so bad data gets caught automatically instead of silently poisoning downstream models.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir data_validation_project
-cd data_validation_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `data_validation_project`.
 
 **Step 2: Define validation rules from what you already know.**
-```bash
-nano validation_rules.md
-```
+Add a **text cell** headed `validation_rules` and write your notes in it.
 Using your Project 3 schema and Project 2's cleaning checks, list rules: required fields, expected types, acceptable value ranges.
 
 **Step 3: Implement schema validation.**
-```bash
-nano validate.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import pandas as pd
 
@@ -596,10 +577,7 @@ data_validation_project/
 **Goal:** Combine every project above into one working system, this is an integration exercise, not a new build.
 
 **Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
+Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 Copy in the final versions of your code from Projects 2–7.
 
 **Step 2: Start from your Project 1 pipeline map.**
@@ -624,9 +602,7 @@ If your use case includes unstructured text, build the vector store as the pipel
 Run it against a completely fresh batch of raw data and confirm it produces validated, labeled, and (if applicable) indexed output without manual intervention.
 
 **Step 9: Write the final pipeline document.**
-```bash
-nano capstone_summary.md
-```
+Add a **text cell** headed `capstone_summary` and write your notes in it.
 Combine your Project 1 map, schema, validation rules, and final pipeline results into one write-up: what you built, how it handles new data, and how you'd know if it broke.
 
 ### Final Project Structure

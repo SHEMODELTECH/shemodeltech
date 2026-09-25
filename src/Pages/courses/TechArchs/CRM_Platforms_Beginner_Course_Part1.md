@@ -1,16 +1,12 @@
 <!-- order: 9 -->
-# CRM Platforms: A Practical Beginner's Course
+# CRM Essentials with HubSpot: A Practical Beginner's Course
 
-> **NOTE:** This is **Part 1** of the complete course. It follows the same instructional style as the uploaded Internal Apps course and begins the full curriculum. Subsequent parts will continue in the same format until the course is complete.
 
-# Course Overview
+## Course overview
 
 **Who this is for:** Beginners who want to learn how businesses manage customers, leads, sales, marketing, and customer support using modern CRM platforms.
 
-**Platforms covered**
-- HubSpot
-- Salesforce
-- Zoho CRM
+**Platform used:** HubSpot's free CRM. Salesforce and Zoho CRM use different names for the same ideas, so what you learn here carries over. The **CRM Platforms** module later in this track compares all three.
 
 Every module contains:
 - Concept
@@ -22,9 +18,9 @@ Every module contains:
 
 ---
 
-# Module 0: What CRM Systems Actually Do
+## Module 0: What CRM Systems Actually Do
 
-## Concept
+### Concept
 
 A **Customer Relationship Management (CRM)** system is software that helps a business manage every interaction with potential and existing customers.
 
@@ -38,7 +34,7 @@ Most CRM platforms share the same flow:
 - Customer
 - Returning Customer
 
-## Structure at a Glance
+### Structure at a Glance
 
 ```mermaid
 flowchart LR
@@ -56,7 +52,7 @@ Every CRM stores:
 
 Although HubSpot, Salesforce, and Zoho use different names, the concepts remain nearly identical.
 
-## Where you'd actually use this
+### Where you'd actually use this
 
 Imagine a consulting company receiving 200 inquiries every month.
 
@@ -75,7 +71,7 @@ With a CRM:
 - deals are tracked
 - dashboards update automatically
 
-## Lab
+### Lab
 
 Create the following customer journey on paper:
 
@@ -99,11 +95,11 @@ Then identify:
 - Who owns the lead?
 - What happens after purchase?
 
-## Checkpoint
+### Checkpoint
 
 You should now understand why CRM systems exist and the basic customer lifecycle.
 
-## Quiz
+### Quiz
 
 1. What does CRM stand for?
 2. Why do businesses use CRM software?
@@ -111,7 +107,7 @@ You should now understand why CRM systems exist and the basic customer lifecycle
 4. What is a Deal?
 5. What is the purpose of a sales pipeline?
 
-### Answers
+#### Answers
 
 1. Customer Relationship Management.
 2. To organize customer interactions and sales.
@@ -121,9 +117,9 @@ You should now understand why CRM systems exist and the basic customer lifecycle
 
 ---
 
-# Module 1: HubSpot CRM
+## Module 1: HubSpot CRM
 
-## Concept
+### Concept
 
 HubSpot organizes information using **CRM Objects**.
 
@@ -136,14 +132,14 @@ The four primary objects are:
 
 Every activity is linked to these objects.
 
-## Structure at a Glance
+### Structure at a Glance
 
 ```mermaid
 flowchart LR
 Company --> Contact --> Deal --> Activity
 ```
 
-## Where you'd actually use this
+### Where you'd actually use this
 
 A software company receives demo requests from its website.
 
@@ -165,15 +161,15 @@ Customer
 
 Sales representatives always know what to do next.
 
-## Lab (Project 1)
+### Lab (Project 1)
 
 Build your first CRM.
 
-### Step 1
+#### Step 1
 
 Create a free HubSpot account.
 
-### Step 2
+#### Step 2
 
 Create five Contacts.
 
@@ -184,13 +180,13 @@ Fields:
 - Email
 - Phone
 
-### Step 3
+#### Step 3
 
 Create one Company.
 
 Associate every contact with that company.
 
-### Step 4
+#### Step 4
 
 Create three Deals.
 
@@ -201,11 +197,11 @@ Stages:
 - Proposal Sent
 - Closed Won
 
-### Step 5
+#### Step 5
 
 Assign yourself as the owner.
 
-### Step 6
+#### Step 6
 
 Create Tasks.
 
@@ -213,7 +209,7 @@ Create Tasks.
 - Send proposal
 - Schedule meeting
 
-### Step 7
+#### Step 7
 
 Create a Dashboard showing:
 
@@ -222,11 +218,11 @@ Create a Dashboard showing:
 - Closed Deals
 - Tasks Due Today
 
-## Checkpoint
+### Checkpoint
 
 You now have a functioning HubSpot CRM with contacts, companies, deals, tasks, and a dashboard.
 
-## Quiz
+### Quiz
 
 1. What is a Contact?
 2. What is a Company?
@@ -234,21 +230,10 @@ You now have a functioning HubSpot CRM with contacts, companies, deals, tasks, a
 4. Why assign an owner?
 5. Why use dashboards?
 
-### Answers
+#### Answers
 
 1. An individual person.
 2. An organization.
 3. A sales opportunity.
 4. Accountability.
 5. To monitor business performance.
-
----
-
-The complete course will continue with:
-
-- Module 2 — Salesforce CRM
-- Module 3 — Zoho CRM
-- Capstone Project
-- Course Completion Checklist
-
-in the same detailed format.

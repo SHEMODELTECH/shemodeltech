@@ -1,9 +1,23 @@
 <!-- order: 17 -->
 # AI Solutions Architect: Hands-On Project Tutorials
 
-This document turns every project in the **AI Solutions Architect Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
 
 ---
 
@@ -11,19 +25,14 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 **Goal:** Translate a business problem into a technical direction, the first move a solutions architect makes, before any diagram or code.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir solutions_brief_project
-cd solutions_brief_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `solutions_brief_project`.
 
 **Step 2: Pick a realistic business problem.**
 Example: "Our support team is overwhelmed by repetitive questions and response times are hurting customer satisfaction scores."
 
 **Step 3: Identify stakeholders.**
-```bash
-nano brief.md
-```
+Add a **text cell** headed `brief` and write your notes in it.
 A **stakeholder** is anyone with a say in whether the solution succeeds, here, likely support leadership, IT/security, and end customers.
 
 **Step 4: State business goals, not technical ones.**
@@ -65,11 +74,8 @@ solutions_brief_project/
 
 **Goal:** Visualize the service you're proposing, the first technical artifact that turns your Project 1 brief into something engineers can react to.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir system_diagram_project
-cd system_diagram_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `system_diagram_project`.
 
 **Step 2: List the major components.**
 Based on your Project 1 brief, list the pieces the system will need: user-facing app, API layer, AI model, data store, integration with existing systems.
@@ -133,25 +139,18 @@ system_diagram_project/
 
 **Goal:** Decide which AI approach actually fits the problem, replacing assumption with a documented comparison.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir model_comparison_project
-cd model_comparison_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `model_comparison_project`.
 
 **Step 2: Define your evaluation criteria.**
-```bash
-nano criteria.md
-```
+Add a **text cell** headed `criteria` and write your notes in it.
 Typical criteria include **accuracy/quality** for the task, **latency** (response speed), **cost per request**, **data privacy** (does data leave your infrastructure), and **ease of integration**.
 
 **Step 3: Identify 2–4 candidate approaches.**
 Examples: a general-purpose LLM API, a smaller open-weight model self-hosted, a fine-tuned specialized model, or a non-AI rules-based approach as a baseline.
 
 **Step 4: Research each option against your criteria.**
-```bash
-nano comparison_matrix.md
-```
+Add a **text cell** headed `comparison_matrix` and write your notes in it.
 Build a table: rows are your candidates, columns are your Step 2 criteria.
 
 **Step 5: Understand the fine-tuning vs. prompting tradeoff.**
@@ -161,9 +160,7 @@ Build a table: rows are your candidates, columns are your Step 2 criteria.
 For each candidate, estimate cost per 1,000 requests (API pricing) or infrastructure cost (self-hosted compute).
 
 **Step 7: Make and justify a recommendation.**
-```bash
-nano recommendation.md
-```
+Add a **text cell** headed `recommendation` and write your notes in it.
 State which option you'd recommend and why, referencing your matrix directly.
 
 ### Final Project Structure
@@ -195,11 +192,8 @@ model_comparison_project/
 
 **Goal:** Expand your Project 2 diagram into a full system design, the central architecture document for the whole solution.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir full_architecture_project
-cd full_architecture_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `full_architecture_project`.
 Copy in `system_diagram_v1.png` and `recommendation.md` from Projects 2 and 3.
 
 **Step 2: Understand common reference architectures.**
@@ -221,9 +215,7 @@ Note: what happens if traffic doubles? Where would this design bottleneck first?
 Combine your Project 3 model costs with rough infrastructure costs (hosting, storage, networking).
 
 **Step 8: Write the architecture document.**
-```bash
-nano architecture.md
-```
+Add a **text cell** headed `architecture` and write your notes in it.
 Structure: Pattern chosen and why → Full diagram → Components and their roles → Scalability notes → Rough cost estimate.
 
 ### Final Project Structure
@@ -254,11 +246,8 @@ full_architecture_project/
 
 **Goal:** Fill in how data will move and be secured, the layer underneath the architecture you designed in Project 4.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir data_infra_layer_project
-cd data_infra_layer_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `data_infra_layer_project`.
 
 **Step 2: Design the data flow.**
 Sketch: where does data enter the system, where is it stored, and where does it get deleted or archived?
@@ -289,9 +278,7 @@ flowchart TB
 ```
 
 **Step 8: Write the data and infrastructure design doc.**
-```bash
-nano data_infra_design.md
-```
+Add a **text cell** headed `data_infra_design` and write your notes in it.
 Structure: Data flow → Storage choices → Network security → Access control → Compliance mapping.
 
 ### Final Project Structure
@@ -322,19 +309,14 @@ data_infra_layer_project/
 
 **Goal:** Address compliance and responsible-use concerns directly, the part of architecture that protects the organization, not just the system.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir governance_risk_project
-cd governance_risk_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `governance_risk_project`.
 
 **Step 2: Identify risk categories.**
 Common categories include **data privacy risk** (mishandled personal data), **model risk** (biased or incorrect outputs), **operational risk** (system downtime affecting the business), and **reputational risk** (public-facing AI mistakes).
 
 **Step 3: Assess each risk for your specific system.**
-```bash
-nano risk_assessment.md
-```
+Add a **text cell** headed `risk_assessment` and write your notes in it.
 For each category, note: how likely is this risk here, and how severe would it be if it happened?
 
 **Step 4: Design mitigations for the highest risks.**
@@ -347,9 +329,7 @@ An **incident response plan** describes what happens when something goes wrong, 
 Note how your design considers fairness (does the system perform differently across user groups), transparency (do users know they're interacting with AI), and accountability (who's responsible if it goes wrong).
 
 **Step 7: Write the governance and risk plan.**
-```bash
-nano governance_risk_plan.md
-```
+Add a **text cell** headed `governance_risk_plan` and write your notes in it.
 Structure: Risk categories and assessment → Mitigations for top risks → Incident response plan → Responsible AI considerations.
 
 ### Final Project Structure
@@ -380,29 +360,22 @@ governance_risk_project/
 
 **Goal:** Package everything into a presentation for stakeholders, the skill that actually gets an architecture approved and built.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir architecture_proposal_project
-cd architecture_proposal_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `architecture_proposal_project`.
 Copy in your final deliverables from Projects 1–6.
 
 **Step 2: Identify your audience.**
 Presenting to a mixed audience (some technical, some business) means leading with business impact, then offering technical depth for those who want it.
 
 **Step 3: Structure the presentation.**
-```bash
-nano presentation_outline.md
-```
+Add a **text cell** headed `presentation_outline` and write your notes in it.
 Draft outline: Problem & Goals (Project 1) → Proposed Solution Overview → Architecture (Project 4) → Data & Security (Project 5) → Risks & Governance (Project 6) → Cost & Timeline → Ask/Next Steps.
 
 **Step 4: Build slides or a written proposal document.**
 For each outline section, create one slide (or one section if written) with your key diagram or point from the matching earlier project.
 
 **Step 5: Prepare for objections.**
-```bash
-nano anticipated_questions.md
-```
+Add a **text cell** headed `anticipated_questions` and write your notes in it.
 List 5 likely tough questions (e.g., "why not just use approach X," "what if the model gets it wrong") and write your answers.
 
 **Step 6: Define a clear ask.**
@@ -444,10 +417,7 @@ architecture_proposal_project/
 **Goal:** Combine every project above into one complete, presentable body of work, this is an integration exercise, not a new build.
 
 **Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
+Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 Copy in the final versions of your deliverables from Projects 1–7.
 
 **Step 2: Finalize your business problem and brief (Project 1).**
@@ -469,9 +439,7 @@ Combine model costs (Project 3), infrastructure costs (Project 4), and any addit
 Package everything using your Project 7 presentation structure.
 
 **Step 8: Write the capstone summary.**
-```bash
-nano capstone_summary.md
-```
+Add a **text cell** headed `capstone_summary` and write your notes in it.
 One page: the business problem, the solution, the architecture, the key risks and how they're managed, and the total cost estimate.
 
 ### Final Project Structure

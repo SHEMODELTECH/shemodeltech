@@ -123,9 +123,76 @@ You have documented results for wrong-password vs. non-existent-account error me
 
 ---
 
+### Topic 7.3: Input Validation Testing
+
+#### Concept
+
+Almost every serious web vulnerability starts with the same mistake: an application trusts what a user typed. **Input validation testing** checks that every field, URL parameter, and uploaded file is checked and safely handled, so input is treated as data and never as code. This is where testers find cross-site scripting and injection flaws, two of the most common and damaging weaknesses.
+
+- **Validation** checks that input matches what's expected (a date is a date, a quantity is a positive number) and rejects the rest, on the server as well as in the browser
+- **Output encoding** makes sure user text shown on a page is displayed as text, never run as part of the page
+- **Cross-site scripting (XSS)** happens when a page displays user input without encoding, letting that input run as script in other users' browsers
+- **Injection** happens when input is pasted straight into a database query or command; the fix is parameterised queries, never building queries from strings
+- **Boundary and type testing** tries empty values, very long values, wrong types, and special characters, to see whether the app rejects them cleanly
+
+#### Structure at a Glance
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#c93a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+flowchart LR
+    IN["<b>User input</b><br/><br/>Forms, URLs,<br/>uploads"]
+    VAL["<b>Validation</b><br/><br/>Server checks<br/>type and range"]
+    SAFE["<b>Safe handling</b><br/><br/>Parameterised queries,<br/>encoded output"]
+    OUT["<b>Result</b><br/><br/>Stored and shown<br/>as data only"]
+
+    IN ==> VAL ==> SAFE ==> OUT
+
+    style IN fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
+    style VAL fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
+    style SAFE fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style OUT fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    linkStyle default stroke-width:4px,stroke:#333333
+```
+- Browser-side checks improve the user experience but prove nothing about security; anyone can send a request that skips them, so the server must check too
+- A tester's job is to show the flaw exists and report it clearly, not to exploit it further
+
+#### Where you'd actually use this
+
+A comment box shows your text back on the page. You enter a comment containing simple HTML formatting and it appears in bold instead of as plain text, which shows the page isn't encoding output. You report it as a likely XSS risk with the exact steps, before an attacker finds it.
+
+#### Lab
+
+Use only **OWASP Juice Shop**, an application built to be attacked for training, running on your own computer. Never test a site you don't own or have written permission to test.
+
+1. **Start Juice Shop locally** with Docker, then open `http://localhost:3000`:
+   ```bash
+   docker run --rm -p 3000:3000 bkimminich/juice-shop
+   ```
+2. **Map the inputs:** list every place a user can type or upload something (search, login, feedback, account fields).
+3. **Try boundary and type inputs** in three of them: an empty value, a very long value, a value of the wrong type, and a short piece of HTML such as `<b>test</b>`. Note whether each is rejected cleanly or shown back unencoded.
+4. **Run an automated scan** with OWASP ZAP against `http://localhost:3000` only, and read the input-related alerts it raises.
+5. **Write one security bug report** for your most serious finding: the input, the steps, what happened, the risk, and the fix you'd recommend (server-side validation, output encoding, or parameterised queries).
+
+#### Checkpoint
+You have a map of Juice Shop's inputs, results from boundary and type testing on three of them, a ZAP scan of your local copy only, and one clear security bug report with a recommended fix.
+
+#### Quiz
+1. What is the difference between validation and output encoding?
+2. What causes cross-site scripting?
+3. What is the standard fix for injection into database queries?
+4. Why isn't browser-side validation enough?
+5. What is the one rule that applies before any security test?
+
+*Answers: 1) Validation checks input is what's expected and rejects the rest; output encoding makes sure user text displayed on a page is shown as text, never run as code. 2) A page displaying user input without encoding it, so the input runs as script in other users' browsers. 3) Parameterised queries, which keep user input separate from the query itself. 4) Anyone can send requests directly to the server and skip the browser's checks, so the server must validate too. 5) Only test systems you own or have written permission to test.*
+
+---
+
 ## Module 7 Completion Checklist
 - [ ] Run an automated OWASP ZAP scan against an authorized training application
 - [ ] Mapped three scan findings to OWASP Top 10 categories with plain-language explanations and justified severities
 - [ ] Documented and compared error messages for wrong-password vs. non-existent-account login attempts
 - [ ] Observed and recorded whether rate limiting/lockout triggered after repeated failed logins
 - [ ] Confirmed whether a logged-out session was actually invalidated, and understands why authentication testing is always scoped to authorized, non-production environments
+- [ ] Mapped every input in a local, intentionally vulnerable practice app
+- [ ] Tested three inputs with boundary, type, and HTML values
+- [ ] Run ZAP against your local copy only and written a security bug report with a fix

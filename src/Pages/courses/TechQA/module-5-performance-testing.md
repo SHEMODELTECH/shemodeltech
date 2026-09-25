@@ -125,9 +125,74 @@ You've run at least two different load pattern types (stress and spike) against 
 
 ---
 
+### Topic 5.3: Reading and Reporting Performance Results
+
+#### Concept
+
+A load test is only useful if someone can act on its results. Averages hide the problem: if most requests take 200 ms but one in twenty takes 6 seconds, the average still looks fine while real users are waiting. Performance testers report **percentiles**, compare every run against a **baseline**, and turn numbers into a clear finding: what slowed down, at what load, and what it means for users.
+
+- A **percentile** (p90, p95, p99) is the response time that 90, 95, or 99 percent of requests were faster than; p95 is a common headline number because it reflects the slow experiences an average hides
+- **Throughput** is how many requests the system handled per second; the **error rate** is the share that failed
+- A **baseline** is a run under normal conditions that later runs are compared against, so "slower" has a precise meaning
+- A **bottleneck** is the one resource that limits everything else, such as database connections, CPU, or memory; response times usually climb sharply once it's reached
+- The **saturation point** is the load at which throughput stops rising while response times and errors keep climbing
+
+#### Structure at a Glance
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#c93a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+flowchart LR
+    RAW["<b>Raw results</b><br/><br/>Every request's<br/>time and status"]
+    MET["<b>Metrics</b><br/><br/>p95, throughput,<br/>error rate"]
+    CMP["<b>Compare</b><br/><br/>Against the<br/>baseline"]
+    FIND["<b>Finding</b><br/><br/>What broke, at<br/>what load"]
+
+    RAW ==> MET ==> CMP ==> FIND
+
+    style RAW fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
+    style MET fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
+    style CMP fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style FIND fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    linkStyle default stroke-width:4px,stroke:#333333
+```
+- Always run JMeter in **non-GUI mode** for real tests; the GUI is for building a plan and uses enough memory to distort results
+- A good finding names the load level, the metric that crossed the line, and the likely cause, so a developer knows where to look first
+
+#### Where you'd actually use this
+
+Before a big sale, a shop asks whether checkout will survive five times its normal traffic. Your report shows p95 stays under a second up to three times normal load, then climbs to eight seconds with a 4% error rate at four times, pointing to database connections as the bottleneck. That tells the team exactly what to fix before the sale.
+
+#### Lab
+
+1. **Reuse your Topic 5.2 test plan** against the same authorised practice endpoint, and save it as `plan.jmx`.
+2. **Run a baseline in non-GUI mode** with a small number of users, generating an HTML report:
+   ```bash
+   jmeter -n -t plan.jmx -l baseline.jtl -e -o baseline-report
+   ```
+3. **Open `baseline-report/index.html`** and record the p95 response time, throughput, and error rate.
+4. **Run again at a higher load** (for example, double the users) into a new results file and report folder, and record the same three numbers.
+5. **Write a one-paragraph finding** comparing the runs: the load level, what changed, and one likely cause. Use percentiles, not averages.
+
+#### Checkpoint
+You have two HTML reports from non-GUI runs, a table comparing p95, throughput, and error rate between them, and a written finding a developer could act on.
+
+#### Quiz
+1. Why are averages misleading in performance testing?
+2. What does "p95 = 1.2 seconds" mean?
+3. What is a baseline, and why do you need one?
+4. What is the saturation point?
+5. Why run JMeter in non-GUI mode for real tests?
+
+*Answers: 1) A small number of very slow requests can hide behind a healthy-looking average, even though real users are experiencing them. 2) 95% of requests completed in 1.2 seconds or less. 3) A run under normal conditions that later runs are compared against, so you can say precisely how much slower or less stable a new run is. 4) The load at which throughput stops increasing while response times and errors keep rising. 5) The GUI uses a lot of memory and can distort the results; non-GUI mode is lighter and designed for real test runs.*
+
+---
+
 ## Module 5 Completion Checklist
 - [ ] Built a working JMeter test plan with a Thread Group, HTTP sampler, and Listener
 - [ ] Compared results between two different load levels (10 vs. 50 users) against the same target
 - [ ] Run the same base test plan reconfigured as both a stress test and a spike test
 - [ ] Can name all four load pattern types (load, stress, spike, soak) and the specific question each one answers
 - [ ] Can explain why a performance number needs context (load pattern, duration, environment) to be meaningful
+- [ ] Ran a baseline and a higher-load test in non-GUI mode with HTML reports
+- [ ] Compared p95, throughput, and error rate across two runs
+- [ ] Written a performance finding using percentiles, not averages

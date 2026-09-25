@@ -1,9 +1,16 @@
 <!-- order: 21 -->
 # AI Infrastructure Engineer: Hands-On Project Tutorials
 
-This document turns every project in the **AI Infrastructure Engineer Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: your terminal
+
+Unlike the other AI courses, this one works in a **terminal** on purpose: infrastructure is built, deployed, and monitored from the command line, so practising there is part of the skill. Use Terminal on a Mac, a Linux shell, or WSL on Windows. If you'd rather not set anything up locally, [Google Cloud Shell](https://shell.cloud.google.com) gives you a free Linux terminal in your browser.
+
+For the Python parts, you can still try code in a Jupyter notebook first, then move it into files once it works.
 
 ---
 

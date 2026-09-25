@@ -51,6 +51,14 @@ const look = (t) => TRACK_LOOK[t] || TRACK_LOOK.company;
 const cleanTitle = (title = '') =>
   title.replace(/:?\s*Hands-?On Project Tutorials\s*$/i, '').trim() || title;
 
+// "About 45 min", "About 3.5 hours"
+const formatTime = (min) => {
+  if (!min) return '';
+  if (min < 60) return `About ${min} min`;
+  const h = Math.round((min / 60) * 2) / 2;
+  return `About ${h} hour${h === 1 ? '' : 's'}`;
+};
+
 const CheckIcon = ({ className = 'w-3.5 h-3.5' }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -289,6 +297,7 @@ const Foundations = () => {
                         <span className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-gray-500">
                           {c.level && <span className="fd-level">{c.level}</span>}
                           {c.projects > 1 && <span>{c.projects} parts</span>}
+                          {c.minutes > 0 && <span>{formatTime(c.minutes)}</span>}
                         </span>
                       </button>
                     </li>
@@ -466,6 +475,7 @@ const CourseReader = ({ course, index, total, trackLabel, isDone, next, onBack, 
           </button>
           <span className="text-xs text-gray-500">
             Course {index + 1} of {total}
+            {course.minutes > 0 && <span className="ml-3">{formatTime(course.minutes)}</span>}
             {isDone && <span className="fd-tag fd-tag-done ml-2 align-middle">Done</span>}
           </span>
         </div>

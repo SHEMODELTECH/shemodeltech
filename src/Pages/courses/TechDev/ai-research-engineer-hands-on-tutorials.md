@@ -1,9 +1,23 @@
 <!-- order: 19 -->
 # AI Research Engineer: Hands-On Project Tutorials
 
-This document turns every project in the **AI Research Engineer Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
 
 ---
 
@@ -11,11 +25,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 **Goal:** Read a research paper the way a researcher does, for what to rebuild, not just what to remember.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir paper_reproduction_project
-cd paper_reproduction_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `paper_reproduction_project`.
 
 **Step 2: Choose a short, well-known paper with a simple result.**
 Look for a paper with a result you can reproduce with a small dataset and a few hours of compute (e.g., a simple classification benchmark), not a paper requiring a GPU cluster.
@@ -24,9 +35,7 @@ Look for a paper with a result you can reproduce with a small dataset and a few 
 Most papers follow **Abstract → Introduction → Method → Results → Discussion**. Skim all five sections once before rereading anything closely.
 
 **Step 4: Identify the one core claim you'll reproduce.**
-```bash
-nano paper_summary.md
-```
+Add a **text cell** headed `paper_summary` and write your notes in it.
 Write one sentence: "This paper claims that [method] achieves [result] on [dataset/task]."
 
 **Step 5: Extract the method in your own words.**
@@ -36,9 +45,7 @@ Write one sentence: "This paper claims that [method] achieves [result] on [datas
 Note what data the paper used and how it measured success (accuracy, F1, etc.).
 
 **Step 7: Write a minimal reproduction script.**
-```bash
-nano reproduce.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 Implement the simplest possible version of the method against a small version of the dataset (or a substitute if the original isn't available).
 
 **Step 8: Compare your result to the paper's claim.**
@@ -74,10 +81,9 @@ paper_reproduction_project/
 **Goal:** Build the habit of understanding data before modeling it, the step most beginners skip and most experienced researchers insist on.
 
 **Step 1: Set up a project folder and environment.**
-```bash
-mkdir data_exploration_project
-cd data_exploration_project
-pip install --break-system-packages jupyter pandas numpy matplotlib
+Create a new notebook for this project (**File → New notebook**) and name it `data_exploration_project`.
+```python
+%pip install pandas numpy matplotlib
 ```
 
 **Step 2: Load a dataset.**
@@ -146,11 +152,8 @@ data_exploration_project/
 
 **Goal:** Build the optimization algorithm underneath nearly every model you'll ever train, by hand, once, so it's never a mystery again.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir gradient_descent_project
-cd gradient_descent_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `gradient_descent_project`.
 
 **Step 2: Understand the goal: minimizing a loss function.**
 A **loss function** measures how wrong a model's predictions are; **minimizing** it means adjusting the model until predictions get as close to correct as possible.
@@ -159,9 +162,7 @@ A **loss function** measures how wrong a model's predictions are; **minimizing**
 A **gradient** is the direction of steepest increase of the loss function with respect to the model's parameters; moving in the *opposite* direction decreases loss.
 
 **Step 4: Implement a simple loss function.**
-```bash
-nano gradient_descent.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def loss(w, x, y):
     prediction = w * x
@@ -225,11 +226,10 @@ gradient_descent_project/
 
 **Goal:** Establish a reference point, the number every future improvement (including Project 6's ablation study) gets measured against.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir baseline_model_project
-cd baseline_model_project
-pip install --break-system-packages scikit-learn
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `baseline_model_project`.
+```python
+%pip install scikit-learn
 ```
 
 **Step 2: Load your Project 2 dataset.**
@@ -271,9 +271,7 @@ print("F1:", f1_score(y_test, preds))
 **accuracy** is percent correct; **F1 score** balances precision and recall, critical if Project 2 revealed class imbalance, where accuracy alone is misleading.
 
 **Step 7: Document the baseline numbers.**
-```bash
-nano baseline_results.md
-```
+Add a **text cell** headed `baseline_results` and write your notes in it.
 Record both models' scores.
 
 ### Final Project Structure
@@ -304,20 +302,17 @@ baseline_model_project/
 
 **Goal:** Move from classical ML (Project 4) to deep learning fundamentals, by building the smallest possible neural network without a framework doing the work for you.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir neural_network_project
-cd neural_network_project
-pip install --break-system-packages numpy
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `neural_network_project`.
+```python
+%pip install numpy
 ```
 
 **Step 2: Understand a neuron.**
 A **neuron** computes a weighted sum of its inputs, adds a bias, and passes the result through an **activation function** (a nonlinearity, like sigmoid).
 
 **Step 3: Implement the sigmoid activation function.**
-```bash
-nano neural_network.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import numpy as np
 
@@ -402,11 +397,8 @@ neural_network_project/
 
 **Goal:** Isolate what actually matters in a model design, the core skill of empirical AI research.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir ablation_study_project
-cd ablation_study_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `ablation_study_project`.
 
 **Step 2: Choose a model with multiple components.**
 Use your Project 5 neural network (or a slightly extended version), something with at least 2–3 design choices you could remove or change.
@@ -415,15 +407,11 @@ Use your Project 5 neural network (or a slightly extended version), something wi
 An **ablation** is a controlled removal or change of one component while holding everything else fixed (e.g., "same network, but no hidden layer" or "same network, but with a different activation function").
 
 **Step 4: Write down your hypothesis for each variant.**
-```bash
-nano hypotheses.md
-```
+Add a **text cell** headed `hypotheses` and write your notes in it.
 Before running anything, predict: will removing this component help, hurt, or not matter?
 
 **Step 5: Run the baseline (full model) and each variant.**
-```bash
-nano ablation.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 variants = {
     "full_model": run_full_model,
@@ -441,9 +429,7 @@ Keep the dataset, training steps, and random seed identical across all variants 
 Run each configuration 3–5 times with different random seeds and record the spread of results, not just one number.
 
 **Step 7: Compare results against your hypotheses.**
-```bash
-nano ablation_results.md
-```
+Add a **text cell** headed `ablation_results` and write your notes in it.
 For each variant: what you predicted, what happened, and by how much.
 
 **Step 8: Write the conclusion.**
@@ -478,11 +464,8 @@ ablation_study_project/
 
 **Goal:** Practice communicating results clearly, the skill that turns good research into research anyone else can use.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir research_report_project
-cd research_report_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `research_report_project`.
 
 **Step 2: Choose which project's results to report on.**
 Use your Project 6 ablation study, or combine it with Project 4's baseline.
@@ -491,9 +474,7 @@ Use your Project 6 ablation study, or combine it with Project 4's baseline.
 An **abstract** is a 3–5 sentence summary of the entire report, question, method, result, takeaway, written so someone can decide whether to read further.
 
 **Step 4: Write the introduction.**
-```bash
-nano report.md
-```
+Add a **text cell** headed `report` and write your notes in it.
 State the question you investigated and why it matters, in your own words.
 
 **Step 5: Write the method section.**
@@ -541,10 +522,7 @@ research_report_project/
 **Goal:** Combine every project above into one complete research effort, this is an integration exercise, not a new build.
 
 **Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
+Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 
 **Step 2: Choose a paper, applying Project 1's approach.**
 Pick a paper with a result ambitious enough to be meaningful, but still reproducible with the compute and time you have.
@@ -562,9 +540,7 @@ Before matching the paper's full method, confirm a simple baseline behaves sensi
 Try to match the paper's reported number, and test at least one component the paper claims matters.
 
 **Step 7: Write the full research report (Project 7 skills).**
-```bash
-nano capstone_report.md
-```
+Add a **text cell** headed `capstone_report` and write your notes in it.
 Abstract, introduction, method, results (with your number vs. the paper's number), ablation findings, discussion, and limitations.
 
 **Step 8: Reflect on what matched and what didn't.**

@@ -1,9 +1,33 @@
 <!-- order: 18 -->
 # Multimodal AI Engineer: Hands-On Project Tutorials
 
-This document turns every project in the **Multimodal AI Engineer Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
+
+**Your Claude API key.** Projects that call Claude need an API key from [console.anthropic.com](https://console.anthropic.com). API use is paid and billed by how much text you send and receive. The requests in this course are small, but set a low monthly spending limit in the console before you begin. Keep the key out of your code: in Colab, click the **key icon** in the left sidebar, add a secret named `ANTHROPIC_API_KEY`, and turn on notebook access. Then run this cell at the top of every notebook that calls Claude:
+
+```python
+import os
+from google.colab import userdata
+os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
+```
+
+**A few projects run on your computer.** Projects that build a web app, a job queue, or a scheduled task keep running in the background, and a notebook can't host that. Those projects say so at the top and use a code editor and your terminal instead: VS Code, plus Terminal on a Mac or PowerShell on Windows.
 
 ---
 
@@ -11,19 +35,14 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 **Goal:** Understand what tools exist before building anything, the landscape you'll be pulling from for every later project.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir multimodal_survey_project
-cd multimodal_survey_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `multimodal_survey_project`.
 
 **Step 2: Understand the four modalities this course covers.**
 **text** (words), **image** (still pictures), **audio** (speech/sound), **video** (moving images, often with audio), a **multimodal model** processes and/or generates more than one of these.
 
 **Step 3: Identify model categories by capability.**
-```bash
-nano model_survey.md
-```
+Add a **text cell** headed `model_survey` and write your notes in it.
 **vision-language models (VLMs)** understand images and text together; **speech-to-text (STT)** and **text-to-speech (TTS)** models convert between audio and text; **image generation models** create images from text prompts.
 
 **Step 4: Research 2–3 models per category.**
@@ -36,9 +55,7 @@ For each model, write down what format it expects as input (e.g., base64-encoded
 Multimodal models often have limits on image resolution, audio length, or combined token count that differ from pure text models.
 
 **Step 7: Write a comparison summary.**
-```bash
-nano comparison_summary.md
-```
+Add a **text cell** headed `comparison_summary` and write your notes in it.
 For each modality combination (text+image, speech+text, text+image-generation), note your top pick and why.
 
 ### Final Project Structure
@@ -69,17 +86,14 @@ multimodal_survey_project/
 
 **Goal:** Handle two modalities at once for the first time, the foundational mechanic behind every later project.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir image_text_project
-cd image_text_project
-pip install --break-system-packages requests pillow
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `image_text_project`.
+```python
+%pip install requests pillow
 ```
 
 **Step 2: Load and inspect an image.**
-```bash
-nano process.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 from PIL import Image
 img = Image.open("test_image.jpg")
@@ -98,13 +112,18 @@ with open("test_image.jpg", "rb") as f:
 
 **Step 4: Send an image + text request.**
 ```python
+import os
 import requests
 
 response = requests.post(
     "https://api.anthropic.com/v1/messages",
-    headers={"x-api-key": "YOUR_KEY", "content-type": "application/json"},
+    headers={
+        "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    },
     json={
-        "model": "claude-sonnet-4-6",
+        "model": "claude-sonnet-5",
         "max_tokens": 300,
         "messages": [{
             "role": "user",
@@ -164,17 +183,14 @@ image_text_project/
 
 **Goal:** Go one level deeper into each modality, understanding what's actually being represented under the hood before combining them.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir feature_extraction_project
-cd feature_extraction_project
-pip install --break-system-packages pillow numpy librosa
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `feature_extraction_project`.
+```python
+%pip install pillow numpy librosa
 ```
 
 **Step 2: Extract basic image features.**
-```bash
-nano extract_features.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 from PIL import Image
 import numpy as np
@@ -218,9 +234,7 @@ print("Estimated tempo:", tempo)
 ```
 
 **Step 7: Document what you extracted and why it matters.**
-```bash
-nano feature_notes.md
-```
+Add a **text cell** headed `feature_notes` and write your notes in it.
 Write 3–4 sentences connecting these hand-extracted features to what a real multimodal model does automatically and at much greater scale.
 
 ### Final Project Structure
@@ -255,20 +269,15 @@ feature_extraction_project/
 
 **Goal:** Combine vision and language in one model output, your first true multimodal *generation* task, not just multimodal *input*.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir image_captioning_project
-cd image_captioning_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `image_captioning_project`.
 Copy in `process.py` from Project 2.
 
 **Step 2: Understand how vision-language models connect the two modalities.**
 A **vision transformer** encodes an image into a numeric representation; **text-image embedding alignment** means the model has learned to relate that image representation to relevant words and concepts.
 
 **Step 3: Write a basic captioning function.**
-```bash
-nano caption.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def generate_caption(image_path):
     # reuse Project 2's describe_image logic with a captioning-specific prompt
@@ -291,9 +300,7 @@ def generate_caption(image_path, style="concise"):
 **alt-text** is a specific caption style written for accessibility, describing an image for someone who can't see it.
 
 **Step 6: Evaluate caption quality manually.**
-```bash
-nano caption_evaluation.md
-```
+Add a **text cell** headed `caption_evaluation` and write your notes in it.
 For each test image, rate the caption 1–5 on accuracy and usefulness, noting any errors (misidentified objects, hallucinated details).
 
 **Step 7: Build a simple batch captioning script.**
@@ -334,11 +341,13 @@ image_captioning_project/
 
 **Goal:** Build a full interactive app around a vision-language model, moving from a script to something a real user could actually use.
 
-**Step 1: Set up a project folder.**
+> **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
+
+**Step 1: Create the project notebook.**
 ```bash
 mkdir image_qa_app_project
 cd image_qa_app_project
-pip install --break-system-packages fastapi uvicorn python-multipart
+pip install fastapi uvicorn python-multipart
 ```
 
 **Step 2: Build an image upload endpoint.**
@@ -421,11 +430,10 @@ image_qa_app_project/
 
 **Goal:** Extend retrieval to work across modalities, finding relevant content by meaning, whether it's stored as text or images.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir multimodal_search_project
-cd multimodal_search_project
-pip install --break-system-packages chromadb sentence-transformers pillow
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `multimodal_search_project`.
+```python
+%pip install chromadb sentence-transformers pillow
 ```
 
 **Step 2: Gather a mixed document set.**
@@ -435,9 +443,7 @@ Collect 10–15 items: some plain text documents, some images (diagrams, screens
 A **multimodal embedding model** maps both text and images into the *same* numeric embedding space, so a text query can be compared directly against image embeddings.
 
 **Step 4: Generate embeddings for text documents.**
-```bash
-nano build_search.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 from sentence_transformers import SentenceTransformer
 text_model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -508,28 +514,21 @@ multimodal_search_project/
 
 **Goal:** Test what you've built for quality and bias, the discipline that separates a demo from something you'd trust in production.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir multimodal_evaluation_project
-cd multimodal_evaluation_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `multimodal_evaluation_project`.
 
 **Step 2: Choose which system to evaluate.**
 Pick your Project 4 captioning tool, Project 5 Q&A app, or Project 6 search tool.
 
 **Step 3: Build a test set.**
-```bash
-nano test_set.md
-```
+Add a **text cell** headed `test_set` and write your notes in it.
 Collect 15–20 diverse test cases: varied image types (simple, complex, text-containing, low-quality), varied questions or queries.
 
 **Step 4: Define evaluation metrics.**
 For generative multimodal output, common metrics include **accuracy** (is the answer factually correct), **relevance** (does it address the actual question), and **hallucination rate** (does it describe things that aren't actually present).
 
 **Step 5: Score each test case.**
-```bash
-nano evaluation_results.md
-```
+Add a **text cell** headed `evaluation_results` and write your notes in it.
 Run each test case through the system and score it 1–5 on each metric from Step 4.
 
 **Step 6: Check for failure modes by category.**
@@ -539,9 +538,7 @@ Common multimodal failure modes include struggling with **low-quality or low-res
 Test with images depicting a range of people, settings, and contexts, and note any systematic differences in caption quality, tone, or accuracy.
 
 **Step 8: Write the evaluation report.**
-```bash
-nano evaluation_report.md
-```
+Add a **text cell** headed `evaluation_report` and write your notes in it.
 Structure: Test set description → Metrics → Scores → Failure mode analysis → Bias check findings → Recommendations for improvement.
 
 ### Final Project Structure
@@ -572,6 +569,8 @@ multimodal_evaluation_project/
 ## Final Capstone: Build a Multimodal Assistant
 
 **Goal:** Combine every project above into one complete assistant that accepts text, image, and audio input and returns a relevant response, this is an integration exercise, not a new build.
+
+> **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
 
 **Step 1: Set up your capstone project folder.**
 ```bash

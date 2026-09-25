@@ -30,6 +30,7 @@ const firstHeading = (md) => {
 const firstParagraph = (md) => {
   const lines = md.split('\n');
   let seenTitle = false;
+  let skipping = false;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!seenTitle) {
@@ -37,6 +38,9 @@ const firstParagraph = (md) => {
       continue;
     }
     if (!line) continue;
+    // The setup section describes the tools, not the course: skip it.
+    if (/^##\s+Before you start/i.test(line)) { skipping = true; continue; }
+    if (skipping) { if (/^##\s+/.test(line)) skipping = false; else continue; }
     // Skip headings, rules, list markers, code fences, blockquotes.
     if (/^(#|---|\*\*\*|```|>|[-*+]\s|\d+\.\s)/.test(line)) continue;
     // Setup notes and document boilerplate don't describe the course.
@@ -94,6 +98,16 @@ const courseLevel = (t) =>
 const prettySlug = (slug) =>
   slug.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
+// Rough time to complete: reading at ~200 words a minute, plus ~30 minutes for
+// each section with hands-on work (a lab, numbered steps, or an exercise).
+const estimateMinutes = (md) => {
+  const words = md.split(/\s+/).filter(Boolean).length;
+  const sections = md.split(/^##\s+/m).slice(1);
+  const practical = sections.filter((s) => /(\bLab\b|\*\*Step \d|Practical exercise|Hands-on)/i.test(s)).length;
+  const raw = words / 200 + practical * 30;
+  return Math.max(10, Math.round(raw / 15) * 15);
+};
+
 const readOrder = (md) => {
   const m = md.match(/<!--\s*order:\s*(\d+)\s*-->/i);
   return m ? parseInt(m[1], 10) : null;
@@ -132,6 +146,7 @@ const build = () => {
         level: courseLevel(firstHeading(md) || ''),
         summary: firstParagraph(md),
         projects: countProjects(md),
+        minutes: estimateMinutes(md),
         order: readOrder(md),
         markdown: md,
       };

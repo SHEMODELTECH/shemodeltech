@@ -131,9 +131,81 @@ You've read a real endpoint's documented schema, executed a live "Try it out" re
 
 ---
 
+### Topic 4.3: Automated API Test Suites
+
+#### Concept
+
+Clicking **Send** on requests one at a time is exploration. Real API testing means a **suite**: a collection where every request carries its own checks, runs in a fixed order, and can be run again with one command, by you, by a teammate, or by a pipeline. Postman's **Collection Runner** runs a whole collection inside the app, and **Newman** is Postman's command-line runner, which runs the same exported collection outside the app.
+
+- An **assertion** is a single check inside a test script, such as "the status code is 200" or "the `name` field equals Leanne Graham"
+- **Positive tests** confirm the API does the right thing with valid input; **negative tests** confirm it fails safely with invalid input, such as a missing field or an ID that doesn't exist
+- **Chaining** passes a value from one response into a later request (for example, saving a new record's `id` into an environment variable and using it in the next request)
+- A **response-time assertion** fails the test when the API is slower than an agreed limit, catching performance slips early
+- **Newman** runs an exported collection from the terminal and prints a pass/fail summary, which is what makes API tests runnable in CI/CD (Module 8)
+
+#### Structure at a Glance
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#c93a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+flowchart LR
+    C["<b>Collection</b><br/><br/>Requests in<br/>a fixed order"]
+    A["<b>Assertions</b><br/><br/>Status, fields,<br/>response time"]
+    RUN["<b>Runner</b><br/><br/>Collection Runner<br/>or Newman"]
+    REP["<b>Report</b><br/><br/>Passed and<br/>failed checks"]
+
+    C ==> A ==> RUN ==> REP
+
+    style C fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
+    style A fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
+    style RUN fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style REP fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    linkStyle default stroke-width:4px,stroke:#333333
+```
+- A good suite mixes positive and negative tests; an API that returns the right data but also accepts nonsense input has only been half tested
+- Keeping base URLs and keys in environment variables means the same suite can run against a test server today and a staging server tomorrow
+
+#### Where you'd actually use this
+
+A developer changes how user records are returned. Instead of someone clicking through twenty requests by hand, the suite runs in under a minute and flags that the `email` field has disappeared from the response, before the change reaches the mobile app that depends on it.
+
+#### Lab
+
+1. **Create a collection** in Postman called `Users API` and set an environment variable `baseUrl` to `https://jsonplaceholder.typicode.com`.
+2. **Add a GET request** to `{{baseUrl}}/users/1` with these tests in the **Tests** (or **Scripts → Post-response**) tab:
+   ```javascript
+   pm.test("Status is 200", () => pm.response.to.have.status(200));
+   pm.test("Returns user 1", () => pm.expect(pm.response.json().id).to.eql(1));
+   pm.test("Name is present", () => pm.expect(pm.response.json().name).to.be.a("string"));
+   pm.test("Responds within 1 second", () => pm.expect(pm.response.responseTime).to.be.below(1000));
+   ```
+3. **Add a negative test:** a GET request to `{{baseUrl}}/users/9999` that asserts the status is `404`.
+4. **Chain two requests:** add a POST to `{{baseUrl}}/posts` with a JSON body, save the returned `id` using `pm.environment.set("postId", pm.response.json().id)`, then use `{{postId}}` in a follow-up request's name or notes to see the value carry over.
+5. **Run the whole collection** with the **Collection Runner** and read the summary. Then export the collection and environment as JSON, and run them from a terminal with Newman:
+   ```bash
+   npm install -g newman
+   newman run users-api.postman_collection.json -e test.postman_environment.json
+   ```
+
+#### Checkpoint
+You have a saved collection with positive, negative, and response-time assertions, it passes in the Collection Runner, and the same collection runs from the terminal with Newman.
+
+#### Quiz
+1. What is the difference between exploring an API by hand and running an API test suite?
+2. What is a negative test? Give an example.
+3. What does chaining requests mean?
+4. Why add a response-time assertion?
+5. Why does Newman matter for CI/CD?
+
+*Answers: 1) Exploring sends requests one at a time and relies on you to read the results; a suite runs a fixed set of requests with built-in checks, the same way every time, and reports pass or fail. 2) A test that confirms the API fails safely on bad input, such as requesting a user that doesn't exist and expecting a 404. 3) Passing a value from one response, like a new record's ID, into a later request, usually through an environment variable. 4) To catch the API getting slower than an agreed limit, not just returning wrong data. 5) It runs a collection from the command line without the Postman app, so a pipeline can run the suite automatically on every change.*
+
+---
+
 ## Module 4 Completion Checklist
 - [ ] Sent a real API request in Postman and inspected its status code and response body
 - [ ] Written and passed two automated Postman test scripts on a single request
 - [ ] Saved a request into a collection and observed how results change against an invalid input
 - [ ] Read a real endpoint's documented schema and executed a live "Try it out" request against it in Swagger UI
 - [ ] Compared an actual API response against its documented schema and written down the result
+- [ ] Built a collection with positive, negative, and response-time assertions
+- [ ] Chained two requests with an environment variable
+- [ ] Ran the full collection in the Collection Runner and from the terminal with Newman

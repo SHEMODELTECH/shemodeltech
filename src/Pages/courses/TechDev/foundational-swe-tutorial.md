@@ -44,6 +44,18 @@ Success metric: One number that tells us it's working
 
 **Why this matters:** In interviews and in real product work, engineers who can write a clear spec get trusted with ambiguous problems. Engineers who can't, only get handed pre-specified tickets. This is the difference between junior and senior scope.
 
+### Checkpoint
+You have a one-page spec for TrackIt, in your own words, with all five parts filled in: problem, users, core flow, non-goals, and one success metric.
+
+### Quiz
+1. What five parts does the spec template ask for?
+2. Why write non-goals down explicitly?
+3. What makes a good success metric?
+4. Why is spec writing becoming *more* valuable as AI writes more code?
+5. What is TrackIt's core flow in one line?
+
+*Answers: 1) Problem, users, core flow, non-goals, and a success metric. 2) So everyone agrees on what v1 will not include, which stops scope creep and wasted work. 3) One measurable number that tells you whether the product is working, such as time from opening the app to logging a task. 4) Someone still has to decide what to build and why; code is only useful when it solves the right problem. 5) Sign up, type a task in plain English, AI structures it, see it on a list, mark it done.*
+
 ---
 
 ## Module 1: Programming Language Proficiency (Backend Core)
@@ -77,6 +89,18 @@ uvicorn main:app --reload
 Visit `http://localhost:8000/health`. You now have a running service.
 
 **Why this matters:** Language proficiency isn't syntax memorization - it's knowing the idioms (type hints, dependency injection, async) that let your code integrate cleanly with the rest of the ecosystem, which is what AI coding assistants and reviewers both expect to see.
+
+### Checkpoint
+Your FastAPI app runs locally, and `http://localhost:8000/health` returns `{"status": "ok"}`.
+
+### Quiz
+1. What does `python -m venv venv` create, and why use one?
+2. What does the `@app.get("/health")` line do?
+3. What command starts the server, and what does `--reload` add?
+4. Why does a service need a health-check endpoint?
+5. The tutorial says language proficiency isn't syntax memorisation. What is it instead?
+
+*Answers: 1) A virtual environment: an isolated set of Python packages for this project, so its libraries don't clash with other projects. 2) It registers the function below it to handle GET requests to the `/health` path. 3) `uvicorn main:app --reload`; `--reload` restarts the server automatically when you save a code change. 4) So people and monitoring tools can check the service is up without touching real data. 5) Knowing the idioms, such as type hints, dependency injection, and async, that make your code fit cleanly into the wider ecosystem.*
 
 ---
 
@@ -119,6 +143,18 @@ class TaskQueue:
 ```
 
 **Why this matters:** A naive implementation would sort the full task list every time you want "what's next" - O(n log n) on every call. The heap keeps insert at O(log n) and peek at O(1). This is exactly the kind of decision an AI assistant will not make for you unless you specify it, and exactly what a code reviewer checks for.
+
+### Checkpoint
+`TaskQueue` returns the most urgent task: the earliest due date first, then the highest priority when due dates tie.
+
+### Quiz
+1. What data structure does `TaskQueue` use?
+2. How fast is it to add a task, and to see the next one up?
+3. What does `__lt__` control in the `Task` class?
+4. Why not just sort the whole list every time?
+5. In `priority`, does 1 mean highest or lowest?
+
+*Answers: 1) A min-heap, through Python's `heapq` module. 2) Adding is O(log n); looking at the next task is O(1). 3) How two tasks compare, which is what the heap uses to order them: due date first, then priority. 4) Sorting on every request costs O(n log n) each time; the heap keeps the list in order as you go. 5) 1 is the highest priority.*
 
 ---
 
@@ -169,6 +205,18 @@ ORDER BY due_date ASC, priority ASC;
 
 **Why this matters:** An ORM will generate SQL for you, but if you cannot read what it generated and spot a missing index or an N+1 query, you cannot debug a slow production endpoint. This is one of the highest-leverage skills for the "senior engineers who review AI output" shift happening across the industry right now.
 
+### Checkpoint
+You have `User` and `Task` models linked by `owner_id`, and you can write the "due this week" SQL query by hand.
+
+### Quiz
+1. Why is `email` both unique and indexed?
+2. What does the `owner_id` foreign key represent?
+3. Why index `owner_id`?
+4. What is an N+1 query problem?
+5. Why should you be able to read the SQL an ORM generates?
+
+*Answers: 1) Unique so two accounts can't share an email; indexed because every login looks users up by email. 2) Which user owns each task. 3) Every task-list query filters by the owner, and the index keeps those lookups fast as the table grows. 4) Running one query to fetch a list, then one extra query per item, when a single joined query would do. 5) So you can spot slow or wrong queries, such as a missing index or an N+1 problem, when the app slows down.*
+
 ---
 
 ## Module 4: System Design & Architecture
@@ -190,6 +238,18 @@ Now answer these design questions in writing - this is the actual skill system d
 3. **What data needs to be consistent vs. what can be eventually consistent?** Task writes must be consistent (a user must never lose a task). A "tasks completed this week" analytics count could be eventually consistent, computed async.
 
 **Why this matters:** Interviewers and staff engineers are not testing whether you know the "correct" architecture - there isn't one. They're testing whether you can reason about trade-offs out loud. Practice narrating decisions like the three above for every system you build, even toy ones.
+
+### Checkpoint
+You've drawn TrackIt's architecture and written answers to the three scaling questions in your own words.
+
+### Quiz
+1. What is likely to break first if traffic grows tenfold?
+2. What is TrackIt's single point of failure, and how do you remove it?
+3. Why must the app be stateless to run more than one copy?
+4. Which data must be strongly consistent in TrackIt?
+5. What are system design interviews actually testing?
+
+*Answers: 1) The database connection pool, so you'd add pooling such as PgBouncer first. 2) The single app server; run two or more instances behind a load balancer. 3) So any instance can handle any request, without depending on data held in one server's memory. 4) Task writes, because a user must never lose a task. 5) Whether you can reason about trade-offs for a specific situation, not whether you know one correct architecture.*
 
 ---
 
@@ -237,6 +297,18 @@ Three non-negotiable rules this code enforces:
 
 **Why this matters:** Security is not a separate role anymore - DevSecOps means every engineer owns this. Reviewing AI-generated code for exactly these four things is now a daily task, not a specialist's job.
 
+### Checkpoint
+Passwords are stored only as bcrypt hashes, tokens expire, and you've run the four-question security checklist on each endpoint.
+
+### Quiz
+1. Why store a bcrypt hash instead of the password?
+2. Where should the JWT secret key live?
+3. Why should access tokens expire?
+4. Why must every task query filter by `owner_id`?
+5. Why return "invalid credentials" rather than "wrong password"?
+
+*Answers: 1) If the database leaks, the hashes can't easily be turned back into passwords. 2) In an environment variable or secrets manager, never in source control. 3) So a stolen token stops working after a short time. 4) Otherwise one user could read or change another user's tasks. 5) A specific message tells an attacker which part was right, such as that the email exists.*
+
 ---
 
 ## Module 6: AI/ML Literacy (Building an AI Feature, Not Just Using One)
@@ -282,7 +354,19 @@ The engineering judgment here, not the API call, is the actual skill:
 - **Keep the prompt out of the client** - a user should never be able to see or override your system prompt
 - **Log failures** - when the model returns malformed JSON, you need to know how often that happens in production
 
-**Why this matters:** AI/ML job postings have grown 74% year over year, but the skill being hired for is rarely "train a model from scratch" - it's structuring reliable systems around a model that is fundamentally probabilistic. That reliability layer is the engineering.
+**Why this matters:** Most AI work in product teams is not training a model from scratch - it's structuring reliable systems around a model that is fundamentally probabilistic. That reliability layer is the engineering.
+
+### Checkpoint
+The quick-add endpoint validates the model's reply against the `ParsedTask` schema, and you know what should happen when parsing fails.
+
+### Quiz
+1. What does the quick-add feature do?
+2. Why validate the model's output against a schema?
+3. Why keep the system prompt on the server?
+4. Why log parsing failures?
+5. What should the endpoint do when the model returns malformed JSON?
+
+*Answers: 1) It turns a plain-English sentence into a structured task: title, due date, and priority. 2) A language model's output isn't guaranteed to follow the format, so the code must check it before trusting it. 3) So users can't see it or override it. 4) To learn how often the model breaks the format in real use, so you can fix the prompt or add safeguards. 5) Handle it cleanly: return a helpful error, or ask the user to enter the task manually, rather than crashing or saving bad data.*
 
 ---
 
@@ -330,6 +414,18 @@ git push origin feature/quick-add-endpoint
 
 **Why this matters:** Tests are what let you trust AI-generated code changes without re-reading every line by hand. A codebase with no tests forces every review to be manual and slow - exactly the bottleneck teams are trying to remove.
 
+### Checkpoint
+Both priority-queue tests pass with `pytest`, and your change lives on its own feature branch.
+
+### Quiz
+1. What do the two tests check?
+2. Why do tests matter more as AI writes more code?
+3. What does `git checkout -b feature/quick-add-endpoint` do?
+4. Why work on a feature branch instead of main?
+5. What rule does the workflow give about merging your own pull request?
+
+*Answers: 1) That the earliest due date comes first, and that priority breaks ties between tasks due the same day. 2) They let you trust a change without re-reading every line by hand. 3) Creates a new branch with that name and switches to it. 4) So unfinished work stays separate until it's reviewed and ready to merge. 5) Don't merge it yourself without review: open the pull request, request a review, and merge only after someone else has looked at it.*
+
 ---
 
 ## Module 8: Cloud & Infrastructure (Ship It)
@@ -372,6 +468,18 @@ jobs:
 Now every pull request automatically runs your tests before a human even looks at it.
 
 **Why this matters:** Docker means "works on my machine" stops being an excuse - the container is identical everywhere. CI means broken code never reaches your teammates. Together, these two things are what let a team move fast without breaking things, which is the entire point of DevOps as a discipline.
+
+### Checkpoint
+TrackIt builds and runs in Docker, and a GitHub Actions workflow runs your tests on every pull request.
+
+### Quiz
+1. What problem does a Docker container solve?
+2. What does the `CMD` line in the Dockerfile do?
+3. What triggers the CI workflow?
+4. What does the CI job do, step by step?
+5. How do containers and CI together support DevOps?
+
+*Answers: 1) "It works on my machine": the container runs the same way everywhere. 2) Sets the command that starts the app, here Uvicorn serving `main:app` on port 8000. 3) Every pull request. 4) Checks out the code, sets up Python 3.12, installs the requirements, and runs pytest. 5) Containers make every environment identical, and CI stops broken code before it reaches teammates, so the team can ship often and safely.*
 
 ---
 

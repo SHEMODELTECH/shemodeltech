@@ -7,6 +7,20 @@ This is a bonus, advanced module extending the **AI Governance and Responsible A
 
 Every step follows the same format as the rest of the course: what you're doing, what the term means, how to do it, and why it matters. **This module is educational, not legal advice — consult qualified counsel for actual compliance decisions.**
 
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
+
 ---
 
 ## Project 8 (Bonus Module 1): Classify an AI System's EU AI Act Risk Tier
@@ -17,34 +31,25 @@ Every step follows the same format as the rest of the course: what you're doing,
 
 Misclassifying a system's risk tier is one of the most common and costly compliance mistakes organizations make — either overspending on unnecessary compliance work, or worse, missing obligations that carry fines up to €35 million or 7% of global annual turnover. This project builds the classification skill directly.
 
-**Step 1 — Set up a project folder.**
-```bash
-mkdir eu_ai_act_classification_project
-cd eu_ai_act_classification_project
-```
+**Step 1 — Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `eu_ai_act_classification_project`.
 Copy in `risk_overview.md` from Project 1.
 *Why:* Your existing risk overview is a natural starting point — EU AI Act classification builds on the same "what could go wrong" thinking, applied to a specific legal framework.
 
 **Step 2 — Learn the four risk tiers.**
-```bash
-nano risk_tiers.md
-```
+Add a **text cell** headed `risk_tiers` and write your notes in it.
 Learn: **unacceptable risk** (banned outright — e.g., social scoring, manipulative AI exploiting vulnerabilities); **high risk** (heavily regulated — AI used in areas like employment, credit scoring, law enforcement, education, and critical infrastructure); **limited risk** (transparency obligations only — e.g., chatbots must disclose they're AI); **minimal risk** (largely unregulated — e.g., spam filters, AI-enabled video games).
 *Why:* Every subsequent obligation in this module depends entirely on which tier applies — get this wrong and everything built on top of it is misdirected effort.
 
 **Step 3 — Check for prohibited practices first.**
 Learn: **Article 5** bans specific practices outright, including government-run social scoring, AI exploiting vulnerabilities of children or people with disabilities to cause harm, real-time remote biometric identification in public spaces by law enforcement (with narrow exceptions), and untargeted scraping of facial images to build recognition databases.
-```bash
-nano prohibited_practice_check.md
-```
+Add a **text cell** headed `prohibited_practice_check` and write your notes in it.
 Using your Project 1 example system, confirm it doesn't fall into any prohibited category.
 *Why:* This check comes first because unacceptable-risk systems can't be brought into compliance at all — they simply can't be deployed, so there's no point classifying further if this applies.
 
 **Step 4 — Check Annex III high-risk categories.**
 Learn: **Annex III** lists specific high-risk use cases — including biometrics, critical infrastructure, education and vocational training, employment and worker management, access to essential services, law enforcement, migration/border control, and administration of justice.
-```bash
-nano annex_iii_check.md
-```
+Add a **text cell** headed `annex_iii_check` and write your notes in it.
 For your example system (e.g., a resume-screening tool from the original course), check it against each Annex III category.
 *Why:* Employment and worker management is explicitly named in Annex III — a resume screener almost certainly qualifies as high-risk, which is exactly why this system was chosen as a running example throughout the original course.
 
@@ -58,16 +63,12 @@ Learn: **limited risk** systems — chatbots, deepfake generators, emotion-recog
 
 **Step 7 — Determine your provider vs. deployer role.**
 Learn: a **provider** develops an AI system and places it on the market; a **deployer** uses an AI system under its own authority. The same organization can be both, for different systems — and providers carry the bulk of high-risk obligations, while deployers have narrower but still real duties (Article 26).
-```bash
-nano role_determination.md
-```
+Add a **text cell** headed `role_determination` and write your notes in it.
 For your example system, determine which role(s) apply.
 *Why:* Every obligation in Projects 9–11 differs depending on whether you're building the system or just using someone else's — this determination shapes everything that follows.
 
 **Step 8 — Write the classification memo.**
-```bash
-nano classification_memo.md
-```
+Add a **text cell** headed `classification_memo` and write your notes in it.
 Structure: System description → Prohibited practice check (cleared) → Annex III analysis → Risk tier determination → Provider/deployer role → Reasoning.
 *Why:* This memo is the foundational document every other artifact in this module (and in a real compliance program) references — it needs to stand on its own as a defensible, written determination.
 
@@ -107,18 +108,13 @@ eu_ai_act_classification_project/
 
 Knowing a system is "high-risk" doesn't tell you what to build. The Act's high-risk obligations (concentrated in Articles 9–15) are specific and numerous — this project builds the skill of turning a legal article into an engineering and documentation checklist.
 
-**Step 1 — Set up a project folder.**
-```bash
-mkdir obligation_mapping_project
-cd obligation_mapping_project
-```
+**Step 1 — Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `obligation_mapping_project`.
 Copy in `classification_memo.md` from Project 8.
 *Why:* This project's entire purpose is translating that classification into action — keep it close at hand.
 
 **Step 2 — Learn the core high-risk provider obligations.**
-```bash
-nano provider_obligations.md
-```
+Add a **text cell** headed `provider_obligations` and write your notes in it.
 Learn: providers of high-risk systems must implement a **risk management system** (continuous, throughout the system's lifecycle), ensure **data governance** (training/validation/testing data must be relevant, representative, and as error-free as possible), produce **technical documentation**, build in **record-keeping** (automatic logging of relevant events), design for **human oversight**, achieve required **accuracy, robustness, and cybersecurity**, and establish a **quality management system**.
 *Why:* This is the actual checklist Articles 9–15 require — each one maps to a specific project later in this module or the original course.
 
@@ -127,9 +123,7 @@ Learn: under **Article 26**, deployers must use the system according to the prov
 *Why:* Deployer duties are lighter than provider duties, but they're not nothing — an organization that only *uses* a high-risk AI system still has real, enforceable responsibilities.
 
 **Step 4 — Cross-reference each obligation with existing course work.**
-```bash
-nano obligation_crosswalk.md
-```
+Add a **text cell** headed `obligation_crosswalk` and write your notes in it.
 Build a table mapping each obligation to work you've already done:
 
 | Obligation | Mapped to |
@@ -156,9 +150,7 @@ Learn: high-risk systems that pass conformity assessment receive **CE marking** 
 *Why:* These are the final, formal steps that make a system's compliance status externally visible and verifiable — not just an internal document, but a public record.
 
 **Step 8 — Write the obligation map.**
-```bash
-nano obligation_map.md
-```
+Add a **text cell** headed `obligation_map` and write your notes in it.
 Structure: Classification recap (from Project 8) → Applicable obligations → Crosswalk to existing artifacts → Identified gaps → Path to conformity assessment.
 *Why:* This document is your actual project plan for becoming compliant — it's what Projects 10 and 11 execute against.
 
@@ -195,25 +187,18 @@ obligation_mapping_project/
 
 Your Project 6 model card was written for internal transparency. The EU AI Act's technical documentation requirement is more specific and more formal — this project builds the difference, so you understand what "good enough internally" and "compliant with a specific legal requirement" actually look like side by side.
 
-**Step 1 — Set up a project folder.**
-```bash
-mkdir technical_documentation_project
-cd technical_documentation_project
-```
+**Step 1 — Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `technical_documentation_project`.
 Copy in `model_card.md` from Project 6 and `fairness_audit_report.md` from Project 3.
 *Why:* This project extends, rather than replaces, your existing documentation — reuse what's already validated.
 
 **Step 2 — Learn what Article 11 technical documentation must include.**
-```bash
-nano required_sections.md
-```
+Add a **text cell** headed `required_sections` and write your notes in it.
 Learn the required sections: general system description and intended purpose, design specifications (architecture, algorithms, key design choices), data requirements and provenance, human oversight measures, performance metrics and known limitations, risk management measures, and change management/version history.
 *Why:* This is a more prescriptive, legally specific structure than a typical internal model card — knowing the required sections is what lets you check for completeness systematically.
 
 **Step 3 — Write the intended purpose section.**
-```bash
-nano technical_documentation.md
-```
+Add a **text cell** headed `technical_documentation` and write your notes in it.
 Expand your Project 1 use case description into a formal intended-purpose statement, including explicit statements of what the system is *not* intended for.
 *Why:* Under the Act, using a system outside its documented intended purpose shifts responsibility in ways that matter — this section needs to be precise, not just descriptive.
 
@@ -234,9 +219,7 @@ Incorporate your Project 4 bias evaluation and Project 6 model card's limitation
 *Why:* Regulatory documentation that omits known weaknesses isn't just poor practice — it undermines the legal validity of the documentation itself if discovered later.
 
 **Step 8 — Add version history and change management.**
-```bash
-nano version_history.md
-```
+Add a **text cell** headed `version_history` and write your notes in it.
 Note the current version, what changed from any prior version, and your process for updating this documentation as the system evolves.
 *Why:* The Act treats technical documentation as a living artifact tied to a specific system version — undocumented changes to a "compliant" system can invalidate that compliance.
 
@@ -273,25 +256,18 @@ technical_documentation_project/
 
 Project 10 *described* human oversight. This project *builds* it — because "we have human oversight" needs to be a real, testable capability, not just a sentence in a document, especially given that regulators specifically look for evidence of operational controls, not just paperwork.
 
-**Step 1 — Set up a project folder.**
-```bash
-mkdir human_oversight_project
-cd human_oversight_project
-```
+**Step 1 — Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `human_oversight_project`.
 Copy in `log_outputs.py` from Project 2 and `dashboard.py` from Project 7.
 *Why:* Human oversight builds directly on your existing logging and monitoring infrastructure — this isn't a new system, it's an extension.
 
 **Step 2 — Learn the categories of human oversight the Act expects.**
-```bash
-nano oversight_requirements.md
-```
+Add a **text cell** headed `oversight_requirements` and write your notes in it.
 Learn: effective oversight typically includes the ability to **fully understand** system outputs, **monitor operation** for anomalies, **intervene or interrupt** the system's operation, and **override or disregard** its output when appropriate.
 *Why:* These four categories are specific, checkable capabilities — "human oversight exists" as a vague claim doesn't map to any of them individually, which is exactly the gap this project closes.
 
 **Step 3 — Implement an override mechanism.**
-```bash
-nano oversight_controls.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def get_model_recommendation(candidate_data):
     recommendation = call_model(candidate_data)
@@ -347,9 +323,7 @@ Run a decision through the system, have a human override it with a documented re
 *Why:* Testing this end-to-end is what proves oversight is a real, working capability — not just code that looks right but has never actually been exercised.
 
 **Step 8 — Write a conformity assessment readiness checklist.**
-```bash
-nano conformity_readiness_checklist.md
-```
+Add a **text cell** headed `conformity_readiness_checklist` and write your notes in it.
 Combine artifacts from Projects 8–11: classification memo complete, obligation map complete, technical documentation complete, human oversight mechanisms built and tested, data governance audit complete, bias evaluation complete.
 *Why:* This checklist is what an organization would actually walk through before either self-assessing conformity or engaging a third-party assessor — the final, practical output of this entire advanced module.
 

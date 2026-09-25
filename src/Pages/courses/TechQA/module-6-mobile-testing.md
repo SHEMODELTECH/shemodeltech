@@ -138,9 +138,71 @@ You have a passing XCUITest run against at least two different Simulator device/
 
 ---
 
+### Topic 6.3: Device Coverage and Accessibility
+
+#### Concept
+
+A mobile app has to work on phones you'll never own: different screen sizes, operating system versions, text sizes, and ways of using a phone. You can't test every device, so testers choose a **device matrix**, a deliberate short list that covers the combinations real users have. Part of that coverage is **accessibility**: people who use screen readers, larger text, or switch controls must be able to use the app too.
+
+- A **device matrix** lists the devices and OS versions you'll test on, chosen from real usage data (for example, the most common screen sizes and the oldest OS version you support)
+- **Screen readers** read the interface aloud: **TalkBack** on Android and **VoiceOver** on iOS; every button needs a meaningful label, not "button 3"
+- **Dynamic text size** lets users enlarge text system-wide; layouts must still fit without cutting words off or overlapping
+- **Touch targets** must be large enough to tap reliably: Android's guidance is at least 48 × 48 dp, and Apple's is at least 44 × 44 points
+- Automated checkers help: Google's **Accessibility Scanner** app on Android and the **Accessibility Inspector** in Xcode on iOS
+
+#### Structure at a Glance
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#c93a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+flowchart LR
+    DATA["<b>Usage data</b><br/><br/>Devices and OS<br/>versions users have"]
+    MAT["<b>Device matrix</b><br/><br/>Short list<br/>to test on"]
+    ACC["<b>Accessibility</b><br/><br/>Screen reader,<br/>text size, targets"]
+    BUG["<b>Findings</b><br/><br/>Bugs by device<br/>and severity"]
+
+    DATA ==> MAT ==> ACC ==> BUG
+
+    style DATA fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
+    style MAT fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
+    style ACC fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style BUG fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    linkStyle default stroke-width:4px,stroke:#333333
+```
+- Emulators and simulators cover most layout checks cheaply; keep at least one real device for touch, camera, and performance
+- Accessibility bugs are real bugs with severity like any other: a checkout button a screen reader can't find blocks a user from paying
+
+#### Where you'd actually use this
+
+A banking app looks perfect on the team's new phones. Tested at the largest text size on a small, older Android phone, the transfer button is pushed off screen, and TalkBack reads it only as "button". Both are release-blocking for the users they affect.
+
+#### Lab
+
+1. **Build a device matrix** of four rows for an app you use: two Android and two iOS entries, each with a screen size and OS version, and one sentence on why each is included.
+2. **Test with a screen reader:** turn on TalkBack (Android emulator) or VoiceOver (iOS Simulator or an iPhone) and try to complete one task, such as signing in, using only the screen reader.
+3. **Test large text:** set the system text size to the largest option and check every screen in that task for cut-off or overlapping text.
+4. **Run an automated check:** use Accessibility Scanner on Android or the Accessibility Inspector in Xcode on one screen, and note what it flags.
+5. **Write two bug reports** from what you found, using the Module 2 format, with the device, OS version, and accessibility setting in each.
+
+#### Checkpoint
+You have a four-device matrix with reasons, you've completed a task using only a screen reader, and you've written two bug reports that include the device and accessibility setting.
+
+#### Quiz
+1. What is a device matrix, and how should you choose its entries?
+2. What are TalkBack and VoiceOver?
+3. What is the minimum recommended touch-target size on Android and on iOS?
+4. Why keep at least one real device when emulators exist?
+5. Why is an unlabelled button a real bug?
+
+*Answers: 1) A short, deliberate list of devices and OS versions to test on, chosen from real usage data such as common screen sizes and the oldest supported OS. 2) The built-in screen readers on Android and iOS, which read the interface aloud for people who can't see the screen. 3) At least 48 × 48 dp on Android and 44 × 44 points on iOS. 4) Emulators miss real-world behaviour such as touch accuracy, camera, sensors, and true performance. 5) A screen reader user can't tell what it does, which can block them from completing a task, the same impact as a broken button.*
+
+---
+
 ## Module 6 Completion Checklist
 - [ ] Run an app on two Android emulators with different device/OS configurations and confirmed ADB connectivity
 - [ ] Documented what happened to app state after simulating an interruption on Android
 - [ ] Written and passed a basic XCUITest against the iOS Simulator
 - [ ] Re-run the same iOS test against a second Simulator device/OS combination
 - [ ] Identified one App Store Review Guideline and a concrete way to test compliance with it
+- [ ] Built a four-device test matrix from real usage reasoning
+- [ ] Completed a task using only TalkBack or VoiceOver
+- [ ] Tested at the largest text size and filed two device-specific bug reports

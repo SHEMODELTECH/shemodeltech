@@ -15,12 +15,12 @@ import { COURSES_BY_TRACK } from './foundationsCoursesData';
 // so a track can show a heading even before its first course lands. Company is a
 // special, non-skill track: a short guide on reading badges.
 const TRACK_META = {
-  TechDev:   { label: 'Coding Developer Foundations',        intro: 'Build real, shippable software project by project, learning each idea at the moment you use it.' },
-  TechArchs: { label: 'Low/No-Code Developer Foundations',   intro: 'Ship working products on no-code and low-code platforms, one hands-on build at a time.' },
-  TechQA:    { label: 'Quality Tester Foundations',          intro: 'Learn to find, report, and prevent bugs by testing real software, manually and with automation.' },
-  TechGuard: { label: 'Network & Cybersecurity Foundations', intro: 'Defend and run real systems: security, networking, cloud, and DevOps, built up through practical projects.' },
-  TechPO:    { label: 'Product / Project Owner Foundations', intro: 'Own product vision and delivery: turn ideas into backlogs, requirements, and shipped outcomes.' },
-  TechLeads: { label: 'Non-Technical Roles Foundations',     intro: 'Lead and support tech teams without coding: delivery, writing, research, and communication.' },
+  TechDev:   { label: 'Coding Developer Foundations',        intro: 'Start from your first program and build up to web apps, databases, APIs, and AI engineering, one hands-on project at a time.' },
+  TechArchs: { label: 'Low/No-Code Developer Foundations',   intro: 'Build websites, internal apps, automations, and CRM systems on no-code and low-code platforms, one hands-on build at a time.' },
+  TechQA:    { label: 'Quality Tester Foundations',          intro: 'Find, report, and prevent bugs: from test cases and bug reports to automated, API, performance, mobile, and security testing.' },
+  TechGuard: { label: 'Network & Cybersecurity Foundations', intro: 'Protect real systems: networking, operating systems, ethical hacking, cryptography, access control, cloud security, monitoring, and DevOps security.' },
+  TechPO:    { label: 'Product / Project Owner Foundations', intro: 'Own a product from idea to delivery: user research, product design, Agile, and project management.' },
+  TechLeads: { label: 'Non-Technical Roles Foundations',     intro: 'Lead and support tech teams without writing code: leadership, strategy, technical writing, research, meetings, delivery, and presenting.' },
   company:   { label: 'Understanding Badges',                intro: 'A short guide for companies: how members prove their skills here, so you can read profiles and hire with confidence.' },
 };
 

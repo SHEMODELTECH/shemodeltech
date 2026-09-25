@@ -1,9 +1,31 @@
 <!-- order: 13 -->
 # AI Product Engineer: Hands-On Project Tutorials
 
-This document turns every project in the **AI Product Engineer Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
+
+**Your Claude API key.** Projects that call Claude need an API key from [console.anthropic.com](https://console.anthropic.com). API use is paid and billed by how much text you send and receive. The requests in this course are small, but set a low monthly spending limit in the console before you begin. Keep the key out of your code: in Colab, click the **key icon** in the left sidebar, add a secret named `ANTHROPIC_API_KEY`, and turn on notebook access. Then run this cell at the top of every notebook that calls Claude:
+
+```python
+import os
+from google.colab import userdata
+os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
+```
 
 ---
 
@@ -11,19 +33,14 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 **Goal:** Frame a real problem in product terms before touching any code, the habit that separates a useful AI feature from a novelty.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir ai_product_brief_project
-cd ai_product_brief_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `ai_product_brief_project`.
 
 **Step 2: Identify a real problem worth solving.**
 An **AI-suited problem** is one with a pattern to learn from data, ambiguity that rules-based code can't handle, and enough volume to be worth automating (e.g., "summarize long support tickets," not "add two numbers").
 
 **Step 3: Define the user.**
-```bash
-nano brief.md
-```
+Add a **text cell** headed `brief` and write your notes in it.
 Write one sentence: who experiences this problem, and how often?
 
 **Step 4: State the problem in one sentence.**
@@ -68,28 +85,28 @@ ai_product_brief_project/
 
 **Goal:** Turn your Project 1 brief into a working piece of software for the first time.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir ai_feature_prototype_project
-cd ai_feature_prototype_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `ai_feature_prototype_project`.
 Copy `brief.md` from Project 1 into this folder for reference.
 
 **Step 2: Get access to an LLM API.**
 An **API key** is a secret credential that authenticates your requests to a service, treat it like a password.
 
 **Step 3: Make your first API call.**
-```bash
-nano prototype.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
+import os
 import requests
 
 response = requests.post(
     "https://api.anthropic.com/v1/messages",
-    headers={"x-api-key": "YOUR_KEY", "content-type": "application/json"},
+    headers={
+        "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    },
     json={
-        "model": "claude-sonnet-4-6",
+        "model": "claude-sonnet-5",
         "max_tokens": 200,
         "messages": [{"role": "user", "content": "Summarize this in one sentence: ..."}]
     }
@@ -113,9 +130,7 @@ Wrapping your API call in a function makes it reusable instead of a one-off scri
 Run your function against several different real-world inputs, not just one.
 
 **Step 7: Note what worked and what didn't.**
-```bash
-nano prototype_notes.md
-```
+Add a **text cell** headed `prototype_notes` and write your notes in it.
 Write down cases where the output was wrong, confusing, or unhelpful.
 
 ### Final Project Structure
@@ -147,19 +162,14 @@ ai_feature_prototype_project/
 
 **Goal:** Extend your prototype into a conversational feature, the most common AI product pattern.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir chatbot_prototype_project
-cd chatbot_prototype_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `chatbot_prototype_project`.
 
 **Step 2: Understand conversation history.**
 LLM APIs are **stateless**: each call has no memory of previous ones. To simulate a "conversation," you resend the full **message history** with every request.
 
 **Step 3: Build a message history list.**
-```bash
-nano chatbot.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 history = [{"role": "system", "content": "You are a helpful assistant for [your use case]."}]
 
@@ -212,19 +222,14 @@ chatbot_prototype_project/
 
 **Goal:** Step back from building and validate the feature against real user needs before going further.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir discovery_doc_project
-cd discovery_doc_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `discovery_doc_project`.
 
 **Step 2: Write 5 user interview questions.**
 Good discovery questions ask about *past behavior* ("tell me about the last time you..."), not hypotheticals ("would you use a feature that...").
 
 **Step 3: Conduct (or simulate) 3–5 short interviews.**
-```bash
-nano interview_notes.md
-```
+Add a **text cell** headed `interview_notes` and write your notes in it.
 If you don't have real users available, simulate this by asking peers who fit your Project 1 target user, or by researching how people currently solve this problem.
 
 **Step 4: Show your Project 3 prototype and get reactions.**
@@ -237,9 +242,7 @@ A **discovery insight** is a pattern repeated across multiple people, not a sing
 Update it if discovery revealed the real problem is different from what you assumed.
 
 **Step 7: Write the discovery summary.**
-```bash
-nano discovery_doc.md
-```
+Add a **text cell** headed `discovery_doc` and write your notes in it.
 Structure: Who you talked to → What you asked → Key insights → What changes for the feature.
 
 ### Final Project Structure
@@ -270,11 +273,8 @@ discovery_doc_project/
 
 **Goal:** Design the full user-facing interaction, not just the AI logic, but what the person actually sees and does.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir feature_flow_project
-cd feature_flow_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `feature_flow_project`.
 
 **Step 2: Map the happy path.**
 The **happy path** is the ideal sequence of steps when everything goes right, user opens the feature, provides input, gets a good result.
@@ -322,16 +322,11 @@ feature_flow_project/
 
 **Goal:** Decide, in advance, how you'll know if the feature is actually good, before it ships, not after complaints arrive.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir evaluation_plan_project
-cd evaluation_plan_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `evaluation_plan_project`.
 
 **Step 2: Build a test set from your Project 2 notes.**
-```bash
-nano test_cases.md
-```
+Add a **text cell** headed `test_cases` and write your notes in it.
 Turn your documented failures and successes into a list of 10–15 concrete input/expected-output pairs.
 
 **Step 3: Define a quality rubric.**
@@ -347,9 +342,7 @@ Run each test case through your prototype and score it using your rubric.
 A **feedback loop** is a mechanism (like a thumbs up/down button from Project 5) that captures real user signal after launch.
 
 **Step 7: Write the evaluation plan.**
-```bash
-nano evaluation_plan.md
-```
+Add a **text cell** headed `evaluation_plan` and write your notes in it.
 Structure: Test set → Rubric → Baseline scores → Quality vs. business metrics → Feedback loop plan.
 
 ### Final Project Structure
@@ -382,11 +375,8 @@ evaluation_plan_project/
 
 **Goal:** Package everything you've built into a plan for actually shipping the feature.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir launch_plan_project
-cd launch_plan_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `launch_plan_project`.
 
 **Step 2: Define the launch scope.**
 A **limited launch** (or beta) releases a feature to a small subset of users first, instead of everyone at once.
@@ -410,9 +400,7 @@ List roles: engineering (to build it), your Project 6 evaluation reviewer, and a
 Reference your Project 6 feedback loop: what will you watch in the first week, and what would trigger a rollback?
 
 **Step 7: Write the launch plan.**
-```bash
-nano launch_plan.md
-```
+Add a **text cell** headed `launch_plan` and write your notes in it.
 Structure: Launch scope → Criteria to launch → Rollout stages → Stakeholders → Post-launch monitoring plan.
 
 ### Final Project Structure
@@ -443,10 +431,7 @@ launch_plan_project/
 **Goal:** Combine every project above into one complete, presentable body of work, this is an integration exercise, not a new build.
 
 **Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
+Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 Copy in the final versions of your deliverables from Projects 1–7.
 
 **Step 2: Revisit and finalize your Project 1 brief.**
@@ -466,9 +451,7 @@ Include the happy path, error states, and uncertainty handling design.
 **Step 7: Attach your launch plan (Project 7).**
 
 **Step 8: Write the capstone summary.**
-```bash
-nano capstone_summary.md
-```
+Add a **text cell** headed `capstone_summary` and write your notes in it.
 One page: the problem, the solution, what you learned, how you'd know it's working, and how you'd launch it.
 
 ### Final Project Structure

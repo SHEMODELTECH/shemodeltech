@@ -1,9 +1,33 @@
 <!-- order: 16 -->
 # AI Agent Platform Engineer: Hands-On Project Tutorials
 
-This document turns every project in the **AI Agent Platform Engineer Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
+
+**Your Claude API key.** Projects that call Claude need an API key from [console.anthropic.com](https://console.anthropic.com). API use is paid and billed by how much text you send and receive. The requests in this course are small, but set a low monthly spending limit in the console before you begin. Keep the key out of your code: in Colab, click the **key icon** in the left sidebar, add a secret named `ANTHROPIC_API_KEY`, and turn on notebook access. Then run this cell at the top of every notebook that calls Claude:
+
+```python
+import os
+from google.colab import userdata
+os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
+```
+
+**A few projects run on your computer.** Projects that build a web app, a job queue, or a scheduled task keep running in the background, and a notebook can't host that. Those projects say so at the top and use a code editor and your terminal instead: VS Code, plus Terminal on a Mac or PowerShell on Windows.
 
 ---
 
@@ -11,11 +35,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 **Goal:** Plan the platform before writing any platform code, so every later project has a place to plug into.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir agent_platform_diagram_project
-cd agent_platform_diagram_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `agent_platform_diagram_project`.
 
 **Step 2: Define the platform's purpose.**
 Write one sentence: what kinds of agents will this platform run, and for whom? Example: "A platform that lets internal teams build and run task-automation agents with access to company tools."
@@ -95,17 +116,14 @@ agent_platform_diagram_project/
 
 **Goal:** Build the smallest working unit, one agent calling one tool, before scaling to anything more complex.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir tool_calling_project
-cd tool_calling_project
-pip install --break-system-packages requests
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `tool_calling_project`.
+```python
+%pip install requests
 ```
 
 **Step 2: Write one simple tool function.**
-```bash
-nano tool_calling.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def get_weather(city):
     # in a real implementation, this would call a weather API
@@ -128,13 +146,18 @@ The **input_schema** tells the model exactly what arguments the tool expects and
 
 **Step 4: Send a request with the tool available.**
 ```python
+import os
 import requests
 
 response = requests.post(
     "https://api.anthropic.com/v1/messages",
-    headers={"x-api-key": "YOUR_KEY", "content-type": "application/json"},
+    headers={
+        "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    },
     json={
-        "model": "claude-sonnet-4-6",
+        "model": "claude-sonnet-5",
         "max_tokens": 300,
         "tools": [tool_definition],
         "messages": [{"role": "user", "content": "What's the weather like in Tokyo?"}]
@@ -161,11 +184,16 @@ print(result)
 
 **Step 7: Send the tool result back to the model.**
 ```python
+import os
 follow_up = requests.post(
     "https://api.anthropic.com/v1/messages",
-    headers={"x-api-key": "YOUR_KEY", "content-type": "application/json"},
+    headers={
+        "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    },
     json={
-        "model": "claude-sonnet-4-6",
+        "model": "claude-sonnet-5",
         "max_tokens": 300,
         "tools": [tool_definition],
         "messages": [
@@ -212,17 +240,12 @@ tool_calling_project/
 
 **Goal:** Turn the Project 2 script into a full agent with planning and memory, able to take multiple steps toward a goal, not just one tool call.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir single_agent_project
-cd single_agent_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `single_agent_project`.
 Copy in `tool_calling.py` from Project 2.
 
 **Step 2: Define 2–3 tools for a single-purpose agent.**
-```bash
-nano agent_tools.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def search_notes(query):
     return f"Found 2 notes matching '{query}'."
@@ -238,9 +261,7 @@ def list_notes():
 An **agent loop** repeatedly asks the model "given everything so far, what's the next step?", calling tools as needed, until the model decides the task is complete.
 
 **Step 4: Implement the agent loop.**
-```bash
-nano agent.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def run_agent(user_goal, max_steps=5):
     messages = [{"role": "user", "content": user_goal}]
@@ -307,16 +328,11 @@ single_agent_project/
 
 **Goal:** Scale from one agent to a registry of tools multiple agents can use, the first real platform component.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir tool_registry_project
-cd tool_registry_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `tool_registry_project`.
 
 **Step 2: Design the tool registry data structure.**
-```bash
-nano registry.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 class ToolRegistry:
     def __init__(self):
@@ -375,9 +391,7 @@ run_agent(notes_agent_goal, registry)
 ```
 
 **Step 8: Document the registry's public interface.**
-```bash
-nano README.md
-```
+Add a **text cell** headed `README` and write your notes in it.
 Note the `register`, `get_tool_definitions`, and `execute` methods, and how a new tool would be added.
 
 ### Final Project Structure
@@ -409,11 +423,13 @@ tool_registry_project/
 
 **Goal:** Add the infrastructure needed to run agents at scale, beyond one agent running synchronously in your terminal.
 
-**Step 1: Set up a project folder.**
+> **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
+
+**Step 1: Create the project notebook.**
 ```bash
 mkdir queue_execution_project
 cd queue_execution_project
-pip install --break-system-packages redis rq
+pip install redis rq
 ```
 
 **Step 2: Understand why queuing matters.**
@@ -501,29 +517,20 @@ queue_execution_project/
 
 **Goal:** Test agent behaviors before trusting them in production, the discipline that separates a working demo from a dependable platform.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir agent_evaluation_project
-cd agent_evaluation_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `agent_evaluation_project`.
 Copy in `agent.py` and `registry.py` from Projects 3 and 4.
 
 **Step 2: Build a test set of agent goals.**
-```bash
-nano test_goals.md
-```
+Add a **text cell** headed `test_goals` and write your notes in it.
 Write 10–15 goals covering: simple single-tool tasks, multi-step tasks, ambiguous goals, and goals with no relevant tool available.
 
 **Step 3: Define success criteria per test.**
-```bash
-nano evaluation_criteria.md
-```
+Add a **text cell** headed `evaluation_criteria` and write your notes in it.
 For each goal, write what a correct outcome looks like (which tool(s) should be called, roughly what the final answer should contain).
 
 **Step 4: Run the test suite.**
-```bash
-nano run_evaluation.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 results = []
 for goal in test_goals:
@@ -532,9 +539,7 @@ for goal in test_goals:
 ```
 
 **Step 5: Score correctness.**
-```bash
-nano scoring.md
-```
+Add a **text cell** headed `scoring` and write your notes in it.
 For each result, compare against your Step 3 criteria and mark pass/fail/partial.
 
 **Step 6: Test hallucination handling.**
@@ -544,9 +549,7 @@ Include a goal like "Search my notes for something that doesn't exist" and confi
 Simulate a tool that raises an exception, and confirm the agent handles it gracefully (reports the failure) instead of crashing the whole loop.
 
 **Step 8: Write the evaluation report.**
-```bash
-nano evaluation_report.md
-```
+Add a **text cell** headed `evaluation_report` and write your notes in it.
 Structure: Test set → Pass/fail/partial rates → Hallucination findings → Failure recovery findings → Recommendations.
 
 ### Final Project Structure
@@ -580,17 +583,12 @@ agent_evaluation_project/
 
 **Goal:** Secure and govern what agents are allowed to do, closing the loop back to Project 1's security consideration.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir access_control_project
-cd access_control_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `access_control_project`.
 Copy in `registry.py` from Project 4.
 
 **Step 2: Define permission levels for tools.**
-```bash
-nano permissions.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 PERMISSION_LEVELS = {
     "get_weather": "public",
@@ -622,9 +620,7 @@ registry.execute("get_weather", user_permission_level="public", city="Paris")  #
 ```
 
 **Step 5: Add audit logging for every tool call.**
-```bash
-nano audit_log.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import json, datetime
 
@@ -664,8 +660,8 @@ def sandboxed_execute(name, **kwargs):
 A **sandbox** here means simulating an action's effects without actually performing it, useful for testing agent behavior involving high-risk tools without real consequences.
 
 **Step 8: Review the audit log after a test run.**
-```bash
-cat audit_log.jsonl
+```python
+!cat audit_log.jsonl
 ```
 Confirm it clearly shows which calls were allowed, which were denied, and by which agent.
 
@@ -700,10 +696,7 @@ access_control_project/
 **Goal:** Combine every project above into one complete platform supporting tool registration, task orchestration, monitoring, and access control, this is an integration exercise, not a new build.
 
 **Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
+Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 Copy in the final versions of your code from Projects 2–7.
 
 **Step 2: Start from your Project 1 architecture diagram.**
@@ -725,9 +718,7 @@ Reuse your test goals and criteria, but now test agents running through the comp
 Submit tasks from at least two different simulated "users" with different permission levels, and confirm the platform enforces isolation and permissions correctly for each.
 
 **Step 8: Write the final capstone report.**
-```bash
-nano capstone_report.md
-```
+Add a **text cell** headed `capstone_report` and write your notes in it.
 Combine your Project 1 diagram, evaluation results, and audit log findings into one write-up: what you built, how reliable and secure it is, and what you'd improve next.
 
 ### Final Project Structure

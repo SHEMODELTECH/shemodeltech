@@ -5,6 +5,13 @@ This is a bonus, advanced module extending the **AI Infrastructure Engineer Foun
 
 Every step follows the same format as the rest of the course: what you're doing, what the term means, how to do it, and why it matters.
 
+
+## Before you start: your terminal
+
+Unlike the other AI courses, this one works in a **terminal** on purpose: infrastructure is built, deployed, and monitored from the command line, so practising there is part of the skill. Use Terminal on a Mac, a Linux shell, or WSL on Windows. If you'd rather not set anything up locally, [Google Cloud Shell](https://shell.cloud.google.com) gives you a free Linux terminal in your browser.
+
+For the Python parts, you can still try code in a Jupyter notebook first, then move it into files once it works.
+
 ---
 
 ## Project 9 (Bonus Module 1): Provision AI Infrastructure as Code with Pulumi

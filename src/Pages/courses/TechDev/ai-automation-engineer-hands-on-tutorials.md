@@ -1,9 +1,33 @@
 <!-- order: 14 -->
 # AI Automation Engineer: Hands-On Project Tutorials
 
-This document turns every project in the **AI Automation Engineer Foundations Course** into a step-by-step, hands-on tutorial. You learn each idea at the moment you need it, while building the thing.
+This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
 Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+
+
+## Before you start: set up your notebook
+
+This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
+2. Give each project its own notebook: choose **File → New notebook**, then click the title at the top to rename it after the project.
+3. Notebooks have two kinds of cells. **Code cells** run Python: type or paste code, then press **Shift + Enter**. **Text cells** hold your notes and written answers: choose **Insert → Text cell**.
+4. Install libraries in a code cell with `%pip install ...`. The `%` form installs them into the notebook you're using.
+5. Put each code block from a project in its own code cell, in order, and run them top to bottom. When a later step changes earlier code, edit that cell and run it again.
+6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
+
+Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
+
+**Your Claude API key.** Projects that call Claude need an API key from [console.anthropic.com](https://console.anthropic.com). API use is paid and billed by how much text you send and receive. The requests in this course are small, but set a low monthly spending limit in the console before you begin. Keep the key out of your code: in Colab, click the **key icon** in the left sidebar, add a secret named `ANTHROPIC_API_KEY`, and turn on notebook access. Then run this cell at the top of every notebook that calls Claude:
+
+```python
+import os
+from google.colab import userdata
+os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
+```
+
+**A few projects run on your computer.** Projects that build a web app, a job queue, or a scheduled task keep running in the background, and a notebook can't host that. Those projects say so at the top and use a code editor and your terminal instead: VS Code, plus Terminal on a Mac or PowerShell on Windows.
 
 ---
 
@@ -11,19 +35,14 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 **Goal:** Identify what's actually worth automating, before writing a single line of automation code.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir automation_opportunity_project
-cd automation_opportunity_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `automation_opportunity_project`.
 
 **Step 2: Pick a real, repetitive workflow.**
 Example: "Every morning, someone manually checks a shared inbox, copies new leads into a spreadsheet, and emails a summary to the sales team."
 
 **Step 3: Map the workflow step by step.**
-```bash
-nano workflow_map.md
-```
+Add a **text cell** headed `workflow_map` and write your notes in it.
 Write out every single step currently performed, including the small ones people usually skip mentioning (e.g., "checks for duplicates by eye").
 
 **Step 4: Score the workflow on automation fit.**
@@ -39,9 +58,7 @@ Estimate how long the manual process takes and how often it happens (e.g., "15 m
 List situations where the manual process currently requires judgment or handles something unusual (e.g., "if the email looks spammy, they don't add it").
 
 **Step 8: Write the opportunity summary.**
-```bash
-nano opportunity_summary.md
-```
+Add a **text cell** headed `opportunity_summary` and write your notes in it.
 Structure: Workflow description → Automation fit score → Trigger/output → Time savings estimate → Known edge cases.
 
 ### Final Project Structure
@@ -72,7 +89,9 @@ automation_opportunity_project/
 
 **Goal:** Build the smallest possible working automation, a script that runs on its own, on a schedule, without you triggering it manually.
 
-**Step 1: Set up a project folder.**
+> **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
+
+**Step 1: Create the project notebook.**
 ```bash
 mkdir scheduled_automation_project
 cd scheduled_automation_project
@@ -157,25 +176,18 @@ scheduled_automation_project/
 
 **Goal:** Chain multiple steps and integrations together, moving from a single script to a real workflow.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir multistep_workflow_project
-cd multistep_workflow_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `multistep_workflow_project`.
 
 **Step 2: Break your Project 1 workflow into discrete steps.**
-```bash
-nano workflow_steps.md
-```
+Add a **text cell** headed `workflow_steps` and write your notes in it.
 List each step as its own numbered item (e.g., "1. Check inbox for new emails, 2. Extract lead info, 3. Add to spreadsheet, 4. Send summary email").
 
 **Step 3: Understand what a webhook is.**
 A **webhook** is a way for one system to notify another automatically when something happens, by sending an HTTP request to a specified URL, instead of the receiving system having to constantly check.
 
 **Step 4: Write each step as a function.**
-```bash
-nano workflow.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def check_for_new_items(source):
     ...
@@ -209,9 +221,7 @@ Wrap each function call in `run_workflow()` with try/except, logging which step 
 Run the workflow against a batch of at least 5 test items, including at least one that should trigger an edge case from Project 1.
 
 **Step 8: Document the workflow.**
-```bash
-nano README.md
-```
+Add a **text cell** headed `README` and write your notes in it.
 Diagram or describe the step sequence, referencing your Project 1 workflow map.
 
 ### Final Project Structure
@@ -243,11 +253,8 @@ multistep_workflow_project/
 
 **Goal:** Add an LLM-driven decision into your Project 3 workflow, the point where automation stops being purely rule-based.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir ai_decision_step_project
-cd ai_decision_step_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `ai_decision_step_project`.
 Copy in `workflow.py` from Project 3.
 
 **Step 2: Identify where a rule-based check falls short.**
@@ -257,18 +264,21 @@ Revisit your Project 1 edge cases: which ones require judgment a simple rule can
 Write the exact question you want the AI to answer for this one step (e.g., "Is this customer message urgent? Answer only 'yes' or 'no'.").
 
 **Step 4: Implement the AI decision step.**
-```bash
-nano ai_decision.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
+import os
 import requests
 
 def is_urgent(message_text):
     response = requests.post(
         "https://api.anthropic.com/v1/messages",
-        headers={"x-api-key": "YOUR_KEY", "content-type": "application/json"},
+        headers={
+        "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    },
         json={
-            "model": "claude-sonnet-4-6",
+            "model": "claude-sonnet-5",
             "max_tokens": 5,
             "messages": [{"role": "user", "content": f"Is this message urgent? Answer only yes or no.\n\n{message_text}"}]
         }
@@ -302,9 +312,7 @@ A **fallback** is a safe default behavior used when a step can't be completed no
 Run the workflow against messages that are clearly urgent, clearly not, and genuinely ambiguous, and review the AI's decisions.
 
 **Step 8: Document the AI decision's role and limitations.**
-```bash
-nano ai_decision_notes.md
-```
+Add a **text cell** headed `ai_decision_notes` and write your notes in it.
 Note: what the AI decides, how confident you are in it, and what happens if it's wrong.
 
 ### Final Project Structure
@@ -336,19 +344,14 @@ ai_decision_step_project/
 
 **Goal:** Replace fixed logic with agent-style tool calling, letting the AI decide *which* action to take, not just answer one narrow question.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir task_agent_project
-cd task_agent_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `task_agent_project`.
 
 **Step 2: Understand what tool calling is.**
 **tool calling** lets an LLM choose to invoke a specific function you've defined, with arguments it decides based on the input, instead of just returning text.
 
 **Step 3: Define 2–3 simple tools.**
-```bash
-nano tools.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def send_email(to, subject, body):
     print(f"Sending email to {to}: {subject}")
@@ -372,11 +375,16 @@ The model uses each tool's **description** to decide which one fits a given situ
 
 **Step 5: Send a request with tool definitions and let the model choose.**
 ```python
+import os
 response = requests.post(
     "https://api.anthropic.com/v1/messages",
-    headers={"x-api-key": "YOUR_KEY", "content-type": "application/json"},
+    headers={
+        "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    },
     json={
-        "model": "claude-sonnet-4-6",
+        "model": "claude-sonnet-5",
         "max_tokens": 300,
         "tools": tool_definitions,
         "messages": [{"role": "user", "content": "A customer emailed asking for a refund on order #4521."}]
@@ -434,17 +442,12 @@ task_agent_project/
 
 **Goal:** Make your Project 5 agent (and earlier workflows) production-safe, reliable enough to trust running unattended.
 
-**Step 1: Set up a project folder.**
-```bash
-mkdir monitoring_project
-cd monitoring_project
-```
+**Step 1: Create the project notebook.**
+Create a new notebook for this project (**File → New notebook**) and name it `monitoring_project`.
 Copy in `agent.py` and `workflow.py` from earlier projects.
 
 **Step 2: Add structured logging.**
-```bash
-nano monitored_automation.py
-```
+Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 import logging
 logging.basicConfig(filename="automation.log", level=logging.INFO,
@@ -502,8 +505,8 @@ def record_failure():
 Temporarily break something (wrong API key, unreachable file path) and confirm your logs, retries, and alerts all behave as expected.
 
 **Step 8: Review the log file after a full test run.**
-```bash
-cat automation.log
+```python
+!cat automation.log
 ```
 Confirm it tells a clear, readable story of what happened.
 
@@ -535,6 +538,8 @@ monitoring_project/
 ## Final Capstone: Build an End-to-End Automated Workflow
 
 **Goal:** Combine every project above into one complete, reliable automation, this is an integration exercise, not a new build.
+
+> **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
 
 **Step 1: Set up your capstone project folder.**
 ```bash
