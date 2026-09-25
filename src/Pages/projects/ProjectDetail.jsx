@@ -940,6 +940,14 @@ const ProjectDetail = () => {
                   >
                     Open Workspace
                   </button>
+                  {project.status === 'active' && project.reviewStatus !== 'rejected' && (
+                    <button
+                      onClick={() => navigate(`/projects/${projectId}/setup`)}
+                      className="bg-white border border-gray-300 text-gray-700 font-medium text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-all"
+                    >
+                      Edit Project
+                    </button>
+                  )}
                   <button
                     onClick={() => navigate('/projects/owner-dashboard')}
                     className="bg-white border border-gray-300 text-gray-700 font-medium text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-all"

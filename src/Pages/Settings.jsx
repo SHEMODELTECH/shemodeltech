@@ -805,12 +805,7 @@ const IncludedTab = () => {
     <div className="space-y-5">
       {/* Free banner */}
       <div className="bg-white border-2 border-pink-500 rounded-xl p-6">
-        <div className="flex items-baseline gap-3 flex-wrap mb-1">
-          <h3 className="text-pink-600 font-bold text-lg">Your account</h3>
-          <span className="bg-pink-50 text-pink-700 text-[10px] font-bold px-2.5 py-1 rounded-full">
-            FREE FOREVER
-          </span>
-        </div>
+        <h3 className="text-pink-600 font-bold text-lg mb-1">Your account</h3>
         <p className="text-gray-900 font-bold text-2xl mb-3">Free</p>
         <p className="text-gray-500 text-sm">
           She Model Tech is free for everyone. There are no plans to choose between, no upgrades,

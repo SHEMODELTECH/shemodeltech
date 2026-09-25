@@ -1,4 +1,14 @@
 // src/components/Navbar.jsx
+// The one public/top navigation bar for She Model Tech. Every page that is
+// not inside the logged-in sidebar layout (AppShell) should render THIS
+// component instead of building its own <nav>, so the brand, spacing and
+// button style stay identical everywhere.
+//
+// Menu items still depend on auth state (logged-out vs logged-in), exactly
+// as before. Pages that need an extra call-to-action for logged-out visitors
+// (e.g. the landing page's "Get Started") pass it via the `cta` prop; it is
+// rendered in the same slot and style on every page and hidden once a user
+// is signed in.
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -6,7 +16,7 @@ import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useInAppShell } from './AppShell';
 
-const Navbar = () => {
+const Navbar = ({ cta = null }) => {
   const inAppShell = useInAppShell();
   const { currentUser } = useAuth();
   const location = useLocation();
@@ -96,6 +106,10 @@ const Navbar = () => {
               ))}
             </div>
 
+            {!currentUser && cta && (
+              <div className="hidden lg:flex items-center">{cta}</div>
+            )}
+
             {currentUser && (
               <div className="hidden lg:flex items-center gap-3 xl:gap-4">
                 <Link to="/messages" className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
@@ -133,9 +147,13 @@ const Navbar = () => {
               </div>
             )}
 
+            <div className="lg:hidden flex items-center gap-2">
+            {!currentUser && cta}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
               <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {mobileMenuOpen ? (
@@ -145,6 +163,7 @@ const Navbar = () => {
                 )}
               </svg>
             </button>
+            </div>
           </div>
         </div>
 

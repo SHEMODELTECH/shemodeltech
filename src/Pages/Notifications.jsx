@@ -80,6 +80,14 @@ const NotificationsPage = () => {
     // Payment + dispute notifications open that project's dispute page, where the
     // member confirms receipt / reports an issue and the payment table lives.
     if (n.projectId && disputeTypes.includes(n.type)) { navigate(`/disputes/${n.projectId}`); return; }
+    // Notifications that carry their own destination (lead decisions, cohort
+    // updates, etc.) go straight there - e.g. an approved lead lands on her
+    // project's setup page.
+    if (n.link) {
+      if (/^https?:\/\//i.test(n.link)) window.open(n.link, '_blank', 'noopener,noreferrer');
+      else navigate(n.link);
+      return;
+    }
     // Review notifications (approved / needs changes / rejected) open the
     // project itself - the completion ("manage project") page for the owner,
     // the workspace for team members - NOT the proof wall.
@@ -104,7 +112,7 @@ const NotificationsPage = () => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
-  const projectTypes = ['payment_confirmation', 'payment_confirmed', 'payment_disputed', 'dispute_resolved', 'project_completed', 'project_application', 'application_approved', 'application_rejected', 'project_review_approved', 'project_needs_changes', 'project_review_rejected'];
+  const projectTypes = ['payment_confirmation', 'payment_confirmed', 'payment_disputed', 'dispute_resolved', 'project_completed', 'project_application', 'application_approved', 'application_rejected', 'project_review_approved', 'project_needs_changes', 'project_review_rejected', 'lead_assigned', 'lead_interview_scheduled', 'lead_role_offered', 'lead_not_selected', 'lead_reassigned'];
   // Payment + dispute lifecycle notifications route to /disputes/:projectId (the
   // dispute room) rather than the project detail page.
   const disputeTypes = ['payment_confirmation', 'payment_confirmed', 'payment_disputed', 'dispute_resolved'];
@@ -211,9 +219,16 @@ const NotificationsPage = () => {
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                <p className="text-gray-900 text-sm">
-                  {n.message || n.text || 'interacted with your content'}
-                </p>
+                {n.title ? (
+                  <>
+                    <p className="text-gray-900 text-sm font-semibold">{n.title}</p>
+                    {n.body && <p className="text-gray-600 text-sm mt-0.5">{n.body}</p>}
+                  </>
+                ) : (
+                  <p className="text-gray-900 text-sm">
+                    {n.message || n.text || 'interacted with your content'}
+                  </p>
+                )}
                 <p className="text-gray-400 text-xs mt-1">{formatTime(n.createdAt)}</p>
               </div>
 

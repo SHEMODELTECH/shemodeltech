@@ -490,7 +490,11 @@ const ProofWall = () => {
       setUpdateImage(null);
       setUpdateMentions([]);
       setShowCompose(false);
-      load(filter);
+      // Land on All Activity so the author sees her post in the feed, instead
+      // of staying on a tab (e.g. Top Talent) where it will never appear.
+      if (filter !== 'all') setFilter('all');
+      else load('all');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) {
       console.error(e);
       // Show the real reason. A generic message here cost real debugging time
@@ -630,6 +634,9 @@ const ProofWall = () => {
 
       {/* Filters + share. The chips live on ONE horizontally-scrollable line so
  they never wrap into a messy stack on phones (standard mobile pattern). */}
+      {/* Hidden while the composer is open so the post form is the only thing
+          in focus; they come back on Share or Cancel. */}
+      {!showCompose && (
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-5">
         <div className="flex flex-nowrap gap-1.5 flex-1 overflow-x-auto pb-1 -mb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {filtersFor(myData?.isCompany).map((f) => (
@@ -661,6 +668,7 @@ const ProofWall = () => {
           {myData?.isCompany ? 'Company update' : 'Project update'}
         </button>
       </div>
+      )}
 
       {/* Wall */}
       {filter === 'talent' && myData?.isCompany ? (

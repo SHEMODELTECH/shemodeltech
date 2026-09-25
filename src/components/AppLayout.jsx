@@ -154,7 +154,10 @@ const AppLayout = ({ children }) => {
       <aside className={`fixed inset-y-0 left-0 z-50 w-60 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:inset-0`}>
         {/* Logo */}
         <div className="flex items-center gap-2 px-5 h-16 sm:h-[72px] border-b border-gray-200">
-          <img src="/Images/512X512.png" alt="She Model Tech" className="w-8 h-8" />
+          {/* Same full She Model Tech wordmark as the public Navbar */}
+          <Link to="/dashboard" className="flex-shrink-0">
+            <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-11 sm:h-12 w-auto" />
+          </Link>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto p-1 text-gray-400 hover:text-gray-700">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
@@ -261,7 +264,7 @@ const AppLayout = ({ children }) => {
             )}
             {location.pathname === '/proof-wall' && (
             <a href="/proof-wall" className="hidden lg:flex items-center gap-1 ml-4">
-              <img src="/Images/512X512.png" alt="She Model Tech" className="h-9 w-9" />
+              <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-11 sm:h-12 w-auto" />
             </a>
             )}
           </div>

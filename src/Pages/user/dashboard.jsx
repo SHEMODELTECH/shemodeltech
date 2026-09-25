@@ -40,6 +40,8 @@ const DashboardOverview = () => {
   const [profileData, setProfileData] = useState(null);
   const [stats, setStats] = useState({ projectsCompleted: 0, ongoingProjects: 0, badgesEarned: 0 });
   const [ongoingProjects, setOngoingProjects] = useState([]);
+  // Projects this member was approved to LEAD that aren't open yet ('setup').
+  const [setupProjects, setSetupProjects] = useState([]);
   const [completedProjects, setCompletedProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [companyStats, setCompanyStats] = useState({
@@ -97,9 +99,30 @@ const DashboardOverview = () => {
             where('members', 'array-contains', currentUser.uid)
           );
           const projectsSnap = await getDocs(projectsQ);
-          const projects = projectsSnap.docs
-            .map((d) => ({ id: d.id, ...d.data() }))
-            .filter((p) => p.status === 'active')
+          const byId = new Map();
+          projectsSnap.docs.forEach((d) => byId.set(d.id, { id: d.id, ...d.data() }));
+
+          // Projects she LEADS. A lead is the owner (submitterId), not in
+          // `members`, so without this an approved lead never saw her own
+          // project on the dashboard until it was opened.
+          // Companies post paid projects rather than lead cohort ones; their
+          // projects already have their own dashboard section.
+          const isCompanyUser = userSnap.exists() && !!userSnap.data().isCompany;
+          if (!isCompanyUser) try {
+            const ledSnap = await getDocs(
+              query(collection(db, 'projects'), where('submitterId', '==', currentUser.uid))
+            );
+            ledSnap.docs.forEach((d) =>
+              byId.set(d.id, { id: d.id, ...d.data(), isLead: true })
+            );
+          } catch (e) {
+            console.log('Led projects query skipped:', e.message);
+          }
+
+          const all = [...byId.values()].filter((p) => p.reviewStatus !== 'rejected');
+          setSetupProjects(all.filter((p) => p.isLead && p.status === 'setup'));
+          const projects = all
+            .filter((p) => p.status === 'active' || (p.isLead && p.status === 'setup'))
             .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
             .slice(0, 5);
           setOngoingProjects(projects);
@@ -175,6 +198,32 @@ const DashboardOverview = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
+
+      {/* Approved lead: her project is hers to prepare before it starts. */}
+      {!loading &&
+        setupProjects.map((p) => (
+          <div
+            key={p.id}
+            className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+          >
+            <div className="min-w-0">
+              <p className="text-amber-800 font-semibold text-sm">
+                You're leading &ldquo;{p.projectTitle || p.title || 'your project'}&rdquo;
+              </p>
+              <p className="text-gray-600 text-xs mt-1">
+                Your lead application was approved. Edit the details, adjust the team roles and
+                size, then open it for applications
+                {p.startDate ? ` before it starts on ${new Date(p.startDate).toLocaleDateString()}` : ''}.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate(`/projects/${p.id}/setup`)}
+              className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-4 py-2 rounded-lg transition-all flex-shrink-0"
+            >
+              Set up project
+            </button>
+          </div>
+        ))}
 
       {/* Cold-start: show "find your first project" only if the user has joined none yet. */}
       {!loading &&
@@ -345,7 +394,13 @@ const DashboardOverview = () => {
                       <div
                         key={project.id}
                         className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                        onClick={() => navigate(`/projects/${project.id}`)}
+                        onClick={() =>
+                          navigate(
+                            project.isLead && project.status === 'setup'
+                              ? `/projects/${project.id}/setup`
+                              : `/projects/${project.id}`
+                          )
+                        }
                       >
                         <div className="min-w-0 flex-1">
                           <p className="text-gray-900 text-sm font-medium truncate">
@@ -355,8 +410,14 @@ const DashboardOverview = () => {
                             {project.industryTrack || project.category || 'General'}
                           </p>
                         </div>
-                        <span className="text-xs font-medium px-2 py-1 bg-pink-50 text-pink-700 rounded-md flex-shrink-0 ml-3">
-                          Active
+                        <span
+                          className={`text-xs font-medium px-2 py-1 rounded-md flex-shrink-0 ml-3 ${
+                            project.status === 'setup'
+                              ? 'bg-amber-50 text-amber-700'
+                              : 'bg-pink-50 text-pink-700'
+                          }`}
+                        >
+                          {project.status === 'setup' ? 'Setting up' : project.isLead ? 'Leading' : 'Active'}
                         </span>
                       </div>
                     ))}
@@ -385,7 +446,13 @@ const DashboardOverview = () => {
                       <div
                         key={project.id}
                         className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                        onClick={() => navigate(`/projects/${project.id}`)}
+                        onClick={() =>
+                          navigate(
+                            project.isLead && project.status === 'setup'
+                              ? `/projects/${project.id}/setup`
+                              : `/projects/${project.id}`
+                          )
+                        }
                       >
                         <div className="min-w-0 flex-1">
                           <p className="text-gray-900 text-sm font-medium truncate">

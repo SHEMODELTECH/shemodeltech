@@ -7,6 +7,7 @@ import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { toast } from 'react-toastify';
 import SkillPicker from '../components/SkillPicker';
+import Navbar from '../components/Navbar';
 import { INDUSTRY_TRACKS } from '../utils/industryTracks';
 
 const BLOCKED_EMAIL_DOMAINS = [
@@ -794,16 +795,9 @@ const Onboarding = () => {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden flex flex-col items-center justify-center px-4 py-8 sm:py-12 bg-white">
-      <div className="flex items-center gap-2 mb-8">
-        <img
-          src="/Images/512X512.png"
-          alt="She Model Tech"
-          className="w-8 h-8"
-          onError={(e) => (e.target.style.display = 'none')}
-        />
-        <span className="text-gray-900 font-extrabold text-xl sm:text-2xl">She Model Tech</span>
-      </div>
+    <div className="min-h-screen overflow-x-hidden flex flex-col bg-white">
+      <Navbar />
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:py-12">
 
       <div className="mb-4">
         <span
@@ -890,6 +884,7 @@ const Onboarding = () => {
       <p className="text-gray-400 text-xs mt-4">
         {new Date().getFullYear()} She Model Tech. All rights reserved.
       </p>
+      </div>
     </div>
   );
 };

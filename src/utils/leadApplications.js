@@ -241,12 +241,19 @@ export const assignAsLead = async ({ appId, projectId, applicant, reviewer }) =>
     decidedAt: serverTimestamp(),
   });
 
+  const title = project.projectTitle || project.title || 'your project';
+  const startsOn = project.startDate
+    ? ` It starts on ${new Date(project.startDate).toLocaleDateString()}, so you have time to get it ready.`
+    : '';
   await notify(
     applicant.applicantUid,
     {
       type: 'lead_assigned',
-      title: `You're leading "${project.projectTitle || project.title}"`,
-      body: 'Open your project to refine the brief and open roles for your team.',
+      projectId,
+      forOwner: true,
+      title: `Your application to lead "${title}" was approved`,
+      body:
+        `You're now the lead. You can edit the project details, adjust the team roles and size, and open it for applications.${startsOn}`,
       link: `/projects/${projectId}/setup`,
     },
     applicant.applicantEmail
@@ -299,6 +306,7 @@ export const rejectAsLeadInviteAsContributor = async ({
           suggestedRole ? ` as ${suggestedRole}` : ''
         }.`,
       link: suggestedProjectId ? `/projects/${suggestedProjectId}` : '/projects',
+      ...(suggestedProjectId ? { projectId: suggestedProjectId } : {}),
     },
     applicant.applicantEmail
   );
@@ -364,6 +372,10 @@ const notify = async (uid, payload, email) => {
       isRead: false,
       read: false,
       createdAt: serverTimestamp(),
+      // `message` is what the Notifications page has always rendered. Without
+      // it, these decision notifications showed up as a generic "interacted
+      // with your content" line, so applicants never saw the decision.
+      message: [payload.title, payload.body].filter(Boolean).join(' - '),
       ...payload,
     });
   } catch (e) {

@@ -41,7 +41,9 @@ const MyWorkspaces = () => {
           const ownerSnap = await getDocs(ownerQ);
           ownerSnap.docs.forEach(d => {
             const data = { id: d.id, ...d.data(), isOwner: true };
-            if ((data.status === 'active' || data.status === 'awaiting_payment_confirmation') && data.reviewStatus !== 'rejected') {
+            // Leads get their project as soon as they're approved ('setup'),
+            // not only once it's open, so they can prepare it before it starts.
+            if ((data.status === 'setup' || data.status === 'active' || data.status === 'awaiting_payment_confirmation') && data.reviewStatus !== 'rejected') {
               allProjects.set(d.id, data); // overwrites if already exists, marks as owner
             }
           });
@@ -79,7 +81,7 @@ const MyWorkspaces = () => {
           {projects.map(project => (
             <div
               key={project.id}
-              onClick={() => navigate(`/projects/${project.id}/workspace`)}
+              onClick={() => navigate(project.isOwner && project.status === 'setup' ? `/projects/${project.id}/setup` : `/projects/${project.id}/workspace`)}
               className="bg-white border border-pink-200 rounded-xl p-4 cursor-pointer hover:border-pink-400 hover:shadow-sm transition-all"
             >
               <div className="flex items-center justify-between">
@@ -91,8 +93,8 @@ const MyWorkspaces = () => {
                   {project.isOwner && (
                     <span className="text-[10px] font-semibold bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full">Owner</span>
                   )}
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-md ${project.status === 'active' ? 'bg-pink-50 text-pink-700' : 'bg-orange-50 text-orange-700'}`}>
-                    {project.status === 'active' ? 'Active' : 'Completing'}
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-md ${project.status === 'active' ? 'bg-pink-50 text-pink-700' : project.status === 'setup' ? 'bg-amber-50 text-amber-700' : 'bg-orange-50 text-orange-700'}`}>
+                    {project.status === 'active' ? 'Active' : project.status === 'setup' ? 'Setting up' : 'Completing'}
                   </span>
                   <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

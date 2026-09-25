@@ -18,6 +18,7 @@ import {
   orderBy,
   limit,
   where,
+  addDoc,
 } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { isReviewerRole, isAdminRole, roleLabel } from '../../utils/permissions';
@@ -339,6 +340,56 @@ const AdminPanel = () => {
   }, [isAdmin, loadData]);
 
   // --- Actions ---
+  // Company verification is the approval gate for posting paid projects:
+  // an unverified company cannot open the "Host a project" form at all.
+  // Admin-only (Firestore rules block companies from setting it themselves).
+  const toggleCompanyVerified = async (u) => {
+    if (!isAdmin) {
+      toast.error('Only admins can verify companies.');
+      return;
+    }
+    const verify = !u.isVerified;
+    const name = u.companyName || u.displayName || u.email;
+    if (
+      !window.confirm(
+        verify
+          ? `Verify ${name}? They will be able to post paid projects that members can apply to.`
+          : `Remove verification from ${name}? They will no longer be able to post new paid projects.`
+      )
+    )
+      return;
+    try {
+      await updateDoc(doc(db, 'users', u.id), {
+        isVerified: verify,
+        verifiedAt: verify ? new Date().toISOString() : null,
+        verifiedBy: verify ? currentUser.email : null,
+      });
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, isVerified: verify } : x)));
+      if (verify) {
+        try {
+          await addDoc(collection(db, 'notifications'), {
+            userId: u.id,
+            recipientId: u.id,
+            type: 'company_verified',
+            title: 'Your company is verified',
+            body: 'You can now post paid projects. Members will see them on the Projects page.',
+            message: 'Your company is verified. You can now post paid projects.',
+            link: '/company/host-cohort',
+            isRead: false,
+            read: false,
+            createdAt: new Date(),
+          });
+        } catch (e) {
+          console.error('verify notification failed:', e);
+        }
+      }
+      toast.success(verify ? 'Company verified.' : 'Verification removed.');
+    } catch (e) {
+      console.error(e);
+      toast.error('Update failed.');
+    }
+  };
+
   const toggleAdmin = async (u) => {
     if (!isAdmin) {
       toast.error('Only admins can change roles.');
@@ -810,12 +861,25 @@ const AdminPanel = () => {
                         COMPANY
                       </span>
                     )}
+                    {u.isCompany && u.isVerified && (
+                      <span className="ml-2 text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
+                        VERIFIED
+                      </span>
+                    )}
                   </p>
                   <p className="text-gray-400 text-xs truncate">
                     {u.email} · {u.country || 'no country'} · joined {fmtDate(u.createdAt)}
                   </p>
                 </div>
                 <div className="flex-shrink-0 flex items-center gap-2">
+                  {isAdmin && u.isCompany && (
+                    <button
+                      onClick={() => toggleCompanyVerified(u)}
+                      className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${u.isVerified ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-purple-600 text-white hover:bg-purple-700'}`}
+                    >
+                      {u.isVerified ? 'Unverify company' : 'Verify company'}
+                    </button>
+                  )}
                   <button
                     onClick={() => toggleEditor(u)}
                     className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${u.role === 'editor' ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}

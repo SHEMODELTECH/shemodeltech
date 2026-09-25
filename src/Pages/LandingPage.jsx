@@ -1,5 +1,6 @@
 // src/Pages/LandingPage.jsx
 import BrandLockup from '../components/BrandLockup';
+import Navbar from '../components/Navbar';
 import { BRAND } from '../config/brand';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -17,7 +18,6 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [visibleSections, setVisibleSections] = useState(new Set());
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (currentUser) navigate('/community');
@@ -131,99 +131,21 @@ const LandingPage = () => {
  .fade-up.delay-7 { transition-delay: 0.7s; }
  `}</style>
 
-      {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20">
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <img
-              src="/Images/she-model-tech-logo.png"
-              alt="She Model Tech"
-              className="h-11 sm:h-14 w-auto"
-            />
-          </Link>
-          <div className="hidden sm:flex items-center gap-6">
-            <Link
-              to="/about"
-              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              to="/support"
-              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-            >
-              Support
-            </Link>
-            <button
-              onClick={handleSignIn}
-              disabled={isLoading}
-              className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-all disabled:opacity-60"
-            >
-              {isLoading ? 'Signing in...' : 'Get Started'}
-            </button>
-          </div>
-          <div className="flex sm:hidden items-center gap-2">
-            <button
-              onClick={handleSignIn}
-              disabled={isLoading}
-              className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-all disabled:opacity-60"
-            >
-              {isLoading ? '...' : 'Get Started'}
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-              aria-label="Toggle menu"
-            >
-              <svg
-                className="w-6 h-6 text-gray-700"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                {mobileMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div
-          className={`sm:hidden border-t border-gray-200 bg-white transition-all duration-200 ease-in-out overflow-hidden ${mobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}
-        >
-          <div className="px-4 py-4 space-y-2">
-            <Link
-              to="/about"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 transition-all min-h-[44px]"
-            >
-              About
-            </Link>
-            <Link
-              to="/support"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 transition-all min-h-[44px]"
-            >
-              Support
-            </Link>
-          </div>
-        </div>
-      </nav>
+      {/* NAVBAR - shared site-wide component so the menu matches every page */}
+      <Navbar
+        cta={
+          <button
+            onClick={handleSignIn}
+            disabled={isLoading}
+            className="bg-pink-600 hover:bg-pink-700 text-white text-xs lg:text-sm xl:text-base font-semibold px-3.5 lg:px-4 py-2 rounded-lg border border-pink-600 transition-all disabled:opacity-60 whitespace-nowrap"
+          >
+            {isLoading ? 'Signing in...' : 'Get Started'}
+          </button>
+        }
+      />
 
       {/* HERO */}
-      <section className="relative pt-32 sm:pt-40 pb-20 sm:pb-28 overflow-hidden">
+      <section className="relative pt-16 sm:pt-20 pb-20 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-pink-50/60 via-white to-white" />
 
         {/* Decorative brand shapes.

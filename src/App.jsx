@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import AppShell from './components/AppShell';
+import Navbar from './components/Navbar';
 
 // Critical path - keep eager
 import Login from './Pages/auth/Login';
@@ -167,6 +168,7 @@ function App() {
                   path="/terms"
                   element={
                     <div className="min-h-screen bg-white">
+                      <Navbar />
                       <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
                         <TermsOfService />
                       </div>
@@ -177,6 +179,7 @@ function App() {
                   path="/privacy"
                   element={
                     <div className="min-h-screen bg-white">
+                      <Navbar />
                       <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
                         <PrivacyPolicy />
                       </div>

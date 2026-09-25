@@ -1,30 +1,14 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const About = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar */}
-      <nav className="border-b border-gray-200 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-1">
-            <img src="/Images/512X512.png" alt="She Model Tech" className="w-10 h-10" />
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link to="/support" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
-              Support
-            </Link>
-            <Link
-              to="/login"
-              className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all"
-            >
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </nav>
+      {/* Shared site navbar - same menu and style as every other page */}
+      <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         {/* Hero */}

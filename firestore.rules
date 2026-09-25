@@ -68,7 +68,10 @@ service cloud.firestore {
  || request.resource.data.role == resource.data.role)
  && !touched('badges')
  && !touched('badgeCounts')
- && !touched('badgeCount');
+ && !touched('badgeCount')
+ // Company verification is granted by an admin, never self-set:
+ // it is what allows a company to post paid projects.
+ && !touched('isVerified');
 
  allow update: if isAdmin();
 

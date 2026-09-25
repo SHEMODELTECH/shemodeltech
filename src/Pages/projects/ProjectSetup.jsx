@@ -240,6 +240,12 @@ const ProjectSetup = () => {
         projectDescription: form.projectDescription.trim(),
         projectGoals: form.projectGoals.trim() || null,
         industryTrack: form.industryTrack,
+        // Keep every detail the lead edited, not just the brief, so a saved
+        // draft doesn't silently drop new dates or links.
+        ...(form.startDate ? { startDate: form.startDate } : {}),
+        ...(form.endDate ? { endDate: form.endDate } : {}),
+        ...(form.projectLink.trim() ? { projectLink: form.projectLink.trim() } : {}),
+        ...(form.submissionUrl.trim() ? { resources: { submissionUrl: form.submissionUrl.trim() } } : {}),
         proposedRoles: teamRoles, // keep draft in proposedRoles until opened
         updatedAt: serverTimestamp(),
       });

@@ -106,6 +106,20 @@ const ProjectsListing = () => {
       } catch (e) {
         /* ignore */
       }
+      try {
+        const snap3 = await getDocs(
+          query(
+            collection(db, 'company_cohort_applications'),
+            where('applicantUid', '==', currentUser.uid)
+          )
+        );
+        snap3.forEach((d) => {
+          const a = d.data();
+          if (a.cohortId && a.status !== 'withdrawn') ids.add(a.cohortId);
+        });
+      } catch (e) {
+        /* ignore */
+      }
       setAppliedProjectIds(ids);
     })();
   }, [currentUser]);
@@ -142,6 +156,59 @@ const ProjectsListing = () => {
   const [filters, setFilters] = useState({ industryTrack: '', timeline: '', payType: '' });
   const [loading, setLoading] = useState(true);
 
+  // Paid projects posted by companies live in their own collection
+  // (company_cohorts), so they were never on this board. Pull the open ones
+  // in and shape them like a project card; clicking goes to their own page,
+  // where the company-specific apply flow lives.
+  const [smtProjects, setSmtProjects] = useState([]);
+  const [companyProjects, setCompanyProjects] = useState([]);
+  const [smtLoaded, setSmtLoaded] = useState(false);
+
+  useEffect(() => {
+    const q = query(collection(db, 'company_cohorts'), where('status', '==', 'hiring'));
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        setCompanyProjects(
+          snap.docs.map((d) => {
+            const c = d.data();
+            return {
+              id: d.id,
+              href: `/company-cohorts/${d.id}`,
+              isCompanyProject: true,
+              isPaid: true,
+              status: 'active',
+              applicationsOpen: true,
+              projectTitle: c.title,
+              projectDescription: c.description,
+              companyName: c.companyName,
+              companyVerified: !!c.companyVerified,
+              contactName: c.companyName,
+              endDate: c.endDate,
+              createdAt: c.createdAt,
+              teamRoles: (c.roles || []).map((r) => ({
+                role: r.title,
+                count: r.count,
+                payAmount: r.payAmount,
+              })),
+            };
+          })
+        );
+      },
+      (err) => console.error('Error fetching company projects:', err)
+    );
+    return unsub;
+  }, []);
+
+  // One board: SMT projects + company paid projects, newest first.
+  useEffect(() => {
+    const merged = [...smtProjects, ...companyProjects].sort(
+      (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+    );
+    setProjects(merged);
+    if (smtLoaded) setLoading(false);
+  }, [smtProjects, companyProjects, smtLoaded]);
+
   useEffect(() => {
     // Query without orderBy so it never depends on a composite index
     // (which may not exist yet on a fresh project). Sort client-side instead.
@@ -158,12 +225,12 @@ const ProjectsListing = () => {
           .filter((p) => p.reviewStatus !== 'rejected')
           // Newest first, sorted in JS (handles missing createdAt gracefully).
           .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-        setProjects(list);
-        setFilteredProjects(list);
-        setLoading(false);
+        setSmtProjects(list);
+        setSmtLoaded(true);
       },
       (err) => {
         console.error('Error fetching projects:', err);
+        setSmtLoaded(true);
         setLoading(false);
       }
     );
@@ -316,7 +383,7 @@ const ProjectsListing = () => {
                 {filteredProjects.map((project) => (
                   <div
                     key={project.id}
-                    onClick={() => navigate(`/projects/${project.id}`)}
+                    onClick={() => navigate(project.href || `/projects/${project.id}`)}
                     className="bg-white rounded-xl p-4 sm:p-5 border border-pink-200 cursor-pointer hover:border-pink-400 hover:shadow-sm transition-all duration-200 active:scale-[0.99]"
                   >
                     <div className="flex items-start justify-between gap-3 mb-3">
@@ -362,12 +429,27 @@ const ProjectsListing = () => {
                     </p>
 
                     <div className="flex flex-wrap items-center gap-1.5 mb-3">
-                      <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">
-                        {getIndustryLabel(project.industryTrack)}
-                      </span>
-                      <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">
-                        {formatTimeline(project.timeline)}
-                      </span>
+                      {project.isCompanyProject ? (
+                        <>
+                          <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">
+                            Company project
+                          </span>
+                          {project.endDate && (
+                            <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">
+                              Due {new Date(project.endDate).toLocaleDateString()}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">
+                            {getIndustryLabel(project.industryTrack)}
+                          </span>
+                          <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">
+                            {formatTimeline(project.timeline)}
+                          </span>
+                        </>
+                      )}
                       {appliedProjectIds.has(project.id) ||
                       (currentUser &&
                         (project.submitterId === currentUser.uid ||
@@ -398,7 +480,9 @@ const ProjectsListing = () => {
                       <span>
                         {project.status === 'lead_recruitment'
                           ? 'Auto-generated by She Model Tech'
-                          : `Posted by ${project.contactName || 'Project Owner'}`}
+                          : project.isCompanyProject
+                            ? `Posted by ${project.companyName || 'a company'}${project.companyVerified ? ' (verified)' : ''}`
+                            : `Posted by ${project.contactName || 'Project Owner'}`}
                       </span>
                       <span>
                         {project.createdAt?.toDate

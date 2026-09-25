@@ -9,6 +9,7 @@ import { db } from '../../firebase/config';
 import { sendPush } from '../../utils/pushNotifications';
 import { toast } from 'react-toastify';
 import { notifyApplicationApproved, notifyApplicationRejected } from '../../utils/emailNotifications';
+import JoinedProjects from '../../components/JoinedProjects';
 import { markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../../utils/paidProjects';
 
 const industryTracks = [
@@ -42,6 +43,16 @@ const ProjectOwnerDashboard = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [myProjects, setMyProjects] = useState([]);
+  // Individuals see two tabs: projects they lead/created, and projects they
+  // applied to or joined (free or paid). Companies only have their own.
+  const [view, setView] = useState('lead');
+  const [isCompany, setIsCompany] = useState(false);
+  useEffect(() => {
+    if (!currentUser) return;
+    getDoc(doc(db, 'users', currentUser.uid))
+      .then((s) => setIsCompany(!!s.data()?.isCompany))
+      .catch(() => {});
+  }, [currentUser]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -335,13 +346,33 @@ const ProjectOwnerDashboard = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-gray-900">My <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">Projects</span></h1>
-                <p className="text-gray-400 text-sm mt-1">{myProjects.length} project{myProjects.length !== 1 ? 's' : ''} you lead</p>
+                <p className="text-gray-400 text-sm mt-1">{view === 'joined' && !isCompany ? 'Projects you applied to or joined' : `${myProjects.length} project${myProjects.length !== 1 ? 's' : ''} you lead`}</p>
               </div>
               <Link to="/projects" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
                 Apply to lead a project
               </Link>
             </div>
 
+            {!isCompany && (
+              <div className="flex gap-1.5 mb-6">
+                {[['lead', 'Projects I lead'], ['joined', 'Projects I joined']].map(([id, label]) => (
+                  <button
+                    key={id}
+                    onClick={() => setView(id)}
+                    className={`text-sm font-semibold px-4 py-2 rounded-full transition-all ${
+                      view === id ? 'bg-pink-600 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {view === 'joined' && !isCompany ? (
+              <JoinedProjects currentUser={currentUser} />
+            ) : (
+            <>
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
               {[
@@ -377,6 +408,8 @@ const ProjectOwnerDashboard = () => {
                 ))}
               </div>
             )}
+            </>
+            )}
           </div>
         </main>
       </div>
@@ -392,6 +425,8 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
   const isRejected = project.reviewStatus === 'rejected';
   const isCompleted = project.status === 'completed' || isRejected;
   const isAwaitingPayment = project.status === 'awaiting_payment_confirmation';
+  // Lead approved but the project isn't open for applications yet.
+  const isSetup = project.status === 'setup';
   const pendingApps = (project.applications || []).filter(a => a.status === 'submitted');
   const approvedApps = (project.applications || []).filter(a => a.status === 'approved');
 
@@ -417,7 +452,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
         </div>
         <div className="flex gap-2">
           <span className={`px-3 py-1 rounded-full text-xs font-bold border ${isRejected ? 'bg-red-50 text-red-600 border-red-200' : isAwaitingPayment ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-pink-600/20 text-pink-500 border-pink-600/30'}`}>
-            {isRejected ? 'Rejected' : isCompleted ? 'Completed' : isAwaitingPayment ? 'Awaiting Payment Confirmation' : 'Active'}
+            {isRejected ? 'Rejected' : isCompleted ? 'Completed' : isAwaitingPayment ? 'Awaiting Payment Confirmation' : isSetup ? 'Setting up' : 'Active'}
           </span>
         </div>
       </div>
@@ -469,11 +504,11 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
           </>
         )}
         {!isCompleted && !isAwaitingPayment && (
-          <Link to={`/projects/${project.id}/setup`} className="px-4 py-2 min-h-[40px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-xs transition-all flex items-center">
-            Edit Project
+          <Link to={`/projects/${project.id}/setup`} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs transition-all flex items-center ${isSetup ? 'bg-pink-600 hover:bg-pink-700 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+            {isSetup ? 'Continue Setup' : 'Edit Project'}
           </Link>
         )}
-        {!isCompleted && !isAwaitingPayment && (
+        {!isCompleted && !isAwaitingPayment && !isSetup && (
           <Link to={`/projects/${project.id}/complete`} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs transition-all flex items-center">
             {project.isPaid ? (
               project.reviewStatus === 'approved' ? 'Mark Work Done'
@@ -490,7 +525,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
             )}
           </Link>
         )}
-        {!isCompleted && !isAwaitingPayment && (
+        {!isCompleted && !isAwaitingPayment && !isSetup && (
           <button onClick={() => onToggleApplications(project)} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs transition-all ${project.applicationsOpen === false ? 'bg-pink-600 hover:bg-pink-700 text-white' : 'bg-orange-50 border border-orange-200 text-orange-700 hover:bg-orange-100'}`}>
             {project.applicationsOpen === false ? 'Open Applications' : 'Close Applications'}
           </button>

@@ -15,6 +15,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { verifyCertificate } from '../utils/certificateVerification';
 import { BRAND } from '../config/brand';
+import Navbar from '../components/Navbar';
 
 const VerifyCertificate = () => {
   const { certificateId } = useParams();
@@ -46,13 +47,9 @@ const VerifyCertificate = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navbar />
       <div className="max-w-xl mx-auto px-4 py-12 sm:py-16">
         <div className="text-center mb-8">
-          <img
-            src={BRAND.logo.mark}
-            alt={BRAND.name}
-            className="w-16 h-16 mx-auto mb-3 object-contain"
-          />
           <h1 className="text-2xl font-bold text-gray-900">Verify a certificate</h1>
           <p className="text-gray-500 text-sm mt-1">
             Check that a {BRAND.name} certificate is genuine.
