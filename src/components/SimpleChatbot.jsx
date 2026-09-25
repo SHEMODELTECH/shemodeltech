@@ -95,10 +95,10 @@ const SimpleChatbot = () => {
         addBotMessage("Great! Tell me about your project. What are you looking to build or transform?");
         setStep(4);
       } else if (type.includes('career') || type.includes('tech') || type.includes('job')) {
-        // Jobs/career branch
-        addBotMessage("Great news! She Model Tech helps tech professionals find projects, jobs, career tools, and connect with a supportive community - all in one place.");
+        // Career branch
+        addBotMessage("Great news! She Model Tech helps tech professionals join real projects, earn verified badges, find paid work, and connect with a supportive community - all in one place.");
         safeTimeout(() => {
-          addBotMessage("Check out our Projects section to find collaborative work, or explore Jobs for career opportunities.");
+          addBotMessage("Check out the Projects page to join a collaborative project. Once you earn a badge, you can apply to paid projects from verified companies.");
         }, 1500);
         safeTimeout(() => {
           addBotMessage("Head to your dashboard to get started: /dashboard");

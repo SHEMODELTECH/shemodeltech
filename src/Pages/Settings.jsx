@@ -26,11 +26,12 @@ const skillTrackOpts = [
 // here too. These feed profile completion and the AI recommendations.
 const individualInterestOpts = [
   { id: 'projects', label: 'Projects', desc: 'Join real-world collaborative projects' },
-  { id: 'jobs', label: 'Jobs', desc: 'Full-time, freelance, and contract roles' },
+  { id: 'paid', label: 'Paid projects', desc: 'Paid work from verified companies' },
   { id: 'community', label: 'Community', desc: 'Connect with women in tech' },
   { id: 'badges', label: 'Badges', desc: 'Earn verified TechTalent credentials' },
 ];
 const companyInterestOpts = [
+  { id: 'paid_projects', label: 'Post paid projects', desc: 'Hire a team for paid project work' },
   { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
   { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },
 ];
@@ -632,7 +633,7 @@ const Settings = () => {
             <h3 className="text-gray-900 font-bold text-base mb-2">Email Updates</h3>
             <p className="text-gray-500 text-sm mb-4">
               Get a weekly email recap of your activity and what's new on She Model Tech: new
-              projects, jobs, your badges, and unread messages. Sent every Sunday.
+              projects, paid projects, your badges, and unread messages. Sent every Sunday.
             </p>
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -832,10 +833,6 @@ const IncludedTab = () => {
           <FeatureItem
             label="Unlimited messaging"
             detail="Message any member or company, and start as many conversations as you like. Nothing is metered."
-          />
-          <FeatureItem
-            label="Unlimited job posts"
-            detail="Post as many roles as you need. There is no monthly cap."
           />
           <FeatureItem
             label="Post paid projects"

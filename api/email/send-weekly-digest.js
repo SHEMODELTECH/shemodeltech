@@ -61,13 +61,16 @@ module.exports = async function handler(req, res) {
  };
 
  // Fetch this week's platform content (only what She Model Tech actually has).
- const [projects, jobs] = await Promise.all([
+ // There is no job board. The second list is paid projects posted by
+ // verified companies (company_cohorts) that are open for applications.
+ const [projects, paidRaw] = await Promise.all([
  safeFetch('projects', 'createdAt', sevenDaysAgo),
- safeFetch('hub_posts', 'createdAt', sevenDaysAgo),
+ safeFetch('company_cohorts', 'createdAt', sevenDaysAgo),
  ]);
+ const paid = paidRaw.filter(c => c.status === 'hiring');
  const newMembersCount = await safeCount('users', 'createdAt', sevenDaysAgo);
 
- console.log(`Week: ${projects.length} projects, ${jobs.length} jobs, ${newMembersCount} new members`);
+ console.log(`Week: ${projects.length} projects, ${paid.length} paid projects, ${newMembersCount} new members`);
 
  // Subscribers (weekly digest opt-in, fall back to daily).
  const usersSnap = await db.collection('users').where('emailPreferences.weeklyDigest', '==', true).get();
@@ -152,7 +155,7 @@ ${totalActivity === 0 ? `<p style="color:#111827;font-size:12px;text-align:cente
 <div class="sc"><h2>Platform This Week</h2>
 <div class="sts">
 <div class="st"><div class="sn">${projects.length}</div><div class="sl">New Projects</div></div>
-<div class="st"><div class="sn">${jobs.length}</div><div class="sl">New Jobs</div></div>
+<div class="st"><div class="sn">${paid.length}</div><div class="sl">Paid Projects</div></div>
 <div class="st"><div class="sn">${newMembersCount}</div><div class="sl">New Members</div></div>
 </div></div>
 
@@ -163,12 +166,12 @@ ${projects.slice(0,5).map(p => `<div class="it">
 </div>`).join('')}
 <a href="${SITE}/projects" class="btn" style="color:#ffffff">Browse projects</a></div>` : ''}
 
-${jobs.length > 0 ? `<div class="sc"><h2>New Jobs</h2>
-${jobs.slice(0,4).map(j => `<div class="it">
-<h3>${j.title || 'Job'}</h3>
-<p>${j.companyName || ''}${j.location ? ' · ' + j.location : ''}</p>
+${paid.length > 0 ? `<div class="sc"><h2>New Paid Projects</h2>
+${paid.slice(0,4).map(c => `<div class="it">
+<h3>${c.title || 'Paid project'}</h3>
+<p>${c.companyName || ''} · earn a badge to apply</p>
 </div>`).join('')}
-<a href="${SITE}/jobs" class="btn" style="color:#ffffff">View all jobs</a></div>` : ''}
+<a href="${SITE}/projects" class="btn" style="color:#ffffff">See paid projects</a></div>` : ''}
 
 <div class="sc"><h2>Quick Links</h2>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:6px"><tr>

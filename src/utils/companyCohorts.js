@@ -115,7 +115,7 @@ export const canApplyToCompanyCohort = async (uid, viewer = null) => {
     if (snap.empty) {
       return {
         allowed: false,
-        reason: 'Earn your first badge on a She Model Tech cohort to unlock paid company projects.',
+        reason: 'Earn one badge on a She Model Tech project to unlock paid company projects.',
       };
     }
     return { allowed: true, badgeCount: snap.size };

@@ -114,12 +114,13 @@ const Onboarding = () => {
 
   const individualInterests = [
     { id: 'projects', label: 'Projects', desc: 'Join real-world collaborative projects' },
-    { id: 'jobs', label: 'Jobs', desc: 'Full-time, freelance, and contract roles' },
+    { id: 'paid', label: 'Paid projects', desc: 'Paid work from verified companies' },
     { id: 'community', label: 'Community', desc: 'Connect with tech professionals' },
     { id: 'badges', label: 'Badges', desc: 'Earn verified TechTalent credentials' },
   ];
 
   const companyInterests = [
+    { id: 'paid_projects', label: 'Post paid projects', desc: 'Hire a team for paid project work' },
     { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
     { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },
   ];
@@ -493,8 +494,8 @@ const Onboarding = () => {
                 Where are you based?
               </h2>
               <p className="text-gray-500 text-sm">
-                Your country helps recruiters know where you can work from. Remote opportunities are
-                open to everyone.
+                Your country helps teammates and companies plan around your time zone. Projects on
+                She Model Tech are remote and open to everyone.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -705,7 +706,7 @@ const Onboarding = () => {
                 Where is your company based?
               </h2>
               <p className="text-gray-500 text-sm">
-                Helps professionals find opportunities near them.
+                Shown on your company profile and the paid projects you post.
               </p>
             </div>
             <div>

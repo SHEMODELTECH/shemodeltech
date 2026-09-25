@@ -66,7 +66,7 @@ const AccessBanner = ({ company }) => {
     <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-5">
       <p className="text-gray-900 text-sm font-bold mb-1">Your free access has ended</p>
       <p className="text-gray-600 text-xs mb-2 leading-relaxed">
-        You can still post roles, reply to members, and take part in the community for free. Search,
+        You can still post paid projects, reply to members, and take part in the community for free. Search,
         filtering and verified evidence need Talent Access.
       </p>
       <Link to="/partner" className="text-pink-600 text-xs font-semibold hover:underline">

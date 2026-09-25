@@ -134,6 +134,15 @@ const CompanyCohortDetail = () => {
   }
 
   const open = cohort.status === COMPANY_COHORT_STATUS.HIRING;
+  const isHost = currentUser?.uid === cohort.companyId;
+  // No badge yet (and not a read error): show the rule, disable role picking.
+  const needsBadge =
+    open &&
+    !myApp &&
+    !isHost &&
+    !!eligibility &&
+    !eligibility.allowed &&
+    !eligibility.reason?.startsWith('Could not');
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10 sm:py-14">
@@ -193,6 +202,24 @@ const CompanyCohortDetail = () => {
 
       {/* Roles */}
       <h2 className="font-bold text-gray-900 mb-3">Open roles</h2>
+
+      {/* Badge rule, stated where the roles are, so nobody looks for an
+          application form that isn't there. One earned badge is required. */}
+      {needsBadge && (
+        <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-3">
+          <p className="text-gray-900 text-sm font-bold mb-1">Badge required to apply</p>
+          <p className="text-gray-600 text-xs leading-relaxed mb-2">
+            Paid company projects are open to members who have earned <strong>at least one
+            badge</strong> on a She Model Tech project. Completing one first builds your skills,
+            gets you working with a real team, and shows you how projects run on the platform,
+            so you&rsquo;re ready for paid work. You can see the roles and pay below; you&rsquo;ll
+            be able to apply once you have a badge.
+          </p>
+          <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">
+            Find a project to earn your badge &rarr;
+          </Link>
+        </div>
+      )}
       <div className="space-y-2 mb-8">
         {(cohort.roles || []).map((r, i) => {
           const chosen = selectedRole === r.title;
@@ -200,7 +227,7 @@ const CompanyCohortDetail = () => {
             <button
               key={i}
               type="button"
-              disabled={!open || !!myApp}
+              disabled={!open || !!myApp || needsBadge}
               onClick={() => setSelectedRole(r.title)}
               className={`w-full text-left p-4 rounded-xl border transition-all disabled:opacity-70 ${
                 chosen
@@ -235,14 +262,13 @@ const CompanyCohortDetail = () => {
         </div>
       ) : !open ? (
         <p className="text-gray-500 text-sm">Applications are closed for this project.</p>
+      ) : isHost ? (
+        <p className="text-gray-500 text-sm">This is your project. Review applicants from your company dashboard.</p>
       ) : eligibility && !eligibility.allowed ? (
-        <div className="bg-pink-50 border border-pink-200 rounded-xl p-5">
-          <p className="text-gray-900 text-sm font-bold mb-1">Earn a badge first</p>
-          <p className="text-gray-600 text-xs mb-3 leading-relaxed">{eligibility.reason}</p>
-          <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">
-            See the current cohort
-          </Link>
-        </div>
+        // Explained next to the roles above; a read error gets its own line.
+        eligibility.reason?.startsWith('Could not') ? (
+          <p className="text-gray-500 text-sm">{eligibility.reason}</p>
+        ) : null
       ) : (
         <>
           <textarea

@@ -14,6 +14,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
 } from 'firebase/firestore';
 import ProjectPayBadge from '../../components/ProjectPayBadge';
 import { getPayRangeLabel } from '../../utils/paidProjects';
@@ -59,6 +60,20 @@ const ProjectsListing = () => {
   const { currentUser } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [appliedProjectIds, setAppliedProjectIds] = useState(new Set());
+  // Paid company projects need one earned badge to apply. null = not known yet.
+  const [hasBadge, setHasBadge] = useState(null);
+
+  useEffect(() => {
+    if (!currentUser) {
+      setHasBadge(null);
+      return;
+    }
+    getDocs(
+      query(collection(db, 'member_badges'), where('memberUid', '==', currentUser.uid), limit(1))
+    )
+      .then((snap) => setHasBadge(!snap.empty))
+      .catch(() => setHasBadge(null));
+  }, [currentUser]);
 
   useEffect(() => {
     if (!currentUser) {
@@ -456,6 +471,13 @@ const ProjectsListing = () => {
                           project.submitterEmail === currentUser.email)) ? (
                         <span className="px-3 py-1.5 bg-gray-800 text-white rounded-lg text-sm font-semibold">
                           View Project
+                        </span>
+                      ) : project.isCompanyProject && hasBadge === false ? (
+                        <span
+                          title="Earn one badge on a She Model Tech project to apply"
+                          className="px-3 py-1.5 bg-white border border-pink-300 text-pink-700 rounded-lg text-sm font-semibold"
+                        >
+                          Badge required
                         </span>
                       ) : project.status === 'setup' ? (
                         <span className="px-3 py-1.5 bg-purple-100 text-gray-700 rounded-lg text-sm font-semibold">
