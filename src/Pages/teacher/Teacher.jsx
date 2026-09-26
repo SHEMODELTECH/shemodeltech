@@ -29,7 +29,7 @@ import {
   titleFromHtml,
 } from '../../utils/teacherCourses';
 import { FD_CSS, enhanceCourseContent } from '../learning/shared';
-import { PUBLISHED_PREFIX, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
+import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
 
 const TRACKS = [
   ['', 'General'],
@@ -96,6 +96,7 @@ const TeacherList = ({ role }) => {
   const [items, setItems] = useState(null);
   const [q, setQ] = useState('');
   const [track, setTrack] = useState('all');
+  const [aud, setAud] = useState('all');
 
   useEffect(() => {
     listTeacherCourses()
@@ -110,6 +111,7 @@ const TeacherList = ({ role }) => {
   const shown = (items || []).filter(
     (c) =>
       (track === 'all' || (c.track || '') === track) &&
+      (aud === 'all' || (aud === 'students' ? !!c.published : !c.published)) &&
       (!q.trim() || `${c.title} ${c.description}`.toLowerCase().includes(q.trim().toLowerCase()))
   );
 
@@ -131,8 +133,8 @@ const TeacherList = ({ role }) => {
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Teacher</h1>
           <p className="text-gray-600 mt-1 max-w-2xl">
-            Teaching notes and instructor editions of courses. Only admins and editors can see this page, and
-            nothing here appears in Learning.
+            Create and manage courses. Choose who each one is for: teachers (stays here, staff only) or students
+            (published to Learning). Only admins and editors can see this page.
           </p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
@@ -151,13 +153,22 @@ const TeacherList = ({ role }) => {
         </div>
       </div>
 
+      <div className="flex gap-2 mb-4" role="group" aria-label="Audience">
+        {[['all', 'All'], ['teachers', 'For teachers'], ['students', 'For students']].map(([v, l]) => (
+          <button key={v} onClick={() => setAud(v)} aria-pressed={aud === v}
+            className={`text-sm font-semibold px-4 py-2 rounded-full ${aud === v ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+            {l}
+            {items ? ` (${v === 'all' ? items.length : items.filter((c) => (v === 'students' ? !!c.published : !c.published)).length})` : ''}
+          </button>
+        ))}
+      </div>
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <input
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search teaching materials"
-          aria-label="Search teaching materials"
+          placeholder="Search courses and notes"
+          aria-label="Search courses and notes"
           className="flex-1 h-10 rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <select
@@ -195,9 +206,9 @@ const TeacherList = ({ role }) => {
                   {c.kind === 'html' ? 'Interactive HTML' : 'Written notes'}
                 </span>
                 <StatusTag status={c.status} />
-                {c.published && (
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700">In Learning</span>
-                )}
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${c.published ? 'bg-pink-50 text-pink-700' : 'bg-indigo-50 text-indigo-700'}`}>
+                  {c.published ? 'For students' : 'For teachers'}
+                </span>
               </div>
               <Link to={`/teacher/${c.id}`} className="font-semibold text-gray-900 hover:underline leading-snug">
                 {c.title || 'Untitled'}
@@ -247,6 +258,10 @@ const TeacherEditor = () => {
     status: 'draft',
     fileName: '',
   });
+  // Where it goes: 'teachers' keeps it in Teacher only; 'students' also
+  // publishes a copy to Learning (kept in step every time it's saved).
+  const [audience, setAudience] = useState(params.get('for') === 'students' ? 'students' : 'teachers');
+  const [pubDetails, setPubDetails] = useState({ level: 'Beginner', minutes: '' });
   const [content, setContent] = useState('');
   const [contentChanged, setContentChanged] = useState(false);
   const [showSource, setShowSource] = useState(false);
@@ -271,6 +286,12 @@ const TeacherEditor = () => {
         status: c.status || 'draft',
         fileName: c.fileName || '',
       });
+      setAudience(c.published ? 'students' : 'teachers');
+      if (c.published) {
+        const pubDoc = await getPublished(c.published.learningId).catch(() => null);
+        if (pubDoc) setPubDetails({ level: pubDoc.level || 'Beginner', minutes: pubDoc.minutes ? String(pubDoc.minutes) : '' });
+        if (!c.track && c.published.track) setMeta((m) => ({ ...m, track: c.published.track }));
+      }
       setContent(await getTeacherContent(id, c.chunkCount));
       setLoaded(true);
     })().catch((e) => {
@@ -302,6 +323,7 @@ const TeacherEditor = () => {
   const save = async () => {
     if (!meta.title.trim()) return toast.error('Add a title.');
     if (!content.trim()) return toast.error(meta.kind === 'html' ? 'Choose an HTML file to upload.' : 'Write some notes first.');
+    if (audience === 'students' && !meta.track) return toast.error('Choose the track students will find it under.');
     setSaving(true);
     try {
       const newId = await saveTeacherCourse(
@@ -313,7 +335,19 @@ const TeacherEditor = () => {
         },
         currentUser
       );
-      toast.success(id ? 'Saved.' : 'Added to Teacher.');
+      const saved = { ...(existing || {}), id: newId, kind: meta.kind };
+      if (audience === 'students') {
+        await publishToLearning(
+          saved,
+          content,
+          { title: meta.title, summary: meta.description, track: meta.track, level: pubDetails.level, minutes: pubDetails.minutes },
+          currentUser
+        );
+        toast.success(existing?.published ? 'Saved, and updated in Learning.' : 'Saved and published to Learning for students.');
+      } else {
+        if (existing?.published) await unpublishFromLearning(saved);
+        toast.success(existing?.published ? 'Saved. Removed from Learning; now for teachers only.' : id ? 'Saved.' : 'Added to Teacher.');
+      }
       navigate(`/teacher/${newId}`);
     } catch (e) {
       console.error(e);
@@ -341,10 +375,38 @@ const TeacherEditor = () => {
         {id ? 'Back to the course' : 'Back to Teacher'}
       </Link>
       <h1 className="text-2xl font-bold text-gray-900 mt-3 mb-6">
-        {id ? 'Edit teaching material' : meta.kind === 'html' ? 'Upload an HTML course' : 'Write teaching notes'}
+        {id ? 'Edit course' : meta.kind === 'html' ? 'Upload an HTML course' : 'Write a course or notes'}
       </h1>
 
       <div className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 space-y-5">
+        <fieldset>
+          <legend className={label}>Who is this for?</legend>
+          <div className="grid sm:grid-cols-2 gap-3 mt-1">
+            {[
+              ['teachers', 'Teachers', 'Teaching notes and instructor editions. Stays in Teacher, visible to admins and editors only.'],
+              ['students', 'Students', 'A course for learners. Published to the Learning platform, where anyone can find it.'],
+            ].map(([val, title, desc]) => (
+              <label
+                key={val}
+                className={`cursor-pointer rounded-xl border-2 p-4 ${audience === val ? 'border-pink-500 bg-pink-50' : 'border-gray-200 hover:border-gray-300'}`}
+              >
+                <input type="radio" name="audience" value={val} checked={audience === val}
+                  onChange={() => setAudience(val)} className="sr-only" />
+                <span className="flex items-center gap-2">
+                  <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${audience === val ? 'border-pink-600' : 'border-gray-400'}`} aria-hidden="true">
+                    {audience === val && <span className="w-2 h-2 rounded-full bg-pink-600" />}
+                  </span>
+                  <span className="font-semibold text-gray-900">{title}</span>
+                </span>
+                <span className="block text-sm text-gray-600 mt-1">{desc}</span>
+              </label>
+            ))}
+          </div>
+          {existing?.published && audience === 'teachers' && (
+            <p className="text-sm text-amber-700 mt-2">Saving will remove it from Learning. Learners who enrolled will lose access.</p>
+          )}
+        </fieldset>
+
         <div>
           <label className={label} htmlFor="t-title">Title</label>
           <input id="t-title" className={input} value={meta.title} onChange={(e) => setMeta({ ...meta, title: e.target.value })} />
@@ -372,6 +434,28 @@ const TeacherEditor = () => {
             </select>
           </div>
         </div>
+
+        {audience === 'students' && (
+          <div className="grid sm:grid-cols-2 gap-4 rounded-xl bg-pink-50/60 border border-pink-100 p-4">
+            <p className="sm:col-span-2 text-sm text-gray-700">
+              Students will find it in Learning under the track above, using the title and description as its card.
+            </p>
+            <div>
+              <label className={label} htmlFor="t-level">Level</label>
+              <select id="t-level" className={input} value={pubDetails.level} onChange={(e) => setPubDetails({ ...pubDetails, level: e.target.value })}>
+                <option>Beginner</option>
+                <option>Project-based</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+            <div>
+              <label className={label} htmlFor="t-min">Time to complete, in minutes (optional)</label>
+              <input id="t-min" type="number" min="5" step="5" className={input} value={pubDetails.minutes}
+                placeholder={meta.kind === 'markdown' ? 'Estimated from the text' : 'e.g. 240'}
+                onChange={(e) => setPubDetails({ ...pubDetails, minutes: e.target.value })} />
+            </div>
+          </div>
+        )}
 
         {meta.kind === 'html' ? (
           <div>
@@ -456,7 +540,7 @@ const TeacherEditor = () => {
         <div className="flex gap-3 pt-2">
           <button onClick={save} disabled={saving}
             className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-60">
-            {saving ? 'Saving...' : id ? 'Save changes' : 'Save'}
+            {saving ? 'Saving...' : audience === 'students' ? (existing?.published ? 'Save and update in Learning' : 'Save and publish to Learning') : id ? 'Save changes' : 'Save'}
           </button>
           <button onClick={() => navigate(id ? `/teacher/${id}` : '/teacher')}
             className="text-sm font-semibold text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-100">
