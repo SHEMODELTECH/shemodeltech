@@ -17,6 +17,7 @@ import { db } from '../../firebase/config';
 import { coursesForTrack, trackMeta } from '../../utils/foundationsCourses';
 import { renderCourse } from '../../utils/renderCourseMarkdown';
 import { LABS_CSS, enhanceHtml, enhancePython, mountLabs } from './labs';
+import { VIDEO_CSS, isVideoUrl, makeVideoElement } from '../../utils/videoEmbed';
 import TechDevImg from '../../Images/TechDev.png';
 import TechArchsImg from '../../Images/TechArchs.png';
 import TechQAImg from '../../Images/TechQA.png';
@@ -284,8 +285,27 @@ const enhanceCode = (container) => {
   });
 };
 
+// Videos: ```video blocks, and any paragraph that is just a video link
+// (YouTube, Vimeo, Instagram, TikTok, Loom, Drive, or a video file).
+const mountVideos = (container) => {
+  container.querySelectorAll('.course-video[data-video]').forEach((slot) => {
+    const url = slot.getAttribute('data-video');
+    const title = slot.getAttribute('data-title') || '';
+    slot.removeAttribute('data-video');
+    slot.appendChild(makeVideoElement(url, title));
+  });
+  container.querySelectorAll('p').forEach((p) => {
+    const a = p.querySelector('a');
+    if (!a || p.children.length !== 1 || p.textContent.trim() !== a.textContent.trim()) return;
+    if (!isVideoUrl(a.href)) return;
+    const text = a.textContent.trim();
+    p.replaceWith(makeVideoElement(a.href, text && text !== a.href && !/^https?:/.test(text) ? text : ''));
+  });
+};
+
 export const enhanceCourseContent = (container, key, opts = {}) => {
   if (!container) return;
+  mountVideos(container);
   enhanceQuizzes(container, key);
   enhanceChecklists(container, key);
   enhanceCheckpoints(container);
@@ -691,7 +711,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
 
 // Page styles. Accent colours come from the active track's medal ribbon via
 // the --acc / --tint custom properties set on .fd-root.
-export const FD_CSS = LABS_CSS + `
+export const FD_CSS = LABS_CSS + VIDEO_CSS + `
 .fd-root { --acc:#DB2777; --tint:#FDF2F8; }
 .fd-display { font-family:'Archivo Black', system-ui, sans-serif; letter-spacing:-.01em; line-height:1.1; }
 

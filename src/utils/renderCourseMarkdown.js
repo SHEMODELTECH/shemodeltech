@@ -30,6 +30,12 @@ export const renderCourse = (markdown) => {
     if ((lang || '').toLowerCase() === 'mermaid') {
       return `<div class="course-mermaid" data-mermaid="1">${escapeHtml(code)}</div>`;
     }
+    // ```video blocks: first line is the link, an optional second line the title.
+    if ((lang || '').toLowerCase() === 'video') {
+      const [url = '', title = ''] = (code || '').split('\n').map((x) => x.trim());
+      const attr = (v) => v.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return `<div class="course-video" data-video="${attr(url)}" data-title="${attr(title)}"></div>`;
+    }
     // ```lab blocks hold a JSON activity config; the reader mounts the activity.
     if ((lang || '').toLowerCase() === 'lab') {
       const attr = (code || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

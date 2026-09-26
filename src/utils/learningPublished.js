@@ -14,6 +14,7 @@
 // Anyone may read (like the rest of the catalog); only admins and editors may
 // publish, update, or unpublish (see firestore.rules).
 
+import { lessonsToMarkdown, parseLessons } from './teacherCourses';
 import {
   collection,
   doc,
@@ -68,6 +69,7 @@ export const toCatalogCourse = (p) => ({
   minutes: p.minutes || 0,
   projects: p.parts || 0,
   kind: p.kind === 'html' ? 'published-html' : 'published-markdown',
+  format: p.format || p.kind,
   order: p.order ?? 999,
   references: [],
   markdown: '',
@@ -78,6 +80,10 @@ export const toCatalogCourse = (p) => ({
  * `details`: { title, summary, track, level, minutes }
  */
 export const publishToLearning = async (teacherCourse, content, details, user) => {
+  // Video courses are published as Markdown (one part per lesson).
+  const isVideo = teacherCourse.kind === 'video';
+  if (isVideo) content = lessonsToMarkdown(parseLessons(content));
+  const kind = isVideo ? 'markdown' : teacherCourse.kind;
   const existingId = teacherCourse.published?.learningId;
   const ref = existingId ? doc(db, COL, existingId) : doc(collection(db, COL));
   const prev = existingId ? await getPublished(existingId) : null;
@@ -89,8 +95,7 @@ export const publishToLearning = async (teacherCourse, content, details, user) =
   chunks.forEach((data, i) => batch.set(doc(db, COL, ref.id, 'chunks', String(i)), { data }));
   for (let i = chunks.length; i < (prev?.chunkCount || 0); i++) batch.delete(doc(db, COL, ref.id, 'chunks', String(i)));
 
-  const parts =
-    teacherCourse.kind === 'markdown' ? (content.match(/^##\s+/gm) || []).length || 1 : 1;
+  const parts = kind === 'markdown' ? (content.match(/^##\s+/gm) || []).length || 1 : 1;
   batch.set(
     ref,
     {
@@ -98,8 +103,9 @@ export const publishToLearning = async (teacherCourse, content, details, user) =
       summary: (details.summary || '').trim(),
       track: details.track,
       level: details.level || 'Beginner',
-      minutes: Number(details.minutes) || (teacherCourse.kind === 'markdown' ? estimateMinutes(content) : 60),
-      kind: teacherCourse.kind,
+      minutes: Number(details.minutes) || (kind === 'markdown' ? estimateMinutes(content) + (isVideo ? parts * 10 : 0) : 60),
+      kind,
+      format: isVideo ? 'video' : kind,
       parts,
       chunkCount: chunks.length,
       sourceTeacherId: teacherCourse.id,

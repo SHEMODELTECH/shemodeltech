@@ -27,7 +27,10 @@ import {
   listTeacherCourses,
   saveTeacherCourse,
   titleFromHtml,
+  displayMarkdown,
+  parseLessons,
 } from '../../utils/teacherCourses';
+import { getVideoEmbed } from '../../utils/videoEmbed';
 import { FD_CSS, enhanceCourseContent } from '../learning/shared';
 import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
 
@@ -145,6 +148,12 @@ const TeacherList = ({ role }) => {
             Upload HTML course
           </button>
           <button
+            onClick={() => navigate('/teacher/new?type=video')}
+            className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 text-sm font-semibold px-4 py-2.5 rounded-lg"
+          >
+            Create video course
+          </button>
+          <button
             onClick={() => navigate('/teacher/new?type=notes')}
             className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 text-sm font-semibold px-4 py-2.5 rounded-lg"
           >
@@ -203,7 +212,7 @@ const TeacherList = ({ role }) => {
             <div key={c.id} className="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
-                  {c.kind === 'html' ? 'Interactive HTML' : 'Written notes'}
+                  {c.kind === 'html' ? 'Interactive HTML' : c.kind === 'video' ? 'Video course' : 'Written notes'}
                 </span>
                 <StatusTag status={c.status} />
                 <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${c.published ? 'bg-pink-50 text-pink-700' : 'bg-indigo-50 text-indigo-700'}`}>
@@ -241,6 +250,72 @@ const TeacherList = ({ role }) => {
   );
 };
 
+
+// ================= Video lessons editor =================
+const VideoLessonsEditor = ({ content, onChange }) => {
+  const [lessons, setLessons] = useState(() => {
+    const l = parseLessons(content);
+    return l.length ? l : [{ title: '', url: '', notes: '' }];
+  });
+  const update = (next) => {
+    setLessons(next);
+    onChange(JSON.stringify({ lessons: next }));
+  };
+  const set = (i, k, v) => update(lessons.map((l, j) => (j === i ? { ...l, [k]: v } : l)));
+  const move = (i, d) => {
+    const next = lessons.slice();
+    [next[i], next[i + d]] = [next[i + d], next[i]];
+    update(next);
+  };
+  const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
+  return (
+    <div>
+      <p className="block text-sm font-semibold text-gray-800 mb-1">Lessons</p>
+      <p className="text-xs text-gray-500 mb-3">
+        Paste a link from YouTube (videos, Shorts, playlists), Vimeo, Instagram (posts and Reels), TikTok, Loom, Google
+        Drive, Dailymotion, Facebook, Wistia, or a direct .mp4 file. Each lesson becomes one part of the course.
+      </p>
+      <ol className="space-y-3">
+        {lessons.map((l, i) => {
+          const v = (l.url || '').trim() ? getVideoEmbed(l.url) : null;
+          return (
+            <li key={i} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-sm font-bold text-gray-900">Lesson {i + 1}</span>
+                <span className="flex gap-1">
+                  <button type="button" aria-label={`Move lesson ${i + 1} up`} disabled={i === 0} onClick={() => move(i, -1)}
+                    className="w-8 h-8 rounded-lg border border-gray-300 bg-white disabled:opacity-40">&uarr;</button>
+                  <button type="button" aria-label={`Move lesson ${i + 1} down`} disabled={i === lessons.length - 1} onClick={() => move(i, 1)}
+                    className="w-8 h-8 rounded-lg border border-gray-300 bg-white disabled:opacity-40">&darr;</button>
+                  <button type="button" aria-label={`Remove lesson ${i + 1}`} disabled={lessons.length === 1}
+                    onClick={() => update(lessons.filter((_, j) => j !== i))}
+                    className="px-2 h-8 rounded-lg text-sm font-semibold text-red-700 hover:bg-red-50 disabled:opacity-40">Remove</button>
+                </span>
+              </div>
+              <div className="grid gap-2">
+                <input className={input} placeholder="Lesson title" aria-label={`Lesson ${i + 1} title`} value={l.title} onChange={(e) => set(i, 'title', e.target.value)} />
+                <input className={input} placeholder="Video link, e.g. https://www.youtube.com/watch?v=..." aria-label={`Lesson ${i + 1} video link`}
+                  value={l.url} onChange={(e) => set(i, 'url', e.target.value)} />
+                {(l.url || '').trim() && (
+                  <p className={`text-xs font-semibold ${v ? 'text-emerald-700' : 'text-amber-700'}`}>
+                    {v ? `${v.provider} video: it will play inside the course.` : 'Not a recognised video link: learners will get a button that opens it in a new tab.'}
+                  </p>
+                )}
+                <textarea className={input} rows={3} placeholder="Notes for this lesson (optional, Markdown): key points, questions, links"
+                  aria-label={`Lesson ${i + 1} notes`} value={l.notes} onChange={(e) => set(i, 'notes', e.target.value)} />
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      <button type="button" onClick={() => update([...lessons, { title: '', url: '', notes: '' }])}
+        className="mt-3 text-sm font-semibold border border-gray-300 bg-white px-4 py-2 rounded-lg hover:bg-gray-50">
+        Add a lesson
+      </button>
+    </div>
+  );
+};
+
 // ================= Editor (create + edit) =================
 const TeacherEditor = () => {
   const { id } = useParams();
@@ -253,7 +328,7 @@ const TeacherEditor = () => {
   const [meta, setMeta] = useState({
     title: '',
     description: '',
-    kind: params.get('type') === 'notes' ? 'markdown' : 'html',
+    kind: params.get('type') === 'notes' ? 'markdown' : params.get('type') === 'video' ? 'video' : 'html',
     track: '',
     status: 'draft',
     fileName: '',
@@ -322,6 +397,7 @@ const TeacherEditor = () => {
 
   const save = async () => {
     if (!meta.title.trim()) return toast.error('Add a title.');
+    if (meta.kind === 'video' && !parseLessons(content).some((l) => (l.url || '').trim())) return toast.error('Add at least one lesson with a video link.');
     if (!content.trim()) return toast.error(meta.kind === 'html' ? 'Choose an HTML file to upload.' : 'Write some notes first.');
     if (audience === 'students' && !meta.track) return toast.error('Choose the track students will find it under.');
     setSaving(true);
@@ -357,6 +433,10 @@ const TeacherEditor = () => {
   };
 
   const rendered = useMemo(() => (meta.kind === 'markdown' && preview ? renderCourse(content).html : ''), [meta.kind, preview, content]);
+  const previewRef = useRef(null);
+  useEffect(() => {
+    if (previewRef.current && rendered) enhanceCourseContent(previewRef.current, 'smt-teacher-preview');
+  }, [rendered]);
 
   if (!loaded) {
     return (
@@ -375,7 +455,7 @@ const TeacherEditor = () => {
         {id ? 'Back to the course' : 'Back to Teacher'}
       </Link>
       <h1 className="text-2xl font-bold text-gray-900 mt-3 mb-6">
-        {id ? 'Edit course' : meta.kind === 'html' ? 'Upload an HTML course' : 'Write a course or notes'}
+        {id ? 'Edit course' : meta.kind === 'html' ? 'Upload an HTML course' : meta.kind === 'video' ? 'Create a video course' : 'Write a course or notes'}
       </h1>
 
       <div className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 space-y-5">
@@ -457,7 +537,15 @@ const TeacherEditor = () => {
           </div>
         )}
 
-        {meta.kind === 'html' ? (
+        {meta.kind === 'video' ? (
+          <VideoLessonsEditor
+            content={content}
+            onChange={(json) => {
+              setContent(json);
+              setContentChanged(true);
+            }}
+          />
+        ) : meta.kind === 'html' ? (
           <div>
             <p className={label}>HTML file</p>
             <div
@@ -517,7 +605,7 @@ const TeacherEditor = () => {
             {preview ? (
               <div className="fd-root border border-gray-200 rounded-lg p-4 max-h-[32rem] overflow-y-auto">
                 <style>{FD_CSS}</style>
-                <div className="course-prose" dangerouslySetInnerHTML={{ __html: rendered }} />
+                <div ref={previewRef} className="course-prose" dangerouslySetInnerHTML={{ __html: rendered }} />
               </div>
             ) : (
               <textarea
@@ -532,7 +620,7 @@ const TeacherEditor = () => {
               />
             )}
             <p className="text-xs text-gray-500 mt-1">
-              Headings with ## become sections. Supports lists, tables, code, ```mermaid diagrams, and ```lab activities.
+              Headings with ## become sections. Supports lists, tables, code, ```mermaid diagrams, ```lab activities, and videos: paste a YouTube, Vimeo, Instagram, TikTok, Loom, or Google Drive link on its own line.
             </p>
           </div>
         )}
@@ -706,7 +794,10 @@ const TeacherViewer = () => {
     });
   }, [id, navigate]);
 
-  const html = useMemo(() => (course?.kind === 'markdown' && content != null ? renderCourse(content).html : ''), [course, content]);
+  const html = useMemo(
+    () => (course && course.kind !== 'html' && content != null ? renderCourse(displayMarkdown(course.kind, content)).html : ''),
+    [course, content]
+  );
   const proseRef = useRef(null);
 
   // Written notes get the same interactive extras as Learning courses:
@@ -732,7 +823,7 @@ const TeacherViewer = () => {
   }, [html, id]);
 
   const download = () => {
-    const blob = new Blob([content || ''], { type: course.kind === 'html' ? 'text/html' : 'text/markdown' });
+    const blob = new Blob([displayMarkdown(course.kind, content || '')], { type: course.kind === 'html' ? 'text/html' : 'text/markdown' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = course.fileName || `${(course.title || 'teaching-notes').replace(/[^\w-]+/g, '-')}.${course.kind === 'html' ? 'html' : 'md'}`;
@@ -825,7 +916,10 @@ const TeacherFullScreen = () => {
     return () => document.removeEventListener('fullscreenchange', onChange);
   }, []);
 
-  const html = useMemo(() => (course?.kind === 'markdown' && content != null ? renderCourse(content).html : ''), [course, content]);
+  const html = useMemo(
+    () => (course && course.kind !== 'html' && content != null ? renderCourse(displayMarkdown(course.kind, content)).html : ''),
+    [course, content]
+  );
   useEffect(() => {
     if (proseRef.current && html) enhanceCourseContent(proseRef.current, `smt-teacher:${id}`);
   }, [html, id]);

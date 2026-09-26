@@ -41,6 +41,7 @@ export const CourseCard = ({ course, status, progress }) => {
           {course.level && <span className="font-semibold text-gray-700">{course.level}</span>}
           {course.minutes > 0 && <span>{formatTime(course.minutes)}</span>}
           {(course.kind === 'interactive' || course.kind === 'published-html') && <span className="lr-inter">Interactive</span>}
+          {course.format === 'video' && <span className="lr-inter">Video</span>}
         </div>
         {status === 'done' && (
           <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-emerald-700">

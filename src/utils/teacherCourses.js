@@ -108,3 +108,30 @@ export const titleFromHtml = (html, fileName = '') => {
   const t = (html.match(/<title>([^<]*)<\/title>/i) || [])[1];
   return (t || fileName.replace(/\.html?$/i, '').replace(/[-_]+/g, ' ')).trim();
 };
+
+// ---- Video courses ----
+// A video course is stored as JSON ({ lessons: [{ title, url, notes }] }) so it
+// stays easy to edit, and shown as Markdown: one part per lesson, each with its
+// video and notes, so it gets the same reader, progress, and full screen as
+// every other course.
+export const parseLessons = (content) => {
+  try {
+    const data = JSON.parse(content || '{}');
+    return Array.isArray(data.lessons) ? data.lessons : [];
+  } catch (_) {
+    return [];
+  }
+};
+
+export const lessonsToMarkdown = (lessons) =>
+  lessons
+    .filter((l) => (l.url || '').trim() || (l.notes || '').trim())
+    .map((l, i) => {
+      const title = (l.title || '').trim() || `Lesson ${i + 1}`;
+      const video = (l.url || '').trim() ? `\`\`\`video\n${l.url.trim()}\n${title}\n\`\`\`\n\n` : '';
+      return `## ${i + 1}. ${title}\n\n${video}${(l.notes || '').trim()}\n`;
+    })
+    .join('\n');
+
+// What the reader shows for any teacher course kind.
+export const displayMarkdown = (kind, content) => (kind === 'video' ? lessonsToMarkdown(parseLessons(content)) : content);
