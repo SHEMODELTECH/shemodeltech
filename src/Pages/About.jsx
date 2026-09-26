@@ -23,6 +23,39 @@ const About = () => {
           </p>
         </section>
 
+        {/* Who we are: registered nonprofit and mission */}
+        <section className="mb-14" aria-labelledby="who-h">
+          <div className="rounded-2xl border border-pink-100 bg-gradient-to-br from-pink-50 via-white to-indigo-50 p-6 sm:p-8">
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-pink-700 bg-white border border-pink-200 px-3 py-1 rounded-full">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+              Registered 501(c)(3) nonprofit
+            </span>
+            <h2 id="who-h" className="text-2xl font-bold text-gray-900 mt-4">Who we are</h2>
+            <p className="text-gray-700 text-lg leading-relaxed mt-3">
+              <strong className="text-gray-900">SHE MODEL TECH Inc.</strong> is a registered 501(c)(3) non-profit
+              organization with the mission to empower women in tech through mentorship, IT skills training, leadership
+              development, and networking opportunities.
+            </p>
+          </div>
+
+          {/* The four parts of the mission, and where they live on the platform */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            {[
+              ['Mentorship', 'Experienced mentors create courses and guide learners through the Mentor Hub.', 'bg-indigo-50 text-indigo-700 border-indigo-100'],
+              ['IT skills training', 'Free, hands-on courses in She Model Tech Learning, with certificates of completion.', 'bg-pink-50 text-pink-700 border-pink-100'],
+              ['Leadership development', 'Lead a real project team, from planning to delivery, and earn a leadership badge.', 'bg-orange-50 text-orange-700 border-orange-100'],
+              ['Networking', 'Build connections on the Proof Wall and Talent Board, and through real teamwork.', 'bg-emerald-50 text-emerald-700 border-emerald-100'],
+            ].map(([t, d, c]) => (
+              <div key={t} className="bg-white rounded-xl border border-gray-200 p-5">
+                <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border ${c}`}>{t}</span>
+                <p className="text-gray-600 text-sm mt-3 leading-relaxed">{d}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* The path: Ascend Achieve Advance */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
@@ -84,6 +117,14 @@ const About = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               {
+                title: 'She Model Tech Learning',
+                desc: 'Free, hands-on courses across six tech tracks, with interactive labs, video lessons, and a certificate of completion for every course you finish.',
+              },
+              {
+                title: 'Mentorship',
+                desc: 'Learn from mentors who create courses and guides for our tracks. Experienced professionals can apply to become a mentor.',
+              },
+              {
                 title: 'Real-World Projects',
                 desc: 'Join or post collaborative projects and build real products with real teams across development, QA, architecture, security, and more - from start to finish.',
               },
@@ -140,6 +181,12 @@ const About = () => {
       <footer className="border-t border-gray-200 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-gray-500 text-sm">
+            <Link to="/learning" className="hover:text-pink-600">
+              Learning
+            </Link>
+            <Link to="/teach" className="hover:text-pink-600">
+              Become a mentor
+            </Link>
             <Link to="/terms" className="hover:text-pink-600">
               Terms
             </Link>
@@ -150,8 +197,8 @@ const About = () => {
               Support
             </Link>
           </div>
-          <p className="text-gray-400 text-xs">
-            {new Date().getFullYear()} She Model Tech. All rights reserved.
+          <p className="text-gray-400 text-xs text-center sm:text-right">
+            {new Date().getFullYear()} SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit. All rights reserved.
           </p>
         </div>
       </footer>

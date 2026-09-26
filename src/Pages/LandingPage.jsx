@@ -5,6 +5,8 @@ import { BRAND } from '../config/brand';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { CourseCard, LR_CSS } from './learning/LearningHome';
+import { coursesForTrack, tracksWithCourses } from '../utils/foundationsCourses';
 
 import TechMO from '../Images/TechMO.png';
 import TechQA from '../Images/TechQA.png';
@@ -87,11 +89,24 @@ const LandingPage = () => {
   ];
 
 
+  // Learning highlights for the front page.
+  const allCourses = tracksWithCourses()
+    .filter((t) => t !== 'company')
+    .flatMap((t) => coursesForTrack(t).map((c) => ({ ...c, track: t })));
+  const featured = [
+    ['TechDev', 'python-fundamentals-beginner-course'],
+    ['TechArchs', 'website-builders-beginner-course'],
+    ['TechQA', '00-course-overview'],
+    ['TechDev', 'computer-vision'],
+  ]
+    .map(([t, slug]) => allCourses.find((c) => c.track === t && c.slug === slug))
+    .filter(Boolean);
+
   const steps = [
     {
       num: '01',
-      title: 'Create Your Profile',
-      desc: 'Sign in with Google or email, choose your skill track, and set your experience level. Ready in under a minute.',
+      title: 'Create Your Profile and Learn',
+      desc: 'Sign in with Google or email, choose your skill track, and build the basics with free, hands-on courses in Learning.',
     },
     {
       num: '02',
@@ -193,8 +208,9 @@ const LandingPage = () => {
             data-animate
             className={`fade-up delay-2 text-gray-600 text-lg sm:text-2xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed ${isVisible('hero-desc') ? 'visible' : ''}`}
           >
-            She Model Tech is where women build real tech experience. Join a team, ship a real
-            project, and earn verified badges that show employers exactly what you did.
+            She Model Tech is where women build real tech experience. Learn with free courses and
+            mentors, join a team, ship a real project, and earn verified badges that show employers
+            exactly what you did.
           </p>
 
           <div
@@ -210,10 +226,10 @@ const LandingPage = () => {
               {isLoading ? 'Signing in...' : 'Join Free'}
             </button>
             <Link
-              to="/about"
+              to="/learning"
               className="w-full sm:w-auto border border-gray-300 hover:border-gray-400 text-gray-700 font-medium text-base px-8 py-4 rounded-lg transition-all hover:bg-gray-50 text-center"
             >
-              Learn More
+              Explore free courses
             </Link>
           </div>
 
@@ -222,7 +238,7 @@ const LandingPage = () => {
             data-animate
             className={`fade-up delay-4 mt-4 text-gray-400 text-sm ${isVisible('hero-sub') ? 'visible' : ''}`}
           >
-            No credit card required. Sign in with Google or email.
+            Free for everyone. SHE MODEL TECH Inc. is a registered 501(c)(3) nonprofit.
           </p>
         </div>
       </section>
@@ -297,6 +313,92 @@ const LandingPage = () => {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* LEARNING */}
+      <style>{LR_CSS}</style>
+      <section className="py-20 sm:py-28 bg-gradient-to-b from-pink-50/60 to-white border-y border-pink-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div
+            id="learn-head"
+            data-animate
+            className={`fade-up grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-10 items-end mb-12 ${isVisible('learn-head') ? 'visible' : ''}`}
+          >
+            <div>
+              <p className="text-pink-600 text-sm font-semibold uppercase tracking-widest mb-3">She Model Tech Learning</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+                Learn it here. Prove it on a real project.
+              </h2>
+              <p className="text-gray-600 text-lg mt-5 leading-relaxed max-w-xl">
+                Free, hands-on courses for every track, from your first program to AI engineering, product, security,
+                and leadership. Built and taught by our team and our mentors.
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                [`${allCourses.length}+`, 'free courses'],
+                ['6', 'tech tracks'],
+                ['100%', 'free, with certificates'],
+              ].map(([n, l]) => (
+                <div key={l} className="bg-white border border-gray-200 rounded-2xl p-4 text-center">
+                  <p className="text-2xl sm:text-3xl font-extrabold text-gray-900">{n}</p>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">{l}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+            {[
+              ['Hands-on labs', 'Run Python in the page, edit live HTML, and practise with interactive activities.'],
+              ['Video and interactive courses', 'Learn from videos, interactive demos, and step-by-step projects.'],
+              ['Certificates', 'Earn a verifiable certificate of completion for every course you finish.'],
+              ['Courses from mentors', 'Mentors create courses for our tracks, reviewed and approved by our team.'],
+            ].map(([t, d]) => (
+              <div key={t} className="bg-white border border-gray-200 rounded-2xl p-5">
+                <h3 className="font-bold text-gray-900">{t}</h3>
+                <p className="text-sm text-gray-500 mt-2 leading-relaxed">{d}</p>
+              </div>
+            ))}
+          </div>
+
+          {featured.length > 0 && (
+            <>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Popular places to start</h3>
+              <div className="lr-grid">
+                {featured.map((c) => (
+                  <CourseCard key={c.track + c.slug} course={c} status={null} progress={0} />
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-12">
+            <Link to="/learning" className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 text-white font-semibold px-8 py-4 rounded-lg text-center">
+              Browse all courses
+            </Link>
+            <Link to="/teach" className="w-full sm:w-auto border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium px-8 py-4 rounded-lg text-center">
+              Become a mentor
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* MISSION */}
+      <section className="py-16 sm:py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <span className="inline-block text-xs font-bold uppercase tracking-wider text-pink-700 bg-pink-50 border border-pink-100 px-3 py-1 rounded-full">
+            Registered 501(c)(3) nonprofit
+          </span>
+          <p className="text-xl sm:text-2xl text-gray-800 leading-relaxed mt-5">
+            <strong className="text-gray-900">SHE MODEL TECH Inc.</strong> is a registered 501(c)(3) non-profit organization
+            with the mission to empower women in tech through mentorship, IT skills training, leadership development, and
+            networking opportunities.
+          </p>
+          <Link to="/about" className="inline-block mt-6 text-pink-600 font-semibold hover:underline">
+            Learn more about us
+          </Link>
         </div>
       </section>
 
@@ -410,6 +512,12 @@ const LandingPage = () => {
               <Link to="/about" className="hover:text-pink-600 transition-colors font-medium">
                 About
               </Link>
+              <Link to="/learning" className="hover:text-pink-600 transition-colors font-medium">
+                Learning
+              </Link>
+              <Link to="/teach" className="hover:text-pink-600 transition-colors font-medium">
+                Become a mentor
+              </Link>
               <Link to="/terms" className="hover:text-pink-600 transition-colors font-medium">
                 Terms
               </Link>
@@ -420,8 +528,8 @@ const LandingPage = () => {
                 Support
               </Link>
             </div>
-            <p className="text-gray-400 text-xs">
-              {new Date().getFullYear()} She Model Tech. All rights reserved.
+            <p className="text-gray-400 text-xs text-center sm:text-right">
+              {new Date().getFullYear()} SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit. All rights reserved.
             </p>
           </div>
         </div>
