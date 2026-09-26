@@ -11,6 +11,21 @@ import { db } from '../../firebase/config';
 import LearningLayout, { signInAndReturn } from '../learning/LearningLayout';
 import { TEACH_TRACKS, applyToTeach, getMyTeacherApplication } from '../../utils/teachers';
 
+// Minimum lengths for the written answers, counted in words.
+const MIN_WORDS = { experience: 20, motivation: 10 };
+const wordCount = (t) => (t || '').trim().split(/\s+/).filter(Boolean).length;
+
+// Live "12 of 20 words" hint shown under a text box.
+const WordHint = ({ id, text, min }) => {
+  const n = wordCount(text);
+  const ok = n >= min;
+  return (
+    <p id={id} className={`text-xs mt-1 ${ok ? 'text-emerald-700' : 'text-gray-500'}`} aria-live="polite">
+      {ok ? `${n} words. Minimum reached.` : `Minimum ${min} words. You have ${n} so far.`}
+    </p>
+  );
+};
+
 const TeachApply = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -45,8 +60,10 @@ const TeachApply = () => {
     e.preventDefault();
     if (!form.name.trim()) return toast.error('Add your name.');
     if (!form.tracks.length) return toast.error('Choose at least one track you would teach.');
-    if (form.experience.trim().length < 40) return toast.error('Tell us a little more about your experience (a few sentences).');
-    if (form.motivation.trim().length < 20) return toast.error('Tell us why you want to teach.');
+    if (wordCount(form.experience) < MIN_WORDS.experience)
+      return toast.error(`Your experience needs at least ${MIN_WORDS.experience} words (you have ${wordCount(form.experience)}).`);
+    if (wordCount(form.motivation) < MIN_WORDS.motivation)
+      return toast.error(`"Why do you want to teach?" needs at least ${MIN_WORDS.motivation} words (you have ${wordCount(form.motivation)}).`);
     setSending(true);
     try {
       await applyToTeach(currentUser, form);
@@ -130,15 +147,19 @@ const TeachApply = () => {
                     </div>
                   </fieldset>
                   <div>
-                    <label className={label} htmlFor="ta-exp">Your experience</label>
+                    <label className={label} htmlFor="ta-exp">Your experience <span className="font-normal text-gray-500">(at least {MIN_WORDS.experience} words)</span></label>
                     <textarea id="ta-exp" rows={4} className={input} value={form.experience}
                       placeholder="Your background in these areas, and any teaching, mentoring, or training you've done."
+                      aria-describedby="ta-exp-hint"
                       onChange={(e) => setForm({ ...form, experience: e.target.value })} />
+                    <WordHint id="ta-exp-hint" text={form.experience} min={MIN_WORDS.experience} />
                   </div>
                   <div>
-                    <label className={label} htmlFor="ta-why">Why do you want to teach?</label>
+                    <label className={label} htmlFor="ta-why">Why do you want to teach? <span className="font-normal text-gray-500">(at least {MIN_WORDS.motivation} words)</span></label>
                     <textarea id="ta-why" rows={3} className={input} value={form.motivation}
+                      aria-describedby="ta-why-hint"
                       onChange={(e) => setForm({ ...form, motivation: e.target.value })} />
+                    <WordHint id="ta-why-hint" text={form.motivation} min={MIN_WORDS.motivation} />
                   </div>
                   <div>
                     <label className={label} htmlFor="ta-links">Links (optional)</label>
