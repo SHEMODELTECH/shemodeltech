@@ -213,7 +213,9 @@ const build = () => {
       return {
         slug,
         title: cleanCourseTitle(firstHeading(md)) || prettySlug(slug),
-        level: courseLevel(firstHeading(md) || ''),
+        // A <!-- level: X --> comment wins; otherwise read it from the title;
+        // courses that say neither are introductory, so they count as Beginner.
+        level: ((md.match(/<!--\s*level:\s*([^>]+?)\s*-->/i) || [])[1]) || courseLevel(firstHeading(md) || '') || 'Beginner',
         summary: firstParagraph(md),
         projects: countProjects(md),
         minutes: estimateMinutes(md),

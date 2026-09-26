@@ -80,22 +80,60 @@ const LearningHome = ({ mine = false }) => {
 
   const inProgress = all.filter((c) => statusOf(c) === 'enrolled');
 
-  const q = query.trim().toLowerCase();
-  const filtered = all.filter(
-    (c) =>
-      (!mine || statusOf(c)) &&
-      (track === 'all' || c.track === track) &&
-      (level === 'all' || c.level === level) &&
-      (!q || `${c.title} ${c.summary} ${trackMeta(c.track).label}`.toLowerCase().includes(q))
+  // Search: every word must appear somewhere in the course (title, track,
+  // level, summary, part or module titles, or the course text), in any order.
+  // Results are ranked: title matches first, then summaries and parts, then text.
+  const index = useMemo(
+    () =>
+      all.map((c) => ({
+        title: c.title.toLowerCase(),
+        meta: `${trackMeta(c.track).label} ${look(c.track).short} ${c.track} ${c.level}`.toLowerCase(),
+        about: `${c.summary} ${coursePartTitles(c).join(' ')} ${(c.parts || []).join(' ')}`.toLowerCase(),
+        body: (c.markdown || '')
+          .replace(/```[\s\S]*?```/g, ' ')
+          .replace(/<!--[\s\S]*?-->/g, ' ')
+          .replace(/[#*_`>|[\]()-]/g, ' ')
+          .toLowerCase(),
+      })),
+    [all]
   );
+  const words = query
+    .toLowerCase()
+    .split(/[^a-z0-9+#.]+/)
+    .map((w) => w.replace(/^\.+|\.+$/g, ''))
+    .filter((w) => w.length > 1 || /\d/.test(w))
+    .map((w) => (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w));
+  const q = words.join(' ');
+  const scoreOf = (i) => {
+    let total = 0;
+    for (const w of words) {
+      const x = index[i];
+      const s = x.title.includes(w) ? 8 : x.meta.includes(w) ? 4 : x.about.includes(w) ? 3 : x.body.includes(w) ? 1 : 0;
+      if (!s) return 0;
+      total += s;
+    }
+    return total;
+  };
+  const scored = all.map((c, i) => ({ c, s: q ? scoreOf(i) : 1, i }));
+  const filtered = scored
+    .filter(
+      ({ c, s }) =>
+        s > 0 &&
+        (!mine || statusOf(c)) &&
+        (track === 'all' || c.track === track) &&
+        (level === 'all' || c.level === level)
+    )
+    .sort((a, b) => b.s - a.s || a.i - b.i)
+    .map(({ c }) => c);
   const grouped = !mine && track === 'all' && level === 'all' && !q;
 
+  // Level toggles (chips); tracks live in the dropdown.
   const chip = (id, label) => (
     <button
       key={id}
-      onClick={() => setTrack(id)}
-      aria-pressed={track === id}
-      className={`lr-chip ${track === id ? 'is-active' : ''}`}
+      onClick={() => setLevel(id)}
+      aria-pressed={level === id}
+      className={`lr-chip ${level === id ? 'is-active' : ''}`}
     >
       {label}
     </button>
@@ -152,13 +190,12 @@ const LearningHome = ({ mine = false }) => {
 
         {/* Filters */}
         <section className="pt-10" aria-label="Filter courses">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:justify-between">
-            <div className="lr-chips">
-              {chip('all', 'All tracks')}
-              {TRACK_ORDER.filter((t) => tracksWithCourses().includes(t)).map((t) => chip(t, look(t).short))}
-              {tracksWithCourses().includes('company') && chip('company', 'For companies')}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+            <div className="lr-chips" role="group" aria-label="Level">
+              {chip('all', 'All levels')}
+              {LEVELS.map((l) => chip(l, l))}
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               {mine && (
                 <input
                   type="search"
@@ -166,20 +203,21 @@ const LearningHome = ({ mine = false }) => {
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search my courses"
                   aria-label="Search my courses"
-                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
                 />
               )}
-              <label className="sr-only" htmlFor="lr-level">Level</label>
+              <label className="sr-only" htmlFor="lr-track">Track</label>
               <select
-                id="lr-level"
-                value={level}
-                onChange={(e) => setLevel(e.target.value)}
-                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                id="lr-track"
+                value={track}
+                onChange={(e) => setTrack(e.target.value)}
+                className="h-10 min-w-[210px] rounded-lg border border-gray-300 bg-white px-3 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-500"
               >
-                <option value="all">All levels</option>
-                {LEVELS.map((l) => (
-                  <option key={l} value={l}>{l}</option>
+                <option value="all">All tracks</option>
+                {TRACK_ORDER.filter((t) => tracksWithCourses().includes(t)).map((t) => (
+                  <option key={t} value={t}>{look(t).short}</option>
                 ))}
+                {tracksWithCourses().includes('company') && <option value="company">For companies</option>}
               </select>
             </div>
           </div>

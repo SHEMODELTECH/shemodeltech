@@ -1,4 +1,5 @@
 <!-- order: 12 -->
+<!-- level: Project-based -->
 # From Fundamentals to Product: Build "TrackIt" While Learning Every Core Skill
 
 ## How this tutorial works
