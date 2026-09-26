@@ -17,6 +17,7 @@ import { db } from '../../firebase/config';
 import { coursesForTrack, trackMeta } from '../../utils/foundationsCourses';
 import { renderCourse } from '../../utils/renderCourseMarkdown';
 import { issueCertificate } from '../../utils/learningCertificates';
+import { courseKey } from '../../utils/mentorStats';
 import { LABS_CSS, enhanceHtml, enhancePython, mountLabs } from './labs';
 import { VIDEO_CSS, isVideoUrl, makeVideoElement } from '../../utils/videoEmbed';
 import TechDevImg from '../../Images/TechDev.png';
@@ -407,6 +408,21 @@ export const useLearning = () => {
       try {
         const snap = await getDoc(doc(db, 'users', currentUser.uid));
         const d = snap.exists() ? snap.data() : {};
+        // One-time catch-up on this device: record enrolments made before
+        // enrolment counting existed, so mentors' numbers include them.
+        try {
+          const flag = `smt-enroll-sync-v1:${currentUser.uid}`;
+          if (!localStorage.getItem(flag)) {
+            Object.entries(d.learningEnrolled || {}).forEach(([t, slugs]) =>
+              Object.entries(slugs || {}).forEach(([sl, at]) =>
+                setDoc(doc(db, 'course_enrollments', courseKey(t, sl), 'learners', currentUser.uid), { uid: currentUser.uid, at: String(at || '') }).catch(() => {})
+              )
+            );
+            localStorage.setItem(flag, '1');
+          }
+        } catch (_) {
+          /* storage unavailable: skip the catch-up */
+        }
         if (alive)
           setState({
             loading: false,
@@ -439,6 +455,8 @@ export const useLearning = () => {
     setState((s) => ({ ...s, enrolled: { ...s.enrolled, [track]: { ...(s.enrolled[track] || {}), [slug]: at } } }));
     try {
       await write({ learningEnrolled: { [track]: { [slug]: at } } });
+      // Count the enrolment for the course (used for mentor impact numbers).
+      setDoc(doc(db, 'course_enrollments', courseKey(track, slug), 'learners', currentUser.uid), { uid: currentUser.uid, at }).catch(() => {});
     } catch (e) {
       console.error(e);
       toast.error('Could not enrol you. Check your connection and try again.');

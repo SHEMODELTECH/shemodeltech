@@ -13,6 +13,7 @@ import TechDev from '../Images/TechDev.png';
 import TechLeads from '../Images/TechLeads.png';
 import TechArchs from '../Images/TechArchs.png';
 import TechGuard from '../Images/TechGuard.png';
+import SocialLinks from '../components/SocialLinks';
 
 const LandingPage = () => {
   const { currentUser } = useAuth();
@@ -482,6 +483,7 @@ const LandingPage = () => {
               </Link>
             </div>
             <div className="flex flex-col items-center sm:items-end gap-2">
+              <SocialLinks />
               <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-pink-700 bg-pink-50 border border-pink-100 px-3 py-1 rounded-full">
                 Registered 501(c)(3) nonprofit
               </span>

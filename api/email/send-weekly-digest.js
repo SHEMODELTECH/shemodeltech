@@ -63,14 +63,16 @@ module.exports = async function handler(req, res) {
  // Fetch this week's platform content (only what She Model Tech actually has).
  // There is no job board. The second list is paid projects posted by
  // verified companies (company_cohorts) that are open for applications.
- const [projects, paidRaw] = await Promise.all([
+ const [projects, paidRaw, newCourses] = await Promise.all([
  safeFetch('projects', 'createdAt', sevenDaysAgo),
  safeFetch('company_cohorts', 'createdAt', sevenDaysAgo),
+ // New mentor courses published to She Model Tech Learning this week.
+ safeFetch('learning_courses', 'publishedAt', sevenDaysAgo),
  ]);
  const paid = paidRaw.filter(c => c.status === 'hiring');
  const newMembersCount = await safeCount('users', 'createdAt', sevenDaysAgo);
 
- console.log(`Week: ${projects.length} projects, ${paid.length} paid projects, ${newMembersCount} new members`);
+ console.log(`Week: ${projects.length} projects, ${paid.length} paid projects, ${newCourses.length} new courses, ${newMembersCount} new members`);
 
  // Subscribers (weekly digest opt-in, fall back to daily).
  const usersSnap = await db.collection('users').where('emailPreferences.weeklyDigest', '==', true).get();
@@ -173,6 +175,13 @@ ${paid.slice(0,4).map(c => `<div class="it">
 </div>`).join('')}
 <a href="${SITE}/projects" class="btn" style="color:#ffffff">See paid projects</a></div>` : ''}
 
+${newCourses.length > 0 ? `<div class="sc"><h2>New Courses from Our Mentors</h2>
+${newCourses.slice(0,4).map(c => `<div class="it">
+<h3><a href="${SITE}/learning/${c.track}/p-${c.id}" style="color:#111827;text-decoration:none">${c.title || 'New course'}</a></h3>
+<p>${[c.level, c.authorName ? `by ${c.authorName}` : ''].filter(Boolean).join(' · ')}${c.summary ? ` · ${c.summary.substring(0, 80)}${c.summary.length > 80 ? '...' : ''}` : ''}</p>
+</div>`).join('')}
+<a href="${SITE}/learning" class="btn" style="color:#ffffff">Browse free courses</a></div>` : ''}
+
 <div class="sc"><h2>Quick Links</h2>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:6px"><tr>
 <td width="33%" align="center" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 4px"><a href="${SITE}/proof-wall" style="color:#2563EB;text-decoration:none;font-weight:600;font-size:12px">Proof Wall</a></td>
@@ -181,7 +190,7 @@ ${paid.slice(0,4).map(c => `<div class="it">
 </tr></table></div>
 
 </div>
-<div class="ft"><p><b>She Model Tech</b></p><p><a href="${SITE}/proof-wall">Proof Wall</a> · <a href="${SITE}/projects">Projects</a> · <a href="${SITE}/settings">Email settings</a></p>
+<div class="ft"><p><b>She Model Tech</b></p><p><a href="${SITE}/proof-wall">Proof Wall</a> · <a href="${SITE}/projects">Projects</a> · <a href="${SITE}/learning">Learning</a> · <a href="${SITE}/settings">Email settings</a></p>
 <p style="margin-top:6px">Weekly digest · ${new Date().getFullYear()} She Model Tech</p></div>
 </div></body></html>`;
  };

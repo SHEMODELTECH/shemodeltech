@@ -141,7 +141,7 @@ const TalentBoard = () => {
                     <p className="text-xs text-amber-600 font-semibold mt-0.5">
                       ★ {st.avg.toFixed(1)} <span className="text-gray-500 font-normal">({st.ratingCount} rating{st.ratingCount === 1 ? '' : 's'})</span>
                     </p>
-                    <p className="text-xs text-gray-500">{st.courses.length} course{st.courses.length === 1 ? '' : 's'} · {st.completions} completed</p>
+                    <p className="text-xs text-gray-500">{st.courses.length} course{st.courses.length === 1 ? '' : 's'} · {st.enrollments || 0} enrolled · {st.completions} completed</p>
                   </button>
                 );
               })}

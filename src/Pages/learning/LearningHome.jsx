@@ -9,6 +9,7 @@ import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, TRACK_ORDER, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack, trackMeta, tracksWithCourses } from '../../utils/foundationsCourses';
 import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
+import { courseRating } from '../../utils/mentorStats';
 
 // "Coding Developer Foundations" -> "Coding Developer"
 export const trackName = (t) => trackMeta(t).label.replace(/\s+Foundations$/, '');
@@ -56,6 +57,11 @@ export const CourseCard = ({ course, status, progress }) => {
           {course.minutes > 0 && <span>{formatTime(course.minutes)}</span>}
           {(course.kind === 'interactive' || course.kind === 'published-html') && <span className="lr-inter">Interactive</span>}
           {course.format === 'video' && <span className="lr-inter">Video</span>}
+          {course.rating?.count > 0 && (
+            <span className="font-semibold text-amber-600" aria-label={`Rated ${course.rating.avg.toFixed(1)} out of 5 by ${course.rating.count} learners`}>
+              ★ {course.rating.avg.toFixed(1)} <span className="font-normal text-gray-400">({course.rating.count})</span>
+            </span>
+          )}
         </div>
         {status === 'done' && (
           <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
@@ -86,7 +92,13 @@ const LearningHome = ({ mine = false }) => {
   const [published, setPublished] = useState([]);
   useEffect(() => {
     listPublished()
-      .then((list) => setPublished(list.map(toCatalogCourse)))
+      .then(async (list) => {
+        const courses = list.map(toCatalogCourse);
+        setPublished(courses);
+        // Learner ratings for mentor courses, shown on their cards.
+        const rated = await Promise.all(courses.map(async (c) => ({ ...c, rating: await courseRating(c.track, c.slug) })));
+        setPublished(rated);
+      })
       .catch(() => setPublished([]));
   }, []);
 

@@ -12,8 +12,7 @@
 // or sign-in, email verification and password reset will all fail.
 // supportEmail : shemodeltech@gmail.com - LIVE. A branded address on the new
 // domain (e.g. hello@shemodeltech.com) would look stronger to partners.
-// socials : still the old Ascivan LinkedIn pages. Update when the new
-// accounts exist.
+// socials : She Model Tech's LinkedIn, Instagram, Facebook, and X pages.
 // ───────────────────────────────────────────────────────────────────────
 
 export const BRAND = {
@@ -31,13 +30,16 @@ export const BRAND = {
   // Support inbox.
   supportEmail: 'shemodeltech@gmail.com',
 
-  // Social handles. TODO: update once the new accounts exist.
+  // Social pages (shown as icons in the site footers).
   // GitHub organisation - teams add us as a collaborator on their project repo.
   github: 'https://github.com/SHEMODELTECH',
   githubOrg: 'SHEMODELTECH',
 
   socials: {
-    linkedin: 'https://www.linkedin.com/company/ascivanhq/',
+    linkedin: 'https://www.linkedin.com/company/she-model-tech/',
+    instagram: 'https://www.instagram.com/shemodeltech/',
+    facebook: 'https://www.facebook.com/shemodeltech',
+    x: 'https://x.com/shemodeltech',
   },
 
   // Logo assets

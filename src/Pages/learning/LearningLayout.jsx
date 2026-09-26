@@ -9,6 +9,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { FD_CSS } from './shared';
+import SocialLinks from '../../components/SocialLinks';
 
 // Remember where to come back to after signing in (read by afterAuthPath).
 export const signInAndReturn = (navigate, path) => {
@@ -156,6 +157,7 @@ const LearningLayout = ({ children, accent, bare = false }) => {
             <Link to="/about" className="hover:text-gray-900">About</Link>
             <Link to="/support" className="hover:text-gray-900">Support</Link>
           </div>
+          <SocialLinks size="w-4 h-4" />
         </div>
       </footer>}
     </div>

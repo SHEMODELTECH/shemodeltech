@@ -7,18 +7,33 @@ import { collection, getCountFromServer, getDocs, query, where } from 'firebase/
 import { db } from '../firebase/config';
 import { PUBLISHED_PREFIX, listPublished } from './learningPublished';
 
-const feedbackKey = (track, slug) => `${track}__${slug}`.replace(/[^A-Za-z0-9_-]/g, '-');
+export const courseKey = (track, slug) => `${track}__${slug}`.replace(/[^A-Za-z0-9_-]/g, '-');
+const feedbackKey = courseKey;
+
+// Ratings only (for course cards): { avg, count }.
+export const courseRating = async (track, slug) => {
+  try {
+    const snap = await getDocs(collection(db, 'course_feedback', feedbackKey(track, slug), 'ratings'));
+    const stars = snap.docs.map((d) => d.data().stars || 0);
+    return { count: stars.length, avg: stars.length ? stars.reduce((a, b) => a + b, 0) / stars.length : 0 };
+  } catch (_) {
+    return { count: 0, avg: 0 };
+  }
+};
 
 // Completions and ratings for one published course.
 export const courseStats = async (track, slug) => {
-  const [certs, ratings] = await Promise.all([
+  const [certs, ratings, enrolled] = await Promise.all([
     // A server-side count: doesn't download every certificate.
     getCountFromServer(query(collection(db, 'learning_certificates'), where('slug', '==', slug))).catch(() => null),
     getDocs(collection(db, 'course_feedback', feedbackKey(track, slug), 'ratings')).catch(() => null),
+    // Learners who enrolled (course_enrollments/{course}/learners/{uid}).
+    getCountFromServer(collection(db, 'course_enrollments', courseKey(track, slug), 'learners')).catch(() => null),
   ]);
   const stars = ratings ? ratings.docs.map((d) => d.data().stars || 0) : [];
   return {
     completions: certs ? certs.data().count : 0,
+    enrollments: enrolled ? enrolled.data().count : 0,
     ratingCount: stars.length,
     ratingSum: stars.reduce((a, b) => a + b, 0),
   };
@@ -40,9 +55,10 @@ export const mentorStatsByUid = async () => {
   );
   const out = {};
   rows.forEach((r) => {
-    const m = out[r.uid] || (out[r.uid] = { courses: [], completions: 0, ratingCount: 0, ratingSum: 0, avg: 0 });
+    const m = out[r.uid] || (out[r.uid] = { courses: [], completions: 0, enrollments: 0, ratingCount: 0, ratingSum: 0, avg: 0 });
     m.courses.push(r);
     m.completions += r.completions;
+    m.enrollments = (m.enrollments || 0) + (r.enrollments || 0);
     m.ratingCount += r.ratingCount;
     m.ratingSum += r.ratingSum;
   });

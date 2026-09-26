@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import SocialLinks from '../components/SocialLinks';
 
 const About = () => {
   const navigate = useNavigate();
@@ -191,9 +192,12 @@ const About = () => {
               Support
             </Link>
           </div>
-          <p className="text-gray-400 text-xs text-center sm:text-right">
-            {new Date().getFullYear()} SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit. All rights reserved.
-          </p>
+          <div className="flex flex-col items-center sm:items-end gap-2">
+            <SocialLinks />
+            <p className="text-gray-400 text-xs text-center sm:text-right">
+              {new Date().getFullYear()} SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </div>

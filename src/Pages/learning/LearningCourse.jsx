@@ -374,10 +374,14 @@ const LearningCourse = ({ reading = false }) => {
                 </div>
               </div>
               {author?.specialization && <p className="text-sm text-gray-600 mt-3">{author.specialization}</p>}
-              <div className="grid grid-cols-3 gap-2 mt-4 text-center">
+              <div className="grid grid-cols-2 gap-2 mt-4 text-center">
                 <div className="rounded-lg bg-gray-50 py-2">
                   <p className="font-bold text-gray-900">{authorCount}</p>
                   <p className="text-[11px] text-gray-500">course{authorCount === 1 ? '' : 's'}</p>
+                </div>
+                <div className="rounded-lg bg-gray-50 py-2">
+                  <p className="font-bold text-gray-900">{stats ? stats.enrollments : '–'}</p>
+                  <p className="text-[11px] text-gray-500">enrolled in this</p>
                 </div>
                 <div className="rounded-lg bg-gray-50 py-2">
                   <p className="font-bold text-gray-900">{stats ? stats.completions : '–'}</p>

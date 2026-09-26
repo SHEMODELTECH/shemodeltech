@@ -329,7 +329,7 @@ const UserProfile = () => {
                   <p className="text-gray-500 text-xs">
                     {mentorCerts.length
                       ? `${mentorCerts.length} course${mentorCerts.length === 1 ? '' : 's'} published in She Model Tech Learning${
-                          mentorStats ? ` · ${mentorStats.completions} learner completion${mentorStats.completions === 1 ? '' : 's'}${mentorStats.ratingCount ? ` · ★ ${mentorStats.avg.toFixed(1)} average rating` : ''}` : ''
+                          mentorStats ? ` · ${mentorStats.enrollments || 0} learners enrolled · ${mentorStats.completions} completion${mentorStats.completions === 1 ? '' : 's'}${mentorStats.ratingCount ? ` · ★ ${mentorStats.avg.toFixed(1)} average rating` : ''}` : ''
                         }`
                       : 'Approved mentor at SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit'}
                   </p>
@@ -349,7 +349,8 @@ const UserProfile = () => {
                           return [
                             c.trackLabel,
                             c.completedOn && `Published ${new Date(`${c.completedOn}T12:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`,
-                            pc && `${pc.completions} learner${pc.completions === 1 ? '' : 's'} completed`,
+                            pc && `${pc.enrollments || 0} enrolled`,
+                            pc && `${pc.completions} completed`,
                             pc?.ratingCount ? `★ ${(pc.ratingSum / pc.ratingCount).toFixed(1)} (${pc.ratingCount})` : '',
                           ].filter(Boolean).join(' · ');
                         })()}

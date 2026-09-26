@@ -321,6 +321,16 @@ service cloud.firestore {
  }
  }
 
+ // Enrolments per course (counted for mentor impact numbers). Anyone can count;
+ // a learner can only add or remove their own.
+ match /course_enrollments/{courseKey} {
+ match /learners/{uid} {
+ allow read: if true;
+ allow create, update: if isSignedIn() && uid == myUid() && request.resource.data.uid == myUid();
+ allow delete: if isSignedIn() && (uid == myUid() || isAdmin());
+ }
+ }
+
  // Ratings, reactions, and comments on mentor courses in Learning.
  match /course_feedback/{courseKey} {
  match /ratings/{uid} {
