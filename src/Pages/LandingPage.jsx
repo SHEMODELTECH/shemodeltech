@@ -199,9 +199,9 @@ const LandingPage = () => {
             data-animate
             className={`fade-up delay-2 text-gray-600 text-lg sm:text-2xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed ${isVisible('hero-desc') ? 'visible' : ''}`}
           >
-            She Model Tech is where women build real tech experience. Learn with free courses and
-            mentors, join a team, ship a real project, and earn verified badges that show employers
-            exactly what you did.
+            She Model Tech helps women build real tech experience through free courses, mentorship,
+            team projects, and verified badges that showcase what they can create, contribute, and
+            lead.
           </p>
 
           <div
@@ -223,14 +223,6 @@ const LandingPage = () => {
               Explore free courses
             </Link>
           </div>
-
-          <p
-            id="hero-sub"
-            data-animate
-            className={`fade-up delay-4 mt-4 text-gray-400 text-sm ${isVisible('hero-sub') ? 'visible' : ''}`}
-          >
-            Free for everyone. SHE MODEL TECH Inc. is a registered 501(c)(3) nonprofit.
-          </p>
         </div>
       </section>
 
@@ -246,8 +238,8 @@ const LandingPage = () => {
               Earn Verified Credentials
             </h2>
             <p className="text-gray-500 max-w-xl mx-auto text-base">
-              Each badge represents a verified skill track with four progression levels: Novice,
-              Associate, Advanced, and Expert. Earn them by completing real projects.
+              Each badge represents a verified skill track with four progression levels, Novice,
+              Associate, Advanced, and Expert, earned by completing real-world projects.
             </p>
           </div>
 
@@ -379,8 +371,8 @@ const LandingPage = () => {
           </h2>
           <p className="text-gray-500 max-w-xl mx-auto text-base">
             She Model Tech is a community of builders verified by the work they have actually
-            shipped. Hire from our talent pool and post paid projects, and judge every candidate on
-            real, verifiable proof.
+            shipped, where organizations can discover talent and post paid projects based on real,
+            verifiable proof.
           </p>
         </div>
 
@@ -403,9 +395,8 @@ const LandingPage = () => {
           >
             <h3 className="text-xl font-700 text-gray-900 mb-2">Post paid projects</h3>
             <p className="text-gray-500 text-sm leading-relaxed">
-              Bring real work to teams ready to deliver it. Post a paid project and assemble talent
-              across development, QA, architecture, security, and product, then let contribution
-              speak for itself.
+              Bring real work to teams ready to deliver it by posting paid projects and assembling
+              talent across development.
             </p>
           </div>
         </div>
