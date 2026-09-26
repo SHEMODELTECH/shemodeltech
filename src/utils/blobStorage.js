@@ -413,3 +413,40 @@ export default {
   getImageDimensions,
   compressImage,
 };
+
+/**
+ * Upload a document (PDF, Word, or plain text) to Vercel Blob, e.g. a mentor's
+ * draft letter. Kept under 3 MB so the upload fits the server function limit
+ * (the file travels as base64, which is about a third larger).
+ */
+export const DOCUMENT_TYPES = {
+  'application/pdf': 'pdf',
+  'application/msword': 'doc',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+  'text/plain': 'txt',
+};
+
+export const uploadDocumentToBlob = async (file, folder = 'documents') => {
+  if (!file) throw new Error('No file provided');
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  if (!DOCUMENT_TYPES[file.type] && !['pdf', 'doc', 'docx', 'txt'].includes(ext)) {
+    throw new Error('Attach a PDF, Word document, or text file.');
+  }
+  if (file.size > 3 * 1024 * 1024) throw new Error('The file must be smaller than 3 MB.');
+  const base64Data = await fileToBase64(file);
+  const filepath = `${folder}/${generateUniqueFilename(file.name)}`;
+  const response = await fetch('/api/blob-storage', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      filename: filepath,
+      contentType: file.type || 'application/octet-stream',
+      fileData: base64Data,
+      originalName: file.name,
+      size: file.size,
+    }),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || 'Upload failed. Please try again.');
+  return { url: data.url, name: file.name, size: file.size };
+};

@@ -1066,6 +1066,35 @@ const AdminPanel = () => {
                         </div>
                       </div>
                       <p className="text-sm text-gray-800 mt-2"><strong>Purpose:</strong> {r.purpose}</p>
+                      {/* The mentor's draft letter */}
+                      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                        {r.attachment?.url && (
+                          <a href={r.attachment.url} target="_blank" rel="noopener noreferrer"
+                            className="font-semibold text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-lg hover:bg-indigo-50">
+                            Open attached draft ({r.attachment.name})
+                          </a>
+                        )}
+                        {r.emailingDraft && (
+                          <span className="font-semibold text-amber-700 bg-amber-50 px-2 py-1 rounded">Mentor will email the draft</span>
+                        )}
+                        {!r.draftText && !r.attachment && !r.emailingDraft && <span className="text-gray-400">No draft provided</span>}
+                      </div>
+                      {r.draftText && (
+                        <details className="mt-2">
+                          <summary className="text-xs font-semibold text-gray-700 cursor-pointer">
+                            Pasted draft ({r.draftText.split(/\s+/).filter(Boolean).length} words)
+                          </summary>
+                          <div className="mt-2 relative">
+                            <pre className="whitespace-pre-wrap text-sm text-gray-800 bg-gray-50 border border-gray-200 rounded-lg p-3 max-h-80 overflow-y-auto font-sans">{r.draftText}</pre>
+                            <button
+                              onClick={() => navigator.clipboard.writeText(r.draftText).then(() => toast.success('Draft copied.')).catch(() => {})}
+                              className="absolute top-2 right-2 text-xs font-semibold bg-white border border-gray-300 px-2 py-1 rounded hover:bg-gray-50"
+                            >
+                              Copy
+                            </button>
+                          </div>
+                        </details>
+                      )}
                     </div>
                   ))}
               </div>

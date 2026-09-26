@@ -8,6 +8,7 @@
 //
 //   mentor_letter_requests/{id}
 //     uid, name, email, type, purpose, recipient, deadline,
+//     draftText, attachment { url, name, size }, emailingDraft,
 //     status: 'pending' | 'sent' | 'declined', adminNote, createdAt, decidedAt, decidedBy
 
 import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
@@ -29,6 +30,10 @@ export const requestLetter = async (user, form) =>
     purpose: (form.purpose || '').trim(),
     recipient: (form.recipient || '').trim(),
     deadline: form.deadline || '',
+    // The mentor's draft: pasted text, an attached file, and/or a promise to email it.
+    draftText: (form.draftText || '').trim(),
+    attachment: form.attachment || null,
+    emailingDraft: !!form.emailingDraft,
     status: 'pending',
     createdAt: serverTimestamp(),
   });

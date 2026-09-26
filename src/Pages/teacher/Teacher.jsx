@@ -41,6 +41,8 @@ import LearningLayout from '../learning/LearningLayout';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { issueMentorCertificate } from '../../utils/learningCertificates';
 import { LETTER_TYPES, myLetterRequests, requestLetter, withdrawLetterRequest } from '../../utils/mentorLetters';
+import { uploadDocumentToBlob } from '../../utils/blobStorage';
+import { BRAND } from '../../config/brand';
 import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
 
 const TRACKS = [
@@ -135,7 +137,9 @@ const MentorLetters = ({ access }) => {
   const [reqs, setReqs] = useState(null);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [form, setForm] = useState({ type: 'recommendation', purpose: '', recipient: '', deadline: '' });
+  const EMPTY = { type: 'recommendation', purpose: '', recipient: '', deadline: '', draftText: '', emailingDraft: false };
+  const [form, setForm] = useState(EMPTY);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     myLetterRequests(access.uid).then(setReqs).catch(() => setReqs([]));
@@ -143,13 +147,22 @@ const MentorLetters = ({ access }) => {
 
   const send = async () => {
     if (form.purpose.trim().split(/\s+/).filter(Boolean).length < 5) return toast.error('Tell us what the letter is for (a sentence or two).');
+    const draftWords = form.draftText.trim().split(/\s+/).filter(Boolean).length;
+    if (draftWords < 50 && !file && !form.emailingDraft) {
+      return toast.error('Add your draft letter: paste it (at least 50 words), attach it, or tick that you will email it.');
+    }
     setBusy(true);
     try {
-      await requestLetter(currentUser, form);
+      let attachment = null;
+      if (file) attachment = await uploadDocumentToBlob(file, `mentor-letters/${access.uid}`);
+      await requestLetter(currentUser, { ...form, attachment });
       setReqs(await myLetterRequests(access.uid));
       setOpen(false);
-      setForm({ type: 'recommendation', purpose: '', recipient: '', deadline: '' });
-      toast.success('Request sent. We will notify you when it is ready.');
+      setForm(EMPTY);
+      setFile(null);
+      toast.success(form.emailingDraft && !attachment && draftWords < 50
+        ? `Request sent. Please email your draft to ${BRAND.supportEmail}.`
+        : 'Request sent. We will review your draft and notify you when the letter is ready.');
     } catch (e) {
       console.error(e);
       toast.error(friendlyError(e, 'Could not send your request.'));
@@ -219,6 +232,36 @@ const MentorLetters = ({ access }) => {
             <input id="lt-date" type="date" className={input} value={form.deadline}
               onChange={(e) => setForm({ ...form, deadline: e.target.value })} />
           </div>
+          <div className="sm:col-span-2 rounded-lg bg-indigo-50/60 border border-indigo-100 p-3">
+            <p className="text-sm font-semibold text-gray-900">Your draft letter</p>
+            <p className="text-xs text-gray-600 mt-0.5">
+              Give us the full letter you'd like, with the details that matter for your purpose. We review and edit it,
+              then sign and send it on SHE MODEL TECH Inc. letterhead. Choose one or more:
+            </p>
+            <label className="block text-sm font-semibold text-gray-800 mt-3 mb-1" htmlFor="lt-draft">Paste your draft</label>
+            <textarea id="lt-draft" rows={8} className={input} value={form.draftText}
+              placeholder="To whom it may concern, ..."
+              onChange={(e) => setForm({ ...form, draftText: e.target.value })} />
+            <p className="text-xs text-gray-500 mt-1">
+              {form.draftText.trim().split(/\s+/).filter(Boolean).length} words
+            </p>
+            <label className="block text-sm font-semibold text-gray-800 mt-3 mb-1" htmlFor="lt-file">Or attach it</label>
+            <input id="lt-file" type="file" accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+              onChange={(e) => setFile(e.target.files[0] || null)}
+              className="block w-full text-sm text-gray-700 file:mr-3 file:rounded-lg file:border-0 file:bg-white file:px-3 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-50" />
+            <p className="text-xs text-gray-500 mt-1">PDF, Word, or text file, up to 3 MB.{file ? ` Selected: ${file.name}` : ''}</p>
+            <label className="flex items-start gap-2 mt-3 text-sm text-gray-800">
+              <input type="checkbox" className="mt-1" checked={form.emailingDraft}
+                onChange={(e) => setForm({ ...form, emailingDraft: e.target.checked })} />
+              <span>
+                I'll email my draft to{' '}
+                <a className="font-semibold text-indigo-700 underline"
+                  href={`mailto:${BRAND.supportEmail}?subject=${encodeURIComponent(`Letter request draft: ${currentUser?.displayName || currentUser?.email || ''}`)}`}>
+                  {BRAND.supportEmail}
+                </a>
+              </span>
+            </label>
+          </div>
           <div className="sm:col-span-2 flex gap-2">
             <button onClick={send} disabled={busy} className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg disabled:opacity-60">
               {busy ? 'Sending...' : 'Send request'}
@@ -235,6 +278,9 @@ const MentorLetters = ({ access }) => {
               <span className="min-w-0">
                 <strong>{LETTER_TYPES[r.type]}</strong>
                 <span className="text-gray-500"> · {r.purpose.length > 70 ? `${r.purpose.slice(0, 70)}...` : r.purpose}</span>
+                <span className="block text-xs text-gray-500 mt-0.5">
+                  {[r.draftText ? 'Draft pasted' : '', r.attachment ? 'Draft attached' : '', r.emailingDraft ? 'Draft by email' : ''].filter(Boolean).join(' · ')}
+                </span>
                 {r.adminNote && <span className="block text-xs text-gray-600 mt-0.5">Note: {r.adminNote}</span>}
               </span>
               <span className="flex items-center gap-2">
