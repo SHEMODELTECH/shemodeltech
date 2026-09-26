@@ -5,7 +5,6 @@ import { BRAND } from '../config/brand';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { CourseCard, LR_CSS } from './learning/LearningHome';
 import { coursesForTrack, tracksWithCourses } from '../utils/foundationsCourses';
 
 import TechMO from '../Images/TechMO.png';
@@ -93,14 +92,6 @@ const LandingPage = () => {
   const allCourses = tracksWithCourses()
     .filter((t) => t !== 'company')
     .flatMap((t) => coursesForTrack(t).map((c) => ({ ...c, track: t })));
-  const featured = [
-    ['TechDev', 'python-fundamentals-beginner-course'],
-    ['TechArchs', 'website-builders-beginner-course'],
-    ['TechQA', '00-course-overview'],
-    ['TechDev', 'computer-vision'],
-  ]
-    .map(([t, slug]) => allCourses.find((c) => c.track === t && c.slug === slug))
-    .filter(Boolean);
 
   const steps = [
     {
@@ -317,7 +308,6 @@ const LandingPage = () => {
       </section>
 
       {/* LEARNING */}
-      <style>{LR_CSS}</style>
       <section className="py-20 sm:py-28 bg-gradient-to-b from-pink-50/60 to-white border-y border-pink-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div
@@ -363,17 +353,6 @@ const LandingPage = () => {
             ))}
           </div>
 
-          {featured.length > 0 && (
-            <>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Popular places to start</h3>
-              <div className="lr-grid">
-                {featured.map((c) => (
-                  <CourseCard key={c.track + c.slug} course={c} status={null} progress={0} />
-                ))}
-              </div>
-            </>
-          )}
-
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-12">
             <Link to="/learning" className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 text-white font-semibold px-8 py-4 rounded-lg text-center">
               Browse all courses
@@ -382,23 +361,6 @@ const LandingPage = () => {
               Become a mentor
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* MISSION */}
-      <section className="py-16 sm:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <span className="inline-block text-xs font-bold uppercase tracking-wider text-pink-700 bg-pink-50 border border-pink-100 px-3 py-1 rounded-full">
-            Registered 501(c)(3) nonprofit
-          </span>
-          <p className="text-xl sm:text-2xl text-gray-800 leading-relaxed mt-5">
-            <strong className="text-gray-900">SHE MODEL TECH Inc.</strong> is a registered 501(c)(3) non-profit organization
-            with the mission to empower women in tech through mentorship, IT skills training, leadership development, and
-            networking opportunities.
-          </p>
-          <Link to="/about" className="inline-block mt-6 text-pink-600 font-semibold hover:underline">
-            Learn more about us
-          </Link>
         </div>
       </section>
 
@@ -528,9 +490,14 @@ const LandingPage = () => {
                 Support
               </Link>
             </div>
-            <p className="text-gray-400 text-xs text-center sm:text-right">
-              {new Date().getFullYear()} SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit. All rights reserved.
-            </p>
+            <div className="flex flex-col items-center sm:items-end gap-2">
+              <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-pink-700 bg-pink-50 border border-pink-100 px-3 py-1 rounded-full">
+                Registered 501(c)(3) nonprofit
+              </span>
+              <p className="text-gray-400 text-xs">
+                {new Date().getFullYear()} SHE MODEL TECH Inc. All rights reserved.
+              </p>
+            </div>
           </div>
         </div>
       </footer>
