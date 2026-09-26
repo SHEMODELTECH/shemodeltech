@@ -146,10 +146,11 @@ const MentorLetters = ({ access }) => {
   }, [access.uid]);
 
   const send = async () => {
-    if (form.purpose.trim().split(/\s+/).filter(Boolean).length < 5) return toast.error('Tell us what the letter is for (a sentence or two).');
+    const purposeWords = form.purpose.trim().split(/\s+/).filter(Boolean).length;
+    if (purposeWords < 5) return toast.error(`"What is it for?" needs at least 5 words (you have ${purposeWords}).`);
     const draftWords = form.draftText.trim().split(/\s+/).filter(Boolean).length;
     if (draftWords < 50 && !file && !form.emailingDraft) {
-      return toast.error('Add your draft letter: paste it (at least 50 words), attach it, or tick that you will email it.');
+      return toast.error(`Add your draft letter: paste at least 50 words (you have ${draftWords}), attach a file, or tick that you'll email it.`);
     }
     setBusy(true);
     try {
@@ -217,10 +218,21 @@ const MentorLetters = ({ access }) => {
             </div>
           </fieldset>
           <div className="sm:col-span-2">
-            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="lt-purpose">What is it for?</label>
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="lt-purpose">
+              What is it for? <span className="font-normal text-gray-500">(at least 5 words)</span>
+            </label>
             <textarea id="lt-purpose" rows={3} className={input} value={form.purpose}
               placeholder="For example: a job application for a senior engineer role, or a scholarship application."
+              aria-describedby="lt-purpose-hint"
               onChange={(e) => setForm({ ...form, purpose: e.target.value })} />
+            {(() => {
+              const n = form.purpose.trim().split(/\s+/).filter(Boolean).length;
+              return (
+                <p id="lt-purpose-hint" aria-live="polite" className={`text-xs mt-1 ${n >= 5 ? 'text-emerald-700' : 'text-gray-500'}`}>
+                  {n >= 5 ? `${n} words. Minimum reached.` : `Minimum 5 words. You have ${n} so far.`}
+                </p>
+              );
+            })()}
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="lt-to">Addressed to (optional)</label>
@@ -238,13 +250,25 @@ const MentorLetters = ({ access }) => {
               Give us the full letter you'd like, with the details that matter for your purpose. We review and edit it,
               then sign and send it on SHE MODEL TECH Inc. letterhead. Choose one or more:
             </p>
-            <label className="block text-sm font-semibold text-gray-800 mt-3 mb-1" htmlFor="lt-draft">Paste your draft</label>
+            <label className="block text-sm font-semibold text-gray-800 mt-3 mb-1" htmlFor="lt-draft">
+              Paste your draft <span className="font-normal text-gray-500">(at least 50 words)</span>
+            </label>
             <textarea id="lt-draft" rows={8} className={input} value={form.draftText}
               placeholder="To whom it may concern, ..."
               onChange={(e) => setForm({ ...form, draftText: e.target.value })} />
-            <p className="text-xs text-gray-500 mt-1">
-              {form.draftText.trim().split(/\s+/).filter(Boolean).length} words
-            </p>
+            {(() => {
+              const n = form.draftText.trim().split(/\s+/).filter(Boolean).length;
+              const other = !!file || form.emailingDraft;
+              return (
+                <p aria-live="polite" className={`text-xs mt-1 ${n >= 50 ? 'text-emerald-700' : 'text-gray-500'}`}>
+                  {n >= 50
+                    ? `${n} words. Minimum reached.`
+                    : other
+                    ? `${n} word${n === 1 ? '' : 's'}. Optional, since you're ${file ? 'attaching a file' : 'emailing your draft'}.`
+                    : `Minimum 50 words, unless you attach a file or email it. You have ${n} so far.`}
+                </p>
+              );
+            })()}
             <label className="block text-sm font-semibold text-gray-800 mt-3 mb-1" htmlFor="lt-file">Or attach it</label>
             <input id="lt-file" type="file" accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
               onChange={(e) => setFile(e.target.files[0] || null)}
