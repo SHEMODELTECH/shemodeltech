@@ -1,4 +1,5 @@
 <!-- order: 11 -->
+<!-- runnable: python -->
 # Data Structures & Algorithms for Builders: A Practical Beginner's Course
 
 ## Course Overview

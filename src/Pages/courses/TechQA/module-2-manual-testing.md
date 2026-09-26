@@ -111,6 +111,42 @@ Any time testing (manual or exploratory) turns up unexpected behavior, an error 
 3. **Justify your severity and priority choices** in one sentence each, explaining why they might differ from each other.
 4. **Rewrite the same bug as a vague, low-quality report** ("cart is broken") so you can see side by side what information the good version added.
 
+```lab
+{
+ "type": "sort",
+ "title": "Severity or priority?",
+ "prompt": "Severity is how bad the impact is; priority is how soon it needs fixing. Place each bug.",
+ "buckets": [
+  "High severity, high priority",
+  "High severity, low priority",
+  "Low severity, high priority",
+  "Low severity, low priority"
+ ],
+ "items": [
+  {
+   "text": "Checkout fails for every user.",
+   "bucket": "High severity, high priority",
+   "why": "It breaks a core feature for everyone, so it's both serious and urgent."
+  },
+  {
+   "text": "The app crashes, but only on an obsolete browser version almost nobody uses.",
+   "bucket": "High severity, low priority",
+   "why": "A crash is severe, but it affects very few people."
+  },
+  {
+   "text": "The company name is misspelled on the homepage.",
+   "bucket": "Low severity, high priority",
+   "why": "Nothing breaks, but everyone sees it, so it should be fixed soon."
+  },
+  {
+   "text": "A tooltip on a rarely used admin screen has the wrong punctuation.",
+   "bucket": "Low severity, low priority",
+   "why": "Minor and rarely seen, so it can wait."
+  }
+ ]
+}
+```
+
 #### Checkpoint
 You have one complete, well-structured bug report with all required fields, a justified severity and priority, and a contrasting vague version that makes clear why the details matter.
 

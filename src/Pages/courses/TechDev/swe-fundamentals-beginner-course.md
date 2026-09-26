@@ -120,6 +120,48 @@ Success metric: time from "open app" to "task logged" under 10 seconds
 
 Now rewrite one section in your own words, imagining you're explaining TrackIt to a friend who has never seen it.
 
+```lab
+{
+ "type": "sort",
+ "title": "Which part of the spec is this?",
+ "prompt": "Each line comes from TrackIt's spec. Put it under the right heading.",
+ "buckets": [
+  "Problem",
+  "Users",
+  "Core flow",
+  "Non-goals",
+  "Success metric"
+ ],
+ "items": [
+  {
+   "text": "People lose track of small tasks spread across notes, chats, and apps.",
+   "bucket": "Problem",
+   "why": "It names the pain point."
+  },
+  {
+   "text": "Busy students and early-career professionals.",
+   "bucket": "Users",
+   "why": "It says exactly who has the problem."
+  },
+  {
+   "text": "Type a task in plain English, see it structured on a list, mark it done.",
+   "bucket": "Core flow",
+   "why": "The handful of steps a user takes to get value."
+  },
+  {
+   "text": "No team sharing or calendar sync in version 1.",
+   "bucket": "Non-goals",
+   "why": "It's deliberately left out for now."
+  },
+  {
+   "text": "Time from opening the app to logging a task.",
+   "bucket": "Success metric",
+   "why": "One number that tells you it's working."
+  }
+ ]
+}
+```
+
 ### Checkpoint
 A `SPEC.md` file exists in your project folder and you can explain the product in three sentences without notes.
 
@@ -255,6 +297,52 @@ q.add(Task(id=1, title="Later task", due_date=date.today() + timedelta(days=5), 
 q.add(Task(id=2, title="Urgent task", due_date=date.today(), priority=3))
 
 print(q.next_up().title)  # "Urgent task"
+```
+
+```lab
+{
+ "type": "sort",
+ "title": "How fast is each operation?",
+ "prompt": "Choose the Big O for each operation as the data grows.",
+ "buckets": [
+  "O(1)",
+  "O(log n)",
+  "O(n)",
+  "O(n log n)"
+ ],
+ "items": [
+  {
+   "text": "Look up a user by ID in a dictionary",
+   "bucket": "O(1)",
+   "why": "Dictionary lookups take about the same time however big the dictionary is."
+  },
+  {
+   "text": "Check whether a value is in an unsorted list",
+   "bucket": "O(n)",
+   "why": "In the worst case you look at every item."
+  },
+  {
+   "text": "Binary search in a sorted list",
+   "bucket": "O(log n)",
+   "why": "Each step halves what's left to search."
+  },
+  {
+   "text": "Sort a list of tasks by due date",
+   "bucket": "O(n log n)",
+   "why": "Good general-purpose sorting grows as n log n."
+  },
+  {
+   "text": "Add a task to a heap",
+   "bucket": "O(log n)",
+   "why": "The new item moves up the heap's height, which grows as log n."
+  },
+  {
+   "text": "Peek at the most urgent task in a heap",
+   "bucket": "O(1)",
+   "why": "It always sits at the top."
+  }
+ ]
+}
 ```
 
 ### Checkpoint

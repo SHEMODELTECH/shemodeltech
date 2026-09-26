@@ -16,6 +16,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { coursesForTrack, trackMeta } from '../../utils/foundationsCourses';
 import { renderCourse } from '../../utils/renderCourseMarkdown';
+import { LABS_CSS, enhancePython, mountLabs } from './labs';
 import TechDevImg from '../../Images/TechDev.png';
 import TechArchsImg from '../../Images/TechArchs.png';
 import TechQAImg from '../../Images/TechQA.png';
@@ -280,12 +281,14 @@ const enhanceCode = (container) => {
   });
 };
 
-export const enhanceCourseContent = (container, key) => {
+export const enhanceCourseContent = (container, key, opts = {}) => {
   if (!container) return;
   enhanceQuizzes(container, key);
   enhanceChecklists(container, key);
   enhanceCheckpoints(container);
   enhanceCode(container);
+  if (opts.runPython) enhancePython(container);
+  mountLabs(container);
 };
 
 // ---- Interactive course player ----
@@ -493,7 +496,9 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
 
   // Quizzes, checklists, checkpoints, and copy buttons for this part.
   useEffect(() => {
-    enhanceCourseContent(proseRef.current, `smt-learn:${course.slug}:${parts[current] ? parts[current].id : current}`);
+    enhanceCourseContent(proseRef.current, `smt-learn:${course.slug}:${parts[current] ? parts[current].id : current}`, {
+      runPython: course.runnable === 'python',
+    });
   }, [current, course.slug, parts]);
 
   const PartList = () => (
@@ -641,7 +646,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
 
 // Page styles. Accent colours come from the active track's medal ribbon via
 // the --acc / --tint custom properties set on .fd-root.
-export const FD_CSS = `
+export const FD_CSS = LABS_CSS + `
 .fd-root { --acc:#DB2777; --tint:#FDF2F8; }
 .fd-display { font-family:'Archivo Black', system-ui, sans-serif; letter-spacing:-.01em; line-height:1.1; }
 

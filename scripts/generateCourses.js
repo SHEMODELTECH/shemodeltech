@@ -218,6 +218,7 @@ const build = () => {
         projects: countProjects(md),
         minutes: estimateMinutes(md),
         order: readOrder(md),
+        ...(/<!--\s*runnable:\s*python\s*-->/i.test(md) ? { runnable: 'python' } : {}),
         markdown: md,
       };
     });

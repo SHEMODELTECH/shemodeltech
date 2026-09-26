@@ -51,6 +51,23 @@ Any time you join a project and need to figure out where things currently stand,
 3. **Walk that single requirement through all six SDLC phases** in your own words: what would design look like for it, what would development involve, what would you test, how might it be deployed, what maintenance might it need six months later.
 4. **Identify one QA activity you could do *before* the Testing phase even starts** (for example, reviewing the requirement itself for ambiguity).
 
+```lab
+{
+ "type": "order",
+ "title": "Put the SDLC phases in order",
+ "prompt": "Use the arrows to arrange the six phases from first to last, then check.",
+ "items": [
+  "Requirements",
+  "Design",
+  "Development",
+  "Testing",
+  "Deployment",
+  "Maintenance"
+ ],
+ "explain": "Requirements say what to build, Design decides how, Development builds it, Testing checks it, Deployment releases it, and Maintenance keeps it working."
+}
+```
+
 #### Checkpoint
 You can name all six SDLC phases in order, explain what each phase hands off to the next, and describe one QA activity that happens outside the "Testing" phase itself.
 
@@ -115,6 +132,23 @@ Any time a feature or build is handed to QA and you need a repeatable, defensibl
 2. **Write a one-paragraph Test Plan** for it: what will you test (marking complete, unmarking, marking an already-completed task again), what won't you test (things out of scope), and what order you'll test in.
 3. **Write two full test cases** for it, each with: a title, preconditions, numbered steps, test data, and an expected result.
 4. **Define exit criteria** for this mini test cycle (for example, "all written test cases executed at least once, no open critical defects").
+
+```lab
+{
+ "type": "order",
+ "title": "Put the STLC phases in order",
+ "prompt": "These are the testing steps inside the SDLC's Testing phase. Arrange them from first to last.",
+ "items": [
+  "Requirement Analysis",
+  "Test Planning",
+  "Test Case Development",
+  "Environment Setup",
+  "Test Execution",
+  "Test Closure"
+ ],
+ "explain": "You work out what to test, plan how, write the test cases, prepare the environment, run the tests, then close out with a report."
+}
+```
 
 #### Checkpoint
 You have a short test plan, two properly structured test cases with real test data, and a written exit criterion, and you can explain how each maps to a specific STLC phase.
@@ -188,6 +222,52 @@ Any time you need to explain testing decisions to someone else, why you're not t
 2. **Apply the exhaustive testing principle:** list five realistic inputs/scenarios you'd test (not fifty), and briefly justify why you picked those five over others.
 3. **Apply the defect clustering principle:** guess which part of this feature is most likely to have bugs (for example, the "already completed" edge case) and explain why you think testing effort should lean there.
 4. **Write one honest, principle-aligned sentence** you could say to a product manager after a clean test run, one that reflects "shows presence, not absence, of defects" rather than overpromising.
+
+```lab
+{
+ "type": "sort",
+ "title": "Which principle is this?",
+ "prompt": "Match each situation to the testing principle it shows.",
+ "buckets": [
+  "Exhaustive testing is impossible",
+  "Early testing saves cost",
+  "Defects cluster",
+  "Pesticide paradox"
+ ],
+ "items": [
+  {
+   "text": "Last release, the checkout module had 30 bugs and the settings page had 2.",
+   "bucket": "Defects cluster",
+   "why": "Most defects sit in a small number of modules, so testing effort should focus there."
+  },
+  {
+   "text": "The same 200 regression tests have passed for a year, but users keep finding new bugs.",
+   "bucket": "Pesticide paradox",
+   "why": "Tests that never change stop finding new bugs; they need reviewing and updating."
+  },
+  {
+   "text": "A reviewer spots a contradiction in the requirements before any code is written.",
+   "bucket": "Early testing saves cost",
+   "why": "Fixing it now costs a conversation; fixing it after release costs rework."
+  },
+  {
+   "text": "A text field accepts up to 500 characters, so there are far too many possible inputs to try.",
+   "bucket": "Exhaustive testing is impossible",
+   "why": "You can't test everything, so you choose inputs based on risk."
+  },
+  {
+   "text": "The team rewrites old test cases to cover new features and edge cases.",
+   "bucket": "Pesticide paradox",
+   "why": "Refreshing tests is the cure for the pesticide paradox."
+  },
+  {
+   "text": "Most bugs found this month came from the payments service.",
+   "bucket": "Defects cluster",
+   "why": "Another sign that defects concentrate in a few areas."
+  }
+ ]
+}
+```
 
 #### Checkpoint
 You can name and briefly explain all seven testing principles, and you've applied at least two of them to a concrete testing decision rather than just reciting them.

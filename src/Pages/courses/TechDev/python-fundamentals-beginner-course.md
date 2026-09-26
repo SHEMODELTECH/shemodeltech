@@ -1,4 +1,5 @@
 <!-- order: 2 -->
+<!-- runnable: python -->
 # Python Programming Fundamentals: A Practical Beginner's Course
 
 ## Course Overview
@@ -57,6 +58,65 @@ price_as_text = "19.99"
 # print(price_as_text + 5)     # this would crash - can't add a string and a number
 price_as_number = float(price_as_text)
 print(price_as_number + 5)     # 24.99 - works, because it's now a float
+```
+
+```lab
+{
+ "type": "sort",
+ "title": "What type is each value?",
+ "prompt": "Pick the Python type each value would have.",
+ "buckets": [
+  "str",
+  "int",
+  "float",
+  "bool",
+  "list"
+ ],
+ "items": [
+  {
+   "text": "\"opeyemi\"",
+   "code": true,
+   "bucket": "str",
+   "why": "Anything in quotes is a string."
+  },
+  {
+   "text": "12",
+   "code": true,
+   "bucket": "int",
+   "why": "A whole number with no decimal point is an int."
+  },
+  {
+   "text": "245.50",
+   "code": true,
+   "bucket": "float",
+   "why": "A decimal point makes it a float."
+  },
+  {
+   "text": "True",
+   "code": true,
+   "bucket": "bool",
+   "why": "True and False are the two bool values."
+  },
+  {
+   "text": "[\"python\", \"docker\"]",
+   "code": true,
+   "bucket": "list",
+   "why": "Square brackets make a list."
+  },
+  {
+   "text": "\"19.99\"",
+   "code": true,
+   "bucket": "str",
+   "why": "It looks like a number, but the quotes make it text. That's why \"19.99\" + 5 fails."
+  },
+  {
+   "text": "12.0",
+   "code": true,
+   "bucket": "float",
+   "why": "Even a whole number is a float once it has a decimal point."
+  }
+ ]
+}
 ```
 
 ### Checkpoint
@@ -329,6 +389,53 @@ def process_payment(amount):
 
 process_payment(50)
 process_payment(-10)
+```
+
+```lab
+{
+ "type": "sort",
+ "title": "Which error would Python raise?",
+ "prompt": "Match each line to the exception it causes. Then try some in the code cell above to check.",
+ "buckets": [
+  "ValueError",
+  "TypeError",
+  "KeyError",
+  "IndexError",
+  "ZeroDivisionError"
+ ],
+ "items": [
+  {
+   "text": "int(\"abc\")",
+   "code": true,
+   "bucket": "ValueError",
+   "why": "The type is right (a string), but the value can't become a number."
+  },
+  {
+   "text": "\"total: \" + 5",
+   "code": true,
+   "bucket": "TypeError",
+   "why": "You can't add a string and a number."
+  },
+  {
+   "text": "{\"name\": \"Ada\"}[\"email\"]",
+   "code": true,
+   "bucket": "KeyError",
+   "why": "The dictionary has no \"email\" key."
+  },
+  {
+   "text": "[10, 20, 30][5]",
+   "code": true,
+   "bucket": "IndexError",
+   "why": "The list only has positions 0 to 2."
+  },
+  {
+   "text": "cart_total / 0",
+   "code": true,
+   "bucket": "ZeroDivisionError",
+   "why": "Dividing by zero is undefined."
+  }
+ ]
+}
 ```
 
 ### Checkpoint

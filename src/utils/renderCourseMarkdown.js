@@ -30,6 +30,11 @@ export const renderCourse = (markdown) => {
     if ((lang || '').toLowerCase() === 'mermaid') {
       return `<div class="course-mermaid" data-mermaid="1">${escapeHtml(code)}</div>`;
     }
+    // ```lab blocks hold a JSON activity config; the reader mounts the activity.
+    if ((lang || '').toLowerCase() === 'lab') {
+      const attr = (code || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return `<div class="course-lab" data-lab="${attr}"></div>`;
+    }
     const cls = lang ? ` class="language-${lang}"` : '';
     return `<pre><code${cls}>${escapeHtml(code)}</code></pre>`;
   };
