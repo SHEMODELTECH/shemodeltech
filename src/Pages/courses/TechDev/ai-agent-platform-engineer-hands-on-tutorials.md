@@ -695,7 +695,7 @@ access_control_project/
 
 **Goal:** Combine every project above into one complete platform supporting tool registration, task orchestration, monitoring, and access control, this is an integration exercise, not a new build.
 
-**Step 1: Set up your capstone project folder.**
+**Step 1: Create your capstone notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 Copy in the final versions of your code from Projects 2–7.
 

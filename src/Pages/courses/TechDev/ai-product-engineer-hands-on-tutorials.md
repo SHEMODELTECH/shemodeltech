@@ -87,7 +87,7 @@ ai_product_brief_project/
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `ai_feature_prototype_project`.
-Copy `brief.md` from Project 1 into this folder for reference.
+Keep your Project 1 brief open in another tab for reference.
 
 **Step 2: Get access to an LLM API.**
 An **API key** is a secret credential that authenticates your requests to a service, treat it like a password.
@@ -430,7 +430,7 @@ launch_plan_project/
 
 **Goal:** Combine every project above into one complete, presentable body of work, this is an integration exercise, not a new build.
 
-**Step 1: Set up your capstone project folder.**
+**Step 1: Create your capstone notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 Copy in the final versions of your deliverables from Projects 1–7.
 

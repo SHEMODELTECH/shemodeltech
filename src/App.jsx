@@ -155,7 +155,7 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <Router>
-          <div className="w-full min-h-screen overflow-x-hidden">
+          <div className="w-full min-h-screen overflow-x-clip">
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 {/* Public - no sidebar */}

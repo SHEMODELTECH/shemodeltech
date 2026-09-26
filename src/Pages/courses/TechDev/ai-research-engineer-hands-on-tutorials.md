@@ -80,7 +80,7 @@ paper_reproduction_project/
 
 **Goal:** Build the habit of understanding data before modeling it, the step most beginners skip and most experienced researchers insist on.
 
-**Step 1: Set up a project folder and environment.**
+**Step 1: Create the project notebook and install libraries.**
 Create a new notebook for this project (**File → New notebook**) and name it `data_exploration_project`.
 ```python
 %pip install pandas numpy matplotlib
@@ -521,7 +521,7 @@ research_report_project/
 
 **Goal:** Combine every project above into one complete research effort, this is an integration exercise, not a new build.
 
-**Step 1: Set up your capstone project folder.**
+**Step 1: Create your capstone notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
 
 **Step 2: Choose a paper, applying Project 1's approach.**

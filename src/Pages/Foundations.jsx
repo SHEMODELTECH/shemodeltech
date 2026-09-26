@@ -134,6 +134,7 @@ const Foundations = () => {
     const p = {};
     if (next.track) p.track = next.track;
     if (next.course) p.course = next.course;
+    if (next.part && next.part > 1) p.part = String(next.part);
     setParams(p);
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -196,6 +197,8 @@ const Foundations = () => {
           trackLabel={meta.label}
           isDone={!!done[activeCourse.slug]}
           next={courses[activeIndex + 1] || null}
+          part={Math.max(0, (parseInt(params.get('part'), 10) || 1) - 1)}
+          onPart={(i) => go({ track, course: activeCourse.slug, part: i + 1 })}
           onBack={() => go({ track })}
           onOpen={(slug) => go({ track, course: slug })}
           onComplete={() => markComplete(activeCourse.slug)}
@@ -361,37 +364,67 @@ const Foundations = () => {
 };
 
 // ============================ Course reader ============================
-const CourseReader = ({ course, index, total, trackLabel, isDone, next, onBack, onOpen, onComplete }) => {
-  const rendered = useMemo(() => renderCourse(course.markdown), [course]);
-  const proseRef = useRef(null);
-  const [readPct, setReadPct] = useState(0);
-  const [activeId, setActiveId] = useState(null);
-  const [tocOpen, setTocOpen] = useState(false);
-  const [floatOpen, setFloatOpen] = useState(false);
+// A course is shown one part at a time, with the list of parts in a sidebar
+// (a collapsible list on phones). Parts come from the course's "##" headings;
+// anything before the first heading becomes the "Overview" part.
 
-  // Reading progress bar along the top of the page.
+const stripTrailingRules = (html) => html.replace(/(\s*<hr\s*\/?>\s*)+$/i, '').replace(/^(\s*<hr\s*\/?>\s*)+/i, '');
+
+const splitParts = (html, toc) => {
+  const marks = [];
+  const re = /<h2 id="([^"]+)">/g;
+  let m;
+  while ((m = re.exec(html))) marks.push({ at: m.index, id: m[1] });
+  if (!marks.length) return [{ id: 'all', title: 'Overview', html }];
+  const parts = [];
+  const intro = stripTrailingRules(html.slice(0, marks[0].at));
+  const introText = intro.replace(/<h1[^>]*>.*?<\/h1>/is, '').replace(/<[^>]+>/g, '').trim();
+  let carry = '';
+  if (introText.length > 500) parts.push({ id: 'overview', title: 'Overview', html: intro });
+  else carry = intro; // a short intro: show it at the top of the first part instead
+  marks.forEach((mk, i) => {
+    const end = i + 1 < marks.length ? marks[i + 1].at : html.length;
+    const t = toc.find((x) => x.id === mk.id);
+    parts.push({
+      id: mk.id,
+      title: t ? t.text : `Part ${i + 1}`,
+      html: (i === 0 ? carry : '') + stripTrailingRules(html.slice(mk.at, end)),
+    });
+  });
+  return parts;
+};
+
+const CourseReader = ({ course, index, total, trackLabel, isDone, next, part, onPart, onBack, onOpen, onComplete }) => {
+  const rendered = useMemo(() => renderCourse(course.markdown), [course]);
+  const parts = useMemo(() => splitParts(rendered.html, rendered.toc), [rendered]);
+  const current = Math.min(Math.max(part, 0), parts.length - 1);
+  const isLast = current === parts.length - 1;
+  const proseRef = useRef(null);
+  const [scrollPct, setScrollPct] = useState(0);
+  const [listOpen, setListOpen] = useState(false);
+
+  // New part: start at the top.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    setListOpen(false);
+  }, [current]);
+
+  // Progress bar: parts finished plus how far through this part you've read.
   useEffect(() => {
     const onScroll = () => {
       const el = proseRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const span = el.offsetHeight - window.innerHeight * 0.6;
-      const pct = span > 0 ? Math.min(1, Math.max(0, -rect.top / span)) : 1;
-      setReadPct(pct);
-      // Highlight the section being read in the contents list.
-      let current = null;
-      rendered.toc.forEach((h) => {
-        const node = document.getElementById(h.id);
-        if (node && node.getBoundingClientRect().top < 140) current = h.id;
-      });
-      setActiveId(current);
+      setScrollPct(span > 0 ? Math.min(1, Math.max(0, -rect.top / span)) : 1);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [rendered]);
+  }, [current]);
+  const progress = (current + scrollPct) / parts.length;
 
-  // Turn ```mermaid blocks into diagrams. Loaded only when a course has one.
+  // Turn ```mermaid blocks into diagrams. Loaded only when a part has one.
   useEffect(() => {
     const container = proseRef.current;
     if (!container) return undefined;
@@ -405,7 +438,7 @@ const CourseReader = ({ course, index, total, trackLabel, isDone, next, onBack, 
         nodes.forEach((node, i) => {
           const src = node.textContent || '';
           node.removeAttribute('data-mermaid');
-          const id = `mmd-${course.slug}-${i}-${Math.random().toString(36).slice(2, 8)}`;
+          const id = `mmd-${course.slug}-${current}-${i}-${Math.random().toString(36).slice(2, 8)}`;
           mermaid
             .render(id, src)
             .then(({ svg }) => {
@@ -420,41 +453,21 @@ const CourseReader = ({ course, index, total, trackLabel, isDone, next, onBack, 
     return () => {
       cancelled = true;
     };
-  }, [rendered.html, course.slug]);
+  }, [current, course.slug, parts]);
 
-  useEffect(() => {
-    if (!floatOpen) return undefined;
-    const onKey = (e) => e.key === 'Escape' && setFloatOpen(false);
-    const onDown = (e) => {
-      if (!e.target.closest('.fd-float')) setFloatOpen(false);
-    };
-    document.addEventListener('keydown', onKey);
-    document.addEventListener('mousedown', onDown);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.removeEventListener('mousedown', onDown);
-    };
-  }, [floatOpen]);
-
-  const jump = (id) => {
-    setTocOpen(false);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const Contents = ({ onPick }) => (
+  const PartList = () => (
     <ol className="space-y-0.5">
-      {rendered.toc.map((h) => (
-        <li key={h.id}>
+      {parts.map((p, i) => (
+        <li key={p.id}>
           <button
-            onClick={() => {
-              if (onPick) onPick();
-              jump(h.id);
-            }}
-            className={`fd-toc ${activeId === h.id ? 'is-active' : ''}`}
-            aria-current={activeId === h.id ? 'location' : undefined}
+            onClick={() => onPart(i)}
+            className={`fd-part ${i === current ? 'is-active' : ''} ${i < current ? 'is-past' : ''}`}
+            aria-current={i === current ? 'page' : undefined}
           >
-            {h.text}
+            <span className="fd-part-num" aria-hidden="true">
+              {i < current ? <CheckIcon className="w-3 h-3" /> : i + 1}
+            </span>
+            <span className="min-w-0">{p.title}</span>
           </button>
         </li>
       ))}
@@ -463,7 +476,7 @@ const CourseReader = ({ course, index, total, trackLabel, isDone, next, onBack, 
 
   return (
     <div>
-      <div className="fd-readbar" style={{ transform: `scaleX(${readPct})` }} aria-hidden="true" />
+      <div className="fd-readbar" style={{ transform: `scaleX(${progress})` }} aria-hidden="true" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
@@ -480,88 +493,107 @@ const CourseReader = ({ course, index, total, trackLabel, isDone, next, onBack, 
           </span>
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          {/* Contents. Kept in normal flow (plus a floating button below):
-              the app's page wrappers stop position:sticky from working. */}
-          {rendered.toc.length > 1 && (
-            <div className="border border-gray-200 rounded-xl bg-white mb-8">
+        <div className="grid lg:grid-cols-[260px_minmax(0,1fr)] gap-8 lg:gap-10 items-start">
+          {/* Parts: sidebar on desktop */}
+          <aside className="hidden lg:block fd-side" aria-label="Course parts">
+            <p className="text-sm font-bold text-gray-900 px-2 leading-snug">{course.title}</p>
+            <p className="text-xs text-gray-500 px-2 mt-1 mb-3">
+              Part {current + 1} of {parts.length}
+            </p>
+            <PartList />
+          </aside>
+
+          <div className="min-w-0">
+            {/* Parts: collapsible list on phones and tablets */}
+            <div className="lg:hidden border border-gray-200 rounded-xl bg-white mb-6">
               <button
-                onClick={() => setTocOpen((o) => !o)}
-                aria-expanded={tocOpen}
-                className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-900"
+                onClick={() => setListOpen((o) => !o)}
+                aria-expanded={listOpen}
+                className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left"
               >
-                In this course: {rendered.toc.length} parts
-                <svg className={`w-4 h-4 text-gray-400 transition-transform ${tocOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <span className="min-w-0">
+                  <span className="block text-xs text-gray-500">Part {current + 1} of {parts.length}</span>
+                  <span className="block text-sm font-semibold text-gray-900 truncate">{parts[current].title}</span>
+                </span>
+                <svg className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${listOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              {tocOpen && (
+              {listOpen && (
                 <div className="border-t border-gray-100 px-2 py-2 max-h-80 overflow-y-auto">
-                  <Contents />
+                  <PartList />
                 </div>
               )}
             </div>
-          )}
 
-          <article>
-            <div ref={proseRef} className="course-prose" dangerouslySetInnerHTML={{ __html: rendered.html }} />
+            <article>
+              <div
+                ref={proseRef}
+                key={parts[current].id}
+                className="course-prose"
+                dangerouslySetInnerHTML={{ __html: parts[current].html }}
+              />
 
-            {/* Finish line */}
-            <div className="fd-finish">
-              {!isDone ? (
-                <>
-                  <div>
-                    <p className="font-semibold text-gray-900">Finished this course?</p>
-                    <p className="text-sm text-gray-600 mt-0.5">Mark it complete to track your progress in {trackLabel}.</p>
-                  </div>
-                  <button onClick={onComplete} className="fd-btn">
-                    <CheckIcon className="w-4 h-4" />
-                    Mark as complete
+              {/* Part navigation */}
+              <nav className="fd-pager" aria-label="Part navigation">
+                {current > 0 ? (
+                  <button onClick={() => onPart(current - 1)} className="fd-pg">
+                    <span className="text-xs text-gray-500">Previous</span>
+                    <span className="block font-semibold text-gray-900 mt-0.5 truncate">{parts[current - 1].title}</span>
                   </button>
-                </>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <span className="fd-node fd-node-static" aria-hidden="true">
-                    <CheckIcon />
-                  </span>
-                  <p className="font-semibold text-gray-900">You completed this course.</p>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <span />
+                )}
+                {!isLast && (
+                  <button onClick={() => onPart(current + 1)} className="fd-pg fd-pg-next">
+                    <span className="text-xs text-gray-500">Next</span>
+                    <span className="block font-semibold text-gray-900 mt-0.5 truncate">{parts[current + 1].title}</span>
+                  </button>
+                )}
+              </nav>
 
-            {next ? (
-              <button onClick={() => onOpen(next.slug)} className="fd-next">
-                <span className="text-xs text-gray-500">Next course</span>
-                <span className="block font-semibold text-gray-900 mt-0.5">{cleanTitle(next.title)}</span>
-              </button>
-            ) : (
-              <button onClick={onBack} className="fd-next">
-                <span className="text-xs text-gray-500">That was the last course in this track</span>
-                <span className="block font-semibold text-gray-900 mt-0.5">Back to {trackLabel}</span>
-              </button>
-            )}
-          </article>
+              {/* Finish line, on the last part */}
+              {isLast && (
+                <>
+                  <div className="fd-finish">
+                    {!isDone ? (
+                      <>
+                        <div>
+                          <p className="font-semibold text-gray-900">Finished this course?</p>
+                          <p className="text-sm text-gray-600 mt-0.5">Mark it complete to track your progress in {trackLabel}.</p>
+                        </div>
+                        <button onClick={onComplete} className="fd-btn">
+                          <CheckIcon className="w-4 h-4" />
+                          Mark as complete
+                        </button>
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <span className="fd-node fd-node-static" aria-hidden="true">
+                          <CheckIcon />
+                        </span>
+                        <p className="font-semibold text-gray-900">You completed this course.</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {next ? (
+                    <button onClick={() => onOpen(next.slug)} className="fd-next">
+                      <span className="text-xs text-gray-500">Next course</span>
+                      <span className="block font-semibold text-gray-900 mt-0.5">{next.title}</span>
+                    </button>
+                  ) : (
+                    <button onClick={onBack} className="fd-next">
+                      <span className="text-xs text-gray-500">That was the last course in this track</span>
+                      <span className="block font-semibold text-gray-900 mt-0.5">Back to {trackLabel}</span>
+                    </button>
+                  )}
+                </>
+              )}
+            </article>
+          </div>
         </div>
       </div>
-
-      {/* Floating contents: always reachable while reading a long course. */}
-      {rendered.toc.length > 1 && readPct > 0.02 && (
-        <div className="fd-float">
-          {floatOpen && (
-            <div className="fd-pop" role="dialog" aria-label="Course contents">
-              <Contents onPick={() => setFloatOpen(false)} />
-            </div>
-          )}
-          <button onClick={() => setFloatOpen((o) => !o)} aria-expanded={floatOpen} className="fd-fab">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h10" />
-            </svg>
-            <span className="truncate max-w-[14rem]">
-              {rendered.toc.find((h) => h.id === activeId)?.text || 'Contents'}
-            </span>
-          </button>
-        </div>
-      )}
     </div>
   );
 };
@@ -579,7 +611,7 @@ const FD_CSS = `
 .fd-chip:hover { border-color:#D1D5DB; }
 .fd-chip.is-active { border-color:var(--c); background:var(--t); }
 .fd-chip:focus-visible, .fd-card:focus-visible, .fd-btn:focus-visible, .fd-next:focus-visible,
-.fd-back:focus-visible, .fd-link:focus-visible, .fd-toc:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+.fd-back:focus-visible, .fd-link:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
 
 .fd-btn { display:inline-flex; align-items:center; gap:.45rem; background:var(--acc); color:#fff; font-weight:600;
   font-size:.875rem; padding:.6rem 1.1rem; border-radius:.7rem; transition:filter .15s; }
@@ -617,18 +649,22 @@ const FD_CSS = `
 /* Reader */
 .fd-readbar { position:fixed; top:0; left:0; right:0; height:3px; background:var(--acc); transform-origin:0 50%;
   z-index:60; transition:transform .1s linear; }
-.fd-toc { display:block; width:100%; text-align:left; font-size:.82rem; line-height:1.35; color:#4B5563;
-  padding:.4rem .6rem; border-radius:.5rem; border-left:2px solid transparent; }
-.fd-toc:hover { background:#F9FAFB; color:#111827; }
-.fd-toc.is-active { color:var(--acc); border-left-color:var(--acc); background:var(--tint); font-weight:600; }
-.fd-float { position:fixed; right:1rem; bottom:5.5rem; z-index:45; display:flex; flex-direction:column; align-items:flex-end; gap:.5rem; }
-@media (min-width:1024px) { .fd-float { right:2rem; bottom:2rem; } }
-.fd-fab { display:inline-flex; align-items:center; gap:.5rem; background:#fff; color:#111827; font-size:.8rem; font-weight:600;
-  padding:.55rem .9rem; border-radius:999px; border:1px solid #E5E7EB; box-shadow:0 6px 20px rgba(17,24,39,.12); }
-.fd-fab:hover { border-color:var(--acc); }
-.fd-fab:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
-.fd-pop { width:min(20rem, calc(100vw - 2rem)); max-height:60vh; overflow-y:auto; background:#fff; border:1px solid #E5E7EB;
-  border-radius:1rem; padding:.5rem; box-shadow:0 12px 32px rgba(17,24,39,.16); }
+.fd-side { position:sticky; top:6rem; max-height:calc(100vh - 7.5rem); overflow-y:auto; padding-right:.25rem; }
+.fd-part { display:flex; align-items:flex-start; gap:.6rem; width:100%; text-align:left; font-size:.84rem; line-height:1.35;
+  color:#4B5563; padding:.5rem .6rem; border-radius:.6rem; }
+.fd-part:hover { background:#F9FAFB; color:#111827; }
+.fd-part.is-active { background:var(--tint); color:#111827; font-weight:600; }
+.fd-part:focus-visible { outline:2px solid var(--acc); outline-offset:1px; }
+.fd-part-num { width:20px; height:20px; flex-shrink:0; border-radius:999px; display:flex; align-items:center; justify-content:center;
+  font-size:.68rem; font-weight:700; background:#F3F4F6; color:#6B7280; margin-top:1px; }
+.fd-part.is-active .fd-part-num { background:var(--acc); color:#fff; }
+.fd-part.is-past .fd-part-num { background:var(--tint); color:var(--acc); }
+.fd-pager { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; margin-top:2.5rem; }
+.fd-pg { display:block; min-width:0; text-align:left; padding:.9rem 1.1rem; border-radius:1rem; border:1px solid #E5E7EB; background:#fff; transition:border-color .15s; }
+.fd-pg:hover { border-color:var(--acc); }
+.fd-pg:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+.fd-pg-next { grid-column:2; text-align:right; }
+@media (max-width:480px) { .fd-pager { grid-template-columns:1fr; } .fd-pg-next { grid-column:1; } }
 .fd-finish { margin-top:2.5rem; padding:1.15rem 1.25rem; border-radius:1rem; background:var(--tint);
   display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; }
 .fd-next { display:block; width:100%; text-align:left; margin-top:1rem; padding:1rem 1.25rem; border-radius:1rem;
@@ -644,6 +680,7 @@ const FD_CSS = `
 .course-prose h1 { font-family:'Archivo Black', system-ui, sans-serif; font-size:1.9rem; font-weight:400; color:#111827;
   line-height:1.15; margin:0 0 .75rem; letter-spacing:-.01em; }
 .course-prose h1 + p { color:#4B5563; font-size:1.05rem; }
+.course-prose > h2:first-child { margin-top:0; padding-top:0; border-top:0; }
 .course-prose h2 { font-size:1.35rem; font-weight:800; color:#111827; margin:2.6rem 0 .75rem; padding-top:1.4rem;
   border-top:1px solid #F3F4F6; scroll-margin-top:6rem; }
 .course-prose h3 { font-size:1.05rem; font-weight:700; color:#1F2937; margin:1.6rem 0 .5rem; }

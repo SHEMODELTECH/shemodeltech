@@ -64,13 +64,24 @@ const firstParagraph = (md) => {
 };
 
 // Shift every heading up one level (## -> #, ### -> ##, ...), outside code fences.
+// Only the first "##" becomes the title; later "##" headings (such as a
+// "Completion Checklist") stay as sections.
 const promoteHeadings = (md) => {
   let inFence = false;
+  let titleDone = false;
   return md
     .split('\n')
     .map((line) => {
       if (/^\s*```/.test(line)) inFence = !inFence;
-      if (!inFence && /^#{2,6}\s/.test(line)) return line.slice(1);
+      if (inFence) return line;
+      if (/^##\s/.test(line)) {
+        if (!titleDone) {
+          titleDone = true;
+          return line.slice(1);
+        }
+        return line;
+      }
+      if (/^#{3,6}\s/.test(line)) return line.slice(1);
       return line;
     })
     .join('\n');
