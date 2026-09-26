@@ -34,6 +34,9 @@ service cloud.firestore {
  function isAdmin() {
  return hasProfile() && myUserDoc().role == 'admin';
  }
+ function isTeacherUser() {
+ return hasProfile() && myUserDoc().get('isTeacher', false) == true;
+ }
  function isReviewer() {
  return hasProfile()
  && (myUserDoc().role == 'admin' || myUserDoc().role == 'editor');
@@ -71,7 +74,11 @@ service cloud.firestore {
  && !touched('badgeCount')
  // Company verification is granted by an admin, never self-set:
  // it is what allows a company to post paid projects.
- && !touched('isVerified');
+ && !touched('isVerified')
+ // Teacher access is granted by an admin, never self-set.
+ && !touched('isTeacher')
+ && !touched('teacherSince')
+ && !touched('teacherAssignedBy');
 
  allow update: if isAdmin();
 
@@ -253,22 +260,48 @@ service cloud.firestore {
  // Teacher materials: teaching notes and instructor editions for staff only.
  // Never readable by members or companies. Deleting a whole course is admin-only.
  match /teacher_courses/{id} {
+ // Staff: full control (deleting a whole course is admin-only).
  allow read, create, update: if isReviewer();
  allow delete: if isAdmin();
+ // Teachers: read everything; create and edit only their own; never publish
+ // (publishing is staff-only), but they may request it.
+ allow read: if isTeacherUser();
+ allow create: if isTeacherUser()
+ && request.resource.data.createdBy.uid == myUid()
+ && !('published' in request.resource.data);
+ allow update: if isTeacherUser()
+ && resource.data.createdBy.uid == myUid()
+ && request.resource.data.createdBy.uid == myUid()
+ && !touched('published');
+ allow delete: if isTeacherUser()
+ && resource.data.createdBy.uid == myUid()
+ && resource.data.get('published', null) == null;
  match /chunks/{n} {
  allow read, write: if isReviewer();
+ allow read: if isTeacherUser();
+ // getAfter: in a batch the course doc may be created in the same write.
+ allow write: if isTeacherUser()
+ && (
+ (existsAfter(/databases/$(database)/documents/teacher_courses/$(id))
+ && getAfter(/databases/$(database)/documents/teacher_courses/$(id)).data.createdBy.uid == myUid())
+ || (exists(/databases/$(database)/documents/teacher_courses/$(id))
+ && get(/databases/$(database)/documents/teacher_courses/$(id)).data.createdBy.uid == myUid())
+ );
  }
  }
 
- // Courses published to Learning from Teacher. Public to read, like the rest of
- // the Learning catalog; only admins and editors can publish, update, or remove.
- match /learning_courses/{id} {
- allow read: if true;
- allow write: if isReviewer();
- match /chunks/{n} {
- allow read: if true;
- allow write: if isReviewer();
- }
+ // Applications to become a teacher. One per person (doc id = their uid).
+ match /teacher_applications/{uid} {
+ allow read: if isSignedIn() && (uid == myUid() || isReviewer());
+ allow create: if isSignedIn() && uid == myUid()
+ && request.resource.data.applicantUid == myUid()
+ && request.resource.data.status == 'pending';
+ // Re-apply after a decline.
+ allow update: if isSignedIn() && uid == myUid()
+ && resource.data.status == 'declined'
+ && request.resource.data.status == 'pending'
+ && request.resource.data.applicantUid == myUid();
+ allow update, delete: if isAdmin();
  }
 
  // Project deletion requests: a lead asks an admin to delete their project.

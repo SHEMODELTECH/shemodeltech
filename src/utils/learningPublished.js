@@ -124,6 +124,7 @@ export const publishToLearning = async (teacherCourse, content, details, user) =
         at: serverTimestamp(),
         by: who(user),
       },
+      publishRequested: null,
     },
     { merge: true }
   );

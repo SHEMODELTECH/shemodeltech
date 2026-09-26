@@ -13,7 +13,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
@@ -47,41 +47,54 @@ const trackLabel = (t) => (TRACKS.find(([id]) => id === t) || TRACKS[0])[1];
 const fmtSize = (b) => (b >= 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`);
 const fmtDate = (ts) => (ts?.toDate ? ts.toDate().toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '');
 
-// ---------- Role gate ----------
-const useStaffRole = () => {
+// ---------- Access ----------
+// Staff (admins and editors) manage everything. Teachers (approved by an admin)
+// see all materials and create and edit their own; publishing to students goes
+// through staff as a request.
+const useTeacherAccess = () => {
   const { currentUser } = useAuth();
-  const [role, setRole] = useState(null);
+  const [access, setAccess] = useState(null);
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid))
-      .then((s) => setRole(s.data()?.role || 'member'))
-      .catch(() => setRole('member'));
+      .then((s) => {
+        const d = s.data() || {};
+        const role = d.role || 'member';
+        const isStaff = role === 'admin' || role === 'editor';
+        setAccess({ role, isStaff, isAdmin: role === 'admin', isTeacher: !!d.isTeacher || isStaff, uid: currentUser.uid });
+      })
+      .catch(() => setAccess({ role: 'member', isStaff: false, isAdmin: false, isTeacher: false, uid: currentUser.uid }));
   }, [currentUser]);
-  return role;
+  return access;
 };
 
 const Gate = ({ children }) => {
-  const role = useStaffRole();
-  if (role === null) {
+  const access = useTeacherAccess();
+  if (access === null) {
     return (
       <div className="flex justify-center py-24">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500" />
       </div>
     );
   }
-  if (role !== 'admin' && role !== 'editor') {
+  if (!access.isTeacher) {
     return (
       <div className="max-w-lg mx-auto text-center py-24 px-4">
-        <h1 className="text-xl font-bold text-gray-900">This page is for She Model Tech staff</h1>
-        <p className="text-gray-600 mt-2">Teaching materials are available to admins and editors only.</p>
-        <Link to="/learning" className="inline-block mt-5 text-pink-700 font-semibold hover:underline">
-          Go to Learning
-        </Link>
+        <h1 className="text-xl font-bold text-gray-900">Teacher is for approved teachers</h1>
+        <p className="text-gray-600 mt-2">Teaching materials are available to teachers and She Model Tech staff.</p>
+        <div className="flex justify-center gap-4 mt-5">
+          <Link to="/teach" className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg">
+            Apply to become a teacher
+          </Link>
+          <Link to="/learning" className="text-sm font-semibold text-gray-700 px-3 py-2 hover:underline">Go to Learning</Link>
+        </div>
       </div>
     );
   }
-  return children(role);
+  return children(access);
 };
+
+const canEdit = (access, c) => access.isStaff || (c?.createdBy?.uid && c.createdBy.uid === access.uid);
 
 const StatusTag = ({ status }) => (
   <span
@@ -94,7 +107,7 @@ const StatusTag = ({ status }) => (
 );
 
 // ================= List =================
-const TeacherList = ({ role }) => {
+const TeacherList = ({ access }) => {
   const navigate = useNavigate();
   const [items, setItems] = useState(null);
   const [q, setQ] = useState('');
@@ -136,8 +149,8 @@ const TeacherList = ({ role }) => {
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Teacher</h1>
           <p className="text-gray-600 mt-1 max-w-2xl">
-            Create and manage courses. Choose who each one is for: teachers (stays here, staff only) or students
-            (published to Learning). Only admins and editors can see this page.
+            Create and manage courses. Choose who each one is for: teachers (stays here) or students (published to
+            Learning). Only She Model Tech staff and approved teachers can see this page.
           </p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
@@ -218,6 +231,9 @@ const TeacherList = ({ role }) => {
                 <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${c.published ? 'bg-pink-50 text-pink-700' : 'bg-indigo-50 text-indigo-700'}`}>
                   {c.published ? 'For students' : 'For teachers'}
                 </span>
+                {!c.published && c.publishRequested && (
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">Awaiting publishing</span>
+                )}
               </div>
               <Link to={`/teacher/${c.id}`} className="font-semibold text-gray-900 hover:underline leading-snug">
                 {c.title || 'Untitled'}
@@ -233,10 +249,12 @@ const TeacherList = ({ role }) => {
                 <button onClick={() => navigate(`/teacher/${c.id}`)} className="text-sm font-semibold bg-gray-900 text-white px-3 py-1.5 rounded-lg">
                   Open
                 </button>
-                <button onClick={() => navigate(`/teacher/${c.id}/edit`)} className="text-sm font-semibold border border-gray-300 text-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-50">
-                  Edit
-                </button>
-                {role === 'admin' && (
+                {canEdit(access, c) && (
+                  <button onClick={() => navigate(`/teacher/${c.id}/edit`)} className="text-sm font-semibold border border-gray-300 text-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-50">
+                    Edit
+                  </button>
+                )}
+                {(access.isAdmin || (!access.isStaff && canEdit(access, c))) && (
                   <button onClick={() => remove(c)} className="ml-auto text-sm font-semibold text-red-700 px-2 py-1.5 rounded-lg hover:bg-red-50">
                     Delete
                   </button>
@@ -317,7 +335,7 @@ const VideoLessonsEditor = ({ content, onChange }) => {
 };
 
 // ================= Editor (create + edit) =================
-const TeacherEditor = () => {
+const TeacherEditor = ({ access }) => {
   const { id } = useParams();
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -352,6 +370,11 @@ const TeacherEditor = () => {
         navigate('/teacher');
         return;
       }
+      if (!canEdit(access, c)) {
+        toast.error('Only its author or staff can edit this.');
+        navigate(`/teacher/${id}`);
+        return;
+      }
       setExisting(c);
       setMeta({
         title: c.title || '',
@@ -361,7 +384,7 @@ const TeacherEditor = () => {
         status: c.status || 'draft',
         fileName: c.fileName || '',
       });
-      setAudience(c.published ? 'students' : 'teachers');
+      setAudience(c.published || c.publishRequested ? 'students' : 'teachers');
       if (c.published) {
         const pubDoc = await getPublished(c.published.learningId).catch(() => null);
         if (pubDoc) setPubDetails({ level: pubDoc.level || 'Beginner', minutes: pubDoc.minutes ? String(pubDoc.minutes) : '' });
@@ -412,6 +435,19 @@ const TeacherEditor = () => {
         currentUser
       );
       const saved = { ...(existing || {}), id: newId, kind: meta.kind };
+      if (!access.isStaff) {
+        // Teachers ask staff to publish for students; staff review it first.
+        await updateDoc(doc(db, 'teacher_courses', newId), {
+          publishRequested:
+            audience === 'students'
+              ? { at: new Date().toISOString(), by: currentUser.email || '', name: currentUser.displayName || currentUser.email || '', level: pubDetails.level, minutes: pubDetails.minutes || '' }
+              : null,
+        });
+        toast.success(audience === 'students' ? 'Saved and sent to editors to publish for students.' : 'Saved.');
+        navigate(`/teacher/${newId}`);
+        setSaving(false);
+        return;
+      }
       if (audience === 'students') {
         await publishToLearning(
           saved,
@@ -464,7 +500,7 @@ const TeacherEditor = () => {
           <div className="grid sm:grid-cols-2 gap-3 mt-1">
             {[
               ['teachers', 'Teachers', 'Teaching notes and instructor editions. Stays in Teacher, visible to admins and editors only.'],
-              ['students', 'Students', 'A course for learners. Published to the Learning platform, where anyone can find it.'],
+              ['students', 'Students', access.isStaff ? 'A course for learners. Published to the Learning platform, where anyone can find it.' : 'A course for learners. Sent to our editors, who review it and publish it to Learning.'],
             ].map(([val, title, desc]) => (
               <label
                 key={val}
@@ -628,7 +664,7 @@ const TeacherEditor = () => {
         <div className="flex gap-3 pt-2">
           <button onClick={save} disabled={saving}
             className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-60">
-            {saving ? 'Saving...' : audience === 'students' ? (existing?.published ? 'Save and update in Learning' : 'Save and publish to Learning') : id ? 'Save changes' : 'Save'}
+            {saving ? 'Saving...' : audience === 'students' ? (!access.isStaff ? 'Save and send for publishing' : existing?.published ? 'Save and update in Learning' : 'Save and publish to Learning') : id ? 'Save changes' : 'Save'}
           </button>
           <button onClick={() => navigate(id ? `/teacher/${id}` : '/teacher')}
             className="text-sm font-semibold text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-100">
@@ -652,10 +688,11 @@ const PublishPanel = ({ course, content, onChange }) => {
     title: course.title || '',
     summary: course.description || '',
     track: course.published?.track || course.track || '',
-    level: 'Beginner',
-    minutes: '',
+    level: course.publishRequested?.level || 'Beginner',
+    minutes: course.publishRequested?.minutes || '',
   });
   const pub = course.published;
+  const req = !pub && course.publishRequested;
   const learnUrl = pub ? `/learning/${pub.track}/${PUBLISHED_PREFIX}${pub.learningId}` : null;
 
   const publish = async () => {
@@ -665,7 +702,7 @@ const PublishPanel = ({ course, content, onChange }) => {
     setBusy(true);
     try {
       const learningId = await publishToLearning(course, content, f, currentUser);
-      onChange({ ...course, published: { learningId, track: f.track } });
+      onChange({ ...course, published: { learningId, track: f.track }, publishRequested: null });
       setOpen(false);
       toast.success(pub ? 'Published version updated.' : 'Published to Learning.');
     } catch (e) {
@@ -699,9 +736,14 @@ const PublishPanel = ({ course, content, onChange }) => {
               <strong className="text-emerald-700">Published in Learning</strong> under {trackLabel(pub.track)}. Edits here
               reach students only when you update the published version.
             </>
+          ) : req ? (
+            <>
+              <strong className="text-amber-700">{req.name || req.by} asked to publish this for students.</strong> Review it,
+              then publish.
+            </>
           ) : (
             <>
-              <strong>Only staff can see this.</strong> Publish it to make a copy students can take in Learning.
+              <strong>For teachers.</strong> Publish it to make a copy students can take in Learning.
             </>
           )}
         </p>
@@ -772,7 +814,7 @@ const PublishPanel = ({ course, content, onChange }) => {
 };
 
 // ================= Viewer =================
-const TeacherViewer = () => {
+const TeacherViewer = ({ access }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
@@ -855,11 +897,25 @@ const TeacherViewer = () => {
             Full screen
           </button>
           <button onClick={download} className="text-sm font-semibold border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">Download</button>
-          <button onClick={() => navigate(`/teacher/${id}/edit`)} className="text-sm font-semibold bg-gray-900 text-white px-3 py-2 rounded-lg">Edit</button>
+          {canEdit(access, course) && (
+            <button onClick={() => navigate(`/teacher/${id}/edit`)} className="text-sm font-semibold bg-gray-900 text-white px-3 py-2 rounded-lg">Edit</button>
+          )}
         </div>
       </div>
 
-      <PublishPanel course={course} content={content} onChange={setCourse} />
+      {access.isStaff ? (
+        <PublishPanel course={course} content={content} onChange={setCourse} />
+      ) : (
+        <div className="mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700">
+          {course.published ? (
+            <><strong className="text-emerald-700">Published in Learning</strong> for students.</>
+          ) : course.publishRequested ? (
+            <><strong className="text-amber-700">Sent for publishing.</strong> An editor will review it and publish it to Learning.</>
+          ) : (
+            <><strong>For teachers.</strong> Visible to teachers and staff only.</>
+          )}
+        </div>
+      )}
 
       {course.kind === 'html' ? (
         // Sandboxed: scripts run, but the course can't reach the app, its login,
@@ -967,7 +1023,7 @@ const TeacherFullScreen = () => {
 };
 
 export const TeacherFull = () => <Gate>{() => <TeacherFullScreen />}</Gate>;
-export const TeacherHome = () => <Gate>{(role) => <TeacherList role={role} />}</Gate>;
-export const TeacherEdit = () => <Gate>{() => <TeacherEditor />}</Gate>;
-export const TeacherView = () => <Gate>{() => <TeacherViewer />}</Gate>;
+export const TeacherHome = () => <Gate>{(access) => <TeacherList access={access} />}</Gate>;
+export const TeacherEdit = () => <Gate>{(access) => <TeacherEditor access={access} />}</Gate>;
+export const TeacherView = () => <Gate>{(access) => <TeacherViewer access={access} />}</Gate>;
 export default TeacherHome;

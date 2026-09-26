@@ -31,6 +31,7 @@ const LearningCourse = lazy(() => import('./Pages/learning/LearningCourse'));
 const TeacherHome = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherHome })));
 const TeacherEdit = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherEdit })));
 const TeacherView = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherView })));
+const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
 const MembersDirectory = lazy(() => import('./Pages/MembersDirectory'));
@@ -173,6 +174,7 @@ function App() {
                 <Route path="/about" element={<About />} />
 
                 {/* She Model Tech Learning: public catalog, its own layout (no app sidebar) */}
+                <Route path="/teach" element={<TeachApply />} />
                 <Route path="/learning" element={<LearningHome />} />
                 <Route path="/learning/my" element={<LearningHome mine />} />
                 <Route path="/learning/:track/:slug" element={<LearningCourse />} />

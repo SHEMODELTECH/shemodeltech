@@ -32,6 +32,7 @@ import {
 } from '../../utils/projectReview';
 import { clearAllTestData } from '../../utils/adminDataReset';
 import { sendPush } from '../../utils/pushNotifications';
+import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTeacher } from '../../utils/teachers';
 
 const fmtDate = (ts) => {
   try {
@@ -78,6 +79,7 @@ const AdminPanel = () => {
   // --- Reviews tab ---
   const [reviewProjects, setReviewProjects] = useState([]);
   const [deletionReqs, setDeletionReqs] = useState([]);
+  const [teacherApps, setTeacherApps] = useState(null);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [feedbackById, setFeedbackById] = useState({});
   const [actingId, setActingId] = useState(null);
@@ -143,6 +145,42 @@ const AdminPanel = () => {
   useEffect(() => {
     if (tab === 'reviews' && isAdmin) loadReviews();
   }, [tab, isAdmin, loadReviews]);
+
+  // Teachers: applications to review, and who currently teaches.
+  useEffect(() => {
+    if (tab === 'teachers' && isAdmin) {
+      listTeacherApplications()
+        .then(setTeacherApps)
+        .catch(() => setTeacherApps([]));
+    }
+  }, [tab, isAdmin]);
+
+  const decideTeacher = async (app, approve) => {
+    const note = approve ? '' : window.prompt('Optional note to the applicant (why, or what to add next time):', '') ;
+    if (note === null) return;
+    try {
+      await decideTeacherApplication(app, approve, currentUser, note || '');
+      setTeacherApps((xs) => xs.map((x) => (x.id === app.id ? { ...x, status: approve ? 'approved' : 'declined' } : x)));
+      if (approve) setUsers((prev) => prev.map((u) => (u.id === app.applicantUid ? { ...u, isTeacher: true } : u)));
+      toast.success(approve ? `${app.applicantName} is now a teacher.` : 'Application declined.');
+    } catch (e) {
+      console.error(e);
+      toast.error('Could not update the application.');
+    }
+  };
+
+  const toggleTeacher = async (u) => {
+    const make = !u.isTeacher;
+    if (!window.confirm(`${make ? 'Make' : 'Remove'} teacher: ${u.displayName || u.email}?`)) return;
+    try {
+      await setTeacher(u.id, make, currentUser);
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, isTeacher: make } : x)));
+      toast.success(make ? 'They are now a teacher.' : 'Teacher access removed.');
+    } catch (e) {
+      console.error(e);
+      toast.error('Update failed.');
+    }
+  };
 
   useEffect(() => {
     if (tab === 'deletions' && isAdmin) {
@@ -488,6 +526,7 @@ const AdminPanel = () => {
     ['reviews', 'Reviews'],
     ['projects', 'Projects'],
     ['users', 'Users'],
+    ...(isAdmin ? [['teachers', 'Teachers']] : []),
     ['moderation', 'Moderation'],
     ['deletions', 'Deletion Requests'],
     ['danger', 'Danger Zone'],
@@ -861,6 +900,11 @@ const AdminPanel = () => {
                         COMPANY
                       </span>
                     )}
+                    {u.isTeacher && (
+                      <span className="ml-2 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">
+                        TEACHER
+                      </span>
+                    )}
                     {u.isCompany && u.isVerified && (
                       <span className="ml-2 text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
                         VERIFIED
@@ -878,6 +922,14 @@ const AdminPanel = () => {
                       className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${u.isVerified ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-purple-600 text-white hover:bg-purple-700'}`}
                     >
                       {u.isVerified ? 'Unverify company' : 'Verify company'}
+                    </button>
+                  )}
+                  {isAdmin && !u.isCompany && (
+                    <button
+                      onClick={() => toggleTeacher(u)}
+                      className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${u.isTeacher ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+                    >
+                      {u.isTeacher ? 'Remove teacher' : 'Make teacher'}
                     </button>
                   )}
                   <button
@@ -905,6 +957,71 @@ const AdminPanel = () => {
       {/* GENERATE */}
 
       {/* SEED (dummy Proof Wall content) */}
+
+      {/* TEACHERS */}
+      {!loadingData && tab === 'teachers' && isAdmin && (
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-gray-900 font-bold mb-2">Applications</h3>
+            {teacherApps === null ? (
+              <p className="text-gray-400 text-sm">Loading...</p>
+            ) : teacherApps.filter((a) => a.status === 'pending').length === 0 ? (
+              <p className="text-gray-400 text-sm">No pending applications.</p>
+            ) : (
+              <div className="space-y-3">
+                {teacherApps
+                  .filter((a) => a.status === 'pending')
+                  .map((a) => (
+                    <div key={a.id} className="bg-white border border-gray-200 rounded-xl p-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-gray-900 font-semibold">{a.applicantName}</p>
+                          <p className="text-gray-400 text-xs">{a.applicantEmail} · applied {fmtDate(a.createdAt)}</p>
+                          <p className="text-xs text-gray-600 mt-1">
+                            Tracks: {(a.tracks || []).map((t) => (TEACH_TRACKS.find(([id]) => id === t) || [t, t])[1]).join(', ') || 'none'}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={() => decideTeacher(a, true)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">
+                            Approve
+                          </button>
+                          <button onClick={() => decideTeacher(a, false)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            Decline
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-800 mt-3"><strong>Experience:</strong> {a.experience}</p>
+                      <p className="text-sm text-gray-800 mt-1"><strong>Why:</strong> {a.motivation}</p>
+                      {a.links && <p className="text-sm text-gray-800 mt-1 break-words"><strong>Links:</strong> {a.links}</p>}
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+          <div>
+            <h3 className="text-gray-900 font-bold mb-2">Current teachers</h3>
+            {users.filter((u) => u.isTeacher).length === 0 ? (
+              <p className="text-gray-400 text-sm">No teachers yet. Approve an application, or use "Make teacher" in Users.</p>
+            ) : (
+              <div className="space-y-2">
+                {users
+                  .filter((u) => u.isTeacher)
+                  .map((u) => (
+                    <div key={u.id} className="bg-white border border-gray-200 rounded-lg p-3 flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-gray-900 text-sm font-medium truncate">{u.displayName || u.email}</p>
+                        <p className="text-gray-400 text-xs truncate">{u.email}</p>
+                      </div>
+                      <button onClick={() => toggleTeacher(u)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                        Remove teacher
+                      </button>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* MODERATION */}
       {!loadingData && tab === 'moderation' && (
