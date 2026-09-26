@@ -18,6 +18,7 @@
 //       'markdown'  notes written on the page, rendered like Learning courses
 
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -25,6 +26,8 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
+  where,
   writeBatch,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -135,3 +138,91 @@ export const lessonsToMarkdown = (lessons) =>
 
 // What the reader shows for any teacher course kind.
 export const displayMarkdown = (kind, content) => (kind === 'video' ? lessonsToMarkdown(parseLessons(content)) : content);
+
+// ---- Review: teacher courses for students need admin approval ----
+// review.status: 'pending'   submitted, waiting for an admin (teacher can edit or withdraw)
+//                'declined'  not approved; the note says why (teacher can edit and resubmit)
+//                'withdrawn' pulled back by the teacher (can resubmit)
+//                'approved'  published to Learning by an admin
+// Older courses may carry publishRequested instead; treat it as pending.
+export const reviewStatus = (c) => c?.review?.status || (c?.publishRequested ? 'pending' : null);
+
+const notifyUser = (userId, title, body, link) =>
+  addDoc(collection(db, 'notifications'), {
+    userId,
+    recipientId: userId,
+    type: 'teacher_course_review',
+    title,
+    body,
+    message: `${title} - ${body}`,
+    link,
+    isRead: false,
+    read: false,
+    createdAt: serverTimestamp(),
+  }).catch(() => {});
+
+export const submitForReview = async (course, user, details) => {
+  await updateDoc(doc(db, COL, course.id), {
+    review: {
+      status: 'pending',
+      submittedAt: new Date().toISOString(),
+      submittedBy: who(user),
+      level: details.level || 'Beginner',
+      minutes: details.minutes || '',
+      track: details.track || '',
+      isUpdate: !!course.published,
+      note: null,
+    },
+    publishRequested: null,
+  });
+  // Let admins know there's something to review.
+  try {
+    const admins = await getDocs(query(collection(db, 'users'), where('role', '==', 'admin')));
+    await Promise.all(
+      admins.docs.map((a) =>
+        notifyUser(
+          a.id,
+          course.published ? 'A teacher updated a published course' : 'A teacher course is waiting for approval',
+          `${user.displayName || user.email}: "${course.title}"`,
+          `/teacher/${course.id}`
+        )
+      )
+    );
+  } catch (_) {
+    /* notifications are best-effort */
+  }
+};
+
+export const withdrawSubmission = async (course, user) => {
+  await updateDoc(doc(db, COL, course.id), {
+    review: { ...(course.review || {}), status: 'withdrawn', withdrawnAt: new Date().toISOString(), withdrawnBy: who(user) },
+    publishRequested: null,
+  });
+};
+
+export const declineSubmission = async (course, admin, note) => {
+  await updateDoc(doc(db, COL, course.id), {
+    review: { ...(course.review || {}), status: 'declined', decidedAt: new Date().toISOString(), decidedBy: who(admin), note: (note || '').trim() || null },
+    publishRequested: null,
+  });
+  const to = course.review?.submittedBy?.uid || course.createdBy?.uid;
+  if (to) {
+    await notifyUser(
+      to,
+      'Your course was not approved yet',
+      (note || '').trim() || `"${course.title}" needs changes before it can be published. Edit it and resubmit.`,
+      `/teacher/${course.id}`
+    );
+  }
+};
+
+export const markApproved = async (course, admin) => {
+  await updateDoc(doc(db, COL, course.id), {
+    review: { ...(course.review || {}), status: 'approved', decidedAt: new Date().toISOString(), decidedBy: who(admin), note: null },
+    publishRequested: null,
+  });
+  const to = course.review?.submittedBy?.uid || course.createdBy?.uid;
+  if (to && to !== admin.uid) {
+    await notifyUser(to, 'Your course is published', `"${course.title}" is now live for students in Learning.`, `/teacher/${course.id}`);
+  }
+};

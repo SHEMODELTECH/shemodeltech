@@ -29,6 +29,11 @@ import {
   titleFromHtml,
   displayMarkdown,
   parseLessons,
+  reviewStatus,
+  submitForReview,
+  withdrawSubmission,
+  declineSubmission,
+  markApproved,
 } from '../../utils/teacherCourses';
 import { getVideoEmbed } from '../../utils/videoEmbed';
 import { FD_CSS, enhanceCourseContent } from '../learning/shared';
@@ -106,6 +111,17 @@ const StatusTag = ({ status }) => (
   </span>
 );
 
+const ReviewTag = ({ course }) => {
+  const st = reviewStatus(course);
+  if (st === 'pending')
+    return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">{course.published ? 'Update pending review' : 'Pending review'}</span>;
+  if (st === 'declined' && !course.published)
+    return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-700">Not approved</span>;
+  if (st === 'withdrawn' && !course.published)
+    return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">Withdrawn</span>;
+  return null;
+};
+
 // ================= List =================
 const TeacherList = ({ access }) => {
   const navigate = useNavigate();
@@ -127,7 +143,8 @@ const TeacherList = ({ access }) => {
   const shown = (items || []).filter(
     (c) =>
       (track === 'all' || (c.track || '') === track) &&
-      (aud === 'all' || (aud === 'students' ? !!c.published : !c.published)) &&
+      (aud === 'all' ||
+        (aud === 'review' ? reviewStatus(c) === 'pending' : aud === 'students' ? !!c.published : !c.published)) &&
       (!q.trim() || `${c.title} ${c.description}`.toLowerCase().includes(q.trim().toLowerCase()))
   );
 
@@ -175,12 +192,18 @@ const TeacherList = ({ access }) => {
         </div>
       </div>
 
-      <div className="flex gap-2 mb-4" role="group" aria-label="Audience">
-        {[['all', 'All'], ['teachers', 'For teachers'], ['students', 'For students']].map(([v, l]) => (
+      <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Audience">
+        {[['all', 'All'], ['teachers', 'For teachers'], ['students', 'For students'], ['review', 'Pending review']].map(([v, l]) => (
           <button key={v} onClick={() => setAud(v)} aria-pressed={aud === v}
             className={`text-sm font-semibold px-4 py-2 rounded-full ${aud === v ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
             {l}
-            {items ? ` (${v === 'all' ? items.length : items.filter((c) => (v === 'students' ? !!c.published : !c.published)).length})` : ''}
+            {items
+              ? ` (${
+                  v === 'all'
+                    ? items.length
+                    : items.filter((c) => (v === 'review' ? reviewStatus(c) === 'pending' : v === 'students' ? !!c.published : !c.published)).length
+                })`
+              : ''}
           </button>
         ))}
       </div>
@@ -231,9 +254,7 @@ const TeacherList = ({ access }) => {
                 <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${c.published ? 'bg-pink-50 text-pink-700' : 'bg-indigo-50 text-indigo-700'}`}>
                   {c.published ? 'For students' : 'For teachers'}
                 </span>
-                {!c.published && c.publishRequested && (
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">Awaiting publishing</span>
-                )}
+                <ReviewTag course={c} />
               </div>
               <Link to={`/teacher/${c.id}`} className="font-semibold text-gray-900 hover:underline leading-snug">
                 {c.title || 'Untitled'}
@@ -384,7 +405,8 @@ const TeacherEditor = ({ access }) => {
         status: c.status || 'draft',
         fileName: c.fileName || '',
       });
-      setAudience(c.published || c.publishRequested ? 'students' : 'teachers');
+      setAudience(c.published || ['pending', 'declined'].includes(reviewStatus(c)) ? 'students' : 'teachers');
+      if (c.review?.level) setPubDetails({ level: c.review.level, minutes: c.review.minutes || '' });
       if (c.published) {
         const pubDoc = await getPublished(c.published.learningId).catch(() => null);
         if (pubDoc) setPubDetails({ level: pubDoc.level || 'Beginner', minutes: pubDoc.minutes ? String(pubDoc.minutes) : '' });
@@ -436,19 +458,30 @@ const TeacherEditor = ({ access }) => {
       );
       const saved = { ...(existing || {}), id: newId, kind: meta.kind };
       if (!access.isStaff) {
-        // Teachers ask staff to publish for students; staff review it first.
-        await updateDoc(doc(db, 'teacher_courses', newId), {
-          publishRequested:
-            audience === 'students'
-              ? { at: new Date().toISOString(), by: currentUser.email || '', name: currentUser.displayName || currentUser.email || '', level: pubDetails.level, minutes: pubDetails.minutes || '' }
-              : null,
-        });
-        toast.success(audience === 'students' ? 'Saved and sent to editors to publish for students.' : 'Saved.');
+        // Teachers' student courses go to an admin for approval before publishing.
+        const current = { ...saved, title: meta.title };
+        const st = reviewStatus(existing);
+        if (audience === 'students') {
+          await submitForReview(current, currentUser, { level: pubDetails.level, minutes: pubDetails.minutes, track: meta.track });
+          toast.success(st === 'pending' ? 'Saved. It stays in review with your changes.' : 'Submitted for admin approval.');
+        } else {
+          if (st === 'pending') await withdrawSubmission(current, currentUser);
+          toast.success(st === 'pending' ? 'Saved and withdrawn from review. It is for teachers only now.' : id ? 'Saved.' : 'Added to Teacher.');
+        }
+        navigate(`/teacher/${newId}`);
+        setSaving(false);
+        return;
+      }
+      if (audience === 'students' && reviewStatus(existing) === 'pending' && !access.isAdmin) {
+        // A teacher's submission is waiting for an admin: editors can fix it up,
+        // but only an admin approves and publishes it.
+        toast.success('Saved. It is still waiting for admin approval.');
         navigate(`/teacher/${newId}`);
         setSaving(false);
         return;
       }
       if (audience === 'students') {
+        if (reviewStatus(existing) === 'pending') await markApproved({ ...existing, id: newId, title: meta.title }, currentUser);
         await publishToLearning(
           saved,
           content,
@@ -500,7 +533,7 @@ const TeacherEditor = ({ access }) => {
           <div className="grid sm:grid-cols-2 gap-3 mt-1">
             {[
               ['teachers', 'Teachers', 'Teaching notes and instructor editions. Stays in Teacher, visible to admins and editors only.'],
-              ['students', 'Students', access.isStaff ? 'A course for learners. Published to the Learning platform, where anyone can find it.' : 'A course for learners. Sent to our editors, who review it and publish it to Learning.'],
+              ['students', 'Students', access.isStaff ? 'A course for learners. Published to the Learning platform, where anyone can find it.' : 'A course for learners. Sent to an admin for approval, then published to Learning.'],
             ].map(([val, title, desc]) => (
               <label
                 key={val}
@@ -519,7 +552,14 @@ const TeacherEditor = ({ access }) => {
             ))}
           </div>
           {existing?.published && audience === 'teachers' && (
-            <p className="text-sm text-amber-700 mt-2">Saving will remove it from Learning. Learners who enrolled will lose access.</p>
+            <p className="text-sm text-amber-700 mt-2">
+              {access.isStaff
+                ? 'Saving will remove it from Learning. Learners who enrolled will lose access.'
+                : 'It is published in Learning; only an admin can remove it. Saving keeps your changes here without sending them to students.'}
+            </p>
+          )}
+          {!access.isStaff && audience === 'students' && (
+            <p className="text-sm text-gray-600 mt-2">An admin reviews it before students can see it. You can keep editing or withdraw it while it waits.</p>
           )}
         </fieldset>
 
@@ -664,7 +704,21 @@ const TeacherEditor = ({ access }) => {
         <div className="flex gap-3 pt-2">
           <button onClick={save} disabled={saving}
             className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-60">
-            {saving ? 'Saving...' : audience === 'students' ? (!access.isStaff ? 'Save and send for publishing' : existing?.published ? 'Save and update in Learning' : 'Save and publish to Learning') : id ? 'Save changes' : 'Save'}
+            {saving
+              ? 'Saving...'
+              : audience === 'students'
+              ? !access.isStaff
+                ? reviewStatus(existing) === 'pending'
+                  ? 'Save (stays in review)'
+                  : ['declined', 'withdrawn'].includes(reviewStatus(existing))
+                  ? 'Save and resubmit'
+                  : 'Submit for approval'
+                : existing?.published
+                ? 'Save and update in Learning'
+                : 'Save and publish to Learning'
+              : id
+              ? 'Save changes'
+              : 'Save'}
           </button>
           <button onClick={() => navigate(id ? `/teacher/${id}` : '/teacher')}
             className="text-sm font-semibold text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-100">
@@ -680,19 +734,22 @@ const TeacherEditor = ({ access }) => {
 // ================= Publish to Learning =================
 // Copies this material into Learning as a student course. The copy only
 // changes when someone presses "Update the published version".
-const PublishPanel = ({ course, content, onChange }) => {
+const PublishPanel = ({ course, content, onChange, access }) => {
   const { currentUser } = useAuth();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [f, setF] = useState({
     title: course.title || '',
     summary: course.description || '',
-    track: course.published?.track || course.track || '',
-    level: course.publishRequested?.level || 'Beginner',
-    minutes: course.publishRequested?.minutes || '',
+    track: course.published?.track || course.review?.track || course.track || '',
+    level: course.review?.level || course.publishRequested?.level || 'Beginner',
+    minutes: course.review?.minutes || course.publishRequested?.minutes || '',
   });
   const pub = course.published;
-  const req = !pub && course.publishRequested;
+  // A teacher's submission waiting for approval (new course, or an update).
+  const pending = reviewStatus(course) === 'pending';
+  const submitter = course.review?.submittedBy?.name || course.publishRequested?.name || course.createdBy?.name || 'A teacher';
+  const req = pending;
   const learnUrl = pub ? `/learning/${pub.track}/${PUBLISHED_PREFIX}${pub.learningId}` : null;
 
   const publish = async () => {
@@ -702,12 +759,28 @@ const PublishPanel = ({ course, content, onChange }) => {
     setBusy(true);
     try {
       const learningId = await publishToLearning(course, content, f, currentUser);
-      onChange({ ...course, published: { learningId, track: f.track }, publishRequested: null });
+      if (pending) await markApproved(course, currentUser);
+      onChange({ ...course, published: { learningId, track: f.track }, publishRequested: null, review: pending ? { ...(course.review || {}), status: 'approved' } : course.review });
       setOpen(false);
       toast.success(pub ? 'Published version updated.' : 'Published to Learning.');
     } catch (e) {
       console.error(e);
       toast.error('Could not publish. Check your connection and try again.');
+    }
+    setBusy(false);
+  };
+
+  const decline = async () => {
+    const note = window.prompt('Note to the teacher (what to change before resubmitting):', '');
+    if (note === null) return;
+    setBusy(true);
+    try {
+      await declineSubmission(course, currentUser, note);
+      onChange({ ...course, review: { ...(course.review || {}), status: 'declined', note } });
+      toast.success('Declined. The teacher has been notified.');
+    } catch (e) {
+      console.error(e);
+      toast.error('Could not decline it.');
     }
     setBusy(false);
   };
@@ -731,15 +804,20 @@ const PublishPanel = ({ course, content, onChange }) => {
     <div className="mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4">
       <div className="flex flex-wrap items-center gap-3 justify-between">
         <p className="text-sm text-gray-700">
-          {pub ? (
+          {pub && pending ? (
+            <>
+              <strong className="text-amber-700">{submitter} submitted an update</strong> to this published course.{' '}
+              {access?.isAdmin ? 'Approve it to update Learning, or decline with a note.' : 'Waiting for an admin to approve it.'}
+            </>
+          ) : pub ? (
             <>
               <strong className="text-emerald-700">Published in Learning</strong> under {trackLabel(pub.track)}. Edits here
               reach students only when you update the published version.
             </>
           ) : req ? (
             <>
-              <strong className="text-amber-700">{req.name || req.by} asked to publish this for students.</strong> Review it,
-              then publish.
+              <strong className="text-amber-700">{submitter} submitted this for students.</strong>{' '}
+              {access?.isAdmin ? 'Review it, then approve and publish, or decline with a note.' : 'Waiting for an admin to approve it.'}
             </>
           ) : (
             <>
@@ -753,10 +831,17 @@ const PublishPanel = ({ course, content, onChange }) => {
               View in Learning
             </Link>
           )}
-          <button onClick={() => setOpen((o) => !o)} disabled={busy}
-            className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-60">
-            {pub ? 'Update the published version' : 'Publish to Learning'}
-          </button>
+          {(!pending || access?.isAdmin) && (
+            <button onClick={() => setOpen((o) => !o)} disabled={busy}
+              className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-60">
+              {pending ? 'Approve and publish' : pub ? 'Update the published version' : 'Publish to Learning'}
+            </button>
+          )}
+          {pending && access?.isAdmin && (
+            <button onClick={decline} disabled={busy} className="text-sm font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50">
+              Decline
+            </button>
+          )}
           {pub && (
             <button onClick={unpublish} disabled={busy} className="text-sm font-semibold text-red-700 px-2 py-1.5 rounded-lg hover:bg-red-50">
               Unpublish
@@ -807,6 +892,108 @@ const PublishPanel = ({ course, content, onChange }) => {
               Cancel
             </button>
           </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+// ================= Teacher's view of the review =================
+const TeacherReviewBar = ({ course, access, onChange }) => {
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  const st = reviewStatus(course);
+  const mine = canEdit(access, course);
+  const fmt = (iso) => (iso ? new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '');
+
+  const withdraw = async () => {
+    if (!window.confirm('Withdraw this from review? It stays in Teacher and you can resubmit any time.')) return;
+    setBusy(true);
+    try {
+      await withdrawSubmission(course, currentUser);
+      onChange({ ...course, review: { ...(course.review || {}), status: 'withdrawn' }, publishRequested: null });
+      toast.success('Withdrawn from review.');
+    } catch (e) {
+      console.error(e);
+      toast.error('Could not withdraw it.');
+    }
+    setBusy(false);
+  };
+  const resubmit = async () => {
+    setBusy(true);
+    try {
+      const r = course.review || {};
+      await submitForReview(course, currentUser, { level: r.level, minutes: r.minutes, track: r.track || course.track });
+      onChange({ ...course, review: { ...r, status: 'pending', note: null } });
+      toast.success('Resubmitted for admin approval.');
+    } catch (e) {
+      console.error(e);
+      toast.error('Could not resubmit it.');
+    }
+    setBusy(false);
+  };
+
+  const btn = 'text-sm font-semibold px-3 py-1.5 rounded-lg';
+  let tone = 'border-gray-200 bg-gray-50';
+  let text;
+  if (st === 'pending') {
+    tone = 'border-amber-200 bg-amber-50';
+    text = (
+      <>
+        <strong className="text-amber-800">{course.published ? 'Your update is waiting for admin approval.' : 'Pending admin approval.'}</strong>{' '}
+        Submitted {fmt(course.review?.submittedAt)}. You can still edit it, or withdraw it.
+      </>
+    );
+  } else if (st === 'declined') {
+    tone = 'border-red-200 bg-red-50';
+    text = (
+      <>
+        <strong className="text-red-800">Not approved yet.</strong> {course.review?.note ? `Admin note: ${course.review.note}` : 'Edit it and resubmit.'}
+      </>
+    );
+  } else if (st === 'withdrawn' && !course.published) {
+    text = (
+      <>
+        <strong>Withdrawn from review.</strong> Visible to teachers and staff only. Resubmit when it is ready.
+      </>
+    );
+  } else if (course.published) {
+    tone = 'border-emerald-200 bg-emerald-50';
+    text = (
+      <>
+        <strong className="text-emerald-800">Published in Learning</strong> for students. Edit it and submit an update when you want changes to go live.
+      </>
+    );
+  } else {
+    text = (
+      <>
+        <strong>For teachers.</strong> Visible to teachers and staff only.
+      </>
+    );
+  }
+
+  return (
+    <div className={`mb-4 rounded-2xl border p-4 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-700 ${tone}`}>
+      <p className="min-w-0 max-w-3xl">{text}</p>
+      {mine && (
+        <div className="flex flex-wrap gap-2">
+          {st === 'pending' && (
+            <button onClick={withdraw} disabled={busy} className={`${btn} border border-gray-300 bg-white hover:bg-gray-50`}>
+              Withdraw
+            </button>
+          )}
+          {['declined', 'withdrawn'].includes(st) && (
+            <button onClick={resubmit} disabled={busy} className={`${btn} bg-pink-600 hover:bg-pink-700 text-white`}>
+              Resubmit
+            </button>
+          )}
+          {!st && !course.published && (
+            <button onClick={() => navigate(`/teacher/${course.id}/edit`)} className={`${btn} bg-pink-600 hover:bg-pink-700 text-white`}>
+              Submit for students
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -904,17 +1091,9 @@ const TeacherViewer = ({ access }) => {
       </div>
 
       {access.isStaff ? (
-        <PublishPanel course={course} content={content} onChange={setCourse} />
+        <PublishPanel course={course} content={content} onChange={setCourse} access={access} />
       ) : (
-        <div className="mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700">
-          {course.published ? (
-            <><strong className="text-emerald-700">Published in Learning</strong> for students.</>
-          ) : course.publishRequested ? (
-            <><strong className="text-amber-700">Sent for publishing.</strong> An editor will review it and publish it to Learning.</>
-          ) : (
-            <><strong>For teachers.</strong> Visible to teachers and staff only.</>
-          )}
-        </div>
+        <TeacherReviewBar course={course} access={access} onChange={setCourse} />
       )}
 
       {course.kind === 'html' ? (

@@ -33,6 +33,7 @@ import {
 import { clearAllTestData } from '../../utils/adminDataReset';
 import { sendPush } from '../../utils/pushNotifications';
 import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTeacher } from '../../utils/teachers';
+import { listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 
 const fmtDate = (ts) => {
   try {
@@ -80,6 +81,7 @@ const AdminPanel = () => {
   const [reviewProjects, setReviewProjects] = useState([]);
   const [deletionReqs, setDeletionReqs] = useState([]);
   const [teacherApps, setTeacherApps] = useState(null);
+  const [pendingCourses, setPendingCourses] = useState(null);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [feedbackById, setFeedbackById] = useState({});
   const [actingId, setActingId] = useState(null);
@@ -152,6 +154,9 @@ const AdminPanel = () => {
       listTeacherApplications()
         .then(setTeacherApps)
         .catch(() => setTeacherApps([]));
+      listTeacherCourses()
+        .then((list) => setPendingCourses(list.filter((c) => reviewStatus(c) === 'pending')))
+        .catch(() => setPendingCourses([]));
     }
   }, [tab, isAdmin]);
 
@@ -961,6 +966,33 @@ const AdminPanel = () => {
       {/* TEACHERS */}
       {!loadingData && tab === 'teachers' && isAdmin && (
         <div className="space-y-6">
+          <div>
+            <h3 className="text-gray-900 font-bold mb-2">Courses awaiting approval</h3>
+            {pendingCourses === null ? (
+              <p className="text-gray-400 text-sm">Loading...</p>
+            ) : pendingCourses.length === 0 ? (
+              <p className="text-gray-400 text-sm">No teacher courses waiting for approval.</p>
+            ) : (
+              <div className="space-y-2">
+                {pendingCourses.map((c) => (
+                  <div key={c.id} className="bg-white border border-amber-200 rounded-lg p-3 flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-gray-900 text-sm font-medium truncate">
+                        {c.title} {c.published && <span className="text-amber-700 text-xs font-semibold">(update to a published course)</span>}
+                      </p>
+                      <p className="text-gray-400 text-xs truncate">
+                        By {c.review?.submittedBy?.name || c.createdBy?.name || 'a teacher'}
+                        {c.review?.submittedAt ? ` · submitted ${new Date(c.review.submittedAt).toLocaleDateString()}` : ''}
+                      </p>
+                    </div>
+                    <Link to={`/teacher/${c.id}`} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-pink-600 text-white hover:bg-pink-700">
+                      Review
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <div>
             <h3 className="text-gray-900 font-bold mb-2">Applications</h3>
             {teacherApps === null ? (

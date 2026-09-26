@@ -272,7 +272,10 @@ service cloud.firestore {
  allow update: if isTeacherUser()
  && resource.data.createdBy.uid == myUid()
  && request.resource.data.createdBy.uid == myUid()
- && !touched('published');
+ && !touched('published')
+ // Teachers can submit or withdraw; only an admin approves or declines.
+ && (!touched('review')
+ || request.resource.data.review.status in ['pending', 'withdrawn']);
  allow delete: if isTeacherUser()
  && resource.data.createdBy.uid == myUid()
  && resource.data.get('published', null) == null;
