@@ -307,6 +307,17 @@ service cloud.firestore {
  allow update, delete: if isAdmin();
  }
 
+ // Certificates of completion for Learning courses. Public so anyone with the
+ // link can verify one; a learner can only issue their own; never edited.
+ match /learning_certificates/{id} {
+ allow read: if true;
+ allow create: if isSignedIn()
+ && request.resource.data.uid == myUid()
+ && id.matches(myUid() + '_.*');
+ allow update: if false;
+ allow delete: if isAdmin();
+ }
+
  // Project deletion requests: a lead asks an admin to delete their project.
  match /deletionRequests/{id} {
  allow create: if isSignedIn()

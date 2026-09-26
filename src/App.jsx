@@ -31,6 +31,7 @@ const LearningCourse = lazy(() => import('./Pages/learning/LearningCourse'));
 const TeacherHome = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherHome })));
 const TeacherEdit = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherEdit })));
 const TeacherView = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherView })));
+const LearningCertificate = lazy(() => import('./Pages/learning/LearningCertificate'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -177,6 +178,7 @@ function App() {
                 <Route path="/teach" element={<TeachApply />} />
                 <Route path="/learning" element={<LearningHome />} />
                 <Route path="/learning/my" element={<LearningHome mine />} />
+                <Route path="/learning/certificate/:id" element={<LearningCertificate />} />
                 <Route path="/learning/:track/:slug" element={<LearningCourse />} />
                 <Route path="/learning/:track/:slug/learn" element={<LearningCourse reading />} />
                 <Route
@@ -519,11 +521,11 @@ function App() {
                   }
                 />
                 <Route path="/foundations" element={<Foundations />} />
-                {/* Teacher: admins and editors only (checked on the page and in Firestore rules) */}
-                <Route path="/teacher" element={<SidebarRoute><TeacherHome /></SidebarRoute>} />
-                <Route path="/teacher/new" element={<SidebarRoute><TeacherEdit /></SidebarRoute>} />
-                <Route path="/teacher/:id" element={<SidebarRoute><TeacherView /></SidebarRoute>} />
-                <Route path="/teacher/:id/edit" element={<SidebarRoute><TeacherEdit /></SidebarRoute>} />
+                {/* Teacher: part of Learning, for staff and approved teachers (checked on the page and in Firestore rules) */}
+                <Route path="/teacher" element={<BasicProtectedRoute><TeacherHome /></BasicProtectedRoute>} />
+                <Route path="/teacher/new" element={<BasicProtectedRoute><TeacherEdit /></BasicProtectedRoute>} />
+                <Route path="/teacher/:id" element={<BasicProtectedRoute><TeacherView /></BasicProtectedRoute>} />
+                <Route path="/teacher/:id/edit" element={<BasicProtectedRoute><TeacherEdit /></BasicProtectedRoute>} />
                 {/* Full screen: no app sidebar or header, like a student's interactive course */}
                 <Route path="/teacher/:id/full" element={<BasicProtectedRoute><TeacherFull /></BasicProtectedRoute>} />
                 <Route

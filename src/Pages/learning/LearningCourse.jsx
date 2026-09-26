@@ -12,6 +12,7 @@ import { CheckIcon, CourseReader, CourseReferences, InteractivePlayer, coursePar
 import { coursesForTrack } from '../../utils/foundationsCourses';
 import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
+import { toast } from 'react-toastify';
 
 const LearningCourse = ({ reading = false }) => {
   const { track, slug } = useParams();
@@ -95,6 +96,17 @@ const LearningCourse = ({ reading = false }) => {
   if (!course) return <Navigate to="/learning" replace />;
   if (reading && !lr.loading && !lr.signedIn) return <Navigate to={`/learning/${track}/${slug}`} replace />;
 
+  // Open (issuing if needed) this learner's certificate for the course.
+  const openCertificate = async () => {
+    try {
+      const id = await lr.ensureCertificate({ ...course, track });
+      if (id) navigate(`/learning/certificate/${id}`);
+    } catch (e) {
+      console.error(e);
+      toast.error('Could not open your certificate. Please try again.');
+    }
+  };
+
   const L = look(track);
   const readerUrl = (p) => `/learning/${track}/${slug}/learn${p > 1 ? `?part=${p}` : ''}`;
   const start = () => {
@@ -111,7 +123,8 @@ const LearningCourse = ({ reading = false }) => {
           next={courses[index + 1] || null}
           onBack={() => navigate(`/learning/${track}/${slug}`)}
           onOpen={(s) => navigate(`/learning/${track}/${s}`)}
-          onComplete={() => lr.markComplete(track, slug)}
+          onComplete={() => lr.markComplete(track, slug, course)}
+          onCertificate={openCertificate}
         />
       </LearningLayout>
     );
@@ -133,7 +146,8 @@ const LearningCourse = ({ reading = false }) => {
           onPart={(i) => setParams(i > 0 ? { part: String(i + 1) } : {})}
           onBack={() => navigate(`/learning/${track}/${slug}`)}
           onOpen={(s) => navigate(`/learning/${track}/${s}`)}
-          onComplete={() => lr.markComplete(track, slug)}
+          onComplete={() => lr.markComplete(track, slug, course)}
+          onCertificate={openCertificate}
         />
       </LearningLayout>
     );
@@ -174,9 +188,14 @@ const LearningCourse = ({ reading = false }) => {
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <button onClick={start} className="fd-btn text-base px-6 py-3">{ctaLabel}</button>
               {done && (
-                <span className="flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
-                  <CheckIcon className="w-4 h-4" /> You completed this course
-                </span>
+                <>
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+                    <CheckIcon className="w-4 h-4" /> You completed this course
+                  </span>
+                  <button onClick={openCertificate} className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2.5 rounded-lg hover:bg-gray-50">
+                    View certificate
+                  </button>
+                </>
               )}
               {!lr.signedIn && <span className="text-sm text-gray-600">Free. Your progress is saved to your account.</span>}
             </div>

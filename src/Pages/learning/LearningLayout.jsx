@@ -5,7 +5,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
+import { db } from '../../firebase/config';
 import { FD_CSS } from './shared';
 
 // Remember where to come back to after signing in (read by afterAuthPath).
@@ -23,6 +25,20 @@ const LearningLayout = ({ children, accent, bare = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Staff and approved teachers get a Teacher link in the Learning header.
+  const [canTeach, setCanTeach] = useState(false);
+  useEffect(() => {
+    if (!currentUser) {
+      setCanTeach(false);
+      return;
+    }
+    getDoc(doc(db, 'users', currentUser.uid))
+      .then((snap) => {
+        const d = snap.data() || {};
+        setCanTeach(d.role === 'admin' || d.role === 'editor' || !!d.isTeacher);
+      })
+      .catch(() => setCanTeach(false));
+  }, [currentUser]);
 
   useEffect(() => setMenuOpen(false), [location.pathname, location.search]);
 
@@ -51,9 +67,15 @@ const LearningLayout = ({ children, accent, bare = false }) => {
                 My learning
               </NavLink>
             )}
-            <NavLink to="/teach" className={linkCls}>
-              Teach
-            </NavLink>
+            {canTeach ? (
+              <NavLink to="/teacher" className={linkCls}>
+                Teacher
+              </NavLink>
+            ) : (
+              <NavLink to="/teach" className={linkCls}>
+                Teach
+              </NavLink>
+            )}
           </nav>
 
           <div className="ml-auto hidden md:flex items-center gap-2">
@@ -99,9 +121,15 @@ const LearningLayout = ({ children, accent, bare = false }) => {
                 My learning
               </NavLink>
             )}
-            <NavLink to="/teach" className={linkCls}>
-              Teach on She Model Tech
-            </NavLink>
+            {canTeach ? (
+              <NavLink to="/teacher" className={linkCls}>
+                Teacher
+              </NavLink>
+            ) : (
+              <NavLink to="/teach" className={linkCls}>
+                Teach on She Model Tech
+              </NavLink>
+            )}
             <Link to={currentUser ? '/dashboard' : '/'} className="text-sm font-semibold text-gray-700 px-3 py-2">
               {currentUser ? 'Back to She Model Tech' : 'About She Model Tech'}
             </Link>

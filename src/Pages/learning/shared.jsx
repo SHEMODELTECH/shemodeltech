@@ -16,6 +16,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { coursesForTrack, trackMeta } from '../../utils/foundationsCourses';
 import { renderCourse } from '../../utils/renderCourseMarkdown';
+import { issueCertificate } from '../../utils/learningCertificates';
 import { LABS_CSS, enhanceHtml, enhancePython, mountLabs } from './labs';
 import { VIDEO_CSS, isVideoUrl, makeVideoElement } from '../../utils/videoEmbed';
 import TechDevImg from '../../Images/TechDev.png';
@@ -349,7 +350,7 @@ export const CourseReferences = ({ refs, compact = false, inline = false }) => {
 // ---- Interactive course player ----
 // Self-contained HTML courses bring their own navigation, labs, and quizzes, so
 // they run full-width in a frame under a slim bar with the course controls.
-export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, onOpen }) => (
+export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, onOpen, onCertificate }) => (
   <div className="flex flex-col" style={{ height: 'calc(100vh - 4rem)' }}>
     <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2.5 border-b border-gray-200 bg-white">
       <button onClick={onBack} className="fd-back">
@@ -367,6 +368,11 @@ export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, on
         ) : (
           <button onClick={onComplete} className="fd-btn !py-2 !px-3 text-sm">
             <CheckIcon className="w-4 h-4" /> Mark as complete
+          </button>
+        )}
+        {isDone && onCertificate && (
+          <button onClick={onCertificate} className="text-sm font-semibold text-gray-700 hover:text-gray-900 px-2 py-2">
+            Certificate
           </button>
         )}
         {isDone && next && (
@@ -444,7 +450,29 @@ export const useLearning = () => {
     write({ learningLastPart: { [track]: { [slug]: part } } }).catch(() => {});
   };
 
-  const markComplete = async (track, slug) => {
+  // Certificate of completion: issued when a course is completed, or on demand
+  // for courses completed before certificates existed. Returns its id.
+  const ensureCertificate = async (course) => {
+    if (!currentUser || !course) return null;
+    const cert = await issueCertificate(
+      {
+        uid: currentUser.uid,
+        name: state.profile?.displayName || currentUser.displayName || '',
+        email: currentUser.email || '',
+      },
+      {
+        track: course.track,
+        trackLabel: trackMeta(course.track).label.replace(/\s+Foundations$/, ''),
+        slug: course.slug,
+        title: course.title,
+        level: course.level,
+        minutes: course.minutes,
+      }
+    );
+    return cert.id;
+  };
+
+  const markComplete = async (track, slug, course = null) => {
     const trackDone = { ...(state.done[track] || {}), [slug]: true };
     const all = coursesForTrack(track).every((c) => trackDone[c.slug]);
     setState((s) => ({ ...s, done: { ...s.done, [track]: trackDone } }));
@@ -453,14 +481,25 @@ export const useLearning = () => {
         foundationsCourses: { [track]: { [slug]: true } },
         ...(all ? { foundationsComplete: { [track]: true } } : {}),
       });
-      toast.success(all && track !== 'company' ? `You finished every ${trackMeta(track).label} course.` : 'Course marked complete.');
+      let certMsg = '';
+      if (course) {
+        try {
+          await ensureCertificate({ ...course, track, slug });
+          certMsg = ' Your certificate is ready.';
+        } catch (certErr) {
+          console.error('certificate', certErr);
+        }
+      }
+      toast.success(
+        (all && track !== 'company' ? `You finished every ${trackMeta(track).label} course.` : 'Course marked complete.') + certMsg
+      );
     } catch (e) {
       console.error(e);
       toast.error('Could not save your progress. Check your connection and try again.');
     }
   };
 
-  return { ...state, signedIn: !!currentUser, isEnrolled, isDone, lastPartOf, enroll, saveLastPart, markComplete };
+  return { ...state, signedIn: !!currentUser, isEnrolled, isDone, lastPartOf, enroll, saveLastPart, markComplete, ensureCertificate };
 };
 
 // ============================ Course reader ============================
@@ -494,7 +533,7 @@ export const splitParts = (html, toc) => {
   return parts;
 };
 
-export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDone, next, part, onPart, onBack, onOpen, onComplete }) => {
+export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDone, next, part, onPart, onBack, onOpen, onComplete, onCertificate }) => {
   const rendered = useMemo(() => renderCourse(course.markdown), [course]);
   const parts = useMemo(() => splitParts(rendered.html, rendered.toc), [rendered]);
   const current = Math.min(Math.max(part, 0), parts.length - 1);
@@ -684,6 +723,11 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                           <CheckIcon />
                         </span>
                         <p className="font-semibold text-gray-900">You completed this course.</p>
+                        {onCertificate && (
+                          <button onClick={onCertificate} className="fd-btn ml-auto">
+                            View your certificate
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>

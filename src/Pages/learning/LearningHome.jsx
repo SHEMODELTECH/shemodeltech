@@ -312,9 +312,28 @@ const LearningHome = ({ mine = false }) => {
                     {label} <span className="text-gray-400 font-semibold">({list.length})</span>
                   </h2>
                   <div className="lr-grid">
-                    {list.map((c) => (
-                      <CourseCard key={c.track + c.slug} course={c} status={statusOf(c)} progress={progressOf(c)} />
-                    ))}
+                    {list.map((c) =>
+                      label === 'Completed' ? (
+                        <div key={c.track + c.slug} className="flex flex-col gap-2">
+                          <CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} />
+                          <button
+                            onClick={async () => {
+                              try {
+                                const id = await lr.ensureCertificate(c);
+                                if (id) navigate(`/learning/certificate/${id}`);
+                              } catch (e) {
+                                console.error(e);
+                              }
+                            }}
+                            className="text-sm font-semibold border border-gray-300 bg-white px-3 py-2 rounded-lg hover:bg-gray-50"
+                          >
+                            View certificate
+                          </button>
+                        </div>
+                      ) : (
+                        <CourseCard key={c.track + c.slug} course={c} status={statusOf(c)} progress={progressOf(c)} />
+                      )
+                    )}
                   </div>
                 </section>
               ))
