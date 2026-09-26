@@ -31,6 +31,7 @@ const LearningCourse = lazy(() => import('./Pages/learning/LearningCourse'));
 const TeacherHome = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherHome })));
 const TeacherEdit = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherEdit })));
 const TeacherView = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherView })));
+const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
 const MembersDirectory = lazy(() => import('./Pages/MembersDirectory'));
 const ApplyToLead = lazy(() => import('./Pages/cohort/ApplyToLead'));
@@ -521,6 +522,8 @@ function App() {
                 <Route path="/teacher/new" element={<SidebarRoute><TeacherEdit /></SidebarRoute>} />
                 <Route path="/teacher/:id" element={<SidebarRoute><TeacherView /></SidebarRoute>} />
                 <Route path="/teacher/:id/edit" element={<SidebarRoute><TeacherEdit /></SidebarRoute>} />
+                {/* Full screen: no app sidebar or header, like a student's interactive course */}
+                <Route path="/teacher/:id/full" element={<BasicProtectedRoute><TeacherFull /></BasicProtectedRoute>} />
                 <Route
                   path="/support"
                   element={

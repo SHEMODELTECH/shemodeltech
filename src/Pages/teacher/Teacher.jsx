@@ -760,6 +760,9 @@ const TeacherViewer = () => {
           {course.description && <p className="text-sm text-gray-600 mt-1 max-w-3xl">{course.description}</p>}
         </div>
         <div className="flex gap-2">
+          <button onClick={() => navigate(`/teacher/${id}/full`)} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">
+            Full screen
+          </button>
           <button onClick={download} className="text-sm font-semibold border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">Download</button>
           <button onClick={() => navigate(`/teacher/${id}/edit`)} className="text-sm font-semibold bg-gray-900 text-white px-3 py-2 rounded-lg">Edit</button>
         </div>
@@ -787,6 +790,89 @@ const TeacherViewer = () => {
   );
 };
 
+
+// ================= Full screen =================
+// The course alone, filling the window under a slim bar, like a student's
+// interactive course. "Present" also hides the browser's own toolbars.
+const TeacherFullScreen = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [course, setCourse] = useState(null);
+  const [content, setContent] = useState(null);
+  const [presenting, setPresenting] = useState(false);
+  const stageRef = useRef(null);
+  const proseRef = useRef(null);
+
+  useEffect(() => {
+    (async () => {
+      const c = await getTeacherCourse(id);
+      if (!c) {
+        toast.error('That course no longer exists.');
+        navigate('/teacher');
+        return;
+      }
+      setCourse(c);
+      setContent(await getTeacherContent(id, c.chunkCount));
+    })().catch((e) => {
+      console.error(e);
+      toast.error('Could not open this course.');
+    });
+  }, [id, navigate]);
+
+  useEffect(() => {
+    const onChange = () => setPresenting(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+
+  const html = useMemo(() => (course?.kind === 'markdown' && content != null ? renderCourse(content).html : ''), [course, content]);
+  useEffect(() => {
+    if (proseRef.current && html) enhanceCourseContent(proseRef.current, `smt-teacher:${id}`);
+  }, [html, id]);
+
+  const present = () => {
+    const el = stageRef.current;
+    if (!document.fullscreenElement && el?.requestFullscreen) el.requestFullscreen().catch(() => {});
+    else if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+  };
+
+  if (!course || content == null) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500" />
+      </div>
+    );
+  }
+
+  return (
+    <div ref={stageRef} className="fd-root flex flex-col bg-white" style={{ height: '100vh' }}>
+      <style>{FD_CSS}</style>
+      <div className="flex items-center gap-3 px-3 sm:px-5 h-12 border-b border-gray-200 bg-white flex-shrink-0">
+        <Link to={`/teacher/${id}`} className="fd-back text-sm font-semibold text-gray-700 hover:text-gray-900 whitespace-nowrap">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Exit full screen
+        </Link>
+        <p className="flex-1 min-w-0 text-sm font-semibold text-gray-900 truncate text-center">{course.title}</p>
+        <button onClick={present} className="text-sm font-semibold bg-gray-900 text-white px-3 py-1.5 rounded-lg whitespace-nowrap">
+          {presenting ? 'Stop presenting' : 'Present'}
+        </button>
+      </div>
+      {course.kind === 'html' ? (
+        <iframe title={course.title} srcDoc={content} sandbox="allow-scripts allow-popups" className="flex-1 w-full border-0 bg-white" />
+      ) : (
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-4xl mx-auto px-5 sm:px-8 py-8">
+            <div ref={proseRef} className="course-prose" dangerouslySetInnerHTML={{ __html: html }} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const TeacherFull = () => <Gate>{() => <TeacherFullScreen />}</Gate>;
 export const TeacherHome = () => <Gate>{(role) => <TeacherList role={role} />}</Gate>;
 export const TeacherEdit = () => <Gate>{() => <TeacherEditor />}</Gate>;
 export const TeacherView = () => <Gate>{() => <TeacherViewer />}</Gate>;
