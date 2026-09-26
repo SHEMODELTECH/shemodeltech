@@ -199,7 +199,7 @@ const LandingPage = () => {
             data-animate
             className={`fade-up delay-2 text-gray-600 text-lg sm:text-2xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed ${isVisible('hero-desc') ? 'visible' : ''}`}
           >
-            She Model Tech helps women build real tech experience through free courses, mentorship,
+            She Model Tech helps women build their tech careers through free courses, mentorship,
             team projects, and verified badges that showcase what they can create, contribute, and
             lead.
           </p>

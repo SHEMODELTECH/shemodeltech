@@ -18,7 +18,7 @@ const About = () => {
             <span className="text-pink-600">She Model Tech</span>
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-4">
-            She Model Tech is where women build real tech experience by joining teams, shipping real
+            She Model Tech is where women build real tech careers by joining teams, shipping real
             products, and earning verified badges that showcase what they built.
           </p>
         </section>
