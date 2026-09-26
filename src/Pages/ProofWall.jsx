@@ -528,7 +528,10 @@ const ProofWall = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    // Feed plus a side panel on wide screens (like LinkedIn), so the page sits
+    // balanced in the space instead of a narrow column floating off-centre.
+    <div className="w-full max-w-5xl mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_280px] xl:gap-8 xl:items-start">
+    <div className="w-full max-w-2xl mx-auto xl:max-w-none">
       {/* Header: title + a filter dropdown (like a social feed's "Sort by") */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Proof Wall</h1>
@@ -1222,6 +1225,26 @@ const ProofWall = () => {
           </button>
         </div>
       )}
+    </div>
+
+    {/* Side panel (wide screens) */}
+    <aside className="hidden xl:block sticky top-24 space-y-4">
+      <div className="bg-white border border-gray-200 rounded-xl p-5">
+        <p className="font-bold text-gray-900">About the Proof Wall</p>
+        <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+          Real updates from real work. Share progress on your projects, celebrate your team, and show what you can
+          build.
+        </p>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-xl p-5">
+        <p className="font-bold text-gray-900 mb-3">Keep building</p>
+        <div className="space-y-2">
+          <a href="/projects" className="block text-sm font-semibold text-pink-700 hover:underline">Find a project to join</a>
+          <a href="/learning" className="block text-sm font-semibold text-pink-700 hover:underline">Take a free course</a>
+          <a href="/talent-board" className="block text-sm font-semibold text-pink-700 hover:underline">See the Talent Board</a>
+        </div>
+      </div>
+    </aside>
     </div>
   );
 };

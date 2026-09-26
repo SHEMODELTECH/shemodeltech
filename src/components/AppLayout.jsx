@@ -262,11 +262,7 @@ const AppLayout = ({ children }) => {
               </svg>
             </button>
             )}
-            {location.pathname === '/proof-wall' && (
-            <a href="/proof-wall" className="hidden lg:flex items-center gap-1 ml-4">
-              <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-11 sm:h-12 w-auto" />
-            </a>
-            )}
+
           </div>
 
           {/* Global search bar - LinkedIn-style pill with a bold magnifier on
