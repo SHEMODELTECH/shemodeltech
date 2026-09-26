@@ -18,13 +18,24 @@ const LEVELS = ['Beginner', 'Project-based', 'Advanced'];
 const courseUrl = (c) => `/learning/${c.track}/${c.slug}`;
 
 // ---------- Course card ----------
+// Mentor courses published in the last 30 days show a "New" tag.
+const isNew = (c) => c.publishedAtMs && Date.now() - c.publishedAtMs < 30 * 24 * 3600 * 1000;
+
 export const CourseCard = ({ course, status, progress }) => {
   const L = look(course.track);
   return (
     <Link to={courseUrl(course)} className="lr-card group" style={{ '--c': L.accent, '--t': L.tint }}>
       <div className="lr-card-top">
-        <span className="text-xs font-semibold" style={{ color: L.accent }}>
-          {L.short}
+        <span className="flex flex-col items-start gap-1">
+          {course.isMentorCourse && (
+            <span className="lr-mentor-tag">
+              Mentor course
+              {isNew(course) && <span className="lr-new">New</span>}
+            </span>
+          )}
+          <span className="text-xs font-semibold" style={{ color: L.accent }}>
+            {L.short}
+          </span>
         </span>
         {L.img ? (
           <img src={L.img} alt="" className="w-11 h-12 object-contain" />
@@ -36,6 +47,9 @@ export const CourseCard = ({ course, status, progress }) => {
         <h3 className="font-semibold text-gray-900 text-[15px] leading-snug line-clamp-2 group-hover:underline decoration-1 underline-offset-2">
           {course.title}
         </h3>
+        {course.isMentorCourse && course.authorName && (
+          <p className="text-xs text-gray-500 mt-1">By {course.authorName}</p>
+        )}
         {course.summary && <p className="text-sm text-gray-600 mt-1.5 line-clamp-2">{course.summary}</p>}
         <div className="mt-auto pt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
           {course.level && <span className="font-semibold text-gray-700">{course.level}</span>}
@@ -139,7 +153,7 @@ const LearningHome = ({ mine = false }) => {
       ({ c, s }) =>
         s > 0 &&
         (!mine || statusOf(c)) &&
-        (track === 'all' || c.track === track) &&
+        (track === 'all' || (track === 'mentors' ? c.isMentorCourse : c.track === track)) &&
         (level === 'all' || c.level === level)
     )
     .sort((a, b) => b.s - a.s || a.i - b.i)
@@ -211,6 +225,36 @@ const LearningHome = ({ mine = false }) => {
           </section>
         )}
 
+        {/* From our mentors: newest mentor-created courses, so learners notice them */}
+        {!mine && !q && track === 'all' && level === 'all' && published.length > 0 && (
+          <section className="pt-10" aria-labelledby="mentors-h">
+            <div className="lr-mentor-band">
+              <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-indigo-700">New in Learning</p>
+                  <h2 id="mentors-h" className="text-xl font-bold text-gray-900 mt-1">From our mentors</h2>
+                  <p className="text-sm text-gray-600 mt-1 max-w-2xl">
+                    Courses created by She Model Tech mentors and approved by our team.
+                  </p>
+                </div>
+                {published.length > 4 && (
+                  <button onClick={() => setTrack('mentors')} className="text-sm font-semibold text-indigo-700 hover:underline">
+                    See all {published.length}
+                  </button>
+                )}
+              </div>
+              <div className="lr-grid">
+                {[...published]
+                  .sort((a, b) => (b.publishedAtMs || 0) - (a.publishedAtMs || 0))
+                  .slice(0, 4)
+                  .map((c) => (
+                    <CourseCard key={c.track + c.slug} course={c} status={statusOf(c)} progress={progressOf(c)} />
+                  ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Filters */}
         <section className="pt-10" aria-label="Filter courses">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
@@ -237,6 +281,7 @@ const LearningHome = ({ mine = false }) => {
                 className="h-10 min-w-[210px] rounded-lg border border-gray-300 bg-white px-3 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-500"
               >
                 <option value="all">All tracks</option>
+                {published.length > 0 && <option value="mentors">Mentor courses ({published.length})</option>}
                 {TRACK_ORDER.filter((t) => tracksWithCourses().includes(t)).map((t) => (
                   <option key={t} value={t}>{look(t).short}</option>
                 ))}
@@ -397,6 +442,10 @@ export const LR_CSS = `
 .lr-card:focus-visible { outline:2px solid var(--c); outline-offset:2px; }
 .lr-card-top { height:88px; background:var(--t); display:flex; align-items:flex-end; justify-content:space-between;
   padding:.75rem 1rem; border-bottom:3px solid var(--c); }
+.lr-mentor-tag { display:inline-flex; align-items:center; gap:.35rem; font-size:.68rem; font-weight:800; letter-spacing:.02em;
+  color:#4338CA; background:#EEF2FF; border:1px solid #C7D2FE; padding:.12rem .5rem; border-radius:999px; }
+.lr-new { color:#fff; background:#DB2777; border-radius:999px; padding:0 .4rem; font-size:.62rem; }
+.lr-mentor-band { background:linear-gradient(135deg,#EEF2FF 0%,#FDF2F8 100%); border:1px solid #E0E7FF; border-radius:1.25rem; padding:1.25rem; }
 .lr-inter { font-weight:700; color:var(--c); background:var(--t); padding:.1rem .45rem; border-radius:999px; }
 .lr-chips { display:flex; gap:.5rem; overflow-x:auto; scrollbar-width:none; padding-bottom:.25rem; }
 .lr-chips::-webkit-scrollbar { display:none; }

@@ -72,6 +72,8 @@ export const toCatalogCourse = (p) => ({
   format: p.format || p.kind,
   authorUid: p.authorUid || '',
   authorName: p.authorName || '',
+  isMentorCourse: true,
+  publishedAtMs: p.publishedAt?.toMillis ? p.publishedAt.toMillis() : 0,
   order: p.order ?? 999,
   references: [],
   markdown: '',
