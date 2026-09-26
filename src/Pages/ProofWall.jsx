@@ -3,7 +3,7 @@
 // Reads system-generated events + limited work updates from the `activity` collection.
 // Members can share a work-focused project update; everything else is auto-generated proof.
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -143,6 +143,17 @@ const ProofWall = () => {
 
   // Share-update composer
   const [showCompose, setShowCompose] = useState(false);
+  // LinkedIn-style "start a post": the quick buttons open the composer and jump
+  // straight to the image picker or the link field.
+  const imageInputRef = useRef(null);
+  const linkInputRef = useRef(null);
+  const openCompose = (focus) => {
+    setShowCompose(true);
+    setTimeout(() => {
+      if (focus === 'photo') imageInputRef.current?.click();
+      if (focus === 'link') linkInputRef.current?.focus();
+    }, 50);
+  };
   const [updateText, setUpdateText] = useState('');
   const [updateProject, setUpdateProject] = useState('');
   const [updateLink, setUpdateLink] = useState('');
@@ -517,15 +528,80 @@ const ProofWall = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      {/* Header */}
-      <div className="mb-4">
+    <div className="w-full max-w-2xl mx-auto">
+      {/* Header: title + a filter dropdown (like a social feed's "Sort by") */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Proof Wall</h1>
+        <label className="flex items-center gap-2 text-sm text-gray-600">
+          <span className="hidden sm:inline">Show</span>
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            aria-label="Filter the Proof Wall"
+            className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          >
+            {filtersFor(myData?.isCompany).map((f) => (
+              <option key={f.id} value={f.id}>{f.label}</option>
+            ))}
+          </select>
+        </label>
       </div>
+
+      {/* Start a post (shown by default, like LinkedIn) */}
+      {!showCompose && (
+        <div className="bg-white border border-gray-200 rounded-xl p-4 mb-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            {myData?.photoURL || currentUser?.photoURL ? (
+              <img src={myData?.photoURL || currentUser?.photoURL} alt="" className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+            ) : (
+              <span className="w-12 h-12 rounded-full bg-pink-600 text-white font-bold flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                {(myData?.displayName || currentUser?.email || '?')[0].toUpperCase()}
+              </span>
+            )}
+            <button
+              onClick={() => openCompose()}
+              className="flex-1 text-left rounded-full border border-gray-300 hover:bg-gray-50 px-5 py-3 text-sm font-semibold text-gray-600"
+            >
+              {myData?.isCompany ? 'Share a company update' : 'Share a project update'}
+            </button>
+          </div>
+          <div className="grid grid-cols-3 gap-1 mt-3">
+            {[
+              ['photo', 'Photo', 'text-sky-600', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'],
+              ['link', 'Link', 'text-emerald-600', 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'],
+              ['write', myData?.isCompany ? 'Update' : 'Progress', 'text-orange-500', 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
+            ].map(([k, label, color, d]) => (
+              <button
+                key={k}
+                onClick={() => openCompose(k)}
+                className="flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-gray-100 text-sm font-semibold text-gray-700"
+              >
+                <svg className={`w-5 h-5 ${color}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={d} />
+                </svg>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Composer (work-focused, not personal) */}
       {showCompose && (
-        <div className="bg-white border border-gray-200 rounded-xl p-4 mb-5 space-y-3">
+        <div className="bg-white border border-gray-200 rounded-xl p-4 mb-5 space-y-3 shadow-sm">
+          <div className="flex items-center gap-3">
+            {myData?.photoURL || currentUser?.photoURL ? (
+              <img src={myData?.photoURL || currentUser?.photoURL} alt="" className="w-10 h-10 rounded-full object-cover" />
+            ) : (
+              <span className="w-10 h-10 rounded-full bg-pink-600 text-white font-bold flex items-center justify-center" aria-hidden="true">
+                {(myData?.displayName || currentUser?.email || '?')[0].toUpperCase()}
+              </span>
+            )}
+            <div>
+              <p className="text-sm font-semibold text-gray-900">{myData?.displayName || currentUser?.displayName || 'You'}</p>
+              <p className="text-xs text-gray-500">Posting to the Proof Wall</p>
+            </div>
+          </div>
           <input
             value={updateProject}
             onChange={(e) => setUpdateProject(e.target.value)}
@@ -573,6 +649,7 @@ const ProofWall = () => {
           )}
 
           <input
+            ref={linkInputRef}
             value={updateLink}
             onChange={(e) => setUpdateLink(e.target.value)}
             placeholder={
@@ -600,6 +677,7 @@ const ProofWall = () => {
           ) : (
             <label className="inline-flex items-center gap-2 text-sm text-pink-600 font-medium cursor-pointer">
               <input
+                ref={imageInputRef}
                 type="file"
                 accept="image/*"
                 onChange={handleUpdateImageSelect}
@@ -630,44 +708,6 @@ const ProofWall = () => {
             </button>
           </div>
         </div>
-      )}
-
-      {/* Filters + share. The chips live on ONE horizontally-scrollable line so
- they never wrap into a messy stack on phones (standard mobile pattern). */}
-      {/* Hidden while the composer is open so the post form is the only thing
-          in focus; they come back on Share or Cancel. */}
-      {!showCompose && (
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-5">
-        <div className="flex flex-nowrap gap-1.5 flex-1 overflow-x-auto pb-1 -mb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {filtersFor(myData?.isCompany).map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setFilter(f.id)}
-              className={`flex-shrink-0 text-xs font-semibold px-3.5 py-2 rounded-full transition-all ${
-                filter === f.id
-                  ? 'bg-pink-600 text-white shadow-sm'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-        <button
-          onClick={() => setShowCompose((v) => !v)}
-          className="flex-shrink-0 flex items-center justify-center gap-1.5 w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-3.5 py-2.5 sm:py-2 rounded-full transition-all shadow-sm"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          {myData?.isCompany ? 'Company update' : 'Project update'}
-        </button>
-      </div>
       )}
 
       {/* Wall */}
