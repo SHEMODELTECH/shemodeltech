@@ -108,6 +108,14 @@ const TeachApply = () => {
                 Sign in to apply
               </button>
             </div>
+          ) : state.profile?.isCompany ? (
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
+              <h2 className="text-xl font-bold text-gray-900">Mentoring is for individual members</h2>
+              <p className="text-gray-700 mt-2">
+                Company accounts can't apply to mentor. If someone at your organisation would like to mentor, they can
+                apply from their own personal account.
+              </p>
+            </div>
           ) : isTeacher ? (
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
               <h2 className="text-xl font-bold text-gray-900">You're a mentor</h2>

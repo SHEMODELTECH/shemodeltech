@@ -5,6 +5,9 @@
 //     Talent Board with badge filtering and ranking)
 //   - PROJECTS by title or field (free and paid)
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { coursesForTrack, tracksWithCourses } from '../utils/foundationsCourses';
+import { listPublished, toCatalogCourse } from '../utils/learningPublished';
+import MentorBadge from '../components/MentorBadge';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { collection, query, getDocs, limit } from 'firebase/firestore';
@@ -19,6 +22,18 @@ const SearchPage = () => {
   const [term, setTerm] = useState(searchParams.get('q') || '');
   const [members, setMembers] = useState([]);
   const [projects, setProjects] = useState([]);
+  // Learning courses: built-in ones plus mentor courses published to Learning.
+  const [published, setPublished] = useState([]);
+  useEffect(() => {
+    listPublished().then((l) => setPublished(l.map(toCatalogCourse))).catch(() => {});
+  }, []);
+  const allCourses = useMemo(
+    () => [
+      ...tracksWithCourses().flatMap((t) => coursesForTrack(t).map((c) => ({ ...c, track: t }))),
+      ...published,
+    ],
+    [published]
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -77,13 +92,20 @@ const SearchPage = () => {
     return projects
       .filter(p => {
         const title = (p.projectTitle || '').toLowerCase();
-        const field = (p.projectField || p.field || '').toLowerCase();
+        const field = `${p.projectField || p.field || ''} ${p.industryTrack || ''} ${p.projectDescription || ''}`.toLowerCase();
         return title.includes(q) || field.includes(q);
       })
       .slice(0, 12);
   }, [q, projects]);
 
-  const total = memberResults.length + projectResults.length;
+  const courseResults = useMemo(() => {
+    if (!q) return [];
+    return allCourses
+      .filter((c) => `${c.title} ${c.summary || ''} ${c.authorName || ''}`.toLowerCase().includes(q))
+      .slice(0, 12);
+  }, [q, allCourses]);
+
+  const total = memberResults.length + projectResults.length + courseResults.length;
 
   const SectionHeader = ({ children }) => (
     <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 mt-6 first:mt-0">{children}</p>
@@ -92,7 +114,7 @@ const SearchPage = () => {
   return (
     <div className="max-w-2xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Search</h1>
-      <p className="text-gray-500 text-sm mb-5">Find members and projects.</p>
+      <p className="text-gray-500 text-sm mb-5">Find members, projects, and courses.</p>
 
       {/* Search input */}
       <div className="relative mb-6">
@@ -103,7 +125,7 @@ const SearchPage = () => {
           ref={inputRef}
           value={term}
           onChange={e => setTerm(e.target.value)}
-          placeholder="Search members and projects…"
+          placeholder="Search members, projects, and courses…"
           className="w-full bg-white border border-gray-300 rounded-xl pl-11 pr-10 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none shadow-sm"
         />
         {term && (
@@ -119,12 +141,12 @@ const SearchPage = () => {
         </div>
       ) : !q ? (
         <div className="text-center py-14">
-          <p className="text-gray-400 text-sm">Type to search across members and projects.</p>
+          <p className="text-gray-400 text-sm">Type to search across members, projects, and courses.</p>
         </div>
       ) : total === 0 ? (
         <div className="text-center py-14">
           <p className="text-gray-700 text-sm font-semibold mb-1">No results for "{term}"</p>
-          <p className="text-gray-400 text-xs">Try a different name, project title, or track.</p>
+          <p className="text-gray-400 text-xs">Try a different name, project title, course, or track.</p>
         </div>
       ) : (
         <div>
@@ -152,6 +174,7 @@ const SearchPage = () => {
                     {u.isCompany && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 flex-shrink-0">COMPANY</span>
                     )}
+                    {!u.isCompany && <MentorBadge count={u.mentorApprovedCourses || 0} isMentor={!!u.isTeacher} size="sm" />}
                   </button>
                 ))}
               </div>
@@ -181,6 +204,27 @@ const SearchPage = () => {
             </div>
           )}
 
+          {courseResults.length > 0 && (
+            <div>
+              <SectionHeader>Courses</SectionHeader>
+              <div className="space-y-1.5">
+                {courseResults.map((c) => (
+                  <button
+                    key={c.track + c.slug}
+                    onClick={() => navigate(`/learning/${c.track}/${c.slug}`)}
+                    className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl hover:border-pink-300 hover:bg-pink-50/40 transition-all text-left"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-gray-900 text-sm font-semibold truncate">{c.title}</p>
+                      <p className="text-gray-400 text-xs truncate">
+                        {[c.level, c.isMentorCourse ? `Mentor course${c.authorName ? ` by ${c.authorName}` : ''}` : 'Learning'].filter(Boolean).join(' · ')}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

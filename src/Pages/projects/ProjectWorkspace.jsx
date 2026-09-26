@@ -257,7 +257,6 @@ const ProjectWorkspace = () => {
         authorId: currentUser.uid,
         authorEmail: currentUser.email,
         authorName: currentUser.displayName || currentUser.email,
-        authorEmail: currentUser.email,
         authorPhoto: currentUser.photoURL || null,
         createdAt: serverTimestamp(),
         editedAt: null,

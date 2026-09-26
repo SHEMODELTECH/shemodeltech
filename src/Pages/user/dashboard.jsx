@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { doc, getDoc, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import FindFirstProject from '../../components/FindFirstProject';
+import DashboardLearning from '../../components/DashboardLearning';
 import AIRecommendations from '../../components/AIRecommendations';
 import DiscoverTrack from '../../components/DiscoverTrack';
 import TierBadge from '../../components/TierBadge';
@@ -372,6 +373,9 @@ const DashboardOverview = () => {
                   Browse Projects
                 </button>
               </div>
+
+              {/* Learning: courses in progress and completed */}
+              <DashboardLearning profile={profileData} />
 
               {/* Ongoing Projects */}
               <div className="bg-white border border-gray-200 rounded-xl p-6">
