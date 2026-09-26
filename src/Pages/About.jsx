@@ -18,21 +18,15 @@ const About = () => {
             <span className="text-pink-600">She Model Tech</span>
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-4">
-            She Model Tech is where women build real tech experience. You join a team, ship a real
-            product, and earn verified badges that show employers exactly what you built.
+            She Model Tech is where women build real tech experience by joining teams, shipping real
+            products, and earning verified badges that showcase what they built.
           </p>
         </section>
 
         {/* Who we are: registered nonprofit and mission */}
         <section className="mb-14" aria-labelledby="who-h">
           <div className="rounded-2xl border border-pink-100 bg-gradient-to-br from-pink-50 via-white to-indigo-50 p-6 sm:p-8">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-pink-700 bg-white border border-pink-200 px-3 py-1 rounded-full">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-              </svg>
-              Registered 501(c)(3) nonprofit
-            </span>
-            <h2 id="who-h" className="text-2xl font-bold text-gray-900 mt-4">Who we are</h2>
+            <h2 id="who-h" className="text-2xl font-bold text-gray-900">Who we are</h2>
             <p className="text-gray-700 text-lg leading-relaxed mt-3">
               <strong className="text-gray-900">SHE MODEL TECH Inc.</strong> is a registered 501(c)(3) non-profit
               organization with the mission to empower women in tech through mentorship, IT skills training, leadership
@@ -59,8 +53,8 @@ const About = () => {
         {/* The path: Ascend Achieve Advance */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            <span className="text-pink-600">Ascend</span>,{' '}
-            <span className="text-orange-500">Achieve</span>,{' '}
+            <span className="text-pink-600">Ascend</span>{' '}
+            <span className="text-orange-500">Achieve</span>{' '}
             <span className="text-gray-900">Advance</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
