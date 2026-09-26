@@ -50,6 +50,56 @@ Software teams building a product incrementally, where stakeholders want regular
 4. **Simulate three Daily Standups** by writing one sentence each day (for three days) noting what you did, what you'll do next, and any blocker, even if the "work" is just planning.
 5. **Hold a mock Sprint Review and Retrospective**: write two sentences summarizing what would be demoed to a stakeholder, and one thing you'd change about the process next sprint.
 
+```lab
+{
+ "type": "sort",
+ "title": "Role, ceremony, or artifact?",
+ "prompt": "Sort each Scrum term into the right group.",
+ "buckets": [
+  "Role",
+  "Ceremony",
+  "Artifact"
+ ],
+ "items": [
+  {
+   "text": "Product Owner",
+   "bucket": "Role",
+   "why": "Decides what gets built and in what order."
+  },
+  {
+   "text": "Scrum Master",
+   "bucket": "Role",
+   "why": "Protects the team's process and removes blockers."
+  },
+  {
+   "text": "Daily Standup",
+   "bucket": "Ceremony",
+   "why": "A short daily sync on progress and blockers."
+  },
+  {
+   "text": "Sprint Review",
+   "bucket": "Ceremony",
+   "why": "Demoing completed work to stakeholders."
+  },
+  {
+   "text": "Product Backlog",
+   "bucket": "Artifact",
+   "why": "The full, prioritised list of everything that could be built."
+  },
+  {
+   "text": "Sprint Backlog",
+   "bucket": "Artifact",
+   "why": "The subset of work pulled into the current sprint."
+  },
+  {
+   "text": "Sprint Planning",
+   "bucket": "Ceremony",
+   "why": "Deciding what the team will work on this sprint."
+  }
+ ]
+}
+```
+
 #### Checkpoint
 You have a Product Backlog, a Sprint Backlog pulled from it during a mock planning session, three days of simulated standup notes, and a mock review and retrospective summary.
 

@@ -1,4 +1,5 @@
 <!-- order: 4 -->
+<!-- runnable: html -->
 # Web Development for Builders: A Practical Beginner's Course
 
 ## Course Overview

@@ -50,6 +50,42 @@ A new team member spends two days getting a project running because setup lives 
 4. **Create a GitHub repository** and write its README with four sections: what this is, who it's for, how to get started, and where to get help.
 5. **Have someone follow your how-to** without your help, and note every place they paused, asked a question, or went wrong. Revise those steps.
 
+```lab
+{
+ "type": "sort",
+ "title": "Which kind of page does the reader need?",
+ "prompt": "Match each reader's goal to the page type that serves it.",
+ "buckets": [
+  "Tutorial",
+  "How-to guide",
+  "Reference",
+  "Explanation"
+ ],
+ "items": [
+  {
+   "text": "\"I'm new. Walk me through building my first report from start to finish.\"",
+   "bucket": "Tutorial",
+   "why": "A beginner learning through a complete example."
+  },
+  {
+   "text": "\"I know the tool. How do I reset a user's password?\"",
+   "bucket": "How-to guide",
+   "why": "One specific task for someone who knows the basics."
+  },
+  {
+   "text": "\"What does the timeout setting accept?\"",
+   "bucket": "Reference",
+   "why": "A fact to look up."
+  },
+  {
+   "text": "\"Why did we choose this vendor over the others?\"",
+   "bucket": "Explanation",
+   "why": "Background and reasons."
+  }
+ ]
+}
+```
+
 #### Checkpoint
 You have a tested how-to guide revised from a real reader's attempt, and a README with all four sections.
 

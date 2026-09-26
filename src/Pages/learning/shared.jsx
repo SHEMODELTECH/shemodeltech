@@ -16,7 +16,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { coursesForTrack, trackMeta } from '../../utils/foundationsCourses';
 import { renderCourse } from '../../utils/renderCourseMarkdown';
-import { LABS_CSS, enhancePython, mountLabs } from './labs';
+import { LABS_CSS, enhanceHtml, enhancePython, mountLabs } from './labs';
 import TechDevImg from '../../Images/TechDev.png';
 import TechArchsImg from '../../Images/TechArchs.png';
 import TechQAImg from '../../Images/TechQA.png';
@@ -288,6 +288,7 @@ export const enhanceCourseContent = (container, key, opts = {}) => {
   enhanceCheckpoints(container);
   enhanceCode(container);
   if (opts.runPython) enhancePython(container);
+  if (opts.runHtml) enhanceHtml(container);
   mountLabs(container);
 };
 
@@ -498,6 +499,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
   useEffect(() => {
     enhanceCourseContent(proseRef.current, `smt-learn:${course.slug}:${parts[current] ? parts[current].id : current}`, {
       runPython: course.runnable === 'python',
+      runHtml: course.runnable === 'html',
     });
   }, [current, course.slug, parts]);
 

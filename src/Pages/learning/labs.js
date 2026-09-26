@@ -199,7 +199,166 @@ const sortLab = (cfg) => {
   return root;
 };
 
-const LABS = { order: orderLab, sort: sortLab };
+
+// ---------- Hash lab (SHA-256, in the browser) ----------
+const sha256 = async (text) => {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+};
+const hashLab = (cfg) => {
+  const root = el('div', 'lab');
+  root.appendChild(el('p', 'lab-kicker', 'Try it'));
+  root.appendChild(el('p', 'lab-title', cfg.title || 'See hashing happen'));
+  root.appendChild(el('p', 'lab-prompt', cfg.prompt || 'Change one character in either box and watch the SHA-256 hash change completely.'));
+  const inputs = (cfg.inputs || ['hello', 'hellp']).map((v, i) => {
+    const wrap = el('div', 'lab-hash');
+    const lab = el('label', 'lab-field-label', `Input ${i + 1}`);
+    const inp = el('input', 'lab-input');
+    inp.value = v;
+    inp.id = `hash-${Math.random().toString(36).slice(2, 8)}`;
+    lab.htmlFor = inp.id;
+    const out = el('code', 'lab-hash-out');
+    wrap.append(lab, inp, el('p', 'lab-field-label', 'SHA-256 hash'), out);
+    root.appendChild(wrap);
+    return { inp, out };
+  });
+  const msg = el('p', 'lab-msg');
+  msg.setAttribute('role', 'status');
+  root.appendChild(msg);
+  const update = async () => {
+    if (!window.crypto || !crypto.subtle) {
+      msg.textContent = 'Your browser blocks hashing on this page. Try a current version of Chrome, Edge, Safari, or Firefox.';
+      return;
+    }
+    const hs = await Promise.all(inputs.map(({ inp }) => sha256(inp.value)));
+    inputs.forEach(({ out }, i) => (out.textContent = hs[i]));
+    if (hs.length === 2) {
+      const diff = hs[0].split('').filter((c, i) => c !== hs[1][i]).length;
+      msg.textContent =
+        inputs[0].inp.value === inputs[1].inp.value
+          ? 'Same input, same hash, every time. That is how a system checks a password without storing it.'
+          : `The inputs differ, and ${diff} of the 64 hash characters changed. You can't work backwards from a hash to the input.`;
+    }
+  };
+  inputs.forEach(({ inp }) => inp.addEventListener('input', update));
+  update();
+  return root;
+};
+
+// ---------- Password strength lab ----------
+const COMMON = ['password', '123456', '12345678', 'qwerty', 'letmein', 'admin', 'welcome', 'iloveyou', 'monkey', 'dragon', 'football', 'abc123', 'passw0rd', 'sunshine', 'princess'];
+const fmtTime = (sec) => {
+  if (sec < 1) return 'instantly';
+  const units = [['year', 31536000], ['day', 86400], ['hour', 3600], ['minute', 60], ['second', 1]];
+  if (sec > 31536000 * 1e6) return 'more than a million years';
+  for (const [n, s] of units) if (sec >= s) { const v = Math.round(sec / s); return `about ${v.toLocaleString()} ${n}${v === 1 ? '' : 's'}`; }
+  return 'instantly';
+};
+const passwordLab = (cfg) => {
+  const root = el('div', 'lab');
+  root.appendChild(el('p', 'lab-kicker', 'Try it'));
+  root.appendChild(el('p', 'lab-title', cfg.title || 'How long would it take to crack?'));
+  root.appendChild(el('p', 'lab-prompt', 'Type a made-up password (never a real one) and see how its length and variety change the estimate. Nothing you type leaves this page.'));
+  const inp = el('input', 'lab-input');
+  inp.type = 'text';
+  inp.value = cfg.start || 'sunshine1';
+  inp.setAttribute('aria-label', 'Made-up password to test');
+  inp.autocomplete = 'off';
+  const meter = el('div', 'lab-meter');
+  const bar = el('div', 'lab-meter-bar');
+  meter.appendChild(bar);
+  const verdict = el('p', 'lab-msg');
+  verdict.setAttribute('role', 'status');
+  const facts = el('ul', 'lab-facts');
+  root.append(inp, meter, verdict, facts);
+  const update = () => {
+    const p = inp.value;
+    let pool = 0;
+    const kinds = [];
+    if (/[a-z]/.test(p)) { pool += 26; kinds.push('lowercase'); }
+    if (/[A-Z]/.test(p)) { pool += 26; kinds.push('uppercase'); }
+    if (/[0-9]/.test(p)) { pool += 10; kinds.push('numbers'); }
+    if (/[^a-zA-Z0-9]/.test(p)) { pool += 33; kinds.push('symbols'); }
+    let bits = p.length && pool ? p.length * Math.log2(pool) : 0;
+    const lower = p.toLowerCase();
+    const flags = [];
+    if (COMMON.some((c) => lower.includes(c))) { bits = Math.min(bits, 12); flags.push('contains a very common password, which attackers try first'); }
+    if (/^(.)\1+$/.test(p)) { bits = Math.min(bits, 6); flags.push('is one character repeated'); }
+    if (/(0123|1234|2345|3456|4567|5678|6789|abcd|qwer)/i.test(p)) { bits -= 10; flags.push('contains a common sequence'); }
+    if (/(19|20)\d\d/.test(p)) { bits -= 6; flags.push('contains what looks like a year'); }
+    bits = Math.max(0, bits);
+    const seconds = Math.pow(2, bits) / 2 / 1e10;
+    const levels = [[28, 'Very weak', '#DC2626'], [36, 'Weak', '#EA580C'], [60, 'Fair', '#CA8A04'], [80, 'Strong', '#16A34A'], [Infinity, 'Very strong', '#047857']];
+    const [, label, color] = levels.find(([max]) => bits < max);
+    bar.style.width = `${Math.min(100, (bits / 100) * 100)}%`;
+    bar.style.background = color;
+    const when = seconds < 1 ? 'cracked instantly' : `cracked in ${fmtTime(seconds)}`;
+    verdict.textContent = p ? `${label}: ${when} by an attacker guessing 10 billion passwords a second.` : 'Type something to test.';
+    facts.innerHTML = '';
+    if (p) {
+      [`${p.length} characters, using ${kinds.join(', ') || 'no letters or numbers'}`, ...flags.map((f) => `It ${f}`)].forEach((t) => facts.appendChild(el('li', null, t)));
+      facts.appendChild(el('li', null, 'Length matters most: adding four random words usually beats swapping letters for symbols. MFA protects you even if a password leaks.'));
+    }
+  };
+  inp.addEventListener('input', update);
+  update();
+  return root;
+};
+
+// ---------- RICE prioritisation lab ----------
+const riceLab = (cfg) => {
+  const root = el('div', 'lab');
+  root.appendChild(el('p', 'lab-kicker', 'Try it'));
+  root.appendChild(el('p', 'lab-title', cfg.title || 'Prioritise with RICE'));
+  root.appendChild(el('p', 'lab-prompt', cfg.prompt || 'Adjust the numbers and watch the ranking change. RICE score = Reach × Impact × Confidence ÷ Effort.'));
+  const rows = cfg.items.map((it) => ({ ...it }));
+  const table = el('div', 'lab-rice');
+  const result = el('ol', 'lab-rice-rank');
+  result.setAttribute('aria-live', 'polite');
+  const fields = [
+    ['reach', 'Reach (people / quarter)', 1, 100000, 10],
+    ['impact', 'Impact (0.25 to 3)', 0.25, 3, 0.25],
+    ['confidence', 'Confidence (%)', 10, 100, 10],
+    ['effort', 'Effort (person-weeks)', 0.5, 52, 0.5],
+  ];
+  const score = (r) => (r.reach * r.impact * (r.confidence / 100)) / Math.max(r.effort, 0.1);
+  const rank = () => {
+    result.innerHTML = '';
+    rows
+      .map((r) => ({ r, s: score(r) }))
+      .sort((a, b) => b.s - a.s)
+      .forEach(({ r, s }) => {
+        const li = el('li', 'lab-rice-item');
+        li.append(el('span', 'lab-rice-name', r.name), el('span', 'lab-rice-score', Math.round(s).toLocaleString()));
+        result.appendChild(li);
+      });
+  };
+  rows.forEach((r, ri) => {
+    const card = el('fieldset', 'lab-rice-card');
+    card.appendChild(el('legend', 'lab-rice-name', r.name));
+    fields.forEach(([k, label, min, max, step]) => {
+      const id = `rice-${ri}-${k}-${Math.random().toString(36).slice(2, 6)}`;
+      const l = el('label', 'lab-field-label', label);
+      l.htmlFor = id;
+      const inp = el('input', 'lab-input lab-input-sm');
+      Object.assign(inp, { type: 'number', min, max, step, value: r[k], id });
+      inp.addEventListener('input', () => {
+        const v = parseFloat(inp.value);
+        if (!Number.isNaN(v)) { r[k] = v; rank(); }
+      });
+      const f = el('div', 'lab-rice-field');
+      f.append(l, inp);
+      card.appendChild(f);
+    });
+    table.appendChild(card);
+  });
+  root.append(table, el('p', 'lab-field-label', 'Ranking (highest score first)'), result);
+  if (cfg.note) root.appendChild(el('p', 'lab-sort-why', cfg.note));
+  rank();
+  return root;
+};
+
+const LABS = { order: orderLab, sort: sortLab, hash: hashLab, password: passwordLab, rice: riceLab };
 
 export const mountLabs = (container) => {
   container.querySelectorAll('.course-lab[data-lab]').forEach((slot) => {
@@ -340,6 +499,54 @@ export const enhancePython = (container) => {
   });
 };
 
+
+// ---------- Live HTML preview ----------
+// Courses marked <!-- runnable: html --> turn ```html blocks into an editor
+// with a live preview beside it (a sandboxed frame, so nothing can touch the page).
+export const enhanceHtml = (container) => {
+  container.querySelectorAll('pre > code.language-html').forEach((code) => {
+    const pre = code.parentElement;
+    const wrap = pre.closest('.code-wrap') || pre;
+    const source = code.textContent.replace(/\n$/, '');
+    const cell = el('div', 'html-cell');
+    const bar = el('div', 'py-bar');
+    bar.appendChild(el('span', 'py-label', 'HTML: edit the code, the preview updates as you type'));
+    const reset = btn('py-reset', 'Reset');
+    bar.appendChild(reset);
+    const grid = el('div', 'html-grid');
+    const ta = el('textarea', 'py-editor');
+    ta.value = source;
+    ta.spellcheck = false;
+    ta.setAttribute('aria-label', 'HTML you can edit; the preview updates as you type');
+    const frame = el('iframe', 'html-preview');
+    frame.setAttribute('sandbox', 'allow-scripts');
+    frame.title = 'Live preview';
+    let t;
+    const render = () => {
+      frame.srcdoc = `<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:system-ui,sans-serif;margin:12px;color:#111}</style></head><body>${ta.value}</body></html>`;
+    };
+    const fit = () => {
+      ta.style.height = 'auto';
+      ta.style.height = `${Math.max(ta.scrollHeight + 2, 140)}px`;
+    };
+    ta.addEventListener('input', () => {
+      fit();
+      clearTimeout(t);
+      t = setTimeout(render, 250);
+    });
+    reset.addEventListener('click', () => {
+      ta.value = source;
+      fit();
+      render();
+    });
+    grid.append(ta, frame);
+    cell.append(bar, grid);
+    wrap.replaceWith(cell);
+    fit();
+    render();
+  });
+};
+
 export const LABS_CSS = `
 .course-prose .lab { margin:1.5rem 0; border:2px solid var(--acc); border-radius:1rem; padding:1rem 1.1rem; background:#fff; }
 .course-prose .lab-kicker { margin:0; font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--acc); }
@@ -383,5 +590,29 @@ export const LABS_CSS = `
 .course-prose .py-editor:focus { outline:2px solid var(--acc); outline-offset:-2px; }
 .course-prose .py-out { margin:0; border-radius:0; background:#0F0D1A; color:#D1FAE5; padding:.75rem 1.1rem; font-size:.82rem; border-top:1px solid #2A2640; white-space:pre-wrap; }
 .course-prose .py-out.is-error { color:#FECACA; }
+.course-prose .html-cell { margin:1.1rem 0; border-radius:.8rem; overflow:hidden; background:#1E1B2E; }
+.course-prose .html-grid { display:grid; grid-template-columns:1fr; }
+@media (min-width:900px) { .course-prose .html-grid { grid-template-columns:1fr 1fr; } }
+.course-prose .html-preview { width:100%; min-height:180px; height:100%; border:0; background:#fff; }
+.course-prose .lab-field-label { display:block; margin:.6rem 0 .2rem; font-size:.75rem; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:.04em; }
+.course-prose .lab-input { width:100%; border:1px solid #D1D5DB; border-radius:.6rem; padding:.55rem .7rem; font:inherit; font-size:.95rem; color:#111827; background:#fff; }
+.course-prose .lab-input:focus { outline:2px solid var(--acc); outline-offset:1px; border-color:transparent; }
+.course-prose .lab-input-sm { padding:.4rem .5rem; font-size:.9rem; }
+.course-prose .lab-hash { margin-top:.4rem; }
+.course-prose .lab-hash-out { display:block; word-break:break-all; background:#F3F4F6; padding:.5rem .6rem; border-radius:.5rem; font-size:.78rem; }
+.course-prose .lab-meter { height:.6rem; border-radius:999px; background:#F3F4F6; margin-top:.7rem; overflow:hidden; }
+.course-prose .lab-meter-bar { height:100%; width:0; border-radius:999px; transition:width .2s; }
+.course-prose .lab-facts { margin:.4rem 0 0; font-size:.9rem; color:#4B5563; }
+.course-prose .lab-rice { display:grid; gap:.7rem; grid-template-columns:1fr; }
+@media (min-width:700px) { .course-prose .lab-rice { grid-template-columns:repeat(2, minmax(0,1fr)); } }
+.course-prose .lab-rice-card { border:1px solid #E5E7EB; border-radius:.75rem; padding:.3rem .8rem .8rem; margin:0; background:#FAFAFA; }
+.course-prose .lab-rice-card legend { padding:0 .3rem; }
+.course-prose .lab-rice-name { font-weight:700; color:#111827; font-size:.92rem; }
+.course-prose .lab-rice-field { display:grid; grid-template-columns:1fr 6.5rem; align-items:center; gap:.5rem; }
+.course-prose .lab-rice-field .lab-field-label { margin:.45rem 0 0; text-transform:none; letter-spacing:0; font-size:.82rem; }
+.course-prose .lab-rice-rank { margin:.3rem 0 0; padding-left:1.4rem; }
+.course-prose .lab-rice-item { display:flex; justify-content:space-between; gap:1rem; padding:.3rem 0; border-bottom:1px dashed #E5E7EB; }
+.course-prose .lab-rice-score { font-weight:800; color:var(--acc); }
+@media (prefers-reduced-motion: reduce) { .course-prose .lab-meter-bar { transition:none; } }
 .course-prose .py-note { margin:-.6rem 0 1rem; font-size:.82rem; color:#6B7280; }
 `;

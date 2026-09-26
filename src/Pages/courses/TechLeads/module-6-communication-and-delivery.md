@@ -109,6 +109,42 @@ A launch depends on a partner delivering an integration. Logged as a dependency 
 4. **Create a RAID log** with at least two entries in each category, each with an owner; rate each risk's likelihood and impact and write a response.
 5. **Write a one-paragraph status update** from your tracking that answers what happened, what's at risk, and what's needed.
 
+```lab
+{
+ "type": "sort",
+ "title": "Build a RAID log",
+ "prompt": "Sort each note from a project meeting into the RAID log.",
+ "buckets": [
+  "Risk",
+  "Assumption",
+  "Issue",
+  "Dependency"
+ ],
+ "items": [
+  {
+   "text": "The payment partner might not finish their API before our launch.",
+   "bucket": "Risk",
+   "why": "Something that might go wrong."
+  },
+  {
+   "text": "We expect about 500 users in the first month.",
+   "bucket": "Assumption",
+   "why": "Something believed true but not yet confirmed."
+  },
+  {
+   "text": "The test server has been down since Tuesday.",
+   "bucket": "Issue",
+   "why": "It has already happened."
+  },
+  {
+   "text": "Design must finish the checkout screens before development can start.",
+   "bucket": "Dependency",
+   "why": "One task can't start until another finishes."
+  }
+ ]
+}
+```
+
 #### Checkpoint
 You have a task plan with milestones, owners, and dependencies, a RAID log with owners and risk ratings, and a status update drawn from it.
 
@@ -167,6 +203,22 @@ A team needs budget to fix a slow checkout. Instead of twenty slides of technica
 3. **Write your key message** in one sentence, and your ask in one sentence.
 4. **Build a five-slide presentation** using situation, complication, and resolution, with one idea per slide and statement headlines.
 5. **Rehearse it aloud, timed,** for a friend or colleague, and ask them to repeat your key message back. Revise until they can.
+
+```lab
+{
+ "type": "order",
+ "title": "Order a stakeholder presentation",
+ "prompt": "Arrange these slides into situation, complication, resolution, then the ask.",
+ "items": [
+  "Checkout handles 2,000 orders a day",
+  "Slow pages now lose us about 8% of carts",
+  "Fix: cache product data and shrink images",
+  "Cost: two engineers for three weeks",
+  "Decision needed today: approve the fix"
+ ],
+ "explain": "Situation, complication, resolution with its cost, then the clear ask at the end."
+}
+```
 
 #### Checkpoint
 You have an audience analysis, a five-slide presentation with statement headlines and a clear ask, and a rehearsal where a listener could repeat your key message.

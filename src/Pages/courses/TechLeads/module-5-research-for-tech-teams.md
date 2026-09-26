@@ -109,6 +109,46 @@ A team assumes users want more features. Six interviews about the last time each
 4. **Build a five-question survey** in Google Forms on the same topic, with one idea per question and balanced answer options.
 5. **Pilot the survey** with two people, ask them what confused them, and fix it before sending it more widely.
 
+```lab
+{
+ "type": "sort",
+ "title": "Good interview question or not?",
+ "prompt": "Spot the questions that would give you reliable answers.",
+ "buckets": [
+  "Good: open and neutral",
+  "Leading",
+  "Asks them to predict"
+ ],
+ "items": [
+  {
+   "text": "\"Tell me about the last time you booked a class.\"",
+   "bucket": "Good: open and neutral",
+   "why": "Open, and about real past behaviour."
+  },
+  {
+   "text": "\"Don't you find the booking page confusing?\"",
+   "bucket": "Leading",
+   "why": "It suggests the answer you expect."
+  },
+  {
+   "text": "\"Would you pay $10 a month for this?\"",
+   "bucket": "Asks them to predict",
+   "why": "People are poor at predicting what they'll do; ask what they've done."
+  },
+  {
+   "text": "\"What happened next?\"",
+   "bucket": "Good: open and neutral",
+   "why": "A neutral follow-up that invites the story."
+  },
+  {
+   "text": "\"You'd use this every day, right?\"",
+   "bucket": "Leading",
+   "why": "It pushes them to agree."
+  }
+ ]
+}
+```
+
 #### Checkpoint
 You have an interview guide free of leading questions, notes from two real interviews, and a piloted five-question survey.
 

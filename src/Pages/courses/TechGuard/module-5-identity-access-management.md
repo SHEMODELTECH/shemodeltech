@@ -52,6 +52,14 @@ Protecting every account that matters: email, cloud consoles, admin panels, bank
 4. **Enter the current code to confirm setup**, and save any backup/recovery codes somewhere safe.
 5. **Compare the options**: write down, for your account, whether it also supports a hardware security key, and explain why that would be stronger than the TOTP you just set up.
 
+```lab
+{
+ "type": "password",
+ "title": "How long would it take to crack?",
+ "start": "sunshine1"
+}
+```
+
 #### Checkpoint
 You have enabled TOTP-based MFA on an account you own, verified it with a code from an authenticator app, and saved recovery codes, and you can explain the three factor categories and why phishing-resistant MFA is stronger than SMS.
 

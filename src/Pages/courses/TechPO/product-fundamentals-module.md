@@ -49,6 +49,42 @@ Deciding whether a declining feature is worth reviving or should be sunset, expl
 4. **Find a second example**, a product currently in Decline or that has been sunset, and note what signals told you that (an official announcement, stopped updates, migration prompts to a different product).
 5. **Compare the two examples** in your doc, noting how the stage changes what "doing well" would even mean for each product.
 
+```lab
+{
+ "type": "sort",
+ "title": "Which lifecycle stage?",
+ "prompt": "Read each situation and choose the stage the product is in.",
+ "buckets": [
+  "Introduction",
+  "Growth",
+  "Maturity",
+  "Decline"
+ ],
+ "items": [
+  {
+   "text": "The app launched last month; a few hundred early users are testing whether it solves their problem.",
+   "bucket": "Introduction",
+   "why": "Low adoption, focus on validating the product."
+  },
+  {
+   "text": "Sign-ups double every month and the team is fixing problems that only appear at high volume.",
+   "bucket": "Growth",
+   "why": "Adoption is accelerating, so the focus is scaling what works."
+  },
+  {
+   "text": "Users are steady, growth has levelled off, and the team focuses on keeping customers.",
+   "bucket": "Maturity",
+   "why": "Retention and efficiency matter more than rapid expansion."
+  },
+  {
+   "text": "Usage is falling and the team is deciding whether to revive the product or retire it.",
+   "bucket": "Decline",
+   "why": "Revive, maintain minimally, or sunset."
+  }
+ ]
+}
+```
+
 #### Checkpoint
 You have written a short lifecycle-stage analysis of two real products, including the evidence for your reasoning and the metric each stage's team would likely prioritize.
 

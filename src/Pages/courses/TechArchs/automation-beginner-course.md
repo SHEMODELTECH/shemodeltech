@@ -54,6 +54,61 @@ Any repetitive, manual task that follows a clear "when X happens, do Y" pattern,
 
 Pick a repetitive task you (or a team you know) do by hand regularly, checking an inbox for a certain kind of email, copying data between two tools, sending the same reminder message. Write it out as a single "when [trigger], then [action]" sentence. That sentence is the exact shape every automation you build in this course will take.
 
+```lab
+{
+ "type": "sort",
+ "title": "Trigger or action?",
+ "prompt": "Every automation is a trigger followed by actions. Sort each step.",
+ "buckets": [
+  "Trigger",
+  "Action"
+ ],
+ "items": [
+  {
+   "text": "A new form response arrives",
+   "bucket": "Trigger",
+   "why": "The event that starts the automation."
+  },
+  {
+   "text": "Add a row to a spreadsheet",
+   "bucket": "Action",
+   "why": "A step that runs after the trigger."
+  },
+  {
+   "text": "Send a Slack message",
+   "bucket": "Action",
+   "why": "A step that runs after the trigger."
+  },
+  {
+   "text": "A new email arrives with an attachment",
+   "bucket": "Trigger",
+   "why": "An event that can start a workflow."
+  },
+  {
+   "text": "Create a contact in the CRM",
+   "bucket": "Action",
+   "why": "A step that uses data from the trigger."
+  }
+ ]
+}
+```
+
+```lab
+{
+ "type": "order",
+ "title": "Build the workflow in order",
+ "prompt": "Arrange this automation so data flows forward from the trigger.",
+ "items": [
+  "New sign-up form response (trigger)",
+  "Add the person to the members sheet",
+  "Create their contact in the CRM",
+  "Send them a welcome email",
+  "Post a note in the team Slack channel"
+ ],
+ "explain": "The trigger comes first, then each action can use data from the steps before it."
+}
+```
+
 ### Checkpoint
 You can describe the trigger, action, and workflow structure, and you have one real "when X, then Y" automation idea written down.
 

@@ -220,7 +220,7 @@ const build = () => {
         projects: countProjects(md),
         minutes: estimateMinutes(md),
         order: readOrder(md),
-        ...(/<!--\s*runnable:\s*python\s*-->/i.test(md) ? { runnable: 'python' } : {}),
+        ...((md.match(/<!--\s*runnable:\s*(python|html)\s*-->/i) || [])[1] ? { runnable: md.match(/<!--\s*runnable:\s*(python|html)\s*-->/i)[1].toLowerCase() } : {}),
         markdown: md,
       };
     });

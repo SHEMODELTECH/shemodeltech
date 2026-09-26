@@ -111,6 +111,45 @@ Explaining to a stakeholder why their feature request is ranked below another on
 4. **Write the one-sentence "why" you'd give a stakeholder** whose lower-ranked idea didn't make the cut, using the criteria from your framework, not just "we decided."
 5. **Revisit your ranking after a hypothetical new signal** (a competitor launches something, a KPI from Topic 4.1 starts declining) and note whether and how the priority order would change.
 
+```lab
+{
+ "type": "rice",
+ "title": "Prioritise a real backlog with RICE",
+ "prompt": "Four ideas for a study app. Change any number and watch the ranking update. RICE score = Reach × Impact × Confidence ÷ Effort.",
+ "items": [
+  {
+   "name": "Dark mode",
+   "reach": 4000,
+   "impact": 0.5,
+   "confidence": 80,
+   "effort": 2
+  },
+  {
+   "name": "Offline flashcards",
+   "reach": 1500,
+   "impact": 2,
+   "confidence": 50,
+   "effort": 6
+  },
+  {
+   "name": "Fix slow sign-up",
+   "reach": 6000,
+   "impact": 1,
+   "confidence": 90,
+   "effort": 1
+  },
+  {
+   "name": "AI study coach",
+   "reach": 3000,
+   "impact": 3,
+   "confidence": 30,
+   "effort": 12
+  }
+ ],
+ "note": "Notice how low confidence drags the exciting AI idea down, and how a small fix that reaches everyone can win."
+}
+```
+
 #### Checkpoint
 You have 5-6 scored and ranked ideas, an MVP scope with explicit out-of-scope items and a follow-on sequence, one stakeholder-facing justification tied to your framework, and one note on how a new signal would shift the ranking.
 

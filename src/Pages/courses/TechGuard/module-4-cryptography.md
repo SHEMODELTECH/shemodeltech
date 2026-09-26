@@ -65,6 +65,46 @@ cat rsa.dec
 ```
 5. **Explain to yourself** which of the two approaches you'd use for a 5 GB backup file and why (hint: think about speed).
 
+```lab
+{
+ "type": "sort",
+ "title": "Symmetric, asymmetric, or hybrid?",
+ "prompt": "Match each situation to the kind of encryption it describes.",
+ "buckets": [
+  "Symmetric",
+  "Asymmetric",
+  "Hybrid"
+ ],
+ "items": [
+  {
+   "text": "A laptop's disk is encrypted with AES using one secret key.",
+   "bucket": "Symmetric",
+   "why": "One shared key, fast, ideal for bulk data."
+  },
+  {
+   "text": "Anyone can encrypt a message with your public key, but only your private key can open it.",
+   "bucket": "Asymmetric",
+   "why": "A public and private key pair solves sharing the key safely."
+  },
+  {
+   "text": "Your browser uses public-key cryptography to agree a session key, then encrypts the page with that key.",
+   "bucket": "Hybrid",
+   "why": "That's how TLS works: asymmetric to exchange a key, then fast symmetric encryption."
+  },
+  {
+   "text": "Two offices share one secret key and must find a safe way to hand it over.",
+   "bucket": "Symmetric",
+   "why": "Distributing the shared key safely is symmetric encryption's hard part."
+  },
+  {
+   "text": "RSA keys protect an email so only the recipient can read it.",
+   "bucket": "Asymmetric",
+   "why": "RSA is the classic asymmetric algorithm."
+  }
+ ]
+}
+```
+
 #### Checkpoint
 You have encrypted and decrypted a file with symmetric AES, generated an RSA key pair, and used the public and private keys to encrypt and decrypt a message, and you can explain the tradeoffs between symmetric and asymmetric encryption and why hybrid systems exist.
 
@@ -136,6 +176,18 @@ sha256sum somefile.txt
 ```
 4. **Modify the file slightly, re-hash it**, and confirm the digest changed, this is how integrity checks catch tampering.
 5. **Reason about passwords**: explain to yourself why you'd store `bcrypt(salt + password)` rather than `sha256(password)`, referring to salting and slow hashing.
+
+```lab
+{
+ "type": "hash",
+ "title": "Watch a hash change",
+ "inputs": [
+  "transfer $100 to Ada",
+  "transfer $900 to Ada"
+ ],
+ "prompt": "These two messages differ by one character. Compare their SHA-256 hashes, then try your own text."
+}
+```
 
 #### Checkpoint
 You can hash strings and files, you've seen the avalanche effect by changing a single character, and you can explain why hashing is one-way, how it differs from encryption, and why passwords need salting and slow algorithms.
