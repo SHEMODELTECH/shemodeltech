@@ -10,6 +10,7 @@ import { db } from '../../firebase/config';
 import FollowButton from '../../components/community/FollowButton';
 import MentorBadge from '../../components/MentorBadge';
 import { listMentorCertificates } from '../../utils/learningCertificates';
+import { mentorStatsByUid } from '../../utils/mentorStats';
 
 const badgeData = [
   { id: 'techmo', title: 'TechPO', image: '/Images/TechMO.png', label: 'Product / Project Owner' },
@@ -55,6 +56,7 @@ const UserProfile = () => {
 
   const [profile, setProfile] = useState(null);
   const [mentorCerts, setMentorCerts] = useState([]);
+  const [mentorStats, setMentorStats] = useState(null);
   // The VIEWER's own profile - needed for the messaging rules:
   // free company accounts can't message anyone, and free individual
   // accounts can't message company accounts.
@@ -111,6 +113,7 @@ const UserProfile = () => {
           setProfile(userData);
           if (userData?.uid) {
             listMentorCertificates(userData.uid).then(setMentorCerts).catch(() => setMentorCerts([]));
+            mentorStatsByUid().then((all) => setMentorStats(all[userData.uid] || null)).catch(() => {});
           }
           // Total projects DONE (paid or free). Auto-populates from the
           // projects collection: any project with status 'completed' where
@@ -325,7 +328,9 @@ const UserProfile = () => {
                   <h3 className="text-lg font-bold text-gray-900">She Model Tech Mentor</h3>
                   <p className="text-gray-500 text-xs">
                     {mentorCerts.length
-                      ? `${mentorCerts.length} course${mentorCerts.length === 1 ? '' : 's'} published in She Model Tech Learning`
+                      ? `${mentorCerts.length} course${mentorCerts.length === 1 ? '' : 's'} published in She Model Tech Learning${
+                          mentorStats ? ` · ${mentorStats.completions} learner completion${mentorStats.completions === 1 ? '' : 's'}${mentorStats.ratingCount ? ` · ★ ${mentorStats.avg.toFixed(1)} average rating` : ''}` : ''
+                        }`
                       : 'Approved mentor at SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit'}
                   </p>
                 </div>
@@ -339,12 +344,30 @@ const UserProfile = () => {
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-gray-900">{c.courseTitle}</p>
                       <p className="text-xs text-gray-500">
-                        {[c.trackLabel, c.completedOn && `Published ${new Date(`${c.completedOn}T12:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`].filter(Boolean).join(' · ')}
+                        {(() => {
+                          const pc = mentorStats?.courses.find((x) => x.teacherId === c.courseId);
+                          return [
+                            c.trackLabel,
+                            c.completedOn && `Published ${new Date(`${c.completedOn}T12:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`,
+                            pc && `${pc.completions} learner${pc.completions === 1 ? '' : 's'} completed`,
+                            pc?.ratingCount ? `★ ${(pc.ratingSum / pc.ratingCount).toFixed(1)} (${pc.ratingCount})` : '',
+                          ].filter(Boolean).join(' · ');
+                        })()}
                       </p>
                     </div>
-                    <a href={`/learning/certificate/${c.id}`} className="text-xs font-semibold text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-lg hover:bg-indigo-50 print:hidden">
-                      View certificate
-                    </a>
+                    <span className="flex flex-wrap items-center gap-2 print:hidden">
+                      {(() => {
+                        const pc = mentorStats?.courses.find((x) => x.teacherId === c.courseId);
+                        return pc ? (
+                          <a href={`/learning/${pc.track}/${pc.slug}`} className="text-xs font-semibold text-white bg-indigo-600 px-3 py-1.5 rounded-lg hover:bg-indigo-700">
+                            View course
+                          </a>
+                        ) : null;
+                      })()}
+                      <a href={`/learning/certificate/${c.id}`} className="text-xs font-semibold text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-lg hover:bg-indigo-50">
+                        Certificate
+                      </a>
+                    </span>
                   </li>
                 ))}
               </ul>

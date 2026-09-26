@@ -18,6 +18,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import MentorBadge from '../../components/MentorBadge';
 import CourseFeedback from './CourseFeedback';
+import { courseStats } from '../../utils/mentorStats';
 
 const LearningCourse = ({ reading = false }) => {
   const { track, slug } = useParams();
@@ -28,6 +29,8 @@ const LearningCourse = ({ reading = false }) => {
   const { currentUser } = useAuth();
   const [refsOpen, setRefsOpen] = useState(false);
   const [authorCount, setAuthorCount] = useState(1);
+  const [author, setAuthor] = useState(null); // the mentor's public profile details
+  const [stats, setStats] = useState(null); // completions and ratings for this course
 
   // Courses published from Teacher live in the database: load this track's list,
   // and the full text of the one being viewed.
@@ -69,9 +72,17 @@ const LearningCourse = ({ reading = false }) => {
   useEffect(() => {
     if (!authorUid || !lr.signedIn) return;
     getDoc(doc(db, 'users', authorUid))
-      .then((s) => setAuthorCount(Math.max(1, s.data()?.mentorApprovedCourses || 1)))
+      .then((s) => {
+        setAuthorCount(Math.max(1, s.data()?.mentorApprovedCourses || 1));
+        setAuthor(s.exists() ? s.data() : null);
+      })
       .catch(() => {});
   }, [authorUid, lr.signedIn]);
+
+  useEffect(() => {
+    if (!isPublished || !authorUid) return;
+    courseStats(track, slug).then(setStats).catch(() => {});
+  }, [isPublished, authorUid, track, slug]);
 
   const course = useMemo(() => {
     if (!baseCourse || !isPublished) return baseCourse;
@@ -196,7 +207,14 @@ const LearningCourse = ({ reading = false }) => {
             <h1 className="fd-display text-3xl sm:text-4xl text-gray-900 leading-tight">{course.title}</h1>
             {course.authorName && (
               <p className="flex flex-wrap items-center gap-2 mt-3 text-sm text-gray-700">
-                By <span className="font-semibold">{course.authorName}</span>
+                By{' '}
+                {author?.email ? (
+                  <Link to={`/profile/${encodeURIComponent(author.email)}`} className="font-semibold hover:underline">
+                    {course.authorName}
+                  </Link>
+                ) : (
+                  <span className="font-semibold">{course.authorName}</span>
+                )}
                 <MentorBadge count={authorCount} size="sm" />
                 {course.authorUid && lr.signedIn && course.authorUid !== currentUser?.uid && (
                   <button
@@ -336,6 +354,67 @@ const LearningCourse = ({ reading = false }) => {
           )}
         </section>
 
+        <div>
+        {/* About the mentor: who wrote this course */}
+        {isPublished && course.authorName && (
+          <section className="pt-10" aria-labelledby="mentor-h">
+            <h2 id="mentor-h" className="text-xl font-bold text-gray-900 mb-4">About the mentor</h2>
+            <div className="rounded-2xl border border-indigo-200 bg-white p-5">
+              <div className="flex items-center gap-3">
+                {author?.photoURL ? (
+                  <img src={author.photoURL} alt="" className="w-14 h-14 rounded-full object-cover border border-gray-100" />
+                ) : (
+                  <span className="w-14 h-14 rounded-full bg-indigo-600 text-white font-bold text-lg flex items-center justify-center" aria-hidden="true">
+                    {(course.authorName || 'M')[0]}
+                  </span>
+                )}
+                <div className="min-w-0">
+                  <p className="font-semibold text-gray-900 truncate">{course.authorName}</p>
+                  <MentorBadge count={authorCount} isMentor size="sm" />
+                </div>
+              </div>
+              {author?.specialization && <p className="text-sm text-gray-600 mt-3">{author.specialization}</p>}
+              <div className="grid grid-cols-3 gap-2 mt-4 text-center">
+                <div className="rounded-lg bg-gray-50 py-2">
+                  <p className="font-bold text-gray-900">{authorCount}</p>
+                  <p className="text-[11px] text-gray-500">course{authorCount === 1 ? '' : 's'}</p>
+                </div>
+                <div className="rounded-lg bg-gray-50 py-2">
+                  <p className="font-bold text-gray-900">{stats ? stats.completions : '–'}</p>
+                  <p className="text-[11px] text-gray-500">completed this</p>
+                </div>
+                <div className="rounded-lg bg-gray-50 py-2">
+                  <p className="font-bold text-gray-900">
+                    {stats?.ratingCount ? `★ ${(stats.ratingSum / stats.ratingCount).toFixed(1)}` : '–'}
+                  </p>
+                  <p className="text-[11px] text-gray-500">rating</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {author?.email && (
+                  <Link to={`/profile/${encodeURIComponent(author.email)}`}
+                    className="text-sm font-semibold border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">
+                    View profile
+                  </Link>
+                )}
+                {course.authorUid !== currentUser?.uid && (
+                  <button
+                    onClick={() =>
+                      lr.signedIn
+                        ? navigate(`/messages?to=${course.authorUid}&text=${encodeURIComponent(`Hi ${course.authorName.split(' ')[0]}, I have a question about your course "${course.title}": `)}`)
+                        : signInAndReturn(navigate, location.pathname)
+                    }
+                    className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg"
+                  >
+                    Ask a question
+                  </button>
+                )}
+              </div>
+              {!lr.signedIn && <p className="text-xs text-gray-500 mt-3">Sign in to see the mentor's profile.</p>}
+            </div>
+          </section>
+        )}
+
         {/* More in this track */}
         {more.length > 0 && (
           <section className="pt-10" aria-labelledby="more-h">
@@ -352,6 +431,7 @@ const LearningCourse = ({ reading = false }) => {
             </div>
           </section>
         )}
+        </div>
       </div>
 
       <style>{LR_CSS + `.lr-reached { background:var(--tint) !important; color:var(--acc) !important; }`}</style>

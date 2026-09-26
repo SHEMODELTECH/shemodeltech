@@ -350,6 +350,18 @@ service cloud.firestore {
  }
  }
 
+ // Mentors' requests for a recommendation or volunteer service letter.
+ match /mentor_letter_requests/{id} {
+ allow read: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow create: if isTeacherUser()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.status == 'pending'
+ && request.resource.data.type in ['recommendation', 'volunteer'];
+ // A mentor can withdraw a request that hasn't been handled yet.
+ allow delete: if isSignedIn() && resource.data.uid == myUid() && resource.data.status == 'pending';
+ allow update, delete: if isAdmin();
+ }
+
  // Certificates of completion for Learning courses. Public so anyone with the
  // link can verify one; a learner can only issue their own; never edited.
  match /learning_certificates/{id} {

@@ -187,8 +187,38 @@ const TeachApply = () => {
           <p className="text-xs text-gray-500 mt-4">Every application is reviewed by a She Model Tech admin.</p>
         </aside>
       </div>
+
+      {/* Why mentor with us */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-4" aria-labelledby="benefits-h">
+        <h2 id="benefits-h" className="text-2xl font-bold text-gray-900">Why mentor with She Model Tech</h2>
+        <p className="text-gray-600 mt-1 max-w-2xl">Your time and knowledge help women build real tech careers. Here is what you get in return.</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+          {MENTOR_BENEFITS.map(([t, d]) => (
+            <div key={t} className="rounded-2xl border border-gray-200 bg-white p-5">
+              <p className="font-semibold text-gray-900">{t}</p>
+              <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">{d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
     </LearningLayout>
   );
 };
+
+const MENTOR_BENEFITS = [
+  ['Certificates', 'A Certificate of Recognition for every course you publish, ready to download and add to LinkedIn.'],
+  ['Mentor badge', 'A Mentor badge on your profile and beside your name on every course you publish.'],
+  ['Recommendation letters', 'Request a recommendation letter from SHE MODEL TECH Inc. for jobs, promotions, or applications.'],
+  ['Volunteer service letter', 'Confirmation of your mentoring service with a registered 501(c)(3) nonprofit, on request.'],
+  ['Top-rated on the Talent Board', 'Mentors are featured on the Talent Board, with learner ratings from your courses.'],
+  ['Public recognition', 'Your name on your courses, and new courses featured in "From our mentors" in Learning.'],
+  ['A teaching portfolio', 'Learner ratings, comments, and reactions show the impact of your teaching.'],
+  ['Impact you can share', 'See how many learners completed your courses, for your CV, promotions, or grant applications.'],
+  ['Leadership development', 'Build teaching, communication, and leadership experience by creating and guiding courses.'],
+  ['Networking', 'Connect with learners, other mentors, and companies hiring through She Model Tech.'],
+  ['Speaking and visibility', 'Opportunities to lead live sessions and workshops, and to be featured in our community updates.'],
+  ['Early access to talent', 'Meet motivated learners up close, which helps if you hire or lead teams.'],
+  ['Tools included', 'The Mentor Hub for building written, video, and interactive courses, plus full-screen Present mode.'],
+];
 
 export default TeachApply;

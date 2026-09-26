@@ -207,19 +207,6 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
     <section className="pt-10" aria-labelledby="fb-h">
       <h2 id="fb-h" className="text-xl font-bold text-gray-900 mb-4">Ratings and comments</h2>
 
-      {authorUid && (!currentUser || currentUser.uid !== authorUid) && (
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 p-4">
-          <div>
-            <p className="font-semibold text-gray-900 text-sm">Have a question about this course?</p>
-            <p className="text-sm text-gray-600">
-              Message {authorName || 'the mentor'} directly for more clarification.
-            </p>
-          </div>
-          <button type="button" onClick={askMentor} className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
-            Ask the mentor
-          </button>
-        </div>
-      )}
 
       <div className="grid sm:grid-cols-[220px_minmax(0,1fr)] gap-6 border border-gray-200 rounded-2xl p-5 bg-white">
         {/* Average */}

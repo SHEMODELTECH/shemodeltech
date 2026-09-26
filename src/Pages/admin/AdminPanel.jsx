@@ -35,6 +35,7 @@ import { sendPush } from '../../utils/pushNotifications';
 import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTeacher } from '../../utils/teachers';
 import { listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
+import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
 
 const fmtDate = (ts) => {
   try {
@@ -83,6 +84,9 @@ const AdminPanel = () => {
   const [deletionReqs, setDeletionReqs] = useState([]);
   const [teacherApps, setTeacherApps] = useState(null);
   const [pendingCourses, setPendingCourses] = useState(null);
+  const [letterReqs, setLetterReqs] = useState(null);
+  const [letterDialog, setLetterDialog] = useState(null); // { req, status: 'sent' | 'declined' }
+  const [letterBusy, setLetterBusy] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [feedbackById, setFeedbackById] = useState({});
   // Request changes / Reject open a dialog for the reviewer's note.
@@ -160,6 +164,9 @@ const AdminPanel = () => {
       listTeacherCourses()
         .then((list) => setPendingCourses(list.filter((c) => reviewStatus(c) === 'pending')))
         .catch(() => setPendingCourses([]));
+      listLetterRequests()
+        .then(setLetterReqs)
+        .catch(() => setLetterReqs([]));
     }
   }, [tab, isAdmin]);
 
@@ -179,6 +186,20 @@ const AdminPanel = () => {
       toast.error(friendlyError(e, 'Could not update the application.'));
     }
     setDeciding(false);
+  };
+
+  const decideLetter = async (req, status, note) => {
+    setLetterBusy(true);
+    try {
+      await decideLetterRequest(req, status, currentUser, note);
+      setLetterReqs((xs) => xs.map((x) => (x.id === req.id ? { ...x, status, adminNote: note || null } : x)));
+      setLetterDialog(null);
+      toast.success(status === 'sent' ? 'Marked as sent. The mentor has been notified.' : 'Request declined. The mentor has been notified.');
+    } catch (e) {
+      console.error(e);
+      toast.error(friendlyError(e, 'Could not update the request.'));
+    }
+    setLetterBusy(false);
   };
 
   const toggleTeacher = async (u) => {
@@ -995,6 +1016,61 @@ const AdminPanel = () => {
             onCancel={() => setDeclineApp(null)}
             onConfirm={(note) => decideTeacher(declineApp, false, note)}
           />
+          <NoteDialog
+            open={!!letterDialog}
+            title={letterDialog?.status === 'sent' ? 'Mark letter as sent' : 'Decline letter request'}
+            description={
+              letterDialog
+                ? letterDialog.status === 'sent'
+                  ? `Confirm you've emailed the ${(LETTER_TYPES[letterDialog.req.type] || 'letter').toLowerCase()} to ${letterDialog.req.email}. Add an optional note for ${letterDialog.req.name}.`
+                  : `Let ${letterDialog.req.name} know why (optional).`
+                : ''
+            }
+            placeholder={letterDialog?.status === 'sent' ? 'For example: sent to your email; the PDF is also attached.' : ''}
+            confirmLabel={letterDialog?.status === 'sent' ? 'Mark as sent' : 'Decline request'}
+            tone={letterDialog?.status === 'sent' ? 'primary' : 'danger'}
+            busy={letterBusy}
+            onCancel={() => setLetterDialog(null)}
+            onConfirm={(note) => decideLetter(letterDialog.req, letterDialog.status, note)}
+          />
+          <div>
+            <h3 className="text-gray-900 font-bold mb-2">Mentor letter requests</h3>
+            {letterReqs === null ? (
+              <p className="text-gray-400 text-sm">Loading...</p>
+            ) : letterReqs.filter((r) => r.status === 'pending').length === 0 ? (
+              <p className="text-gray-400 text-sm">No letter requests waiting.</p>
+            ) : (
+              <div className="space-y-3">
+                {letterReqs
+                  .filter((r) => r.status === 'pending')
+                  .map((r) => (
+                    <div key={r.id} className="bg-white border border-indigo-200 rounded-xl p-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-gray-900 font-semibold">
+                            {LETTER_TYPES[r.type]} <span className="text-gray-500 font-normal">for {r.name}</span>
+                          </p>
+                          <p className="text-gray-400 text-xs">
+                            {r.email}
+                            {r.recipient ? ` · to ${r.recipient}` : ''}
+                            {r.deadline ? ` · needed by ${r.deadline}` : ''}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={() => setLetterDialog({ req: r, status: 'sent' })} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">
+                            Mark as sent
+                          </button>
+                          <button onClick={() => setLetterDialog({ req: r, status: 'declined' })} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            Decline
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-800 mt-2"><strong>Purpose:</strong> {r.purpose}</p>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
           <div>
             <h3 className="text-gray-900 font-bold mb-2">Mentor courses awaiting approval</h3>
             {pendingCourses === null ? (

@@ -40,6 +40,7 @@ import { FD_CSS, enhanceCourseContent } from '../learning/shared';
 import LearningLayout from '../learning/LearningLayout';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { issueMentorCertificate } from '../../utils/learningCertificates';
+import { LETTER_TYPES, myLetterRequests, requestLetter, withdrawLetterRequest } from '../../utils/mentorLetters';
 import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
 
 const TRACKS = [
@@ -125,6 +126,133 @@ const ReviewTag = ({ course }) => {
   return null;
 };
 
+
+// ================= Mentor benefits: letters =================
+// Mentors can request a recommendation letter or a volunteer service letter;
+// admins handle requests in Admin > Mentors.
+const MentorLetters = ({ access }) => {
+  const { currentUser } = useAuth();
+  const [reqs, setReqs] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [form, setForm] = useState({ type: 'recommendation', purpose: '', recipient: '', deadline: '' });
+
+  useEffect(() => {
+    myLetterRequests(access.uid).then(setReqs).catch(() => setReqs([]));
+  }, [access.uid]);
+
+  const send = async () => {
+    if (form.purpose.trim().split(/\s+/).filter(Boolean).length < 5) return toast.error('Tell us what the letter is for (a sentence or two).');
+    setBusy(true);
+    try {
+      await requestLetter(currentUser, form);
+      setReqs(await myLetterRequests(access.uid));
+      setOpen(false);
+      setForm({ type: 'recommendation', purpose: '', recipient: '', deadline: '' });
+      toast.success('Request sent. We will notify you when it is ready.');
+    } catch (e) {
+      console.error(e);
+      toast.error(friendlyError(e, 'Could not send your request.'));
+    }
+    setBusy(false);
+  };
+
+  const withdraw = async (r) => {
+    if (!window.confirm('Withdraw this request?')) return;
+    try {
+      await withdrawLetterRequest(r.id);
+      setReqs((xs) => xs.filter((x) => x.id !== r.id));
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not withdraw it.'));
+    }
+  };
+
+  const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
+  const statusTag = (st) =>
+    st === 'sent'
+      ? 'bg-emerald-50 text-emerald-700'
+      : st === 'declined'
+      ? 'bg-gray-100 text-gray-600'
+      : 'bg-amber-50 text-amber-700';
+
+  return (
+    <div className="mb-6 rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-pink-50 p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="font-bold text-gray-900">Your mentor benefits</p>
+          <p className="text-sm text-gray-600 mt-1 max-w-2xl">
+            A Mentor badge on your profile, a certificate for every published course, a spot among top-rated mentors on
+            the Talent Board, and letters from SHE MODEL TECH Inc. when you need them.
+          </p>
+        </div>
+        <button onClick={() => setOpen((o) => !o)} className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+          Request a letter
+        </button>
+      </div>
+
+      {open && (
+        <div className="mt-4 bg-white rounded-xl border border-gray-200 p-4 grid gap-3 sm:grid-cols-2">
+          <fieldset className="sm:col-span-2">
+            <legend className="text-sm font-semibold text-gray-800 mb-1">Which letter?</legend>
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(LETTER_TYPES).map(([v, l]) => (
+                <button key={v} type="button" aria-pressed={form.type === v} onClick={() => setForm({ ...form, type: v })}
+                  className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${form.type === v ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>
+                  {l}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="lt-purpose">What is it for?</label>
+            <textarea id="lt-purpose" rows={3} className={input} value={form.purpose}
+              placeholder="For example: a job application for a senior engineer role, or a scholarship application."
+              onChange={(e) => setForm({ ...form, purpose: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="lt-to">Addressed to (optional)</label>
+            <input id="lt-to" className={input} value={form.recipient} placeholder="Organisation or person"
+              onChange={(e) => setForm({ ...form, recipient: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="lt-date">Needed by (optional)</label>
+            <input id="lt-date" type="date" className={input} value={form.deadline}
+              onChange={(e) => setForm({ ...form, deadline: e.target.value })} />
+          </div>
+          <div className="sm:col-span-2 flex gap-2">
+            <button onClick={send} disabled={busy} className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg disabled:opacity-60">
+              {busy ? 'Sending...' : 'Send request'}
+            </button>
+            <button onClick={() => setOpen(false)} className="text-sm font-semibold text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100">Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {reqs && reqs.length > 0 && (
+        <ul className="mt-4 space-y-2">
+          {reqs.map((r) => (
+            <li key={r.id} className="bg-white rounded-lg border border-gray-200 px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-sm">
+              <span className="min-w-0">
+                <strong>{LETTER_TYPES[r.type]}</strong>
+                <span className="text-gray-500"> · {r.purpose.length > 70 ? `${r.purpose.slice(0, 70)}...` : r.purpose}</span>
+                {r.adminNote && <span className="block text-xs text-gray-600 mt-0.5">Note: {r.adminNote}</span>}
+              </span>
+              <span className="flex items-center gap-2">
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${statusTag(r.status)}`}>
+                  {r.status === 'sent' ? 'Sent' : r.status === 'declined' ? 'Declined' : 'Requested'}
+                </span>
+                {r.status === 'pending' && (
+                  <button onClick={() => withdraw(r)} className="text-xs font-semibold text-gray-500 hover:text-red-700">Withdraw</button>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
 // ================= List =================
 const TeacherList = ({ access }) => {
   const navigate = useNavigate();
@@ -194,6 +322,8 @@ const TeacherList = ({ access }) => {
           </button>
         </div>
       </div>
+
+      {!access.isStaff && <MentorLetters access={access} />}
 
       <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Audience">
         {[['all', 'All'], ['teachers', 'For mentors'], ['students', 'For learners'], ['review', 'Pending review']].map(([v, l]) => (
