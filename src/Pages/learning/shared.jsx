@@ -64,6 +64,230 @@ export const coursePartTitles = (course) => {
   return partsCache.get(course.slug);
 };
 
+
+// ---- Interactive layer for every written course ----
+// Runs on each part after it renders, turning the course's standard blocks into
+// things learners can do, the same way in all courses:
+//   "Quiz" + "Answers: 1) ... 2) ..."  -> question cards: write, reveal, self-mark
+//   "- [ ] item" checklists            -> real checkboxes with a running count
+//   "Checkpoint" paragraph             -> a highlighted goal box
+//   code blocks                        -> a Copy button
+// Answers and ticks are kept in this browser (localStorage), like the
+// interactive courses.
+const store = {
+  get(k) {
+    try {
+      return localStorage.getItem(k);
+    } catch (_) {
+      return null;
+    }
+  },
+  set(k, v) {
+    try {
+      if (v == null) localStorage.removeItem(k);
+      else localStorage.setItem(k, v);
+    } catch (_) {
+      /* storage unavailable: the page still works, it just won't remember */
+    }
+  },
+};
+
+const h = (tag, cls, text) => {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+};
+
+// "Answers: 1) A. 2) B." -> ["A.", "B."], matching numbers in order so a
+// "(1)" or "2)" inside an answer doesn't split it.
+const splitAnswers = (text, n) => {
+  const body = text.replace(/^\s*Answers?:\s*/i, '');
+  const starts = [];
+  let from = 0;
+  for (let k = 1; k <= n; k++) {
+    const re = new RegExp(`(^|\\s)${k}\\)\\s`, 'g');
+    re.lastIndex = from;
+    const m = re.exec(body);
+    if (!m) return null;
+    const at = m.index + m[1].length;
+    starts.push({ at, text: at + String(k).length + 2 });
+    from = at + 1;
+  }
+  return starts.map((st, i) => body.slice(st.text, i + 1 < starts.length ? starts[i + 1].at : body.length).trim());
+};
+
+const headingNamed = (container, re) =>
+  Array.from(container.querySelectorAll('h2, h3, h4, h5')).filter((x) => re.test(x.textContent.trim()));
+
+const enhanceQuizzes = (container, key) => {
+  headingNamed(container, /^quiz\b/i).forEach((head, qi) => {
+    const list = head.nextElementSibling;
+    if (!list || list.tagName !== 'OL') return;
+    const ansEl = list.nextElementSibling;
+    if (!ansEl || !/^\s*Answers?:/i.test(ansEl.textContent)) return;
+    const questions = Array.from(list.children);
+    const answers = splitAnswers(ansEl.textContent, questions.length);
+    if (!answers) return;
+
+    const box = h('div', 'qz');
+    const top = h('div', 'qz-top');
+    top.appendChild(h('p', 'qz-title', 'Check yourself'));
+    const score = h('p', 'qz-score');
+    top.appendChild(score);
+    box.appendChild(top);
+    box.appendChild(h('p', 'qz-help', 'Answer in your own words first, then reveal the model answer and mark how you did.'));
+
+    const marks = questions.map((_, i) => store.get(`${key}:q${qi}:${i}`));
+    const renderScore = () => {
+      const got = marks.filter((m) => m === 'y').length;
+      const done = marks.filter(Boolean).length;
+      score.textContent = done ? `${got} of ${questions.length} correct` : `${questions.length} questions`;
+      box.classList.toggle('qz-complete', done === questions.length);
+    };
+
+    questions.forEach((li, i) => {
+      const k = `${key}:q${qi}:${i}`;
+      const card = h('div', 'qz-q');
+      card.appendChild(h('p', 'qz-n', `Question ${i + 1}`));
+      const q = h('div', 'qz-text');
+      q.innerHTML = li.innerHTML;
+      card.appendChild(q);
+
+      const ta = h('textarea', 'qz-input');
+      ta.rows = 2;
+      ta.placeholder = 'Your answer';
+      ta.setAttribute('aria-label', `Your answer to question ${i + 1}`);
+      ta.value = store.get(`${k}:t`) || '';
+      ta.addEventListener('input', () => store.set(`${k}:t`, ta.value || null));
+      card.appendChild(ta);
+
+      const reveal = h('button', 'qz-reveal', 'Show answer');
+      reveal.type = 'button';
+      const ans = h('div', 'qz-ans');
+      ans.hidden = true;
+      ans.appendChild(h('p', 'qz-ans-label', 'Model answer'));
+      ans.appendChild(h('p', 'qz-ans-text', answers[i]));
+      const self = h('div', 'qz-self');
+      self.appendChild(h('span', null, 'How did you do?'));
+      const yes = h('button', 'qz-mark', 'Got it');
+      const no = h('button', 'qz-mark', 'Not yet');
+      yes.type = 'button';
+      no.type = 'button';
+      const paint = () => {
+        yes.classList.toggle('is-yes', marks[i] === 'y');
+        no.classList.toggle('is-no', marks[i] === 'n');
+        yes.setAttribute('aria-pressed', String(marks[i] === 'y'));
+        no.setAttribute('aria-pressed', String(marks[i] === 'n'));
+        card.classList.toggle('is-yes', marks[i] === 'y');
+        card.classList.toggle('is-no', marks[i] === 'n');
+      };
+      const setMark = (v) => {
+        marks[i] = marks[i] === v ? null : v;
+        store.set(k, marks[i]);
+        paint();
+        renderScore();
+      };
+      yes.addEventListener('click', () => setMark('y'));
+      no.addEventListener('click', () => setMark('n'));
+      self.appendChild(yes);
+      self.appendChild(no);
+      ans.appendChild(self);
+      const show = (open) => {
+        ans.hidden = !open;
+        reveal.textContent = open ? 'Hide answer' : 'Show answer';
+        reveal.setAttribute('aria-expanded', String(open));
+      };
+      reveal.addEventListener('click', () => show(ans.hidden));
+      if (marks[i]) show(true);
+      paint();
+      card.appendChild(reveal);
+      card.appendChild(ans);
+      box.appendChild(card);
+    });
+
+    renderScore();
+    list.replaceWith(box);
+    ansEl.remove();
+  });
+};
+
+const enhanceChecklists = (container, key) => {
+  const lists = new Set();
+  container.querySelectorAll('li > input[type="checkbox"]').forEach((cb) => lists.add(cb.closest('ul, ol')));
+  Array.from(lists).forEach((list, li) => {
+    const boxes = Array.from(list.querySelectorAll(':scope > li > input[type="checkbox"]'));
+    if (!boxes.length) return;
+    const count = h('p', 'ck-count');
+    list.parentNode.insertBefore(count, list);
+    list.classList.add('ck-list');
+    const update = () => {
+      const n = boxes.filter((b) => b.checked).length;
+      count.textContent = `${n} of ${boxes.length} done`;
+      count.classList.toggle('is-done', n === boxes.length);
+    };
+    boxes.forEach((cb, i) => {
+      const k = `${key}:c${li}:${i}`;
+      cb.disabled = false;
+      cb.checked = store.get(k) === '1';
+      const label = cb.parentElement;
+      label.classList.add('ck-item');
+      cb.setAttribute('aria-label', label.textContent.trim().slice(0, 120));
+      cb.addEventListener('change', () => {
+        store.set(k, cb.checked ? '1' : null);
+        label.classList.toggle('is-checked', cb.checked);
+        update();
+      });
+      label.classList.toggle('is-checked', cb.checked);
+    });
+    update();
+  });
+};
+
+const enhanceCheckpoints = (container) => {
+  headingNamed(container, /^checkpoint\b/i).forEach((head) => {
+    const p = head.nextElementSibling;
+    if (!p || p.tagName !== 'P') return;
+    const box = h('div', 'cp-box');
+    box.appendChild(h('p', 'cp-label', 'Checkpoint'));
+    const body = h('div');
+    body.innerHTML = p.innerHTML;
+    box.appendChild(body);
+    p.replaceWith(box);
+    head.remove();
+  });
+};
+
+const enhanceCode = (container) => {
+  container.querySelectorAll('pre').forEach((pre) => {
+    if (pre.parentElement && pre.parentElement.classList.contains('code-wrap')) return;
+    const wrap = h('div', 'code-wrap');
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+    const btn = h('button', 'code-copy', 'Copy');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pre.innerText);
+        btn.textContent = 'Copied';
+      } catch (_) {
+        btn.textContent = 'Press Ctrl+C';
+      }
+      setTimeout(() => (btn.textContent = 'Copy'), 1600);
+    });
+    wrap.appendChild(btn);
+  });
+};
+
+export const enhanceCourseContent = (container, key) => {
+  if (!container) return;
+  enhanceQuizzes(container, key);
+  enhanceChecklists(container, key);
+  enhanceCheckpoints(container);
+  enhanceCode(container);
+};
+
 // ---- Interactive course player ----
 // Self-contained HTML courses bring their own navigation, labs, and quizzes, so
 // they run full-width in a frame under a slim bar with the course controls.
@@ -265,6 +489,11 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
     return () => {
       cancelled = true;
     };
+  }, [current, course.slug, parts]);
+
+  // Quizzes, checklists, checkpoints, and copy buttons for this part.
+  useEffect(() => {
+    enhanceCourseContent(proseRef.current, `smt-learn:${course.slug}:${parts[current] ? parts[current].id : current}`);
   }, [current, course.slug, parts]);
 
   const PartList = () => (
@@ -486,6 +715,47 @@ export const FD_CSS = `
 @media (prefers-reduced-motion: reduce) {
   .fd-readbar, .fd-chip, .fd-card, .fd-btn, .fd-next { transition:none; }
 }
+
+
+/* Interactive layer: quizzes, checklists, checkpoints, code copy */
+.course-prose .qz { margin:1.5rem 0; border:1px solid #E5E7EB; border-radius:1rem; padding:1rem; background:#FAFAFA; }
+.course-prose .qz-top { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; }
+.course-prose .qz-title { margin:0; font-weight:800; color:#111827; font-size:1.05rem; }
+.course-prose .qz-score { margin:0; font-size:.85rem; font-weight:700; color:var(--acc); }
+.course-prose .qz-help { margin:.25rem 0 .9rem; font-size:.88rem; color:#6B7280; }
+.course-prose .qz-q { background:#fff; border:1px solid #E5E7EB; border-left:4px solid #E5E7EB; border-radius:.75rem; padding:.9rem 1rem; margin-top:.75rem; }
+.course-prose .qz-q.is-yes { border-left-color:#059669; }
+.course-prose .qz-q.is-no { border-left-color:#D97706; }
+.course-prose .qz-n { margin:0 0 .2rem; font-size:.75rem; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:.04em; }
+.course-prose .qz-text { font-weight:600; color:#111827; }
+.course-prose .qz-text p { margin:0; }
+.course-prose .qz-input { display:block; width:100%; margin-top:.6rem; border:1px solid #D1D5DB; border-radius:.6rem; padding:.55rem .7rem;
+  font:inherit; font-size:.95rem; line-height:1.5; resize:vertical; background:#fff; color:#111827; }
+.course-prose .qz-input:focus { outline:2px solid var(--acc); outline-offset:1px; border-color:transparent; }
+.course-prose .qz-reveal { margin-top:.6rem; font-size:.85rem; font-weight:700; color:var(--acc); background:var(--tint); padding:.4rem .8rem; border-radius:.5rem; }
+.course-prose .qz-reveal:focus-visible, .course-prose .qz-mark:focus-visible, .course-prose .code-copy:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+.course-prose .qz-ans { margin-top:.7rem; border-top:1px dashed #E5E7EB; padding-top:.6rem; }
+.course-prose .qz-ans-label { margin:0; font-size:.75rem; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:.04em; }
+.course-prose .qz-ans-text { margin:.2rem 0 .6rem; color:#1F2937; }
+.course-prose .qz-self { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; font-size:.85rem; color:#4B5563; }
+.course-prose .qz-mark { font-size:.82rem; font-weight:700; padding:.35rem .75rem; border-radius:999px; border:1px solid #D1D5DB; background:#fff; color:#374151; }
+.course-prose .qz-mark.is-yes { background:#ECFDF5; border-color:#059669; color:#047857; }
+.course-prose .qz-mark.is-no { background:#FFFBEB; border-color:#D97706; color:#B45309; }
+.course-prose .ck-count { margin:.5rem 0 .25rem; font-size:.85rem; font-weight:700; color:var(--acc); }
+.course-prose .ck-count.is-done { color:#047857; }
+.course-prose .ck-list { list-style:none; padding-left:0; }
+.course-prose .ck-list > li.ck-item { margin-left:0; padding:.35rem .5rem; border-radius:.5rem; }
+.course-prose .ck-list > li.ck-item:hover { background:#F9FAFB; }
+.course-prose .ck-list > li.is-checked { color:#6B7280; text-decoration:line-through; text-decoration-color:#9CA3AF; }
+.course-prose .ck-list input[type="checkbox"] { width:1.05rem; height:1.05rem; vertical-align:-2px; cursor:pointer; }
+.course-prose .cp-box { margin:1.25rem 0; background:var(--tint); border-left:4px solid var(--acc); border-radius:0 .75rem .75rem 0; padding:.8rem 1rem; }
+.course-prose .cp-label { margin:0 0 .2rem; font-size:.75rem; font-weight:800; color:var(--acc); text-transform:uppercase; letter-spacing:.05em; }
+.course-prose .cp-box p { margin:0; }
+.course-prose .code-wrap { position:relative; }
+.course-prose .code-wrap pre { padding-top:2.2rem; }
+.course-prose .code-copy { position:absolute; top:.5rem; right:.5rem; font-size:.75rem; font-weight:700; color:#E9E7F5; background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2); padding:.25rem .6rem; border-radius:.4rem; }
+.course-prose .code-copy:hover { background:rgba(255,255,255,.18); }
 
 /* Course text */
 .course-prose { max-width:72ch; color:#374151; font-size:16px; line-height:1.75; }
