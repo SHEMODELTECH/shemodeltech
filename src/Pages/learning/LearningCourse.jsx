@@ -5,7 +5,7 @@
 // Anyone can view the course page; reading needs an account and enrollment
 // (opening the reader while signed in enrolls automatically).
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, CourseReader, CourseReferences, InteractivePlayer, coursePartTitles, formatTime, look, useLearning } from './shared';
@@ -18,6 +18,7 @@ const LearningCourse = ({ reading = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const lr = useLearning();
+  const [refsOpen, setRefsOpen] = useState(false);
 
   const courses = useMemo(() => coursesForTrack(track).map((c) => ({ ...c, track })), [track]);
   const index = courses.findIndex((c) => c.slug === slug);
@@ -190,11 +191,39 @@ const LearningCourse = ({ reading = false }) => {
                 </li>
               );
             })}
+            {/* Sources: the last row. Members open it in place; visitors are asked to sign in. */}
+            {course.references && course.references.length > 0 && (
+              <li>
+                <button
+                  onClick={() => (lr.signedIn ? setRefsOpen((o) => !o) : signInAndReturn(navigate, location.pathname))}
+                  aria-expanded={lr.signedIn ? refsOpen : undefined}
+                  className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-gray-50"
+                >
+                  <span className="fd-part-num" aria-hidden="true">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.247m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.247" />
+                    </svg>
+                  </span>
+                  <span className="flex-1 text-sm text-gray-900 font-medium">
+                    Sources and further reading
+                    <span className="text-gray-500 font-normal"> ({course.references.length})</span>
+                  </span>
+                  {lr.signedIn ? (
+                    <svg className={`w-4 h-4 text-gray-400 transition-transform ${refsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  ) : (
+                    <span className="text-xs font-semibold text-gray-500">Sign in to view</span>
+                  )}
+                </button>
+                {lr.signedIn && refsOpen && (
+                  <div className="px-5 pb-5">
+                    <CourseReferences refs={course.references} inline />
+                  </div>
+                )}
+              </li>
+            )}
           </ol>
-          {/* Sources, under the syllabus */}
-          <div className="pt-10">
-            <CourseReferences refs={course.references} />
-          </div>
         </section>
 
         {/* More in this track */}

@@ -296,13 +296,15 @@ export const enhanceCourseContent = (container, key, opts = {}) => {
 // ---- Sources and further reading ----
 // Official documentation, standards, and primary sources for what the course
 // teaches, matched from its content at build time (scripts/courseReferences.js).
-export const CourseReferences = ({ refs, compact = false }) => {
+export const CourseReferences = ({ refs, compact = false, inline = false }) => {
   if (!refs || !refs.length) return null;
   return (
-    <section className={compact ? 'lr-refs lr-refs-compact' : 'lr-refs'} aria-labelledby="refs-h">
-      <h2 id="refs-h" className={compact ? 'text-base font-bold text-gray-900' : 'text-xl font-bold text-gray-900'}>
-        Sources and further reading
-      </h2>
+    <section className={inline ? 'lr-refs' : compact ? 'lr-refs lr-refs-compact' : 'lr-refs'} aria-label="Sources and further reading">
+      {!inline && (
+        <h2 className={compact ? 'text-base font-bold text-gray-900' : 'text-xl font-bold text-gray-900'}>
+          Sources and further reading
+        </h2>
+      )}
       <p className="text-sm text-gray-600 mt-1 mb-3 max-w-2xl">
         Official documentation, standards, and original sources for the tools and ideas in this course. Use them
         to check details and go deeper.
