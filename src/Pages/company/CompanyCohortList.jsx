@@ -26,7 +26,7 @@ const CompanyCohortList = () => {
         const list = await getOpenCompanyCohorts();
         if (!dead) setCohorts(list);
         if (currentUser) {
-          const e = await canApplyToCompanyCohort(currentUser.uid);
+          const e = await canApplyToCompanyCohort(currentUser.uid, { email: currentUser.email });
           if (!dead) setEligibility(e);
         }
       } catch (e) {

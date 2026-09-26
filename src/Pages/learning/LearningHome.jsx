@@ -74,6 +74,8 @@ const LearningHome = ({ mine = false }) => {
 
   const statusOf = (c) => (lr.isDone(c.track, c.slug) ? 'done' : lr.isEnrolled(c.track, c.slug) ? 'enrolled' : null);
   const progressOf = (c) => {
+    // Only in-progress cards show a bar; skip the work for everything else.
+    if (statusOf(c) !== 'enrolled') return 0;
     const n = coursePartTitles(c).length || 1;
     return Math.min(1, (lr.lastPartOf(c.track, c.slug) - 1) / n);
   };
@@ -88,7 +90,8 @@ const LearningHome = ({ mine = false }) => {
       all.map((c) => ({
         title: c.title.toLowerCase(),
         meta: `${trackMeta(c.track).label} ${look(c.track).short} ${c.track} ${c.level}`.toLowerCase(),
-        about: `${c.summary} ${coursePartTitles(c).join(' ')} ${(c.parts || []).join(' ')}`.toLowerCase(),
+        // Headings stand in for part titles here: cheap, and good enough to search.
+        about: `${c.summary} ${((c.markdown || '').match(/^#{2,3}\s+.+$/gm) || []).join(' ')} ${(c.modules || []).map((m) => m.title).join(' ')} ${(c.parts || []).join(' ')}`.toLowerCase(),
         body: (c.markdown || '')
           .replace(/```[\s\S]*?```/g, ' ')
           .replace(/<!--[\s\S]*?-->/g, ' ')
@@ -171,7 +174,11 @@ const LearningHome = ({ mine = false }) => {
       ) : (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-10">
           <h1 className="fd-display text-3xl sm:text-4xl text-gray-900">My learning</h1>
-          <p className="text-gray-600 mt-2">Courses you&rsquo;ve enrolled in, and the ones you&rsquo;ve finished.</p>
+          <p className="text-gray-600 mt-2">
+            {lr.signedIn && !lr.loading
+              ? `${all.filter((c) => statusOf(c) === 'enrolled').length} in progress, ${all.filter((c) => statusOf(c) === 'done').length} completed. Your progress is saved to your account.`
+              : 'Courses you\u2019ve enrolled in, and the ones you\u2019ve finished.'}
+          </p>
         </section>
       )}
 
@@ -224,7 +231,11 @@ const LearningHome = ({ mine = false }) => {
         </section>
 
         {/* Courses */}
-        {mine && !lr.loading && !lr.signedIn ? (
+        {mine && lr.loading ? (
+          <div className="flex justify-center py-20">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500" />
+          </div>
+        ) : mine && !lr.signedIn ? (
           <div className="text-center py-20">
             <p className="text-gray-900 font-semibold mb-2">Sign in to see your courses</p>
             <button onClick={() => signInAndReturn(navigate, '/learning/my')} className="fd-btn" style={{ '--acc': '#DB2777' }}>Sign in</button>
@@ -272,6 +283,26 @@ const LearningHome = ({ mine = false }) => {
               );
             })
         ) : (
+          mine ? (
+            // My learning: in progress first, then completed.
+            [
+              ['In progress', filtered.filter((c) => statusOf(c) === 'enrolled')],
+              ['Completed', filtered.filter((c) => statusOf(c) === 'done')],
+            ]
+              .filter(([, list]) => list.length)
+              .map(([label, list]) => (
+                <section key={label} className="pt-8" aria-label={label}>
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">
+                    {label} <span className="text-gray-400 font-semibold">({list.length})</span>
+                  </h2>
+                  <div className="lr-grid">
+                    {list.map((c) => (
+                      <CourseCard key={c.track + c.slug} course={c} status={statusOf(c)} progress={progressOf(c)} />
+                    ))}
+                  </div>
+                </section>
+              ))
+          ) : (
           <section className="pt-8">
             <p className="text-sm text-gray-500 mb-4">
               {filtered.length} course{filtered.length === 1 ? '' : 's'}
@@ -282,6 +313,7 @@ const LearningHome = ({ mine = false }) => {
               ))}
             </div>
           </section>
+          )
         )}
 
         {/* How learning leads to badges */}

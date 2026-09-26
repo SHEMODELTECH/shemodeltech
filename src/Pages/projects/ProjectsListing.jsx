@@ -68,10 +68,18 @@ const ProjectsListing = () => {
       setHasBadge(null);
       return;
     }
-    getDocs(
-      query(collection(db, 'member_badges'), where('memberUid', '==', currentUser.uid), limit(1))
-    )
-      .then((snap) => setHasBadge(!snap.empty))
+    // Badges awarded before memberUid was recorded only carry the email.
+    (async () => {
+      const byUid = await getDocs(
+        query(collection(db, 'member_badges'), where('memberUid', '==', currentUser.uid), limit(1))
+      );
+      if (!byUid.empty) return true;
+      const byEmail = await getDocs(
+        query(collection(db, 'member_badges'), where('memberEmail', '==', currentUser.email), limit(1))
+      );
+      return !byEmail.empty;
+    })()
+      .then(setHasBadge)
       .catch(() => setHasBadge(null));
   }, [currentUser]);
 

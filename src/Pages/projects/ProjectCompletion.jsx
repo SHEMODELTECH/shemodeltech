@@ -204,7 +204,19 @@ const ProjectCompletion = () => {
       // instead, so this entire loop is skipped when the project is paid.
       for (const ev of evaluations) {
         if (!isPaidProject && ev.awardBadge && ev.contribution !== 'poor') {
+          // Look the member up first so the badge records their uid: paid-project
+          // eligibility and other checks look badges up by memberUid.
+          let memberUid = ev.memberUid || null;
+          if (!memberUid) {
+            try {
+              const u = await getDocs(query(collection(db, 'users'), where('email', '==', ev.memberEmail)));
+              if (!u.empty) memberUid = u.docs[0].id;
+            } catch (_) {
+              /* fall back to email only */
+            }
+          }
           await addDoc(collection(db, 'member_badges'), {
+            memberUid,
             memberEmail: ev.memberEmail,
             memberName: ev.memberName,
             badgeCategory: ev.badgeCategory,
@@ -332,6 +344,7 @@ const ProjectCompletion = () => {
 
         // Save to member_badges collection
         await addDoc(collection(db, 'member_badges'), {
+          memberUid: currentUser.uid,
           memberEmail: currentUser.email,
           memberName: currentUser.displayName || currentUser.email,
           badgeCategory: 'leadership',

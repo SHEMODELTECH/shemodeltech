@@ -190,7 +190,7 @@ const ProjectWorkspace = () => {
         if (project.submitterId) {
           await addDoc(collection(db, 'notifications'), {
             userId: project.submitterId,
-            type: project.isPaid ? 'payment_disputed' : 'project_completed',
+            type: project.isPaid ? 'payment_disputed' : 'member_left',
             message: `${currentUser.displayName || currentUser.email} left "${project.projectTitle}"${project.isPaid ? ' (paid project - pay forfeited, auto-flagged for review)' : ''}. Reason: ${leaveReason.trim()}`,
             projectId,
             read: false,

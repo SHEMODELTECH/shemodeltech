@@ -109,9 +109,18 @@ export const canApplyToCompanyCohort = async (uid, viewer = null) => {
     return { allowed: true, badgeCount: 0 };
   }
   try {
-    const snap = await getDocs(
+    let snap = await getDocs(
       query(collection(db, 'member_badges'), where('memberUid', '==', uid))
     );
+    // Badges awarded before memberUid was recorded only carry the email.
+    if (snap.empty) {
+      const email = viewer?.email || (await getDoc(doc(db, 'users', uid))).data()?.email;
+      if (email) {
+        snap = await getDocs(
+          query(collection(db, 'member_badges'), where('memberEmail', '==', email))
+        );
+      }
+    }
     if (snap.empty) {
       return {
         allowed: false,
@@ -193,7 +202,7 @@ export const createCompanyCohort = async ({
 
 /** Member applies. Badge-gated. */
 export const applyToCompanyCohort = async ({ cohortId, applicant, roleTitle, coverNote }) => {
-  const gate = await canApplyToCompanyCohort(applicant.uid);
+  const gate = await canApplyToCompanyCohort(applicant.uid, { email: applicant.email });
   if (!gate.allowed) throw new Error(gate.reason);
 
   const dupes = await getDocs(

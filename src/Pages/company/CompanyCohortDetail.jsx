@@ -56,7 +56,7 @@ const CompanyCohortDetail = () => {
         setCohort({ id: snap.id, ...snap.data() });
 
         const [elig, apps] = await Promise.all([
-          canApplyToCompanyCohort(currentUser.uid),
+          canApplyToCompanyCohort(currentUser.uid, { email: currentUser.email }),
           getDocs(
             query(
               collection(db, 'company_cohort_applications'),

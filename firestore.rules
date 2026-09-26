@@ -75,6 +75,23 @@ service cloud.firestore {
 
  allow update: if isAdmin();
 
+ // Badge award at project completion. The lead of a project may add ONE badge
+ // (and matching counters/certificate) to a teammate's profile, or to their own
+ // as lead, and only for a project they own where that person is on the team.
+ // Without this, awarded badges never reached anyone's profile, dashboard, or
+ // Talent Board listing (only the separate member_badges record was written).
+ allow update: if isSignedIn()
+ && request.resource.data.diff(resource.data).affectedKeys()
+ .hasOnly(['badges', 'badgeCounts', 'totalBadges', 'certificates'])
+ && request.resource.data.get('badges', []).size() == resource.data.get('badges', []).size() + 1
+ && request.resource.data.badges[request.resource.data.badges.size() - 1].projectId is string
+ && ownsProject(request.resource.data.badges[request.resource.data.badges.size() - 1].projectId)
+ && (
+ userId in get(/databases/$(database)/documents/projects/$(request.resource.data.badges[request.resource.data.badges.size() - 1].projectId)).data.get('members', [])
+ || userId == myUid()
+ )
+ && request.resource.data.get('totalBadges', 0) == resource.data.get('totalBadges', 0) + 1;
+
  // Follow / unfollow another member.
  allow update: if isSignedIn() && userId != myUid()
  && changed(['followers', 'followerCount']);
@@ -233,6 +250,17 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  // project_applications, contributor applications, reviewed by the lead.
  // ---------------------------------------------------------------
+ // Project deletion requests: a lead asks an admin to delete their project.
+ match /deletionRequests/{id} {
+ allow create: if isSignedIn()
+ && request.resource.data.ownerId == myUid()
+ && request.resource.data.status == 'pending'
+ && request.resource.data.projectId is string
+ && ownsProject(request.resource.data.projectId);
+ allow read: if isReviewer() || (isSignedIn() && resource.data.ownerId == myUid());
+ allow update, delete: if isAdmin();
+ }
+
  match /project_applications/{id} {
  allow read: if isSignedIn();
  allow create: if isSignedIn()

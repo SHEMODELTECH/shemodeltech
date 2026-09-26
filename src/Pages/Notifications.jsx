@@ -112,7 +112,7 @@ const NotificationsPage = () => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
-  const projectTypes = ['payment_confirmation', 'payment_confirmed', 'payment_disputed', 'dispute_resolved', 'project_completed', 'project_application', 'application_approved', 'application_rejected', 'project_review_approved', 'project_needs_changes', 'project_review_rejected', 'lead_assigned', 'lead_interview_scheduled', 'lead_role_offered', 'lead_not_selected', 'lead_reassigned'];
+  const projectTypes = ['payment_confirmation', 'payment_confirmed', 'payment_disputed', 'dispute_resolved', 'project_completed', 'project_application', 'application_approved', 'application_rejected', 'project_review_approved', 'project_needs_changes', 'project_review_rejected', 'member_left', 'lead_assigned', 'lead_interview_scheduled', 'lead_role_offered', 'lead_not_selected', 'lead_reassigned'];
   // Payment + dispute lifecycle notifications route to /disputes/:projectId (the
   // dispute room) rather than the project detail page.
   const disputeTypes = ['payment_confirmation', 'payment_confirmed', 'payment_disputed', 'dispute_resolved'];
