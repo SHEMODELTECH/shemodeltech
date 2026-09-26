@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { authFetch } from '../../utils/authFetch';
 
 const AdminEmailTester = () => {
   const [testEmail, setTestEmail] = useState('');
@@ -181,7 +182,7 @@ const AdminEmailTester = () => {
 
       console.log(`🧪 Testing ${emailTest.key} with data:`, testData);
 
-      const response = await fetch(`/api/notifications/${emailTest.endpoint}`, {
+      const response = await authFetch(`/api/notifications/${emailTest.endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

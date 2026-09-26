@@ -19,6 +19,9 @@ const badgeOptions = [
   { id: 'TechGuard', label: 'Cybersecurity' },
 ];
 
+// Talent Board data kept in memory for 5 minutes while the app is open.
+const TALENT_CACHE = { at: 0, data: null, mentor: null, mentorAt: 0 };
+
 const TalentBoard = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -30,7 +33,17 @@ const TalentBoard = () => {
   // Learner ratings and completions for mentors' published courses.
   const [mentorStats, setMentorStats] = useState({});
   useEffect(() => {
-    mentorStatsByUid().then(setMentorStats).catch(() => setMentorStats({}));
+    if (TALENT_CACHE.mentor && Date.now() - TALENT_CACHE.mentorAt < 5 * 60 * 1000) {
+      setMentorStats(TALENT_CACHE.mentor);
+      return;
+    }
+    mentorStatsByUid()
+      .then((m) => {
+        TALENT_CACHE.mentor = m;
+        TALENT_CACHE.mentorAt = Date.now();
+        setMentorStats(m);
+      })
+      .catch(() => setMentorStats({}));
   }, []);
 
   // Only needed to decide what the access banner should say.
@@ -46,21 +59,31 @@ const TalentBoard = () => {
   useEffect(() => {
     const fetchTalents = async () => {
       try {
-        // Fetch users; don't orderBy a field that some docs may lack (that silently drops them).
-        const q = query(collection(db, 'users'), limit(500));
-        const snap = await getDocs(q);
-        const allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        // Reuse data loaded in the last 5 minutes (each load reads up to
+        // 1,500 documents, which adds up in database costs).
+        let allUsers, badgedUids;
+        if (TALENT_CACHE.data && Date.now() - TALENT_CACHE.at < 5 * 60 * 1000) {
+          ({ allUsers, badgedUids } = TALENT_CACHE.data);
+        } else {
+          // Fetch users; don't orderBy a field that some docs may lack (that silently drops them).
+          const q = query(collection(db, 'users'), limit(500));
+          const snap = await getDocs(q);
+          allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-        // Collect uids that have earned a badge from the member_badges collection too,
-        // so anyone with a badge there is included even if their user doc wasn't denormalized.
-        const badgedUids = new Set();
-        try {
-          const mbSnap = await getDocs(query(collection(db, 'member_badges'), limit(1000)));
-          mbSnap.docs.forEach(d => {
-            const uid = d.data().userId || d.data().uid || d.data().memberId;
-            if (uid) badgedUids.add(uid);
-          });
-        } catch (e) { /* ignore */ }
+          // Collect uids that have earned a badge from the member_badges collection too,
+          // so anyone with a badge there is included even if their user doc wasn't denormalized.
+          badgedUids = new Set();
+          try {
+            const mbSnap = await getDocs(query(collection(db, 'member_badges'), limit(1000)));
+            mbSnap.docs.forEach(d => {
+              // Badge records store the member as memberUid (older ones may use other names).
+              const uid = d.data().memberUid || d.data().userId || d.data().uid || d.data().memberId;
+              if (uid) badgedUids.add(uid);
+            });
+          } catch (e) { /* ignore */ }
+          TALENT_CACHE.data = { allUsers, badgedUids };
+          TALENT_CACHE.at = Date.now();
+        }
 
         const users = allUsers
           .filter(u => {

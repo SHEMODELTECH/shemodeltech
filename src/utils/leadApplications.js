@@ -32,6 +32,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { authFetch } from './authFetch';
 
 export const LEAD_APP_STATUS = {
   SUBMITTED: 'submitted',
@@ -385,7 +386,7 @@ const notify = async (uid, payload, email) => {
   if (!email) return;
   try {
     const site = window.location.origin;
-    await fetch('/api/notifications/send-generic', {
+    await authFetch('/api/notifications/send-generic', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

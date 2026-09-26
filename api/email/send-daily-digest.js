@@ -40,7 +40,13 @@ module.exports = async function handler(req, res) {
  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-API-Key');
  if (req.method === 'OPTIONS') return res.status(200).end();
 
- const isVercelCron = req.headers['x-vercel-cron'] || req.headers['user-agent']?.includes('vercel');
+ // Vercel Cron sends "Authorization: Bearer <CRON_SECRET>" when CRON_SECRET is
+ // set in Vercel. The old user-agent check can be faked by anyone, so it's only
+ // used while CRON_SECRET isn't set yet.
+ const cronSecret = process.env.CRON_SECRET;
+ const isVercelCron = cronSecret
+   ? req.headers.authorization === `Bearer ${cronSecret}`
+   : !!(req.headers['x-vercel-cron'] || req.headers['user-agent']?.includes('vercel-cron'));
  const isDev = process.env.NODE_ENV === 'development' || req.headers.host?.includes('localhost');
  const apiKey = req.headers['x-api-key'] || req.query.apiKey;
  const validKey = process.env.DAILY_DIGEST_API_KEY;

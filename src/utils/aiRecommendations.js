@@ -19,6 +19,7 @@ import {
 import { db } from '../firebase/config';
 import { CLAUDE_API_CONFIG } from '../config/claudeApiConfig';
 import { getIndustryLabel } from './industryTracks';
+import { authFetch } from './authFetch';
 
 const CACHE_HOURS = 24;
 const MAX_PROJECT_CANDIDATES = 20;
@@ -202,7 +203,7 @@ export const getAIRecommendations = async (currentUser, opts = {}) => {
   if (projectCandidates.length === 0) return null;
 
   // Call Claude through the existing server-side proxy (the key never touches the client).
-  const response = await fetch('/api/claude-proxy', {
+  const response = await authFetch('/api/claude-proxy', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

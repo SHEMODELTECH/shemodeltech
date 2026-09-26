@@ -1,3 +1,4 @@
+import { authFetch } from './authFetch';
 // src/utils/blobStorage.js - Vercel Blob Storage Utilities (Server-Side API)
 /**
  * Convert file to base64 for API transmission
@@ -66,7 +67,7 @@ export const uploadImageToBlob = async (file, folder = 'posts') => {
     const filepath = `${folder}/${uniqueFilename}`;
 
     // Call server-side API endpoint
-    const response = await fetch('/api/blob-storage', {
+    const response = await authFetch('/api/blob-storage', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -129,7 +130,7 @@ export const deleteImageFromBlob = async (urlOrPathname) => {
     }
 
     // Call server-side API endpoint for deletion
-    const response = await fetch('/api/blob-storage', {
+    const response = await authFetch('/api/blob-storage', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -435,7 +436,7 @@ export const uploadDocumentToBlob = async (file, folder = 'documents') => {
   if (file.size > 3 * 1024 * 1024) throw new Error('The file must be smaller than 3 MB.');
   const base64Data = await fileToBase64(file);
   const filepath = `${folder}/${generateUniqueFilename(file.name)}`;
-  const response = await fetch('/api/blob-storage', {
+  const response = await authFetch('/api/blob-storage', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

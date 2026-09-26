@@ -2,6 +2,7 @@
 import { CLAUDE_API_CONFIG, CLAUDE_PROMPTS } from '../config/claudeApiConfig';
 import firebaseCareerService from './firebaseCareerService';
 import { auth } from '../firebase/config';
+import { authFetch } from '../utils/authFetch';
 
 class ClaudeApiService {
   async getFormSuggestions() {
@@ -19,7 +20,7 @@ class ClaudeApiService {
         ]
       };
       
-      const response = await fetch('/api/claude-proxy', {
+      const response = await authFetch('/api/claude-proxy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -58,7 +59,7 @@ class ClaudeApiService {
         ]
       };
       
-      const response = await fetch('/api/claude-proxy', {
+      const response = await authFetch('/api/claude-proxy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

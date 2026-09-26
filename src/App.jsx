@@ -17,7 +17,6 @@ import Logout from './Pages/auth/Logout';
 import AccountTypeSelection from './Pages/auth/AccountTypeSelection';
 import LandingPage from './Pages/LandingPage';
 import Onboarding from './Pages/Onboarding';
-import CommunityPosts from './Pages/community/CommunityPosts';
 
 // Lazy-load secondary pages
 const UserDashboard = lazy(() => import('./Pages/user/dashboard'));

@@ -3,6 +3,7 @@
 // This replaces 6 separate files to stay within Vercel Hobby plan's 12 function limit
 
 const { sendMail } = require('../../lib/mailer');
+const { requireUser } = require('../../lib/requireUser');
 
 // Brand/config - override via Vercel env vars, never hardcode again.
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
@@ -601,6 +602,11 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed. Use POST.' });
   }
+
+  // Only signed-in members can trigger emails (stops this being used to send
+  // spam through our email account).
+  const user = await requireUser(req, res);
+  if (!user) return;
 
   // Extract notification type from URL path
   const type = req.query.type;

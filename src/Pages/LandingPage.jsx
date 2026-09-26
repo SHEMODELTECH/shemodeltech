@@ -5,7 +5,7 @@ import { BRAND } from '../config/brand';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { coursesForTrack, tracksWithCourses } from '../utils/foundationsCourses';
+import { COURSE_COUNT } from '../utils/foundationsCoursesMeta';
 
 import TechMO from '../Images/TechMO.png';
 import TechQA from '../Images/TechQA.png';
@@ -90,9 +90,6 @@ const LandingPage = () => {
 
 
   // Learning highlights for the front page.
-  const allCourses = tracksWithCourses()
-    .filter((t) => t !== 'company')
-    .flatMap((t) => coursesForTrack(t).map((c) => ({ ...c, track: t })));
 
   const steps = [
     {
@@ -320,7 +317,7 @@ const LandingPage = () => {
             </div>
             <div className="grid grid-cols-3 gap-3">
               {[
-                [`${allCourses.length}+`, 'free courses'],
+                [`${COURSE_COUNT}+`, 'free courses'],
                 ['6', 'tech tracks'],
                 ['100%', 'free, with certificates'],
               ].map(([n, l]) => (

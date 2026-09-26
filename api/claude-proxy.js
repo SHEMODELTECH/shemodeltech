@@ -1,143 +1,65 @@
-// api/claude-proxy-fetch.js
+// api/claude-proxy.js
+// Server-side proxy to the Claude API, so the API key never reaches browsers.
+// Only signed-in members can use it, only approved models, and with a cap on
+// response length, so no one can run up the API bill through this endpoint.
+const { requireUser, throttle } = require('../lib/requireUser');
 
-export default async function handler(req, res) {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
-  
-  // Handle OPTIONS request
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+const ALLOWED_MODEL = /^claude-(haiku|sonnet)-/;
+const MAX_TOKENS = 2000;
+const MAX_BODY_CHARS = 60000; // roughly 15k words of input
+
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || 'https://shemodeltech.com');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const user = await requireUser(req, res);
+  if (!user) return;
+
+  const body = req.body || {};
+  if (!Array.isArray(body.messages) || body.messages.length === 0) {
+    return res.status(400).json({ error: 'Invalid messages format' });
   }
-  
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (!ALLOWED_MODEL.test(String(body.model || ''))) {
+    return res.status(400).json({ error: 'Model not allowed' });
   }
-  
-  // Enhanced request validation
-  if (!req.body) {
-    return res.status(400).json({ 
-      error: 'Missing request body' 
-    });
+  if (JSON.stringify(body.messages).length + String(body.system || '').length > MAX_BODY_CHARS) {
+    return res.status(413).json({ error: 'Request too large' });
   }
-  
-  if (!req.body.messages) {
-    return res.status(400).json({ 
-      error: 'Missing messages array in request', 
-      details: 'Request must include a messages array with at least one message'
-    });
+  // At most one request per second per member.
+  if (!(await throttle(`claude_${user.uid}`, 1))) {
+    return res.status(429).json({ error: 'Too many requests. Please wait a moment and try again.' });
   }
-  
-  if (!req.body.model) {
-    return res.status(400).json({ 
-      error: 'Missing model in request', 
-      details: 'Request must specify a valid Claude model'
-    });
+  if (!process.env.CLAUDE_API_KEY) {
+    return res.status(500).json({ error: 'API configuration error' });
   }
-  
-  // Validate messages format
-  if (!Array.isArray(req.body.messages) || req.body.messages.length === 0) {
-    return res.status(400).json({
-      error: 'Invalid messages format',
-      details: 'Messages must be a non-empty array'
-    });
-  }
-  
+
   try {
-    // Log request details for debugging
-    console.log('Claude API Request:', {
-      model: req.body.model,
-      messageCount: req.body.messages.length,
-      maxTokens: req.body.max_tokens || 'default'
-    });
-    
-    // Check API key
-    if (!process.env.CLAUDE_API_KEY) {
-      console.error('CLAUDE_API_KEY environment variable is not set');
-      return res.status(500).json({
-        error: 'API configuration error',
-        details: 'Claude API key is not configured'
-      });
-    }
-    
-    // Prepare the request body with well-defined structure
-    const requestBody = {
-      model: req.body.model,
-      messages: req.body.messages,
-      max_tokens: req.body.max_tokens || 4096,
-      temperature: req.body.temperature !== undefined ? req.body.temperature : 0.7,
-      system: req.body.system || ''
-    };
-    
-    // Call the Claude API using fetch
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': process.env.CLAUDE_API_KEY,
-        'anthropic-version': '2023-06-01' // Consider using a more recent version if available
+        'anthropic-version': '2023-06-01',
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify({
+        model: body.model,
+        messages: body.messages,
+        max_tokens: Math.min(Number(body.max_tokens) || 1024, MAX_TOKENS),
+        temperature: body.temperature !== undefined ? body.temperature : 0.7,
+        ...(body.system ? { system: body.system } : {}),
+      }),
     });
-    
-    // Check if the response is successful
+    const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('Claude API Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorData
-      });
-      
-      return res.status(response.status).json({
-        error: 'Claude API error',
-        details: errorData.error?.message || response.statusText,
-        status: response.status
-      });
+      console.error('Claude API error', response.status, data?.error?.message);
+      return res.status(response.status).json({ error: 'Claude API error', details: data?.error?.message || response.statusText });
     }
-    
-    // Successfully received response from Claude API
-    const data = await response.json();
-    
-    // Log response structure for debugging
-    console.log('Claude API Response Structure:', {
-      hasContent: !!data.content,
-      contentType: data.content ? (Array.isArray(data.content) ? 'array' : typeof data.content) : 'undefined',
-      role: data.role || 'unknown',
-      model: data.model || 'unknown'
-    });
-    
-    // Enhance the response if needed for backward compatibility
-    if (data.content && Array.isArray(data.content) && data.content.length > 0) {
-      // Modern Claude API format - keep as is
-      // But add a log to help debug the structure
-      console.log('Content structure:', {
-        type: data.content[0].type,
-        hasText: !!data.content[0].text
-      });
-    } else if (data.completion) {
-      // Legacy Claude API format - convert to new format
-      console.log('Converting legacy format to new format');
-      data.content = [{ type: 'text', text: data.completion }];
-    }
-    
-    // Return the Claude API response to the client
     return res.status(200).json(data);
   } catch (error) {
-    console.error('Claude API Request Error:', error);
-    
-    // Provide detailed error information
-    return res.status(500).json({ 
-      error: 'Error processing request',
-      message: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
+    console.error('Claude proxy error:', error.message);
+    return res.status(500).json({ error: 'Error processing request' });
   }
-}
+};

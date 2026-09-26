@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { toast } from 'react-toastify';
+import { authFetch } from './authFetch';
 
 /**
  * Send email notification to event group admin when someone requests to join
@@ -103,7 +104,7 @@ export const sendEventGroupJoinNotification = async (
  */
 const sendNotificationEmail = async ({ eventGroupData, applicantData, adminData }) => {
   try {
-    const response = await fetch('/api/notifications/send-event-group-request', {
+    const response = await authFetch('/api/notifications/send-event-group-request', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,3 +1,4 @@
+import { authFetch } from './authFetch';
 // src/utils/projectGenerator.js
 // Generates an auto-project via the in-app Claude proxy. Projects are any-tech or
 // AI-based and MUST be buildable as software or simulation only - never requiring a
@@ -48,7 +49,7 @@ export const generateProject = async () => {
     messages: [{ role: 'user', content: buildPrompt() }],
   };
 
-  const response = await fetch('/api/claude-proxy', {
+  const response = await authFetch('/api/claude-proxy', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(requestBody),

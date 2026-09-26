@@ -14,6 +14,9 @@ import { collection, query, getDocs, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import ProjectPayBadge from '../components/ProjectPayBadge';
 
+// Search data kept in memory for 5 minutes while the app is open.
+const SEARCH_CACHE = { at: 0, data: null };
+
 const SearchPage = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -54,17 +57,26 @@ const SearchPage = () => {
     let active = true;
     (async () => {
       try {
+        // Reuse what we loaded in the last 5 minutes: every visit to Search used
+        // to re-read up to 800 documents, which adds up in database costs.
+        if (SEARCH_CACHE.data && Date.now() - SEARCH_CACHE.at < 5 * 60 * 1000) {
+          setMembers(SEARCH_CACHE.data.members);
+          setProjects(SEARCH_CACHE.data.projects);
+          return;
+        }
         const [uSnap, pSnap] = await Promise.all([
           getDocs(query(collection(db, 'users'), limit(500))),
           getDocs(query(collection(db, 'projects'), limit(300))),
         ]);
         if (!active) return;
-        setMembers(
-          uSnap.docs
-            .map(d => ({ uid: d.id, ...d.data() }))
-            .filter(u => u.onboardingComplete !== false && (u.displayName || u.companyName))
-        );
-        setProjects(pSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        const members = uSnap.docs
+          .map(d => ({ uid: d.id, ...d.data() }))
+          .filter(u => u.onboardingComplete !== false && (u.displayName || u.companyName));
+        const projects = pSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        SEARCH_CACHE.data = { members, projects };
+        SEARCH_CACHE.at = Date.now();
+        setMembers(members);
+        setProjects(projects);
       } catch (e) {
         console.error('Search data load failed:', e);
       } finally {

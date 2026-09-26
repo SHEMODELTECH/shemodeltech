@@ -25,6 +25,8 @@ if (!admin.apps.length) {
 
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
 
+const { throttle } = require('../../lib/requireUser');
+
 module.exports = async function handler(req, res) {
  res.setHeader('Access-Control-Allow-Origin', '*');
  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -36,6 +38,11 @@ module.exports = async function handler(req, res) {
  const name = String(req.body?.name || '').trim();
  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
  return res.status(400).json({ error: 'Please enter a valid email address.' });
+ }
+
+ // One email per address per minute, so the form can't be used to flood an inbox.
+ if (!(await throttle(`verify_${email}`, 60))) {
+ return res.status(429).json({ error: 'Please wait a minute before requesting another email.' });
  }
 
  try {

@@ -22,6 +22,7 @@ import {
 import { db } from '../../firebase/config';
 import { usePermissions, roleLabel } from '../../utils/permissions';
 import { toast } from 'react-toastify';
+import { authFetch } from '../../utils/authFetch';
 
 const AdminDashboard = () => {
   const { currentUser } = useAuth();
@@ -172,7 +173,7 @@ const AdminDashboard = () => {
         };
         
         console.log('📧 Sending approval email notification...');
-        const response = await fetch('/api/notifications/send-project-review-approved', {
+        const response = await authFetch('/api/notifications/send-project-review-approved', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(emailData)
@@ -264,7 +265,7 @@ const AdminDashboard = () => {
         };
         
         console.log('📧 Sending rejection email notification...');
-        const response = await fetch('/api/notifications/send-project-review-rejected', {
+        const response = await authFetch('/api/notifications/send-project-review-rejected', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(emailData)

@@ -1,3 +1,4 @@
+import { authFetch } from './authFetch';
 // src/utils/communityHelpers.js - She Model Tech Utility Functions (Updated for Vercel Blob with Server-Side API)
 
 import {
@@ -148,7 +149,7 @@ export const uploadImageToStorage = async (file, folder = 'posts') => {
     const uniqueFilename = generateUniqueFilename(file.name).replace(/\.[^.]+$/, '.jpg');
     const filepath = `${folder}/${uniqueFilename}`;
 
-    const response = await fetch('/api/blob-storage', {
+    const response = await authFetch('/api/blob-storage', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -186,7 +187,7 @@ export const uploadImageToStorage = async (file, folder = 'posts') => {
 
 export const deleteImageFromStorage = async (urlOrPathname) => {
   try {
-    const response = await fetch('/api/blob-storage', {
+    const response = await authFetch('/api/blob-storage', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url: urlOrPathname }),

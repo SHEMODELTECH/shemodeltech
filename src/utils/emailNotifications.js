@@ -1,3 +1,4 @@
+import { authFetch } from './authFetch';
 // =================================================================
 // COMPLETE FILE: src/utils/emailNotifications.js
 // =================================================================
@@ -14,7 +15,7 @@ const sendEmailNotification = async (endpoint, data) => {
   try {
     console.log(`📧 Sending email notification via ${endpoint}...`);
 
-    const response = await fetch(`/api/notifications/${endpoint}`, {
+    const response = await authFetch(`/api/notifications/${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
