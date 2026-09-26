@@ -164,7 +164,7 @@ const AppLayout = ({ children }) => {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 py-4 px-3 space-y-2 overflow-y-auto">
+        <nav className="flex-1 py-6 px-3 space-y-3 lg:space-y-4 overflow-y-auto">
           {navItems.map((item) => {
             // Expandable group (e.g. Projects with sub-items)
             if (item.isGroup) {
@@ -173,7 +173,7 @@ const AppLayout = ({ children }) => {
                 <div key={item.label}>
                   <button
                     onClick={() => setProjectsOpen(o => !o)}
-                    className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    className={`group w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all ${
                       anyChildActive ? 'text-pink-700 bg-pink-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   >
@@ -181,8 +181,8 @@ const AppLayout = ({ children }) => {
                     <span className="flex-1 text-left">{item.label}</span>
                     <svg className={`w-4 h-4 transition-transform ${projectsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                   </button>
-                  <div className={`overflow-hidden transition-all duration-200 ${projectsOpen ? 'max-h-60 mt-1' : 'max-h-0'}`}>
-                    <div className="ml-5 pl-3 border-l-2 border-gray-100 space-y-1.5 py-0.5">
+                  <div className={`overflow-hidden transition-all duration-200 ${projectsOpen ? 'max-h-72 mt-2' : 'max-h-0'}`}>
+                    <div className="ml-5 pl-3 border-l-2 border-gray-100 space-y-2 py-1">
                       {item.children.map(child => (
                         <Link
                           key={child.path}
@@ -205,7 +205,7 @@ const AppLayout = ({ children }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                className={`group flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all ${
                   active ? 'bg-pink-600 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
