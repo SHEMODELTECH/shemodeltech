@@ -354,9 +354,20 @@ service cloud.firestore {
  // link can verify one; a learner can only issue their own; never edited.
  match /learning_certificates/{id} {
  allow read: if true;
+ // Course certificates: a learner issues their own.
  allow create: if isSignedIn()
  && request.resource.data.uid == myUid()
- && id.matches(myUid() + '_.*');
+ && id.matches(myUid() + '_.*')
+ && request.resource.data.get('type', 'course') != 'mentor';
+ // Mentor certificates: issued by an admin or editor at approval, or by the
+ // mentor for their own course once it is published.
+ allow create: if isReviewer() && request.resource.data.type == 'mentor';
+ allow create: if isSignedIn()
+ && request.resource.data.type == 'mentor'
+ && request.resource.data.uid == myUid()
+ && id.matches(myUid() + '_mentor_.*')
+ && get(/databases/$(database)/documents/teacher_courses/$(request.resource.data.courseId)).data.createdBy.uid == myUid()
+ && get(/databases/$(database)/documents/teacher_courses/$(request.resource.data.courseId)).data.get('published', null) != null;
  allow update: if false;
  allow delete: if isAdmin();
  }

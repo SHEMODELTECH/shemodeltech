@@ -9,6 +9,7 @@ import { collection, query, where, limit, getDocs, doc, getDoc } from 'firebase/
 import { db } from '../../firebase/config';
 import FollowButton from '../../components/community/FollowButton';
 import MentorBadge from '../../components/MentorBadge';
+import { listMentorCertificates } from '../../utils/learningCertificates';
 
 const badgeData = [
   { id: 'techmo', title: 'TechPO', image: '/Images/TechMO.png', label: 'Product / Project Owner' },
@@ -53,6 +54,7 @@ const UserProfile = () => {
   const userParam = userEmail ? decodeURIComponent(userEmail).trim() : '';
 
   const [profile, setProfile] = useState(null);
+  const [mentorCerts, setMentorCerts] = useState([]);
   // The VIEWER's own profile - needed for the messaging rules:
   // free company accounts can't message anyone, and free individual
   // accounts can't message company accounts.
@@ -107,6 +109,9 @@ const UserProfile = () => {
 
         if (userData) {
           setProfile(userData);
+          if (userData?.uid) {
+            listMentorCertificates(userData.uid).then(setMentorCerts).catch(() => setMentorCerts([]));
+          }
           // Total projects DONE (paid or free). Auto-populates from the
           // projects collection: any project with status 'completed' where
           // this user was a team member (tracked by uid OR email in the
@@ -235,7 +240,10 @@ const UserProfile = () => {
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 print:hidden">
+                <button onClick={() => window.print()} className="px-4 py-2 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-all">
+                  Print
+                </button>
                 {isOwnProfile && (
                   <button onClick={() => navigate('/settings')} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all">
                     Edit Profile
@@ -261,7 +269,7 @@ const UserProfile = () => {
             {/* Name */}
             <h1 className="text-2xl font-bold text-gray-900 mb-0.5 flex items-center gap-2 flex-wrap">
               {displayName}
-              <MentorBadge count={profile.mentorApprovedCourses || 0} showCount />
+              <MentorBadge count={profile.mentorApprovedCourses || 0} isMentor={!!profile.isTeacher} showCount />
               {profile.isCompany && (
                 <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-purple-100 text-purple-700 rounded-full">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
@@ -302,6 +310,47 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
+
+        {/* Mentor: badge, published courses, and certificates (public; prints too) */}
+        {(profile.isTeacher || (profile.mentorApprovedCourses || 0) > 0 || mentorCerts.length > 0) && (
+          <div className="bg-white rounded-xl border border-indigo-200 p-6 mb-6 print:break-inside-avoid">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="w-11 h-11 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700" aria-hidden="true">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                  </svg>
+                </span>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">She Model Tech Mentor</h3>
+                  <p className="text-gray-500 text-xs">
+                    {mentorCerts.length
+                      ? `${mentorCerts.length} course${mentorCerts.length === 1 ? '' : 's'} published in She Model Tech Learning`
+                      : 'Approved mentor at SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit'}
+                  </p>
+                </div>
+              </div>
+              <MentorBadge count={mentorCerts.length || profile.mentorApprovedCourses || 0} isMentor />
+            </div>
+            {mentorCerts.length > 0 && (
+              <ul className="mt-4 divide-y divide-gray-100 border-t border-gray-100">
+                {mentorCerts.map((c) => (
+                  <li key={c.id} className="py-3 flex flex-wrap items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900">{c.courseTitle}</p>
+                      <p className="text-xs text-gray-500">
+                        {[c.trackLabel, c.completedOn && `Published ${new Date(`${c.completedOn}T12:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`].filter(Boolean).join(' · ')}
+                      </p>
+                    </div>
+                    <a href={`/learning/certificate/${c.id}`} className="text-xs font-semibold text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-lg hover:bg-indigo-50 print:hidden">
+                      View certificate
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
 
         {/* Badges Section */}
         {!profile.isCompany && userBadges.length > 0 && (

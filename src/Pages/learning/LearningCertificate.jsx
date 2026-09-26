@@ -46,6 +46,7 @@ const LearningCertificate = () => {
   }
 
   const L = look(cert.track);
+  const isMentor = cert.type === 'mentor';
   const mine = currentUser && currentUser.uid === cert.uid;
   const copy = async () => {
     try {
@@ -68,7 +69,7 @@ const LearningCertificate = () => {
               </svg>
               Verified certificate
             </span>{' '}
-            issued by She Model Tech
+            issued by SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit
           </p>
           <div className="flex flex-wrap gap-2">
             <button onClick={() => window.print()} className="fd-btn">Download PDF</button>
@@ -84,36 +85,44 @@ const LearningCertificate = () => {
           </div>
         </div>
 
-        <article className="cert" aria-label={`Certificate of completion for ${cert.name}`} style={{ '--c': L.accent, '--t': L.tint }}>
+        <article className="cert" aria-label={`${isMentor ? 'Certificate of recognition' : 'Certificate of completion'} for ${cert.name}`} style={{ '--c': L.accent, '--t': L.tint }}>
           <div className="cert-inner">
             <div className="cert-top">
               <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="cert-logo" />
               {L.img && <img src={L.img} alt="" className="cert-medal" />}
             </div>
-            <p className="cert-kicker">Certificate of completion</p>
+            <p className="cert-kicker">{isMentor ? 'Certificate of recognition' : 'Certificate of completion'}</p>
             <p className="cert-small">This certifies that</p>
             <h1 className="cert-name">{cert.name}</h1>
-            <p className="cert-small">has successfully completed</p>
+            <p className="cert-small">
+              {isMentor ? 'has created and published the course' : 'has successfully completed'}
+            </p>
             <h2 className="cert-course">{cert.courseTitle}</h2>
             <p className="cert-meta">
-              {[cert.trackLabel && `${cert.trackLabel} track`, cert.level, cert.minutes ? formatTime(cert.minutes) : '']
+              {[
+                isMentor ? 'She Model Tech Mentor' : '',
+                cert.trackLabel && `${cert.trackLabel} track`,
+                cert.level,
+                !isMentor && cert.minutes ? formatTime(cert.minutes) : '',
+              ]
                 .filter(Boolean)
                 .join('  ·  ')}
             </p>
             <div className="cert-foot">
               <div>
                 <p className="cert-foot-value">{fmtDate(cert.completedOn)}</p>
-                <p className="cert-foot-label">Date completed</p>
+                <p className="cert-foot-label">{isMentor ? 'Date published' : 'Date completed'}</p>
               </div>
               <div className="cert-sign">
                 <p className="cert-foot-value cert-script">She Model Tech</p>
-                <p className="cert-foot-label">She Model Tech Learning</p>
+                <p className="cert-foot-label">SHE MODEL TECH Inc.</p>
               </div>
               <div>
                 <p className="cert-foot-value cert-id">{certificateCode(cert.id)}</p>
                 <p className="cert-foot-label">Certificate ID</p>
               </div>
             </div>
+            <p className="cert-org">SHE MODEL TECH Inc. is a registered 501(c)(3) nonprofit organization.</p>
             <p className="cert-verify">Verify at {certificateUrl(cert.id).replace(/^https?:\/\//, '')}</p>
           </div>
         </article>
@@ -145,7 +154,8 @@ const CERT_CSS = `
 .cert-foot-label { margin-top:.35rem; font-size:clamp(.6rem,1vw,.78rem); color:#6B7280; text-transform:uppercase; letter-spacing:.08em; }
 .cert-script { font-family:'Brush Script MT','Segoe Script',cursive; font-weight:400; font-size:clamp(1rem,2vw,1.6rem); color:var(--c); }
 .cert-id { font-family:ui-monospace,Menlo,Consolas,monospace; letter-spacing:.05em; }
-.cert-verify { margin-top:2%; font-size:clamp(.55rem,.9vw,.72rem); color:#9CA3AF; }
+.cert-org { margin-top:2.2%; font-size:clamp(.6rem,1vw,.8rem); font-weight:600; color:#4B5563; letter-spacing:.02em; }
+.cert-verify { margin-top:.6%; font-size:clamp(.55rem,.9vw,.72rem); color:#9CA3AF; }
 @media print {
   @page { size: A4 landscape; margin: 0; }
   body * { visibility:hidden !important; }
@@ -153,7 +163,7 @@ const CERT_CSS = `
   .cert { position:fixed; inset:0; box-shadow:none; border-radius:0; padding:8mm; aspect-ratio:auto; width:100vw; height:100vh; }
   .cert-inner { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .cert-name { font-size:34pt; } .cert-course { font-size:20pt; } .cert-kicker { font-size:11pt; }
-  .cert-small, .cert-foot-value { font-size:11pt; } .cert-meta { font-size:10pt; } .cert-foot-label { font-size:8pt; } .cert-verify { font-size:8pt; }
+  .cert-small, .cert-foot-value { font-size:11pt; } .cert-meta { font-size:10pt; } .cert-foot-label { font-size:8pt; } .cert-verify { font-size:8pt; } .cert-org { font-size:9pt; }
   .cert-logo { height:56px; } .cert-medal { height:66px; } .cert-script { font-size:20pt; }
 }
 `;

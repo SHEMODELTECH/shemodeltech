@@ -39,6 +39,7 @@ import { getVideoEmbed } from '../../utils/videoEmbed';
 import { FD_CSS, enhanceCourseContent } from '../learning/shared';
 import LearningLayout from '../learning/LearningLayout';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
+import { issueMentorCertificate } from '../../utils/learningCertificates';
 import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
 
 const TRACKS = [
@@ -947,6 +948,28 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
     setBusy(false);
   };
 
+  // The mentor's Certificate of Recognition for this published course
+  // (issued at approval; created here for courses published before that).
+  const openCert = async () => {
+    setBusy(true);
+    try {
+      const cert = await issueMentorCertificate(
+        { uid: currentUser.uid, name: currentUser.displayName || course.createdBy?.name, email: currentUser.email },
+        {
+          courseId: course.id,
+          title: course.title,
+          track: course.published?.track || course.track || '',
+          level: course.review?.level || '',
+        }
+      );
+      navigate(`/learning/certificate/${cert.id}`);
+    } catch (e) {
+      console.error(e);
+      toast.error(friendlyError(e, 'Could not open your certificate.'));
+    }
+    setBusy(false);
+  };
+
   const btn = 'text-sm font-semibold px-3 py-1.5 rounded-lg';
   let tone = 'border-gray-200 bg-gray-50';
   let text;
@@ -1004,6 +1027,11 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
           {!st && !course.published && (
             <button onClick={() => navigate(`/teacher/${course.id}/edit`)} className={`${btn} bg-pink-600 hover:bg-pink-700 text-white`}>
               Submit for learners
+            </button>
+          )}
+          {course.published && (
+            <button onClick={openCert} disabled={busy} className={`${btn} bg-indigo-600 hover:bg-indigo-700 text-white`}>
+              Mentor certificate
             </button>
           )}
         </div>

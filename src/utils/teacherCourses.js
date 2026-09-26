@@ -31,6 +31,7 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { issueMentorCertificate } from './learningCertificates';
 
 const COL = 'teacher_courses';
 const CHUNK_CHARS = 300000; // well under 1 MB even for multi-byte text
@@ -223,7 +224,30 @@ export const markApproved = async (course, admin) => {
   });
   const to = course.review?.submittedBy?.uid || course.createdBy?.uid;
   if (to && to !== admin.uid) {
-    await notifyUser(to, 'Your course is published', `"${course.title}" is now live for learners in Learning.`, `/teacher/${course.id}`);
+    // A Certificate of Recognition for this published course.
+    let certLink = `/teacher/${course.id}`;
+    try {
+      const sub = course.review?.submittedBy || course.createdBy || {};
+      const cert = await issueMentorCertificate(
+        { uid: to, name: sub.name, email: sub.email },
+        {
+          courseId: course.id,
+          title: course.title,
+          track: course.review?.track || course.track || '',
+          level: course.review?.level || '',
+          minutes: Number(course.review?.minutes) || 0,
+        }
+      );
+      certLink = `/learning/certificate/${cert.id}`;
+    } catch (e) {
+      console.error('mentor certificate', e);
+    }
+    await notifyUser(
+      to,
+      'Your course is published',
+      `"${course.title}" is now live for learners in Learning. Your mentor certificate is ready.`,
+      certLink
+    );
     // Mentor badge: counts approved courses (an approved update doesn't count again).
     if (!course.review?.isUpdate && !course.mentorBadgeCounted) {
       try {
@@ -234,10 +258,8 @@ export const markApproved = async (course, admin) => {
           mentorBadgeSince: u.data()?.mentorBadgeSince || new Date().toISOString(),
         });
         await updateDoc(doc(db, COL, course.id), { mentorBadgeCounted: true });
-        const level = prev + 1 >= 10 ? 'Lead Mentor' : prev + 1 >= 3 ? 'Senior Mentor' : 'Mentor';
-        const levelUp = prev === 0 || prev + 1 === 3 || prev + 1 === 10;
-        if (levelUp) {
-          await notifyUser(to, `You earned the ${level} badge`, 'It now shows on your profile and on your courses in Learning.', course.review?.submittedBy?.email ? `/profile/${course.review.submittedBy.email}` : '/learning');
+        if (prev === 0) {
+          await notifyUser(to, 'You earned the Mentor badge', 'It now shows on your profile and on your courses in Learning.', course.review?.submittedBy?.email ? `/profile/${course.review.submittedBy.email}` : '/learning');
         }
       } catch (e) {
         console.error('mentor badge', e);

@@ -151,7 +151,7 @@ const AppLayout = ({ children }) => {
     <div className="min-h-screen flex bg-white">
       {/* Sidebar */}
       {!hideSidebar && (
-      <aside className={`fixed inset-y-0 left-0 z-50 w-60 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:inset-0`}>
+      <aside className={`print:hidden fixed inset-y-0 left-0 z-50 w-60 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:inset-0`}>
         {/* Logo */}
         <div className="flex items-center gap-2 px-5 h-16 sm:h-[72px] border-b border-gray-200">
           {/* Same full She Model Tech wordmark as the public Navbar */}
@@ -253,7 +253,7 @@ const AppLayout = ({ children }) => {
       {/* Main content */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Top bar - sticky, responsive */}
-        <header className="sticky top-0 z-30 h-16 sm:h-[72px] flex items-center gap-2 sm:gap-4 px-2 sm:px-4 border-b border-gray-200 bg-white lg:px-6">
+        <header className="print:hidden sticky top-0 z-30 h-16 sm:h-[72px] flex items-center gap-2 sm:gap-4 px-2 sm:px-4 border-b border-gray-200 bg-white lg:px-6">
           <div className="flex items-center gap-2 flex-shrink-0">
             {!hideSidebar && (
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-gray-100 min-h-[60px] min-w-[44px] flex items-center justify-center flex-shrink-0">
@@ -354,7 +354,7 @@ const AppLayout = ({ children }) => {
           thumb-friendly tabs. Hidden on desktop (sidebar takes over) and while
           the drawer is open. Respects the iOS home-indicator safe area. */}
       {!hideSidebar && (
-        <nav className={`lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 ${sidebarOpen ? 'hidden' : 'flex'} items-stretch justify-around pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_8px_rgba(0,0,0,0.04)]`}>
+        <nav className={`print:hidden lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 ${sidebarOpen ? 'hidden' : 'flex'} items-stretch justify-around pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_8px_rgba(0,0,0,0.04)]`}>
           {mobileTabs.map((tab) => {
             const active = tab.path ? isActive(tab.path) : false;
             const cls = `relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[60px] active:bg-gray-50 transition-colors ${active ? 'text-pink-600' : 'text-gray-500'}`;
