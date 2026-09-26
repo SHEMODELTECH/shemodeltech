@@ -29,6 +29,7 @@ import {
   titleFromHtml,
 } from '../../utils/teacherCourses';
 import { FD_CSS, enhanceCourseContent } from '../learning/shared';
+import { PUBLISHED_PREFIX, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
 
 const TRACKS = [
   ['', 'General'],
@@ -194,6 +195,9 @@ const TeacherList = ({ role }) => {
                   {c.kind === 'html' ? 'Interactive HTML' : 'Written notes'}
                 </span>
                 <StatusTag status={c.status} />
+                {c.published && (
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700">In Learning</span>
+                )}
               </div>
               <Link to={`/teacher/${c.id}`} className="font-semibold text-gray-900 hover:underline leading-snug">
                 {c.title || 'Untitled'}
@@ -464,6 +468,137 @@ const TeacherEditor = () => {
   );
 };
 
+
+// ================= Publish to Learning =================
+// Copies this material into Learning as a student course. The copy only
+// changes when someone presses "Update the published version".
+const PublishPanel = ({ course, content, onChange }) => {
+  const { currentUser } = useAuth();
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [f, setF] = useState({
+    title: course.title || '',
+    summary: course.description || '',
+    track: course.published?.track || course.track || '',
+    level: 'Beginner',
+    minutes: '',
+  });
+  const pub = course.published;
+  const learnUrl = pub ? `/learning/${pub.track}/${PUBLISHED_PREFIX}${pub.learningId}` : null;
+
+  const publish = async () => {
+    if (!f.title.trim()) return toast.error('Add a title for students.');
+    if (!f.track) return toast.error('Choose the track it belongs to in Learning.');
+    if (!pub && !window.confirm('Publish this to Learning? Every visitor will be able to see it in the catalog.')) return;
+    setBusy(true);
+    try {
+      const learningId = await publishToLearning(course, content, f, currentUser);
+      onChange({ ...course, published: { learningId, track: f.track } });
+      setOpen(false);
+      toast.success(pub ? 'Published version updated.' : 'Published to Learning.');
+    } catch (e) {
+      console.error(e);
+      toast.error('Could not publish. Check your connection and try again.');
+    }
+    setBusy(false);
+  };
+
+  const unpublish = async () => {
+    if (!window.confirm('Remove this from Learning? Students will no longer see it. The Teacher copy stays.')) return;
+    setBusy(true);
+    try {
+      await unpublishFromLearning(course);
+      onChange({ ...course, published: null });
+      toast.success('Removed from Learning.');
+    } catch (e) {
+      console.error(e);
+      toast.error('Could not unpublish it.');
+    }
+    setBusy(false);
+  };
+
+  const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
+  return (
+    <div className="mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+      <div className="flex flex-wrap items-center gap-3 justify-between">
+        <p className="text-sm text-gray-700">
+          {pub ? (
+            <>
+              <strong className="text-emerald-700">Published in Learning</strong> under {trackLabel(pub.track)}. Edits here
+              reach students only when you update the published version.
+            </>
+          ) : (
+            <>
+              <strong>Only staff can see this.</strong> Publish it to make a copy students can take in Learning.
+            </>
+          )}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {pub && (
+            <Link to={learnUrl} className="text-sm font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50">
+              View in Learning
+            </Link>
+          )}
+          <button onClick={() => setOpen((o) => !o)} disabled={busy}
+            className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-60">
+            {pub ? 'Update the published version' : 'Publish to Learning'}
+          </button>
+          {pub && (
+            <button onClick={unpublish} disabled={busy} className="text-sm font-semibold text-red-700 px-2 py-1.5 rounded-lg hover:bg-red-50">
+              Unpublish
+            </button>
+          )}
+        </div>
+      </div>
+
+      {open && (
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="p-title">Title students see</label>
+            <input id="p-title" className={input} value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="p-sum">Summary for the course card</label>
+            <textarea id="p-sum" rows={2} className={input} value={f.summary} onChange={(e) => setF({ ...f, summary: e.target.value })} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="p-track">Track in Learning</label>
+            <select id="p-track" className={input} value={f.track} onChange={(e) => setF({ ...f, track: e.target.value })}>
+              <option value="">Choose a track</option>
+              {TRACKS.filter(([id]) => id).map(([id, l]) => (
+                <option key={id} value={id}>{l}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="p-level">Level</label>
+            <select id="p-level" className={input} value={f.level} onChange={(e) => setF({ ...f, level: e.target.value })}>
+              <option>Beginner</option>
+              <option>Project-based</option>
+              <option>Advanced</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="p-min">Time to complete, in minutes (optional)</label>
+            <input id="p-min" type="number" min="5" step="5" className={input} value={f.minutes}
+              placeholder={course.kind === 'markdown' ? 'Estimated from the text' : 'e.g. 240'}
+              onChange={(e) => setF({ ...f, minutes: e.target.value })} />
+          </div>
+          <div className="flex items-end gap-2">
+            <button onClick={publish} disabled={busy}
+              className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg disabled:opacity-60">
+              {busy ? 'Publishing...' : pub ? 'Update in Learning' : 'Publish'}
+            </button>
+            <button onClick={() => setOpen(false)} className="text-sm font-semibold text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ================= Viewer =================
 const TeacherViewer = () => {
   const { id } = useParams();
@@ -545,6 +680,8 @@ const TeacherViewer = () => {
           <button onClick={() => navigate(`/teacher/${id}/edit`)} className="text-sm font-semibold bg-gray-900 text-white px-3 py-2 rounded-lg">Edit</button>
         </div>
       </div>
+
+      <PublishPanel course={course} content={content} onChange={setCourse} />
 
       {course.kind === 'html' ? (
         // Sandboxed: scripts run, but the course can't reach the app, its login,

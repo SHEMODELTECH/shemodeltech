@@ -10,6 +10,7 @@ import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } 
 import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, CourseReader, CourseReferences, InteractivePlayer, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack } from '../../utils/foundationsCourses';
+import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
 
 const LearningCourse = ({ reading = false }) => {
@@ -20,10 +21,50 @@ const LearningCourse = ({ reading = false }) => {
   const lr = useLearning();
   const [refsOpen, setRefsOpen] = useState(false);
 
-  const courses = useMemo(() => coursesForTrack(track).map((c) => ({ ...c, track })), [track]);
+  // Courses published from Teacher live in the database: load this track's list,
+  // and the full text of the one being viewed.
+  const isPublished = slug.startsWith(PUBLISHED_PREFIX);
+  const [published, setPublished] = useState(null);
+  const [pubContent, setPubContent] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    listPublished()
+      .then((list) => alive && setPublished(list.filter((p) => p.track === track).map(toCatalogCourse)))
+      .catch(() => alive && setPublished([]));
+    return () => {
+      alive = false;
+    };
+  }, [track]);
+
+  const courses = useMemo(
+    () => [...coursesForTrack(track).map((c) => ({ ...c, track })), ...(published || [])],
+    [track, published]
+  );
   const index = courses.findIndex((c) => c.slug === slug);
-  const course = index >= 0 ? courses[index] : null;
+  const baseCourse = index >= 0 ? courses[index] : null;
+
+  const pubMeta = isPublished && published ? published.find((p) => p.slug === slug) : null;
+  useEffect(() => {
+    if (!pubMeta) return undefined;
+    let alive = true;
+    getPublished(pubMeta.publishedId)
+      .then((full) => (full ? getPublishedContent(full.id, full.chunkCount) : ''))
+      .then((text) => alive && setPubContent(text || ''))
+      .catch(() => alive && setPubContent(''));
+    return () => {
+      alive = false;
+    };
+  }, [pubMeta]);
+
+  const course = useMemo(() => {
+    if (!baseCourse || !isPublished) return baseCourse;
+    if (pubContent == null) return baseCourse;
+    return baseCourse.kind === 'published-html'
+      ? { ...baseCourse, html: pubContent }
+      : { ...baseCourse, markdown: pubContent };
+  }, [baseCourse, isPublished, pubContent]);
   const parts = useMemo(() => (course ? coursePartTitles(course) : []), [course]);
+  const waiting = isPublished && (published === null || (baseCourse && pubContent == null));
 
   const enrolled = course && lr.isEnrolled(track, slug);
   const done = course && lr.isDone(track, slug);
@@ -42,6 +83,15 @@ const LearningCourse = ({ reading = false }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reading, part, lr.signedIn, lr.loading]);
 
+  if (waiting) {
+    return (
+      <LearningLayout>
+        <div className="flex justify-center py-24">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500" />
+        </div>
+      </LearningLayout>
+    );
+  }
   if (!course) return <Navigate to="/learning" replace />;
   if (reading && !lr.loading && !lr.signedIn) return <Navigate to={`/learning/${track}/${slug}`} replace />;
 
@@ -52,7 +102,7 @@ const LearningCourse = ({ reading = false }) => {
     navigate(readerUrl(enrolled && !done ? lastPart : 1));
   };
 
-  if (reading && course.kind === 'interactive') {
+  if (reading && (course.kind === 'interactive' || course.kind === 'published-html')) {
     return (
       <LearningLayout accent={L} bare>
         <InteractivePlayer
@@ -93,7 +143,7 @@ const LearningCourse = ({ reading = false }) => {
     ? 'Sign in to enroll'
     : done
     ? 'Review the course'
-    : enrolled && course.kind === 'interactive'
+    : enrolled && (course.kind === 'interactive' || course.kind === 'published-html')
     ? 'Continue the course'
     : enrolled
     ? lastPart > 1
@@ -118,7 +168,7 @@ const LearningCourse = ({ reading = false }) => {
             <div className="flex flex-wrap gap-x-5 gap-y-2 mt-5 text-sm text-gray-700">
               {course.level && <span><strong className="font-semibold">Level:</strong> {course.level}</span>}
               {course.minutes > 0 && <span>{formatTime(course.minutes)}</span>}
-              <span>{parts.length} {course.kind === 'interactive' ? 'interactive modules' : 'parts'}</span>
+              <span>{course.kind === 'published-html' ? 'Interactive course' : `${parts.length} ${course.kind === 'interactive' ? 'interactive modules' : 'parts'}`}</span>
               <span>Course {index + 1} of {courses.length} in {L.short}</span>
             </div>
             <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -156,7 +206,7 @@ const LearningCourse = ({ reading = false }) => {
         {/* Syllabus */}
         <section className="pt-10" aria-labelledby="syl-h">
           <h2 id="syl-h" className="text-xl font-bold text-gray-900 mb-4">What&rsquo;s in this course</h2>
-          {course.kind === 'interactive' && (
+          {(course.kind === 'interactive' || course.kind === 'published-html') && (
             <p className="text-sm text-gray-600 mb-4 max-w-2xl">
               An interactive course: every module has worked examples, a hands-on lab you can play with
               right in the page, and a short quiz. It remembers where you got to on this device.
@@ -169,7 +219,7 @@ const LearningCourse = ({ reading = false }) => {
                 (i === 0 || course.modules[i].part !== course.modules[i - 1].part)
                   ? course.parts[course.modules[i].part]
                   : null;
-              const reached = enrolled && (done || (course.kind !== 'interactive' && i + 1 < lastPart));
+              const reached = enrolled && (done || (course.kind !== 'interactive' && course.kind !== 'published-html' && i + 1 < lastPart));
               return (
                 <li key={t + i}>
                   {partName && (
@@ -178,7 +228,7 @@ const LearningCourse = ({ reading = false }) => {
                   <button
                     onClick={() =>
                       lr.signedIn
-                        ? navigate(course.kind === 'interactive' ? readerUrl(1) : readerUrl(i + 1))
+                        ? navigate(course.kind === 'interactive' || course.kind === 'published-html' ? readerUrl(1) : readerUrl(i + 1))
                         : signInAndReturn(navigate, location.pathname)
                     }
                     className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-gray-50"

@@ -58,6 +58,9 @@ export const CheckIcon = ({ className = 'w-3.5 h-3.5' }) => (
 const partsCache = new Map();
 export const coursePartTitles = (course) => {
   if (course.kind === 'interactive') return (course.modules || []).map((m) => m.title);
+  if (course.kind === 'published-html') return [course.title];
+  // Published notes load their text separately; don't cache an empty result.
+  if (!course.markdown) return [];
   if (!partsCache.has(course.slug)) {
     const r = renderCourse(course.markdown);
     partsCache.set(course.slug, splitParts(r.html, r.toc).map((p) => p.title));
@@ -353,7 +356,13 @@ export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, on
         )}
       </div>
     </div>
-    <iframe title={course.title} src={course.src} className="flex-1 w-full border-0 bg-white" />
+    {course.html != null ? (
+      // Published from Teacher: shown from its stored copy in a sandboxed frame,
+      // so its scripts can't reach the app or the learner's account.
+      <iframe title={course.title} srcDoc={course.html} sandbox="allow-scripts allow-popups" className="flex-1 w-full border-0 bg-white" />
+    ) : (
+      <iframe title={course.title} src={course.src} className="flex-1 w-full border-0 bg-white" />
+    )}
   </div>
 );
 

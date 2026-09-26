@@ -3,11 +3,12 @@
 // for enrolled members, and every course as a card in a grid, grouped by track.
 // Also serves /learning/my ("My learning"): only the member's enrolled courses.
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, TRACK_ORDER, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack, trackMeta, tracksWithCourses } from '../../utils/foundationsCourses';
+import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
 
 // "Coding Developer Foundations" -> "Coding Developer"
 export const trackName = (t) => trackMeta(t).label.replace(/\s+Foundations$/, '');
@@ -39,7 +40,7 @@ export const CourseCard = ({ course, status, progress }) => {
         <div className="mt-auto pt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
           {course.level && <span className="font-semibold text-gray-700">{course.level}</span>}
           {course.minutes > 0 && <span>{formatTime(course.minutes)}</span>}
-          {course.kind === 'interactive' && <span className="lr-inter">Interactive</span>}
+          {(course.kind === 'interactive' || course.kind === 'published-html') && <span className="lr-inter">Interactive</span>}
         </div>
         {status === 'done' && (
           <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
@@ -66,11 +67,25 @@ const LearningHome = ({ mine = false }) => {
   const [track, setTrack] = useState('all');
   const [level, setLevel] = useState('all');
 
-  // Every course, tagged with its track, in authored order.
-  const all = useMemo(() => {
-    const tracks = [...TRACK_ORDER, 'company'].filter((t) => tracksWithCourses().includes(t));
-    return tracks.flatMap((t) => coursesForTrack(t).map((c) => ({ ...c, track: t })));
+  // Courses published from Teacher (stored in the database, not the code).
+  const [published, setPublished] = useState([]);
+  useEffect(() => {
+    listPublished()
+      .then((list) => setPublished(list.map(toCatalogCourse)))
+      .catch(() => setPublished([]));
   }, []);
+
+  // Every course, tagged with its track: built-in courses in authored order,
+  // then that track's published courses.
+  const all = useMemo(() => {
+    const tracks = [...TRACK_ORDER, 'company'].filter(
+      (t) => tracksWithCourses().includes(t) || published.some((p) => p.track === t)
+    );
+    return tracks.flatMap((t) => [
+      ...coursesForTrack(t).map((c) => ({ ...c, track: t })),
+      ...published.filter((p) => p.track === t),
+    ]);
+  }, [published]);
 
   const statusOf = (c) => (lr.isDone(c.track, c.slug) ? 'done' : lr.isEnrolled(c.track, c.slug) ? 'enrolled' : null);
   const progressOf = (c) => {
