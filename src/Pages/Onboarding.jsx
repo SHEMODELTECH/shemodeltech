@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import SkillPicker from '../components/SkillPicker';
 import Navbar from '../components/Navbar';
 import { INDUSTRY_TRACKS } from '../utils/industryTracks';
+import { afterAuthPath } from '../utils/afterAuth';
 
 const BLOCKED_EMAIL_DOMAINS = [
   'gmail.com',
@@ -145,7 +146,7 @@ const Onboarding = () => {
         if (snap.exists()) {
           const data = snap.data();
           if (data.onboardingComplete) {
-            navigate('/dashboard', { replace: true });
+            navigate(afterAuthPath(), { replace: true });
             return;
           }
           if (!data.accountType) {
@@ -315,7 +316,7 @@ const Onboarding = () => {
       }
       await updateDoc(doc(db, 'users', currentUser.uid), updateData);
       toast.success('Welcome to She Model Tech!');
-      navigate('/dashboard', { replace: true });
+      navigate(afterAuthPath(), { replace: true });
     } catch (error) {
       console.error('Error saving onboarding:', error);
       toast.error('Something went wrong. Please try again.');

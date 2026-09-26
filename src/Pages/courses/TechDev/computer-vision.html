@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- order: 13 -->
+<!-- level: Beginner -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Computer Vision — Student Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f2f5f6; --surface2:#e6ecee; --ink:#26292b; --muted:#5d666a; --line:#d5dde0;
+  --orange:#ef7d1a; --red:#d4461b; --teal:#128f8f; --teal-soft:#d7efee; --maroon:#7a1d36; --good:#1c8a4a; --bad:#c0392b;
+  --display:"Bricolage Grotesque", "Segoe UI", Arial, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", Arial, sans-serif;
+  --mono:"JetBrains Mono", "Courier New", monospace;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1516; --surface:#182224; --surface2:#223033; --ink:#e7eced; --muted:#9fb0b4; --line:#2e3e41;
+    --orange:#f5943f; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#4cc47f; --bad:#ff6b5b; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1516; --surface:#182224; --surface2:#223033; --ink:#e7eced; --muted:#9fb0b4; --line:#2e3e41;
+  --orange:#f5943f; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#4cc47f; --bad:#ff6b5b; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;min-height:100%}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--teal)}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.app{display:grid;grid-template-columns:290px minmax(0,1fr);min-height:100vh}
+/* rail */
+.rail{background:var(--surface);border-right:1px solid var(--line);padding:22px 14px 30px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow-y:auto}
+.brand{font-family:var(--display);font-weight:800;font-size:22px;line-height:1.1;margin:0 8px 4px}
+.brand small{display:block;font-family:var(--body);font-weight:400;font-size:14px;color:var(--muted);margin-top:6px;line-height:1.35}
+.part{font-size:13px;color:var(--muted);margin:20px 8px 6px;font-weight:600}
+.mod{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:8px;cursor:pointer;line-height:1.3;font-size:15px}
+.mod:hover{background:var(--surface2)}
+.mod[aria-current="true"]{background:var(--ink);color:var(--bg)}
+.mod[aria-current="true"] .px{background:var(--orange);color:#1b1b1b}
+.px{flex:0 0 26px;height:26px;display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:600;background:var(--surface2);border-radius:4px}
+.mod.done .px{background:var(--teal);color:#fff}
+.railfoot{margin:22px 8px 0;font-size:13px;color:var(--muted)}
+.themebtn{margin-top:8px;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:14px}
+/* main */
+main{padding:34px clamp(18px,4vw,56px) 80px;min-width:0}
+.mobilenav{display:none}
+.eyebrow{font-size:15px;color:var(--teal);font-weight:600;margin:0}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.04;margin:4px 0 12px;letter-spacing:-.01em;max-width:18ch}
+h2{font-family:var(--display);font-weight:700;font-size:24px;margin:0 0 10px;line-height:1.2}
+h3{font-family:var(--display);font-weight:700;font-size:19px;margin:0 0 8px}
+.bigidea{font-size:21px;max-width:60ch;margin:0 0 18px;color:var(--ink)}
+.decks{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px;padding:0;list-style:none}
+.decks li{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:14px}
+.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:26px;align-items:start}
+.card{background:var(--surface);border-radius:14px;padding:22px}
+.lab{background:var(--bg);border:2px solid var(--ink);border-radius:14px;padding:20px;min-width:0}
+.lab h2::before{content:"";display:inline-block;width:12px;height:12px;background:var(--orange);margin-right:10px;border-radius:2px;vertical-align:2px}
+.points{margin:0;padding:0;list-style:none;counter-reset:p}
+.points li{counter-increment:p;padding:10px 0 10px 38px;position:relative;border-top:1px solid var(--line)}
+.points li:first-child{border-top:0}
+.points li::before{content:counter(p);position:absolute;left:0;top:10px;width:26px;height:26px;display:grid;place-items:center;font-family:var(--mono);font-size:12px;background:var(--teal);color:#fff;border-radius:4px}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-weight:600;color:var(--teal)}
+details p{margin:10px 0 0}
+.below{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:26px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);cursor:pointer}
+.opt:hover{border-color:var(--teal)}
+.opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--bg))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--bg))}
+.why{margin-top:10px;font-size:15px;color:var(--muted)}
+.fixes{margin:0;padding-left:20px;font-size:15.5px}
+.fixes li{margin:6px 0}
+.navrow{display:flex;justify-content:space-between;gap:12px;margin-top:34px}
+.navbtn{background:var(--ink);color:var(--bg);border:0;border-radius:10px;padding:12px 18px;cursor:pointer;font-weight:600}
+.navbtn[disabled]{opacity:.3;cursor:default}
+/* lab controls */
+.ctrls{display:flex;flex-wrap:wrap;gap:12px 18px;margin:12px 0;align-items:center}
+.ctrl{display:flex;flex-direction:column;font-size:14px;color:var(--muted);min-width:130px;flex:1 1 130px}
+.ctrl b{color:var(--ink);font-family:var(--mono);font-weight:600}
+input[type=range]{accent-color:var(--orange);width:100%}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--bg);padding:7px 12px;cursor:pointer;font-size:14px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+canvas{display:block;max-width:100%;image-rendering:pixelated;border-radius:8px;background:#000}
+.cv-row{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+.cv-row figure{margin:0;flex:1 1 200px;min-width:0}
+figcaption{font-size:13.5px;color:var(--muted);margin-top:4px}
+.matrix{font-family:var(--mono);font-size:13px;border-collapse:collapse}
+.matrix td{border:1px solid var(--line);padding:3px 6px;text-align:right;min-width:34px}
+.note{font-size:14.5px;color:var(--muted);margin:8px 0 0}
+.stat{display:inline-block;margin:4px 14px 4px 0;font-size:15px}
+.stat b{font-family:var(--mono)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:#1b1b1b}
+pre.code{background:var(--surface);border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:13px;overflow-x:auto;margin:10px 0 0;line-height:1.5}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:14px}
+.btn.ghost{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.scroll{overflow-x:auto}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 14px}
+.flow div{background:var(--surface);border-radius:8px;padding:8px 10px;font-size:14px;line-height:1.3}
+.flow b{display:block;font-family:var(--mono);color:var(--teal);font-size:12px}
+.map{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:22px}
+.map button{text-align:left;background:var(--surface);border:0;border-radius:12px;padding:14px;cursor:pointer;line-height:1.3}
+.map button:hover{background:var(--surface2)}
+.map .px{display:inline-grid;margin-bottom:8px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px;align-items:center}
+.lensgrid{font-family:var(--mono);font-size:11px;border-collapse:collapse}
+.lensgrid td{width:44px;height:30px;text-align:center;border:1px solid var(--line);line-height:1.1}
+@media (max-width:980px){
+  .app{grid-template-columns:1fr}
+  .rail{display:none}
+  .mobilenav{display:flex;gap:10px;align-items:center;margin-bottom:18px}
+  .mobilenav select{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+  .grid,.below,.hero{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+.wrap{max-width:1060px}
+.lesson{max-width:74ch;margin:0 0 30px}
+.lesson h2{font-size:26px;margin:0 0 10px;display:flex;gap:12px;align-items:baseline}
+.lesson h2 .sn{font-family:var(--mono);font-size:13px;color:var(--teal);font-weight:600;flex:0 0 auto}
+.lesson p,.lesson li{font-size:17.5px}
+.lesson ul,.lesson ol{padding-left:22px}
+.lesson li{margin:6px 0}
+.steps{counter-reset:s;list-style:none;padding-left:0!important}
+.steps li{counter-increment:s;position:relative;padding-left:40px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;display:grid;place-items:center;font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--bg);border-radius:4px}
+.tip{background:var(--teal-soft);border-radius:12px;padding:14px 18px;margin:16px 0;font-size:17px}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:16px 0;font-size:16.5px;line-height:1.65}
+.eq{font-family:var(--mono);font-size:15px;background:var(--ink);color:var(--bg);border-radius:10px;padding:14px 18px;margin:16px 0;line-height:1.8;overflow-x:auto}
+.tbl{border-collapse:collapse;width:100%;margin:14px 0;font-size:15.5px;display:block;overflow-x:auto}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+.tbl th{background:var(--surface);font-weight:700}
+.goals{background:var(--surface);border-radius:14px;padding:18px 22px;margin:6px 0 34px;max-width:74ch}
+.goals h3{margin:0 0 6px}
+.goals ul{margin:0;padding-left:20px}
+.tryit{border:2px solid var(--ink);border-radius:16px;padding:20px;margin:6px 0 38px;background:var(--bg)}
+.tryit h2{margin:0 0 4px;font-size:22px}
+.tryit h2::before{content:"";display:inline-block;width:12px;height:12px;background:var(--orange);margin-right:10px;border-radius:2px;vertical-align:2px}
+.tryit .sub{margin:0 0 6px;color:var(--muted);font-size:15px}
+.terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:10px 0 36px}
+.terms div{background:var(--surface);border-radius:12px;padding:12px 14px;font-size:15.5px}
+.terms b{display:block;font-family:var(--display);font-size:17px;margin-bottom:2px}
+.quiz{max-width:74ch;margin-bottom:36px}
+.qcard{background:var(--surface);border-radius:14px;padding:18px 20px;margin:0 0 14px}
+.qcard p.q{margin:0 0 6px;font-weight:600;font-size:17.5px}
+.score{font-family:var(--display);font-size:22px;margin:6px 0 0}
+.recap{background:var(--ink);color:var(--bg);border-radius:16px;padding:20px 24px;max-width:74ch;margin-bottom:26px}
+.recap h2{color:var(--bg)}
+.recap li{margin:6px 0;font-size:17px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 16px;color:var(--muted);font-size:15px;margin:0 0 20px}
+.bar{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--teal)}
+.mod .bar{width:100%}
+.progress-line{font-size:13px;color:var(--muted)}
+.howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:22px 0 0}
+.howto div{background:var(--surface);border-radius:12px;padding:14px;font-size:15.5px}
+.howto b{display:block;font-family:var(--display);font-size:17px}
+.done-btn{background:var(--teal);color:#fff;border:0;border-radius:10px;padding:12px 18px;cursor:pointer;font-weight:600}
+.done-btn.on{background:var(--good)}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <nav class="rail" id="rail" aria-label="Modules"></nav>
+  <main id="main"></main>
+</div>
+<script>
+const COURSE={title:"Computer Vision",tag:"From pixels to tracking — learn by doing",key:"cvstu",
+ headline:"Learn how computers see — one pixel at a time",intro:"Each module explains one idea in plain language, with worked examples, a hands-on lab you can play with, and a short quiz to check yourself.",
+ hero:{demo:"lens",title:"Try it: what the computer sees",sub:"Move over the picture (or tap it) to read the pixel values."}};
+const PARTS=["Seeing images","Tools & math","Processing images","Learning from images"];
+const MODULES=[
+{n:1,part:0,title:"Introduction to Computer Vision & Image Processing",short:"Intro to CV",slides:"Slides 1.1–1.4",demo:"lens",mins:30,
+ goals:["Define computer vision and digital image processing","Explain what makes an image \u201cdigital\u201d","List the main stages of a vision system","Name real-world applications and imaging types"],
+ sections:[
+ {h:"What is computer vision?",b:`<p><b>Computer vision (CV)</b> is the part of artificial intelligence that lets machines understand images and video — recognising objects, finding them, following them and making decisions from what they see.</p>
+ <p><b>Digital image processing (DIP)</b> is closely related but has a different goal: it improves or changes an image, and the output is another image.</p>
+ <table class="tbl"><tr><th>Image processing</th><th>Computer vision</th></tr><tr><td>Image in → image out</td><td>Image in → understanding out</td></tr><tr><td>Remove noise, sharpen, adjust brightness</td><td>\u201cThere are 3 people and a car\u201d, \u201cthis tumour is here\u201d</td></tr></table>
+ <div class="tip"><b>Think of it like this:</b> image processing is cleaning your glasses; computer vision is recognising your friend across the street.</div>`},
+ {h:"What makes an image digital?",b:`<p>An image can be described as a function <b>f(x, y)</b>: at each position (x, y) there is a brightness value, called the <b>intensity</b> or <b>grey level</b>. When x, y and the values are all finite, whole-number quantities, the image is <b>digital</b>.</p>
+ <p>A digital image is therefore a grid of tiny elements called <b>pixels</b> (picture elements). Each pixel has a location and a value.</p>
+ <ul><li><b>Grayscale:</b> one number per pixel, usually 0 (black) to 255 (white).</li><li><b>Colour (RGB):</b> three numbers per pixel — red, green and blue.</li><li><b>Binary:</b> only 0 or 1 (black or white).</li></ul>
+ <p>Move over the picture in the lab. Bright areas have high numbers, dark areas low numbers. That grid of numbers is all the computer really has.</p>`,lab:true},
+ {h:"How a vision system works",b:`<ol class="steps"><li><b>Image acquisition:</b> a camera or sensor captures the scene and converts it to numbers.</li><li><b>Preprocessing:</b> clean the image — remove noise, fix brightness and contrast, resize.</li><li><b>Feature extraction:</b> find useful patterns such as edges, corners, textures and shapes.</li><li><b>Recognition / pattern matching:</b> compare features with learned patterns to identify objects.</li><li><b>Decision making:</b> act on the result — count, alert, steer, diagnose.</li></ol>
+ <p>Classic image-processing textbooks add further stages such as <b>restoration</b> (undo blur or damage using a model of how it happened), <b>colour processing</b>, <b>compression</b> (make files smaller, lossless or lossy), <b>morphology</b> (shape tools), <b>segmentation</b> (split the image into regions) and <b>representation and description</b> (turn regions into measurements). Later modules cover most of these.</p>`},
+ {h:"Where images come from and where CV is used",b:`<p>Images are not only photos. They can be made with any part of the electromagnetic spectrum:</p>
+ <ul><li><b>Gamma rays</b> — nuclear medicine and astronomy.</li><li><b>X-rays</b> — medical scans, airport baggage, circuit-board inspection.</li><li><b>Ultraviolet</b> — microscopy, industrial inspection.</li><li><b>Visible and infrared</b> — everyday cameras, satellites, night vision.</li><li><b>Microwaves (radar)</b> — imaging through clouds and at night.</li><li>Also ultrasound, electron microscopes and computer-generated images.</li></ul>
+ <p><b>Applications:</b> healthcare (reading scans), self-driving cars (roads, signs, pedestrians), security and surveillance (face recognition, tracking), agriculture (crop and pest monitoring), manufacturing (defect inspection) and forensic video analysis.</p>`}],
+ terms:[["Computer vision","AI that extracts meaning from images and video."],["Digital image","A grid of pixels with finite, whole-number values."],["Pixel","The smallest element of a digital image: a location plus a value."],["Intensity","The brightness value of a pixel."],["Preprocessing","Cleaning an image before analysing it."]],
+ quiz:[{q:"Which task is computer vision rather than image processing?",o:["Increasing contrast","Removing noise","Counting people in a CCTV frame","Converting colour to grayscale"],a:2,why:"Counting needs understanding of the content. The others output another image."},
+ {q:"A grayscale pixel with value 0 is…",o:["White","Black","Red","Transparent"],a:1,why:"0 is the darkest level; 255 is the brightest in an 8-bit image."},
+ {q:"Which stage finds edges, corners and textures?",o:["Acquisition","Feature extraction","Compression","Decision making"],a:1,why:"Feature extraction turns raw pixels into useful patterns."},
+ {q:"X-ray imaging is used for…",o:["Weather radar","Medical and baggage scans","Colour photography","Sound recording"],a:1,why:"X-rays pass through soft material, revealing dense structures."}],
+ recap:["CV = understanding images; DIP = improving or changing them.","A digital image is a grid of pixel values f(x, y).","Pipeline: acquire → preprocess → extract features → recognise → decide.","Images come from many kinds of radiation, not just visible light."]},
+
+{n:2,part:0,title:"Image Formation",short:"Image formation",slides:"Slides 2.1 Eye · 2.2 Image Formation Model",demo:"sampling",mins:35,
+ goals:["Describe how the eye forms an image","Use the model f = i × r","Explain sampling and quantization and their artefacts","Describe pixel neighbours, adjacency and distance"],
+ sections:[
+ {h:"The human eye as a camera",b:`<p>Light enters through the <b>cornea</b> and <b>pupil</b>; the <b>lens</b> focuses it onto the <b>retina</b> at the back of the eye. The lens changes shape (thicker for near objects, thinner for far ones) to stay in focus.</p>
+ <ul><li><b>Cones</b> (about 6–7 million) work in bright light and see colour and fine detail. They cluster in the <b>fovea</b>, the centre of sharpest vision.</li><li><b>Rods</b> (about 75–150 million) work in dim light, see only shades of grey, and are spread across the retina.</li></ul>
+ <p>A camera does the same job: a lens focuses light onto a <b>sensor</b> made of millions of light-sensitive cells, each of which becomes a pixel.</p>`},
+ {h:"A simple image formation model",b:`<p>The light a camera records from a point depends on two things:</p>
+ <div class="eq">f(x, y) = i(x, y) × r(x, y)</div>
+ <ul><li><b>i</b> = <b>illumination</b>: how much light falls on the scene (sunlight is huge, a dim room is small).</li><li><b>r</b> = <b>reflectance</b>: how much of that light the surface bounces back, from 0 (black velvet absorbs everything) to 1 (snow reflects almost everything).</li></ul>
+ <div class="ex"><b>Worked example.</b> White paper (r = 0.9) in bright light (i = 1000) gives 900. The same paper in a dim room (i = 50) gives 45. The paper didn\u2019t change — the illumination did. This is why vision systems must cope with lighting changes.</div>`},
+ {h:"Sampling and quantization",b:`<p>A real scene is continuous. To store it, we make two choices:</p>
+ <ul><li><b>Sampling</b> — how many points we measure. This sets the <b>spatial resolution</b> (e.g. 1920 × 1080 pixels). Too few samples → blocky, jagged images.</li><li><b>Quantization</b> — how many different values each point can take. With <b>k bits</b> there are <b>2<sup>k</sup></b> grey levels (8 bits → 256). Too few levels → visible bands in smooth areas, called <b>false contouring</b>.</li></ul>
+ <div class="eq">Storage (bits) = width × height × bits per pixel</div>
+ <div class="ex"><b>Worked example.</b> A 1024 × 1024 image at 8 bits = 1024 × 1024 × 8 = 8,388,608 bits = 1 MB.</div>
+ <p>When we resize an image, new pixel positions don\u2019t line up with old ones, so we estimate values by <b>interpolation</b>: nearest neighbour (fast, blocky), bilinear (smooth) or bicubic (smoother, slower).</p>`,lab:true},
+ {h:"Relationships between pixels",b:`<p>Many operations look at a pixel\u2019s <b>neighbours</b>:</p>
+ <ul><li><b>4-neighbours N<sub>4</sub>(p):</b> up, down, left, right.</li><li><b>Diagonal neighbours N<sub>D</sub>(p):</b> the four corners.</li><li><b>8-neighbours N<sub>8</sub>(p):</b> all eight together.</li></ul>
+ <p>Two pixels are <b>adjacent</b> if they are neighbours <i>and</i> both have values in a chosen set (e.g. both are white). A chain of adjacent pixels is a <b>path</b>; pixels joined by a path are <b>connected</b>; a connected set is a <b>region</b>; its edge pixels form its <b>boundary</b>.</p>
+ <div class="eq">Euclidean: √((x−s)² + (y−t)²)<br>City-block D₄: |x−s| + |y−t|<br>Chessboard D₈: max(|x−s|, |y−t|)</div>
+ <div class="ex"><b>Worked example.</b> From (0, 0) to (3, 4): Euclidean = 5, city-block = 7, chessboard = 4.</div>
+ <p>Images can also be combined pixel-by-pixel with <b>arithmetic</b> (adding frames averages away noise; subtracting two frames reveals what changed) and with <b>logic</b> (AND, OR, NOT on binary masks).</p>`}],
+ terms:[["Illumination","Light falling on the scene."],["Reflectance","Fraction of light a surface reflects (0–1)."],["Sampling","Choosing how many pixels to measure (spatial resolution)."],["Quantization","Choosing how many grey levels each pixel can have."],["False contouring","Bands that appear when there are too few grey levels."]],
+ quiz:[{q:"An 8-bit image is reduced to 3 bits. How many grey levels remain?",o:["3","8","24","256"],a:1,why:"2³ = 8."},
+ {q:"Which receptors see colour in bright light?",o:["Rods","Cones","Lens","Pupil"],a:1,why:"Cones handle colour and fine detail; rods handle dim light."},
+ {q:"Blocky, jagged edges come from too little…",o:["Quantization","Sampling","Reflectance","Illumination"],a:1,why:"Too few samples means each pixel covers a large area."},
+ {q:"City-block distance from (1, 1) to (4, 5)?",o:["5","7","4","25"],a:1,why:"|4−1| + |5−1| = 3 + 4 = 7."}],
+ recap:["Eye: lens focuses light on the retina; cones for colour, rods for dim light.","f = illumination × reflectance.","Sampling = how many pixels; quantization = how many levels (2^bits).","Neighbours (4, 8), adjacency and distances underpin later operations."]},
+
+{n:3,part:0,title:"Digital Image Representation",short:"Pixels & colour",slides:"Slides 3.1 Pixels · 3.2 2D Digital Images",demo:"color",mins:30,
+ goals:["Describe an image as a matrix","Explain resolution, bit depth, channels and aspect ratio","Convert between colour and grayscale","Tell raster from vector graphics"],
+ sections:[
+ {h:"An image is a matrix",b:`<p>A grayscale image with M rows and N columns is an <b>M × N matrix</b>. The value in row r, column c is the pixel\u2019s intensity. By convention the origin (0, 0) is the <b>top-left</b> corner, and y grows downwards.</p>
+ <div class="eq">[ 12  40  200 ]<br>[ 15  90  220 ]   ← a tiny 3 × 3 grayscale image<br>[ 10  60  255 ]</div>
+ <p>A colour image is a stack of three such matrices, one per channel: shape <b>height × width × 3</b>.</p>`},
+ {h:"Key properties of an image",b:`<ul><li><b>Resolution</b> — number of pixels, e.g. 1920 × 1080 ≈ 2.1 million. <b>Pixel density</b> (PPI) is pixels per inch on a screen or print.</li><li><b>Bit depth</b> — bits per channel: 1 bit (binary), 8 bits (256 levels, the usual), 16 bits (65,536 levels, medical and scientific images).</li><li><b>Channels</b> — 1 (grayscale), 3 (RGB), 4 (RGBA, with transparency).</li><li><b>Aspect ratio</b> — width ÷ height, e.g. 16:9.</li></ul>
+ <div class="ex"><b>Worked example.</b> One uncompressed 1920 × 1080 RGB frame at 8 bits: 1920 × 1080 × 3 bytes ≈ 6.2 MB. At 30 frames per second, that is about 186 MB every second — why video is compressed.</div>`},
+ {h:"Colour and grayscale",b:`<p>In <b>RGB</b>, each pixel mixes red, green and blue light. (0, 0, 0) is black, (255, 255, 255) is white, (255, 0, 0) is pure red.</p>
+ <p><b>Colour → gray.</b> A plain average treats all colours equally, but our eyes are most sensitive to green and least to blue. So the standard formula weights them:</p>
+ <div class="eq">Gray = 0.299·R + 0.587·G + 0.114·B</div>
+ <p><b>Gray → colour</b> just copies the grey value into all three channels (R = G = B); it cannot bring back lost colour. Colourising photos needs a trained model.</p>
+ <p>Try pure green and pure blue in the lab: same average, very different brightness.</p>`,lab:true},
+ {h:"Raster vs vector, and where pixels matter",b:`<table class="tbl"><tr><th>Raster (bitmap)</th><th>Vector</th></tr><tr><td>Grid of pixels</td><td>Shapes described by maths (lines, curves)</td></tr><tr><td>Photos, camera frames, scans</td><td>Logos, fonts, diagrams</td></tr><tr><td>Gets blocky when enlarged</td><td>Stays sharp at any size</td></tr><tr><td>JPEG, PNG</td><td>SVG, PDF drawings</td></tr></table>
+ <p>Computer vision almost always works on <b>raster</b> images. More pixels give more detail but cost more storage and computing — a constant trade-off in medical imaging, satellite imagery, photography and video.</p>`}],
+ terms:[["Resolution","Number of pixels (width × height)."],["Bit depth","Bits used per channel value."],["Channel","One layer of values, e.g. the red channel."],["RGB","Colour made of red, green and blue values."],["Raster","An image stored as a grid of pixels."]],
+ quiz:[{q:"Using Gray = 0.299R + 0.587G + 0.114B, which is brighter: pure green or pure blue?",o:["Green","Blue","Equal","Can\u2019t tell"],a:0,why:"Green → 150, blue → 29."},
+ {q:"The shape of a 640 × 480 RGB image array (height × width × channels) is…",o:["640 × 480","480 × 640 × 3","3 × 640","480 × 640 × 1"],a:1,why:"Rows (height) first, then columns, then 3 channels."},
+ {q:"How many levels does a 16-bit channel have?",o:["16","256","65,536","1,024"],a:2,why:"2¹⁶ = 65,536."},
+ {q:"Which stays sharp when enlarged?",o:["JPEG photo","PNG screenshot","SVG logo","Camera frame"],a:2,why:"Vector graphics are redrawn from shapes at any size."}],
+ recap:["Grayscale image = M × N matrix; colour = three stacked matrices.","Resolution, bit depth, channels and aspect ratio describe an image.","Gray = 0.299R + 0.587G + 0.114B.","CV works on raster images."]},
+
+{n:4,part:1,title:"Mathematical Foundations",short:"Math foundations",slides:"Slides 4.1 Mathematical Prerequisites",demo:"matrix",mins:45,
+ goals:["Use vectors, matrices and matrix multiplication","Read a 2×2 matrix as a transformation","Explain eigenvectors, eigenvalues and PCA","Describe convolution, filtering and the Fourier transform"],
+ sections:[
+ {h:"Scalars, vectors and matrices",b:`<ul><li><b>Scalar:</b> a single number (a pixel value, a learning rate).</li><li><b>Vector:</b> a list of numbers (a feature vector describing one image).</li><li><b>Matrix:</b> a grid of numbers (a grayscale image, a table of data, a set of weights).</li><li><b>Tensor:</b> the same idea in more dimensions (a colour image, a batch of images).</li></ul>
+ <p>Key operations: <b>addition</b> (element by element), <b>scalar multiplication</b> (scale everything), the <b>dot product</b> (multiply matching entries and add — measures how similar two vectors point), <b>matrix multiplication</b> (rows of A dotted with columns of B), <b>transpose</b> (swap rows and columns) and the <b>inverse</b> (undoes a matrix, when it exists).</p>
+ <div class="ex"><b>Worked example.</b> [1, 2, 3] · [4, 5, 6] = 1·4 + 2·5 + 3·6 = <b>32</b>.</div>`},
+ {h:"Matrices as transformations",b:`<p>Multiplying a point by a 2×2 matrix moves it. Every point moves by the same rule, so the matrix is a <b>linear transformation</b>:</p>
+ <div class="eq">[ a  b ] [x]   [ax + by]<br>[ c  d ] [y] = [cx + dy]</div>
+ <ul><li>[2 0; 0 1] stretches x by 2. [0 −1; 1 0] rotates 90°. [1 1; 0 1] shears.</li><li>The <b>determinant</b> ad − bc tells how much area is scaled. Negative → mirrored. Zero → everything is squashed onto a line and the matrix has no inverse.</li></ul>
+ <p>An <b>eigenvector</b> is a special direction the matrix only stretches, never turns; the <b>eigenvalue</b> is the stretch factor: <b>A·v = λ·v</b>. Try the presets in the lab and watch the dashed eigenvector lines.</p>`,lab:true},
+ {h:"PCA: finding the important directions",b:`<p><b>Principal Component Analysis</b> reduces the number of features while keeping as much information (variance) as possible.</p>
+ <ol class="steps"><li>Standardise each feature.</li><li>Compute the covariance matrix (how features vary together).</li><li>Find its eigenvectors (principal components) and eigenvalues (variance along each).</li><li>Keep the components with the largest eigenvalues and project the data onto them.</li></ol>
+ <p>Uses: compressing images, speeding up models, visualising data. Downside: the new features are mixtures and harder to interpret.</p>
+ <p>Linear algebra also solves systems of equations (Gaussian elimination, LU decomposition) and underpins linear regression and neural networks.</p>`},
+ {h:"Signals, filtering and the Fourier transform",b:`<p>An image is a 2-D <b>signal</b>. Signal-processing tools carry straight over:</p>
+ <ul><li><b>Convolution:</b> slide a small grid of weights (a <b>kernel</b>) over the image, multiply and add at each position. Different kernels blur, sharpen, emboss or find edges (Modules 7 and 9).</li><li><b>Filtering:</b> low-pass filters keep smooth changes (blur, remove noise); high-pass filters keep rapid changes (edges, detail).</li><li><b>Sampling and quantization</b> (Module 2).</li></ul>
+ <p>The <b>Fourier transform</b> rewrites an image as a sum of waves of different frequencies. Low frequencies = smooth areas; high frequencies = edges and fine detail. The <b>Discrete Fourier Transform (DFT)</b> does this for sampled data, and the <b>Fast Fourier Transform (FFT)</b> computes it quickly (N log N steps instead of N²).</p>
+ <div class="eq">Python: F = np.fft.fft2(img);  F = np.fft.fftshift(F)   # centre low frequencies</div>
+ <p>FFT uses: low-pass and high-pass filtering, compression (drop weak frequencies), edge and blur detection, pattern recognition. A key fact: <b>convolution in space = multiplication in frequency</b>, which makes big filters fast.</p>`}],
+ terms:[["Vector","An ordered list of numbers."],["Dot product","Sum of products of matching entries."],["Determinant","Area scale factor of a 2×2 transformation."],["Eigenvector","A direction a matrix only stretches."],["Fourier transform","Rewrites a signal as a sum of frequencies."]],
+ quiz:[{q:"[2, 0, 1] · [3, 5, 4] = ?",o:["10","6","15","0"],a:0,why:"2·3 + 0·5 + 1·4 = 10."},
+ {q:"A matrix has determinant 0. What happens to shapes?",o:["They rotate","They double in area","They collapse onto a line or point","They mirror"],a:2,why:"Zero area scale means the transform squashes the plane."},
+ {q:"In PCA, eigenvalues tell you…",o:["The labels","How much variance lies along each component","The number of pixels","The learning rate"],a:1,why:"Larger eigenvalue = more spread along that direction."},
+ {q:"Edges and fine detail correspond to…",o:["Low frequencies","High frequencies","Zero frequency","No frequencies"],a:1,why:"Rapid changes in intensity are high-frequency content."}],
+ recap:["Images are matrices; features are vectors.","A matrix is a transformation; determinant = area scale; eigenvectors don\u2019t turn.","PCA keeps the directions of greatest variance.","Convolution and the FFT link image processing to signal processing."]},
+
+{n:5,part:1,title:"Python Toolkit for Computer Vision",short:"Python toolkit",slides:"Slides 5.1 Popular Libraries",demo:"toolkit",mins:30,
+ goals:["Choose the right library for a task","Load, display and inspect an image with OpenCV","Know what PyTorch and TensorFlow are for","Use scikit-learn to split data, encode labels and evaluate models"],
+ sections:[
+ {h:"The four main libraries",b:`<table class="tbl"><tr><th>Library</th><th>Main job</th><th>Typical use</th></tr>
+ <tr><td><b>OpenCV</b></td><td>Image and video processing</td><td>Read/write images, resize, filter, detect edges, draw boxes, read a webcam</td></tr>
+ <tr><td><b>NumPy</b></td><td>Fast arrays and maths</td><td>Every image is a NumPy array underneath</td></tr>
+ <tr><td><b>scikit-learn</b></td><td>Classical machine learning</td><td>Split data, SVM/KNN/random forest, metrics</td></tr>
+ <tr><td><b>PyTorch / TensorFlow</b></td><td>Deep learning</td><td>Build and train CNNs on GPUs</td></tr></table>
+ <p>Install with pip: <code>pip install opencv-python numpy scikit-learn torch tensorflow</code>.</p>`},
+ {h:"OpenCV basics",b:`<div class="eq">import cv2<br>img = cv2.imread("street.jpg")      # NumPy array, shape (H, W, 3), dtype uint8<br>print(img.shape)<br>gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)<br>small = cv2.resize(img, (224, 224))<br>cv2.imwrite("gray.jpg", gray)</div>
+ <p><b>Watch out:</b> OpenCV stores colour as <b>BGR</b>, not RGB. If you show an OpenCV image with Matplotlib without converting (<code>cv2.COLOR_BGR2RGB</code>), blue skies look orange.</p>
+ <p>OpenCV is fast (written in C++), free and huge, but it is not a deep-learning training library, and its API can feel low-level.</p>`,lab:true},
+ {h:"PyTorch and TensorFlow",b:`<p>Both work with <b>tensors</b> (multi-dimensional arrays that can live on a GPU) and <b>automatic differentiation</b> (they compute gradients for you during training).</p>
+ <ul><li><b>PyTorch</b>: build a model as a Python class or <code>nn.Sequential</code>, choose a loss (e.g. <code>nn.CrossEntropyLoss</code>) and an optimiser (e.g. <code>torch.optim.Adam</code>), then loop: forward → loss → <code>loss.backward()</code> → <code>optimizer.step()</code>. Popular in research.</li><li><b>TensorFlow / Keras</b>: stack layers in <code>tf.keras.Sequential</code>, then <code>model.compile()</code> and <code>model.fit()</code>. Strong tools for deployment (TensorFlow Lite for phones, TensorFlow.js for browsers, TF Serving for servers).</li></ul>
+ <p>Tensors can be <b>reshaped</b> (same numbers, new shape) and <b>transposed</b> (swap axes) — you will do this constantly when feeding images to networks.</p>`},
+ {h:"scikit-learn for classical ML",b:`<ol class="steps"><li><b>Load data</b> (built-in datasets or your own features).</li><li><b>Split</b> into training and test sets: <code>train_test_split(X, y, test_size=0.2)</code>.</li><li><b>Encode categories</b> as numbers.</li><li><b>Train</b> a model with <code>.fit()</code>, predict with <code>.predict()</code>.</li><li><b>Evaluate</b> with <code>accuracy_score</code>, <code>f1_score</code>, <code>confusion_matrix</code>.</li></ol>
+ <table class="tbl"><tr><th>Label encoding</th><th>One-hot encoding</th></tr><tr><td>red → 0, green → 1, blue → 2</td><td>red → [1, 0, 0], green → [0, 1, 0], blue → [0, 0, 1]</td></tr><tr><td>One column; implies an order</td><td>One column per category; no false order</td></tr><tr><td>Good for ordered categories (small, medium, large) and for targets</td><td>Good for unordered categories as model inputs</td></tr></table>`}],
+ terms:[["OpenCV","Library for image and video processing."],["BGR","OpenCV\u2019s channel order: blue, green, red."],["Tensor","Multi-dimensional array used by deep-learning libraries."],["train_test_split","scikit-learn function that divides data for training and testing."],["One-hot encoding","Turns a category into a vector with a single 1."]],
+ quiz:[{q:"Colours look wrong when you plot an OpenCV image with Matplotlib. Why?",o:["The file is broken","OpenCV uses BGR order","Matplotlib is grayscale only","The image is too big"],a:1,why:"Convert with cv2.cvtColor(img, cv2.COLOR_BGR2RGB)."},
+ {q:"Which library would you use to train a CNN?",o:["scikit-learn","PyTorch","Matplotlib","Pandas"],a:1,why:"PyTorch (or TensorFlow) handles tensors, GPUs and automatic gradients."},
+ {q:"\u201cCat, dog, bird\u201d as unordered model inputs should be…",o:["Label encoded","One-hot encoded","Deleted","Averaged"],a:1,why:"One-hot avoids implying dog is \u201cbetween\u201d cat and bird."},
+ {q:"cv2.imread returns…",o:["A Python list","A NumPy array","A PyTorch tensor","A string"],a:1,why:"Images in OpenCV are NumPy arrays."}],
+ recap:["OpenCV = images; NumPy = arrays; scikit-learn = classical ML; PyTorch/TensorFlow = deep learning.","OpenCV loads BGR — convert before plotting.","Training loop: forward → loss → backward → step.","Label encoding for order; one-hot for unordered categories."]},
+
+{n:6,part:2,title:"Intensity Transformations & Image Enhancement",short:"Intensity & enhancement",slides:"Slides 6.1 Intensity Transformations · 6.2 Enhancement & Colour Spaces",demo:"intensity",mins:40,
+ goals:["Apply negative, log, gamma and threshold transforms","Read an image histogram","Explain histogram equalization","Choose a colour space for a task"],
+ sections:[
+ {h:"Point operations",b:`<p>An <b>intensity transformation</b> changes each pixel using only its own value: <b>s = T(r)</b>, where r is the input level and s the output. Plotting T gives a curve you can read at a glance.</p>
+ <ul><li><b>Negative:</b> s = (L − 1) − r (255 − r for 8-bit). Useful for looking at white details in dark regions, such as X-rays.</li><li><b>Log:</b> s = c·log(1 + r). Brightens dark values strongly, compresses bright ones. Used to display Fourier spectra.</li><li><b>Power-law (gamma):</b> s = c·r<sup>γ</sup> (r scaled 0–1). γ &lt; 1 brightens, γ &gt; 1 darkens. Screens and cameras use gamma correction.</li><li><b>Thresholding:</b> s = 255 if r ≥ T, else 0. Produces a binary image.</li></ul>
+ <p>Piecewise-linear transforms give extra control: <b>contrast stretching</b> spreads a narrow range over 0–255; <b>intensity-level slicing</b> highlights one band of levels; <b>bit-plane slicing</b> looks at each bit of the values separately.</p>`},
+ {h:"Histograms",b:`<p>A <b>histogram</b> counts how many pixels have each grey level. Its shape tells you about the image:</p>
+ <ul><li>Bunched on the left → dark image. Bunched on the right → bright image.</li><li>Narrow → <b>low contrast</b> (washed out). Spread across the range → high contrast.</li></ul>
+ <p><b>Histogram equalization</b> spreads the levels out automatically. It uses the cumulative histogram (the running total, or CDF) as the transform:</p>
+ <div class="eq">s<sub>k</sub> = (L − 1) × (n<sub>0</sub> + n<sub>1</sub> + … + n<sub>k</sub>) ÷ total pixels</div>
+ <div class="ex"><b>Worked example.</b> An 8-level image (L = 8) with 64 pixels. Levels 0–2 hold 8, 16 and 8 pixels. Cumulative counts: 8, 24, 32 → s = 7 × 8/64 ≈ 1, 7 × 24/64 ≈ 3, 7 × 32/64 ≈ 4 (rounded). The crowded dark levels get pushed apart.</div>
+ <p><b>Histogram matching</b> makes an image\u2019s histogram follow a chosen shape instead of a flat one. <b>Local (adaptive) histogram equalization</b> — e.g. CLAHE — works on small tiles, bringing out detail in both shadows and highlights.</p>`,lab:true},
+ {h:"More enhancement tools",b:`<ul><li><b>Brightness and contrast:</b> s = α·r + β (α scales contrast, β shifts brightness).</li><li><b>Smoothing</b> to reduce noise and <b>sharpening</b> to boost edges (Module 7).</li><li><b>Unsharp masking:</b> subtract a blurred copy to find detail, then add that detail back.</li><li><b>Frequency-domain filtering</b> with the FFT (Module 4).</li></ul>
+ <p><b>Enhancement is subjective</b> — the goal is an image that looks better or is easier for a person or model to use. <b>Restoration</b> is objective — it models how the image was damaged and tries to undo it.</p>`},
+ {h:"Colour spaces",b:`<table class="tbl"><tr><th>Space</th><th>Channels</th><th>Good for</th></tr>
+ <tr><td>RGB / BGR</td><td>Red, green, blue</td><td>Display, storage</td></tr>
+ <tr><td>Grayscale</td><td>Brightness only</td><td>Edges, shape, speed</td></tr>
+ <tr><td>HSV</td><td>Hue (colour), saturation (purity), value (brightness)</td><td>Picking out a colour regardless of lighting, e.g. tracking a red ball</td></tr>
+ <tr><td>LAB</td><td>Lightness, green–red, blue–yellow</td><td>Colour differences that match human perception</td></tr>
+ <tr><td>YCrCb</td><td>Brightness + two colour-difference channels</td><td>Video compression, skin detection</td></tr></table>
+ <div class="eq">hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)</div>`}],
+ terms:[["Intensity transformation","A rule s = T(r) applied to every pixel."],["Gamma","The exponent in s = c·r^γ."],["Histogram","Count of pixels at each grey level."],["Histogram equalization","Spreading levels using the cumulative histogram."],["HSV","Colour space separating hue, saturation and brightness."]],
+ quiz:[{q:"An image is too dark overall. Which gamma helps?",o:["γ = 0.4","γ = 1","γ = 2.5","γ = −1"],a:0,why:"With r between 0 and 1, r^0.4 > r, so dark values rise."},
+ {q:"A histogram squeezed into a narrow band means…",o:["High contrast","Low contrast","Colour image","Binary image"],a:1,why:"Few levels are used, so the image looks flat."},
+ {q:"The negative of 8-bit value 200 is…",o:["55","200","-200","255"],a:0,why:"255 − 200 = 55."},
+ {q:"To find a yellow object under changing light, which space helps most?",o:["RGB","HSV","Binary","Grayscale"],a:1,why:"Hue stays fairly stable when brightness changes."}],
+ recap:["Point operations: s = T(r) — negative, log, gamma, threshold.","Histograms show brightness and contrast at a glance.","Equalization uses the cumulative histogram to spread levels.","Pick the colour space that separates what you care about."]},
+{n:7,part:2,title:"Noise Reduction & Spatial Filtering",short:"Noise & filtering",slides:"Slides 7.1 Noise Reduction Techniques",demo:"noise",mins:35,
+ goals:["Recognise common types of noise","Explain how a spatial filter slides over an image","Choose between mean, Gaussian, median and bilateral filters","Describe the trade-off between smoothing and sharp edges"],
+ sections:[
+ {h:"Where noise comes from",b:`<p><b>Noise</b> is unwanted random variation in pixel values, caused by sensors, low light, heat, transmission errors or compression.</p>
+ <table class="tbl"><tr><th>Noise</th><th>Looks like</th><th>Cause</th></tr>
+ <tr><td>Gaussian</td><td>Fine grain everywhere</td><td>Sensor electronics, heat</td></tr>
+ <tr><td>Salt-and-pepper (impulse)</td><td>Random pure white and black dots</td><td>Faulty pixels, transmission errors</td></tr>
+ <tr><td>Speckle</td><td>Grainy pattern that scales with brightness</td><td>Ultrasound, radar</td></tr>
+ <tr><td>Poisson (shot)</td><td>Grain that is worse in dark images</td><td>Counting few photons in low light</td></tr></table>`},
+ {h:"How spatial filtering works",b:`<p>A <b>spatial filter</b> uses a small window called a <b>kernel</b> or <b>mask</b> (3 × 3, 5 × 5…).</p>
+ <ol class="steps"><li>Centre the kernel on a pixel.</li><li>Combine the pixels under the kernel (e.g. weighted sum, or middle value).</li><li>Write the result to the output pixel.</li><li>Slide to the next pixel and repeat. Borders are handled by padding (copy edge pixels, add zeros, or mirror).</li></ol>
+ <ul><li><b>Linear filters</b> use a weighted sum (mean, Gaussian, sharpening). Their maths is <b>correlation</b>, or <b>convolution</b> if the kernel is flipped first.</li><li><b>Non-linear filters</b> use another rule, such as the median, minimum or maximum.</li></ul>
+ <div class="eq">Mean 3×3 kernel = 1/9 × [1 1 1; 1 1 1; 1 1 1]</div>`},
+ {h:"Choosing a filter",b:`<ul><li><b>Mean (averaging) filter:</b> replaces each pixel with the average of its neighbours. Reduces Gaussian noise but blurs edges.</li><li><b>Gaussian filter:</b> a weighted average — near neighbours count more. Smoother, more natural blur. The size and σ control strength.</li><li><b>Median filter:</b> sorts the neighbourhood and takes the middle value. Outliers are ignored, so it removes salt-and-pepper noise and keeps edges sharper.</li><li><b>Bilateral filter:</b> averages only neighbours that are both <i>close in position</i> and <i>similar in brightness</i>. Smooths flat areas but stops at edges. Slower.</li><li><b>Wavelet denoising:</b> splits the image into frequency bands at several scales, shrinks the small (noisy) coefficients, and rebuilds the image.</li></ul>
+ <div class="ex"><b>Worked example.</b> Neighbourhood values: 10, 12, 11, 13, <b>255</b>, 12, 11, 10, 12. Mean ≈ 38 (the white dot drags it up). Median = 12 — the dot vanishes.</div>
+ <p>Always a trade-off: bigger kernels remove more noise but blur more detail. <b>PSNR</b> (peak signal-to-noise ratio, in dB) measures how close the result is to the clean image — higher is better.</p>`,lab:true},
+ {h:"Where it is used",b:`<p>Denoising is a standard preprocessing step in medical imaging, astronomy, low-light photography, document scanning, surveillance video and before edge detection (noise creates false edges).</p>
+ <p><b>Strengths:</b> simple, fast, easy to tune. <b>Limits:</b> linear filters blur edges; the right filter depends on the noise type; heavy noise may need learned (deep-learning) denoisers.</p>`}],
+ terms:[["Noise","Unwanted random variation in pixel values."],["Kernel","Small grid of weights slid over the image."],["Median filter","Replaces a pixel with the middle value of its neighbours."],["Bilateral filter","Edge-preserving smoothing using position and brightness similarity."],["PSNR","Measure of similarity to the clean image, in dB."]],
+ quiz:[{q:"Isolated black and white dots — best first filter?",o:["3×3 mean","3×3 median","Sharpen","Log transform"],a:1,why:"The median ignores the outlier dots."},
+ {q:"Which filter is non-linear?",o:["Mean","Gaussian","Median","Box blur"],a:2,why:"Sorting and picking the middle value isn\u2019t a weighted sum."},
+ {q:"Increasing kernel size from 3×3 to 7×7 usually…",o:["Sharpens edges","Removes more noise but blurs more","Adds noise","Changes colours"],a:1,why:"More neighbours averaged → smoother, blurrier."},
+ {q:"Which filter smooths while keeping edges, using brightness similarity?",o:["Mean","Bilateral","Box","Negative"],a:1,why:"Bilateral only averages neighbours with similar values."}],
+ recap:["Know your noise: Gaussian, salt-and-pepper, speckle, Poisson.","A kernel slides over the image; linear = weighted sum, non-linear = other rule.","Median for impulse noise; Gaussian/mean for grain; bilateral to keep edges.","Bigger kernels: less noise, more blur."]},
+
+{n:8,part:2,title:"Geometric Transformations & Image Manipulation",short:"Geometric transforms",slides:"Slides 8.1 Transformations · 8.2 OpenCV lab",demo:"geometric",mins:35,
+ goals:["Apply translation, rotation, scaling, shearing, reflection and cropping","Read an affine transformation matrix","Tell affine and perspective transforms apart","Explain why interpolation is needed"],
+ sections:[
+ {h:"Moving pixels, not changing them",b:`<p><b>Geometric transformations</b> change <i>where</i> pixels are, not their values:</p>
+ <ul><li><b>Translation:</b> shift by (t<sub>x</sub>, t<sub>y</sub>).</li><li><b>Rotation:</b> turn by an angle θ around a point.</li><li><b>Scaling:</b> resize by s<sub>x</sub>, s<sub>y</sub>.</li><li><b>Shearing:</b> slant, like pushing the top of a deck of cards sideways.</li><li><b>Reflection:</b> mirror horizontally or vertically.</li><li><b>Cropping:</b> keep a rectangle — just array slicing: <code>img[y1:y2, x1:x2]</code>.</li></ul>
+ <p>Uses: data augmentation for training, aligning images (<b>registration</b>), correcting camera angle, panoramas, and following objects.</p>`},
+ {h:"The affine matrix",b:`<p>All of the above (except cropping) are <b>affine</b>: straight lines stay straight and parallel lines stay parallel. They are written as a 2 × 3 matrix:</p>
+ <div class="eq">[x\u2032]   [a  b  t<sub>x</sub>] [x]<br>[y\u2032] = [c  d  t<sub>y</sub>] [y]<br>                    [1]</div>
+ <ul><li>Translation: a = d = 1, b = c = 0.</li><li>Rotation: a = cos θ, b = −sin θ, c = sin θ, d = cos θ.</li><li>Scaling: a = s<sub>x</sub>, d = s<sub>y</sub>.</li><li>Shear in x: b = shear amount.</li></ul>
+ <div class="eq">M = cv2.getRotationMatrix2D(center, angle, scale)<br>out = cv2.warpAffine(img, M, (w, h))</div>`,lab:true},
+ {h:"Perspective and interpolation",b:`<p>A <b>perspective (projective) transformation</b> uses a 3 × 3 matrix called a <b>homography</b>. Parallel lines can meet, like railway tracks in the distance. Use it to flatten a photo of a document or to view a road from above. OpenCV finds it from 4 matching points: <code>cv2.getPerspectiveTransform</code> then <code>cv2.warpPerspective</code>.</p>
+ <p>After a transform, output pixels rarely land exactly on input pixels, so values are estimated by <b>interpolation</b>:</p>
+ <table class="tbl"><tr><th>Method</th><th>How</th><th>Result</th></tr><tr><td>Nearest neighbour</td><td>Copy the closest pixel</td><td>Fast, blocky</td></tr><tr><td>Bilinear</td><td>Blend the 4 nearest</td><td>Smooth, the usual default</td></tr><tr><td>Bicubic</td><td>Blend the 16 nearest</td><td>Smoothest, slower</td></tr></table>
+ <p><b>Limits:</b> content can be pushed off the canvas, empty corners appear (filled with black or copied edges), and repeated transforms slowly blur the image.</p>`},
+ {h:"Other everyday manipulations",b:`<p>With OpenCV you will also often <b>resize</b> (<code>cv2.resize</code>), <b>normalise</b> pixel values (scale 0–255 to 0–1, or subtract the mean and divide by the standard deviation before feeding a network), <b>blur</b> (<code>cv2.GaussianBlur</code>) and detect edges (<code>cv2.Canny</code>).</p>
+ <p>The <b>Fourier transform</b> is another kind of image transformation — from space to frequency (Module 4) — and intensity transformations (Module 6) change values rather than positions.</p>`}],
+ terms:[["Affine transform","Keeps lines straight and parallel lines parallel."],["Homography","3 × 3 matrix for perspective transforms."],["Interpolation","Estimating pixel values between grid points."],["Registration","Aligning two images of the same scene."],["Data augmentation","Creating varied training images by transforming originals."]],
+ quiz:[{q:"Which transformation can make parallel lines meet?",o:["Rotation","Scaling","Shear","Perspective"],a:3,why:"Affine transforms preserve parallel lines; perspective does not."},
+ {q:"In the affine matrix, tx and ty control…",o:["Rotation","Translation","Scaling","Colour"],a:1,why:"The last column shifts the image."},
+ {q:"Which interpolation is fastest but blockiest?",o:["Bicubic","Bilinear","Nearest neighbour","Fourier"],a:2,why:"It just copies the nearest pixel."},
+ {q:"Cropping in NumPy/OpenCV is done by…",o:["cv2.rotate","Array slicing","Histogram equalization","A median filter"],a:1,why:"img[y1:y2, x1:x2] keeps a rectangle."}],
+ recap:["Geometric transforms move pixels: translate, rotate, scale, shear, reflect, crop.","Affine = 2 × 3 matrix; parallel lines stay parallel.","Perspective = 3 × 3 homography; parallel lines may meet.","Interpolation fills in values: nearest, bilinear, bicubic."]},
+
+{n:9,part:2,title:"Edges, Corners & Morphology",short:"Edges & morphology",slides:"Slides 9.1 Edge & Corner Detection · 9.2 Morphology & Otsu",demo:"edges",mins:45,
+ goals:["Explain edges as rapid intensity changes","Apply Sobel, Prewitt, Laplacian and Canny","Describe Harris corner detection","Use erosion, dilation, opening, closing and Otsu thresholding"],
+ sections:[
+ {h:"What is an edge?",b:`<p>An <b>edge</b> is where brightness changes quickly — the outline of an object, a shadow line, a texture boundary. Since edges are about change, edge detectors are built from <b>derivatives</b>.</p>
+ <ul><li>The <b>first derivative (gradient)</b> is large at an edge. Its <b>magnitude</b> √(G<sub>x</sub>² + G<sub>y</sub>²) says how strong the edge is; its <b>direction</b> atan2(G<sub>y</sub>, G<sub>x</sub>) says which way intensity increases.</li><li>The <b>second derivative</b> crosses zero at an edge.</li></ul>`},
+ {h:"Edge detection operators",b:`<table class="tbl"><tr><th>Operator</th><th>Idea</th><th>Notes</th></tr>
+ <tr><td>Roberts</td><td>2 × 2 diagonal differences</td><td>Very simple, sensitive to noise</td></tr>
+ <tr><td>Prewitt</td><td>3 × 3 differences in x and y</td><td>Simple smoothing built in</td></tr>
+ <tr><td>Sobel</td><td>Like Prewitt, centre row/column weighted 2</td><td>The common default</td></tr>
+ <tr><td>Scharr</td><td>Sobel with tuned weights (3, 10, 3)</td><td>More accurate directions</td></tr>
+ <tr><td>Laplacian / LoG</td><td>Second derivative; LoG blurs with a Gaussian first</td><td>Edges in all directions at once</td></tr></table>
+ <div class="eq">Sobel G<sub>x</sub> = [−1 0 1; −2 0 2; −1 0 1]   (vertical edges)<br>Sobel G<sub>y</sub> = [−1 −2 −1; 0 0 0; 1 2 1]   (horizontal edges)</div>
+ <p><b>Canny</b>, the most widely used detector, has four stages:</p>
+ <ol class="steps"><li>Gaussian blur to reduce noise.</li><li>Compute gradient magnitude and direction (Sobel).</li><li><b>Non-maximum suppression:</b> thin edges to one pixel wide.</li><li><b>Double threshold + hysteresis:</b> keep strong edges, and weak edges only if they connect to strong ones.</li></ol>
+ <div class="eq">edges = cv2.Canny(gray, 100, 200)</div>
+ <p>In the lab, step the kernel across the grid and do one calculation yourself.</p>`,lab:true},
+ {h:"Corners",b:`<p>A <b>corner</b> is where intensity changes in <i>two</i> directions. Corners are great landmarks for matching and tracking because they are easy to find again.</p>
+ <p><b>Harris corner detection</b> slides a small window and asks how much the contents change when it shifts:</p>
+ <ul><li>Flat region: little change in any direction.</li><li>Edge: big change across the edge, little along it.</li><li>Corner: big change in every direction.</li></ul>
+ <div class="eq">R = det(M) − k·(trace M)²     large R → corner<br>cv2.cornerHarris(gray, blockSize=2, ksize=3, k=0.04)</div>`},
+ {h:"Morphology and thresholding",b:`<p><b>Morphological operations</b> change the shape of regions in a binary image using a small <b>structuring element</b> (e.g. a 3 × 3 square).</p>
+ <ul><li><b>Erosion:</b> a pixel stays white only if the whole element fits inside white. Shrinks objects, removes small specks.</li><li><b>Dilation:</b> a pixel turns white if the element touches any white. Grows objects, fills small gaps.</li><li><b>Opening</b> = erosion then dilation: removes specks, keeps big shapes.</li><li><b>Closing</b> = dilation then erosion: fills small holes, keeps big shapes.</li><li><b>Morphological gradient</b> = dilation − erosion (outlines); <b>top-hat</b> and <b>black-hat</b> pull out small bright or dark details.</li></ul>
+ <p><b>Thresholding</b> makes the binary image in the first place. <b>Otsu\u2019s method</b> chooses the threshold automatically: it tries every level and picks the one that makes the two groups (background and foreground) as separate as possible — the largest <b>between-class variance</b>.</p>
+ <div class="eq">t, mask = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)</div>
+ <p>Use the Morphology tab in the lab to draw a shape and try each operation.</p>`}],
+ terms:[["Edge","A place where intensity changes quickly."],["Gradient","Direction and rate of fastest intensity change."],["Non-maximum suppression","Thinning edges to the strongest pixel."],["Structuring element","Small shape used by morphological operations."],["Otsu\u2019s method","Automatic threshold that best separates two classes."]],
+ quiz:[{q:"Sobel Gx responds most to…",o:["Horizontal edges","Vertical edges","Flat areas","Colour"],a:1,why:"It measures change from left to right, which happens across vertical edges."},
+ {q:"Which Canny stage keeps weak edges only if they connect to strong ones?",o:["Gaussian blur","Gradient","Non-maximum suppression","Hysteresis"],a:3,why:"Hysteresis links weak edges to strong ones and drops isolated weak ones."},
+ {q:"Remove small white specks but keep the main object\u2019s size:",o:["Erosion","Dilation","Opening","Closing"],a:2,why:"Erode removes specks, dilate restores the object."},
+ {q:"Otsu\u2019s method picks the threshold that…",o:["Is always 128","Maximises between-class variance","Minimises the number of pixels","Maximises brightness"],a:1,why:"It best separates foreground from background."}],
+ recap:["Edges = fast intensity change; detectors are derivative filters.","Sobel is the default; Canny = blur → gradient → thin → hysteresis.","Harris finds corners: change in every direction.","Erosion/dilation/opening/closing reshape binary regions; Otsu picks the threshold."]},
+
+{n:10,part:2,title:"Feature Descriptors",short:"Feature descriptors",slides:"Slides 10.1 SIFT, SURF, ORB, HOG",demo:"hog",mins:35,
+ goals:["Explain keypoints and descriptors","Describe SIFT, SURF and ORB","Build a HOG descriptor step by step","Choose a descriptor for a task"],
+ sections:[
+ {h:"Keypoints and descriptors",b:`<p>To match the same object across two photos — taken from different angles, distances or lighting — we need <b>features</b> that stay recognisable.</p>
+ <ul><li>A <b>keypoint</b> is an interesting, repeatable location (a corner or blob).</li><li>A <b>descriptor</b> is a vector of numbers describing the patch around it.</li></ul>
+ <p>A good descriptor is <b>invariant</b>: its numbers stay similar when the image is scaled, rotated or brighter. Matching is then just finding descriptors that are close together. Uses: image stitching (panoramas), object recognition, 3-D reconstruction, visual tracking, and pedestrian detection.</p>`},
+ {h:"SIFT, SURF and ORB",b:`<p><b>SIFT (Scale-Invariant Feature Transform)</b></p>
+ <ol class="steps"><li><b>Scale-space extrema:</b> blur the image at many scales, subtract neighbours (Difference of Gaussians) and find blobs at every size.</li><li><b>Keypoint localisation:</b> refine positions and drop weak or edge-like points.</li><li><b>Orientation:</b> give each keypoint its dominant gradient direction, so rotation doesn\u2019t matter.</li><li><b>Descriptor:</b> 16 × 16 area → 4 × 4 cells × 8-bin gradient histograms = a <b>128-number</b> vector.</li></ol>
+ <p><b>SURF (Speeded-Up Robust Features)</b> approximates SIFT with box filters and integral images — several times faster, slightly less precise.</p>
+ <p><b>ORB (Oriented FAST and Rotated BRIEF)</b> finds corners with <b>FAST</b>, adds orientation, and describes them with <b>BRIEF</b>, a <b>binary</b> string made of simple brightness comparisons. Matching uses <b>Hamming distance</b> (count differing bits) — very fast. Free to use and good for real-time and phones.</p>
+ <table class="tbl"><tr><th></th><th>SIFT</th><th>SURF</th><th>ORB</th></tr><tr><td>Descriptor</td><td>128 floats</td><td>64 floats</td><td>256 bits</td></tr><tr><td>Speed</td><td>Slow</td><td>Faster</td><td>Fastest</td></tr><tr><td>Robustness</td><td>Highest</td><td>High</td><td>Good</td></tr><tr><td>Match with</td><td>Euclidean distance</td><td>Euclidean distance</td><td>Hamming distance</td></tr></table>`},
+ {h:"HOG, step by step",b:`<p><b>Histogram of Oriented Gradients (HOG)</b> describes a whole window (e.g. a person-sized 64 × 128 box) by the directions of its edges. It was the classic feature for pedestrian detection with an SVM.</p>
+ <ol class="steps"><li><b>Preprocess:</b> resize the window (e.g. 64 × 128) and convert to grayscale.</li><li><b>Gradients:</b> compute G<sub>x</sub>, G<sub>y</sub>, then magnitude and direction for every pixel.</li><li><b>Cells:</b> divide into 8 × 8-pixel cells.</li><li><b>Histograms:</b> in each cell, build a 9-bin histogram of directions (0–180°), each pixel voting with its magnitude.</li><li><b>Block normalisation:</b> group 2 × 2 cells into blocks and normalise, so lighting changes matter less.</li><li><b>Concatenate</b> all block histograms into one long vector.</li></ol>
+ <div class="ex"><b>Worked example.</b> A 64 × 128 window has 8 × 16 cells. Sliding 2 × 2-cell blocks one cell at a time gives 7 × 15 = 105 blocks. Each block has 4 cells × 9 bins = 36 numbers. Total: 105 × 36 = <b>3,780</b> features.</div>`,lab:true},
+ {h:"Which one should I use?",b:`<ul><li>Need the most reliable matches and speed isn\u2019t critical → <b>SIFT</b>.</li><li>Real-time on limited hardware → <b>ORB</b>.</li><li>Describe the shape of a whole object window for classification → <b>HOG</b>.</li></ul>
+ <p>Today, deep networks (Module 12) often learn their own features, but these descriptors remain fast, explainable and useful when data is scarce.</p>`}],
+ terms:[["Keypoint","A distinctive, repeatable image location."],["Descriptor","A vector describing the patch around a keypoint."],["Invariance","Staying the same under scale, rotation or lighting changes."],["Hamming distance","Number of differing bits between two binary strings."],["HOG","Histograms of gradient directions in cells, normalised in blocks."]],
+ quiz:[{q:"Which descriptor is binary and matched with Hamming distance?",o:["SIFT","HOG","ORB","SURF"],a:2,why:"ORB uses rotated BRIEF, a bit string."},
+ {q:"How long is a standard SIFT descriptor?",o:["9","36","128","3,780"],a:2,why:"4 × 4 cells × 8 orientation bins = 128."},
+ {q:"In HOG, why normalise over blocks?",o:["To add colour","To reduce the effect of lighting changes","To find keypoints","To rotate the image"],a:1,why:"Normalising removes overall brightness and contrast differences."},
+ {q:"Best choice for fast matching on a phone?",o:["SIFT","ORB","HOG + SVM","Histogram equalization"],a:1,why:"ORB is fast, binary and free."}],
+ recap:["Keypoint = where; descriptor = what it looks like.","SIFT: robust, 128-D. SURF: faster approximation. ORB: binary, fastest.","HOG: gradients → 8×8 cells → 9-bin histograms → block normalisation → one vector.","Invariance lets features be matched across viewpoints and lighting."]},
+
+{n:11,part:3,title:"Machine Learning for Vision",short:"Machine learning",slides:"Slides 11.1 ML Foundations · 11.2 Supervised Techniques",demo:"threshold",mins:50,
+ goals:["Follow the ML workflow from data to evaluation","Tell supervised, unsupervised and reinforcement learning apart","Describe linear regression, KNN, naive Bayes, SVM and random forests","Evaluate models with the confusion matrix, F1, ROC-AUC and cross-validation"],
+ sections:[
+ {h:"What machine learning is",b:`<p><b>Machine learning (ML)</b> lets computers learn patterns from data instead of following hand-written rules.</p>
+ <ul><li><b>Supervised:</b> learn from labelled examples. <b>Classification</b> predicts a category (cat/dog); <b>regression</b> predicts a number (age, price).</li><li><b>Unsupervised:</b> find structure without labels — clustering, dimensionality reduction, association rules.</li><li><b>Reinforcement:</b> an agent learns by trial and error from rewards (games, robots).</li></ul>
+ <p>Every project follows the same workflow:</p>
+ <ol class="steps"><li><b>Data collection</b> — gather and label examples.</li><li><b>Preprocessing</b> — clean, resize, normalise, split into train/validation/test.</li><li><b>Model development</b> — train and tune.</li><li><b>Evaluation / testing</b> — measure performance on data the model has never seen.</li></ol>`},
+ {h:"Classic supervised models",b:`<ul><li><b>Linear regression:</b> fits a straight line y = mx + c (or a plane) that minimises squared errors. Measured with MAE, MSE, RMSE and R².</li><li><b>K-nearest neighbours (KNN):</b> label a new point by a vote of its k closest training points. Choice of k and distance (Euclidean, Manhattan) matters; odd k avoids ties.</li><li><b>Naive Bayes:</b> uses Bayes\u2019 rule and assumes features are independent (\u201cnaive\u201d). Fast, good for text.</li><li><b>Support vector machine (SVM):</b> finds the boundary with the widest <b>margin</b> between classes; the closest points are <b>support vectors</b>. The <b>kernel trick</b> (e.g. RBF) handles curved boundaries.</li><li><b>Random forest:</b> many decision trees, each trained on a random sample of data and features; they vote. Robust, handles many features. Key settings: number of trees, max depth, features per split.</li></ul>`},
+ {h:"Fitting just right",b:`<ul><li><b>Underfitting:</b> too simple — poor on training and test data (high <b>bias</b>).</li><li><b>Overfitting:</b> memorises training data, including noise — great on training, poor on test (high <b>variance</b>).</li></ul>
+ <p>The <b>bias–variance trade-off</b>: more complex models lower bias but raise variance. Fixes for overfitting include more data, simpler models, data augmentation and <b>regularisation</b>:</p>
+ <table class="tbl"><tr><th>Lasso (L1)</th><th>Ridge (L2)</th><th>Elastic Net</th></tr><tr><td>Adds |weights| to the loss; can set some to exactly zero (feature selection)</td><td>Adds weights² to the loss; shrinks all weights smoothly</td><td>A mix of both</td></tr></table>
+ <p><b>Hyperparameters</b> are settings you choose before training (k in KNN, tree depth, learning rate). Tune them with <b>grid search</b> (try every combination), <b>random search</b>, or <b>Bayesian optimisation</b>, using <b>cross-validation</b>: split data into k folds, train on k − 1 and test on the remaining one, rotating so every fold is tested once. <b>Stratified</b> folds keep class proportions the same.</p>`},
+ {h:"Measuring performance",b:`<p>For classification, count four outcomes in a <b>confusion matrix</b>:</p>
+ <table class="tbl"><tr><th></th><th>Predicted positive</th><th>Predicted negative</th></tr><tr><td><b>Actually positive</b></td><td>True positive (TP)</td><td>False negative (FN) — a miss</td></tr><tr><td><b>Actually negative</b></td><td>False positive (FP) — a false alarm</td><td>True negative (TN)</td></tr></table>
+ <div class="eq">Accuracy = (TP + TN) ÷ all<br>Precision = TP ÷ (TP + FP)     — of the alarms, how many were right?<br>Recall = TP ÷ (TP + FN)        — of the real cases, how many did we find?<br>F1 = 2 × P × R ÷ (P + R)<br>Specificity = TN ÷ (TN + FP)</div>
+ <div class="ex"><b>Worked example.</b> A defect detector finds 90 of 100 real defects and raises 60 false alarms. Precision = 90/150 = 0.60, recall = 90/100 = 0.90, F1 = 2 × 0.6 × 0.9 ÷ 1.5 = <b>0.72</b>.</div>
+ <p>Moving the <b>decision threshold</b> trades precision for recall. The <b>ROC curve</b> plots true-positive rate against false-positive rate for every threshold; the area under it (<b>AUC</b>) is the chance the model ranks a random positive above a random negative (1.0 perfect, 0.5 guessing). On imbalanced data, accuracy misleads — use precision, recall and F1. For vision tasks you will also meet <b>IoU</b> and <b>mAP</b> (detection) and <b>Dice</b> (segmentation).</p>`,lab:true}],
+ terms:[["Supervised learning","Learning from labelled examples."],["Overfitting","Memorising training data so the model fails on new data."],["Regularisation","A penalty that keeps weights small to reduce overfitting."],["Cross-validation","Rotating train/test folds to estimate performance fairly."],["F1 score","Harmonic mean of precision and recall."]],
+ quiz:[{q:"A model scores 99% on training data and 60% on test data. This is…",o:["Underfitting","Overfitting","Perfect","Regularisation"],a:1,why:"Big gap between training and test performance = memorising."},
+ {q:"Which regularisation can set weights exactly to zero?",o:["Ridge (L2)","Lasso (L1)","Neither","Dropout"],a:1,why:"L1\u2019s penalty pushes small weights all the way to zero."},
+ {q:"90 real defects found out of 100, with 60 false alarms. Precision?",o:["0.90","0.60","0.40","0.72"],a:1,why:"90 ÷ (90 + 60) = 0.60."},
+ {q:"Which model finds the widest margin between classes?",o:["KNN","Naive Bayes","SVM","Linear regression"],a:2,why:"SVMs maximise the margin; the closest points are support vectors."}],
+ recap:["Workflow: data collection → preprocessing → model development → evaluation.","Supervised models: regression, KNN, naive Bayes, SVM, random forest.","Balance bias and variance; regularise and cross-validate.","Use precision, recall, F1 and AUC — not accuracy alone — on imbalanced data."]},
+{n:12,part:3,title:"Neural Networks & Deep Learning",short:"Neural nets & CNNs",slides:"Slides 12.1 Neural Networks · 12.2 CNNs · 12.3 Deep Learning Models",demo:"gd",mins:55,
+ goals:["Explain neurons, layers, forward pass and backpropagation","Use gradient descent and the learning rate","Describe every layer of a CNN and compute output sizes","Name key architectures and use transfer learning"],
+ sections:[
+ {h:"Neurons and layers",b:`<p>A <b>neuron</b> takes inputs, multiplies each by a <b>weight</b>, adds a <b>bias</b>, and passes the result through an <b>activation function</b>:</p>
+ <div class="eq">z = w₁x₁ + w₂x₂ + … + b      output = activation(z)</div>
+ <p>Neurons are stacked in layers: an <b>input layer</b> (raw data), <b>hidden layers</b> (learn features) and an <b>output layer</b> (the prediction). \u201cDeep\u201d learning just means many hidden layers.</p>
+ <p><b>Activations</b> add non-linearity so the network can learn curves, not just straight lines:</p>
+ <ul><li><b>ReLU:</b> max(0, z) — the default for hidden layers. Simple, fast, and avoids the vanishing-gradient problem of older functions. Variants such as <b>Leaky ReLU</b> let a small signal through for negative z so neurons don\u2019t \u201cdie\u201d.</li><li><b>Sigmoid:</b> squashes to 0–1 — binary outputs.</li><li><b>Softmax:</b> turns a list of scores into probabilities that add to 1 — multi-class outputs.</li><li><b>Tanh:</b> squashes to −1 to 1.</li></ul>`},
+ {h:"How a network learns",b:`<ol class="steps"><li><b>Forward pass:</b> data flows through the layers to a prediction.</li><li><b>Loss:</b> measure how wrong it is — mean squared error for numbers, cross-entropy for classes.</li><li><b>Backpropagation:</b> use the chain rule to find how much each weight contributed to the error (its gradient).</li><li><b>Gradient descent update:</b> nudge every weight against its gradient.</li><li><b>Repeat</b> over many batches and <b>epochs</b> (passes through the data).</li></ol>
+ <div class="eq">w ← w − η × ∂Loss/∂w      (η = learning rate)</div>
+ <p>Too small η: painfully slow. Too large: overshoots and may diverge. Bumpy losses have <b>local minima</b> that can trap training. Try all of this in the lab.</p>`,lab:true},
+ {h:"Convolutional neural networks",b:`<p>A <b>CNN</b> is built for images. Instead of connecting every pixel to every neuron, it learns small <b>filters</b> — like the Sobel kernel in Module 9, but with learned numbers.</p>
+ <ol class="steps"><li><b>Input layer:</b> the image, e.g. 32 × 32 × 3.</li><li><b>Convolutional layer:</b> each filter slides over the input and produces a <b>feature map</b>. Twelve 3 × 3 filters → 12 feature maps. Early layers find edges; deeper layers find textures, parts and objects.</li><li><b>Activation (ReLU):</b> applied to every value; size unchanged.</li><li><b>Pooling:</b> shrinks each map. 2 × 2 max pooling with stride 2 keeps the largest of every 4 values: 32 × 32 × 12 → 16 × 16 × 12. Fewer computations, less overfitting.</li><li><b>Flatten:</b> 16 × 16 × 12 → a vector of 3,072.</li><li><b>Fully connected layer(s):</b> combine features for the final decision.</li><li><b>Output layer:</b> softmax (many classes) or sigmoid (two).</li></ol>
+ <div class="eq">Output width = (W − K + 2P) ÷ S + 1<br>W input size · K kernel size · P padding · S stride</div>
+ <div class="ex"><b>Worked example.</b> 32 × 32 input, 5 × 5 kernel, no padding, stride 1: (32 − 5 + 0) ÷ 1 + 1 = <b>28</b>. With padding 2: (32 − 5 + 4) ÷ 1 + 1 = 32 — \u201csame\u201d size.</div>
+ <p>Other network types: <b>RNNs/LSTMs</b> for sequences, <b>autoencoders</b> for compression, <b>GANs</b> for generation, and <b>transformers</b> (including Vision Transformers) that use attention instead of convolution.</p>`},
+ {h:"Famous architectures and transfer learning",b:`<ul><li><b>AlexNet (2012)</b> — won ImageNet and started the deep-learning boom.</li><li><b>VGG</b> — simple stacks of 3 × 3 convolutions, very deep.</li><li><b>ResNet</b> — <b>skip connections</b> add a layer\u2019s input to its output, letting networks train with 100+ layers without vanishing gradients.</li><li><b>Inception</b> — several filter sizes in parallel.</li><li><b>YOLO, Faster R-CNN, SSD</b> — object detection.</li></ul>
+ <p><b>Transfer learning:</b> start from a model already trained on a huge dataset such as ImageNet instead of from scratch.</p>
+ <ul><li><b>Feature extraction:</b> freeze the pre-trained layers and train only a new final layer.</li><li><b>Fine-tuning:</b> also adjust some pre-trained layers with a small learning rate.</li></ul>
+ <p>This needs far less data and time — the usual choice in practice.</p>
+ <p><b>Deep-learning vision tasks:</b> classification (one label), detection (boxes + labels), segmentation (a label per pixel) and face recognition.</p>`},
+ {h:"YOLO: detection in one look",b:`<p><b>YOLO (You Only Look Once)</b> detects all objects in a single forward pass.</p>
+ <ol class="steps"><li>Resize the image (448 × 448 in YOLOv1) and split it into an <b>S × S grid</b>.</li><li>The cell containing an object\u2019s centre is responsible for it. Each cell predicts <b>B boxes</b> (x, y, w, h, confidence) and <b>C class probabilities</b> → output <b>S × S × (5B + C)</b>, e.g. 7 × 7 × 30.</li><li>A CNN backbone (24 conv layers in v1) extracts features; the loss combines localisation, confidence and classification errors.</li><li><b>Confidence</b> = Pr(object) × IoU with the true box.</li><li><b>Non-maximum suppression</b> removes duplicate boxes.</li></ol>`}],
+ terms:[["Activation function","Adds non-linearity to a neuron\u2019s output (e.g. ReLU)."],["Backpropagation","Computing each weight\u2019s gradient with the chain rule."],["Learning rate","How big each gradient-descent step is."],["Feature map","Output of one filter across the image."],["Transfer learning","Reusing a pre-trained model for a new task."]],
+ quiz:[{q:"ReLU(−3) = ?",o:["−3","0","3","1"],a:1,why:"ReLU outputs max(0, z)."},
+ {q:"32 × 32 input, 3 × 3 kernel, padding 1, stride 1. Output width?",o:["30","32","34","16"],a:1,why:"(32 − 3 + 2) ÷ 1 + 1 = 32."},
+ {q:"Your loss jumps around and grows. The learning rate is probably…",o:["Too small","Too large","Perfect","Irrelevant"],a:1,why:"Steps overshoot the minimum and diverge."},
+ {q:"What let ResNet train very deep networks?",o:["Max pooling","Skip connections","Sigmoid","Bigger images"],a:1,why:"Skip connections give gradients a shortcut backwards."}],
+ recap:["Neuron = weighted sum + bias + activation; ReLU is the default.","Train: forward → loss → backprop → w ← w − η·gradient.","CNN: conv → ReLU → pool → … → flatten → dense → softmax. Size = (W − K + 2P)/S + 1.","Use transfer learning; YOLO detects everything in one pass."]},
+
+{n:13,part:3,title:"Object Tracking",short:"Tracking",slides:"Slides 13.1 Tracking",demo:"tracking",mins:40,
+ goals:["Explain how tracking differs from detection","Describe the Kalman filter\u2019s predict–update cycle","Use a cost matrix and the Hungarian algorithm to match tracks","Explain how occlusion breaks tracking and how re-identification helps"],
+ sections:[
+ {h:"Detection vs tracking",b:`<p><b>Object detection</b> looks at one frame and says what objects are there and where. <b>Object tracking</b> follows those objects <i>across frames</i> and keeps a consistent <b>identity (ID)</b> for each: \u201cperson 3 walked from here to there\u201d.</p>
+ <p>Most modern systems use <b>tracking-by-detection</b>:</p>
+ <ol class="steps"><li>Run a detector (e.g. YOLO) on each frame.</li><li><b>Predict</b> where each existing track should be now.</li><li><b>Associate</b> new detections with existing tracks.</li><li><b>Update</b> matched tracks, start new tracks for unmatched detections, and retire tracks that have been lost too long.</li></ol>`},
+ {h:"The Kalman filter: predict, then update",b:`<p>Detections are noisy and sometimes missing. The <b>Kalman filter</b> keeps a smooth estimate of each object\u2019s position and velocity.</p>
+ <ul><li><b>Predict:</b> use the previous position and velocity to guess where the object is now. Uncertainty grows, because time has passed.</li><li><b>Update:</b> when a new detection arrives, blend it with the prediction. Uncertainty shrinks.</li></ul>
+ <div class="eq">new estimate = prediction + K × (measurement − prediction)<br>K = prediction uncertainty ÷ (prediction uncertainty + measurement uncertainty)</div>
+ <p>K is the <b>Kalman gain</b>. If the detector is noisy, K is small and we trust the prediction; if the prediction is shaky, K is large and we trust the measurement.</p>
+ <div class="ex"><b>Worked example.</b> Prediction x = 100 (uncertainty 4); detection x = 110 (uncertainty 1). K = 4 ÷ (4 + 1) = 0.8. New estimate = 100 + 0.8 × 10 = <b>108</b> — closer to the more trusted detection.</div>
+ <p>Why both steps? Prediction alone drifts; measurements alone jitter and vanish when the object is hidden. Together they are smooth and robust.</p>`,lab:true},
+ {h:"Matching: the Hungarian algorithm",b:`<p>With several tracks and several detections, which detection belongs to which track? Build a <b>cost matrix</b> — rows are tracks, columns are detections, and each cost says how unlikely that pairing is. Costs come from:</p>
+ <ul><li>distance between the Kalman prediction and the detection,</li><li>1 − IoU of their boxes,</li><li>appearance difference (colour or a learned embedding).</li></ul>
+ <p>The <b>Hungarian algorithm</b> finds the one-to-one assignment with the <b>lowest total cost</b>. It is better than greedily taking the cheapest pair first, which can force a bad match later. <b>Gating</b> first removes impossible pairs (too far away).</p>
+ <p><b>When it breaks:</b> the algorithm always returns the cheapest answer, even if it is wrong. When two people look alike and stand close together, costs are nearly equal and a small change can swap their IDs — an <b>ID switch</b>. Missing or false detections also cause errors.</p>`},
+ {h:"Occlusion and re-identification",b:`<p><b>Occlusion</b> happens when a tracked object is partly or fully hidden — behind a pillar, a car, or another person.</p>
+ <ul><li>The detector produces no box, so the track loses its measurements.</li><li>People crossing paths can get their IDs swapped.</li><li>When the object reappears it may get a brand-new ID.</li></ul>
+ <p>Handling a long occlusion (say, 5 seconds):</p>
+ <ol class="steps"><li>Keep the track in a <b>lost</b> state instead of deleting it.</li><li>Let the Kalman filter keep predicting its path (with growing uncertainty).</li><li>When a new detection appears, check it is in a plausible place (gating).</li><li>Compare its <b>appearance embedding</b> from a re-identification network (e.g. OSNet) with the stored one.</li><li>Match with the Hungarian algorithm; restore the old ID only if the evidence is strong — in forensic work, a wrong identity is worse than an unresolved one.</li></ol>`}],
+ terms:[["Tracking-by-detection","Detect every frame, then link detections into tracks."],["Kalman filter","Predict–update estimator for position and velocity."],["Kalman gain","How much to trust the measurement over the prediction."],["Hungarian algorithm","Finds the lowest-cost one-to-one assignment."],["Occlusion","When a tracked object is hidden from view."]],
+ quiz:[{q:"What does tracking add to detection?",o:["Colour","Consistent identities over time","Higher resolution","Labels"],a:1,why:"Tracking links detections across frames with the same ID."},
+ {q:"Prediction 50 (uncertainty 1), measurement 60 (uncertainty 1). Kalman estimate?",o:["50","55","60","110"],a:1,why:"K = 1 ÷ 2 = 0.5, so 50 + 0.5 × 10 = 55."},
+ {q:"During a full occlusion, what keeps the track alive?",o:["The detector","The Kalman prediction","Non-max suppression","Histogram equalization"],a:1,why:"No detections arrive, so the filter keeps predicting."},
+ {q:"Two similar people walk side by side. What risk rises?",o:["Overfitting","ID switches","False contouring","Aliasing"],a:1,why:"Near-equal costs make the assignment easy to flip."}],
+ recap:["Detection = where now; tracking = who, over time.","Kalman: predict (uncertainty grows) → update (uncertainty shrinks).","Cost matrix + Hungarian = best one-to-one match.","Occlusion: keep lost tracks, predict, then re-identify with appearance."]},
+
+{n:14,part:3,title:"Case Study: AI Models Analysing Video Evidence",short:"Case study",slides:"Slides 14.2 Research Spotlight",demo:"study",mins:25,
+ goals:["See how the course ideas combine in a real study","Explain what a multimodal LLM is","Compare prompting strategies","Read results with accuracy, precision, recall and F1"],
+ sections:[
+ {h:"The question",b:`<p><b>Multimodal large language models (MLLMs)</b> can take images as well as text — they turn image patches into tokens, much like a Vision Transformer. Could they help analyse crime-scene video the way a forensic expert would?</p>
+ <p>Research by your instructor, Opeyemi Adeniran, asked three questions:</p>
+ <ol class="steps"><li>How closely can MLLMs approximate human forensic reasoning?</li><li>Which <b>prompting techniques</b> give the most reliable, human-aligned outputs?</li><li>How do differences between models change how well prompting works?</li></ol>`},
+ {h:"How the study worked",b:`<ul><li><b>Data:</b> 5,714 frames from the UCF-Crime video dataset, covering 11 crime categories.</li><li><b>Pipeline:</b> load frames → encode them → send 10 frames at a time to each model → receive a structured (JSON) answer.</li><li><b>Models:</b> GPT-4o, Claude Sonnet 4 and Gemini 2.0 Flash.</li><li><b>Evaluation:</b> a 10-question forensic rubric — crime type and intent, timeline, people and behaviour, physical evidence, violence and weapons, coordination, method, scene context, escape route, and whether the narrative is court-ready.</li></ul>
+ <p><b>Eight prompting strategies</b> were compared:</p>
+ <table class="tbl"><tr><th>Strategy</th><th>How it asks</th></tr>
+ <tr><td>Zero-shot</td><td>Direct instruction, no examples</td></tr><tr><td>Sequential</td><td>Five stages from scene overview to detailed timeline</td></tr><tr><td>Least-to-most</td><td>Eight levels from simple objects to complex activity</td></tr><tr><td>ReAct</td><td>A think → act → observe → decide cycle</td></tr><tr><td>Iterative</td><td>Four rounds: people, actions, criminal elements, critical review</td></tr><tr><td>Meta-prompting</td><td>The model writes its own specialised prompts</td></tr><tr><td>Self-consistency</td><td>Five independent analyses, then a consensus</td></tr><tr><td>Chain-of-thought</td><td>Six reasoning steps from observation to interpretation</td></tr></table>`},
+ {h:"What they found",b:`<p>Results were scored with the metrics from Module 11 — accuracy, precision, recall and F1 — plus how consistently the models agreed.</p>
+ <ul><li><b>GPT-4o</b> came closest to human forensic reasoning (F1 0.686, accuracy 0.580), then Gemini (F1 0.456) and Claude (F1 0.365).</li><li><b>ReAct</b> was the most reliable prompting technique across all three models (100%, 90.9% and 81.8% consistency).</li><li>GPT-4o stayed stable whatever the prompt; Claude\u2019s results varied most between techniques.</li></ul>
+ <p>Explore the numbers in the lab. Notice how a model can have high recall but lower precision — the same trade-off you saw with the decision threshold.</p>`,lab:true},
+ {h:"Why it matters, and what\u2019s next",b:`<p>The study connects much of this course: images as data (Modules 1–3), deep vision models and transformers (Module 12), evaluation metrics (Module 11) and careful reasoning about identity and events (Module 13).</p>
+ <p><b>Take-aways:</b> how you ask matters as much as which model you use, and results must be measured, not assumed — especially when the stakes are legal.</p>
+ <p><b>Future work:</b> more crime categories, combining several prompting strategies (ensembles), and making sensitive models more consistent.</p>`}],
+ terms:[["Multimodal LLM","A language model that also accepts images or video."],["Prompting strategy","A structured way of asking a model to reason."],["ReAct","Prompting that cycles through thinking, acting, observing and deciding."],["UCF-Crime","A public video dataset of real-world crime and normal events."],["Rubric","A fixed set of criteria for scoring answers."]],
+ quiz:[{q:"How does a multimodal LLM read an image?",o:["As one number","By turning image patches into tokens","It cannot","By converting it to audio"],a:1,why:"Like ViT, it splits images into patches and embeds them as tokens."},
+ {q:"Which prompting technique was most reliable across models in the study?",o:["Zero-shot","Meta-prompting","ReAct","Self-consistency"],a:2,why:"ReAct had the highest consistency for all three models."},
+ {q:"GPT-4o had precision 0.645 and recall 0.793. What does that mean?",o:["It raised few false alarms but missed many real cases","It found most real cases, but about a third of its positive calls were wrong","It was correct 79% of the time overall","Its F1 must be above 0.9"],a:1,why:"Recall 0.79 = found most real cases; precision 0.65 = roughly 1 in 3 positive calls was a false alarm."},
+ {q:"Why use several metrics instead of accuracy alone?",o:["It looks better","Accuracy can hide missed cases or false alarms","Accuracy is always wrong","Metrics are optional"],a:1,why:"Precision and recall show what kind of mistakes are being made."}],
+ recap:["MLLMs see images as patch tokens, like ViT.","Eight prompting strategies × three models × 5,714 frames.","GPT-4o most human-aligned; ReAct most reliable.","Measure with precision, recall and F1 — especially in high-stakes settings."]}
+];
+const CARDS=[
+["Image processing vs computer vision?","Processing: image in → image out. Vision: image in → understanding out."],
+["Image formation model?","f(x, y) = illumination × reflectance."],
+["Sampling vs quantization?","Sampling = how many pixels. Quantization = how many levels (2^bits)."],
+["Colour to gray formula?","Gray = 0.299R + 0.587G + 0.114B."],
+["What does the determinant tell you?","How much a matrix scales area; 0 means it collapses space."],
+["Why does OpenCV colour look wrong in Matplotlib?","OpenCV uses BGR order."],
+["What does histogram equalization do?","Spreads grey levels using the cumulative histogram → more contrast."],
+["Median vs mean filter?","Median removes salt-and-pepper noise and keeps edges; mean blurs everything."],
+["Affine vs perspective?","Affine keeps parallel lines parallel; perspective can make them meet."],
+["Four stages of Canny?","Blur → gradient → non-maximum suppression → double threshold + hysteresis."],
+["Opening vs closing?","Opening removes specks; closing fills holes."],
+["SIFT vs ORB?","SIFT: robust, 128 floats. ORB: fast, binary, Hamming distance."],
+["Precision vs recall?","Precision = right alarms ÷ all alarms. Recall = found ÷ all real cases."],
+["Overfitting?","Great on training data, poor on new data — memorising noise."],
+["Gradient descent update?","w ← w − η × gradient."],
+["CNN output size?","(W − K + 2P) ÷ S + 1."],
+["Kalman filter in one line?","Predict from motion, then correct with the measurement, weighted by uncertainty."],
+["Hungarian algorithm?","Finds the lowest-cost one-to-one matching of tracks to detections."]
+];
+const $=(s,r=document)=>r.querySelector(s);
+const el=(t,a={},...kids)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==="class")e.className=v;else if(k==="html")e.innerHTML=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v)}for(const c of kids.flat()){if(c==null)continue;e.append(c.nodeType?c:document.createTextNode(c))}return e};
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+/* ---------- synthetic scene ---------- */
+const SCN={};
+function sceneCanvas(w,h){
+  const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
+  const g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,"#1c6ea4");g.addColorStop(1,"#f2b36b");x.fillStyle=g;x.fillRect(0,0,w,h);
+  x.fillStyle="#2e4d2c";x.beginPath();x.moveTo(0,h*.78);for(let i=0;i<=w;i+=w/8){x.lineTo(i,h*.72+Math.sin(i/w*9)*h*.05)}x.lineTo(w,h);x.lineTo(0,h);x.fill();
+  x.fillStyle="#fff3c4";x.beginPath();x.arc(w*.76,h*.26,h*.13,0,7);x.fill();
+  x.fillStyle="#c0392b";x.fillRect(w*.12,h*.42,w*.22,h*.34);
+  x.fillStyle="#3b2a20";x.beginPath();x.moveTo(w*.09,h*.44);x.lineTo(w*.23,h*.24);x.lineTo(w*.37,h*.44);x.fill();
+  x.fillStyle="#f7d154";x.fillRect(w*.19,h*.52,w*.07,h*.1);
+  x.fillStyle="#111";x.fillRect(w*.5,h*.46,w*.035,h*.3);x.fillStyle="#1f8a4c";x.beginPath();x.arc(w*.517,h*.42,h*.12,0,7);x.fill();
+  x.fillStyle="#ffffff";x.font=`bold ${Math.round(h*.13)}px Arial`;x.fillText("CV",w*.62,h*.9);
+  return c;
+}
+function grayScene(w,h){
+  const key=w+"x"+h;if(SCN[key])return SCN[key];
+  const c=sceneCanvas(w,h),d=c.getContext("2d").getImageData(0,0,w,h).data,g=new Float32Array(w*h);
+  let sd=12345;const rn=()=>{sd=(sd*16807)%2147483647;return sd/2147483647-.5};for(let i=0;i<w*h;i++)g[i]=clamp(.299*d[i*4]+.587*d[i*4+1]+.114*d[i*4+2]+rn()*10,0,255);
+  return SCN[key]={w,h,d:g};
+}
+function drawGray(cv,img,scale=1){
+  cv.width=img.w;cv.height=img.h;cv.style.width=(img.w*scale)+"px";cv.style.maxWidth="100%";
+  const x=cv.getContext("2d"),id=x.createImageData(img.w,img.h);
+  for(let i=0;i<img.w*img.h;i++){const v=clamp(Math.round(img.d[i]),0,255);id.data[i*4]=id.data[i*4+1]=id.data[i*4+2]=v;id.data[i*4+3]=255}
+  x.putImageData(id,0,0);
+}
+function conv(img,K,k){
+  const{w,h,d}=img,o=new Float32Array(w*h),r=k>>1;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s=0;for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++){const yy=clamp(y+j,0,h-1),xx=clamp(x+i,0,w-1);s+=d[yy*w+xx]*K[(j+r)*k+(i+r)]}o[y*w+x]=s}
+  return{w,h,d:o};
+}
+function histogram(d){const H=new Array(256).fill(0);for(const v of d)H[clamp(Math.round(v),0,255)]++;return H}
+function drawHist(cv,H,color){
+  const W=cv.width=512,Hh=cv.height=150,x=cv.getContext("2d");x.fillStyle=css("--surface");x.fillRect(0,0,W,Hh);
+  const m=Math.sqrt(Math.max(...H));x.fillStyle=color||css("--teal");for(let i=0;i<256;i++){const bh=Math.sqrt(H[i])/m*(Hh-8);x.fillRect(i*2,Hh-bh,2,bh)}
+}
+function slider(label,min,max,step,val,fmt,on){
+  const out=el("b",{},fmt(val));const inp=el("input",{type:"range",min,max,step,value:val,"aria-label":label});
+  inp.addEventListener("input",()=>{out.textContent=fmt(+inp.value);on(+inp.value)});
+  return el("label",{class:"ctrl"},el("span",{},label," ",out),inp);
+}
+function seg(opts,cur,on,label){
+  const w=el("div",{class:"seg",role:"group","aria-label":label||"options"});
+  opts.forEach(([v,t])=>{const b=el("button",{type:"button","aria-pressed":String(v===cur),onclick:()=>{w.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");on(v)}},t);w.append(b)});
+  return w;
+}
+function fig(cv,cap){return el("figure",{},cv,el("figcaption",{},cap))}
+function randn(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+const DEMOS={};
+/* 1. pixel lens */
+DEMOS.lens=(root)=>{
+  const W=320,H=200,src=sceneCanvas(W,H),sd=src.getContext("2d").getImageData(0,0,W,H).data;
+  const cv=el("canvas",{"aria-label":"Scene; move pointer to inspect pixels"});cv.width=W;cv.height=H;cv.style.width="100%";cv.style.cursor="crosshair";
+  const x=cv.getContext("2d");let mode="rgb";
+  const tbl=el("table",{class:"lensgrid"}),info=el("p",{class:"note"},"Move over the image (or tap it). The table shows the 5×5 block of pixel values around the pointer.");
+  function draw(px,py){x.drawImage(src,0,0);if(px==null)return;x.strokeStyle="#ff0";x.lineWidth=1.5;x.strokeRect(px-2.5,py-2.5,5,5);x.strokeStyle="#000";x.strokeRect(px-3.5,py-3.5,7,7);
+    tbl.innerHTML="";for(let j=-2;j<=2;j++){const tr=el("tr");for(let i=-2;i<=2;i++){const X=clamp(px+i,0,W-1),Y=clamp(py+j,0,H-1),k=(Y*W+X)*4,r=sd[k],g=sd[k+1],b=sd[k+2],gy=Math.round(.299*r+.587*g+.114*b);
+      const td=el("td");if(mode==="rgb"){td.innerHTML=`${r}<br>${g}<br>${b}`;td.style.height="46px";td.style.background=`rgb(${r},${g},${b})`;td.style.color=gy>128?"#000":"#fff"}else{td.textContent=gy;td.style.background=`rgb(${gy},${gy},${gy})`;td.style.color=gy>128?"#000":"#fff"}
+      if(!i&&!j)td.style.outline="2px solid "+css("--orange");tr.append(td)}tbl.append(tr)}
+    info.textContent=`Pixel (x=${px}, y=${py}) of a ${W}×${H} image = ${W*H} pixels. ${mode==="rgb"?"Each cell lists R, G, B.":"Each cell is one grey level, 0–255."}`}
+  let last=[61,105];
+  const move=e=>{const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;last=[clamp(Math.floor((t.clientX-r.left)/r.width*W),0,W-1),clamp(Math.floor((t.clientY-r.top)/r.height*H),0,H-1)];draw(...last)};
+  cv.addEventListener("mousemove",move);cv.addEventListener("touchmove",e=>{e.preventDefault();move(e)},{passive:false});cv.addEventListener("click",move);
+  root.append(el("div",{class:"ctrls"},seg([["rgb","Colour (R, G, B)"],["gray","Grayscale"]],mode,v=>{mode=v;draw(...last)},"channel mode")),
+    el("div",{class:"cv-row"},el("figure",{style:"flex:2 1 260px"},cv),el("div",{class:"scroll",style:"flex:1 1 230px"},tbl)),info);
+  draw(...last);
+};
+/* 2. sampling & quantization */
+DEMOS.sampling=(root)=>{
+  const img=grayScene(320,200);let blk=1,bits=8;const cv=el("canvas");const cap=el("figcaption");
+  function run(){const{w,h,d}=img,o=new Float32Array(w*h),L=2**bits;
+    for(let y=0;y<h;y+=blk)for(let x=0;x<w;x+=blk){let s=0,n=0;for(let j=0;j<blk&&y+j<h;j++)for(let i=0;i<blk&&x+i<w;i++){s+=d[(y+j)*w+x+i];n++}
+      let v=s/n;v=Math.floor(v/256*L);v=L===1?0:v*255/(L-1);for(let j=0;j<blk&&y+j<h;j++)for(let i=0;i<blk&&x+i<w;i++)o[(y+j)*w+x+i]=v}
+    drawGray(cv,{w,h,d:o});cv.style.width="100%";
+    cap.textContent=`${Math.ceil(w/blk)}×${Math.ceil(h/blk)} samples · ${L} grey level${L>1?"s":""} (${bits}-bit) · ≈${Math.ceil(Math.ceil(w/blk)*Math.ceil(h/blk)*bits/8/1024*10)/10} KB`}
+  root.append(el("div",{class:"ctrls"},
+    slider("Sampling: block size (px)",1,32,1,blk,v=>v+"×"+v,v=>{blk=v;run()}),
+    slider("Quantization: bits per pixel",1,8,1,bits,v=>v+" bit",v=>{bits=v;run()})),
+    el("figure",{},cv,cap),el("p",{class:"note"},"Big blocks = under-sampling (blocky). Few bits = false contouring (bands in the sky gradient)."));run();
+};
+/* 3. colour to gray */
+DEMOS.color=(root)=>{
+  let r=40,g=200,b=90;const sw=el("div",{style:"height:110px;border-radius:10px;border:1px solid var(--line)"});
+  const a1=el("div",{style:"height:70px;border-radius:10px;border:1px solid var(--line)"}),a2=el("div",{style:"height:70px;border-radius:10px;border:1px solid var(--line)"});
+  const t1=el("p",{class:"note"}),t2=el("p",{class:"note"});
+  function run(){sw.style.background=`rgb(${r},${g},${b})`;const avg=Math.round((r+g+b)/3),Y=Math.round(.299*r+.587*g+.114*b);
+    a1.style.background=`rgb(${avg},${avg},${avg})`;a2.style.background=`rgb(${Y},${Y},${Y})`;
+    t1.innerHTML=`Average: (${r}+${g}+${b})/3 = <b>${avg}</b>`;t2.innerHTML=`Luminance: .299·${r} + .587·${g} + .114·${b} = <b>${Y}</b>`}
+  const pre=el("div",{class:"chips"},...[["Pure green",[0,255,0]],["Pure blue",[0,0,255]],["Pure red",[255,0,0]],["Skin tone",[224,172,105]]].map(([n,c])=>el("button",{class:"chip",type:"button",onclick:()=>{[r,g,b]=c;sR.querySelector("input").value=r;sG.querySelector("input").value=g;sB.querySelector("input").value=b;sR.querySelector("b").textContent=r;sG.querySelector("b").textContent=g;sB.querySelector("b").textContent=b;run()}},n)));
+  const sR=slider("Red",0,255,1,r,v=>v,v=>{r=v;run()}),sG=slider("Green",0,255,1,g,v=>v,v=>{g=v;run()}),sB=slider("Blue",0,255,1,b,v=>v,v=>{b=v;run()});
+  root.append(el("div",{class:"ctrls"},sR,sG,sB),pre,el("div",{class:"cv-row",style:"margin-top:14px"},el("figure",{},sw,el("figcaption",{},"Colour pixel")),el("figure",{},a1,t1),el("figure",{},a2,t2)),
+    el("p",{class:"note"},"Try Pure green then Pure blue: same average (85), very different luminance. OpenCV\u2019s cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) uses the luminance weights."));run();
+};
+/* 4. 2x2 matrix */
+DEMOS.matrix=(root)=>{
+  let m=[1,0.5,0,1];const S=300,cv=el("canvas");cv.width=S;cv.height=S;cv.style.width="100%";cv.style.maxWidth="340px";cv.style.background="var(--surface)";
+  const x=cv.getContext("2d"),info=el("div",{class:"note"});
+  function run(){const u=S/8,o=S/2;x.clearRect(0,0,S,S);x.fillStyle=css("--surface");x.fillRect(0,0,S,S);
+    const T=(p,q)=>[o+(m[0]*p+m[1]*q)*u,o-(m[2]*p+m[3]*q)*u];
+    x.strokeStyle=css("--line");x.lineWidth=1;for(let k=-4;k<=4;k++){x.beginPath();x.moveTo(o+k*u,0);x.lineTo(o+k*u,S);x.moveTo(0,o+k*u);x.lineTo(S,o+k*u);x.stroke()}
+    x.strokeStyle=css("--teal");x.globalAlpha=.55;for(let k=-4;k<=4;k++){x.beginPath();let a=T(k,-4),b=T(k,4);x.moveTo(...a);x.lineTo(...b);a=T(-4,k);b=T(4,k);x.moveTo(...a);x.lineTo(...b);x.stroke()}x.globalAlpha=1;
+    x.fillStyle=css("--orange");x.globalAlpha=.8;x.beginPath();[[0,0],[1,0],[1,1],[0,1]].forEach((p,i)=>{const q=T(...p);i?x.lineTo(...q):x.moveTo(...q)});x.fill();x.globalAlpha=1;
+    // letter F
+    x.strokeStyle=css("--ink");x.lineWidth=4;x.lineCap="round";x.beginPath();[[[-2.5,-2],[-2.5,0.5]],[[-2.5,0.5],[-1,0.5]],[[-2.5,-0.7],[-1.5,-0.7]]].forEach(([a,b])=>{x.moveTo(...T(...a));x.lineTo(...T(...b))});x.stroke();
+    const det=m[0]*m[3]-m[1]*m[2],tr=m[0]+m[3],disc=tr*tr-4*det;
+    let ev="complex (the transform rotates every direction)";
+    if(disc>=0){const l1=(tr+Math.sqrt(disc))/2,l2=(tr-Math.sqrt(disc))/2;ev=`λ₁ = ${l1.toFixed(2)}, λ₂ = ${l2.toFixed(2)}`;
+      [l1,l2].forEach((l,i)=>{let v=Math.abs(m[1])>1e-9?[m[1],l-m[0]]:Math.abs(m[2])>1e-9?[l-m[3],m[2]]:(i?[0,1]:[1,0]);const n=Math.hypot(...v)||1;v=[v[0]/n*3.5,v[1]/n*3.5];x.strokeStyle=css("--maroon");x.lineWidth=2;x.setLineDash([6,5]);x.beginPath();x.moveTo(o-v[0]*u,o+v[1]*u);x.lineTo(o+v[0]*u,o-v[1]*u);x.stroke();x.setLineDash([])})}
+    info.innerHTML=`<table class="matrix"><tr><td>${m[0].toFixed(2)}</td><td>${m[1].toFixed(2)}</td></tr><tr><td>${m[2].toFixed(2)}</td><td>${m[3].toFixed(2)}</td></tr></table>
+      <span class="stat">det = <b>${det.toFixed(2)}</b> (area × ${Math.abs(det).toFixed(2)}${det<0?", mirrored":""})</span><span class="stat">eigenvalues: <b>${ev}</b></span><br>Orange square = where the unit square lands. Dashed lines = eigenvector directions.`}
+  const sl=["a (x→x)","b (y→x)","c (x→y)","d (y→y)"].map((n,i)=>slider(n,-2,2,0.05,m[i],v=>v.toFixed(2),v=>{m[i]=v;run()}));
+  const presets=[["Identity",[1,0,0,1]],["Scale x2",[2,0,0,1]],["Rotate 90°",[0,-1,1,0]],["Shear",[1,1,0,1]],["Mirror",[-1,0,0,1]],["Collapse",[1,2,0.5,1]]];
+  const pb=el("div",{class:"chips"},...presets.map(([n,v])=>el("button",{class:"chip",type:"button",onclick:()=>{m=[...v];sl.forEach((s,i)=>{s.querySelector("input").value=m[i];s.querySelector("b").textContent=m[i].toFixed(2)});run()}},n)));
+  root.append(pb,el("div",{class:"cv-row",style:"margin-top:12px"},el("figure",{style:"flex:1 1 260px"},cv),el("div",{style:"flex:1 1 220px"},el("div",{class:"ctrls"},...sl),info)));run();
+};
+/* 5. toolkit matcher */
+DEMOS.toolkit=(root)=>{
+  const T=[["Read an image and resize it","OpenCV","import cv2\nimg = cv2.imread('street.jpg')          # BGR, uint8, shape (H, W, 3)\nsmall = cv2.resize(img, (224, 224))"],
+  ["Convert BGR to RGB for plotting","OpenCV + Matplotlib","rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)\nimport matplotlib.pyplot as plt\nplt.imshow(rgb); plt.axis('off')"],
+  ["Split a dataset 80/20","scikit-learn","from sklearn.model_selection import train_test_split\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2,\n                                          stratify=y, random_state=0)"],
+  ["Train an SVM on HOG features","scikit-image + scikit-learn","from skimage.feature import hog\nfrom sklearn.svm import SVC\nfeats = [hog(im, pixels_per_cell=(8, 8)) for im in gray_images]\nclf = SVC(kernel='rbf').fit(feats, labels)"],
+  ["Define a small CNN","PyTorch","import torch.nn as nn\nnet = nn.Sequential(\n    nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),\n    nn.Flatten(), nn.Linear(16*112*112, 10))"],
+  ["Fine-tune a pretrained ResNet","PyTorch (torchvision)","from torchvision import models\nm = models.resnet18(weights='DEFAULT')\nm.fc = nn.Linear(m.fc.in_features, num_classes)   # new head"],
+  ["Build and train a Keras model","TensorFlow / Keras","import tensorflow as tf\nmodel = tf.keras.Sequential([tf.keras.layers.Conv2D(16, 3, activation='relu'),\n    tf.keras.layers.GlobalAveragePooling2D(), tf.keras.layers.Dense(10, activation='softmax')])\nmodel.compile('adam', 'sparse_categorical_crossentropy', metrics=['accuracy'])"],
+  ["Detect edges with Canny","OpenCV","gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)\nedges = cv2.Canny(gray, 100, 200)"],
+  ["Compute F1 and a confusion matrix","scikit-learn","from sklearn.metrics import f1_score, confusion_matrix\nprint(f1_score(y_te, y_pred), confusion_matrix(y_te, y_pred))"]];
+  const ans=el("div"),chips=el("div",{class:"chips"});let reveal=false,cur=0;
+  const show=()=>{const[t,lib,code]=T[cur];ans.innerHTML="";ans.append(el("h3",{style:"margin-top:14px"},t),reveal?el("div",{},el("p",{},"Library: ",el("b",{},lib)),el("pre",{class:"code"},code)):el("button",{class:"btn",type:"button",onclick:()=>{reveal=true;show()}},"Reveal the library"))};
+  T.forEach((t,i)=>chips.append(el("button",{class:"chip",type:"button","aria-pressed":String(!i),onclick:e=>{chips.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed","false"));e.currentTarget.setAttribute("aria-pressed","true");cur=i;reveal=false;show()}},t[0])));
+  root.append(el("p",{class:"note",style:"margin-top:0"},"Pick a task, let the class call out the library, then reveal the code."),chips,ans);show();
+};
+/* 6. intensity transforms */
+DEMOS.intensity=(root)=>{
+  const base=grayScene(320,200);
+  // low-contrast version to make equalization meaningful
+  const lc={w:base.w,h:base.h,d:base.d.map(v=>60+v*0.45)};
+  let op="gamma",g=0.5,eq=false,th=128;const cv=el("canvas"),curve=el("canvas"),hc=el("canvas"),cap=el("figcaption"),extra=el("div");
+  function T(r){const n=r/255;switch(op){case"neg":return 255-r;case"log":return 255*Math.log(1+r)/Math.log(256);case"gamma":return 255*Math.pow(n,g);case"thresh":return r>=th?255:0;default:return r}}
+  function run(){let lut=new Float32Array(256);for(let r=0;r<256;r++)lut[r]=T(r);
+    let d=lc.d.map(v=>lut[clamp(Math.round(v),0,255)]);
+    if(eq){const H=histogram(d),N=d.length;let c=0;const cdf=H.map(h=>c+=h);const cmin=cdf.find(v=>v>0);const map=cdf.map(v=>Math.round((v-cmin)/(N-cmin)*255));d=d.map(v=>map[clamp(Math.round(v),0,255)]);
+      // compose for curve
+      lut=lut.map(v=>map[clamp(Math.round(v),0,255)])}
+    drawGray(cv,{w:lc.w,h:lc.h,d});cv.style.width="100%";drawHist(hc,histogram(d));hc.style.width="100%";hc.style.height="auto";
+    const S=220;curve.width=curve.height=S;curve.style.width="100%";curve.style.maxWidth="220px";const x=curve.getContext("2d");x.fillStyle=css("--surface");x.fillRect(0,0,S,S);
+    x.strokeStyle=css("--line");x.beginPath();x.moveTo(0,S);x.lineTo(S,0);x.stroke();x.strokeStyle=css("--orange");x.lineWidth=3;x.beginPath();for(let r=0;r<256;r++){const px=r/255*S,py=S-lut[r]/255*S;r?x.lineTo(px,py):x.moveTo(px,py)}x.stroke();
+    
+    const f={none:"s = r (unchanged)",neg:"s = 255 − r",log:"s = c · log(1 + r)",gamma:`s = 255 · (r/255)^${g.toFixed(2)}`,thresh:`s = 255 if r ≥ ${th} else 0`}[op];
+    cap.textContent=f+(eq?"  → then histogram equalization":"")}
+  function ctrls(){extra.innerHTML="";if(op==="gamma")extra.append(slider("Gamma γ",0.1,3,0.05,g,v=>v.toFixed(2),v=>{g=v;run()}));if(op==="thresh")extra.append(slider("Threshold",0,255,1,th,v=>v,v=>{th=v;run()}))}
+  const eqb=el("label",{style:"display:flex;gap:8px;align-items:center;font-size:15px"},el("input",{type:"checkbox",onchange:e=>{eq=e.target.checked;run()}}),"Histogram equalization");
+  root.append(el("div",{class:"ctrls"},seg([["none","Original"],["neg","Negative"],["log","Log"],["gamma","Gamma"],["thresh","Threshold"]],op,v=>{op=v;ctrls();run()},"transform"),eqb),extra,
+    el("div",{class:"cv-row"},el("figure",{style:"flex:2 1 260px"},cv,cap),el("figure",{style:"flex:1 1 160px"},curve,el("figcaption",{},"Transfer curve: input r along the bottom, output s up the side. Grey diagonal = no change."))),
+    el("figure",{style:"margin-top:10px"},hc,el("figcaption",{},"Histogram of the output (0 → 255). The starting image is deliberately low-contrast.")));ctrls();run();
+};
+/* 7. noise */
+DEMOS.noise=(root)=>{
+  const img=grayScene(240,150);let type="sp",amt=0.08,filt="median",k=3,noisy;const c1=el("canvas"),c2=el("canvas"),stat=el("p",{class:"note"});
+  function addNoise(){const d=new Float32Array(img.d);if(type==="sp"){for(let i=0;i<d.length;i++){const r=Math.random();if(r<amt/2)d[i]=0;else if(r<amt)d[i]=255}}else{const s=amt*255;for(let i=0;i<d.length;i++)d[i]=clamp(d[i]+randn()*s,0,255)}noisy={w:img.w,h:img.h,d};}
+  function psnr(a){let m=0;for(let i=0;i<a.d.length;i++){const e=clamp(a.d[i],0,255)-img.d[i];m+=e*e}m/=a.d.length;return 10*Math.log10(255*255/m)}
+  function filter(){if(filt==="none")return noisy;if(filt==="mean")return conv(noisy,new Array(k*k).fill(1/(k*k)),k);
+    if(filt==="gauss"){const s=k/4,K=[];let t=0;const r=k>>1;for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++){const v=Math.exp(-(i*i+j*j)/(2*s*s));K.push(v);t+=v}return conv(noisy,K.map(v=>v/t),k)}
+    const{w,h,d}=noisy,o=new Float32Array(w*h),r=k>>1,buf=[];for(let y=0;y<h;y++)for(let x=0;x<w;x++){buf.length=0;for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++)buf.push(d[clamp(y+j,0,h-1)*w+clamp(x+i,0,w-1)]);buf.sort((a,b)=>a-b);o[y*w+x]=buf[buf.length>>1]}return{w,h,d:o}}
+  function run(re){if(re)addNoise();const f=filter();drawGray(c1,noisy);drawGray(c2,f);c1.style.width=c2.style.width="100%";
+    stat.innerHTML=`PSNR vs clean image — noisy: <b>${psnr(noisy).toFixed(1)} dB</b> · filtered: <b>${psnr(f).toFixed(1)} dB</b> (higher is better)`}
+  root.append(el("div",{class:"ctrls"},seg([["sp","Salt & pepper"],["gauss","Gaussian"]],type,v=>{type=v;run(true)},"noise type"),slider("Noise amount",0.01,0.3,0.01,amt,v=>v.toFixed(2),v=>{amt=v;run(true)})),
+    el("div",{class:"ctrls"},seg([["none","No filter"],["mean","Mean"],["gauss","Gaussian"],["median","Median"]],filt,v=>{filt=v;run()},"filter"),seg([[3,"3×3"],[5,"5×5"],[7,"7×7"]],k,v=>{k=v;run()},"kernel size")),
+    el("div",{class:"cv-row"},fig(c1,"Noisy input"),fig(c2,"Filtered output")),stat);run(true);
+};
+/* 8. geometric */
+DEMOS.geometric=(root)=>{
+  const src=sceneCanvas(200,125);let p={tx:0,ty:0,rot:15,sc:1,sh:0};const W=320,H=220,cv=el("canvas");cv.width=W;cv.height=H;cv.style.width="100%";cv.style.background="var(--surface)";
+  const x=cv.getContext("2d"),mat=el("div"),code=el("pre",{class:"code"});
+  function run(){const t=p.rot*Math.PI/180,c=Math.cos(t)*p.sc,s=Math.sin(t)*p.sc;
+    // M = R*S then shear x
+    const a=c,b=-s+c*p.sh,cc=s,d=c+s*p.sh;
+    x.setTransform(1,0,0,1,0,0);x.fillStyle=css("--surface");x.fillRect(0,0,W,H);x.strokeStyle=css("--line");x.strokeRect(W/2-100,H/2-62.5,200,125);
+    x.setTransform(a,cc,b,d,W/2+p.tx,H/2+p.ty);x.imageSmoothingEnabled=true;x.drawImage(src,-100,-62.5);x.setTransform(1,0,0,1,0,0);
+    const f=v=>(Math.abs(v)<5e-3?0:v).toFixed(2);
+    mat.innerHTML=`<p class="note" style="margin:0 0 4px">Affine matrix [A | t] (about the image centre)</p><table class="matrix"><tr><td>${f(a)}</td><td>${f(b)}</td><td>${f(p.tx)}</td></tr><tr><td>${f(cc)}</td><td>${f(d)}</td><td>${f(p.ty)}</td></tr><tr style="opacity:.55"><td>0</td><td>0</td><td>1</td></tr></table>`;
+    code.textContent=`M = cv2.getRotationMatrix2D(center, angle=${-p.rot}, scale=${p.sc})\nM[0, 2] += ${p.tx};  M[1, 2] += ${p.ty}\nout = cv2.warpAffine(img, M, (w, h))\n# note: OpenCV angles are counter-clockwise; this canvas rotates clockwise`}
+  const add=(n,k,a,b,st,fmt)=>slider(n,a,b,st,p[k],fmt,v=>{p[k]=v;run()});
+  root.append(el("div",{class:"ctrls"},add("Translate x","tx",-80,80,1,v=>v+" px"),add("Translate y","ty",-60,60,1,v=>v+" px"),add("Rotate","rot",-180,180,1,v=>v+"°"),add("Scale","sc",0.3,1.8,0.05,v=>v.toFixed(2)+"×"),add("Shear x","sh",-1,1,0.05,v=>v.toFixed(2))),
+    el("div",{class:"cv-row"},el("figure",{style:"flex:2 1 260px"},cv,el("figcaption",{},"Outline = original position")),el("div",{style:"flex:1 1 180px"},mat)),code);run();
+};
+/* 9. edges + morphology */
+const KERN={sobelx:{n:"Sobel x",k:[-1,0,1,-2,0,2,-1,0,1]},sobely:{n:"Sobel y",k:[-1,-2,-1,0,0,0,1,2,1]},lap:{n:"Laplacian",k:[0,1,0,1,-4,1,0,1,0]},box:{n:"Box blur",k:[1,1,1,1,1,1,1,1,1].map(v=>v/9)},sharp:{n:"Sharpen",k:[0,-1,0,-1,5,-1,0,-1,0]}};
+DEMOS.edges=(root)=>{
+  const G=[[10,10,10,80,80,80,80],[10,10,10,80,80,80,80],[10,10,10,80,80,80,80],[10,10,80,80,80,80,80],[10,10,80,80,80,80,80],[10,80,80,80,80,80,80],[10,80,80,80,80,80,80]];
+  let kk="sobelx",pos=[2,2];const gridT=el("table",{class:"matrix"}),outT=el("table",{class:"matrix"}),kT=el("table",{class:"matrix"}),calc=el("p",{class:"note"}),full=el("canvas");
+  const N=7;
+  function val(y,x){const K=KERN[kk].k;let s=0;for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++)s+=G[y+j][x+i]*K[(j+1)*3+i+1];return s}
+  function run(){const K=KERN[kk].k,[py,px]=pos;gridT.innerHTML="";outT.innerHTML="";kT.innerHTML="";
+    for(let y=0;y<N;y++){const tr=el("tr"),to=el("tr");for(let x=0;x<N;x++){const v=G[y][x],inW=Math.abs(y-py)<=1&&Math.abs(x-px)<=1;
+      const td=el("td",{style:`background:rgb(${v*2.5},${v*2.5},${v*2.5});color:${v>50?"#000":"#fff"};cursor:pointer;${inW?"outline:2px solid "+css("--orange")+";outline-offset:-2px":""}`,title:"Centre the kernel here",onclick:()=>{if(y>0&&y<N-1&&x>0&&x<N-1){pos=[y,x];run()}}},v);tr.append(td);
+      const inner=y>0&&y<N-1&&x>0&&x<N-1;const o=inner?Math.round(val(y,x)*10)/10:"·";const tdo=el("td",{style:inner&&y===py&&x===px?"background:"+css("--orange")+";color:#1b1b1b;font-weight:600":""},o);to.append(tdo)}gridT.append(tr);outT.append(to)}
+    for(let j=0;j<3;j++){const tr=el("tr");for(let i=0;i<3;i++)tr.append(el("td",{},+K[j*3+i].toFixed(2)));kT.append(tr)}
+    const parts=[];for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const kv=+K[(j+1)*3+i+1].toFixed(2);if(kv)parts.push(`${kv}·${G[py+j][px+i]}`)}
+    calc.innerHTML=`At row ${py}, col ${px}: ${parts.join(" + ")} = <b>${Math.round(val(py,px)*10)/10}</b>`;
+    const img=grayScene(240,150),o=conv(img,K,3),vis={w:o.w,h:o.h,d:o.d.map(v=>kk==="box"||kk==="sharp"?v:Math.min(255,Math.abs(v)*(kk==="lap"?3:1)))};drawGray(full,vis);full.style.width="100%"}
+  const step=()=>{let[y,x]=pos;x++;if(x>N-2){x=1;y++;if(y>N-2)y=1}pos=[y,x];run()};
+  const conv1=el("div",{},el("div",{class:"ctrls"},seg(Object.entries(KERN).map(([k,v])=>[k,v.n]),kk,v=>{kk=v;run()},"kernel"),el("button",{class:"btn",type:"button",onclick:step},"Step kernel →")),
+    el("div",{class:"cv-row scroll"},el("figure",{},gridT,el("figcaption",{},"Input (click a cell)")),el("figure",{},kT,el("figcaption",{},"Kernel")),el("figure",{},outT,el("figcaption",{},"Output"))),calc,
+    el("figure",{style:"margin-top:10px"},full,el("figcaption",{},"Same kernel on the whole scene (edge maps show |response|)")));
+  // morphology
+  const M=12;let B=Array.from({length:M},(_,y)=>Array.from({length:M},(_,x)=>(x>=3&&x<=8&&y>=3&&y<=8&&!(x===6&&y===5))||(x===10&&y===1)?1:0));
+  const mt=el("table",{class:"matrix",style:"user-select:none"}),mnote=el("p",{class:"note"},"Click cells to draw. The shape has a one-pixel hole and a stray speck.");
+  function mdraw(){mt.innerHTML="";for(let y=0;y<M;y++){const tr=el("tr");for(let x=0;x<M;x++)tr.append(el("td",{style:`width:22px;min-width:22px;height:22px;padding:0;cursor:pointer;background:${B[y][x]?css("--ink"):css("--bg")}`,onclick:()=>{B[y][x]^=1;mdraw()}}));mt.append(tr)}}
+  const er=A=>A.map((r,y)=>r.map((_,x)=>{for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){if(!(A[y+j]&&A[y+j][x+i]))return 0}return 1}));
+  const di=A=>A.map((r,y)=>r.map((_,x)=>{for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){if(A[y+j]&&A[y+j][x+i])return 1}return 0}));
+  const ops={Erode:[er,"Erosion: a pixel stays white only if the whole 3×3 neighbourhood is white."],Dilate:[di,"Dilation: a pixel turns white if any neighbour is white."],Open:[A=>di(er(A)),"Opening = erode, then dilate: small specks vanish and large shapes return to about their size (holes may grow)."],Close:[A=>er(di(A)),"Closing = dilate, then erode: small holes and gaps fill in while large shapes keep about their size."]};
+  const hist=[];const morph=el("div",{},el("div",{class:"ctrls"},...Object.entries(ops).map(([n,[f,t]])=>el("button",{class:"btn",type:"button",onclick:()=>{hist.push(B);B=f(B);mnote.textContent=t;mdraw()}},n)),el("button",{class:"btn ghost",type:"button",onclick:()=>{if(hist.length){B=hist.pop();mdraw()}}},"Undo")),
+    el("div",{class:"scroll"},mt),mnote);
+  const tabs=el("div",{class:"ctrls"},seg([["c","Convolution & edges"],["m","Morphology"]],"c",v=>{conv1.hidden=v!=="c";morph.hidden=v!=="m"},"lab part"));morph.hidden=true;
+  root.append(tabs,conv1,morph);run();mdraw();
+};
+/* 10. HOG */
+DEMOS.hog=(root)=>{
+  const img=grayScene(240,150);let cs=12,sel=[4,3];const cv=el("canvas"),hc=el("canvas"),hcap=el("figcaption",{},"Click a cell to see its 9-bin orientation histogram.");
+  const gx=conv(img,[-1,0,1,-2,0,2,-1,0,1],3),gy=conv(img,[-1,-2,-1,0,0,0,1,2,1],3);
+  function cellHist(cx,cy){const H=new Array(9).fill(0);for(let y=cy*cs;y<(cy+1)*cs&&y<img.h;y++)for(let x=cx*cs;x<(cx+1)*cs&&x<img.w;x++){const i=y*img.w+x,m=Math.hypot(gx.d[i],gy.d[i]);let a=Math.atan2(gy.d[i],gx.d[i])*180/Math.PI;if(a<0)a+=180;if(a>=180)a-=180;const b=a/20,b0=Math.floor(b)%9,f=b-Math.floor(b);H[b0]+=m*(1-f);H[(b0+1)%9]+=m*f}return H}
+  function run(){const S=2;cv.width=img.w*S;cv.height=img.h*S;cv.style.width="100%";cv.style.cursor="pointer";const x=cv.getContext("2d");
+    const t=document.createElement("canvas");drawGray(t,img);x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);x.globalAlpha=.45;x.imageSmoothingEnabled=false;x.drawImage(t,0,0,cv.width,cv.height);x.globalAlpha=1;
+    const nx=Math.floor(img.w/cs),ny=Math.floor(img.h/cs);const all=[];for(let j=0;j<ny;j++)for(let i=0;i<nx;i++)all.push(cellHist(i,j));const mx=all.map(H=>Math.max(...H)).sort((a,b)=>a-b);const gmax=Math.max(1,mx[Math.floor(mx.length*.9)]);
+    x.lineCap="round";for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){const H=all[j*nx+i],cx=(i+.5)*cs*S,cy=(j+.5)*cs*S,R=cs*S*.48;
+      for(let b=0;b<9;b++){const m=Math.min(1,H[b]/gmax);if(m<.06)continue;const a=(b*20+10+90)*Math.PI/180;x.strokeStyle=`rgba(212,70,27,${0.35+0.65*m})`;x.lineWidth=1.5+m*2.5;x.beginPath();x.moveTo(cx-Math.cos(a)*R*m,cy-Math.sin(a)*R*m);x.lineTo(cx+Math.cos(a)*R*m,cy+Math.sin(a)*R*m);x.stroke()}
+      if(sel&&sel[0]===i&&sel[1]===j){x.strokeStyle=css("--teal");x.lineWidth=3;x.strokeRect(i*cs*S,j*cs*S,cs*S,cs*S)}}
+    if(sel){const H=cellHist(...sel),W=hc.width=360,Hh=hc.height=140,y=hc.getContext("2d");y.fillStyle=css("--surface");y.fillRect(0,0,W,Hh);const m=Math.max(...H,1);y.font="11px sans-serif";
+      H.forEach((v,b)=>{const bh=v/m*(Hh-26);y.fillStyle=css("--orange");y.fillRect(b*40+4,Hh-18-bh,32,bh);y.fillStyle=css("--muted");y.fillText(b*20+"°",b*40+8,Hh-4)});hc.style.width="100%";hc.style.maxWidth="360px";hcap.textContent=`Cell (${sel[0]}, ${sel[1]}): gradient orientations 0–180°, weighted by magnitude`}}
+  cv.addEventListener("click",e=>{const r=cv.getBoundingClientRect();sel=[Math.floor((e.clientX-r.left)/r.width*img.w/cs),Math.floor((e.clientY-r.top)/r.height*img.h/cs)];run()});
+  root.append(el("div",{class:"ctrls"},seg([[8,"8 px cells"],[12,"12 px cells"],[20,"20 px cells"]],cs,v=>{cs=v;sel=[Math.floor(4*12/v),Math.floor(3*12/v)];run()},"cell size")),fig(cv,"Each cell draws lines along its edge directions (perpendicular to the gradient). Stronger = longer."),el("figure",{style:"margin-top:10px"},hc,hcap));run();
+};
+/* 11. threshold / confusion matrix */
+DEMOS.threshold=(root)=>{
+  const flow=el("div",{class:"flow"},...[["STEP 1","Data collection"],["STEP 2","Preprocessing"],["STEP 3","Model development (training & tuning)"],["STEP 4","Evaluation / testing"]].map(([a,b],i)=>el("div",{style:i===3?"outline:2px solid "+css("--orange"):""},el("b",{},a),b)));
+  // synthetic scores
+  let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};const nrm=()=>{let u=rnd()||1e-9,v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+  let npos=100,sep=1.6,th=0.5;let pos=[],neg=[];
+  const gen=()=>{seed=7;pos=Array.from({length:npos},()=>1/(1+Math.exp(-(nrm()+sep/2)*1.8)));neg=Array.from({length:400},()=>1/(1+Math.exp(-(nrm()-sep/2)*1.8)))};
+  const cv=el("canvas"),cm=el("div"),st=el("div");
+  function run(){const TP=pos.filter(s=>s>=th).length,FN=npos-TP,FP=neg.filter(s=>s>=th).length,TN=neg.length-FP;
+    const P=TP+FP?TP/(TP+FP):0,R=TP/npos,F=P+R?2*P*R/(P+R):0,A=(TP+TN)/(npos+neg.length);
+    const W=cv.width=560,H=cv.height=170,x=cv.getContext("2d");cv.style.width="100%";x.fillStyle=css("--surface");x.fillRect(0,0,W,H);
+    const bins=40,hp=new Array(bins).fill(0),hn=new Array(bins).fill(0);pos.forEach(s=>hp[Math.min(bins-1,Math.floor(s*bins))]++);neg.forEach(s=>hn[Math.min(bins-1,Math.floor(s*bins))]++);
+    const mn=Math.max(...hn),mp=Math.max(...hp);const bw=W/bins;x.globalAlpha=.6;x.fillStyle=css("--muted");hn.forEach((v,i)=>x.fillRect(i*bw+1,H-18-v/mn*(H-30),bw-2,v/mn*(H-30)));x.fillStyle=css("--orange");hp.forEach((v,i)=>x.fillRect(i*bw+1,H-18-v/mp*(H-30),bw-2,v/mp*(H-30)));x.globalAlpha=1;
+    x.strokeStyle=css("--ink");x.lineWidth=2;x.beginPath();x.moveTo(th*W,0);x.lineTo(th*W,H-14);x.stroke();x.fillStyle=css("--ink");x.font="15px sans-serif";x.fillText("threshold "+th.toFixed(2),Math.min(th*W+6,W-115),18);x.fillStyle=css("--muted");x.fillText("model score 0 → 1",W-135,H-2);
+    const c=(v,l,good)=>`<td style="padding:8px 12px;background:${good?"color-mix(in srgb,var(--good) 18%,var(--bg))":"color-mix(in srgb,var(--bad) 14%,var(--bg))"}"><b>${v}</b><br><span style="font-size:11px">${l}</span></td>`;
+    cm.innerHTML=`<table class="matrix"><tr><td></td><td>Pred +</td><td>Pred −</td></tr><tr><td>Actual +</td>${c(TP,"TP",1)}${c(FN,"FN",0)}</tr><tr><td>Actual −</td>${c(FP,"FP",0)}${c(TN,"TN",1)}</tr></table>`;
+    st.innerHTML=`<span class="stat">Accuracy <b>${A.toFixed(2)}</b></span><span class="stat">Precision <b>${P.toFixed(2)}</b></span><span class="stat">Recall <b>${R.toFixed(2)}</b></span><span class="stat">F1 <b>${F.toFixed(2)}</b></span>`}
+  gen();
+  root.append(el("p",{class:"note",style:"margin-top:0"},"This module\u2019s workflow — the lab sits in step 4:"),flow,
+    el("div",{class:"ctrls"},slider("Decision threshold",0.05,0.95,0.01,th,v=>v.toFixed(2),v=>{th=v;run()}),slider("Class separation",0.2,3,0.1,sep,v=>v.toFixed(1),v=>{sep=v;gen();run()}),slider("Real positives (negatives fixed at 400)",10,250,5,npos,v=>v,v=>{npos=v;gen();run()})),
+    fig(cv,"Orange = real positives, grey = real negatives (each scaled to its own height). Everything right of the line is predicted positive."),el("div",{class:"cv-row",style:"margin-top:10px;align-items:center"},cm,st),
+    el("p",{class:"note"},"Drop real positives to 10: accuracy stays around 0.8 while precision falls to about 0.1 — accuracy hides the problem on imbalanced data, F1 does not."));run();
+};
+/* 12. gradient descent + output size */
+DEMOS.gd=(root)=>{
+  const f=w=>0.5*(w-3)**2+2.2*Math.sin(1.5*w)+2.7,df=w=>(w-3)+3.3*Math.cos(1.5*w);
+  let lr=0.3,w0=-2,path=[];const cv=el("canvas"),info=el("p",{class:"note"});let timer=null;
+  function draw(){const W=cv.width=560,H=cv.height=240,x=cv.getContext("2d");cv.style.width="100%";x.fillStyle=css("--surface");x.fillRect(0,0,W,H);
+    const X=w=>(w+2.5)/10.5*W,Y=v=>H-12-(v)/20*(H-24);x.strokeStyle=css("--teal");x.lineWidth=2.5;x.beginPath();for(let i=0;i<=200;i++){const w=-2.5+i*10.5/200;i?x.lineTo(X(w),Y(f(w))):x.moveTo(X(w),Y(f(w)))}x.stroke();
+    x.strokeStyle=css("--orange");x.lineWidth=1.5;x.beginPath();path.forEach((w,i)=>{const px=clamp(X(w),-50,W+50),py=clamp(Y(f(w)),-50,H+50);i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke();
+    path.forEach((w,i)=>{x.fillStyle=i===path.length-1?css("--red"):css("--orange");x.beginPath();x.arc(clamp(X(w),0,W),clamp(Y(f(w)),0,H),i===path.length-1?6:3.5,0,7);x.fill()});
+    x.fillStyle=css("--muted");x.font="15px sans-serif";x.fillText("weight w →",W-90,H-2);x.fillText("loss L(w)",8,18);
+    const w=path[path.length-1];info.innerHTML=path.length?`Step ${path.length-1}: w = <b>${w.toFixed(3)}</b>, loss = <b>${f(w).toFixed(3)}</b>, gradient = <b>${df(w).toFixed(3)}</b>. Update: w ← w − ${lr}·gradient.`:""}
+  function start(){clearInterval(timer);path=[w0];draw();timer=setInterval(()=>{const w=path[path.length-1];const n=w-lr*df(w);path.push(n);draw();if(path.length>60||Math.abs(n)>30||Math.abs(n-w)<1e-4)clearInterval(timer)},260)}
+  // output size calculator
+  let Win=224,K=3,P=1,S=1,C=16;const out=el("p",{style:"font-size:18px;margin:8px 0 0"});
+  function calc(){const o=(Win-K+2*P)/S+1;out.innerHTML=Number.isInteger(o)&&o>0?`Output: (${Win} − ${K} + 2·${P}) / ${S} + 1 = <b>${o}</b> → feature map <b>${o}×${o}×${C}</b>, weights = ${K}·${K}·in_channels·${C} + ${C} biases`:`(${Win} − ${K} + 2·${P}) / ${S} + 1 = ${o.toFixed(2)} — not a whole number, so this combination doesn\u2019t tile the input evenly.`}
+  root.append(el("h3",{},"Gradient descent"),el("div",{class:"ctrls"},slider("Learning rate η",0.02,1.3,0.01,lr,v=>v.toFixed(2),v=>{lr=v}),slider("Starting weight",-2.5,8,0.1,w0,v=>v.toFixed(1),v=>{w0=v;path=[w0];draw()}),el("button",{class:"btn",type:"button",onclick:start},"Run ▶")),
+    fig(cv,"A bumpy loss: two local minima and one global minimum near w = 3. Start at −2 with η = 0.1 (stuck in a local minimum), then at 2, then try η = 0.6 and 1.1."),info,
+    el("h3",{style:"margin-top:18px"},"Conv layer output size"),el("div",{class:"ctrls"},slider("Input W",8,256,1,Win,v=>v,v=>{Win=v;calc()}),slider("Kernel K",1,11,1,K,v=>v,v=>{K=v;calc()}),slider("Padding P",0,5,1,P,v=>v,v=>{P=v;calc()}),slider("Stride S",1,4,1,S,v=>v,v=>{S=v;calc()}),slider("Filters",1,256,1,C,v=>v,v=>{C=v;calc()})),out);
+  path=[w0];draw();calc();
+};
+/* 13. tracking: Kalman with occlusion + Hungarian */
+DEMOS.tracking=(root)=>{
+  const W=560,H=220,cv=el("canvas"),info=el("p",{class:"note"});let Rn=8,occ=true,run_=null;
+  function sim(){clearInterval(run_);let t=0;const truth=[],meas=[],est=[],pred=[];
+    // state [x,y,vx,vy], simple 2D constant-velocity KF (independent axes)
+    let s=[40,H/2,0,0],P=[[500,0],[0,500]],Py=[[500,0],[0,500]];const q=0.05,dt=1;
+    const kf=(xx,v,Pm,z)=>{let x1=xx+v*dt,v1=v;let p00=Pm[0][0]+dt*(Pm[1][0]+Pm[0][1])+dt*dt*Pm[1][1]+q,p01=Pm[0][1]+dt*Pm[1][1],p10=Pm[1][0]+dt*Pm[1][1],p11=Pm[1][1]+q;const px=x1;
+      if(z!=null){const Sx=p00+Rn*Rn,k0=p00/Sx,k1=p10/Sx,y=z-x1;x1+=k0*y;v1+=k1*y;const n00=(1-k0)*p00,n01=(1-k0)*p01,n10=p10-k1*p00,n11=p11-k1*p01;p00=n00;p01=n01;p10=n10;p11=n11}
+      return[x1,v1,[[p00,p01],[p10,p11]],px]};
+    const ox0=W*0.45,ox1=W*0.65;
+    run_=setInterval(()=>{t++;const tx=40+t*4.2,ty=H/2+Math.sin(t/9)*55;truth.push([tx,ty]);const hidden=occ&&tx>ox0&&tx<ox1;
+      const z=hidden?null:[tx+randn()*Rn,ty+randn()*Rn];meas.push(z);
+      let r1=kf(s[0],s[2],P,z&&z[0]),r2=kf(s[1],s[3],Py,z&&z[1]);s=[r1[0],r2[0],r1[1],r2[1]];P=r1[2];Py=r2[2];est.push([s[0],s[1]]);pred.push([r1[3],r2[3]]);
+      const x=cv.getContext("2d");cv.width=W;cv.height=H;cv.style.width="100%";x.fillStyle=css("--surface");x.fillRect(0,0,W,H);
+      if(occ){x.fillStyle=css("--muted");x.globalAlpha=.35;x.fillRect(ox0,0,ox1-ox0,H);x.globalAlpha=1;x.fillStyle=css("--ink");x.font="12px sans-serif";x.fillText("occluder",ox0+8,16)}
+      x.strokeStyle=css("--line");x.lineWidth=2;x.setLineDash([4,4]);x.beginPath();truth.forEach((p,i)=>i?x.lineTo(...p):x.moveTo(...p));x.stroke();x.setLineDash([]);
+      x.fillStyle=css("--red");meas.forEach(m=>{if(m){x.beginPath();x.arc(m[0],m[1],2.6,0,7);x.fill()}});
+      x.strokeStyle=css("--good");x.lineWidth=2.5;x.beginPath();est.forEach((p,i)=>i?x.lineTo(...p):x.moveTo(...p));x.stroke();
+      const e=est[est.length-1],unc=Math.sqrt(P[0][0]);x.strokeStyle=css("--orange");x.lineWidth=2;x.beginPath();x.arc(e[0],e[1],Math.max(4,unc*2),0,7);x.stroke();
+      const err=Math.hypot(e[0]-tx,e[1]-ty);info.innerHTML=`Frame ${t} · ${hidden?"<b>occluded</b>: no detection, track coasts on prediction":"detection received: predict → update"} · position uncertainty ±${(unc*2).toFixed(1)} px · error ${err.toFixed(1)} px`;
+      if(tx>W-20)clearInterval(run_)},70)}
+  const legend=el("p",{class:"note"},"Dashed = true path · red dots = noisy detections · green = Kalman estimate · orange ring = uncertainty (grows while occluded).");
+  const kfPart=el("div",{},el("div",{class:"ctrls"},slider("Measurement noise R (px)",1,25,1,Rn,v=>v,v=>{Rn=v}),el("label",{style:"display:flex;gap:8px;align-items:center;font-size:15px"},el("input",{type:"checkbox",checked:"",onchange:e=>{occ=e.target.checked}}),"Occluder"),el("button",{class:"btn",type:"button",onclick:sim},"Run ▶")),fig(cv,""),legend,info);
+  // Hungarian (brute force 3x3)
+  let C=[[0.2,0.9,0.8],[0.7,0.3,0.9],[0.8,0.75,0.25]];const ht=el("table",{class:"matrix"}),hres=el("p",{class:"note"});
+  const perms=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+  function hung(){let best=null,bc=1e9;perms.forEach(p=>{const c=p.reduce((s,d,i)=>s+C[i][d],0);if(c<bc){bc=c;best=p}});
+    ht.innerHTML="";ht.append(el("tr",{},el("td",{}),...["Det A","Det B","Det C"].map(t=>el("td",{},t))));
+    C.forEach((row,i)=>{const tr=el("tr",{},el("td",{},"Track "+(i+1)));row.forEach((v,j)=>{const inp=el("input",{type:"number",step:"0.05",min:"0",max:"1",value:v,"aria-label":`cost track ${i+1} detection ${"ABC"[j]}`,style:"width:62px;border:0;background:transparent;text-align:right;font-family:var(--mono)",onchange:e=>{C[i][j]=+e.target.value;hung()}});
+      tr.append(el("td",{style:best[i]===j?"background:color-mix(in srgb,var(--good) 25%,var(--bg));font-weight:600":""},inp))});ht.append(tr)});
+    const greedy=[];const used=new Set();C.map((r,i)=>r.map((v,j)=>[v,i,j])).flat().sort((a,b)=>a[0]-b[0]).forEach(([v,i,j])=>{if(greedy[i]==null&&!used.has(j)){greedy[i]=j;used.add(j)}});
+    const gc=greedy.reduce((s,d,i)=>s+C[i][d],0);
+    hres.innerHTML=`Optimal assignment: ${best.map((d,i)=>`Track ${i+1} → ${"ABC"[d]}`).join(", ")} · total cost <b>${bc.toFixed(2)}</b>. Greedy (cheapest pair first) gives ${gc.toFixed(2)}${gc>bc+1e-9?" — worse, which is why we use Hungarian.":"."}`}
+  const hPart=el("div",{},el("p",{class:"note",style:"margin-top:0"},"Cost = 1 − IoU, distance, or appearance dissimilarity. Edit any number."),el("div",{class:"scroll"},ht),hres,
+    el("div",{class:"chips",style:"margin-top:8px"},el("button",{class:"chip",type:"button",onclick:()=>{C=[[0.2,0.25,0.9],[0.22,0.3,0.9],[0.9,0.9,0.1]];hung()}},"Two people side by side"),el("button",{class:"chip",type:"button",onclick:()=>{C=[[0.1,0.2,0.9],[0.15,0.9,0.9],[0.9,0.9,0.2]];hung()}},"Greedy trap"),el("button",{class:"chip",type:"button",onclick:()=>{C=[[0.2,0.9,0.8],[0.7,0.3,0.9],[0.8,0.75,0.25]];hung()}},"Reset")));
+  hPart.hidden=true;
+  root.append(el("div",{class:"ctrls"},seg([["k","Kalman + occlusion"],["h","Hungarian assignment"]],"k",v=>{kfPart.hidden=v!=="k";hPart.hidden=v!=="h"},"lab part")),kfPart,hPart);hung();
+  const x=cv.getContext("2d");cv.width=W;cv.height=H;cv.style.width="100%";x.fillStyle=css("--surface");x.fillRect(0,0,W,H);x.fillStyle=css("--muted");x.font="15px sans-serif";x.fillText("Press Run ▶ to start the target",W/2-110,H/2);
+};
+/* 14. flashcards */
+DEMOS.cards=(root)=>{
+  let order=CARDS.map((_,i)=>i),i=0,flipped=false;const card=el("button",{type:"button",style:"display:block;width:100%;min-height:180px;border-radius:14px;border:2px solid var(--ink);background:var(--surface);padding:22px;text-align:left;cursor:pointer;font-size:20px;line-height:1.4"}),cnt=el("p",{class:"note"});
+  function show(){const[q,a]=CARDS[order[i]];card.innerHTML=flipped?`<span style="font-size:13px;color:var(--teal);font-weight:600">Answer</span><br>${a}`:`<span style="font-size:13px;color:var(--orange);font-weight:600">Question</span><br>${q}`;cnt.textContent=`Card ${i+1} of ${order.length} · click the card to flip`}
+  card.onclick=()=>{flipped=!flipped;show()};
+  root.append(card,el("div",{class:"ctrls"},el("button",{class:"btn ghost",type:"button",onclick:()=>{i=(i-1+order.length)%order.length;flipped=false;show()}},"← Previous"),el("button",{class:"btn",type:"button",onclick:()=>{i=(i+1)%order.length;flipped=false;show()}},"Next →"),el("button",{class:"btn ghost",type:"button",onclick:()=>{order.sort(()=>Math.random()-.5);i=0;flipped=false;show()}},"Shuffle")),cnt);show();
+};
+DEMOS.study=(root)=>{
+  const M={"GPT-4o":[0.580,0.645,0.793,0.686],"Gemini 2.0 Flash":[0.473,0.618,0.442,0.456],"Claude Sonnet 4":[0.549,0.443,0.341,0.365]};
+  const T=[["ReAct",[100,90.9,81.8]],["Sequential",[90.9,72.7,72.7]],["Least-to-most",[90.9,63.6,81.8]],["Chain-of-thought",[63.6,81.8,63.6]],["Self-consistency",[81.8,36.4,27.3]],["Iterative",[81.8,0,45.5]],["Meta-prompting",[100,36.4,9.1]],["Zero-shot",[63.6,36.4,18.2]]];
+  const names=["GPT-4o","Claude Sonnet 4","Gemini 2.0 Flash"],cols=["#128f8f","#ef7d1a","#7a1d36"];
+  const bar=(v,max,c,lab)=>el("div",{style:"display:grid;grid-template-columns:130px 1fr 64px;gap:8px;align-items:center;margin:4px 0;font-size:15px"},el("span",{},lab),el("div",{style:"background:var(--surface2);border-radius:4px;height:18px"},el("div",{style:`width:${v/max*100}%;height:100%;background:${c};border-radius:4px`})),el("b",{style:"font-family:var(--mono);font-size:13px"},max===1?v.toFixed(3):v.toFixed(1)+"%"));
+  const a=el("div"),b=el("div");let met=3,tech=0;
+  function A(){a.innerHTML="";a.append(el("div",{class:"ctrls"},seg([[0,"Accuracy"],[1,"Precision"],[2,"Recall"],[3,"F1"]],met,v=>{met=v;A()},"metric")));
+    Object.entries(M).sort((x,y)=>y[1][met]-x[1][met]).forEach(([n,v])=>a.append(bar(v[met],1,cols[names.indexOf(n)],n)));
+    const m=["Accuracy: share of all crime-category calls that were right.","Precision: of the crimes a model flagged, how many were real.","Recall: of the real crimes, how many the model found.","F1: balance of precision and recall."][met];a.append(el("p",{class:"note"},m+" Notice GPT-4o\u2019s recall is much higher than its precision."))}
+  function B(){b.innerHTML="";b.append(el("div",{class:"chips",style:"margin-bottom:10px"},...T.map(([t],i)=>el("button",{class:"chip",type:"button","aria-pressed":String(i===tech),onclick:()=>{tech=i;B()}},t))));
+    T[tech][1].forEach((v,i)=>b.append(bar(v,100,cols[i],names[i])));b.append(el("p",{class:"note"},"Consistency: how often the three evaluator models agreed the output was human-aligned. Compare ReAct (stable for everyone) with Meta-prompting (great for one model, poor for another)."))}
+  const pa=el("div",{},el("h3",{},"Research question 1 — model performance"),a),pb=el("div",{},el("h3",{},"Research question 2 — prompting techniques"),b);pb.hidden=true;
+  root.append(el("div",{class:"ctrls"},seg([["a","Models"],["b","Prompting techniques"]],"a",v=>{pa.hidden=v!=="a";pb.hidden=v!=="b"},"view")),pa,pb);A();B();
+};
+const rail=$("#rail"),main=$("#main");const K=COURSE.key;
+let cur=store.get(K+"-cur",0);const done=new Set(store.get(K+"-done",[]));const scores=store.get(K+"-scores",{});
+const REVIEW=MODULES.length+1;
+DEMOS.cards=(root)=>{let order=CARDS.map((_,i)=>i),i=0,f=false;const card=el("button",{type:"button",style:"display:block;width:100%;min-height:170px;border-radius:14px;border:2px solid var(--ink);background:var(--surface);padding:22px;text-align:left;cursor:pointer;font-size:20px;line-height:1.4;color:var(--ink)"}),cnt=el("p",{class:"note"});
+  const show=()=>{const[q,a]=CARDS[order[i]];card.innerHTML=f?`<span style="font-size:13px;color:var(--teal);font-weight:600">Answer</span><br>${a}`:`<span style="font-size:13px;color:var(--orange);font-weight:600">Question</span><br>${q}`;cnt.textContent=`Card ${i+1} of ${order.length} · tap the card to flip`};
+  card.onclick=()=>{f=!f;show()};root.append(card,el("div",{class:"ctrls"},el("button",{class:"btn ghost",type:"button",onclick:()=>{i=(i-1+order.length)%order.length;f=false;show()}},"← Previous"),el("button",{class:"btn",type:"button",onclick:()=>{i=(i+1)%order.length;f=false;show()}},"Next →"),el("button",{class:"btn ghost",type:"button",onclick:()=>{order.sort(()=>Math.random()-.5);i=0;f=false;show()}},"Shuffle")),cnt);show()};
+function pct(n){const m=MODULES[n-1];if(done.has(n))return 100;const s=scores[n];return s?Math.round(s.answered/m.quiz.length*80):0}
+function buildRail(){rail.innerHTML="";rail.append(el("div",{class:"brand"},COURSE.title,el("small",{},"Student edition · "+COURSE.tag)));
+  rail.append(el("button",{class:"mod","aria-current":String(cur===0),onclick:()=>go(0)},el("span",{class:"px"},"◻"),"Start here"));
+  PARTS.forEach((p,pi)=>{rail.append(el("div",{class:"part"},p));MODULES.filter(m=>m.part===pi).forEach(m=>{const v=pct(m.n);rail.append(el("button",{class:"mod"+(done.has(m.n)?" done":""),"aria-current":String(cur===m.n),onclick:()=>go(m.n)},el("span",{class:"px"},String(m.n).padStart(2,"0")),el("span",{style:"flex:1"},m.short,el("span",{class:"bar","aria-hidden":"true"},el("i",{style:`width:${v}%`})))))})});
+  rail.append(el("div",{class:"part"},"Wrap up"),el("button",{class:"mod","aria-current":String(cur===REVIEW),onclick:()=>go(REVIEW)},el("span",{class:"px"},"★"),"Review & final quiz"));
+  const tb=el("button",{class:"themebtn",type:"button",onclick:()=>{const d=document.documentElement,now=d.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),nx=now==="dark"?"light":"dark";d.setAttribute("data-theme",nx);store.set(K+"-theme",nx);render()}},"Switch light / dark");
+  rail.append(el("div",{class:"railfoot"},`${done.size} of ${MODULES.length} modules complete. Progress is saved in this browser.`,el("br"),tb))}
+function mobileNav(){const s=el("select",{"aria-label":"Choose module",onchange:e=>go(+e.target.value)},el("option",{value:0},"Start here"),...MODULES.map(m=>el("option",{value:m.n},`${String(m.n).padStart(2,"0")} ${m.short}${done.has(m.n)?" ✓":""}`)),el("option",{value:REVIEW},"★ Review & final quiz"));s.value=cur;return el("div",{class:"mobilenav"},s)}
+function quizBlock(qs,key){const box=el("div",{class:"quiz"});const res=(scores[key]&&scores[key].res)||{};const sc=el("p",{class:"score"});
+  const upd=()=>{const a=Object.keys(res).length,c=Object.values(res).filter(Boolean).length;sc.textContent=a?`Score: ${c} / ${qs.length}${a<qs.length?` (${qs.length-a} to go)`:c===qs.length?" — perfect!":" — review the explanations and try again later."}`:"";scores[key]={answered:a,correct:c,res};store.set(K+"-scores",scores);buildRail()};
+  qs.forEach((q,qi)=>{const why=el("p",{class:"why",hidden:""}),card=el("div",{class:"qcard"},el("p",{class:"q"},`${qi+1}. ${q.q}`));
+    const mark=(i)=>{card.querySelectorAll(".opt").forEach((x,j)=>{x.classList.remove("right","wrong");if(j===q.a)x.classList.add("right")});if(i!==q.a)card.querySelectorAll(".opt")[i].classList.add("wrong");why.hidden=false;why.textContent=(i===q.a?"Correct. ":"Not quite. ")+q.why};
+    q.o.forEach((o,i)=>card.append(el("button",{class:"opt",type:"button",onclick:()=>{res[qi]=i===q.a;mark(i);upd()}},o)));card.append(why);box.append(card)});
+  box.append(sc,el("button",{class:"btn ghost",type:"button",onclick:()=>{for(const k in res)delete res[k];delete scores[key];store.set(K+"-scores",scores);render()}},"Reset quiz"));upd();return box}
+function renderHome(){main.append(mobileNav());const w=el("div",{class:"wrap"});main.append(w);
+  const next=MODULES.find(m=>!done.has(m.n))||MODULES[0];
+  w.append(el("div",{class:"hero"},el("div",{},el("p",{class:"eyebrow"},`${MODULES.length} modules · about ${MODULES.reduce((s,m)=>s+m.mins,0)/60|0} hours · learn by doing`),el("h1",{},COURSE.headline),
+    el("p",{class:"bigidea"},COURSE.intro),
+    el("button",{class:"navbtn",type:"button",onclick:()=>go(next.n)},done.size?`Continue: Module ${next.n} →`:"Start Module 1 →")),
+    el("div",{class:"tryit",id:"heroLab"},el("h2",{},COURSE.hero.title),el("p",{class:"sub"},COURSE.hero.sub))));DEMOS[COURSE.hero.demo]($("#heroLab"));
+  w.append(el("div",{class:"howto"},el("div",{},el("b",{},"1 · Read"),"Short sections, simple words. Tinted boxes are analogies; dark boxes are formulas; bordered boxes are worked examples."),el("div",{},el("b",{},"2 · Try it"),"Every module has a live lab. Move the sliders, click, break things — nothing is saved to anyone else."),el("div",{},el("b",{},"3 · Check yourself"),"Answer the quiz, read the explanations, then mark the module complete."),el("div",{},el("b",{},"4 · Review"),"Flashcards and a final mixed quiz at the end.")));
+  w.append(el("h2",{style:"margin-top:34px"},"Modules"));
+  PARTS.forEach((p,pi)=>{w.append(el("h3",{style:"margin-top:18px;color:var(--muted);font-family:var(--body);font-weight:600;font-size:15px"},p));
+    w.append(el("div",{class:"map",style:"margin-top:8px"},...MODULES.filter(m=>m.part===pi).map(m=>el("button",{type:"button",onclick:()=>go(m.n)},el("span",{class:"px",style:done.has(m.n)?"background:var(--teal);color:#fff":""},String(m.n).padStart(2,"0")),el("br"),el("b",{},m.title),el("br"),el("span",{style:"font-size:14px;color:var(--muted)"},`~${m.mins} min${done.has(m.n)?" · complete ✓":""}`),el("span",{class:"bar"},el("i",{style:`width:${pct(m.n)}%`}))))))})}
+function renderModule(m){main.append(mobileNav());const w=el("div",{class:"wrap"});main.append(w);
+  w.append(el("p",{class:"eyebrow"},`Module ${m.n} of ${MODULES.length} · ${PARTS[m.part]}`),el("h1",{style:"max-width:22ch"},m.title),
+    el("div",{class:"meta"},el("span",{},`About ${m.mins} minutes`),el("span",{},m.slides),el("span",{},`${m.sections.length} sections · 1 lab · ${m.quiz.length}-question quiz`)),
+    el("div",{class:"goals"},el("h3",{},"By the end you will be able to"),el("ul",{},...m.goals.map(g=>el("li",{},g)))));
+  m.sections.forEach((s,i)=>{w.append(el("section",{class:"lesson"},el("h2",{},el("span",{class:"sn"},`${m.n}.${i+1}`),s.h),el("div",{html:s.b})));
+    if(s.lab){const lab=el("section",{class:"tryit","aria-label":"Interactive lab"},el("h2",{},"Try it yourself"),el("p",{class:"sub"},"Everything below is live — experiment freely."));w.append(lab);DEMOS[m.demo](lab)}});
+  w.append(el("h2",{},"Key terms"),el("div",{class:"terms"},...m.terms.map(([t,d])=>el("div",{},el("b",{},t),d))));
+  w.append(el("h2",{},"Check yourself"),quizBlock(m.quiz,m.n));
+  w.append(el("div",{class:"recap"},el("h2",{},"Remember"),el("ul",{},...m.recap.map(r=>el("li",{},r)))));
+  const db=el("button",{class:"done-btn"+(done.has(m.n)?" on":""),type:"button",onclick:()=>{done.has(m.n)?done.delete(m.n):done.add(m.n);store.set(K+"-done",[...done]);render()}},done.has(m.n)?"✓ Module complete (tap to undo)":"Mark module complete");
+  const prev=m.n>1?MODULES[m.n-2]:null,next=MODULES[m.n];
+  w.append(db,el("div",{class:"navrow"},el("button",{class:"navbtn",type:"button",onclick:()=>go(m.n-1)},"← "+(prev?prev.short:"Start here")),el("button",{class:"navbtn",type:"button",onclick:()=>go(m.n+1)},(next?next.short:"Review & final quiz")+" →")))}
+function renderReview(){main.append(mobileNav());const w=el("div",{class:"wrap"});main.append(w);
+  w.append(el("p",{class:"eyebrow"},"Wrap up"),el("h1",{},"Review & final quiz"),el("p",{class:"bigidea"},"Flip through the flashcards, then take the mixed final quiz covering every module."));
+  const fc=el("section",{class:"tryit"},el("h2",{},"Flashcards"));w.append(fc);DEMOS.cards(fc);
+  const qs=[];MODULES.forEach(m=>qs.push(MODULES.length>8?m.quiz[1]:m.quiz[m.quiz.length-1]));if(MODULES.length<=8)MODULES.forEach(m=>qs.push(m.quiz[1]));
+  w.append(el("h2",{},"Final quiz"),quizBlock(qs,"final"));
+  w.append(el("div",{class:"navrow"},el("button",{class:"navbtn",type:"button",onclick:()=>go(MODULES.length)},"← "+MODULES[MODULES.length-1].short),el("button",{class:"navbtn",type:"button",onclick:()=>go(0)},"Start here")))}
+function render(){main.innerHTML="";buildRail();if(cur===0)renderHome();else if(cur===REVIEW)renderReview();else renderModule(MODULES[cur-1]);}
+function go(n){cur=clamp(n,0,REVIEW);store.set(K+"-cur",cur);render();window.scrollTo(0,0);}
+(()=>{const t=store.get(K+"-theme",null);if(t)document.documentElement.setAttribute("data-theme",t)})();
+render();
+</script>
+</body>
+</html>

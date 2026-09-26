@@ -1,4 +1,4 @@
-<!-- order: 13 -->
+<!-- order: 15 -->
 # AI Product Engineer: Hands-On Project Tutorials
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.

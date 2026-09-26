@@ -45,7 +45,7 @@ const firstParagraph = (md) => {
     if (/^(#|---|\*\*\*|```|>|[-*+]\s|\d+\.\s)/.test(line)) continue;
     // Setup notes and document boilerplate don't describe the course.
     if (/^\*\*(Tools needed|Prerequisites|Time)/i.test(line)) continue;
-    if (/^(This (document|is a bonus|course turns)|Follow the projects in order|Every step follows|(\*\*)?A note on)/i.test(line)) continue;
+    if (/^(This (document|is a bonus|course turns|course is a series)|Follow the projects in order|Every step follows|(\*\*)?A note on)/i.test(line)) continue;
     // A one-line generic purpose ("Plan, build, and deliver...") is shared by a
     // whole track, so it doesn't tell courses apart; use the next paragraph.
     if (/^\*\*Purpose[^*]*:\*\*/i.test(line) && line.replace(/^\*\*Purpose[^*]*:\*\*\s*/i, '')
@@ -119,6 +119,63 @@ const estimateMinutes = (md) => {
   return Math.max(10, Math.round(raw / 15) * 15);
 };
 
+
+// ---- Interactive courses ----
+// A self-contained .html course in a track folder (its own navigation, labs,
+// and quizzes) is published as-is to public/interactive/<slug>.html and listed
+// in the catalog. Metadata comes from its COURSE / PARTS / MODULES constants;
+// order and level come from comments in its <head>:
+//   <!-- order: 13 -->  <!-- level: Beginner -->
+const PUBLIC_DIR = path.join(__dirname, '..', 'public', 'interactive');
+
+const readInteractive = (fullPath, file) => {
+  const html = fs.readFileSync(fullPath, 'utf8');
+  const slug = file.replace(/\.html$/i, '');
+  let meta = null;
+  try {
+    const a = html.indexOf('const COURSE=');
+    const m = html.indexOf('const MODULES=');
+    // MODULES is an array literal; take it up to its closing "];" at depth 0.
+    let i = html.indexOf('[', m), depth = 0, inStr = null, esc = false;
+    for (; i < html.length; i++) {
+      const ch = html[i];
+      if (inStr) {
+        if (esc) esc = false;
+        else if (ch === '\\') esc = true;
+        else if (ch === inStr) inStr = null;
+        continue;
+      }
+      if (ch === '"' || ch === "'" || ch === '`') inStr = ch;
+      else if (ch === '[') depth++;
+      else if (ch === ']' && --depth === 0) break;
+    }
+    const src = html.slice(a, i + 1) + ';return {COURSE,PARTS,MODULES};';
+    // eslint-disable-next-line no-new-func
+    meta = new Function(src)();
+  } catch (e) {
+    console.warn(`[generateCourses] ${file}: could not read course data (${e.message}); using the page title.`);
+  }
+  const titleTag = (html.match(/<title>([^<]*)<\/title>/i) || [])[1] || prettySlug(slug);
+  const modules = meta ? meta.MODULES.map((x) => ({ title: x.title, part: x.part, mins: x.mins || 0 })) : [];
+  const levelM = html.match(/<!--\s*level:\s*([^>]+?)\s*-->/i);
+  fs.mkdirSync(PUBLIC_DIR, { recursive: true });
+  fs.copyFileSync(fullPath, path.join(PUBLIC_DIR, `${slug}.html`));
+  return {
+    slug,
+    kind: 'interactive',
+    src: `/interactive/${slug}.html`,
+    title: meta ? meta.COURSE.title : titleTag.replace(/\s+[—-].*$/, ''),
+    level: levelM ? levelM[1] : '',
+    summary: meta ? `${meta.COURSE.headline}. ${meta.COURSE.intro}` : '',
+    projects: modules.length,
+    minutes: modules.reduce((n, x) => n + x.mins, 0),
+    parts: meta ? meta.PARTS : [],
+    modules: modules.map(({ title, part }) => ({ title, part })),
+    order: readOrder(html),
+    markdown: '',
+  };
+};
+
 const readOrder = (md) => {
   const m = md.match(/<!--\s*order:\s*(\d+)\s*-->/i);
   return m ? parseInt(m[1], 10) : null;
@@ -143,6 +200,8 @@ const build = () => {
   tracks.forEach((track) => {
     const dir = path.join(COURSES_DIR, track);
     const files = fs.readdirSync(dir).filter((f) => f.toLowerCase().endsWith('.md'));
+    const htmlFiles = fs.readdirSync(dir).filter((f) => f.toLowerCase().endsWith('.html'));
+    const interactive = htmlFiles.map((file) => readInteractive(path.join(dir, file), file)).filter(Boolean);
     const courses = files.map((file) => {
       const raw = fs.readFileSync(path.join(dir, file), 'utf8');
       const slug = file.replace(/\.md$/i, '');
@@ -162,6 +221,7 @@ const build = () => {
         markdown: md,
       };
     });
+    courses.push(...interactive);
     courses.sort((a, b) => {
       const ao = a.order == null ? Infinity : a.order;
       const bo = b.order == null ? Infinity : b.order;

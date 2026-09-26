@@ -219,8 +219,8 @@ const CompanyCohortDetail = () => {
             <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">
               Find a project to earn your badge
             </Link>
-            <Link to="/foundations" className="text-pink-700 text-sm font-semibold hover:underline">
-              Build your skills in Foundations
+            <Link to="/learning" className="text-pink-700 text-sm font-semibold hover:underline">
+              Build your skills in Learning
             </Link>
           </div>
         </div>

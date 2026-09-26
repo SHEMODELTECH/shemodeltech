@@ -1,4 +1,4 @@
-<!-- order: 16 -->
+<!-- order: 18 -->
 # AI Agent Platform Engineer: Hands-On Project Tutorials
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.

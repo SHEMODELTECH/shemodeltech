@@ -1,4 +1,4 @@
-<!-- order: 23 -->
+<!-- order: 25 -->
 # AI Governance and Responsible AI Engineer: Hands-On Project Tutorials
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.

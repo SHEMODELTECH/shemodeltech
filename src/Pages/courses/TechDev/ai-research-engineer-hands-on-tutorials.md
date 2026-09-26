@@ -1,4 +1,4 @@
-<!-- order: 19 -->
+<!-- order: 21 -->
 # AI Research Engineer: Hands-On Project Tutorials
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.

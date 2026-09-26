@@ -1,4 +1,4 @@
-<!-- order: 20 -->
+<!-- order: 22 -->
 # Robotics AI Engineer: Hands-On Project Tutorials
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing. Projects use simulation so you can complete this course without owning physical robot hardware.

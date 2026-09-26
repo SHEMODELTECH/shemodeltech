@@ -1,4 +1,4 @@
-<!-- order: 24 -->
+<!-- order: 26 -->
 # AI Governance and Responsible AI Engineer — Advanced Module: EU AI Act Compliance
 
 This is a bonus, advanced module extending the **AI Governance and Responsible AI Engineer Foundations Course**. It covers the specific regulatory framework reshaping this field in 2026: the **EU AI Act** (Regulation (EU) 2024/1689) — the world's first comprehensive, binding AI regulation, with extraterritorial reach to any organization whose AI system or output touches people in the EU, regardless of where the company is headquartered. Complete the original 8 projects first — this module turns your Project 1 risk overview, Project 4 bias evaluation, and Project 6 model card into artifacts mapped directly to real legal obligations.

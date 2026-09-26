@@ -66,11 +66,13 @@ const Navbar = ({ cta = null }) => {
         { path: '/', label: 'Home' },
         { path: '/proof-wall', label: 'Proof Wall' },
         { path: '/projects', label: 'Projects' },
+        { path: '/learning', label: 'Learning' },
         { path: '/dashboard', label: 'Dashboard' },
       ]
     : [
         { path: '/', label: 'Home' },
         { path: '/projects', label: 'Projects' },
+        { path: '/learning', label: 'Learning' },
         { path: '/about', label: 'About' },
       ];
 

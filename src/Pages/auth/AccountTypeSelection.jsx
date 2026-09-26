@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import Navbar from '../../components/Navbar';
+import { afterAuthPath } from '../../utils/afterAuth';
 
 const AccountTypeSelection = () => {
   const { currentUser } = useAuth();
@@ -26,7 +27,7 @@ const AccountTypeSelection = () => {
           const data = snap.data();
           // Once onboarding is complete, account type is locked - send them on.
           if (data.onboardingComplete) {
-            navigate('/dashboard', { replace: true });
+            navigate(afterAuthPath(), { replace: true });
             return;
           }
           // If they already picked a type but haven't finished onboarding, pre-select

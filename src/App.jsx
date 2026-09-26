@@ -26,6 +26,8 @@ const SearchPage = lazy(() => import('./Pages/SearchPage'));
 const FollowersFollowing = lazy(() => import('./Pages/user/FollowersFollowing'));
 const NotificationsPage = lazy(() => import('./Pages/Notifications'));
 const Foundations = lazy(() => import('./Pages/Foundations'));
+const LearningHome = lazy(() => import('./Pages/learning/LearningHome'));
+const LearningCourse = lazy(() => import('./Pages/learning/LearningCourse'));
 const Messages = lazy(() => import('./Pages/Messages'));
 const MembersDirectory = lazy(() => import('./Pages/MembersDirectory'));
 const ApplyToLead = lazy(() => import('./Pages/cohort/ApplyToLead'));
@@ -165,6 +167,12 @@ function App() {
                 <Route path="/auth/action" element={<AuthAction />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/about" element={<About />} />
+
+                {/* She Model Tech Learning: public catalog, its own layout (no app sidebar) */}
+                <Route path="/learning" element={<LearningHome />} />
+                <Route path="/learning/my" element={<LearningHome mine />} />
+                <Route path="/learning/:track/:slug" element={<LearningCourse />} />
+                <Route path="/learning/:track/:slug/learn" element={<LearningCourse reading />} />
                 <Route
                   path="/terms"
                   element={
@@ -504,14 +512,7 @@ function App() {
                     </SidebarRoute>
                   }
                 />
-                <Route
-                  path="/foundations"
-                  element={
-                    <SidebarRoute>
-                      <Foundations />
-                    </SidebarRoute>
-                  }
-                />
+                <Route path="/foundations" element={<Foundations />} />
                 <Route
                   path="/support"
                   element={
