@@ -50,7 +50,11 @@ module.exports = async function handler(req, res) {
  const isDev = process.env.NODE_ENV === 'development' || req.headers.host?.includes('localhost');
  const apiKey = req.headers['x-api-key'] || req.query.apiKey;
  const validKey = process.env.DAILY_DIGEST_API_KEY;
- if (!isDev && !isVercelCron && validKey && apiKey !== validKey) {
+ // Test mode: ?to=someone@example.com sends only to that one address.
+ const testTo = String(req.query.to || '').trim().toLowerCase();
+ // Allowed: Vercel's scheduler (CRON_SECRET), or a request with the digest API
+ // key. Anything else is refused, so no one can trigger mass emails.
+ if (!isDev && !isVercelCron && !(validKey && apiKey === validKey)) {
  return res.status(401).json({ error: 'Unauthorized' });
  }
 
@@ -62,7 +66,10 @@ module.exports = async function handler(req, res) {
  projectsSnap.docs.forEach(d => { projects[d.id] = { id: d.id, ...d.data() }; });
 
  // Pull all users (opted in or no preference set defaults to receiving reminders).
- const usersSnap = await db.collection('users').get();
+ const usersSnap = testTo
+   ? await db.collection('users').where('email', '==', testTo).limit(1).get()
+   : await db.collection('users').get();
+ if (testTo && usersSnap.empty) return res.status(404).json({ success: false, error: `No member with email ${testTo}` });
 
  let sent = 0, skipped = 0, failed = 0;
 

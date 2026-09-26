@@ -43,7 +43,11 @@ module.exports = async function handler(req, res) {
  const isDev = process.env.NODE_ENV === 'development' || req.headers.host?.includes('localhost');
  const apiKey = req.headers['x-api-key'] || req.query.apiKey;
  const validKey = process.env.DAILY_DIGEST_API_KEY;
- if (!isDev && !isVercelCron && validKey && apiKey !== validKey) {
+ // Test mode: ?to=someone@example.com sends only to that one address.
+ const testTo = String(req.query.to || '').trim().toLowerCase();
+ // Allowed: Vercel's scheduler (CRON_SECRET), or a request with the digest API
+ // key. Anything else is refused, so no one can trigger mass emails.
+ if (!isDev && !isVercelCron && !(validKey && apiKey === validKey)) {
  return res.status(401).json({ error: 'Unauthorized' });
  }
 
@@ -91,9 +95,15 @@ module.exports = async function handler(req, res) {
  users = fallbackSnap.docs
  .map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }))
  .filter(u => u.email?.includes('@'));
- if (users.length === 0) {
+ if (users.length === 0 && !testTo) {
  return res.json({ success: true, message: 'No subscribers' });
  }
+ }
+ if (testTo) {
+   // Test run: just this address (it must be a member, so the email has real data).
+   const one = await db.collection('users').where('email', '==', testTo).limit(1).get();
+   users = one.docs.map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }));
+   if (!users.length) return res.status(404).json({ success: false, error: `No member with email ${testTo}` });
  }
  console.log(`${users.length} weekly subscribers`);
 
