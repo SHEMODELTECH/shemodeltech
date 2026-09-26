@@ -54,7 +54,7 @@ const Star = ({ filled, className = 'w-5 h-5' }) => (
   </svg>
 );
 
-const CourseFeedback = ({ track, slug, courseTitle, isStaff = false, displayName = '' }) => {
+const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName = '', isStaff = false, displayName = '' }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,6 +107,34 @@ const CourseFeedback = ({ track, slug, courseTitle, isStaff = false, displayName
     signInAndReturn(navigate, location.pathname);
   };
 
+  // Let the mentor know when someone rates, reacts to, or comments on their
+  // course, with that person's name. Best-effort: a failed notification never
+  // blocks the rating or comment itself.
+  const notifyMentor = (title, body) => {
+    if (!authorUid || !currentUser || authorUid === currentUser.uid) return;
+    addDoc(collection(db, 'notifications'), {
+      userId: authorUid,
+      recipientId: authorUid,
+      type: 'course_feedback',
+      title,
+      body,
+      message: `${title} - ${body}`,
+      link: location.pathname,
+      fromUid: currentUser.uid,
+      fromName: myName,
+      isRead: false,
+      read: false,
+      createdAt: serverTimestamp(),
+    }).catch(() => {});
+  };
+
+  // A question for the mentor opens Messages with a starter note.
+  const askMentor = () => {
+    if (!currentUser) return needSignIn();
+    const starter = `Hi${authorName ? ` ${authorName.split(' ')[0]}` : ''}, I have a question about your course "${courseTitle}": `;
+    navigate(`/messages?to=${authorUid}&text=${encodeURIComponent(starter)}`);
+  };
+
   const rate = async (stars) => {
     if (!currentUser) return needSignIn();
     const prev = ratings;
@@ -115,6 +143,10 @@ const CourseFeedback = ({ track, slug, courseTitle, isStaff = false, displayName
     try {
       await setDoc(doc(db, base, 'ratings', currentUser.uid), { uid: currentUser.uid, name: myName, stars, at: serverTimestamp() });
       toast.success('Thanks for rating this course.');
+      notifyMentor(
+        `${myName} rated your course ${stars} star${stars === 1 ? '' : 's'}`,
+        `${mine ? 'Updated rating on' : 'New rating on'} "${courseTitle}".`
+      );
     } catch (e) {
       setRatings(prev);
       toast.error(friendlyError(e, 'Could not save your rating.'));
@@ -132,6 +164,8 @@ const CourseFeedback = ({ track, slug, courseTitle, isStaff = false, displayName
       } else {
         setReactions((rs) => [...rs.filter((r) => r.id !== currentUser.uid), { id: currentUser.uid, type }]);
         await setDoc(ref, { uid: currentUser.uid, type, at: serverTimestamp() });
+        const label = (REACTIONS.find(([t]) => t === type) || [])[2] || type;
+        notifyMentor(`${myName} reacted to your course`, `"${label}" on "${courseTitle}".`);
       }
     } catch (e) {
       setReactions(prev);
@@ -150,6 +184,7 @@ const CourseFeedback = ({ track, slug, courseTitle, isStaff = false, displayName
       const ref = await addDoc(collection(db, base, 'comments'), { uid: currentUser.uid, name: myName, text: t, at: serverTimestamp() });
       setComments((cs) => [{ id: ref.id, uid: currentUser.uid, name: myName, text: t, at: new Date() }, ...cs]);
       setText('');
+      notifyMentor(`${myName} commented on your course`, `"${courseTitle}": ${t.length > 140 ? `${t.slice(0, 140)}...` : t}`);
     } catch (err) {
       toast.error(friendlyError(err, 'Could not post your comment.'));
     }
@@ -171,6 +206,20 @@ const CourseFeedback = ({ track, slug, courseTitle, isStaff = false, displayName
   return (
     <section className="pt-10" aria-labelledby="fb-h">
       <h2 id="fb-h" className="text-xl font-bold text-gray-900 mb-4">Ratings and comments</h2>
+
+      {authorUid && (!currentUser || currentUser.uid !== authorUid) && (
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 p-4">
+          <div>
+            <p className="font-semibold text-gray-900 text-sm">Have a question about this course?</p>
+            <p className="text-sm text-gray-600">
+              Message {authorName || 'the mentor'} directly for more clarification.
+            </p>
+          </div>
+          <button type="button" onClick={askMentor} className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+            Ask the mentor
+          </button>
+        </div>
+      )}
 
       <div className="grid sm:grid-cols-[220px_minmax(0,1fr)] gap-6 border border-gray-200 rounded-2xl p-5 bg-white">
         {/* Average */}

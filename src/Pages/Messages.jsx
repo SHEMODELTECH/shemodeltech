@@ -140,7 +140,12 @@ const Messages = () => {
   // URL param ?with=uid or ?to=uid - auto-open conversation
   useEffect(() => {
     const targetUid = searchParams.get('with') || searchParams.get('to');
-    if (targetUid && !loading) openConversation(targetUid);
+    if (targetUid && !loading) {
+      openConversation(targetUid);
+      // Optional starter text, e.g. a question about a mentor's course.
+      const starter = searchParams.get('text');
+      if (starter) setNewMessage(starter.slice(0, 1000));
+    }
   }, [searchParams, loading]);
 
   // Listen to messages in active conv

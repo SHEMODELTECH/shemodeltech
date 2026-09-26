@@ -13,6 +13,7 @@ import { coursesForTrack } from '../../utils/foundationsCourses';
 import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../context/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import MentorBadge from '../../components/MentorBadge';
@@ -24,6 +25,7 @@ const LearningCourse = ({ reading = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const lr = useLearning();
+  const { currentUser } = useAuth();
   const [refsOpen, setRefsOpen] = useState(false);
   const [authorCount, setAuthorCount] = useState(1);
 
@@ -196,6 +198,20 @@ const LearningCourse = ({ reading = false }) => {
               <p className="flex flex-wrap items-center gap-2 mt-3 text-sm text-gray-700">
                 By <span className="font-semibold">{course.authorName}</span>
                 <MentorBadge count={authorCount} size="sm" />
+                {course.authorUid && lr.signedIn && course.authorUid !== currentUser?.uid && (
+                  <button
+                    onClick={() =>
+                      navigate(
+                        `/messages?to=${course.authorUid}&text=${encodeURIComponent(
+                          `Hi ${course.authorName.split(' ')[0]}, I have a question about your course "${course.title}": `
+                        )}`
+                      )
+                    }
+                    className="text-xs font-semibold text-indigo-700 hover:underline"
+                  >
+                    Ask a question
+                  </button>
+                )}
               </p>
             )}
             {course.summary && <p className="text-gray-700 text-lg mt-4 max-w-2xl">{course.summary}</p>}
@@ -316,7 +332,7 @@ const LearningCourse = ({ reading = false }) => {
         
           {/* Ratings, reactions, comments: on mentor courses published to Learning */}
           {isPublished && (
-            <CourseFeedback track={track} slug={slug} courseTitle={course.title} displayName={lr.profile?.displayName || ''} />
+            <CourseFeedback track={track} slug={slug} courseTitle={course.title} authorUid={course.authorUid} authorName={course.authorName} displayName={lr.profile?.displayName || ''} />
           )}
         </section>
 
