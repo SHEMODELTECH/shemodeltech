@@ -307,6 +307,17 @@ service cloud.firestore {
  allow update, delete: if isAdmin();
  }
 
+ // Courses published to Learning from Teacher. Public to read, like the rest of
+ // the Learning catalog; only admins and editors can publish, update, or remove.
+ match /learning_courses/{id} {
+ allow read: if true;
+ allow write: if isReviewer();
+ match /chunks/{n} {
+ allow read: if true;
+ allow write: if isReviewer();
+ }
+ }
+
  // Certificates of completion for Learning courses. Public so anyone with the
  // link can verify one; a learner can only issue their own; never edited.
  match /learning_certificates/{id} {

@@ -34,6 +34,7 @@ import { clearAllTestData } from '../../utils/adminDataReset';
 import { sendPush } from '../../utils/pushNotifications';
 import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTeacher } from '../../utils/teachers';
 import { listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
+import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 
 const fmtDate = (ts) => {
   try {
@@ -160,18 +161,22 @@ const AdminPanel = () => {
     }
   }, [tab, isAdmin]);
 
-  const decideTeacher = async (app, approve) => {
-    const note = approve ? '' : window.prompt('Optional note to the applicant (why, or what to add next time):', '') ;
-    if (note === null) return;
+  // Declining opens a dialog so the note can be as long as needed.
+  const [declineApp, setDeclineApp] = useState(null);
+  const [deciding, setDeciding] = useState(false);
+  const decideTeacher = async (app, approve, note = '') => {
+    setDeciding(true);
     try {
       await decideTeacherApplication(app, approve, currentUser, note || '');
       setTeacherApps((xs) => xs.map((x) => (x.id === app.id ? { ...x, status: approve ? 'approved' : 'declined' } : x)));
       if (approve) setUsers((prev) => prev.map((u) => (u.id === app.applicantUid ? { ...u, isTeacher: true } : u)));
+      setDeclineApp(null);
       toast.success(approve ? `${app.applicantName} is now a teacher.` : 'Application declined.');
     } catch (e) {
       console.error(e);
-      toast.error('Could not update the application.');
+      toast.error(friendlyError(e, 'Could not update the application.'));
     }
+    setDeciding(false);
   };
 
   const toggleTeacher = async (u) => {
@@ -966,6 +971,16 @@ const AdminPanel = () => {
       {/* TEACHERS */}
       {!loadingData && tab === 'teachers' && isAdmin && (
         <div className="space-y-6">
+          <NoteDialog
+            open={!!declineApp}
+            title="Decline this application"
+            description={declineApp ? `Optional note to ${declineApp.applicantName}. They'll see it on the Teach page and can apply again.` : ''}
+            placeholder="For example: we'd love to see a sample lesson or a link to a talk you've given."
+            confirmLabel="Decline application"
+            busy={deciding}
+            onCancel={() => setDeclineApp(null)}
+            onConfirm={(note) => decideTeacher(declineApp, false, note)}
+          />
           <div>
             <h3 className="text-gray-900 font-bold mb-2">Courses awaiting approval</h3>
             {pendingCourses === null ? (
@@ -1017,7 +1032,7 @@ const AdminPanel = () => {
                           <button onClick={() => decideTeacher(a, true)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">
                             Approve
                           </button>
-                          <button onClick={() => decideTeacher(a, false)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                          <button onClick={() => setDeclineApp(a)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
                             Decline
                           </button>
                         </div>

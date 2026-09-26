@@ -38,6 +38,7 @@ import {
 import { getVideoEmbed } from '../../utils/videoEmbed';
 import { FD_CSS, enhanceCourseContent } from '../learning/shared';
 import LearningLayout from '../learning/LearningLayout';
+import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
 
 const TRACKS = [
@@ -497,7 +498,7 @@ const TeacherEditor = ({ access }) => {
       navigate(`/teacher/${newId}`);
     } catch (e) {
       console.error(e);
-      toast.error(e.message?.includes('5 MB') ? e.message : 'Could not save. Check your connection and try again.');
+      toast.error(e.message?.includes('5 MB') ? e.message : friendlyError(e, 'Could not save.'));
     }
     setSaving(false);
   };
@@ -766,22 +767,22 @@ const PublishPanel = ({ course, content, onChange, access }) => {
       toast.success(pub ? 'Published version updated.' : 'Published to Learning.');
     } catch (e) {
       console.error(e);
-      toast.error('Could not publish. Check your connection and try again.');
+      toast.error(friendlyError(e, 'Could not publish.'));
     }
     setBusy(false);
   };
 
-  const decline = async () => {
-    const note = window.prompt('Note to the teacher (what to change before resubmitting):', '');
-    if (note === null) return;
+  const [declineOpen, setDeclineOpen] = useState(false);
+  const decline = async (note) => {
     setBusy(true);
     try {
       await declineSubmission(course, currentUser, note);
       onChange({ ...course, review: { ...(course.review || {}), status: 'declined', note } });
+      setDeclineOpen(false);
       toast.success('Declined. The teacher has been notified.');
     } catch (e) {
       console.error(e);
-      toast.error('Could not decline it.');
+      toast.error(friendlyError(e, 'Could not decline it.'));
     }
     setBusy(false);
   };
@@ -795,7 +796,7 @@ const PublishPanel = ({ course, content, onChange, access }) => {
       toast.success('Removed from Learning.');
     } catch (e) {
       console.error(e);
-      toast.error('Could not unpublish it.');
+      toast.error(friendlyError(e, 'Could not unpublish it.'));
     }
     setBusy(false);
   };
@@ -803,6 +804,16 @@ const PublishPanel = ({ course, content, onChange, access }) => {
   const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   return (
     <div className="mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+      <NoteDialog
+        open={declineOpen}
+        title="Decline this course"
+        description={`Tell ${submitter} what to change before resubmitting. They'll see this note on the course and in their notifications.`}
+        placeholder={'For example:\n- Add a short introduction to Lesson 1\n- The video in Lesson 3 is private; make it public or unlisted\n- Add notes with the key points under each video'}
+        confirmLabel="Decline and send note"
+        busy={busy}
+        onCancel={() => setDeclineOpen(false)}
+        onConfirm={decline}
+      />
       <div className="flex flex-wrap items-center gap-3 justify-between">
         <p className="text-sm text-gray-700">
           {pub && pending ? (
@@ -839,7 +850,7 @@ const PublishPanel = ({ course, content, onChange, access }) => {
             </button>
           )}
           {pending && access?.isAdmin && (
-            <button onClick={decline} disabled={busy} className="text-sm font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50">
+            <button onClick={() => setDeclineOpen(true)} disabled={busy} className="text-sm font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50">
               Decline
             </button>
           )}
