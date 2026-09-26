@@ -85,6 +85,8 @@ const AdminPanel = () => {
   const [pendingCourses, setPendingCourses] = useState(null);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [feedbackById, setFeedbackById] = useState({});
+  // Request changes / Reject open a dialog for the reviewer's note.
+  const [reviewDialog, setReviewDialog] = useState(null); // { project, mode: 'changes' | 'reject' }
   const [actingId, setActingId] = useState(null);
 
   // --- Danger Zone: clear test data ---
@@ -171,7 +173,7 @@ const AdminPanel = () => {
       setTeacherApps((xs) => xs.map((x) => (x.id === app.id ? { ...x, status: approve ? 'approved' : 'declined' } : x)));
       if (approve) setUsers((prev) => prev.map((u) => (u.id === app.applicantUid ? { ...u, isTeacher: true } : u)));
       setDeclineApp(null);
-      toast.success(approve ? `${app.applicantName} is now a teacher.` : 'Application declined.');
+      toast.success(approve ? `${app.applicantName} is now a mentor.` : 'Application declined.');
     } catch (e) {
       console.error(e);
       toast.error(friendlyError(e, 'Could not update the application.'));
@@ -181,11 +183,11 @@ const AdminPanel = () => {
 
   const toggleTeacher = async (u) => {
     const make = !u.isTeacher;
-    if (!window.confirm(`${make ? 'Make' : 'Remove'} teacher: ${u.displayName || u.email}?`)) return;
+    if (!window.confirm(`${make ? 'Make' : 'Remove'} mentor: ${u.displayName || u.email}?`)) return;
     try {
       await setTeacher(u.id, make, currentUser);
       setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, isTeacher: make } : x)));
-      toast.success(make ? 'They are now a teacher.' : 'Teacher access removed.');
+      toast.success(make ? 'They are now a mentor.' : 'Mentor access removed.');
     } catch (e) {
       console.error(e);
       toast.error('Update failed.');
@@ -262,13 +264,13 @@ const AdminPanel = () => {
       toast.success('Approved. Owner and team notified.');
       setReviewProjects((prev) => prev.filter((p) => p.id !== project.id));
     } catch (e) {
-      toast.error('Approve failed: ' + e.message);
+      toast.error(friendlyError(e, 'Could not approve it.'));
     }
     setActingId(null);
   };
 
-  const doRequestChanges = async (project) => {
-    const fb = (feedbackById[project.id] || '').trim();
+  const doRequestChanges = async (project, note) => {
+    const fb = (note || '').trim();
     if (!fb) {
       toast.error('Add a note describing the changes needed.');
       return;
@@ -285,21 +287,16 @@ const AdminPanel = () => {
         link: `/projects/${project.id}/complete`,
       });
       toast.success('Sent back for changes. Owner notified.');
+      setReviewDialog(null);
       setReviewProjects((prev) => prev.filter((p) => p.id !== project.id));
     } catch (e) {
-      toast.error('Failed: ' + e.message);
+      toast.error(friendlyError(e, 'Could not send it back for changes.'));
     }
     setActingId(null);
   };
 
-  const doReject = async (project) => {
-    if (
-      !window.confirm(
-        'Reject this project? Badges cannot be assigned and it cannot be re-submitted.'
-      )
-    )
-      return;
-    const fb = (feedbackById[project.id] || '').trim();
+  const doReject = async (project, note) => {
+    const fb = (note || '').trim();
     setActingId(project.id);
     try {
       const emails = await getProjectMemberEmails(project.id);
@@ -312,9 +309,10 @@ const AdminPanel = () => {
         link: `/projects/${project.id}`,
       });
       toast.success('Rejected. Owner and team notified.');
+      setReviewDialog(null);
       setReviewProjects((prev) => prev.filter((p) => p.id !== project.id));
     } catch (e) {
-      toast.error('Reject failed: ' + e.message);
+      toast.error(friendlyError(e, 'Could not reject it.'));
     }
     setActingId(null);
   };
@@ -536,7 +534,7 @@ const AdminPanel = () => {
     ['reviews', 'Reviews'],
     ['projects', 'Projects'],
     ['users', 'Users'],
-    ...(isAdmin ? [['teachers', 'Teachers']] : []),
+    ...(isAdmin ? [['teachers', 'Mentors']] : []),
     ['moderation', 'Moderation'],
     ['deletions', 'Deletion Requests'],
     ['danger', 'Danger Zone'],
@@ -667,6 +665,29 @@ const AdminPanel = () => {
       )}
 
       {/* REVIEWS */}
+      <NoteDialog
+        open={!!reviewDialog}
+        title={reviewDialog?.mode === 'reject' ? 'Reject this project' : 'Request changes'}
+        description={
+          reviewDialog?.mode === 'reject'
+            ? `"${reviewDialog?.project?.projectTitle || reviewDialog?.project?.title || 'This project'}" will not be approved: no badges can be assigned and it can't be resubmitted. Explain why (optional); the owner and team will see it.`
+            : `Tell the team exactly what to fix before resubmitting "${reviewDialog?.project?.projectTitle || reviewDialog?.project?.title || 'this project'}". The owner and team will see this note.`
+        }
+        placeholder={
+          reviewDialog?.mode === 'reject'
+            ? 'For example: the repository is empty and the submission does not match the project brief.'
+            : 'For example:\n- Make the GitHub repository public\n- Add She Model Tech as a collaborator\n- Add a README describing each team member\'s part'
+        }
+        required={reviewDialog?.mode === 'changes'}
+        confirmLabel={reviewDialog?.mode === 'reject' ? 'Reject project' : 'Send back for changes'}
+        tone={reviewDialog?.mode === 'reject' ? 'danger' : 'primary'}
+        busy={!!reviewDialog && actingId === reviewDialog.project.id}
+        onCancel={() => setReviewDialog(null)}
+        onConfirm={(note) =>
+          reviewDialog.mode === 'reject' ? doReject(reviewDialog.project, note) : doRequestChanges(reviewDialog.project, note)
+        }
+      />
+
       {tab === 'reviews' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -732,13 +753,6 @@ const AdminPanel = () => {
                   </p>
                 </div>
 
-                <textarea
-                  value={feedbackById[p.id] || ''}
-                  onChange={(e) => setFeedbackById((prev) => ({ ...prev, [p.id]: e.target.value }))}
-                  placeholder="Feedback for the team (required for 'Request changes', optional for 'Reject')…"
-                  rows={2}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none mb-3"
-                />
 
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -749,14 +763,14 @@ const AdminPanel = () => {
                     {actingId === p.id ? '…' : 'Approve'}
                   </button>
                   <button
-                    onClick={() => doRequestChanges(p)}
+                    onClick={() => setReviewDialog({ project: p, mode: 'changes' })}
                     disabled={actingId === p.id}
                     className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg disabled:opacity-50"
                   >
                     Request changes
                   </button>
                   <button
-                    onClick={() => doReject(p)}
+                    onClick={() => setReviewDialog({ project: p, mode: 'reject' })}
                     disabled={actingId === p.id}
                     className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-sm font-semibold rounded-lg disabled:opacity-50"
                   >
@@ -912,7 +926,7 @@ const AdminPanel = () => {
                     )}
                     {u.isTeacher && (
                       <span className="ml-2 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">
-                        TEACHER
+                        MENTOR
                       </span>
                     )}
                     {u.isCompany && u.isVerified && (
@@ -939,7 +953,7 @@ const AdminPanel = () => {
                       onClick={() => toggleTeacher(u)}
                       className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${u.isTeacher ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
                     >
-                      {u.isTeacher ? 'Remove teacher' : 'Make teacher'}
+                      {u.isTeacher ? 'Remove mentor' : 'Make mentor'}
                     </button>
                   )}
                   <button
@@ -974,7 +988,7 @@ const AdminPanel = () => {
           <NoteDialog
             open={!!declineApp}
             title="Decline this application"
-            description={declineApp ? `Optional note to ${declineApp.applicantName}. They'll see it on the Teach page and can apply again.` : ''}
+            description={declineApp ? `Optional note to ${declineApp.applicantName}. They'll see it on the Become a mentor page and can apply again.` : ''}
             placeholder="For example: we'd love to see a sample lesson or a link to a talk you've given."
             confirmLabel="Decline application"
             busy={deciding}
@@ -982,11 +996,11 @@ const AdminPanel = () => {
             onConfirm={(note) => decideTeacher(declineApp, false, note)}
           />
           <div>
-            <h3 className="text-gray-900 font-bold mb-2">Courses awaiting approval</h3>
+            <h3 className="text-gray-900 font-bold mb-2">Mentor courses awaiting approval</h3>
             {pendingCourses === null ? (
               <p className="text-gray-400 text-sm">Loading...</p>
             ) : pendingCourses.length === 0 ? (
-              <p className="text-gray-400 text-sm">No teacher courses waiting for approval.</p>
+              <p className="text-gray-400 text-sm">No mentor courses waiting for approval.</p>
             ) : (
               <div className="space-y-2">
                 {pendingCourses.map((c) => (
@@ -996,7 +1010,7 @@ const AdminPanel = () => {
                         {c.title} {c.published && <span className="text-amber-700 text-xs font-semibold">(update to a published course)</span>}
                       </p>
                       <p className="text-gray-400 text-xs truncate">
-                        By {c.review?.submittedBy?.name || c.createdBy?.name || 'a teacher'}
+                        By {c.review?.submittedBy?.name || c.createdBy?.name || 'a mentor'}
                         {c.review?.submittedAt ? ` · submitted ${new Date(c.review.submittedAt).toLocaleDateString()}` : ''}
                       </p>
                     </div>
@@ -1009,7 +1023,7 @@ const AdminPanel = () => {
             )}
           </div>
           <div>
-            <h3 className="text-gray-900 font-bold mb-2">Applications</h3>
+            <h3 className="text-gray-900 font-bold mb-2">Mentor applications</h3>
             {teacherApps === null ? (
               <p className="text-gray-400 text-sm">Loading...</p>
             ) : teacherApps.filter((a) => a.status === 'pending').length === 0 ? (
@@ -1046,9 +1060,9 @@ const AdminPanel = () => {
             )}
           </div>
           <div>
-            <h3 className="text-gray-900 font-bold mb-2">Current teachers</h3>
+            <h3 className="text-gray-900 font-bold mb-2">Current mentors</h3>
             {users.filter((u) => u.isTeacher).length === 0 ? (
-              <p className="text-gray-400 text-sm">No teachers yet. Approve an application, or use "Make teacher" in Users.</p>
+              <p className="text-gray-400 text-sm">No mentors yet. Approve an application, or use "Make mentor" in Users.</p>
             ) : (
               <div className="space-y-2">
                 {users
@@ -1060,7 +1074,7 @@ const AdminPanel = () => {
                         <p className="text-gray-400 text-xs truncate">{u.email}</p>
                       </div>
                       <button onClick={() => toggleTeacher(u)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
-                        Remove teacher
+                        Remove mentor
                       </button>
                     </div>
                   ))}

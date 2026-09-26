@@ -59,11 +59,11 @@ const TeachApply = () => {
   const submit = async (e) => {
     e.preventDefault();
     if (!form.name.trim()) return toast.error('Add your name.');
-    if (!form.tracks.length) return toast.error('Choose at least one track you would teach.');
+    if (!form.tracks.length) return toast.error('Choose at least one track you could mentor in.');
     if (wordCount(form.experience) < MIN_WORDS.experience)
       return toast.error(`Your experience needs at least ${MIN_WORDS.experience} words (you have ${wordCount(form.experience)}).`);
     if (wordCount(form.motivation) < MIN_WORDS.motivation)
-      return toast.error(`"Why do you want to teach?" needs at least ${MIN_WORDS.motivation} words (you have ${wordCount(form.motivation)}).`);
+      return toast.error(`"Why do you want to mentor?" needs at least ${MIN_WORDS.motivation} words (you have ${wordCount(form.motivation)}).`);
     setSending(true);
     try {
       await applyToTeach(currentUser, form);
@@ -84,11 +84,11 @@ const TeachApply = () => {
     <LearningLayout>
       <section className="lr-hero" style={{ background: 'linear-gradient(180deg,#FDF2F8 0%,#fff 100%)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <p className="text-sm font-semibold text-pink-700 mb-3">Teach on She Model Tech</p>
+          <p className="text-sm font-semibold text-pink-700 mb-3">Become a She Model Tech mentor</p>
           <h1 className="fd-display text-4xl sm:text-5xl text-gray-900 max-w-3xl">Share what you know. Help others build real skills.</h1>
           <p className="text-gray-600 text-lg mt-4 max-w-2xl">
-            Teachers create and run lessons, video courses, and teaching guides for our tracks. Approved teachers get
-            access to Teacher, our space for building and presenting teaching materials.
+            Mentors create lessons, video courses, and guides for our tracks, and help others grow. Approved mentors get
+            access to the Mentor Hub, our space for building and presenting courses.
           </p>
         </div>
       </section>
@@ -101,7 +101,7 @@ const TeachApply = () => {
             </div>
           ) : !currentUser ? (
             <div className="rounded-2xl border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-gray-900">Apply to teach</h2>
+              <h2 className="text-xl font-bold text-gray-900">Apply to become a mentor</h2>
               <p className="text-gray-600 mt-2">Sign in or create a free account to apply.</p>
               <button onClick={() => signInAndReturn(navigate, location.pathname)}
                 className="mt-4 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
@@ -110,10 +110,10 @@ const TeachApply = () => {
             </div>
           ) : isTeacher ? (
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
-              <h2 className="text-xl font-bold text-gray-900">You're a teacher</h2>
-              <p className="text-gray-700 mt-2">You can create and present teaching materials in Teacher.</p>
+              <h2 className="text-xl font-bold text-gray-900">You're a mentor</h2>
+              <p className="text-gray-700 mt-2">You can create and present courses in the Mentor Hub.</p>
               <Link to="/teacher" className="inline-block mt-4 bg-gray-900 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
-                Open Teacher
+                Open the Mentor Hub
               </Link>
             </div>
           ) : app && app.status === 'pending' ? (
@@ -130,13 +130,13 @@ const TeachApply = () => {
               )}
               {canApply && (
                 <form onSubmit={submit} className="rounded-2xl border border-gray-200 p-5 sm:p-6 space-y-5">
-                  <h2 className="text-xl font-bold text-gray-900">Apply to teach</h2>
+                  <h2 className="text-xl font-bold text-gray-900">Apply to become a mentor</h2>
                   <div>
                     <label className={label} htmlFor="ta-name">Your name</label>
                     <input id="ta-name" className={input} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                   </div>
                   <fieldset>
-                    <legend className={label}>Which tracks could you teach?</legend>
+                    <legend className={label}>Which tracks could you mentor in?</legend>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {TEACH_TRACKS.map(([id, l]) => (
                         <button type="button" key={id} onClick={() => toggleTrack(id)} aria-pressed={form.tracks.includes(id)}
@@ -155,7 +155,7 @@ const TeachApply = () => {
                     <WordHint id="ta-exp-hint" text={form.experience} min={MIN_WORDS.experience} />
                   </div>
                   <div>
-                    <label className={label} htmlFor="ta-why">Why do you want to teach? <span className="font-normal text-gray-500">(at least {MIN_WORDS.motivation} words)</span></label>
+                    <label className={label} htmlFor="ta-why">Why do you want to mentor? <span className="font-normal text-gray-500">(at least {MIN_WORDS.motivation} words)</span></label>
                     <textarea id="ta-why" rows={3} className={input} value={form.motivation}
                       aria-describedby="ta-why-hint"
                       onChange={(e) => setForm({ ...form, motivation: e.target.value })} />
@@ -178,11 +178,11 @@ const TeachApply = () => {
         </div>
 
         <aside className="rounded-2xl bg-gray-50 border border-gray-100 p-5">
-          <p className="font-bold text-gray-900 mb-3">What teachers do</p>
+          <p className="font-bold text-gray-900 mb-3">What mentors do</p>
           <ul className="space-y-3 text-sm text-gray-700">
-            <li>Create lessons, written guides, and video courses in Teacher.</li>
+            <li>Create lessons, written guides, and video courses in the Mentor Hub.</li>
             <li>Present them full screen in class or live sessions.</li>
-            <li>Propose courses for students; our editors review them before they go live in Learning.</li>
+            <li>Publish courses for learners after an admin approves them, and earn the Mentor badge.</li>
           </ul>
           <p className="text-xs text-gray-500 mt-4">Every application is reviewed by a She Model Tech admin.</p>
         </aside>

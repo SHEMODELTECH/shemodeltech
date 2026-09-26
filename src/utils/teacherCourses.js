@@ -182,7 +182,7 @@ export const submitForReview = async (course, user, details) => {
       admins.docs.map((a) =>
         notifyUser(
           a.id,
-          course.published ? 'A teacher updated a published course' : 'A teacher course is waiting for approval',
+          course.published ? 'A mentor updated a published course' : 'A mentor course is waiting for approval',
           `${user.displayName || user.email}: "${course.title}"`,
           `/teacher/${course.id}`
         )
@@ -223,6 +223,25 @@ export const markApproved = async (course, admin) => {
   });
   const to = course.review?.submittedBy?.uid || course.createdBy?.uid;
   if (to && to !== admin.uid) {
-    await notifyUser(to, 'Your course is published', `"${course.title}" is now live for students in Learning.`, `/teacher/${course.id}`);
+    await notifyUser(to, 'Your course is published', `"${course.title}" is now live for learners in Learning.`, `/teacher/${course.id}`);
+    // Mentor badge: counts approved courses (an approved update doesn't count again).
+    if (!course.review?.isUpdate && !course.mentorBadgeCounted) {
+      try {
+        const u = await getDoc(doc(db, 'users', to));
+        const prev = u.exists() ? u.data().mentorApprovedCourses || 0 : 0;
+        await updateDoc(doc(db, 'users', to), {
+          mentorApprovedCourses: prev + 1,
+          mentorBadgeSince: u.data()?.mentorBadgeSince || new Date().toISOString(),
+        });
+        await updateDoc(doc(db, COL, course.id), { mentorBadgeCounted: true });
+        const level = prev + 1 >= 10 ? 'Lead Mentor' : prev + 1 >= 3 ? 'Senior Mentor' : 'Mentor';
+        const levelUp = prev === 0 || prev + 1 === 3 || prev + 1 === 10;
+        if (levelUp) {
+          await notifyUser(to, `You earned the ${level} badge`, 'It now shows on your profile and on your courses in Learning.', course.review?.submittedBy?.email ? `/profile/${course.review.submittedBy.email}` : '/learning');
+        }
+      } catch (e) {
+        console.error('mentor badge', e);
+      }
+    }
   }
 };

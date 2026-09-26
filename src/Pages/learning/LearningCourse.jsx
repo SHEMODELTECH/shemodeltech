@@ -13,6 +13,10 @@ import { coursesForTrack } from '../../utils/foundationsCourses';
 import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
 import { toast } from 'react-toastify';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase/config';
+import MentorBadge from '../../components/MentorBadge';
+import CourseFeedback from './CourseFeedback';
 
 const LearningCourse = ({ reading = false }) => {
   const { track, slug } = useParams();
@@ -21,6 +25,7 @@ const LearningCourse = ({ reading = false }) => {
   const location = useLocation();
   const lr = useLearning();
   const [refsOpen, setRefsOpen] = useState(false);
+  const [authorCount, setAuthorCount] = useState(1);
 
   // Courses published from Teacher live in the database: load this track's list,
   // and the full text of the one being viewed.
@@ -56,6 +61,15 @@ const LearningCourse = ({ reading = false }) => {
       alive = false;
     };
   }, [pubMeta]);
+
+  // The mentor's badge level (approved course count), when we can read it.
+  const authorUid = isPublished && published ? (published.find((p) => p.slug === slug) || {}).authorUid : null;
+  useEffect(() => {
+    if (!authorUid || !lr.signedIn) return;
+    getDoc(doc(db, 'users', authorUid))
+      .then((s) => setAuthorCount(Math.max(1, s.data()?.mentorApprovedCourses || 1)))
+      .catch(() => {});
+  }, [authorUid, lr.signedIn]);
 
   const course = useMemo(() => {
     if (!baseCourse || !isPublished) return baseCourse;
@@ -178,6 +192,12 @@ const LearningCourse = ({ reading = false }) => {
               <span>{trackName(track)}</span>
             </nav>
             <h1 className="fd-display text-3xl sm:text-4xl text-gray-900 leading-tight">{course.title}</h1>
+            {course.authorName && (
+              <p className="flex flex-wrap items-center gap-2 mt-3 text-sm text-gray-700">
+                By <span className="font-semibold">{course.authorName}</span>
+                <MentorBadge count={authorCount} size="sm" />
+              </p>
+            )}
             {course.summary && <p className="text-gray-700 text-lg mt-4 max-w-2xl">{course.summary}</p>}
             <div className="flex flex-wrap gap-x-5 gap-y-2 mt-5 text-sm text-gray-700">
               {course.level && <span><strong className="font-semibold">Level:</strong> {course.level}</span>}
@@ -293,6 +313,11 @@ const LearningCourse = ({ reading = false }) => {
               </li>
             )}
           </ol>
+        
+          {/* Ratings, reactions, comments: on mentor courses published to Learning */}
+          {isPublished && (
+            <CourseFeedback track={track} slug={slug} courseTitle={course.title} displayName={lr.profile?.displayName || ''} />
+          )}
         </section>
 
         {/* More in this track */}

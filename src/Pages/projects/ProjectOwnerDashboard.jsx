@@ -10,6 +10,7 @@ import { sendPush } from '../../utils/pushNotifications';
 import { toast } from 'react-toastify';
 import { notifyApplicationApproved, notifyApplicationRejected } from '../../utils/emailNotifications';
 import JoinedProjects from '../../components/JoinedProjects';
+import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../../utils/paidProjects';
 
 const industryTracks = [
@@ -301,14 +302,19 @@ const ProjectOwnerDashboard = () => {
 
   // Owners can't delete directly - they request deletion (admin approves).
   // Only allowed while no members have joined; otherwise they must close/dispute.
-  const requestDeletion = async (project) => {
+  // Asking for a reason opens a dialog (room to explain), not the browser prompt.
+  const [deleteFor, setDeleteFor] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const requestDeletion = (project) => {
     if ((project.approvedMembers?.length || 0) > 0) {
       toast.error('This project has members. Close or dispute it instead of deleting.');
       return;
     }
-    const reason = window.prompt('Why do you want to delete this project? An admin will review your request.');
-    if (reason === null) return;
+    setDeleteFor(project);
+  };
+  const sendDeletionRequest = async (project, reason) => {
     if (!reason.trim()) { toast.error('Please add a reason for the request.'); return; }
+    setDeleting(true);
     try {
       await addDoc(collection(db, 'deletionRequests'), {
         projectId: project.id,
@@ -322,7 +328,9 @@ const ProjectOwnerDashboard = () => {
       await updateDoc(doc(db, 'projects', project.id), { deletionRequested: true });
       setMyProjects(prev => prev.map(p => p.id === project.id ? { ...p, deletionRequested: true } : p));
       toast.success('Deletion request sent. An admin will review it.');
-    } catch (e) { console.error('deletion request failed', e); toast.error('Could not send the request.'); }
+      setDeleteFor(null);
+    } catch (e) { console.error('deletion request failed', e); toast.error(friendlyError(e, 'Could not send the request.')); }
+    setDeleting(false);
   };
 
   if (loading) {
@@ -340,6 +348,17 @@ const ProjectOwnerDashboard = () => {
     <>
       
       <div className="min-h-screen overflow-x-hidden " style={{ backgroundColor: '#ffffff' }}>
+        <NoteDialog
+          open={!!deleteFor}
+          title="Request deletion"
+          description={deleteFor ? `Why do you want to delete "${deleteFor.projectTitle || deleteFor.title || 'this project'}"? An admin will review your request.` : ''}
+          placeholder="For example: this was created by mistake, or it duplicates another project."
+          required
+          confirmLabel="Send request"
+          busy={deleting}
+          onCancel={() => setDeleteFor(null)}
+          onConfirm={(reason) => sendDeletionRequest(deleteFor, reason)}
+        />
         <main className="pb-16 sm:pb-20">
           <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-5xl">
 

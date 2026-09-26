@@ -87,11 +87,11 @@ const Gate = ({ children }) => {
   if (!access.isTeacher) {
     return (
       <div className="max-w-lg mx-auto text-center py-24 px-4">
-        <h1 className="text-xl font-bold text-gray-900">Teacher is for approved teachers</h1>
-        <p className="text-gray-600 mt-2">Teaching materials are available to teachers and She Model Tech staff.</p>
+        <h1 className="text-xl font-bold text-gray-900">The Mentor Hub is for approved mentors</h1>
+        <p className="text-gray-600 mt-2">Mentor courses and guides are available to mentors and She Model Tech staff.</p>
         <div className="flex justify-center gap-4 mt-5">
           <Link to="/teach" className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg">
-            Apply to become a teacher
+            Apply to become a mentor
           </Link>
           <Link to="/learning" className="text-sm font-semibold text-gray-700 px-3 py-2 hover:underline">Go to Learning</Link>
         </div>
@@ -109,7 +109,7 @@ const StatusTag = ({ status }) => (
       status === 'ready' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
     }`}
   >
-    {status === 'ready' ? 'Ready to teach' : 'Draft'}
+    {status === 'ready' ? 'Ready' : 'Draft'}
   </span>
 );
 
@@ -137,7 +137,7 @@ const TeacherList = ({ access }) => {
       .then(setItems)
       .catch((e) => {
         console.error(e);
-        toast.error('Could not load teaching materials.');
+        toast.error('Could not load the Mentor Hub.');
         setItems([]);
       });
   }, []);
@@ -166,10 +166,10 @@ const TeacherList = ({ access }) => {
     <div className="max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Teacher</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mentor Hub</h1>
           <p className="text-gray-600 mt-1 max-w-2xl">
-            Create and manage courses. Choose who each one is for: teachers (stays here) or students (published to
-            Learning). Only She Model Tech staff and approved teachers can see this page.
+            Create and manage courses. Choose who each one is for: mentors (stays here) or learners (published to
+            Learning). Only She Model Tech staff and approved mentors can see this page.
           </p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
@@ -195,7 +195,7 @@ const TeacherList = ({ access }) => {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Audience">
-        {[['all', 'All'], ['teachers', 'For teachers'], ['students', 'For students'], ['review', 'Pending review']].map(([v, l]) => (
+        {[['all', 'All'], ['teachers', 'For mentors'], ['students', 'For learners'], ['review', 'Pending review']].map(([v, l]) => (
           <button key={v} onClick={() => setAud(v)} aria-pressed={aud === v}
             className={`text-sm font-semibold px-4 py-2 rounded-full ${aud === v ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
             {l}
@@ -238,7 +238,7 @@ const TeacherList = ({ access }) => {
       ) : shown.length === 0 ? (
         <div className="text-center py-20 border border-dashed border-gray-300 rounded-2xl">
           <p className="font-semibold text-gray-900">
-            {items.length ? 'Nothing matches that search' : 'No teaching materials yet'}
+            {items.length ? 'Nothing matches that search' : 'No courses yet'}
           </p>
           <p className="text-sm text-gray-600 mt-1">
             {items.length ? 'Try another word or track.' : 'Upload an instructor edition as an HTML file, or write notes here.'}
@@ -254,7 +254,7 @@ const TeacherList = ({ access }) => {
                 </span>
                 <StatusTag status={c.status} />
                 <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${c.published ? 'bg-pink-50 text-pink-700' : 'bg-indigo-50 text-indigo-700'}`}>
-                  {c.published ? 'For students' : 'For teachers'}
+                  {c.published ? 'For learners' : 'For mentors'}
                 </span>
                 <ReviewTag course={c} />
               </div>
@@ -468,7 +468,7 @@ const TeacherEditor = ({ access }) => {
           toast.success(st === 'pending' ? 'Saved. It stays in review with your changes.' : 'Submitted for admin approval.');
         } else {
           if (st === 'pending') await withdrawSubmission(current, currentUser);
-          toast.success(st === 'pending' ? 'Saved and withdrawn from review. It is for teachers only now.' : id ? 'Saved.' : 'Added to Teacher.');
+          toast.success(st === 'pending' ? 'Saved and withdrawn from review. It is for mentors only now.' : id ? 'Saved.' : 'Added to the Mentor Hub.');
         }
         navigate(`/teacher/${newId}`);
         setSaving(false);
@@ -493,7 +493,7 @@ const TeacherEditor = ({ access }) => {
         toast.success(existing?.published ? 'Saved, and updated in Learning.' : 'Saved and published to Learning for students.');
       } else {
         if (existing?.published) await unpublishFromLearning(saved);
-        toast.success(existing?.published ? 'Saved. Removed from Learning; now for teachers only.' : id ? 'Saved.' : 'Added to Teacher.');
+        toast.success(existing?.published ? 'Saved. Removed from Learning; now for mentors only.' : id ? 'Saved.' : 'Added to the Mentor Hub.');
       }
       navigate(`/teacher/${newId}`);
     } catch (e) {
@@ -523,7 +523,7 @@ const TeacherEditor = ({ access }) => {
   return (
     <div className="max-w-4xl mx-auto">
       <Link to={id ? `/teacher/${id}` : '/teacher'} className="text-sm font-semibold text-gray-600 hover:text-gray-900">
-        {id ? 'Back to the course' : 'Back to Teacher'}
+        {id ? 'Back to the course' : 'Back to the Mentor Hub'}
       </Link>
       <h1 className="text-2xl font-bold text-gray-900 mt-3 mb-6">
         {id ? 'Edit course' : meta.kind === 'html' ? 'Upload an HTML course' : meta.kind === 'video' ? 'Create a video course' : 'Write a course or notes'}
@@ -534,8 +534,8 @@ const TeacherEditor = ({ access }) => {
           <legend className={label}>Who is this for?</legend>
           <div className="grid sm:grid-cols-2 gap-3 mt-1">
             {[
-              ['teachers', 'Teachers', 'Teaching notes and instructor editions. Stays in Teacher, visible to admins and editors only.'],
-              ['students', 'Students', access.isStaff ? 'A course for learners. Published to the Learning platform, where anyone can find it.' : 'A course for learners. Sent to an admin for approval, then published to Learning.'],
+              ['teachers', 'Mentors', 'Guides and instructor editions. Stays in the Mentor Hub, visible to mentors and staff only.'],
+              ['students', 'Learners', access.isStaff ? 'A course for learners. Published to the Learning platform, where anyone can find it.' : 'A course for learners. Sent to an admin for approval, then published to Learning.'],
             ].map(([val, title, desc]) => (
               <label
                 key={val}
@@ -572,7 +572,7 @@ const TeacherEditor = ({ access }) => {
         <div>
           <label className={label} htmlFor="t-desc">Description</label>
           <textarea id="t-desc" rows={2} className={input} value={meta.description}
-            placeholder="What this is and how to use it when teaching"
+            placeholder="What this is and who it is for"
             onChange={(e) => setMeta({ ...meta, description: e.target.value })} />
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
@@ -588,7 +588,7 @@ const TeacherEditor = ({ access }) => {
             <label className={label} htmlFor="t-status">Status</label>
             <select id="t-status" className={input} value={meta.status} onChange={(e) => setMeta({ ...meta, status: e.target.value })}>
               <option value="draft">Draft</option>
-              <option value="ready">Ready to teach</option>
+              <option value="ready">Ready</option>
             </select>
           </div>
         </div>
@@ -750,7 +750,7 @@ const PublishPanel = ({ course, content, onChange, access }) => {
   const pub = course.published;
   // A teacher's submission waiting for approval (new course, or an update).
   const pending = reviewStatus(course) === 'pending';
-  const submitter = course.review?.submittedBy?.name || course.publishRequested?.name || course.createdBy?.name || 'A teacher';
+  const submitter = course.review?.submittedBy?.name || course.publishRequested?.name || course.createdBy?.name || 'A mentor';
   const req = pending;
   const learnUrl = pub ? `/learning/${pub.track}/${PUBLISHED_PREFIX}${pub.learningId}` : null;
 
@@ -779,7 +779,7 @@ const PublishPanel = ({ course, content, onChange, access }) => {
       await declineSubmission(course, currentUser, note);
       onChange({ ...course, review: { ...(course.review || {}), status: 'declined', note } });
       setDeclineOpen(false);
-      toast.success('Declined. The teacher has been notified.');
+      toast.success('Declined. The mentor has been notified.');
     } catch (e) {
       console.error(e);
       toast.error(friendlyError(e, 'Could not decline it.'));
@@ -788,7 +788,7 @@ const PublishPanel = ({ course, content, onChange, access }) => {
   };
 
   const unpublish = async () => {
-    if (!window.confirm('Remove this from Learning? Students will no longer see it. The Teacher copy stays.')) return;
+    if (!window.confirm('Remove this from Learning? Learners will no longer see it. The Mentor Hub copy stays.')) return;
     setBusy(true);
     try {
       await unpublishFromLearning(course);
@@ -828,12 +828,12 @@ const PublishPanel = ({ course, content, onChange, access }) => {
             </>
           ) : req ? (
             <>
-              <strong className="text-amber-700">{submitter} submitted this for students.</strong>{' '}
+              <strong className="text-amber-700">{submitter} submitted this for learners.</strong>{' '}
               {access?.isAdmin ? 'Review it, then approve and publish, or decline with a note.' : 'Waiting for an admin to approve it.'}
             </>
           ) : (
             <>
-              <strong>For teachers.</strong> Publish it to make a copy students can take in Learning.
+              <strong>For mentors.</strong> Publish it to make a copy learners can take in Learning.
             </>
           )}
         </p>
@@ -921,7 +921,7 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
   const fmt = (iso) => (iso ? new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '');
 
   const withdraw = async () => {
-    if (!window.confirm('Withdraw this from review? It stays in Teacher and you can resubmit any time.')) return;
+    if (!window.confirm('Withdraw this from review? It stays in the Mentor Hub and you can resubmit any time.')) return;
     setBusy(true);
     try {
       await withdrawSubmission(course, currentUser);
@@ -968,7 +968,7 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
   } else if (st === 'withdrawn' && !course.published) {
     text = (
       <>
-        <strong>Withdrawn from review.</strong> Visible to teachers and staff only. Resubmit when it is ready.
+        <strong>Withdrawn from review.</strong> Visible to mentors and staff only. Resubmit when it is ready.
       </>
     );
   } else if (course.published) {
@@ -981,7 +981,7 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
   } else {
     text = (
       <>
-        <strong>For teachers.</strong> Visible to teachers and staff only.
+        <strong>For mentors.</strong> Visible to mentors and staff only.
       </>
     );
   }
@@ -1003,7 +1003,7 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
           )}
           {!st && !course.published && (
             <button onClick={() => navigate(`/teacher/${course.id}/edit`)} className={`${btn} bg-pink-600 hover:bg-pink-700 text-white`}>
-              Submit for students
+              Submit for learners
             </button>
           )}
         </div>
@@ -1084,7 +1084,7 @@ const TeacherViewer = ({ access }) => {
     <div className={course.kind === 'html' ? '' : 'max-w-4xl mx-auto'}>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="min-w-0">
-          <Link to="/teacher" className="text-sm font-semibold text-gray-600 hover:text-gray-900">Teacher</Link>
+          <Link to="/teacher" className="text-sm font-semibold text-gray-600 hover:text-gray-900">Mentor Hub</Link>
           <div className="flex flex-wrap items-center gap-2 mt-1">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{course.title}</h1>
             <StatusTag status={course.status} />

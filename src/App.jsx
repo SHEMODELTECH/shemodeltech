@@ -176,6 +176,8 @@ function App() {
 
                 {/* She Model Tech Learning: public catalog, its own layout (no app sidebar) */}
                 <Route path="/teach" element={<TeachApply />} />
+                <Route path="/become-a-mentor" element={<Navigate to="/teach" replace />} />
+                <Route path="/mentor" element={<Navigate to="/teacher" replace />} />
                 <Route path="/learning" element={<LearningHome />} />
                 <Route path="/learning/my" element={<LearningHome mine />} />
                 <Route path="/learning/certificate/:id" element={<LearningCertificate />} />

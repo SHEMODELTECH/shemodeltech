@@ -72,7 +72,7 @@ export const setTeacher = async (userId, value, admin) => {
     teacherAssignedBy: value ? admin.email || '' : null,
   });
   if (value) {
-    await notify(userId, 'You are now a teacher on She Model Tech', 'Open Teacher in the sidebar to create and share teaching materials.', '/teacher');
+    await notify(userId, 'You are now a She Model Tech mentor', 'Open the Mentor Hub in Learning to create and share courses.', '/teacher');
   }
 };
 
@@ -90,11 +90,11 @@ export const decideTeacherApplication = async (app, approve, admin, note = '') =
       teacherSince: new Date().toISOString(),
       teacherAssignedBy: admin.email || '',
     });
-    await notify(app.applicantUid, 'Your teacher application was approved', 'Welcome! Open Teacher in the sidebar to start creating teaching materials.', '/teacher');
+    await notify(app.applicantUid, 'Your mentor application was approved', 'Welcome! Open the Mentor Hub in Learning to start creating courses.', '/teacher');
   } else {
     await notify(
       app.applicantUid,
-      'Update on your teacher application',
+      'Update on your mentor application',
       note.trim() || 'Thank you for applying. We are not able to approve it right now; you are welcome to apply again later.',
       '/teach'
     );

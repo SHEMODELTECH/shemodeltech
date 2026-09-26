@@ -70,6 +70,8 @@ export const toCatalogCourse = (p) => ({
   projects: p.parts || 0,
   kind: p.kind === 'html' ? 'published-html' : 'published-markdown',
   format: p.format || p.kind,
+  authorUid: p.authorUid || '',
+  authorName: p.authorName || '',
   order: p.order ?? 999,
   references: [],
   markdown: '',
@@ -109,6 +111,9 @@ export const publishToLearning = async (teacherCourse, content, details, user) =
       parts,
       chunkCount: chunks.length,
       sourceTeacherId: teacherCourse.id,
+      // Who wrote it (shown on the course page, with their Mentor badge).
+      authorUid: teacherCourse.review?.submittedBy?.uid || teacherCourse.createdBy?.uid || user.uid,
+      authorName: teacherCourse.review?.submittedBy?.name || teacherCourse.createdBy?.name || '',
       updatedAt: serverTimestamp(),
       updatedBy: who(user),
       ...(prev ? {} : { publishedAt: serverTimestamp(), publishedBy: who(user) }),

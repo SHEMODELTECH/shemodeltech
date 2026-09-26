@@ -78,7 +78,10 @@ service cloud.firestore {
  // Teacher access is granted by an admin, never self-set.
  && !touched('isTeacher')
  && !touched('teacherSince')
- && !touched('teacherAssignedBy');
+ && !touched('teacherAssignedBy')
+ // The Mentor badge is awarded by an admin's approval, never self-set.
+ && !touched('mentorApprovedCourses')
+ && !touched('mentorBadgeSince');
 
  allow update: if isAdmin();
 
@@ -315,6 +318,35 @@ service cloud.firestore {
  match /chunks/{n} {
  allow read: if true;
  allow write: if isReviewer();
+ }
+ }
+
+ // Ratings, reactions, and comments on mentor courses in Learning.
+ match /course_feedback/{courseKey} {
+ match /ratings/{uid} {
+ allow read: if true;
+ allow create, update: if isSignedIn() && uid == myUid()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.stars is int
+ && request.resource.data.stars >= 1 && request.resource.data.stars <= 5;
+ allow delete: if isSignedIn() && (uid == myUid() || isReviewer());
+ }
+ match /reactions/{uid} {
+ allow read: if true;
+ allow create, update: if isSignedIn() && uid == myUid()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.type in ['helpful', 'love', 'insightful', 'inspiring'];
+ allow delete: if isSignedIn() && (uid == myUid() || isReviewer());
+ }
+ match /comments/{id} {
+ allow read: if true;
+ allow create: if isSignedIn()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.text is string
+ && request.resource.data.text.size() > 0
+ && request.resource.data.text.size() <= 2000;
+ allow update: if false;
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
  }
  }
 

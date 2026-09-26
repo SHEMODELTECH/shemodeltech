@@ -69,11 +69,11 @@ const LearningLayout = ({ children, accent, bare = false }) => {
             )}
             {canTeach ? (
               <NavLink to="/teacher" className={linkCls}>
-                Teacher
+                Mentor Hub
               </NavLink>
             ) : (
               <NavLink to="/teach" className={linkCls}>
-                Teach
+                Become a mentor
               </NavLink>
             )}
           </nav>
@@ -123,11 +123,11 @@ const LearningLayout = ({ children, accent, bare = false }) => {
             )}
             {canTeach ? (
               <NavLink to="/teacher" className={linkCls}>
-                Teacher
+                Mentor Hub
               </NavLink>
             ) : (
               <NavLink to="/teach" className={linkCls}>
-                Teach on She Model Tech
+                Become a mentor
               </NavLink>
             )}
             <Link to={currentUser ? '/dashboard' : '/'} className="text-sm font-semibold text-gray-700 px-3 py-2">
@@ -152,7 +152,7 @@ const LearningLayout = ({ children, accent, bare = false }) => {
           <p>She Model Tech Learning. Free courses for every track.</p>
           <div className="flex gap-5">
             <Link to="/projects" className="hover:text-gray-900">Projects</Link>
-            <Link to="/teach" className="hover:text-gray-900">Teach</Link>
+            <Link to="/teach" className="hover:text-gray-900">Mentor</Link>
             <Link to="/about" className="hover:text-gray-900">About</Link>
             <Link to="/support" className="hover:text-gray-900">Support</Link>
           </div>
