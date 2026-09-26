@@ -22,7 +22,8 @@
 //    (Python compiled for the browser), loaded only when someone presses Run.
 //    A block whose first line is "# name.py" is also saved as that file, so a
 //    later block can import it. Blocks that need the internet (requests) or a
-//    package Pyodide doesn't ship say so instead of offering Run.
+//    package Pyodide doesn't ship say so instead of offering Run. It runs in a
+//    Web Worker with a time limit, so a runaway loop can't freeze the page.
 
 const el = (tag, cls, text) => {
   const e = document.createElement(tag);
@@ -376,32 +377,58 @@ export const mountLabs = (container) => {
   });
 };
 
-// ---------- Runnable Python (Pyodide) ----------
-const PYODIDE_VERSION = '0.26.4';
-const PYODIDE_URL = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
-let pyodidePromise = null;
+// ---------- Runnable Python (Pyodide, in a Web Worker) ----------
+// Python runs in a background worker (public/workers/pyodide-worker.js), so an
+// endless loop can't freeze the page. A run that takes longer than RUN_LIMIT_MS
+// is stopped by terminating the worker; the next run starts a fresh one.
+const RUN_LIMIT_MS = 15000;
+let worker = null;
+let workerStarted = false;
+let seq = 0;
+const pending = new Map();
 
-const loadPython = () => {
-  if (pyodidePromise) return pyodidePromise;
-  pyodidePromise = new Promise((resolve, reject) => {
-    const start = () =>
-      window
-        .loadPyodide({ indexURL: PYODIDE_URL })
-        .then(resolve)
-        .catch(reject);
-    if (window.loadPyodide) return start();
-    const s = document.createElement('script');
-    s.src = `${PYODIDE_URL}pyodide.js`;
-    s.async = true;
-    s.onload = start;
-    s.onerror = () => reject(new Error('Could not load Python. Check your internet connection.'));
-    document.head.appendChild(s);
-  }).catch((e) => {
-    pyodidePromise = null;
-    throw e;
-  });
-  return pyodidePromise;
+const getWorker = () => {
+  if (!worker) {
+    worker = new Worker('/workers/pyodide-worker.js');
+    worker.onmessage = (e) => {
+      const p = pending.get(e.data.id);
+      if (!p) return;
+      pending.delete(e.data.id);
+      clearTimeout(p.timer);
+      p.resolve(e.data);
+    };
+    worker.onerror = () => {
+      pending.forEach((p) => {
+        clearTimeout(p.timer);
+        p.resolve({ ok: false, out: '', error: 'Could not start Python. Check your internet connection.' });
+      });
+      pending.clear();
+      worker = null;
+      workerStarted = false;
+    };
+  }
+  return worker;
 };
+
+const runPython = (code, fileName) =>
+  new Promise((resolve) => {
+    const id = ++seq;
+    const firstRun = !workerStarted;
+    workerStarted = true;
+    const timer = setTimeout(() => {
+      pending.delete(id);
+      if (worker) worker.terminate();
+      worker = null;
+      workerStarted = false;
+      resolve({
+        ok: false,
+        out: '',
+        error: `Stopped after ${Math.round((firstRun ? RUN_LIMIT_MS * 3 : RUN_LIMIT_MS) / 1000)} seconds. Check for a loop that never ends. (Files you created earlier on this page were reset.)`,
+      });
+    }, firstRun ? RUN_LIMIT_MS * 3 : RUN_LIMIT_MS); // first run also downloads Python
+    pending.set(id, { resolve, timer });
+    getWorker().postMessage({ id, code, fileName });
+  });
 
 const NEEDS_COMPUTER = /^\s*(import|from)\s+(requests|fastapi|flask|uvicorn|sqlalchemy|psycopg2|anthropic|openai|dotenv)\b/m;
 
@@ -465,31 +492,26 @@ export const enhancePython = (container) => {
     run.addEventListener('click', async () => {
       out.hidden = false;
       out.classList.remove('is-error');
-      out.textContent = pyodidePromise ? 'Running...' : 'Starting Python in your browser (first run takes a few seconds)...';
+      out.textContent = workerStarted ? 'Running...' : 'Starting Python in your browser (first run takes a few seconds)...';
       run.disabled = true;
-      try {
-        const py = await loadPython();
-        let text = '';
-        py.setStdout({ batched: (s) => (text += `${s}\n`) });
-        py.setStderr({ batched: (s) => (text += `${s}\n`) });
-        py.setStdin({ stdin: () => window.prompt('Your program is asking for input:') ?? '' });
-        const src = ta.value;
-        const file = src.match(/^#\s*([\w-]+\.py)\s*$/m);
-        if (file && src.trimStart().startsWith('#')) {
-          py.FS.writeFile(file[1], src);
-          await py.runPythonAsync('import importlib; importlib.invalidate_caches()');
+      const src = ta.value;
+      const file = src.trimStart().startsWith('#') ? (src.match(/^#\s*([\w-]+\.py)\s*$/m) || [])[1] : null;
+      const res = await runPython(src, file || null);
+      if (res.ok) {
+        out.textContent = res.out.trim() || '(Ran with no output.)';
+      } else {
+        if (res.loadFailed) {
+          out.textContent = 'Could not load Python. Check your internet connection, then press Run again.';
+          out.classList.add('is-error');
+          run.disabled = false;
+          return;
         }
-        await py.runPythonAsync(src);
-        out.textContent = text.trim() || '(Ran with no output.)';
-      } catch (err) {
-        const lines = String(err && err.message ? err.message : err).trim().split('\n');
-        // Show the useful end of a Python traceback, not the Pyodide internals.
+        const lines = String(res.error || '').trim().split('\n');
         const i = lines.findIndex((l) => l.includes('File "<exec>"'));
-        out.textContent = (i >= 0 ? lines.slice(i) : lines.slice(-4)).join('\n');
+        out.textContent = `${res.out ? `${res.out.trim()}\n` : ''}${(i >= 0 ? lines.slice(i) : lines.slice(-4)).join('\n')}`;
         out.classList.add('is-error');
-      } finally {
-        run.disabled = false;
       }
+      run.disabled = false;
     });
 
     cell.append(bar, ta, out);
@@ -519,25 +541,34 @@ export const enhanceHtml = (container) => {
     ta.spellcheck = false;
     ta.setAttribute('aria-label', 'HTML you can edit; the preview updates as you type');
     const frame = el('iframe', 'html-preview');
-    frame.setAttribute('sandbox', 'allow-scripts');
     frame.title = 'Live preview';
+    // The live preview never runs JavaScript while typing (a half-typed loop
+    // could freeze the page). Code with <script> gets a "Run scripts" button
+    // that runs it once, in a sandbox that can't reach the site.
+    const runJs = btn('py-run', 'Run scripts');
+    runJs.hidden = !/<script/i.test(source);
+    bar.insertBefore(runJs, reset);
     let t;
-    const render = () => {
+    const render = (withScripts = false) => {
+      frame.setAttribute('sandbox', withScripts ? 'allow-scripts' : '');
       frame.srcdoc = `<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:system-ui,sans-serif;margin:12px;color:#111}</style></head><body>${ta.value}</body></html>`;
     };
+    runJs.addEventListener('click', () => render(true));
     const fit = () => {
       ta.style.height = 'auto';
       ta.style.height = `${Math.max(ta.scrollHeight + 2, 140)}px`;
     };
     ta.addEventListener('input', () => {
       fit();
+      runJs.hidden = !/<script/i.test(ta.value);
       clearTimeout(t);
-      t = setTimeout(render, 250);
+      t = setTimeout(() => render(false), 400);
     });
     reset.addEventListener('click', () => {
       ta.value = source;
       fit();
-      render();
+      runJs.hidden = !/<script/i.test(source);
+      render(false);
     });
     grid.append(ta, frame);
     cell.append(bar, grid);

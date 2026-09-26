@@ -3,7 +3,7 @@
 // completed each course (from issued certificates) and learner ratings.
 // Everything read here is public, so it works for any visitor.
 
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getCountFromServer, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { PUBLISHED_PREFIX, listPublished } from './learningPublished';
 
@@ -12,12 +12,13 @@ const feedbackKey = (track, slug) => `${track}__${slug}`.replace(/[^A-Za-z0-9_-]
 // Completions and ratings for one published course.
 export const courseStats = async (track, slug) => {
   const [certs, ratings] = await Promise.all([
-    getDocs(query(collection(db, 'learning_certificates'), where('slug', '==', slug))).catch(() => null),
+    // A server-side count: doesn't download every certificate.
+    getCountFromServer(query(collection(db, 'learning_certificates'), where('slug', '==', slug))).catch(() => null),
     getDocs(collection(db, 'course_feedback', feedbackKey(track, slug), 'ratings')).catch(() => null),
   ]);
   const stars = ratings ? ratings.docs.map((d) => d.data().stars || 0) : [];
   return {
-    completions: certs ? certs.size : 0,
+    completions: certs ? certs.data().count : 0,
     ratingCount: stars.length,
     ratingSum: stars.reduce((a, b) => a + b, 0),
   };

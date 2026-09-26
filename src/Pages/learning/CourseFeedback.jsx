@@ -18,6 +18,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   orderBy,
   query,
   serverTimestamp,
@@ -73,7 +74,7 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
     Promise.all([
       getDocs(collection(db, base, 'ratings')),
       getDocs(collection(db, base, 'reactions')),
-      getDocs(query(collection(db, base, 'comments'), orderBy('at', 'desc'))),
+      getDocs(query(collection(db, base, 'comments'), orderBy('at', 'desc'), limit(100))),
     ])
       .then(([r, re, c]) => {
         if (!alive) return;
