@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
-import { CheckIcon, CourseReader, InteractivePlayer, coursePartTitles, formatTime, look, useLearning } from './shared';
+import { CheckIcon, CourseReader, CourseReferences, InteractivePlayer, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack } from '../../utils/foundationsCourses';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
 
@@ -191,6 +191,10 @@ const LearningCourse = ({ reading = false }) => {
               );
             })}
           </ol>
+          {/* Sources, under the syllabus */}
+          <div className="pt-10">
+            <CourseReferences refs={course.references} />
+          </div>
         </section>
 
         {/* More in this track */}

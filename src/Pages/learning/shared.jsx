@@ -292,6 +292,35 @@ export const enhanceCourseContent = (container, key, opts = {}) => {
   mountLabs(container);
 };
 
+
+// ---- Sources and further reading ----
+// Official documentation, standards, and primary sources for what the course
+// teaches, matched from its content at build time (scripts/courseReferences.js).
+export const CourseReferences = ({ refs, compact = false }) => {
+  if (!refs || !refs.length) return null;
+  return (
+    <section className={compact ? 'lr-refs lr-refs-compact' : 'lr-refs'} aria-labelledby="refs-h">
+      <h2 id="refs-h" className={compact ? 'text-base font-bold text-gray-900' : 'text-xl font-bold text-gray-900'}>
+        Sources and further reading
+      </h2>
+      <p className="text-sm text-gray-600 mt-1 mb-3 max-w-2xl">
+        Official documentation, standards, and original sources for the tools and ideas in this course. Use them
+        to check details and go deeper.
+      </p>
+      <ol className="lr-refs-list">
+        {refs.map((r) => (
+          <li key={r.url}>
+            <a href={r.url} target="_blank" rel="noopener noreferrer">
+              {r.title}
+            </a>
+            <span className="text-gray-500">, {r.publisher}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+};
+
 // ---- Interactive course player ----
 // Self-contained HTML courses bring their own navigation, labs, and quizzes, so
 // they run full-width in a frame under a slim bar with the course controls.
@@ -603,6 +632,9 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
               {/* Finish line, on the last part */}
               {isLast && (
                 <>
+                  <div className="mt-10">
+                    <CourseReferences refs={course.references} compact />
+                  </div>
                   <div className="fd-finish">
                     {!isDone ? (
                       <>
@@ -713,6 +745,10 @@ export const FD_CSS = LABS_CSS + `
 .fd-pg:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
 .fd-pg-next { grid-column:2; text-align:right; }
 @media (max-width:480px) { .fd-pager { grid-template-columns:1fr; } .fd-pg-next { grid-column:1; } }
+.lr-refs-list { list-style:decimal; padding-left:1.3rem; display:grid; gap:.4rem; font-size:.92rem; }
+.lr-refs-list a { color:var(--acc); font-weight:600; text-decoration:underline; text-underline-offset:2px; }
+.lr-refs-list a:focus-visible { outline:2px solid var(--acc); outline-offset:2px; border-radius:2px; }
+.lr-refs-compact { border-top:1px solid #E5E7EB; padding-top:1.25rem; }
 .fd-finish { margin-top:2.5rem; padding:1.15rem 1.25rem; border-radius:1rem; background:var(--tint);
   display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; }
 .fd-next { display:block; width:100%; text-align:left; margin-top:1rem; padding:1rem 1.25rem; border-radius:1rem;

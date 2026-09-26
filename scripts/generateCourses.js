@@ -18,6 +18,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { referencesFor } = require('./courseReferences');
 
 const COURSES_DIR = path.join(__dirname, '..', 'src', 'Pages', 'courses');
 const OUT_FILE = path.join(__dirname, '..', 'src', 'utils', 'foundationsCoursesData.js');
@@ -128,7 +129,7 @@ const estimateMinutes = (md) => {
 //   <!-- order: 13 -->  <!-- level: Beginner -->
 const PUBLIC_DIR = path.join(__dirname, '..', 'public', 'interactive');
 
-const readInteractive = (fullPath, file) => {
+const readInteractive = (fullPath, file, track) => {
   const html = fs.readFileSync(fullPath, 'utf8');
   const slug = file.replace(/\.html$/i, '');
   let meta = null;
@@ -172,6 +173,7 @@ const readInteractive = (fullPath, file) => {
     parts: meta ? meta.PARTS : [],
     modules: modules.map(({ title, part }) => ({ title, part })),
     order: readOrder(html),
+    references: referencesFor(track, html.replace(/<style[\s\S]*?<\/style>/gi, ' ')),
     markdown: '',
   };
 };
@@ -201,7 +203,7 @@ const build = () => {
     const dir = path.join(COURSES_DIR, track);
     const files = fs.readdirSync(dir).filter((f) => f.toLowerCase().endsWith('.md'));
     const htmlFiles = fs.readdirSync(dir).filter((f) => f.toLowerCase().endsWith('.html'));
-    const interactive = htmlFiles.map((file) => readInteractive(path.join(dir, file), file)).filter(Boolean);
+    const interactive = htmlFiles.map((file) => readInteractive(path.join(dir, file), file, track)).filter(Boolean);
     const courses = files.map((file) => {
       const raw = fs.readFileSync(path.join(dir, file), 'utf8');
       const slug = file.replace(/\.md$/i, '');
@@ -220,6 +222,7 @@ const build = () => {
         projects: countProjects(md),
         minutes: estimateMinutes(md),
         order: readOrder(md),
+        references: referencesFor(track, md),
         ...((md.match(/<!--\s*runnable:\s*(python|html)\s*-->/i) || [])[1] ? { runnable: md.match(/<!--\s*runnable:\s*(python|html)\s*-->/i)[1].toLowerCase() } : {}),
         markdown: md,
       };
