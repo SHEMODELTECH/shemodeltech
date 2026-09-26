@@ -250,6 +250,16 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  // project_applications, contributor applications, reviewed by the lead.
  // ---------------------------------------------------------------
+ // Teacher materials: teaching notes and instructor editions for staff only.
+ // Never readable by members or companies. Deleting a whole course is admin-only.
+ match /teacher_courses/{id} {
+ allow read, create, update: if isReviewer();
+ allow delete: if isAdmin();
+ match /chunks/{n} {
+ allow read, write: if isReviewer();
+ }
+ }
+
  // Project deletion requests: a lead asks an admin to delete their project.
  match /deletionRequests/{id} {
  allow create: if isSignedIn()

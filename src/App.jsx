@@ -28,6 +28,9 @@ const NotificationsPage = lazy(() => import('./Pages/Notifications'));
 const Foundations = lazy(() => import('./Pages/Foundations'));
 const LearningHome = lazy(() => import('./Pages/learning/LearningHome'));
 const LearningCourse = lazy(() => import('./Pages/learning/LearningCourse'));
+const TeacherHome = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherHome })));
+const TeacherEdit = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherEdit })));
+const TeacherView = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherView })));
 const Messages = lazy(() => import('./Pages/Messages'));
 const MembersDirectory = lazy(() => import('./Pages/MembersDirectory'));
 const ApplyToLead = lazy(() => import('./Pages/cohort/ApplyToLead'));
@@ -513,6 +516,11 @@ function App() {
                   }
                 />
                 <Route path="/foundations" element={<Foundations />} />
+                {/* Teacher: admins and editors only (checked on the page and in Firestore rules) */}
+                <Route path="/teacher" element={<SidebarRoute><TeacherHome /></SidebarRoute>} />
+                <Route path="/teacher/new" element={<SidebarRoute><TeacherEdit /></SidebarRoute>} />
+                <Route path="/teacher/:id" element={<SidebarRoute><TeacherView /></SidebarRoute>} />
+                <Route path="/teacher/:id/edit" element={<SidebarRoute><TeacherEdit /></SidebarRoute>} />
                 <Route
                   path="/support"
                   element={
