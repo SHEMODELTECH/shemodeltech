@@ -12,7 +12,7 @@ import { notifyApplicationApproved, notifyApplicationRejected } from '../../util
 import JoinedProjects from '../../components/JoinedProjects';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../../utils/paidProjects';
-import { alertStaff } from '../../utils/staffAlerts';
+import { alertStaff, notifyMember } from '../../utils/staffAlerts';
 import { isPremium } from '../../config/premium';
 import PremiumBadge from '../../components/PremiumBadge';
 
@@ -106,7 +106,13 @@ const ProjectOwnerDashboard = () => {
     }
   };
 
-  const approveApplication = async (project, app) => {
+  // When a role is already full, the lead chooses what to do in a proper dialog
+  // (suggest another role, message the applicant, or grow the team).
+  const [roleFull, setRoleFull] = useState(null);
+  const [altRole, setAltRole] = useState('');
+  const [altNote, setAltNote] = useState('');
+
+  const approveApplication = async (project, app, opts = {}) => {
     try {
       // Soft cap: how many are already approved for this same role vs the role's target count.
       const roleName = app.role;
@@ -114,11 +120,15 @@ const ProjectOwnerDashboard = () => {
       const cap = roleDef ? (parseInt(roleDef.count, 10) || 0) : 0;
       const approvedForRole = (project.applications || [])
         .filter(a => a.status === 'approved' && a.role === roleName).length;
-      if (cap > 0 && approvedForRole >= cap) {
-        const ok = window.confirm(
-          `The "${roleName}" role is already full (${approvedForRole} of ${cap} filled). Approve this person anyway and grow the team beyond the planned size?`
-        );
-        if (!ok) return;
+      if (cap > 0 && approvedForRole >= cap && !opts.force) {
+        const openRoles = (project.teamRoles || [])
+          .filter((r) => r.role && r.role !== roleName)
+          .filter((r) => (project.applications || []).filter((a) => a.status === 'approved' && a.role === r.role).length < (parseInt(r.count, 10) || 0))
+          .map((r) => r.role);
+        setAltRole(openRoles[0] || '');
+        setAltNote('');
+        setRoleFull({ project, app, roleName, approvedForRole, cap, openRoles });
+        return;
       }
 
       await updateDoc(doc(db, 'project_applications', app.id), {
@@ -324,6 +334,40 @@ const ProjectOwnerDashboard = () => {
     }
   };
 
+  const applicantUid = (app) => app?.applicantUid || app?.applicantId || null;
+
+  // Suggest a different role: tell her (bell + email) and open a conversation.
+  const suggestRole = async () => {
+    const { project, app, roleName } = roleFull;
+    const uid = applicantUid(app);
+    const text = `Hi ${app.applicantName || ''}! The ${roleName} role on "${project.projectTitle}" is already filled. Would you like to join as ${altRole} instead?${altNote.trim() ? ` ${altNote.trim()}` : ''}`;
+    if (uid) {
+      notifyMember(uid, {
+        type: 'role_suggestion',
+        title: `A different role on "${project.projectTitle}"`,
+        body: `The ${roleName} role is full. The lead suggests ${altRole} instead. Reply in Messages.`,
+        link: `/messages?with=${currentUser.uid}`,
+        ctaLabel: 'Reply in Messages',
+      });
+      setRoleFull(null);
+      navigate(`/messages?to=${uid}&text=${encodeURIComponent(text)}`);
+    } else {
+      toast.error('Could not find this applicant’s account to message.');
+    }
+  };
+
+  // Approve her straight into the other role (she's told which role).
+  const approveAsOtherRole = async () => {
+    const { project, app } = roleFull;
+    try {
+      await updateDoc(doc(db, 'project_applications', app.id), { role: altRole, originalRole: app.role });
+      setRoleFull(null);
+      await approveApplication(project, { ...app, role: altRole }, { force: true });
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not approve.'));
+    }
+  };
+
   // Asking for a reason opens a dialog (room to explain), not the browser prompt.
   const [deleteFor, setDeleteFor] = useState(null);
   const [deleting, setDeleting] = useState(false);
@@ -377,6 +421,54 @@ const ProjectOwnerDashboard = () => {
     <>
       
       <div className="min-h-screen overflow-x-hidden " style={{ backgroundColor: '#ffffff' }}>
+        {roleFull && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="rolefull-h"
+            onKeyDown={(e) => e.key === 'Escape' && setRoleFull(null)}>
+            <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6">
+              <h2 id="rolefull-h" className="text-lg font-bold text-gray-900">The {roleFull.roleName} role is full</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                {roleFull.approvedForRole} of {roleFull.cap} filled. What would you like to do for {roleFull.app.applicantName || 'this applicant'}?
+              </p>
+
+              {roleFull.openRoles.length > 0 ? (
+                <div className="mt-4 rounded-xl border border-pink-200 bg-pink-50/50 p-4">
+                  <p className="text-sm font-semibold text-gray-900">Offer a different role</p>
+                  <label className="block text-xs text-gray-600 mt-2" htmlFor="alt-role">Role with space</label>
+                  <select id="alt-role" value={altRole} onChange={(e) => setAltRole(e.target.value)} className="mt-1 w-full text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white">
+                    {roleFull.openRoles.map((r) => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                  <label className="block text-xs text-gray-600 mt-3" htmlFor="alt-note">Add a note <span className="text-gray-400">(optional, up to 300 characters)</span></label>
+                  <textarea id="alt-note" rows={2} maxLength={300} value={altNote} onChange={(e) => setAltNote(e.target.value)} className="mt-1 w-full text-sm border border-gray-300 rounded-lg px-3 py-2" />
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    <button onClick={suggestRole} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Suggest it and chat</button>
+                    <button onClick={approveAsOtherRole} className="text-sm font-semibold border border-pink-300 text-pink-700 bg-white px-4 py-2 rounded-lg">Approve as {altRole || 'this role'}</button>
+                  </div>
+                  <p className="text-[11px] text-gray-500 mt-2">“Suggest it and chat” notifies her and opens a conversation, and her application stays open for her answer.</p>
+                </div>
+              ) : (
+                <p className="mt-4 text-sm text-gray-600">No other roles have space right now.</p>
+              )}
+
+              <div className="flex flex-wrap gap-2 mt-4">
+                {applicantUid(roleFull.app) && (
+                  <button
+                    onClick={() => { const uid = applicantUid(roleFull.app); setRoleFull(null); navigate(`/messages?to=${uid}`); }}
+                    className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+                  >
+                    Message her
+                  </button>
+                )}
+                <button
+                  onClick={() => { const { project, app } = roleFull; setRoleFull(null); approveApplication(project, app, { force: true }); }}
+                  className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+                >
+                  Approve anyway (grow the team)
+                </button>
+                <button onClick={() => setRoleFull(null)} className="text-sm font-semibold text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 ml-auto">Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
         <NoteDialog
           open={!!deleteFor}
           title="Request deletion"
