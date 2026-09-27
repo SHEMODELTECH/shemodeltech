@@ -129,6 +129,19 @@ const ReviewTag = ({ course }) => {
 };
 
 
+// A simple open/close section (closed by default).
+const HubToggle = ({ title, children }) => (
+  <details className="group rounded-xl border border-gray-200 bg-white">
+    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-semibold text-gray-900">
+      {title}
+      <svg className="w-5 h-5 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </summary>
+    <div className="px-4 pb-4 text-sm text-gray-700 leading-relaxed">{children}</div>
+  </details>
+);
+
 // ================= Mentor benefits: letters =================
 // Mentors can request a recommendation letter or a volunteer service letter;
 // admins handle requests in Admin > Mentors.
@@ -190,15 +203,21 @@ const MentorLetters = ({ access }) => {
       : 'bg-amber-50 text-amber-700';
 
   return (
-    <div className="mb-6 rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-pink-50 p-5">
+    <details className="group rounded-xl border border-gray-200 bg-white">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-semibold text-gray-900">
+        <span>
+          Letters from She Model Tech
+          {reqs && reqs.length > 0 && <span className="ml-2 text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">{reqs.length}</span>}
+        </span>
+        <svg className="w-5 h-5 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </summary>
+      <div className="px-4 pb-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="font-bold text-gray-900">Letters from She Model Tech</p>
-          <p className="text-sm text-gray-600 mt-1 max-w-2xl">
-            Need a recommendation or volunteer service letter? Request one here and track it below.{' '}
-            <a href="/teach#faq" className="font-semibold text-indigo-700 hover:underline">See all mentor benefits</a>
-          </p>
-        </div>
+        <p className="text-sm text-gray-600 max-w-2xl">
+          Need a recommendation or volunteer service letter? Request one and track it here.
+        </p>
         <button onClick={() => setOpen((o) => !o)} className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
           Request a letter
         </button>
@@ -325,7 +344,8 @@ const MentorLetters = ({ access }) => {
           ))}
         </ul>
       )}
-    </div>
+      </div>
+    </details>
   );
 };
 
@@ -372,10 +392,7 @@ const TeacherList = ({ access }) => {
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mentor Hub</h1>
-          <p className="text-gray-600 mt-1 max-w-2xl">
-            Create and manage courses. Choose who each one is for: mentors (stays here) or learners (published to
-            Learning). Only She Model Tech staff and approved mentors can see this page.
-          </p>
+          <p className="text-gray-600 mt-1">Create, present, and publish your courses.</p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
           <button
@@ -399,7 +416,34 @@ const TeacherList = ({ access }) => {
         </div>
       </div>
 
-      {!access.isStaff && <MentorLetters access={access} />}
+      {/* Guides and benefits, tucked into toggles so the page stays clean */}
+      <div className="grid gap-3 mb-6">
+        <HubToggle title="How the Mentor Hub works">
+          <ol className="list-decimal pl-5 space-y-1.5">
+            <li>Create a course: upload an interactive HTML course, write notes, or build a video course.</li>
+            <li>Choose who it's for: <strong>mentors</strong> (stays in the Mentor Hub) or <strong>learners</strong> (published to Learning).</li>
+            <li>
+              {access.isStaff
+                ? 'Staff can publish courses for learners directly; mentors\' courses come to admins for approval.'
+                : 'Courses for learners go to an admin for approval. While they wait, you can edit or withdraw them.'}
+            </li>
+            <li>Use Full screen and Present to teach live.</li>
+          </ol>
+          <p className="mt-2 text-gray-500">Only She Model Tech staff and approved mentors can see this page.</p>
+        </HubToggle>
+        {!access.isStaff && (
+          <HubToggle title="Your mentor benefits">
+            <ul className="list-disc pl-5 space-y-1.5">
+              <li>A Mentor badge on your profile and on your courses</li>
+              <li>A Certificate of Recognition for every published course</li>
+              <li>A spot among top-rated mentors on the Talent Board</li>
+              <li>Recommendation and volunteer service letters from SHE MODEL TECH Inc.</li>
+            </ul>
+            <a href="/teach#faq" className="inline-block mt-2 font-semibold text-indigo-700 hover:underline">See all benefits and FAQs</a>
+          </HubToggle>
+        )}
+        {!access.isStaff && <MentorLetters access={access} />}
+      </div>
 
       <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Audience">
         {[['all', 'All'], ['teachers', 'For mentors'], ['students', 'For learners'], ['review', 'Pending review']].map(([v, l]) => (
