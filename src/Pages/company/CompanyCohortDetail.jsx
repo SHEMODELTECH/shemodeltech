@@ -282,6 +282,17 @@ const CompanyCohortDetail = () => {
           <p className="text-gray-500 text-xs mt-1">
             Status: {myApp.status}. {cohort.companyName} reviews applications directly.
           </p>
+          {myApp.status === 'interview' && (myApp.interviewAt || myApp.meetLink) && (
+            <p className="text-sm text-gray-800 mt-2">
+              {myApp.interviewAt && <>Interview: <strong>{new Date(myApp.interviewAt).toLocaleString()}</strong>. </>}
+              {myApp.meetLink && <a href={myApp.meetLink} target="_blank" rel="noopener noreferrer" className="text-pink-700 font-semibold underline">Join the interview</a>}
+            </p>
+          )}
+          {myApp.status === 'approved' && (
+            <p className="text-sm text-gray-700 mt-2">
+              You’re on the team. {cohort.companyName} will contact you about the work; use <a href={`/messages?to=${cohort.companyId}`} className="text-pink-700 font-semibold underline">Messages</a> to reach them.
+            </p>
+          )}
         </div>
       ) : !open ? (
         <p className="text-gray-500 text-sm">Applications are closed for this project.</p>

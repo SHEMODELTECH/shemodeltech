@@ -572,6 +572,36 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
   const [showApps, setShowApps] = useState(false);
   // Which pending application has the "request info" composer open, and its text.
   const [requestingFor, setRequestingFor] = useState(null);
+  // Interview invitations: time + meeting link, sent in the notification.
+  const [interviewFor, setInterviewFor] = useState(null);
+  const [ivWhen, setIvWhen] = useState('');
+  const [ivLink, setIvLink] = useState('');
+  const [ivNote, setIvNote] = useState('');
+  const sendInterview = async (app) => {
+    if (!ivWhen) return toast.error('Pick a date and time for the interview.');
+    if (ivLink && !/^https?:\/\//i.test(ivLink.trim())) return toast.error('The meeting link must start with https://');
+    try {
+      await updateDoc(doc(db, 'project_applications', app.id), { interviewAt: ivWhen, meetLink: ivLink.trim() || null, interviewNote: ivNote.trim() || null });
+      const uid = app.applicantUid || app.applicantId;
+      const when = new Date(ivWhen).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+      if (uid) {
+        notifyMember(uid, {
+          type: 'interview_invite',
+          title: `Interview for "${project.projectTitle}"`,
+          body: [`${when}.`, ivLink.trim() ? `Join here: ${ivLink.trim()}` : null, ivNote.trim() || null].filter(Boolean).join(' '),
+          link: ivLink.trim() || `/projects/${project.id}`,
+          ctaLabel: ivLink.trim() ? 'Join the interview' : 'See the project',
+        });
+      }
+      toast.success('Interview invitation sent.');
+      setInterviewFor(null);
+      setIvWhen('');
+      setIvLink('');
+      setIvNote('');
+    } catch (e) {
+      toast.error('Could not send the invitation.');
+    }
+  };
   const [requestText, setRequestText] = useState('');
   const isRejected = project.reviewStatus === 'rejected';
   const isCompleted = project.status === 'completed' || isRejected;
@@ -791,8 +821,34 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                   >
                     Request Info
                   </button>
+                  <button
+                    onClick={() => setInterviewFor(interviewFor === app.id ? null : app.id)}
+                    className="px-3 py-1.5 min-h-[36px] bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold rounded-lg text-xs transition-all border border-sky-200"
+                  >
+                    Invite to interview
+                  </button>
                 </div>
               </div>
+              {interviewFor === app.id && (
+                <div className="mt-3 rounded-lg border border-sky-200 bg-sky-50/50 p-3 space-y-2">
+                  <div className="grid sm:grid-cols-2 gap-2">
+                    <label className="text-xs text-gray-700">Date and time
+                      <input type="datetime-local" value={ivWhen} onChange={(e) => setIvWhen(e.target.value)} className="block w-full mt-1 px-3 py-2 rounded-lg border border-gray-300 text-sm" />
+                    </label>
+                    <label className="text-xs text-gray-700">Meeting link <span className="text-gray-400">(optional)</span>
+                      <input value={ivLink} onChange={(e) => setIvLink(e.target.value)} placeholder="https://meet.google.com/..." className="block w-full mt-1 px-3 py-2 rounded-lg border border-gray-300 text-sm" />
+                    </label>
+                  </div>
+                  <label className="text-xs text-gray-700 block">Note <span className="text-gray-400">(optional, up to 300 characters)</span>
+                    <textarea rows={2} maxLength={300} value={ivNote} onChange={(e) => setIvNote(e.target.value)} className="block w-full mt-1 px-3 py-2 rounded-lg border border-gray-300 text-sm" />
+                  </label>
+                  <div className="flex gap-2">
+                    <button onClick={() => sendInterview(app)} className="text-xs font-semibold bg-sky-600 hover:bg-sky-700 text-white px-3 py-2 rounded-lg">Send invitation</button>
+                    <button onClick={() => setInterviewFor(null)} className="text-xs font-semibold text-gray-600 px-3 py-2">Cancel</button>
+                  </div>
+                  {app.interviewAt && <p className="text-[11px] text-gray-500">Already invited for {new Date(app.interviewAt).toLocaleString()}.</p>}
+                </div>
+              )}
 
               {/* Earlier request - the conversation continues in Messages */}
               {app.feedbackRequest?.message && requestingFor !== app.id && (

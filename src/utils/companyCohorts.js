@@ -302,6 +302,11 @@ export const decideApplication = async ({
     });
   }
 
+  // The interview time and meeting link go in the notification itself.
+  const when = interviewAt ? new Date(interviewAt).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : null;
+  const interviewText = decision === 'interview'
+    ? [when ? `Interview: ${when}.` : null, meetLink ? `Join here: ${meetLink}` : null, message || null].filter(Boolean).join(' ')
+    : null;
   await notify(app.applicantUid, {
     type: `company_cohort_${decision}`,
     title:
@@ -310,8 +315,8 @@ export const decideApplication = async ({
         : decision === 'interview'
           ? 'A company wants to interview you'
           : 'Update on your application',
-    body: message || null,
-    link: `/paid-projects/${app.cohortId}`,
+    body: decision === 'interview' ? interviewText || 'The company will share the interview details with you.' : message || null,
+    link: decision === 'interview' && meetLink ? meetLink : `/paid-projects/${app.cohortId}`,
   });
 };
 
