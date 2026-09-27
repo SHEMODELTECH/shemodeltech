@@ -127,7 +127,7 @@ const splitAnswers = (text, n) => {
 const headingNamed = (container, re) =>
   Array.from(container.querySelectorAll('h2, h3, h4, h5')).filter((x) => re.test(x.textContent.trim()));
 
-const enhanceQuizzes = (container, key) => {
+const enhanceQuizzes = (container, key, onAllDone) => {
   headingNamed(container, /^quiz\b/i).forEach((head, qi) => {
     const list = head.nextElementSibling;
     if (!list || list.tagName !== 'OL') return;
@@ -151,6 +151,8 @@ const enhanceQuizzes = (container, key) => {
       const done = marks.filter(Boolean).length;
       score.textContent = done ? `${got} of ${questions.length} correct` : `${questions.length} questions`;
       box.classList.toggle('qz-complete', done === questions.length);
+      // Every question answered (marked Got it or Not yet): report this quiz done.
+      if (done === questions.length && onAllDone) onAllDone(qi);
     };
 
     questions.forEach((li, i) => {
@@ -305,10 +307,25 @@ const mountVideos = (container) => {
   });
 };
 
+// How many quizzes a part has (same rules the reader uses to build them).
+export const countQuizzes = (html) => {
+  if (typeof DOMParser === 'undefined' || !html) return 0;
+  const d = new DOMParser().parseFromString(`<div>${html}</div>`, 'text/html');
+  let n = 0;
+  d.querySelectorAll('h2, h3, h4, h5').forEach((head) => {
+    if (!/^quiz\b/i.test(head.textContent.trim())) return;
+    const list = head.nextElementSibling;
+    if (!list || list.tagName !== 'OL') return;
+    const ans = list.nextElementSibling;
+    if (ans && /^\s*Answers?:/i.test(ans.textContent)) n += 1;
+  });
+  return n;
+};
+
 export const enhanceCourseContent = (container, key, opts = {}) => {
   if (!container) return;
   mountVideos(container);
-  enhanceQuizzes(container, key);
+  enhanceQuizzes(container, key, opts.onQuizDone);
   enhanceChecklists(container, key);
   enhanceCheckpoints(container);
   enhanceCode(container);
@@ -430,6 +447,7 @@ export const useLearning = () => {
             enrolled: d.learningEnrolled || {},
             lastPart: d.learningLastPart || {},
             done: d.foundationsCourses || {},
+            quizDone: d.learningQuizDone || {},
           });
       } catch (e) {
         console.error('Learning: profile load failed', e);
@@ -490,6 +508,21 @@ export const useLearning = () => {
     return cert.id;
   };
 
+  // Quizzes finished, per part: learningQuizDone.<track>.<slug>.<partId> = true.
+  // Kept on the account so progress follows the learner across devices.
+  const quizDoneFor = (track, slug) => ((state.quizDone || {})[track] || {})[slug] || {};
+  const saveQuizDone = (track, slug, partId) => {
+    if (!currentUser || quizDoneFor(track, slug)[partId]) return;
+    setState((s) => ({
+      ...s,
+      quizDone: {
+        ...(s.quizDone || {}),
+        [track]: { ...((s.quizDone || {})[track] || {}), [slug]: { ...(((s.quizDone || {})[track] || {})[slug] || {}), [partId]: true } },
+      },
+    }));
+    write({ learningQuizDone: { [track]: { [slug]: { [partId]: true } } } }).catch(() => {});
+  };
+
   const markComplete = async (track, slug, course = null) => {
     const trackDone = { ...(state.done[track] || {}), [slug]: true };
     const all = coursesForTrack(track).every((c) => trackDone[c.slug]);
@@ -517,7 +550,7 @@ export const useLearning = () => {
     }
   };
 
-  return { ...state, signedIn: !!currentUser, isEnrolled, isDone, lastPartOf, enroll, saveLastPart, markComplete, ensureCertificate };
+  return { ...state, signedIn: !!currentUser, isEnrolled, isDone, lastPartOf, enroll, saveLastPart, markComplete, ensureCertificate, quizDoneFor, saveQuizDone };
 };
 
 // ============================ Course reader ============================
@@ -551,11 +584,20 @@ export const splitParts = (html, toc) => {
   return parts;
 };
 
-export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDone, next, part, onPart, onBack, onOpen, onComplete, onCertificate }) => {
+export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDone, next, part, onPart, onBack, onOpen, onComplete, onCertificate, quizDone = {}, onQuizDone, capstone = null }) => {
   const rendered = useMemo(() => renderCourse(course.markdown), [course]);
   const parts = useMemo(() => splitParts(rendered.html, rendered.toc), [rendered]);
   const current = Math.min(Math.max(part, 0), parts.length - 1);
   const isLast = current === parts.length - 1;
+  // What must be done before the course can be completed: every quiz, and (for
+  // courses with a capstone) a capstone post in the course forum.
+  const quizParts = useMemo(
+    () => parts.map((p, i) => ({ i, id: p.id, title: p.title, n: countQuizzes(p.html) })).filter((p) => p.n > 0),
+    [parts]
+  );
+  const quizzesLeft = quizParts.filter((p) => !quizDone[p.id]);
+  const capstoneLeft = capstone && capstone.required && !capstone.done;
+  const canComplete = quizzesLeft.length === 0 && !capstoneLeft;
   const proseRef = useRef(null);
   const [scrollPct, setScrollPct] = useState(0);
   const [listOpen, setListOpen] = useState(false);
@@ -614,9 +656,17 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
 
   // Quizzes, checklists, checkpoints, and copy buttons for this part.
   useEffect(() => {
-    enhanceCourseContent(proseRef.current, `smt-learn:${course.slug}:${parts[current] ? parts[current].id : current}`, {
+    const partId = parts[current] ? parts[current].id : String(current);
+    const quizzesHere = parts[current] ? countQuizzes(parts[current].html) : 0;
+    const doneQuizzes = new Set();
+    enhanceCourseContent(proseRef.current, `smt-learn:${course.slug}:${partId}`, {
       runPython: course.runnable === 'python',
       runHtml: course.runnable === 'html',
+      // When every quiz in this part is answered, record the part as done.
+      onQuizDone: (qi) => {
+        doneQuizzes.add(qi);
+        if (onQuizDone && doneQuizzes.size >= quizzesHere) onQuizDone(partId);
+      },
     });
   }, [current, course.slug, parts]);
 
@@ -726,11 +776,35 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                   <div className="fd-finish">
                     {!isDone ? (
                       <>
-                        <div>
-                          <p className="font-semibold text-gray-900">Finished this course?</p>
-                          <p className="text-sm text-gray-600 mt-0.5">Mark it complete to track your progress in {trackLabel}.</p>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-gray-900">
+                            {canComplete ? 'Finished this course?' : 'Almost there'}
+                          </p>
+                          {canComplete ? (
+                            <p className="text-sm text-gray-600 mt-0.5">Mark it complete to get your certificate.</p>
+                          ) : (
+                            <div className="text-sm text-gray-700 mt-1">
+                              <p>To complete this course and get your certificate:</p>
+                              <ul className="mt-1 space-y-1">
+                                {quizzesLeft.map((p) => (
+                                  <li key={p.id}>
+                                    <button onClick={() => onPart(p.i)} className="text-left font-semibold text-pink-700 hover:underline">
+                                      Answer the quiz in "{p.title}"
+                                    </button>
+                                  </li>
+                                ))}
+                                {capstoneLeft && (
+                                  <li>
+                                    <a href={capstone.forumUrl} className="font-semibold text-pink-700 hover:underline">
+                                      Share your capstone project in the course forum
+                                    </a>
+                                  </li>
+                                )}
+                              </ul>
+                            </div>
+                          )}
                         </div>
-                        <button onClick={onComplete} className="fd-btn">
+                        <button onClick={onComplete} disabled={!canComplete} className="fd-btn disabled:opacity-40 disabled:cursor-not-allowed">
                           <CheckIcon className="w-4 h-4" />
                           Mark as complete
                         </button>

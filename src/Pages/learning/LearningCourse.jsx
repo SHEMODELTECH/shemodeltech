@@ -18,6 +18,9 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import MentorBadge from '../../components/MentorBadge';
 import CourseFeedback from './CourseFeedback';
+import CourseForum from './CourseForum';
+import { collection, getDocs, limit, query, where } from 'firebase/firestore';
+import { courseKey } from '../../utils/mentorStats';
 import { courseStats } from '../../utils/mentorStats';
 
 const LearningCourse = ({ reading = false }) => {
@@ -92,6 +95,22 @@ const LearningCourse = ({ reading = false }) => {
       : { ...baseCourse, markdown: pubContent };
   }, [baseCourse, isPublished, pubContent]);
   const parts = useMemo(() => (course ? coursePartTitles(course) : []), [course]);
+  // Courses with a capstone part need a capstone post in the forum to complete.
+  const hasCapstone = !!course && course.kind !== 'interactive' && course.kind !== 'published-html' && parts.some((t) => /capstone/i.test(t));
+  const [capstoneDone, setCapstoneDone] = useState(false);
+  useEffect(() => {
+    if (!hasCapstone || !currentUser) return;
+    getDocs(
+      query(
+        collection(db, 'course_forum', courseKey(track, slug), 'threads'),
+        where('uid', '==', currentUser.uid),
+        where('kind', '==', 'capstone'),
+        limit(1)
+      )
+    )
+      .then((snap) => setCapstoneDone(!snap.empty))
+      .catch(() => {});
+  }, [hasCapstone, currentUser, track, slug]);
   const waiting = isPublished && (published === null || (baseCourse && pubContent == null));
 
   const enrolled = course && lr.isEnrolled(track, slug);
@@ -175,6 +194,9 @@ const LearningCourse = ({ reading = false }) => {
           onOpen={(s) => navigate(`/learning/${track}/${s}`)}
           onComplete={() => lr.markComplete(track, slug, course)}
           onCertificate={openCertificate}
+          quizDone={lr.quizDoneFor(track, slug)}
+          onQuizDone={(partId) => lr.saveQuizDone(track, slug, partId)}
+          capstone={{ required: hasCapstone, done: capstoneDone, forumUrl: `/learning/${track}/${slug}#forum` }}
         />
       </LearningLayout>
     );
@@ -352,6 +374,16 @@ const LearningCourse = ({ reading = false }) => {
           {isPublished && (
             <CourseFeedback track={track} slug={slug} courseTitle={course.title} authorUid={course.authorUid} authorName={course.authorName} displayName={lr.profile?.displayName || ''} />
           )}
+
+          {/* Discussion forum for every course */}
+          <CourseForum
+            track={track}
+            slug={slug}
+            courseTitle={course.title}
+            hasCapstone={hasCapstone}
+            displayName={lr.profile?.displayName || ''}
+            onCapstonePosted={() => setCapstoneDone(true)}
+          />
         </section>
 
         <div>
