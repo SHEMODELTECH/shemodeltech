@@ -466,14 +466,8 @@ const LandingPage = () => {
               <Link to="/learning" className="hover:text-pink-600 transition-colors font-medium">
                 Learning
               </Link>
-              <Link to="/organizations" className="hover:text-pink-600 transition-colors font-medium">
-                For Organizations
-              </Link>
               <Link to="/summit" className="hover:text-pink-600 transition-colors font-medium">
                 Summit
-              </Link>
-              <Link to="/teach" className="hover:text-pink-600 transition-colors font-medium">
-                Become a mentor
               </Link>
               <Link to="/terms" className="hover:text-pink-600 transition-colors font-medium">
                 Terms
@@ -487,9 +481,7 @@ const LandingPage = () => {
             </div>
             <div className="flex flex-col items-center sm:items-end gap-2">
               <SocialLinks />
-              <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-pink-700 bg-pink-50 border border-pink-100 px-3 py-1 rounded-full">
-                Registered 501(c)(3) nonprofit
-              </span>
+              <p className="text-gray-500 text-xs">SHE MODEL TECH Inc., a 501(c)(3) nonprofit.</p>
               <p className="text-gray-400 text-xs">
                 {new Date().getFullYear()} SHE MODEL TECH Inc. All rights reserved.
               </p>
