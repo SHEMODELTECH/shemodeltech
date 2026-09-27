@@ -668,22 +668,14 @@ const AdminPanel = () => {
         Manage projects, users, and content across She Model Tech.
       </p>
 
-      {/* Projects run on a rolling basis: create free or paid projects any time;
-          leads apply to open projects, and members join. */}
+      {/* She Model Tech projects are created in cohorts (one project or more,
+          free or paid). Companies post their own paid work. */}
       <div className="flex flex-wrap gap-2 mb-6">
-        {isAdmin && (
-          <Link
-            to="/projects/generate"
-            className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
-          >
-            Create a free project
-          </Link>
-        )}
         <Link
-          to="/projects/new-paid"
-          className="bg-white border border-pink-300 hover:bg-pink-50 text-pink-700 text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
+          to="/admin/cohorts"
+          className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
         >
-          Post a paid project
+          Create a cohort
         </Link>
         <Link
           to="/admin/lead-applications"
@@ -909,6 +901,65 @@ const AdminPanel = () => {
       )}
 
       {/* PROJECTS */}
+      {!loadingData && tab === 'projects' && projects.some((p) => p.extensionRequest?.status === 'pending') && (
+        <div className="mb-6">
+          <h3 className="text-gray-900 font-bold mb-2">Extra time requested by cohort leads</h3>
+          {projects.filter((p) => p.extensionRequest?.status === 'pending').map((p) => (
+            <div key={p.id} className="bg-white border border-purple-200 rounded-xl p-4 mb-2">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-semibold text-gray-900">{p.projectTitle}</p>
+                  <p className="text-xs text-gray-500">
+                    Deadline {p.endDate} · asking for {p.extensionRequest.days} more days
+                  </p>
+                  <p className="text-sm text-gray-700 mt-1">{p.extensionRequest.reason}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={async () => {
+                      const d = new Date(`${p.endDate}T12:00:00`);
+                      d.setDate(d.getDate() + Number(p.extensionRequest.days || 7));
+                      const newEnd = d.toISOString().slice(0, 10);
+                      const data = {
+                        endDate: newEnd,
+                        extensionDays: (p.extensionDays || 0) + Number(p.extensionRequest.days || 7),
+                        extensionRequest: { ...p.extensionRequest, status: 'approved', decidedBy: currentUser.email },
+                      };
+                      try {
+                        await updateDoc(doc(db, 'projects', p.id), data);
+                        setProjects((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data } : x)));
+                        if (p.submitterId) notifyMember(p.submitterId, { type: 'extension_decision', title: 'Extra time approved', body: `"${p.projectTitle}" now ends on ${newEnd}.`, link: `/projects/${p.id}/workspace` });
+                        toast.success(`Approved. New deadline ${newEnd}.`);
+                      } catch (e) {
+                        toast.error(friendlyError(e, 'Could not approve it.'));
+                      }
+                    }}
+                    className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const data = { extensionRequest: { ...p.extensionRequest, status: 'declined', decidedBy: currentUser.email } };
+                      try {
+                        await updateDoc(doc(db, 'projects', p.id), data);
+                        setProjects((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data } : x)));
+                        if (p.submitterId) notifyMember(p.submitterId, { type: 'extension_decision', title: 'Extra time not approved', body: `"${p.projectTitle}" keeps its deadline of ${p.endDate}. Message us if you need to talk it through.`, link: `/projects/${p.id}/workspace` });
+                        toast.success('Declined.');
+                      } catch (e) {
+                        toast.error(friendlyError(e, 'Could not decline it.'));
+                      }
+                    }}
+                    className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg"
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       {!loadingData && tab === 'projects' && (
         <div className="space-y-2">
           {projects.length === 0 ? (

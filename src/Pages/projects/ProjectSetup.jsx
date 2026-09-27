@@ -58,6 +58,9 @@ const emptyRole = () => ({
 });
 
 const ProjectSetup = () => {
+  const [cohortLock, setCohortLock] = useState(false);
+  const [paidLock, setPaidLock] = useState(false);
+  const [projectStatus, setProjectStatus] = useState('');
   const { projectId } = useParams();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -93,6 +96,10 @@ const ProjectSetup = () => {
         const alreadyActive = data.status === 'active';
         setIsEditing(alreadyActive);
         setIsPaid(!!data.isPaid);
+        // Cohort projects: She Model Tech fixes the dates; paid cohorts are fully fixed.
+        setCohortLock(!!data.isCohort);
+        setPaidLock(!!data.cohortPaid);
+        setProjectStatus(data.status || '');
 
         setForm({
           projectTitle: data.projectTitle || '',
@@ -209,8 +216,7 @@ const ProjectSetup = () => {
         projectDescription: form.projectDescription.trim(),
         projectGoals: form.projectGoals.trim() || null,
         industryTrack: form.industryTrack,
-        startDate: form.startDate,
-        endDate: form.endDate,
+        ...(cohortLock ? {} : { startDate: form.startDate, endDate: form.endDate }),
         projectLink: form.projectLink.trim(),
         resources: { ...(form.submissionUrl ? { submissionUrl: form.submissionUrl.trim() } : {}) },
         teamRoles,
@@ -242,8 +248,8 @@ const ProjectSetup = () => {
         industryTrack: form.industryTrack,
         // Keep every detail the lead edited, not just the brief, so a saved
         // draft doesn't silently drop new dates or links.
-        ...(form.startDate ? { startDate: form.startDate } : {}),
-        ...(form.endDate ? { endDate: form.endDate } : {}),
+        ...(!cohortLock && form.startDate ? { startDate: form.startDate } : {}),
+        ...(!cohortLock && form.endDate ? { endDate: form.endDate } : {}),
         ...(form.projectLink.trim() ? { projectLink: form.projectLink.trim() } : {}),
         ...(form.submissionUrl.trim() ? { resources: { submissionUrl: form.submissionUrl.trim() } } : {}),
         proposedRoles: teamRoles, // keep draft in proposedRoles until opened
@@ -259,6 +265,51 @@ const ProjectSetup = () => {
   };
 
   if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
+
+  // Paid cohort: everything is fixed by She Model Tech. The lead can only open
+  // the project for applications.
+  if (paidLock) {
+    const openProject = async () => {
+      setSaving(true);
+      try {
+        await updateDoc(doc(db, 'projects', projectId), { status: 'active', openedAt: serverTimestamp(), updatedAt: serverTimestamp() });
+        toast.success('Project is now open for applications!');
+        navigate(`/projects/${projectId}`);
+      } catch (e) {
+        toast.error('Could not open the project.');
+      }
+      setSaving(false);
+    };
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold text-gray-900">{form.projectTitle}</h1>
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800">
+          <strong>Paid cohort project.</strong> She Model Tech has set the brief, roles, skills, number of people, pay,
+          and dates, so they can’t be changed here. Need more time? Use <strong>Request extra time</strong> in your workspace.
+        </div>
+        <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-5 space-y-3 text-sm text-gray-800">
+          <p className="whitespace-pre-wrap">{form.projectDescription}</p>
+          <p><strong>Dates:</strong> {form.startDate} to {form.endDate}</p>
+          <div>
+            <strong>Roles:</strong>
+            <ul className="list-disc pl-5 mt-1">
+              {roles.filter((r) => resolveRoleName(r)).map((r, i) => (
+                <li key={i}>{resolveRoleName(r)} · {r.count || 1} {Number(r.count) === 1 ? 'person' : 'people'}{r.payAmount ? ` · $${r.payAmount} each` : ''}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="mt-5 flex gap-2">
+          {projectStatus !== 'active' && (
+            <button onClick={openProject} disabled={saving} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-60">
+              {saving ? 'Opening...' : 'Open for applications'}
+            </button>
+          )}
+          <button onClick={() => navigate(`/projects/${projectId}`)} className="border border-gray-300 text-sm font-semibold px-5 py-2.5 rounded-lg">Back to project</button>
+        </div>
+      </div>
+    );
+  }
   if (!authorized) return null;
 
   return (
@@ -289,12 +340,18 @@ const ProjectSetup = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Start date <span className="text-red-500">*</span></label>
-            <input type="date" value={form.startDate} onChange={e => setForm(p => ({ ...p, startDate: e.target.value }))} className={inputClass} />
+            <input type="date" value={form.startDate} disabled={cohortLock} onChange={e => setForm(p => ({ ...p, startDate: e.target.value }))} className={inputClass + (cohortLock ? ' opacity-60 cursor-not-allowed' : '')} />
           </div>
           <div>
             <label className={labelClass}>End date <span className="text-red-500">*</span></label>
-            <input type="date" value={form.endDate} onChange={e => setForm(p => ({ ...p, endDate: e.target.value }))} className={inputClass} />
+            <input type="date" value={form.endDate} disabled={cohortLock} onChange={e => setForm(p => ({ ...p, endDate: e.target.value }))} className={inputClass + (cohortLock ? ' opacity-60 cursor-not-allowed' : '')} />
           </div>
+          {cohortLock && (
+            <p className="sm:col-span-2 text-xs text-gray-600">
+              This is a cohort project: everyone starts and finishes together, so She Model Tech sets the dates. Need more
+              time? Use <strong>Request extra time</strong> in your project workspace.
+            </p>
+          )}
         </div>
 
         <div>

@@ -150,12 +150,17 @@ export const createCompanyCohort = async ({
   startDate,
   endDate,
   notes,
+  kind = 'project', // 'project' | 'cohort' (several projects, same dates) | 'freelance' (one person)
+  cohortGroupId = null,
 }) => {
   const gate = canHostCohort(company);
   if (!gate.allowed) throw new Error(gate.reason);
 
   if (!title?.trim()) throw new Error('Give your project a title.');
   if (!roles?.length) throw new Error('Add at least one role.');
+  if (kind === 'freelance' && (roles.length !== 1 || (parseInt(roles[0].count, 10) || 1) !== 1)) {
+    throw new Error('A freelance project hires exactly one person.');
+  }
   if (!endDate) throw new Error('Set a target completion date.');
 
   const unpaid = roles.filter((r) => !(Number(r.payAmount) > 0));
@@ -184,6 +189,8 @@ export const createCompanyCohort = async ({
 
     startDate: startDate || null,
     endDate, // company sets its own timeline
+    kind,
+    cohortGroupId: kind === 'cohort' ? cohortGroupId : null,
 
     status: COMPANY_COHORT_STATUS.HIRING,
     // Explicit, so nothing downstream ever mistakes this for an SMT cohort.

@@ -70,6 +70,9 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
     cohortNumber = null,
     startDate = null,
     endDate = null,
+    startAt = null,
+    isPaid = false,
+    payPerPerson = 0,
     draft = true,
   } = opts;
   const templates = pickVaried(count);
@@ -104,6 +107,12 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
         sponsorLogo: null,
         startDate,
         endDate,
+        startAt,
+        // Cohort projects: dates are fixed by She Model Tech; on paid cohorts the
+        // lead can't change anything (content, roles, skills, people needed).
+        isCohort: !!cohortId,
+        cohortPaid: !!isPaid,
+        ...(isPaid ? { isPaid: true, paidBy: 'She Model Tech', payPerPerson: Number(payPerPerson) || 0 } : {}),
         submitterId: null,
         submitterEmail: null,
         submitterName: 'She Model Tech (Auto-generated)',

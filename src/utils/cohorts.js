@@ -70,9 +70,9 @@ const iso = (d) => d.toISOString().slice(0, 10);
  * Build the full date schedule for a cohort from its build start date.
  * Every downstream feature (reveal, reminders, grace) reads these.
  */
-export const buildSchedule = (startDate) => {
+export const buildSchedule = (startDate, endDate = null) => {
   const start = new Date(startDate);
-  const end = addWeeks(start, COHORT_LENGTH_WEEKS);
+  const end = endDate ? new Date(endDate) : addWeeks(start, COHORT_LENGTH_WEEKS);
   return {
     startDate: iso(start),
     endDate: iso(end),
@@ -131,15 +131,21 @@ export const getCohort = async (cohortId) => {
  * reviewed before anyone sees them - never auto-publish unreviewed briefs
  * into a live cohort.
  */
-export const createCohort = async ({ startDate, projectCount, createdBy }) => {
+export const createCohort = async ({ startDate, startTime = '09:00', endDate = null, projectCount, isPaid = false, payPerPerson = 0, createdBy }) => {
   const number = await getNextCohortNumber();
-  const schedule = buildSchedule(startDate);
+  const schedule = buildSchedule(startDate, endDate);
+  // Fixed start (date and time): everyone in the cohort starts and finishes together.
+  const startAt = new Date(`${startDate}T${startTime || '09:00'}`).toISOString();
   const ref = await addDoc(collection(db, 'cohorts'), {
     number,
     name: `Cohort ${number}`,
     status: COHORT_STATUS.DRAFT,
-    projectCount: projectCount || DEFAULT_PROJECTS_PER_COHORT,
+    projectCount: Math.max(1, Number(projectCount) || 1),
     ...schedule,
+    startAt,
+    // Paid cohorts are funded by She Model Tech (Premium, sponsor, or grant funds).
+    isPaid: !!isPaid,
+    payPerPerson: isPaid ? Number(payPerPerson) || 0 : 0,
     createdBy: createdBy || null,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),

@@ -212,6 +212,7 @@ const ProjectsListing = () => {
               projectDescription: c.description,
               companyName: c.companyName,
               companyVerified: !!c.companyVerified,
+              companyKind: c.kind || 'project',
               contactName: c.companyName,
               endDate: c.endDate,
               createdAt: c.createdAt,
@@ -316,10 +317,10 @@ const ProjectsListing = () => {
               <div className="flex items-center gap-2">
                 {isAdmin && (
                   <Link
-                    to="/projects/generate"
+                    to="/admin/cohorts"
                     className="inline-flex items-center justify-center px-4 py-2.5 min-h-[44px] bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-sm transition-all"
                   >
-                    Generate
+                    Create a cohort
                   </Link>
                 )}
               </div>
@@ -463,10 +464,15 @@ const ProjectsListing = () => {
                     </p>
 
                     <div className="flex flex-wrap items-center gap-1.5 mb-3">
+                      {project.isCohort && (
+                        <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[10px] font-semibold">
+                          Cohort{project.startAt ? ` · starts ${new Date(project.startAt).toLocaleDateString()}` : ''}
+                        </span>
+                      )}
                       {project.isCompanyProject ? (
                         <>
                           <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">
-                            Company project
+                            {project.companyKind === 'freelance' ? 'Freelance · 1 person' : project.companyKind === 'cohort' ? 'Company cohort' : 'Company project'}
                           </span>
                           {project.endDate && (
                             <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">

@@ -34,9 +34,15 @@ const HostCohort = () => {
   const qs = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const [title, setTitle] = useState(qs.get('title') || '');
   const [description, setDescription] = useState(qs.get('description') || '');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(qs.get('start') || '');
+  const [endDate, setEndDate] = useState(qs.get('end') || '');
   const [roles, setRoles] = useState([qs.get('role') ? { ...blankRole(), title: qs.get('role') } : blankRole()]);
+  // What kind of paid work: one project, a cohort (several projects that start
+  // and finish together), or freelance (one person).
+  const groupFromLink = qs.get('group');
+  const [kind, setKind] = useState(groupFromLink ? 'cohort' : 'project');
+  const [groupId] = useState(groupFromLink || `g${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`);
+  const [created, setCreated] = useState(null);
 
   useEffect(() => {
     if (!currentUser) {
@@ -68,15 +74,18 @@ const HostCohort = () => {
         description,
         startDate,
         endDate,
-        roles: roles.map((r) => ({
+        roles: (kind === 'freelance' ? roles.slice(0, 1) : roles).map((r) => ({
           title: r.title.trim(),
-          count: parseInt(r.count, 10) || 1,
+          count: kind === 'freelance' ? 1 : parseInt(r.count, 10) || 1,
           payAmount: Number(r.payAmount) || 0,
           skills: r.skills.trim(),
         })),
+        kind,
+        cohortGroupId: kind === 'cohort' ? groupId : null,
       });
       toast.success('Your project is live. Applications are open.');
-      navigate(`/paid-projects/${id}`);
+      if (kind === 'cohort') setCreated(id);
+      else navigate(`/paid-projects/${id}`);
     } catch (e) {
       toast.error(e.message || 'Could not create the project.');
     }
@@ -133,6 +142,40 @@ const HostCohort = () => {
         work-experience record instead.
       </p>
 
+      {created && (
+        <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <p className="font-semibold text-emerald-800">Project added to your cohort.</p>
+          <p className="text-sm text-gray-700 mt-1">Add another project with the same dates, or view the one you just posted.</p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            <a href={`/projects/new-paid?group=${groupId}&start=${startDate}&end=${endDate}`} className="text-sm font-semibold bg-pink-600 text-white px-4 py-2 rounded-lg">Add another project to this cohort</a>
+            <button onClick={() => navigate(`/paid-projects/${created}`)} className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg">View the project</button>
+          </div>
+        </div>
+      )}
+
+      <fieldset className="mb-6">
+        <legend className="block text-sm font-bold text-gray-900 mb-2">What are you posting?</legend>
+        <div className="grid sm:grid-cols-3 gap-2">
+          {[
+            ['project', 'Paid project', 'A team builds one project.'],
+            ['cohort', 'Paid cohort', 'Several projects that start and finish together.'],
+            ['freelance', 'Freelance', 'Hire exactly one person, no team.'],
+          ].map(([k, l, d]) => (
+            <button key={k} type="button" aria-pressed={kind === k} disabled={!!groupFromLink && k !== 'cohort'}
+              onClick={() => { setKind(k); if (k === 'freelance') setRoles((rs) => [{ ...rs[0], count: 1 }]); }}
+              className={`text-left rounded-xl border p-3 ${kind === k ? 'border-pink-500 bg-pink-50' : 'border-gray-200 bg-white'} disabled:opacity-40`}>
+              <span className="block text-sm font-semibold text-gray-900">{l}</span>
+              <span className="block text-xs text-gray-600">{d}</span>
+            </button>
+          ))}
+        </div>
+        {kind === 'cohort' && (
+          <p className="text-xs text-gray-600 mt-2">
+            Post each project in the cohort one at a time with the same dates. After posting, choose <strong>Add another project to this cohort</strong>.
+          </p>
+        )}
+      </fieldset>
+
       <label className="block text-sm font-bold text-gray-900 mb-1.5">Project title *</label>
       <input
         value={title}
@@ -156,6 +199,7 @@ const HostCohort = () => {
           <input
             type="date"
             value={startDate}
+            disabled={!!groupFromLink}
             onChange={(e) => setStartDate(e.target.value)}
             className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
           />
@@ -167,6 +211,7 @@ const HostCohort = () => {
           <input
             type="date"
             value={endDate}
+            disabled={!!groupFromLink}
             onChange={(e) => setEndDate(e.target.value)}
             className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
           />
@@ -193,7 +238,8 @@ const HostCohort = () => {
             <input
               type="number"
               min="1"
-              value={r.count}
+              disabled={kind === 'freelance'}
+              value={kind === 'freelance' ? 1 : r.count}
               onChange={(e) => setRole(i, 'count', e.target.value)}
               className="w-16 shrink-0 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
             />
@@ -225,13 +271,17 @@ const HostCohort = () => {
           </div>
         </div>
       ))}
-      <button
-        type="button"
-        onClick={() => setRoles((rs) => [...rs, blankRole()])}
-        className="text-pink-600 text-sm font-semibold hover:underline mb-8"
-      >
-        + Add another role
-      </button>
+      {kind !== 'freelance' ? (
+        <button
+          type="button"
+          onClick={() => setRoles((rs) => [...rs, blankRole()])}
+          className="text-pink-600 text-sm font-semibold hover:underline mb-8"
+        >
+          + Add another role
+        </button>
+      ) : (
+        <p className="text-xs text-gray-600 mb-8">Freelance projects hire exactly one person for one role.</p>
+      )}
 
       <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-6">
         <p className="text-gray-900 text-xs font-bold mb-1">How payment works</p>

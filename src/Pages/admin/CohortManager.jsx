@@ -74,7 +74,11 @@ const CohortManager = () => {
   const [editingCohort, setEditingCohort] = useState(null);
   const [cohortDraft, setCohortDraft] = useState({ name: '', startDate: '' });
   const [startDate, setStartDate] = useState('');
-  const [count, setCount] = useState(DEFAULT_PROJECTS_PER_COHORT);
+  const [startTime, setStartTime] = useState('09:00');
+  const [endDate, setEndDate] = useState('');
+  const [isPaid, setIsPaid] = useState(false);
+  const [payPerPerson, setPayPerPerson] = useState(''); // USD, paid cohorts
+  const [count, setCount] = useState(1);
 
   useEffect(() => {
     if (!currentUser) {
@@ -115,11 +119,27 @@ const CohortManager = () => {
       toast.error('Pick a start date.');
       return;
     }
+    if (!endDate || endDate <= startDate) {
+      toast.error('Pick an end date after the start date.');
+      return;
+    }
+    if (isPaid && !(Number(payPerPerson) > 0)) {
+      toast.error('Set the pay per person for a paid cohort.');
+      return;
+    }
+    if (Number(count) < 1) {
+      toast.error('A cohort needs at least one project.');
+      return;
+    }
     setBusy('create');
     try {
       const c = await createCohort({
         startDate,
+        startTime,
+        endDate,
         projectCount: Number(count),
+        isPaid,
+        payPerPerson: Number(payPerPerson) || 0,
         createdBy: currentUser.email,
       });
       toast.success(`Cohort ${c.number} created. Generate its projects next.`);
@@ -140,6 +160,9 @@ const CohortManager = () => {
         cohortNumber: cohort.number,
         startDate: cohort.startDate,
         endDate: cohort.endDate,
+        startAt: cohort.startAt || null,
+        isPaid: !!cohort.isPaid,
+        payPerPerson: cohort.payPerPerson || 0,
         draft: true, // hidden until you have read the briefs
       });
       toast.success(`${res.created} draft projects created. Read the briefs, then reveal.`);
@@ -165,7 +188,21 @@ const CohortManager = () => {
       // One batch, not N writes, this is the moment members start hitting
       // the page, so it should land atomically.
       const batch = writeBatch(db);
-      drafts.forEach((p) => batch.update(doc(db, 'projects', p.id), { isActive: true }));
+      drafts.forEach((p) => {
+        // Paid cohorts: roles and pay are fixed by She Model Tech at reveal
+        // (the lead can't change them), so publish the proposed roles now.
+        if (cohort.isPaid) {
+          const roles = (p.proposedRoles || []).map((r) => ({ ...r, count: Number(r.count) || 1, payAmount: String(cohort.payPerPerson || 0) }));
+          batch.update(doc(db, 'projects', p.id), {
+            isActive: true,
+            teamRoles: roles,
+            maxTeamSize: roles.reduce((n, r) => n + (Number(r.count) || 1), 0),
+            totalBudget: roles.reduce((n, r) => n + (Number(r.count) || 1) * (Number(cohort.payPerPerson) || 0), 0),
+          });
+        } else {
+          batch.update(doc(db, 'projects', p.id), { isActive: true });
+        }
+      });
       await batch.commit();
       await setCohortStatus(cohort.id, COHORT_STATUS.LEAD_RECRUITMENT);
 
@@ -276,7 +313,7 @@ const CohortManager = () => {
       <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Cohorts</h1>
-          <p className="text-gray-500 text-sm">8-week cycles, back to back.</p>
+          <p className="text-gray-500 text-sm">Groups of projects that start and finish together. Free or paid, one project or more.</p>
         </div>
         <button
           onClick={() => setShowNew(!showNew)}
@@ -289,55 +326,50 @@ const CohortManager = () => {
       {/* Create */}
       {showNew && (
         <div className="bg-white border border-gray-200 rounded-xl p-5 mb-8">
-          <div className="flex flex-wrap gap-3 mb-3">
+          <div className="grid sm:grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block text-xs font-bold text-gray-900 mb-1">Build starts</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
-              />
+              <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-start">Starts on</label>
+              <input id="c-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-900 mb-1">Projects</label>
-              <input
-                type="number"
-                min="1"
-                max="20"
-                value={count}
-                onChange={(e) => setCount(e.target.value)}
-                className="w-20 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
-              />
+              <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-time">Start time (your time zone)</label>
+              <input id="c-time" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-end">Ends on (deadline)</label>
+              <input id="c-end" type="date" value={endDate} min={startDate || undefined} onChange={(e) => setEndDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-count">Number of projects <span className="font-normal text-gray-500">(1 or more)</span></label>
+              <input id="c-count" type="number" min="1" max="30" value={count} onChange={(e) => setCount(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
             </div>
           </div>
-          <p className="text-gray-500 text-xs mb-3 leading-relaxed">
-            Six is the default on purpose, roughly 5 women per team, about 30 people. Publishing
-            more projects than a cohort can staff leaves half-empty teams that all stall, which is
-            worse than fewer full ones.
-          </p>
-          {preview && (
-            <div className="bg-gray-50 rounded-lg p-3 mb-3 text-xs text-gray-600 space-y-0.5">
-              <p>
-                Reveal &amp; lead applications open: <strong>{preview.revealDate}</strong>
-              </p>
-              <p>
-                Applications close: <strong>{preview.leadApplyCloseDate}</strong>
-              </p>
-              <p>
-                Leads assigned by: <strong>{preview.leadsAssignedByDate}</strong>
-              </p>
-              <p>
-                Contributors apply: <strong>{preview.teamOpenDate}</strong>
-              </p>
-              <p>
-                Teams locked: <strong>{preview.teamLockDate}</strong>
-              </p>
-              <p>
-                Deadline: <strong>{preview.endDate}</strong> · grace ends {preview.graceEndDate}
-              </p>
+          <fieldset className="mb-3">
+            <legend className="block text-xs font-bold text-gray-900 mb-1">Type</legend>
+            <div className="flex gap-2">
+              {[[false, 'Free cohort'], [true, 'Paid cohort (paid by She Model Tech)']].map(([v, l]) => (
+                <button key={l} type="button" aria-pressed={isPaid === v} onClick={() => setIsPaid(v)}
+                  className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${isPaid === v ? 'bg-gray-900 border-gray-900 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>{l}</button>
+              ))}
+            </div>
+          </fieldset>
+          {isPaid && (
+            <div className="mb-3">
+              <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-pay">Pay per person (USD) <span className="font-normal text-gray-500">(paid by She Model Tech on completion)</span></label>
+              <input id="c-pay" type="number" min="1" value={payPerPerson} onChange={(e) => setPayPerPerson(e.target.value)} placeholder="e.g. 300"
+                className="w-40 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
             </div>
           )}
+          <p className="text-gray-500 text-xs mb-3 leading-relaxed">
+            Everyone in the cohort starts at the same time and finishes on the same deadline. Leads can’t change these
+            dates; they can request extra time, which you approve. On a paid cohort, leads can’t change anything in the
+            project (content, roles, skills, or people needed). Lead applications stay open on each project until a
+            lead is assigned.
+          </p>
           <button
             onClick={create}
             disabled={busy === 'create' || !startDate}
@@ -365,7 +397,8 @@ const CohortManager = () => {
                 <div>
                   <h2 className="font-bold text-gray-900">{cohort.name}</h2>
                   <p className="text-gray-500 text-xs">
-                    {cohort.startDate} → {cohort.endDate}
+                    {cohort.startDate}{cohort.startAt ? ` ${new Date(cohort.startAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : ''} → {cohort.endDate}
+                    {cohort.isPaid ? ` · Paid ($${cohort.payPerPerson || 0} per person)` : ' · Free'}
                     {daysLeft !== null &&
                       cohort.status === COHORT_STATUS.BUILDING &&
                       ` · ${daysLeft} days left`}
@@ -395,7 +428,7 @@ const CohortManager = () => {
                   >
                     {busy === cohort.id
                       ? 'Generating…'
-                      : `Generate ${cohort.projectCount || 6} projects`}
+                      : `Generate ${cohort.projectCount || 1} project${(cohort.projectCount || 1) === 1 ? '' : 's'}`}
                   </button>
                 )}
                 {drafts > 0 && (

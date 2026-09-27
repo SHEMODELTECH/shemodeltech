@@ -223,6 +223,12 @@ service cloud.firestore {
  allow update: if isProjectOwner()
  // Featuring a project is a Premium feature.
  && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured']) || isPremiumUser())
+ // Cohort projects: She Model Tech sets the dates (leads request extra time).
+ && (resource.data.get('isCohort', false) != true
+ || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['startDate', 'endDate', 'startAt', 'extensionDays', 'isCohort', 'cohortId']))
+ // Paid cohorts: the lead can't change anything She Model Tech set.
+ && (resource.data.get('cohortPaid', false) != true
+ || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'projectGoals', 'industryTrack', 'teamRoles', 'proposedRoles', 'maxTeamSize', 'totalBudget', 'isPaid', 'payPerPerson', 'cohortPaid', 'requiredSkills']))
  && appendOnly('disputeHistory')
  && appendOnly('leaveReasons')
  && appendOnly('activityLog')
