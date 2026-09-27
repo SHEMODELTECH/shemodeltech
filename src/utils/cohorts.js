@@ -161,19 +161,33 @@ export const setCohortStatus = async (cohortId, status) =>
  * pushes the new endDate onto every project in the cohort - otherwise the
  * deadline reminders and grace period would still fire on the old dates.
  */
-export const updateCohort = async (cohortId, { name, startDate, projectCount }) => {
+export const updateCohort = async (cohortId, { name, startDate, startTime, endDate, projectCount }) => {
   const updates = { updatedAt: serverTimestamp() };
   if (name) updates.name = name;
   if (projectCount) updates.projectCount = Number(projectCount);
 
-  if (startDate) {
-    Object.assign(updates, buildSchedule(startDate));
+  // Moving the cohort's dates moves every project in it (they start and finish
+  // together). A project's approved extra time is kept on top of the new end.
+  if (startDate || endDate) {
+    const current = (await getDoc(doc(db, 'cohorts', cohortId))).data() || {};
+    const start = startDate || current.startDate;
+    const end = endDate || current.endDate;
+    Object.assign(updates, buildSchedule(start, end));
+    const time = startTime || (current.startAt ? new Date(current.startAt).toTimeString().slice(0, 5) : '09:00');
+    updates.startAt = new Date(`${start}T${time}`).toISOString();
     const projects = await getCohortProjects(cohortId);
     for (const p of projects) {
+      let projectEnd = updates.endDate;
+      if (p.extensionDays) {
+        const d = new Date(`${updates.endDate}T12:00:00`);
+        d.setDate(d.getDate() + Number(p.extensionDays));
+        projectEnd = d.toISOString().slice(0, 10);
+      }
       // eslint-disable-next-line no-await-in-loop
       await updateDoc(doc(db, 'projects', p.id), {
         startDate: updates.startDate,
-        endDate: updates.endDate,
+        endDate: projectEnd,
+        startAt: updates.startAt,
         updatedAt: serverTimestamp(),
       });
     }

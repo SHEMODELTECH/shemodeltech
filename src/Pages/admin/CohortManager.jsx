@@ -267,6 +267,10 @@ const CohortManager = () => {
   };
 
   const saveCohort = async (cohort) => {
+    if (cohortDraft.endDate && cohortDraft.startDate && cohortDraft.endDate <= cohortDraft.startDate) {
+      toast.error('The end date must be after the start date.');
+      return;
+    }
     setBusy(cohort.id);
     try {
       await updateCohort(cohort.id, cohortDraft);
@@ -472,7 +476,7 @@ const CohortManager = () => {
                 <button
                   onClick={() => {
                     setEditingCohort(cohort.id);
-                    setCohortDraft({ name: cohort.name, startDate: cohort.startDate });
+                    setCohortDraft({ name: cohort.name, startDate: cohort.startDate, endDate: cohort.endDate, startTime: cohort.startAt ? new Date(cohort.startAt).toTimeString().slice(0, 5) : '09:00' });
                   }}
                   className="text-gray-500 hover:text-gray-800 text-xs font-semibold px-2 py-2"
                 >
@@ -498,16 +502,25 @@ const CohortManager = () => {
                       onChange={(e) => setCohortDraft((d) => ({ ...d, name: e.target.value }))}
                       className="flex-1 min-w-[10rem] px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
                     />
-                    <input
-                      type="date"
-                      value={cohortDraft.startDate}
-                      onChange={(e) => setCohortDraft((d) => ({ ...d, startDate: e.target.value }))}
-                      className="px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
-                    />
+                    <label className="text-xs text-gray-600">Starts
+                      <input type="date" value={cohortDraft.startDate}
+                        onChange={(e) => setCohortDraft((d) => ({ ...d, startDate: e.target.value }))}
+                        className="block px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
+                    </label>
+                    <label className="text-xs text-gray-600">Start time
+                      <input type="time" value={cohortDraft.startTime || '09:00'}
+                        onChange={(e) => setCohortDraft((d) => ({ ...d, startTime: e.target.value }))}
+                        className="block px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
+                    </label>
+                    <label className="text-xs text-gray-600">Ends (deadline)
+                      <input type="date" value={cohortDraft.endDate || ''} min={cohortDraft.startDate}
+                        onChange={(e) => setCohortDraft((d) => ({ ...d, endDate: e.target.value }))}
+                        className="block px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
+                    </label>
                   </div>
                   <p className="text-gray-500 text-[11px] mb-2">
-                    Changing the start date moves every deadline in this cohort, including on
-                    projects already generated.
+                    Changing these dates moves every project in this cohort. Extra time you’ve approved for a project is
+                    kept on top of the new deadline.
                   </p>
                   <div className="flex gap-2">
                     <button
