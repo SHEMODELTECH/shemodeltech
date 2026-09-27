@@ -207,8 +207,15 @@ service cloud.firestore {
 
  allow read: if isSignedIn();
 
+ // Only She Model Tech creates free projects. Verified companies create paid
+ // work (they own it, and it never awards badges).
  allow create: if isReviewer()
- || (isSignedIn() && request.resource.data.submitterId == myUid());
+ || (isSignedIn() && request.resource.data.submitterId == myUid()
+ && request.resource.data.get('isCompanyPost', false) == true
+ && request.resource.data.get('isPaid', false) == true
+ && request.resource.data.get('awardsBadges', true) == false
+ && myUserDoc().get('isCompany', false) == true
+ && myUserDoc().get('isVerified', false) == true);
 
  // 1. Admin: full control.
  allow update: if isAdmin();

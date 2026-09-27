@@ -650,7 +650,9 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
 
       {/* Actions: one clear next step, the everyday links, and the rest under "More". */}
       {(() => {
-        const reviewLabel = project.isPaid
+        const reviewLabel = project.isCompanyPost
+          ? 'Mark work done'
+          : project.isPaid
           ? (project.reviewStatus === 'approved' ? 'Mark work done'
             : project.reviewStatus === 'submitted' ? 'Review pending'
             : project.reviewStatus === 'needs_changes' ? 'Make the requested changes'
@@ -680,7 +682,9 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
           };
         } else if (active) {
           next = {
-            text: project.reviewStatus === 'submitted' ? 'Your project is with She Model Tech for review.' : 'When the work is finished, send it to She Model Tech for review.',
+            text: project.isCompanyPost
+              ? 'When the work is finished, mark it done. Then pay each member; they confirm payment and the project closes.'
+              : project.reviewStatus === 'submitted' ? 'Your project is with She Model Tech for review.' : 'When the work is finished, send it to She Model Tech for review.',
             button: (
               <Link to={`/projects/${project.id}/complete`} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs flex items-center ${project.reviewStatus === 'submitted' ? 'bg-gray-100 text-gray-700' : 'bg-pink-600 hover:bg-pink-700 text-white'}`}>
                 {reviewLabel}

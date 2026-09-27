@@ -420,12 +420,12 @@ const AdminPanel = () => {
     (async () => {
       try {
         const staffIds = new Set(users.filter((u) => ['admin', 'editor'].includes(u.role)).map((u) => u.id));
-        const cs = await getDocs(collection(db, 'company_cohorts'));
-        const mine = cs.docs.map((d) => ({ id: d.id, ...d.data() })).filter((c) => staffIds.has(c.companyId));
+        // Paid work She Model Tech posted (as a company) in the main projects collection.
+        const mine = projects.filter((p) => p.isCompanyPost && staffIds.has(p.submitterId) && p.status !== 'completed');
         const withCounts = await Promise.all(
           mine.map(async (c) => {
-            const a = await getDocs(query(collection(db, 'company_cohort_applications'), where('cohortId', '==', c.id))).catch(() => null);
-            return { ...c, waiting: a ? a.docs.filter((d) => ['submitted', 'interview'].includes(d.data().status)).length : 0 };
+            const a = await getDocs(query(collection(db, 'project_applications'), where('projectId', '==', c.id))).catch(() => null);
+            return { ...c, title: c.projectTitle, waiting: a ? a.docs.filter((d) => d.data().status === 'submitted').length : 0 };
           })
         );
         setSmtPaid(withCounts);
@@ -433,7 +433,7 @@ const AdminPanel = () => {
         setSmtPaid([]);
       }
     })();
-  }, [isReviewer, tab, users]);
+  }, [isReviewer, tab, users, projects]);
 
   // Admins and editors both see the dashboard data (editors just can't delete or change roles).
   useEffect(() => {
@@ -934,7 +934,7 @@ const AdminPanel = () => {
                 <p className="text-sm font-semibold text-gray-900">{c.title}</p>
                 <p className="text-xs text-gray-500">{c.status} · {c.waiting} application{c.waiting === 1 ? '' : 's'} waiting</p>
               </div>
-              <Link to={`/paid-projects/${c.id}`} className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg">Review applicants</Link>
+              <Link to={`/projects/owner-dashboard#project-${c.id}`} className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg">Review applicants</Link>
             </div>
           ))}
         </div>

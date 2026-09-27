@@ -14,6 +14,7 @@ import { REVIEW_STATUS, submitProjectForReview, getProjectMemberEmails } from '.
 import SubmissionForm from '../../components/SubmissionForm';
 import { MIN_TEAM_SIZE, membersMeetMinTeamSize, MIN_TEAM_SIZE_MEMBERS_ERROR } from '../../utils/projectRoles';
 import { sendPush } from '../../utils/pushNotifications';
+import { issueWorkRecords } from '../../utils/companyCohorts';
 
 const badgeCategories = {
   'mentorship': { id: 'techmo', name: 'TechPO (Mentor)', color: 'from-pink-500 to-pink-600' },
@@ -128,6 +129,7 @@ const ProjectCompletion = () => {
           const count = await fetchBadgeCount(member.applicantEmail, defaultCategory);
           evals.push({
             memberId: member.id,
+            memberUid: member.applicantUid || member.applicantId || null,
             memberEmail: member.applicantEmail,
             memberName: member.applicantName,
             memberRole: member.role,
@@ -427,6 +429,14 @@ const ProjectCompletion = () => {
       }
 
       setStep(4);
+      // Company-owned paid work: each member gets a verified paid work-experience record.
+      if (project.isCompanyPost) {
+        try {
+          await issueWorkRecords({ ...project, id: projectId }, evaluations.map((e) => ({ applicantUid: e.memberUid, applicantEmail: e.memberEmail, role: e.memberRole, payAmount: e.payAmount })));
+        } catch (_) {
+          /* non-blocking */
+        }
+      }
       toast.success(isPaidProject ? 'Work marked done! The project will fully close once all members confirm they were paid.' : 'Project completed successfully!');
 
       // Log completion

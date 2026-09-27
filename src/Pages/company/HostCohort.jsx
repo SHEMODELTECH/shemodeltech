@@ -14,7 +14,8 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { createCompanyCohort, canHostCohort } from '../../utils/companyCohorts';
+import { createCompanyCohort,
+  createCompanyProject, canHostCohort } from '../../utils/companyCohorts';
 import { formatMoney } from '../../utils/paidProjects';
 import { ComingSoonRibbon } from '../../components/ComingSoon';
 import { usePaidFeaturesVisible } from '../../utils/permissions';
@@ -68,7 +69,7 @@ const HostCohort = () => {
   const submit = async () => {
     setSaving(true);
     try {
-      const id = await createCompanyCohort({
+      const id = await createCompanyProject({
         company: profile,
         title,
         description,
@@ -89,7 +90,7 @@ const HostCohort = () => {
         updateDoc(doc(db, 'org_requests', qs.get('orgRequest')), { assistantProjectId: id }).catch(() => {});
       }
       if (kind === 'cohort') setCreated(id);
-      else navigate(`/paid-projects/${id}`);
+      else navigate(`/projects/${id}`);
     } catch (e) {
       toast.error(e.message || 'Could not create the project.');
     }
@@ -152,7 +153,7 @@ const HostCohort = () => {
           <p className="text-sm text-gray-700 mt-1">Add another project with the same dates, or view the one you just posted.</p>
           <div className="flex flex-wrap gap-2 mt-3">
             <a href={`/projects/new-paid?group=${groupId}&start=${startDate}&end=${endDate}`} className="text-sm font-semibold bg-pink-600 text-white px-4 py-2 rounded-lg">Add another project to this cohort</a>
-            <button onClick={() => navigate(`/paid-projects/${created}`)} className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg">View the project</button>
+            <button onClick={() => navigate(`/projects/${created}`)} className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg">View the project</button>
           </div>
         </div>
       )}

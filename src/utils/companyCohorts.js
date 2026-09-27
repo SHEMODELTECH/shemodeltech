@@ -474,3 +474,94 @@ const notify = async (uid, payload) => {
     console.error('notify failed:', e);
   }
 };
+
+/**
+ * ONE SYSTEM FOR ALL PAID WORK.
+ * Company paid projects (and freelance, and company cohorts) are created as
+ * regular projects, so they get the full flow: applications, team approval,
+ * workspace, "Mark work done", payment confirmations, disputes, and the
+ * Project Vault. The company owns the project (no separate lead), members need
+ * at least one badge to apply, and no badge is awarded; members receive a
+ * verified paid work-experience record in the company's name instead.
+ */
+export const createCompanyProject = async ({ company, title, description, startDate, endDate, roles, kind = 'project', cohortGroupId = null }) => {
+  const gate = canHostCohort(company);
+  if (!gate.allowed) throw new Error(gate.reason);
+  if (!title?.trim()) throw new Error('Give the project a title.');
+  if (!endDate) throw new Error('Set a target end date.');
+  if (!roles?.length) throw new Error('Add at least one role.');
+  if (kind === 'freelance' && (roles.length !== 1 || (parseInt(roles[0].count, 10) || 1) !== 1)) {
+    throw new Error('A freelance project hires exactly one person.');
+  }
+  const teamRoles = roles.map((r) => ({
+    role: r.title.trim(),
+    customRole: '',
+    skills: r.skills || '',
+    count: kind === 'freelance' ? 1 : parseInt(r.count, 10) || 1,
+    experienceLevel: 'any-level',
+    payAmount: String(Number(r.payAmount) || 0),
+  }));
+  const companyName = company.companyProfile?.companyName || company.companyName || company.displayName || 'Company';
+  const ref = await addDoc(collection(db, 'projects'), {
+    projectTitle: title.trim(),
+    projectDescription: (description || '').trim(),
+    industryTrack: 'company',
+    timeline: 'flexible',
+    startDate: startDate || null,
+    endDate,
+    teamRoles,
+    maxTeamSize: teamRoles.reduce((n, r) => n + r.count, 0),
+    totalBudget: teamRoles.reduce((n, r) => n + r.count * (Number(r.payAmount) || 0), 0),
+    isPaid: true,
+    paidBy: companyName,
+    isCompanyPost: true,
+    companyKind: kind, // 'project' | 'cohort' | 'freelance'
+    cohortGroupId: kind === 'cohort' ? cohortGroupId : null,
+    companyName,
+    companyVerified: !!company.isVerified,
+    awardsBadges: false,
+    submitterId: company.uid,
+    submitterEmail: company.email || null,
+    submitterName: companyName,
+    leadConfirmed: true, // the company runs it; no separate lead
+    status: 'active',
+    applicationsOpen: true,
+    isActive: true,
+    viewCount: 0,
+    applicationCount: 0,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+  return ref.id;
+};
+
+// Issued when a company marks the work done: one record per member.
+export const issueWorkRecords = async (project, members) => {
+  for (const m of members) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      await addDoc(collection(db, 'work_records'), {
+        type: WORK_RECORD_TYPE,
+        memberUid: m.applicantUid || m.uid || null,
+        memberEmail: m.applicantEmail || m.email || null,
+        companyId: project.submitterId,
+        companyName: project.companyName || project.submitterName,
+        companyVerified: !!project.companyVerified,
+        projectId: project.id,
+        projectTitle: project.projectTitle,
+        roleTitle: m.role || null,
+        startDate: project.startDate || null,
+        endDate: project.endDate || null,
+        paid: true,
+        payAmount: Number(m.payAmount) || null,
+        issuedBy: project.companyName || project.submitterName,
+        facilitatedBy: 'She Model Tech',
+        isBadge: false,
+        verifiedBySMT: false,
+        createdAt: serverTimestamp(),
+      });
+    } catch (_) {
+      /* keep going for the rest of the team */
+    }
+  }
+};

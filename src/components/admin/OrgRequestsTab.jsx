@@ -274,7 +274,7 @@ const OrgRequestsTab = ({ isAdmin }) => {
                 {r.type !== 'licensing' && ['signed', 'in_progress'].includes(r.status) && (
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {r.assistantProjectId ? (
-                      <Link to={`/paid-projects/${r.assistantProjectId}`} className="text-xs font-semibold border border-emerald-300 text-emerald-700 px-3 py-1.5 rounded-lg hover:bg-emerald-50">
+                      <Link to={`/projects/owner-dashboard#project-${r.assistantProjectId}`} className="text-xs font-semibold border border-emerald-300 text-emerald-700 px-3 py-1.5 rounded-lg hover:bg-emerald-50">
                         ✓ Assistant role opened: view applicants
                       </Link>
                     ) : (

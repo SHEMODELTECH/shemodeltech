@@ -24,6 +24,7 @@ import { checkRoleEligibility } from '../../utils/roleEligibility';
 import { checkProfileComplete } from '../../utils/profileCompletion';
 import ProjectPayBadge from '../../components/ProjectPayBadge';
 import { formatMoney, getPayRangeLabel } from '../../utils/paidProjects';
+import { canApplyToCompanyCohort } from '../../utils/companyCohorts';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -229,6 +230,15 @@ const ProjectDetail = () => {
         "Company accounts can't apply to projects. Post a paid project to hire a team instead."
       );
       return;
+    }
+
+    // Paid work from companies: members need at least one earned badge (and to be 18+).
+    if (project.isCompanyPost) {
+      const gate = await canApplyToCompanyCohort(currentUser.uid, { email: currentUser.email });
+      if (!gate.allowed) {
+        toast.error(gate.reason || 'Paid company projects are open to members with at least one earned badge.');
+        return;
+      }
     }
 
     // Require a complete profile before joining a project
