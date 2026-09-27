@@ -66,34 +66,31 @@ export const companyCapabilities = (company) => {
   const partner = isPartner(company);
   return {
     tier: partner ? COMPANY_TIER.PARTNER : COMPANY_TIER.FREE,
-    // Always free
+    // Free for every company, permanently (not tied to any plan):
+    // the Talent Board, messaging, posting paid projects, and outreach.
     canPostToWall: true,
     canReactToPosts: true,
-    canReplyToMembers: true, // never block a reply to an inbound message
+    canReplyToMembers: true,
     canSponsorCohort: true,
-    // Paid tooling
-    canSearchTalentBoard: partner,
-    canFilterByBadge: partner,
-    canViewVerifiedEvidence: partner, // repos, commit history, certificates
-    canSaveCandidates: partner,
-    unlimitedOutreach: partner,
-    outreachLimit: partner ? Infinity : FREE_COMPANY_DM_LIMIT,
+    canSearchTalentBoard: true,
+    canFilterByBadge: true,
+    canViewVerifiedEvidence: true, // repos, commit history, certificates
+    canSaveCandidates: true,
+    unlimitedOutreach: true,
+    outreachLimit: Infinity,
   };
 };
 
-// Feature list for the partner pitch page.
-export const PARTNER_FEATURES = [
-  'Search the full Talent Board of verified graduates',
-  'Filter by badge track, level, and completed projects',
-  'See verified evidence, repositories, commit history, certificates',
-  'Unlimited direct messaging to members',
-  'Save and organise candidates',
-  'Priority support',
+// What's free on She Model Tech (for members and companies).
+export const FREE_FEATURES = [
+  'Unlimited access to the Talent Board',
+  'Posting paid projects (after free company verification)',
+  'Unlimited messaging',
+  'Unlimited collaboration on paid and free projects',
+  'Unlimited certificates of completion and badges on projects',
+  'Access to She Model Tech self-paced courses and mentor courses',
+  'Unlimited freelance work: paid projects can hire a single person',
 ];
 
-export const FREE_FEATURES = [
-  'Post to the community Activity Wall',
-  `Message up to ${FREE_COMPANY_DM_LIMIT} members`,
-  'Reply to any member who contacts you',
-  'Sponsor a cohort team',
-];
+// Kept for when optional paid extras are introduced; nothing above depends on it.
+export const PARTNER_FEATURES = ['Priority support'];

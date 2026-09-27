@@ -821,40 +821,51 @@ const IncludedTab = () => {
 
       {/* Everything included */}
       <div className="bg-white border border-gray-200 rounded-xl p-6">
-        <p className="text-gray-900 text-sm font-bold mb-3">Everything you get</p>
+        <p className="text-gray-900 text-sm font-bold mb-3">Everything you get, free</p>
         <ul className="space-y-1">
           <FeatureItem
-            label="Unlimited collaborative projects"
-            detail="Create or join as many real product-build projects as you want, in any tech field, work with real teams and earn verified badges. No caps, no fees."
+            label="Unlimited access to the Talent Board"
+            detail="Browse and search the directory of verified women, filter by badge track and level, and get listed yourself."
           />
           <FeatureItem
-            label="All 6 TechTalent Badge tracks"
-            detail="Earn badges across all tracks: TechDev, TechQA, TechPO, TechLeads, TechArchs, and TechGuard."
-          />
-          <FeatureItem
-            label="Full Talent Board access"
-            detail="Browse and search the whole directory of verified women, and get listed yourself once you earn your first badge."
+            label="Posting paid projects"
+            detail="Companies post paid projects and hire real teams after free verification: you set the pay per person for every role, applicants see it before they join, and the project closes only when the work is verified done and every member confirms they were paid."
           />
           <FeatureItem
             label="Unlimited messaging"
             detail="Message any member or company, and start as many conversations as you like. Nothing is metered."
           />
           <FeatureItem
-            label="Post paid projects"
-            detail="Post paid projects and hire real teams: you set the pay per person for every role, it's visible to applicants before they join, and the project closes only when the work is verified done and every member confirms they were paid."
+            label="Unlimited collaboration on paid and free projects"
+            detail="Join or lead as many projects as you want, in any tech field, and work in shared project workspaces."
           />
           <FeatureItem
-            label="Community, Proof Wall, and workspaces"
-            detail="Share work on the Proof Wall, follow other members, and collaborate in project workspaces."
+            label="Unlimited certificates and badges"
+            detail="A certificate for every course and every project you complete, and verified badges across all six tracks, from Novice to Expert."
           />
           <FeatureItem
-            label="Certificates on project completion"
-            detail="Receive a certificate for every project you complete, documenting your role and contributions."
+            label="She Model Tech courses and mentor courses"
+            detail="Self-paced courses with hands-on labs, quizzes, capstone projects, and course forums, plus courses created by our mentors."
           />
           <FeatureItem
-            label="Support"
-            detail={`Reach the She Model Tech team any time at ${BRAND.supportEmail}.`}
+            label="Unlimited freelance work"
+            detail="Take on paid projects that hire a single person, as often as you like."
           />
+        </ul>
+      </div>
+
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <p className="text-gray-900 text-sm font-bold mb-3">Also included</p>
+        <ul className="space-y-1">
+          <FeatureItem label="Lead a project" detail="Apply to lead, run a real team, and earn a leadership badge." />
+          <FeatureItem label="AI project matches" detail="Project suggestions picked for you from your skills, badges, and interests." />
+          <FeatureItem label="Proof Wall and public profile" detail="Share progress, show your badges and certificates, and print your profile." />
+          <FeatureItem label="Verifiable, LinkedIn-ready certificates" detail="Every certificate has a public verification link and an Add to LinkedIn button." />
+          <FeatureItem label="Course forums and ratings" detail="Ask questions, discuss, share capstones, and rate courses." />
+          <FeatureItem label="Become a mentor" detail="Create and publish courses, earn the Mentor badge and certificates, and request recommendation or volunteer service letters." />
+          <FeatureItem label="Payment protection on paid projects" detail="Every member confirms payment before a paid project closes, with a dispute process if something goes wrong." />
+          <FeatureItem label="Email updates" detail="Daily and weekly digests with new projects and courses. Choose what you receive in Settings." />
+          <FeatureItem label="Support" detail={`Reach the She Model Tech team any time at ${BRAND.supportEmail}.`} />
         </ul>
       </div>
     </div>

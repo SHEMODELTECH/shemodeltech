@@ -75,7 +75,7 @@ const Partner = () => {
 
       {/* Free tier */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-8">
-        <p className="text-gray-900 font-bold text-sm mb-2">Free for any company</p>
+        <p className="text-gray-900 font-bold text-sm mb-2">Free for every member and company</p>
         <ul className="text-gray-600 text-sm space-y-1">
           {FREE_FEATURES.map((f, i) => (
             <li key={i}>{f}</li>
@@ -88,36 +88,6 @@ const Partner = () => {
       </div>
 
       <div className="grid md:grid-cols-2 gap-5 mb-12">
-        {/* Talent Access */}
-        <div className="relative bg-white border-2 border-pink-500 rounded-2xl p-6">
-          <ComingSoonRibbon />
-          <p className="text-pink-600 font-bold text-xs uppercase tracking-wide mb-2">Recurring</p>
-          <h2 className="text-xl font-bold text-gray-900 mb-1">Talent Access</h2>
-          <Price
-            amount={PLANS.TALENT_ACCESS_MONTHLY.amount}
-            interval="month"
-            note={`or ${formatPrice(PLANS.TALENT_ACCESS_ANNUAL.amount, 'year')}, two months free`}
-            className="mb-5"
-          />
-          <ul className="text-gray-600 text-sm space-y-2 mb-6">
-            {PLANS.TALENT_ACCESS_MONTHLY.features.map((f, i) => (
-              <li key={i}>{f}</li>
-            ))}
-          </ul>
-          <ComingSoonButton
-            onClick={() =>
-              checkout(
-                { kind: 'subscription', priceId: PLANS.TALENT_ACCESS_MONTHLY.priceId },
-                'sub'
-              )
-            }
-            disabled={busy === 'sub'}
-            className="w-full bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 text-white font-semibold text-sm py-3 rounded-lg transition-all"
-          >
-            {busy === 'sub' ? 'Starting…' : 'Get Talent Access'}
-          </ComingSoonButton>
-        </div>
-
         {/* Sponsorship */}
         <div className="relative bg-white border border-gray-200 rounded-2xl p-6">
           <ComingSoonRibbon />

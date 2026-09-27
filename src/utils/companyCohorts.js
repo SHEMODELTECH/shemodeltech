@@ -57,7 +57,6 @@ import {
   arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { isPartner } from '../config/companyAccess';
 
 export const COMPANY_COHORT_STATUS = {
   DRAFT: 'draft',
@@ -92,12 +91,7 @@ export const canHostCohort = (company) => {
         'Your company must be verified before hosting. Verification is free, submit your registration details.',
     };
   }
-  if (!isPartner(company)) {
-    return {
-      allowed: false,
-      reason: 'Hosting your own cohort is part of the Talent Access plan.',
-    };
-  }
+  // Posting paid projects is free for every verified company (no plan needed).
   return { allowed: true };
 };
 
