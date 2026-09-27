@@ -414,6 +414,14 @@ const LearningCourse = ({ reading = false }) => {
             <CourseFeedback track={track} slug={slug} courseTitle={course.title} authorUid={course.authorUid} authorName={course.authorName} displayName={lr.profile?.displayName || ''} canParticipate={canParticipate} onEnroll={joinCourse} />
           )}
 
+          {/* Organizations: license this course */}
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+            <p className="text-sm text-gray-700">Teaching a class or training a team? Bring this course to your organization.</p>
+            <Link to={`/organizations?course=${encodeURIComponent(course.title)}`} className="text-sm font-semibold border border-gray-300 bg-white px-3 py-2 rounded-lg hover:bg-gray-50">
+              Bring this course to your organization
+            </Link>
+          </div>
+
           {/* Discussion forum for every course */}
           <CourseForum
             track={track}

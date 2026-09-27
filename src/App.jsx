@@ -38,6 +38,8 @@ const JobDetail = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default:
 const JobForm = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.JobForm })));
 const MyJobs = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.MyJobs })));
 const Premium = lazy(() => import('./Pages/Premium'));
+const Organizations = lazy(() => import('./Pages/Organizations'));
+const Summit = lazy(() => import('./Pages/Summit'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -208,6 +210,8 @@ function App() {
                 <Route path="/auth/action" element={<AuthAction />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/organizations" element={<Organizations />} />
+                <Route path="/summit" element={<Summit />} />
 
                 {/* She Model Tech Learning: public catalog, its own layout (no app sidebar) */}
                 <Route path="/teach" element={<TeachApply />} />

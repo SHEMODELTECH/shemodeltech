@@ -277,6 +277,12 @@ const UserProfile = () => {
               <MentorBadge count={profile.mentorApprovedCourses || 0} isMentor={!!profile.isTeacher} showCount />
               {/* Companies show a badge only with Premium: the gold Verified Partner badge. */}
               {isVerifiedPartner(profile) && <PremiumBadge kind="partner" size="md" />}
+              {profile.isTrainer && (
+                <span className="inline-flex items-center text-xs font-bold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-full">Trainer</span>
+              )}
+              {Object.keys(profile.summitAttendance || {}).length > 0 && (
+                <span className="inline-flex items-center text-xs font-bold text-pink-800 bg-pink-50 border border-pink-200 px-2.5 py-1 rounded-full" title="Attended a She Model Tech Summit">Summit Attendee</span>
+              )}
               {profile.isCompany && (
                 <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-purple-100 text-purple-700 rounded-full">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>

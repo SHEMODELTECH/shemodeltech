@@ -466,6 +466,12 @@ const LandingPage = () => {
               <Link to="/learning" className="hover:text-pink-600 transition-colors font-medium">
                 Learning
               </Link>
+              <Link to="/organizations" className="hover:text-pink-600 transition-colors font-medium">
+                For Organizations
+              </Link>
+              <Link to="/summit" className="hover:text-pink-600 transition-colors font-medium">
+                Summit
+              </Link>
               <Link to="/teach" className="hover:text-pink-600 transition-colors font-medium">
                 Become a mentor
               </Link>

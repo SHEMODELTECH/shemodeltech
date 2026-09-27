@@ -89,6 +89,10 @@ service cloud.firestore {
  && !touched('isVerified')
  // Premium is granted by an admin (or payment activation), never self-set.
  && !touched('premium')
+ // Trainer status (training contracts) is granted by an admin.
+ && !touched('isTrainer')
+ // Summit attendance is recorded by staff at check-in.
+ && !touched('summitAttendance')
  // Teacher access is granted by an admin, never self-set.
  && !touched('isTeacher')
  && !touched('teacherSince')
@@ -369,6 +373,44 @@ service cloud.firestore {
  && request.resource.data.companyUid == myUid()
  && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured']) || isPremiumUser())));
  allow delete: if isSignedIn() && (resource.data.companyUid == myUid() || isAdmin());
+ }
+
+ // Organizations: training contract and course licensing requests. Anyone can
+ // submit one from the public page; staff manage them; assigned mentors can
+ // read the ones they're assigned to.
+ match /org_requests/{id} {
+ allow create: if request.resource.data.status == 'new'
+ && request.resource.data.orgName is string && request.resource.data.orgName.size() > 0 && request.resource.data.orgName.size() <= 150
+ && request.resource.data.contactEmail is string && request.resource.data.contactEmail.size() <= 200
+ && request.resource.data.get('topics', '').size() <= 1500
+ && request.resource.data.get('message', '').size() <= 2000
+ && request.resource.data.assignedMentorUids.size() == 0;
+ allow read: if isReviewer() || (isSignedIn() && myUid() in resource.data.get('assignedMentorUids', []));
+ allow update, delete: if isReviewer();
+ }
+
+ // The Summit.
+ match /summits/{id} {
+ allow read: if true;
+ allow write: if isReviewer();
+ }
+ match /summitRegistrations/{id} {
+ allow read: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow create: if isSignedIn() && request.resource.data.uid == myUid()
+ && id == request.resource.data.summitId + '_' + myUid()
+ && request.resource.data.checkedIn == false;
+ allow update: if isReviewer()
+ || (isSignedIn() && resource.data.uid == myUid()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['shareProfile']));
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ }
+ match /summitPartners/{id} {
+ allow create: if request.resource.data.status == 'new'
+ && request.resource.data.companyName is string && request.resource.data.companyName.size() > 0 && request.resource.data.companyName.size() <= 150
+ && request.resource.data.get('message', '').size() <= 1500
+ && (request.resource.data.get('companyUid', null) == null || (isSignedIn() && request.resource.data.companyUid == myUid()));
+ allow read: if isReviewer() || (isSignedIn() && resource.data.get('companyUid', '') == myUid());
+ allow update, delete: if isReviewer();
  }
 
  // Course discussion forums: questions, discussions, and capstone posts.

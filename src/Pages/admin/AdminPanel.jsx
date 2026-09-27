@@ -39,6 +39,8 @@ import { notifyMember } from '../../utils/staffAlerts';
 import { isPremium } from '../../config/premium';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
+import OrgRequestsTab from '../../components/admin/OrgRequestsTab';
+import SummitTab from '../../components/admin/SummitTab';
 
 const fmtDate = (ts) => {
   try {
@@ -629,7 +631,7 @@ const AdminPanel = () => {
     ['reviews', 'Reviews'],
     ['projects', 'Projects'],
     ['users', 'Users'],
-    ...(isReviewer ? [['teachers', 'Mentors']] : []),
+    ...(isReviewer ? [['teachers', 'Mentors'], ['organizations', 'Organizations'], ['summit', 'Summit']] : []),
     ['moderation', 'Moderation'],
     ['deletions', 'Deletion Requests'],
     ['danger', 'Danger Zone'],
@@ -1333,6 +1335,9 @@ const AdminPanel = () => {
           </>)}
         </div>
       )}
+
+      {!loadingData && tab === 'organizations' && isReviewer && <OrgRequestsTab isAdmin={isAdmin} />}
+      {!loadingData && tab === 'summit' && isReviewer && <SummitTab />}
 
       {/* MODERATION */}
       {!loadingData && tab === 'moderation' && (

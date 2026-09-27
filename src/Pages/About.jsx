@@ -179,6 +179,12 @@ const About = () => {
             <Link to="/learning" className="hover:text-pink-600">
               Learning
             </Link>
+            <Link to="/organizations" className="hover:text-pink-600">
+              For Organizations
+            </Link>
+            <Link to="/summit" className="hover:text-pink-600">
+              Summit
+            </Link>
             <Link to="/teach" className="hover:text-pink-600">
               Become a mentor
             </Link>

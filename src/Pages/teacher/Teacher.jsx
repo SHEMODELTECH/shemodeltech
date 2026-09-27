@@ -49,6 +49,7 @@ import { LETTER_TYPES, myLetterRequests, requestLetter, withdrawLetterRequest } 
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import { BRAND } from '../../config/brand';
 import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
+import TrainerPanel from '../../components/TrainerPanel';
 
 const TRACKS = [
   ['', 'General'],
@@ -463,6 +464,11 @@ const TeacherList = ({ access }) => {
               <li>Recommendation and volunteer service letters from SHE MODEL TECH Inc.</li>
             </ul>
             <a href="/teach#faq" className="inline-block mt-2 font-semibold text-indigo-700 hover:underline">See all benefits and FAQs</a>
+          </HubToggle>
+        )}
+        {!access.isStaff && (
+          <HubToggle title="Training contracts">
+            <TrainerPanel uid={access.uid} name={currentUser?.displayName || currentUser?.email || 'A mentor'} />
           </HubToggle>
         )}
         {!access.isStaff && <MentorLetters access={access} />}
