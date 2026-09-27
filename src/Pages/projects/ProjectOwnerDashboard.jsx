@@ -533,77 +533,110 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
         </div>
       )}
 
-      {/* Actions */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        <Link to={`/projects/${project.id}`} className="px-4 py-2 min-h-[40px] bg-gray-100 hover:bg-gray-100 text-gray-900 font-semibold rounded-lg text-xs transition-all flex items-center">
-          View Details
-        </Link>
-        <Link to={`/projects/${project.id}/workspace`} className="px-4 py-2 min-h-[40px] bg-gray-100 hover:bg-gray-100 text-gray-900 font-semibold rounded-lg text-xs transition-all flex items-center">
-          Workspace
-        </Link>
-        {isAwaitingPayment && (
-          <>
-            {!project.ownerPaidAll && (
-              <button onClick={() => onMarkAllPaid(project)} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs transition-all flex items-center">
-                I've Paid Everyone
+      {/* Actions: one clear next step, the everyday links, and the rest under "More". */}
+      {(() => {
+        const reviewLabel = project.isPaid
+          ? (project.reviewStatus === 'approved' ? 'Mark work done'
+            : project.reviewStatus === 'submitted' ? 'Review pending'
+            : project.reviewStatus === 'needs_changes' ? 'Make the requested changes'
+            : project.reviewStatus === 'rejected' ? 'Not approved'
+            : 'Submit for review')
+          : (project.reviewStatus === 'approved' ? 'Assign badges'
+            : project.reviewStatus === 'submitted' ? 'Review pending'
+            : project.reviewStatus === 'needs_changes' ? 'Make the requested changes'
+            : project.reviewStatus === 'rejected' ? 'Not approved'
+            : 'Submit for review');
+        const active = !isCompleted && !isAwaitingPayment;
+        // The single most useful next step for the lead.
+        let next = null;
+        if (active && pendingApps.length > 0) {
+          next = {
+            text: `${pendingApps.length} application${pendingApps.length === 1 ? '' : 's'} waiting for your decision.`,
+            button: (
+              <button onClick={() => setShowApps(!showApps)} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs">
+                {showApps ? 'Hide applications' : `Review applications (${pendingApps.length})`}
               </button>
+            ),
+          };
+        } else if (active && isSetup) {
+          next = {
+            text: 'Finish setting up your project so members can join.',
+            button: <Link to={`/projects/${project.id}/setup`} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs flex items-center">Continue setup</Link>,
+          };
+        } else if (active) {
+          next = {
+            text: project.reviewStatus === 'submitted' ? 'Your project is with She Model Tech for review.' : 'When the work is finished, send it to She Model Tech for review.',
+            button: (
+              <Link to={`/projects/${project.id}/complete`} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs flex items-center ${project.reviewStatus === 'submitted' ? 'bg-gray-100 text-gray-700' : 'bg-pink-600 hover:bg-pink-700 text-white'}`}>
+                {reviewLabel}
+              </Link>
+            ),
+          };
+        }
+        return (
+          <div className="mb-4 space-y-3">
+            {next && (
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-pink-50/60 border border-pink-100 px-4 py-3">
+                <p className="text-sm text-gray-800"><span className="font-semibold">Next step:</span> {next.text}</p>
+                {next.button}
+              </div>
             )}
-            <Link to={`/disputes/${project.id}`} className="px-4 py-2 min-h-[40px] bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 font-semibold rounded-lg text-xs transition-all flex items-center">
-              Payment Status{Object.values(project.paymentConfirmations || {}).some(c => c?.status === 'disputed') ? ' · Dispute Open' : ''}
-            </Link>
-          </>
-        )}
-        {!isCompleted && !isAwaitingPayment && (
-          <Link to={`/projects/${project.id}/setup`} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs transition-all flex items-center ${isSetup ? 'bg-pink-600 hover:bg-pink-700 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
-            {isSetup ? 'Continue Setup' : 'Edit Project'}
-          </Link>
-        )}
-        {!isCompleted && !isAwaitingPayment && !isSetup && (
-          <Link to={`/projects/${project.id}/complete`} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs transition-all flex items-center">
-            {project.isPaid ? (
-              project.reviewStatus === 'approved' ? 'Mark Work Done'
-              : project.reviewStatus === 'submitted' ? 'Review Pending'
-              : project.reviewStatus === 'needs_changes' ? 'Changes Requested'
-              : project.reviewStatus === 'rejected' ? 'Not Approved'
-              : 'Submit for Review'
-            ) : (
-              project.reviewStatus === 'approved' ? 'Assign Badges'
-              : project.reviewStatus === 'submitted' ? 'Review Pending'
-              : project.reviewStatus === 'needs_changes' ? 'Changes Requested'
-              : project.reviewStatus === 'rejected' ? 'Not Approved'
-              : 'Submit for Review'
-            )}
-          </Link>
-        )}
-        {!isCompleted && !isAwaitingPayment && !isSetup && (
-          <button onClick={() => onToggleApplications(project)} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs transition-all ${project.applicationsOpen === false ? 'bg-pink-600 hover:bg-pink-700 text-white' : 'bg-orange-50 border border-orange-200 text-orange-700 hover:bg-orange-100'}`}>
-            {project.applicationsOpen === false ? 'Open Applications' : 'Close Applications'}
-          </button>
-        )}
-        {!isCompleted && (
-          canFeature ? (
-            <button onClick={onToggleFeatured} className="px-4 py-2 min-h-[40px] bg-white border border-amber-300 text-amber-800 hover:bg-amber-50 font-semibold rounded-lg text-xs transition-all">
-              {project.featured ? 'Unfeature' : '★ Feature this project'}
-            </button>
-          ) : (
-            <a href="/premium" className="px-4 py-2 min-h-[40px] text-amber-700 text-xs font-semibold flex items-center hover:underline">★ Feature with Premium</a>
-          )
-        )}
-        {!isCompleted && (project.approvedMembers?.length || 0) === 0 && (
-          project.deletionRequested ? (
-            <span className="px-4 py-2 min-h-[40px] text-amber-600 text-xs font-semibold flex items-center">Deletion requested</span>
-          ) : (
-            <button onClick={onRequestDeletion} className="px-4 py-2 min-h-[40px] bg-white border border-red-200 text-red-600 hover:bg-red-50 font-semibold rounded-lg text-xs transition-all flex items-center">
-              Request deletion
-            </button>
-          )
-        )}
-        {!isCompleted && pendingApps.length > 0 && (
-          <button onClick={() => setShowApps(!showApps)} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs transition-all">
-            Applications ({pendingApps.length})
-          </button>
-        )}
-      </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link to={`/projects/${project.id}/workspace`} className="px-4 py-2 min-h-[40px] bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-lg text-xs flex items-center">Open workspace</Link>
+              <Link to={`/projects/${project.id}`} className="px-4 py-2 min-h-[40px] bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-lg text-xs flex items-center">View details</Link>
+              {active && !isSetup && (
+                <Link to={`/projects/${project.id}/setup`} className="px-4 py-2 min-h-[40px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-xs flex items-center">Edit project</Link>
+              )}
+              {active && pendingApps.length > 0 && !isSetup && (
+                <Link to={`/projects/${project.id}/complete`} className="px-4 py-2 min-h-[40px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-xs flex items-center">{reviewLabel}</Link>
+              )}
+              {isAwaitingPayment && (
+                <>
+                  {!project.ownerPaidAll && (
+                    <button onClick={() => onMarkAllPaid(project)} className="px-4 py-2 min-h-[40px] bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg text-xs flex items-center">
+                      I've paid everyone
+                    </button>
+                  )}
+                  <Link to={`/disputes/${project.id}`} className="px-4 py-2 min-h-[40px] bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 font-semibold rounded-lg text-xs flex items-center">
+                    Payment status{Object.values(project.paymentConfirmations || {}).some(c => c?.status === 'disputed') ? ' · Dispute open' : ''}
+                  </Link>
+                </>
+              )}
+              {!isCompleted && (
+                <details className="relative">
+                  <summary className="list-none cursor-pointer px-4 py-2 min-h-[40px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-xs flex items-center gap-1">
+                    More <span aria-hidden="true">▾</span>
+                  </summary>
+                  <div className="absolute z-20 mt-1 w-60 rounded-xl border border-gray-200 bg-white shadow-lg p-1.5 text-sm">
+                    {active && !isSetup && (
+                      <button onClick={() => onToggleApplications(project)} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-800">
+                        {project.applicationsOpen === false ? 'Open applications' : 'Close applications'}
+                        <span className="block text-xs text-gray-500">{project.applicationsOpen === false ? 'Let members apply again' : 'Stop new members applying'}</span>
+                      </button>
+                    )}
+                    {canFeature ? (
+                      <button onClick={onToggleFeatured} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-amber-800">
+                        {project.featured ? 'Stop featuring' : '★ Feature this project'}
+                      </button>
+                    ) : (
+                      <a href="/premium" className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-amber-700">★ Feature with Premium</a>
+                    )}
+                    {(project.approvedMembers?.length || 0) === 0 && (
+                      project.deletionRequested ? (
+                        <span className="block px-3 py-2 text-amber-600">Deletion requested</span>
+                      ) : (
+                        <button onClick={onRequestDeletion} className="w-full text-left px-3 py-2 rounded-lg hover:bg-red-50 text-red-600 border-t border-gray-100 mt-1">
+                          Request deletion
+                        </button>
+                      )
+                    )}
+                  </div>
+                </details>
+              )}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Pending Applications */}
       {showApps && pendingApps.length > 0 && (
