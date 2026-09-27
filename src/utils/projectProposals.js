@@ -93,11 +93,10 @@ export const notifyLeadWaitlist = async (projectTitle) => {
 // proposal goes (the current cohort if it hasn't started, otherwise the next).
 export const listOpenCohorts = async () => {
   const snap = await getDocs(collection(db, 'cohorts'));
-  const now = Date.now();
   return snap.docs
     .map((d) => ({ id: d.id, ...d.data() }))
+    // Free cohorts whose build hasn't started (draft, lead applications, interviews, team forming).
     .filter((c) => !c.isPaid && !['complete', 'completed', 'grace', 'building'].includes(c.status))
-    .filter((c) => new Date(c.startAt || `${c.startDate}T00:00:00`).getTime() > now)
     .sort((a, b) => String(a.startAt || a.startDate).localeCompare(String(b.startAt || b.startDate)));
 };
 

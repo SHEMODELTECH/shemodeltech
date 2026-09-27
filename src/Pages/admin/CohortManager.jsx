@@ -36,6 +36,7 @@ import {
 } from '../../utils/cohorts';
 import { batchGenerateProjects } from '../../utils/batchGenerateProjects';
 import { logActivity as logProof } from '../../utils/activityFeed';
+import { approveProposal, listProposals } from '../../utils/projectProposals';
 
 const PHASES = [
   { id: COHORT_STATUS.DRAFT, label: 'Draft', hint: 'Projects generated, hidden from members' },
@@ -148,6 +149,26 @@ const CohortManager = () => {
       await load();
     } catch (e) {
       toast.error(e.message || 'Could not create the cohort.');
+    }
+    setBusy(null);
+  };
+
+  // Member proposals waiting for a decision: add them to a cohort from its card.
+  const [proposals, setProposals] = useState([]);
+  const loadProposals = () => listProposals().then((l) => setProposals(l.filter((x) => x.status === 'new'))).catch(() => setProposals([]));
+  useEffect(() => {
+    loadProposals();
+  }, []);
+  const addProposal = async (p, cohort) => {
+    if (cohort.isPaid) return toast.error('Member proposals join free cohorts.');
+    setBusy(cohort.id);
+    try {
+      await approveProposal(p, currentUser, cohort);
+      toast.success(`"${p.title}" added to ${cohort.name}. ${p.name} is its lead.`);
+      await loadProposals();
+      await load();
+    } catch (e) {
+      toast.error(e.message || 'Could not add it.');
     }
     setBusy(null);
   };
@@ -494,6 +515,30 @@ const CohortManager = () => {
               {/* Edit cohort dates. Moving the start date recomputes the whole
                   schedule AND pushes the new deadline onto every project, so
                   reminders and grace never fire on stale dates. */}
+              {!cohort.isPaid && !['building', 'grace', 'complete'].includes(cohort.status) && proposals.length > 0 && (
+                <div className="mb-3 rounded-lg border border-pink-200 bg-pink-50/50 p-3">
+                  <p className="text-xs font-bold text-gray-900 mb-2">Member proposals you can add ({proposals.length})</p>
+                  <ul className="space-y-2">
+                    {proposals.map((p) => (
+                      <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2">
+                        <span className="text-sm">
+                          <span className="font-semibold text-gray-900">{p.title}</span>
+                          <span className="text-gray-500"> · proposed by {p.name}</span>
+                        </span>
+                        <button
+                          onClick={() => addProposal(p, cohort)}
+                          disabled={busy === cohort.id}
+                          className="text-xs font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
+                        >
+                          Add to this cohort (she leads)
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-[11px] text-gray-500 mt-2">Added proposals count on top of the projects you generate, and take this cohort’s dates.</p>
+                </div>
+              )}
+
               {editingCohort === cohort.id && (
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-3">
                   <div className="flex flex-wrap gap-2 mb-2">
