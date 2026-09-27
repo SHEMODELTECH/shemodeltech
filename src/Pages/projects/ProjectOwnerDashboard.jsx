@@ -106,6 +106,13 @@ const ProjectOwnerDashboard = () => {
     }
   };
 
+  // Arriving from a workspace's "Manage project": scroll to that project.
+  useEffect(() => {
+    const h = typeof window !== 'undefined' ? window.location.hash : '';
+    if (!h.startsWith('#project-') || !myProjects.length) return;
+    setTimeout(() => document.getElementById(h.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+  }, [myProjects.length]);
+
   // When a role is already full, the lead chooses what to do in a proper dialog
   // (suggest another role, message the applicant, or grow the team).
   const [roleFull, setRoleFull] = useState(null);
@@ -536,7 +543,8 @@ const ProjectOwnerDashboard = () => {
             ) : (
               <div className="space-y-6">
                 {myProjects.map(project => (
-                  <ProjectCard key={project.id} project={project} currentUser={currentUser}
+                  <div key={project.id} id={`project-${project.id}`} className={`scroll-mt-24 rounded-2xl ${typeof window !== 'undefined' && window.location.hash === `#project-${project.id}` ? 'ring-2 ring-pink-400 ring-offset-2' : ''}`}>
+                  <ProjectCard project={project} currentUser={currentUser}
                     onApprove={(app) => approveApplication(project, app)}
                     onReject={rejectApplication}
                     onRequestInfo={(app, message) => requestApplicantInfo(project, app, message)}
@@ -547,6 +555,7 @@ const ProjectOwnerDashboard = () => {
                     canFeature={premiumOwner}
                     onToggleFeatured={() => toggleFeatured(project)}
                   />
+                  </div>
                 ))}
               </div>
             )}
