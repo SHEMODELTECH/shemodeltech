@@ -22,8 +22,12 @@ import {
   COMPANY_COHORT_STATUS,
 } from '../../utils/companyCohorts';
 import { formatMoney } from '../../utils/paidProjects';
+import PremiumBadge from '../../components/PremiumBadge';
+import { isVerifiedPartner } from '../../config/premium';
 
 const CompanyCohortDetail = () => {
+  // Premium companies show the gold Verified Partner badge.
+  const [hostIsPartner, setHostIsPartner] = useState(false);
   const { cohortId } = useParams();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -54,6 +58,12 @@ const CompanyCohortDetail = () => {
           return;
         }
         setCohort({ id: snap.id, ...snap.data() });
+        const hostId = snap.data().companyId;
+        if (hostId) {
+          getDoc(doc(db, 'users', hostId))
+            .then((u) => setHostIsPartner(u.exists() && isVerifiedPartner(u.data())))
+            .catch(() => {});
+        }
 
         const [elig, apps] = await Promise.all([
           canApplyToCompanyCohort(currentUser.uid, { email: currentUser.email }),
@@ -126,7 +136,7 @@ const CompanyCohortDetail = () => {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
         <p className="text-gray-600">This project isn&rsquo;t available.</p>
-        <Link to="/company-cohorts" className="text-pink-600 font-semibold hover:underline">
+        <Link to="/paid-projects" className="text-pink-600 font-semibold hover:underline">
           Browse paid projects
         </Link>
       </div>
@@ -158,11 +168,8 @@ const CompanyCohortDetail = () => {
         <div>
           <p className="font-bold text-gray-900 flex items-center gap-2">
             {cohort.companyName}
-            {cohort.companyVerified && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-100 text-pink-700 uppercase">
-                Verified
-              </span>
-            )}
+            {hostIsPartner && <PremiumBadge kind="partner" />}
+
           </p>
           <p className="text-gray-500 text-xs">Company-hosted paid project</p>
         </div>
@@ -196,7 +203,7 @@ const CompanyCohortDetail = () => {
           {cohort.companyName} owns this brief, reviews applications, and pays you directly. Because
           we don&rsquo;t review the work, <strong>no badge is awarded</strong>, you&rsquo;ll receive
           a verified paid work-experience record for your profile instead. Badges come from She
-          Model Tech cohorts.
+          Model Tech projects.
         </p>
       </div>
 

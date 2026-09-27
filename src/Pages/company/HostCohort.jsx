@@ -74,7 +74,7 @@ const HostCohort = () => {
         })),
       });
       toast.success('Your project is live. Applications are open.');
-      navigate(`/company-cohorts/${id}`);
+      navigate(`/paid-projects/${id}`);
     } catch (e) {
       toast.error(e.message || 'Could not create the project.');
     }

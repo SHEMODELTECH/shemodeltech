@@ -99,7 +99,7 @@ const About = () => {
               For Startups and Organisations
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              Sponsor a cohort and fund a team of women through eight weeks of building, or host
+              Sponsor a project and fund a team of women while they build, or host
               your own paid project and hire directly from women who have already earned a verified
               badge with us.
             </p>

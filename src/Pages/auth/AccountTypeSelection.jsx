@@ -138,7 +138,7 @@ const AccountTypeSelection = () => {
                 Company / Organisation
               </div>
               <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
-                I am hiring, sponsoring a cohort, or representing an organisation that supports women in tech.
+                I am hiring, sponsoring a project team, or representing an organisation that supports women in tech.
               </p>
             </button>
           </div>

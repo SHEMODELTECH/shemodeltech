@@ -93,9 +93,7 @@ const VerifyCertificate = () => {
                 value={[result.data.startDate, result.data.endDate].filter(Boolean).join(', ')}
               />
             )}
-            {result.data.cohortNumber && (
-              <Field label="Cohort" value={`Cohort ${result.data.cohortNumber}`} />
-            )}
+
 
             {result.data.badges?.length > 0 && (
               <div className="mt-4">
@@ -121,8 +119,8 @@ const VerifyCertificate = () => {
               {result.data.certificateId}
             </p>
             <p className="text-gray-500 text-xs mt-2 leading-relaxed">
-              Issued by {BRAND.name}. This project was completed collaboratively and reviewed by our
-              team, including the work&rsquo;s commit history.
+              Issued by SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit organization. This project was
+              completed collaboratively and reviewed by our team, including the work&rsquo;s commit history.
             </p>
           </div>
         )}

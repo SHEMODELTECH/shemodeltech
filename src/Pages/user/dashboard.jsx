@@ -309,7 +309,7 @@ const DashboardOverview = () => {
                 <h3 className="text-lg font-bold text-gray-900">Your Paid Projects</h3>
                 <div className="flex items-center gap-4">
                   <Link
-                    to="/company/host-cohort"
+                    to="/projects/new-paid"
                     className="text-pink-600 text-sm font-medium hover:underline"
                   >
                     + Post Paid Project

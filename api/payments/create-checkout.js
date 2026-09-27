@@ -76,8 +76,8 @@ module.exports = async (req, res) => {
             currency: 'usd',
             unit_amount: cents,
             product_data: {
-              name: label || 'Cohort sponsorship',
-              description: 'Funds training stipends for women on a She Model Tech cohort.',
+              name: label || 'Project team sponsorship',
+              description: 'Funds stipends for women on a She Model Tech project team.',
             },
           },
         }],

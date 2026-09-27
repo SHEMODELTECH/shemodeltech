@@ -79,7 +79,7 @@ export const SPONSORSHIP_TIERS = [
   },
   {
     id: 'sponsor_cohort',
-    name: 'Sponsor a full cohort',
+    name: 'Sponsor several project teams',
     amount: 27000,
     blurb: 'All six teams, ~30 women, with headline acknowledgement.',
   },

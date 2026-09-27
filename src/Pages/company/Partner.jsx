@@ -101,7 +101,7 @@ const Partner = () => {
           <ul className="text-gray-600 text-sm space-y-2 mb-4">
             <li>Your name and logo on the team you fund</li>
             <li>Read-only progress updates</li>
-            <li>An impact report when the cohort completes</li>
+            <li>An impact report when the project completes</li>
             <li>A two-week first look at the graduates you funded</li>
             <li>An invitation to demo day</li>
           </ul>
@@ -113,7 +113,7 @@ const Partner = () => {
             onClick={() => navigate('/sponsor')}
             className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 font-semibold text-sm py-3 rounded-lg transition-all"
           >
-            Sponsor a cohort
+            Sponsor a project team
           </button>
         </div>
       </div>

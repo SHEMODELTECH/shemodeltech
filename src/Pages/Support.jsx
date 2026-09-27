@@ -59,7 +59,7 @@ const Support = () => {
     },
     {
       q: 'How does it work?',
-      a: 'Four steps. (1) Sign up and build your profile: sign in with Google, pick your skill track, and set your experience level. It takes under a minute. (2) Join a project: browse the open projects in the current cohort and apply with your portfolio and LinkedIn, or apply to lead one. (3) Collaborate: once you are on a team you get the project workspace, where you discuss in the forum, share resources, and coordinate with everyone else. (4) Complete and earn your badge: when the project is done we review the work, including the commit history, and badges are awarded based on your role and contribution, building a verified record of what you actually built.',
+      a: 'Four steps. (1) Sign up and build your profile: sign in with Google, pick your skill track, and set your experience level. It takes under a minute. (2) Join a project: browse the open projects and apply with your portfolio and LinkedIn, or apply to lead one. (3) Collaborate: once you are on a team you get the project workspace, where you discuss in the forum, share resources, and coordinate with everyone else. (4) Complete and earn your badge: when the project is done we review the work, including the commit history, and badges are awarded based on your role and contribution, building a verified record of what you actually built.',
     },
     {
       q: 'Is She Model Tech free to use?',
@@ -79,7 +79,7 @@ const Support = () => {
     },
     {
       q: 'I am new to tech - where do I start?',
-      a: 'Join a cohort. We do not teach theory here; you learn by building alongside people at different levels, with a project lead who can point you in the right direction. Pick the track closest to what you want to do, apply to a project in a role you can grow into, and ask questions as you go. Most people learn far more in eight weeks of real work than in months of tutorials.',
+      a: 'Join a project. We do not teach theory here; you learn by building alongside people at different levels, with a project lead who can point you in the right direction. Pick the track closest to what you want to do, apply to a project in a role you can grow into, and ask questions as you go. Most people learn far more in eight weeks of real work than in months of tutorials.',
     },
     {
       q: 'How do projects work?',

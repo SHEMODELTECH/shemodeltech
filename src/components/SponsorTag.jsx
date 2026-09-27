@@ -25,7 +25,7 @@ const SponsorTag = ({ project, size = 'md', showLabel = true }) => {
     if (!showLabel) return null;
     return (
       <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">
-        Community cohort
+        Community project
       </span>
     );
   }

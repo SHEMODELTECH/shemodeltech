@@ -107,7 +107,7 @@ const JoinedProjects = ({ currentUser }) => {
               isPaid: true,
               kind: c?.companyName ? `Company project · ${c.companyName}` : 'Company project',
               status: a.status,
-              link: `/company-cohorts/${a.cohortId}`,
+              link: `/paid-projects/${a.cohortId}`,
               at: toMillis(a.createdAt),
             });
           })
@@ -136,7 +136,7 @@ const JoinedProjects = ({ currentUser }) => {
               isPaid: false,
               kind: titles.length > 1 ? 'Applied to lead (ranked choices)' : 'Applied to lead',
               status: a.status,
-              link: '/cohort/apply-to-lead',
+              link: '/apply-to-lead',
               at: toMillis(a.createdAt),
             });
           })

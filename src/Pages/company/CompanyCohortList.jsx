@@ -59,7 +59,7 @@ const CompanyCohortList = () => {
             proof you shipped something on a real team. Have a look around here in the meantime.
           </p>
           <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">
-            Join the current cohort
+            Join a She Model Tech project
           </Link>
         </div>
       )}
@@ -76,7 +76,7 @@ const CompanyCohortList = () => {
         {cohorts.map((c) => (
           <Link
             key={c.id}
-            to={`/company-cohorts/${c.id}`}
+            to={`/paid-projects/${c.id}`}
             className="block p-5 bg-white border border-gray-200 rounded-xl hover:border-gray-300 transition-all"
           >
             <div className="flex items-start gap-3">
@@ -90,11 +90,7 @@ const CompanyCohortList = () => {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-gray-500 text-xs">{c.companyName}</span>
-                  {c.companyVerified && (
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-700 uppercase">
-                      Verified
-                    </span>
-                  )}
+
                 </div>
                 <p className="font-bold text-gray-900 text-sm mt-0.5">{c.title}</p>
                 <p className="text-gray-500 text-xs mt-1 line-clamp-2">{c.description}</p>

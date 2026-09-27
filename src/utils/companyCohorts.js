@@ -281,7 +281,7 @@ export const decideApplication = async ({
           ? 'A company wants to interview you'
           : 'Update on your application',
     body: message || null,
-    link: `/company-cohorts/${app.cohortId}`,
+    link: `/paid-projects/${app.cohortId}`,
   });
 };
 

@@ -1,6 +1,7 @@
 // src/Pages/cohort/ApplyToLead.jsx
 //
-// Where a member applies to lead a cohort project, ranking up to 3 choices.
+// Where a member applies to lead a She Model Tech project (rolling: any open
+// project that needs a lead), ranking up to 3 choices.
 //
 // Ranking exists because there are ~6 projects and usually many more
 // applicants. Without it, everyone who doesn't win their one project gets
@@ -19,8 +20,8 @@ import {
   withdrawApplication,
   MAX_RANKED_CHOICES,
   LEAD_APP_STATUS,
+  ROLLING_POOL,
 } from '../../utils/leadApplications';
-import { getFormingCohort } from '../../utils/cohorts';
 
 const ApplyToLead = () => {
   const { currentUser } = useAuth();
@@ -28,7 +29,8 @@ const ApplyToLead = () => {
   const [params] = useSearchParams();
   const preselect = params.get('project');
 
-  const [cohort, setCohort] = useState(null);
+  // Open projects that need a lead (rolling, no cohorts).
+  const [hasOpen, setHasOpen] = useState(false);
   const [projects, setProjects] = useState([]);
   const [ranked, setRanked] = useState(preselect ? [preselect] : []);
   const [pitch, setPitch] = useState('');
@@ -50,44 +52,32 @@ const ApplyToLead = () => {
 
     (async () => {
       try {
-        const c = await getFormingCohort();
+        // Every active She Model Tech project still looking for a lead.
+        const snap = await getDocs(
+          query(collection(db, 'projects'), where('leadConfirmed', '==', false), where('isActive', '==', true))
+        );
         if (cancelled) return;
-        setCohort(c);
-        if (!c) {
-          // No cohort forming: check whether she's already waiting, so we
-          // don't offer to add her twice.
+        const open = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter((p) => !p.isCompanyPost && ['lead_recruitment', 'setup', 'active'].includes(p.status || 'lead_recruitment'));
+        setProjects(open);
+        setHasOpen(open.length > 0);
+        if (!open.length) {
           try {
             const wl = await getDocs(
-              query(
-                collection(db, 'waitlist'),
-                where('userId', '==', currentUser.uid),
-                where('interest', '==', 'lead')
-              )
+              query(collection(db, 'waitlist'), where('userId', '==', currentUser.uid), where('interest', '==', 'lead'))
             );
             if (!cancelled) setOnWaitlist(!wl.empty);
           } catch (_) {
             /* non-blocking */
           }
-          if (!cancelled) setLoading(false);
-          return;
         }
 
-        // One query for the whole cohort's projects, no per-project reads.
-        const snap = await getDocs(
-          query(
-            collection(db, 'projects'),
-            where('cohortId', '==', c.id),
-            where('leadConfirmed', '==', false)
-          )
-        );
-        if (cancelled) return;
-        setProjects(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-
-        const mine = await getMyApplication(c.id, currentUser.uid);
+        const mine = await getMyApplication(ROLLING_POOL, currentUser.uid);
         if (!cancelled) setExisting(mine);
       } catch (e) {
         console.error(e);
-        if (!cancelled) toast.error('Could not load the current cohort.');
+        if (!cancelled) toast.error('Could not load the projects that need a lead.');
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -120,7 +110,7 @@ const ApplyToLead = () => {
         });
       }
       setOnWaitlist(true);
-      toast.success("You're on the list. We'll email you when applications open.");
+      toast.success("You're on the list. We'll email you when a project needs a lead.");
     } catch (e) {
       toast.error('Could not add you to the waitlist.');
     }
@@ -170,7 +160,7 @@ const ApplyToLead = () => {
     setSaving(true);
     try {
       await applyToLead({
-        cohortId: cohort.id,
+        cohortId: ROLLING_POOL,
         applicant: {
           uid: currentUser.uid,
           email: currentUser.email,
@@ -185,7 +175,7 @@ const ApplyToLead = () => {
       toast.success('Application submitted. We\u2019ll be in touch to arrange a short chat.');
       // Back to this page: it renders the "your application is in" state
       // once an application exists.
-      navigate('/cohort/apply-to-lead', { replace: true });
+      navigate('/apply-to-lead', { replace: true });
       setExisting({ status: 'submitted', rankedProjectIds: ranked, pitch });
     } catch (e) {
       toast.error(e.message || 'Could not submit your application.');
@@ -194,7 +184,7 @@ const ApplyToLead = () => {
   };
 
   const withdraw = async () => {
-    if (!window.confirm('Withdraw your lead application for this cohort?')) return;
+    if (!window.confirm('Withdraw your lead application?')) return;
     try {
       await withdrawApplication(existing.id);
       setExisting(null);
@@ -210,19 +200,19 @@ const ApplyToLead = () => {
     );
   }
 
-  if (!cohort) {
+  if (!hasOpen && !(existing && existing.status !== LEAD_APP_STATUS.WITHDRAWN)) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">No cohort is open right now</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">No projects need a lead right now</h1>
         <p className="text-gray-600 mb-6">
-          Lead applications open about two weeks into each cycle. Join the waitlist and we&rsquo;ll
-          email you the moment the next set of projects goes live.
+          New projects open all the time. Join the waitlist and we&rsquo;ll email you when a new project
+          needs a lead.
         </p>
         {onWaitlist ? (
           <div className="bg-green-50 border border-green-200 rounded-xl p-5">
             <p className="text-green-800 font-semibold text-sm">You&rsquo;re on the waitlist</p>
             <p className="text-gray-600 text-xs mt-1">
-              We&rsquo;ll email {currentUser?.email} when applications open.
+              We&rsquo;ll email {currentUser?.email} when a project needs a lead.
             </p>
           </div>
         ) : (
@@ -243,7 +233,7 @@ const ApplyToLead = () => {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Your application is in for {cohort.name}
+          Your lead application is in
         </h1>
         <p className="text-gray-600 mb-6">
           {existing.status === LEAD_APP_STATUS.INTERVIEW_SCHEDULED
@@ -260,7 +250,7 @@ const ApplyToLead = () => {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10 sm:py-16">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-        Apply to lead, {cohort.name}
+        Apply to lead a project
       </h1>
       <p className="text-gray-600 text-sm mb-8 leading-relaxed">
         Leading is a skill-building path in itself, you don&rsquo;t need badges or prior experience

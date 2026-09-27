@@ -204,7 +204,7 @@ const ProjectsListing = () => {
             const c = d.data();
             return {
               id: d.id,
-              href: `/company-cohorts/${d.id}`,
+              href: `/paid-projects/${d.id}`,
               isCompanyProject: true,
               isPaid: true,
               status: 'active',

@@ -46,6 +46,14 @@ export const LEAD_APP_STATUS = {
 
 export const MAX_RANKED_CHOICES = 3;
 
+// Lead applications run on a rolling basis: every open She Model Tech project
+// that needs a lead can be applied for at any time. (Stored with this pool id
+// in the existing cohortId field, so older records keep working.)
+export const ROLLING_POOL = 'rolling';
+
+// Statuses that mean an application is still being decided.
+export const LIVE_STATUSES = ['submitted', 'interview_scheduled'];
+
 // ---------------------------------------------------------------------
 // Applicant side
 // ---------------------------------------------------------------------
@@ -81,11 +89,9 @@ export const applyToLead = async ({
       where('applicantUid', '==', applicant.uid)
     )
   );
-  const live = existing.docs.find(
-    (d) => ![LEAD_APP_STATUS.WITHDRAWN, LEAD_APP_STATUS.REJECTED].includes(d.data().status)
-  );
+  const live = existing.docs.find((d) => LIVE_STATUSES.includes(d.data().status));
   if (live) {
-    throw new Error('You already have an application in for this cohort.');
+    throw new Error('You already have a lead application waiting for a decision. You can apply again once it is decided.');
   }
 
   const ref = await addDoc(collection(db, 'lead_applications'), {
@@ -135,9 +141,8 @@ export const getMyApplication = async (cohortId, uid) => {
     )
   );
   if (snap.empty) return null;
-  const live = snap.docs.find((d) => d.data().status !== LEAD_APP_STATUS.WITHDRAWN);
-  const chosen = live || snap.docs[0];
-  return { id: chosen.id, ...chosen.data() };
+  const live = snap.docs.find((d) => LIVE_STATUSES.includes(d.data().status));
+  return live ? { id: live.id, ...live.data() } : null;
 };
 
 // ---------------------------------------------------------------------
@@ -199,7 +204,7 @@ export const scheduleInterview = async ({ appId, scheduledAt, meetLink, reviewer
       body: `We'd love to talk about you leading a project. ${
         scheduledAt ? `Scheduled for ${new Date(scheduledAt).toLocaleString()}.` : ''
       }`,
-      link: meetLink || '/cohort/apply-to-lead',
+      link: meetLink || '/apply-to-lead',
     },
     app.applicantEmail
   );
@@ -294,7 +299,7 @@ export const rejectAsLeadInviteAsContributor = async ({
     decidedAt: serverTimestamp(),
   });
 
-  let projectTitle = 'a project in this cohort';
+  let projectTitle = 'a She Model Tech project';
   if (suggestedProjectId) {
     try {
       const ps = await getDoc(doc(db, 'projects', suggestedProjectId));
@@ -308,7 +313,7 @@ export const rejectAsLeadInviteAsContributor = async ({
     applicant.applicantUid,
     {
       type: 'lead_role_offered',
-      title: 'We\u2019d like you on a team this cohort',
+      title: 'We\u2019d like you on a project team',
       body:
         message ||
         `We had more strong lead applicants than projects. We'd love you on ${projectTitle}${
@@ -336,7 +341,7 @@ export const rejectApplication = async ({ appId, applicant, reason, reviewer }) 
       title: 'Update on your lead application',
       body:
         reason ||
-        'You weren\u2019t selected to lead this cohort, but you can apply again next cycle.',
+        'You weren\u2019t selected to lead this time, but you can apply to lead another project any time.',
       link: '/projects',
     },
     applicant.applicantEmail

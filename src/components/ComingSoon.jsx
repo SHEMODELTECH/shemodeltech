@@ -84,7 +84,7 @@ export const Price = ({ amount, interval, note, className = '' }) => {
       <div className={className}>
         <p className="text-2xl font-bold text-gray-400">Pricing to be announced</p>
         <p className="text-gray-400 text-xs mt-1">
-          Free for everyone while we run our first cohorts.
+          Free for everyone while we grow our community.
         </p>
       </div>
     );
@@ -123,7 +123,7 @@ export const ComingSoonNotice = () => {
     <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-8">
       <p className="text-gray-900 text-sm font-bold mb-1">Everything below is free right now</p>
       <p className="text-gray-600 text-xs leading-relaxed">
-        We&rsquo;re running our first cohorts and building the pool of verified graduates. Paid
+        We&rsquo;re building the pool of verified graduates. Paid
         plans open next year, and you&rsquo;ll get three months free when they do. Nothing here is
         charged, and there&rsquo;s no card to add.
       </p>

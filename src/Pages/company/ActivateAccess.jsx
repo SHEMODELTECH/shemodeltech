@@ -139,7 +139,7 @@ const ActivateAccess = () => {
         <h1 className="text-2xl font-bold text-gray-900 mb-3">Everything is free right now</h1>
         <p className="text-gray-600 text-sm mb-6 leading-relaxed">
           Your company already has full access, there&rsquo;s nothing to pay for yet. We&rsquo;re
-          building our first cohorts of verified graduates, and paid plans start once the talent
+          building our first community of verified graduates, and paid plans start once the talent
           pool is worth paying for.
         </p>
         <p className="text-gray-500 text-xs mb-6">

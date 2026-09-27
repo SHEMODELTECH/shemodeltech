@@ -16,7 +16,6 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { usePermissions } from '../../utils/permissions';
-import { getFormingCohort, getCohort } from '../../utils/cohorts';
 import { leadInterviewInvite } from '../../utils/calendarInvite';
 import {
   getApplicationsForCohort,
@@ -51,7 +50,6 @@ const LeadApplicationReview = () => {
   const navigate = useNavigate();
   const { isReviewer, loading: permsLoading } = usePermissions(currentUser?.uid);
 
-  const [cohort, setCohort] = useState(null);
   const [projects, setProjects] = useState([]);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,20 +67,16 @@ const LeadApplicationReview = () => {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      let c = await getFormingCohort();
-      if (!c) c = await getCohort('__none__').catch(() => null);
-      setCohort(c);
-      if (!c) {
-        setLoading(false);
-        return;
-      }
-
-      // Two queries total, regardless of how many applicants there are.
-      const [projSnap, apps] = await Promise.all([
-        getDocs(query(collection(db, 'projects'), where('cohortId', '==', c.id))),
-        getApplicationsForCohort(c.id),
+      // Rolling: every active project still needing a lead, and every lead
+      // application still waiting for a decision (any pool, including older ones).
+      const [projSnap, appSnap] = await Promise.all([
+        getDocs(query(collection(db, 'projects'), where('leadConfirmed', '==', false), where('isActive', '==', true))),
+        getDocs(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
       ]);
-      setProjects(projSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      const apps = appSnap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((x, y) => (x.createdAt?.seconds || 0) - (y.createdAt?.seconds || 0));
+      setProjects(projSnap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((p) => !p.isCompanyPost));
       setApplications(apps);
     } catch (e) {
       console.error(e);
@@ -112,17 +106,6 @@ const LeadApplicationReview = () => {
   }
   if (!isReviewer) return null;
 
-  if (!cohort) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">No cohort is being staffed</h1>
-        <p className="text-gray-600">
-          Create a cohort and reveal its projects to start taking lead applications.
-        </p>
-      </div>
-    );
-  }
-
   const grouped = groupByProject(applications, projects);
   const unled = projects.filter((p) => !p.leadConfirmed);
   const assignedCount = applications.filter((a) => a.status === LEAD_APP_STATUS.ASSIGNED).length;
@@ -130,12 +113,11 @@ const LeadApplicationReview = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-        Lead applications, {cohort.name}
+        Lead applications
       </h1>
       <p className="text-gray-500 text-sm mb-8">
-        {applications.length} application{applications.length === 1 ? '' : 's'} &middot;{' '}
-        {assignedCount} of {projects.length} projects have a lead &middot; applications close{' '}
-        {cohort.leadApplyCloseDate}
+        {applications.length} application{applications.length === 1 ? '' : 's'} waiting &middot;{' '}
+        {projects.length} project{projects.length === 1 ? '' : 's'} need{projects.length === 1 ? 's' : ''} a lead &middot; applications are open all the time
       </p>
 
       {/* Projects nobody wants - the thing most likely to be missed */}
@@ -145,7 +127,7 @@ const LeadApplicationReview = () => {
             Some projects have no applicants
           </p>
           <p className="text-amber-800 text-xs">
-            Consider promoting them in the weekly email, or dropping them from this cohort, a
+            Consider promoting them in the weekly email, or closing them, a
             project with no lead can&rsquo;t run, and fewer full teams beat more empty ones.
           </p>
         </div>

@@ -60,11 +60,11 @@ export const OVERHEAD_RATE = 0.22;
 
 export const SPONSOR_ENTITLEMENTS = [
   'Read-only progress updates on the team you funded',
-  'Your name and logo on the project and the cohort page',
+  'Your name and logo on the project page',
   'Acknowledgement in the weekly community email',
-  'An impact report when the cohort completes',
+  'An impact report when the project completes',
   'A two-week first look at the graduates you funded',
-  'An invitation to the cohort demo day',
+  'An invitation to the project demo day',
 ];
 
 // Stated explicitly, because sponsors drift toward involvement once they've

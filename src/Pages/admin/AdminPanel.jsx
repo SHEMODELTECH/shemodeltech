@@ -1,7 +1,7 @@
 // src/Pages/admin/AdminPanel.jsx - Platform admin dashboard (admin-only)
 // Tabs: Overview (stats) · Projects · Users · Generate · Moderation
 // Gated by users/{uid}.role. Admins get everything; editors get the
-// reviewer surfaces (cohorts, lead applications, project review) but not
+// reviewer surfaces (lead applications, project review) but not
 // delete/role management.
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -515,7 +515,7 @@ const AdminPanel = () => {
             title: 'Your company is verified',
             body: 'You can now post paid projects. Members will see them on the Projects page.',
             message: 'Your company is verified. You can now post paid projects.',
-            link: '/company/host-cohort',
+            link: '/projects/new-paid',
             isRead: false,
             read: false,
             createdAt: new Date(),
@@ -661,16 +661,22 @@ const AdminPanel = () => {
         Manage projects, users, and content across She Model Tech.
       </p>
 
-      {/* Cohort tools live on their own pages, not as tabs here. Without
-          these links they were unreachable from the dashboard, so the only
-          generator anyone could find was the legacy one that does not tag
-          projects to a cohort. */}
+      {/* Projects run on a rolling basis: create free or paid projects any time;
+          leads apply to open projects, and members join. */}
       <div className="flex flex-wrap gap-2 mb-6">
+        {isAdmin && (
+          <Link
+            to="/projects/generate"
+            className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
+          >
+            Create a free project
+          </Link>
+        )}
         <Link
-          to="/admin/cohorts"
-          className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
+          to="/projects/new-paid"
+          className="bg-white border border-pink-300 hover:bg-pink-50 text-pink-700 text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
         >
-          Cohorts &amp; project generation
+          Post a paid project
         </Link>
         <Link
           to="/admin/lead-applications"

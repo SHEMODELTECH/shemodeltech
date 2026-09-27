@@ -78,7 +78,7 @@ export const TRIAL_NOTICE = {
   badge: 'Early access',
   short: `Free early access. ${TRIAL_MONTHS} months on us when paid plans begin.`,
   body:
-    'Every feature is free while we build our first cohorts of verified ' +
+    'Every feature is free while we build our first community of verified ' +
     `graduates. When paid plans begin, you'll get ${TRIAL_MONTHS} months free ` +
     'before anything is charged.',
 };
@@ -131,7 +131,7 @@ export const DORMANT_NOTICE = {
   badge: 'Early access',
   title: 'Free early access',
   body:
-    'We\u2019re building our first cohorts of verified graduates. Every feature ' +
+    'We\u2019re building our first community of verified graduates. Every feature ' +
     'below is free for your company while we do. When paid plans begin, ' +
     `you\u2019ll get ${TRIAL_MONTHS} months free before anything is charged.`,
 };

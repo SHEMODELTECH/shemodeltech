@@ -1,7 +1,7 @@
 // src/App.jsx - UPDATED
 
 import React, { Suspense, lazy, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -52,7 +52,6 @@ const SponsorDashboard = lazy(() => import('./Pages/company/SponsorDashboard'));
 const ActivateAccess = lazy(() => import('./Pages/company/ActivateAccess'));
 const ActivationQueue = lazy(() => import('./Pages/admin/ActivationQueue'));
 const VerifyCertificate = lazy(() => import('./Pages/VerifyCertificate'));
-const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const Sponsor = lazy(() => import('./Pages/company/Sponsor'));
 const SubmitPost = lazy(() => import('./Pages/community/SubmitPost'));
 const SinglePost = lazy(() => import('./Pages/community/SinglePost'));
@@ -179,6 +178,12 @@ const StaffRoute = ({ children, adminOnly = false }) => (
     <StaffOnly adminOnly={adminOnly}>{children}</StaffOnly>
   </SidebarRoute>
 );
+
+// /company-cohorts/:id -> /paid-projects/:id
+const OldPaidProjectRedirect = () => {
+  const { cohortId } = useParams();
+  return <Navigate to={`/paid-projects/${cohortId}`} replace />;
+};
 
 // Home: logged-out visitors see the landing page; logged-in members go to their dashboard.
 const HomeRoute = () => {
@@ -325,7 +330,7 @@ function App() {
                     depends on whoever takes it on. Self-created projects
                     bypassed that entirely and produced untagged projects that
                     sat outside cohort stats, reminders and the grace period.
-                    Companies host their own at /company/host-cohort. */}
+                    Companies post their own paid projects at /projects/new-paid. */}
                 <Route path="/projects/submit" element={<Navigate to="/projects" replace />} />
                 <Route
                   path="/projects/:projectId/setup"
@@ -430,9 +435,15 @@ function App() {
                     a successful application landed on a 404. Redirect rather
                     than remove: notifications sent before this fix still use it. */}
                 <Route path="/cohort" element={<Navigate to="/projects" replace />} />
+                {/* Old addresses from when projects were grouped into cohorts */}
+                <Route path="/cohort/apply-to-lead" element={<Navigate to="/apply-to-lead" replace />} />
+                <Route path="/company/host-cohort" element={<Navigate to="/projects/new-paid" replace />} />
+                <Route path="/company-cohorts" element={<Navigate to="/paid-projects" replace />} />
+                <Route path="/company-cohorts/:cohortId" element={<OldPaidProjectRedirect />} />
+                <Route path="/admin/cohorts" element={<Navigate to="/admin" replace />} />
                 {/* Cohort: apply to lead (ranked choices, reviewed by admin/editor) */}
                 <Route
-                  path="/cohort/apply-to-lead"
+                  path="/apply-to-lead"
                   element={
                     <SidebarRoute>
                       <ApplyToLead />
@@ -450,7 +461,7 @@ function App() {
                 />
                 {/* Company-hosted cohorts: company owns brief, team, timeline and pays members */}
                 <Route
-                  path="/company/host-cohort"
+                  path="/projects/new-paid"
                   element={
                     <SidebarRoute>
                       <HostCohort />
@@ -458,7 +469,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/company-cohorts"
+                  path="/paid-projects"
                   element={
                     <SidebarRoute>
                       <CompanyCohortList />
@@ -466,7 +477,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/company-cohorts/:cohortId"
+                  path="/paid-projects/:cohortId"
                   element={
                     <SidebarRoute>
                       <CompanyCohortDetail />
@@ -510,14 +521,6 @@ function App() {
  certificate in one click or verification is pointless. */}
                 <Route path="/verify" element={<VerifyCertificate />} />
                 <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
-                <Route
-                  path="/admin/cohorts"
-                  element={
-                    <StaffRoute>
-                      <CohortManager />
-                    </StaffRoute>
-                  }
-                />
                 <Route
                   path="/sponsor"
                   element={

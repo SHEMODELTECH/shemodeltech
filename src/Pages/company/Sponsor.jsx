@@ -170,7 +170,7 @@ const Sponsor = () => {
         <div className="bg-pink-50 border border-pink-200 rounded-xl p-5 text-center">
           <p className="text-gray-900 text-sm font-bold mb-1">Sponsorship opens soon</p>
           <p className="text-gray-600 text-xs mb-3 leading-relaxed">
-            We&rsquo;re running our first cohorts now. If you&rsquo;d like to sponsor a team, get in
+            We&rsquo;re building our first project teams now. If you&rsquo;d like to sponsor a team, get in
             touch and we&rsquo;ll walk you through it directly.
           </p>
           <a

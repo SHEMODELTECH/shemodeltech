@@ -171,27 +171,23 @@ const ProjectDetail = () => {
   const [myLeadApp, setMyLeadApp] = useState(null);
 
   useEffect(() => {
-    if (!currentUser || !project?.cohortId) return;
+    if (!currentUser || !project) return;
     let dead = false;
-    getDocs(
-      query(
-        collection(db, 'lead_applications'),
-        where('cohortId', '==', project.cohortId),
-        where('applicantUid', '==', currentUser.uid)
-      )
-    )
+    // Lead applications are rolling: look for this member's application that
+    // is still waiting for a decision.
+    getDocs(query(collection(db, 'lead_applications'), where('applicantUid', '==', currentUser.uid)))
       .then((snap) => {
         if (dead || snap.empty) return;
         const live = snap.docs
           .map((d) => ({ id: d.id, ...d.data() }))
-          .find((a) => a.status !== 'withdrawn');
+          .find((a) => ['submitted', 'interview_scheduled'].includes(a.status));
         setMyLeadApp(live || null);
       })
       .catch(() => {});
     return () => {
       dead = true;
     };
-  }, [currentUser, project?.cohortId]);
+  }, [currentUser, project]);
 
   const handleApplyToLead = async () => {
     if (!currentUser) {
@@ -217,7 +213,7 @@ const ProjectDetail = () => {
       return;
     }
 
-    navigate(`/cohort/apply-to-lead?project=${projectId}`);
+    navigate(`/apply-to-lead?project=${projectId}`);
   };
 
   const handleApply = async () => {
@@ -431,11 +427,7 @@ const ProjectDetail = () => {
                   ['Industry', getIndustryLabel(project.industryTrack)],
                   [
                     'Timeline',
-                    // Cohort projects run to a real deadline, so "Flexible"
-                    // was misleading next to a fixed end date.
-                    project.cohortNumber
-                      ? `Cohort ${project.cohortNumber} · 8 weeks`
-                      : formatTimeline(project.timeline),
+                    formatTimeline(project.timeline),
                   ],
                   [
                     'Team Size',
@@ -587,7 +579,7 @@ const ProjectDetail = () => {
                     Company accounts can't lead collaborative projects or earn badges. To hire a
                     team,{' '}
                     <button
-                      onClick={() => navigate('/company/host-cohort')}
+                      onClick={() => navigate('/projects/new-paid')}
                       className="text-pink-600 underline"
                     >
                       post a paid project
@@ -612,7 +604,7 @@ const ProjectDetail = () => {
                     <p className="text-gray-900 text-sm font-semibold mb-1">
                       {myLeadApp.rankedProjectIds?.includes(projectId)
                         ? 'You already applied to lead this project'
-                        : 'You already have a lead application in for this cohort'}
+                        : 'You already have a lead application waiting for a decision'}
                     </p>
                     <p className="text-gray-600 text-xs mb-3">
                       {myLeadApp.status === 'interview_scheduled'
@@ -622,7 +614,7 @@ const ProjectDetail = () => {
                           : 'We review applications and arrange a short chat before assigning leads. You will hear from us by email.'}
                     </p>
                     <button
-                      onClick={() => navigate('/cohort/apply-to-lead')}
+                      onClick={() => navigate('/apply-to-lead')}
                       className="text-pink-600 text-sm font-semibold hover:underline"
                     >
                       View your application
@@ -666,7 +658,7 @@ const ProjectDetail = () => {
                       your own team.
                     </p>
                     <button
-                      onClick={() => navigate('/company/host-cohort')}
+                      onClick={() => navigate('/projects/new-paid')}
                       className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all"
                     >
                       Post a Paid Project
