@@ -82,6 +82,25 @@ const Premium = () => {
         <Section title="Free for every mentor" items={PREMIUM_FEATURES.mentors} note="Our thanks for the extra work mentors give. Nothing to pay." />
       </div>
 
+      {/* Where Premium goes: shown to signed-in visitors on this page only */}
+      <div className="mt-5 bg-white border border-pink-200 rounded-2xl p-6">
+        <h2 className="text-lg font-bold text-gray-900">Where Premium goes</h2>
+        <p className="text-sm text-gray-700 mt-2">
+          SHE MODEL TECH Inc. is a registered 501(c)(3) nonprofit. Premium is for companies, and every dollar from it goes
+          back into our mission to empower women in tech. It funds:
+        </p>
+        <ul className="mt-3 space-y-2 text-sm text-gray-700 list-disc pl-5">
+          <li><strong>Paid opportunities for our members:</strong> paid projects, so women earn while they learn, and fair pay for members who lead projects, create courses, and mentor.</li>
+          <li><strong>Education:</strong> certifications for members, awarded on clear and fair criteria such as badges earned, projects completed, and financial need, plus support for women going to school and university.</li>
+          <li><strong>Access:</strong> laptops and internet access for women who need them.</li>
+          <li><strong>Community:</strong> summits and events that connect women in tech.</li>
+          <li><strong>Running the platform:</strong> hosting, security, tools, and the team that keeps She Model Tech free for every member.</li>
+        </ul>
+        <p className="text-sm text-gray-700 mt-3">
+          Courses, projects, the Talent Board, AI-powered matches, messaging, certificates, and badges stay free for every member, always.
+        </p>
+      </div>
+
       <p className="text-sm text-gray-500 mt-6">
         See everything that's free in <Link to="/settings" className="text-pink-700 font-semibold hover:underline">Settings, What's included</Link>.
       </p>
