@@ -248,3 +248,46 @@ export const markApproved = async (course, admin) => {
     }
   }
 };
+
+// ---- Removal requests: a mentor asks staff to unpublish or delete a course ----
+// removalRequest: { status: 'pending' | 'declined' | 'approved', reason, at, by, note, decidedBy }
+export const requestRemoval = async (course, user, reason) => {
+  await updateDoc(doc(db, COL, course.id), {
+    removalRequest: { status: 'pending', reason: (reason || '').trim(), at: new Date().toISOString(), by: who(user) },
+  });
+  await alertStaff({
+    type: 'course_removal_requested',
+    title: 'A mentor asked to remove a course',
+    body: `${user.displayName || user.email} asked to remove "${course.title}"${course.published ? ' from Learning' : ''}: ${(reason || '').trim().slice(0, 160)}`,
+    link: `/teacher/${course.id}`,
+    roles: ['admin', 'editor'],
+  });
+};
+
+export const cancelRemovalRequest = async (course) => {
+  await updateDoc(doc(db, COL, course.id), { removalRequest: null });
+};
+
+// Staff decision. 'approved' means staff unpublished (or deleted) the course.
+export const decideRemoval = async (course, staff, approve, note = '') => {
+  const decided = {
+    ...(course.removalRequest || {}),
+    status: approve ? 'approved' : 'declined',
+    note: note.trim() || null,
+    decidedBy: who(staff),
+    decidedAt: new Date().toISOString(),
+  };
+  // A deleted course has no document left to update; only record on unpublish/decline.
+  await updateDoc(doc(db, COL, course.id), { removalRequest: decided }).catch(() => {});
+  const to = course.removalRequest?.by?.uid || course.createdBy?.uid;
+  if (to && to !== staff.uid) {
+    await notifyUser(
+      to,
+      approve ? 'Your course was removed from Learning' : 'Your removal request was declined',
+      approve
+        ? `"${course.title}" is no longer available to learners.${note.trim() ? ` ${note.trim()}` : ''}`
+        : note.trim() || `We kept "${course.title}" published. Reply in Messages if you have questions.`,
+      '/teacher'
+    );
+  }
+};

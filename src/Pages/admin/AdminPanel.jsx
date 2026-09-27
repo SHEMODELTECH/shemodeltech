@@ -164,7 +164,7 @@ const AdminPanel = () => {
         .then(setTeacherApps)
         .catch(() => setTeacherApps([]));
       listTeacherCourses()
-        .then((list) => setPendingCourses(list.filter((c) => reviewStatus(c) === 'pending')))
+        .then((list) => setPendingCourses(list.filter((c) => reviewStatus(c) === 'pending' || c.removalRequest?.status === 'pending')))
         .catch(() => setPendingCourses([]));
       listLetterRequests()
         .then(setLetterReqs)
@@ -1183,7 +1183,7 @@ const AdminPanel = () => {
             )}
           </div>
           <div>
-            <h3 className="text-gray-900 font-bold mb-2">Mentor courses awaiting approval</h3>
+            <h3 className="text-gray-900 font-bold mb-2">Mentor courses awaiting a decision</h3>
             {pendingCourses === null ? (
               <p className="text-gray-400 text-sm">Loading...</p>
             ) : pendingCourses.length === 0 ? (
@@ -1194,7 +1194,12 @@ const AdminPanel = () => {
                   <div key={c.id} className="bg-white border border-amber-200 rounded-lg p-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-gray-900 text-sm font-medium truncate">
-                        {c.title} {c.published && <span className="text-amber-700 text-xs font-semibold">(update to a published course)</span>}
+                        {c.title}{' '}
+                        {c.removalRequest?.status === 'pending' ? (
+                          <span className="text-red-700 text-xs font-semibold">(removal requested)</span>
+                        ) : (
+                          c.published && <span className="text-amber-700 text-xs font-semibold">(update to a published course)</span>
+                        )}
                       </p>
                       <p className="text-gray-400 text-xs truncate">
                         By {c.review?.submittedBy?.name || c.createdBy?.name || 'a mentor'}

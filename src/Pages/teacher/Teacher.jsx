@@ -34,7 +34,11 @@ import {
   withdrawSubmission,
   declineSubmission,
   markApproved,
+  requestRemoval,
+  cancelRemovalRequest,
+  decideRemoval,
 } from '../../utils/teacherCourses';
+import { courseStats } from '../../utils/mentorStats';
 import { getVideoEmbed } from '../../utils/videoEmbed';
 import { FD_CSS, enhanceCourseContent } from '../learning/shared';
 import LearningLayout from '../learning/LearningLayout';
@@ -118,6 +122,8 @@ const StatusTag = ({ status }) => (
 );
 
 const ReviewTag = ({ course }) => {
+  if (course.removalRequest?.status === 'pending')
+    return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-700">Removal requested</span>;
   const st = reviewStatus(course);
   if (st === 'pending')
     return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">{course.published ? 'Update pending review' : 'Pending review'}</span>;
@@ -352,6 +358,7 @@ const MentorLetters = ({ access }) => {
 // ================= List =================
 const TeacherList = ({ access }) => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [items, setItems] = useState(null);
   const [q, setQ] = useState('');
   const [track, setTrack] = useState('all');
@@ -371,13 +378,27 @@ const TeacherList = ({ access }) => {
     (c) =>
       (track === 'all' || (c.track || '') === track) &&
       (aud === 'all' ||
-        (aud === 'review' ? reviewStatus(c) === 'pending' : aud === 'students' ? !!c.published : !c.published)) &&
+        (aud === 'review'
+          ? reviewStatus(c) === 'pending' || c.removalRequest?.status === 'pending'
+          : aud === 'students'
+          ? !!c.published
+          : !c.published)) &&
       (!q.trim() || `${c.title} ${c.description}`.toLowerCase().includes(q.trim().toLowerCase()))
   );
 
   const remove = async (c) => {
-    if (!window.confirm(`Delete "${c.title}"? This can't be undone.`)) return;
+    if (
+      !window.confirm(
+        c.published
+          ? `Delete "${c.title}"? It will also be removed from Learning, and enrolled learners will lose access. This can't be undone.`
+          : `Delete "${c.title}"? This can't be undone.`
+      )
+    )
+      return;
     try {
+      // A published course is taken out of Learning first, so no orphan copy is left.
+      if (c.published) await unpublishFromLearning(c);
+      if (c.removalRequest?.status === 'pending') await decideRemoval(c, currentUser, true, 'The course has been deleted.');
       await deleteTeacherCourse(c);
       setItems((xs) => xs.filter((x) => x.id !== c.id));
       toast.success('Deleted.');
@@ -454,7 +475,13 @@ const TeacherList = ({ access }) => {
               ? ` (${
                   v === 'all'
                     ? items.length
-                    : items.filter((c) => (v === 'review' ? reviewStatus(c) === 'pending' : v === 'students' ? !!c.published : !c.published)).length
+                    : items.filter((c) =>
+                        v === 'review'
+                          ? reviewStatus(c) === 'pending' || c.removalRequest?.status === 'pending'
+                          : v === 'students'
+                          ? !!c.published
+                          : !c.published
+                      ).length
                 })`
               : ''}
           </button>
@@ -528,7 +555,7 @@ const TeacherList = ({ access }) => {
                     Edit
                   </button>
                 )}
-                {(access.isAdmin || (!access.isStaff && canEdit(access, c))) && (
+                {(access.isAdmin || (!access.isStaff && canEdit(access, c) && !c.published)) && (
                   <button onClick={() => remove(c)} className="ml-auto text-sm font-semibold text-red-700 px-2 py-1.5 rounded-lg hover:bg-red-50">
                     Delete
                   </button>
@@ -1038,13 +1065,37 @@ const PublishPanel = ({ course, content, onChange, access }) => {
     setBusy(false);
   };
 
+  // A mentor's removal request: show the reason and how many learners use it.
+  const removal = course.removalRequest?.status === 'pending' ? course.removalRequest : null;
+  const [impact, setImpact] = useState(null);
+  const [declineRemovalOpen, setDeclineRemovalOpen] = useState(false);
+  useEffect(() => {
+    if (!removal || !pub) return;
+    courseStats(pub.track, `${PUBLISHED_PREFIX}${pub.learningId}`).then(setImpact).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [removal?.at, pub?.learningId]);
+
+  const declineRemoval = async (note) => {
+    setBusy(true);
+    try {
+      await decideRemoval(course, currentUser, false, note);
+      onChange({ ...course, removalRequest: { ...(course.removalRequest || {}), status: 'declined', note } });
+      setDeclineRemovalOpen(false);
+      toast.success('Request declined. The mentor has been notified.');
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not decline it.'));
+    }
+    setBusy(false);
+  };
+
   const unpublish = async () => {
     if (!window.confirm('Remove this from Learning? Learners will no longer see it. The Mentor Hub copy stays.')) return;
     setBusy(true);
     try {
       await unpublishFromLearning(course);
-      onChange({ ...course, published: null });
-      toast.success('Removed from Learning.');
+      if (removal) await decideRemoval(course, currentUser, true);
+      onChange({ ...course, published: null, removalRequest: removal ? { ...removal, status: 'approved' } : course.removalRequest });
+      toast.success(removal ? 'Removed from Learning. The mentor has been notified.' : 'Removed from Learning.');
     } catch (e) {
       console.error(e);
       toast.error(friendlyError(e, 'Could not unpublish it.'));
@@ -1055,6 +1106,45 @@ const PublishPanel = ({ course, content, onChange, access }) => {
   const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   return (
     <div className="mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+      {removal && (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4">
+          <p className="font-semibold text-red-800">
+            {removal.by?.name || 'The mentor'} asked to remove this course{pub ? ' from Learning' : ''}.
+          </p>
+          <p className="text-sm text-gray-800 mt-1"><strong>Reason:</strong> {removal.reason}</p>
+          {pub && (
+            <p className="text-sm text-gray-700 mt-1">
+              {impact
+                ? `${impact.enrollments} learner${impact.enrollments === 1 ? '' : 's'} enrolled, ${impact.completions} completed. ${
+                    impact.enrollments === 0 ? 'No learners are affected.' : 'Enrolled learners will lose access if you unpublish it.'
+                  }`
+                : 'Checking how many learners use it...'}
+            </p>
+          )}
+          <div className="flex flex-wrap gap-2 mt-3">
+            {pub && (
+              <button onClick={unpublish} disabled={busy} className="text-sm font-semibold bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg">
+                Unpublish from Learning
+              </button>
+            )}
+            <button onClick={() => setDeclineRemovalOpen(true)} disabled={busy} className="text-sm font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50">
+              Keep it and decline
+            </button>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">Admins can also delete it completely from the Mentor Hub list after unpublishing.</p>
+        </div>
+      )}
+      <NoteDialog
+        open={declineRemovalOpen}
+        title="Decline the removal request"
+        description="Let the mentor know why the course stays published (optional)."
+        placeholder="For example: 40 learners are enrolled; let's fix the lesson instead of removing the course."
+        confirmLabel="Decline request"
+        tone="primary"
+        busy={busy}
+        onCancel={() => setDeclineRemovalOpen(false)}
+        onConfirm={declineRemoval}
+      />
       <NoteDialog
         open={declineOpen}
         title="Decline this course"
@@ -1171,6 +1261,33 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
   const mine = canEdit(access, course);
   const fmt = (iso) => (iso ? new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '');
 
+  // Mentors can't unpublish or delete a published course themselves; they ask staff.
+  const [removalOpen, setRemovalOpen] = useState(false);
+  const sendRemoval = async (reason) => {
+    setBusy(true);
+    try {
+      await requestRemoval(course, currentUser, reason);
+      onChange({ ...course, removalRequest: { status: 'pending', reason } });
+      setRemovalOpen(false);
+      toast.success('Request sent. An admin or editor will review it.');
+    } catch (e) {
+      console.error(e);
+      toast.error(friendlyError(e, 'Could not send the request.'));
+    }
+    setBusy(false);
+  };
+  const cancelRemoval = async () => {
+    setBusy(true);
+    try {
+      await cancelRemovalRequest(course);
+      onChange({ ...course, removalRequest: null });
+      toast.success('Removal request cancelled.');
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not cancel it.'));
+    }
+    setBusy(false);
+  };
+
   const withdraw = async () => {
     if (!window.confirm('Withdraw this from review? It stays in the Mentor Hub and you can resubmit any time.')) return;
     setBusy(true);
@@ -1284,8 +1401,39 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
               Mentor certificate
             </button>
           )}
+          {course.published && course.removalRequest?.status !== 'pending' && (
+            <button onClick={() => setRemovalOpen(true)} disabled={busy} className={`${btn} border border-red-200 bg-white text-red-700 hover:bg-red-50`}>
+              Request removal
+            </button>
+          )}
+          {course.removalRequest?.status === 'pending' && (
+            <button onClick={cancelRemoval} disabled={busy} className={`${btn} border border-gray-300 bg-white hover:bg-gray-50`}>
+              Cancel removal request
+            </button>
+          )}
         </div>
       )}
+      {mine && course.removalRequest?.status === 'pending' && (
+        <p className="w-full text-sm text-red-700">
+          <strong>Removal requested.</strong> An admin or editor will review it and let you know.
+        </p>
+      )}
+      {mine && course.removalRequest?.status === 'declined' && course.removalRequest?.note && (
+        <p className="w-full text-sm text-gray-700">
+          <strong>Removal request declined:</strong> {course.removalRequest.note}
+        </p>
+      )}
+      <NoteDialog
+        open={removalOpen}
+        title="Request removal from Learning"
+        description="Tell us why this course should be unpublished or deleted (for example, it's outdated or has a mistake). An admin or editor reviews every request."
+        placeholder="For example: the video in Lesson 2 is no longer available, and I'd like to rebuild the course."
+        required
+        confirmLabel="Send request"
+        busy={busy}
+        onCancel={() => setRemovalOpen(false)}
+        onConfirm={sendRemoval}
+      />
     </div>
   );
 };
