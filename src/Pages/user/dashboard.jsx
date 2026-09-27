@@ -7,6 +7,7 @@ import { doc, getDoc, collection, query, where, getDocs, orderBy, limit } from '
 import { db } from '../../firebase/config';
 import FindFirstProject from '../../components/FindFirstProject';
 import DashboardLearning from '../../components/DashboardLearning';
+import CompanyVerificationBanner from '../../components/CompanyVerificationBanner';
 import AIRecommendations from '../../components/AIRecommendations';
 import DiscoverTrack from '../../components/DiscoverTrack';
 import TierBadge from '../../components/TierBadge';
@@ -199,6 +200,9 @@ const DashboardOverview = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
+
+      {/* Unverified companies: status and a direct line to the team */}
+      {!loading && profileData?.isCompany && <CompanyVerificationBanner profile={profileData} />}
 
       {/* Approved lead: her project is hers to prepare before it starts. */}
       {!loading &&

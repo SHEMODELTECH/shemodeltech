@@ -35,6 +35,7 @@ import { sendPush } from '../../utils/pushNotifications';
 import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTeacher } from '../../utils/teachers';
 import { listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
+import { notifyMember } from '../../utils/staffAlerts';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 
@@ -412,6 +413,40 @@ const AdminPanel = () => {
   // Company verification is the approval gate for posting paid projects:
   // an unverified company cannot open the "Host a project" form at all.
   // Admin-only (Firestore rules block companies from setting it themselves).
+  // Ask a company for more details before verifying: marks the request, tells
+  // them (bell + email), and opens a message to them with a starter note.
+  const requestCompanyInfo = async (u) => {
+    const name = u.companyProfile?.companyName || u.displayName || 'there';
+    try {
+      await updateDoc(doc(db, 'users', u.id), {
+        'companyProfile.verificationStatus': 'info_requested',
+        'companyProfile.infoRequestedAt': new Date().toISOString(),
+        'companyProfile.infoRequestedBy': currentUser.uid,
+      });
+      setUsers((prev) =>
+        prev.map((x) =>
+          x.id === u.id ? { ...x, companyProfile: { ...(x.companyProfile || {}), verificationStatus: 'info_requested' } } : x
+        )
+      );
+      notifyMember(u.id, {
+        type: 'company_info_requested',
+        title: 'We need a few details to verify your company',
+        body: 'The She Model Tech team sent you a message. Reply there, and update your company details in Settings.',
+        link: `/messages?with=${currentUser.uid}`,
+        ctaLabel: 'Read the message',
+      });
+    } catch (e) {
+      console.error(e);
+      toast.error(friendlyError(e, 'Could not mark the request.'));
+      return;
+    }
+    const starter =
+      `Hi ${name}, thank you for joining She Model Tech. Before we verify your company, could you share: ` +
+      '(1) your company website, (2) a contact phone number, and (3) your business registration or EIN. ' +
+      'You can reply here and update your details in Settings. Thank you!';
+    navigate(`/messages?to=${u.id}&text=${encodeURIComponent(starter)}`);
+  };
+
   const toggleCompanyVerified = async (u) => {
     if (!isAdmin) {
       toast.error('Only admins can verify companies.');
@@ -432,6 +467,7 @@ const AdminPanel = () => {
         isVerified: verify,
         verifiedAt: verify ? new Date().toISOString() : null,
         verifiedBy: verify ? currentUser.email : null,
+        'companyProfile.verificationStatus': verify ? 'verified' : 'pending',
       });
       setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, isVerified: verify } : x)));
       if (verify) {
@@ -931,7 +967,13 @@ const AdminPanel = () => {
               >
                 <div className="min-w-0">
                   <p className="text-gray-900 text-sm font-medium truncate">
-                    {u.displayName || 'No name'}
+                    <Link
+                      to={`/profile/${encodeURIComponent(u.email || u.id)}`}
+                      className="hover:text-pink-700 hover:underline"
+                      title="Open profile"
+                    >
+                      {u.companyProfile?.companyName || u.displayName || 'No name'}
+                    </Link>
                     {u.role === 'admin' && (
                       <span className="ml-2 text-[10px] font-bold text-pink-600 bg-pink-50 px-1.5 py-0.5 rounded">
                         ADMIN
@@ -957,12 +999,47 @@ const AdminPanel = () => {
                         VERIFIED
                       </span>
                     )}
+                    {u.isCompany && !u.isVerified && (
+                      <span className={`ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        u.companyProfile?.verificationStatus === 'info_requested'
+                          ? 'text-amber-700 bg-amber-50'
+                          : u.companyProfile?.verificationStatus === 'details_updated'
+                          ? 'text-sky-700 bg-sky-50'
+                          : 'text-gray-600 bg-gray-100'
+                      }`}>
+                        {u.companyProfile?.verificationStatus === 'info_requested'
+                          ? 'INFO REQUESTED'
+                          : u.companyProfile?.verificationStatus === 'details_updated'
+                          ? 'DETAILS UPDATED'
+                          : 'PENDING VERIFICATION'}
+                      </span>
+                    )}
                   </p>
                   <p className="text-gray-400 text-xs truncate">
                     {u.email} · {u.country || 'no country'} · joined {fmtDate(u.createdAt)}
                   </p>
                 </div>
-                <div className="flex-shrink-0 flex items-center gap-2">
+                <div className="flex-shrink-0 flex flex-wrap items-center justify-end gap-2">
+                  {u.id !== currentUser?.uid && (
+                    <button
+                      onClick={() => navigate(`/messages?to=${u.id}`)}
+                      title={`Message ${u.companyProfile?.companyName || u.displayName || 'this member'}`}
+                      aria-label={`Message ${u.companyProfile?.companyName || u.displayName || 'this member'}`}
+                      className="p-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-pink-700"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </button>
+                  )}
+                  {isAdmin && u.isCompany && !u.isVerified && (
+                    <button
+                      onClick={() => requestCompanyInfo(u)}
+                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200"
+                    >
+                      Request info
+                    </button>
+                  )}
                   {isAdmin && u.isCompany && (
                     <button
                       onClick={() => toggleCompanyVerified(u)}

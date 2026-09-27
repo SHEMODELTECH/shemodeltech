@@ -12,6 +12,7 @@ import { BRAND } from '../config/brand';
 import { deleteUserAccount } from '../utils/deleteUserContent';
 import { enablePushForCurrentUser } from '../utils/pushNotifications';
 import { toast } from 'react-toastify';
+import CompanyDetailsForm from '../components/CompanyDetailsForm';
 
 const skillTrackOpts = [
   { id: 'TechDev', label: 'Development' },
@@ -250,6 +251,10 @@ const Settings = () => {
       </div>
 
       {/* Edit Profile */}
+      {activeTab === 'profile' && profileData?.isCompany && currentUser && (
+        <CompanyDetailsForm uid={currentUser.uid} profile={profileData} />
+      )}
+
       {activeTab === 'profile' && (
         <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-5">
           {/* Profile picture - available to all accounts */}
