@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, where, onSnapshot, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, getDoc, getDocs, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 const AppLayout = ({ children }) => {
@@ -16,6 +16,7 @@ const AppLayout = ({ children }) => {
   const [unreadAccount, setUnreadAccount] = useState(0);
   const [userRole, setUserRole] = useState('member');
   const [isCompany, setIsCompany] = useState(false);
+  const [hasBadge, setHasBadge] = useState(false);
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -36,6 +37,16 @@ const AppLayout = ({ children }) => {
         const data = snap.data();
         setUserRole(data.role || 'member');
         setIsCompany(!!data.isCompany);
+        // Proposing a project unlocks after a member earns her first badge.
+        const fromProfile = (Array.isArray(data.badges) && data.badges.length > 0)
+          || (data.totalBadges || 0) > 0
+          || Object.values(data.badgeCounts || {}).some((n) => Number(n) > 0);
+        if (fromProfile) setHasBadge(true);
+        else {
+          getDocs(query(collection(db, 'member_badges'), where('memberUid', '==', currentUser.uid), limit(1)))
+            .then((b) => setHasBadge(!b.empty))
+            .catch(() => {});
+        }
       }
     }).catch(() => {});
   }, [currentUser]);
@@ -86,6 +97,8 @@ const AppLayout = ({ children }) => {
     { path: '/projects/owner-dashboard', label: 'My Projects' },
     { path: '/project-vault', label: 'Project Vault' },
     { path: '/disputes', label: 'Payment Dispute' },
+    // Members only; locked until the first earned badge.
+    ...(!isCompany ? [{ path: '/projects/propose', label: 'Propose a project', locked: !hasBadge && userRole !== 'admin' && userRole !== 'editor' }] : []),
   ];
 
   const navItems = [
@@ -138,7 +151,7 @@ const AppLayout = ({ children }) => {
       // "All Projects" covers the listing and project detail pages, but NOT its
       // sibling sub-menu pages (My Projects) - otherwise both highlight at once.
       const p = location.pathname;
-      return p === '/projects' || (p.startsWith('/projects/') && !p.startsWith('/projects/owner-dashboard') && !p.startsWith('/projects/my-projects'));
+      return p === '/projects' || (p.startsWith('/projects/') && !p.startsWith('/projects/owner-dashboard') && !p.startsWith('/projects/my-projects') && !p.startsWith('/projects/propose'));
     }
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
@@ -187,9 +200,23 @@ const AppLayout = ({ children }) => {
                     <span className="flex-1 text-left">{item.label}</span>
                     <svg className={`w-4 h-4 transition-transform ${projectsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                   </button>
-                  <div className={`overflow-hidden transition-all duration-200 ${projectsOpen ? 'max-h-72 mt-2' : 'max-h-0'}`}>
+                  <div className={`overflow-hidden transition-all duration-200 ${projectsOpen ? 'max-h-96 mt-2' : 'max-h-0'}`}>
                     <div className="ml-5 pl-3 border-l-2 border-gray-100 space-y-2 py-1">
-                      {item.children.map(child => (
+                      {item.children.map(child => child.locked ? (
+                        <div
+                          key={child.path}
+                          role="note"
+                          aria-disabled="true"
+                          title="Unlocks after you complete at least one project as a lead or collaborator and earn your first badge."
+                          className="block px-3 py-2 rounded-lg text-sm text-gray-400 cursor-not-allowed"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                            {child.label}
+                          </span>
+                          <span className="block text-[11px] leading-snug mt-0.5">Unlocks after you complete a project (as a lead or collaborator) and earn your first badge.</span>
+                        </div>
+                      ) : (
                         <Link
                           key={child.path}
                           to={child.path}

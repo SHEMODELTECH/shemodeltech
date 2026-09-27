@@ -9,9 +9,9 @@ import { PROPOSAL_LIMITS as L, TRACKS, listMyProposals, proposeProject } from '.
 
 const EMPTY = { title: '', description: '', track: 'TechDev', rolesNeeded: '', whyLead: '' };
 
-const ProposeProject = () => {
+const ProposeProject = ({ startOpen = false }) => {
   const { currentUser } = useAuth();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [form, setForm] = useState(EMPTY);
   const [busy, setBusy] = useState(false);
   const [mine, setMine] = useState([]);
@@ -46,8 +46,8 @@ const ProposeProject = () => {
     <div className="rounded-2xl border border-pink-200 bg-white p-5 text-left">
       <p className="font-bold text-gray-900 text-lg">Have your own project idea? Propose it</p>
       <p className="text-sm text-gray-600 mt-1">
-        Suggest a project you’d like to lead. Our team reviews every idea; if it’s approved, it becomes an open She Model
-        Tech project, and we’ll have a short chat with you about leading it.
+        Suggest a project you’d like to lead. Our team reviews every idea. If it’s approved, you become its lead, and it
+        joins the next She Model Tech cohort that hasn’t started yet, with the same start date and deadline.
       </p>
       {!open ? (
         <button onClick={() => setOpen(true)} className="mt-4 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">

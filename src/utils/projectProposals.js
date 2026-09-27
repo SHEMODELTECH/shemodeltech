@@ -11,7 +11,7 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { alertStaff, notifyMember } from './staffAlerts';
-import { ROLLING_POOL } from './leadApplications';
+import { ROLLING_POOL, assignAsLead } from './leadApplications';
 
 export const PROPOSAL_LIMITS = {
   titleMinWords: 3,
@@ -89,7 +89,20 @@ export const notifyLeadWaitlist = async (projectTitle) => {
   }
 };
 
-export const approveProposal = async (p, staff) => {
+// Free cohorts that haven't started yet, earliest first: where an approved
+// proposal goes (the current cohort if it hasn't started, otherwise the next).
+export const listOpenCohorts = async () => {
+  const snap = await getDocs(collection(db, 'cohorts'));
+  const now = Date.now();
+  return snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .filter((c) => !c.isPaid && !['complete', 'completed', 'grace', 'building'].includes(c.status))
+    .filter((c) => new Date(c.startAt || `${c.startDate}T00:00:00`).getTime() > now)
+    .sort((a, b) => String(a.startAt || a.startDate).localeCompare(String(b.startAt || b.startDate)));
+};
+
+export const approveProposal = async (p, staff, cohort) => {
+  if (!cohort) throw new Error('Choose a cohort for this project first.');
   const projectRef = await addDoc(collection(db, 'projects'), {
     projectTitle: p.title,
     projectDescription: p.description,
@@ -99,9 +112,18 @@ export const approveProposal = async (p, staff) => {
     teamRoles: [],
     maxTeamSize: 0,
     status: 'lead_recruitment',
-    isActive: true,
+    // Visible now if the cohort has been revealed; otherwise with the cohort's reveal.
+    isActive: cohort.status !== 'draft',
     isGenerated: false,
     proposedBy: { uid: p.uid, name: p.name },
+    // Part of the cohort: same start and deadline; the lead can't change the dates.
+    cohortId: cohort.id,
+    cohortNumber: cohort.number || null,
+    startDate: cohort.startDate,
+    endDate: cohort.endDate,
+    startAt: cohort.startAt || null,
+    isCohort: true,
+    cohortPaid: false,
     leadConfirmed: false,
     submitterId: null,
     submitterEmail: null,
@@ -112,8 +134,9 @@ export const approveProposal = async (p, staff) => {
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
-  // The proposer's lead application for their own project.
-  await addDoc(collection(db, 'lead_applications'), {
+  // The proposer's lead application, then assign her straight away: approving
+  // her proposal is the decision.
+  const appRef = await addDoc(collection(db, 'lead_applications'), {
     cohortId: ROLLING_POOL,
     applicantUid: p.uid,
     applicantName: p.name,
@@ -132,18 +155,23 @@ export const approveProposal = async (p, staff) => {
     decidedAt: null,
     assignedProjectId: null,
     createdAt: serverTimestamp(),
-  }).catch(() => {});
+  });
+  await assignAsLead({
+    appId: appRef.id,
+    projectId: projectRef.id,
+    applicant: { applicantUid: p.uid, applicantName: p.name, applicantEmail: p.email, id: appRef.id },
+    reviewer: staff,
+  });
   await updateDoc(doc(db, 'project_proposals', p.id), {
     status: 'approved',
     projectId: projectRef.id,
     decidedAt: serverTimestamp(),
     decidedBy: staff.email || '',
   });
-  notifyLeadWaitlist(p.title);
   notifyMember(p.uid, {
     type: 'project_proposal_decision',
-    title: 'Your project idea was approved',
-    body: `"${p.title}" is now a She Model Tech project. We'll set up a short chat about leading it.`,
+    title: 'Your project idea was approved, and you’re its lead',
+    body: `"${p.title}" is part of ${cohort.name || 'the next cohort'}, starting ${cohort.startDate} with a deadline of ${cohort.endDate}. Set up your project and start building your team.`,
     link: `/projects/${projectRef.id}`,
   });
   return projectRef.id;

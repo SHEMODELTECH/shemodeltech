@@ -17,7 +17,7 @@ import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { usePermissions } from '../../utils/permissions';
 import { leadInterviewInvite } from '../../utils/calendarInvite';
-import { approveProposal, declineProposal, listProposals, TRACKS } from '../../utils/projectProposals';
+import { approveProposal, declineProposal, listOpenCohorts, listProposals, TRACKS } from '../../utils/projectProposals';
 import NoteDialog from '../../components/NoteDialog';
 import {
   getApplicationsForCohort,
@@ -61,6 +61,8 @@ const LeadApplicationReview = () => {
   const [proposals, setProposals] = useState([]);
   const [declining, setDeclining] = useState(null);
   const [pBusy, setPBusy] = useState(false);
+  const [openCohorts, setOpenCohorts] = useState([]);
+  const [cohortFor, setCohortFor] = useState({});
   const [busy, setBusy] = useState(null);
 
   useEffect(() => {
@@ -95,6 +97,7 @@ const LeadApplicationReview = () => {
       );
       setApplications(apps);
       listProposals().then((l) => setProposals(l.filter((x) => x.status === 'new'))).catch(() => setProposals([]));
+      listOpenCohorts().then(setOpenCohorts).catch(() => setOpenCohorts([]));
     } catch (e) {
       console.error(e);
       toast.error('Could not load applications.');
@@ -165,14 +168,29 @@ const LeadApplicationReview = () => {
                     <p className="font-bold text-gray-900">{p.title}</p>
                     <p className="text-xs text-gray-500">{TRACKS[p.track] || p.track} · proposed by {p.name} ({p.email})</p>
                   </div>
-                  <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                    {openCohorts.length === 0 ? (
+                      <a href="/admin/cohorts" className="text-xs font-semibold text-pink-700 underline">No upcoming cohort: create one first</a>
+                    ) : (
+                      <select
+                        value={cohortFor[p.id] || openCohorts[0].id}
+                        onChange={(e) => setCohortFor((m) => ({ ...m, [p.id]: e.target.value }))}
+                        className="text-xs border border-gray-300 rounded-lg px-2 py-1.5"
+                        aria-label="Cohort for this project"
+                      >
+                        {openCohorts.map((c) => (
+                          <option key={c.id} value={c.id}>{c.name} (starts {c.startDate})</option>
+                        ))}
+                      </select>
+                    )}
                     <button
-                      disabled={pBusy}
+                      disabled={pBusy || openCohorts.length === 0}
                       onClick={async () => {
                         setPBusy(true);
                         try {
-                          await approveProposal(p, currentUser);
-                          toast.success('Approved. The project is open, and her lead application is below.');
+                          const cohort = openCohorts.find((c) => c.id === (cohortFor[p.id] || openCohorts[0].id));
+                          await approveProposal(p, currentUser, cohort);
+                          toast.success(`Approved. ${p.name} is the lead, and the project is in ${cohort.name}.`);
                           load();
                         } catch (e) {
                           toast.error('Could not approve it.');
@@ -181,7 +199,7 @@ const LeadApplicationReview = () => {
                       }}
                       className="text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
                     >
-                      Approve and open project
+                      Approve and make her lead
                     </button>
                     <button onClick={() => setDeclining(p)} className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
                   </div>
