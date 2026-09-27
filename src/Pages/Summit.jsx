@@ -11,7 +11,6 @@ import SocialLinks from '../components/SocialLinks';
 import LimitHint, { countWords } from '../components/LimitHint';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
-import { alertStaff } from '../utils/staffAlerts';
 import {
   PARTNER_OPTIONS,
   SUMMIT_LIMITS,
@@ -85,11 +84,8 @@ const Summit = () => {
     setBusy(true);
     try {
       const ref = await createPartnerRequest(summit.id, pForm, currentUser && profile?.isCompany ? currentUser.uid : null);
-      if (!currentUser) {
-        fetch('/api/public-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'partner', id: ref.id }) }).catch(() => {});
-      } else {
-        alertStaff({ type: 'summit_partner', title: 'New Summit partner request', body: `${pForm.companyName}: ${PARTNER_OPTIONS[pForm.option]}.`, link: '/admin', roles: ['admin', 'editor'] });
-      }
+      // Alert the team (inbox + staff) and confirm to the sender, signed in or not.
+      fetch('/api/public-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'partner', id: ref.id }) }).catch(() => {});
       setPSent(true);
     } catch (e2) {
       toast.error('Could not send your request. Please try again.');

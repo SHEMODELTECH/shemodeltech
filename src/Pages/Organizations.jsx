@@ -8,7 +8,6 @@ import Navbar from '../components/Navbar';
 import SocialLinks from '../components/SocialLinks';
 import LimitHint, { countWords } from '../components/LimitHint';
 import { useAuth } from '../context/AuthContext';
-import { alertStaff } from '../utils/staffAlerts';
 import { ORG_LIMITS, ORG_TYPES, REQUEST_TYPES, createOrgRequest } from '../utils/organizations';
 
 const EMPTY = {
@@ -55,18 +54,8 @@ const Organizations = () => {
     try {
       const clean = Object.fromEntries(Object.entries(form).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v]));
       const ref = await createOrgRequest(clean, currentUser?.uid || null);
-      if (!currentUser) {
-        // Signed-out: ask the server to alert staff about this new request.
-        fetch('/api/public-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'org', id: ref.id }) }).catch(() => {});
-      } else {
-        alertStaff({
-          type: 'org_request',
-          title: 'New organization request',
-          body: `${clean.orgName} (${ORG_TYPES[clean.orgType]}) asked about ${REQUEST_TYPES[clean.type].toLowerCase()}.`,
-          link: '/admin',
-          roles: ['admin', 'editor'],
-        });
-      }
+      // Alert the team (inbox + staff) and confirm to the sender, signed in or not.
+      fetch('/api/public-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'org', id: ref.id }) }).catch(() => {});
       setSent(true);
     } catch (err) {
       console.error(err);
@@ -124,7 +113,9 @@ const Organizations = () => {
           {sent ? (
             <div className="mt-5 rounded-xl bg-white border border-emerald-200 p-5">
               <p className="font-semibold text-emerald-800">Thank you. Your request has been sent.</p>
-              <p className="text-sm text-gray-700 mt-1">We’ll contact {form.contactEmail} soon.</p>
+              <p className="text-sm text-gray-700 mt-1">
+                It went to the She Model Tech team, and we’ve emailed a confirmation to {form.contactEmail}. We’ll reply within a few working days.
+              </p>
             </div>
           ) : (
             <form onSubmit={submit} className="mt-5 grid sm:grid-cols-2 gap-4">
