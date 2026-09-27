@@ -10,7 +10,7 @@
 //   foundationsComplete.<track>       = true once a whole track is completed
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { deleteField, doc, getDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
@@ -96,7 +96,37 @@ const store = {
     } catch (_) {
       /* storage unavailable: the page still works, it just won't remember */
     }
+    // Also save to the learner's account (quiz answers, marks, checklist
+    // ticks), so progress survives reloads, cleared browsers, and new devices.
+    if (progressSink) progressSink(k, v);
   },
+};
+
+// Account sync for course progress. CourseReader points progressSink at the
+// signed-in learner's users/{uid}/learning_progress/{course} document; writes
+// are batched for a second so typing an answer doesn't send every keystroke.
+let progressSink = null;
+const makeProgressSink = (ref) => {
+  let pending = {};
+  let timer = null;
+  const flush = () => {
+    const data = pending;
+    pending = {};
+    timer = null;
+    setDoc(ref, { data, updatedAt: new Date().toISOString() }, { merge: true }).catch(() => {});
+  };
+  const sink = (k, v) => {
+    pending[k] = v == null ? deleteField() : v;
+    clearTimeout(timer);
+    timer = setTimeout(flush, 1000);
+  };
+  sink.flush = () => {
+    if (timer) {
+      clearTimeout(timer);
+      flush();
+    }
+  };
+  return sink;
 };
 
 const h = (tag, cls, text) => {
@@ -623,6 +653,52 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
   }, [current]);
   const progress = (current + scrollPct) / parts.length;
 
+  // Load this learner's saved progress for the course (answers, marks, ticks)
+  // from their account into the page, and save new progress back to it.
+  const { currentUser } = useAuth();
+  const [hydrated, setHydrated] = useState(0);
+  useEffect(() => {
+    if (!currentUser) return undefined;
+    const ref = doc(db, 'users', currentUser.uid, 'learning_progress', course.slug.replace(/[/]/g, '_'));
+    let alive = true;
+    getDoc(ref)
+      .then((snap) => {
+        if (!alive) return;
+        const data = (snap.exists() && snap.data().data) || {};
+        const prefix = `smt-learn:${course.slug}:`;
+        let changed = false;
+        Object.entries(data).forEach(([k, v]) => {
+          if (!k.startsWith(prefix) || v == null) return;
+          try {
+            if (localStorage.getItem(k) !== v) {
+              localStorage.setItem(k, v);
+              changed = true;
+            }
+          } catch (_) {
+            /* ignore */
+          }
+        });
+        // Anything saved on this device but not yet on the account: upload once.
+        const sink = makeProgressSink(ref);
+        try {
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && k.startsWith(prefix) && !(k in data)) sink(k, localStorage.getItem(k));
+          }
+        } catch (_) {
+          /* ignore */
+        }
+        progressSink = sink;
+        if (changed) setHydrated((n) => n + 1);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+      if (progressSink && progressSink.flush) progressSink.flush();
+      progressSink = null;
+    };
+  }, [currentUser, course.slug]);
+
   // Turn ```mermaid blocks into diagrams. Loaded only when a part has one.
   useEffect(() => {
     const container = proseRef.current;
@@ -652,7 +728,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
     return () => {
       cancelled = true;
     };
-  }, [current, course.slug, parts]);
+  }, [current, course.slug, parts, hydrated]);
 
   // Quizzes, checklists, checkpoints, and copy buttons for this part.
   useEffect(() => {
@@ -668,7 +744,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
         if (onQuizDone && doneQuizzes.size >= quizzesHere) onQuizDone(partId);
       },
     });
-  }, [current, course.slug, parts]);
+  }, [current, course.slug, parts, hydrated]);
 
   const PartList = () => (
     <ol className="space-y-0.5">
@@ -744,7 +820,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
             <article>
               <div
                 ref={proseRef}
-                key={parts[current].id}
+                key={`${parts[current].id}-${hydrated}`}
                 className="course-prose"
                 dangerouslySetInnerHTML={{ __html: parts[current].html }}
               />

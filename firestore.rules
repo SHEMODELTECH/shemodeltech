@@ -331,6 +331,12 @@ service cloud.firestore {
  }
  }
 
+ // Each learner's course progress (quiz answers and marks, checklist ticks).
+ // Private to the learner.
+ match /users/{userId}/learning_progress/{courseId} {
+ allow read, write: if isSignedIn() && userId == myUid();
+ }
+
  // Course discussion forums: questions, discussions, and capstone posts.
  match /course_forum/{courseKey} {
  match /threads/{threadId} {
@@ -341,14 +347,49 @@ service cloud.firestore {
  && request.resource.data.title is string && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 150
  && request.resource.data.body is string && request.resource.data.body.size() <= 5000
  && request.resource.data.replyCount == 0;
- // Anyone signed in can bump the reply count when replying; nothing else.
- allow update: if isSignedIn()
- && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['replyCount', 'lastAt'])
- && request.resource.data.replyCount >= resource.data.get('replyCount', 0) - 1;
+ // Anyone signed in can bump the reply count when replying, or set their own
+ // emoji reaction; nothing else.
+ allow update: if isSignedIn() && (
+ (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['replyCount', 'lastAt'])
+ && request.resource.data.replyCount >= resource.data.get('replyCount', 0) - 1)
+ || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
+ && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()]))
+ );
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
  match /replies/{replyId} {
  allow read: if true;
  allow create: if isSignedIn()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.body is string
+ && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
+ allow update: if false;
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ }
+ }
+ }
+
+ // Mentor Hub forums: private to mentors and staff.
+ match /teacher_forum/{courseKey} {
+ match /threads/{threadId} {
+ allow read: if isTeacherUser() || isReviewer();
+ allow create: if (isTeacherUser() || isReviewer())
+ && request.resource.data.uid == myUid()
+ && request.resource.data.kind in ['question', 'discussion', 'capstone']
+ && request.resource.data.title is string && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 150
+ && request.resource.data.body is string && request.resource.data.body.size() <= 5000
+ && request.resource.data.replyCount == 0;
+ // Anyone signed in can bump the reply count when replying, or set their own
+ // emoji reaction; nothing else.
+ allow update: if isSignedIn() && (
+ (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['replyCount', 'lastAt'])
+ && request.resource.data.replyCount >= resource.data.get('replyCount', 0) - 1)
+ || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
+ && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()]))
+ );
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ match /replies/{replyId} {
+ allow read: if isTeacherUser() || isReviewer();
+ allow create: if (isTeacherUser() || isReviewer())
  && request.resource.data.uid == myUid()
  && request.resource.data.body is string
  && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;

@@ -381,6 +381,7 @@ const LearningCourse = ({ reading = false }) => {
             slug={slug}
             courseTitle={course.title}
             hasCapstone={hasCapstone}
+            authorUid={isPublished ? course.authorUid || null : null}
             displayName={lr.profile?.displayName || ''}
             onCapstonePosted={() => setCapstoneDone(true)}
           />

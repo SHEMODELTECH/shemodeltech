@@ -39,6 +39,7 @@ import {
   decideRemoval,
 } from '../../utils/teacherCourses';
 import { courseStats } from '../../utils/mentorStats';
+import CourseForum from '../learning/CourseForum';
 import { getVideoEmbed } from '../../utils/videoEmbed';
 import { FD_CSS, enhanceCourseContent } from '../learning/shared';
 import LearningLayout from '../learning/LearningLayout';
@@ -1550,6 +1551,21 @@ const TeacherViewer = ({ access }) => {
           <div ref={proseRef} className="course-prose" dangerouslySetInnerHTML={{ __html: html }} />
         </div>
       )}
+
+      {/* Private discussion for mentors and staff about this course */}
+      <div className="fd-root mt-6">
+        <style>{FD_CSS}</style>
+        <CourseForum
+          track={course.track || 'general'}
+          slug={course.id}
+          root="teacher_forum"
+          forumKey={`course-${course.id}`}
+          courseTitle={course.title}
+          authorUid={course.createdBy?.uid || null}
+          title="Mentor discussion"
+          intro="A private space for mentors and staff to discuss this course: questions, teaching tips, and feedback."
+        />
+      </div>
     </div>
   );
 };

@@ -11,12 +11,13 @@
 // Anyone can read. Signed-in members post and reply; they can delete their own
 // posts, and staff can remove anything.
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   addDoc,
   collection,
   deleteDoc,
+  deleteField,
   doc,
   getDoc,
   getDocs,
@@ -34,11 +35,106 @@ import { signInAndReturn } from './LearningLayout';
 import { friendlyError } from '../../components/NoteDialog';
 import { notifyMember } from '../../utils/staffAlerts';
 import { courseKey } from '../../utils/mentorStats';
+import { uploadDocumentToBlob, uploadImageToBlob } from '../../utils/blobStorage';
 
 const KINDS = {
   question: { label: 'Question', cls: 'bg-sky-50 text-sky-700' },
   discussion: { label: 'Discussion', cls: 'bg-gray-100 text-gray-700' },
   capstone: { label: 'Capstone project', cls: 'bg-pink-50 text-pink-700' },
+};
+
+const EMOJIS = ['😀', '😂', '😊', '😍', '🤔', '😅', '🙏', '👏', '🙌', '💪', '👍', '👎', '❤️', '🔥', '🎉', '✨', '💡', '✅', '❓', '🚀', '💻', '📚', '🧠', '🌟'];
+const REACTIONS = ['👍', '❤️', '🎉', '💡', '🙏'];
+const MAX_FILE = 1024 * 1024; // 1 MB
+const FILE_ACCEPT = 'image/png,image/jpeg,image/gif,image/webp,.pdf,.doc,.docx,.txt';
+
+// Emoji picker: inserts at the cursor of the given textarea.
+const EmojiPicker = ({ targetRef, value, onChange }) => {
+  const [open, setOpen] = useState(false);
+  const insert = (e) => {
+    const el = targetRef.current;
+    const start = el ? el.selectionStart : value.length;
+    const end = el ? el.selectionEnd : value.length;
+    const next = value.slice(0, start) + e + value.slice(end);
+    onChange(next);
+    setOpen(false);
+    setTimeout(() => {
+      if (el) {
+        el.focus();
+        el.selectionStart = el.selectionEnd = start + e.length;
+      }
+    }, 0);
+  };
+  return (
+    <span className="relative inline-block">
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-label="Add an emoji" aria-expanded={open}
+        className="text-lg leading-none px-2 py-1 rounded-lg hover:bg-gray-100">😊</button>
+      {open && (
+        <span className="absolute z-20 bottom-full mb-1 left-0 grid grid-cols-8 gap-0.5 bg-white border border-gray-200 rounded-xl shadow-lg p-2 w-64">
+          {EMOJIS.map((e) => (
+            <button key={e} type="button" onClick={() => insert(e)} className="text-lg p-1 rounded hover:bg-gray-100" aria-label={`Insert ${e}`}>
+              {e}
+            </button>
+          ))}
+        </span>
+      )}
+    </span>
+  );
+};
+
+// Attach one small file (up to 1 MB).
+const AttachButton = ({ file, onFile, id }) => (
+  <span className="inline-flex items-center gap-2 text-sm">
+    <label htmlFor={id} className="cursor-pointer px-2 py-1 rounded-lg hover:bg-gray-100 text-gray-700" title="Attach a file (up to 1 MB)">
+      📎 <span className="sr-only">Attach a file (up to 1 MB)</span>
+    </label>
+    <input id={id} type="file" accept={FILE_ACCEPT} className="hidden"
+      onChange={(e) => {
+        const f = e.target.files[0] || null;
+        e.target.value = '';
+        if (f && f.size > MAX_FILE) return toast.error('Files must be 1 MB or smaller.');
+        onFile(f);
+      }} />
+    {file && (
+      <span className="inline-flex items-center gap-1 text-xs bg-gray-100 rounded-full px-2 py-0.5">
+        {file.name}
+        <button type="button" onClick={() => onFile(null)} aria-label="Remove attachment" className="text-gray-500 hover:text-red-700">×</button>
+      </span>
+    )}
+  </span>
+);
+
+const uploadAttachment = async (file, folder) => {
+  if (!file) return null;
+  const isImage = /^image\//.test(file.type);
+  const r = isImage ? await uploadImageToBlob(file, folder) : await uploadDocumentToBlob(file, folder);
+  return { url: r.url, name: file.name, size: file.size, type: file.type || '' };
+};
+
+const Attachment = ({ a }) =>
+  !a?.url ? null : /^image\//.test(a.type) ? (
+    <a href={a.url} target="_blank" rel="noopener noreferrer" className="block mt-2">
+      <img src={a.url} alt={a.name || 'Attached image'} className="max-h-64 rounded-lg border border-gray-200" />
+    </a>
+  ) : (
+    <a href={a.url} target="_blank" rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 mt-2 text-sm font-semibold text-pink-700 border border-pink-200 rounded-lg px-3 py-1.5 hover:bg-pink-50">
+      📄 {a.name || 'Attachment'}
+    </a>
+  );
+
+// Text with clickable links (http/https only).
+const Linkified = ({ text }) => {
+  const parts = String(text || '').split(/(https?:\/\/[^\s<]+)/g);
+  return parts.map((p, i) =>
+    /^https?:\/\//.test(p) ? (
+      <a key={i} href={p} target="_blank" rel="noopener noreferrer nofollow" className="text-pink-700 underline break-all">
+        {p}
+      </a>
+    ) : (
+      <React.Fragment key={i}>{p}</React.Fragment>
+    )
+  );
 };
 
 const timeAgo = (ts) => {
@@ -51,8 +147,25 @@ const timeAgo = (ts) => {
   return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 };
 
-const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted }) => {
+const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSignIn }) => {
   const [open, setOpen] = useState(false);
+  const [file, setFile] = useState(null);
+  const replyRef = useRef(null);
+  const [reactions, setReactions] = useState(t.reactions || {});
+  const react = async (emoji) => {
+    if (!me) return onNeedSignIn();
+    const mine = reactions[me.uid];
+    const next = { ...reactions };
+    if (mine === emoji) delete next[me.uid];
+    else next[me.uid] = emoji;
+    setReactions(next);
+    try {
+      await updateDoc(doc(db, base, 'threads', t.id), { [`reactions.${me.uid}`]: mine === emoji ? deleteField() : emoji });
+    } catch (err) {
+      setReactions(reactions);
+      toast.error(friendlyError(err, 'Could not save your reaction.'));
+    }
+  };
   const [replies, setReplies] = useState(null);
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
@@ -71,14 +184,18 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted }) => {
   const reply = async (e) => {
     e.preventDefault();
     const body = text.trim();
-    if (!body) return;
+    if (!body && !file) return;
     setBusy(true);
     try {
-      const ref = await addDoc(collection(db, base, 'threads', t.id, 'replies'), { uid: me.uid, name: myName, body, at: serverTimestamp() });
+      const attachment = await uploadAttachment(file, 'forum');
+      const ref = await addDoc(collection(db, base, 'threads', t.id, 'replies'), {
+        uid: me.uid, name: myName, body: body || '(attachment)', attachment, at: serverTimestamp(),
+      });
       await updateDoc(doc(db, base, 'threads', t.id), { replyCount: increment(1), lastAt: serverTimestamp() }).catch(() => {});
-      setReplies((rs) => [...(rs || []), { id: ref.id, uid: me.uid, name: myName, body, at: new Date() }]);
+      setReplies((rs) => [...(rs || []), { id: ref.id, uid: me.uid, name: myName, body: body || '(attachment)', attachment, at: new Date() }]);
       setCount((c) => c + 1);
       setText('');
+      setFile(null);
       if (t.uid !== me.uid) {
         notifyMember(t.uid, {
           type: 'forum_reply',
@@ -127,9 +244,22 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted }) => {
         <p className="font-semibold text-gray-900 mt-1.5">{t.title}</p>
         {!open && t.body && <p className="text-sm text-gray-600 mt-0.5 line-clamp-2">{t.body}</p>}
       </button>
+      <div className="flex flex-wrap gap-1.5 px-4 pb-3" role="group" aria-label="Reactions">
+        {REACTIONS.map((e) => {
+          const n = Object.values(reactions).filter((x) => x === e).length;
+          const on = me && reactions[me.uid] === e;
+          return (
+            <button key={e} type="button" onClick={() => react(e)} aria-pressed={!!on} aria-label={`React ${e}`}
+              className={`text-sm px-2 py-0.5 rounded-full border ${on ? 'border-pink-400 bg-pink-50' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+              {e}{n > 0 && <span className="ml-1 text-xs text-gray-600">{n}</span>}
+            </button>
+          );
+        })}
+      </div>
       {open && (
         <div className="px-4 pb-4 border-t border-gray-100">
-          <p className="text-sm text-gray-800 whitespace-pre-wrap mt-3">{t.body}</p>
+          <p className="text-sm text-gray-800 whitespace-pre-wrap mt-3"><Linkified text={t.body} /></p>
+          <Attachment a={t.attachment} />
           {t.link && (
             <a href={t.link} target="_blank" rel="noopener noreferrer" className="inline-block mt-2 text-sm font-semibold text-pink-700 hover:underline break-all">
               {t.link}
@@ -147,7 +277,8 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted }) => {
                     <button onClick={() => removeReply(r)} className="text-xs font-semibold text-gray-500 hover:text-red-700">Delete</button>
                   )}
                 </div>
-                <p className="text-sm text-gray-800 whitespace-pre-wrap mt-1">{r.body}</p>
+                <p className="text-sm text-gray-800 whitespace-pre-wrap mt-1"><Linkified text={r.body} /></p>
+                <Attachment a={r.attachment} />
               </li>
             ))}
             {replies && replies.length === 0 && <li className="text-sm text-gray-500">No replies yet.</li>}
@@ -156,12 +287,16 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted }) => {
           {me ? (
             <form onSubmit={reply} className="mt-3">
               <label className="sr-only" htmlFor={`reply-${t.id}`}>Your reply</label>
-              <textarea id={`reply-${t.id}`} rows={2} value={text} onChange={(e) => setText(e.target.value)} maxLength={3000}
-                placeholder="Write a reply"
+              <textarea ref={replyRef} id={`reply-${t.id}`} rows={2} value={text} onChange={(e) => setText(e.target.value)} maxLength={3000}
+                placeholder="Write a reply (links are clickable)"
                 className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500" />
-              <button type="submit" disabled={busy || !text.trim()} className="mt-2 fd-btn !py-1.5 !px-3 text-sm disabled:opacity-50">
-                {busy ? 'Posting...' : 'Reply'}
-              </button>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <button type="submit" disabled={busy || (!text.trim() && !file)} className="fd-btn !py-1.5 !px-3 text-sm disabled:opacity-50">
+                  {busy ? 'Posting...' : 'Reply'}
+                </button>
+                <EmojiPicker targetRef={replyRef} value={text} onChange={setText} />
+                <AttachButton id={`reply-file-${t.id}`} file={file} onFile={setFile} />
+              </div>
             </form>
           ) : null}
         </div>
@@ -170,11 +305,13 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted }) => {
   );
 };
 
-const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayName = '', onCapstonePosted }) => {
+const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayName = '', onCapstonePosted, root = 'course_forum', forumKey = null, authorUid = null, title = 'Course forum', intro = 'Ask questions, help others, and share your work.' }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const base = `course_forum/${courseKey(track, slug)}`;
+  const base = `${root}/${forumKey || courseKey(track, slug)}`;
+  const bodyRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [threads, setThreads] = useState(null);
   const [filter, setFilter] = useState('all');
   const [open, setOpen] = useState(false);
@@ -212,11 +349,23 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
     }
     setBusy(true);
     try {
-      const data = { uid: currentUser.uid, name: myName, kind: form.kind, title, body, link: form.link.trim() || null, at: serverTimestamp(), replyCount: 0, lastAt: serverTimestamp() };
+      const attachment = await uploadAttachment(file, 'forum');
+      const data = { uid: currentUser.uid, name: myName, kind: form.kind, title, body, link: form.link.trim() || null, attachment, at: serverTimestamp(), replyCount: 0, lastAt: serverTimestamp() };
       const ref = await addDoc(collection(db, base, 'threads'), data);
       setThreads((ts) => [{ id: ref.id, ...data, at: new Date() }, ...(ts || [])]);
       setOpen(false);
       setForm({ kind: 'question', title: '', body: '', link: '' });
+      setFile(null);
+      // Let the course's mentor know about new posts.
+      if (authorUid && authorUid !== currentUser.uid) {
+        notifyMember(authorUid, {
+          type: 'forum_post',
+          title: `New ${KINDS[data.kind]?.label.toLowerCase() || 'post'} in your course forum`,
+          body: `${myName} posted "${title}" in ${courseTitle}.`,
+          link: `${location.pathname}#forum`,
+          ctaLabel: 'Open the forum',
+        });
+      }
       toast.success(form.kind === 'capstone' ? 'Capstone shared. You can now complete the course.' : 'Posted.');
       if (form.kind === 'capstone' && onCapstonePosted) onCapstonePosted();
     } catch (err) {
@@ -232,8 +381,8 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
     <section id="forum" className="pt-10 scroll-mt-24" aria-labelledby="forum-h">
       <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
         <div>
-          <h2 id="forum-h" className="text-xl font-bold text-gray-900">Course forum</h2>
-          <p className="text-sm text-gray-600 mt-1">Ask questions, help others, and share your work.</p>
+          <h2 id="forum-h" className="text-xl font-bold text-gray-900">{title}</h2>
+          <p className="text-sm text-gray-600 mt-1">{intro}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button onClick={() => startPost('question')} className="fd-btn !py-2 !px-3 text-sm">Ask a question</button>
@@ -268,9 +417,14 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
               {form.kind === 'capstone' ? 'Describe your project' : 'Details'}
               {form.kind === 'capstone' && <span className="font-normal text-gray-500"> (at least 20 words)</span>}
             </label>
-            <textarea id="forum-body" rows={5} className={input} value={form.body} maxLength={5000}
+            <textarea ref={bodyRef} id="forum-body" rows={5} className={input} value={form.body} maxLength={5000}
               placeholder={form.kind === 'capstone' ? 'What you built, how you approached it, what you learned, and anything you would like feedback on.' : ''}
               onChange={(e) => setForm({ ...form, body: e.target.value })} />
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <EmojiPicker targetRef={bodyRef} value={form.body} onChange={(v) => setForm({ ...form, body: v })} />
+              <AttachButton id="forum-file" file={file} onFile={setFile} />
+              <span className="text-xs text-gray-500">Links are clickable. Attach an image, PDF, or document up to 1 MB.</span>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="forum-link">
@@ -305,7 +459,8 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
         <ul className="space-y-2">
           {shown.map((t) => (
             <Thread key={t.id} base={base} t={t} me={currentUser} isStaff={isStaff} myName={myName} courseTitle={courseTitle}
-              onDeleted={(id) => setThreads((ts) => ts.filter((x) => x.id !== id))} />
+              onDeleted={(id) => setThreads((ts) => ts.filter((x) => x.id !== id))}
+              onNeedSignIn={() => signInAndReturn(navigate, `${location.pathname}#forum`)} />
           ))}
         </ul>
       )}
