@@ -575,6 +575,9 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
   const [requestText, setRequestText] = useState('');
   const isRejected = project.reviewStatus === 'rejected';
   const isCompleted = project.status === 'completed' || isRejected;
+  // Finished (completed or not approved) projects stay compact until opened.
+  const [showDetails, setShowDetails] = useState(false);
+  const compact = isCompleted && !showDetails;
   const isAwaitingPayment = project.status === 'awaiting_payment_confirmation';
   // Lead approved but the project isn't open for applications yet.
   const isSetup = project.status === 'setup';
@@ -608,8 +611,19 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
         </div>
       </div>
 
+      {isCompleted && (
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <p className="text-xs text-gray-500">
+            {isRejected ? 'Not approved in review' : 'Completed'} · {approvedApps.length} team member{approvedApps.length === 1 ? '' : 's'}
+          </p>
+          <button type="button" onClick={() => setShowDetails((v) => !v)} className="text-xs font-semibold text-pink-700 hover:underline">
+            {showDetails ? 'Hide details' : 'Show details'}
+          </button>
+        </div>
+      )}
+
       {/* Approved Members */}
-      {approvedApps.length > 0 && (
+      {!compact && approvedApps.length > 0 && (
         <div className="mb-4">
           <p className="text-gray-400 text-xs font-semibold mb-2">Team Members ({approvedApps.length})</p>
           <div className="space-y-2">
