@@ -152,10 +152,13 @@ const CohortManager = () => {
     setBusy(null);
   };
 
-  const generate = async (cohort) => {
+  // How many projects to generate for each cohort (you choose; at least 1).
+  const [genCount, setGenCount] = useState({});
+  const generate = async (cohort, n = null, existing = 0) => {
+    const howMany = Math.max(1, Number(n ?? genCount[cohort.id] ?? cohort.projectCount ?? 1) || 1);
     setBusy(cohort.id);
     try {
-      const res = await batchGenerateProjects(cohort.projectCount || DEFAULT_PROJECTS_PER_COHORT, {
+      const res = await batchGenerateProjects(howMany, {
         cohortId: cohort.id,
         cohortNumber: cohort.number,
         startDate: cohort.startDate,
@@ -165,7 +168,8 @@ const CohortManager = () => {
         payPerPerson: cohort.payPerPerson || 0,
         draft: true, // hidden until you have read the briefs
       });
-      toast.success(`${res.created} draft projects created. Read the briefs, then reveal.`);
+      await updateCohort(cohort.id, { projectCount: existing + (res.created || 0) }).catch(() => {});
+      toast.success(`${res.created} draft project${res.created === 1 ? '' : 's'} created. Read the briefs, then reveal.`);
       await load();
     } catch (e) {
       toast.error('Generation failed.');
@@ -420,17 +424,27 @@ const CohortManager = () => {
               </div>
 
               <div className="flex flex-wrap gap-2 mb-3">
-                {projects.length === 0 && (
+                <span className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-2 py-1">
+                  <label htmlFor={`gen-${cohort.id}`} className="text-xs font-semibold text-gray-700">
+                    {projects.length === 0 ? 'Projects to create' : 'Add projects'} <span className="font-normal text-gray-500">(1 or more)</span>
+                  </label>
+                  <input
+                    id={`gen-${cohort.id}`}
+                    type="number"
+                    min="1"
+                    max="30"
+                    value={genCount[cohort.id] ?? (projects.length === 0 ? cohort.projectCount || 1 : 1)}
+                    onChange={(e) => setGenCount((g) => ({ ...g, [cohort.id]: e.target.value }))}
+                    className="w-16 px-2 py-1 rounded-md border border-gray-300 text-sm"
+                  />
                   <button
-                    onClick={() => generate(cohort)}
-                    disabled={busy === cohort.id}
-                    className="bg-gray-900 hover:bg-gray-800 disabled:bg-gray-200 text-white text-xs font-semibold px-4 py-2 rounded-lg"
+                    onClick={() => generate(cohort, genCount[cohort.id] ?? (projects.length === 0 ? cohort.projectCount || 1 : 1), projects.length)}
+                    disabled={busy === cohort.id || Number(genCount[cohort.id] ?? 1) < 1}
+                    className="bg-gray-900 hover:bg-gray-800 disabled:bg-gray-200 text-white text-xs font-semibold px-3 py-1.5 rounded-md"
                   >
-                    {busy === cohort.id
-                      ? 'Generating…'
-                      : `Generate ${cohort.projectCount || 1} project${(cohort.projectCount || 1) === 1 ? '' : 's'}`}
+                    {busy === cohort.id ? 'Generating…' : 'Generate'}
                   </button>
-                )}
+                </span>
                 {drafts > 0 && (
                   <button
                     onClick={() => reveal(cohort, projects)}
