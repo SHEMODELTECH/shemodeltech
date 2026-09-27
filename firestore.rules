@@ -385,13 +385,17 @@ service cloud.firestore {
  // submit one from the public page; staff manage them; assigned mentors can
  // read the ones they're assigned to.
  match /org_requests/{id} {
- allow create: if request.resource.data.status == 'new'
+ // Organizations must be signed in to send a request (so we can update them
+ // and chat with them on the platform).
+ allow create: if isSignedIn() && request.resource.data.requesterUid == myUid()
+ && request.resource.data.status == 'new'
  && request.resource.data.orgName is string && request.resource.data.orgName.size() > 0 && request.resource.data.orgName.size() <= 150
  && request.resource.data.contactEmail is string && request.resource.data.contactEmail.size() <= 200
  && request.resource.data.get('topics', '').size() <= 1500
  && request.resource.data.get('message', '').size() <= 2000
  && request.resource.data.assignedMentorUids.size() == 0;
- allow read: if isReviewer() || (isSignedIn() && myUid() in resource.data.get('assignedMentorUids', []));
+ allow read: if isReviewer()
+ || (isSignedIn() && (myUid() in resource.data.get('assignedMentorUids', []) || resource.data.get('requesterUid', '') == myUid()));
  allow update, delete: if isReviewer();
  }
 

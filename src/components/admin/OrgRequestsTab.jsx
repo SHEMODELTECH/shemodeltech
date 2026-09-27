@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { notifyMember } from '../../utils/staffAlerts';
 import { Link } from 'react-router-dom';
-import { ORG_TYPES, REQUEST_TYPES, STATUS_LABELS, TRAINER_CRITERIA, createOrganization, getOrganization, listOrgRequests, shareEdition, statusesFor, updateOrgRequest, updateOrganization } from '../../utils/organizations';
+import { ORG_TYPES, REQUEST_TYPES, STATUS_LABELS, STATUS_MESSAGES, TRAINER_CRITERIA, createOrganization, getOrganization, listOrgRequests, shareEdition, statusesFor, updateOrgRequest, updateOrganization } from '../../utils/organizations';
 import { coursesForTrack, tracksWithCourses } from '../../utils/foundationsCourses';
 import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { listTeacherCourses } from '../../utils/teacherCourses';
@@ -212,10 +212,32 @@ const OrgRequestsTab = ({ isAdmin }) => {
                       {r.contactPhone ? ` · ${r.contactPhone}` : ''}
                     </p>
                   </div>
-                  <select value={r.status} onChange={(e) => patch(r, { status: e.target.value }, 'Status updated.')}
+                  <div className="flex flex-wrap items-center gap-2">
+                  {r.requesterUid && (
+                    <Link
+                      to={`/messages?to=${r.requesterUid}&text=${encodeURIComponent(`Hi ${r.contactName || ''}, thank you for your request for ${r.orgName}. `)}`}
+                      className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50"
+                    >
+                      Message {r.contactName || 'them'}
+                    </Link>
+                  )}
+                  <select value={r.status} onChange={async (e) => {
+                      const st = e.target.value;
+                      await patch(r, { status: st }, r.requesterUid ? 'Status updated. The organization has been notified.' : 'Status updated.');
+                      if (r.requesterUid && STATUS_MESSAGES[st]) {
+                        notifyMember(r.requesterUid, {
+                          type: 'org_request_update',
+                          title: `Update on your request: ${STATUS_LABELS[st]}`,
+                          body: `${r.orgName}: ${STATUS_MESSAGES[st]}`,
+                          link: '/organizations#my-requests',
+                          ctaLabel: 'See your request',
+                        });
+                      }
+                    }}
                     className="text-sm border border-gray-300 rounded-lg px-2 py-1" aria-label="Status">
                     {statusesFor(r.type).map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                   </select>
+                  </div>
                 </div>
                 <p className="text-sm text-gray-800 mt-2"><strong>Topics:</strong> {r.topics}</p>
                 {r.courses && <p className="text-sm text-gray-800"><strong>Courses:</strong> {r.courses}</p>}

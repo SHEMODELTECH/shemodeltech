@@ -65,6 +65,23 @@ export const listOrgRequests = async () => {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
 
+export const listMyOrgRequests = async (uid) => {
+  const snap = await getDocs(query(collection(db, 'org_requests'), where('requesterUid', '==', uid)));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+};
+
+// What the organization is told when its request moves on.
+export const STATUS_MESSAGES = {
+  proposal_sent: 'We’ve prepared a proposal for you. Check your messages and email.',
+  signed: 'Your training agreement is signed. We’ll be in touch about next steps.',
+  in_progress: 'Your training is under way.',
+  completed: 'Your training is complete. Thank you for working with She Model Tech.',
+  approved: 'Your course license is approved. We’ll set up your organization next.',
+  active: 'Your course license is active. Open your organization dashboard to invite learners.',
+  ended: 'Your course license has ended.',
+  declined: 'We’re not able to take this request forward right now. Check your messages for details.',
+};
+
 export const listMyAssignments = async (uid) => {
   const snap = await getDocs(query(collection(db, 'org_requests'), where('assignedMentorUids', 'array-contains', uid)));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));

@@ -2,13 +2,14 @@
 // Public "For Organizations" page: training contracts and course licensing,
 // with one request form. ?course=Title pre-fills a course (from Learning).
 import React, { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import SocialLinks from '../components/SocialLinks';
 import LimitHint, { countWords } from '../components/LimitHint';
 import { useAuth } from '../context/AuthContext';
-import { ORG_LIMITS, ORG_TYPES, REQUEST_TYPES, createOrgRequest } from '../utils/organizations';
+import { ORG_LIMITS, ORG_TYPES, REQUEST_TYPES, STATUS_LABELS, createOrgRequest, listMyOrgRequests } from '../utils/organizations';
+import { getStaff } from '../utils/staffAlerts';
 
 const EMPTY = {
   type: 'training',
@@ -31,6 +32,23 @@ const Organizations = () => {
   const [form, setForm] = useState(EMPTY);
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const navigate = useNavigate();
+  // Signed-in requesters see their requests and can chat with our team.
+  const [mine, setMine] = useState([]);
+  const [teamUid, setTeamUid] = useState(null);
+  useEffect(() => {
+    if (!currentUser) return;
+    listMyOrgRequests(currentUser.uid).then(setMine).catch(() => {});
+    getStaff(['admin']).then((s) => s[0] && setTeamUid(s[0].uid)).catch(() => {});
+  }, [currentUser, sent]);
+  const signIn = () => {
+    try {
+      sessionStorage.setItem('smt_return_to', `/organizations${window.location.search}#request`);
+    } catch (_) {
+      /* ignore */
+    }
+    navigate('/login');
+  };
 
   useEffect(() => {
     const course = params.get('course');
@@ -110,11 +128,23 @@ const Organizations = () => {
         <section id="request" className="mt-12 rounded-2xl border border-pink-200 bg-pink-50/40 p-6 scroll-mt-24">
           <h2 className="text-2xl font-bold text-gray-900">Request training or a license</h2>
           <p className="text-sm text-gray-600 mt-1">We reply within a few working days. There’s no commitment until we agree a proposal.</p>
-          {sent ? (
+          {!currentUser ? (
+            <div className="mt-5 rounded-xl bg-white border border-gray-200 p-5">
+              <p className="font-semibold text-gray-900">Sign in to send a request</p>
+              <p className="text-sm text-gray-700 mt-1">
+                Create a free account (or sign in) first. You’ll follow your request here, get updates in your
+                notifications and by email, and can chat with our team before we finalize anything.
+              </p>
+              <button onClick={signIn} className="mt-4 bg-pink-600 hover:bg-pink-700 text-white font-semibold px-5 py-2.5 rounded-lg">
+                Sign in or create an account
+              </button>
+            </div>
+          ) : sent ? (
             <div className="mt-5 rounded-xl bg-white border border-emerald-200 p-5">
               <p className="font-semibold text-emerald-800">Thank you. Your request has been sent.</p>
               <p className="text-sm text-gray-700 mt-1">
-                It went to the She Model Tech team, and we’ve emailed a confirmation to {form.contactEmail}. We’ll reply within a few working days.
+                It went to the She Model Tech team, and we’ve emailed a confirmation to {form.contactEmail}. You’ll get
+                updates in your notifications and by email, and you can follow it below.
               </p>
             </div>
           ) : (
@@ -192,6 +222,38 @@ const Organizations = () => {
             </form>
           )}
         </section>
+
+        {currentUser && mine.length > 0 && (
+          <section id="my-requests" className="mt-10 scroll-mt-24">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-xl font-bold text-gray-900">Your requests</h2>
+              {teamUid && (
+                <button
+                  onClick={() => navigate(`/messages?to=${teamUid}&text=${encodeURIComponent('Hi She Model Tech team, I have a question about our organization request: ')}`)}
+                  className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg"
+                >
+                  Message the She Model Tech team
+                </button>
+              )}
+            </div>
+            <ul className="mt-4 space-y-2">
+              {mine.map((r) => (
+                <li key={r.id} className="border border-gray-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="font-semibold text-gray-900">{r.orgName} <span className="font-normal text-gray-500">· {REQUEST_TYPES[r.type]}</span></p>
+                    <p className="text-xs text-gray-500">
+                      Sent {r.createdAt?.toDate ? r.createdAt.toDate().toLocaleDateString() : 'just now'}
+                    </p>
+                  </div>
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${r.status === 'declined' ? 'bg-gray-100 text-gray-600' : ['completed', 'active', 'signed', 'approved'].includes(r.status) ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-800'}`}>
+                    {STATUS_LABELS[r.status] || r.status}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-gray-500 mt-2">Final agreements and invoices are handled by email.</p>
+          </section>
+        )}
       </main>
       <footer className="border-t border-gray-200 py-8">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
