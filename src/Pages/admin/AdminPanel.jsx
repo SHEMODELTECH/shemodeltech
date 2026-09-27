@@ -41,6 +41,7 @@ import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../uti
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import OrgRequestsTab from '../../components/admin/OrgRequestsTab';
 import SummitTab from '../../components/admin/SummitTab';
+import AttentionBoard from '../../components/admin/AttentionBoard';
 
 const fmtDate = (ts) => {
   try {
@@ -906,6 +907,7 @@ const AdminPanel = () => {
       )}
 
       {/* OVERVIEW */}
+      {!loadingData && tab === 'overview' && <AttentionBoard isAdmin={isAdmin} onTab={setTab} />}
       {!loadingData && tab === 'overview' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <StatCard label="Total Users" value={stats.users} />
@@ -999,10 +1001,16 @@ const AdminPanel = () => {
       )}
       {!loadingData && tab === 'projects' && (
         <div className="space-y-2">
-          {projects.length === 0 ? (
-            <p className="text-gray-400 text-sm">No projects yet.</p>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+            <h3 className="text-gray-900 font-bold">Active projects ({projects.filter((p) => p.status !== 'completed').length})</h3>
+            <Link to="/project-vault" className="text-xs font-semibold text-pink-700 hover:underline">
+              {projects.filter((p) => p.status === 'completed').length} completed projects are in the Project Vault
+            </Link>
+          </div>
+          {projects.filter((p) => p.status !== 'completed').length === 0 ? (
+            <p className="text-gray-400 text-sm">No active projects.</p>
           ) : (
-            projects.map((p) => (
+            projects.filter((p) => p.status !== 'completed').map((p) => (
               <div
                 key={p.id}
                 className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-lg p-3"

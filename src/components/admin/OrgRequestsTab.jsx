@@ -272,12 +272,28 @@ const OrgRequestsTab = ({ isAdmin }) => {
                   <OrgManager request={r} onCreated={(id) => setReqs((xs) => xs.map((x) => (x.id === r.id ? { ...x, organizationId: id } : x)))} />
                 )}
                 {r.type !== 'licensing' && ['signed', 'in_progress'].includes(r.status) && (
-                  <Link
-                    to={`/projects/new-paid?title=${encodeURIComponent(`Training assistant: ${r.orgName}`)}&description=${encodeURIComponent(`Assist our trainers delivering ${r.topics.slice(0, 200)} for ${r.orgName}. Paid work experience.`)}&role=${encodeURIComponent('Training assistant')}`}
-                    className="inline-block mt-3 text-xs font-semibold border border-pink-300 text-pink-700 px-3 py-1.5 rounded-lg hover:bg-pink-50"
-                  >
-                    Open a paid assistant role
-                  </Link>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    {r.assistantProjectId ? (
+                      <Link to={`/paid-projects/${r.assistantProjectId}`} className="text-xs font-semibold border border-emerald-300 text-emerald-700 px-3 py-1.5 rounded-lg hover:bg-emerald-50">
+                        ✓ Assistant role opened: view applicants
+                      </Link>
+                    ) : (
+                      <Link
+                        to={`/projects/new-paid?orgRequest=${r.id}&title=${encodeURIComponent(`Training assistant: ${r.orgName}`)}&description=${encodeURIComponent(`Assist our trainers delivering ${r.topics.slice(0, 200)} for ${r.orgName}. Paid work experience.`)}&role=${encodeURIComponent('Training assistant')}`}
+                        className="text-xs font-semibold border border-pink-300 text-pink-700 px-3 py-1.5 rounded-lg hover:bg-pink-50"
+                      >
+                        Open a paid assistant role
+                      </Link>
+                    )}
+                    <label className="flex items-center gap-2 text-xs text-gray-700 ml-auto">
+                      <input
+                        type="checkbox"
+                        checked={!!r.trainerPaid}
+                        onChange={(e) => patch(r, { trainerPaid: e.target.checked, ...(e.target.checked ? { status: 'completed' } : {}) }, e.target.checked ? 'Marked delivered and trainer paid. Moved out of Open.' : 'Updated.')}
+                      />
+                      Training delivered and trainer paid (close this request)
+                    </label>
+                  </div>
                 )}
               </div>
             ))}

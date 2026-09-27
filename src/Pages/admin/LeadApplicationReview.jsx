@@ -93,7 +93,7 @@ const LeadApplicationReview = () => {
       setProjects(
         projSnap.docs
           .map((d) => ({ id: d.id, ...d.data() }))
-          .filter((p) => !p.isCompanyPost && (!p.leadConfirmed || wanted.has(p.id)))
+          .filter((p) => !p.isCompanyPost && p.status !== 'completed' && (!p.leadConfirmed || wanted.has(p.id)))
       );
       setApplications(apps);
       listProposals().then((l) => setProposals(l.filter((x) => x.status === 'new'))).catch(() => setProposals([]));

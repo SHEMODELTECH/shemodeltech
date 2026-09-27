@@ -10,7 +10,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -84,6 +84,10 @@ const HostCohort = () => {
         cohortGroupId: kind === 'cohort' ? groupId : null,
       });
       toast.success('Your project is live. Applications are open.');
+      // Opened from a training contract: link it so the request shows it's done.
+      if (qs.get('orgRequest')) {
+        updateDoc(doc(db, 'org_requests', qs.get('orgRequest')), { assistantProjectId: id }).catch(() => {});
+      }
       if (kind === 'cohort') setCreated(id);
       else navigate(`/paid-projects/${id}`);
     } catch (e) {
