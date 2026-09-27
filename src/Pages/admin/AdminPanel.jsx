@@ -1079,7 +1079,7 @@ const AdminPanel = () => {
                       </svg>
                     </button>
                   )}
-                  {isAdmin && (
+                  {isAdmin && u.isCompany && (
                     <button
                       onClick={() => togglePremium(u)}
                       className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${isPremium(u) ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-amber-500 text-white hover:bg-amber-600'}`}

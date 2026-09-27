@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { collection, doc, getDoc, getDocs, limit, query, where } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
-import { isPremium } from '../config/premium';
+import { hasPrioritySupport } from '../config/premium';
 import { getStaff } from '../utils/staffAlerts';
 import PremiumBadge from './PremiumBadge';
 
@@ -18,21 +18,15 @@ export const PrioritySupport = () => {
   const [teamUid, setTeamUid] = useState(null);
   useEffect(() => {
     if (!currentUser) return;
-    getDoc(doc(db, 'users', currentUser.uid)).then((s) => setPremium(isPremium(s.data()))).catch(() => {});
+    getDoc(doc(db, 'users', currentUser.uid)).then((s) => setPremium(hasPrioritySupport(s.data()))).catch(() => {});
     getStaff(['admin']).then((s) => s[0] && setTeamUid(s[0].uid)).catch(() => {});
   }, [currentUser]);
-  if (!premium) {
-    return (
-      <p className="text-sm text-gray-600 mb-6">
-        Need faster help? <Link to="/premium" className="font-semibold text-pink-700 hover:underline">Premium includes priority support.</Link>
-      </p>
-    );
-  }
+  if (!premium) return null;
   return (
     <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
       <div>
-        <p className="font-semibold text-gray-900 flex items-center gap-2"><PremiumBadge /> Priority support</p>
-        <p className="text-sm text-gray-700 mt-1">Message the She Model Tech team directly. Premium requests are handled first.</p>
+        <p className="font-semibold text-gray-900">Priority support</p>
+        <p className="text-sm text-gray-700 mt-1">Message the She Model Tech team directly. Your requests are handled first.</p>
       </div>
       {teamUid && (
         <button

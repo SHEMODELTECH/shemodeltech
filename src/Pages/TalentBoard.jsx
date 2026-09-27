@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { collection, getDocs, query, orderBy, limit, doc, getDoc } from 'firebase/firestore';
 import MentorBadge from '../components/MentorBadge';
 import PremiumBadge from '../components/PremiumBadge';
-import { isFeaturedTalent, isPremium } from '../config/premium';
+import { isFeaturedTalent } from '../config/premium';
 import { mentorStatsByUid } from '../utils/mentorStats';
 import { db } from '../firebase/config';
 import AccessBanner from '../components/AccessBanner';
@@ -100,7 +100,7 @@ const TalentBoard = () => {
             const inMemberBadges = badgedUids.has(thisUid);
             // Mentors are listed too, even before they earn a project badge.
             const isMentor = !!u.isTeacher || (u.mentorApprovedCourses || 0) > 0;
-            return hasBadgeArray || hasTotal || hasBadgeCounts || hasCertificates || inMemberBadges || isMentor || isPremium(u);
+            return hasBadgeArray || hasTotal || hasBadgeCounts || hasCertificates || inMemberBadges || isMentor;
           })
           .sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
         setTalents(users);
@@ -117,7 +117,7 @@ const TalentBoard = () => {
   const statsOf = (t) => mentorStats[t.uid || t.id];
   // Mentors rank first: highest-rated (with at least one rating), then by
   // published courses; everyone else follows alphabetically.
-  // Featured (Premium members, and mentors for free) rank first.
+  // Mentors are featured first; everyone else is ranked on skills and badges.
   const rank = (t) => {
     const featuredBoost = isFeaturedTalent(t) ? 1000 : 0;
     if (!isMentor(t)) return featuredBoost;

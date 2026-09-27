@@ -51,14 +51,16 @@ const Premium = () => {
         <PremiumBadge size="md" />
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-3">She Model Tech Premium</h1>
         <p className="text-gray-700 mt-2 max-w-2xl">
-          Everything that matters stays free: courses, projects, the Talent Board, messaging, certificates, and badges.
-          Premium adds visibility and extra tools for members, mentors, and companies.
+          Premium is for companies: more visibility and hiring tools. Every member keeps every career tool free,
+          including courses, projects, the Talent Board, AI-powered matches, messaging, certificates, and badges.
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           {premium ? (
             <p className="font-semibold text-emerald-800">
               You have Premium{profile?.premium?.until ? ` until ${new Date(profile.premium.until).toLocaleDateString()}` : ''}.
             </p>
+          ) : profile && !profile.isCompany ? (
+            <p className="text-sm text-gray-700">Premium is for company accounts. As a member, every career tool is already free for you.</p>
           ) : PREMIUM_PAYMENTS_ON && PREMIUM_PAYMENT_LINK ? (
             <a href={PREMIUM_PAYMENT_LINK} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">Get Premium</a>
           ) : (
@@ -71,14 +73,13 @@ const Premium = () => {
           )}
         </div>
         {isMentorProfile(profile) && (
-          <p className="text-sm text-indigo-800 mt-3">As a mentor, your courses, instructor profile, and Talent Board listing are featured for free.</p>
+          <p className="text-sm text-indigo-800 mt-3">As a mentor, your courses, profile, and Talent Board listing are featured, and you have priority support, all free.</p>
         )}
       </div>
 
       <div className="grid gap-5">
-        <Section title="For companies" items={PREMIUM_FEATURES.companies} note="Company verification stays free. Premium adds the Verified Partner badge." />
-        <Section title="For members" items={PREMIUM_FEATURES.members} />
-        <Section title="For mentors" items={PREMIUM_FEATURES.mentors} note="Featured courses, instructor profile, and Talent Board ranking are free for every mentor." />
+        <Section title="Premium for companies" items={PREMIUM_FEATURES.companies} note="Company verification stays free. Premium adds the Verified Partner badge." />
+        <Section title="Free for every mentor" items={PREMIUM_FEATURES.mentors} note="Our thanks for the extra work mentors give. Nothing to pay." />
       </div>
 
       <p className="text-sm text-gray-500 mt-6">

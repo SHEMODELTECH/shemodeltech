@@ -459,6 +459,7 @@ const TeacherList = ({ access }) => {
               <li>A Mentor badge on your profile and on your courses</li>
               <li>A Certificate of Recognition for every published course</li>
               <li>A spot among top-rated mentors on the Talent Board</li>
+              <li>Priority support from the She Model Tech team</li>
               <li>Recommendation and volunteer service letters from SHE MODEL TECH Inc.</li>
             </ul>
             <a href="/teach#faq" className="inline-block mt-2 font-semibold text-indigo-700 hover:underline">See all benefits and FAQs</a>

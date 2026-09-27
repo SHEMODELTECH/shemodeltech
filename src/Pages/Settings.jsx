@@ -855,10 +855,10 @@ const IncludedTab = () => {
       </div>
 
       <div className="bg-gradient-to-br from-amber-50 to-pink-50 border border-amber-200 rounded-xl p-6">
-        <p className="text-gray-900 text-sm font-bold">Want more visibility? Premium</p>
+        <p className="text-gray-900 text-sm font-bold">Premium for companies</p>
         <p className="text-gray-600 text-sm mt-1">
-          Optional extras: a Verified Partner badge for companies, posting jobs, featured projects and Talent Board
-          ranking, in-app promotion, AI-powered project and job matches, and priority support. Mentors get featured placement free.
+          Companies can add a Verified Partner badge, job posting, featured projects and jobs, in-app promotion, and
+          priority support. Mentors get featured placement and priority support free.
         </p>
         <a href="/premium" className="inline-block mt-3 text-sm font-semibold text-pink-700 hover:underline">See Premium</a>
       </div>
@@ -867,6 +867,7 @@ const IncludedTab = () => {
         <p className="text-gray-900 text-sm font-bold mb-3">Also included</p>
         <ul className="space-y-1">
           <FeatureItem label="Lead a project" detail="Apply to lead, run a real team, and earn a leadership badge." />
+          <FeatureItem label="AI-powered project and job matches" detail="Personal recommendations for the projects and jobs that fit your skills and badges." />
           <FeatureItem label="Proof Wall and public profile" detail="Share progress, show your badges and certificates, and print your profile." />
           <FeatureItem label="Verifiable, LinkedIn-ready certificates" detail="Every certificate has a public verification link and an Add to LinkedIn button." />
           <FeatureItem label="Course forums and ratings" detail="Ask questions, discuss, share capstones, and rate courses." />

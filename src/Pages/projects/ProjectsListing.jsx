@@ -20,7 +20,6 @@ import {
 import ProjectPayBadge from '../../components/ProjectPayBadge';
 import { getPayRangeLabel } from '../../utils/paidProjects';
 import AIRecommendations from '../../components/AIRecommendations';
-import { isPremium } from '../../config/premium';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -326,23 +325,8 @@ const ProjectsListing = () => {
               </div>
             </div>
 
-            {/* AI-powered project matches: Premium */}
-            {myProfile && !myProfile.isCompany && (
-              isPremium(myProfile) ? (
-                <AIRecommendations currentUser={currentUser} />
-              ) : (
-                <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
-                  <p className="font-semibold text-gray-900 flex items-center gap-2">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-amber-50 text-amber-800 border-amber-200">★ Premium</span>
-                    Your top project matches
-                  </p>
-                  <p className="text-sm text-gray-700 mt-1">
-                    Premium members get AI-powered project matches based on their skills and badges.{' '}
-                    <Link to="/premium" className="font-semibold text-pink-700 hover:underline">See Premium</Link>
-                  </p>
-                </div>
-              )
-            )}
+            {/* AI-powered project matches: free for every member */}
+            {myProfile && !myProfile.isCompany && <AIRecommendations currentUser={currentUser} />}
 
             {/* How leading works */}
             <div className="bg-pink-50 border border-pink-200 rounded-2xl p-4 mb-6">

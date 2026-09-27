@@ -121,7 +121,8 @@ export const JobsBoard = () => {
     listOpenJobs().then(setJobs).catch(() => setJobs([]));
   }, []);
 
-  const premiumMember = profile && !profile.isCompany && isPremium(profile);
+  // AI-powered job matches: free for every member.
+  const premiumMember = profile && !profile.isCompany;
   useEffect(() => {
     if (!premiumMember || !jobs?.length) return;
     aiMatches(profile, jobs).then(setMatches).catch(() => {});
@@ -153,25 +154,17 @@ export const JobsBoard = () => {
         )}
       </div>
 
-      {/* AI-powered matches: Premium members */}
-      {profile && !profile.isCompany && (
-        <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
-          <p className="font-semibold text-gray-900 flex items-center gap-2">
-            <PremiumBadge /> Your top job matches
-          </p>
-          {premiumMember ? (
-            matches === null ? (
-              <p className="text-sm text-gray-600 mt-1">Finding your best matches...</p>
-            ) : (
-              <div className="grid gap-2 mt-3">
-                {matches.map((id) => (jobs || []).find((j) => j.id === id)).filter(Boolean).map((j) => <JobCard key={j.id} j={j} />)}
-              </div>
-            )
+      {/* AI-powered job matches: free for every member */}
+      {premiumMember && jobs && jobs.length > 0 && (
+        <div className="mb-5 rounded-xl border border-pink-200 bg-pink-50/40 p-4">
+          <p className="font-semibold text-gray-900">Your top job matches</p>
+          <p className="text-xs text-gray-600">Picked by AI from your skills and badges.</p>
+          {matches === null ? (
+            <p className="text-sm text-gray-600 mt-2">Finding your best matches...</p>
           ) : (
-            <p className="text-sm text-gray-700 mt-1">
-              Premium members get AI-powered job matches based on their skills and badges.{' '}
-              <Link to="/premium" className="font-semibold text-pink-700 hover:underline">See Premium</Link>
-            </p>
+            <div className="grid gap-2 mt-3">
+              {matches.map((id) => jobs.find((j) => j.id === id)).filter(Boolean).map((j) => <JobCard key={j.id} j={j} />)}
+            </div>
           )}
         </div>
       )}
@@ -236,9 +229,6 @@ export const JobDetail = () => {
         <p className="text-gray-700 mt-1 flex flex-wrap items-center gap-2">
           {job.companyName}
           {company && isVerifiedPartner(company) && <PremiumBadge kind="partner" />}
-          {company && company.isVerified && !isVerifiedPartner(company) && (
-            <span className="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">VERIFIED</span>
-          )}
         </p>
         <p className="text-sm text-gray-500 mt-1">
           {[job.location, job.salary].filter(Boolean).join(' · ')}
