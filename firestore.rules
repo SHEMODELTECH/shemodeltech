@@ -153,7 +153,8 @@ service cloud.firestore {
  allow create: if isSignedIn() && ownsNew('userId');
  allow update: if isSignedIn() && ownsExisting('userId') && ownsNew('userId');
  allow update: if isReviewer();
- allow delete: if isSignedIn() && (ownsExisting('userId') || isAdmin());
+ // Staff clear entries once the member has been told a project needs a lead.
+ allow delete: if isSignedIn() && (ownsExisting('userId') || isReviewer());
  }
 
  // ---------------------------------------------------------------
@@ -162,6 +163,8 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  match /lead_applications/{appId} {
  allow read: if isSignedIn() && (ownsExisting('applicantUid') || isReviewer());
+ // Staff create the proposer's application when approving a project proposal.
+ allow create: if isReviewer() && request.resource.data.status == 'submitted';
 
  allow create: if isSignedIn()
  && ownsNew('applicantUid')
@@ -379,6 +382,18 @@ service cloud.firestore {
  && request.resource.data.companyUid == myUid()
  && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured']) || isPremiumUser())));
  allow delete: if isSignedIn() && (resource.data.companyUid == myUid() || isAdmin());
+ }
+
+ // Members' project proposals (projects they'd like to lead). Staff review them.
+ match /project_proposals/{id} {
+ allow create: if isSignedIn() && request.resource.data.uid == myUid()
+ && request.resource.data.status == 'new'
+ && request.resource.data.title is string && request.resource.data.title.size() <= 120
+ && request.resource.data.description is string && request.resource.data.description.size() <= 4000
+ && request.resource.data.get('whyLead', '').size() <= 1500;
+ allow read: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow update: if isReviewer();
+ allow delete: if isAdmin() || (isSignedIn() && resource.data.uid == myUid() && resource.data.status == 'new');
  }
 
  // Organizations: training contract and course licensing requests. Anyone can

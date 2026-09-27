@@ -10,6 +10,7 @@ import { doc, getDoc, addDoc, collection, serverTimestamp } from 'firebase/fires
 import { db } from '../../firebase/config';
 import { toast } from 'react-toastify';
 import { getRandomTemplate } from '../../utils/projectTemplates';
+import { notifyLeadWaitlist } from '../../utils/projectProposals';
 
 const GenerateProject = () => {
   const { currentUser } = useAuth();
@@ -79,6 +80,8 @@ const GenerateProject = () => {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
+      // Anyone on the lead waitlist hears about the new project.
+      notifyLeadWaitlist(draft.projectTitle);
       // Proof Wall: log a "needs a lead" event.
       try {
         const { logActivity: logProof } = await import('../../utils/activityFeed');

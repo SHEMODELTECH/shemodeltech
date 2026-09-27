@@ -14,6 +14,7 @@ import { collection, query, where, getDocs, addDoc, serverTimestamp } from 'fire
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+import ProposeProject from '../../components/ProposeProject';
 import {
   applyToLead,
   getMyApplication,
@@ -206,7 +207,7 @@ const ApplyToLead = () => {
         <h1 className="text-2xl font-bold text-gray-900 mb-2">No projects need a lead right now</h1>
         <p className="text-gray-600 mb-6">
           New projects open all the time. Join the waitlist and we&rsquo;ll email you when a new project
-          needs a lead.
+          needs a lead, or propose your own project below.
         </p>
         {onWaitlist ? (
           <div className="bg-green-50 border border-green-200 rounded-xl p-5">
@@ -225,6 +226,9 @@ const ApplyToLead = () => {
             {saving ? 'Adding you…' : 'Join the waitlist'}
           </button>
         )}
+        <div className="mt-8">
+          <ProposeProject />
+        </div>
       </div>
     );
   }
@@ -368,6 +372,9 @@ const ApplyToLead = () => {
           {saving ? 'Submitting…' : 'Submit application'}
         </button>
         {blockedReason && <p className="text-gray-500 text-xs mt-2">{blockedReason}</p>}
+      </div>
+      <div className="mt-10">
+        <ProposeProject />
       </div>
     </div>
   );

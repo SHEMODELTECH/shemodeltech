@@ -17,6 +17,8 @@ import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { usePermissions } from '../../utils/permissions';
 import { leadInterviewInvite } from '../../utils/calendarInvite';
+import { approveProposal, declineProposal, listProposals, TRACKS } from '../../utils/projectProposals';
+import NoteDialog from '../../components/NoteDialog';
 import {
   getApplicationsForCohort,
   groupByProject,
@@ -54,6 +56,10 @@ const LeadApplicationReview = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
+  // Members' project proposals waiting for a decision.
+  const [proposals, setProposals] = useState([]);
+  const [declining, setDeclining] = useState(null);
+  const [pBusy, setPBusy] = useState(false);
   const [busy, setBusy] = useState(null);
 
   useEffect(() => {
@@ -87,6 +93,7 @@ const LeadApplicationReview = () => {
           .filter((p) => !p.isCompanyPost && (!p.leadConfirmed || wanted.has(p.id)))
       );
       setApplications(apps);
+      listProposals().then((l) => setProposals(l.filter((x) => x.status === 'new'))).catch(() => setProposals([]));
     } catch (e) {
       console.error(e);
       toast.error('Could not load applications.');
@@ -145,6 +152,62 @@ const LeadApplicationReview = () => {
           </p>
         </div>
       )}
+
+      {proposals.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Project proposals from members ({proposals.length})</h2>
+          <div className="space-y-3">
+            {proposals.map((p) => (
+              <div key={p.id} className="bg-white border border-pink-200 rounded-xl p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-bold text-gray-900">{p.title}</p>
+                    <p className="text-xs text-gray-500">{TRACKS[p.track] || p.track} · proposed by {p.name} ({p.email})</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      disabled={pBusy}
+                      onClick={async () => {
+                        setPBusy(true);
+                        try {
+                          await approveProposal(p, currentUser);
+                          toast.success('Approved. The project is open, and her lead application is below.');
+                          load();
+                        } catch (e) {
+                          toast.error('Could not approve it.');
+                        }
+                        setPBusy(false);
+                      }}
+                      className="text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
+                    >
+                      Approve and open project
+                    </button>
+                    <button onClick={() => setDeclining(p)} className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-800 mt-2 whitespace-pre-wrap">{p.description}</p>
+                {p.rolesNeeded && <p className="text-sm text-gray-700 mt-2"><strong>Roles:</strong> {p.rolesNeeded.split(/\n/).filter(Boolean).join(', ')}</p>}
+                <p className="text-sm text-gray-700 mt-2"><strong>Why she wants to lead it:</strong> {p.whyLead}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      <NoteDialog
+        open={!!declining}
+        title="Decline this project idea"
+        description={declining ? `Let ${declining.name} know why (optional). She can propose another idea.` : ''}
+        confirmLabel="Decline"
+        busy={pBusy}
+        onCancel={() => setDeclining(null)}
+        onConfirm={async (note) => {
+          setPBusy(true);
+          await declineProposal(declining, currentUser, note).catch(() => toast.error('Could not decline it.'));
+          setProposals((xs) => xs.filter((x) => x.id !== declining.id));
+          setDeclining(null);
+          setPBusy(false);
+        }}
+      />
 
       <div className="space-y-4">
         {grouped.map(({ project, applicants }) => {
