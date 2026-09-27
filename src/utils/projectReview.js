@@ -17,6 +17,7 @@ import {
 } from 'firebase/firestore';
 import { membersMeetMinTeamSize, MIN_TEAM_SIZE_MEMBERS_ERROR } from './projectRoles';
 import { validateSubmission, GITHUB_ORG } from './githubSubmission';
+import { alertStaff } from './staffAlerts';
 
 export const REVIEW_STATUS = {
   NONE: 'none',
@@ -110,7 +111,16 @@ export const submitProjectForReview = async (project, owner, submission) => {
     reviewFeedback: null, // clear any prior "needs changes" note on resubmit
   });
 
-  // Notify admins (via a queue collection the AdminPanel reads).
+  // Tell admins: bell + push + email.
+  alertStaff({
+    type: 'project_review_submitted',
+    title: 'Project submitted for review',
+    body: `"${project.projectTitle || project.title || 'A project'}" was submitted by ${owner?.displayName || owner?.email || 'its lead'} and needs review.`,
+    link: '/admin',
+    roles: ['admin'],
+  });
+
+  // Also queue it for the AdminPanel.
   try {
     await addDoc(collection(db, 'admin_notifications'), {
       type: 'project_review_submitted',

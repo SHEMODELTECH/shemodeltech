@@ -32,6 +32,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { issueMentorCertificate } from './learningCertificates';
+import { alertStaff, notifyMember } from './staffAlerts';
 
 const COL = 'teacher_courses';
 const CHUNK_CHARS = 300000; // well under 1 MB even for multi-byte text
@@ -148,19 +149,7 @@ export const displayMarkdown = (kind, content) => (kind === 'video' ? lessonsToM
 // Older courses may carry publishRequested instead; treat it as pending.
 export const reviewStatus = (c) => c?.review?.status || (c?.publishRequested ? 'pending' : null);
 
-const notifyUser = (userId, title, body, link) =>
-  addDoc(collection(db, 'notifications'), {
-    userId,
-    recipientId: userId,
-    type: 'teacher_course_review',
-    title,
-    body,
-    message: `${title} - ${body}`,
-    link,
-    isRead: false,
-    read: false,
-    createdAt: serverTimestamp(),
-  }).catch(() => {});
+const notifyUser = (userId, title, body, link) => notifyMember(userId, { type: 'teacher_course_review', title, body, link });
 
 export const submitForReview = async (course, user, details) => {
   await updateDoc(doc(db, COL, course.id), {
@@ -176,22 +165,14 @@ export const submitForReview = async (course, user, details) => {
     },
     publishRequested: null,
   });
-  // Let admins know there's something to review.
-  try {
-    const admins = await getDocs(query(collection(db, 'users'), where('role', '==', 'admin')));
-    await Promise.all(
-      admins.docs.map((a) =>
-        notifyUser(
-          a.id,
-          course.published ? 'A mentor updated a published course' : 'A mentor course is waiting for approval',
-          `${user.displayName || user.email}: "${course.title}"`,
-          `/teacher/${course.id}`
-        )
-      )
-    );
-  } catch (_) {
-    /* notifications are best-effort */
-  }
+  // Let admins know there's something to review (bell, push, email).
+  await alertStaff({
+    type: 'mentor_course_submitted',
+    title: course.published ? 'A mentor updated a published course' : 'A mentor course is waiting for approval',
+    body: `${user.displayName || user.email}: "${course.title}"`,
+    link: `/teacher/${course.id}`,
+    roles: ['admin'],
+  });
 };
 
 export const withdrawSubmission = async (course, user) => {

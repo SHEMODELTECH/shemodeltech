@@ -13,6 +13,7 @@
 
 import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { alertStaff, notifyMember } from './staffAlerts';
 
 const COL = 'mentor_letter_requests';
 
@@ -21,8 +22,8 @@ export const LETTER_TYPES = {
   volunteer: 'Volunteer service letter',
 };
 
-export const requestLetter = async (user, form) =>
-  addDoc(collection(db, COL), {
+export const requestLetter = async (user, form) => {
+  const ref = await addDoc(collection(db, COL), {
     uid: user.uid,
     name: (form.name || user.displayName || user.email || '').trim(),
     email: user.email || '',
@@ -37,6 +38,15 @@ export const requestLetter = async (user, form) =>
     status: 'pending',
     createdAt: serverTimestamp(),
   });
+  alertStaff({
+    type: 'mentor_letter_requested',
+    title: `New ${(LETTER_TYPES[form.type] || 'letter').toLowerCase()} request`,
+    body: `${(form.name || user.displayName || user.email || 'A mentor').trim()} requested a letter: ${(form.purpose || '').trim().slice(0, 140)}`,
+    link: '/admin',
+    roles: ['admin'],
+  });
+  return ref;
+};
 
 export const myLetterRequests = async (uid) => {
   const snap = await getDocs(query(collection(db, COL), where('uid', '==', uid)));
@@ -62,19 +72,14 @@ export const decideLetterRequest = async (req, status, admin, note = '') => {
     decidedBy: admin.email || '',
   });
   const label = LETTER_TYPES[req.type] || 'letter';
-  await addDoc(collection(db, 'notifications'), {
-    userId: req.uid,
-    recipientId: req.uid,
+  await notifyMember(req.uid, {
     type: 'mentor_letter',
     title: status === 'sent' ? `Your ${label.toLowerCase()} has been sent` : `Update on your ${label.toLowerCase()} request`,
     body:
       status === 'sent'
         ? note.trim() || `We've emailed it to ${req.email}. Thank you for mentoring with She Model Tech.`
         : note.trim() || 'We are not able to provide this letter right now.',
-    message: status === 'sent' ? `Your ${label.toLowerCase()} has been sent` : `Update on your ${label.toLowerCase()} request`,
     link: '/teacher',
-    isRead: false,
-    read: false,
-    createdAt: serverTimestamp(),
-  }).catch(() => {});
+    emailTo: req.email,
+  });
 };

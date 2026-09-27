@@ -12,6 +12,7 @@ import { notifyApplicationApproved, notifyApplicationRejected } from '../../util
 import JoinedProjects from '../../components/JoinedProjects';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../../utils/paidProjects';
+import { alertStaff } from '../../utils/staffAlerts';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -328,6 +329,13 @@ const ProjectOwnerDashboard = () => {
       await updateDoc(doc(db, 'projects', project.id), { deletionRequested: true });
       setMyProjects(prev => prev.map(p => p.id === project.id ? { ...p, deletionRequested: true } : p));
       toast.success('Deletion request sent. An admin will review it.');
+      alertStaff({
+        type: 'deletion_requested',
+        title: 'Project deletion requested',
+        body: `${currentUser.displayName || currentUser.email} asked to delete "${project.projectTitle || project.title || 'a project'}": ${reason.trim().slice(0, 140)}`,
+        link: '/admin',
+        roles: ['admin'],
+      });
       setDeleteFor(null);
     } catch (e) { console.error('deletion request failed', e); toast.error(friendlyError(e, 'Could not send the request.')); }
     setDeleting(false);

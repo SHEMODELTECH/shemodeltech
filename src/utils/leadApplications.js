@@ -33,6 +33,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { authFetch } from './authFetch';
+import { alertStaff } from './staffAlerts';
 
 export const LEAD_APP_STATUS = {
   SUBMITTED: 'submitted',
@@ -106,6 +107,13 @@ export const applyToLead = async ({
     decidedAt: null,
     assignedProjectId: null,
     createdAt: serverTimestamp(),
+  });
+  alertStaff({
+    type: 'lead_application_submitted',
+    title: 'New project lead application',
+    body: `${applicant.displayName || applicant.email} applied to lead a project.`,
+    link: '/admin',
+    roles: ['admin', 'editor'],
   });
   return ref.id;
 };

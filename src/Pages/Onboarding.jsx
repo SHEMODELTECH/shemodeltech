@@ -10,6 +10,7 @@ import SkillPicker from '../components/SkillPicker';
 import Navbar from '../components/Navbar';
 import { INDUSTRY_TRACKS } from '../utils/industryTracks';
 import { afterAuthPath } from '../utils/afterAuth';
+import { alertStaff } from '../utils/staffAlerts';
 
 const BLOCKED_EMAIL_DOMAINS = [
   'gmail.com',
@@ -315,6 +316,16 @@ const Onboarding = () => {
         updateData.githubUrl = formData.githubUrl.trim() || null;
       }
       await updateDoc(doc(db, 'users', currentUser.uid), updateData);
+      if (isCompany) {
+        // A new company account needs verifying before it can post paid projects.
+        alertStaff({
+          type: 'company_needs_verification',
+          title: 'New company account to verify',
+          body: `${formData.companyName.trim() || 'A company'} (${formData.companyEmail.trim() || currentUser.email}) joined and needs verification.`,
+          link: '/admin',
+          roles: ['admin'],
+        });
+      }
       toast.success('Welcome to She Model Tech!');
       navigate(afterAuthPath(), { replace: true });
     } catch (error) {

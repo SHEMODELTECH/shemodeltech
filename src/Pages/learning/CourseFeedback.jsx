@@ -29,6 +29,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { signInAndReturn } from './LearningLayout';
 import { friendlyError } from '../../components/NoteDialog';
+import { notifyMember } from '../../utils/staffAlerts';
 
 export const REACTIONS = [
   ['helpful', '👍', 'Helpful'],
@@ -111,22 +112,11 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
   // Let the mentor know when someone rates, reacts to, or comments on their
   // course, with that person's name. Best-effort: a failed notification never
   // blocks the rating or comment itself.
-  const notifyMentor = (title, body) => {
+  const notifyMentor = (title, body, sendEmail = false) => {
     if (!authorUid || !currentUser || authorUid === currentUser.uid) return;
-    addDoc(collection(db, 'notifications'), {
-      userId: authorUid,
-      recipientId: authorUid,
-      type: 'course_feedback',
-      title,
-      body,
-      message: `${title} - ${body}`,
-      link: location.pathname,
-      fromUid: currentUser.uid,
-      fromName: myName,
-      isRead: false,
-      read: false,
-      createdAt: serverTimestamp(),
-    }).catch(() => {});
+    // Bell + push always; email only for comments (ratings and reactions
+    // would be too many emails).
+    notifyMember(authorUid, { type: 'course_feedback', title, body, link: location.pathname, sendEmail, ctaLabel: 'See the comment' });
   };
 
   // A question for the mentor opens Messages with a starter note.
@@ -185,7 +175,7 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
       const ref = await addDoc(collection(db, base, 'comments'), { uid: currentUser.uid, name: myName, text: t, at: serverTimestamp() });
       setComments((cs) => [{ id: ref.id, uid: currentUser.uid, name: myName, text: t, at: new Date() }, ...cs]);
       setText('');
-      notifyMentor(`${myName} commented on your course`, `"${courseTitle}": ${t.length > 140 ? `${t.slice(0, 140)}...` : t}`);
+      notifyMentor(`${myName} commented on your course`, `"${courseTitle}": ${t.length > 140 ? `${t.slice(0, 140)}...` : t}`, true);
     } catch (err) {
       toast.error(friendlyError(err, 'Could not post your comment.'));
     }

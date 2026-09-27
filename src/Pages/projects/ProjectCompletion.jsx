@@ -80,19 +80,7 @@ const ProjectCompletion = () => {
       const memberEmails = await getProjectMemberEmails(projectId);
       await submitProjectForReview({ ...project, id: projectId }, currentUser, submission);
       toast.success('Submitted to She Model Tech for review. You will be notified once it is reviewed.');
-      // Push to admins (non-blocking).
-      try {
-        const adminSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'admin')));
-        const adminUids = adminSnap.docs.map(d => d.id);
-        if (adminUids.length) {
-          sendPush({
-            recipientUids: adminUids,
-            title: 'Project submitted for review',
-            body: `"${project.projectTitle || 'A project'}" was submitted and needs review.`,
-            link: '/admin',
-          });
-        }
-      } catch (e) { /* non-blocking */ }
+      // Admins are alerted (bell, push, email) inside submitProjectForReview.
       await fetchData();
     } catch (e) {
       toast.error(e.message || 'Could not submit for review.');

@@ -14,6 +14,7 @@
 
 import { collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { alertStaff, notifyMember } from './staffAlerts';
 
 export const TEACH_TRACKS = [
   ['TechDev', 'Coding Developer'],
@@ -41,6 +42,13 @@ export const applyToTeach = async (user, form) => {
     status: 'pending',
     createdAt: serverTimestamp(),
   });
+  alertStaff({
+    type: 'mentor_application_submitted',
+    title: 'New mentor application',
+    body: `${(form.name || user.displayName || user.email || 'Someone').trim()} applied to become a mentor.`,
+    link: '/admin',
+    roles: ['admin'],
+  });
 };
 
 export const listTeacherApplications = async () => {
@@ -50,19 +58,7 @@ export const listTeacherApplications = async () => {
     .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 };
 
-const notify = (userId, title, body, link) =>
-  addDoc(collection(db, 'notifications'), {
-    userId,
-    recipientId: userId,
-    type: 'teacher_status',
-    title,
-    body,
-    message: `${title} - ${body}`,
-    link,
-    isRead: false,
-    read: false,
-    createdAt: serverTimestamp(),
-  }).catch(() => {});
+const notify = (userId, title, body, link) => notifyMember(userId, { type: 'teacher_status', title, body, link });
 
 // Admin: make someone a teacher, or remove teacher access.
 export const setTeacher = async (userId, value, admin) => {
