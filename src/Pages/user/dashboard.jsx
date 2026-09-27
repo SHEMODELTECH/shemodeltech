@@ -12,6 +12,7 @@ import AIRecommendations from '../../components/AIRecommendations';
 import DiscoverTrack from '../../components/DiscoverTrack';
 import TierBadge from '../../components/TierBadge';
 import { PromotedStrip } from '../../components/PriorityBanners';
+import { isPremium } from '../../config/premium';
 import {
   computeMemberEarnings,
   computeCompanyDisbursements,
@@ -241,7 +242,8 @@ const DashboardOverview = () => {
         !profileData?.isCompany && <FindFirstProject profile={profileData} />}
 
       {/* AI-matched projects for this member (individuals only). */}
-      {!loading && !profileData?.isCompany && <AIRecommendations currentUser={currentUser} />}
+      {/* AI-powered project matches are a Premium feature */}
+      {!loading && !profileData?.isCompany && isPremium(profileData) && <AIRecommendations currentUser={currentUser} />}
 
       {/* Help users who haven't settled on a track (new to tech or unsure) discover one. */}
       {!loading &&

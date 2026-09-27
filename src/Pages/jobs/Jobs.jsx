@@ -14,7 +14,6 @@ import { friendlyError } from '../../components/NoteDialog';
 import { authFetch } from '../../utils/authFetch';
 import {
   JOB_LIMITS,
-  JOB_TRACKS,
   JOB_TYPES,
   createJob,
   deleteJob,
@@ -45,10 +44,6 @@ const scoreJob = (job, profile) => {
   const skills = (profile?.skills || []).map((s) => String(s).toLowerCase());
   const text = `${job.title} ${job.description}`.toLowerCase();
   let score = skills.filter((s) => s && text.includes(s)).length * 2;
-  if (profile?.primarySkillTrack && (job.tracks || []).includes(profile.primarySkillTrack)) score += 5;
-  Object.keys(profile?.badgeCounts || {}).forEach((t) => {
-    if ((job.tracks || []).includes(t)) score += 3;
-  });
   return score;
 };
 
@@ -76,7 +71,7 @@ const aiMatches = async (profile, jobs) => {
               `A job seeker has these skills: ${(profile.skillsList || profile.skills || []).join(', ') || 'not listed'}; ` +
               `main track: ${profile.primarySkillTrack || 'not set'}; experience: ${profile.experienceLevel || 'not set'}. ` +
               `From these jobs, pick the 3 best fits. Reply with only a JSON array of ids, nothing else.\n` +
-              JSON.stringify(pool.map((j) => ({ id: j.id, title: j.title, type: j.type, tracks: j.tracks, about: j.description.slice(0, 300) }))),
+              JSON.stringify(pool.map((j) => ({ id: j.id, title: j.title, type: j.type, about: j.description.slice(0, 300) }))),
           },
         ],
       }),
@@ -119,7 +114,6 @@ export const JobsBoard = () => {
   const [jobs, setJobs] = useState(null);
   const [q, setQ] = useState('');
   const [type, setType] = useState('all');
-  const [track, setTrack] = useState('all');
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [matches, setMatches] = useState(null);
 
@@ -138,11 +132,10 @@ export const JobsBoard = () => {
     return (jobs || []).filter(
       (j) =>
         (type === 'all' || j.type === type) &&
-        (track === 'all' || (j.tracks || []).includes(track)) &&
         (!remoteOnly || j.remote) &&
         (!needle || `${j.title} ${j.companyName} ${j.location} ${j.description}`.toLowerCase().includes(needle))
     );
-  }, [jobs, q, type, track, remoteOnly]);
+  }, [jobs, q, type, remoteOnly]);
 
   const input = 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   return (
@@ -150,7 +143,7 @@ export const JobsBoard = () => {
       <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs</h1>
-          <p className="text-gray-600 text-sm mt-1">Roles from companies hiring women in tech.</p>
+          <p className="text-gray-600 text-sm mt-1">Full-time, part-time, contract, and internship roles from companies hiring on She Model Tech.</p>
         </div>
         {profile?.isCompany && (
           <div className="flex gap-2">
@@ -176,7 +169,7 @@ export const JobsBoard = () => {
             )
           ) : (
             <p className="text-sm text-gray-700 mt-1">
-              Premium members get AI-powered job and project matches based on their skills and badges.{' '}
+              Premium members get AI-powered job matches based on their skills and badges.{' '}
               <Link to="/premium" className="font-semibold text-pink-700 hover:underline">See Premium</Link>
             </p>
           )}
@@ -188,10 +181,6 @@ export const JobsBoard = () => {
         <select value={type} onChange={(e) => setType(e.target.value)} aria-label="Job type" className={input}>
           <option value="all">All types</option>
           {Object.entries(JOB_TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-        </select>
-        <select value={track} onChange={(e) => setTrack(e.target.value)} aria-label="Track" className={input}>
-          <option value="all">All tracks</option>
-          {Object.entries(JOB_TRACKS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
         <label className="flex items-center gap-2 text-sm text-gray-700">
           <input type="checkbox" checked={remoteOnly} onChange={(e) => setRemoteOnly(e.target.checked)} /> Remote only
@@ -252,7 +241,7 @@ export const JobDetail = () => {
           )}
         </p>
         <p className="text-sm text-gray-500 mt-1">
-          {[job.location, job.salary, (job.tracks || []).map((t) => JOB_TRACKS[t]).join(', ')].filter(Boolean).join(' · ')}
+          {[job.location, job.salary].filter(Boolean).join(' · ')}
         </p>
         <div className="mt-5 text-gray-800 whitespace-pre-wrap leading-relaxed">{job.description}</div>
         <div className="flex flex-wrap gap-2 mt-6">
@@ -328,7 +317,7 @@ export const MyJobs = () => {
 };
 
 // ---------- Post / edit ----------
-const EMPTY = { title: '', type: 'full-time', location: '', remote: false, description: '', applyUrl: '', applyEmail: '', tracks: [], salary: '' };
+const EMPTY = { title: '', type: 'full-time', location: '', remote: false, description: '', applyUrl: '', applyEmail: '', salary: '' };
 
 export const JobForm = () => {
   const { id } = useParams();
@@ -409,19 +398,6 @@ export const JobForm = () => {
           </label>
         </div>
       </div>
-      <fieldset>
-        <legend className={label}>Tracks <span className={hintCls}>(optional, choose any)</span></legend>
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(JOB_TRACKS).map(([k, v]) => {
-            const on = form.tracks.includes(k);
-            return (
-              <button key={k} type="button" aria-pressed={on}
-                onClick={() => setForm({ ...form, tracks: on ? form.tracks.filter((x) => x !== k) : [...form.tracks, k] })}
-                className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${on ? 'bg-pink-600 border-pink-600 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>{v}</button>
-            );
-          })}
-        </div>
-      </fieldset>
       <div>
         <label className={label} htmlFor="job-desc">Description <span className={hintCls}>(at least {L.descMinWords} words, up to {L.descMaxChars} characters)</span></label>
         <textarea id="job-desc" rows={10} className={input} value={form.description} maxLength={L.descMaxChars}

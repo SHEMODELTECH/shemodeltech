@@ -1,9 +1,10 @@
 // src/utils/jobs.js
-// She Model Tech Jobs board. Browsing is free for everyone; posting is a
-// Premium feature for verified companies.
+// She Model Tech Jobs board: full-time, part-time, contract, and internship
+// roles that companies recruit for (separate from projects, which have teams
+// and workspaces). Browsing is free; posting is Premium for verified companies.
 //
 //   jobs/{id}: companyUid, companyName, title, type, location, remote,
-//     description, applyUrl, applyEmail, tracks[], salary, status ('open'|'closed'),
+//     description, applyUrl, applyEmail, salary, status ('open'|'closed'),
 //     featured, createdAt, updatedAt, expiresAt (ISO)
 
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
@@ -14,15 +15,6 @@ export const JOB_TYPES = {
   'part-time': 'Part-time',
   contract: 'Contract',
   internship: 'Internship',
-};
-
-export const JOB_TRACKS = {
-  TechDev: 'Coding Developer',
-  TechArchs: 'Low/No-Code',
-  TechQA: 'Quality Tester',
-  TechGuard: 'Cybersecurity',
-  TechPO: 'Product Owner',
-  TechLeads: 'Non-Technical',
 };
 
 // Shown on every field (She Model Tech principle: limits are visible up front).
@@ -65,7 +57,6 @@ const clean = (form) => ({
   description: form.description.trim(),
   applyUrl: form.applyUrl.trim() || null,
   applyEmail: form.applyEmail.trim() || null,
-  tracks: form.tracks || [],
   salary: form.salary.trim() || null,
 });
 
