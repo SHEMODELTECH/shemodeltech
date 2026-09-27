@@ -45,10 +45,16 @@ const Login = () => {
       try {
         setEmailLoading(true);
         await resetPassword(form.email);
-        setInfo('Reset link sent. If you don\'t see it, check your spam folder.');
+        setInfo('Reset link sent. If you don\'t see it in a minute or two, check your spam folder.');
         setMode('signin');
       } catch (err) {
-        setError(getAuthErrorMessage(err));
+        if (/wait a minute/i.test(err.message || '')) {
+          // A reset email was sent to this address in the last minute.
+          setInfo('We already sent a reset email to this address in the last minute. Check your inbox and spam folder. If it hasn\'t arrived, you can ask for another in a minute.');
+          setMode('signin');
+        } else {
+          setError(getAuthErrorMessage(err));
+        }
       } finally { setEmailLoading(false); }
       return;
     }
@@ -135,7 +141,7 @@ const Login = () => {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                   <div className="min-w-0">
-                    <p className="font-bold text-sm text-red-700">Sign-in Failed</p>
+                    <p className="font-bold text-sm text-red-700">{mode === 'reset' ? 'Couldn\'t send the reset email' : mode === 'signup' ? 'Sign-up failed' : 'Sign-in failed'}</p>
                     <p className="text-sm mt-1 text-red-600 break-words">{error}</p>
                     {error.includes('popup') && (
                       <p className="text-xs mt-2 text-red-500">Try enabling popups in your browser settings</p>

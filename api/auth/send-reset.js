@@ -61,6 +61,18 @@ module.exports = async function handler(req, res) {
 
  const resetUrl = `${SITE}/reset-password?oobCode=${encodeURIComponent(oobCode)}`;
 
+ // Accounts created with Google: explain that a password is optional.
+ let googleNote = '';
+ try {
+ const u = await admin.auth().getUserByEmail(email);
+ const providers = (u.providerData || []).map((p) => p.providerId);
+ if (providers.includes('google.com') && !providers.includes('password')) {
+ googleNote = '<p style="font-size:14px;line-height:1.6;color:#374151;margin:0 0 16px;background:#f9fafb;border-radius:10px;padding:12px">You usually sign in with <strong>Google</strong>. You can keep using <strong>Sign in with Google</strong>; setting a password is optional and lets you also sign in with your email and password.</p>';
+ }
+ } catch (_) {
+ /* ignore */
+ }
+
  const html = `
  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:520px;margin:0 auto;padding:8px;color:#111827">
  <div style="text-align:center;padding:24px 0">
@@ -71,6 +83,7 @@ module.exports = async function handler(req, res) {
  <p style="font-size:15px;line-height:1.6;color:#374151;margin:0 0 20px">
  We received a request to reset the password for your She Model Tech account. Click the button below to choose a new password.
  </p>
+ ${googleNote}
  <div style="text-align:center;margin:26px 0">
  <a href="${resetUrl}" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 28px;border-radius:12px">
  Reset my password
