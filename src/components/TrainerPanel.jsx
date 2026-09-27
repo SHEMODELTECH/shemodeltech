@@ -49,6 +49,9 @@ const TrainerPanel = ({ uid, name }) => {
                   <p className="font-semibold text-gray-900">{a.orgName} <span className="font-normal text-gray-500">· {ORG_TYPES[a.orgType] || a.orgType} · {STATUS_LABELS[a.status]}</span></p>
                   <p className="text-gray-700">{a.topics}</p>
                   {a.timeline && <p className="text-xs text-gray-500">{a.timeline}</p>}
+                  {a.workspaceProjectId && (
+                    <a href={`/projects/${a.workspaceProjectId}/workspace`} className="inline-block mt-1 text-xs font-semibold text-indigo-700 hover:underline">Open the training workspace</a>
+                  )}
                 </li>
               ))}
             </ul>

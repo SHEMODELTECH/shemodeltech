@@ -2,7 +2,7 @@
 // Admin > Organizations: training contract and licensing requests, trainer
 // approvals, and mentor assignments.
 import React, { useEffect, useState } from 'react';
-import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { notifyMember } from '../../utils/staffAlerts';
@@ -110,7 +110,31 @@ const OrgRequestsTab = ({ isAdmin }) => {
   const [filter, setFilter] = useState('open');
 
   const load = async () => {
-    listOrgRequests().then(setReqs).catch(() => setReqs([]));
+    listOrgRequests()
+      .then(async (list) => {
+        // A training workspace that has completed (work done, payments confirmed)
+        // closes its request automatically.
+        const updated = await Promise.all(
+          list.map(async (r) => {
+            if (!r.workspaceProjectId || ['completed', 'ended', 'declined'].includes(r.status)) return r;
+            try {
+              const p = await getDoc(doc(db, 'projects', r.workspaceProjectId));
+              if (p.exists() && p.data().status === 'completed') {
+                await updateOrgRequest(r.id, { status: 'completed' });
+                if (r.requesterUid) {
+                  notifyMember(r.requesterUid, { type: 'org_request_update', title: 'Your training is complete', body: `${r.orgName}: thank you for working with She Model Tech.`, link: '/organizations#my-requests' });
+                }
+                return { ...r, status: 'completed' };
+              }
+            } catch (_) {
+              /* ignore */
+            }
+            return r;
+          })
+        );
+        setReqs(updated);
+      })
+      .catch(() => setReqs([]));
     const [t, p] = await Promise.all([
       getDocs(query(collection(db, 'users'), where('isTrainer', '==', true))).catch(() => null),
       getDocs(query(collection(db, 'users'), where('trainerRequested', '==', true))).catch(() => null),
@@ -197,7 +221,7 @@ const OrgRequestsTab = ({ isAdmin }) => {
         ) : (
           <div className="space-y-3">
             {shown.map((r) => (
-              <div key={r.id} className="bg-white border border-gray-200 rounded-xl p-4">
+              <div key={r.id} className={`border rounded-xl p-4 ${['completed', 'ended', 'declined'].includes(r.status) ? 'bg-gray-50 border-gray-100 opacity-70' : 'bg-white border-gray-200'}`}>
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-semibold text-gray-900">
@@ -274,16 +298,24 @@ const OrgRequestsTab = ({ isAdmin }) => {
                 {r.type !== 'licensing' && ['signed', 'in_progress'].includes(r.status) && (
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {r.assistantProjectId ? (
-                      <Link to={`/projects/owner-dashboard#project-${r.assistantProjectId}`} className="text-xs font-semibold border border-emerald-300 text-emerald-700 px-3 py-1.5 rounded-lg hover:bg-emerald-50">
-                        ✓ Assistant role opened: view applicants
-                      </Link>
+                      <>
+                        <Link to={`/projects/${r.assistantProjectId}/workspace`} className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700">
+                          Open training workspace
+                        </Link>
+                        <Link to={`/projects/owner-dashboard#project-${r.assistantProjectId}`} className="text-xs font-semibold border border-emerald-300 text-emerald-700 px-3 py-1.5 rounded-lg hover:bg-emerald-50">
+                          Manage (applicants, mark done)
+                        </Link>
+                      </>
                     ) : (
                       <Link
                         to={`/projects/new-paid?orgRequest=${r.id}&title=${encodeURIComponent(`Training assistant: ${r.orgName}`)}&description=${encodeURIComponent(`Assist our trainers delivering ${r.topics.slice(0, 200)} for ${r.orgName}. Paid work experience.`)}&role=${encodeURIComponent('Training assistant')}`}
                         className="text-xs font-semibold border border-pink-300 text-pink-700 px-3 py-1.5 rounded-lg hover:bg-pink-50"
                       >
-                        Open a paid assistant role
+                        Create training workspace
                       </Link>
+                    )}
+                    {!r.assistantProjectId && (
+                      <span className="text-[11px] text-gray-500">Adds the organization and assigned trainers to the workspace; set any paid assistant roles.</span>
                     )}
                     <label className="flex items-center gap-2 text-xs text-gray-700 ml-auto">
                       <input

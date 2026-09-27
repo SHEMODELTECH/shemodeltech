@@ -19,6 +19,7 @@ import { createCompanyCohort,
 import { formatMoney } from '../../utils/paidProjects';
 import { ComingSoonRibbon } from '../../components/ComingSoon';
 import { usePaidFeaturesVisible } from '../../utils/permissions';
+import { notifyMember } from '../../utils/staffAlerts';
 
 const blankRole = () => ({ title: '', count: 1, payAmount: '', skills: '' });
 
@@ -87,7 +88,33 @@ const HostCohort = () => {
       toast.success('Your project is live. Applications are open.');
       // Opened from a training contract: link it so the request shows it's done.
       if (qs.get('orgRequest')) {
-        updateDoc(doc(db, 'org_requests', qs.get('orgRequest')), { assistantProjectId: id }).catch(() => {});
+        // Training workspace: link it to the request, and add the organization's
+        // contact and the assigned trainers so the conversation happens here.
+        try {
+          const reqSnap = await getDoc(doc(db, 'org_requests', qs.get('orgRequest')));
+          const req = reqSnap.exists() ? reqSnap.data() : {};
+          const observers = [...new Set([req.requesterUid, ...(req.assignedMentorUids || [])].filter(Boolean))];
+          await updateDoc(doc(db, 'projects', id), {
+            trainingRequestId: qs.get('orgRequest'),
+            observers,
+            observerInfo: [
+              ...(req.requesterUid ? [{ uid: req.requesterUid, name: req.contactName || req.orgName, label: `${req.orgName} (organization)` }] : []),
+              ...(req.assignedMentors || []).map((m) => ({ uid: m.uid, name: m.name, label: 'Trainer' })),
+            ],
+          });
+          await updateDoc(doc(db, 'org_requests', qs.get('orgRequest')), { assistantProjectId: id, workspaceProjectId: id });
+          observers.forEach((uid) =>
+            notifyMember(uid, {
+              type: 'training_workspace',
+              title: `Workspace ready: ${req.orgName || 'your training'}`,
+              body: 'We’ve opened a project workspace for this training. Use its Discussion to talk with the She Model Tech team, trainers, and assistants.',
+              link: `/projects/${id}/workspace`,
+              ctaLabel: 'Open the workspace',
+            })
+          );
+        } catch (_) {
+          /* non-blocking */
+        }
       }
       if (kind === 'cohort') setCreated(id);
       else navigate(`/projects/${id}`);

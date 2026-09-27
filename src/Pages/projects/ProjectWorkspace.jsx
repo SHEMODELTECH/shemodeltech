@@ -691,6 +691,19 @@ const ProjectWorkspace = () => {
           )}
 
           <div className="bg-white border border-gray-200 rounded-xl p-5">
+            {(project.observerInfo || []).length > 0 && (
+              <div className="mb-5">
+                <h3 className="text-base font-bold text-gray-900 mb-2">Organization and trainers</h3>
+                <p className="text-xs text-gray-500 mb-3">They follow this workspace and take part in the Discussion.</p>
+                <div className="flex flex-wrap gap-2">
+                  {project.observerInfo.map((o) => (
+                    <span key={o.uid} className="text-sm bg-indigo-50 text-indigo-800 border border-indigo-100 rounded-full px-3 py-1">
+                      {o.name} <span className="text-indigo-500 text-xs">· {o.label}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
             <h3 className="text-base font-bold text-gray-900 mb-4">Team Members</h3>
             {teamMembers.length === 0 ? (
               <p className="text-gray-400 text-sm text-center py-6">No team members yet.</p>

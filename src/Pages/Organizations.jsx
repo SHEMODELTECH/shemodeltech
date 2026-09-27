@@ -245,6 +245,9 @@ const Organizations = () => {
                       Sent {r.createdAt?.toDate ? r.createdAt.toDate().toLocaleDateString() : 'just now'}
                     </p>
                   </div>
+                  {r.workspaceProjectId && (
+                    <a href={`/projects/${r.workspaceProjectId}/workspace`} className="text-xs font-semibold bg-gray-900 text-white px-3 py-1.5 rounded-lg">Open workspace</a>
+                  )}
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${r.status === 'declined' ? 'bg-gray-100 text-gray-600' : ['completed', 'active', 'signed', 'approved'].includes(r.status) ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-800'}`}>
                     {STATUS_LABELS[r.status] || r.status}
                   </span>
