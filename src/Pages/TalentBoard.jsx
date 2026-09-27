@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 
 import { collection, getDocs, query, orderBy, limit, doc, getDoc } from 'firebase/firestore';
 import MentorBadge from '../components/MentorBadge';
+import PremiumBadge from '../components/PremiumBadge';
+import { isFeaturedTalent, isPremium } from '../config/premium';
 import { mentorStatsByUid } from '../utils/mentorStats';
 import { db } from '../firebase/config';
 import AccessBanner from '../components/AccessBanner';
@@ -98,7 +100,7 @@ const TalentBoard = () => {
             const inMemberBadges = badgedUids.has(thisUid);
             // Mentors are listed too, even before they earn a project badge.
             const isMentor = !!u.isTeacher || (u.mentorApprovedCourses || 0) > 0;
-            return hasBadgeArray || hasTotal || hasBadgeCounts || hasCertificates || inMemberBadges || isMentor;
+            return hasBadgeArray || hasTotal || hasBadgeCounts || hasCertificates || inMemberBadges || isMentor || isPremium(u);
           })
           .sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
         setTalents(users);
@@ -115,10 +117,12 @@ const TalentBoard = () => {
   const statsOf = (t) => mentorStats[t.uid || t.id];
   // Mentors rank first: highest-rated (with at least one rating), then by
   // published courses; everyone else follows alphabetically.
+  // Featured (Premium members, and mentors for free) rank first.
   const rank = (t) => {
-    if (!isMentor(t)) return 0;
+    const featuredBoost = isFeaturedTalent(t) ? 1000 : 0;
+    if (!isMentor(t)) return featuredBoost;
     const st = statsOf(t);
-    return 1 + (st?.ratingCount ? st.avg * 10 + Math.min(st.ratingCount, 50) / 10 : 0) + (t.mentorApprovedCourses || 0) / 100;
+    return featuredBoost + 1 + (st?.ratingCount ? st.avg * 10 + Math.min(st.ratingCount, 50) / 10 : 0) + (t.mentorApprovedCourses || 0) / 100;
   };
   const filtered = talents
     .filter(t => {
@@ -223,6 +227,9 @@ const TalentBoard = () => {
                 )}
                 {talent.badges && talent.badges.length > 0 && (
                   <p className="text-gray-400 text-xs mt-1">{talent.badges.length} badge{talent.badges.length !== 1 ? 's' : ''}</p>
+                )}
+                {isFeaturedTalent(talent) && (
+                  <div className="mt-2 flex justify-center"><PremiumBadge kind="featured" /></div>
                 )}
                 {isMentor(talent) && (
                   <div className="mt-2 flex flex-col items-center gap-1">

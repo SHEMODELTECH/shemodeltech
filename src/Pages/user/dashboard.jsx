@@ -11,6 +11,7 @@ import CompanyVerificationBanner from '../../components/CompanyVerificationBanne
 import AIRecommendations from '../../components/AIRecommendations';
 import DiscoverTrack from '../../components/DiscoverTrack';
 import TierBadge from '../../components/TierBadge';
+import { PromotedStrip } from '../../components/PriorityBanners';
 import {
   computeMemberEarnings,
   computeCompanyDisbursements,
@@ -200,6 +201,9 @@ const DashboardOverview = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
+
+      {/* In-app promotion: featured jobs and projects (Premium) */}
+      {!loading && !profileData?.isCompany && <PromotedStrip />}
 
       {/* Unverified companies: status and a direct line to the team */}
       {!loading && profileData?.isCompany && <CompanyVerificationBanner profile={profileData} />}

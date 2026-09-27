@@ -41,6 +41,10 @@ service cloud.firestore {
  exists(/databases/$(database)/documents/course_enrollments/$(courseKey)/learners/$(request.auth.uid))
  || isReviewer() || isTeacherUser());
  }
+ // Premium, granted by an admin (or payment activation later).
+ function isPremiumUser() {
+ return hasProfile() && myUserDoc().get('premium', {}).get('active', false) == true;
+ }
  function isTeacherUser() {
  return hasProfile() && myUserDoc().get('isTeacher', false) == true;
  }
@@ -70,6 +74,7 @@ service cloud.firestore {
 
  allow create: if isSignedIn() && userId == myUid()
  && request.resource.data.get('role', 'member') != 'admin'
+ && !('premium' in request.resource.data)
  && request.resource.data.get('role', 'member') != 'editor';
 
  // Self-update: cannot change own role, cannot self-award badges.
@@ -82,6 +87,8 @@ service cloud.firestore {
  // Company verification is granted by an admin, never self-set:
  // it is what allows a company to post paid projects.
  && !touched('isVerified')
+ // Premium is granted by an admin (or payment activation), never self-set.
+ && !touched('premium')
  // Teacher access is granted by an admin, never self-set.
  && !touched('isTeacher')
  && !touched('teacherSince')
@@ -205,6 +212,8 @@ service cloud.firestore {
  // append-only, ownership is frozen, and closing the project needs
  // the owner plus at least one approved member.
  allow update: if isProjectOwner()
+ // Featuring a project is a Premium feature.
+ && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured']) || isPremiumUser())
  && appendOnly('disputeHistory')
  && appendOnly('leaveReasons')
  && appendOnly('activityLog')
@@ -342,6 +351,24 @@ service cloud.firestore {
  // Private to the learner.
  match /users/{userId}/learning_progress/{courseId} {
  allow read, write: if isSignedIn() && userId == myUid();
+ }
+
+ // Jobs board. Anyone signed in can browse. Posting is Premium, for verified
+ // companies (and staff). Only the posting company or an admin can change a job;
+ // featuring a job needs Premium.
+ match /jobs/{jobId} {
+ allow read: if isSignedIn();
+ allow create: if isSignedIn()
+ && request.resource.data.companyUid == myUid()
+ && (isReviewer() || (myUserDoc().get('isCompany', false) == true
+ && myUserDoc().get('isVerified', false) == true && isPremiumUser()))
+ && request.resource.data.title is string && request.resource.data.title.size() <= 120
+ && request.resource.data.description is string && request.resource.data.description.size() <= 8000
+ && request.resource.data.featured == false;
+ allow update: if isSignedIn() && (isAdmin() || (resource.data.companyUid == myUid()
+ && request.resource.data.companyUid == myUid()
+ && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured']) || isPremiumUser())));
+ allow delete: if isSignedIn() && (resource.data.companyUid == myUid() || isAdmin());
  }
 
  // Course discussion forums: questions, discussions, and capstone posts.

@@ -267,6 +267,35 @@ const LearningHome = ({ mine = false }) => {
           </section>
         )}
 
+        {/* Featured instructors: every mentor with a published course (free for mentors) */}
+        {!mine && !q && track === 'all' && level === 'all' && published.length > 0 && (() => {
+          const byAuthor = {};
+          published.forEach((c) => {
+            if (!c.authorName) return;
+            const a = byAuthor[c.authorName] || (byAuthor[c.authorName] = { name: c.authorName, courses: [] });
+            a.courses.push(c);
+          });
+          const authors = Object.values(byAuthor);
+          if (!authors.length) return null;
+          return (
+            <section className="pt-8" aria-labelledby="instructors-h">
+              <h2 id="instructors-h" className="text-lg font-bold text-gray-900 mb-3">Featured instructors</h2>
+              <div className="flex flex-wrap gap-3">
+                {authors.map((a) => (
+                  <Link key={a.name} to={`/learning/${a.courses[0].track}/${a.courses[0].slug}`}
+                    className="flex items-center gap-3 border border-indigo-100 bg-white rounded-xl px-4 py-3 hover:border-indigo-300">
+                    <span className="w-9 h-9 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center" aria-hidden="true">{a.name[0]}</span>
+                    <span>
+                      <span className="block font-semibold text-gray-900 text-sm">{a.name}</span>
+                      <span className="block text-xs text-gray-500">Mentor · {a.courses.length} course{a.courses.length === 1 ? '' : 's'}</span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          );
+        })()}
+
         {/* Filters */}
         <section className="pt-10" aria-label="Filter courses">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">

@@ -1,17 +1,24 @@
 // src/components/PremiumBadge.jsx
-//
-// She Model Tech is free for everyone. There are no paid tiers, no PRO badge,
-// and no gated features.
-//
-// This module is kept as a compatibility shim so any remaining call site keeps
-// working:
-//   - <PremiumBadge /> renders nothing.
-//   - isPremium() always returns true, so every gate it guards is open.
-// New code should not import from here.
+// Small labels for Premium status: "Premium", "Featured", "Verified Partner".
+import React from 'react';
 
-export const PremiumBadge = () => null;
+const STYLES = {
+  premium: 'bg-amber-50 text-amber-800 border-amber-200',
+  featured: 'bg-pink-50 text-pink-700 border-pink-200',
+  partner: 'bg-gradient-to-r from-amber-100 to-yellow-50 text-amber-900 border-amber-300',
+};
+const LABELS = { premium: 'Premium', featured: 'Featured', partner: 'Verified Partner' };
 
-// Every member has full access.
-export const isPremium = () => true;
+const PremiumBadge = ({ kind = 'premium', size = 'sm' }) => (
+  <span
+    className={`inline-flex items-center gap-1 font-bold rounded-full border ${STYLES[kind]} ${
+      size === 'sm' ? 'text-[10px] px-2 py-0.5' : 'text-xs px-2.5 py-1'
+    }`}
+    title={kind === 'partner' ? 'Verified company with a Premium partnership' : LABELS[kind]}
+  >
+    <span aria-hidden="true">{kind === 'partner' ? '✔' : '★'}</span>
+    {LABELS[kind]}
+  </span>
+);
 
 export default PremiumBadge;

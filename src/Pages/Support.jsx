@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { BRAND } from '../config/brand';
+import { PrioritySupport } from '../components/PriorityBanners';
 
 const GOOGLE_FORM_ACTION =
   'https://docs.google.com/forms/d/e/1FAIpQLSeauqCwIMFBBxpnoaLtqIqNZUtu4V-0Uw-bXYYZ2yd9SK0RFA/formResponse';
@@ -140,6 +141,7 @@ const Support = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Support</h1>
+      <PrioritySupport />
       <p className="text-gray-500 text-sm mb-8">Find answers or contact us.</p>
 
       {/* Direct contact - open to every member */}

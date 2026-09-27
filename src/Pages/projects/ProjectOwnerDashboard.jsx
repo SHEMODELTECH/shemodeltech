@@ -13,6 +13,8 @@ import JoinedProjects from '../../components/JoinedProjects';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../../utils/paidProjects';
 import { alertStaff } from '../../utils/staffAlerts';
+import { isPremium } from '../../config/premium';
+import PremiumBadge from '../../components/PremiumBadge';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -303,6 +305,25 @@ const ProjectOwnerDashboard = () => {
 
   // Owners can't delete directly - they request deletion (admin approves).
   // Only allowed while no members have joined; otherwise they must close/dispute.
+  // Featuring a project (Premium): it appears first on the Projects board and
+  // in members' dashboards.
+  const [premiumOwner, setPremiumOwner] = useState(false);
+  useEffect(() => {
+    if (!currentUser) return;
+    getDoc(doc(db, 'users', currentUser.uid))
+      .then((snap) => setPremiumOwner(isPremium(snap.data()) || snap.data()?.role === 'admin'))
+      .catch(() => {});
+  }, [currentUser]);
+  const toggleFeatured = async (project) => {
+    try {
+      await updateDoc(doc(db, 'projects', project.id), { featured: !project.featured });
+      setMyProjects((ps) => ps.map((p) => (p.id === project.id ? { ...p, featured: !project.featured } : p)));
+      toast.success(project.featured ? 'No longer featured.' : 'Featured at the top of Projects.');
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not update it.'));
+    }
+  };
+
   // Asking for a reason opens a dialog (room to explain), not the browser prompt.
   const [deleteFor, setDeleteFor] = useState(null);
   const [deleting, setDeleting] = useState(false);
@@ -431,6 +452,8 @@ const ProjectOwnerDashboard = () => {
                     onToggleApplications={toggleApplications}
                     onRequestDeletion={() => requestDeletion(project)}
                     onMarkAllPaid={markAllPaid}
+                    canFeature={premiumOwner}
+                    onToggleFeatured={() => toggleFeatured(project)}
                   />
                 ))}
               </div>
@@ -444,7 +467,7 @@ const ProjectOwnerDashboard = () => {
   );
 };
 
-const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo, onRemove, onToggleApplications, onRequestDeletion, onMarkAllPaid }) => {
+const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo, onRemove, onToggleApplications, onRequestDeletion, onMarkAllPaid, canFeature, onToggleFeatured }) => {
   const [showApps, setShowApps] = useState(false);
   // Which pending application has the "request info" composer open, and its text.
   const [requestingFor, setRequestingFor] = useState(null);
@@ -556,6 +579,15 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
           <button onClick={() => onToggleApplications(project)} className={`px-4 py-2 min-h-[40px] font-semibold rounded-lg text-xs transition-all ${project.applicationsOpen === false ? 'bg-pink-600 hover:bg-pink-700 text-white' : 'bg-orange-50 border border-orange-200 text-orange-700 hover:bg-orange-100'}`}>
             {project.applicationsOpen === false ? 'Open Applications' : 'Close Applications'}
           </button>
+        )}
+        {!isCompleted && (
+          canFeature ? (
+            <button onClick={onToggleFeatured} className="px-4 py-2 min-h-[40px] bg-white border border-amber-300 text-amber-800 hover:bg-amber-50 font-semibold rounded-lg text-xs transition-all">
+              {project.featured ? 'Unfeature' : '★ Feature this project'}
+            </button>
+          ) : (
+            <a href="/premium" className="px-4 py-2 min-h-[40px] text-amber-700 text-xs font-semibold flex items-center hover:underline">★ Feature with Premium</a>
+          )
         )}
         {!isCompleted && (project.approvedMembers?.length || 0) === 0 && (
           project.deletionRequested ? (

@@ -36,6 +36,7 @@ import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTea
 import { listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { notifyMember } from '../../utils/staffAlerts';
+import { isPremium } from '../../config/premium';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 
@@ -445,6 +446,41 @@ const AdminPanel = () => {
       '(1) your company website, (2) a contact phone number, and (3) your business registration or EIN. ' +
       'You can reply here and update your details in Settings. Thank you!';
     navigate(`/messages?to=${u.id}&text=${encodeURIComponent(starter)}`);
+  };
+
+  // Premium: granted by an admin while online payments are off.
+  const togglePremium = async (u) => {
+    const give = !isPremium(u);
+    const name = u.companyProfile?.companyName || u.displayName || u.email;
+    let until = null;
+    if (give) {
+      const months = window.prompt(`Grant Premium to ${name} for how many months? Leave empty for no end date.`, '12');
+      if (months === null) return;
+      const m = parseInt(months, 10);
+      if (m > 0) {
+        const d = new Date();
+        d.setMonth(d.getMonth() + m);
+        until = d.toISOString();
+      }
+    } else if (!window.confirm(`Remove Premium from ${name}?`)) return;
+    try {
+      const premium = give
+        ? { active: true, since: new Date().toISOString(), until, grantedBy: currentUser.email, plan: u.isCompany ? 'company' : 'member' }
+        : { ...(u.premium || {}), active: false, endedAt: new Date().toISOString() };
+      await updateDoc(doc(db, 'users', u.id), { premium });
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, premium } : x)));
+      if (give) {
+        notifyMember(u.id, {
+          type: 'premium_granted',
+          title: 'Welcome to She Model Tech Premium',
+          body: until ? `Your Premium is active until ${new Date(until).toLocaleDateString()}.` : 'Your Premium is active.',
+          link: '/premium',
+        });
+      }
+      toast.success(give ? 'Premium granted.' : 'Premium removed.');
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not update Premium.'));
+    }
   };
 
   const toggleCompanyVerified = async (u) => {
@@ -994,6 +1030,11 @@ const AdminPanel = () => {
                         MENTOR
                       </span>
                     )}
+                    {isPremium(u) && (
+                      <span className="ml-2 text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded">
+                        PREMIUM
+                      </span>
+                    )}
                     {u.isCompany && u.isVerified && (
                       <span className="ml-2 text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
                         VERIFIED
@@ -1030,6 +1071,14 @@ const AdminPanel = () => {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                       </svg>
+                    </button>
+                  )}
+                  {isAdmin && (
+                    <button
+                      onClick={() => togglePremium(u)}
+                      className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${isPremium(u) ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-amber-500 text-white hover:bg-amber-600'}`}
+                    >
+                      {isPremium(u) ? 'Remove premium' : 'Grant premium'}
                     </button>
                   )}
                   {isAdmin && u.isCompany && !u.isVerified && (

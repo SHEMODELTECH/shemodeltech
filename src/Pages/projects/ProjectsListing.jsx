@@ -1,5 +1,6 @@
 // src/Pages/projects/ProjectsListing.jsx - Browse Projects
 
+import PremiumBadge from '../../components/PremiumBadge';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -225,8 +226,9 @@ const ProjectsListing = () => {
 
   // One board: SMT projects + company paid projects, newest first.
   useEffect(() => {
+    // Featured projects (a Premium feature) first, then newest.
     const merged = [...smtProjects, ...companyProjects].sort(
-      (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+      (a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
     );
     setProjects(merged);
     if (smtLoaded) setLoading(false);
@@ -411,6 +413,7 @@ const ProjectsListing = () => {
                   >
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <h3 className="text-gray-900 font-bold text-sm sm:text-base line-clamp-2">
+                        {project.featured && <span className="mr-1.5 align-middle"><PremiumBadge kind="featured" /></span>}
                         {project.projectTitle}
                       </h3>
                       <div className="flex items-center gap-1.5 flex-shrink-0">

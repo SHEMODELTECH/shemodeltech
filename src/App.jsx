@@ -33,6 +33,11 @@ const TeacherHome = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ 
 const TeacherEdit = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherEdit })));
 const TeacherView = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherView })));
 const LearningCertificate = lazy(() => import('./Pages/learning/LearningCertificate'));
+const JobsBoard = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.JobsBoard })));
+const JobDetail = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.JobDetail })));
+const JobForm = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.JobForm })));
+const MyJobs = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.MyJobs })));
+const Premium = lazy(() => import('./Pages/Premium'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -593,8 +598,13 @@ function App() {
                 <Route path="/payment" element={<Navigate to="/dashboard" replace />} />
                 {/* Job board removed: a free board on a platform with no
                     traffic teaches companies we are a worse LinkedIn. */}
-                <Route path="/jobs" element={<Navigate to="/projects" replace />} />
-                <Route path="/jobs/post" element={<Navigate to="/partner" replace />} />
+                <Route path="/jobs" element={<SidebarRoute><JobsBoard /></SidebarRoute>} />
+                <Route path="/jobs/post" element={<Navigate to="/jobs/new" replace />} />
+                <Route path="/jobs/new" element={<SidebarRoute><JobForm /></SidebarRoute>} />
+                <Route path="/jobs/mine" element={<SidebarRoute><MyJobs /></SidebarRoute>} />
+                <Route path="/jobs/:id" element={<SidebarRoute><JobDetail /></SidebarRoute>} />
+                <Route path="/jobs/:id/edit" element={<SidebarRoute><JobForm /></SidebarRoute>} />
+                <Route path="/premium" element={<SidebarRoute><Premium /></SidebarRoute>} />
                 <Route path="/housing" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/finance" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/banking" element={<Navigate to="/dashboard" replace />} />

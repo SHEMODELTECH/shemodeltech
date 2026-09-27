@@ -854,6 +854,15 @@ const IncludedTab = () => {
         </ul>
       </div>
 
+      <div className="bg-gradient-to-br from-amber-50 to-pink-50 border border-amber-200 rounded-xl p-6">
+        <p className="text-gray-900 text-sm font-bold">Want more visibility? Premium</p>
+        <p className="text-gray-600 text-sm mt-1">
+          Optional extras: a Verified Partner badge for companies, posting jobs, featured projects and Talent Board
+          ranking, in-app promotion, AI-powered job matches, and priority support. Mentors get featured placement free.
+        </p>
+        <a href="/premium" className="inline-block mt-3 text-sm font-semibold text-pink-700 hover:underline">See Premium</a>
+      </div>
+
       <div className="bg-white border border-gray-200 rounded-xl p-6">
         <p className="text-gray-900 text-sm font-bold mb-3">Also included</p>
         <ul className="space-y-1">
