@@ -211,9 +211,25 @@ export const AuthProvider = ({ children }) => {
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      throw new Error(data.error || 'Could not send the reset email. Please try again.');
+      const err = new Error(data.error || 'Could not send the reset email. Please try again.');
+      err.code = data.code || null;
+      throw err;
     }
     return true;
+  };
+
+  // How an existing email signs in (Google and/or password). Used to guide people.
+  const checkSignInMethods = async (email) => {
+    try {
+      const res = await fetch('/api/auth/send-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, mode: 'check' }),
+      });
+      return res.ok ? await res.json() : null;
+    } catch (_) {
+      return null;
+    }
   };
 
   // Verify a reset code (from the email link) and return the associated email.
@@ -332,6 +348,7 @@ export const AuthProvider = ({ children }) => {
     signUpWithEmail,
     signInWithEmail,
     resetPassword,
+    checkSignInMethods,
     verifyResetCode,
     confirmReset,
     resendVerification,

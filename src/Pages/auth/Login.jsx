@@ -17,7 +17,7 @@ const validatePasswordStrength = (pw) => {
 };
 
 const Login = () => {
-  const { currentUser, signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword } = useAuth();
+  const { currentUser, signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword, checkSignInMethods } = useAuth();
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +48,11 @@ const Login = () => {
         setInfo('Reset link sent. If you don\'t see it in a minute or two, check your spam folder.');
         setMode('signin');
       } catch (err) {
-        if (/wait a minute/i.test(err.message || '')) {
+        if (err.code === 'google_only') {
+          // No password on this account: it was created with Google.
+          setMode('signin');
+          setError(err.message);
+        } else if (err.code === 'throttled' || /wait a minute/i.test(err.message || '')) {
           // A reset email was sent to this address in the last minute.
           setInfo('We already sent a reset email to this address in the last minute. Check your inbox and spam folder. If it hasn\'t arrived, you can ask for another in a minute.');
           setMode('signin');
@@ -72,7 +76,12 @@ const Login = () => {
         } catch (err) {
           if (/already exists/i.test(err.message || '') || err.code === 'auth/email-already-in-use') {
             setMode('signin');
-            setInfo('You already have a She Model Tech account with this email. If you joined with Google, use "Sign in with Google" (you can add a password later in Settings > Account), or use "Forgot password" to set one now.');
+            const m = await checkSignInMethods(form.email);
+            if (m?.google && !m?.password) {
+              setError('This email is already registered with Sign in with Google. Click "Sign in with Google" above to continue. (Once signed in, you can add a password in Settings > Account.)');
+            } else {
+              setInfo('You already have a She Model Tech account with this email. Sign in with your email and password, or use "Forgot password" if you don\'t remember it.');
+            }
             return;
           }
           throw err;
@@ -83,6 +92,14 @@ const Login = () => {
       }
       // currentUser effect handles navigation.
     } catch (err) {
+      // Wrong password on an account that was created with Google: explain why.
+      if (mode === 'signin' && ['auth/invalid-credential', 'auth/wrong-password', 'auth/invalid-login-credentials'].includes(err.code)) {
+        const m = await checkSignInMethods(form.email);
+        if (m?.google && !m?.password) {
+          setError('This email is registered with Sign in with Google and doesn\'t have a password. Click "Sign in with Google" above to continue. (Once signed in, you can add a password in Settings > Account.)');
+          return;
+        }
+      }
       setError(getAuthErrorMessage(err));
     } finally { setEmailLoading(false); }
   };

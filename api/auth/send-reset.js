@@ -38,9 +38,33 @@ module.exports = async function handler(req, res) {
  return res.status(400).json({ error: 'Please enter a valid email address.' });
  }
 
+ // How does this account sign in? Accounts created with Google have no
+ // password, so a reset email would only confuse; tell them to use Google.
+ let providers = null;
+ try {
+ const u = await admin.auth().getUserByEmail(email);
+ providers = (u.providerData || []).map((p) => p.providerId);
+ } catch (_) {
+ providers = null; // no account with this email
+ }
+ const googleOnly = !!providers && providers.includes('google.com') && !providers.includes('password');
+
+ // "check" mode: the sign-up page asks how an existing email signs in, so it
+ // can point the person to the right button.
+ if (req.body?.mode === 'check') {
+ return res.status(200).json({ exists: !!providers, google: !!providers && providers.includes('google.com'), password: !!providers && providers.includes('password') });
+ }
+
+ if (googleOnly) {
+ return res.status(409).json({
+ code: 'google_only',
+ error: 'This email is registered with Sign in with Google, so it doesn’t have a password to reset. Click "Sign in with Google" to continue. (Once signed in, you can add a password in Settings > Account.)',
+ });
+ }
+
  // One email per address per minute, so the form can't be used to flood an inbox.
  if (!(await throttle(`reset_${email}`, 60))) {
- return res.status(429).json({ error: 'Please wait a minute before requesting another email.' });
+ return res.status(429).json({ code: 'throttled', error: 'Please wait a minute before requesting another email.' });
  }
 
  try {
@@ -113,6 +137,7 @@ module.exports = async function handler(req, res) {
  return res.status(200).json({ success: true });
  } catch (err) {
  console.error('send-reset error:', err.message);
- return res.status(500).json({ error: 'Could not send the reset email. Please try again.' });
+ console.error('send-reset failed:', err && err.message);
+ return res.status(500).json({ error: 'We couldn’t send the reset email just now. Please try again in a few minutes, or email shemodeltech@gmail.com for help.' });
  }
 };
