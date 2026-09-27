@@ -34,6 +34,8 @@ const individualInterestOpts = [
 ];
 const companyInterestOpts = [
   { id: 'paid_projects', label: 'Post paid projects', desc: 'Hire a team for paid project work' },
+  { id: 'jobs', label: 'Post jobs', desc: 'Advertise full-time, part-time, contract, or internship roles' },
+  { id: 'sponsor', label: 'Sponsor a cohort', desc: 'Fund a team of women building real projects' },
   { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
   { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },
 ];

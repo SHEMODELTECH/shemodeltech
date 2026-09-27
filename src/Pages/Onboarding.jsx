@@ -123,6 +123,8 @@ const Onboarding = () => {
 
   const companyInterests = [
     { id: 'paid_projects', label: 'Post paid projects', desc: 'Hire a team for paid project work' },
+    { id: 'jobs', label: 'Post jobs', desc: 'Advertise full-time, part-time, contract, or internship roles' },
+    { id: 'sponsor', label: 'Sponsor a cohort', desc: 'Fund a team of women building real projects' },
     { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
     { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },
   ];
@@ -754,14 +756,14 @@ const Onboarding = () => {
                 />
               </div>
               <div>
-                <label className={labelClass}>State</label>
+                <label className={labelClass}>State / Region <span className="font-normal text-gray-500">(optional, up to 60 characters)</span></label>
                 <input
                   type="text"
                   value={formData.state}
                   onChange={(e) => setFormData((p) => ({ ...p, state: e.target.value }))}
                   className={inputClass}
-                  placeholder="e.g., MD"
-                  maxLength={2}
+                  placeholder="e.g., Oyo State, MD, or Ontario"
+                  maxLength={60}
                 />
               </div>
             </div>
