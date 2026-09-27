@@ -33,7 +33,8 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { signInAndReturn } from './LearningLayout';
 import { friendlyError } from '../../components/NoteDialog';
-import { notifyMember } from '../../utils/staffAlerts';
+import { alertStaff, notifyMember } from '../../utils/staffAlerts';
+import NoteDialog from '../../components/NoteDialog';
 import { courseKey } from '../../utils/mentorStats';
 import LimitHint, { countWords } from '../../components/LimitHint';
 
@@ -159,7 +160,36 @@ const timeAgo = (ts) => {
   return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 };
 
-const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSignIn, canParticipate, onNeedEnroll }) => {
+const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSignIn, canParticipate, onNeedEnroll, canReview }) => {
+  // Capstone review: admins, editors, or the course's mentor approve a capstone
+  // before the learner can complete the course and get the certificate.
+  const [review, setReview] = useState(t.review || null);
+  const [changesOpen, setChangesOpen] = useState(false);
+  const [reviewBusy, setReviewBusy] = useState(false);
+  const location2 = useLocation();
+  const decide = async (status, note = '') => {
+    setReviewBusy(true);
+    try {
+      const next = { status, note: note.trim() || null, by: { uid: me.uid, name: myName }, at: new Date().toISOString() };
+      await updateDoc(doc(db, base, 'threads', t.id), { review: next });
+      setReview(next);
+      setChangesOpen(false);
+      notifyMember(t.uid, {
+        type: 'capstone_review',
+        title: status === 'approved' ? 'Your capstone was approved' : 'Changes requested on your capstone',
+        body:
+          status === 'approved'
+            ? `"${t.title}" in ${courseTitle} was approved. You can now complete the course and get your certificate.`
+            : `${note.trim() || 'Please update your capstone and share it again.'}`,
+        link: `${location2.pathname}#forum`,
+        ctaLabel: status === 'approved' ? 'Complete the course' : 'See the note',
+      });
+      toast.success(status === 'approved' ? 'Capstone approved. The learner has been notified.' : 'Changes requested. The learner has been notified.');
+    } catch (err) {
+      toast.error(friendlyError(err, 'Could not save the review.'));
+    }
+    setReviewBusy(false);
+  };
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
   const replyRef = useRef(null);
@@ -259,6 +289,13 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
       <button type="button" onClick={toggle} aria-expanded={open} className="w-full text-left p-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${k.cls}`}>{k.label}</span>
+          {t.kind === 'capstone' && (
+            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+              review?.status === 'approved' ? 'bg-emerald-50 text-emerald-700' : review?.status === 'changes' ? 'bg-amber-50 text-amber-800' : 'bg-gray-100 text-gray-600'
+            }`}>
+              {review?.status === 'approved' ? 'Approved' : review?.status === 'changes' ? 'Changes requested' : 'Waiting for review'}
+            </span>
+          )}
           <span className="text-xs text-gray-500">
             {t.name || 'Learner'} · {timeAgo(t.at)} · {count} repl{count === 1 ? 'y' : 'ies'}
           </span>
@@ -297,6 +334,36 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
               {t.link}
             </a>
           )}
+          {t.kind === 'capstone' && review?.status === 'changes' && review?.note && (
+            <p className="mt-3 text-sm bg-amber-50 border border-amber-200 rounded-lg p-3 text-gray-800">
+              <strong>Reviewer's note:</strong> {review.note}
+            </p>
+          )}
+          {t.kind === 'capstone' && canReview && me && t.uid !== me.uid && (
+            <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-3">
+              <span className="text-sm font-semibold text-gray-800 mr-auto">Review this capstone</span>
+              <button onClick={() => decide('approved')} disabled={reviewBusy || review?.status === 'approved'}
+                className="text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50">
+                {review?.status === 'approved' ? 'Approved' : 'Approve'}
+              </button>
+              <button onClick={() => setChangesOpen(true)} disabled={reviewBusy}
+                className="text-xs font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50">
+                Request changes
+              </button>
+            </div>
+          )}
+          <NoteDialog
+            open={changesOpen}
+            title="Request changes to this capstone"
+            description="Tell the learner what to improve. They'll see this note and can share an updated capstone."
+            placeholder="For example: add a link to your repository and describe how you tested your program."
+            required
+            confirmLabel="Send to the learner"
+            tone="primary"
+            busy={reviewBusy}
+            onCancel={() => setChangesOpen(false)}
+            onConfirm={(note) => decide('changes', note)}
+          />
           {me && (t.uid === me.uid || isStaff) && (
             <button onClick={removeThread} className="block mt-2 text-xs font-semibold text-gray-500 hover:text-red-700">Delete post</button>
           )}
@@ -344,7 +411,7 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
   );
 };
 
-const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayName = '', onCapstonePosted, root = 'course_forum', forumKey = null, authorUid = null, title = 'Course forum', intro = 'Ask questions, help others, and share your work.', canParticipate = true, onEnroll = null }) => {
+const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayName = '', onCapstonePosted, root = 'course_forum', forumKey = null, authorUid = null, title = 'Course forum', intro = 'Ask questions, help others, and share your work.', canParticipate = true, onEnroll = null, learningId = null }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -392,7 +459,12 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
     setBusy(true);
     try {
       const attachment = await uploadAttachment(file, 'forum');
-      const data = { uid: currentUser.uid, name: myName, kind: form.kind, title, body, link: form.link.trim() || null, attachment, at: serverTimestamp(), replyCount: 0, lastAt: serverTimestamp() };
+      const data = {
+        uid: currentUser.uid, name: myName, kind: form.kind, title, body, link: form.link.trim() || null, attachment,
+        at: serverTimestamp(), replyCount: 0, lastAt: serverTimestamp(),
+        track, ...(learningId ? { learningId } : {}),
+        ...(form.kind === 'capstone' ? { review: { status: 'pending' } } : {}),
+      };
       const ref = await addDoc(collection(db, base, 'threads'), data);
       setThreads((ts) => [{ id: ref.id, ...data, at: new Date() }, ...(ts || [])]);
       setOpen(false);
@@ -408,8 +480,18 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
           ctaLabel: 'Open the forum',
         });
       }
-      toast.success(form.kind === 'capstone' ? 'Capstone shared. You can now complete the course.' : 'Posted.');
-      if (form.kind === 'capstone' && onCapstonePosted) onCapstonePosted();
+      toast.success(form.kind === 'capstone' ? 'Capstone shared. A mentor or the She Model Tech team will review it.' : 'Posted.');
+      if (form.kind === 'capstone') {
+        if (onCapstonePosted) onCapstonePosted();
+        alertStaff({
+          type: 'capstone_submitted',
+          title: 'A capstone is waiting for review',
+          body: `${myName} shared "${title}" in ${courseTitle}.`,
+          link: `${location.pathname}#forum`,
+          roles: ['admin', 'editor'],
+          ctaLabel: 'Review it',
+        });
+      }
     } catch (err) {
       toast.error(friendlyError(err, 'Could not post.'));
     }
@@ -536,7 +618,8 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
               onDeleted={(id) => setThreads((ts) => ts.filter((x) => x.id !== id))}
               onNeedSignIn={() => signInAndReturn(navigate, `${location.pathname}#forum`)}
               canParticipate={canParticipate}
-              onNeedEnroll={needEnroll} />
+              onNeedEnroll={needEnroll}
+              canReview={isStaff || (!!learningId && !!authorUid && currentUser?.uid === authorUid)} />
           ))}
         </ul>
       )}

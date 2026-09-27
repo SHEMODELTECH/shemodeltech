@@ -5,7 +5,7 @@
 // Anyone can view the course page; reading needs an account and enrollment
 // (opening the reader while signed in enrolls automatically).
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, CourseReader, CourseReferences, InteractivePlayer, coursePartTitles, formatTime, look, useLearning } from './shared';
@@ -120,20 +120,36 @@ const LearningCourse = ({ reading = false }) => {
 
   // Courses with a capstone part need a capstone post in the forum to complete.
   const hasCapstone = !!course && course.kind !== 'interactive' && course.kind !== 'published-html' && parts.some((t) => /capstone/i.test(t));
-  const [capstoneDone, setCapstoneDone] = useState(false);
-  useEffect(() => {
-    if (!hasCapstone || !currentUser) return;
+  // Capstone status for this learner: null (none yet), 'pending', 'changes', or 'approved'.
+  // A capstone must be approved by an admin, an editor, or the course's mentor.
+  const [capstone, setCapstone] = useState({ status: null, note: '' });
+  const reloadCapstone = useCallback(() => {
+    if (!currentUser) return;
     getDocs(
       query(
         collection(db, 'course_forum', courseKey(track, slug), 'threads'),
         where('uid', '==', currentUser.uid),
         where('kind', '==', 'capstone'),
-        limit(1)
+        limit(20)
       )
     )
-      .then((snap) => setCapstoneDone(!snap.empty))
+      .then((snap) => {
+        const posts = snap.docs.map((d) => d.data());
+        const approved = posts.find((p) => p.review?.status === 'approved');
+        const latest = posts.sort((a, b) => (b.at?.seconds || 0) - (a.at?.seconds || 0))[0];
+        setCapstone(
+          approved
+            ? { status: 'approved', note: '' }
+            : latest
+            ? { status: latest.review?.status || 'pending', note: latest.review?.note || '' }
+            : { status: null, note: '' }
+        );
+      })
       .catch(() => {});
-  }, [hasCapstone, currentUser, track, slug]);
+  }, [currentUser, track, slug]);
+  useEffect(() => {
+    if (hasCapstone) reloadCapstone();
+  }, [hasCapstone, reloadCapstone]);
   const waiting = isPublished && (published === null || (baseCourse && pubContent == null));
 
   const enrolled = course && lr.isEnrolled(track, slug);
@@ -219,7 +235,7 @@ const LearningCourse = ({ reading = false }) => {
           onCertificate={openCertificate}
           quizDone={lr.quizDoneFor(track, slug)}
           onQuizDone={(partId) => lr.saveQuizDone(track, slug, partId)}
-          capstone={{ required: hasCapstone, done: capstoneDone, forumUrl: `/learning/${track}/${slug}#forum` }}
+          capstone={{ required: hasCapstone, done: capstone.status === 'approved', status: capstone.status, note: capstone.note, forumUrl: `/learning/${track}/${slug}#forum` }}
         />
       </LearningLayout>
     );
@@ -408,7 +424,8 @@ const LearningCourse = ({ reading = false }) => {
             canParticipate={canParticipate}
             onEnroll={joinCourse}
             displayName={lr.profile?.displayName || ''}
-            onCapstonePosted={() => setCapstoneDone(true)}
+            onCapstonePosted={reloadCapstone}
+            learningId={isPublished ? course.publishedId || null : null}
           />
         </section>
 

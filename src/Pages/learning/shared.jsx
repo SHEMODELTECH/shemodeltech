@@ -873,8 +873,15 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                                 {capstoneLeft && (
                                   <li>
                                     <a href={capstone.forumUrl} className="font-semibold text-pink-700 hover:underline">
-                                      Share your capstone project in the course forum
+                                      {capstone.status === 'pending'
+                                        ? 'Your capstone is waiting for review by a mentor or the She Model Tech team'
+                                        : capstone.status === 'changes'
+                                        ? 'Update your capstone: changes were requested'
+                                        : 'Share your capstone project in the course forum for review'}
                                     </a>
+                                    {capstone.status === 'changes' && capstone.note && (
+                                      <p className="text-xs text-gray-600 mt-0.5">Reviewer's note: {capstone.note}</p>
+                                    )}
                                   </li>
                                 )}
                               </ul>

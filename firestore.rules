@@ -380,7 +380,24 @@ service cloud.firestore {
  && request.resource.data.kind in ['question', 'discussion', 'capstone']
  && request.resource.data.title is string && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 150
  && request.resource.data.body is string && request.resource.data.body.size() <= 5000
- && request.resource.data.replyCount == 0;
+ && request.resource.data.replyCount == 0
+ // Capstones start as waiting for review; nobody can approve their own.
+ && (request.resource.data.kind == 'capstone'
+ ? request.resource.data.get('review', {}).get('status', '') == 'pending'
+ : !('review' in request.resource.data))
+ // A mentor course's id, if given, must be this forum's course.
+ && (!('learningId' in request.resource.data)
+ || courseKey == request.resource.data.track + '__p-' + request.resource.data.learningId);
+ // Capstone review: admins and editors, or the mentor who wrote this course
+ // (mentor courses only). Never the learner who posted it.
+ allow update: if isSignedIn()
+ && resource.data.get('kind', '') == 'capstone'
+ && resource.data.uid != myUid()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['review'])
+ && request.resource.data.review.status in ['approved', 'changes']
+ && (isReviewer()
+ || ('learningId' in resource.data
+ && get(/databases/$(database)/documents/learning_courses/$(resource.data.learningId)).data.get('authorUid', '') == myUid()));
  // Anyone signed in can bump the reply count when replying, or set their own
  // emoji reaction; nothing else.
  allow update: if canJoinCourse(courseKey) && (

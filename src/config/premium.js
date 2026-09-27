@@ -7,6 +7,9 @@
 // is true and payment links are set; until then, "Get Premium" buttons invite
 // people to contact the team instead.
 //
+// Business model: Premium is a flat monthly subscription. For mentors who sell
+// courses, She Model Tech takes no percentage of course sales.
+//
 // Premium status lives on the user document:
 //   users/{uid}.premium = { active: true, since, until (optional), grantedBy, plan }
 // Only admins can set it (Firestore rules block self-granting).
@@ -48,6 +51,6 @@ export const PREMIUM_FEATURES = {
   mentors: [
     ['Featured courses and instructor profile', 'Your courses and profile are featured in Learning. Free for all mentors.'],
     ['Featured on the Talent Board', 'Free for all mentors.'],
-    ['Sell courses', 'Set a price for your courses (coming when course payments open).'],
+    ['Sell courses', 'Set your own course prices and keep every sale. Premium is a flat monthly subscription; She Model Tech takes no commission per course. (Coming when course payments open.)'],
   ],
 };
