@@ -24,10 +24,14 @@ import {
 import { formatMoney } from '../../utils/paidProjects';
 import PremiumBadge from '../../components/PremiumBadge';
 import { isVerifiedPartner } from '../../config/premium';
+import PaidApplicants from '../../components/PaidApplicants';
 
 const CompanyCohortDetail = () => {
   // Premium companies show the gold Verified Partner badge.
   const [hostIsPartner, setHostIsPartner] = useState(false);
+  // She Model Tech's own paid projects are managed by any admin or editor.
+  const [hostIsStaff, setHostIsStaff] = useState(false);
+  const [viewerIsStaff, setViewerIsStaff] = useState(false);
   const { cohortId } = useParams();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -61,7 +65,13 @@ const CompanyCohortDetail = () => {
         const hostId = snap.data().companyId;
         if (hostId) {
           getDoc(doc(db, 'users', hostId))
-            .then((u) => setHostIsPartner(u.exists() && isVerifiedPartner(u.data())))
+            .then((u) => {
+              setHostIsPartner(u.exists() && isVerifiedPartner(u.data()));
+              setHostIsStaff(u.exists() && ['admin', 'editor'].includes(u.data().role));
+            })
+            .catch(() => {});
+          getDoc(doc(db, 'users', currentUser.uid))
+            .then((u) => setViewerIsStaff(u.exists() && ['admin', 'editor'].includes(u.data().role)))
             .catch(() => {});
         }
 
@@ -144,7 +154,7 @@ const CompanyCohortDetail = () => {
   }
 
   const open = cohort.status === COMPANY_COHORT_STATUS.HIRING;
-  const isHost = currentUser?.uid === cohort.companyId;
+  const isHost = currentUser?.uid === cohort.companyId || (viewerIsStaff && hostIsStaff);
   // No badge yet (and not a read error): show the rule, disable role picking.
   const needsBadge =
     open &&
@@ -208,6 +218,7 @@ const CompanyCohortDetail = () => {
       </div>
 
       {/* Roles */}
+      {isHost && <PaidApplicants cohort={cohort} />}
       <h2 className="font-bold text-gray-900 mb-3">Open roles</h2>
 
       {/* Badge rule, stated where the roles are, so nobody looks for an
@@ -275,7 +286,7 @@ const CompanyCohortDetail = () => {
       ) : !open ? (
         <p className="text-gray-500 text-sm">Applications are closed for this project.</p>
       ) : isHost ? (
-        <p className="text-gray-500 text-sm">This is your project. Review applicants from your company dashboard.</p>
+        null
       ) : eligibility && !eligibility.allowed ? (
         // Explained next to the roles above; a read error gets its own line.
         eligibility.reason?.startsWith('Could not') ? (

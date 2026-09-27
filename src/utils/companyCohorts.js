@@ -57,6 +57,7 @@ import {
   arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { alertStaff } from './staffAlerts';
 
 export const COMPANY_COHORT_STATUS = {
   DRAFT: 'draft',
@@ -232,7 +233,24 @@ export const applyToCompanyCohort = async ({ cohortId, applicant, roleTitle, cov
     status: 'submitted',
     createdAt: serverTimestamp(),
   });
+  // Paid projects posted by She Model Tech: every admin and editor hears about applications.
+  try {
+    const c = (await getDoc(doc(db, 'company_cohorts', cohortId))).data() || {};
+    const host = (await getDoc(doc(db, 'users', c.companyId))).data() || {};
+    if (['admin', 'editor'].includes(host.role)) {
+      alertStaff({
+        type: 'paid_application',
+        title: 'New application for a She Model Tech paid project',
+        body: `${applicant.displayName || applicant.email} applied for ${roleTitle} on "${c.title || 'a paid project'}".`,
+        link: `/paid-projects/${cohortId}`,
+        roles: ['admin', 'editor'],
+      });
+    }
+  } catch (_) {
+    /* non-blocking */
+  }
   return ref.id;
+
 };
 
 /**

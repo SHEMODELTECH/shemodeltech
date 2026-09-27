@@ -81,6 +81,8 @@ const AdminPanel = () => {
   });
   const [users, setUsers] = useState([]);
   const [projects, setProjects] = useState([]);
+  // Paid projects She Model Tech posted (from a staff account), with applicant counts.
+  const [smtPaid, setSmtPaid] = useState([]);
   const [posts, setPosts] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
@@ -411,6 +413,26 @@ const AdminPanel = () => {
     }
     setLoadingData(false);
   }, []);
+
+  useEffect(() => {
+    if (!isReviewer || tab !== 'projects') return;
+    (async () => {
+      try {
+        const staffIds = new Set(users.filter((u) => ['admin', 'editor'].includes(u.role)).map((u) => u.id));
+        const cs = await getDocs(collection(db, 'company_cohorts'));
+        const mine = cs.docs.map((d) => ({ id: d.id, ...d.data() })).filter((c) => staffIds.has(c.companyId));
+        const withCounts = await Promise.all(
+          mine.map(async (c) => {
+            const a = await getDocs(query(collection(db, 'company_cohort_applications'), where('cohortId', '==', c.id))).catch(() => null);
+            return { ...c, waiting: a ? a.docs.filter((d) => ['submitted', 'interview'].includes(d.data().status)).length : 0 };
+          })
+        );
+        setSmtPaid(withCounts);
+      } catch (_) {
+        setSmtPaid([]);
+      }
+    })();
+  }, [isReviewer, tab, users]);
 
   // Admins and editors both see the dashboard data (editors just can't delete or change roles).
   useEffect(() => {
@@ -901,6 +923,21 @@ const AdminPanel = () => {
       )}
 
       {/* PROJECTS */}
+      {!loadingData && tab === 'projects' && smtPaid.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-gray-900 font-bold mb-2">She Model Tech paid projects</h3>
+          {smtPaid.map((c) => (
+            <div key={c.id} className="flex flex-wrap items-center justify-between gap-2 bg-white border border-gray-200 rounded-lg p-3 mb-2">
+              <div>
+                <p className="text-sm font-semibold text-gray-900">{c.title}</p>
+                <p className="text-xs text-gray-500">{c.status} · {c.waiting} application{c.waiting === 1 ? '' : 's'} waiting</p>
+              </div>
+              <Link to={`/paid-projects/${c.id}`} className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg">Review applicants</Link>
+            </div>
+          ))}
+        </div>
+      )}
+
       {!loadingData && tab === 'projects' && projects.some((p) => p.extensionRequest?.status === 'pending') && (
         <div className="mb-6">
           <h3 className="text-gray-900 font-bold mb-2">Extra time requested by cohort leads</h3>
