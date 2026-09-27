@@ -67,7 +67,16 @@ const Login = () => {
     try {
       setEmailLoading(true);
       if (mode === 'signup') {
-        await signUpWithEmail(form.email, form.password, form.name.trim());
+        try {
+          await signUpWithEmail(form.email, form.password, form.name.trim());
+        } catch (err) {
+          if (/already exists/i.test(err.message || '') || err.code === 'auth/email-already-in-use') {
+            setMode('signin');
+            setInfo('You already have a She Model Tech account with this email. If you joined with Google, use "Sign in with Google" (you can add a password later in Settings > Account), or use "Forgot password" to set one now.');
+            return;
+          }
+          throw err;
+        }
         setInfo('Account created. We sent a verification email to confirm your address.');
       } else {
         await signInWithEmail(form.email, form.password);

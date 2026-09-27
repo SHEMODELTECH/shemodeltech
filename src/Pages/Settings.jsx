@@ -13,6 +13,7 @@ import { deleteUserAccount } from '../utils/deleteUserContent';
 import { enablePushForCurrentUser } from '../utils/pushNotifications';
 import { toast } from 'react-toastify';
 import CompanyDetailsForm from '../components/CompanyDetailsForm';
+import SignInMethods from '../components/SignInMethods';
 
 const skillTrackOpts = [
   { id: 'TechDev', label: 'Development' },
@@ -543,6 +544,7 @@ const Settings = () => {
       {/* Account */}
       {activeTab === 'account' && (
         <div className="space-y-6">
+          <SignInMethods />
           <div className="bg-white border border-gray-200 rounded-xl p-6">
             <h3 className="text-gray-900 font-bold text-base mb-2">Push Notifications</h3>
             <p className="text-gray-500 text-sm mb-4">
