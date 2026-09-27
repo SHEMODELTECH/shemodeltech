@@ -481,14 +481,8 @@ function App() {
                     </SidebarRoute>
                   }
                 />
-                <Route
-                  path="/paid-projects"
-                  element={
-                    <SidebarRoute>
-                      <CompanyCohortList />
-                    </SidebarRoute>
-                  }
-                />
+                {/* All paid work now lives on the Projects board (one system). */}
+                <Route path="/paid-projects" element={<Navigate to="/projects" replace />} />
                 <Route
                   path="/paid-projects/:cohortId"
                   element={
