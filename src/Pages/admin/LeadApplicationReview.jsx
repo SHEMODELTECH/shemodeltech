@@ -69,14 +69,23 @@ const LeadApplicationReview = () => {
     try {
       // Rolling: every active project still needing a lead, and every lead
       // application still waiting for a decision (any pool, including older ones).
+      // Every active She Model Tech project (including ones that already have a
+      // lead, so their other applicants stay visible and can be offered a team
+      // role), and every lead application except withdrawn ones.
       const [projSnap, appSnap] = await Promise.all([
-        getDocs(query(collection(db, 'projects'), where('leadConfirmed', '==', false), where('isActive', '==', true))),
-        getDocs(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
+        getDocs(query(collection(db, 'projects'), where('isActive', '==', true))),
+        getDocs(collection(db, 'lead_applications')),
       ]);
       const apps = appSnap.docs
         .map((d) => ({ id: d.id, ...d.data() }))
+        .filter((a) => a.status !== LEAD_APP_STATUS.WITHDRAWN)
         .sort((x, y) => (x.createdAt?.seconds || 0) - (y.createdAt?.seconds || 0));
-      setProjects(projSnap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((p) => !p.isCompanyPost));
+      const wanted = new Set(apps.flatMap((a) => a.rankedProjectIds || []));
+      setProjects(
+        projSnap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter((p) => !p.isCompanyPost && (!p.leadConfirmed || wanted.has(p.id)))
+      );
       setApplications(apps);
     } catch (e) {
       console.error(e);
@@ -106,7 +115,11 @@ const LeadApplicationReview = () => {
   }
   if (!isReviewer) return null;
 
-  const grouped = groupByProject(applications, projects);
+  // Show every applicant (including decided ones) under each project they ranked.
+  const grouped = groupByProject(applications, projects, { includeDecided: true })
+    .filter((g) => !g.project.leadConfirmed || g.applicants.length > 0)
+    .sort((a, b) => Number(a.project.leadConfirmed || false) - Number(b.project.leadConfirmed || false));
+  const waiting = applications.filter((a) => ['submitted', 'interview_scheduled'].includes(a.status));
   const unled = projects.filter((p) => !p.leadConfirmed);
   const assignedCount = applications.filter((a) => a.status === LEAD_APP_STATUS.ASSIGNED).length;
 
@@ -116,8 +129,8 @@ const LeadApplicationReview = () => {
         Lead applications
       </h1>
       <p className="text-gray-500 text-sm mb-8">
-        {applications.length} application{applications.length === 1 ? '' : 's'} waiting &middot;{' '}
-        {projects.length} project{projects.length === 1 ? '' : 's'} need{projects.length === 1 ? 's' : ''} a lead &middot; applications are open all the time
+        {waiting.length} application{waiting.length === 1 ? '' : 's'} waiting &middot;{' '}
+        {unled.length} project{unled.length === 1 ? '' : 's'} need{unled.length === 1 ? 's' : ''} a lead &middot; applications are open all the time
       </p>
 
       {/* Projects nobody wants - the thing most likely to be missed */}

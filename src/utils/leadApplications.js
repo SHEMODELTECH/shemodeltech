@@ -166,10 +166,11 @@ export const getApplicationsForCohort = async (cohortId) => {
  * Project A, nobody wants Project D", which is the view that actually
  * drives decisions.
  */
-export const groupByProject = (applications, projects) => {
+export const groupByProject = (applications, projects, { includeDecided = false } = {}) => {
   const map = new Map(projects.map((p) => [p.id, { project: p, applicants: [] }]));
   for (const app of applications) {
-    if ([LEAD_APP_STATUS.WITHDRAWN, LEAD_APP_STATUS.REJECTED].includes(app.status)) continue;
+    if (app.status === LEAD_APP_STATUS.WITHDRAWN) continue;
+    if (!includeDecided && app.status === LEAD_APP_STATUS.REJECTED) continue;
     (app.rankedProjectIds || []).forEach((pid, rank) => {
       const entry = map.get(pid);
       if (entry) entry.applicants.push({ ...app, rank: rank + 1 });
