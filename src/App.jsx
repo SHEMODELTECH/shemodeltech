@@ -6,6 +6,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { db } from './firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
 import AppShell from './components/AppShell';
 import Navbar from './components/Navbar';
 
@@ -149,6 +151,30 @@ const SidebarRoute = ({ children }) => (
   </BasicProtectedRoute>
 );
 
+// Staff-only pages (admin tools). Members and company accounts are sent to
+// their dashboard quietly, with no "admins only" message, and never see the page.
+const StaffOnly = ({ children, adminOnly = false }) => {
+  const { currentUser } = useAuth();
+  const [ok, setOk] = React.useState(null);
+  React.useEffect(() => {
+    if (!currentUser) return;
+    getDoc(doc(db, 'users', currentUser.uid))
+      .then((snap) => {
+        const role = snap.exists() ? snap.data().role : null;
+        setOk(adminOnly ? role === 'admin' : role === 'admin' || role === 'editor');
+      })
+      .catch(() => setOk(false));
+  }, [currentUser, adminOnly]);
+  if (ok === false) return <Navigate to="/dashboard" replace />;
+  if (ok === null) return null;
+  return children;
+};
+const StaffRoute = ({ children, adminOnly = false }) => (
+  <SidebarRoute>
+    <StaffOnly adminOnly={adminOnly}>{children}</StaffOnly>
+  </SidebarRoute>
+);
+
 // Home: logged-out visitors see the landing page; logged-in members go to their dashboard.
 const HomeRoute = () => {
   const { currentUser, loading } = useAuth();
@@ -235,9 +261,9 @@ function App() {
                 <Route
                   path="/admin"
                   element={
-                    <SidebarRoute>
+                    <StaffRoute>
                       <AdminPanel />
-                    </SidebarRoute>
+                    </StaffRoute>
                   }
                 />
 
@@ -283,9 +309,9 @@ function App() {
                 <Route
                   path="/projects/generate"
                   element={
-                    <SidebarRoute>
+                    <StaffRoute adminOnly>
                       <GenerateProject />
-                    </SidebarRoute>
+                    </StaffRoute>
                   }
                 />
                 {/* Members no longer create their own projects. Everything
@@ -412,9 +438,9 @@ function App() {
                 <Route
                   path="/admin/lead-applications"
                   element={
-                    <SidebarRoute>
+                    <StaffRoute>
                       <LeadApplicationReview />
-                    </SidebarRoute>
+                    </StaffRoute>
                   }
                 />
                 {/* Company-hosted cohorts: company owns brief, team, timeline and pays members */}
@@ -470,9 +496,9 @@ function App() {
                 <Route
                   path="/admin/activations"
                   element={
-                    <SidebarRoute>
+                    <StaffRoute>
                       <ActivationQueue />
-                    </SidebarRoute>
+                    </StaffRoute>
                   }
                 />
                 {/* PUBLIC, no login. A recruiter must be able to check a
@@ -482,9 +508,9 @@ function App() {
                 <Route
                   path="/admin/cohorts"
                   element={
-                    <SidebarRoute>
+                    <StaffRoute>
                       <CohortManager />
-                    </SidebarRoute>
+                    </StaffRoute>
                   }
                 />
                 <Route

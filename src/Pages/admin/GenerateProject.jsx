@@ -26,7 +26,6 @@ const GenerateProject = () => {
       .then(snap => {
         const role = snap.exists() ? snap.data().role : null;
         if (role !== 'admin') {
-          toast.error('Admins only');
           navigate('/projects', { replace: true });
           return;
         }

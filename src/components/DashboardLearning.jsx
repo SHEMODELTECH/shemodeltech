@@ -8,9 +8,9 @@ import { coursesForTrack, tracksWithCourses } from '../utils/foundationsCourses'
 import { PUBLISHED_PREFIX, listPublished, toCatalogCourse } from '../utils/learningPublished';
 
 const DashboardLearning = ({ profile }) => {
-  const [published, setPublished] = useState([]);
+  const [published, setPublished] = useState(null); // null until loaded
   useEffect(() => {
-    listPublished().then((l) => setPublished(l.map(toCatalogCourse))).catch(() => {});
+    listPublished().then((l) => setPublished(l.map(toCatalogCourse))).catch(() => setPublished([]));
   }, []);
 
   const { inProgress, completed } = useMemo(() => {
@@ -19,7 +19,7 @@ const DashboardLearning = ({ profile }) => {
     const last = profile?.learningLastPart || {};
     const find = (track, slug) =>
       slug.startsWith(PUBLISHED_PREFIX)
-        ? published.find((p) => p.slug === slug)
+        ? (published || []).find((p) => p.slug === slug)
         : tracksWithCourses().includes(track)
         ? coursesForTrack(track).find((c) => c.slug === slug)
         : null;
@@ -42,7 +42,12 @@ const DashboardLearning = ({ profile }) => {
         <h3 className="text-lg font-bold text-gray-900">Your learning</h3>
         <Link to="/learning/my" className="text-pink-600 text-sm font-semibold hover:underline">My learning</Link>
       </div>
-      {inProgress.length === 0 ? (
+      {!profile || published === null ? (
+        <div className="space-y-2" aria-hidden="true">
+          <div className="h-14 rounded-lg bg-gray-100 animate-pulse" />
+          <div className="h-14 rounded-lg bg-gray-100 animate-pulse" />
+        </div>
+      ) : inProgress.length === 0 ? (
         <p className="text-gray-500 text-sm">
           {completed > 0
             ? `You've completed ${completed} course${completed === 1 ? '' : 's'}. Pick your next one in Learning.`

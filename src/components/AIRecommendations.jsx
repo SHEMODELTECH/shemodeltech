@@ -17,7 +17,16 @@ const Spark = ({ className = 'w-4 h-4' }) => (
 
 const AIRecommendations = ({ currentUser }) => {
   const navigate = useNavigate();
-  const [recs, setRecs] = useState(null);
+  // Start from this session's last result (if any) so the card doesn't flash a
+  // loading box and then vanish when there are no matches.
+  const cacheKey = currentUser ? `smt-ai-recs:${currentUser.uid}` : '';
+  const [recs, setRecs] = useState(() => {
+    try {
+      return cacheKey ? JSON.parse(sessionStorage.getItem(cacheKey) || 'null') : null;
+    } catch (_) {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -28,6 +37,11 @@ const AIRecommendations = ({ currentUser }) => {
       force ? setRefreshing(true) : setLoading(true);
       const r = await getAIRecommendations(currentUser, { force });
       setRecs(r);
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify(r));
+      } catch (_) {
+        /* storage full or unavailable */
+      }
       setFailed(false);
     } catch (e) {
       console.error('AI recommendations failed:', e);
@@ -36,13 +50,15 @@ const AIRecommendations = ({ currentUser }) => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [currentUser]);
+  }, [currentUser, cacheKey]);
 
   useEffect(() => { load(false); }, [load]);
 
   // Nothing to show: stay out of the way (no error boxes on the dashboard).
   if (failed && !recs) return null;
-  if (!loading && (!recs || recs.projects.length === 0)) return null;
+  // Nothing known yet: stay hidden while loading instead of showing empty boxes.
+  if (loading && !recs) return null;
+  if (!recs || !recs.projects || recs.projects.length === 0) return null;
 
   const project = recs?.projects?.[0] || null;
 

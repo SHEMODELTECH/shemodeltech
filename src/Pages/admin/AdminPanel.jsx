@@ -351,7 +351,6 @@ const AdminPanel = () => {
       .then((snap) => {
         const role = snap.exists() ? snap.data().role : null;
         if (!isReviewerRole(role)) {
-          toast.error('Admins and editors only');
           navigate('/dashboard', { replace: true });
           return;
         }
