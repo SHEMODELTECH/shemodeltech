@@ -19,18 +19,7 @@
 // building video or a calendar OAuth integration, at ~6 interviews per
 // 8-week cycle, that is not worth the consent-screen friction.
 
-import {
-  collection,
-  doc,
-  addDoc,
-  getDoc,
-  getDocs,
-  updateDoc,
-  query,
-  where,
-  orderBy,
-  serverTimestamp,
-} from 'firebase/firestore';
+import { collection, doc, addDoc, getDoc, getDocs, updateDoc, query, where, orderBy, serverTimestamp, arrayUnion } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { authFetch } from './authFetch';
 import { alertStaff } from './staffAlerts';
@@ -417,4 +406,30 @@ const notify = async (uid, payload, email) => {
   } catch (e) {
     console.error('notify email failed:', e); // non-blocking
   }
+};
+
+/**
+ * Suggest another project for an applicant to lead, keeping her application
+ * open: the project is added to her choices and she's told about it. Used when
+ * the project she applied for got a different lead.
+ */
+export const suggestAnotherProjectToLead = async ({ appId, applicant, projectId, projectTitle, message, reviewer }) => {
+  await updateDoc(doc(db, 'lead_applications', appId), {
+    rankedProjectIds: arrayUnion(projectId),
+    suggestedLeadProjectId: projectId,
+    reviewerNotes: null,
+  });
+  await addDoc(collection(db, 'notifications'), {
+    userId: applicant.applicantUid,
+    recipientId: applicant.applicantUid,
+    type: 'lead_application_update',
+    title: 'We’d like you to consider leading another project',
+    body: `${message ? `${message} ` : ''}Take a look at "${projectTitle}". Your lead application is still open.`,
+    message: `Consider leading "${projectTitle}"`,
+    link: `/projects/${projectId}`,
+    isRead: false,
+    read: false,
+    createdAt: serverTimestamp(),
+  }).catch(() => {});
+  return { reviewer };
 };

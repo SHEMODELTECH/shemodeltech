@@ -27,6 +27,7 @@ import {
   assignAsLead,
   rejectAsLeadInviteAsContributor,
   rejectApplication,
+  suggestAnotherProjectToLead,
   getFallbackCandidates,
   LEAD_APP_STATUS,
 } from '../../utils/leadApplications';
@@ -321,6 +322,7 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
   const [meetLink, setMeetLink] = useState(app.meetLink || '');
   const [when, setWhen] = useState(app.interviewScheduledAt || '');
   const [suggestProject, setSuggestProject] = useState('');
+  const [otherLead, setOtherLead] = useState('');
   const [suggestRole, setSuggestRole] = useState('');
   const [message, setMessage] = useState('');
 
@@ -428,7 +430,14 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
             Save notes
           </button>
 
-          {/* Decisions */}
+          {/* Decisions: every applicant stays here until she has a decision. */}
+          <p className="text-xs font-bold text-gray-900 mb-2">Decide for {app.applicantName}</p>
+          {project.leadConfirmed && (
+            <p className="text-xs text-gray-600 mb-2">
+              This project already has a lead. Choose another option below: lead a different project, suggest one for
+              her to consider, join a team as a collaborator, or close the application.
+            </p>
+          )}
           <div className="flex flex-wrap gap-2 mb-4">
             <button
               type="button"
@@ -448,14 +457,64 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
               }
               className="bg-green-600 hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold px-4 py-2 rounded-lg"
             >
-              {project.leadConfirmed ? 'Project already has a lead' : 'Assign as lead'}
+              {project.leadConfirmed ? 'Project already has a lead' : 'Accept as lead of this project'}
             </button>
+          </div>
+
+          {/* Lead a different project */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+            <p className="text-gray-900 text-xs font-bold mb-1">Lead a different project</p>
+            <p className="text-gray-600 text-[11px] mb-2">Assign her straight away, or suggest a project she can consider (her application stays open).</p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <select
+                value={otherLead}
+                onChange={(e) => setOtherLead(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 text-sm bg-white"
+                aria-label="Another project that needs a lead"
+              >
+                <option value="">Choose a project that needs a lead…</option>
+                {projects.filter((p) => !p.leadConfirmed && p.id !== project.id).map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.projectTitle || p.title}{p.isCohort ? ' (cohort)' : ''}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                disabled={!otherLead || busy === k('assign-other')}
+                onClick={() =>
+                  onAct(
+                    k('assign-other'),
+                    () => assignAsLead({ appId: app.id, projectId: otherLead, applicant: app, reviewer }),
+                    `${app.applicantName} is now leading that project.`
+                  )
+                }
+                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold px-3 py-2 rounded-lg"
+              >
+                Assign as lead
+              </button>
+              <button
+                type="button"
+                disabled={!otherLead || busy === k('suggest-other')}
+                onClick={() => {
+                  const target = projects.find((p) => p.id === otherLead);
+                  onAct(
+                    k('suggest-other'),
+                    () => suggestAnotherProjectToLead({ appId: app.id, applicant: app, projectId: otherLead, projectTitle: target?.projectTitle || 'this project', message, reviewer }),
+                    'Suggested. Her application stays open and now shows under that project too.'
+                  );
+                }}
+                className="bg-white border border-green-300 text-green-800 disabled:opacity-40 text-xs font-semibold px-3 py-2 rounded-lg"
+              >
+                Suggest she applies
+              </button>
+            </div>
           </div>
 
           {/* Not lead, but wanted on a team */}
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <p className="text-gray-900 text-xs font-bold mb-1">
-              Not leading, but invite her onto a team
+              Be a collaborator: invite her onto a team
             </p>
             <p className="text-gray-600 text-[11px] mb-3 leading-relaxed">
               Someone confident enough to apply to lead is exactly who you want building. Use this
@@ -510,7 +569,7 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
                 }
                 className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg"
               >
-                Offer a contributor role
+                Offer a collaborator role
               </button>
               <button
                 type="button"
@@ -531,7 +590,7 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
                 }}
                 className="text-gray-500 hover:text-red-600 text-xs font-semibold px-2 py-2"
               >
-                Reject outright
+                Reject
               </button>
             </div>
           </div>
