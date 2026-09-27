@@ -90,7 +90,7 @@ Write out, in plain language, what each filter and branch does. Logic you unders
 Zap 2
 │
 ├── Trigger
-├── Filter: continue only if status = new
+├── Filter: continue only if status equals "new"
 ├── Formatter: date -> friendly format
 └── Paths
     ├── Branch A (priority = high) -> Slack urgent message
