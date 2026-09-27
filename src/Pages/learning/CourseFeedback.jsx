@@ -93,7 +93,7 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
   useEffect(() => {
     if (!currentUser || isStaff) return;
     getDoc(doc(db, 'users', currentUser.uid))
-      .then((s) => setStaff(['admin', 'editor'].includes(s.data()?.role)))
+      .then((s) => setStaff(s.data()?.role === 'admin'))
       .catch(() => {});
   }, [currentUser, isStaff]);
 

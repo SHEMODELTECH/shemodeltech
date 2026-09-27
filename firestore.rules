@@ -409,7 +409,7 @@ service cloud.firestore {
  && get(/databases/$(database)/documents/organizations/$(orgId)).data.status == 'active'
  && (request.resource.data.minor == false
  || get(/databases/$(database)/documents/organizations/$(orgId)).data.get('allowMinors', false) == true);
- allow delete: if isSignedIn() && (uid == myUid() || isReviewer()
+ allow delete: if isSignedIn() && (uid == myUid() || isAdmin()
  || myUid() in get(/databases/$(database)/documents/organizations/$(orgId)).data.adminUids);
  }
  }
@@ -476,7 +476,7 @@ service cloud.firestore {
  || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
  && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()]))
  );
- allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  match /replies/{replyId} {
  allow read: if true;
  allow create: if canJoinCourse(courseKey)
@@ -484,7 +484,7 @@ service cloud.firestore {
  && request.resource.data.body is string
  && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
  allow update: if false;
- allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  }
  }
  }
@@ -507,7 +507,7 @@ service cloud.firestore {
  || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
  && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()]))
  );
- allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  match /replies/{replyId} {
  allow read: if isTeacherUser() || isReviewer();
  allow create: if (isTeacherUser() || isReviewer())
@@ -515,7 +515,7 @@ service cloud.firestore {
  && request.resource.data.body is string
  && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
  allow update: if false;
- allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  }
  }
  }
@@ -528,14 +528,14 @@ service cloud.firestore {
  && request.resource.data.uid == myUid()
  && request.resource.data.stars is int
  && request.resource.data.stars >= 1 && request.resource.data.stars <= 5;
- allow delete: if isSignedIn() && (uid == myUid() || isReviewer());
+ allow delete: if isSignedIn() && (uid == myUid() || isAdmin());
  }
  match /reactions/{uid} {
  allow read: if true;
  allow create, update: if canJoinCourse(courseKey) && uid == myUid()
  && request.resource.data.uid == myUid()
  && request.resource.data.type in ['helpful', 'love', 'insightful', 'inspiring'];
- allow delete: if isSignedIn() && (uid == myUid() || isReviewer());
+ allow delete: if isSignedIn() && (uid == myUid() || isAdmin());
  }
  match /comments/{id} {
  allow read: if true;
@@ -545,7 +545,7 @@ service cloud.firestore {
  && request.resource.data.text.size() > 0
  && request.resource.data.text.size() <= 2000;
  allow update: if false;
- allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  }
  }
 

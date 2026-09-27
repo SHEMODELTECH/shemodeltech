@@ -66,6 +66,10 @@ const AdminPanel = () => {
   const [isReviewer, setIsReviewer] = useState(false); // admin OR editor: review surfaces
   const [myRole, setMyRole] = useState(null); // shown in the header badge
   const [tab, setTab] = useState('overview');
+  // Editors can't open admin-only tabs (deleting is admin-only).
+  useEffect(() => {
+    if (!isAdmin && ['danger', 'deletions'].includes(tab)) setTab('overview');
+  }, [isAdmin, tab]);
 
   const [stats, setStats] = useState({
     users: 0,
@@ -633,8 +637,8 @@ const AdminPanel = () => {
     ['users', 'Users'],
     ...(isReviewer ? [['teachers', 'Mentors'], ['organizations', 'Organizations'], ['summit', 'Summit']] : []),
     ['moderation', 'Moderation'],
-    ['deletions', 'Deletion Requests'],
-    ['danger', 'Danger Zone'],
+    // Deleting anything is admin-only: editors never see these.
+    ...(isAdmin ? [['deletions', 'Deletion Requests'], ['danger', 'Danger Zone']] : []),
   ];
 
   const StatCard = ({ label, value, sub }) => (
@@ -648,7 +652,7 @@ const AdminPanel = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 flex items-center gap-3">
-        Admin Dashboard
+        {isAdmin ? 'Admin Dashboard' : 'Editor Dashboard'}
         {myRole && (
           <span
             className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide ${
@@ -710,7 +714,7 @@ const AdminPanel = () => {
       {loadingData && <div className="py-10 text-center text-gray-400 text-sm">Loading…</div>}
 
       {/* DANGER ZONE */}
-      {tab === 'danger' && (
+      {tab === 'danger' && isAdmin && (
         <div className="space-y-4 max-w-2xl">
           <div className="bg-red-50 border-2 border-red-200 rounded-xl p-5">
             <h2 className="text-lg font-bold text-red-700 mb-1">Clear all test data</h2>
@@ -950,7 +954,7 @@ const AdminPanel = () => {
         </div>
       )}
 
-      {!loadingData && tab === 'deletions' && (
+      {!loadingData && tab === 'deletions' && isAdmin && (
         <div className="space-y-2">
           {deletionReqs.length === 0 ? (
             <p className="text-gray-400 text-sm">No pending deletion requests.</p>
@@ -1113,12 +1117,14 @@ const AdminPanel = () => {
                       {u.isTeacher ? 'Remove mentor' : 'Make mentor'}
                     </button>
                   )}
+                  {isAdmin && (
                   <button
                     onClick={() => toggleEditor(u)}
                     className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${u.role === 'editor' ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}
                   >
                     {u.role === 'editor' ? 'Remove editor' : 'Make editor'}
                   </button>
+                  )}
                   {isAdmin && (
                     <button
                       onClick={() => toggleAdmin(u)}
@@ -1363,12 +1369,14 @@ const AdminPanel = () => {
                     {p.content || '(no text)'}
                   </p>
                 </div>
-                <button
-                  onClick={() => deletePost(p)}
-                  className="flex-shrink-0 text-red-500 text-xs font-semibold"
-                >
-                  Delete
-                </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => deletePost(p)}
+                    className="flex-shrink-0 text-red-500 text-xs font-semibold"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             ))
           )}

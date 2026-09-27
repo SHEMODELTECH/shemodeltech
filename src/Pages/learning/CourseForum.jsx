@@ -424,6 +424,7 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
   const [form, setForm] = useState({ kind: 'question', title: '', body: '', link: '' });
   const [busy, setBusy] = useState(false);
   const [isStaff, setIsStaff] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const myName = displayName || currentUser?.displayName || (currentUser?.email || '').split('@')[0] || 'Learner';
 
   useEffect(() => {
@@ -435,7 +436,10 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid))
-      .then((s) => setIsStaff(['admin', 'editor'].includes(s.data()?.role)))
+      .then((s) => {
+        setIsStaff(['admin', 'editor'].includes(s.data()?.role));
+        setIsAdmin(s.data()?.role === 'admin');
+      })
       .catch(() => {});
   }, [currentUser]);
 
@@ -614,7 +618,7 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
       ) : (
         <ul className="space-y-2">
           {shown.map((t) => (
-            <Thread key={t.id} base={base} t={t} me={currentUser} isStaff={isStaff} myName={myName} courseTitle={courseTitle}
+            <Thread key={t.id} base={base} t={t} me={currentUser} isStaff={isAdmin} myName={myName} courseTitle={courseTitle}
               onDeleted={(id) => setThreads((ts) => ts.filter((x) => x.id !== id))}
               onNeedSignIn={() => signInAndReturn(navigate, `${location.pathname}#forum`)}
               canParticipate={canParticipate}
