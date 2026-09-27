@@ -10,6 +10,8 @@ import { CheckIcon, TRACK_ORDER, coursePartTitles, formatTime, look, useLearning
 import { coursesForTrack, trackMeta, tracksWithCourses } from '../../utils/foundationsCourses';
 import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { courseRating } from '../../utils/mentorStats';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 
 // "Coding Developer Foundations" -> "Coding Developer"
 export const trackName = (t) => trackMeta(t).label.replace(/\s+Foundations$/, '');
@@ -84,6 +86,8 @@ export const CourseCard = ({ course, status, progress }) => {
 const LearningHome = ({ mine = false }) => {
   const navigate = useNavigate();
   const lr = useLearning();
+  // Profile photos for mentors whose courses were published before photos were saved on them.
+  const [authorPhotos, setAuthorPhotos] = useState({});
   const [query, setQuery] = useState('');
   const [track, setTrack] = useState('all');
   const [level, setLevel] = useState('all');
@@ -98,6 +102,21 @@ const LearningHome = ({ mine = false }) => {
         // Learner ratings for mentor courses, shown on their cards.
         const rated = await Promise.all(courses.map(async (c) => ({ ...c, rating: await courseRating(c.track, c.slug) })));
         setPublished(rated);
+        const missing = [...new Set(rated.filter((c) => c.authorUid && !c.authorPhotoURL).map((c) => c.authorUid))];
+        if (missing.length) {
+          const found = {};
+          await Promise.all(
+            missing.map(async (uid) => {
+              try {
+                const u = await getDoc(doc(db, 'users', uid));
+                if (u.exists() && u.data().photoURL) found[uid] = u.data().photoURL;
+              } catch (_) {
+                /* profiles are readable when signed in */
+              }
+            })
+          );
+          setAuthorPhotos(found);
+        }
       })
       .catch(() => setPublished([]));
   }, []);
@@ -272,25 +291,68 @@ const LearningHome = ({ mine = false }) => {
           const byAuthor = {};
           published.forEach((c) => {
             if (!c.authorName) return;
-            const a = byAuthor[c.authorName] || (byAuthor[c.authorName] = { name: c.authorName, courses: [] });
+            const key = c.authorUid || c.authorName;
+            const a = byAuthor[key] || (byAuthor[key] = { key, uid: c.authorUid, name: c.authorName, photo: c.authorPhotoURL || null, courses: [], ratingSum: 0, ratingCount: 0 });
             a.courses.push(c);
+            if (!a.photo && c.authorPhotoURL) a.photo = c.authorPhotoURL;
+            if (c.rating?.count) {
+              a.ratingSum += c.rating.avg * c.rating.count;
+              a.ratingCount += c.rating.count;
+            }
           });
-          const authors = Object.values(byAuthor);
+          const authors = Object.values(byAuthor).sort((x, y) => y.ratingCount - x.ratingCount || y.courses.length - x.courses.length);
           if (!authors.length) return null;
           return (
-            <section className="pt-8" aria-labelledby="instructors-h">
-              <h2 id="instructors-h" className="text-lg font-bold text-gray-900 mb-3">Featured instructors</h2>
-              <div className="flex flex-wrap gap-3">
-                {authors.map((a) => (
-                  <Link key={a.name} to={`/learning/${a.courses[0].track}/${a.courses[0].slug}`}
-                    className="flex items-center gap-3 border border-indigo-100 bg-white rounded-xl px-4 py-3 hover:border-indigo-300">
-                    <span className="w-9 h-9 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center" aria-hidden="true">{a.name[0]}</span>
-                    <span>
-                      <span className="block font-semibold text-gray-900 text-sm">{a.name}</span>
-                      <span className="block text-xs text-gray-500">Mentor · {a.courses.length} course{a.courses.length === 1 ? '' : 's'}</span>
-                    </span>
-                  </Link>
-                ))}
+            <section className="pt-10" aria-labelledby="instructors-h">
+              <div className="rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-5 sm:p-6">
+                <h2 id="instructors-h" className="text-xl font-bold text-gray-900">Featured instructors</h2>
+                <p className="text-sm text-gray-600 mt-1">Mentors who create courses for She Model Tech Learning.</p>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
+                  {authors.map((a) => {
+                    const photo = a.photo || authorPhotos[a.uid];
+                    const avg = a.ratingCount ? a.ratingSum / a.ratingCount : 0;
+                    return (
+                      <div key={a.key} className="bg-white border border-indigo-100 rounded-2xl p-5 shadow-sm flex flex-col">
+                        <div className="flex items-center gap-4">
+                          {photo ? (
+                            <img src={photo} alt="" className="w-16 h-16 rounded-full object-cover border-2 border-indigo-100" />
+                          ) : (
+                            <span className="w-16 h-16 rounded-full bg-indigo-600 text-white text-2xl font-bold flex items-center justify-center" aria-hidden="true">
+                              {a.name[0]}
+                            </span>
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-bold text-gray-900 text-lg truncate">{a.name}</p>
+                            <span className="inline-block text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-full px-2 py-0.5">Mentor</span>
+                          </div>
+                        </div>
+                        <div className="mt-4 flex items-center gap-2 text-sm">
+                          {a.ratingCount ? (
+                            <>
+                              <span className="text-amber-500" aria-hidden="true">
+                                {'★'.repeat(Math.round(avg))}
+                                <span className="text-gray-300">{'★'.repeat(5 - Math.round(avg))}</span>
+                              </span>
+                              <span className="font-semibold text-gray-900">{avg.toFixed(1)}</span>
+                              <span className="text-gray-500">({a.ratingCount} rating{a.ratingCount === 1 ? '' : 's'})</span>
+                              <span className="sr-only">{`Rated ${avg.toFixed(1)} out of 5`}</span>
+                            </>
+                          ) : (
+                            <span className="text-gray-500">No ratings yet</span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{a.courses.length} course{a.courses.length === 1 ? '' : 's'}</p>
+                        <ul className="mt-2 space-y-1 text-sm flex-1">
+                          {a.courses.slice(0, 3).map((c) => (
+                            <li key={c.slug}>
+                              <Link to={`/learning/${c.track}/${c.slug}`} className="text-pink-700 font-semibold hover:underline">{c.title}</Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </section>
           );

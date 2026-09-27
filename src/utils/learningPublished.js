@@ -72,6 +72,7 @@ export const toCatalogCourse = (p) => ({
   format: p.format || p.kind,
   authorUid: p.authorUid || '',
   authorName: p.authorName || '',
+  authorPhotoURL: p.authorPhotoURL || null,
   isMentorCourse: true,
   publishedAtMs: p.publishedAt?.toMillis ? p.publishedAt.toMillis() : 0,
   order: p.order ?? 999,
@@ -116,6 +117,15 @@ export const publishToLearning = async (teacherCourse, content, details, user) =
       // Who wrote it (shown on the course page, with their Mentor badge).
       authorUid: teacherCourse.review?.submittedBy?.uid || teacherCourse.createdBy?.uid || user.uid,
       authorName: teacherCourse.review?.submittedBy?.name || teacherCourse.createdBy?.name || '',
+      authorPhotoURL: await (async () => {
+        try {
+          const uid = teacherCourse.review?.submittedBy?.uid || teacherCourse.createdBy?.uid || user.uid;
+          const u = await getDoc(doc(db, 'users', uid));
+          return (u.exists() && u.data().photoURL) || null;
+        } catch (_) {
+          return null;
+        }
+      })(),
       updatedAt: serverTimestamp(),
       updatedBy: who(user),
       ...(prev ? {} : { publishedAt: serverTimestamp(), publishedBy: who(user) }),
