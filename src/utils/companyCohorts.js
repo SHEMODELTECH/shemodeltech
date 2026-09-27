@@ -103,6 +103,11 @@ export const canApplyToCompanyCohort = async (uid, viewer = null) => {
     return { allowed: true, badgeCount: 0 };
   }
   try {
+    // Learners under 18 (joined through a school) can't take paid work.
+    const me = await getDoc(doc(db, 'users', uid)).catch(() => null);
+    if (me?.data()?.isMinor) {
+      return { allowed: false, badgeCount: 0, reason: 'Paid projects are for members aged 18 and over.' };
+    }
     let snap = await getDocs(
       query(collection(db, 'member_badges'), where('memberUid', '==', uid))
     );

@@ -13,6 +13,7 @@ import DiscoverTrack from '../../components/DiscoverTrack';
 import TierBadge from '../../components/TierBadge';
 import { PromotedStrip } from '../../components/PriorityBanners';
 import SummitCard from '../../components/SummitCard';
+import OrgMembershipsCard from '../../components/OrgMembershipsCard';
 import {
   computeMemberEarnings,
   computeCompanyDisbursements,
@@ -202,6 +203,9 @@ const DashboardOverview = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
+
+      {/* Organizations you run or belong to */}
+      {!loading && currentUser && <OrgMembershipsCard uid={currentUser.uid} profile={profileData} />}
 
       {/* The Summit: register (members) or partner (companies) */}
       {!loading && <SummitCard profile={profileData} />}

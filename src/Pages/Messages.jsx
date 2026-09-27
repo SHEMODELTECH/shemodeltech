@@ -188,6 +188,28 @@ const Messages = () => {
       const otherUser = otherSnap.exists() ? { uid: targetUid, ...otherSnap.data() } : { uid: targetUid };
 
       if (!convSnap.exists()) {
+        // Learners under 18 can only message (and be messaged by) She Model Tech
+        // staff and their own organization's instructors.
+        const meSnap = await getDoc(doc(db, 'users', currentUser.uid));
+        const me = meSnap.data() || {};
+        const isStaff = (u) => ['admin', 'editor'].includes(u?.role);
+        if (me.isMinor || otherUser.isMinor) {
+          const minor = me.isMinor ? me : otherUser;
+          const adult = me.isMinor ? otherUser : me;
+          const adultUid = me.isMinor ? targetUid : currentUser.uid;
+          let allowed = isStaff(adult);
+          if (!allowed) {
+            const orgIds = Object.keys(minor.orgMemberships || {});
+            for (const id of orgIds) {
+              const o = await getDoc(doc(db, 'organizations', id)).catch(() => null);
+              if ((o?.data()?.adminUids || []).includes(adultUid)) { allowed = true; break; }
+            }
+          }
+          if (!allowed) {
+            toast.error('Messages with learners under 18 are limited to their school’s instructors and the She Model Tech team.');
+            return;
+          }
+        }
         // NEW conversation. Messaging is unlimited for everyone - any member
         // can start a conversation with any other member or company.
         await setDoc(convRef, {

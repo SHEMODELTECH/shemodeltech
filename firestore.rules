@@ -93,6 +93,8 @@ service cloud.firestore {
  && !touched('isTrainer')
  // Summit attendance is recorded by staff at check-in.
  && !touched('summitAttendance')
+ // A learner under 18 (joined through a school) can't remove that flag herself.
+ && (!touched('isMinor') || request.resource.data.isMinor == true)
  // Teacher access is granted by an admin, never self-set.
  && !touched('isTeacher')
  && !touched('teacherSince')
@@ -289,6 +291,8 @@ service cloud.firestore {
  // Teachers: read everything; create and edit only their own; never publish
  // (publishing is staff-only), but they may request it.
  allow read: if isTeacherUser();
+ // Organization instructors can read the instructor editions shared with them.
+ allow read: if isSignedIn() && myUid() in resource.data.get('orgInstructorUids', []);
  allow create: if isTeacherUser()
  && request.resource.data.createdBy.uid == myUid()
  && !('published' in request.resource.data);
@@ -305,6 +309,8 @@ service cloud.firestore {
  match /chunks/{n} {
  allow read, write: if isReviewer();
  allow read: if isTeacherUser();
+ allow read: if isSignedIn()
+ && myUid() in get(/databases/$(database)/documents/teacher_courses/$(id)).data.get('orgInstructorUids', []);
  // getAfter: in a batch the course doc may be created in the same write.
  allow write: if isTeacherUser()
  && (
@@ -389,6 +395,25 @@ service cloud.firestore {
  allow update, delete: if isReviewer();
  }
 
+ // Organizations with learners (course licensing). Staff create and manage them;
+ // an organization's admins read its members; learners join with consent.
+ match /organizations/{orgId} {
+ allow read: if isSignedIn();
+ allow write: if isReviewer();
+ match /members/{uid} {
+ allow read: if isSignedIn() && (uid == myUid() || isReviewer()
+ || myUid() in get(/databases/$(database)/documents/organizations/$(orgId)).data.adminUids);
+ allow create: if isSignedIn() && uid == myUid()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.consent == true
+ && get(/databases/$(database)/documents/organizations/$(orgId)).data.status == 'active'
+ && (request.resource.data.minor == false
+ || get(/databases/$(database)/documents/organizations/$(orgId)).data.get('allowMinors', false) == true);
+ allow delete: if isSignedIn() && (uid == myUid() || isReviewer()
+ || myUid() in get(/databases/$(database)/documents/organizations/$(orgId)).data.adminUids);
+ }
+ }
+
  // The Summit.
  match /summits/{id} {
  allow read: if true;
@@ -396,6 +421,9 @@ service cloud.firestore {
  }
  match /summitRegistrations/{id} {
  allow read: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ // Recruiting partners (confirmed by staff) see attendees who opted in.
+ allow read: if isSignedIn() && resource.data.get('shareProfile', false) == true
+ && myUid() in get(/databases/$(database)/documents/summits/$(resource.data.summitId)).data.get('recruiterUids', []);
  allow create: if isSignedIn() && request.resource.data.uid == myUid()
  && id == request.resource.data.summitId + '_' + myUid()
  && request.resource.data.checkedIn == false;

@@ -90,6 +90,7 @@ const TalentBoard = () => {
         const users = allUsers
           .filter(u => {
             if (u.isCompany) return false;
+            if (u.isMinor) return false; // learners under 18 are never listed
             const thisUid = u.uid || u.id;
             if (thisUid === currentUser?.uid) return false;
             if (u.onboardingComplete === false) return false;

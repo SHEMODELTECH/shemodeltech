@@ -30,11 +30,13 @@ const HostCohort = () => {
   const [saving, setSaving] = useState(false);
   const { visible: paidLive } = usePaidFeaturesVisible(currentUser?.uid);
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  // Optional prefill (?title=&description=&role=), e.g. assistant roles on a training contract.
+  const qs = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+  const [title, setTitle] = useState(qs.get('title') || '');
+  const [description, setDescription] = useState(qs.get('description') || '');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [roles, setRoles] = useState([blankRole()]);
+  const [roles, setRoles] = useState([qs.get('role') ? { ...blankRole(), title: qs.get('role') } : blankRole()]);
 
   useEffect(() => {
     if (!currentUser) {

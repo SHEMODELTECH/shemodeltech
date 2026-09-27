@@ -9,7 +9,7 @@
 // Payments are invoiced outside the platform for now; contractValue is recorded
 // here so the organization can report where the money goes.
 
-import { addDoc, collection, doc, getDocs, orderBy, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, deleteField, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export const ORG_TYPES = {
@@ -75,3 +75,85 @@ export const updateOrgRequest = (id, data) => updateDoc(doc(db, 'org_requests', 
 // Trainers: approved mentors who opt in. Default criteria (adjustable):
 // an approved mentor with at least one published course, approved by an admin.
 export const TRAINER_CRITERIA = 'Approved mentors with at least one published course can ask to be available for training contracts. An admin reviews each request.';
+
+// ---------------------------------------------------------------------------
+// Phase 2: organizations with learners (course licensing).
+//
+//   organizations/{orgId}: name, type, requestId, adminUids[], courses[{ track, slug, title }],
+//     editionIds[] (Mentor Hub courses shared as instructor editions), inviteCode,
+//     allowMinors, status ('active' | 'ended'), createdAt
+//   organizations/{orgId}/members/{uid}: uid, name, email, consent, minor, joinedAt
+//   users/{uid}.orgMemberships.{orgId} = true; users/{uid}.isMinor = true (13 to 17)
+// ---------------------------------------------------------------------------
+
+const newCode = () => Math.random().toString(36).slice(2, 8) + Math.random().toString(36).slice(2, 6);
+
+export const createOrganization = async (request, adminUids, staff) => {
+  const ref = await addDoc(collection(db, 'organizations'), {
+    name: request.orgName,
+    type: request.orgType,
+    requestId: request.id,
+    adminUids,
+    courses: [],
+    editionIds: [],
+    inviteCode: newCode(),
+    allowMinors: ['school', 'university'].includes(request.orgType),
+    status: 'active',
+    createdBy: staff.email || '',
+    createdAt: serverTimestamp(),
+  });
+  await updateDoc(doc(db, 'org_requests', request.id), { organizationId: ref.id, updatedAt: serverTimestamp() });
+  return ref.id;
+};
+
+export const getOrganization = async (id) => {
+  const s = await getDoc(doc(db, 'organizations', id));
+  return s.exists() ? { id: s.id, ...s.data() } : null;
+};
+export const listOrganizations = async () => {
+  const snap = await getDocs(collection(db, 'organizations'));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+};
+export const listMyOrganizations = async (uid) => {
+  const snap = await getDocs(query(collection(db, 'organizations'), where('adminUids', 'array-contains', uid)));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+};
+export const findOrgByInvite = async (code) => {
+  const snap = await getDocs(query(collection(db, 'organizations'), where('inviteCode', '==', code)));
+  return snap.empty ? null : { id: snap.docs[0].id, ...snap.docs[0].data() };
+};
+export const updateOrganization = (id, data) => updateDoc(doc(db, 'organizations', id), data);
+
+// Instructor editions: share a Mentor Hub course with an organization's instructors.
+export const shareEdition = async (org, courseId, share) => {
+  await updateDoc(doc(db, 'organizations', org.id), { editionIds: share ? arrayUnion(courseId) : arrayRemove(courseId) });
+  await updateDoc(doc(db, 'teacher_courses', courseId), {
+    orgInstructorUids: share ? arrayUnion(...org.adminUids) : arrayRemove(...org.adminUids),
+  });
+};
+
+export const joinOrganization = async (org, user, profile, { minor }) => {
+  await setDoc(doc(db, 'organizations', org.id, 'members', user.uid), {
+    uid: user.uid,
+    name: profile?.displayName || user.displayName || user.email,
+    email: user.email,
+    consent: true,
+    minor: !!minor,
+    inviteCode: org.inviteCode,
+    joinedAt: serverTimestamp(),
+  });
+  await updateDoc(doc(db, 'users', user.uid), {
+    [`orgMemberships.${org.id}`]: true,
+    ...(minor ? { isMinor: true } : {}),
+  });
+};
+
+export const leaveOrganization = async (orgId, uid) => {
+  await deleteDoc(doc(db, 'organizations', orgId, 'members', uid));
+  await updateDoc(doc(db, 'users', uid), { [`orgMemberships.${orgId}`]: deleteField() }).catch(() => {});
+};
+
+export const listOrgMembers = async (orgId) => {
+  const snap = await getDocs(collection(db, 'organizations', orgId, 'members'));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+};

@@ -40,6 +40,9 @@ const MyJobs = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.
 const Premium = lazy(() => import('./Pages/Premium'));
 const Organizations = lazy(() => import('./Pages/Organizations'));
 const Summit = lazy(() => import('./Pages/Summit'));
+const JoinOrganization = lazy(() => import('./Pages/org/Org').then((m) => ({ default: m.JoinOrganization })));
+const OrgDashboard = lazy(() => import('./Pages/org/Org').then((m) => ({ default: m.OrgDashboard })));
+const OrgEdition = lazy(() => import('./Pages/org/Org').then((m) => ({ default: m.OrgEdition })));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -212,6 +215,9 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/organizations" element={<Organizations />} />
                 <Route path="/summit" element={<Summit />} />
+                <Route path="/join/:code" element={<JoinOrganization />} />
+                <Route path="/org/:orgId" element={<SidebarRoute><OrgDashboard /></SidebarRoute>} />
+                <Route path="/org/:orgId/edition/:courseId" element={<SidebarRoute><OrgEdition /></SidebarRoute>} />
 
                 {/* She Model Tech Learning: public catalog, its own layout (no app sidebar) */}
                 <Route path="/teach" element={<TeachApply />} />

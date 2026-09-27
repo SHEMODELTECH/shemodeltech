@@ -235,13 +235,14 @@ export const JobDetail = () => {
         </p>
         <div className="mt-5 text-gray-800 whitespace-pre-wrap leading-relaxed">{job.description}</div>
         <div className="flex flex-wrap gap-2 mt-6">
-          {job.applyUrl && (
+          {profile?.isMinor && <p className="text-sm text-gray-600">Jobs are for members aged 18 and over.</p>}
+          {job.applyUrl && !profile?.isMinor && (
             <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">Apply</a>
           )}
-          {job.applyEmail && (
+          {job.applyEmail && !profile?.isMinor && (
             <a href={`mailto:${job.applyEmail}?subject=${encodeURIComponent(`Application: ${job.title}`)}`} className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Apply by email</a>
           )}
-          {profile && profile.uid !== job.companyUid && (
+          {profile && profile.uid !== job.companyUid && !profile.isMinor && (
             <button onClick={() => navigate(`/messages?to=${job.companyUid}&text=${encodeURIComponent(`Hi, I'm interested in the ${job.title} role.`)}`)}
               className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Message the company</button>
           )}

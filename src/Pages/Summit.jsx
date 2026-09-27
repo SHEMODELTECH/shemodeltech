@@ -4,7 +4,7 @@
 // an inquiry form, and sponsors (logos and names only).
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import SocialLinks from '../components/SocialLinks';
@@ -34,6 +34,7 @@ const Summit = () => {
   const [busy, setBusy] = useState(false);
   const [pForm, setPForm] = useState({ companyName: '', contactName: '', contactEmail: '', option: 'booth', message: '' });
   const [pSent, setPSent] = useState(false);
+  const [attendees, setAttendees] = useState(null); // recruiters: attendees who opted in
 
   useEffect(() => {
     getCurrentSummit().then(setSummit).catch(() => setSummit(null));
@@ -48,6 +49,11 @@ const Summit = () => {
   }, [currentUser]);
   useEffect(() => {
     if (currentUser && summit?.id) getMyRegistration(summit.id, currentUser.uid).then(setReg).catch(() => {});
+    if (currentUser && (summit?.recruiterUids || []).includes(currentUser.uid)) {
+      getDocs(query(collection(db, 'summitRegistrations'), where('summitId', '==', summit.id), where('shareProfile', '==', true)))
+        .then((snap) => setAttendees(snap.docs.map((d) => d.data())))
+        .catch(() => setAttendees([]));
+    }
   }, [currentUser, summit]);
 
   const register = async () => {
@@ -78,8 +84,10 @@ const Summit = () => {
       return toast.error(`Tell us a little about what you have in mind: at least ${SUMMIT_LIMITS.messageMinWords} words (you have ${countWords(pForm.message)}).`);
     setBusy(true);
     try {
-      await createPartnerRequest(summit.id, pForm, currentUser && profile?.isCompany ? currentUser.uid : null);
-      if (currentUser) {
+      const ref = await createPartnerRequest(summit.id, pForm, currentUser && profile?.isCompany ? currentUser.uid : null);
+      if (!currentUser) {
+        fetch('/api/public-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'partner', id: ref.id }) }).catch(() => {});
+      } else {
         alertStaff({ type: 'summit_partner', title: 'New Summit partner request', body: `${pForm.companyName}: ${PARTNER_OPTIONS[pForm.option]}.`, link: '/admin', roles: ['admin', 'editor'] });
       }
       setPSent(true);
@@ -125,7 +133,7 @@ const Summit = () => {
                     <button onClick={register} disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg disabled:opacity-60">
                       {currentUser ? 'Register free' : 'Create a free account to register'}
                     </button>
-                    {currentUser && (
+                    {currentUser && !profile?.isMinor && (
                       <label className="flex items-center gap-2 text-sm text-gray-700">
                         <input type="checkbox" checked={share} onChange={(e) => setShare(e.target.checked)} />
                         Let recruiting companies at the Summit see my Talent Board profile
@@ -163,6 +171,21 @@ const Summit = () => {
                     </a>
                   ))}
                 </div>
+              </section>
+            )}
+
+            {attendees && (
+              <section className="mt-10 rounded-2xl border border-indigo-200 bg-indigo-50/40 p-6">
+                <h2 className="text-xl font-bold text-gray-900">Attendees open to recruiters ({attendees.length})</h2>
+                <p className="text-sm text-gray-600 mt-1">Only attendees who chose to share their Talent Board profile appear here.</p>
+                <ul className="mt-3 grid sm:grid-cols-2 gap-2">
+                  {attendees.map((a) => (
+                    <li key={a.uid} className="bg-white border border-gray-200 rounded-lg px-3 py-2 flex items-center justify-between">
+                      <span className="text-sm font-semibold text-gray-900">{a.name}</span>
+                      <Link to={`/profile/${encodeURIComponent(a.email)}`} className="text-xs font-semibold text-indigo-700 hover:underline">View profile</Link>
+                    </li>
+                  ))}
+                </ul>
               </section>
             )}
 

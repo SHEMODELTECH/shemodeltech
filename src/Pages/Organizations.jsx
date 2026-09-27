@@ -54,8 +54,11 @@ const Organizations = () => {
     setBusy(true);
     try {
       const clean = Object.fromEntries(Object.entries(form).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v]));
-      await createOrgRequest(clean, currentUser?.uid || null);
-      if (currentUser) {
+      const ref = await createOrgRequest(clean, currentUser?.uid || null);
+      if (!currentUser) {
+        // Signed-out: ask the server to alert staff about this new request.
+        fetch('/api/public-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'org', id: ref.id }) }).catch(() => {});
+      } else {
         alertStaff({
           type: 'org_request',
           title: 'New organization request',

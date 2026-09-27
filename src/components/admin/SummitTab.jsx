@@ -4,6 +4,8 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { uploadImageToBlob } from '../../utils/blobStorage';
+import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 import {
   PARTNER_OPTIONS,
   PARTNER_STATUSES,
@@ -164,7 +166,16 @@ const SummitTab = () => {
                 <div key={p.id} className="bg-white border border-gray-200 rounded-lg p-3 mb-2">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="text-sm font-semibold text-gray-900">{p.companyName} <span className="font-normal text-gray-500">· {PARTNER_OPTIONS[p.option]}</span></p>
-                    <select value={p.status} onChange={async (e) => { await setPartnerStatus(p.id, e.target.value); setPartners((xs) => xs.map((x) => (x.id === p.id ? { ...x, status: e.target.value } : x))); }}
+                    <select value={p.status} onChange={async (e) => {
+                        const st = e.target.value;
+                        await setPartnerStatus(p.id, st);
+                        setPartners((xs) => xs.map((x) => (x.id === p.id ? { ...x, status: st } : x)));
+                        // Recruiting-table partners (paid or confirmed) can see attendees who opted in.
+                        if (p.option === 'booth' && p.companyUid) {
+                          const on = ['paid', 'confirmed'].includes(st);
+                          await updateDoc(doc(db, 'summits', editing), { recruiterUids: on ? arrayUnion(p.companyUid) : arrayRemove(p.companyUid) }).catch(() => {});
+                        }
+                      }}
                       className="text-sm border border-gray-300 rounded-lg px-2 py-1" aria-label="Status">
                       {PARTNER_STATUSES.map((s) => <option key={s} value={s}>{PARTNER_STATUS_LABELS[s]}</option>)}
                     </select>

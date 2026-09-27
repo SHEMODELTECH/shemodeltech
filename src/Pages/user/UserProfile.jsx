@@ -59,6 +59,12 @@ const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [mentorCerts, setMentorCerts] = useState([]);
   const [mentorStats, setMentorStats] = useState(null);
+  // Staff can view profiles of learners under 18; other members can't.
+  const [viewerStaff, setViewerStaff] = useState(false);
+  useEffect(() => {
+    if (!currentUser) return;
+    getDoc(doc(db, 'users', currentUser.uid)).then((s) => setViewerStaff(['admin', 'editor'].includes(s.data()?.role))).catch(() => {});
+  }, [currentUser]);
   // The VIEWER's own profile - needed for the messaging rules:
   // free company accounts can't message anyone, and free individual
   // accounts can't message company accounts.
@@ -202,6 +208,14 @@ const UserProfile = () => {
   }
 
   const isOwnProfile = currentUser?.uid === profile.uid || currentUser?.email?.toLowerCase() === profile.email?.toLowerCase();
+  if (profile.isMinor && !isOwnProfile && !viewerStaff) {
+    return (
+      <div className="max-w-xl mx-auto py-16 text-center">
+        <h1 className="text-xl font-bold text-gray-900">This profile is private</h1>
+        <p className="text-gray-600 mt-2">Profiles of learners under 18 aren’t shown publicly.</p>
+      </div>
+    );
+  }
   const displayName = profile.displayName || profile.email?.split('@')[0] || 'Member';
   const initials = getInitials(displayName, profile.email);
   const userBadges = profile.badges || [];

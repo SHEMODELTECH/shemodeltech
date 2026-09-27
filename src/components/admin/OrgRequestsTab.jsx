@@ -6,7 +6,102 @@ import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/fire
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { notifyMember } from '../../utils/staffAlerts';
-import { ORG_TYPES, REQUEST_TYPES, STATUS_LABELS, TRAINER_CRITERIA, listOrgRequests, statusesFor, updateOrgRequest } from '../../utils/organizations';
+import { Link } from 'react-router-dom';
+import { ORG_TYPES, REQUEST_TYPES, STATUS_LABELS, TRAINER_CRITERIA, createOrganization, getOrganization, listOrgRequests, shareEdition, statusesFor, updateOrgRequest, updateOrganization } from '../../utils/organizations';
+import { coursesForTrack, tracksWithCourses } from '../../utils/foundationsCourses';
+import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
+import { listTeacherCourses } from '../../utils/teacherCourses';
+import { useAuth } from '../../context/AuthContext';
+
+// Manage the organization created from a licensing request: invite link,
+// licensed courses, instructor editions, and whether learners under 18 may join.
+const OrgManager = ({ request, onCreated }) => {
+  const { currentUser } = useAuth();
+  const [org, setOrg] = useState(null);
+  const [catalog, setCatalog] = useState([]);
+  const [hub, setHub] = useState([]);
+  useEffect(() => {
+    if (request.organizationId) getOrganization(request.organizationId).then(setOrg).catch(() => {});
+  }, [request.organizationId]);
+  useEffect(() => {
+    if (!org) return;
+    const builtIn = tracksWithCourses().filter((t) => t !== 'company').flatMap((t) => coursesForTrack(t).map((c) => ({ track: t, slug: c.slug, title: c.title })));
+    listPublished().then((l) => setCatalog([...builtIn, ...l.map(toCatalogCourse).map((c) => ({ track: c.track, slug: c.slug, title: c.title }))])).catch(() => setCatalog(builtIn));
+    listTeacherCourses().then((l) => setHub(l.filter((c) => !c.published))).catch(() => {});
+  }, [org]);
+
+  const create = async () => {
+    const emails = window.prompt('Email address(es) of the organization’s admins or instructors (they need She Model Tech accounts). Separate with commas.', request.contactEmail || '');
+    if (!emails) return;
+    const uids = [];
+    for (const em of emails.split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)) {
+      const snap = await getDocs(query(collection(db, 'users'), where('email', '==', em))).catch(() => null);
+      if (snap && !snap.empty) uids.push(snap.docs[0].id);
+      else toast.error(`No account found for ${em}. Ask them to sign up first.`);
+    }
+    if (!uids.length) return;
+    try {
+      const id = await createOrganization(request, uids, currentUser);
+      uids.forEach((uid) => notifyMember(uid, { type: 'org_created', title: `${request.orgName} is set up on She Model Tech`, body: 'Open your organization dashboard to invite your learners.', link: `/org/${id}` }));
+      toast.success('Organization created.');
+      onCreated(id);
+    } catch (e) {
+      toast.error('Could not create the organization.');
+    }
+  };
+
+  if (!request.organizationId) {
+    return <button onClick={create} className="text-xs font-semibold bg-indigo-600 text-white px-3 py-1.5 rounded-lg">Create organization and invite link</button>;
+  }
+  if (!org) return <p className="text-xs text-gray-500">Loading organization...</p>;
+  const save = async (data) => {
+    await updateOrganization(org.id, data);
+    setOrg({ ...org, ...data });
+  };
+  const inviteUrl = `${window.location.origin}/join/${org.inviteCode}`;
+  return (
+    <div className="mt-3 rounded-lg border border-indigo-200 bg-indigo-50/40 p-3 space-y-2 text-sm">
+      <p className="font-semibold text-gray-900">
+        Organization · <Link to={`/org/${org.id}`} className="text-indigo-700 hover:underline">Open dashboard</Link>
+      </p>
+      <p className="text-xs text-gray-600 break-all">Invite link: {inviteUrl}</p>
+      <label className="flex items-center gap-2 text-xs text-gray-700">
+        <input type="checkbox" checked={!!org.allowMinors} onChange={(e) => save({ allowMinors: e.target.checked })} />
+        Allow learners aged 13 to 17 (the school confirms guardian consent)
+      </label>
+      <div>
+        <p className="text-xs font-semibold text-gray-700">Licensed courses</p>
+        <div className="flex flex-wrap gap-1.5 mt-1">
+          {(org.courses || []).map((c) => (
+            <span key={c.slug} className="text-xs bg-white border border-gray-200 rounded-full px-2 py-0.5">
+              {c.title} <button onClick={() => save({ courses: org.courses.filter((x) => x.slug !== c.slug) })} aria-label={`Remove ${c.title}`}>×</button>
+            </span>
+          ))}
+        </div>
+        <select value="" onChange={(e) => { const c = catalog.find((x) => x.slug === e.target.value); if (c && !(org.courses || []).some((x) => x.slug === c.slug)) save({ courses: [...(org.courses || []), c] }); }}
+          className="mt-1 text-xs border border-gray-300 rounded-lg px-2 py-1 max-w-full">
+          <option value="">Add a course...</option>
+          {catalog.map((c) => <option key={c.track + c.slug} value={c.slug}>{c.title}</option>)}
+        </select>
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-gray-700">Instructor editions (Mentor Hub, for mentors)</p>
+        <div className="flex flex-wrap gap-1.5 mt-1">
+          {hub.filter((c) => (org.editionIds || []).includes(c.id)).map((c) => (
+            <span key={c.id} className="text-xs bg-white border border-gray-200 rounded-full px-2 py-0.5">
+              {c.title} <button onClick={async () => { await shareEdition(org, c.id, false); setOrg({ ...org, editionIds: org.editionIds.filter((x) => x !== c.id) }); }} aria-label={`Stop sharing ${c.title}`}>×</button>
+            </span>
+          ))}
+        </div>
+        <select value="" onChange={async (e) => { const id = e.target.value; if (!id || (org.editionIds || []).includes(id)) return; await shareEdition(org, id, true); setOrg({ ...org, editionIds: [...(org.editionIds || []), id] }); toast.success('Shared with the organization’s instructors.'); }}
+          className="mt-1 text-xs border border-gray-300 rounded-lg px-2 py-1 max-w-full">
+          <option value="">Share an instructor edition...</option>
+          {hub.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+        </select>
+      </div>
+    </div>
+  );
+};
 
 const OrgRequestsTab = ({ isAdmin }) => {
   const [reqs, setReqs] = useState(null);
@@ -151,6 +246,17 @@ const OrgRequestsTab = ({ isAdmin }) => {
                 <textarea id={`note-${r.id}`} rows={2} defaultValue={r.adminNotes || ''}
                   onBlur={(e) => e.target.value !== (r.adminNotes || '') && patch(r, { adminNotes: e.target.value }, 'Notes saved.')}
                   className="mt-1 w-full text-sm border border-gray-300 rounded-lg px-2 py-1" />
+                {r.type !== 'training' && ['approved', 'active'].includes(r.status) && (
+                  <OrgManager request={r} onCreated={(id) => setReqs((xs) => xs.map((x) => (x.id === r.id ? { ...x, organizationId: id } : x)))} />
+                )}
+                {r.type !== 'licensing' && ['signed', 'in_progress'].includes(r.status) && (
+                  <Link
+                    to={`/projects/new-paid?title=${encodeURIComponent(`Training assistant: ${r.orgName}`)}&description=${encodeURIComponent(`Assist our trainers delivering ${r.topics.slice(0, 200)} for ${r.orgName}. Paid work experience.`)}&role=${encodeURIComponent('Training assistant')}`}
+                    className="inline-block mt-3 text-xs font-semibold border border-pink-300 text-pink-700 px-3 py-1.5 rounded-lg hover:bg-pink-50"
+                  >
+                    Open a paid assistant role
+                  </Link>
+                )}
               </div>
             ))}
           </div>
