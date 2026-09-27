@@ -504,7 +504,8 @@ export const useLearning = () => {
     try {
       await write({ learningEnrolled: { [track]: { [slug]: at } } });
       // Count the enrolment for the course (used for mentor impact numbers).
-      setDoc(doc(db, 'course_enrollments', courseKey(track, slug), 'learners', currentUser.uid), { uid: currentUser.uid, at }).catch(() => {});
+      // Awaited: the forum and ratings check this record before letting them post.
+      await setDoc(doc(db, 'course_enrollments', courseKey(track, slug), 'learners', currentUser.uid), { uid: currentUser.uid, at }).catch(() => {});
     } catch (e) {
       console.error(e);
       toast.error('Could not enrol you. Check your connection and try again.');

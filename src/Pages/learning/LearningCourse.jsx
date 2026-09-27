@@ -14,7 +14,7 @@ import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toC
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import MentorBadge from '../../components/MentorBadge';
 import CourseFeedback from './CourseFeedback';
@@ -95,6 +95,29 @@ const LearningCourse = ({ reading = false }) => {
       : { ...baseCourse, markdown: pubContent };
   }, [baseCourse, isPublished, pubContent]);
   const parts = useMemo(() => (course ? coursePartTitles(course) : []), [course]);
+  // Only enrolled learners (and mentors and staff) can rate, comment, and post in
+  // the forum. Enrolment is read from the learner's account, and the database
+  // rules check the same thing, so this can't be bypassed in the browser.
+  const isStaffOrMentor = !!lr.profile && (['admin', 'editor'].includes(lr.profile.role) || !!lr.profile.isTeacher);
+  const canParticipate = lr.signedIn && (lr.isEnrolled(track, slug) || isStaffOrMentor);
+  const joinCourse = () => {
+    if (!lr.signedIn) return signInAndReturn(navigate, location.pathname);
+    lr.enroll(track, slug).then(() => toast.success('Enrolled. You can now join the discussion.')).catch(() => {});
+  };
+
+  // Make sure an enrolled learner's enrolment record exists (older enrolments
+  // were made before these records), so the forum and ratings accept them.
+  const enrolledHere = lr.signedIn && lr.isEnrolled(track, slug);
+  useEffect(() => {
+    if (!enrolledHere || !currentUser) return;
+    const ref = doc(db, 'course_enrollments', courseKey(track, slug), 'learners', currentUser.uid);
+    getDoc(ref)
+      .then((snap) => {
+        if (!snap.exists()) setDoc(ref, { uid: currentUser.uid, at: new Date().toISOString() }).catch(() => {});
+      })
+      .catch(() => {});
+  }, [enrolledHere, currentUser, track, slug]);
+
   // Courses with a capstone part need a capstone post in the forum to complete.
   const hasCapstone = !!course && course.kind !== 'interactive' && course.kind !== 'published-html' && parts.some((t) => /capstone/i.test(t));
   const [capstoneDone, setCapstoneDone] = useState(false);
@@ -372,7 +395,7 @@ const LearningCourse = ({ reading = false }) => {
         
           {/* Ratings, reactions, comments: on mentor courses published to Learning */}
           {isPublished && (
-            <CourseFeedback track={track} slug={slug} courseTitle={course.title} authorUid={course.authorUid} authorName={course.authorName} displayName={lr.profile?.displayName || ''} />
+            <CourseFeedback track={track} slug={slug} courseTitle={course.title} authorUid={course.authorUid} authorName={course.authorName} displayName={lr.profile?.displayName || ''} canParticipate={canParticipate} onEnroll={joinCourse} />
           )}
 
           {/* Discussion forum for every course */}
@@ -382,6 +405,8 @@ const LearningCourse = ({ reading = false }) => {
             courseTitle={course.title}
             hasCapstone={hasCapstone}
             authorUid={isPublished ? course.authorUid || null : null}
+            canParticipate={canParticipate}
+            onEnroll={joinCourse}
             displayName={lr.profile?.displayName || ''}
             onCapstonePosted={() => setCapstoneDone(true)}
           />

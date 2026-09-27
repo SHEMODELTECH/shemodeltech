@@ -35,6 +35,18 @@ import { signInAndReturn } from './LearningLayout';
 import { friendlyError } from '../../components/NoteDialog';
 import { notifyMember } from '../../utils/staffAlerts';
 import { courseKey } from '../../utils/mentorStats';
+import LimitHint, { countWords } from '../../components/LimitHint';
+
+// Limits, shown on every field (and the maximums are enforced by the database rules).
+export const FORUM_LIMITS = {
+  titleMinWords: 3,
+  titleMaxChars: 150,
+  bodyMinWords: 10,
+  capstoneMinWords: 20,
+  bodyMaxChars: 5000,
+  replyMinWords: 2,
+  replyMaxChars: 3000,
+};
 import { uploadDocumentToBlob, uploadImageToBlob } from '../../utils/blobStorage';
 
 const KINDS = {
@@ -147,13 +159,14 @@ const timeAgo = (ts) => {
   return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 };
 
-const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSignIn }) => {
+const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSignIn, canParticipate, onNeedEnroll }) => {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
   const replyRef = useRef(null);
   const [reactions, setReactions] = useState(t.reactions || {});
   const react = async (emoji) => {
     if (!me) return onNeedSignIn();
+    if (!canParticipate) return onNeedEnroll();
     const mine = reactions[me.uid];
     const next = { ...reactions };
     if (mine === emoji) delete next[me.uid];
@@ -180,11 +193,20 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
     setOpen((o) => !o);
     if (!replies) load().catch(() => setReplies([]));
   };
+  const startReply = () => {
+    if (!me) return onNeedSignIn();
+    if (!canParticipate) return onNeedEnroll();
+    setOpen(true);
+    if (!replies) load().catch(() => setReplies([]));
+    setTimeout(() => replyRef.current?.focus(), 50);
+  };
 
   const reply = async (e) => {
     e.preventDefault();
     const body = text.trim();
     if (!body && !file) return;
+    if (body && countWords(body) < FORUM_LIMITS.replyMinWords)
+      return toast.error(`Replies need at least ${FORUM_LIMITS.replyMinWords} words (you have ${countWords(body)}).`);
     setBusy(true);
     try {
       const attachment = await uploadAttachment(file, 'forum');
@@ -244,7 +266,7 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
         <p className="font-semibold text-gray-900 mt-1.5">{t.title}</p>
         {!open && t.body && <p className="text-sm text-gray-600 mt-0.5 line-clamp-2">{t.body}</p>}
       </button>
-      <div className="flex flex-wrap gap-1.5 px-4 pb-3" role="group" aria-label="Reactions">
+      <div className="flex flex-wrap items-center gap-1.5 px-4 pb-3" role="group" aria-label="Reactions and replies">
         {REACTIONS.map((e) => {
           const n = Object.values(reactions).filter((x) => x === e).length;
           const on = me && reactions[me.uid] === e;
@@ -255,6 +277,16 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
             </button>
           );
         })}
+        <span className="flex-1" />
+        {count > 0 && (
+          <button type="button" onClick={toggle} className="text-xs font-semibold text-gray-600 hover:text-gray-900 px-2 py-1">
+            {open ? 'Hide replies' : `View ${count} repl${count === 1 ? 'y' : 'ies'}`}
+          </button>
+        )}
+        <button type="button" onClick={startReply}
+          className="text-xs font-semibold text-pink-700 border border-pink-200 bg-white hover:bg-pink-50 px-3 py-1 rounded-full">
+          💬 Reply
+        </button>
       </div>
       {open && (
         <div className="px-4 pb-4 border-t border-gray-100">
@@ -284,12 +316,15 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
             {replies && replies.length === 0 && <li className="text-sm text-gray-500">No replies yet.</li>}
             {!replies && <li className="text-sm text-gray-500">Loading replies...</li>}
           </ul>
-          {me ? (
+          {me && canParticipate ? (
             <form onSubmit={reply} className="mt-3">
-              <label className="sr-only" htmlFor={`reply-${t.id}`}>Your reply</label>
-              <textarea ref={replyRef} id={`reply-${t.id}`} rows={2} value={text} onChange={(e) => setText(e.target.value)} maxLength={3000}
+              <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor={`reply-${t.id}`}>
+                Your reply <span className="font-normal text-gray-500">(at least {FORUM_LIMITS.replyMinWords} words, up to {FORUM_LIMITS.replyMaxChars} characters)</span>
+              </label>
+              <textarea ref={replyRef} id={`reply-${t.id}`} rows={2} value={text} onChange={(e) => setText(e.target.value)} maxLength={FORUM_LIMITS.replyMaxChars}
                 placeholder="Write a reply (links are clickable)"
                 className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500" />
+              <LimitHint text={text} minWords={FORUM_LIMITS.replyMinWords} maxChars={FORUM_LIMITS.replyMaxChars} />
               <div className="flex flex-wrap items-center gap-2 mt-2">
                 <button type="submit" disabled={busy || (!text.trim() && !file)} className="fd-btn !py-1.5 !px-3 text-sm disabled:opacity-50">
                   {busy ? 'Posting...' : 'Reply'}
@@ -298,14 +333,18 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
                 <AttachButton id={`reply-file-${t.id}`} file={file} onFile={setFile} />
               </div>
             </form>
-          ) : null}
+          ) : (
+            <p className="mt-3 text-sm text-gray-600">
+              {me ? 'Enroll in this course to reply.' : 'Sign in and enroll in this course to reply.'}
+            </p>
+          )}
         </div>
       )}
     </li>
   );
 };
 
-const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayName = '', onCapstonePosted, root = 'course_forum', forumKey = null, authorUid = null, title = 'Course forum', intro = 'Ask questions, help others, and share your work.' }) => {
+const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayName = '', onCapstonePosted, root = 'course_forum', forumKey = null, authorUid = null, title = 'Course forum', intro = 'Ask questions, help others, and share your work.', canParticipate = true, onEnroll = null }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -333,8 +372,10 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
       .catch(() => {});
   }, [currentUser]);
 
+  const needEnroll = () => toast.info('Enroll in this course to post, reply, and react in its forum.');
   const startPost = (kind) => {
     if (!currentUser) return signInAndReturn(navigate, `${location.pathname}#forum`);
+    if (!canParticipate) return needEnroll();
     setForm((f) => ({ ...f, kind }));
     setOpen(true);
   };
@@ -343,10 +384,11 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
     e.preventDefault();
     const title = form.title.trim();
     const body = form.body.trim();
-    if (!title) return toast.error('Add a short title.');
-    if (body.split(/\s+/).filter(Boolean).length < (form.kind === 'capstone' ? 20 : 3)) {
-      return toast.error(form.kind === 'capstone' ? 'Describe your capstone project in at least 20 words.' : 'Add a little more detail.');
-    }
+    const minBody = form.kind === 'capstone' ? FORUM_LIMITS.capstoneMinWords : FORUM_LIMITS.bodyMinWords;
+    if (countWords(title) < FORUM_LIMITS.titleMinWords)
+      return toast.error(`The title needs at least ${FORUM_LIMITS.titleMinWords} words (you have ${countWords(title)}).`);
+    if (countWords(body) < minBody)
+      return toast.error(`${form.kind === 'capstone' ? 'Your project description' : 'The details'} need at least ${minBody} words (you have ${countWords(body)}).`);
     setBusy(true);
     try {
       const attachment = await uploadAttachment(file, 'forum');
@@ -394,6 +436,27 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
         </div>
       </div>
 
+      {!canParticipate && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <p className="text-sm text-gray-700">
+            {currentUser
+              ? 'Only learners enrolled in this course can post, reply, and react. You can read the discussion.'
+              : 'Sign in and enroll in this course to post, reply, and react. You can read the discussion.'}
+          </p>
+          {currentUser ? (
+            onEnroll && (
+              <button onClick={onEnroll} className="fd-btn !py-2 !px-3 text-sm">
+                Enroll to join
+              </button>
+            )
+          ) : (
+            <button onClick={() => signInAndReturn(navigate, `${location.pathname}#forum`)} className="fd-btn !py-2 !px-3 text-sm">
+              Sign in
+            </button>
+          )}
+        </div>
+      )}
+
       {open && (
         <form onSubmit={post} className="border border-gray-200 rounded-2xl p-4 bg-white mb-4 space-y-3">
           <div className="flex flex-wrap gap-2" role="group" aria-label="Type of post">
@@ -407,19 +470,30 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
               ))}
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="forum-title">Title</label>
-            <input id="forum-title" className={input} value={form.title} maxLength={150}
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="forum-title">
+              Title <span className="font-normal text-gray-500">(at least {FORUM_LIMITS.titleMinWords} words, up to {FORUM_LIMITS.titleMaxChars} characters)</span>
+            </label>
+            <input id="forum-title" className={input} value={form.title} maxLength={FORUM_LIMITS.titleMaxChars} aria-describedby="forum-title-hint"
               placeholder={form.kind === 'capstone' ? 'My capstone: ...' : 'What do you want to ask or discuss?'}
               onChange={(e) => setForm({ ...form, title: e.target.value })} />
+            <LimitHint id="forum-title-hint" text={form.title} minWords={FORUM_LIMITS.titleMinWords} maxChars={FORUM_LIMITS.titleMaxChars} />
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="forum-body">
-              {form.kind === 'capstone' ? 'Describe your project' : 'Details'}
-              {form.kind === 'capstone' && <span className="font-normal text-gray-500"> (at least 20 words)</span>}
+              {form.kind === 'capstone' ? 'Describe your project' : 'Details'}{' '}
+              <span className="font-normal text-gray-500">
+                (at least {form.kind === 'capstone' ? FORUM_LIMITS.capstoneMinWords : FORUM_LIMITS.bodyMinWords} words, up to {FORUM_LIMITS.bodyMaxChars} characters)
+              </span>
             </label>
-            <textarea ref={bodyRef} id="forum-body" rows={5} className={input} value={form.body} maxLength={5000}
+            <textarea ref={bodyRef} id="forum-body" rows={5} className={input} value={form.body} maxLength={FORUM_LIMITS.bodyMaxChars} aria-describedby="forum-body-hint"
               placeholder={form.kind === 'capstone' ? 'What you built, how you approached it, what you learned, and anything you would like feedback on.' : ''}
               onChange={(e) => setForm({ ...form, body: e.target.value })} />
+            <LimitHint
+              id="forum-body-hint"
+              text={form.body}
+              minWords={form.kind === 'capstone' ? FORUM_LIMITS.capstoneMinWords : FORUM_LIMITS.bodyMinWords}
+              maxChars={FORUM_LIMITS.bodyMaxChars}
+            />
             <div className="flex flex-wrap items-center gap-2 mt-1">
               <EmojiPicker targetRef={bodyRef} value={form.body} onChange={(v) => setForm({ ...form, body: v })} />
               <AttachButton id="forum-file" file={file} onFile={setFile} />
@@ -460,7 +534,9 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
           {shown.map((t) => (
             <Thread key={t.id} base={base} t={t} me={currentUser} isStaff={isStaff} myName={myName} courseTitle={courseTitle}
               onDeleted={(id) => setThreads((ts) => ts.filter((x) => x.id !== id))}
-              onNeedSignIn={() => signInAndReturn(navigate, `${location.pathname}#forum`)} />
+              onNeedSignIn={() => signInAndReturn(navigate, `${location.pathname}#forum`)}
+              canParticipate={canParticipate}
+              onNeedEnroll={needEnroll} />
           ))}
         </ul>
       )}

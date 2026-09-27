@@ -316,7 +316,8 @@ const ApplyToLead = () => {
 
       {/* Pitch */}
       <label className="block text-gray-900 font-bold mb-1">
-        Why do you want to lead? <span className="text-pink-600">*</span>
+        Why do you want to lead? <span className="text-pink-600">*</span>{' '}
+        <span className="text-gray-500 font-normal text-sm">(at least 40 characters)</span>
       </label>
       <p className="text-gray-500 text-xs mb-2">
         A couple of sentences is plenty. What draws you to these projects, and how you&rsquo;d keep
@@ -330,9 +331,12 @@ const ApplyToLead = () => {
         className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:border-pink-500 text-sm outline-none resize-y mb-1"
       />
       <p
-        className={`text-xs mb-6 ${pitch.trim().length >= 40 ? 'text-gray-400' : 'text-gray-500'}`}
+        className={`text-xs mb-6 ${pitch.trim().length >= 40 ? 'text-emerald-700' : 'text-gray-500'}`}
+        aria-live="polite"
       >
-        {pitch.trim().length}/40 characters minimum
+        {pitch.trim().length >= 40
+          ? `${pitch.trim().length} characters. Minimum reached.`
+          : `Minimum 40 characters. You have ${pitch.trim().length} so far.`}
       </p>
 
       <label className="block text-gray-900 font-bold mb-1">

@@ -34,6 +34,13 @@ service cloud.firestore {
  function isAdmin() {
  return hasProfile() && myUserDoc().role == 'admin';
  }
+ // Enrolled in a Learning course (course_enrollments/{course}/learners/{uid}),
+ // or a mentor or staff member, who can take part in any course's discussion.
+ function canJoinCourse(courseKey) {
+ return isSignedIn() && (
+ exists(/databases/$(database)/documents/course_enrollments/$(courseKey)/learners/$(request.auth.uid))
+ || isReviewer() || isTeacherUser());
+ }
  function isTeacherUser() {
  return hasProfile() && myUserDoc().get('isTeacher', false) == true;
  }
@@ -341,7 +348,7 @@ service cloud.firestore {
  match /course_forum/{courseKey} {
  match /threads/{threadId} {
  allow read: if true;
- allow create: if isSignedIn()
+ allow create: if canJoinCourse(courseKey)
  && request.resource.data.uid == myUid()
  && request.resource.data.kind in ['question', 'discussion', 'capstone']
  && request.resource.data.title is string && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 150
@@ -349,7 +356,7 @@ service cloud.firestore {
  && request.resource.data.replyCount == 0;
  // Anyone signed in can bump the reply count when replying, or set their own
  // emoji reaction; nothing else.
- allow update: if isSignedIn() && (
+ allow update: if canJoinCourse(courseKey) && (
  (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['replyCount', 'lastAt'])
  && request.resource.data.replyCount >= resource.data.get('replyCount', 0) - 1)
  || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
@@ -358,7 +365,7 @@ service cloud.firestore {
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
  match /replies/{replyId} {
  allow read: if true;
- allow create: if isSignedIn()
+ allow create: if canJoinCourse(courseKey)
  && request.resource.data.uid == myUid()
  && request.resource.data.body is string
  && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
@@ -403,7 +410,7 @@ service cloud.firestore {
  match /course_feedback/{courseKey} {
  match /ratings/{uid} {
  allow read: if true;
- allow create, update: if isSignedIn() && uid == myUid()
+ allow create, update: if canJoinCourse(courseKey) && uid == myUid()
  && request.resource.data.uid == myUid()
  && request.resource.data.stars is int
  && request.resource.data.stars >= 1 && request.resource.data.stars <= 5;
@@ -411,14 +418,14 @@ service cloud.firestore {
  }
  match /reactions/{uid} {
  allow read: if true;
- allow create, update: if isSignedIn() && uid == myUid()
+ allow create, update: if canJoinCourse(courseKey) && uid == myUid()
  && request.resource.data.uid == myUid()
  && request.resource.data.type in ['helpful', 'love', 'insightful', 'inspiring'];
  allow delete: if isSignedIn() && (uid == myUid() || isReviewer());
  }
  match /comments/{id} {
  allow read: if true;
- allow create: if isSignedIn()
+ allow create: if canJoinCourse(courseKey)
  && request.resource.data.uid == myUid()
  && request.resource.data.text is string
  && request.resource.data.text.size() > 0

@@ -433,8 +433,14 @@ const Messages = () => {
                         }}
                         placeholder="Type a message..."
                         maxLength={2000}
+                        aria-describedby="msg-count"
                         className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent min-h-[44px] placeholder-gray-400"
                       />
+                      {newMessage.length > 0 && (
+                        <span id="msg-count" className={`self-center text-[11px] whitespace-nowrap ${newMessage.length > 1800 ? 'text-amber-700' : 'text-gray-400'}`}>
+                          {newMessage.length}/2000
+                        </span>
+                      )}
                       <button
                         onClick={sendMessage}
                         disabled={!newMessage.trim() || sending}

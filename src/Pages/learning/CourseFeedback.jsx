@@ -29,6 +29,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { signInAndReturn } from './LearningLayout';
 import { friendlyError } from '../../components/NoteDialog';
+import LimitHint, { countWords } from '../../components/LimitHint';
 import { notifyMember } from '../../utils/staffAlerts';
 
 export const REACTIONS = [
@@ -56,7 +57,7 @@ const Star = ({ filled, className = 'w-5 h-5' }) => (
   </svg>
 );
 
-const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName = '', isStaff = false, displayName = '' }) => {
+const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName = '', isStaff = false, displayName = '', canParticipate = true, onEnroll = null }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -108,6 +109,18 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
   const needSignIn = () => {
     signInAndReturn(navigate, location.pathname);
   };
+  // Only enrolled learners can rate, react, and comment (also enforced by the database rules).
+  const blocked = () => {
+    if (!currentUser) {
+      needSignIn();
+      return true;
+    }
+    if (!canParticipate) {
+      toast.info('Enroll in this course to rate, react, and comment.');
+      return true;
+    }
+    return false;
+  };
 
   // Let the mentor know when someone rates, reacts to, or comments on their
   // course, with that person's name. Best-effort: a failed notification never
@@ -127,7 +140,7 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
   };
 
   const rate = async (stars) => {
-    if (!currentUser) return needSignIn();
+    if (blocked()) return;
     const prev = ratings;
     const entry = { id: currentUser.uid, uid: currentUser.uid, name: myName, stars };
     setRatings((rs) => [...(rs || []).filter((r) => r.id !== currentUser.uid), entry]);
@@ -145,7 +158,7 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
   };
 
   const react = async (type) => {
-    if (!currentUser) return needSignIn();
+    if (blocked()) return;
     const prev = reactions;
     const ref = doc(db, base, 'reactions', currentUser.uid);
     try {
@@ -166,9 +179,9 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
 
   const comment = async (e) => {
     e.preventDefault();
-    if (!currentUser) return needSignIn();
+    if (blocked()) return;
     const t = text.trim();
-    if (!t) return;
+    if (countWords(t) < 3) return toast.error(`Comments need at least 3 words (you have ${countWords(t)}).`);
     if (t.length > 2000) return toast.error('Comments can be up to 2,000 characters.');
     setBusy(true);
     try {
@@ -277,19 +290,28 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
       <div className="mt-6">
         <form onSubmit={comment} className="border border-gray-200 rounded-2xl p-4 bg-white">
           <label htmlFor="fb-comment" className="text-sm font-semibold text-gray-900">
-            Leave a comment
+            Leave a comment <span className="font-normal text-gray-500">(at least 3 words, up to 2000 characters)</span>
           </label>
+          {currentUser && !canParticipate && (
+            <p className="text-sm text-gray-600 mt-1">
+              Only learners enrolled in this course can rate, react, and comment.{' '}
+              {onEnroll && (
+                <button type="button" onClick={onEnroll} className="font-semibold text-pink-700 hover:underline">Enroll to join</button>
+              )}
+            </p>
+          )}
           <textarea
             id="fb-comment"
             rows={3}
             value={text}
             onChange={(e) => setText(e.target.value)}
             onFocus={() => !currentUser && needSignIn()}
+            disabled={!!currentUser && !canParticipate}
             placeholder={currentUser ? 'What did you learn? What would make it better?' : 'Sign in to comment'}
             className="mt-2 w-full rounded-lg border border-gray-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
           <div className="flex justify-between items-center mt-2">
-            <span className="text-xs text-gray-500">{text.length}/2000</span>
+            <LimitHint text={text} minWords={3} maxChars={2000} className="!mt-0" />
             <button type="submit" disabled={busy || !text.trim()} className="fd-btn disabled:opacity-50">
               {busy ? 'Posting...' : 'Post comment'}
             </button>
