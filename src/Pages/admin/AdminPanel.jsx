@@ -371,7 +371,7 @@ const AdminPanel = () => {
       .finally(() => setChecking(false));
   }, [currentUser, navigate]);
 
-  // --- Load all data once admin-confirmed ---
+  // --- Load all data once staff-confirmed (admin or editor) ---
   const loadData = useCallback(async () => {
     setLoadingData(true);
     try {
@@ -412,9 +412,10 @@ const AdminPanel = () => {
     setLoadingData(false);
   }, []);
 
+  // Admins and editors both see the dashboard data (editors just can't delete or change roles).
   useEffect(() => {
-    if (isAdmin) loadData();
-  }, [isAdmin, loadData]);
+    if (isReviewer) loadData();
+  }, [isReviewer, loadData]);
 
   // --- Actions ---
   // Company verification is the approval gate for posting paid projects:
