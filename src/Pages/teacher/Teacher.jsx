@@ -193,10 +193,10 @@ const MentorLetters = ({ access }) => {
     <div className="mb-6 rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-pink-50 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="font-bold text-gray-900">Your mentor benefits</p>
+          <p className="font-bold text-gray-900">Letters from She Model Tech</p>
           <p className="text-sm text-gray-600 mt-1 max-w-2xl">
-            A Mentor badge on your profile, a certificate for every published course, a spot among top-rated mentors on
-            the Talent Board, and letters from SHE MODEL TECH Inc. when you need them.
+            Need a recommendation or volunteer service letter? Request one here and track it below.{' '}
+            <a href="/teach#faq" className="font-semibold text-indigo-700 hover:underline">See all mentor benefits</a>
           </p>
         </div>
         <button onClick={() => setOpen((o) => !o)} className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
@@ -306,6 +306,12 @@ const MentorLetters = ({ access }) => {
                   {[r.draftText ? 'Draft pasted' : '', r.attachment ? 'Draft attached' : '', r.emailingDraft ? 'Draft by email' : ''].filter(Boolean).join(' · ')}
                 </span>
                 {r.adminNote && <span className="block text-xs text-gray-600 mt-0.5">Note: {r.adminNote}</span>}
+                {r.letterFile?.url && (
+                  <a href={r.letterFile.url} target="_blank" rel="noopener noreferrer"
+                    className="inline-block mt-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg">
+                    Download your letter
+                  </a>
+                )}
               </span>
               <span className="flex items-center gap-2">
                 <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${statusTag(r.status)}`}>

@@ -36,6 +36,7 @@ import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTea
 import { listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
+import { uploadDocumentToBlob } from '../../utils/blobStorage';
 
 const fmtDate = (ts) => {
   try {
@@ -157,8 +158,8 @@ const AdminPanel = () => {
 
   // Teachers: applications to review, and who currently teaches.
   useEffect(() => {
-    if (tab === 'teachers' && isAdmin) {
-      listTeacherApplications()
+    if (tab === 'teachers' && isReviewer) {
+      if (isAdmin) listTeacherApplications()
         .then(setTeacherApps)
         .catch(() => setTeacherApps([]));
       listTeacherCourses()
@@ -188,10 +189,12 @@ const AdminPanel = () => {
     setDeciding(false);
   };
 
-  const decideLetter = async (req, status, note) => {
+  const decideLetter = async (req, status, note, file) => {
     setLetterBusy(true);
     try {
-      await decideLetterRequest(req, status, currentUser, note);
+      let letterFile = null;
+      if (status === 'sent' && file) letterFile = await uploadDocumentToBlob(file, `mentor-letters/${req.uid}/final`);
+      await decideLetterRequest(req, status, currentUser, note, letterFile);
       setLetterReqs((xs) => xs.map((x) => (x.id === req.id ? { ...x, status, adminNote: note || null } : x)));
       setLetterDialog(null);
       toast.success(status === 'sent' ? 'Marked as sent. The mentor has been notified.' : 'Request declined. The mentor has been notified.');
@@ -555,7 +558,7 @@ const AdminPanel = () => {
     ['reviews', 'Reviews'],
     ['projects', 'Projects'],
     ['users', 'Users'],
-    ...(isAdmin ? [['teachers', 'Mentors']] : []),
+    ...(isReviewer ? [['teachers', 'Mentors']] : []),
     ['moderation', 'Moderation'],
     ['deletions', 'Deletion Requests'],
     ['danger', 'Danger Zone'],
@@ -1004,7 +1007,7 @@ const AdminPanel = () => {
       {/* SEED (dummy Proof Wall content) */}
 
       {/* TEACHERS */}
-      {!loadingData && tab === 'teachers' && isAdmin && (
+      {!loadingData && tab === 'teachers' && isReviewer && (
         <div className="space-y-6">
           <NoteDialog
             open={!!declineApp}
@@ -1022,7 +1025,7 @@ const AdminPanel = () => {
             description={
               letterDialog
                 ? letterDialog.status === 'sent'
-                  ? `Confirm you've emailed the ${(LETTER_TYPES[letterDialog.req.type] || 'letter').toLowerCase()} to ${letterDialog.req.email}. Add an optional note for ${letterDialog.req.name}.`
+                  ? `Attach the finished ${(LETTER_TYPES[letterDialog.req.type] || 'letter').toLowerCase()} for ${letterDialog.req.name} to download, or confirm you've emailed it to ${letterDialog.req.email}. You can add a note too.`
                   : `Let ${letterDialog.req.name} know why (optional).`
                 : ''
             }
@@ -1031,7 +1034,10 @@ const AdminPanel = () => {
             tone={letterDialog?.status === 'sent' ? 'primary' : 'danger'}
             busy={letterBusy}
             onCancel={() => setLetterDialog(null)}
-            onConfirm={(note) => decideLetter(letterDialog.req, letterDialog.status, note)}
+            fileLabel={letterDialog?.status === 'sent' ? 'Attach the finished letter (optional)' : ''}
+            fileAccept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            fileHelp="PDF or Word, up to 3 MB. The mentor can download it from the Mentor Hub."
+            onConfirm={(note, file) => decideLetter(letterDialog.req, letterDialog.status, note, file)}
           />
           <div>
             <h3 className="text-gray-900 font-bold mb-2">Mentor letter requests</h3>
@@ -1127,6 +1133,8 @@ const AdminPanel = () => {
               </div>
             )}
           </div>
+          {/* Applications and mentor roles are admin-only. */}
+          {isAdmin && (<>
           <div>
             <h3 className="text-gray-900 font-bold mb-2">Mentor applications</h3>
             {teacherApps === null ? (
@@ -1186,6 +1194,7 @@ const AdminPanel = () => {
               </div>
             )}
           </div>
+          </>)}
         </div>
       )}
 

@@ -14,16 +14,22 @@ const NoteDialog = ({
   required = false,
   busy = false,
   tone = 'danger',
+  // Optional file attachment (e.g. the finished letter).
+  fileLabel = '',
+  fileAccept = '',
+  fileHelp = '',
   onConfirm,
   onCancel,
 }) => {
   const [text, setText] = useState('');
+  const [file, setFile] = useState(null);
   const areaRef = useRef(null);
   const lastFocus = useRef(null);
 
   useEffect(() => {
     if (!open) return undefined;
     setText('');
+    setFile(null);
     lastFocus.current = document.activeElement;
     const t = setTimeout(() => areaRef.current?.focus(), 30);
     const onKey = (e) => {
@@ -67,6 +73,19 @@ const NoteDialog = ({
           aria-label={title}
           className="mt-4 w-full rounded-xl border border-gray-300 p-3 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
+        {fileLabel && (
+          <div className="mt-4">
+            <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="note-dialog-file">{fileLabel}</label>
+            <input
+              id="note-dialog-file"
+              type="file"
+              accept={fileAccept}
+              onChange={(e) => setFile(e.target.files[0] || null)}
+              className="block w-full text-sm text-gray-700 file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-gray-800 hover:file:bg-gray-200"
+            />
+            {fileHelp && <p className="text-xs text-gray-500 mt-1">{fileHelp}{file ? ` Selected: ${file.name}` : ''}</p>}
+          </div>
+        )}
         <div className="flex flex-wrap items-center justify-between gap-3 mt-3">
           <p className="text-xs text-gray-500">{words} word{words === 1 ? '' : 's'}{required ? '' : ' · optional'}</p>
           <div className="flex gap-2">
@@ -76,7 +95,7 @@ const NoteDialog = ({
             </button>
             <button
               type="button"
-              onClick={() => onConfirm(text.trim())}
+              onClick={() => onConfirm(text.trim(), file)}
               disabled={disabled}
               className={`text-sm font-semibold text-white px-4 py-2 rounded-lg disabled:opacity-50 ${
                 tone === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-pink-600 hover:bg-pink-700'

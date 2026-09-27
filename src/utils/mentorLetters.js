@@ -8,7 +8,7 @@
 //
 //   mentor_letter_requests/{id}
 //     uid, name, email, type, purpose, recipient, deadline,
-//     draftText, attachment { url, name, size }, emailingDraft,
+//     draftText, attachment { url, name, size }, emailingDraft, letterFile { url, name, size },
 //     status: 'pending' | 'sent' | 'declined', adminNote, createdAt, decidedAt, decidedBy
 
 import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
@@ -64,12 +64,14 @@ export const listLetterRequests = async () => {
     .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 };
 
-export const decideLetterRequest = async (req, status, admin, note = '') => {
+export const decideLetterRequest = async (req, status, admin, note = '', letterFile = null) => {
   await updateDoc(doc(db, COL, req.id), {
     status,
     adminNote: note.trim() || null,
     decidedAt: serverTimestamp(),
     decidedBy: admin.email || '',
+    // The finished letter, if staff attached it (the mentor downloads it in the Mentor Hub).
+    ...(letterFile ? { letterFile } : {}),
   });
   const label = LETTER_TYPES[req.type] || 'letter';
   await notifyMember(req.uid, {
@@ -77,7 +79,9 @@ export const decideLetterRequest = async (req, status, admin, note = '') => {
     title: status === 'sent' ? `Your ${label.toLowerCase()} has been sent` : `Update on your ${label.toLowerCase()} request`,
     body:
       status === 'sent'
-        ? note.trim() || `We've emailed it to ${req.email}. Thank you for mentoring with She Model Tech.`
+        ? (letterFile
+            ? `Your letter is ready to download in the Mentor Hub.${note.trim() ? ` ${note.trim()}` : ''}`
+            : note.trim() || `We've emailed it to ${req.email}. Thank you for mentoring with She Model Tech.`)
         : note.trim() || 'We are not able to provide this letter right now.',
     link: '/teacher',
     emailTo: req.email,

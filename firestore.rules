@@ -369,7 +369,9 @@ service cloud.firestore {
  && request.resource.data.type in ['recommendation', 'volunteer'];
  // A mentor can withdraw a request that hasn't been handled yet.
  allow delete: if isSignedIn() && resource.data.uid == myUid() && resource.data.status == 'pending';
- allow update, delete: if isAdmin();
+ // Admins and editors handle requests (mark sent with the letter, or decline).
+ allow update: if isReviewer();
+ allow delete: if isAdmin();
  }
 
  // Certificates of completion for Learning courses. Public so anyone with the

@@ -186,26 +186,33 @@ const TeachApply = () => {
         </div>
 
         <aside className="rounded-2xl bg-gray-50 border border-gray-100 p-5">
-          <p className="font-bold text-gray-900 mb-3">What mentors do</p>
-          <ul className="space-y-3 text-sm text-gray-700">
-            <li>Create lessons, written guides, and video courses in the Mentor Hub.</li>
-            <li>Present them full screen in class or live sessions.</li>
-            <li>Publish courses for learners after an admin approves them, and earn the Mentor badge.</li>
-          </ul>
-          <p className="text-xs text-gray-500 mt-4">Every application is reviewed by a She Model Tech admin.</p>
+          <p className="font-bold text-gray-900 mb-3">How it works</p>
+          <ol className="space-y-3 text-sm text-gray-700 list-decimal pl-5">
+            <li>Apply here. An admin reviews every application.</li>
+            <li>Once approved, create courses in the Mentor Hub: written, video, or interactive.</li>
+            <li>Submit a course for learners. After an admin approves it, it goes live in Learning.</li>
+            <li>Earn your Mentor badge and a certificate for every published course.</li>
+          </ol>
+          <a href="#faq" className="inline-block mt-4 text-sm font-semibold text-pink-700 hover:underline">
+            Questions? See the FAQ
+          </a>
         </aside>
       </div>
 
-      {/* Why mentor with us */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-4" aria-labelledby="benefits-h">
-        <h2 id="benefits-h" className="text-2xl font-bold text-gray-900">Why mentor with She Model Tech</h2>
-        <p className="text-gray-600 mt-1 max-w-2xl">Your time and knowledge help women build real tech careers. Here is what you get in return.</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-          {MENTOR_BENEFITS.map(([t, d]) => (
-            <div key={t} className="rounded-2xl border border-gray-200 bg-white p-5">
-              <p className="font-semibold text-gray-900">{t}</p>
-              <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">{d}</p>
-            </div>
+      {/* FAQ: benefits and how mentoring works */}
+      <section id="faq" className="max-w-3xl mx-auto px-4 sm:px-6 pb-6 scroll-mt-24" aria-labelledby="faq-h">
+        <h2 id="faq-h" className="text-2xl font-bold text-gray-900">Frequently asked questions</h2>
+        <div className="mt-5 divide-y divide-gray-200 border-y border-gray-200">
+          {MENTOR_FAQ.map(([q, a], i) => (
+            <details key={q} className="group py-4" open={i === 0}>
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-gray-900">
+                {q}
+                <svg className="w-5 h-5 flex-shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div className="mt-3 text-sm text-gray-700 leading-relaxed">{a}</div>
+            </details>
           ))}
         </div>
       </section>
@@ -214,19 +221,60 @@ const TeachApply = () => {
 };
 
 const MENTOR_BENEFITS = [
-  ['Certificates', 'A Certificate of Recognition for every course you publish, ready to download and add to LinkedIn.'],
-  ['Mentor badge', 'A Mentor badge on your profile and beside your name on every course you publish.'],
-  ['Recommendation letters', 'Request a recommendation letter from SHE MODEL TECH Inc. for jobs, promotions, or applications.'],
-  ['Volunteer service letter', 'Confirmation of your mentoring service with a registered 501(c)(3) nonprofit, on request.'],
-  ['Top-rated on the Talent Board', 'Mentors are featured on the Talent Board, with learner ratings from your courses.'],
-  ['Public recognition', 'Your name on your courses, and new courses featured in "From our mentors" in Learning.'],
-  ['A teaching portfolio', 'Learner ratings, comments, and reactions show the impact of your teaching.'],
-  ['Impact you can share', 'See how many learners completed your courses, for your CV, promotions, or grant applications.'],
-  ['Leadership development', 'Build teaching, communication, and leadership experience by creating and guiding courses.'],
-  ['Networking', 'Connect with learners, other mentors, and companies hiring through She Model Tech.'],
-  ['Speaking and visibility', 'Opportunities to lead live sessions and workshops, and to be featured in our community updates.'],
-  ['Early access to talent', 'Meet motivated learners up close, which helps if you hire or lead teams.'],
-  ['Tools included', 'The Mentor Hub for building written, video, and interactive courses, plus full-screen Present mode.'],
+  ['Certificates', 'a Certificate of Recognition for every course you publish, ready to download and add to LinkedIn'],
+  ['Mentor badge', 'on your profile and beside your name on every course you publish'],
+  ['Recommendation letters', 'from SHE MODEL TECH Inc. for jobs, promotions, or applications, on request'],
+  ['Volunteer service letter', 'confirming your mentoring with a registered 501(c)(3) nonprofit, on request'],
+  ['Top-rated on the Talent Board', 'mentors are featured with learner ratings from their courses'],
+  ['Public recognition', 'your name on your courses, and new courses featured in "From our mentors" in Learning'],
+  ['A teaching portfolio', 'learner ratings, comments, and reactions that show the impact of your teaching'],
+  ['Impact you can share', 'how many learners enrolled in and completed your courses'],
+  ['Leadership development', 'teaching, communication, and leadership experience'],
+  ['Networking', 'with learners, other mentors, and companies hiring through She Model Tech'],
+  ['Speaking and visibility', 'opportunities to lead live sessions and workshops, and features in our community updates'],
+  ['Early access to talent', 'meet motivated learners up close, helpful if you hire or lead teams'],
+  ['Tools included', 'the Mentor Hub for written, video, and interactive courses, plus full-screen Present mode'],
+];
+
+const MENTOR_FAQ = [
+  [
+    'What are the benefits of being a mentor?',
+    <ul className="list-disc pl-5 space-y-1.5">
+      {MENTOR_BENEFITS.map(([t, d]) => (
+        <li key={t}>
+          <strong>{t}:</strong> {d}.
+        </li>
+      ))}
+    </ul>,
+  ],
+  [
+    'What does a mentor do?',
+    'Mentors create lessons, written guides, video courses, and interactive courses for our tracks in the Mentor Hub, present them in live sessions with full-screen Present mode, answer learners\' questions, and publish courses for learners in She Model Tech Learning.',
+  ],
+  [
+    'Who can become a mentor?',
+    'Members with experience in one of our tracks (Coding Developer, Low/No-Code, Quality Tester, Cybersecurity, Product Owner, or Non-Technical roles) who want to help others learn. Mentors apply from a personal account; company accounts can\'t apply.',
+  ],
+  [
+    'How are applications reviewed?',
+    'A She Model Tech admin reviews every application. You\'ll get a notification and an email with the decision. If it isn\'t approved, you\'ll see any note from the team and can apply again.',
+  ],
+  [
+    'How do I publish a course for learners?',
+    'Create your course in the Mentor Hub and choose "Learners". It goes to an admin for approval; while it waits, you can keep editing it or withdraw it. Once approved, it goes live in Learning with your name on it. If it isn\'t approved, you\'ll see the admin\'s note and can edit and resubmit.',
+  ],
+  [
+    'How do certificates and the Mentor badge work?',
+    'You get the Mentor badge when you\'re approved as a mentor, and a Certificate of Recognition for every course that\'s published. Download certificates from your profile or the Mentor Hub, share their verification link, or add them to LinkedIn.',
+  ],
+  [
+    'Can I get a recommendation or volunteer service letter?',
+    'Yes. In the Mentor Hub, choose "Request a letter", say what it\'s for, and give us your draft (paste it, attach it, or email it). Our team reviews and edits it, and you can download the finished letter from the Mentor Hub.',
+  ],
+  [
+    'How much time does mentoring take?',
+    'You set the pace. Create courses when it suits you, and answer learners\' questions as they come in through messages.',
+  ],
 ];
 
 export default TeachApply;
