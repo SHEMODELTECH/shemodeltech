@@ -55,7 +55,7 @@ const DashboardLearning = ({ profile }) => {
         </p>
       ) : (
         <ul className="space-y-2">
-          {inProgress.slice(0, 3).map((c) => (
+          {inProgress.slice(0, 1).map((c) => (
             <li key={c.track + c.slug} className="flex items-center justify-between gap-3 border border-gray-100 rounded-lg p-3">
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-gray-900 truncate">{c.title}</p>
@@ -75,6 +75,11 @@ const DashboardLearning = ({ profile }) => {
         <Link to="/learning" className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">
           Browse courses
         </Link>
+        {inProgress.length > 1 && (
+          <Link to="/learning/my" className="text-xs font-semibold text-pink-700 hover:underline">
+            {inProgress.length - 1} more in progress
+          </Link>
+        )}
         {completed > 0 && (
           <span className="text-xs text-gray-500">{completed} completed, each with a certificate</span>
         )}
