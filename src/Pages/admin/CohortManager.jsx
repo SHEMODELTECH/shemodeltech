@@ -497,11 +497,11 @@ const CohortManager = () => {
                 <button
                   onClick={() => {
                     setEditingCohort(cohort.id);
-                    setCohortDraft({ name: cohort.name, startDate: cohort.startDate, endDate: cohort.endDate, startTime: cohort.startAt ? new Date(cohort.startAt).toTimeString().slice(0, 5) : '09:00' });
+                    setCohortDraft({ name: cohort.name, startDate: cohort.startDate, endDate: cohort.endDate, startTime: cohort.startAt ? new Date(cohort.startAt).toTimeString().slice(0, 5) : '09:00', isPaid: !!cohort.isPaid, payPerPerson: cohort.payPerPerson || '' });
                   }}
                   className="text-gray-500 hover:text-gray-800 text-xs font-semibold px-2 py-2"
                 >
-                  Edit dates
+                  Edit cohort
                 </button>
                 <button
                   onClick={() => removeCohort(cohort)}
@@ -563,8 +563,21 @@ const CohortManager = () => {
                         className="block px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
                     </label>
                   </div>
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <span className="text-xs font-semibold text-gray-700">Type</span>
+                    {[[false, 'Free'], [true, 'Paid by She Model Tech']].map(([v, l]) => (
+                      <button key={l} type="button" aria-pressed={!!cohortDraft.isPaid === v} onClick={() => setCohortDraft((d) => ({ ...d, isPaid: v }))}
+                        className={`text-xs font-semibold px-3 py-1.5 rounded-full border ${!!cohortDraft.isPaid === v ? 'bg-gray-900 border-gray-900 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>{l}</button>
+                    ))}
+                    {cohortDraft.isPaid && (
+                      <label className="text-xs text-gray-600 flex items-center gap-1.5">Pay per person (USD)
+                        <input type="number" min="1" value={cohortDraft.payPerPerson || ''} onChange={(e) => setCohortDraft((d) => ({ ...d, payPerPerson: e.target.value }))}
+                          className="w-24 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                      </label>
+                    )}
+                  </div>
                   <p className="text-gray-500 text-[11px] mb-2">
-                    Changing these dates moves every project in this cohort. Extra time you’ve approved for a project is
+                    Free or paid can be changed until members join a project. Changing these dates moves every project in this cohort. Extra time you’ve approved for a project is
                     kept on top of the new deadline.
                   </p>
                   <div className="flex gap-2">

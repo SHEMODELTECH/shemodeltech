@@ -161,7 +161,7 @@ export const setCohortStatus = async (cohortId, status) =>
  * pushes the new endDate onto every project in the cohort - otherwise the
  * deadline reminders and grace period would still fire on the old dates.
  */
-export const updateCohort = async (cohortId, { name, startDate, startTime, endDate, projectCount }) => {
+export const updateCohort = async (cohortId, { name, startDate, startTime, endDate, projectCount, isPaid, payPerPerson }) => {
   const updates = { updatedAt: serverTimestamp() };
   if (name) updates.name = name;
   if (projectCount) updates.projectCount = Number(projectCount);
@@ -192,6 +192,43 @@ export const updateCohort = async (cohortId, { name, startDate, startTime, endDa
       });
     }
   }
+  // Switching between free and paid: only before anyone has joined a project,
+  // so nobody's terms change after they signed up.
+  if (typeof isPaid === 'boolean') {
+    const current = (await getDoc(doc(db, 'cohorts', cohortId))).data() || {};
+    const pay = Number(payPerPerson) || 0;
+    if (isPaid && !(pay > 0)) throw new Error('Set the pay per person for a paid cohort.');
+    if (isPaid !== !!current.isPaid || (isPaid && pay !== Number(current.payPerPerson || 0))) {
+      const projects = await getCohortProjects(cohortId);
+      const joined = projects.some((p) => (p.members || []).length > 0);
+      if (joined) throw new Error('Members have already joined projects in this cohort, so it can’t switch between free and paid.');
+      updates.isPaid = isPaid;
+      updates.payPerPerson = isPaid ? pay : 0;
+      for (const p of projects) {
+        const roles = (p.teamRoles && p.teamRoles.length ? p.teamRoles : p.proposedRoles || []).map((r) => ({
+          ...r,
+          count: Number(r.count) || 1,
+          ...(isPaid ? { payAmount: String(pay) } : { payAmount: '' }),
+        }));
+        // eslint-disable-next-line no-await-in-loop
+        await updateDoc(doc(db, 'projects', p.id), {
+          isPaid,
+          cohortPaid: isPaid,
+          paidBy: isPaid ? 'She Model Tech' : null,
+          payPerPerson: isPaid ? pay : 0,
+          ...(p.isActive || (p.teamRoles && p.teamRoles.length)
+            ? {
+                teamRoles: roles,
+                maxTeamSize: roles.reduce((n, r) => n + (Number(r.count) || 1), 0),
+                totalBudget: isPaid ? roles.reduce((n, r) => n + (Number(r.count) || 1) * pay, 0) : 0,
+              }
+            : {}),
+          updatedAt: serverTimestamp(),
+        });
+      }
+    }
+  }
+
   await updateDoc(doc(db, 'cohorts', cohortId), updates);
 };
 
