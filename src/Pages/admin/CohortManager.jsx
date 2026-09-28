@@ -113,6 +113,20 @@ const CohortManager = () => {
         })
       );
       setCohorts(rows);
+      // Paid cohorts: the She Model Tech person who created them is always in
+      // every project workspace (quietly fixes cohorts made before this rule).
+      rows.forEach(({ cohort, projects }) => {
+        const c = cohort.creator;
+        if (!cohort.isPaid || !c?.uid) return;
+        projects
+          .filter((p) => !(p.observers || []).includes(c.uid))
+          .forEach((p) => {
+            updateDoc(doc(db, 'projects', p.id), {
+              observers: arrayUnion(c.uid),
+              observerInfo: arrayUnion({ uid: c.uid, name: c.name, label: 'She Model Tech (created this cohort)' }),
+            }).catch(() => {});
+          });
+      });
     } catch (e) {
       console.error(e);
       toast.error('Could not load cohorts.');
@@ -196,7 +210,11 @@ const CohortManager = () => {
 
   // How many projects to generate for each cohort (you choose; at least 1).
   const [genCount, setGenCount] = useState({});
+  // After a cohort's projects are generated, the generator is tucked away so the
+  // same cohort isn't generated twice by accident.
+  const [addMore, setAddMore] = useState({});
   const generate = async (cohort, n = null, existing = 0) => {
+    if (busy) return; // one generation at a time
     const howMany = Math.max(1, Number(n ?? genCount[cohort.id] ?? cohort.projectCount ?? 1) || 1);
     setBusy(cohort.id);
     try {
@@ -211,9 +229,11 @@ const CohortManager = () => {
         sponsor: cohort.sponsor || null,
         teamSize: cohort.teamSize || null,
         creator: cohort.creator || { uid: currentUser.uid, name: currentUser.displayName || currentUser.email },
+        // Whoever generates is also added (below, on reveal) so staff never have to ask.
         draft: true, // hidden until you have read the briefs
       });
       await updateCohort(cohort.id, { projectCount: existing + (res.created || 0) }).catch(() => {});
+      setAddMore((m) => ({ ...m, [cohort.id]: false }));
       toast.success(`${res.created} draft project${res.created === 1 ? '' : 's'} created. Read the briefs, then reveal.`);
       await load();
     } catch (e) {
@@ -240,6 +260,7 @@ const CohortManager = () => {
       // Everyone who should follow the cohort's workspaces: its creator and sponsor.
       const followers = [
         ...(cohort.creator?.uid ? [{ uid: cohort.creator.uid, name: cohort.creator.name, label: 'She Model Tech (created this cohort)' }] : []),
+        ...(currentUser && currentUser.uid !== cohort.creator?.uid ? [{ uid: currentUser.uid, name: currentUser.displayName || currentUser.email, label: 'She Model Tech' }] : []),
         ...(cohort.sponsor?.uid ? [{ uid: cohort.sponsor.uid, name: cohort.sponsor.name, label: 'Sponsor' }] : []),
       ];
       drafts.forEach((p) => {
@@ -544,7 +565,8 @@ const CohortManager = () => {
               </div>
 
               <div className="flex flex-wrap gap-2 mb-3">
-                <span className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-2 py-1">
+                {(projects.length === 0 || addMore[cohort.id]) ? (
+                  <span className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-2 py-1">
                   <label htmlFor={`gen-${cohort.id}`} className="text-xs font-semibold text-gray-700">
                     {projects.length === 0 ? 'Projects to create' : 'Add projects'} <span className="font-normal text-gray-500">(1 or more)</span>
                   </label>
@@ -565,6 +587,11 @@ const CohortManager = () => {
                     {busy === cohort.id ? 'Generating…' : 'Generate'}
                   </button>
                 </span>
+                ) : (
+                  <button type="button" onClick={() => setAddMore((m) => ({ ...m, [cohort.id]: true }))} className="text-gray-500 hover:text-gray-900 text-xs font-semibold px-2">
+                    Add more projects
+                  </button>
+                )}
                 {drafts > 0 && (
                   <button
                     onClick={() => reveal(cohort, projects)}
@@ -598,23 +625,7 @@ const CohortManager = () => {
                 >
                   Edit cohort
                 </button>
-                <button
-                  onClick={async () => {
-                    try {
-                      const me = { uid: currentUser.uid, name: currentUser.displayName || currentUser.email, label: 'She Model Tech' };
-                      await Promise.all(projects.map((p) => updateDoc(doc(db, 'projects', p.id), {
-                        observers: arrayUnion(me.uid),
-                        observerInfo: arrayUnion(me),
-                      })));
-                      toast.success('You’ve been added to every project workspace in this cohort.');
-                    } catch (e) {
-                      toast.error('Could not add you.');
-                    }
-                  }}
-                  className="text-gray-500 hover:text-gray-900 text-xs font-semibold px-2"
-                >
-                  Add me to all workspaces
-                </button>
+
                 <button
                   onClick={() => removeCohort(cohort)}
                   disabled={busy === cohort.id}
