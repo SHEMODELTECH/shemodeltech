@@ -19,7 +19,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
   useEffect(() => {
     (async () => {
       const [
-        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone,
+        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone,
       ] = await Promise.all([
         count(query(collection(db, 'projects'), where('reviewStatus', '==', 'submitted'))),
         count(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
@@ -31,6 +31,15 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
         isAdmin ? count(query(collection(db, 'teacher_applications'), where('status', '==', 'pending'))) : 0,
         count(query(collection(db, 'projects'), where('extensionRequest.status', '==', 'pending'))),
         (async () => {
+          // Company accounts not yet verified (no badge yet).
+          try {
+            const s = await getDocs(query(collection(db, 'users'), where('isCompany', '==', true)));
+            return s.docs.filter((d) => !d.data().isVerified).length;
+          } catch (_) {
+            return 0;
+          }
+        })(),
+        (async () => {
           // Mentor courses waiting for approval.
           try {
             const s = await getDocs(collection(db, 'teacher_courses'));
@@ -40,7 +49,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
           }
         })(),
       ]);
-      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone });
+      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies });
     })();
   }, [isAdmin]);
 
@@ -52,6 +61,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ['Mentor courses', c.capstone, 'Courses waiting for approval', { tab: 'teachers' }],
     ['Mentor letters', c.letters, 'Recommendation and volunteer letters', { tab: 'teachers' }],
     ...(isAdmin ? [['Mentor applications', c.mentorApps, 'People applying to mentor', { tab: 'teachers' }]] : []),
+    ...(isAdmin ? [['Companies to verify', c.companies, 'New company accounts waiting for verification', { tab: 'users', view: 'unverified' }]] : []),
     ['Organization requests', c.orgNew, 'New training or licensing requests', { tab: 'organizations' }],
     ['Summit partners', c.partnersNew, 'New booth, workshop, or sponsor requests', { tab: 'summit' }],
     ...(isAdmin ? [['Deletion requests', c.deletions, 'Leads asking to delete a project', { tab: 'deletions' }]] : []),
@@ -79,7 +89,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
           return go.to ? (
             <Link key={label} to={go.to} className={cls}>{inner}</Link>
           ) : (
-            <button key={label} type="button" onClick={() => onTab(go.tab)} className={cls}>{inner}</button>
+            <button key={label} type="button" onClick={() => onTab(go.tab, go.view)} className={cls}>{inner}</button>
           );
         })}
       </div>

@@ -90,6 +90,8 @@ const AdminPanel = () => {
   // Generate tab
 
   const [userSearch, setUserSearch] = useState('');
+  // 'all' or 'unverified' (company accounts waiting for verification)
+  const [userView, setUserView] = useState('all');
 
   // --- Reviews tab ---
   const [reviewProjects, setReviewProjects] = useState([]);
@@ -647,6 +649,7 @@ const AdminPanel = () => {
   if (!isReviewer) return null;
 
   const filteredUsers = users.filter((u) => {
+    if (userView === 'unverified' && !(u.isCompany && !u.isVerified)) return false;
     if (!userSearch.trim()) return true;
     const q = userSearch.toLowerCase();
     return (
@@ -907,7 +910,9 @@ const AdminPanel = () => {
       )}
 
       {/* OVERVIEW */}
-      {!loadingData && tab === 'overview' && <AttentionBoard isAdmin={isAdmin} onTab={setTab} />}
+      {!loadingData && tab === 'overview' && (
+        <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
+      )}
       {!loadingData && tab === 'overview' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <StatCard label="Total Users" value={stats.users} />
@@ -1102,8 +1107,17 @@ const AdminPanel = () => {
             value={userSearch}
             onChange={(e) => setUserSearch(e.target.value)}
             placeholder="Search by name or email"
-            className="w-full mb-4 bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-pink-500 focus:outline-none"
+            className="w-full mb-3 bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-pink-500 focus:outline-none"
           />
+          <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Show">
+            {[['all', `Everyone (${users.length})`], ['unverified', `Companies to verify (${users.filter((u) => u.isCompany && !u.isVerified).length})`]].map(([v, l]) => (
+              <button key={v} type="button" aria-pressed={userView === v} onClick={() => setUserView(v)}
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full ${userView === v ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>{l}</button>
+            ))}
+          </div>
+          {userView === 'unverified' && filteredUsers.length === 0 && (
+            <p className="text-sm text-gray-500 mb-3">No companies are waiting for verification.</p>
+          )}
           <div className="space-y-2">
             {filteredUsers.map((u) => (
               <div
