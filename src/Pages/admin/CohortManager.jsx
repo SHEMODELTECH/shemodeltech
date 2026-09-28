@@ -15,7 +15,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, doc, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, writeBatch, arrayUnion, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -37,7 +37,7 @@ import {
 import { batchGenerateProjects } from '../../utils/batchGenerateProjects';
 import { logActivity as logProof } from '../../utils/activityFeed';
 import { approveProposal, listProposals } from '../../utils/projectProposals';
-import { listSponsorRequests, markSponsorScheduled } from '../../utils/sponsorships2';
+import { declineSponsorRequest, listSponsorRequests, markSponsorPaid, markSponsorScheduled } from '../../utils/sponsorships2';
 
 const PHASES = [
   { id: COHORT_STATUS.DRAFT, label: 'Draft', hint: 'Projects generated, hidden from members' },
@@ -84,7 +84,7 @@ const CohortManager = () => {
   const [sponsorReqs, setSponsorReqs] = useState([]);
   const [sponsorReqId, setSponsorReqId] = useState('');
   useEffect(() => {
-    listSponsorRequests().then((l) => setSponsorReqs(l.filter((x) => x.status === 'new'))).catch(() => {});
+    listSponsorRequests().then((l) => setSponsorReqs(l.filter((x) => ['new', 'paid'].includes(x.status)))).catch(() => {});
   }, []);
   const [count, setCount] = useState(1);
 
@@ -153,6 +153,7 @@ const CohortManager = () => {
           return req ? { uid: req.companyUid, name: req.companyName, requestId: req.id } : null;
         })(),
         createdBy: currentUser.email,
+        creator: { uid: currentUser.uid, name: currentUser.displayName || currentUser.email },
       });
       const req = sponsorReqs.find((x) => x.id === sponsorReqId);
       if (req) {
@@ -205,6 +206,7 @@ const CohortManager = () => {
         isPaid: !!cohort.isPaid,
         payPerPerson: cohort.payPerPerson || 0,
         sponsor: cohort.sponsor || null,
+        creator: cohort.creator || { uid: currentUser.uid, name: currentUser.displayName || currentUser.email },
         draft: true, // hidden until you have read the briefs
       });
       await updateCohort(cohort.id, { projectCount: existing + (res.created || 0) }).catch(() => {});
@@ -370,6 +372,36 @@ const CohortManager = () => {
         </button>
       </div>
 
+      {sponsorReqs.length > 0 && (
+        <div className="mb-8 bg-white border border-pink-200 rounded-xl p-5">
+          <h2 className="font-bold text-gray-900 mb-3">Sponsorship requests</h2>
+          <ul className="space-y-3">
+            {sponsorReqs.map((x) => (
+              <li key={x.id} className="border border-gray-200 rounded-lg p-3">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-900">{x.companyName}: {x.problemTitle || 'Sponsored cohort'}</p>
+                    <p className="text-xs text-gray-500">{x.projects} project{x.projects === 1 ? '' : 's'} · {x.people || '?'} people · ${x.budget || 0}{x.payPerPerson ? ` · $${x.payPerPerson}/person` : ''}{x.timeline ? ` · ${x.timeline}` : ''}</p>
+                  </div>
+                  {x.status === 'new' ? (
+                    <div className="flex gap-2">
+                      <button onClick={async () => { await markSponsorPaid(x, currentUser); setSponsorReqs((xs) => xs.map((y) => (y.id === x.id ? { ...y, status: 'paid' } : y))); toast.success('Payment confirmed. Create the cohort and choose this sponsor.'); }}
+                        className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg">Payment received</button>
+                      <button onClick={async () => { const note = window.prompt('Optional note for the company:') || ''; await declineSponsorRequest(x, note); setSponsorReqs((xs) => xs.filter((y) => y.id !== x.id)); }}
+                        className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
+                    </div>
+                  ) : (
+                    <span className="text-xs font-bold text-sky-700 bg-sky-50 px-2 py-1 rounded-full">Paid · ready for a cohort</span>
+                  )}
+                </div>
+                <p className="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{x.focus}</p>
+                {x.message && <p className="text-xs text-gray-500 mt-1">{x.message}</p>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Create */}
       {showNew && (
         <div className="bg-white border border-gray-200 rounded-xl p-5 mb-8">
@@ -416,11 +448,11 @@ const CohortManager = () => {
             <select id="c-sponsor" value={sponsorReqId} onChange={(e) => { setSponsorReqId(e.target.value); if (e.target.value) setIsPaid(true); }}
               className="w-full sm:w-auto px-3 py-2 rounded-lg border border-gray-300 text-sm">
               <option value="">No sponsor</option>
-              {sponsorReqs.map((x) => (
+              {sponsorReqs.filter((x) => x.status === 'paid').map((x) => (
                 <option key={x.id} value={x.id}>{x.companyName} · {x.projects} project{x.projects === 1 ? '' : 's'}{x.payPerPerson ? ` · $${x.payPerPerson}/person` : ''}</option>
               ))}
             </select>
-            {sponsorReqs.length === 0 && <p className="text-[11px] text-gray-500 mt-1">No sponsorship requests waiting. Companies send them from My Projects → Sponsor a cohort.</p>}
+            {sponsorReqs.filter((x) => x.status === 'paid').length === 0 && <p className="text-[11px] text-gray-500 mt-1">Only sponsorships you’ve confirmed as paid appear here. Confirm payment in Sponsorship requests above.</p>}
             {sponsorReqId && <p className="text-[11px] text-gray-600 mt-1">The sponsor is added to every project workspace. She Model Tech pays the leads and collaborators.</p>}
           </div>
           <p className="text-gray-500 text-xs mb-3 leading-relaxed">
@@ -533,6 +565,23 @@ const CohortManager = () => {
                   className="text-gray-500 hover:text-gray-800 text-xs font-semibold px-2 py-2"
                 >
                   Edit cohort
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      const me = { uid: currentUser.uid, name: currentUser.displayName || currentUser.email, label: 'She Model Tech' };
+                      await Promise.all(projects.map((p) => updateDoc(doc(db, 'projects', p.id), {
+                        observers: arrayUnion(me.uid),
+                        observerInfo: arrayUnion(me),
+                      })));
+                      toast.success('You’ve been added to every project workspace in this cohort.');
+                    } catch (e) {
+                      toast.error('Could not add you.');
+                    }
+                  }}
+                  className="text-gray-500 hover:text-gray-900 text-xs font-semibold px-2"
+                >
+                  Add me to all workspaces
                 </button>
                 <button
                   onClick={() => removeCohort(cohort)}

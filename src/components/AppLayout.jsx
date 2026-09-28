@@ -97,6 +97,7 @@ const AppLayout = ({ children }) => {
     { path: '/projects/owner-dashboard', label: 'My Projects' },
     { path: '/project-vault', label: 'Project Vault' },
     { path: '/disputes', label: 'Payment Dispute' },
+    ...(isCompany || userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/new-paid', label: 'Post a project' }] : []),
     // Members only; locked until the first earned badge.
     ...(!isCompany ? [{ path: '/projects/propose', label: 'Propose a project', locked: !hasBadge && userRole !== 'admin' && userRole !== 'editor' }] : []),
   ];
@@ -151,7 +152,7 @@ const AppLayout = ({ children }) => {
       // "All Projects" covers the listing and project detail pages, but NOT its
       // sibling sub-menu pages (My Projects) - otherwise both highlight at once.
       const p = location.pathname;
-      return p === '/projects' || (p.startsWith('/projects/') && !p.startsWith('/projects/owner-dashboard') && !p.startsWith('/projects/my-projects') && !p.startsWith('/projects/propose'));
+      return p === '/projects' || (p.startsWith('/projects/') && !p.startsWith('/projects/owner-dashboard') && !p.startsWith('/projects/my-projects') && !p.startsWith('/projects/propose') && !p.startsWith('/projects/new-paid') && !p.startsWith('/projects/sponsor-cohort'));
     }
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };

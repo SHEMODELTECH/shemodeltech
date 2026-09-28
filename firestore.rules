@@ -414,7 +414,7 @@ service cloud.firestore {
  allow create: if isSignedIn() && request.resource.data.companyUid == myUid()
  && request.resource.data.status == 'new'
  && myUserDoc().get('isCompany', false) == true
- && request.resource.data.get('focus', '').size() <= 1000
+ && request.resource.data.get('focus', '').size() <= 3000
  && request.resource.data.get('message', '').size() <= 1500;
  allow read: if isReviewer() || (isSignedIn() && resource.data.companyUid == myUid());
  allow update, delete: if isAdmin();

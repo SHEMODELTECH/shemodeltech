@@ -45,6 +45,10 @@ const HostCohort = () => {
   const [kind, setKind] = useState(groupFromLink ? 'cohort' : 'project');
   const [groupId] = useState(groupFromLink || `g${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`);
   const [created, setCreated] = useState(null);
+  // Optional lead: members apply for the Project Lead role and you approve them,
+  // like any role. You stay in the workspace either way.
+  const [hireLead, setHireLead] = useState(false);
+  const [leadPay, setLeadPay] = useState('');
 
   useEffect(() => {
     if (!currentUser) {
@@ -76,7 +80,10 @@ const HostCohort = () => {
         description,
         startDate,
         endDate,
-        roles: (kind === 'freelance' ? roles.slice(0, 1) : roles).map((r) => ({
+        roles: [
+          ...(hireLead && kind !== 'freelance' ? [{ title: 'Project Lead', count: 1, payAmount: leadPay, skills: 'Leading the team, planning, and delivery' }] : []),
+          ...(kind === 'freelance' ? roles.slice(0, 1) : roles),
+        ].map((r) => ({
           title: r.title.trim(),
           count: kind === 'freelance' ? 1 : parseInt(r.count, 10) || 1,
           payAmount: Number(r.payAmount) || 0,
@@ -184,6 +191,11 @@ const HostCohort = () => {
           </div>
         </div>
       )}
+
+      <div className="flex gap-2 mb-6" role="tablist" aria-label="Post a project">
+        <span role="tab" aria-selected="true" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-900 text-white">Post a paid project</span>
+        <a role="tab" aria-selected="false" href="/projects/sponsor-cohort" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Sponsor a cohort</a>
+      </div>
 
       <fieldset className="mb-6">
         <legend className="block text-sm font-bold text-gray-900 mb-2">What are you posting?</legend>
@@ -303,6 +315,22 @@ const HostCohort = () => {
           </div>
         </div>
       ))}
+      {kind !== 'freelance' && (
+        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4">
+          <label className="flex items-start gap-2 text-sm text-gray-800">
+            <input type="checkbox" className="mt-1" checked={hireLead} onChange={(e) => setHireLead(e.target.checked)} />
+            <span>
+              <strong>Hire a project lead</strong>
+              <span className="block text-xs text-gray-500">Members apply to lead; you approve. The lead runs the team, and you stay in the workspace.</span>
+            </span>
+          </label>
+          {hireLead && (
+            <label className="block mt-3 text-xs font-semibold text-gray-700">Lead’s pay (USD)
+              <input type="number" min="1" value={leadPay} onChange={(e) => setLeadPay(e.target.value)} className="block mt-1 w-40 px-3 py-2 rounded-lg border border-gray-300 text-sm" />
+            </label>
+          )}
+        </div>
+      )}
       {kind !== 'freelance' ? (
         <button
           type="button"

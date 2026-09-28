@@ -74,6 +74,7 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
     isPaid = false,
     payPerPerson = 0,
     sponsor = null,
+    creator = null,
     draft = true,
   } = opts;
   const templates = pickVaried(count);
@@ -112,7 +113,13 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
         // Cohort projects: dates are fixed by She Model Tech; on paid cohorts the
         // lead can't change anything (content, roles, skills, people needed).
         isCohort: !!cohortId,
-        ...(sponsor?.uid ? { sponsor, observers: [sponsor.uid], observerInfo: [{ uid: sponsor.uid, name: sponsor.name, label: 'Sponsor' }] } : {}),
+        ...(() => {
+          const obs = [];
+          const info = [];
+          if (creator?.uid) { obs.push(creator.uid); info.push({ uid: creator.uid, name: creator.name, label: 'She Model Tech (created this cohort)' }); }
+          if (sponsor?.uid && sponsor.uid !== creator?.uid) { obs.push(sponsor.uid); info.push({ uid: sponsor.uid, name: sponsor.name, label: 'Sponsor' }); }
+          return obs.length ? { observers: obs, observerInfo: info, createdByUid: creator?.uid || null, ...(sponsor ? { sponsor } : {}) } : {};
+        })(),
         cohortPaid: !!isPaid,
         ...(isPaid ? { isPaid: true, paidBy: 'She Model Tech', payPerPerson: Number(payPerPerson) || 0 } : {}),
         submitterId: null,

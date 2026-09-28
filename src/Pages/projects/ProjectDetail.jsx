@@ -25,6 +25,7 @@ import { checkProfileComplete } from '../../utils/profileCompletion';
 import ProjectPayBadge from '../../components/ProjectPayBadge';
 import { formatMoney, getPayRangeLabel } from '../../utils/paidProjects';
 import { canApplyToCompanyCohort } from '../../utils/companyCohorts';
+import { assignAsLead } from '../../utils/leadApplications';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -215,6 +216,44 @@ const ProjectDetail = () => {
     }
 
     navigate(`/apply-to-lead?project=${projectId}`);
+  };
+
+  // The cohort's creator (She Model Tech staff) takes the lead directly.
+  const leadItMyself = async () => {
+    if (!window.confirm('Lead this project yourself? You will become its lead and can set up the team.')) return;
+    setSubmittingApp(true);
+    try {
+      const ref = await addDoc(collection(db, 'lead_applications'), {
+        cohortId: 'rolling',
+        applicantUid: currentUser.uid,
+        applicantName: currentUser.displayName || currentUser.email,
+        applicantEmail: currentUser.email,
+        applicantPhoto: currentUser.photoURL || null,
+        rankedProjectIds: [projectId],
+        pitch: 'Created this cohort and is leading this project directly.',
+        experience: null,
+        availabilityHours: null,
+        status: 'submitted',
+        interviewScheduledAt: null,
+        meetLink: null,
+        reviewerNotes: null,
+        decidedBy: null,
+        decidedAt: null,
+        assignedProjectId: null,
+        createdAt: serverTimestamp(),
+      });
+      await assignAsLead({
+        appId: ref.id,
+        projectId,
+        applicant: { id: ref.id, applicantUid: currentUser.uid, applicantName: currentUser.displayName || currentUser.email, applicantEmail: currentUser.email },
+        reviewer: currentUser,
+      });
+      toast.success('You’re now leading this project. Set up your team next.');
+      navigate(`/projects/${projectId}/setup`);
+    } catch (e) {
+      toast.error(e.message || 'Could not make you the lead.');
+    }
+    setSubmittingApp(false);
   };
 
   const handleApply = async () => {
@@ -631,13 +670,25 @@ const ProjectDetail = () => {
                     </button>
                   </div>
                 ) : (
-                  <button
-                    onClick={handleApplyToLead}
-                    disabled={submittingApp}
-                    className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50"
-                  >
-                    Apply to Lead This Project
-                  </button>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    <button
+                      onClick={handleApplyToLead}
+                      disabled={submittingApp}
+                      className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50"
+                    >
+                      Apply to Lead This Project
+                    </button>
+                    {/* The person who created this cohort can lead it directly. */}
+                    {currentUser && project.createdByUid === currentUser.uid && !project.leadConfirmed && (
+                      <button
+                        onClick={leadItMyself}
+                        disabled={submittingApp}
+                        className="bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50"
+                      >
+                        Lead the project myself
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             )}

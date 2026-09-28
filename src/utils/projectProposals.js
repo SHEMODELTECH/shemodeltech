@@ -123,6 +123,7 @@ export const approveProposal = async (p, staff, cohort) => {
     startAt: cohort.startAt || null,
     isCohort: true,
     cohortPaid: false,
+    ...(cohort.creator?.uid ? { observers: [cohort.creator.uid], observerInfo: [{ uid: cohort.creator.uid, name: cohort.creator.name, label: 'She Model Tech (created this cohort)' }], createdByUid: cohort.creator.uid } : {}),
     leadConfirmed: false,
     submitterId: null,
     submitterEmail: null,

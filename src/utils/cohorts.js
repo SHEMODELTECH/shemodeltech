@@ -131,7 +131,7 @@ export const getCohort = async (cohortId) => {
  * reviewed before anyone sees them - never auto-publish unreviewed briefs
  * into a live cohort.
  */
-export const createCohort = async ({ startDate, startTime = '09:00', endDate = null, projectCount, isPaid = false, payPerPerson = 0, sponsor = null, createdBy }) => {
+export const createCohort = async ({ startDate, startTime = '09:00', endDate = null, projectCount, isPaid = false, payPerPerson = 0, sponsor = null, createdBy, creator = null }) => {
   const number = await getNextCohortNumber();
   const schedule = buildSchedule(startDate, endDate);
   // Fixed start (date and time): everyone in the cohort starts and finishes together.
@@ -148,6 +148,8 @@ export const createCohort = async ({ startDate, startTime = '09:00', endDate = n
     payPerPerson: isPaid ? Number(payPerPerson) || 0 : 0,
     // A company sponsoring this cohort follows every project's workspace.
     sponsor: sponsor || null,
+    // Whoever created the cohort is included in every project workspace.
+    creator: creator || null,
     createdBy: createdBy || null,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),

@@ -12,7 +12,7 @@ import { addDoc, collection, doc, getDocs, orderBy, query, serverTimestamp, upda
 import { db } from '../firebase/config';
 import { alertStaff, notifyMember } from './staffAlerts';
 
-export const SPONSOR_LIMITS = { focusMinWords: 5, focusMaxChars: 1000, messageMaxChars: 1500 };
+export const SPONSOR_LIMITS = { titleMinWords: 3, titleMaxChars: 150, focusMinWords: 30, focusMaxChars: 3000, messageMaxChars: 1500 };
 
 export const createSponsorRequest = async (company, form) => {
   const companyName = company.companyProfile?.companyName || company.displayName || 'A company';
@@ -20,8 +20,11 @@ export const createSponsorRequest = async (company, form) => {
     companyUid: company.uid,
     companyName,
     projects: Math.max(1, Number(form.projects) || 1),
+    people: Math.max(1, Number(form.people) || 1),
+    budget: Number(form.budget) || 0,
     payPerPerson: Number(form.payPerPerson) || 0,
-    focus: form.focus.trim(),
+    problemTitle: (form.problemTitle || '').trim(),
+    focus: form.focus.trim(), // the problem statement
     timeline: form.timeline.trim(),
     message: form.message.trim(),
     status: 'new',
@@ -30,7 +33,7 @@ export const createSponsorRequest = async (company, form) => {
   alertStaff({
     type: 'sponsor_request',
     title: 'A company wants to sponsor a cohort',
-    body: `${companyName}: ${Math.max(1, Number(form.projects) || 1)} project(s). ${form.focus.trim().slice(0, 120)}`,
+    body: `${companyName}: ${Math.max(1, Number(form.projects) || 1)} project(s), ${Number(form.people) || 1} people, $${Number(form.budget) || 0}. ${(form.problemTitle || '').trim()}`,
     link: '/admin/cohorts',
     roles: ['admin'],
   });
@@ -66,4 +69,15 @@ export const declineSponsorRequest = async (req, note) => {
 export const listSponsoredProjects = async (uid) => {
   const s = await getDocs(query(collection(db, 'projects'), where('observers', 'array-contains', uid)));
   return s.docs.map((d) => ({ id: d.id, ...d.data() }));
+};
+
+// She Model Tech confirms the sponsor's payment before the cohort is created.
+export const markSponsorPaid = async (req, staff) => {
+  await updateDoc(doc(db, 'sponsor_requests', req.id), { status: 'paid', paidConfirmedBy: staff.email || '', paidConfirmedAt: new Date().toISOString() });
+  notifyMember(req.companyUid, {
+    type: 'sponsor_paid',
+    title: 'Sponsorship payment received',
+    body: 'Thank you. We’re creating your cohort and will add your representative to every project workspace.',
+    link: '/projects/owner-dashboard',
+  });
 };
