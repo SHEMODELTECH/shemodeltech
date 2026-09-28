@@ -411,7 +411,7 @@ const DashboardOverview = () => {
                   </p>
                 ) : (
                   <div className="space-y-3">
-                    {ongoingProjects.map((project) => (
+                    {ongoingProjects.slice(0, 1).map((project) => (
                       <div
                         key={project.id}
                         className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
@@ -442,6 +442,11 @@ const DashboardOverview = () => {
                         </span>
                       </div>
                     ))}
+                    {ongoingProjects.length > 1 && (
+                      <Link to="/projects/my-projects" className="inline-block text-xs font-semibold text-pink-700 hover:underline">
+                        {ongoingProjects.length - 1} more ongoing
+                      </Link>
+                    )}
                   </div>
                 )}
               </div>
@@ -502,7 +507,8 @@ const DashboardOverview = () => {
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-1">Your Badges</h3>
               <p className="text-gray-500 text-xs mb-4">
-                The badges you’ve earned. Each project you complete in a track adds to its level.
+                The badges you’ve earned. Each project you complete in a track adds to its level.{' '}
+                <Link to="/badges" className="text-pink-700 font-semibold hover:underline">Learn how badges work</Link>
               </p>
 
               {/* Badge Levels */}
