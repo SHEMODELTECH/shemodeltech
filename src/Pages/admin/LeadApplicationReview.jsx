@@ -19,6 +19,7 @@ import { usePermissions } from '../../utils/permissions';
 import { leadInterviewInvite } from '../../utils/calendarInvite';
 import { approveProposal, declineProposal, listOpenCohorts, listProposals, TRACKS } from '../../utils/projectProposals';
 import NoteDialog from '../../components/NoteDialog';
+import { createCohort } from '../../utils/cohorts';
 import {
   getApplicationsForCohort,
   groupByProject,
@@ -63,6 +64,7 @@ const LeadApplicationReview = () => {
   const [pBusy, setPBusy] = useState(false);
   const [openCohorts, setOpenCohorts] = useState([]);
   const [cohortFor, setCohortFor] = useState({});
+  const [newDates, setNewDates] = useState({}); // proposal id -> { start, time, end }
   const [busy, setBusy] = useState(null);
 
   useEffect(() => {
@@ -169,26 +171,51 @@ const LeadApplicationReview = () => {
                     <p className="text-xs text-gray-500">{TRACKS[p.track] || p.track} · proposed by {p.name} ({p.email})</p>
                   </div>
                     <div className="flex flex-wrap items-center gap-2">
-                    {openCohorts.length === 0 ? (
-                      <a href="/admin/cohorts" className="text-xs font-semibold text-pink-700 underline">No upcoming cohort: create one first</a>
-                    ) : (
-                      <select
-                        value={cohortFor[p.id] || openCohorts[0].id}
-                        onChange={(e) => setCohortFor((m) => ({ ...m, [p.id]: e.target.value }))}
-                        className="text-xs border border-gray-300 rounded-lg px-2 py-1.5"
-                        aria-label="Cohort for this project"
-                      >
-                        {openCohorts.map((c) => (
-                          <option key={c.id} value={c.id}>{c.name} (starts {c.startDate})</option>
-                        ))}
-                      </select>
-                    )}
+                    <select
+                      value={cohortFor[p.id] || (openCohorts[0] ? openCohorts[0].id : 'new')}
+                      onChange={(e) => setCohortFor((m) => ({ ...m, [p.id]: e.target.value }))}
+                      className="text-xs border border-gray-300 rounded-lg px-2 py-1.5"
+                      aria-label="Cohort for this project"
+                    >
+                      {openCohorts.map((c) => (
+                        <option key={c.id} value={c.id}>{c.name}: {c.startDate} to {c.endDate}</option>
+                      ))}
+                      <option value="new">New cohort with dates I choose…</option>
+                    </select>
                     <button
-                      disabled={pBusy || openCohorts.length === 0}
+                      disabled={pBusy}
                       onClick={async () => {
                         setPBusy(true);
                         try {
-                          const cohort = openCohorts.find((c) => c.id === (cohortFor[p.id] || openCohorts[0].id));
+                          const choice = cohortFor[p.id] || (openCohorts[0] ? openCohorts[0].id : 'new');
+                          let cohort = openCohorts.find((c) => c.id === choice);
+                          if (choice === 'new') {
+                            const d = newDates[p.id] || {};
+                            if (!d.start || !d.end || d.end <= d.start) {
+                              toast.error('Choose a start date and an end date after it.');
+                              setPBusy(false);
+                              return;
+                            }
+                            const c = await createCohort({
+                              startDate: d.start,
+                              startTime: d.time || '09:00',
+                              endDate: d.end,
+                              projectCount: 1,
+                              isPaid: false,
+                              createdBy: currentUser.email,
+                              creator: { uid: currentUser.uid, name: currentUser.displayName || currentUser.email },
+                            });
+                            cohort = {
+                              id: c.id,
+                              name: `Cohort ${c.number}`,
+                              status: 'draft',
+                              startDate: d.start,
+                              endDate: d.end,
+                              startAt: new Date(`${d.start}T${d.time || '09:00'}`).toISOString(),
+                              number: c.number,
+                              creator: { uid: currentUser.uid, name: currentUser.displayName || currentUser.email },
+                            };
+                          }
                           await approveProposal(p, currentUser, cohort);
                           toast.success(`Approved. ${p.name} is the lead, and the project is in ${cohort.name}.`);
                           load();
@@ -203,6 +230,23 @@ const LeadApplicationReview = () => {
                     </button>
                     <button onClick={() => setDeclining(p)} className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
                   </div>
+                  {(cohortFor[p.id] || (openCohorts[0] ? openCohorts[0].id : 'new')) === 'new' && (
+                    <div className="w-full flex flex-wrap items-end gap-2 mt-2 rounded-lg bg-gray-50 border border-gray-200 p-3">
+                      <label className="text-xs text-gray-700">Starts
+                        <input type="date" value={(newDates[p.id] || {}).start || ''} onChange={(e) => setNewDates((m) => ({ ...m, [p.id]: { ...(m[p.id] || {}), start: e.target.value } }))}
+                          className="block mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                      </label>
+                      <label className="text-xs text-gray-700">Start time
+                        <input type="time" value={(newDates[p.id] || {}).time || '09:00'} onChange={(e) => setNewDates((m) => ({ ...m, [p.id]: { ...(m[p.id] || {}), time: e.target.value } }))}
+                          className="block mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                      </label>
+                      <label className="text-xs text-gray-700">Ends (deadline)
+                        <input type="date" value={(newDates[p.id] || {}).end || ''} min={(newDates[p.id] || {}).start || undefined} onChange={(e) => setNewDates((m) => ({ ...m, [p.id]: { ...(m[p.id] || {}), end: e.target.value } }))}
+                          className="block mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                      </label>
+                      <p className="text-[11px] text-gray-500 w-full">A new free cohort is created with these dates, and this project goes into it. Reveal it in Admin → Cohorts when you’re ready.</p>
+                    </div>
+                  )}
                 </div>
                 <p className="text-sm text-gray-800 mt-2 whitespace-pre-wrap">{p.description}</p>
                 {p.rolesNeeded && <p className="text-sm text-gray-700 mt-2"><strong>Roles:</strong> {p.rolesNeeded.split(/\n/).filter(Boolean).join(', ')}</p>}
