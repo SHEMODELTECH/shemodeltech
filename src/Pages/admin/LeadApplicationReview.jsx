@@ -20,6 +20,7 @@ import { leadInterviewInvite } from '../../utils/calendarInvite';
 import { approveProposal, declineProposal, listOpenCohorts, listProposals, TRACKS } from '../../utils/projectProposals';
 import NoteDialog from '../../components/NoteDialog';
 import { createCohort } from '../../utils/cohorts';
+import { checkDates, minEndDate, todayISO } from '../../utils/dateRules';
 import {
   getApplicationsForCohort,
   groupByProject,
@@ -191,8 +192,9 @@ const LeadApplicationReview = () => {
                           let cohort = openCohorts.find((c) => c.id === choice);
                           if (choice === 'new') {
                             const d = newDates[p.id] || {};
-                            if (!d.start || !d.end || d.end <= d.start) {
-                              toast.error('Choose a start date and an end date after it.');
+                            const dateErr = checkDates({ start: d.start, end: d.end, startTime: d.time || '09:00' });
+                            if (dateErr) {
+                              toast.error(dateErr);
                               setPBusy(false);
                               return;
                             }
@@ -233,7 +235,7 @@ const LeadApplicationReview = () => {
                   {(cohortFor[p.id] || (openCohorts[0] ? openCohorts[0].id : 'new')) === 'new' && (
                     <div className="w-full flex flex-wrap items-end gap-2 mt-2 rounded-lg bg-gray-50 border border-gray-200 p-3">
                       <label className="text-xs text-gray-700">Starts
-                        <input type="date" value={(newDates[p.id] || {}).start || ''} onChange={(e) => setNewDates((m) => ({ ...m, [p.id]: { ...(m[p.id] || {}), start: e.target.value } }))}
+                        <input type="date" value={(newDates[p.id] || {}).start || ''} min={todayISO()} onChange={(e) => setNewDates((m) => ({ ...m, [p.id]: { ...(m[p.id] || {}), start: e.target.value } }))}
                           className="block mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
                       </label>
                       <label className="text-xs text-gray-700">Start time
@@ -241,7 +243,7 @@ const LeadApplicationReview = () => {
                           className="block mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
                       </label>
                       <label className="text-xs text-gray-700">Ends (deadline)
-                        <input type="date" value={(newDates[p.id] || {}).end || ''} min={(newDates[p.id] || {}).start || undefined} onChange={(e) => setNewDates((m) => ({ ...m, [p.id]: { ...(m[p.id] || {}), end: e.target.value } }))}
+                        <input type="date" value={(newDates[p.id] || {}).end || ''} min={minEndDate((newDates[p.id] || {}).start)} onChange={(e) => setNewDates((m) => ({ ...m, [p.id]: { ...(m[p.id] || {}), end: e.target.value } }))}
                           className="block mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
                       </label>
                       <p className="text-[11px] text-gray-500 w-full">A new free cohort is created with these dates, and this project goes into it. Reveal it in Admin → Cohorts when you’re ready.</p>

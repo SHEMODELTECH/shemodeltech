@@ -22,6 +22,7 @@ import {
   rolesMeetMinTeamSize, MIN_TEAM_SIZE_ROLES_ERROR,
 } from '../../utils/projectRoles';
 import { formatMoney, computeTotalBudget } from '../../utils/paidProjects';
+import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
 
 const industryTracks = [
   'healthcare', 'finance', 'education', 'ecommerce', 'entertainment', 'government',
@@ -59,6 +60,7 @@ const emptyRole = () => ({
 
 const ProjectSetup = () => {
   const [cohortLock, setCohortLock] = useState(false);
+  const [originalStart, setOriginalStart] = useState(null);
   const [paidLock, setPaidLock] = useState(false);
   const [projectStatus, setProjectStatus] = useState('');
   const { projectId } = useParams();
@@ -98,6 +100,7 @@ const ProjectSetup = () => {
         setIsPaid(!!data.isPaid);
         // Cohort projects: She Model Tech fixes the dates; paid cohorts are fully fixed.
         setCohortLock(!!data.isCohort);
+        setOriginalStart(data.startDate || null);
         setPaidLock(!!data.cohortPaid);
         setProjectStatus(data.status || '');
 
@@ -107,6 +110,7 @@ const ProjectSetup = () => {
           projectGoals: data.projectGoals || '',
           industryTrack: data.industryTrack || 'technology',
           startDate: data.startDate || '',
+          // (kept below so an already-started project can keep its start date)
           endDate: data.endDate || '',
           submissionUrl: data.resources?.submissionUrl || '',
           projectLink: data.projectLink || '',
@@ -169,6 +173,10 @@ const ProjectSetup = () => {
     if (!form.projectDescription.trim()) { toast.error('Description is required'); return; }
     if (!form.startDate) { toast.error('Start date is required'); return; }
     if (!form.endDate) { toast.error('End date is required'); return; }
+    if (!cohortLock) {
+      const dateErr = checkDates({ start: form.startDate, end: form.endDate, originalStart: originalStart });
+      if (dateErr) { toast.error(dateErr); return; }
+    }
     if (form.startDate && form.endDate && new Date(form.endDate) < new Date(form.startDate)) {
       toast.error('End date must be after the start date'); return;
     }
@@ -340,11 +348,11 @@ const ProjectSetup = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Start date <span className="text-red-500">*</span></label>
-            <input type="date" value={form.startDate} disabled={cohortLock} onChange={e => setForm(p => ({ ...p, startDate: e.target.value }))} className={inputClass + (cohortLock ? ' opacity-60 cursor-not-allowed' : '')} />
+            <input type="date" value={form.startDate} min={cohortLock ? undefined : minStartDate(originalStart)} disabled={cohortLock} onChange={e => setForm(p => ({ ...p, startDate: e.target.value }))} className={inputClass + (cohortLock ? ' opacity-60 cursor-not-allowed' : '')} />
           </div>
           <div>
             <label className={labelClass}>End date <span className="text-red-500">*</span></label>
-            <input type="date" value={form.endDate} disabled={cohortLock} onChange={e => setForm(p => ({ ...p, endDate: e.target.value }))} className={inputClass + (cohortLock ? ' opacity-60 cursor-not-allowed' : '')} />
+            <input type="date" value={form.endDate} min={cohortLock ? undefined : minEndDate(form.startDate)} disabled={cohortLock} onChange={e => setForm(p => ({ ...p, endDate: e.target.value }))} className={inputClass + (cohortLock ? ' opacity-60 cursor-not-allowed' : '')} />
           </div>
           {cohortLock && (
             <p className="sm:col-span-2 text-xs text-gray-600">

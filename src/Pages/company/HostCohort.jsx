@@ -20,6 +20,7 @@ import { formatMoney } from '../../utils/paidProjects';
 import { ComingSoonRibbon } from '../../components/ComingSoon';
 import { usePaidFeaturesVisible } from '../../utils/permissions';
 import { notifyMember } from '../../utils/staffAlerts';
+import { checkDates, minEndDate, todayISO } from '../../utils/dateRules';
 
 const blankRole = () => ({ title: '', count: 1, payAmount: '', skills: '' });
 
@@ -72,6 +73,14 @@ const HostCohort = () => {
     setRoles((rs) => rs.map((r, idx) => (idx === i ? { ...r, [key]: value } : r)));
 
   const submit = async () => {
+    // Joining an existing company cohort keeps that cohort's dates.
+    if (!groupFromLink) {
+      const dateErr = checkDates({ start: startDate, end: endDate, requireStart: false });
+      if (dateErr) {
+        toast.error(dateErr);
+        return;
+      }
+    }
     setSaving(true);
     try {
       const id = await createCompanyProject({
@@ -243,6 +252,7 @@ const HostCohort = () => {
           <input
             type="date"
             value={startDate}
+            min={todayISO()}
             disabled={!!groupFromLink}
             onChange={(e) => setStartDate(e.target.value)}
             className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
@@ -255,6 +265,7 @@ const HostCohort = () => {
           <input
             type="date"
             value={endDate}
+            min={minEndDate(startDate)}
             disabled={!!groupFromLink}
             onChange={(e) => setEndDate(e.target.value)}
             className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"

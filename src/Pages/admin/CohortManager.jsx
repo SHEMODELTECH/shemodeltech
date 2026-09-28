@@ -39,6 +39,7 @@ import { batchGenerateProjects } from '../../utils/batchGenerateProjects';
 import { logActivity as logProof } from '../../utils/activityFeed';
 import { approveProposal, listProposals } from '../../utils/projectProposals';
 import { declineSponsorRequest, listSponsorRequests, markSponsorPaid, markSponsorScheduled } from '../../utils/sponsorships2';
+import { checkDates, minEndDate, minStartDate, todayISO } from '../../utils/dateRules';
 
 const PHASES = [
   { id: COHORT_STATUS.DRAFT, label: 'Draft', hint: 'Projects generated, hidden from members' },
@@ -139,12 +140,9 @@ const CohortManager = () => {
   }, [isReviewer, load]);
 
   const create = async () => {
-    if (!startDate) {
-      toast.error('Pick a start date.');
-      return;
-    }
-    if (!endDate || endDate <= startDate) {
-      toast.error('Pick an end date after the start date.');
+    const dateErr = checkDates({ start: startDate, end: endDate, startTime });
+    if (dateErr) {
+      toast.error(dateErr);
       return;
     }
     if (isPaid && !(Number(payPerPerson) > 0)) {
@@ -347,8 +345,9 @@ const CohortManager = () => {
   };
 
   const saveCohort = async (cohort) => {
-    if (cohortDraft.endDate && cohortDraft.startDate && cohortDraft.endDate <= cohortDraft.startDate) {
-      toast.error('The end date must be after the start date.');
+    const dateErr = checkDates({ start: cohortDraft.startDate, end: cohortDraft.endDate, startTime: cohortDraft.startTime, originalStart: cohort.startDate });
+    if (dateErr) {
+      toast.error(dateErr);
       return;
     }
     setBusy(cohort.id);
@@ -447,7 +446,7 @@ const CohortManager = () => {
           <div className="grid sm:grid-cols-2 gap-3 mb-3">
             <div>
               <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-start">Starts on</label>
-              <input id="c-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
+              <input id="c-start" type="date" value={startDate} min={todayISO()} onChange={(e) => setStartDate(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
             </div>
             <div>
@@ -457,7 +456,7 @@ const CohortManager = () => {
             </div>
             <div>
               <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-end">Ends on (deadline)</label>
-              <input id="c-end" type="date" value={endDate} min={startDate || undefined} onChange={(e) => setEndDate(e.target.value)}
+              <input id="c-end" type="date" value={endDate} min={minEndDate(startDate)} onChange={(e) => setEndDate(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
             </div>
             <div>
@@ -671,7 +670,7 @@ const CohortManager = () => {
                       className="flex-1 min-w-[10rem] px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
                     />
                     <label className="text-xs text-gray-600">Starts
-                      <input type="date" value={cohortDraft.startDate}
+                      <input type="date" value={cohortDraft.startDate} min={minStartDate(cohort.startDate)}
                         onChange={(e) => setCohortDraft((d) => ({ ...d, startDate: e.target.value }))}
                         className="block px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
                     </label>
@@ -681,7 +680,7 @@ const CohortManager = () => {
                         className="block px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
                     </label>
                     <label className="text-xs text-gray-600">Ends (deadline)
-                      <input type="date" value={cohortDraft.endDate || ''} min={cohortDraft.startDate}
+                      <input type="date" value={cohortDraft.endDate || ''} min={minEndDate(cohortDraft.startDate)}
                         onChange={(e) => setCohortDraft((d) => ({ ...d, endDate: e.target.value }))}
                         className="block px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
                     </label>
