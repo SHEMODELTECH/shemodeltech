@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
-import { CheckIcon, CourseReader, CourseReferences, InteractivePlayer, coursePartTitles, formatTime, look, useLearning } from './shared';
+import { CheckIcon, CourseReader, CourseReferences, InteractivePlayer, ModuleSummary, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack } from '../../utils/foundationsCourses';
 import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
@@ -150,6 +150,51 @@ const LearningCourse = ({ reading = false }) => {
   useEffect(() => {
     if (hasCapstone) reloadCapstone();
   }, [hasCapstone, reloadCapstone]);
+
+  // Module summaries, saved with this learner's progress for the course.
+  const progressRef = currentUser ? doc(db, 'users', currentUser.uid, 'learning_progress', slug.replace(/[/]/g, '_')) : null;
+  const [summaries, setSummaries] = useState({});
+  useEffect(() => {
+    if (!currentUser) return;
+    getDoc(doc(db, 'users', currentUser.uid, 'learning_progress', slug.replace(/[/]/g, '_')))
+      .then((snap) => setSummaries((snap.exists() && snap.data().summaries) || {}))
+      .catch(() => {});
+  }, [currentUser, slug]);
+  const saveSummary = async (partId, text) => {
+    const entry = { text: text.trim(), at: new Date().toISOString() };
+    await setDoc(progressRef, { summaries: { [partId]: entry } }, { merge: true });
+    setSummaries((m) => ({ ...m, [partId]: entry }));
+  };
+
+  // Forum participation: once other learners have posted or replied at least
+  // twice, the learner replies to someone else's post before finishing.
+  const [forumReq, setForumReq] = useState({ required: false, done: true });
+  const reloadForum = useCallback(async () => {
+    if (!currentUser) return;
+    try {
+      const snap = await getDocs(query(collection(db, 'course_forum', courseKey(track, slug), 'threads'), limit(100)));
+      const threads = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      const others = threads.filter((t) => t.uid !== currentUser.uid);
+      const otherActivity = others.length + threads.reduce((n, t) => n + (Number(t.replyCount) || 0), 0);
+      if (otherActivity < 2 || others.length === 0) {
+        setForumReq({ required: false, done: true });
+        return;
+      }
+      let replied = false;
+      for (const t of others.slice(0, 50)) {
+        // eslint-disable-next-line no-await-in-loop
+        const r = await getDocs(query(collection(db, 'course_forum', courseKey(track, slug), 'threads', t.id, 'replies'), where('uid', '==', currentUser.uid), limit(1)));
+        if (!r.empty) { replied = true; break; }
+      }
+      setForumReq({ required: true, done: replied });
+    } catch (_) {
+      setForumReq({ required: false, done: true });
+    }
+  }, [currentUser, track, slug]);
+  useEffect(() => {
+    reloadForum();
+  }, [reloadForum]);
+  const [summaryGate, setSummaryGate] = useState(false); // interactive courses: summary before completing
   const waiting = isPublished && (published === null || (baseCourse && pubContent == null));
 
   const enrolled = course && lr.isEnrolled(track, slug);
@@ -208,9 +253,37 @@ const LearningCourse = ({ reading = false }) => {
           next={courses[index + 1] || null}
           onBack={() => navigate(`/learning/${track}/${slug}`)}
           onOpen={(s) => navigate(`/learning/${track}/${s}`)}
-          onComplete={() => lr.markComplete(track, slug, course)}
+          onComplete={() => {
+            if (!summaries.course) return setSummaryGate(true);
+            if (forumReq.required && !forumReq.done) {
+              toast.info('Before you finish: reply to another learner in the course forum.');
+              return navigate(`/learning/${track}/${slug}#forum`);
+            }
+            return lr.markComplete(track, slug, course);
+          }}
           onCertificate={openCertificate}
         />
+        {summaryGate && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true">
+            <div className="w-full max-w-xl bg-white rounded-2xl p-5">
+              <ModuleSummary
+                title={course.title}
+                saved={null}
+                onSave={async (text) => {
+                  await saveSummary('course', text);
+                  setSummaryGate(false);
+                  if (forumReq.required && !forumReq.done) {
+                    toast.info('One more step: reply to another learner in the course forum.');
+                    navigate(`/learning/${track}/${slug}#forum`);
+                  } else {
+                    lr.markComplete(track, slug, course);
+                  }
+                }}
+              />
+              <button onClick={() => setSummaryGate(false)} className="mt-3 text-sm font-semibold text-gray-600">Not now</button>
+            </div>
+          </div>
+        )}
       </LearningLayout>
     );
   }
@@ -236,6 +309,9 @@ const LearningCourse = ({ reading = false }) => {
           quizDone={lr.quizDoneFor(track, slug)}
           onQuizDone={(partId) => lr.saveQuizDone(track, slug, partId)}
           capstone={{ required: hasCapstone, done: capstone.status === 'approved', status: capstone.status, note: capstone.note, forumUrl: `/learning/${track}/${slug}#forum` }}
+          summaries={summaries}
+          onSummary={currentUser ? saveSummary : null}
+          forum={{ ...forumReq, url: `/learning/${track}/${slug}#forum` }}
         />
       </LearningLayout>
     );
@@ -433,6 +509,7 @@ const LearningCourse = ({ reading = false }) => {
             onEnroll={joinCourse}
             displayName={lr.profile?.displayName || ''}
             onCapstonePosted={reloadCapstone}
+            onReplied={reloadForum}
             learningId={isPublished ? course.publishedId || null : null}
           />
         </section>

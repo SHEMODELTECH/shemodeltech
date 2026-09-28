@@ -160,7 +160,7 @@ const timeAgo = (ts) => {
   return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 };
 
-const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSignIn, canParticipate, onNeedEnroll, canReview }) => {
+const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSignIn, canParticipate, onNeedEnroll, canReview, onReplied = null }) => {
   // Capstone review: admins, editors, or the course's mentor approve a capstone
   // before the learner can complete the course and get the certificate.
   const [review, setReview] = useState(t.review || null);
@@ -248,6 +248,7 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
       setCount((c) => c + 1);
       setText('');
       setFile(null);
+      if (onReplied) onReplied();
       if (t.uid !== me.uid) {
         notifyMember(t.uid, {
           type: 'forum_reply',
@@ -411,7 +412,7 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
   );
 };
 
-const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayName = '', onCapstonePosted, root = 'course_forum', forumKey = null, authorUid = null, title = 'Course forum', intro = 'Ask questions, help others, and share your work.', canParticipate = true, onEnroll = null, learningId = null }) => {
+const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayName = '', onCapstonePosted, onReplied = null, root = 'course_forum', forumKey = null, authorUid = null, title = 'Course forum', intro = 'Ask questions, help others, and share your work.', canParticipate = true, onEnroll = null, learningId = null }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -618,7 +619,7 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
       ) : (
         <ul className="space-y-2">
           {shown.map((t) => (
-            <Thread key={t.id} base={base} t={t} me={currentUser} isStaff={isAdmin} myName={myName} courseTitle={courseTitle}
+            <Thread key={t.id} base={base} t={t} me={currentUser} isStaff={isAdmin} myName={myName} courseTitle={courseTitle} onReplied={onReplied}
               onDeleted={(id) => setThreads((ts) => ts.filter((x) => x.id !== id))}
               onNeedSignIn={() => signInAndReturn(navigate, `${location.pathname}#forum`)}
               canParticipate={canParticipate}

@@ -615,7 +615,53 @@ export const splitParts = (html, toc) => {
   return parts;
 };
 
-export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDone, next, part, onPart, onBack, onOpen, onComplete, onCertificate, quizDone = {}, onQuizDone, capstone = null }) => {
+// "What did you learn?" at the end of each module. Required for the certificate.
+const SUMMARY_MIN_WORDS = 30;
+const SUMMARY_MAX_CHARS = 1500;
+export const ModuleSummary = ({ title, saved, onSave }) => {
+  const [editing, setEditing] = useState(!saved);
+  const [text, setText] = useState(saved?.text || '');
+  const [busy, setBusy] = useState(false);
+  const words = (text.trim().match(/\S+/g) || []).length;
+  const save = async () => {
+    if (words < SUMMARY_MIN_WORDS) return toast.error(`Write at least ${SUMMARY_MIN_WORDS} words (you have ${words}).`);
+    setBusy(true);
+    try {
+      await onSave(text);
+      setEditing(false);
+      toast.success('Summary saved.');
+    } catch (e) {
+      toast.error('Could not save your summary. Check your connection and try again.');
+    }
+    setBusy(false);
+  };
+  return (
+    <section className="mt-10 rounded-2xl border border-pink-200 bg-pink-50/40 p-5" aria-label="Module summary">
+      <p className="font-semibold text-gray-900">Summarize what you learned</p>
+      <p className="text-sm text-gray-600 mt-0.5">In your own words: the main ideas of "{title}" and how you’d use them. Required for your certificate.</p>
+      {editing ? (
+        <>
+          <label htmlFor="module-summary" className="sr-only">Your summary</label>
+          <textarea id="module-summary" rows={5} maxLength={SUMMARY_MAX_CHARS} value={text} onChange={(e) => setText(e.target.value)}
+            className="mt-3 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500" />
+          <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
+            <span className={`text-xs ${words >= SUMMARY_MIN_WORDS ? 'text-emerald-700' : 'text-gray-500'}`}>
+              {words >= SUMMARY_MIN_WORDS ? `${words} words. Minimum reached.` : `At least ${SUMMARY_MIN_WORDS} words. You have ${words} so far.`} · {text.length}/{SUMMARY_MAX_CHARS} characters
+            </span>
+            <button onClick={save} disabled={busy} className="fd-btn !py-2 !px-3 text-sm disabled:opacity-50">{busy ? 'Saving…' : 'Save summary'}</button>
+          </div>
+        </>
+      ) : (
+        <div className="mt-3">
+          <p className="text-sm text-gray-800 whitespace-pre-wrap bg-white rounded-lg border border-gray-200 p-3">{saved?.text || text}</p>
+          <button onClick={() => setEditing(true)} className="mt-2 text-xs font-semibold text-pink-700 hover:underline">Edit summary</button>
+        </div>
+      )}
+    </section>
+  );
+};
+
+export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDone, next, part, onPart, onBack, onOpen, onComplete, onCertificate, quizDone = {}, onQuizDone, capstone = null, summaries = {}, onSummary = null, forum = null }) => {
   const rendered = useMemo(() => renderCourse(course.markdown), [course]);
   const parts = useMemo(() => splitParts(rendered.html, rendered.toc), [rendered]);
   const current = Math.min(Math.max(part, 0), parts.length - 1);
@@ -628,7 +674,12 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
   );
   const quizzesLeft = quizParts.filter((p) => !quizDone[p.id]);
   const capstoneLeft = capstone && capstone.required && !capstone.done;
-  const canComplete = quizzesLeft.length === 0 && !capstoneLeft;
+  // Every module ends with a short summary in the learner's own words.
+  const summaryParts = parts.map((p, i) => ({ i, id: p.id, title: p.title })).filter((p) => p.id !== 'overview');
+  const summariesLeft = onSummary ? summaryParts.filter((p) => !summaries[p.id]) : [];
+  // Once other learners are talking in the forum (2+ posts or replies), reply to one.
+  const forumLeft = forum && forum.required && !forum.done;
+  const canComplete = quizzesLeft.length === 0 && !capstoneLeft && summariesLeft.length === 0 && !forumLeft;
   const proseRef = useRef(null);
   const [scrollPct, setScrollPct] = useState(0);
   const [listOpen, setListOpen] = useState(false);
@@ -826,6 +877,15 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                 dangerouslySetInnerHTML={{ __html: parts[current].html }}
               />
 
+              {onSummary && parts[current].id !== 'overview' && (
+                <ModuleSummary
+                  key={parts[current].id}
+                  title={parts[current].title}
+                  saved={summaries[parts[current].id]}
+                  onSave={(text) => onSummary(parts[current].id, text)}
+                />
+              )}
+
               {/* Part navigation */}
               <nav className="fd-pager" aria-label="Part navigation">
                 {current > 0 ? (
@@ -870,6 +930,20 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                                     </button>
                                   </li>
                                 ))}
+                                {summariesLeft.map((p) => (
+                                  <li key={`sum-${p.id}`}>
+                                    <button onClick={() => onPart(p.i)} className="text-left font-semibold text-pink-700 hover:underline">
+                                      Summarize what you learned in "{p.title}"
+                                    </button>
+                                  </li>
+                                ))}
+                                {forumLeft && (
+                                  <li>
+                                    <a href={forum.url} className="font-semibold text-pink-700 hover:underline">
+                                      Reply to another learner in the course forum
+                                    </a>
+                                  </li>
+                                )}
                                 {capstoneLeft && (
                                   <li>
                                     <a href={capstone.forumUrl} className="font-semibold text-pink-700 hover:underline">
