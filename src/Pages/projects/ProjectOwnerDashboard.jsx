@@ -15,7 +15,7 @@ import { markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../.
 import { alertStaff, notifyMember } from '../../utils/staffAlerts';
 import { isPremium } from '../../config/premium';
 import PremiumBadge from '../../components/PremiumBadge';
-import { listSponsoredProjects } from '../../utils/sponsorships2';
+import { listSponsoredCohorts, listSponsoredProjects } from '../../utils/sponsorships2';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -57,7 +57,9 @@ const ProjectOwnerDashboard = () => {
   useEffect(() => {
     if (!currentUser) return;
     listSponsoredProjects(currentUser.uid).then(setSponsored).catch(() => {});
+    listSponsoredCohorts(currentUser.uid).then(setSponsoredCohorts).catch(() => {});
   }, [currentUser]);
+  const [sponsoredCohorts, setSponsoredCohorts] = useState([]);
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid))
@@ -538,6 +540,12 @@ const ProjectOwnerDashboard = () => {
               <JoinedProjects currentUser={currentUser} />
             ) : (
             <>
+            {isCompany && sponsoredCohorts.length > 0 && sponsored.length === 0 && (
+              <div className="mb-8 rounded-xl border border-pink-200 bg-pink-50 p-4 text-sm text-gray-800">
+                <strong>Your sponsored cohort is being prepared.</strong>{' '}
+                {sponsoredCohorts.map((c) => `${c.name} starts ${c.startDate}`).join('; ')}. You’ll see each project here, with its workspace, once She Model Tech reveals them.
+              </div>
+            )}
             {isCompany && sponsored.length > 0 && (
               <div className="mb-8">
                 <h2 className="text-lg font-bold text-gray-900 mb-3">Cohorts you sponsor</h2>

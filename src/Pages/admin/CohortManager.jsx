@@ -87,6 +87,7 @@ const CohortManager = () => {
     listSponsorRequests().then((l) => setSponsorReqs(l.filter((x) => ['new', 'paid'].includes(x.status)))).catch(() => {});
   }, []);
   const [count, setCount] = useState(1);
+  const [teamSize, setTeamSize] = useState(4); // people per project, including the lead
 
   useEffect(() => {
     if (!currentUser) {
@@ -148,6 +149,7 @@ const CohortManager = () => {
         projectCount: Number(count),
         isPaid,
         payPerPerson: Number(payPerPerson) || 0,
+        teamSize: Math.max(2, Number(teamSize) || 4),
         sponsor: (() => {
           const req = sponsorReqs.find((x) => x.id === sponsorReqId);
           return req ? { uid: req.companyUid, name: req.companyName, requestId: req.id } : null;
@@ -206,6 +208,7 @@ const CohortManager = () => {
         isPaid: !!cohort.isPaid,
         payPerPerson: cohort.payPerPerson || 0,
         sponsor: cohort.sponsor || null,
+        teamSize: cohort.teamSize || null,
         creator: cohort.creator || { uid: currentUser.uid, name: currentUser.displayName || currentUser.email },
         draft: true, // hidden until you have read the briefs
       });
@@ -233,7 +236,18 @@ const CohortManager = () => {
       // One batch, not N writes, this is the moment members start hitting
       // the page, so it should land atomically.
       const batch = writeBatch(db);
+      // Everyone who should follow the cohort's workspaces: its creator and sponsor.
+      const followers = [
+        ...(cohort.creator?.uid ? [{ uid: cohort.creator.uid, name: cohort.creator.name, label: 'She Model Tech (created this cohort)' }] : []),
+        ...(cohort.sponsor?.uid ? [{ uid: cohort.sponsor.uid, name: cohort.sponsor.name, label: 'Sponsor' }] : []),
+      ];
       drafts.forEach((p) => {
+        if (followers.length) {
+          batch.update(doc(db, 'projects', p.id), {
+            observers: arrayUnion(...followers.map((f) => f.uid)),
+            observerInfo: arrayUnion(...followers),
+          });
+        }
         // Paid cohorts: roles and pay are fixed by She Model Tech at reveal
         // (the lead can't change them), so publish the proposed roles now.
         if (cohort.isPaid) {
@@ -426,6 +440,11 @@ const CohortManager = () => {
               <input id="c-count" type="number" min="1" max="30" value={count} onChange={(e) => setCount(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
             </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-team">People per project <span className="font-normal text-gray-500">(including the lead, 2 or more)</span></label>
+              <input id="c-team" type="number" min="2" max="20" value={teamSize} onChange={(e) => setTeamSize(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
+            </div>
           </div>
           <fieldset className="mb-3">
             <legend className="block text-xs font-bold text-gray-900 mb-1">Type</legend>
@@ -445,11 +464,20 @@ const CohortManager = () => {
           )}
           <div className="mb-3">
             <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-sponsor">Sponsor <span className="font-normal text-gray-500">(optional: a company funding this cohort)</span></label>
-            <select id="c-sponsor" value={sponsorReqId} onChange={(e) => { setSponsorReqId(e.target.value); if (e.target.value) setIsPaid(true); }}
+            <select id="c-sponsor" value={sponsorReqId} onChange={(e) => {
+                setSponsorReqId(e.target.value);
+                const req = sponsorReqs.find((x) => x.id === e.target.value);
+                if (req) {
+                  setIsPaid(true);
+                  setCount(req.projects || 1);
+                  if (req.people) setTeamSize(Math.max(2, Math.round(req.people / (req.projects || 1))));
+                  if (req.payPerPerson) setPayPerPerson(req.payPerPerson);
+                }
+              }}
               className="w-full sm:w-auto px-3 py-2 rounded-lg border border-gray-300 text-sm">
               <option value="">No sponsor</option>
               {sponsorReqs.filter((x) => x.status === 'paid').map((x) => (
-                <option key={x.id} value={x.id}>{x.companyName} · {x.projects} project{x.projects === 1 ? '' : 's'}{x.payPerPerson ? ` · $${x.payPerPerson}/person` : ''}</option>
+                <option key={x.id} value={x.id}>{x.companyName} · {x.projects} project{x.projects === 1 ? '' : 's'} · {x.people || '?'} people{x.payPerPerson ? ` · $${x.payPerPerson}/person` : ''}</option>
               ))}
             </select>
             {sponsorReqs.filter((x) => x.status === 'paid').length === 0 && <p className="text-[11px] text-gray-500 mt-1">Only sponsorships you’ve confirmed as paid appear here. Confirm payment in Sponsorship requests above.</p>}

@@ -75,6 +75,7 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
     payPerPerson = 0,
     sponsor = null,
     creator = null,
+    teamSize = null,
     draft = true,
   } = opts;
   const templates = pickVaried(count);
@@ -90,7 +91,14 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
         projectGoals: t.projectGoals || null,
         industryTrack: t.industryTrack,
         timeline: 'flexible',
-        proposedRoles: t.proposedRoles,
+        proposedRoles: (() => {
+          // Fit the roles to the chosen team size: the lead plus (teamSize - 1) people.
+          const roles = Array.isArray(t.proposedRoles) ? t.proposedRoles.map((r) => ({ ...r, count: 0 })) : [];
+          if (!teamSize || !roles.length) return t.proposedRoles;
+          for (let i = 0; i < Math.max(1, Number(teamSize) - 1); i += 1) roles[i % roles.length].count += 1;
+          return roles.filter((r) => r.count > 0);
+        })(),
+        ...(teamSize ? { maxTeamSize: Number(teamSize) } : {}),
         teamRoles: [],
         maxTeamSize: 0,
         status: 'lead_recruitment',

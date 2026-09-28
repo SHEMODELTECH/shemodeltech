@@ -68,7 +68,8 @@ export const declineSponsorRequest = async (req, note) => {
 // Projects a company sponsors (it follows them in the workspace).
 export const listSponsoredProjects = async (uid) => {
   const s = await getDocs(query(collection(db, 'projects'), where('observers', 'array-contains', uid)));
-  return s.docs.map((d) => ({ id: d.id, ...d.data() }));
+  // Hidden drafts stay hidden until She Model Tech reveals the cohort.
+  return s.docs.map((d) => ({ id: d.id, ...d.data() })).filter((p) => p.isActive !== false);
 };
 
 // She Model Tech confirms the sponsor's payment before the cohort is created.
@@ -80,4 +81,9 @@ export const markSponsorPaid = async (req, staff) => {
     body: 'Thank you. We’re creating your cohort and will add your representative to every project workspace.',
     link: '/projects/owner-dashboard',
   });
+};
+
+export const listSponsoredCohorts = async (uid) => {
+  const s = await getDocs(query(collection(db, 'cohorts'), where('sponsor.uid', '==', uid)));
+  return s.docs.map((d) => ({ id: d.id, ...d.data() }));
 };

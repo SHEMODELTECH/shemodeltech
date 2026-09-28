@@ -49,6 +49,16 @@ const MyWorkspaces = () => {
           });
         } catch (e) { console.log('Owner projects query skipped:', e.message); }
 
+        // Projects you follow: cohorts you created or sponsor, training you're part of.
+        try {
+          const obsSnap = await getDocs(query(collection(db, 'projects'), where('observers', 'array-contains', currentUser.uid)));
+          obsSnap.docs.forEach((d) => {
+            if (allProjects.has(d.id)) return;
+            const data = { id: d.id, ...d.data(), isOwner: false, isObserver: true };
+            if (data.isActive !== false && data.status !== 'completed' && data.reviewStatus !== 'rejected') allProjects.set(d.id, data);
+          });
+        } catch (e) { console.log('Followed projects query skipped:', e.message); }
+
         const projects = Array.from(allProjects.values());
         projects.sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
         setProjects(projects);
