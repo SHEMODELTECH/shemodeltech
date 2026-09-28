@@ -11,6 +11,7 @@ import SocialLinks from '../components/SocialLinks';
 import LimitHint, { countWords } from '../components/LimitHint';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
+import SummitComingSoon from '../components/SummitComingSoon';
 import {
   PARTNER_OPTIONS,
   SUMMIT_LIMITS,
@@ -99,46 +100,11 @@ const Summit = () => {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+      <main className={summit === null ? '' : 'max-w-5xl mx-auto px-4 sm:px-6 py-12'}>
         {summit === undefined ? (
           <p className="text-gray-500">Loading...</p>
         ) : !summit ? (
-          <div className="max-w-3xl mx-auto text-center py-12">
-            <p className="text-pink-600 text-sm font-semibold uppercase tracking-widest">Coming soon</p>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">She Model Tech Summit</h1>
-            <p className="text-gray-700 text-lg mt-4 leading-relaxed">
-              A day for women building careers in tech: talks from women leading in the industry, hands-on workshops,
-              recruiting tables with companies that are hiring, and time to connect with mentors and each other.
-              Free for every She Model Tech member.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-4 mt-8 text-left">
-              <div className="rounded-2xl border border-pink-200 bg-pink-50/40 p-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-pink-700">Date and time</p>
-                <p className="text-lg font-semibold text-gray-900 mt-1">Coming soon</p>
-              </div>
-              <div className="rounded-2xl border border-indigo-200 bg-indigo-50/40 p-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-indigo-700">Theme</p>
-                <p className="text-lg font-semibold text-gray-900 mt-1">Coming soon</p>
-              </div>
-            </div>
-            <ul className="mt-8 grid sm:grid-cols-3 gap-3 text-sm text-gray-700 text-left">
-              <li className="rounded-xl border border-gray-200 p-4"><strong className="block text-gray-900">Learn</strong>Talks and hands-on workshops across our tech tracks.</li>
-              <li className="rounded-xl border border-gray-200 p-4"><strong className="block text-gray-900">Get hired</strong>Meet companies at recruiting tables.</li>
-              <li className="rounded-xl border border-gray-200 p-4"><strong className="block text-gray-900">Connect</strong>Build your network with mentors and peers.</li>
-            </ul>
-            {currentUser ? (
-              <p className="text-gray-600 mt-8">You’ll see the details here, and on your dashboard, as soon as they’re announced.</p>
-            ) : (
-              <>
-                <p className="text-gray-600 mt-8">Create a free account to hear first when registration opens.</p>
-                <Link to="/login" className="inline-block mt-4 bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Create a free account</Link>
-              </>
-            )}
-            <p className="text-sm text-gray-500 mt-6">
-              Want to exhibit, sponsor, or run a workshop? Email{' '}
-              <a href="mailto:shemodeltech@gmail.com" className="text-pink-700 font-semibold hover:underline">shemodeltech@gmail.com</a>.
-            </p>
-          </div>
+          <SummitComingSoon signedIn={!!currentUser} />
         ) : (
           <>
             <section className="rounded-3xl bg-gradient-to-br from-pink-50 via-white to-indigo-50 border border-pink-100 p-6 sm:p-10">
