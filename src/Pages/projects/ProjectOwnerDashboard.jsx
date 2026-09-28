@@ -15,6 +15,7 @@ import { markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../.
 import { alertStaff, notifyMember } from '../../utils/staffAlerts';
 import { isPremium } from '../../config/premium';
 import PremiumBadge from '../../components/PremiumBadge';
+import { listSponsoredProjects } from '../../utils/sponsorships2';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -51,6 +52,12 @@ const ProjectOwnerDashboard = () => {
   // applied to or joined (free or paid). Companies only have their own.
   const [view, setView] = useState('lead');
   const [isCompany, setIsCompany] = useState(false);
+  // Projects in cohorts this company sponsors (it's added to their workspaces).
+  const [sponsored, setSponsored] = useState([]);
+  useEffect(() => {
+    if (!currentUser) return;
+    listSponsoredProjects(currentUser.uid).then(setSponsored).catch(() => {});
+  }, [currentUser]);
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid))
@@ -493,11 +500,22 @@ const ProjectOwnerDashboard = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-gray-900">My <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-500">Projects</span></h1>
-                <p className="text-gray-400 text-sm mt-1">{view === 'joined' && !isCompany ? 'Projects you applied to or joined' : `${myProjects.length} project${myProjects.length !== 1 ? 's' : ''} you lead`}</p>
+                <p className="text-gray-400 text-sm mt-1">{view === 'joined' && !isCompany ? 'Projects you applied to or joined' : isCompany ? `${myProjects.length} paid project${myProjects.length !== 1 ? 's' : ''} you posted · ${sponsored.length} sponsored` : `${myProjects.length} project${myProjects.length !== 1 ? 's' : ''} you lead`}</p>
               </div>
-              <Link to="/projects" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
-                Apply to lead a project
-              </Link>
+              {isCompany ? (
+                <div className="flex flex-wrap gap-2">
+                  <Link to="/projects/new-paid" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
+                    Post a paid project
+                  </Link>
+                  <Link to="/projects/sponsor-cohort" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-white border border-pink-300 text-pink-700 hover:bg-pink-50 font-bold rounded-xl text-sm transition-all">
+                    Sponsor a cohort
+                  </Link>
+                </div>
+              ) : (
+                <Link to="/projects" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
+                  Apply to lead a project
+                </Link>
+              )}
             </div>
 
             {!isCompany && (
@@ -520,6 +538,23 @@ const ProjectOwnerDashboard = () => {
               <JoinedProjects currentUser={currentUser} />
             ) : (
             <>
+            {isCompany && sponsored.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-lg font-bold text-gray-900 mb-3">Cohorts you sponsor</h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {sponsored.map((p) => (
+                    <div key={p.id} className="bg-white border border-gray-200 rounded-xl p-4">
+                      <p className="font-semibold text-gray-900">{p.projectTitle}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {p.cohortNumber ? `Cohort ${p.cohortNumber} · ` : ''}{p.status === 'completed' ? 'Completed' : p.leadConfirmed ? 'Team building' : 'Choosing a lead'}
+                      </p>
+                      <Link to={`/projects/${p.id}/workspace`} className="inline-block mt-3 text-xs font-semibold bg-gray-900 text-white px-3 py-1.5 rounded-lg">Open workspace</Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
               {[
@@ -536,9 +571,15 @@ const ProjectOwnerDashboard = () => {
 
             {myProjects.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-gray-400 text-lg font-semibold mb-2">No projects yet</p>
-                <p className="text-gray-500 text-sm mb-6">Post your first project to get started</p>
-                <Link to="/projects" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-xl text-sm">Browse projects</Link>
+                <p className="text-gray-400 text-lg font-semibold mb-2">{isCompany ? 'No paid projects yet' : 'No projects yet'}</p>
+                <p className="text-gray-500 text-sm mb-6">
+                  {isCompany ? 'Post a paid project to hire a team, or sponsor a cohort led by She Model Tech.' : 'Apply to lead a project to get started.'}
+                </p>
+                {isCompany ? (
+                  <Link to="/projects/new-paid" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-xl text-sm">Post a paid project</Link>
+                ) : (
+                  <Link to="/projects" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-xl text-sm">Browse projects</Link>
+                )}
               </div>
             ) : (
               <div className="space-y-6">

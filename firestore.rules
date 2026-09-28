@@ -409,6 +409,17 @@ service cloud.firestore {
  allow delete: if isAdmin() || (isSignedIn() && resource.data.uid == myUid() && resource.data.status == 'new');
  }
 
+ // Companies asking to sponsor a She Model Tech cohort.
+ match /sponsor_requests/{id} {
+ allow create: if isSignedIn() && request.resource.data.companyUid == myUid()
+ && request.resource.data.status == 'new'
+ && myUserDoc().get('isCompany', false) == true
+ && request.resource.data.get('focus', '').size() <= 1000
+ && request.resource.data.get('message', '').size() <= 1500;
+ allow read: if isReviewer() || (isSignedIn() && resource.data.companyUid == myUid());
+ allow update, delete: if isAdmin();
+ }
+
  // Organizations: training contract and course licensing requests. Anyone can
  // submit one from the public page; staff manage them; assigned mentors can
  // read the ones they're assigned to.

@@ -37,6 +37,7 @@ import {
 import { batchGenerateProjects } from '../../utils/batchGenerateProjects';
 import { logActivity as logProof } from '../../utils/activityFeed';
 import { approveProposal, listProposals } from '../../utils/projectProposals';
+import { listSponsorRequests, markSponsorScheduled } from '../../utils/sponsorships2';
 
 const PHASES = [
   { id: COHORT_STATUS.DRAFT, label: 'Draft', hint: 'Projects generated, hidden from members' },
@@ -79,6 +80,12 @@ const CohortManager = () => {
   const [endDate, setEndDate] = useState('');
   const [isPaid, setIsPaid] = useState(false);
   const [payPerPerson, setPayPerPerson] = useState(''); // USD, paid cohorts
+  // Company sponsorship requests (a sponsored cohort adds the company to every workspace).
+  const [sponsorReqs, setSponsorReqs] = useState([]);
+  const [sponsorReqId, setSponsorReqId] = useState('');
+  useEffect(() => {
+    listSponsorRequests().then((l) => setSponsorReqs(l.filter((x) => x.status === 'new'))).catch(() => {});
+  }, []);
   const [count, setCount] = useState(1);
 
   useEffect(() => {
@@ -141,8 +148,18 @@ const CohortManager = () => {
         projectCount: Number(count),
         isPaid,
         payPerPerson: Number(payPerPerson) || 0,
+        sponsor: (() => {
+          const req = sponsorReqs.find((x) => x.id === sponsorReqId);
+          return req ? { uid: req.companyUid, name: req.companyName, requestId: req.id } : null;
+        })(),
         createdBy: currentUser.email,
       });
+      const req = sponsorReqs.find((x) => x.id === sponsorReqId);
+      if (req) {
+        await markSponsorScheduled(req, { id: c.id, name: `Cohort ${c.number}`, startDate }).catch(() => {});
+        setSponsorReqs((xs) => xs.filter((x) => x.id !== req.id));
+        setSponsorReqId('');
+      }
       toast.success(`Cohort ${c.number} created. Generate its projects next.`);
       setShowNew(false);
       setStartDate('');
@@ -187,6 +204,7 @@ const CohortManager = () => {
         startAt: cohort.startAt || null,
         isPaid: !!cohort.isPaid,
         payPerPerson: cohort.payPerPerson || 0,
+        sponsor: cohort.sponsor || null,
         draft: true, // hidden until you have read the briefs
       });
       await updateCohort(cohort.id, { projectCount: existing + (res.created || 0) }).catch(() => {});
@@ -393,6 +411,18 @@ const CohortManager = () => {
                 className="w-40 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
             </div>
           )}
+          <div className="mb-3">
+            <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-sponsor">Sponsor <span className="font-normal text-gray-500">(optional: a company funding this cohort)</span></label>
+            <select id="c-sponsor" value={sponsorReqId} onChange={(e) => { setSponsorReqId(e.target.value); if (e.target.value) setIsPaid(true); }}
+              className="w-full sm:w-auto px-3 py-2 rounded-lg border border-gray-300 text-sm">
+              <option value="">No sponsor</option>
+              {sponsorReqs.map((x) => (
+                <option key={x.id} value={x.id}>{x.companyName} · {x.projects} project{x.projects === 1 ? '' : 's'}{x.payPerPerson ? ` · $${x.payPerPerson}/person` : ''}</option>
+              ))}
+            </select>
+            {sponsorReqs.length === 0 && <p className="text-[11px] text-gray-500 mt-1">No sponsorship requests waiting. Companies send them from My Projects → Sponsor a cohort.</p>}
+            {sponsorReqId && <p className="text-[11px] text-gray-600 mt-1">The sponsor is added to every project workspace. She Model Tech pays the leads and collaborators.</p>}
+          </div>
           <p className="text-gray-500 text-xs mb-3 leading-relaxed">
             Everyone in the cohort starts at the same time and finishes on the same deadline. Leads can’t change these
             dates; they can request extra time, which you approve. On a paid cohort, leads can’t change anything in the
@@ -428,6 +458,7 @@ const CohortManager = () => {
                   <p className="text-gray-500 text-xs">
                     {cohort.startDate}{cohort.startAt ? ` ${new Date(cohort.startAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : ''} → {cohort.endDate}
                     {cohort.isPaid ? ` · Paid ($${cohort.payPerPerson || 0} per person)` : ' · Free'}
+                    {cohort.sponsor?.name ? ` · Sponsored by ${cohort.sponsor.name}` : ''}
                     {daysLeft !== null &&
                       cohort.status === COHORT_STATUS.BUILDING &&
                       ` · ${daysLeft} days left`}

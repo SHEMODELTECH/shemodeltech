@@ -45,6 +45,7 @@ const OrgDashboard = lazy(() => import('./Pages/org/Org').then((m) => ({ default
 const OrgEdition = lazy(() => import('./Pages/org/Org').then((m) => ({ default: m.OrgEdition })));
 const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const ProposeProjectPage = lazy(() => import('./Pages/projects/ProposeProjectPage'));
+const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -218,6 +219,7 @@ function App() {
                 <Route path="/organizations" element={<Organizations />} />
                 <Route path="/summit" element={<Summit />} />
                 <Route path="/projects/propose" element={<SidebarRoute><ProposeProjectPage /></SidebarRoute>} />
+                <Route path="/projects/sponsor-cohort" element={<SidebarRoute><SponsorCohort /></SidebarRoute>} />
                 <Route path="/admin/cohorts" element={<StaffRoute><CohortManager /></StaffRoute>} />
                 <Route path="/join/:code" element={<JoinOrganization />} />
                 <Route path="/org/:orgId" element={<SidebarRoute><OrgDashboard /></SidebarRoute>} />
