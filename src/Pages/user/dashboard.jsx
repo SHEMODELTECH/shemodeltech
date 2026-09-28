@@ -502,7 +502,7 @@ const DashboardOverview = () => {
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-1">Your Badges</h3>
               <p className="text-gray-500 text-xs mb-4">
-                Earn badges by completing projects in each track.
+                The badges you’ve earned. Each project you complete in a track adds to its level.
               </p>
 
               {/* Badge Levels */}
@@ -528,6 +528,18 @@ const DashboardOverview = () => {
 
               {/* All 6 Badges */}
               <div className="space-y-3">
+                {badgeData.filter((badge) => {
+                  const key = (s) => (s || '').toString().toLowerCase();
+                  return (profileData?.badges || []).some(
+                    (b) => key(b.id) === key(badge.id) || key(b.title) === key(badge.title) || key(b.category) === key(badge.title) || key(b.category) === key(badge.id)
+                  );
+                }).length === 0 && (
+                  <div className="rounded-lg border border-dashed border-gray-200 p-4 text-center">
+                    <p className="text-sm font-semibold text-gray-800">No badges yet</p>
+                    <p className="text-xs text-gray-500 mt-1">Complete a She Model Tech project to earn your first badge.</p>
+                    <Link to="/projects" className="inline-block mt-3 text-xs font-semibold text-pink-700 hover:underline">Find a project</Link>
+                  </div>
+                )}
                 {badgeData.map((badge) => {
                   // Match all earned badges in this category (robust: id / title / category, case-insensitive).
                   const key = (s) => (s || '').toString().toLowerCase();
@@ -539,6 +551,7 @@ const DashboardOverview = () => {
                       key(b.category) === key(badge.id)
                   );
                   const earned = matches.length > 0;
+                  if (!earned) return null; // only the badges this member has earned
                   // Level is derived LIVE from how many badges earned in this track,
                   // so it advances as more are earned (Novice 1, Associate 2-5, Advanced 6-10, Expert 11+).
                   const count = matches.length;
@@ -676,18 +689,6 @@ const DashboardOverview = () => {
             </Link>
           </div>
 
-          {/* Talent Board */}
-          <div className="bg-white border border-gray-200 rounded-xl p-6">
-            <h3 className="text-base font-bold text-gray-900 mb-1">Talent Board</h3>
-            <p className="text-gray-600 text-xs mb-3">
-              {profileData?.isCompany
-                ? 'Browse verified talent and find people for your team.'
-                : "You're visible to recruiters and companies on the Talent Board."}
-            </p>
-            <Link to="/talent-board" className="text-pink-600 text-sm font-medium hover:underline">
-              View Talent Board
-            </Link>
-          </div>
         </div>
       </div>
     </div>
