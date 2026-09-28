@@ -43,7 +43,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
           // Mentor courses waiting for approval.
           try {
             const s = await getDocs(collection(db, 'teacher_courses'));
-            return s.docs.filter((d) => d.data().review?.status === 'pending').length;
+            return s.docs.filter((d) => d.data().review?.status === 'pending' || d.data().removalRequest?.status === 'pending').length;
           } catch (_) {
             return 0;
           }
@@ -59,7 +59,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ['Projects to review', c.reviews, 'Submitted by leads for She Model Tech review', { tab: 'reviews' }],
     ['Lead applications', c.leadApps + c.proposals, `${c.leadApps} waiting · ${c.proposals} project proposal${c.proposals === 1 ? '' : 's'}`, { to: '/admin/lead-applications' }],
     ['Extra time requests', c.extension, 'Cohort leads asking for more time', { tab: 'projects' }],
-    ['Mentor courses', c.capstone, 'Courses waiting for approval', { tab: 'teachers' }],
+    ['Mentor courses', c.capstone, 'Courses to approve, or deletion requests', { tab: 'teachers' }],
     ['Mentor letters', c.letters, 'Recommendation and volunteer letters', { tab: 'teachers' }],
     ...(isAdmin ? [['Mentor applications', c.mentorApps, 'People applying to mentor', { tab: 'teachers' }]] : []),
     ...(isAdmin ? [['Companies to verify', c.companies, 'New company accounts waiting for verification', { tab: 'users', view: 'unverified' }]] : []),

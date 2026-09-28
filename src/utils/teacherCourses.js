@@ -251,13 +251,13 @@ export const markApproved = async (course, admin) => {
 
 // ---- Removal requests: a mentor asks staff to unpublish or delete a course ----
 // removalRequest: { status: 'pending' | 'declined' | 'approved', reason, at, by, note, decidedBy }
-export const requestRemoval = async (course, user, reason) => {
+export const requestRemoval = async (course, user, reason, kind = 'remove') => {
   await updateDoc(doc(db, COL, course.id), {
-    removalRequest: { status: 'pending', reason: (reason || '').trim(), at: new Date().toISOString(), by: who(user) },
+    removalRequest: { status: 'pending', kind, reason: (reason || '').trim(), at: new Date().toISOString(), by: who(user) },
   });
   await alertStaff({
     type: 'course_removal_requested',
-    title: 'A mentor asked to remove a course',
+    title: kind === 'delete' ? 'A mentor asked to delete a course' : 'A mentor asked to remove a course',
     body: `${user.displayName || user.email} asked to remove "${course.title}"${course.published ? ' from Learning' : ''}: ${(reason || '').trim().slice(0, 160)}`,
     link: `/teacher/${course.id}`,
     roles: ['admin', 'editor'],

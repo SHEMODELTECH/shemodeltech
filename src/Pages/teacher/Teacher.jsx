@@ -361,6 +361,21 @@ const MentorLetters = ({ access }) => {
 const TeacherList = ({ access }) => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  // Mentors ask for a deletion; an admin reviews it.
+  const [deleteReq, setDeleteReq] = useState(null);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const sendDeleteRequest = async (reason) => {
+    setDeleteBusy(true);
+    try {
+      await requestRemoval(deleteReq, currentUser, reason, 'delete');
+      setItems((xs) => xs.map((x) => (x.id === deleteReq.id ? { ...x, removalRequest: { status: 'pending', reason, kind: 'delete' } } : x)));
+      setDeleteReq(null);
+      toast.success('Deletion requested. An admin will review it and message you.');
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not send the request.'));
+    }
+    setDeleteBusy(false);
+  };
   const [items, setItems] = useState(null);
   const [q, setQ] = useState('');
   const [track, setTrack] = useState('all');
@@ -412,6 +427,17 @@ const TeacherList = ({ access }) => {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <NoteDialog
+        open={!!deleteReq}
+        title="Request deletion"
+        description={deleteReq ? `Tell us why "${deleteReq.title}" should be deleted. An admin reviews every request and will message you.` : ''}
+        placeholder="For example: I made this by mistake, or I'm replacing it with a new version."
+        required
+        confirmLabel="Send request"
+        busy={deleteBusy}
+        onCancel={() => setDeleteReq(null)}
+        onConfirm={sendDeleteRequest}
+      />
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mentor Hub</h1>
@@ -563,10 +589,19 @@ const TeacherList = ({ access }) => {
                     Edit
                   </button>
                 )}
-                {(access.isAdmin || (!access.isStaff && canEdit(access, c) && !c.published)) && (
+                {access.isAdmin && (
                   <button onClick={() => remove(c)} className="ml-auto text-sm font-semibold text-red-700 px-2 py-1.5 rounded-lg hover:bg-red-50">
                     Delete
                   </button>
+                )}
+                {!access.isStaff && canEdit(access, c) && (
+                  c.removalRequest?.status === 'pending' ? (
+                    <span className="ml-auto text-xs font-semibold text-red-700">Deletion requested</span>
+                  ) : (
+                    <button onClick={() => setDeleteReq(c)} className="ml-auto text-sm font-semibold text-red-700 px-2 py-1.5 rounded-lg hover:bg-red-50">
+                      Request deletion
+                    </button>
+                  )
                 )}
               </div>
             </div>
@@ -1024,6 +1059,7 @@ const TeacherEditor = ({ access }) => {
 // changes when someone presses "Update the published version".
 const PublishPanel = ({ course, content, onChange, access }) => {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [f, setF] = useState({
@@ -1083,6 +1119,21 @@ const PublishPanel = ({ course, content, onChange, access }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [removal?.at, pub?.learningId]);
 
+  const deleteForMentor = async () => {
+    if (!window.confirm(`Delete "${course.title}"${pub ? ' and remove it from Learning' : ''}? This can't be undone.`)) return;
+    setBusy(true);
+    try {
+      if (pub) await unpublishFromLearning(course);
+      await decideRemoval(course, currentUser, true, 'The course has been deleted as you asked.');
+      await deleteTeacherCourse(course);
+      toast.success('Deleted. The mentor has been notified.');
+      navigate('/teacher');
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not delete it.'));
+    }
+    setBusy(false);
+  };
+
   const declineRemoval = async (note) => {
     setBusy(true);
     try {
@@ -1117,7 +1168,7 @@ const PublishPanel = ({ course, content, onChange, access }) => {
       {removal && (
         <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4">
           <p className="font-semibold text-red-800">
-            {removal.by?.name || 'The mentor'} asked to remove this course{pub ? ' from Learning' : ''}.
+            {removal.by?.name || 'The mentor'} asked to {removal.kind === 'delete' ? 'delete this course' : `remove this course${pub ? ' from Learning' : ''}`}.
           </p>
           <p className="text-sm text-gray-800 mt-1"><strong>Reason:</strong> {removal.reason}</p>
           {pub && (
@@ -1135,11 +1186,24 @@ const PublishPanel = ({ course, content, onChange, access }) => {
                 Unpublish from Learning
               </button>
             )}
+            {access.isAdmin && (
+              <button onClick={deleteForMentor} disabled={busy} className="text-sm font-semibold bg-red-700 hover:bg-red-800 text-white px-3 py-1.5 rounded-lg">
+                Delete the course
+              </button>
+            )}
             <button onClick={() => setDeclineRemovalOpen(true)} disabled={busy} className="text-sm font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50">
               Keep it and decline
             </button>
+            {removal.by?.uid && (
+              <button
+                onClick={() => navigate(`/messages?to=${removal.by.uid}&text=${encodeURIComponent(`Hi ${removal.by.name || ''}, about your request to ${removal.kind === 'delete' ? 'delete' : 'remove'} "${course.title}": `)}`)}
+                className="text-sm font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50"
+              >
+                Message {removal.by.name || 'the mentor'}
+              </button>
+            )}
           </div>
-          <p className="text-xs text-gray-500 mt-2">Admins can also delete it completely from the Mentor Hub list after unpublishing.</p>
+          <p className="text-xs text-gray-500 mt-2">{access.isAdmin ? 'Deleting also removes it from Learning if it’s published.' : 'Only admins can delete; you can unpublish or decline.'}</p>
         </div>
       )}
       <NoteDialog
