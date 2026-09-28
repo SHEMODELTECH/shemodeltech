@@ -481,10 +481,7 @@ const LandingPage = () => {
             </div>
             <div className="flex flex-col items-center sm:items-end gap-2">
               <SocialLinks />
-              <p className="text-gray-500 text-xs">SHE MODEL TECH Inc., a 501(c)(3) nonprofit.</p>
-              <p className="text-gray-400 text-xs">
-                {new Date().getFullYear()} SHE MODEL TECH Inc. All rights reserved.
-              </p>
+              <p className="text-gray-500 text-xs">© {new Date().getFullYear()} SHE MODEL TECH Inc., a 501(c)(3) nonprofit.</p>
             </div>
           </div>
         </div>
