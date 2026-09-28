@@ -117,7 +117,7 @@ export const submitProjectForReview = async (project, owner, submission) => {
     title: 'Project submitted for review',
     body: `"${project.projectTitle || project.title || 'A project'}" was submitted by ${owner?.displayName || owner?.email || 'its lead'} and needs review.`,
     link: '/admin',
-    roles: ['admin'],
+    roles: ['admin', 'editor'],
   });
 
   // Also queue it for the AdminPanel.

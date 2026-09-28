@@ -166,8 +166,9 @@ const AdminPanel = () => {
   }, []);
 
   useEffect(() => {
-    if (tab === 'reviews' && isAdmin) loadReviews();
-  }, [tab, isAdmin, loadReviews]);
+    // Admins and editors both review projects (free and paid).
+    if (tab === 'reviews' && isReviewer) loadReviews();
+  }, [tab, isReviewer, loadReviews]);
 
   // Teachers: applications to review, and who currently teaches.
   useEffect(() => {
@@ -836,6 +837,11 @@ const AdminPanel = () => {
                   <div className="min-w-0">
                     <h3 className="font-bold text-gray-900">
                       {p.projectTitle || p.title || 'Untitled project'}
+                      {p.isPaid && (
+                        <span className="ml-2 align-middle text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
+                          PAID{p.payPerPerson ? ` · $${p.payPerPerson}/person` : ''}
+                        </span>
+                      )}
                     </h3>
                     <p className="text-gray-500 text-xs mt-0.5">
                       Submitted by {p.reviewSubmittedBy || 'unknown'}
