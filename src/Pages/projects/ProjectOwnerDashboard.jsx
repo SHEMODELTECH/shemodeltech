@@ -52,6 +52,8 @@ const ProjectOwnerDashboard = () => {
   // applied to or joined (free or paid). Companies only have their own.
   const [view, setView] = useState('lead');
   const [isCompany, setIsCompany] = useState(false);
+  // "Manage project" from a workspace opens just that project.
+  const focusId = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '').get('project');
   // Projects in cohorts this company sponsors (it's added to their workspaces).
   const [sponsored, setSponsored] = useState([]);
   useEffect(() => {
@@ -591,7 +593,13 @@ const ProjectOwnerDashboard = () => {
               </div>
             ) : (
               <div className="space-y-6">
-                {myProjects.map(project => (
+                {focusId && (
+                  <div className="flex flex-wrap items-center justify-between gap-2 -mb-2">
+                    <p className="text-sm text-gray-600">Managing one project.</p>
+                    <Link to="/projects/owner-dashboard" className="text-sm font-semibold text-pink-700 hover:underline">Show all my projects</Link>
+                  </div>
+                )}
+                {myProjects.filter((pr) => !focusId || pr.id === focusId).map(project => (
                   <div key={project.id} id={`project-${project.id}`} className={`scroll-mt-24 rounded-2xl ${typeof window !== 'undefined' && window.location.hash === `#project-${project.id}` ? 'ring-2 ring-pink-400 ring-offset-2' : ''}`}>
                   <ProjectCard project={project} currentUser={currentUser}
                     onApprove={(app) => approveApplication(project, app)}
