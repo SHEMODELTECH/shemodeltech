@@ -15,7 +15,7 @@ import { markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../.
 import { alertStaff, notifyMember } from '../../utils/staffAlerts';
 import { isPremium } from '../../config/premium';
 import PremiumBadge from '../../components/PremiumBadge';
-import { listSponsoredCohorts, listSponsoredProjects } from '../../utils/sponsorships2';
+import { listMySponsorRequests, listSponsoredCohorts, listSponsoredProjects } from '../../utils/sponsorships2';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -60,8 +60,12 @@ const ProjectOwnerDashboard = () => {
     if (!currentUser) return;
     listSponsoredProjects(currentUser.uid).then(setSponsored).catch(() => {});
     listSponsoredCohorts(currentUser.uid).then(setSponsoredCohorts).catch(() => {});
+    listMySponsorRequests(currentUser.uid)
+      .then((l) => setSponsorReqs(l.sort((x, y) => (y.createdAt?.seconds || 0) - (x.createdAt?.seconds || 0))))
+      .catch(() => {});
   }, [currentUser]);
   const [sponsoredCohorts, setSponsoredCohorts] = useState([]);
+  const [sponsorReqs, setSponsorReqs] = useState([]);
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid))
@@ -542,10 +546,44 @@ const ProjectOwnerDashboard = () => {
               <JoinedProjects currentUser={currentUser} />
             ) : (
             <>
-            {isCompany && sponsoredCohorts.length > 0 && sponsored.length === 0 && (
-              <div className="mb-8 rounded-xl border border-pink-200 bg-pink-50 p-4 text-sm text-gray-800">
-                <strong>Your sponsored cohort is being prepared.</strong>{' '}
-                {sponsoredCohorts.map((c) => `${c.name} starts ${c.startDate}`).join('; ')}. You’ll see each project here, with its workspace, once She Model Tech reveals them.
+            {isCompany && (sponsorReqs.length > 0 || sponsoredCohorts.length > 0) && (
+              <div className="mb-8">
+                <h2 className="text-lg font-bold text-gray-900 mb-3">Your sponsorships</h2>
+                <ul className="space-y-2">
+                  {sponsorReqs.map((r) => {
+                    const cohort = sponsoredCohorts.find((c) => c.id === r.cohortId);
+                    const revealed = cohort && sponsored.some((p) => p.cohortId === cohort.id);
+                    const [label, tone] =
+                      r.status === 'declined' ? ['Not scheduled', 'bg-gray-100 text-gray-700']
+                      : r.status === 'new' ? ['Received · awaiting payment', 'bg-amber-50 text-amber-800']
+                      : r.status === 'paid' ? ['Payment received · setting up', 'bg-sky-50 text-sky-700']
+                      : revealed ? ['Running', 'bg-emerald-50 text-emerald-700']
+                      : ['Cohort created · being prepared', 'bg-pink-50 text-pink-700'];
+                    return (
+                      <li key={r.id} className="bg-white border border-gray-200 rounded-xl p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="font-semibold text-gray-900">{r.problemTitle || 'Sponsored cohort'}</p>
+                          <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${tone}`}>{label}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {r.projects} project{r.projects === 1 ? '' : 's'}{r.people ? ` · ${r.people} people` : ''}{r.budget ? ` · $${r.budget}` : ''}
+                          {cohort ? ` · ${cohort.name}, starts ${cohort.startDate}` : ''}
+                        </p>
+                        {r.status === 'declined' && (
+                          <div className="mt-2 text-sm text-gray-700">
+                            {r.note && <p className="m-0">{r.note}</p>}
+                            <Link to={r.decidedByUid ? `/messages?to=${r.decidedByUid}` : '/support'} className="inline-block mt-2 text-xs font-semibold text-pink-700 hover:underline">
+                              Message us about it
+                            </Link>
+                          </div>
+                        )}
+                        {r.status === 'scheduled' && !revealed && (
+                          <p className="text-xs text-gray-600 mt-2">You’ll see each project here, with its workspace, once She Model Tech reveals them.</p>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             )}
             {isCompany && sponsored.length > 0 && (

@@ -54,15 +54,28 @@ export const markSponsorScheduled = async (req, cohort) => {
   await updateDoc(doc(db, 'sponsor_requests', req.id), { status: 'scheduled', cohortId: cohort.id, cohortName: cohort.name || null });
   notifyMember(req.companyUid, {
     type: 'sponsor_scheduled',
-    title: 'Your sponsored cohort is set up',
+    title: req.problemTitle ? `Your sponsored cohort is set up: "${req.problemTitle}"` : 'Your sponsored cohort is set up',
     body: `${cohort.name || 'Your cohort'} starts ${cohort.startDate}. You’ll be added to every project workspace once projects are revealed.`,
     link: '/projects/owner-dashboard',
   });
 };
 
-export const declineSponsorRequest = async (req, note) => {
-  await updateDoc(doc(db, 'sponsor_requests', req.id), { status: 'declined', note: note || null });
-  notifyMember(req.companyUid, { type: 'sponsor_declined', title: 'Update on your sponsorship request', body: note || 'We’re not able to schedule this sponsorship right now. Message us to talk it through.', link: '/projects/owner-dashboard' });
+export const declineSponsorRequest = async (req, note, staff) => {
+  await updateDoc(doc(db, 'sponsor_requests', req.id), {
+    status: 'declined',
+    note: note || null,
+    decidedByUid: staff?.uid || null,
+    decidedByName: staff?.displayName || staff?.email || null,
+  });
+  const what = req.problemTitle ? `"${req.problemTitle}"` : 'your sponsorship request';
+  notifyMember(req.companyUid, {
+    type: 'sponsor_declined',
+    title: `Update on ${what}`,
+    body: `${note ? `${note} ` : 'We’re not able to schedule this sponsorship right now. '}Reply in Messages to talk it through.`,
+    // Opens a conversation with the team member who reviewed it.
+    link: staff?.uid ? `/messages?to=${staff.uid}` : '/support',
+    ctaLabel: 'Message us',
+  });
 };
 
 // Projects a company sponsors (it follows them in the workspace).
@@ -77,7 +90,7 @@ export const markSponsorPaid = async (req, staff) => {
   await updateDoc(doc(db, 'sponsor_requests', req.id), { status: 'paid', paidConfirmedBy: staff.email || '', paidConfirmedAt: new Date().toISOString() });
   notifyMember(req.companyUid, {
     type: 'sponsor_paid',
-    title: 'Sponsorship payment received',
+    title: req.problemTitle ? `Sponsorship payment received: "${req.problemTitle}"` : 'Sponsorship payment received',
     body: 'Thank you. We’re creating your cohort and will add your representative to every project workspace.',
     link: '/projects/owner-dashboard',
   });

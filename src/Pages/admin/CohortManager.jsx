@@ -32,6 +32,7 @@ import {
   updateCohort,
   deleteCohort,
   updateCohortProject,
+  setProjectTeamSize,
   deleteCohortProject,
 } from '../../utils/cohorts';
 import { batchGenerateProjects } from '../../utils/batchGenerateProjects';
@@ -296,6 +297,9 @@ const CohortManager = () => {
     setBusy(project.id);
     try {
       await updateCohortProject(project.id, draft);
+      if (draft.teamSize && Number(draft.teamSize) !== Number(project.maxTeamSize || 0)) {
+        await setProjectTeamSize(project, draft.teamSize);
+      }
       toast.success('Brief updated.');
       setEditingProject(null);
       await load();
@@ -401,7 +405,7 @@ const CohortManager = () => {
                     <div className="flex gap-2">
                       <button onClick={async () => { await markSponsorPaid(x, currentUser); setSponsorReqs((xs) => xs.map((y) => (y.id === x.id ? { ...y, status: 'paid' } : y))); toast.success('Payment confirmed. Create the cohort and choose this sponsor.'); }}
                         className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg">Payment received</button>
-                      <button onClick={async () => { const note = window.prompt('Optional note for the company:') || ''; await declineSponsorRequest(x, note); setSponsorReqs((xs) => xs.filter((y) => y.id !== x.id)); }}
+                      <button onClick={async () => { const note = window.prompt('Optional note for the company:') || ''; await declineSponsorRequest(x, note, currentUser); setSponsorReqs((xs) => xs.filter((y) => y.id !== x.id)); }}
                         className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
                     </div>
                   ) : (
@@ -588,7 +592,7 @@ const CohortManager = () => {
                 <button
                   onClick={() => {
                     setEditingCohort(cohort.id);
-                    setCohortDraft({ name: cohort.name, startDate: cohort.startDate, endDate: cohort.endDate, startTime: cohort.startAt ? new Date(cohort.startAt).toTimeString().slice(0, 5) : '09:00', isPaid: !!cohort.isPaid, payPerPerson: cohort.payPerPerson || '' });
+                    setCohortDraft({ name: cohort.name, startDate: cohort.startDate, endDate: cohort.endDate, startTime: cohort.startAt ? new Date(cohort.startAt).toTimeString().slice(0, 5) : '09:00', isPaid: !!cohort.isPaid, payPerPerson: cohort.payPerPerson || '', teamSize: cohort.teamSize || '' });
                   }}
                   className="text-gray-500 hover:text-gray-800 text-xs font-semibold px-2 py-2"
                 >
@@ -671,6 +675,10 @@ const CohortManager = () => {
                         className="block px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
                     </label>
                   </div>
+                  <label className="flex items-center gap-2 mb-2 text-xs font-semibold text-gray-700">People per project <span className="font-normal text-gray-500">(including the lead)</span>
+                    <input type="number" min="2" max="20" value={cohortDraft.teamSize || ''} onChange={(e) => setCohortDraft((d) => ({ ...d, teamSize: e.target.value }))}
+                      className="w-20 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                  </label>
                   <div className="flex flex-wrap items-center gap-2 mb-2">
                     <span className="text-xs font-semibold text-gray-700">Type</span>
                     {[[false, 'Free'], [true, 'Paid by She Model Tech']].map(([v, l]) => (
@@ -728,6 +736,11 @@ const CohortManager = () => {
                             rows={5}
                             className="w-full px-3 py-2 mb-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500 resize-y"
                           />
+                          <label className="flex items-center gap-2 mb-2 text-xs font-semibold text-gray-700">
+                            People on this project <span className="font-normal text-gray-500">(including the lead)</span>
+                            <input type="number" min="2" max="20" value={draft.teamSize || ''} onChange={(e) => setDraft((d) => ({ ...d, teamSize: e.target.value }))}
+                              className="w-20 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                          </label>
                           <div className="flex gap-2">
                             <button
                               onClick={() => saveProject(pr)}
@@ -755,6 +768,7 @@ const CohortManager = () => {
                                 {pr.industryTrack}
                                 {pr.isActive === false ? ' · hidden' : ' · live'}
                                 {pr.leadConfirmed ? ` · led by ${pr.submitterName}` : ''}
+                                {pr.maxTeamSize ? ` · ${pr.maxTeamSize} people` : ''}
                                 {pr.members?.length ? ` · ${pr.members.length} members` : ''}
                               </p>
                             </div>
@@ -763,6 +777,7 @@ const CohortManager = () => {
                                 onClick={() => {
                                   setEditingProject(pr.id);
                                   setDraft({
+                                    teamSize: pr.maxTeamSize || '',
                                     projectTitle: pr.projectTitle || pr.title || '',
                                     projectDescription:
                                       pr.projectDescription || pr.description || '',
