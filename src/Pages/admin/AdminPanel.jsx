@@ -43,6 +43,7 @@ import OrgRequestsTab from '../../components/admin/OrgRequestsTab';
 import SummitTab from '../../components/admin/SummitTab';
 import AttentionBoard from '../../components/admin/AttentionBoard';
 import { unpublishFromLearning } from '../../utils/learningPublished';
+import LaunchSettings from '../../components/admin/LaunchSettings';
 
 const fmtDate = (ts) => {
   try {
@@ -739,12 +740,6 @@ const AdminPanel = () => {
         >
           Lead applications
         </Link>
-        <Link
-          to="/admin/activations"
-          className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
-        >
-          Access &amp; activation
-        </Link>
       </div>
 
       {/* Tabs */}
@@ -945,6 +940,7 @@ const AdminPanel = () => {
       )}
 
       {/* OVERVIEW */}
+      {!loadingData && tab === 'overview' && isAdmin && <LaunchSettings currentUser={currentUser} />}
       {!loadingData && tab === 'overview' && (
         <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
       )}

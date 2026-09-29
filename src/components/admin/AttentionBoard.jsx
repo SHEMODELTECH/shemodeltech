@@ -19,7 +19,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
   useEffect(() => {
     (async () => {
       const [
-        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments,
+        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments, jobDeletes,
       ] = await Promise.all([
         count(query(collection(db, 'projects'), where('reviewStatus', '==', 'submitted'))),
         count(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
@@ -50,8 +50,9 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
         })(),
         isAdmin ? count(query(collection(db, 'sponsor_requests'), where('status', '==', 'new'))) : 0,
         count(query(collection(db, 'projects'), where('status', '==', 'awaiting_payment_confirmation'))),
+        count(query(collection(db, 'jobs'), where('status', '==', 'removal_requested'))),
       ]);
-      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments });
+      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments, jobDeletes });
     })();
   }, [isAdmin]);
 
@@ -66,6 +67,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ...(isAdmin ? [['Mentor applications', c.mentorApps, 'People applying to mentor', { tab: 'teachers' }]] : []),
     ...(isAdmin ? [['Companies to verify', c.companies, 'New company accounts waiting for verification', { tab: 'users', view: 'unverified' }]] : []),
     ...(isAdmin ? [['Sponsorship requests', c.sponsors, 'Companies asking to sponsor a cohort', { to: '/admin/cohorts' }]] : []),
+    ['Job post deletion requests', c.jobDeletes, 'Companies asking to delete a job post (unpublished meanwhile)', { to: '/jobs' }],
     ['Organization requests', c.orgNew, 'New training or licensing requests', { tab: 'organizations' }],
     ['Summit partners', c.partnersNew, 'New booth, workshop, or sponsor requests', { tab: 'summit' }],
     ...(isAdmin ? [['Deletion requests', c.deletions, 'Leads asking to delete a project', { tab: 'deletions' }]] : []),

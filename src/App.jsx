@@ -47,6 +47,8 @@ const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const ProposeProjectPage = lazy(() => import('./Pages/projects/ProposeProjectPage'));
 const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
+const EditCourse = lazy(() => import('./Pages/learning/ManageCourses'));
+const ManageCoursesPage = lazy(() => import('./Pages/learning/ManageCourses').then((m) => ({ default: m.ManageCourses })));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -56,12 +58,8 @@ const LeadApplicationReview = lazy(() => import('./Pages/admin/LeadApplicationRe
 const HostCohort = lazy(() => import('./Pages/company/HostCohort'));
 const CompanyCohortList = lazy(() => import('./Pages/company/CompanyCohortList'));
 const CompanyCohortDetail = lazy(() => import('./Pages/company/CompanyCohortDetail'));
-const Partner = lazy(() => import('./Pages/company/Partner'));
 const SponsorDashboard = lazy(() => import('./Pages/company/SponsorDashboard'));
-const ActivateAccess = lazy(() => import('./Pages/company/ActivateAccess'));
-const ActivationQueue = lazy(() => import('./Pages/admin/ActivationQueue'));
 const VerifyCertificate = lazy(() => import('./Pages/VerifyCertificate'));
-const Sponsor = lazy(() => import('./Pages/company/Sponsor'));
 const SubmitPost = lazy(() => import('./Pages/community/SubmitPost'));
 const SinglePost = lazy(() => import('./Pages/community/SinglePost'));
 const About = lazy(() => import('./Pages/About'));
@@ -233,6 +231,8 @@ function App() {
                 <Route path="/mentor" element={<Navigate to="/teacher" replace />} />
                 <Route path="/learning" element={<LearningHome />} />
                 <Route path="/learning/my" element={<LearningHome mine />} />
+                <Route path="/learning/manage" element={<StaffRoute><ManageCoursesPage /></StaffRoute>} />
+                <Route path="/learning/manage/:track/:slug" element={<StaffRoute><EditCourse /></StaffRoute>} />
                 <Route path="/learning/certificate/:id" element={<LearningCertificate />} />
                 <Route path="/learning/:track/:slug" element={<LearningCourse />} />
                 <Route path="/learning/:track/:slug/learn" element={<LearningCourse reading />} />
@@ -495,14 +495,8 @@ function App() {
                     </SidebarRoute>
                   }
                 />
-                <Route
-                  path="/partner"
-                  element={
-                    <SidebarRoute>
-                      <Partner />
-                    </SidebarRoute>
-                  }
-                />
+                {/* Company membership (Talent Access) is retired: companies use Premium. */}
+                <Route path="/partner" element={<Navigate to="/premium" replace />} />
                 <Route
                   path="/sponsor/dashboard"
                   element={
@@ -511,35 +505,13 @@ function App() {
                     </SidebarRoute>
                   }
                 />
-                {/* Payment redirect lands here. Records a claim; grants nothing. */}
-                <Route
-                  path="/partner/activate"
-                  element={
-                    <SidebarRoute>
-                      <ActivateAccess />
-                    </SidebarRoute>
-                  }
-                />
-                <Route
-                  path="/admin/activations"
-                  element={
-                    <StaffRoute>
-                      <ActivationQueue />
-                    </StaffRoute>
-                  }
-                />
+                <Route path="/partner/activate" element={<Navigate to="/premium" replace />} />
+                <Route path="/admin/activations" element={<Navigate to="/admin" replace />} />
                 {/* PUBLIC, no login. A recruiter must be able to check a
  certificate in one click or verification is pointless. */}
                 <Route path="/verify" element={<VerifyCertificate />} />
                 <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
-                <Route
-                  path="/sponsor"
-                  element={
-                    <SidebarRoute>
-                      <Sponsor />
-                    </SidebarRoute>
-                  }
-                />
+                <Route path="/sponsor" element={<Navigate to="/projects/sponsor-cohort" replace />} />
                 <Route path="/my-connections" element={<Navigate to="/proof-wall" replace />} />
                 <Route
                   path="/account"

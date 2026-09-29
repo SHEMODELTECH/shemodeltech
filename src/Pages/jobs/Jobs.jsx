@@ -10,13 +10,20 @@ import { db } from '../../firebase/config';
 import { isPremium, isVerifiedPartner } from '../../config/premium';
 import PremiumBadge from '../../components/PremiumBadge';
 import LimitHint, { countWords } from '../../components/LimitHint';
-import { friendlyError } from '../../components/NoteDialog';
+import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { authFetch } from '../../utils/authFetch';
+import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
+import { useFeatures } from '../../utils/features';
 import {
   JOB_LIMITS,
   JOB_TYPES,
   createJob,
   deleteJob,
+  requestJobDeletion,
+  approveJobDeletion,
+  restoreJob,
+  listJobDeletionRequests,
+  jobWindow,
   getJob,
   listMyJobs,
   listOpenJobs,
@@ -105,12 +112,19 @@ const JobCard = ({ j }) => (
       {j.location ? ` · ${j.location}` : ''}
       {j.salary ? ` · ${j.salary}` : ''}
     </p>
+    {(() => {
+      const w = jobWindow(j);
+      if (w.state === 'upcoming') return <p className="text-xs text-sky-700 mt-1">Applications open {w.opens}</p>;
+      return w.closes ? <p className="text-xs text-gray-500 mt-1">Apply by {w.closes}</p> : null;
+    })()}
   </Link>
 );
 
 // ---------- Board ----------
 export const JobsBoard = () => {
   const profile = useMyProfile();
+  const features = useFeatures();
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState(null);
   const [q, setQ] = useState('');
   const [type, setType] = useState('all');
@@ -120,6 +134,23 @@ export const JobsBoard = () => {
   useEffect(() => {
     listOpenJobs().then(setJobs).catch(() => setJobs([]));
   }, []);
+
+  // Staff: deletion requests from companies (their posts are unpublished meanwhile).
+  const isStaff = ['admin', 'editor'].includes(profile?.role);
+  const [deletionReqs, setDeletionReqs] = useState([]);
+  useEffect(() => {
+    if (isStaff) listJobDeletionRequests().then(setDeletionReqs).catch(() => {});
+  }, [isStaff]);
+  const decide = async (j, remove) => {
+    try {
+      await (remove ? approveJobDeletion(j) : restoreJob(j));
+      setDeletionReqs((xs) => xs.filter((x) => x.id !== j.id));
+      if (!remove) listOpenJobs().then(setJobs).catch(() => {});
+      toast.success(remove ? 'Deleted. The company has been told.' : 'Kept and republished. The company has been told.');
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not update it.'));
+    }
+  };
 
   // AI-powered job matches: free for every member.
   const premiumMember = profile && !profile.isCompany;
@@ -141,12 +172,33 @@ export const JobsBoard = () => {
   const input = 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   return (
     <div className="max-w-4xl mx-auto">
+      {isStaff && deletionReqs.length > 0 && (
+        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <p className="font-semibold text-gray-900 mb-2">Deletion requests ({deletionReqs.length})</p>
+          <p className="text-xs text-gray-600 mb-3">These posts are unpublished while you decide.</p>
+          <ul className="space-y-2">
+            {deletionReqs.map((j) => (
+              <li key={j.id} className="bg-white border border-gray-200 rounded-lg p-3 flex flex-wrap items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <Link to={`/jobs/${j.id}`} className="font-semibold text-gray-900 hover:underline">{j.title}</Link>
+                  <p className="text-xs text-gray-500">{j.companyName}{j.removalRequest?.reason ? ` · “${j.removalRequest.reason}”` : ''}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => decide(j, true)} className="text-xs font-semibold bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg">Delete</button>
+                  <button onClick={() => decide(j, false)} className="text-xs font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg">Keep and republish</button>
+                  <button onClick={() => navigate(`/messages?to=${j.companyUid}&text=${encodeURIComponent(`Hi, about your request to delete "${j.title}": `)}`)} className="text-xs font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg">Message them</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs</h1>
           <p className="text-gray-600 text-sm mt-1">Full-time, part-time, contract, and internship roles from companies hiring on She Model Tech.</p>
         </div>
-        {profile?.isCompany && (
+        {(profile?.isCompany || isStaff) && (features.jobPosting || isStaff) && (
           <div className="flex gap-2">
             <Link to="/jobs/mine" className="text-sm font-semibold border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">My job posts</Link>
             <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>
@@ -183,7 +235,9 @@ export const JobsBoard = () => {
       {jobs === null ? (
         <p className="text-gray-500 text-sm">Loading jobs...</p>
       ) : shown.length === 0 ? (
-        <p className="text-gray-500 text-sm border border-dashed border-gray-300 rounded-xl p-8 text-center">No open jobs match right now. Check back soon.</p>
+        <p className="text-gray-500 text-sm border border-dashed border-gray-300 rounded-xl p-8 text-center">
+          {features.jobPosting ? 'No open jobs match right now. Check back soon.' : 'Job listings from hiring companies are coming soon. For now, build your proof on She Model Tech projects.'}
+        </p>
       ) : (
         <div className="grid gap-3">{shown.map((j) => <JobCard key={j.id} j={j} />)}</div>
       )}
@@ -214,7 +268,12 @@ export const JobDetail = () => {
   if (job === undefined) return <p className="text-gray-500 text-sm">Loading...</p>;
   if (!job) return <p className="text-gray-600">This job is no longer available. <Link to="/jobs" className="text-pink-700 font-semibold">See all jobs</Link></p>;
 
-  const mine = profile && (profile.uid === job.companyUid || ['admin'].includes(profile.role));
+  const isStaff = ['admin', 'editor'].includes(profile?.role);
+  const mine = profile && (profile.uid === job.companyUid || isStaff);
+  const win = jobWindow(job);
+  const underReview = job.status === 'removal_requested';
+  const canApply = job.status === 'open' && win.state === 'open';
+  const fmt = (d) => (d ? new Date(`${d}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '');
   return (
     <div className="max-w-3xl mx-auto">
       <Link to="/jobs" className="text-sm font-semibold text-gray-600 hover:text-gray-900">&larr; All jobs</Link>
@@ -223,7 +282,13 @@ export const JobDetail = () => {
           {job.featured && <PremiumBadge kind="featured" />}
           <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{JOB_TYPES[job.type] || job.type}</span>
           {job.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Remote</span>}
-          {job.status !== 'open' && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">Closed</span>}
+          {underReview ? (
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Under review · not accepting applications</span>
+          ) : (job.status !== 'open' || win.state === 'closed') ? (
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">Closed</span>
+          ) : win.state === 'upcoming' ? (
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700">Opens {fmt(win.opens)}</span>
+          ) : null}
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mt-3">{job.title}</h1>
         <p className="text-gray-700 mt-1 flex flex-wrap items-center gap-2">
@@ -233,13 +298,21 @@ export const JobDetail = () => {
         <p className="text-sm text-gray-500 mt-1">
           {[job.location, job.salary].filter(Boolean).join(' · ')}
         </p>
+        {(win.opens || win.closes) && (
+          <p className="text-sm text-gray-700 mt-3 bg-gray-50 border border-gray-100 rounded-lg px-3 py-2">
+            <strong>Applications:</strong> {win.opens ? `open ${fmt(win.opens)}` : 'open now'}{win.closes ? `, deadline ${fmt(win.closes)}` : ''}
+          </p>
+        )}
         <div className="mt-5 text-gray-800 whitespace-pre-wrap leading-relaxed">{job.description}</div>
         <div className="flex flex-wrap gap-2 mt-6">
           {profile?.isMinor && <p className="text-sm text-gray-600">Jobs are for members aged 18 and over.</p>}
-          {job.applyUrl && !profile?.isMinor && (
+          {!canApply && !profile?.isMinor && (
+            <p className="text-sm text-gray-600">{underReview ? 'This post is under review, so applications are paused.' : win.state === 'upcoming' ? `Applications open ${fmt(win.opens)}.` : 'Applications for this job are closed.'}</p>
+          )}
+          {canApply && job.applyUrl && !profile?.isMinor && (
             <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">Apply</a>
           )}
-          {job.applyEmail && !profile?.isMinor && (
+          {canApply && job.applyEmail && !profile?.isMinor && (
             <a href={`mailto:${job.applyEmail}?subject=${encodeURIComponent(`Application: ${job.title}`)}`} className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Apply by email</a>
           )}
           {profile && profile.uid !== job.companyUid && !profile.isMinor && (
@@ -247,6 +320,23 @@ export const JobDetail = () => {
               className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Message the company</button>
           )}
           {mine && <Link to={`/jobs/${job.id}/edit`} className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Edit</Link>}
+          {isStaff && (
+            <button
+              onClick={async () => {
+                if (!window.confirm(`Delete "${job.title}"? This can’t be undone.`)) return;
+                try {
+                  await (underReview ? approveJobDeletion(job) : deleteJob(job.id));
+                  toast.success('Job post deleted.');
+                  navigate('/jobs');
+                } catch (e) {
+                  toast.error(friendlyError(e, 'Could not delete it.'));
+                }
+              }}
+              className="text-sm font-semibold text-red-700 px-4 py-2.5 rounded-lg hover:bg-red-50"
+            >
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -255,6 +345,8 @@ export const JobDetail = () => {
 
 // ---------- My job posts ----------
 export const MyJobs = () => {
+  const features = useFeatures();
+  const [deleteFor, setDeleteFor] = useState(null);
   const profile = useMyProfile();
   const [jobs, setJobs] = useState(null);
   useEffect(() => {
@@ -274,7 +366,21 @@ export const MyJobs = () => {
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-2xl font-bold text-gray-900">My job posts</h1>
-        <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>
+        <NoteDialog
+          open={!!deleteFor}
+          title="Request deletion"
+          description={deleteFor ? `"${deleteFor.title}" is unpublished straight away, so nobody can apply, while She Model Tech reviews your request. Tell us why.` : ''}
+          placeholder="For example: the role has been filled, or it was posted by mistake."
+          required
+          confirmLabel="Send request"
+          onCancel={() => setDeleteFor(null)}
+          onConfirm={async (reason) => {
+            const j = deleteFor;
+            setDeleteFor(null);
+            await act(() => requestJobDeletion(j, { uid: profile.uid }, reason), 'Request sent. The post is unpublished while we review it.');
+          }}
+        />
+        {features.jobPosting && <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>}
       </div>
       {jobs === null ? (
         <p className="text-gray-500 text-sm">Loading...</p>
@@ -286,7 +392,16 @@ export const MyJobs = () => {
             <li key={j.id} className="bg-white border border-gray-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <Link to={`/jobs/${j.id}`} className="font-semibold text-gray-900 hover:underline">{j.title}</Link>
-                <p className="text-xs text-gray-500">{j.status === 'open' ? `Open until ${new Date(j.expiresAt).toLocaleDateString()}` : 'Closed'}{j.featured ? ' · Featured' : ''}</p>
+                <p className="text-xs text-gray-500">
+                  {j.status === 'removal_requested'
+                    ? 'Deletion requested · unpublished while we review it'
+                    : j.status !== 'open' || jobWindow(j).state === 'closed'
+                    ? 'Closed'
+                    : jobWindow(j).state === 'upcoming'
+                    ? `Opens ${jobWindow(j).opens}${jobWindow(j).closes ? `, deadline ${jobWindow(j).closes}` : ''}`
+                    : `Open${jobWindow(j).closes ? `, deadline ${jobWindow(j).closes}` : ''}`}
+                  {j.featured ? ' · Featured' : ''}
+                </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Link to={`/jobs/${j.id}/edit`} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg">Edit</Link>
@@ -294,10 +409,14 @@ export const MyJobs = () => {
                   <button onClick={() => act(() => setJobFeatured(j.id, !j.featured), j.featured ? 'No longer featured.' : 'Featured at the top of Jobs.')}
                     className="text-xs font-semibold border border-pink-200 text-pink-700 px-3 py-1.5 rounded-lg">{j.featured ? 'Unfeature' : '★ Feature'}</button>
                 )}
-                <button onClick={() => act(() => setJobStatus(j.id, j.status === 'open' ? 'closed' : 'open'), j.status === 'open' ? 'Closed.' : 'Reopened.')}
-                  className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg">{j.status === 'open' ? 'Close' : 'Reopen'}</button>
-                <button onClick={() => window.confirm('Delete this job post?') && act(() => deleteJob(j.id), 'Deleted.')}
-                  className="text-xs font-semibold text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-50">Delete</button>
+                {j.status !== 'removal_requested' && (
+                  <>
+                    <button onClick={() => act(() => setJobStatus(j.id, j.status === 'open' ? 'closed' : 'open'), j.status === 'open' ? 'Closed.' : 'Reopened.')}
+                      className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg">{j.status === 'open' ? 'Close' : 'Reopen'}</button>
+                    <button onClick={() => setDeleteFor(j)}
+                      className="text-xs font-semibold text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-50">Request deletion</button>
+                  </>
+                )}
               </div>
             </li>
           ))}
@@ -308,21 +427,33 @@ export const MyJobs = () => {
 };
 
 // ---------- Post / edit ----------
-const EMPTY = { title: '', type: 'full-time', location: '', remote: false, description: '', applyUrl: '', applyEmail: '', salary: '' };
+const plusDays = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+const EMPTY = { title: '', type: 'full-time', location: '', remote: false, description: '', applyUrl: '', applyEmail: '', salary: '', opensOn: '', closesOn: '' };
 
 export const JobForm = () => {
+  const features = useFeatures();
+  const [originalOpens, setOriginalOpens] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
   const profile = useMyProfile();
-  const [form, setForm] = useState(EMPTY);
+  const [form, setForm] = useState({ ...EMPTY, opensOn: new Date().toISOString().slice(0, 10), closesOn: plusDays(30) });
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (!id) return;
-    getJob(id).then((j) => j && setForm({ ...EMPTY, ...j, applyUrl: j.applyUrl || '', applyEmail: j.applyEmail || '', salary: j.salary || '' })).catch(() => {});
+    getJob(id).then((j) => { if (!j) return; setOriginalOpens(j.opensOn || null); setForm({ ...EMPTY, ...j, applyUrl: j.applyUrl || '', applyEmail: j.applyEmail || '', salary: j.salary || '', opensOn: j.opensOn || '', closesOn: j.closesOn || (j.expiresAt ? j.expiresAt.slice(0, 10) : '') }); }).catch(() => {});
   }, [id]);
 
   if (!profile) return <p className="text-gray-500 text-sm">Loading...</p>;
+  if (!id && !features.jobPosting && !['admin', 'editor'].includes(profile.role)) {
+    return (
+      <div className="max-w-xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
+        <h1 className="text-xl font-bold text-gray-900">Job posting is coming soon</h1>
+        <p className="text-gray-600 mt-2">Posting jobs is part of She Model Tech Premium, which opens soon. You can still edit or close posts you already have.</p>
+        <Link to="/jobs/mine" className="inline-block mt-4 text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg">My job posts</Link>
+      </div>
+    );
+  }
   if (!canPostJobs(profile)) {
     return (
       <div className="max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
@@ -345,6 +476,8 @@ export const JobForm = () => {
     if (countWords(form.title) < L.titleMinWords) return toast.error(`The job title needs at least ${L.titleMinWords} words (you have ${countWords(form.title)}).`);
     if (countWords(form.description) < L.descMinWords) return toast.error(`The description needs at least ${L.descMinWords} words (you have ${countWords(form.description)}).`);
     if (!form.applyUrl.trim() && !form.applyEmail.trim()) return toast.error('Add an application link or an email address.');
+    const dateErr = checkDates({ start: form.opensOn, end: form.closesOn, originalStart: originalOpens });
+    if (dateErr) return toast.error(dateErr.replace('start date', 'application start date').replace('end date', 'application deadline'));
     if (form.applyUrl.trim() && !/^https?:\/\//i.test(form.applyUrl.trim())) return toast.error('The application link must start with https://');
     setBusy(true);
     try {
@@ -397,6 +530,16 @@ export const JobForm = () => {
         <LimitHint text={form.description} minWords={L.descMinWords} maxChars={L.descMaxChars} />
       </div>
       <div>
+        <div className="grid sm:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className={label} htmlFor="job-opens">Applications open</label>
+            <input id="job-opens" type="date" className={input} value={form.opensOn} min={minStartDate(originalOpens)} onChange={(e) => setForm({ ...form, opensOn: e.target.value })} />
+          </div>
+          <div>
+            <label className={label} htmlFor="job-closes">Application deadline</label>
+            <input id="job-closes" type="date" className={input} value={form.closesOn} min={minEndDate(form.opensOn)} onChange={(e) => setForm({ ...form, closesOn: e.target.value })} />
+          </div>
+        </div>
         <label className={label} htmlFor="job-salary">Salary or pay range <span className={hintCls}>(optional, up to {L.salaryMaxChars} characters)</span></label>
         <input id="job-salary" className={input} value={form.salary} maxLength={L.salaryMaxChars} placeholder="e.g. $70,000 to $85,000 a year" onChange={(e) => setForm({ ...form, salary: e.target.value })} />
       </div>

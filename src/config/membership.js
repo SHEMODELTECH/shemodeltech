@@ -1,3 +1,6 @@
+// RETIRED: company membership ("Talent Access") has been replaced by Premium.
+// The Talent Board and all company features are free; Premium adds extras.
+// MEMBERSHIP_ENFORCED stays false, so nothing here ever blocks anyone.
 // src/config/membership.js
 //
 // MEMBERSHIP IS BUILT BUT DORMANT.

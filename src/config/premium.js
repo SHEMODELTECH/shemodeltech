@@ -14,6 +14,8 @@
 //   users/{uid}.premium = { active: true, since, until (optional), grantedBy, plan }
 // Only admins can set it (Firestore rules block self-granting).
 
+// Online Premium payments are now switched on in Admin → Launch settings
+// (Company Premium payments). This constant is kept only for reference.
 export const PREMIUM_PAYMENTS_ON = false;
 
 export const PREMIUM_PAYMENT_LINK = process.env.REACT_APP_PREMIUM_PAYMENT_LINK || null;

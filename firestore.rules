@@ -354,6 +354,22 @@ service cloud.firestore {
 
  // Courses published to Learning from Teacher. Public to read, like the rest of
  // the Learning catalog; only admins and editors can publish, update, or remove.
+ // Launch switches (admin-only), readable by everyone so the site can adapt.
+ match /app_settings/{id} {
+ allow read: if true;
+ allow write: if isAdmin();
+ }
+
+ // Staff edits to the built-in courses (admins and editors).
+ match /course_overrides/{id} {
+ allow read: if true;
+ allow write: if isReviewer();
+ match /chunks/{n} {
+ allow read: if true;
+ allow write: if isReviewer();
+ }
+ }
+
  match /learning_courses/{id} {
  allow read: if true;
  allow write: if isReviewer();
@@ -387,14 +403,21 @@ service cloud.firestore {
  allow create: if isSignedIn()
  && request.resource.data.companyUid == myUid()
  && (isReviewer() || (myUserDoc().get('isCompany', false) == true
- && myUserDoc().get('isVerified', false) == true && isPremiumUser()))
+ && myUserDoc().get('isVerified', false) == true && isPremiumUser()
+ // Job posting is switched on in Admin → Launch settings.
+ && exists(/databases/$(database)/documents/app_settings/features)
+ && get(/databases/$(database)/documents/app_settings/features).data.get('jobPosting', false) == true))
  && request.resource.data.title is string && request.resource.data.title.size() <= 120
  && request.resource.data.description is string && request.resource.data.description.size() <= 8000
  && request.resource.data.featured == false;
- allow update: if isSignedIn() && (isAdmin() || (resource.data.companyUid == myUid()
+ // Staff (admins and editors) manage any post. A company edits its own, but
+ // can't republish a post it asked to delete (that's for staff to decide).
+ allow update: if isSignedIn() && (isReviewer() || (resource.data.companyUid == myUid()
  && request.resource.data.companyUid == myUid()
+ && !(resource.data.get('status', '') == 'removal_requested' && request.resource.data.get('status', '') != 'removal_requested')
  && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured']) || isPremiumUser())));
- allow delete: if isSignedIn() && (resource.data.companyUid == myUid() || isAdmin());
+ // Only She Model Tech staff delete job posts; companies request deletion.
+ allow delete: if isReviewer();
  }
 
  // Members' project proposals (projects they'd like to lead). Staff review them.

@@ -6,9 +6,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
-import { PREMIUM_FEATURES, PREMIUM_PAYMENTS_ON, PREMIUM_PAYMENT_LINK, isMentorProfile, isPremium } from '../config/premium';
+import { PREMIUM_FEATURES, PREMIUM_PAYMENT_LINK, isMentorProfile, isPremium } from '../config/premium';
 import PremiumBadge from '../components/PremiumBadge';
 import { getStaff } from '../utils/staffAlerts';
+import { useFeatures } from '../utils/features';
 
 const Section = ({ title, items, note }) => (
   <div className="bg-white border border-gray-200 rounded-2xl p-6">
@@ -29,6 +30,7 @@ const Section = ({ title, items, note }) => (
 );
 
 const Premium = () => {
+  const features = useFeatures(); // Admin → Launch settings → Company Premium payments
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
@@ -61,7 +63,7 @@ const Premium = () => {
             </p>
           ) : profile && !profile.isCompany ? (
             <p className="text-sm text-gray-700">Premium is for company accounts. As a member, every career tool is already free for you.</p>
-          ) : PREMIUM_PAYMENTS_ON && PREMIUM_PAYMENT_LINK ? (
+          ) : features.premiumPayments && PREMIUM_PAYMENT_LINK ? (
             <a href={PREMIUM_PAYMENT_LINK} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">Get Premium</a>
           ) : (
             <>

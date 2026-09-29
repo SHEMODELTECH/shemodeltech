@@ -11,6 +11,8 @@ const ROWS = [
   ['paidProjects', 'Paid projects from companies', 'Companies post paid projects, company cohorts, and freelance work. Members need a badge to apply.', 'badgeHolders', 20, 'members with a badge'],
   ['paidCohorts', 'Paid cohorts by She Model Tech', 'You create cohorts where She Model Tech pays the lead and collaborators.', null, null, 'Bank account, Stripe, and visa advice in place'],
   ['sponsorships', 'Sponsored cohorts', 'Companies sponsor a cohort and pay She Model Tech. While off, companies can only register interest.', 'completedCohorts', 2, 'completed cohorts'],
+  ['jobPosting', 'Job posting (Premium)', 'Premium companies post full-time, part-time, contract, and internship roles. While off, the Jobs board says roles are coming soon, and nobody can post.', null, null, 'Premium launched'],
+  ['premiumPayments', 'Company Premium payments', 'Companies can pay for Premium online (the payment link in REACT_APP_PREMIUM_PAYMENT_LINK). While off, they “Ask about Premium” and you grant it in Admin → Users.', null, null, 'Bank account and Stripe set up'],
   ['orgTraining', 'Training and curriculum requests', 'Organizations request training or licensing. While off, they register interest.', 'completedCohorts', 2, 'completed cohorts'],
 ];
 

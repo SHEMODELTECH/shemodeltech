@@ -20,6 +20,7 @@ import {
 import ProjectPayBadge from '../../components/ProjectPayBadge';
 import { getPayRangeLabel } from '../../utils/paidProjects';
 import AIRecommendations from '../../components/AIRecommendations';
+import { useFeatures } from '../../utils/features';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -61,6 +62,7 @@ const formatTimeline = (t) =>
 const ProjectsListing = () => {
   const { currentUser } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
+  const features = useFeatures();
   const [myProfile, setMyProfile] = useState(null);
   const [appliedProjectIds, setAppliedProjectIds] = useState(new Set());
   // Paid company projects need one earned badge to apply. null = not known yet.
@@ -287,8 +289,14 @@ const ProjectsListing = () => {
     if (filters.timeline) result = result.filter((p) => p.timeline === filters.timeline);
     if (filters.payType === 'paid') result = result.filter((p) => !!p.isPaid);
     if (filters.payType === 'free') result = result.filter((p) => !p.isPaid);
+    // Focus mode: paid company work and paid cohorts stay hidden until switched on.
+    if (!isAdmin) {
+      if (!features.paidProjects) result = result.filter((p) => !p.isCompanyPost && !p.isCompanyProject);
+      if (!features.paidCohorts) result = result.filter((p) => !p.cohortPaid);
+    }
     setFilteredProjects(result);
-  }, [searchQuery, filters, projects]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, filters, projects, features, isAdmin]);
 
   const clearFilters = () => {
     setSearchQuery('');

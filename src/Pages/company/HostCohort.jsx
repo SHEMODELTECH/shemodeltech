@@ -17,10 +17,9 @@ import { toast } from 'react-toastify';
 import { createCompanyCohort,
   createCompanyProject, canHostCohort } from '../../utils/companyCohorts';
 import { formatMoney } from '../../utils/paidProjects';
-import { ComingSoonRibbon } from '../../components/ComingSoon';
-import { usePaidFeaturesVisible } from '../../utils/permissions';
 import { notifyMember } from '../../utils/staffAlerts';
 import { checkDates, minEndDate, todayISO } from '../../utils/dateRules';
+import { useFeatures } from '../../utils/features';
 
 const blankRole = () => ({ title: '', count: 1, payAmount: '', skills: '' });
 
@@ -31,7 +30,6 @@ const HostCohort = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const { visible: paidLive } = usePaidFeaturesVisible(currentUser?.uid);
 
   // Optional prefill (?title=&description=&role=), e.g. assistant roles on a training contract.
   const qs = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
@@ -39,6 +37,7 @@ const HostCohort = () => {
   const [description, setDescription] = useState(qs.get('description') || '');
   const [startDate, setStartDate] = useState(qs.get('start') || '');
   const [endDate, setEndDate] = useState(qs.get('end') || '');
+  const features = useFeatures();
   const [roles, setRoles] = useState([qs.get('role') ? { ...blankRole(), title: qs.get('role') } : blankRole()]);
   // What kind of paid work: one project, a cohort (several projects that start
   // and finish together), or freelance (one person).
@@ -147,7 +146,6 @@ const HostCohort = () => {
   if (!gate.allowed) {
     return (
       <div className="relative max-w-xl mx-auto px-4 py-16">
-        <ComingSoonRibbon />
         <h1 className="text-2xl font-bold text-gray-900 mb-3">Host your own project</h1>
         <p className="text-gray-600 text-sm mb-6 leading-relaxed">{gate.reason}</p>
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6">
@@ -159,23 +157,29 @@ const HostCohort = () => {
             <li>You own the work outright</li>
           </ul>
         </div>
-        {paidLive ? (
-          <button
-            onClick={() => navigate('/partner')}
-            className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-3 rounded-lg"
-          >
-            See Talent Access
-          </button>
-        ) : (
-          <button
-            type="button"
-            disabled
-            aria-disabled="true"
-            className="bg-gray-200 text-gray-500 font-semibold text-sm px-6 py-3 rounded-lg cursor-not-allowed"
-          >
-            Coming soon
-          </button>
-        )}
+        <button
+          onClick={() => navigate('/settings')}
+          className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-3 rounded-lg"
+        >
+          Complete company verification
+        </button>
+      </div>
+    );
+  }
+
+  // Focus mode: paid work is paused until She Model Tech switches it on.
+  if (!features.paidProjects && !['admin', 'editor'].includes(profile?.role)) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-10">
+        <h1 className="text-2xl font-bold text-gray-900">Paid projects are coming soon</h1>
+        <p className="text-gray-600 mt-2">
+          Right now we’re focused on training our first cohorts, so members earn verified badges. We’ll open paid
+          projects once there’s a pool of badge-holders ready to hire. In the meantime, tell us how you’d like to work
+          with us.
+        </p>
+        <a href="/projects/sponsor-cohort" className="inline-block mt-5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
+          {features.sponsorships ? 'Sponsor a cohort' : 'Partner with us'}
+        </a>
       </div>
     );
   }
@@ -203,7 +207,7 @@ const HostCohort = () => {
 
       <div className="flex gap-2 mb-6" role="tablist" aria-label="Post a project">
         <span role="tab" aria-selected="true" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-900 text-white">Post a paid project</span>
-        <a role="tab" aria-selected="false" href="/projects/sponsor-cohort" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Sponsor a cohort</a>
+        <a role="tab" aria-selected="false" href="/projects/sponsor-cohort" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">{features.sponsorships ? 'Sponsor a cohort' : 'Partner with us'}</a>
       </div>
 
       <fieldset className="mb-6">
