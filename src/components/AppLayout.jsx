@@ -106,7 +106,14 @@ const AppLayout = ({ children }) => {
     { path: '/project-vault', label: 'Project Vault' },
     { path: '/disputes', label: 'Payment Dispute' },
     // Only She Model Tech staff post projects (free and paid). Companies don't run projects.
-    ...(userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/new-paid', label: 'Post a project' }] : []),
+    ...(userRole === 'admin' || userRole === 'editor' ? [
+      { path: '/projects/new-paid', label: 'Post a project' },
+      // Staff project tools live here, not on the Admin dashboard.
+      { path: '/admin/cohorts', label: 'Create a cohort' },
+      { path: '/admin/lead-applications', label: 'Lead applications' },
+      { path: '/admin/reviews', label: 'Project reviews' },
+      { path: '/admin/projects', label: 'Manage projects' },
+    ] : []),
     // Propose a project is no longer in the members' menu (staff still see it).
     ...(userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/propose', label: 'Propose a project' }] : []),
   ];
@@ -157,6 +164,8 @@ const AppLayout = ({ children }) => {
   const isActive = (path) => {
     if (path === '/proof-wall') return location.pathname === '/proof-wall';
     if (path === '/dashboard') return location.pathname === '/dashboard';
+    // The staff project tools under /admin/... belong to the Projects menu.
+    if (path === '/admin') return location.pathname === '/admin';
     if (path === '/projects') {
       // "All Projects" covers the listing and project detail pages, but NOT its
       // sibling sub-menu pages (My Projects) - otherwise both highlight at once.
@@ -167,7 +176,7 @@ const AppLayout = ({ children }) => {
   };
 
   // Keep the Projects group open whenever the user is on one of its pages.
-  const projectPaths = ['/projects', '/my-workspaces', '/project-vault', '/disputes'];
+  const projectPaths = ['/projects', '/my-workspaces', '/project-vault', '/disputes', '/admin/cohorts', '/admin/lead-applications', '/admin/reviews', '/admin/projects'];
   useEffect(() => {
     if (projectPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))) {
       setProjectsOpen(true);

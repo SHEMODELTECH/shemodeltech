@@ -221,6 +221,8 @@ function App() {
                 <Route path="/badges" element={<SidebarRoute><BadgesInfo /></SidebarRoute>} />
                 <Route path="/projects/sponsor-cohort" element={<SidebarRoute><SponsorCohort /></SidebarRoute>} />
                 <Route path="/admin/cohorts" element={<StaffRoute><CohortManager /></StaffRoute>} />
+                <Route path="/admin/reviews" element={<StaffRoute><AdminPanel only="reviews" /></StaffRoute>} />
+                <Route path="/admin/projects" element={<StaffRoute><AdminPanel only="projects" /></StaffRoute>} />
                 <Route path="/join/:code" element={<JoinOrganization />} />
                 <Route path="/org/:orgId" element={<SidebarRoute><OrgDashboard /></SidebarRoute>} />
                 <Route path="/org/:orgId/edition/:courseId" element={<SidebarRoute><OrgEdition /></SidebarRoute>} />

@@ -49,14 +49,16 @@ const statusStyle = {
   completed: 'bg-green-100 text-green-700',
 };
 
-const AdminPanel = () => {
+// `only`: show one section on its own page (Project reviews or Projects), opened
+// from the Projects menu. Without it, this is the dashboard.
+const AdminPanel = ({ only = null }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false); // full powers: delete, roles
   const [isReviewer, setIsReviewer] = useState(false); // admin OR editor: review surfaces
   const [myRole, setMyRole] = useState(null); // shown in the header badge
-  const [tab, setTab] = useState('overview');
+  const [tab, setTab] = useState(only || 'overview');
   // Editors can't open admin-only tabs (deleting is admin-only).
   useEffect(() => {
     if (!isAdmin && ['danger', 'deletions'].includes(tab)) setTab('overview');
@@ -675,8 +677,6 @@ const AdminPanel = () => {
 
   const tabs = [
     ['overview', 'Overview'],
-    ['reviews', 'Reviews'],
-    ['projects', 'Projects'],
     ['users', 'Users'],
     ...(isReviewer ? [['teachers', 'Mentors'], ['organizations', 'Organizations'], ['summit', 'Summit']] : []),
     ['moderation', 'Moderation'],
@@ -695,7 +695,7 @@ const AdminPanel = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 flex items-center gap-3">
-        {isAdmin ? 'Admin Dashboard' : 'Editor Dashboard'}
+        {only === 'reviews' ? 'Project reviews' : only === 'projects' ? 'Projects' : isAdmin ? 'Admin Dashboard' : 'Editor Dashboard'}
         {myRole && (
           <span
             className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide ${
@@ -707,28 +707,15 @@ const AdminPanel = () => {
         )}
       </h1>
       <p className="text-gray-500 text-sm mb-6">
-        Manage projects, users, and content across She Model Tech.
+        {only === 'reviews'
+          ? 'Projects submitted by their leads for She Model Tech review.'
+          : only === 'projects'
+          ? 'Every active project: view, manage extra-time requests, or delete.'
+          : 'Important decisions and company requests. Projects, cohorts, and reviews are in the Projects menu.'}
       </p>
 
-      {/* She Model Tech projects are created in cohorts (one project or more,
-          free or paid). Companies post their own paid work. */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        <Link
-          to="/admin/cohorts"
-          className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
-        >
-          Create a cohort
-        </Link>
-        <Link
-          to="/admin/lead-applications"
-          className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 text-sm font-semibold px-4 py-2.5 rounded-lg transition-all"
-        >
-          Lead applications
-        </Link>
-      </div>
-
       {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200">
+      {!only && <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200">
         {tabs.map(([key, label]) => (
           <button
             key={key}
@@ -738,7 +725,7 @@ const AdminPanel = () => {
             {label}
           </button>
         ))}
-      </div>
+      </div>}
 
       {loadingData && <div className="py-10 text-center text-gray-400 text-sm">Loading…</div>}
 
