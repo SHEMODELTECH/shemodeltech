@@ -55,6 +55,23 @@ service cloud.firestore {
  return exists(/databases/$(database)/documents/app_settings/features)
  && get(/databases/$(database)/documents/app_settings/features).data.get(name, false) == true;
  }
+ // Free companies (Company tiers on, no tier, not staff): limited messaging.
+ function limitedCompany() {
+ return hasProfile() && myUserDoc().get('isCompany', false) == true
+ && !(myUserDoc().get('role', 'member') in ['admin', 'editor'])
+ && featureOn('companyTiers') && tierRank() == 0;
+ }
+ // This month (UTC), e.g. "2026-10".
+ function monthKey() {
+ let m = request.time.month();
+ return string(request.time.year()) + '-' + (m < 10 ? '0' + string(m) : string(m));
+ }
+ function otherParticipant(p) {
+ return p[0] == myUid() ? p[1] : p[0];
+ }
+ function isStaffUid(uid) {
+ return get(/databases/$(database)/documents/users/$(uid)).data.get('role', 'member') in ['admin', 'editor'];
+ }
  // Kept for older rules: "premium" now means any company tier.
  function isPremiumUser() {
  return tierRank() >= 1;
@@ -377,6 +394,21 @@ service cloud.firestore {
  match /sponsors/{id} {
  allow read: if true;
  allow write: if isAdmin();
+ }
+
+ // Monthly count of new conversations for free companies ({uid}_{YYYY-MM}).
+ // Only grows, one person at a time, up to 5; can't be deleted by the company.
+ match /message_quota/{id} {
+ allow read: if isSignedIn() && (resource == null || resource.data.uid == myUid() || isAdmin());
+ allow create: if isSignedIn() && id == myUid() + '_' + monthKey()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.contacts.size() == 1;
+ allow update: if isSignedIn() && id == myUid() + '_' + monthKey()
+ && request.resource.data.uid == myUid()
+ && request.resource.data.contacts.hasAll(resource.data.contacts)
+ && request.resource.data.contacts.size() == resource.data.contacts.size() + 1
+ && request.resource.data.contacts.size() <= 5;
+ allow delete: if isAdmin();
  }
 
  // Launch switches (admin-only), readable by everyone so the site can adapt.
@@ -880,7 +912,13 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  match /conversations/{convId} {
  allow read: if isSignedIn() && (resource == null || myUid() in resource.data.participants);
- allow create: if isSignedIn() && myUid() in request.resource.data.participants;
+ // Free companies can start up to 5 new conversations a month (UTC). The
+ // month's quota record must list the other person, written in the same batch.
+ allow create: if isSignedIn() && myUid() in request.resource.data.participants
+ && (!limitedCompany()
+ || isStaffUid(otherParticipant(request.resource.data.participants))
+ || (getAfter(/databases/$(database)/documents/message_quota/$(myUid() + '_' + monthKey())).data.contacts.hasAny([otherParticipant(request.resource.data.participants)])
+ && getAfter(/databases/$(database)/documents/message_quota/$(myUid() + '_' + monthKey())).data.contacts.size() <= 5));
  allow update: if isSignedIn() && myUid() in resource.data.participants;
  allow delete: if isAdmin();
  match /messages/{msgId} {
@@ -922,7 +960,9 @@ service cloud.firestore {
  allow read: if isSignedIn()
  && (resource.data.get('userId', '') == myUid()
  || resource.data.get('recipientId', '') == myUid());
- allow create: if isSignedIn();
+ // Free companies can't use notifications to reach members (only staff).
+ allow create: if isSignedIn()
+ && (!limitedCompany() || isStaffUid(request.resource.data.get('userId', request.resource.data.get('recipientId', ''))));
  allow update, delete: if isSignedIn()
  && (resource.data.get('userId', '') == myUid()
  || resource.data.get('recipientId', '') == myUid()

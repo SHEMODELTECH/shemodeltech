@@ -49,7 +49,7 @@ const SummitCard = ({ profile }) => {
             <Link to="/summit#partner" className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg">Partner with the Summit</Link>
             {partnerReqs.map((p) => (
               <span key={p.id} className="text-xs bg-white border border-gray-200 rounded-full px-2.5 py-1">
-                {PARTNER_OPTIONS[p.option]}: {PARTNER_STATUS_LABELS[p.status]}
+                {PARTNER_OPTIONS[p.option] || p.option}: {PARTNER_STATUS_LABELS[p.status]}
               </span>
             ))}
           </>

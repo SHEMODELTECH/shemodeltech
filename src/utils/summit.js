@@ -15,12 +15,16 @@
 import { addDoc, collection, deleteField, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
+// Summit requests from companies. Each needs a company tier (once tiers are on);
+// She Model Tech approves every request. Funding goes through Support our mission.
 export const PARTNER_OPTIONS = {
-  booth: 'Exhibitor booth or recruiting table',
-  workshop: 'Sponsored workshop',
-  speaking: 'Speaking slot',
-  sponsorship: 'Sponsorship (logo and name acknowledgment)',
+  booth: 'Exhibitor table',
+  workshop: 'Host a workshop',
+  panel: 'Panel seat (sponsored session)',
+  speaking: 'Speaking slot (sponsored session)',
 };
+// The tier perk each request needs.
+export const PARTNER_OPTION_PERK = { booth: 'summitTable', workshop: 'summitWorkshop', panel: 'summitPanel', speaking: 'summitSpeaker' };
 export const PARTNER_STATUSES = ['new', 'approved', 'invoiced', 'paid', 'confirmed', 'declined'];
 export const PARTNER_STATUS_LABELS = { new: 'New', approved: 'Approved', invoiced: 'Invoiced', paid: 'Paid', confirmed: 'Confirmed', declined: 'Declined' };
 export const SUMMIT_LIMITS = { messageMinWords: 5, messageMaxChars: 1500 };

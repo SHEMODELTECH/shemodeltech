@@ -10,17 +10,21 @@ import { db } from '../firebase/config';
 import { hasPrioritySupport } from '../config/premium';
 import { getStaff } from '../utils/staffAlerts';
 import PremiumBadge from './PremiumBadge';
+import { companyTier } from '../config/tiers';
+import { useFeatures } from '../utils/features';
 
 export const PrioritySupport = () => {
   const { currentUser } = useAuth();
+  const features = useFeatures();
   const navigate = useNavigate();
   const [premium, setPremium] = useState(false);
   const [teamUid, setTeamUid] = useState(null);
   useEffect(() => {
     if (!currentUser) return;
-    getDoc(doc(db, 'users', currentUser.uid)).then((s) => setPremium(hasPrioritySupport(s.data()))).catch(() => {});
+    // Mentors always; Champion companies once Company tiers is on.
+    getDoc(doc(db, 'users', currentUser.uid)).then((s) => { const d = s.data() || {}; setPremium(d.isCompany ? features.companyTiers && hasPrioritySupport(d) : hasPrioritySupport(d)); }).catch(() => {});
     getStaff(['admin']).then((s) => s[0] && setTeamUid(s[0].uid)).catch(() => {});
-  }, [currentUser]);
+  }, [currentUser, features.companyTiers]);
   if (!premium) return null;
   return (
     <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -46,12 +50,20 @@ export const PromotedStrip = () => {
     Promise.all([
       getDocs(query(collection(db, 'jobs'), where('featured', '==', true), limit(10))).catch(() => null),
       getDocs(query(collection(db, 'projects'), where('featured', '==', true), limit(10))).catch(() => null),
-    ]).then(([j, p]) => {
+      // Champion companies' jobs (in-app promotion).
+      getDocs(query(collection(db, 'jobs'), where('promoted', '==', true), limit(10))).catch(() => null),
+    ]).then(async ([j, p, pr]) => {
       const now = new Date().toISOString();
-      const jobs = j
-        ? j.docs.map((d) => ({ id: d.id, ...d.data() })).filter((x) => x.status === 'open' && (!x.expiresAt || x.expiresAt > now))
-            .map((x) => ({ kind: 'Job', title: x.title, sub: x.companyName, href: `/jobs/${x.id}` }))
-        : [];
+      const open = (x) => x.status === 'open' && (!x.expiresAt || x.expiresAt > now);
+      const featuredJobs = j ? j.docs.map((d) => ({ id: d.id, ...d.data() })).filter(open) : [];
+      // Only keep promoted jobs whose company is still a Champion.
+      let promotedJobs = pr ? pr.docs.map((d) => ({ id: d.id, ...d.data() })).filter(open) : [];
+      const tiers = await Promise.all(promotedJobs.map((x) => getDoc(doc(db, 'users', x.companyUid)).then((u) => companyTier(u.data())).catch(() => null)));
+      promotedJobs = promotedJobs.filter((_, i) => tiers[i] === 'champion');
+      const seen = new Set();
+      const jobs = [...promotedJobs, ...featuredJobs]
+        .filter((x) => (seen.has(x.id) ? false : seen.add(x.id)))
+        .map((x) => ({ kind: 'Job', title: x.title, sub: x.companyName, href: `/jobs/${x.id}` }));
       const projects = p
         ? p.docs.map((d) => ({ id: d.id, ...d.data() })).filter((x) => x.status !== 'completed')
             .map((x) => ({ kind: x.isPaid ? 'Paid project' : 'Project', title: x.projectTitle, sub: x.projectField || x.industryTrack || '', href: `/projects/${x.id}` }))

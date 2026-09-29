@@ -166,7 +166,7 @@ const SummitTab = () => {
               partners.map((p) => (
                 <div key={p.id} className="bg-white border border-gray-200 rounded-lg p-3 mb-2">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-sm font-semibold text-gray-900">{p.companyName} <span className="font-normal text-gray-500">· {PARTNER_OPTIONS[p.option]}</span></p>
+                    <p className="text-sm font-semibold text-gray-900">{p.companyName} <span className="font-normal text-gray-500">· {PARTNER_OPTIONS[p.option] || p.option}</span></p>
                     <select value={p.status} onChange={async (e) => {
                         const st = e.target.value;
                         await setPartnerStatus(p.id, st);

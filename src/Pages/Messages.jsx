@@ -20,11 +20,16 @@ import {
   limitToLast,
   getDocs,
   limit,
+  writeBatch,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { sendPush } from '../utils/pushNotifications';
+import { useFeatures } from '../utils/features';
+import { FREE_MESSAGE_LIMIT, companyTier } from '../config/tiers';
 
 const getConversationId = (uid1, uid2) => [uid1, uid2].sort().join('_');
+// This month in UTC, e.g. "2026-10" (matches the database rule).
+const monthKeyUTC = () => { const d = new Date(); return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`; };
 
 const formatTime = (ts) => {
   if (!ts) return '';
@@ -62,6 +67,27 @@ const Avatar = ({ user, size = 'md' }) => {
 const Messages = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const features = useFeatures();
+  // Free companies: how many of this month's 5 new conversations are used.
+  const [quotaUsed, setQuotaUsed] = useState(null);
+  const [limitedMe, setLimitedMe] = useState(false);
+  const [viewerStaff, setViewerStaff] = useState(false); // staff see Champion chats marked Priority
+  useEffect(() => {
+    if (!currentUser) return;
+    getDoc(doc(db, 'users', currentUser.uid)).then((snap) => setViewerStaff(['admin', 'editor'].includes(snap.data()?.role))).catch(() => {});
+  }, [currentUser]);
+  useEffect(() => {
+    if (!currentUser || !features.companyTiers) { setLimitedMe(false); return; }
+    getDoc(doc(db, 'users', currentUser.uid)).then(async (snap) => {
+      const me = snap.data() || {};
+      const lim = !!me.isCompany && !['admin', 'editor'].includes(me.role) && !companyTier(me);
+      setLimitedMe(lim);
+      if (lim) {
+        const q = await getDoc(doc(db, 'message_quota', `${currentUser.uid}_${monthKeyUTC()}`)).catch(() => null);
+        setQuotaUsed(q && q.exists() ? (q.data().contacts || []).length : 0);
+      }
+    }).catch(() => {});
+  }, [currentUser, features.companyTiers]);
   const [searchParams] = useSearchParams();
 
   const [conversations, setConversations] = useState([]);
@@ -210,15 +236,36 @@ const Messages = () => {
             return;
           }
         }
-        // NEW conversation. Messaging is unlimited for everyone - any member
-        // can start a conversation with any other member or company.
-        await setDoc(convRef, {
+        // NEW conversation. Free companies (Company tiers on, no tier) can start
+        // up to 5 new conversations a month (UTC); the database enforces this.
+        const convData = {
           participants:  [currentUser.uid, targetUid],
           lastMessage:   '',
           lastMessageAt: serverTimestamp(),
           createdAt:     serverTimestamp(),
           unreadBy:      { [currentUser.uid]: 0, [targetUid]: 0 },
-        });
+        };
+        const limited = me.isCompany && !isStaff(me) && features.companyTiers && !companyTier(me);
+        if (limited && !isStaff(otherUser)) {
+          const key = monthKeyUTC();
+          const qRef = doc(db, 'message_quota', `${currentUser.uid}_${key}`);
+          const qSnap = await getDoc(qRef);
+          const contacts = qSnap.exists() ? qSnap.data().contacts || [] : [];
+          if (!contacts.includes(targetUid) && contacts.length >= FREE_MESSAGE_LIMIT) {
+            toast.error(`You’ve reached ${FREE_MESSAGE_LIMIT} new conversations this month. Choose a company tier for unlimited messaging.`);
+            navigate('/premium');
+            return;
+          }
+          const batch = writeBatch(db);
+          batch.set(convRef, convData);
+          if (!contacts.includes(targetUid)) {
+            batch.set(qRef, { uid: currentUser.uid, month: key, contacts: [...contacts, targetUid] });
+          }
+          await batch.commit();
+          setQuotaUsed(contacts.includes(targetUid) ? contacts.length : contacts.length + 1);
+        } else {
+          await setDoc(convRef, convData);
+        }
       }
 
       setActiveConvId(convId);
@@ -308,6 +355,12 @@ const Messages = () => {
                   to "go find a profile" without a route there is a dead end. */}
               <div className="px-4 py-3.5 border-b border-gray-200 flex-shrink-0">
                 <h1 className="text-base sm:text-lg font-bold text-gray-900">Messages</h1>
+                {limitedMe && quotaUsed !== null && (
+                  <p className="text-[11px] text-gray-500 mt-0.5">
+                    {Math.max(0, FREE_MESSAGE_LIMIT - quotaUsed)} of {FREE_MESSAGE_LIMIT} new conversations left this month.{' '}
+                    <Link to="/premium" className="text-pink-700 font-semibold">Unlimited with a tier</Link>
+                  </p>
+                )}
                 {totalUnread > 0 && (
                   <p className="text-xs text-pink-600 font-medium mt-0.5">{totalUnread} unread</p>
                 )}
@@ -359,7 +412,12 @@ const Messages = () => {
                       <Avatar user={conv.otherUser} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1">
-                          <p className="text-sm font-semibold text-gray-900 truncate">{getDisplayName(conv.otherUser)}</p>
+                          <p className="text-sm font-semibold text-gray-900 truncate">
+                            {getDisplayName(conv.otherUser)}
+                            {viewerStaff && features.companyTiers && companyTier(conv.otherUser) === 'champion' && (
+                              <span className="ml-1.5 align-middle text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">PRIORITY</span>
+                            )}
+                          </p>
                           <span className="text-xs text-gray-400 flex-shrink-0">{formatTime(conv.lastMessageAt)}</span>
                         </div>
                         <p className="text-xs text-gray-500 truncate mt-0.5">

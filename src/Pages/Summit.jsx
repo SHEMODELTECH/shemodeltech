@@ -12,8 +12,11 @@ import LimitHint, { countWords } from '../components/LimitHint';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
 import SummitComingSoon from '../components/SummitComingSoon';
+import { useFeatures } from '../utils/features';
+import { hasPerk } from '../config/tiers';
 import {
   PARTNER_OPTIONS,
+  PARTNER_OPTION_PERK,
   SUMMIT_LIMITS,
   createPartnerRequest,
   getCurrentSummit,
@@ -25,6 +28,7 @@ const lines = (t) => String(t || '').split('\n').map((l) => l.trim()).filter(Boo
 const fmtDate = (d) => (d ? new Date(`${d}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '');
 
 const Summit = () => {
+  const features = useFeatures();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [summit, setSummit] = useState(undefined);
@@ -194,6 +198,11 @@ const Summit = () => {
               {summit.partnerOptions && <p className="text-sm text-gray-700 mt-3 whitespace-pre-wrap">{summit.partnerOptions}</p>}
               {pSent ? (
                 <p className="mt-5 font-semibold text-emerald-800">Thank you. We’ll be in touch at {pForm.contactEmail}.</p>
+              ) : features.companyTiers && !Object.keys(PARTNER_OPTIONS).some((k) => hasPerk(profile, PARTNER_OPTION_PERK[k], true)) ? (
+                <p className="mt-5 text-sm text-gray-700">
+                  Summit tables, workshops, panels, and speaking slots come with our company tiers.{' '}
+                  <a href="/premium" className="text-pink-700 font-semibold underline">See the tiers</a>
+                </p>
               ) : (
                 <form onSubmit={sendPartner} className="mt-5 grid sm:grid-cols-2 gap-4">
                   <div>
@@ -202,8 +211,10 @@ const Summit = () => {
                   </div>
                   <div>
                     <label className={label} htmlFor="p-opt">Option</label>
-                    <select id="p-opt" className={input} value={pForm.option} onChange={(e) => setPForm({ ...pForm, option: e.target.value })}>
-                      {Object.entries(PARTNER_OPTIONS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                    <select id="p-opt" className={input} value={!features.companyTiers || hasPerk(profile, PARTNER_OPTION_PERK[pForm.option], true) ? pForm.option : ''} onChange={(e) => setPForm({ ...pForm, option: e.target.value })}>
+                      {Object.entries(PARTNER_OPTIONS)
+                        .filter(([k]) => !features.companyTiers || hasPerk(profile, PARTNER_OPTION_PERK[k], true))
+                        .map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                     </select>
                   </div>
                   <div>

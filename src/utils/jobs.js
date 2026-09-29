@@ -82,6 +82,8 @@ export const createJob = async (company, form) =>
     companyName: company.companyProfile?.companyName || company.displayName || 'Company',
     status: 'open',
     featured: false,
+    // Champion companies' jobs are promoted to members (checked again on display).
+    promoted: company.companyTier === 'champion',
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
     ...(form.closesOn ? {} : { expiresAt: new Date(Date.now() + JOB_LIMITS.daysOpen * 86400000).toISOString() }),
