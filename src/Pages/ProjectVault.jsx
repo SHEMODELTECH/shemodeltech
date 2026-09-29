@@ -7,7 +7,7 @@ import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { verificationUrl, qrCodeUrl } from '../utils/certificateVerification';
 import TierBadge from '../components/TierBadge';
-import { formatMoney, hasOpenDispute, confirmPaymentReceived, markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus } from '../utils/paidProjects';
+import { formatMoney, hasOpenDispute, confirmPaymentReceived, markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus, smtPays } from '../utils/paidProjects';
 import { toast } from 'react-toastify';
 
 // Map a badge category (stored on evaluations) to its badge image in /public/Images.
@@ -58,6 +58,8 @@ const tierRingCss = (level) => {
 
 const ProjectVault = () => {
   const { currentUser } = useAuth();
+  // She Model Tech staff mark payments sent on the projects She Model Tech pays for.
+  const [isStaffViewer, setIsStaffViewer] = useState(false);
   const navigate = useNavigate();
   const [userBadges, setUserBadges] = useState([]);
   const [completedProjects, setCompletedProjects] = useState([]);
@@ -81,6 +83,7 @@ const ProjectVault = () => {
         try {
           const { doc, getDoc } = await import('firebase/firestore');
           const uSnap = await getDoc(doc(db, 'users', currentUser.uid));
+          setIsStaffViewer(uSnap.exists() && ['admin', 'editor'].includes(uSnap.data().role));
           if (uSnap.exists()) setUserBadges(uSnap.data().badges || []);
         } catch (_) {}
         const allDisputed = [];
@@ -217,10 +220,11 @@ const ProjectVault = () => {
                       </div>
                       <div>
                         <p className="text-gray-400 text-[10px] uppercase tracking-widest mb-0.5">Issued By</p>
-                        <p className="text-gray-700 text-sm font-semibold">She Model Tech</p>
+                        <p className="text-gray-700 text-sm font-semibold">SHE MODEL TECH Inc.</p>
                       </div>
                     </div>
-                    <p className="text-gray-300 text-[10px] mt-3">shemodeltech.com</p>
+                    <p className="text-gray-500 text-[10px] font-semibold mt-3">SHE MODEL TECH Inc. is a registered 501(c)(3) nonprofit organization.</p>
+                    <p className="text-gray-300 text-[10px] mt-1">shemodeltech.com</p>
                     {viewingCert.certificateId && (
                       <div className="mt-4 flex flex-col items-center gap-1.5">
                         <img
@@ -274,7 +278,8 @@ const ProjectVault = () => {
                         .meta-col{text-align:center}
                         .meta-col .l{font-size:8pt;color:#9ca3af;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.03in}
                         .meta-col .v{font-size:11pt;color:#374151;font-weight:700}
-                        .site{color:#d1d5db;font-size:9pt;margin-top:0.1in}
+                        .org{color:#4b5563;font-size:9pt;font-weight:600;margin-top:0.12in}
+                        .site{color:#d1d5db;font-size:9pt;margin-top:0.04in}
                         </style></head><body>
                         <div class="page">
                         <div class="border">
@@ -297,8 +302,9 @@ const ProjectVault = () => {
                         <div class="bottom">
                         <div class="meta-row">
                         <div class="meta-col"><div class="l">Date Completed</div><div class="v">${viewingCert.completedAt}</div></div>
-                        <div class="meta-col"><div class="l">Issued By</div><div class="v">She Model Tech</div></div>
+                        <div class="meta-col"><div class="l">Issued By</div><div class="v">SHE MODEL TECH Inc.</div></div>
                         </div>
+                        <div class="org">SHE MODEL TECH Inc. is a registered 501(c)(3) nonprofit organization.</div>
                         <div class="site">shemodeltech.com</div>
                         ${viewingCert.certificateId ? `
                         <div style="margin-top:14px;text-align:center">
@@ -345,7 +351,7 @@ const ProjectVault = () => {
                   <span className="w-2 h-2 rounded-full bg-amber-500"></span>
                   Payment Confirmations
                 </h2>
-                <p className="text-gray-400 text-xs mb-3">Work on these paid projects is done. They move to your completed wall once the owner marks everyone paid and every member confirms receipt. Disputes are handled in the dispute room.</p>
+                <p className="text-gray-400 text-xs mb-3">Work on these paid projects is done. They move to your completed wall once the payer (She Model Tech, or the company that posted the work) marks everyone paid and every member confirms receipt. Disputes are handled in the dispute room.</p>
                 <div className="space-y-4">
                   {awaitingProjects.map(project => {
                     const disputed = hasOpenDispute(project);
@@ -379,8 +385,9 @@ const ProjectVault = () => {
 
                         {/* Actions */}
                         <div className="flex flex-wrap gap-2 mt-3">
-                          {/* Owner: mark all paid */}
-                          {isOwner && !project.ownerPaidAll && (
+                          {/* The payer marks everyone paid: She Model Tech staff on its paid
+                              cohorts, the company on company work. Leads never pay. */}
+                          {(smtPays(project) ? isStaffViewer : isOwner) && !project.ownerPaidAll && (
                             <button disabled={busy} onClick={async () => {
                               setBusy(true);
                               try {
@@ -393,7 +400,7 @@ const ProjectVault = () => {
                               I've Paid Everyone
                             </button>
                           )}
-                          {isOwner && project.ownerPaidAll && !disputed && (
+                          {(smtPays(project) ? isStaffViewer : isOwner) && project.ownerPaidAll && !disputed && (
                             <span className="text-gray-400 text-xs py-2">Waiting on member confirmations...</span>
                           )}
                           {/* Member: confirm received */}
