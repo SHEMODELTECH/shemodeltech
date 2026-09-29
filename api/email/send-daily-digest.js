@@ -217,6 +217,8 @@ module.exports = async function handler(req, res) {
  }
  try { await db.collection('email_logs').add({ type: 'daily_reminder', timestamp: new Date(), stats: { sent, skipped, failed } }); } catch (_) {}
 
+ // Show the result in Vercel's logs.
+ console.log(`Daily digest: ${sent} sent, ${skipped} skipped (nothing pending, opted out, or company), ${failed} failed`);
  return res.json({ success: true, stats: { sent, skipped, failed } });
  } catch (error) {
  console.error('Daily reminder error:', error);
