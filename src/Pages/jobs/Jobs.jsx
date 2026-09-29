@@ -14,6 +14,7 @@ import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { authFetch } from '../../utils/authFetch';
 import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
 import { useFeatures } from '../../utils/features';
+import { hasPerk } from '../../config/tiers';
 import {
   JOB_LIMITS,
   JOB_TYPES,
@@ -44,7 +45,10 @@ const useMyProfile = () => {
   return profile;
 };
 
-const canPostJobs = (p) => !!p && (['admin', 'editor'].includes(p.role) || (p.isCompany && p.isVerified && isPremium(p)));
+// Posting: staff always; companies need verification plus a tier (tiers on),
+// or the "Job posting (before tiers)" switch (tiers off).
+const canPostJobs = (p, features) => !!p && (['admin', 'editor'].includes(p.role)
+  || (p.isCompany && p.isVerified && (features?.companyTiers ? hasPerk(p, 'postJobs', true) : !!features?.jobPosting)));
 
 // ---------- AI-powered matches (Premium members) ----------
 const scoreJob = (job, profile) => {
@@ -198,7 +202,7 @@ export const JobsBoard = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs</h1>
           <p className="text-gray-600 text-sm mt-1">Full-time, part-time, contract, and internship roles from companies hiring on She Model Tech.</p>
         </div>
-        {(profile?.isCompany || isStaff) && (features.jobPosting || isStaff) && (
+        {(profile?.isCompany || isStaff) && (isStaff || canPostJobs(profile, features)) && (
           <div className="flex gap-2">
             <Link to="/jobs/mine" className="text-sm font-semibold border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">My job posts</Link>
             <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>
@@ -236,7 +240,7 @@ export const JobsBoard = () => {
         <p className="text-gray-500 text-sm">Loading jobs...</p>
       ) : shown.length === 0 ? (
         <p className="text-gray-500 text-sm border border-dashed border-gray-300 rounded-xl p-8 text-center">
-          {features.jobPosting ? 'No open jobs match right now. Check back soon.' : 'Job listings from hiring companies are coming soon. For now, build your proof on She Model Tech projects.'}
+          {(features.jobPosting || features.companyTiers) ? 'No open jobs match right now. Check back soon.' : 'Job listings from hiring companies are coming soon. For now, build your proof on She Model Tech projects.'}
         </p>
       ) : (
         <div className="grid gap-3">{shown.map((j) => <JobCard key={j.id} j={j} />)}</div>
@@ -352,7 +356,8 @@ export const MyJobs = () => {
   useEffect(() => {
     if (profile) listMyJobs(profile.uid).then(setJobs).catch(() => setJobs([]));
   }, [profile]);
-  const premium = profile && (isPremium(profile) || profile.role === 'admin');
+  // Featured jobs: Partner and above (or staff).
+  const premium = profile && hasPerk(profile, 'featuredJobs', !!features.companyTiers);
   const act = async (fn, msg) => {
     try {
       await fn();
@@ -380,7 +385,7 @@ export const MyJobs = () => {
             await act(() => requestJobDeletion(j, { uid: profile.uid }, reason), 'Request sent. The post is unpublished while we review it.');
           }}
         />
-        {features.jobPosting && <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>}
+        {canPostJobs(profile, features) && <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>}
       </div>
       {jobs === null ? (
         <p className="text-gray-500 text-sm">Loading...</p>
@@ -445,7 +450,7 @@ export const JobForm = () => {
   }, [id]);
 
   if (!profile) return <p className="text-gray-500 text-sm">Loading...</p>;
-  if (!id && !features.jobPosting && !['admin', 'editor'].includes(profile.role)) {
+  if (!id && !features.companyTiers && !features.jobPosting && !['admin', 'editor'].includes(profile.role)) {
     return (
       <div className="max-w-xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
         <h1 className="text-xl font-bold text-gray-900">Job posting is coming soon</h1>
@@ -454,18 +459,18 @@ export const JobForm = () => {
       </div>
     );
   }
-  if (!canPostJobs(profile)) {
+  if (!canPostJobs(profile, features)) {
     return (
       <div className="max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
-        <h1 className="text-xl font-bold text-gray-900">Posting jobs is a Premium feature</h1>
+        <h1 className="text-xl font-bold text-gray-900">Posting jobs is part of our company tiers</h1>
         <p className="text-gray-700 mt-2">
           {!profile.isCompany
             ? 'Only company accounts can post jobs.'
             : !profile.isVerified
-            ? 'First, get your company verified (it\u2019s free). Then Premium lets you post jobs.'
-            : 'Premium lets verified companies post jobs, feature them, and promote them to members.'}
+            ? 'First, get your company verified (it\u2019s free). Then any tier (Supporter, Partner, or Champion) lets you post jobs.'
+            : 'Any tier (Supporter, Partner, or Champion) lets verified companies post jobs. Partner and Champion can also feature them.'}
         </p>
-        <Link to="/premium" className="inline-block mt-4 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">See Premium</Link>
+        <Link to="/premium" className="inline-block mt-4 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">See the tiers</Link>
       </div>
     );
   }

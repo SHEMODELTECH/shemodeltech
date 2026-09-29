@@ -42,8 +42,22 @@ service cloud.firestore {
  || isReviewer() || isTeacherUser());
  }
  // Premium, granted by an admin (or payment activation later).
+ // Company tiers (Supporter < Partner < Champion), set only by admins.
+ // A tier counts while companyTierUntil is empty or still in the future.
+ function tierRank() {
+ let t = hasProfile() ? myUserDoc().get('companyTier', '') : '';
+ let until = hasProfile() ? myUserDoc().get('companyTierUntil', null) : null;
+ let active = until == null || until > request.time;
+ return !active ? 0 : t == 'champion' ? 3 : t == 'partner' ? 2 : t == 'supporter' ? 1 : 0;
+ }
+ // Launch switches (Admin → Launch settings).
+ function featureOn(name) {
+ return exists(/databases/$(database)/documents/app_settings/features)
+ && get(/databases/$(database)/documents/app_settings/features).data.get(name, false) == true;
+ }
+ // Kept for older rules: "premium" now means any company tier.
  function isPremiumUser() {
- return hasProfile() && myUserDoc().get('premium', {}).get('active', false) == true;
+ return tierRank() >= 1;
  }
  function isTeacherUser() {
  return hasProfile() && myUserDoc().get('isTeacher', false) == true;
@@ -75,6 +89,7 @@ service cloud.firestore {
  allow create: if isSignedIn() && userId == myUid()
  && request.resource.data.get('role', 'member') != 'admin'
  && !('premium' in request.resource.data)
+ && !('companyTier' in request.resource.data) && !('companyTierUntil' in request.resource.data)
  && request.resource.data.get('role', 'member') != 'editor';
 
  // Self-update: cannot change own role, cannot self-award badges.
@@ -88,7 +103,7 @@ service cloud.firestore {
  // it is what allows a company to post paid projects.
  && !touched('isVerified')
  // Premium is granted by an admin (or payment activation), never self-set.
- && !touched('premium')
+ && !touched('premium') && !touched('companyTier') && !touched('companyTierUntil')
  // Trainer status (training contracts) is granted by an admin.
  && !touched('isTrainer')
  // Summit attendance is recorded by staff at check-in.
@@ -403,10 +418,9 @@ service cloud.firestore {
  allow create: if isSignedIn()
  && request.resource.data.companyUid == myUid()
  && (isReviewer() || (myUserDoc().get('isCompany', false) == true
- && myUserDoc().get('isVerified', false) == true && isPremiumUser()
- // Job posting is switched on in Admin → Launch settings.
- && exists(/databases/$(database)/documents/app_settings/features)
- && get(/databases/$(database)/documents/app_settings/features).data.get('jobPosting', false) == true))
+ && myUserDoc().get('isVerified', false) == true
+ // With tiers on, any tier can post; before that, the Job posting switch decides.
+ && ((featureOn('companyTiers') && tierRank() >= 1) || (!featureOn('companyTiers') && featureOn('jobPosting')))))
  && request.resource.data.title is string && request.resource.data.title.size() <= 120
  && request.resource.data.description is string && request.resource.data.description.size() <= 8000
  && request.resource.data.featured == false;

@@ -29,7 +29,16 @@ const SponsorCohort = () => {
   }, [currentUser]);
 
   if (!profile) return <p className="text-gray-500 text-sm">Loading...</p>;
-  if (!profile.isCompany) return <p className="text-gray-600">Sponsoring a cohort is for company accounts.</p>;
+  // Sponsoring cohorts has been replaced by company tiers.
+  if (!['admin', 'editor'].includes(profile.role)) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-900">Work with She Model Tech</h1>
+        <p className="text-gray-600 mt-2">Companies now work with us through our tiers: Supporter, Partner, and Champion. Partner and Champion companies can propose a real challenge for a future cohort.</p>
+        <a href="/premium" className="inline-block mt-5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">See company tiers</a>
+      </div>
+    );
+  }
 
   const submit = async (e) => {
     e.preventDefault();

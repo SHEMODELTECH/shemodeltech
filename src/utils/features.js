@@ -13,7 +13,8 @@ export const FEATURE_DEFAULTS = {
   sponsorships: false, // companies sponsor a cohort (otherwise: register interest)
   orgTraining: false, // training and curriculum requests (otherwise: register interest)
   jobPosting: false, // companies post jobs (a Premium feature)
-  premiumPayments: false, // companies pay for Premium online (otherwise: "Ask about Premium")
+  companyTiers: false, // Supporter, Partner, Champion rules apply to companies
+  premiumPayments: false, // companies pay for tiers online (otherwise: "Ask about a tier")
 };
 
 let current = { ...FEATURE_DEFAULTS };

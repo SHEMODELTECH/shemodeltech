@@ -11,8 +11,9 @@ const ROWS = [
   ['paidProjects', 'Paid projects from companies', 'Companies post paid projects, company cohorts, and freelance work. Members need a badge to apply.', 'badgeHolders', 20, 'members with a badge'],
   ['paidCohorts', 'Paid cohorts by She Model Tech', 'You create cohorts where She Model Tech pays the lead and collaborators.', null, null, 'Bank account, Stripe, and visa advice in place'],
   ['sponsorships', 'Sponsored cohorts', 'Companies sponsor a cohort and pay She Model Tech. While off, companies can only register interest.', 'completedCohorts', 2, 'completed cohorts'],
-  ['jobPosting', 'Job posting (Premium)', 'Premium companies post full-time, part-time, contract, and internship roles. While off, the Jobs board says roles are coming soon, and nobody can post.', null, null, 'Premium launched'],
-  ['premiumPayments', 'Company Premium payments', 'Companies can pay for Premium online (the payment link in REACT_APP_PREMIUM_PAYMENT_LINK). While off, they “Ask about Premium” and you grant it in Admin → Users.', null, null, 'Bank account and Stripe set up'],
+  ['jobPosting', 'Job posting (before tiers)', 'Lets companies post jobs while Company tiers is off. Once tiers are on, any tier can post and this switch no longer matters.', null, null, 'Usually leave off'],
+  ['companyTiers', 'Company tiers', 'Supporter, Partner, and Champion rules apply to companies. Companies without a tier become free companies (5 new conversations a month, no job posting). Set tiers first in Admin → Users.', null, null, 'Tiers assigned to your early partners'],
+  ['premiumPayments', 'Tier payments', 'Companies can pay for a tier online (links in REACT_APP_TIER_SUPPORTER_LINK, _PARTNER_LINK, _CHAMPION_LINK). While off, they “Ask about” a tier and you set it in Admin → Users.', null, null, 'Bank account and Stripe set up'],
   ['orgTraining', 'Training and curriculum requests', 'Organizations request training or licensing. While off, they register interest.', 'completedCohorts', 2, 'completed cohorts'],
 ];
 

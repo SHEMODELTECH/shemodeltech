@@ -7,19 +7,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  orderBy,
-  limit,
-  where,
-  addDoc,
-} from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, orderBy, limit, where, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { isReviewerRole, isAdminRole, roleLabel } from '../../utils/permissions';
 import { toast } from 'react-toastify';
@@ -36,7 +24,7 @@ import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTea
 import { deleteTeacherCourse, listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { notifyMember } from '../../utils/staffAlerts';
-import { isPremium } from '../../config/premium';
+import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import OrgRequestsTab from '../../components/admin/OrgRequestsTab';
@@ -511,38 +499,35 @@ const AdminPanel = () => {
     navigate(`/messages?to=${u.id}&text=${encodeURIComponent(starter)}`);
   };
 
-  // Premium: granted by an admin while online payments are off.
-  const togglePremium = async (u) => {
-    const give = !isPremium(u);
+  // Company tiers (Supporter, Partner, Champion): set by an admin.
+  const [tierFor, setTierFor] = useState(null); // user being edited
+  const [tierDraft, setTierDraft] = useState({ tier: '', until: '' });
+  const openTier = (u) => {
+    const until = u.companyTierUntil?.toDate ? u.companyTierUntil.toDate() : u.companyTierUntil ? new Date(u.companyTierUntil) : null;
+    setTierDraft({ tier: u.companyTier || '', until: until ? until.toISOString().slice(0, 10) : '' });
+    setTierFor(u);
+  };
+  const saveTier = async () => {
+    const u = tierFor;
     const name = u.companyProfile?.companyName || u.displayName || u.email;
-    let until = null;
-    if (give) {
-      const months = window.prompt(`Grant Premium to ${name} for how many months? Leave empty for no end date.`, '12');
-      if (months === null) return;
-      const m = parseInt(months, 10);
-      if (m > 0) {
-        const d = new Date();
-        d.setMonth(d.getMonth() + m);
-        until = d.toISOString();
-      }
-    } else if (!window.confirm(`Remove Premium from ${name}?`)) return;
     try {
-      const premium = give
-        ? { active: true, since: new Date().toISOString(), until, grantedBy: currentUser.email, plan: u.isCompany ? 'company' : 'member' }
-        : { ...(u.premium || {}), active: false, endedAt: new Date().toISOString() };
-      await updateDoc(doc(db, 'users', u.id), { premium });
-      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, premium } : x)));
-      if (give) {
+      const data = tierDraft.tier
+        ? { companyTier: tierDraft.tier, companyTierUntil: tierDraft.until ? Timestamp.fromDate(new Date(`${tierDraft.until}T23:59:59`)) : null, companyTierSetBy: currentUser.email }
+        : { companyTier: null, companyTierUntil: null, companyTierSetBy: currentUser.email };
+      await updateDoc(doc(db, 'users', u.id), data);
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, ...data } : x)));
+      if (tierDraft.tier) {
         notifyMember(u.id, {
-          type: 'premium_granted',
-          title: 'Welcome to She Model Tech Premium',
-          body: until ? `Your Premium is active until ${new Date(until).toLocaleDateString()}.` : 'Your Premium is active.',
+          type: 'tier_set',
+          title: `Welcome to She Model Tech ${TIER_LABEL[tierDraft.tier]}`,
+          body: tierDraft.until ? `Your ${TIER_LABEL[tierDraft.tier]} tier is active until ${new Date(`${tierDraft.until}T12:00:00`).toLocaleDateString()}.` : `Your ${TIER_LABEL[tierDraft.tier]} tier is active.`,
           link: '/premium',
         });
       }
-      toast.success(give ? 'Premium granted.' : 'Premium removed.');
+      toast.success(tierDraft.tier ? `${name} is now ${TIER_LABEL[tierDraft.tier]}.` : `Tier removed from ${name}.`);
+      setTierFor(null);
     } catch (e) {
-      toast.error(friendlyError(e, 'Could not update Premium.'));
+      toast.error(friendlyError(e, 'Could not update the tier.'));
     }
   };
 
@@ -940,6 +925,29 @@ const AdminPanel = () => {
       )}
 
       {/* OVERVIEW */}
+      {tierFor && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="tier-h">
+          <div className="w-full max-w-md bg-white rounded-2xl p-5">
+            <h2 id="tier-h" className="text-lg font-bold text-gray-900">Set tier: {tierFor.companyProfile?.companyName || tierFor.displayName || tierFor.email}</h2>
+            <label className="block text-sm font-semibold text-gray-800 mt-4 mb-1" htmlFor="tier-sel">Tier</label>
+            <select id="tier-sel" value={tierDraft.tier} onChange={(e) => setTierDraft((d) => ({ ...d, tier: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+              <option value="">None (free company)</option>
+              {TIERS.map((t) => <option key={t} value={t}>{TIER_LABEL[t]}</option>)}
+            </select>
+            {tierDraft.tier && (
+              <>
+                <label className="block text-sm font-semibold text-gray-800 mt-3 mb-1" htmlFor="tier-until">Until <span className="font-normal text-gray-500">(optional; leave empty for no end date)</span></label>
+                <input id="tier-until" type="date" min={new Date().toISOString().slice(0, 10)} value={tierDraft.until} onChange={(e) => setTierDraft((d) => ({ ...d, until: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+              </>
+            )}
+            <p className="text-xs text-gray-500 mt-3">Tiers take effect when Company tiers is switched on in Launch settings. You can set them any time.</p>
+            <div className="flex justify-end gap-2 mt-4">
+              <button onClick={() => setTierFor(null)} className="text-sm font-semibold text-gray-600 px-4 py-2">Cancel</button>
+              <button onClick={saveTier} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Save</button>
+            </div>
+          </div>
+        </div>
+      )}
       {!loadingData && tab === 'overview' && isAdmin && <LaunchSettings currentUser={currentUser} />}
       {!loadingData && tab === 'overview' && (
         <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
@@ -1184,9 +1192,9 @@ const AdminPanel = () => {
                         MENTOR
                       </span>
                     )}
-                    {isPremium(u) && (
-                      <span className="ml-2 text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded">
-                        PREMIUM
+                    {u.isCompany && companyTier(u) && (
+                      <span className="ml-2 text-[10px] font-bold text-pink-800 bg-pink-50 px-1.5 py-0.5 rounded uppercase">
+                        {TIER_LABEL[companyTier(u)]}
                       </span>
                     )}
                     {u.isCompany && u.isVerified && (
@@ -1229,10 +1237,10 @@ const AdminPanel = () => {
                   )}
                   {isAdmin && u.isCompany && (
                     <button
-                      onClick={() => togglePremium(u)}
-                      className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${isPremium(u) ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-amber-500 text-white hover:bg-amber-600'}`}
+                      onClick={() => openTier(u)}
+                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-pink-600 text-white hover:bg-pink-700"
                     >
-                      {isPremium(u) ? 'Remove premium' : 'Grant premium'}
+                      {companyTier(u) ? `Tier: ${TIER_LABEL[companyTier(u)]}` : 'Set tier'}
                     </button>
                   )}
                   {isAdmin && u.isCompany && !u.isVerified && (

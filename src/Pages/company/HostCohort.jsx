@@ -167,18 +167,18 @@ const HostCohort = () => {
     );
   }
 
-  // Focus mode: paid work is paused until She Model Tech switches it on.
-  if (!features.paidProjects && !['admin', 'editor'].includes(profile?.role)) {
+  // Only She Model Tech staff post projects (free and paid). Companies don't
+  // run projects; Partner and Champion companies can propose a challenge.
+  if (!['admin', 'editor'].includes(profile?.role)) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-10">
-        <h1 className="text-2xl font-bold text-gray-900">Paid projects are coming soon</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Projects are run by She Model Tech</h1>
         <p className="text-gray-600 mt-2">
-          Right now we’re focused on training our first cohorts, so members earn verified badges. We’ll open paid
-          projects once there’s a pool of badge-holders ready to hire. In the meantime, tell us how you’d like to work
-          with us.
+          She Model Tech designs and runs every project, free and paid, and pays members on paid projects. Companies
+          on the Partner and Champion tiers can propose a real challenge for a future cohort.
         </p>
-        <a href="/projects/sponsor-cohort" className="inline-block mt-5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
-          {features.sponsorships ? 'Sponsor a cohort' : 'Partner with us'}
+        <a href="/premium" className="inline-block mt-5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
+          See company tiers
         </a>
       </div>
     );
@@ -207,7 +207,7 @@ const HostCohort = () => {
 
       <div className="flex gap-2 mb-6" role="tablist" aria-label="Post a project">
         <span role="tab" aria-selected="true" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-900 text-white">Post a paid project</span>
-        <a role="tab" aria-selected="false" href="/projects/sponsor-cohort" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">{features.sponsorships ? 'Sponsor a cohort' : 'Partner with us'}</a>
+
       </div>
 
       <fieldset className="mb-6">

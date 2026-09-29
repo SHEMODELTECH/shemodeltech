@@ -99,8 +99,8 @@ const AppLayout = ({ children }) => {
     { path: '/projects/owner-dashboard', label: 'My Projects' },
     { path: '/project-vault', label: 'Project Vault' },
     { path: '/disputes', label: 'Payment Dispute' },
-    ...((isCompany && features.paidProjects) || userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/new-paid', label: 'Post a project' }] : []),
-    ...(isCompany && !features.paidProjects ? [{ path: '/projects/sponsor-cohort', label: features.sponsorships ? 'Sponsor a cohort' : 'Partner with us' }] : []),
+    // Only She Model Tech staff post projects (free and paid). Companies don't run projects.
+    ...(userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/new-paid', label: 'Post a project' }] : []),
     // Members only; locked until the first earned badge.
     ...(!isCompany ? [{ path: '/projects/propose', label: 'Propose a project', locked: !hasBadge && userRole !== 'admin' && userRole !== 'editor' }] : []),
   ];
@@ -119,7 +119,7 @@ const AppLayout = ({ children }) => {
     { path: '/talent-board', label: 'Talent Board', icon: 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4z' },
     { path: '/support', label: 'Support', icon: 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z' },
 ...(isCompany || userRole === 'admin' || userRole === 'editor' ? [
-    { path: '/premium', label: 'Premium', icon: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z' },
+    { path: '/premium', label: 'Company tiers', icon: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z' },
     ] : []),
     { path: '/settings', label: 'Settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
     ...(userRole === 'admin' || userRole === 'editor' ? [
