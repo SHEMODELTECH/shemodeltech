@@ -145,6 +145,41 @@ module.exports = async function handler(req, res) {
  });
  } catch (_) { /* non-blocking */ }
 
+ // STATE 5: a course they started but haven't opened in a few days.
+ try {
+   const enrolled = user.learningEnrolled || {};
+   const done = user.foundationsCourses || {}; // completed courses, by track and slug
+   const lastPart = user.learningLastPart || {};
+   const opened = user.learningLastOpened || {};
+   for (const [track, slugs] of Object.entries(enrolled)) {
+     for (const [slug, at] of Object.entries(slugs || {})) {
+       if (done?.[track]?.[slug]) continue;
+       const last = tsToDate(opened?.[track]?.[slug]) || tsToDate(at);
+       if (last && daysSince(last) < QUIET_DAYS) continue;
+       const part = lastPart?.[track]?.[slug];
+       const nice = slug.replace(/^p-/, '').replace(/-(beginner|intermediate|advanced)-course$/, '').replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+       items.push({
+         headline: `Continue ${nice}${part ? `, Part ${part}` : ''}`,
+         detail: 'You started this course. A few minutes today keeps you moving toward your certificate.',
+         link: `${SITE}/learning/${track}/${slug}`,
+       });
+       if (items.filter((i) => i.link.includes('/learning/')).length >= 2) break;
+     }
+   }
+ } catch (_) { /* non-blocking */ }
+
+ // STATE 6: unread notifications (messages, decisions, invitations).
+ try {
+   const unread = await db.collection('notifications').where('userId', '==', user.uid).where('read', '==', false).limit(20).get();
+   if (unread.size > 0) {
+     items.push({
+       headline: `You have ${unread.size}${unread.size === 20 ? '+' : ''} unread notification${unread.size === 1 ? '' : 's'}`,
+       detail: 'Messages, decisions, and invitations are waiting for you.',
+       link: `${SITE}/notifications`,
+     });
+   }
+ } catch (_) { /* non-blocking */ }
+
  // CRITICAL: nothing pending = no email... UNLESS the user is idle and we
  // want to gently encourage them to join a project in their track. To avoid
  // spamming, this nudge is throttled (at most once every few days per user).
@@ -198,6 +233,15 @@ module.exports = async function handler(req, res) {
  try { await db.collection('users').doc(user.uid).update({ lastJoinNudge: new Date() }); } catch (_) {}
  }
  }
+ }
+
+ // Test sample (?to=you&sample=1): always send, so staff can see the design.
+ if (items.length === 0 && testTo && String(req.query.sample || '') === '1') {
+   items.push({
+     headline: 'You’re all caught up (sample)',
+     detail: 'This is a sample of the daily digest. Members only receive it when something is waiting for them.',
+     link: `${SITE}/dashboard`,
+   });
  }
 
  // Still nothing? No email.
