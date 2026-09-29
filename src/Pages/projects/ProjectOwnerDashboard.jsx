@@ -16,7 +16,6 @@ import { alertStaff, notifyMember } from '../../utils/staffAlerts';
 import { isPremium } from '../../config/premium';
 import PremiumBadge from '../../components/PremiumBadge';
 import { listMySponsorRequests, listSponsoredCohorts, listSponsoredProjects } from '../../utils/sponsorships2';
-import { useFeatures } from '../../utils/features';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -53,7 +52,6 @@ const ProjectOwnerDashboard = () => {
   // applied to or joined (free or paid). Companies only have their own.
   const [view, setView] = useState('lead');
   const [isCompany, setIsCompany] = useState(false);
-  const features = useFeatures();
   // "Manage project" from a workspace opens just that project.
   const focusId = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '').get('project');
   // Projects in cohorts this company sponsors (it's added to their workspaces).
@@ -514,13 +512,11 @@ const ProjectOwnerDashboard = () => {
               </div>
               {isCompany ? (
                 <div className="flex flex-wrap gap-2">
-                  {features.paidProjects && (
-                    <Link to="/projects/new-paid" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
-                      Post a paid project
-                    </Link>
-                  )}
+                  <Link to="/projects/new-paid" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
+                    Post a paid project
+                  </Link>
                   <Link to="/projects/sponsor-cohort" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-white border border-pink-300 text-pink-700 hover:bg-pink-50 font-bold rounded-xl text-sm transition-all">
-                    {features.sponsorships ? 'Sponsor a cohort' : 'Partner with us'}
+                    Sponsor a cohort
                   </Link>
                 </div>
               ) : (
@@ -625,14 +621,10 @@ const ProjectOwnerDashboard = () => {
               <div className="text-center py-20">
                 <p className="text-gray-400 text-lg font-semibold mb-2">{isCompany ? 'No paid projects yet' : 'No projects yet'}</p>
                 <p className="text-gray-500 text-sm mb-6">
-                  {isCompany
-                    ? features.paidProjects
-                      ? 'Post a paid project to hire a team, or sponsor a cohort led by She Model Tech.'
-                      : 'Paid projects open soon. Until then, partner with us to support our training cohorts.'
-                    : 'Apply to lead a project to get started.'}
+                  {isCompany ? 'Post a paid project to hire a team, or sponsor a cohort led by She Model Tech.' : 'Apply to lead a project to get started.'}
                 </p>
                 {isCompany ? (
-                  <Link to={features.paidProjects ? '/projects/new-paid' : '/projects/sponsor-cohort'} className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-xl text-sm">{features.paidProjects ? 'Post a paid project' : 'Partner with us'}</Link>
+                  <Link to="/projects/new-paid" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-xl text-sm">Post a paid project</Link>
                 ) : (
                   <Link to="/projects" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-xl text-sm">Browse projects</Link>
                 )}

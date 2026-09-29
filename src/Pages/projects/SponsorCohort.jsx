@@ -8,7 +8,6 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import LimitHint, { countWords } from '../../components/LimitHint';
 import { SPONSOR_LIMITS as L, createSponsorRequest, listMySponsorRequests } from '../../utils/sponsorships2';
-import { useFeatures } from '../../utils/features';
 
 const EMPTY = { problemTitle: '', projects: 1, people: 4, budget: '', payPerPerson: '', focus: '', timeline: '', message: '' };
 const STATUS = { new: ['Received · awaiting payment', 'bg-amber-50 text-amber-800'], paid: ['Payment received · setting up', 'bg-sky-50 text-sky-700'], scheduled: ['Cohort created', 'bg-emerald-50 text-emerald-700'], declined: ['Not scheduled', 'bg-gray-100 text-gray-600'] };
@@ -19,8 +18,6 @@ const SponsorCohort = () => {
   const [form, setForm] = useState(EMPTY);
   const [busy, setBusy] = useState(false);
   const [mine, setMine] = useState([]);
-  const features = useFeatures();
-  const interestOnly = !features.sponsorships; // focus mode: register interest
 
   useEffect(() => {
     if (!currentUser) return;
@@ -35,13 +32,13 @@ const SponsorCohort = () => {
     e.preventDefault();
     if (countWords(form.problemTitle) < L.titleMinWords) return toast.error(`Give the problem a title of at least ${L.titleMinWords} words (you have ${countWords(form.problemTitle)}).`);
     if (countWords(form.focus) < L.focusMinWords) return toast.error(`The problem statement needs at least ${L.focusMinWords} words (you have ${countWords(form.focus)}).`);
-    if (!interestOnly && !(Number(form.budget) > 0)) return toast.error('Enter the total amount you plan to sponsor.');
+    if (!(Number(form.budget) > 0)) return toast.error('Enter the total amount you plan to sponsor.');
     setBusy(true);
     try {
       await createSponsorRequest(profile, form);
       setMine(await listMySponsorRequests(currentUser.uid));
       setForm(EMPTY);
-      toast.success(interestOnly ? 'Thank you. We’ll be in touch when partnerships open.' : 'Thank you. Our team will be in touch to set up your cohort.');
+      toast.success('Thank you. Our team will be in touch to set up your cohort.');
     } catch (err) {
       toast.error('Could not send your request.');
     }
@@ -52,18 +49,10 @@ const SponsorCohort = () => {
   const label = 'block text-sm font-semibold text-gray-800 mb-1';
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{interestOnly ? 'Partner with us' : 'Sponsor a cohort'}</h1>
-      {interestOnly && (
-        <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800">
-          <strong>We’re focused on our first training cohorts right now.</strong> Tell us what you’d like to support and
-          we’ll contact you when sponsored cohorts open. Nothing is charged, and nothing is scheduled yet.
-        </div>
-      )}
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Sponsor a cohort</h1>
       <div className="flex gap-2 mt-3 mb-4" role="tablist" aria-label="Post a project">
-        {features.paidProjects && (
-          <a role="tab" aria-selected="false" href="/projects/new-paid" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Post a paid project</a>
-        )}
-        <span role="tab" aria-selected="true" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-900 text-white">{interestOnly ? 'Partner with us' : 'Sponsor a cohort'}</span>
+        <a role="tab" aria-selected="false" href="/projects/new-paid" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Post a paid project</a>
+        <span role="tab" aria-selected="true" className="text-sm font-semibold px-4 py-2 rounded-full bg-gray-900 text-white">Sponsor a cohort</span>
       </div>
       <p className="text-gray-600 mt-2">
         Fund a cohort of real projects, led by She Model Tech. We run lead applications, leads build their teams, and
@@ -71,9 +60,7 @@ const SponsorCohort = () => {
         workspace in the cohort, so you can follow the work and talk with the teams.
       </p>
       <ol className="mt-4 grid sm:grid-cols-4 gap-2 text-xs text-gray-700 list-none p-0">
-        {(interestOnly
-          ? ['You register interest', 'We contact you', 'We agree the details', 'Your cohort runs when partnerships open']
-          : ['You send a request', 'You pay She Model Tech', 'We create your cohort', 'Your representative joins every workspace']).map((t, i) => (
+        {['You send a request', 'You pay She Model Tech', 'We create your cohort', 'Your representative joins every workspace'].map((t, i) => (
           <li key={t} className="rounded-lg bg-pink-50 border border-pink-100 p-3"><span className="font-bold text-pink-700">{i + 1}.</span> {t}</li>
         ))}
       </ol>
@@ -102,7 +89,7 @@ const SponsorCohort = () => {
             <input id="sp-people" type="number" min="1" className={input} value={form.people} onChange={(e) => setForm({ ...form, people: e.target.value })} />
           </div>
           <div>
-            <label className={label} htmlFor="sp-budget">{interestOnly ? 'Budget you have in mind (USD)' : 'Total sponsorship (USD)'} {interestOnly && <span className="font-normal text-gray-500">(optional)</span>}</label>
+            <label className={label} htmlFor="sp-budget">Total sponsorship (USD)</label>
             <input id="sp-budget" type="number" min="1" className={input} value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} />
           </div>
           <div>
@@ -119,7 +106,7 @@ const SponsorCohort = () => {
           <textarea id="sp-msg" rows={3} maxLength={L.messageMaxChars} className={input} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
         </div>
         <button type="submit" disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-60">
-          {busy ? 'Sending...' : interestOnly ? 'Register interest' : 'Send sponsorship request'}
+          {busy ? 'Sending...' : 'Send sponsorship request'}
         </button>
       </form>
 
@@ -139,9 +126,7 @@ const SponsorCohort = () => {
           </ul>
         </div>
       )}
-      {features.paidProjects && (
-        <p className="text-sm text-gray-500 mt-6">Prefer to hire directly? <Link to="/projects/new-paid" className="text-pink-700 font-semibold hover:underline">Post a paid project</Link> instead.</p>
-      )}
+      <p className="text-sm text-gray-500 mt-6">Prefer to hire directly? <Link to="/projects/new-paid" className="text-pink-700 font-semibold hover:underline">Post a paid project</Link> instead.</p>
     </div>
   );
 };

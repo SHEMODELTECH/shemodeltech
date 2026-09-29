@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { collection, query, where, onSnapshot, doc, getDoc, getDocs, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { useFeatures } from '../utils/features';
 
 const AppLayout = ({ children }) => {
   const { currentUser } = useAuth();
@@ -18,7 +17,6 @@ const AppLayout = ({ children }) => {
   const [userRole, setUserRole] = useState('member');
   const [isCompany, setIsCompany] = useState(false);
   const [hasBadge, setHasBadge] = useState(false);
-  const features = useFeatures();
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -99,8 +97,7 @@ const AppLayout = ({ children }) => {
     { path: '/projects/owner-dashboard', label: 'My Projects' },
     { path: '/project-vault', label: 'Project Vault' },
     { path: '/disputes', label: 'Payment Dispute' },
-    ...((isCompany && features.paidProjects) || userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/new-paid', label: 'Post a project' }] : []),
-    ...(isCompany && !features.paidProjects ? [{ path: '/projects/sponsor-cohort', label: features.sponsorships ? 'Sponsor a cohort' : 'Partner with us' }] : []),
+    ...(isCompany || userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/new-paid', label: 'Post a project' }] : []),
     // Members only; locked until the first earned badge.
     ...(!isCompany ? [{ path: '/projects/propose', label: 'Propose a project', locked: !hasBadge && userRole !== 'admin' && userRole !== 'editor' }] : []),
   ];

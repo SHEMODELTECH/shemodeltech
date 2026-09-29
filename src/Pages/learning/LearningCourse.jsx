@@ -22,9 +22,6 @@ import CourseForum from './CourseForum';
 import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 import { courseKey } from '../../utils/mentorStats';
 import { courseStats } from '../../utils/mentorStats';
-import MentorCourseStaffTools from '../../components/MentorCourseStaffTools';
-import { getOverrideContent } from '../../utils/courseOverrides';
-import BuiltInCourseStaffTools, { useCourseOverridesVersion } from '../../components/BuiltInCourseStaffTools';
 
 const LearningCourse = ({ reading = false }) => {
   const { track, slug } = useParams();
@@ -53,22 +50,12 @@ const LearningCourse = ({ reading = false }) => {
     };
   }, [track]);
 
-  const overridesVersion = useCourseOverridesVersion(); // staff edits to built-in courses
   const courses = useMemo(
     () => [...coursesForTrack(track).map((c) => ({ ...c, track })), ...(published || [])],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [track, published, overridesVersion]
+    [track, published]
   );
-
   const index = courses.findIndex((c) => c.slug === slug);
   const baseCourse = index >= 0 ? courses[index] : null;
-  // Built-in course whose text staff edited: load the edited text.
-  const [editedText, setEditedText] = useState(null);
-  const needsEdited = !isPublished && baseCourse?.overrideHasContent;
-  useEffect(() => {
-    if (!needsEdited) { setEditedText(null); return; }
-    getOverrideContent(track, slug).then(setEditedText).catch(() => setEditedText(null));
-  }, [needsEdited, track, slug, overridesVersion]);
 
   const pubMeta = isPublished && published ? published.find((p) => p.slug === slug) : null;
   useEffect(() => {
@@ -101,13 +88,12 @@ const LearningCourse = ({ reading = false }) => {
   }, [isPublished, authorUid, track, slug]);
 
   const course = useMemo(() => {
-    if (baseCourse && !isPublished) return editedText != null ? { ...baseCourse, markdown: editedText } : baseCourse;
     if (!baseCourse || !isPublished) return baseCourse;
     if (pubContent == null) return baseCourse;
     return baseCourse.kind === 'published-html'
       ? { ...baseCourse, html: pubContent }
       : { ...baseCourse, markdown: pubContent };
-  }, [baseCourse, isPublished, pubContent, editedText]);
+  }, [baseCourse, isPublished, pubContent]);
   const parts = useMemo(() => (course ? coursePartTitles(course) : []), [course]);
   // Only enrolled learners (and mentors and staff) can rate, comment, and post in
   // the forum. Enrolment is read from the learner's account, and the database
@@ -356,8 +342,6 @@ const LearningCourse = ({ reading = false }) => {
               <span>{trackName(track)}</span>
             </nav>
             <h1 className="fd-display text-3xl sm:text-4xl text-gray-900 leading-tight">{course.title}</h1>
-            {isPublished && <MentorCourseStaffTools course={course} onRemoved={() => navigate('/learning')} />}
-            {!isPublished && <BuiltInCourseStaffTools course={course} track={track} onRemoved={() => navigate('/learning')} />}
             {course.authorName && (
               <p className="flex flex-wrap items-center gap-2 mt-3 text-sm text-gray-700">
                 By{' '}
