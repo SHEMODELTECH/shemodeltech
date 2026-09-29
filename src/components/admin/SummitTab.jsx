@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { uploadImageToBlob } from '../../utils/blobStorage';
 import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import { minEndDate, minStartDate } from '../../utils/dateRules';
 import {
   PARTNER_OPTIONS,
   PARTNER_STATUSES,
@@ -109,8 +110,8 @@ const SummitTab = () => {
       <div className="bg-white border border-gray-200 rounded-xl p-4 grid sm:grid-cols-2 gap-3">
         <div className="sm:col-span-2"><label className={label} htmlFor="s-title">Title</label><input id="s-title" className={input} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
         <div className="sm:col-span-2"><label className={label} htmlFor="s-tag">Tagline</label><input id="s-tag" className={input} value={form.tagline} onChange={(e) => setForm({ ...form, tagline: e.target.value })} /></div>
-        <div><label className={label} htmlFor="s-start">Start date</label><input id="s-start" type="date" className={input} value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} /></div>
-        <div><label className={label} htmlFor="s-end">End date</label><input id="s-end" type="date" className={input} value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} /></div>
+        <div><label className={label} htmlFor="s-start">Start date</label><input id="s-start" type="date" min={minStartDate(editing !== 'new' ? (summits || []).find((x) => x.id === editing)?.startDate : null)} className={input} value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} /></div>
+        <div><label className={label} htmlFor="s-end">End date</label><input id="s-end" type="date" min={minEndDate(form.startDate)} className={input} value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} /></div>
         <div className="sm:col-span-2"><label className={label} htmlFor="s-venue">Venue (or "Online")</label><input id="s-venue" className={input} value={form.venue} onChange={(e) => setForm({ ...form, venue: e.target.value })} /></div>
         <div className="sm:col-span-2"><label className={label} htmlFor="s-desc">Description</label><textarea id="s-desc" rows={3} className={input} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
         {[['agenda', 'Agenda (one item per line, e.g. "9:00 Welcome")'], ['speakers', 'Speakers (one per line)'], ['workshops', 'Workshops (one per line; mark sponsored ones "Sponsored")'], ['partnerOptions', 'Partner options and pricing notes (shown on the page)']].map(([k, l]) => (

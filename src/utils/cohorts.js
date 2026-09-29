@@ -166,7 +166,7 @@ export const setCohortStatus = async (cohortId, status) =>
  * pushes the new endDate onto every project in the cohort - otherwise the
  * deadline reminders and grace period would still fire on the old dates.
  */
-export const updateCohort = async (cohortId, { name, startDate, startTime, endDate, projectCount, isPaid, payPerPerson }) => {
+export const updateCohort = async (cohortId, { name, startDate, startTime, endDate, projectCount, isPaid, payPerPerson, teamSize }) => {
   const updates = { updatedAt: serverTimestamp() };
   if (name) updates.name = name;
   if (projectCount) updates.projectCount = Number(projectCount);
@@ -234,6 +234,19 @@ export const updateCohort = async (cohortId, { name, startDate, startTime, endDa
     }
   }
 
+  // People per project: applies to every project nobody has joined yet.
+  if (teamSize) {
+    const current = (await getDoc(doc(db, 'cohorts', cohortId))).data() || {};
+    if (Number(teamSize) !== Number(current.teamSize || 0)) {
+      updates.teamSize = Math.max(2, Number(teamSize));
+      const projects = await getCohortProjects(cohortId);
+      for (const p of projects) {
+        // eslint-disable-next-line no-await-in-loop
+        if (!(p.members || []).length) await setProjectTeamSize(p, updates.teamSize).catch(() => {});
+      }
+    }
+  }
+
   await updateDoc(doc(db, 'cohorts', cohortId), updates);
 };
 
@@ -262,6 +275,28 @@ export const deleteCohort = async (cohortId) => {
 };
 
 /** Edit a generated brief before it is revealed. */
+// Fit a project's roles to a team size: the lead plus (size - 1) people.
+export const fitRolesToTeamSize = (roles, size) => {
+  const list = (Array.isArray(roles) ? roles : []).map((r) => ({ ...r, count: 0 }));
+  if (!list.length) return roles || [];
+  for (let i = 0; i < Math.max(1, Number(size) - 1); i += 1) list[i % list.length].count += 1;
+  return list.filter((r) => r.count > 0);
+};
+
+export const setProjectTeamSize = async (project, size) => {
+  const n = Math.max(2, Number(size) || 2);
+  if ((project.members || []).length > 0) throw new Error('People have already joined this project, so its team size can’t change here.');
+  const updates = { maxTeamSize: n, updatedAt: serverTimestamp() };
+  if (project.teamRoles && project.teamRoles.length) {
+    updates.teamRoles = fitRolesToTeamSize(project.teamRoles, n);
+    if (project.cohortPaid || project.isPaid) {
+      updates.totalBudget = updates.teamRoles.reduce((t, r) => t + (Number(r.count) || 1) * (Number(r.payAmount) || 0), 0);
+    }
+  }
+  if (project.proposedRoles && project.proposedRoles.length) updates.proposedRoles = fitRolesToTeamSize(project.proposedRoles, n);
+  await updateDoc(doc(db, 'projects', project.id), updates);
+};
+
 export const updateCohortProject = async (
   projectId,
   { projectTitle, projectDescription, industryTrack }

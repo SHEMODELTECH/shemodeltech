@@ -50,6 +50,7 @@ import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import { BRAND } from '../../config/brand';
 import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
 import TrainerPanel from '../../components/TrainerPanel';
+import { todayISO } from '../../utils/dateRules';
 
 const TRACKS = [
   ['', 'General'],
@@ -268,7 +269,7 @@ const MentorLetters = ({ access }) => {
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="lt-date">Needed by (optional)</label>
-            <input id="lt-date" type="date" className={input} value={form.deadline}
+            <input id="lt-date" type="date" min={todayISO()} className={input} value={form.deadline}
               onChange={(e) => setForm({ ...form, deadline: e.target.value })} />
           </div>
           <div className="sm:col-span-2 rounded-lg bg-indigo-50/60 border border-indigo-100 p-3">
@@ -1338,8 +1339,10 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
   const sendRemoval = async (reason) => {
     setBusy(true);
     try {
-      await requestRemoval(course, currentUser, reason);
-      onChange({ ...course, removalRequest: { status: 'pending', reason } });
+      // Published: remove from Learning. Draft or mentors-only: delete the course.
+      const kind = course.published ? 'remove' : 'delete';
+      await requestRemoval(course, currentUser, reason, kind);
+      onChange({ ...course, removalRequest: { status: 'pending', reason, kind } });
       setRemovalOpen(false);
       toast.success('Request sent. An admin or editor will review it.');
     } catch (e) {
@@ -1473,9 +1476,9 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
               Mentor certificate
             </button>
           )}
-          {course.published && course.removalRequest?.status !== 'pending' && (
+          {course.removalRequest?.status !== 'pending' && (
             <button onClick={() => setRemovalOpen(true)} disabled={busy} className={`${btn} border border-red-200 bg-white text-red-700 hover:bg-red-50`}>
-              Request removal
+              {course.published ? 'Request removal' : 'Request deletion'}
             </button>
           )}
           {course.removalRequest?.status === 'pending' && (
@@ -1497,7 +1500,7 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
       )}
       <NoteDialog
         open={removalOpen}
-        title="Request removal from Learning"
+        title={course.published ? 'Request removal from Learning' : 'Request deletion'}
         description="Tell us why this course should be unpublished or deleted (for example, it's outdated or has a mistake). An admin or editor reviews every request."
         placeholder="For example: the video in Lesson 2 is no longer available, and I'd like to rebuild the course."
         required

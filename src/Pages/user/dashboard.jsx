@@ -507,8 +507,7 @@ const DashboardOverview = () => {
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-1">Your Badges</h3>
               <p className="text-gray-500 text-xs mb-4">
-                The badges you’ve earned. Each project you complete in a track adds to its level.{' '}
-                <Link to="/badges" className="text-pink-700 font-semibold hover:underline">Learn how badges work</Link>
+                The badges you’ve earned. Each project you complete in a track adds to its level.
               </p>
 
               {/* Badge Levels */}
@@ -619,6 +618,10 @@ const DashboardOverview = () => {
                   );
                 })}
               </div>
+              <Link to="/badges" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-pink-700 hover:underline">
+                Learn how badges work
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              </Link>
             </div>
           )}
 
