@@ -202,7 +202,7 @@ export const JobsBoard = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs</h1>
           <p className="text-gray-600 text-sm mt-1">Full-time, part-time, contract, and internship roles from companies hiring on She Model Tech.</p>
         </div>
-        {(profile?.isCompany || isStaff) && (isStaff || canPostJobs(profile, features)) && (
+        {(profile?.isCompany || isStaff) && (
           <div className="flex gap-2">
             <Link to="/jobs/mine" className="text-sm font-semibold border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">My job posts</Link>
             <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>
@@ -385,7 +385,7 @@ export const MyJobs = () => {
             await act(() => requestJobDeletion(j, { uid: profile.uid }, reason), 'Request sent. The post is unpublished while we review it.');
           }}
         />
-        {canPostJobs(profile, features) && <Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>}
+        {<Link to="/jobs/new" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Post a job</Link>}
       </div>
       {jobs === null ? (
         <p className="text-gray-500 text-sm">Loading...</p>
@@ -450,30 +450,15 @@ export const JobForm = () => {
   }, [id]);
 
   if (!profile) return <p className="text-gray-500 text-sm">Loading...</p>;
-  if (!id && !features.companyTiers && !features.jobPosting && !['admin', 'editor'].includes(profile.role)) {
-    return (
-      <div className="max-w-xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
-        <h1 className="text-xl font-bold text-gray-900">Job posting is coming soon</h1>
-        <p className="text-gray-600 mt-2">Posting jobs is part of She Model Tech Premium, which opens soon. You can still edit or close posts you already have.</p>
-        <Link to="/jobs/mine" className="inline-block mt-4 text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg">My job posts</Link>
-      </div>
-    );
-  }
-  if (!canPostJobs(profile, features)) {
-    return (
-      <div className="max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
-        <h1 className="text-xl font-bold text-gray-900">Posting jobs is part of our company tiers</h1>
-        <p className="text-gray-700 mt-2">
-          {!profile.isCompany
-            ? 'Only company accounts can post jobs.'
-            : !profile.isVerified
-            ? 'First, get your company verified (it\u2019s free). Then any tier (Supporter, Partner, or Champion) lets you post jobs.'
-            : 'Any tier (Supporter, Partner, or Champion) lets verified companies post jobs. Partner and Champion can also feature them.'}
-        </p>
-        <Link to="/premium" className="inline-block mt-4 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">See the tiers</Link>
-      </div>
-    );
-  }
+  // Companies always see the form; until they can post, it's shown but locked.
+  const locked = !canPostJobs(profile, features) && !(id && profile.isCompany);
+  const lockedMessage = !profile.isCompany
+    ? 'Only company accounts can post jobs.'
+    : !features.companyTiers
+    ? 'Job posting opens soon, as part of our company tiers.'
+    : !profile.isVerified
+    ? 'First, get your company verified (it’s free). Then any tier lets you post jobs.'
+    : 'Job posting is included in every tier: Supporter, Partner, and Champion.';
 
   const L = JOB_LIMITS;
   const submit = async (e) => {
@@ -505,8 +490,15 @@ export const JobForm = () => {
   const label = 'block text-sm font-semibold text-gray-800 mb-1';
   const hintCls = 'font-normal text-gray-500';
   return (
-    <form onSubmit={submit} className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl p-6 space-y-4">
+    <form onSubmit={(e) => (locked ? e.preventDefault() : submit(e))} className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl p-6 space-y-4">
       <h1 className="text-2xl font-bold text-gray-900">{id ? 'Edit job' : 'Post a job'}</h1>
+      {locked && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex flex-wrap items-center justify-between gap-3">
+          <p className="m-0 text-sm text-gray-800"><strong>Coming soon.</strong> {lockedMessage}</p>
+          {profile.isCompany && <Link to="/premium" className="text-sm font-semibold bg-pink-600 text-white px-4 py-2 rounded-lg">See the tiers</Link>}
+        </div>
+      )}
+      <fieldset disabled={locked} className={locked ? 'opacity-50 pointer-events-none select-none space-y-4' : 'space-y-4'} aria-disabled={locked}>
       <div>
         <label className={label} htmlFor="job-title">Job title <span className={hintCls}>(at least {L.titleMinWords} words, up to {L.titleMaxChars} characters)</span></label>
         <input id="job-title" className={input} value={form.title} maxLength={L.titleMaxChars} onChange={(e) => setForm({ ...form, title: e.target.value })} />
@@ -562,6 +554,7 @@ export const JobForm = () => {
       <button type="submit" disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-60">
         {busy ? 'Saving...' : id ? 'Save changes' : 'Post job'}
       </button>
+      </fieldset>
     </form>
   );
 };

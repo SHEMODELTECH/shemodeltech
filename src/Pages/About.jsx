@@ -180,7 +180,7 @@ const About = () => {
               Learning
             </Link>
             <Link to="/organizations" className="hover:text-pink-600">
-              For Organizations
+              Work with us
             </Link>
             <Link to="/summit" className="hover:text-pink-600">
               Summit

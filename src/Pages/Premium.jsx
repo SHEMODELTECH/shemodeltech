@@ -13,8 +13,8 @@ import { useFeatures } from '../utils/features';
 
 const BLURB = {
   supporter: 'Hire from our talent and show your support.',
-  partner: 'Everything in Supporter, plus the Summit stage, our curriculum, and challenges.',
-  champion: 'Everything in Partner, plus speaking, training, promotion, and priority support.',
+  partner: 'Everything in Supporter, plus the Summit stage, featured jobs, and challenges.',
+  champion: 'Everything in Partner, plus a speaking slot, promotion, and priority support.',
 };
 
 const Premium = () => {

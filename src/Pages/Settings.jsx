@@ -14,6 +14,8 @@ import { enablePushForCurrentUser } from '../utils/pushNotifications';
 import { toast } from 'react-toastify';
 import CompanyDetailsForm from '../components/CompanyDetailsForm';
 import SignInMethods from '../components/SignInMethods';
+import { TIER_LABEL, companyTier, perksFor } from '../config/tiers';
+import { useFeatures } from '../utils/features';
 
 const skillTrackOpts = [
   { id: 'TechDev', label: 'Development' },
@@ -541,7 +543,7 @@ const Settings = () => {
       )}
 
       {/* What's included */}
-      {activeTab === 'membership' && <IncludedTab />}
+      {activeTab === 'membership' && <IncludedTab profile={profileData} />}
 
       {/* Account */}
       {activeTab === 'account' && (
@@ -810,7 +812,35 @@ const FeatureItem = ({ icon, label, detail, color = 'blue' }) => {
   );
 };
 
-const IncludedTab = () => {
+// Companies see their plan (tier and perks); members see what's free for them.
+const CompanyPlan = ({ profile }) => {
+  const features = useFeatures();
+  const tier = companyTier(profile);
+  return (
+    <div className="space-y-5">
+      <div className="bg-white border-2 border-pink-500 rounded-xl p-6">
+        <h3 className="text-pink-600 font-bold text-lg mb-1">Your company plan</h3>
+        <p className="text-gray-900 font-bold text-2xl mb-3">{tier ? TIER_LABEL[tier] : 'Free company'}</p>
+        <p className="text-gray-500 text-sm">
+          {!features.companyTiers
+            ? 'Company tiers open soon. Until then, your company has free access to the Talent Board.'
+            : tier
+            ? 'Your tier includes:'
+            : 'Free companies can browse the Talent Board and the Proof Wall, view profiles, and start up to 5 new conversations a month.'}
+        </p>
+        {tier && (
+          <ul className="mt-3 space-y-1 text-sm text-gray-800">
+            {perksFor(tier).map((p) => <li key={p} className="flex gap-2"><span className="text-pink-600" aria-hidden="true">✓</span>{p}</li>)}
+          </ul>
+        )}
+        <a href="/premium" className="inline-block mt-4 text-sm font-semibold text-pink-700 hover:underline">See all company tiers</a>
+      </div>
+    </div>
+  );
+};
+
+const IncludedTab = ({ profile }) => {
+  if (profile?.isCompany) return <CompanyPlan profile={profile} />;
   return (
     <div className="space-y-5">
       {/* Free banner */}
@@ -858,14 +888,6 @@ const IncludedTab = () => {
         </ul>
       </div>
 
-      <div className="bg-gradient-to-br from-amber-50 to-pink-50 border border-amber-200 rounded-xl p-6">
-        <p className="text-gray-900 text-sm font-bold">Premium for companies</p>
-        <p className="text-gray-600 text-sm mt-1">
-          Companies can add a Verified Partner badge, job posting, featured projects and jobs, in-app promotion, and
-          priority support. Mentors get featured placement and priority support free.
-        </p>
-        <a href="/premium" className="inline-block mt-3 text-sm font-semibold text-pink-700 hover:underline">See Premium</a>
-      </div>
 
       <div className="bg-white border border-gray-200 rounded-xl p-6">
         <p className="text-gray-900 text-sm font-bold mb-3">Also included</p>

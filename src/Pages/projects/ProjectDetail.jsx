@@ -625,15 +625,7 @@ const ProjectDetail = () => {
                   </button>
                 ) : memberProfile?.isCompany ? (
                   <p className="text-gray-500 text-xs">
-                    Company accounts can't lead collaborative projects or earn badges. To hire a
-                    team,{' '}
-                    <button
-                      onClick={() => navigate('/projects/new-paid')}
-                      className="text-pink-600 underline"
-                    >
-                      post a paid project
-                    </button>{' '}
-                    instead.
+                    Company accounts can follow projects and view the team, but can't lead or join them.
                   </p>
                 ) : memberProfile && !checkProfileComplete(memberProfile).complete ? (
                   <div>
@@ -711,18 +703,17 @@ const ProjectDetail = () => {
                 {memberProfile?.isCompany ? (
                   <div className="text-center py-4">
                     <p className="text-gray-900 font-semibold text-sm mb-1">
-                      Company accounts hire teams - they don't join them
+                      You're viewing this project as a company
                     </p>
                     <p className="text-gray-500 text-xs mb-3 max-w-md mx-auto">
-                      Company accounts can't apply to projects or earn badges. Instead, post a paid
-                      project: set the pay per person for every role and hire verified talent for
-                      your own team.
+                      Companies can read about She Model Tech projects and view the people on them, but
+                      can't join. Found someone great? View their profile or send them a message.
                     </p>
                     <button
-                      onClick={() => navigate('/projects/new-paid')}
+                      onClick={() => navigate('/talent-board')}
                       className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-all"
                     >
-                      Post a Paid Project
+                      Browse the Talent Board
                     </button>
                   </div>
                 ) : memberProfile && !checkProfileComplete(memberProfile).complete ? (

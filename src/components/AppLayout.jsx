@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { collection, query, where, onSnapshot, doc, getDoc, getDocs, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useFeatures } from '../utils/features';
+import { isBlockedForCompany } from '../utils/companyPaths';
 
 const AppLayout = ({ children }) => {
   const { currentUser } = useAuth();
@@ -18,6 +19,11 @@ const AppLayout = ({ children }) => {
   const [userRole, setUserRole] = useState('member');
   const [isCompany, setIsCompany] = useState(false);
   const [hasBadge, setHasBadge] = useState(false);
+  const isStaffUser = userRole === 'admin' || userRole === 'editor';
+  // Companies don't run projects or take courses: send them home from those pages.
+  useEffect(() => {
+    if (isCompany && !isStaffUser && isBlockedForCompany(location.pathname)) navigate('/dashboard', { replace: true });
+  }, [isCompany, isStaffUser, location.pathname, navigate]);
   const features = useFeatures();
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -115,7 +121,7 @@ const AppLayout = ({ children }) => {
     { path: '/proof-wall', label: 'Proof Wall', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
     { path: '/jobs', label: 'Jobs', icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
     { path: '/summit', label: 'Summit', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
-    { path: '/organizations', label: 'For Organizations', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+    { path: '/organizations', label: 'Work with us', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
     { path: '/talent-board', label: 'Talent Board', icon: 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4z' },
     { path: '/support', label: 'Support', icon: 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z' },
 ...(isCompany || userRole === 'admin' || userRole === 'editor' ? [
@@ -138,7 +144,7 @@ const AppLayout = ({ children }) => {
     ? [
         { path: '/dashboard', label: 'Home', icon: HOME_ICON },
         { path: '/talent-board', label: 'Talents', icon: 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4z' },
-        { path: '/my-workspaces', label: 'Workspace', icon: WORKSPACE_ICON },
+        { path: '/jobs', label: 'Jobs', icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
         { path: '/messages', label: 'Messages', icon: MESSAGES_ICON, badge: unreadMessages },
       ]
     : [
@@ -188,7 +194,7 @@ const AppLayout = ({ children }) => {
 
         {/* Nav */}
         <nav className="flex-1 py-6 px-3 space-y-3 lg:space-y-4 overflow-y-auto">
-          {navItems.map((item) => {
+          {navItems.filter((item) => !(isCompany && !isStaffUser && (item.label === 'Projects' || item.path === '/my-workspaces'))).map((item) => {
             // Expandable group (e.g. Projects with sub-items)
             if (item.isGroup) {
               const anyChildActive = item.children.some(c => isActive(c.path));
@@ -331,12 +337,12 @@ const AppLayout = ({ children }) => {
           <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-6 flex-shrink-0 pr-1 lg:pr-2">
             {/* Learning - opens She Model Tech Learning (/learning). Shown on every
                 screen size, since it isn't in the sidebar or the mobile bottom bar. */}
-            <Link to="/learning" aria-label="Learning" className="relative flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors text-gray-500">
+            {!(isCompany && !isStaffUser) && <Link to="/learning" aria-label="Learning" className="relative flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors text-gray-500">
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.247m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.247" />
               </svg>
               <span className="hidden lg:block text-[11px] font-semibold leading-none">Learning</span>
-            </Link>
+            </Link>}
             {/* Messaging - desktop only; on mobile it lives in the bottom bar. */}
             <Link to="/messages" className={`relative hidden lg:flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/messages' ? 'text-pink-600' : 'text-gray-500'}`}>
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">

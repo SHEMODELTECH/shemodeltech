@@ -41,13 +41,11 @@ export const PERKS = [
   ['summitTable', 'supporter', 'Summit exhibitor table (request)'],
   ['featuredJobs', 'partner', 'Featured jobs'],
   ['summitWorkshop', 'partner', 'Host a Summit workshop (request)'],
-  ['licensing', 'partner', 'Licence our curriculum (request)'],
   ['summitPanel', 'partner', 'Summit panel seat (sponsored session, approved by She Model Tech)'],
   ['proposeChallenge', 'partner', 'Propose a challenge for a She Model Tech cohort'],
   ['summitSpeaker', 'champion', 'Summit speaking slot (sponsored session, approved by She Model Tech)'],
   ['prioritySupport', 'champion', 'Priority support'],
   ['promotion', 'champion', 'In-app promotion (featured placement)'],
-  ['training', 'champion', 'Request training (online or on-site, depending on location and availability)'],
 ];
 const PERK_MIN = Object.fromEntries(PERKS.map(([k, t]) => [k, RANK[t]]));
 

@@ -14,6 +14,7 @@ import TierBadge from '../../components/TierBadge';
 import { PromotedStrip } from '../../components/PriorityBanners';
 import SummitCard from '../../components/SummitCard';
 import OrgMembershipsCard from '../../components/OrgMembershipsCard';
+import { TIER_LABEL, companyTier } from '../../config/tiers';
 import {
   computeMemberEarnings,
   computeCompanyDisbursements,
@@ -266,20 +267,21 @@ const DashboardOverview = () => {
       {/* Stats Cards */}
       {profileData?.isCompany ? (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Paid Projects Posted</p>
-            <p className="text-3xl font-bold text-gray-900">{companyStats.jobsPosted}</p>
-          </div>
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Applications Received</p>
-            <p className="text-3xl font-bold text-gray-900">{companyStats.totalApplied}</p>
-            <p className="text-gray-400 text-xs mt-1">Across all your paid projects</p>
-          </div>
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Active Projects</p>
-            <p className="text-3xl font-bold text-gray-900">{companyStats.totalViews}</p>
-            <p className="text-gray-400 text-xs mt-1">Running or awaiting payment confirmation</p>
-          </div>
+          <Link to="/premium" className="bg-white border border-gray-200 rounded-xl p-5 hover:border-pink-300">
+            <p className="text-gray-500 text-sm mb-1">Your plan</p>
+            <p className="text-2xl font-bold text-gray-900">{companyTier(profileData) ? TIER_LABEL[companyTier(profileData)] : 'Free company'}</p>
+            <p className="text-pink-700 text-xs font-semibold mt-1">See company tiers</p>
+          </Link>
+          <Link to="/talent-board" className="bg-white border border-gray-200 rounded-xl p-5 hover:border-pink-300">
+            <p className="text-gray-500 text-sm mb-1">Talent Board</p>
+            <p className="text-2xl font-bold text-gray-900">Browse talent</p>
+            <p className="text-gray-400 text-xs mt-1">Verified members with real project proof</p>
+          </Link>
+          <Link to="/jobs/mine" className="bg-white border border-gray-200 rounded-xl p-5 hover:border-pink-300">
+            <p className="text-gray-500 text-sm mb-1">Jobs</p>
+            <p className="text-2xl font-bold text-gray-900">Your job posts</p>
+            <p className="text-gray-400 text-xs mt-1">Post and manage roles</p>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -312,67 +314,12 @@ const DashboardOverview = () => {
         <div className="lg:col-span-2 space-y-6">
           {profileData?.isCompany ? (
             <div className="bg-white border border-gray-200 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900">Your Paid Projects</h3>
-                <div className="flex items-center gap-4">
-                  <Link
-                    to="/projects/new-paid"
-                    className="text-pink-600 text-sm font-medium hover:underline"
-                  >
-                    + Post Paid Project
-                  </Link>
-                  <Link
-                    to="/projects/owner-dashboard"
-                    className="text-pink-600 text-sm font-medium hover:underline"
-                  >
-                    Manage
-                  </Link>
-                </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-1">What She Model Tech members are building</h3>
+              <p className="text-gray-500 text-sm mb-4">Follow projects, badges earned, and work shipped on the Proof Wall. Open any project to see the team.</p>
+              <div className="flex flex-wrap gap-2">
+                <Link to="/proof-wall" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Open the Proof Wall</Link>
+                <Link to="/summit" className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">The Summit</Link>
               </div>
-              {companyJobs.length === 0 ? (
-                <p className="text-gray-400 text-sm">
-                  No paid projects posted yet. Post a paid project to hire a team - you set the pay
-                  per person for every role, and it's visible to talent before they apply.
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {companyJobs.map((p) => (
-                    <div
-                      key={p.id}
-                      onClick={() => navigate('/projects/owner-dashboard')}
-                      className="flex items-center justify-between p-3 border border-gray-100 rounded-lg cursor-pointer hover:bg-gray-50 transition-all"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="text-gray-900 text-sm font-medium truncate">
-                          {p.projectTitle || 'Untitled project'}
-                        </p>
-                        <p className="text-gray-400 text-xs mt-0.5 capitalize">
-                          {p.status === 'awaiting_payment_confirmation'
-                            ? 'Awaiting payment confirmation'
-                            : p.status || 'active'}
-                          {p.isPaid && p.totalBudget > 0
-                            ? ` · $${Number(p.totalBudget).toLocaleString()} budget`
-                            : ''}
-                        </p>
-                      </div>
-                      <div className="flex gap-4 flex-shrink-0 ml-3 text-center">
-                        <div>
-                          <p className="text-sm font-bold text-gray-900">
-                            {p.applicationCount || 0}
-                          </p>
-                          <p className="text-gray-400 text-[11px]">applied</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-gray-900">
-                            {(p.members || []).length}
-                          </p>
-                          <p className="text-gray-400 text-[11px]">on team</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           ) : (
             <>
@@ -625,7 +572,8 @@ const DashboardOverview = () => {
             </div>
           )}
 
-          {/* Account & Earnings */}
+          {/* Account & Earnings (members only) */}
+          {!profileData?.isCompany && (
           <div className="bg-white border border-gray-200 rounded-xl p-6">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">My Account</h3>
@@ -680,8 +628,10 @@ const DashboardOverview = () => {
                 : "Earnings from paid projects you're approved for. Confirmed payments (including any dispute-adjusted amounts) show under Earned."}
             </p>
           </div>
+          )}
 
-          {/* Plan */}
+          {/* Plan (members; companies see their tier at the top) */}
+          {!profileData?.isCompany && (
           <div className="bg-white border border-gray-200 rounded-xl p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-2">Your account</h3>
             <p className="text-pink-600 font-semibold text-lg mb-1">Free</p>
@@ -697,6 +647,7 @@ const DashboardOverview = () => {
               See what&rsquo;s included
             </Link>
           </div>
+          )}
 
         </div>
       </div>

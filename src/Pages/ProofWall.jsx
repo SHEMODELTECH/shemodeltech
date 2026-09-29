@@ -127,7 +127,8 @@ const COMPANY_FILTERS = [
   { id: 'update', label: 'Updates' },
   { id: 'talent', label: 'Top Talent' },
 ];
-const filtersFor = (isCompany) => (isCompany ? COMPANY_FILTERS : FILTERS);
+// Companies see everything members see, plus a Top Talent tab.
+const filtersFor = (isCompany) => (isCompany ? [...FILTERS, { id: 'talent', label: 'Top Talent' }] : FILTERS);
 
 // Filter ids that map directly to an activity `type` in the feed. Everything else
 // ('all', 'open', 'talent') loads the unfiltered feed and/or its own data source.
@@ -261,7 +262,7 @@ const ProofWall = () => {
   const [loadingOpen, setLoadingOpen] = useState(false);
 
   useEffect(() => {
-    if ((filter !== 'open' && filter !== 'all') || myData?.isCompany) return;
+    if (filter !== 'open' && filter !== 'all') return;
     let active = true;
     (async () => {
       setLoadingOpen(true);
@@ -385,7 +386,7 @@ const ProofWall = () => {
   // helps them find talent; they don't see calls for leads, which are for members.
   // She Model Tech staff (admins and editors) always see everything.
   const isStaffViewer = ['admin', 'editor'].includes(myData?.role);
-  const companyHiddenTypes = ['lead'];
+  const companyHiddenTypes = []; // companies see everything members see
   const visibleItems = myData?.isCompany && !isStaffViewer
     ? items.filter((a) => !companyHiddenTypes.includes(a.type))
     : items;
@@ -789,7 +790,7 @@ const ProofWall = () => {
             ))}
           </div>
         )
-      ) : filter === 'open' && !myData?.isCompany ? (
+      ) : filter === 'open' ? (
         loadingOpen ? (
           <div className="flex justify-center py-16">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
@@ -853,7 +854,7 @@ const ProofWall = () => {
       ) : (
         <>
           {/* All Activity extras: open projects (individuals) / top talent (companies) */}
-          {filter === 'all' && !myData?.isCompany && openProjects.length > 0 && (
+          {filter === 'all' && openProjects.length > 0 && (
             <div className="bg-pink-50 border border-pink-100 rounded-xl p-4 mb-3">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-pink-700 text-xs font-bold uppercase tracking-wide">

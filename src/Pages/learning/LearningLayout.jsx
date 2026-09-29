@@ -23,6 +23,17 @@ export const signInAndReturn = (navigate, path) => {
 
 const LearningLayout = ({ children, accent, bare = false }) => {
   const { currentUser } = useAuth();
+  // Learning is for members: company accounts are sent to their dashboard.
+  const navigateAway = useNavigate();
+  useEffect(() => {
+    if (!currentUser) return;
+    getDoc(doc(db, 'users', currentUser.uid))
+      .then((snap) => {
+        const d = snap.data() || {};
+        if (d.isCompany && !['admin', 'editor'].includes(d.role)) navigateAway('/dashboard', { replace: true });
+      })
+      .catch(() => {});
+  }, [currentUser, navigateAway]);
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -155,7 +166,7 @@ const LearningLayout = ({ children, accent, bare = false }) => {
             <Link to="/projects" className="hover:text-gray-900">Projects</Link>
             <Link to="/teach" className="hover:text-gray-900">Mentor</Link>
             <Link to="/about" className="hover:text-gray-900">About</Link>
-            <Link to="/organizations" className="hover:text-gray-900">For Organizations</Link>
+            <Link to="/organizations" className="hover:text-gray-900">Work with us</Link>
             <Link to="/support" className="hover:text-gray-900">Support</Link>
           </div>
           <SocialLinks size="w-4 h-4" />
