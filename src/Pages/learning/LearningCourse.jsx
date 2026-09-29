@@ -22,6 +22,7 @@ import CourseForum from './CourseForum';
 import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 import { courseKey } from '../../utils/mentorStats';
 import { courseStats } from '../../utils/mentorStats';
+import MentorCourseStaffTools from '../../components/MentorCourseStaffTools';
 
 const LearningCourse = ({ reading = false }) => {
   const { track, slug } = useParams();
@@ -342,6 +343,7 @@ const LearningCourse = ({ reading = false }) => {
               <span>{trackName(track)}</span>
             </nav>
             <h1 className="fd-display text-3xl sm:text-4xl text-gray-900 leading-tight">{course.title}</h1>
+            {isPublished && <MentorCourseStaffTools course={course} onRemoved={() => navigate('/learning')} />}
             {course.authorName && (
               <p className="flex flex-wrap items-center gap-2 mt-3 text-sm text-gray-700">
                 By{' '}

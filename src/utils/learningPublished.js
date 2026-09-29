@@ -15,14 +15,7 @@
 // publish, update, or unpublish (see firestore.rules).
 
 import { lessonsToMarkdown, parseLessons } from './teacherCourses';
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  serverTimestamp,
-  writeBatch,
-} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, serverTimestamp, writeBatch, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 const COL = 'learning_courses';
@@ -62,6 +55,7 @@ export const getPublishedContent = async (id, chunkCount) => {
 export const toCatalogCourse = (p) => ({
   slug: `${PUBLISHED_PREFIX}${p.id}`,
   publishedId: p.id,
+  sourceTeacherId: p.sourceTeacherId || null,
   track: p.track,
   title: p.title,
   summary: p.summary || '',
@@ -158,4 +152,21 @@ export const unpublishFromLearning = async (teacherCourse) => {
   batch.delete(doc(db, COL, id));
   batch.set(doc(db, 'teacher_courses', teacherCourse.id), { published: null }, { merge: true });
   await batch.commit();
+};
+
+/**
+ * Remove a published mentor course from Learning by its published id. Works
+ * even if its Mentor Hub source was deleted (for example, the mentor was removed).
+ */
+export const removePublishedCourse = async (publishedId) => {
+  const prev = await getPublished(publishedId);
+  if (!prev) return;
+  const batch = writeBatch(db);
+  for (let i = 0; i < (prev.chunkCount || 0); i++) batch.delete(doc(db, COL, publishedId, 'chunks', String(i)));
+  batch.delete(doc(db, COL, publishedId));
+  await batch.commit();
+  if (prev.sourceTeacherId) {
+    // Tidy the Mentor Hub copy, if it still exists.
+    await setDoc(doc(db, 'teacher_courses', prev.sourceTeacherId), { published: null }, { merge: true }).catch(() => {});
+  }
 };

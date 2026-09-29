@@ -12,6 +12,7 @@ import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { courseRating } from '../../utils/mentorStats';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import MentorCourseStaffTools from '../../components/MentorCourseStaffTools';
 
 // "Coding Developer Foundations" -> "Coding Developer"
 export const trackName = (t) => trackMeta(t).label.replace(/\s+Foundations$/, '');
@@ -279,7 +280,7 @@ const LearningHome = ({ mine = false }) => {
                   .sort((a, b) => (b.publishedAtMs || 0) - (a.publishedAtMs || 0))
                   .slice(0, 4)
                   .map((c) => (
-                    <CourseCard key={c.track + c.slug} course={c} status={statusOf(c)} progress={progressOf(c)} />
+                    <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /></div>
                   ))}
               </div>
             </div>
@@ -440,7 +441,7 @@ const LearningHome = ({ mine = false }) => {
                   </div>
                   <div className="lr-grid">
                     {list.slice(0, 4).map((c) => (
-                      <CourseCard key={c.slug} course={c} status={statusOf(c)} progress={progressOf(c)} />
+                      <div key={c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /></div>
                     ))}
                   </div>
                 </section>
@@ -464,6 +465,7 @@ const LearningHome = ({ mine = false }) => {
                       label === 'Completed' ? (
                         <div key={c.track + c.slug} className="flex flex-col gap-2">
                           <CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} />
+                          <MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} />
                           <button
                             onClick={async () => {
                               try {
@@ -479,7 +481,7 @@ const LearningHome = ({ mine = false }) => {
                           </button>
                         </div>
                       ) : (
-                        <CourseCard key={c.track + c.slug} course={c} status={statusOf(c)} progress={progressOf(c)} />
+                        <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /></div>
                       )
                     )}
                   </div>
@@ -492,7 +494,7 @@ const LearningHome = ({ mine = false }) => {
             </p>
             <div className="lr-grid">
               {filtered.map((c) => (
-                <CourseCard key={c.track + c.slug} course={c} status={statusOf(c)} progress={progressOf(c)} />
+                <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /></div>
               ))}
             </div>
           </section>
