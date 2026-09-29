@@ -489,7 +489,11 @@ const notify = async (uid, payload) => {
  * at least one badge to apply, and no badge is awarded; members receive a
  * verified paid work-experience record in the company's name instead.
  */
+// kind: 'free' (She Model Tech free project, badges) | 'project' (paid) | 'freelance' (paid, one person).
+// Posted by She Model Tech staff, She Model Tech runs it and pays members on paid work.
 export const createCompanyProject = async ({ company, title, description, startDate, endDate, roles, kind = 'project', cohortGroupId = null }) => {
+  const isStaffPoster = ['admin', 'editor'].includes(company?.role);
+  const isFree = kind === 'free';
   const gate = canHostCohort(company);
   if (!gate.allowed) throw new Error(gate.reason);
   if (!title?.trim()) throw new Error('Give the project a title.');
@@ -504,7 +508,7 @@ export const createCompanyProject = async ({ company, title, description, startD
     skills: r.skills || '',
     count: kind === 'freelance' ? 1 : parseInt(r.count, 10) || 1,
     experienceLevel: 'any-level',
-    payAmount: String(Number(r.payAmount) || 0),
+    payAmount: isFree ? '' : String(Number(r.payAmount) || 0),
   }));
   const companyName = company.companyProfile?.companyName || company.companyName || company.displayName || 'Company';
   const ref = await addDoc(collection(db, 'projects'), {
@@ -516,15 +520,17 @@ export const createCompanyProject = async ({ company, title, description, startD
     endDate,
     teamRoles,
     maxTeamSize: teamRoles.reduce((n, r) => n + r.count, 0),
-    totalBudget: teamRoles.reduce((n, r) => n + r.count * (Number(r.payAmount) || 0), 0),
-    isPaid: true,
-    paidBy: companyName,
-    isCompanyPost: true,
-    companyKind: kind, // 'project' | 'cohort' | 'freelance'
+    totalBudget: isFree ? 0 : teamRoles.reduce((n, r) => n + r.count * (Number(r.payAmount) || 0), 0),
+    isPaid: !isFree,
+    paidBy: isFree ? null : isStaffPoster ? 'She Model Tech' : companyName,
+    // Staff posts are She Model Tech projects (She Model Tech pays members on paid work).
+    isCompanyPost: !isStaffPoster,
+    companyKind: kind, // 'free' | 'project' | 'freelance'
     cohortGroupId: kind === 'cohort' ? cohortGroupId : null,
-    companyName,
+    companyName: isStaffPoster ? 'She Model Tech' : companyName,
     companyVerified: !!company.isVerified,
-    awardsBadges: false,
+    // Free She Model Tech projects award badges; paid work gives a work record.
+    awardsBadges: isFree,
     submitterId: company.uid,
     submitterEmail: company.email || null,
     submitterName: companyName,

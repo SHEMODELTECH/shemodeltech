@@ -292,7 +292,6 @@ const ProjectsListing = () => {
     // Focus mode: paid company work and paid cohorts stay hidden until switched on.
     if (!isAdmin) {
       if (!features.paidProjects) result = result.filter((p) => !p.isCompanyPost && !p.isCompanyProject);
-      if (!features.paidCohorts) result = result.filter((p) => !p.cohortPaid);
     }
     setFilteredProjects(result);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -496,15 +496,12 @@ const CohortManager = () => {
           <fieldset className="mb-3">
             <legend className="block text-xs font-bold text-gray-900 mb-1">Type</legend>
             <div className="flex gap-2">
-              {[[false, 'Free cohort'], ...(features.paidCohorts ? [[true, 'Paid cohort (paid by She Model Tech)']] : [])].map(([v, l]) => (
+              {[[false, 'Free cohort'], [true, 'Paid cohort (paid by She Model Tech)']].map(([v, l]) => (
                 <button key={l} type="button" aria-pressed={isPaid === v} onClick={() => setIsPaid(v)}
                   className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${isPaid === v ? 'bg-gray-900 border-gray-900 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>{l}</button>
               ))}
             </div>
           </fieldset>
-          {!features.paidCohorts && (
-            <p className="text-[11px] text-gray-500 mb-3">Paid cohorts are switched off (Admin → Overview → Launch settings).</p>
-          )}
           {isPaid && (
             <div className="mb-3">
               <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-pay">Pay per person (USD) <span className="font-normal text-gray-500">(paid by She Model Tech on completion)</span></label>

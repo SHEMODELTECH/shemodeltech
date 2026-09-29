@@ -42,7 +42,8 @@ const HostCohort = () => {
   // What kind of paid work: one project, a cohort (several projects that start
   // and finish together), or freelance (one person).
   const groupFromLink = qs.get('group');
-  const [kind, setKind] = useState(groupFromLink ? 'cohort' : 'project');
+  const [kind, setKind] = useState('free');
+  const isFree = kind === 'free';
   const [groupId] = useState(groupFromLink || `g${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`);
   const [created, setCreated] = useState(null);
   // Optional lead: members apply for the Project Lead role and you approve them,
@@ -214,11 +215,11 @@ const HostCohort = () => {
         <legend className="block text-sm font-bold text-gray-900 mb-2">What are you posting?</legend>
         <div className="grid sm:grid-cols-3 gap-2">
           {[
-            ['project', 'Paid project', 'A team builds one project.'],
-            ['cohort', 'Paid cohort', 'Several projects that start and finish together.'],
-            ['freelance', 'Freelance', 'Hire exactly one person, no team.'],
+            ['free', 'Free project', 'A team builds it and earns badges. No pay.'],
+            ['project', 'Paid project', 'She Model Tech pays each member.'],
+            ['freelance', 'Freelance', 'Hire exactly one person (paid), no team.'],
           ].map(([k, l, d]) => (
-            <button key={k} type="button" aria-pressed={kind === k} disabled={!!groupFromLink && k !== 'cohort'}
+            <button key={k} type="button" aria-pressed={kind === k}
               onClick={() => { setKind(k); if (k === 'freelance') setRoles((rs) => [{ ...rs[0], count: 1 }]); }}
               className={`text-left rounded-xl border p-3 ${kind === k ? 'border-pink-500 bg-pink-50' : 'border-gray-200 bg-white'} disabled:opacity-40`}>
               <span className="block text-sm font-semibold text-gray-900">{l}</span>
@@ -226,11 +227,7 @@ const HostCohort = () => {
             </button>
           ))}
         </div>
-        {kind === 'cohort' && (
-          <p className="text-xs text-gray-600 mt-2">
-            Post each project in the cohort one at a time with the same dates. After posting, choose <strong>Add another project to this cohort</strong>.
-          </p>
-        )}
+        <p className="text-xs text-gray-600 mt-2">Need several projects that start and finish together? Use <a href="/admin/cohorts" className="text-pink-700 font-semibold underline">Create a cohort</a>.</p>
       </fieldset>
 
       <label className="block text-sm font-bold text-gray-900 mb-1.5">Project title *</label>
@@ -279,7 +276,7 @@ const HostCohort = () => {
 
       <div className="flex items-center justify-between mb-2">
         <label className="block text-sm font-bold text-gray-900">Roles &amp; pay *</label>
-        <span className="text-gray-500 text-xs">Total budget: {formatMoney(totalBudget)}</span>
+        {!isFree && <span className="text-gray-500 text-xs">Total budget: {formatMoney(totalBudget)}</span>}
       </div>
       <p className="text-gray-500 text-xs mb-3">
         Every role must be paid. Pay is shown to applicants before they apply.
@@ -304,14 +301,14 @@ const HostCohort = () => {
             />
           </div>
           <div className="flex flex-wrap gap-2">
-            <input
+            {!isFree && <input
               type="number"
               min="1"
               value={r.payAmount}
               onChange={(e) => setRole(i, 'payAmount', e.target.value)}
               placeholder="Pay per person (USD)"
               className="w-full sm:w-48 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500"
-            />
+            />}
             <input
               value={r.skills}
               onChange={(e) => setRole(i, 'skills', e.target.value)}
@@ -339,7 +336,7 @@ const HostCohort = () => {
               <span className="block text-xs text-gray-500">Members apply to lead; you approve. The lead runs the team, and you stay in the workspace.</span>
             </span>
           </label>
-          {hireLead && (
+          {hireLead && !isFree && (
             <label className="block mt-3 text-xs font-semibold text-gray-700">Lead’s pay (USD)
               <input type="number" min="1" value={leadPay} onChange={(e) => setLeadPay(e.target.value)} className="block mt-1 w-40 px-3 py-2 rounded-lg border border-gray-300 text-sm" />
             </label>
@@ -358,14 +355,15 @@ const HostCohort = () => {
         <p className="text-xs text-gray-600 mb-8">Freelance projects hire exactly one person for one role.</p>
       )}
 
-      <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-6">
-        <p className="text-gray-900 text-xs font-bold mb-1">How payment works</p>
-        <p className="text-gray-600 text-xs leading-relaxed">
-          You pay members directly, She Model Tech never holds the funds. When you mark the project
-          complete, each member confirms she was paid. Unresolved non-payment is reviewed by our
-          team and can end hosting access and your plan.
-        </p>
-      </div>
+      {!isFree && (
+        <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-6">
+          <p className="text-gray-900 text-xs font-bold mb-1">How payment works</p>
+          <p className="text-gray-600 text-xs leading-relaxed">
+            She Model Tech pays each member after the work is done. On the project’s payments page, staff mark
+            payments as sent and each member confirms she was paid.
+          </p>
+        </div>
+      )}
 
       <button
         type="button"

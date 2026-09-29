@@ -9,7 +9,6 @@ import { setFeature, useFeatures } from '../../utils/features';
 
 const ROWS = [
   ['paidProjects', 'Paid projects from companies', 'Companies post paid projects, company cohorts, and freelance work. Members need a badge to apply.', 'badgeHolders', 20, 'members with a badge'],
-  ['paidCohorts', 'Paid cohorts by She Model Tech', 'You create cohorts where She Model Tech pays the lead and collaborators.', null, null, 'Bank account, Stripe, and visa advice in place'],
   ['sponsorships', 'Sponsored cohorts', 'Companies sponsor a cohort and pay She Model Tech. While off, companies can only register interest.', 'completedCohorts', 2, 'completed cohorts'],
   ['jobPosting', 'Job posting (before tiers)', 'Lets companies post jobs while Company tiers is off. Once tiers are on, any tier can post and this switch no longer matters.', null, null, 'Usually leave off'],
   ['companyTiers', 'Company tiers', 'Supporter, Partner, and Champion rules apply to companies. Companies without a tier become free companies (5 new conversations a month, no job posting). Set tiers first in Admin → Users.', null, null, 'Tiers assigned to your early partners'],
