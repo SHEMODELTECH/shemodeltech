@@ -130,7 +130,6 @@ const Organizations = () => {
               <li>Instructor editions, so your own teachers can run the course</li>
               <li>Invite links that bring your learners onto the platform under your organization</li>
             </ul>
-            <Link to="/learning" className="inline-block mt-3 text-sm font-semibold text-pink-700 hover:underline">Browse our courses</Link>
           </section>
         </div>
 
