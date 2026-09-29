@@ -521,11 +521,7 @@ const ProjectOwnerDashboard = () => {
                     Company tiers
                   </Link>
                 </div>
-              ) : (
-                <Link to="/projects" className="inline-flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
-                  Apply to lead a project
-                </Link>
-              )}
+              ) : null /* members use "Browse projects" below; no duplicate button */}
             </div>
 
             {!isCompany && (
@@ -625,7 +621,7 @@ const ProjectOwnerDashboard = () => {
                 <p className="text-gray-500 text-sm mb-6">
                   {isCompany
                     ? 'She Model Tech runs every project. Explore the Talent Board, and see our company tiers for jobs, the Summit, and more.'
-                    : 'Apply to lead a project to get started.'}
+                    : 'Browse projects to find one to join or lead.'}
                 </p>
                 {isCompany ? (
                   <Link to="/premium" className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-xl text-sm">See company tiers</Link>
