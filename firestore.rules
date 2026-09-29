@@ -354,6 +354,12 @@ service cloud.firestore {
 
  // Courses published to Learning from Teacher. Public to read, like the rest of
  // the Learning catalog; only admins and editors can publish, update, or remove.
+ // Launch switches (admin-only), readable by everyone so the site can adapt.
+ match /app_settings/{id} {
+ allow read: if true;
+ allow write: if isAdmin();
+ }
+
  // Staff edits to the built-in courses (admins and editors).
  match /course_overrides/{id} {
  allow read: if true;

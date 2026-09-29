@@ -33,7 +33,7 @@ import {
 import { clearAllTestData } from '../../utils/adminDataReset';
 import { sendPush } from '../../utils/pushNotifications';
 import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTeacher } from '../../utils/teachers';
-import { listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
+import { deleteTeacherCourse, listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { notifyMember } from '../../utils/staffAlerts';
 import { isPremium } from '../../config/premium';
@@ -42,6 +42,8 @@ import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import OrgRequestsTab from '../../components/admin/OrgRequestsTab';
 import SummitTab from '../../components/admin/SummitTab';
 import AttentionBoard from '../../components/admin/AttentionBoard';
+import { unpublishFromLearning } from '../../utils/learningPublished';
+import LaunchSettings from '../../components/admin/LaunchSettings';
 
 const fmtDate = (ts) => {
   try {
@@ -98,6 +100,31 @@ const AdminPanel = () => {
   const [deletionReqs, setDeletionReqs] = useState([]);
   const [teacherApps, setTeacherApps] = useState(null);
   const [pendingCourses, setPendingCourses] = useState(null);
+  // Every mentor course, so admins can review or delete any of them directly.
+  const [allCourses, setAllCourses] = useState(null);
+  const [courseQuery, setCourseQuery] = useState('');
+  const [courseView, setCourseView] = useState('all'); // all | published | pending | draft | orphaned
+  const deleteCourseDirect = async (c) => {
+    const mentorGone = c.createdBy?.uid && !users.some((u) => u.id === c.createdBy.uid && (u.isTeacher || ['admin', 'editor'].includes(u.role)));
+    if (!window.confirm(`Delete "${c.title}"${c.published ? ' and remove it from Learning' : ''}? This can't be undone.${mentorGone ? '' : ' The mentor will be notified.'}`)) return;
+    try {
+      if (c.published) await unpublishFromLearning(c);
+      await deleteTeacherCourse(c);
+      if (c.createdBy?.uid && !mentorGone) {
+        notifyMember(c.createdBy.uid, {
+          type: 'teacher_course_deleted',
+          title: 'A course was removed',
+          body: `She Model Tech removed "${c.title}" from the Mentor Hub. Message us if you have questions.`,
+          link: '/teacher',
+        });
+      }
+      setAllCourses((xs) => (xs || []).filter((x) => x.id !== c.id));
+      setPendingCourses((xs) => (xs || []).filter((x) => x.id !== c.id));
+      toast.success('Course deleted.');
+    } catch (e) {
+      toast.error(friendlyError(e, 'Could not delete the course.'));
+    }
+  };
   const [letterReqs, setLetterReqs] = useState(null);
   const [letterDialog, setLetterDialog] = useState(null); // { req, status: 'sent' | 'declined' }
   const [letterBusy, setLetterBusy] = useState(false);
@@ -177,8 +204,11 @@ const AdminPanel = () => {
         .then(setTeacherApps)
         .catch(() => setTeacherApps([]));
       listTeacherCourses()
-        .then((list) => setPendingCourses(list.filter((c) => reviewStatus(c) === 'pending' || c.removalRequest?.status === 'pending')))
-        .catch(() => setPendingCourses([]));
+        .then((list) => {
+          setAllCourses(list);
+          setPendingCourses(list.filter((c) => reviewStatus(c) === 'pending' || c.removalRequest?.status === 'pending'));
+        })
+        .catch(() => { setPendingCourses([]); setAllCourses([]); });
       listLetterRequests()
         .then(setLetterReqs)
         .catch(() => setLetterReqs([]));
@@ -916,6 +946,7 @@ const AdminPanel = () => {
       )}
 
       {/* OVERVIEW */}
+      {!loadingData && tab === 'overview' && isAdmin && <LaunchSettings currentUser={currentUser} />}
       {!loadingData && tab === 'overview' && (
         <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
       )}
@@ -1393,6 +1424,64 @@ const AdminPanel = () => {
                 ))}
               </div>
             )}
+          </div>
+          <div>
+            <h3 className="text-gray-900 font-bold mb-2">All mentor courses</h3>
+            {allCourses === null ? (
+              <p className="text-gray-400 text-sm">Loading...</p>
+            ) : (() => {
+              const mentorActive = (c) => users.some((u) => u.id === c.createdBy?.uid && (u.isTeacher || ['admin', 'editor'].includes(u.role)));
+              const stateOf = (c) => (c.published ? 'published' : reviewStatus(c) === 'pending' ? 'pending' : 'draft');
+              const counts = {
+                all: allCourses.length,
+                published: allCourses.filter((c) => c.published).length,
+                pending: allCourses.filter((c) => stateOf(c) === 'pending').length,
+                draft: allCourses.filter((c) => stateOf(c) === 'draft').length,
+                orphaned: allCourses.filter((c) => !mentorActive(c)).length,
+              };
+              const q = courseQuery.trim().toLowerCase();
+              const rows = allCourses
+                .filter((c) => courseView === 'all' || (courseView === 'orphaned' ? !mentorActive(c) : stateOf(c) === courseView))
+                .filter((c) => !q || `${c.title} ${c.createdBy?.name || ''}`.toLowerCase().includes(q));
+              return (
+                <>
+                  <div className="flex flex-wrap gap-2 mb-2" role="group" aria-label="Show courses">
+                    {[['all', 'All'], ['published', 'Published'], ['pending', 'Awaiting review'], ['draft', 'Drafts'], ['orphaned', 'Mentor no longer active']].map(([v, l]) => (
+                      <button key={v} type="button" aria-pressed={courseView === v} onClick={() => setCourseView(v)}
+                        className={`text-xs font-semibold px-3 py-1.5 rounded-full ${courseView === v ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+                        {l} ({counts[v]})
+                      </button>
+                    ))}
+                  </div>
+                  <input value={courseQuery} onChange={(e) => setCourseQuery(e.target.value)} placeholder="Search by course or mentor"
+                    className="w-full mb-3 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-pink-500 focus:outline-none" />
+                  {rows.length === 0 ? (
+                    <p className="text-gray-400 text-sm">No courses match.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {rows.map((c) => (
+                        <div key={c.id} className="bg-white border border-gray-200 rounded-lg p-3 flex flex-wrap items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-gray-900 text-sm font-medium truncate">{c.title}</p>
+                            <p className="text-gray-400 text-xs">
+                              {c.published ? 'Published' : stateOf(c) === 'pending' ? 'Awaiting review' : 'Draft'} · by {c.createdBy?.name || 'unknown'}
+                              {!mentorActive(c) && <span className="text-red-600 font-semibold"> · mentor no longer active</span>}
+                              {c.removalRequest?.status === 'pending' && <span className="text-red-700 font-semibold"> · deletion requested</span>}
+                            </p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Link to={`/teacher/${c.id}`} className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-300 hover:bg-gray-50">Open</Link>
+                            {isAdmin && (
+                              <button onClick={() => deleteCourseDirect(c)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100">Delete</button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
           {/* Applications and mentor roles are admin-only. */}
           {isAdmin && (<>
