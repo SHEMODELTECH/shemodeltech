@@ -102,12 +102,12 @@ const AppLayout = ({ children }) => {
   // 'paid' projects - enforced in ProjectDetail and ProjectSubmission.
   const projectChildren = [
     { path: '/projects', label: 'All Projects' },
-    { path: '/projects/owner-dashboard', label: 'My Projects' },
+    // Staff develop members through cohorts, so they don't need My Projects here.
+    ...(userRole === 'admin' || userRole === 'editor' ? [] : [{ path: '/projects/owner-dashboard', label: 'My Projects' }]),
     { path: '/project-vault', label: 'Project Vault' },
     { path: '/disputes', label: 'Payment Dispute' },
     // Only She Model Tech staff post projects (free and paid). Companies don't run projects.
     ...(userRole === 'admin' || userRole === 'editor' ? [
-      { path: '/projects/new-paid', label: 'Post a project' },
       // Staff project tools live here, not on the Admin dashboard.
       { path: '/admin/cohorts', label: 'Create a cohort' },
       { path: '/admin/lead-applications', label: 'Lead applications' },
