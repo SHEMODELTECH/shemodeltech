@@ -131,7 +131,7 @@ const DisputePage = () => {
 
           if (isAdmin) {
             const snap = await getDocs(query(collection(db, 'projects'), where('status', '==', 'awaiting_payment_confirmation')));
-            snap.docs.forEach(d => { const p = { id: d.id, ...d.data() }; if (hasOpenDispute(p)) found.set(p.id, p); });
+            snap.docs.forEach(d => { const p = { id: d.id, ...d.data() }; if (hasOpenDispute(p) || unresolved(p)) found.set(p.id, p); });
           } else {
             const involved = new Map();
             try {
@@ -270,7 +270,7 @@ const DisputePage = () => {
         </p>
         {disputes.length === 0 ? (
           <div className="bg-white border border-gray-200 rounded-xl p-10 text-center">
-            <p className="text-gray-900 font-semibold text-lg mb-2">{isAdmin ? 'No open disputes' : 'Nothing awaiting confirmation'}</p>
+            <p className="text-gray-900 font-semibold text-lg mb-2">{isAdmin ? 'No payments or disputes need attention' : 'Nothing awaiting confirmation'}</p>
             <p className="text-gray-400 text-sm">Completed paid projects with confirmed payments live in the <Link to="/project-vault" className="text-pink-600 hover:underline">Project Vault</Link>.</p>
           </div>
         ) : (

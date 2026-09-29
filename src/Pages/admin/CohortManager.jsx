@@ -40,6 +40,7 @@ import { logActivity as logProof } from '../../utils/activityFeed';
 import { approveProposal, listProposals } from '../../utils/projectProposals';
 import { declineSponsorRequest, listSponsorRequests, markSponsorPaid, markSponsorScheduled } from '../../utils/sponsorships2';
 import { checkDates, minEndDate, minStartDate, todayISO } from '../../utils/dateRules';
+import NoteDialog from '../../components/NoteDialog';
 
 const PHASES = [
   { id: COHORT_STATUS.DRAFT, label: 'Draft', hint: 'Projects generated, hidden from members' },
@@ -85,6 +86,7 @@ const CohortManager = () => {
   // Company sponsorship requests (a sponsored cohort adds the company to every workspace).
   const [sponsorReqs, setSponsorReqs] = useState([]);
   const [sponsorReqId, setSponsorReqId] = useState('');
+  const [declineSponsor, setDeclineSponsor] = useState(null);
   useEffect(() => {
     listSponsorRequests().then((l) => setSponsorReqs(l.filter((x) => ['new', 'paid'].includes(x.status)))).catch(() => {});
   }, []);
@@ -410,6 +412,25 @@ const CohortManager = () => {
         </button>
       </div>
 
+      <NoteDialog
+        open={!!declineSponsor}
+        title="Decline this sponsorship"
+        description={declineSponsor ? `Tell ${declineSponsor.companyName} why (optional). They can reply in Messages.` : ''}
+        placeholder="For example: we can't fit this into a cohort before next quarter."
+        confirmLabel="Decline"
+        onCancel={() => setDeclineSponsor(null)}
+        onConfirm={async (note) => {
+          const x = declineSponsor;
+          try {
+            await declineSponsorRequest(x, note || '', currentUser);
+            setSponsorReqs((xs) => xs.filter((y) => y.id !== x.id));
+            toast.success('Declined. The company has been told.');
+          } catch (e) {
+            toast.error('Could not decline it.');
+          }
+          setDeclineSponsor(null);
+        }}
+      />
       {sponsorReqs.length > 0 && (
         <div className="mb-8 bg-white border border-pink-200 rounded-xl p-5">
           <h2 className="font-bold text-gray-900 mb-3">Sponsorship requests</h2>
@@ -425,7 +446,7 @@ const CohortManager = () => {
                     <div className="flex gap-2">
                       <button onClick={async () => { await markSponsorPaid(x, currentUser); setSponsorReqs((xs) => xs.map((y) => (y.id === x.id ? { ...y, status: 'paid' } : y))); toast.success('Payment confirmed. Create the cohort and choose this sponsor.'); }}
                         className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg">Payment received</button>
-                      <button onClick={async () => { const note = window.prompt('Optional note for the company:') || ''; await declineSponsorRequest(x, note, currentUser); setSponsorReqs((xs) => xs.filter((y) => y.id !== x.id)); }}
+                      <button onClick={() => setDeclineSponsor(x)}
                         className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
                     </div>
                   ) : (

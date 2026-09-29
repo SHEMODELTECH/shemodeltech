@@ -19,7 +19,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
   useEffect(() => {
     (async () => {
       const [
-        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors,
+        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments,
       ] = await Promise.all([
         count(query(collection(db, 'projects'), where('reviewStatus', '==', 'submitted'))),
         count(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
@@ -49,8 +49,9 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
           }
         })(),
         isAdmin ? count(query(collection(db, 'sponsor_requests'), where('status', '==', 'new'))) : 0,
+        count(query(collection(db, 'projects'), where('status', '==', 'awaiting_payment_confirmation'))),
       ]);
-      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors });
+      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments });
     })();
   }, [isAdmin]);
 
@@ -58,6 +59,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
   const cards = [
     ['Projects to review', c.reviews, 'Submitted by leads for She Model Tech review', { tab: 'reviews' }],
     ['Lead applications', c.leadApps + c.proposals, `${c.leadApps} waiting · ${c.proposals} project proposal${c.proposals === 1 ? '' : 's'}`, { to: '/admin/lead-applications' }],
+    ['Payments in progress', c.payments, 'Paid projects waiting on payments or confirmations', { to: '/disputes' }],
     ['Extra time requests', c.extension, 'Cohort leads asking for more time', { tab: 'projects' }],
     ['Mentor courses', c.capstone, 'Courses to approve, or deletion requests', { tab: 'teachers' }],
     ['Mentor letters', c.letters, 'Recommendation and volunteer letters', { tab: 'teachers' }],

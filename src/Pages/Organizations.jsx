@@ -10,7 +10,6 @@ import LimitHint, { countWords } from '../components/LimitHint';
 import { useAuth } from '../context/AuthContext';
 import { ORG_LIMITS, ORG_TYPES, REQUEST_TYPES, STATUS_LABELS, createOrgRequest, listMyOrgRequests } from '../utils/organizations';
 import { getStaff } from '../utils/staffAlerts';
-import { useFeatures } from '../utils/features';
 
 const EMPTY = {
   type: 'training',
@@ -32,8 +31,6 @@ const Organizations = () => {
   const [params] = useSearchParams();
   const [form, setForm] = useState(EMPTY);
   const [busy, setBusy] = useState(false);
-  const features = useFeatures();
-  const interestOnly = !features.orgTraining; // focus mode: register interest
   const [sent, setSent] = useState(false);
   const navigate = useNavigate();
   // Signed-in requesters see their requests and can chat with our team.
@@ -99,12 +96,6 @@ const Organizations = () => {
           Schools, universities, companies, and nonprofits work with us to train students and staff in tech skills.
           Every fee supports our mission as a registered 501(c)(3) nonprofit.
         </p>
-        {interestOnly && (
-          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800 max-w-3xl">
-            <strong>Training partnerships open soon.</strong> We’re focused on our first training cohorts right now.
-            Register your interest below and we’ll contact you when we open training and curriculum partnerships.
-          </div>
-        )}
 
         <div className="grid md:grid-cols-2 gap-5 mt-10">
           <section className="rounded-2xl border border-gray-200 p-6">
@@ -225,7 +216,7 @@ const Organizations = () => {
               </div>
               <div className="sm:col-span-2">
                 <button type="submit" disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg disabled:opacity-60">
-                  {busy ? 'Sending...' : interestOnly ? 'Register interest' : 'Send request'}
+                  {busy ? 'Sending...' : 'Send request'}
                 </button>
               </div>
             </form>

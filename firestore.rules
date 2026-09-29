@@ -417,7 +417,8 @@ service cloud.firestore {
  && request.resource.data.get('focus', '').size() <= 3000
  && request.resource.data.get('message', '').size() <= 1500;
  allow read: if isReviewer() || (isSignedIn() && resource.data.companyUid == myUid());
- allow update, delete: if isAdmin();
+ allow update: if isReviewer();
+ allow delete: if isAdmin();
  }
 
  // Organizations: training contract and course licensing requests. Anyone can
