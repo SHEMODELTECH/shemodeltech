@@ -483,7 +483,9 @@ service cloud.firestore {
 
  // Members' project proposals (projects they'd like to lead). Staff review them.
  match /project_proposals/{id} {
- allow create: if isSignedIn() && request.resource.data.uid == myUid()
+ // Proposals are closed: projects come from She Model Tech cohorts. Staff can
+ // still review any that were sent before.
+ allow create: if false && isSignedIn() && request.resource.data.uid == myUid()
  && request.resource.data.status == 'new'
  && request.resource.data.title is string && request.resource.data.title.size() <= 120
  && request.resource.data.description is string && request.resource.data.description.size() <= 4000

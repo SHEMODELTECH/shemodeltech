@@ -40,7 +40,6 @@ const MyJobs = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.
 const Premium = lazy(() => import('./Pages/Premium'));
 const Summit = lazy(() => import('./Pages/Summit'));
 const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
-const ProposeProjectPage = lazy(() => import('./Pages/projects/ProposeProjectPage'));
 const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
 const EditCourse = lazy(() => import('./Pages/learning/ManageCourses'));
@@ -215,7 +214,8 @@ function App() {
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
                 <Route path="/summit" element={<Summit />} />
                 <Route path="/support-our-mission" element={<SupportMission />} />
-                <Route path="/projects/propose" element={<SidebarRoute><ProposeProjectPage /></SidebarRoute>} />
+                {/* Project proposals are closed: projects come from She Model Tech cohorts. */}
+                <Route path="/projects/propose" element={<Navigate to="/projects" replace />} />
                 <Route path="/badges" element={<SidebarRoute><BadgesInfo /></SidebarRoute>} />
                 <Route path="/projects/sponsor-cohort" element={<SidebarRoute><SponsorCohort /></SidebarRoute>} />
                 <Route path="/admin/cohorts" element={<StaffRoute><CohortManager /></StaffRoute>} />

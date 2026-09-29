@@ -42,6 +42,7 @@ import { declineSponsorRequest, listSponsorRequests, markSponsorPaid, markSponso
 import { checkDates, minEndDate, minStartDate, todayISO } from '../../utils/dateRules';
 import NoteDialog from '../../components/NoteDialog';
 import { useFeatures } from '../../utils/features';
+import { notifyLeadWaitlist } from '../../utils/projectProposals';
 
 const PHASES = [
   { id: COHORT_STATUS.DRAFT, label: 'Draft', hint: 'Projects generated, hidden from members' },
@@ -308,6 +309,10 @@ const CohortManager = () => {
         }
       }
 
+      // Email everyone on the lead waitlist: new projects need leads.
+      notifyLeadWaitlist(`${cohort.name || 'A new cohort'} (${projects.length} project${projects.length === 1 ? '' : 's'})`)
+        .then((n) => n > 0 && toast.info(`${n} ${n === 1 ? 'person' : 'people'} on the lead waitlist were emailed.`))
+        .catch(() => {});
       toast.success('Cohort revealed. Lead applications are open.');
       await load();
     } catch (e) {

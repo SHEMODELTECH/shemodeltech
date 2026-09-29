@@ -75,7 +75,7 @@ export const notifyLeadWaitlist = async (projectTitle) => {
         await notifyMember(w.userId, {
           type: 'lead_waitlist',
           title: 'A new project needs a lead',
-          body: `"${projectTitle}" is open for lead applications.`,
+          body: `${projectTitle} is open for lead applications. Apply now to lead a team.`,
           link: '/apply-to-lead',
           ctaLabel: 'Apply to lead',
           emailTo: w.email,
