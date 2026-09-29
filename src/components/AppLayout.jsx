@@ -107,8 +107,8 @@ const AppLayout = ({ children }) => {
     { path: '/disputes', label: 'Payment Dispute' },
     // Only She Model Tech staff post projects (free and paid). Companies don't run projects.
     ...(userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/new-paid', label: 'Post a project' }] : []),
-    // Members only; locked until the first earned badge.
-    ...(!isCompany ? [{ path: '/projects/propose', label: 'Propose a project', locked: !hasBadge && userRole !== 'admin' && userRole !== 'editor' }] : []),
+    // Propose a project is no longer in the members' menu (staff still see it).
+    ...(userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/propose', label: 'Propose a project' }] : []),
   ];
 
   const navItems = [
@@ -194,7 +194,13 @@ const AppLayout = ({ children }) => {
 
         {/* Nav */}
         <nav className="flex-1 py-6 px-3 space-y-3 lg:space-y-4 overflow-y-auto">
-          {navItems.filter((item) => !(isCompany && !isStaffUser && (item.label === 'Projects' || item.path === '/my-workspaces'))).map((item) => {
+          {navItems.filter((item) => {
+            if (isStaffUser) return true;
+            // Companies: no projects or workspaces.
+            if (isCompany) return !(item.label === 'Projects' || item.path === '/my-workspaces');
+            // Members: no Work with us or Talent Board in their menu.
+            return !(item.path === '/organizations' || item.path === '/talent-board');
+          }).map((item) => {
             // Expandable group (e.g. Projects with sub-items)
             if (item.isGroup) {
               const anyChildActive = item.children.some(c => isActive(c.path));
