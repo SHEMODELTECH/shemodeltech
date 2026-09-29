@@ -207,9 +207,7 @@ const notifyUid = async (userId, type, message, projectId, projectTitle) => {
 };
 
 // She Model Tech pays everyone on its own paid cohorts (leads and collaborators).
-// Company work (posted by a company) is paid by the company; every other paid
-// project (paid cohorts and She Model Tech's own paid projects) is paid by She Model Tech.
-export const smtPays = (project) => !!project?.cohortPaid || (!!project?.isPaid && !project?.isCompanyPost);
+export const smtPays = (project) => !!project?.cohortPaid;
 
 // Tell She Model Tech staff (admins and editors): bell + push + email.
 const alertPayments = (title, body, projectId) =>
