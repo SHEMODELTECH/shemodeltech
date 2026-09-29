@@ -63,6 +63,25 @@ const DisputePage = () => {
 
   // Detail mode
   const [project, setProject] = useState(null);
+  // Staff: each paid member's payout details (from their payment agreement).
+  const [payouts, setPayouts] = useState({});
+  useEffect(() => {
+    if (!isAdmin || !project?.id || !smtPays(project)) return;
+    getDocs(query(collection(db, 'project_applications'), where('projectId', '==', project.id)))
+      .then((snap) => {
+        const map = {};
+        snap.docs.forEach((d) => {
+          const a = d.data();
+          if (a.paymentAgreement && a.applicantEmail) map[a.applicantEmail] = a.paymentAgreement;
+        });
+        setPayouts(map);
+        // Leads join through lead applications: use the details on their account.
+        const missing = Object.keys(project.paymentConfirmations || {}).filter((e) => !map[e]);
+        return Promise.all(missing.map((e) => getDocs(query(collection(db, 'users'), where('email', '==', e))).then((u) => [e, u.docs[0]?.data()?.payout || null]).catch(() => [e, null])))
+          .then((pairs) => setPayouts((prev) => ({ ...prev, ...Object.fromEntries(pairs.filter(([, v]) => v)) })));
+      })
+      .catch(() => {});
+  }, [isAdmin, project]);
   const [accessDenied, setAccessDenied] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -351,6 +370,12 @@ const DisputePage = () => {
                       <div className="min-w-0">
                         <p className="text-gray-900 text-sm font-semibold truncate">{e.memberName || email}{isMe ? ' (you)' : ''}</p>
                         <p className="text-gray-500 text-xs">{e.role || 'Team member'} · {email}</p>
+                        {isAdmin && payouts[email] && (
+                          <p className="text-[11px] text-gray-700 mt-0.5">
+                            Pay by <strong>{payouts[email].method}</strong>
+                            {payouts[email].email ? ` to ${payouts[email].email}` : ' (ask for bank details by email)'} · {payouts[email].country}
+                          </p>
+                        )}
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         <div className="text-right">

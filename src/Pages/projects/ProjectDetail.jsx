@@ -26,6 +26,7 @@ import ProjectPayBadge from '../../components/ProjectPayBadge';
 import { formatMoney, getPayRangeLabel } from '../../utils/paidProjects';
 import { canApplyToCompanyCohort } from '../../utils/companyCohorts';
 import { assignAsLead } from '../../utils/leadApplications';
+import PaymentAgreement, { AGREEMENT_VERSION } from '../../components/PaymentAgreement';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -87,6 +88,8 @@ const ProjectDetail = () => {
     linkedinUrl: '',
   });
   const [submittingApp, setSubmittingApp] = useState(false);
+  const [agreementOpen, setAgreementOpen] = useState(false);
+  const [agreementFor, setAgreementFor] = useState('role'); // 'role' | 'lead'
   const [memberProfile, setMemberProfile] = useState(null);
 
   useEffect(() => {
@@ -191,7 +194,7 @@ const ProjectDetail = () => {
     };
   }, [currentUser, project]);
 
-  const handleApplyToLead = async () => {
+  const handleApplyToLead = async (agreement = null) => {
     if (!currentUser) {
       navigate('/login');
       return;
@@ -204,6 +207,24 @@ const ProjectDetail = () => {
         "Company accounts can't lead projects. Post a paid project to hire a team instead."
       );
       return;
+    }
+
+    // Leading a paid project is paid work: 18 and older only.
+    if (project.isPaid && memberProfile?.isMinor) {
+      toast.error('Paid projects are for members 18 and older. Free projects are open to you.');
+      return;
+    }
+    if (project.isPaid && !memberProfile?.adultConfirmedAt && !agreement) {
+      setAgreementFor('lead');
+      setAgreementOpen(true);
+      return;
+    }
+    if (agreement) {
+      await updateDoc(doc(db, 'users', currentUser.uid), {
+        adultConfirmedAt: serverTimestamp(),
+        payout: { ...agreement, updatedAt: new Date().toISOString() },
+      }).catch(() => {});
+      setMemberProfile((p) => ({ ...(p || {}), adultConfirmedAt: new Date(), payout: agreement }));
     }
 
     // A complete profile is required, but there is NO badge gate to lead -
@@ -256,7 +277,7 @@ const ProjectDetail = () => {
     setSubmittingApp(false);
   };
 
-  const handleApply = async () => {
+  const handleApply = async (agreement = null) => {
     if (!currentUser) {
       navigate('/login');
       return;
@@ -306,8 +327,28 @@ const ProjectDetail = () => {
       return;
     }
 
+    // Paid projects are for members 18 and older: confirm age and payment details first.
+    if (project.isPaid) {
+      if (memberProfile?.isMinor) {
+        toast.error('Paid projects are for members 18 and older. Free projects are open to you.');
+        return;
+      }
+      if (!agreement) {
+        setAgreementFor('role');
+        setAgreementOpen(true);
+        return;
+      }
+    }
+
     setSubmittingApp(true);
     try {
+      if (agreement) {
+        // Only the confirmation is stored, not the date of birth.
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          adultConfirmedAt: serverTimestamp(),
+          payout: { ...agreement, updatedAt: new Date().toISOString() },
+        });
+      }
       await addDoc(collection(db, 'project_applications'), {
         projectId,
         projectTitle: project.projectTitle,
@@ -330,6 +371,7 @@ const ProjectDetail = () => {
         portfolioUrl: applyForm.portfolioUrl.trim() || null,
         linkedinUrl: applyForm.linkedinUrl.trim() || null,
         status: 'submitted',
+        ...(agreement ? { paymentAgreement: { ...agreement, version: AGREEMENT_VERSION, acceptedAt: new Date().toISOString() } } : {}),
         createdAt: serverTimestamp(),
       });
       await updateDoc(doc(db, 'projects', projectId), { applicationCount: increment(1) });
@@ -420,6 +462,15 @@ const ProjectDetail = () => {
 
   return (
     <>
+      <PaymentAgreement
+        open={agreementOpen}
+        projectTitle={project?.projectTitle}
+        roleTitle={agreementFor === 'lead' ? 'Project Lead' : applyForm.role}
+        pay={(project?.teamRoles || []).find((r) => r.role === applyForm.role)?.payAmount}
+        defaults={memberProfile?.payout || {}}
+        onCancel={() => setAgreementOpen(false)}
+        onConfirm={(details) => { setAgreementOpen(false); if (agreementFor === 'lead') handleApplyToLead(details); else handleApply(details); }}
+      />
       <div className="min-h-screen overflow-x-hidden " style={{ backgroundColor: '#ffffff' }}>
         <main className="pb-16 sm:pb-20">
           <div className="max-w-6xl mx-auto">
@@ -664,7 +715,7 @@ const ProjectDetail = () => {
                 ) : (
                   <div className="flex flex-wrap items-center justify-center gap-2">
                     <button
-                      onClick={handleApplyToLead}
+                      onClick={() => handleApplyToLead()}
                       disabled={submittingApp}
                       className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50"
                     >
@@ -938,7 +989,7 @@ const ProjectDetail = () => {
                         Cancel
                       </button>
                       <button
-                        onClick={handleApply}
+                        onClick={() => handleApply()}
                         disabled={submittingApp}
                         className="px-8 py-2.5 min-h-[44px] bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg disabled:opacity-50"
                       >

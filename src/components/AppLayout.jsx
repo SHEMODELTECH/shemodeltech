@@ -6,6 +6,7 @@ import { collection, query, where, onSnapshot, doc, getDoc, getDocs, limit } fro
 import { db } from '../firebase/config';
 import { useFeatures } from '../utils/features';
 import { isBlockedForCompany } from '../utils/companyPaths';
+import AgeCheck from './AgeCheck';
 
 const AppLayout = ({ children }) => {
   const { currentUser } = useAuth();
@@ -184,6 +185,7 @@ const AppLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen flex bg-white">
+      <AgeCheck />
       {/* Sidebar */}
       {!hideSidebar && (
       <aside className={`print:hidden fixed inset-y-0 left-0 z-50 w-60 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:inset-0`}>

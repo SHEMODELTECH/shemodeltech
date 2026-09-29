@@ -726,9 +726,12 @@ service cloud.firestore {
 
  match /project_applications/{id} {
  allow read: if isSignedIn();
+ // Paid projects are for members 18 and older who confirmed their age.
  allow create: if isSignedIn()
  && request.resource.data.applicantUid == myUid()
- && request.resource.data.status == 'submitted';
+ && request.resource.data.status == 'submitted'
+ && (get(/databases/$(database)/documents/projects/$(request.resource.data.projectId)).data.get('isPaid', false) != true
+ || (myUserDoc().get('isMinor', false) != true && myUserDoc().get('adultConfirmedAt', null) != null));
  allow update: if isReviewer();
  // The project lead approves / rejects / suggests a better-fit role.
  allow update: if isSignedIn() && ownsProject(resource.data.projectId);
