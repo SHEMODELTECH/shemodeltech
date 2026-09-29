@@ -71,7 +71,8 @@ const ProjectOwnerDashboard = () => {
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid))
-      .then((s) => setIsCompany(!!s.data()?.isCompany))
+      // Staff (even on the She Model Tech company account) get the regular view.
+      .then((s) => setIsCompany(!!s.data()?.isCompany && !['admin', 'editor'].includes(s.data()?.role)))
       .catch(() => {});
   }, [currentUser]);
   const [loading, setLoading] = useState(true);

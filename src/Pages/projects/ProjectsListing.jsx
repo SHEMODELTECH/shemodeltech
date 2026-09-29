@@ -326,14 +326,6 @@ const ProjectsListing = () => {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                {isAdmin && (
-                  <Link
-                    to="/admin/cohorts"
-                    className="inline-flex items-center justify-center px-4 py-2.5 min-h-[44px] bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-sm transition-all"
-                  >
-                    Create a cohort
-                  </Link>
-                )}
               </div>
             </div>
 

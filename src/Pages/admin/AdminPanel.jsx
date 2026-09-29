@@ -184,7 +184,7 @@ const AdminPanel = ({ only = null }) => {
 
   useEffect(() => {
     // Admins and editors both review projects (free and paid).
-    if (tab === 'reviews' && isReviewer) loadReviews();
+    if ((tab === 'reviews' || only === 'projects') && isReviewer) loadReviews();
   }, [tab, isReviewer, loadReviews]);
 
   // Teachers: applications to review, and who currently teaches.
@@ -710,7 +710,7 @@ const AdminPanel = ({ only = null }) => {
         {only === 'reviews'
           ? 'Projects submitted by their leads for She Model Tech review.'
           : only === 'projects'
-          ? 'Every active project: view, manage extra-time requests, or delete.'
+          ? 'Projects to review, extra-time requests, and every active project (view or delete).'
           : 'Important decisions and company requests. Projects, cohorts, and reviews are in the Projects menu.'}
       </p>
 
@@ -811,10 +811,13 @@ const AdminPanel = ({ only = null }) => {
         }
       />
 
-      {tab === 'reviews' && (
+      {(tab === 'reviews' || only === 'projects') && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-gray-500 text-sm">Projects submitted for completion review.</p>
+            <div>
+              <h3 className="text-gray-900 font-bold">Projects to review</h3>
+              <p className="text-gray-500 text-sm">Projects submitted by their leads for completion review.</p>
+            </div>
             <button
               onClick={loadReviews}
               className="text-pink-600 text-sm font-semibold hover:underline"

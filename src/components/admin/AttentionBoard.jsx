@@ -58,7 +58,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
 
   if (!c) return <p className="text-gray-400 text-sm mb-6">Checking what needs attention…</p>;
   const cards = [
-    ['Projects to review', c.reviews, 'Submitted by leads for She Model Tech review', { to: '/admin/reviews' }],
+    ['Projects to review', c.reviews, 'Submitted by leads for She Model Tech review', { to: '/admin/projects' }],
     ['Lead applications', c.leadApps + c.proposals, `${c.leadApps} waiting · ${c.proposals} project proposal${c.proposals === 1 ? '' : 's'}`, { to: '/admin/lead-applications' }],
     ['Payments in progress', c.payments, 'Paid projects waiting on payments or confirmations', { to: '/disputes' }],
     ['Extra time requests', c.extension, 'Leads asking for more time', { to: '/admin/projects' }],

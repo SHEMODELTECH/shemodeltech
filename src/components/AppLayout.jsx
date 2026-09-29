@@ -111,11 +111,8 @@ const AppLayout = ({ children }) => {
       // Staff project tools live here, not on the Admin dashboard.
       { path: '/admin/cohorts', label: 'Create a cohort' },
       { path: '/admin/lead-applications', label: 'Lead applications' },
-      { path: '/admin/reviews', label: 'Project reviews' },
       { path: '/admin/projects', label: 'Manage projects' },
     ] : []),
-    // Propose a project is no longer in the members' menu (staff still see it).
-    ...(userRole === 'admin' || userRole === 'editor' ? [{ path: '/projects/propose', label: 'Propose a project' }] : []),
   ];
 
   const navItems = [
