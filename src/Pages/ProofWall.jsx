@@ -122,6 +122,8 @@ const FILTERS = [
 // earners). Individuals get the contributor tabs.
 const COMPANY_FILTERS = [
   { id: 'all', label: 'All Activity' },
+  { id: 'badge', label: 'Badges earned' },
+  { id: 'ship', label: 'Projects shipped' },
   { id: 'update', label: 'Updates' },
   { id: 'talent', label: 'Top Talent' },
 ];
@@ -379,10 +381,12 @@ const ProofWall = () => {
     };
   }, [filter, myData]);
 
-  // Companies don't see contributor-proof activity (badges, ships, lead recruitment).
-  // They still see everyone's project updates and general activity.
-  const companyHiddenTypes = ['badge', 'ship', 'lead'];
-  const visibleItems = myData?.isCompany
+  // Companies see the proof (badges earned, projects shipped, updates) that
+  // helps them find talent; they don't see calls for leads, which are for members.
+  // She Model Tech staff (admins and editors) always see everything.
+  const isStaffViewer = ['admin', 'editor'].includes(myData?.role);
+  const companyHiddenTypes = ['lead'];
+  const visibleItems = myData?.isCompany && !isStaffViewer
     ? items.filter((a) => !companyHiddenTypes.includes(a.type))
     : items;
 
