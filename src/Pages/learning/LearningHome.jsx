@@ -13,6 +13,8 @@ import { courseRating } from '../../utils/mentorStats';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import MentorCourseStaffTools from '../../components/MentorCourseStaffTools';
+import BuiltInCourseStaffTools, { useCourseOverridesVersion } from '../../components/BuiltInCourseStaffTools';
+import { useStaffRole } from '../../components/MentorCourseStaffTools';
 
 // "Coding Developer Foundations" -> "Coding Developer"
 export const trackName = (t) => trackMeta(t).label.replace(/\s+Foundations$/, '');
@@ -87,6 +89,8 @@ export const CourseCard = ({ course, status, progress }) => {
 const LearningHome = ({ mine = false }) => {
   const navigate = useNavigate();
   const lr = useLearning();
+  const overridesVersion = useCourseOverridesVersion(); // staff edits to built-in courses
+  const staffRole = useStaffRole();
   // Profile photos for mentors whose courses were published before photos were saved on them.
   const [authorPhotos, setAuthorPhotos] = useState({});
   const [query, setQuery] = useState('');
@@ -132,7 +136,8 @@ const LearningHome = ({ mine = false }) => {
       ...coursesForTrack(t).map((c) => ({ ...c, track: t })),
       ...published.filter((p) => p.track === t),
     ]);
-  }, [published]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [published, overridesVersion]);
 
   const statusOf = (c) => (lr.isDone(c.track, c.slug) ? 'done' : lr.isEnrolled(c.track, c.slug) ? 'enrolled' : null);
   const progressOf = (c) => {
@@ -210,7 +215,15 @@ const LearningHome = ({ mine = false }) => {
       {!mine ? (
         <section className="lr-hero">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-            <p className="text-sm font-semibold text-pink-700 mb-3">She Model Tech Learning</p>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <p className="text-sm font-semibold text-pink-700 m-0">She Model Tech Learning</p>
+              {['admin', 'editor'].includes(staffRole) && (
+                <div className="flex gap-2">
+                  <Link to="/teacher" className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg">Add a course</Link>
+                  <Link to="/learning/manage" className="text-xs font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg">Manage courses</Link>
+                </div>
+              )}
+            </div>
             <h1 className="fd-display text-4xl sm:text-5xl text-gray-900 max-w-3xl">
               Learn the skills. Prove them on real projects.
             </h1>
@@ -280,7 +293,7 @@ const LearningHome = ({ mine = false }) => {
                   .sort((a, b) => (b.publishedAtMs || 0) - (a.publishedAtMs || 0))
                   .slice(0, 4)
                   .map((c) => (
-                    <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /></div>
+                    <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} /></div>
                   ))}
               </div>
             </div>
@@ -441,7 +454,7 @@ const LearningHome = ({ mine = false }) => {
                   </div>
                   <div className="lr-grid">
                     {list.slice(0, 4).map((c) => (
-                      <div key={c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /></div>
+                      <div key={c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} /></div>
                     ))}
                   </div>
                 </section>
@@ -465,7 +478,7 @@ const LearningHome = ({ mine = false }) => {
                       label === 'Completed' ? (
                         <div key={c.track + c.slug} className="flex flex-col gap-2">
                           <CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} />
-                          <MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} />
+                          <MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} />
                           <button
                             onClick={async () => {
                               try {
@@ -481,7 +494,7 @@ const LearningHome = ({ mine = false }) => {
                           </button>
                         </div>
                       ) : (
-                        <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /></div>
+                        <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} /></div>
                       )
                     )}
                   </div>
@@ -494,7 +507,7 @@ const LearningHome = ({ mine = false }) => {
             </p>
             <div className="lr-grid">
               {filtered.map((c) => (
-                <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /></div>
+                <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} /></div>
               ))}
             </div>
           </section>

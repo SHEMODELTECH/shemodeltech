@@ -354,6 +354,16 @@ service cloud.firestore {
 
  // Courses published to Learning from Teacher. Public to read, like the rest of
  // the Learning catalog; only admins and editors can publish, update, or remove.
+ // Staff edits to the built-in courses (admins and editors).
+ match /course_overrides/{id} {
+ allow read: if true;
+ allow write: if isReviewer();
+ match /chunks/{n} {
+ allow read: if true;
+ allow write: if isReviewer();
+ }
+ }
+
  match /learning_courses/{id} {
  allow read: if true;
  allow write: if isReviewer();
@@ -417,7 +427,8 @@ service cloud.firestore {
  && request.resource.data.get('focus', '').size() <= 3000
  && request.resource.data.get('message', '').size() <= 1500;
  allow read: if isReviewer() || (isSignedIn() && resource.data.companyUid == myUid());
- allow update, delete: if isAdmin();
+ allow update: if isReviewer();
+ allow delete: if isAdmin();
  }
 
  // Organizations: training contract and course licensing requests. Anyone can

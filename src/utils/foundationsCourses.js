@@ -10,6 +10,7 @@
 // rebuild - nothing here needs editing.
 
 import { COURSES_BY_TRACK } from './foundationsCoursesData';
+import { applyOverrides } from './courseOverrides';
 
 // Display name + one-line intro per track. Kept here (not derived from a course file)
 // so a track can show a heading even before its first course lands. Company is a
@@ -27,7 +28,10 @@ const TRACK_META = {
 export const trackMeta = (trackId) => TRACK_META[trackId] || { label: trackId, intro: '' };
 
 // All courses for a track, in authored order (already sorted by the generator).
-export const coursesForTrack = (trackId) => (trackId && COURSES_BY_TRACK[trackId]) || [];
+// Built-in courses, with any staff edits applied and removed courses hidden.
+export const coursesForTrack = (trackId) => applyOverrides(trackId, (trackId && COURSES_BY_TRACK[trackId]) || []);
+// The original built-in course, ignoring staff edits and removals.
+export const originalCourse = (trackId, slug) => ((trackId && COURSES_BY_TRACK[trackId]) || []).find((c) => c.slug === slug) || null;
 
 // A single course by its slug (filename without .md).
 export const getCourse = (trackId, slug) =>

@@ -47,6 +47,8 @@ const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const ProposeProjectPage = lazy(() => import('./Pages/projects/ProposeProjectPage'));
 const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
+const EditCourse = lazy(() => import('./Pages/learning/ManageCourses'));
+const ManageCoursesPage = lazy(() => import('./Pages/learning/ManageCourses').then((m) => ({ default: m.ManageCourses })));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -233,6 +235,8 @@ function App() {
                 <Route path="/mentor" element={<Navigate to="/teacher" replace />} />
                 <Route path="/learning" element={<LearningHome />} />
                 <Route path="/learning/my" element={<LearningHome mine />} />
+                <Route path="/learning/manage" element={<StaffRoute><ManageCoursesPage /></StaffRoute>} />
+                <Route path="/learning/manage/:track/:slug" element={<StaffRoute><EditCourse /></StaffRoute>} />
                 <Route path="/learning/certificate/:id" element={<LearningCertificate />} />
                 <Route path="/learning/:track/:slug" element={<LearningCourse />} />
                 <Route path="/learning/:track/:slug/learn" element={<LearningCourse reading />} />
