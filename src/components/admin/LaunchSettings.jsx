@@ -12,6 +12,7 @@ const ROWS = [
   ['sponsorships', 'Sponsored cohorts', 'Companies sponsor a cohort and pay She Model Tech. While off, companies can only register interest.', 'completedCohorts', 2, 'completed cohorts'],
   ['jobPosting', 'Job posting (before tiers)', 'Lets companies post jobs while Company tiers is off. Once tiers are on, any tier can post and this switch no longer matters.', null, null, 'Usually leave off'],
   ['companyTiers', 'Company tiers', 'Supporter, Partner, and Champion rules apply to companies. Companies without a tier become free companies (5 new conversations a month, no job posting). Set tiers first in Admin → Users.', null, null, 'Tiers assigned to your early partners'],
+  ['donations', 'Online donations', 'The Fund a cohort button on Support our mission opens your donation link (REACT_APP_DONATION_LINK). While off, it says “Contact us to fund a cohort”.', null, null, 'Bank account and a donation tool (Zeffy or Stripe) set up'],
   ['premiumPayments', 'Tier payments', 'Companies can pay for a tier online (links in REACT_APP_TIER_SUPPORTER_LINK, _PARTNER_LINK, _CHAMPION_LINK). While off, they “Ask about” a tier and you set it in Admin → Users.', null, null, 'Bank account and Stripe set up'],
 ];
 

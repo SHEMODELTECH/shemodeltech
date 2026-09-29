@@ -373,6 +373,12 @@ service cloud.firestore {
 
  // Courses published to Learning from Teacher. Public to read, like the rest of
  // the Learning catalog; only admins and editors can publish, update, or remove.
+ // Sponsors thanked on the site (companies that funded a cohort). Admins only.
+ match /sponsors/{id} {
+ allow read: if true;
+ allow write: if isAdmin();
+ }
+
  // Launch switches (admin-only), readable by everyone so the site can adapt.
  match /app_settings/{id} {
  allow read: if true;

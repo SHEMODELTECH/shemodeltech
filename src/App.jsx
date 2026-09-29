@@ -45,6 +45,7 @@ const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
 const EditCourse = lazy(() => import('./Pages/learning/ManageCourses'));
 const ManageCoursesPage = lazy(() => import('./Pages/learning/ManageCourses').then((m) => ({ default: m.ManageCourses })));
+const SupportMission = lazy(() => import('./Pages/SupportMission'));
 const TeachApply = lazy(() => import('./Pages/teacher/TeachApply'));
 const TeacherFull = lazy(() => import('./Pages/teacher/Teacher').then((m) => ({ default: m.TeacherFull })));
 const Messages = lazy(() => import('./Pages/Messages'));
@@ -213,6 +214,7 @@ function App() {
                 {/* She Model Tech doesn't offer training programs: these pages are retired. */}
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
                 <Route path="/summit" element={<Summit />} />
+                <Route path="/support-our-mission" element={<SupportMission />} />
                 <Route path="/projects/propose" element={<SidebarRoute><ProposeProjectPage /></SidebarRoute>} />
                 <Route path="/badges" element={<SidebarRoute><BadgesInfo /></SidebarRoute>} />
                 <Route path="/projects/sponsor-cohort" element={<SidebarRoute><SponsorCohort /></SidebarRoute>} />

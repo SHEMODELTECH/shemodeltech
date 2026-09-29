@@ -32,6 +32,7 @@ import SummitTab from '../../components/admin/SummitTab';
 import AttentionBoard from '../../components/admin/AttentionBoard';
 import { unpublishFromLearning } from '../../utils/learningPublished';
 import LaunchSettings from '../../components/admin/LaunchSettings';
+import SponsorsAdmin from '../../components/admin/SponsorsAdmin';
 
 const fmtDate = (ts) => {
   try {
@@ -939,6 +940,7 @@ const AdminPanel = ({ only = null }) => {
         </div>
       )}
       {!loadingData && tab === 'overview' && isAdmin && <LaunchSettings currentUser={currentUser} />}
+      {!loadingData && tab === 'overview' && isAdmin && <SponsorsAdmin />}
       {!loadingData && tab === 'overview' && (
         <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
       )}

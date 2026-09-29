@@ -37,7 +37,6 @@ export const PERKS = [
   ['postJobs', 'supporter', 'Post jobs'],
   ['talentBoard', 'supporter', 'Full Talent Board with unlimited messaging'],
   ['verifiedBadge', 'supporter', 'Verified Partner badge'],
-  ['sponsorRecognition', 'supporter', 'Sponsor recognition in the app'],
   ['summitTable', 'supporter', 'Summit exhibitor table (request)'],
   ['featuredJobs', 'partner', 'Featured jobs'],
   ['summitWorkshop', 'partner', 'Host a Summit workshop (request)'],

@@ -14,6 +14,7 @@ import TechLeads from '../Images/TechLeads.png';
 import TechArchs from '../Images/TechArchs.png';
 import TechGuard from '../Images/TechGuard.png';
 import SocialLinks from '../components/SocialLinks';
+import SponsorsStrip from '../components/SponsorsStrip';
 
 const LandingPage = () => {
   const { currentUser } = useAuth();
@@ -449,6 +450,8 @@ const LandingPage = () => {
       </section>
 
       {/* FOOTER */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-12"><SponsorsStrip /></div>
+
       <footer className="border-t border-gray-200 bg-white py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -468,6 +471,9 @@ const LandingPage = () => {
               </Link>
               <Link to="/summit" className="hover:text-pink-600 transition-colors font-medium">
                 Summit
+              </Link>
+              <Link to="/support-our-mission" className="hover:text-pink-600 transition-colors font-medium">
+                Support our mission
               </Link>
               <Link to="/terms" className="hover:text-pink-600 transition-colors font-medium">
                 Terms
