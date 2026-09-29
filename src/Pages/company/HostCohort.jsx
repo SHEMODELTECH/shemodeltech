@@ -169,14 +169,14 @@ const HostCohort = () => {
   }
 
   // Only She Model Tech staff post projects (free and paid). Companies don't
-  // run projects; Partner and Champion companies can propose a challenge.
+  // run projects; they hire through job posts (see the tiers).
   if (!['admin', 'editor'].includes(profile?.role)) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-10">
         <h1 className="text-2xl font-bold text-gray-900">Projects are run by She Model Tech</h1>
         <p className="text-gray-600 mt-2">
           She Model Tech designs and runs every project, free and paid, and pays members on paid projects. Companies
-          on the Partner and Champion tiers can propose a real challenge for a future cohort.
+          hire our talent by posting jobs, which is included in every company tier.
         </p>
         <a href="/premium" className="inline-block mt-5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
           See company tiers

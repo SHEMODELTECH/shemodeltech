@@ -13,7 +13,7 @@ import { useFeatures } from '../utils/features';
 
 const BLURB = {
   supporter: 'Hire from our talent and show your support.',
-  partner: 'Everything in Supporter, plus the Summit stage, featured jobs, and challenges.',
+  partner: 'Everything in Supporter, plus featured jobs and the Summit stage.',
   champion: 'Everything in Partner, plus a speaking slot, promotion, and priority support.',
 };
 

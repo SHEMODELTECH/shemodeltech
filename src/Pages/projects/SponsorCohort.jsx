@@ -34,7 +34,7 @@ const SponsorCohort = () => {
     return (
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-900">Work with She Model Tech</h1>
-        <p className="text-gray-600 mt-2">Companies now work with us through our tiers: Supporter, Partner, and Champion. Partner and Champion companies can propose a real challenge for a future cohort.</p>
+        <p className="text-gray-600 mt-2">Companies now work with us through our tiers: Supporter, Partner, and Champion. Every tier can post jobs and hire our talent.</p>
         <a href="/premium" className="inline-block mt-5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">See company tiers</a>
       </div>
     );

@@ -42,7 +42,6 @@ export const PERKS = [
   ['featuredJobs', 'partner', 'Featured jobs'],
   ['summitWorkshop', 'partner', 'Host a Summit workshop (request)'],
   ['summitPanel', 'partner', 'Summit panel seat (sponsored session, approved by She Model Tech)'],
-  ['proposeChallenge', 'partner', 'Propose a challenge for a She Model Tech cohort'],
   ['summitSpeaker', 'champion', 'Summit speaking slot (sponsored session, approved by She Model Tech)'],
   ['prioritySupport', 'champion', 'Priority support'],
   ['promotion', 'champion', 'In-app promotion (featured placement)'],
