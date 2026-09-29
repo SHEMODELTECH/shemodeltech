@@ -493,11 +493,6 @@ const TeacherList = ({ access }) => {
             <a href="/teach#faq" className="inline-block mt-2 font-semibold text-indigo-700 hover:underline">See all benefits and FAQs</a>
           </HubToggle>
         )}
-        {!access.isStaff && (
-          <HubToggle title="Training contracts">
-            <TrainerPanel uid={access.uid} name={currentUser?.displayName || currentUser?.email || 'A mentor'} />
-          </HubToggle>
-        )}
         {!access.isStaff && <MentorLetters access={access} />}
       </div>
 

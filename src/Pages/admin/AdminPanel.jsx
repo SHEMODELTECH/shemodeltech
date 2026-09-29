@@ -678,7 +678,7 @@ const AdminPanel = ({ only = null }) => {
   const tabs = [
     ['overview', 'Overview'],
     ['users', 'Users'],
-    ...(isReviewer ? [['teachers', 'Mentors'], ['organizations', 'Organizations'], ['summit', 'Summit']] : []),
+    ...(isReviewer ? [['teachers', 'Mentors'], ['summit', 'Summit']] : []),
     ['moderation', 'Moderation'],
     // Deleting anything is admin-only: editors never see these.
     ...(isAdmin ? [['deletions', 'Deletion Requests'], ['danger', 'Danger Zone']] : []),
@@ -1540,7 +1540,6 @@ const AdminPanel = ({ only = null }) => {
         </div>
       )}
 
-      {!loadingData && tab === 'organizations' && isReviewer && <OrgRequestsTab isAdmin={isAdmin} />}
       {!loadingData && tab === 'summit' && isReviewer && <SummitTab />}
 
       {/* MODERATION */}

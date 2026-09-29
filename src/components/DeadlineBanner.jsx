@@ -126,12 +126,14 @@ const DeadlineBanner = ({ project }) => {
             {project.extensionDays ? ` (extended by ${project.extensionDays} days)` : ''}
           </p>
         </div>
-        {isLead && !project.isCohort && (
+        {/* Leads can't change dates themselves (She Model Tech sets them), so every
+            project uses a request that staff approve. Company posts keep their edit link. */}
+        {isLead && project.isCompanyPost && (
           <Link to={`/projects/${project.id}/setup`} className="text-pink-700 text-xs font-semibold underline">
             Change the deadline
           </Link>
         )}
-        {isLead && project.isCohort && (
+        {isLead && !project.isCompanyPost && (
           requested ? (
             <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 uppercase">Extra time requested</span>
           ) : (

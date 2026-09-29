@@ -38,11 +38,7 @@ const JobDetail = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default:
 const JobForm = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.JobForm })));
 const MyJobs = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.MyJobs })));
 const Premium = lazy(() => import('./Pages/Premium'));
-const Organizations = lazy(() => import('./Pages/Organizations'));
 const Summit = lazy(() => import('./Pages/Summit'));
-const JoinOrganization = lazy(() => import('./Pages/org/Org').then((m) => ({ default: m.JoinOrganization })));
-const OrgDashboard = lazy(() => import('./Pages/org/Org').then((m) => ({ default: m.OrgDashboard })));
-const OrgEdition = lazy(() => import('./Pages/org/Org').then((m) => ({ default: m.OrgEdition })));
 const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const ProposeProjectPage = lazy(() => import('./Pages/projects/ProposeProjectPage'));
 const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
@@ -55,7 +51,6 @@ const Messages = lazy(() => import('./Pages/Messages'));
 const MembersDirectory = lazy(() => import('./Pages/MembersDirectory'));
 const ApplyToLead = lazy(() => import('./Pages/cohort/ApplyToLead'));
 const LeadApplicationReview = lazy(() => import('./Pages/admin/LeadApplicationReview'));
-const HostCohort = lazy(() => import('./Pages/company/HostCohort'));
 const CompanyCohortList = lazy(() => import('./Pages/company/CompanyCohortList'));
 const CompanyCohortDetail = lazy(() => import('./Pages/company/CompanyCohortDetail'));
 const SponsorDashboard = lazy(() => import('./Pages/company/SponsorDashboard'));
@@ -215,7 +210,8 @@ function App() {
                 <Route path="/auth/action" element={<AuthAction />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/organizations" element={<Organizations />} />
+                {/* She Model Tech doesn't offer training programs: these pages are retired. */}
+                <Route path="/organizations" element={<Navigate to="/" replace />} />
                 <Route path="/summit" element={<Summit />} />
                 <Route path="/projects/propose" element={<SidebarRoute><ProposeProjectPage /></SidebarRoute>} />
                 <Route path="/badges" element={<SidebarRoute><BadgesInfo /></SidebarRoute>} />
@@ -223,9 +219,8 @@ function App() {
                 <Route path="/admin/cohorts" element={<StaffRoute><CohortManager /></StaffRoute>} />
                 <Route path="/admin/reviews" element={<Navigate to="/admin/projects" replace />} />
                 <Route path="/admin/projects" element={<StaffRoute><AdminPanel only="projects" /></StaffRoute>} />
-                <Route path="/join/:code" element={<JoinOrganization />} />
-                <Route path="/org/:orgId" element={<SidebarRoute><OrgDashboard /></SidebarRoute>} />
-                <Route path="/org/:orgId/edition/:courseId" element={<SidebarRoute><OrgEdition /></SidebarRoute>} />
+                <Route path="/join/:code" element={<Navigate to="/" replace />} />
+                <Route path="/org/*" element={<Navigate to="/" replace />} />
 
                 {/* She Model Tech Learning: public catalog, its own layout (no app sidebar) */}
                 <Route path="/teach" element={<TeachApply />} />
@@ -479,14 +474,8 @@ function App() {
                   }
                 />
                 {/* Company-hosted cohorts: company owns brief, team, timeline and pays members */}
-                <Route
-                  path="/projects/new-paid"
-                  element={
-                    <SidebarRoute>
-                      <HostCohort />
-                    </SidebarRoute>
-                  }
-                />
+                {/* Projects are created in cohorts (Create a cohort). */}
+                <Route path="/projects/new-paid" element={<Navigate to="/admin/cohorts" replace />} />
                 {/* All paid work now lives on the Projects board (one system). */}
                 <Route path="/paid-projects" element={<Navigate to="/projects" replace />} />
                 <Route

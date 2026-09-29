@@ -13,7 +13,6 @@ const ROWS = [
   ['jobPosting', 'Job posting (before tiers)', 'Lets companies post jobs while Company tiers is off. Once tiers are on, any tier can post and this switch no longer matters.', null, null, 'Usually leave off'],
   ['companyTiers', 'Company tiers', 'Supporter, Partner, and Champion rules apply to companies. Companies without a tier become free companies (5 new conversations a month, no job posting). Set tiers first in Admin → Users.', null, null, 'Tiers assigned to your early partners'],
   ['premiumPayments', 'Tier payments', 'Companies can pay for a tier online (links in REACT_APP_TIER_SUPPORTER_LINK, _PARTNER_LINK, _CHAMPION_LINK). While off, they “Ask about” a tier and you set it in Admin → Users.', null, null, 'Bank account and Stripe set up'],
-  ['orgTraining', 'Training and curriculum requests', 'Organizations request training or licensing. While off, they register interest.', 'completedCohorts', 2, 'completed cohorts'],
 ];
 
 const LaunchSettings = ({ currentUser }) => {

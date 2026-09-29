@@ -60,6 +60,8 @@ const emptyRole = () => ({
 
 const ProjectSetup = () => {
   const [cohortLock, setCohortLock] = useState(false);
+  const [coreLock, setCoreLock] = useState(true);
+  const datesLocked = cohortLock || coreLock;
   const [originalStart, setOriginalStart] = useState(null);
   const [paidLock, setPaidLock] = useState(false);
   const [projectStatus, setProjectStatus] = useState('');
@@ -100,6 +102,10 @@ const ProjectSetup = () => {
         setIsPaid(!!data.isPaid);
         // Cohort projects: She Model Tech fixes the dates; paid cohorts are fully fixed.
         setCohortLock(!!data.isCohort);
+        // Leads (members) can't change the title, description, or dates; staff can.
+        getDoc(doc(db, 'users', currentUser.uid))
+          .then((u) => setCoreLock(!['admin', 'editor'].includes(u.data()?.role) && !data.isCompanyPost))
+          .catch(() => setCoreLock(true));
         setOriginalStart(data.startDate || null);
         setPaidLock(!!data.cohortPaid);
         setProjectStatus(data.status || '');
@@ -173,7 +179,7 @@ const ProjectSetup = () => {
     if (!form.projectDescription.trim()) { toast.error('Description is required'); return; }
     if (!form.startDate) { toast.error('Start date is required'); return; }
     if (!form.endDate) { toast.error('End date is required'); return; }
-    if (!cohortLock) {
+    if (!datesLocked) {
       const dateErr = checkDates({ start: form.startDate, end: form.endDate, originalStart: originalStart });
       if (dateErr) { toast.error(dateErr); return; }
     }
@@ -220,11 +226,10 @@ const ProjectSetup = () => {
       const maxTeamSize = teamRoles.reduce((s, r) => s + r.count, 0);
 
       await updateDoc(doc(db, 'projects', projectId), {
-        projectTitle: form.projectTitle.trim(),
-        projectDescription: form.projectDescription.trim(),
+        ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
         projectGoals: form.projectGoals.trim() || null,
         industryTrack: form.industryTrack,
-        ...(cohortLock ? {} : { startDate: form.startDate, endDate: form.endDate }),
+        ...(datesLocked ? {} : { startDate: form.startDate, endDate: form.endDate }),
         projectLink: form.projectLink.trim(),
         resources: { ...(form.submissionUrl ? { submissionUrl: form.submissionUrl.trim() } : {}) },
         teamRoles,
@@ -250,14 +255,13 @@ const ProjectSetup = () => {
     try {
       const teamRoles = buildTeamRoles();
       await updateDoc(doc(db, 'projects', projectId), {
-        projectTitle: form.projectTitle.trim(),
-        projectDescription: form.projectDescription.trim(),
+        ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
         projectGoals: form.projectGoals.trim() || null,
         industryTrack: form.industryTrack,
         // Keep every detail the lead edited, not just the brief, so a saved
         // draft doesn't silently drop new dates or links.
-        ...(!cohortLock && form.startDate ? { startDate: form.startDate } : {}),
-        ...(!cohortLock && form.endDate ? { endDate: form.endDate } : {}),
+        ...(!datesLocked && form.startDate ? { startDate: form.startDate } : {}),
+        ...(!datesLocked && form.endDate ? { endDate: form.endDate } : {}),
         ...(form.projectLink.trim() ? { projectLink: form.projectLink.trim() } : {}),
         ...(form.submissionUrl.trim() ? { resources: { submissionUrl: form.submissionUrl.trim() } } : {}),
         proposedRoles: teamRoles, // keep draft in proposedRoles until opened
@@ -328,11 +332,12 @@ const ProjectSetup = () => {
       <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 sm:p-6 space-y-5">
         <div>
           <label className={labelClass}>Project Title *</label>
-          <input type="text" value={form.projectTitle} onChange={e => setForm(p => ({ ...p, projectTitle: e.target.value }))} className={inputClass} />
+          <input type="text" value={form.projectTitle} disabled={coreLock} onChange={e => setForm(p => ({ ...p, projectTitle: e.target.value }))} className={inputClass + (coreLock ? ' opacity-60 cursor-not-allowed' : '')} />
         </div>
         <div>
           <label className={labelClass}>Description *</label>
-          <textarea rows={4} value={form.projectDescription} onChange={e => setForm(p => ({ ...p, projectDescription: e.target.value }))} className={inputClass} />
+          <textarea rows={4} value={form.projectDescription} disabled={coreLock} onChange={e => setForm(p => ({ ...p, projectDescription: e.target.value }))} className={inputClass + (coreLock ? ' opacity-60 cursor-not-allowed' : '')} />
+          {coreLock && <p className="text-xs text-gray-500 mt-1">The title, description, and dates are set by She Model Tech. Need a change? Message the She Model Tech team.</p>}
         </div>
         <div>
           <label className={labelClass}>Goals</label>
@@ -348,11 +353,11 @@ const ProjectSetup = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Start date <span className="text-red-500">*</span></label>
-            <input type="date" value={form.startDate} min={cohortLock ? undefined : minStartDate(originalStart)} disabled={cohortLock} onChange={e => setForm(p => ({ ...p, startDate: e.target.value }))} className={inputClass + (cohortLock ? ' opacity-60 cursor-not-allowed' : '')} />
+            <input type="date" value={form.startDate} min={datesLocked ? undefined : minStartDate(originalStart)} disabled={datesLocked} onChange={e => setForm(p => ({ ...p, startDate: e.target.value }))} className={inputClass + (datesLocked ? ' opacity-60 cursor-not-allowed' : '')} />
           </div>
           <div>
             <label className={labelClass}>End date <span className="text-red-500">*</span></label>
-            <input type="date" value={form.endDate} min={cohortLock ? undefined : minEndDate(form.startDate)} disabled={cohortLock} onChange={e => setForm(p => ({ ...p, endDate: e.target.value }))} className={inputClass + (cohortLock ? ' opacity-60 cursor-not-allowed' : '')} />
+            <input type="date" value={form.endDate} min={datesLocked ? undefined : minEndDate(form.startDate)} disabled={datesLocked} onChange={e => setForm(p => ({ ...p, endDate: e.target.value }))} className={inputClass + (datesLocked ? ' opacity-60 cursor-not-allowed' : '')} />
           </div>
           {cohortLock && (
             <p className="sm:col-span-2 text-xs text-gray-600">

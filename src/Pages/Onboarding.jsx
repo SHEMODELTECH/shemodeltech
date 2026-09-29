@@ -53,6 +53,8 @@ const Onboarding = () => {
   const [formData, setFormData] = useState({
     displayName: '',
     experienceLevel: '', // 'beginner' | 'intermediate' | 'advanced' | 'expert'
+    ageGroup: '', // '18plus' | '13-17' | 'under13'
+    guardianConsent: false,
     primarySkillTrack: '', // TechPO, TechQA, TechDev, TechLeads, TechArchs, TechGuard, others, notsure
     highestEducation: '', // high_school | undergrad | masters | phd
     specialization: '',
@@ -205,9 +207,23 @@ const Onboarding = () => {
       // interests optional now: shown on profile, editable later
     } else {
       // Individual: step 1=experience level, 2=name/profile/links, 3=location, 4=interests
-      if (step === 1 && !formData.experienceLevel) {
-        toast.error('Please select your experience level');
-        return;
+      if (step === 1) {
+        if (!formData.ageGroup) {
+          toast.error('Please tell us your age group');
+          return;
+        }
+        if (formData.ageGroup === 'under13') {
+          toast.error('You need to be at least 13 to join She Model Tech.');
+          return;
+        }
+        if (formData.ageGroup === '13-17' && !formData.guardianConsent) {
+          toast.error('Please confirm your parent or guardian knows you’re joining and agrees.');
+          return;
+        }
+        if (!formData.experienceLevel) {
+          toast.error('Please select your experience level');
+          return;
+        }
       }
       if (step === 2) {
         if (!formData.displayName.trim()) {
@@ -289,6 +305,16 @@ const Onboarding = () => {
         onboardingCompletedAt: new Date(),
         profileComplete: true,
       };
+      if (!isCompany) {
+        // Members aged 13 to 17 (high school students) get extra protections:
+        // a private profile, no paid work, and messages only from staff.
+        updateData.ageGroup = formData.ageGroup || '18plus';
+        if (formData.ageGroup === '13-17') {
+          updateData.isMinor = true;
+          updateData.guardianConsent = true;
+          updateData.guardianConsentAt = new Date();
+        }
+      }
       if (isCompany) {
         updateData.companyProfile = {
           companyName: formData.companyName.trim(),
@@ -356,6 +382,27 @@ const Onboarding = () => {
       case 1:
         return (
           <div className="space-y-5">
+            <fieldset className="rounded-xl border border-gray-200 p-4">
+              <legend className="px-1 text-sm font-bold text-gray-900">How old are you?</legend>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {[['18plus', '18 or older'], ['13-17', '13 to 17'], ['under13', 'Under 13']].map(([v, l]) => (
+                  <button key={v} type="button" aria-pressed={formData.ageGroup === v}
+                    onClick={() => setFormData((p) => ({ ...p, ageGroup: v, guardianConsent: v === '13-17' ? p.guardianConsent : false }))}
+                    className={`text-sm font-semibold px-4 py-2 rounded-full border ${formData.ageGroup === v ? 'bg-gray-900 border-gray-900 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>
+                    {l}
+                  </button>
+                ))}
+              </div>
+              {formData.ageGroup === '13-17' && (
+                <label className="flex items-start gap-2 mt-3 text-sm text-gray-800">
+                  <input type="checkbox" className="mt-1" checked={formData.guardianConsent} onChange={(e) => setFormData((p) => ({ ...p, guardianConsent: e.target.checked }))} />
+                  <span>My parent or guardian knows I’m joining She Model Tech and agrees. <span className="block text-xs text-gray-500">Members under 18 have a private profile, can’t take paid work, and only receive messages from She Model Tech staff.</span></span>
+                </label>
+              )}
+              {formData.ageGroup === 'under13' && (
+                <p className="mt-3 text-sm text-red-700">You need to be at least 13 to join She Model Tech. We’d love to see you when you’re 13!</p>
+              )}
+            </fieldset>
             <div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 mb-1">
                 What is your experience level?

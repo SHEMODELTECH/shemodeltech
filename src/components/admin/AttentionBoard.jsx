@@ -68,7 +68,6 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ...(isAdmin ? [['Companies to verify', c.companies, 'New company accounts waiting for verification', { tab: 'users', view: 'unverified' }]] : []),
     ...(isAdmin ? [['Sponsorship requests', c.sponsors, 'Companies asking to sponsor a cohort', { to: '/admin/cohorts' }]] : []),
     ['Job post deletion requests', c.jobDeletes, 'Companies asking to delete a job post (unpublished meanwhile)', { to: '/jobs' }],
-    ['Organization requests', c.orgNew, 'New training or licensing requests', { tab: 'organizations' }],
     ['Summit partners', c.partnersNew, 'New booth, workshop, or sponsor requests', { tab: 'summit' }],
     ...(isAdmin ? [['Deletion requests', c.deletions, 'Leads asking to delete a project', { tab: 'deletions' }]] : []),
   ];
