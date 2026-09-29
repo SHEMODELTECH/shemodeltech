@@ -20,6 +20,7 @@
 
 import { collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc, arrayUnion, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { alertStaff, notifyMember } from './staffAlerts';
 
 // Format a money amount. USD platform-wide for now.
 export const formatMoney = (amount, currency = 'USD') => {
@@ -195,10 +196,35 @@ const historyEntry = (memberName, memberEmail, action, extra = {}) => ({
 // Notify a user by uid (non-blocking pattern - callers wrap in try/catch).
 const notifyUid = async (userId, type, message, projectId, projectTitle) => {
   if (!userId) return;
-  await addDoc(collection(db, 'notifications'), {
-    userId, type, message, projectId, projectTitle: projectTitle || null,
-    isRead: false, read: false, createdAt: serverTimestamp(),
+  // Bell + push + email, opening the project's payments page.
+  await notifyMember(userId, {
+    type,
+    title: projectTitle ? `Payments: "${projectTitle}"` : 'Project payments',
+    body: message,
+    link: `/disputes/${projectId}`,
+    ctaLabel: 'Open the payments page',
   });
+};
+
+// She Model Tech pays everyone on its own paid cohorts (leads and collaborators).
+export const smtPays = (project) => !!project?.cohortPaid;
+
+// Tell She Model Tech staff (admins and editors): bell + push + email.
+const alertPayments = (title, body, projectId) =>
+  alertStaff({ type: 'payments', title, body, link: `/disputes/${projectId}`, roles: ['admin', 'editor'] });
+
+// Everyone involved in a project's payments, except the sender.
+export const notifyPaymentParticipants = async (project, fromEmail, message) => {
+  const emails = Object.keys(project.paymentConfirmations || {}).filter((e) => e !== fromEmail);
+  for (const e of emails) {
+    // eslint-disable-next-line no-await-in-loop
+    const uid = await uidByEmail(e);
+    // eslint-disable-next-line no-await-in-loop
+    if (uid) await notifyUid(uid, 'payment_message', message, project.id, project.projectTitle);
+  }
+  if (!smtPays(project) && project.submitterEmail !== fromEmail && project.submitterId) {
+    await notifyUid(project.submitterId, 'payment_message', message, project.id, project.projectTitle);
+  }
 };
 
 // Find a user's uid by email (users collection).
@@ -287,7 +313,7 @@ export const markOwnerPaidAll = async (project, currentUser) => {
     for (const [email, entry] of Object.entries(map)) {
       if (entry?.status !== 'pending') continue;
       const uid = await uidByEmail(email);
-      if (uid) await notifyUid(uid, 'payment_confirmation', `The owner of "${project.projectTitle}" marked your payment of ${formatMoney(entry.amountPaid ?? entry.amountDue)} as sent. Please confirm you received it (or report if you didn't) - the project closes when everyone confirms.`, project.id, project.projectTitle);
+      if (uid) await notifyUid(uid, 'payment_confirmation', `${smtPays(project) ? 'She Model Tech' : 'The owner'} marked your payment of ${formatMoney(entry.amountPaid ?? entry.amountDue)} for "${project.projectTitle}" as sent. Please confirm you received it (or report if you didn't) - the project closes when everyone confirms.`, project.id, project.projectTitle);
     }
   } catch (_) {}
   // Edge case: everyone already confirmed before the owner clicked.
@@ -311,7 +337,9 @@ export const confirmPaymentReceived = async (project, currentUser) => {
     })),
   });
   try {
-    if (project.submitterId) await notifyUid(project.submitterId, 'payment_confirmed', `${currentUser.displayName || currentUser.email} confirmed receiving ${formatMoney(map[currentUser.email].amountPaid)} for "${project.projectTitle}".`, project.id, project.projectTitle);
+    const note = `${currentUser.displayName || currentUser.email} confirmed receiving ${formatMoney(map[currentUser.email].amountPaid)} for "${project.projectTitle}".`;
+    if (smtPays(project)) alertPayments('Payment confirmed', note, project.id);
+    else if (project.submitterId) await notifyUid(project.submitterId, 'payment_confirmed', note, project.id, project.projectTitle);
   } catch (_) {}
   const completed = await checkAndCompleteProject(project, map);
   return { map, completed };
@@ -334,10 +362,8 @@ export const disputePayment = async (project, currentUser, reason) => {
   // Alert owner + all admins.
   try {
     const msg = `${currentUser.displayName || currentUser.email} disputed their payment on "${project.projectTitle}": ${reason}`;
-    if (project.submitterId) await notifyUid(project.submitterId, 'payment_disputed', msg, project.id, project.projectTitle);
-    for (const adminUid of await getAdminUids()) {
-      if (adminUid !== project.submitterId) await notifyUid(adminUid, 'payment_disputed', `[Admin] ${msg}`, project.id, project.projectTitle);
-    }
+    if (!smtPays(project) && project.submitterId) await notifyUid(project.submitterId, 'payment_disputed', msg, project.id, project.projectTitle);
+    alertPayments('A payment was disputed', msg, project.id);
   } catch (_) {}
   return map;
 };

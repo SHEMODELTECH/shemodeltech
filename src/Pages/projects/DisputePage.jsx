@@ -24,9 +24,10 @@ import { useAuth } from '../../context/AuthContext';
 import { doc, getDoc, collection, query, where, getDocs, addDoc, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { toast } from 'react-toastify';
+import { alertStaff } from '../../utils/staffAlerts';
 import {
   formatMoney, hasOpenDispute, confirmPaymentReceived, disputePayment,
-  adjustMemberPayment, resolveDispute, markOwnerPaidAll,
+  adjustMemberPayment, resolveDispute, markOwnerPaidAll, smtPays, notifyPaymentParticipants,
   isReadyToComplete, healPaidProjectStatus,
 } from '../../utils/paidProjects';
 
@@ -79,7 +80,7 @@ const DisputePage = () => {
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid))
-      .then(snap => setIsAdmin(snap.exists() && snap.data().role === 'admin'))
+      .then(snap => setIsAdmin(snap.exists() && ['admin', 'editor'].includes(snap.data().role)))
       .catch(() => {})
       .finally(() => setProfileLoaded(true));
   }, [currentUser]);
@@ -198,6 +199,12 @@ const DisputePage = () => {
         authorRole: myAuthorRole, // admin | owner | member
         createdAt: serverTimestamp(),
       });
+      // Everyone involved hears about it: participants, the owner, and She Model Tech.
+      const preview = `${currentUser.displayName || currentUser.email}: ${newMessage.trim().slice(0, 200)}`;
+      notifyPaymentParticipants(project, currentUser.email, `New message on the payments page. ${preview}`).catch(() => {});
+      if (!isAdmin) {
+        alertStaff({ type: 'payments_message', title: `Payments message: "${project.projectTitle}"`, body: preview, link: `/disputes/${projectId}`, roles: ['admin', 'editor'] });
+      }
       setNewMessage('');
     } catch (e) { toast.error('Could not send message.'); }
     setSending(false);
@@ -379,7 +386,7 @@ const DisputePage = () => {
                           </>
                         )}
                         {/* Owner/Admin: adjust the amount */}
-                        {(isOwner || isAdmin) && !isMe && e.status !== 'confirmed' && (
+                        {(smtPays(project) ? isAdmin : (isOwner || isAdmin)) && !isMe && e.status !== 'confirmed' && (
                           adjusting === email ? (
                             <div className="flex items-center gap-2 w-full">
                               <input type="number" min="0" step="0.01" value={adjustAmount} onChange={ev => setAdjustAmount(ev.target.value)}
@@ -414,14 +421,18 @@ const DisputePage = () => {
             </div>
 
             {/* Owner: mark all paid (after adjustments this resets and must be clicked again) */}
-            {isOwner && !isResolvedOrComplete && !project.ownerPaidAll && (
+            {/* Who sends payment: She Model Tech on its paid cohorts; otherwise the owner (company). */}
+            {(smtPays(project) ? isAdmin : isOwner) && !isResolvedOrComplete && !project.ownerPaidAll && (
               <button onClick={handleOwnerPaidAll} disabled={busy}
                 className="w-full mt-3 bg-pink-600 hover:bg-pink-700 text-white text-sm font-bold py-2.5 rounded-lg transition-all disabled:opacity-50">
-                I've Paid Everyone - Ask Members to Confirm
+                {smtPays(project) ? 'She Model Tech has sent everyone’s payment: ask them to confirm' : "I've Paid Everyone - Ask Members to Confirm"}
               </button>
             )}
+            {smtPays(project) && !isAdmin && !project.ownerPaidAll && !isResolvedOrComplete && (
+              <p className="text-gray-500 text-xs mt-3 text-center">She Model Tech pays the lead and every collaborator. You’ll be asked to confirm once your payment is sent.</p>
+            )}
             {project.ownerPaidAll && !isResolvedOrComplete && (
-              <p className="text-gray-400 text-xs mt-3 text-center">Owner has marked all payments sent. The project closes when every member confirms receipt.</p>
+              <p className="text-gray-400 text-xs mt-3 text-center">{smtPays(project) ? 'She Model Tech' : 'The owner'} has marked all payments sent. The project closes when everyone confirms receipt.</p>
             )}
           </div>
 

@@ -15,6 +15,7 @@ import SubmissionForm from '../../components/SubmissionForm';
 import { MIN_TEAM_SIZE, membersMeetMinTeamSize, MIN_TEAM_SIZE_MEMBERS_ERROR } from '../../utils/projectRoles';
 import { sendPush } from '../../utils/pushNotifications';
 import { issueWorkRecords } from '../../utils/companyCohorts';
+import { alertStaff } from '../../utils/staffAlerts';
 
 const badgeCategories = {
   'mentorship': { id: 'techmo', name: 'TechPO (Mentor)', color: 'from-pink-500 to-pink-600' },
@@ -280,6 +281,16 @@ const ProjectCompletion = () => {
       // can be adjusted during a dispute - the member's Account earnings read
       // amountPaid, so adjustments flow through automatically.
       const paymentConfirmations = {};
+      if (isPaidProject && project.cohortPaid) {
+        // She Model Tech pays everyone on its paid cohorts, the lead included.
+        paymentConfirmations[project.submitterEmail || currentUser.email] = {
+          status: 'pending',
+          amountDue: Number(project.payPerPerson) || 0,
+          amountPaid: null,
+          memberName: project.submitterName || currentUser.displayName || currentUser.email,
+          role: 'Project Lead',
+        };
+      }
       if (isPaidProject) {
         for (const m of members) {
           paymentConfirmations[m.applicantEmail] = {
@@ -290,6 +301,15 @@ const ProjectCompletion = () => {
             role: m.role || '',
           };
         }
+      }
+      if (isPaidProject && project.cohortPaid) {
+        alertStaff({
+          type: 'payments_due',
+          title: 'Work done: payments to send',
+          body: `"${project.projectTitle}" is finished. Send payment to the lead and collaborators, then mark it sent on the payments page.`,
+          link: `/disputes/${projectId}`,
+          roles: ['admin', 'editor'],
+        });
       }
       await updateDoc(doc(db, 'projects', projectId), {
         status: isPaidProject ? 'awaiting_payment_confirmation' : 'completed',
