@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useFeatures } from '../utils/features';
 import SponsorsStrip from '../components/SponsorsStrip';
 import Navbar from '../components/Navbar';
+import { DEDUCTIBLE_LINE } from '../config/nonprofit';
 
 const DONATION_LINK = process.env.REACT_APP_DONATION_LINK || null;
 const TEAM_EMAIL = 'shemodeltech@gmail.com';
@@ -51,7 +52,7 @@ const SupportMission = () => {
           <h2 className="text-lg font-bold text-gray-900">How we thank sponsors</h2>
           <ul className="mt-3 space-y-2 text-sm text-gray-700 list-disc pl-5">
             <li>Companies that fund a cohort are thanked with their logo and name in <strong>Thank you to our sponsors</strong> on She Model Tech.</li>
-            <li>You’ll receive a receipt for your records. SHE MODEL TECH Inc. is a registered 501(c)(3) nonprofit.</li>
+            <li>You’ll receive a receipt for your records. {DEDUCTIBLE_LINE}</li>
             <li>Sponsors support our programs; She Model Tech designs and runs every cohort and chooses the teams.</li>
           </ul>
         </div>
@@ -60,6 +61,9 @@ const SupportMission = () => {
       <section className="max-w-4xl mx-auto px-6 pb-16">
         <SponsorsStrip />
         <p className="text-sm text-gray-600 mt-6 text-center">
+          {DEDUCTIBLE_LINE} Donors outside the United States should check their own country’s rules.
+        </p>
+        <p className="text-sm text-gray-600 mt-2 text-center">
           Hiring? Companies post jobs and browse verified talent through our <Link to="/premium" className="text-pink-700 font-semibold hover:underline">company tiers</Link>.
         </p>
       </section>
