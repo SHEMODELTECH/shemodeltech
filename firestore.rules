@@ -559,7 +559,15 @@ service cloud.firestore {
  && request.resource.data.checkedIn == false;
  allow update: if isReviewer()
  || (isSignedIn() && resource.data.uid == myUid()
- && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['shareProfile']));
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['shareProfile', 'workshops']));
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ }
+ // "Notify me" for the Summit ({summitId}_{uid}).
+ match /summitInterest/{id} {
+ allow read: if isSignedIn() && (resource == null || resource.data.uid == myUid() || isReviewer());
+ allow create: if isSignedIn() && request.resource.data.uid == myUid()
+ && id == request.resource.data.summitId + '_' + myUid();
+ allow update: if isReviewer();
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
  }
  match /summitPartners/{id} {

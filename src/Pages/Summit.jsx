@@ -11,7 +11,6 @@ import SocialLinks from '../components/SocialLinks';
 import LimitHint, { countWords } from '../components/LimitHint';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
-import SummitComingSoon from '../components/SummitComingSoon';
 import { useFeatures } from '../utils/features';
 import { hasPerk } from '../config/tiers';
 import {
@@ -22,9 +21,41 @@ import {
   getCurrentSummit,
   getMyRegistration,
   registerForSummit,
+  notifyMe,
+  getMyInterest,
+  workshopTaken,
+  updateMyWorkshops,
 } from '../utils/summit';
 
-const lines = (t) => String(t || '').split('\n').map((l) => l.trim()).filter(Boolean);
+const TYPE_STYLE = {
+  keynote: 'bg-pink-100 text-pink-800',
+  panel: 'bg-violet-100 text-violet-800',
+  workshop: 'bg-amber-100 text-amber-800',
+  break: 'bg-gray-100 text-gray-700',
+};
+const TYPE_LABEL = { keynote: 'Keynote', panel: 'Panel', workshop: 'Workshop', break: 'Break' };
+
+// Days, hours, and minutes until the start date.
+const Countdown = ({ date }) => {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 60000); return () => clearInterval(t); }, []);
+  if (!date) return null;
+  const ms = new Date(`${date}T09:00:00`).getTime() - now;
+  if (ms <= 0) return null;
+  const d = Math.floor(ms / 86400000);
+  const h = Math.floor((ms % 86400000) / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  return (
+    <div className="flex gap-2 mt-5" aria-label={`${d} days, ${h} hours, ${m} minutes to go`}>
+      {[[d, 'days'], [h, 'hours'], [m, 'min']].map(([v, l]) => (
+        <div key={l} className="bg-white border border-pink-100 rounded-xl px-3 py-2 text-center min-w-[64px]">
+          <p className="text-xl font-bold text-gray-900">{v}</p>
+          <p className="text-[11px] text-gray-500">{l}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
 const fmtDate = (d) => (d ? new Date(`${d}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '');
 
 const Summit = () => {
@@ -39,6 +70,10 @@ const Summit = () => {
   const [pForm, setPForm] = useState({ companyName: '', contactName: '', contactEmail: '', option: 'booth', message: '' });
   const [pSent, setPSent] = useState(false);
   const [attendees, setAttendees] = useState(null); // recruiters: attendees who opted in
+  const [interested, setInterested] = useState(false); // "Notify me" already set
+  const [pick, setPick] = useState([]); // workshops to reserve
+  const [seats, setSeats] = useState({}); // sessionId -> seats taken
+  const [editingWs, setEditingWs] = useState(false);
 
   useEffect(() => {
     getCurrentSummit().then(setSummit).catch(() => setSummit(null));
@@ -51,8 +86,44 @@ const Summit = () => {
       if (p.isCompany) setPForm((f) => ({ ...f, companyName: p.companyProfile?.companyName || p.displayName || '', contactEmail: currentUser.email || '' }));
     }).catch(() => {});
   }, [currentUser]);
+  const interestId = summit?.id && !summit.published ? summit.id : 'next';
   useEffect(() => {
-    if (currentUser && summit?.id) getMyRegistration(summit.id, currentUser.uid).then(setReg).catch(() => {});
+    if (!currentUser || summit === undefined) return;
+    getMyInterest(summit?.published ? summit.id : summit?.id || 'next', currentUser.uid).then(setInterested).catch(() => {});
+  }, [currentUser, summit]);
+  const workshops = (summit?.sessions || []).filter((x) => x.type === 'workshop');
+  useEffect(() => {
+    if (!summit?.published) return;
+    Promise.all(workshops.map((w) => workshopTaken(summit.id, w.id).then((n) => [w.id, n]).catch(() => [w.id, 0])))
+      .then((pairs) => setSeats(Object.fromEntries(pairs)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [summit]);
+  const seatsLeft = (w) => (w.seats ? Math.max(0, Number(w.seats) - (seats[w.id] || 0)) : null);
+  const askNotify = async () => {
+    if (!currentUser) {
+      try { sessionStorage.setItem('smt_return_to', '/summit'); } catch (_) { /* ignore */ }
+      return navigate('/login');
+    }
+    try {
+      await notifyMe(interestId, currentUser, profile?.displayName);
+      setInterested(true);
+      toast.success('We’ll email you when registration opens.');
+    } catch (e) {
+      toast.error('Could not save that. Please try again.');
+    }
+  };
+  const saveMyWorkshops = async () => {
+    try {
+      await updateMyWorkshops(summit.id, currentUser.uid, pick);
+      setReg((r) => ({ ...r, workshops: pick }));
+      setEditingWs(false);
+      toast.success('Your workshop seats are saved.');
+    } catch (e) {
+      toast.error('Could not save your workshops.');
+    }
+  };
+  useEffect(() => {
+    if (currentUser && summit?.id) getMyRegistration(summit.id, currentUser.uid).then((r) => { setReg(r); if (r?.workshops) setPick(r.workshops); }).catch(() => {});
     if (currentUser && (summit?.recruiterUids || []).includes(currentUser.uid)) {
       getDocs(query(collection(db, 'summitRegistrations'), where('summitId', '==', summit.id), where('shareProfile', '==', true)))
         .then((snap) => setAttendees(snap.docs.map((d) => d.data())))
@@ -71,8 +142,14 @@ const Summit = () => {
     }
     setBusy(true);
     try {
-      await registerForSummit(summit, currentUser, profile, share);
-      setReg({ checkedIn: false, shareProfile: share });
+      const full = workshops.filter((w) => pick.includes(w.id) && seatsLeft(w) === 0);
+      if (full.length) {
+        toast.error(`${full[0].title} is full. Choose another workshop.`);
+        setBusy(false);
+        return;
+      }
+      await registerForSummit(summit, currentUser, profile, share, pick);
+      setReg({ checkedIn: false, shareProfile: share, workshops: pick });
       toast.success('You’re registered. See you at the Summit!');
     } catch (e) {
       toast.error('Could not register you. Please try again.');
@@ -104,27 +181,56 @@ const Summit = () => {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <main className={summit === null ? '' : 'max-w-5xl mx-auto px-4 sm:px-6 py-12'}>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
         {summit === undefined ? (
           <p className="text-gray-500">Loading...</p>
         ) : !summit ? (
-          <SummitComingSoon signedIn={!!currentUser} />
+          <section className="rounded-3xl bg-[#FDF4F8] border border-pink-100 p-8 sm:p-12 text-center">
+            <p className="text-pink-700 text-sm font-bold uppercase tracking-widest">She Model Tech Summit</p>
+            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mt-2">Our annual conference for women in tech</h1>
+            <p className="text-gray-700 mt-3 max-w-xl mx-auto">Keynotes, panels, and hands-on workshops. Details are coming soon.</p>
+            <div className="mt-6">
+              {interested ? (
+                <p className="font-semibold text-emerald-800">✓ We’ll email you when registration opens.</p>
+              ) : (
+                <button onClick={askNotify} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Notify me</button>
+              )}
+            </div>
+          </section>
         ) : (
           <>
-            <section className="rounded-3xl bg-gradient-to-br from-pink-50 via-white to-indigo-50 border border-pink-100 p-6 sm:p-10">
-              <p className="text-pink-600 text-sm font-semibold uppercase tracking-widest">She Model Tech Summit</p>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">{summit.title}</h1>
+            {/* Top: the conference at a glance */}
+            <section className="rounded-3xl bg-[#FDF4F8] border border-pink-100 p-6 sm:p-10">
+              <p className="text-pink-700 text-sm font-bold uppercase tracking-widest">She Model Tech Summit · our annual conference for women in tech</p>
+              <h1 className="text-3xl sm:text-5xl font-black text-gray-900 mt-2 tracking-tight">{summit.theme || summit.title}</h1>
+              {summit.theme && summit.title && <p className="text-base font-semibold text-gray-700 mt-1">{summit.title}</p>}
               {summit.tagline && <p className="text-lg text-gray-700 mt-2">{summit.tagline}</p>}
-              <p className="text-gray-700 mt-4">
-                <strong>{fmtDate(summit.startDate)}</strong>
-                {summit.endDate && summit.endDate !== summit.startDate ? ` to ${fmtDate(summit.endDate)}` : ''}
-                {summit.venue ? ` · ${summit.venue}` : ''}
-              </p>
+              <div className="flex flex-wrap gap-x-5 gap-y-1 mt-4 text-gray-800 text-sm">
+                <span><strong>{fmtDate(summit.startDate)}</strong>{summit.endDate && summit.endDate !== summit.startDate ? ` to ${fmtDate(summit.endDate)}` : ''}</span>
+                <span>{summit.venue || 'Location to be announced'}</span>
+                <span>Free for members</span>
+              </div>
+              <Countdown date={summit.startDate} />
+
               <div className="mt-6">
-                {reg ? (
-                  <p className="font-semibold text-emerald-800">✓ You’re registered{reg.checkedIn ? ' and checked in' : ''}.</p>
+                {!summit.published ? (
+                  interested ? (
+                    <p className="font-semibold text-emerald-800">✓ We’ll email you when registration opens.</p>
+                  ) : (
+                    <button onClick={askNotify} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Notify me</button>
+                  )
+                ) : reg ? (
+                  <div>
+                    <p className="font-semibold text-emerald-800">✓ You’re registered{reg.checkedIn ? ' and checked in' : ''}.</p>
+                    {workshops.length > 0 && !editingWs && (
+                      <p className="text-sm text-gray-700 mt-1">
+                        Your workshops: {(reg.workshops || []).length ? workshops.filter((w) => (reg.workshops || []).includes(w.id)).map((w) => w.title).join(', ') : 'none yet'}{' '}
+                        <button onClick={() => { setPick(reg.workshops || []); setEditingWs(true); }} className="text-pink-700 font-semibold underline">Change</button>
+                      </p>
+                    )}
+                  </div>
                 ) : profile?.isCompany ? (
-                  <a href="#partner" className="inline-block bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Partner with the Summit</a>
+                  <a href="#partner" className="inline-block bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Take part as a company</a>
                 ) : (
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <button onClick={register} disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg disabled:opacity-60">
@@ -138,24 +244,115 @@ const Summit = () => {
                     )}
                   </div>
                 )}
-                <p className="text-xs text-gray-500 mt-2">Free for every member.</p>
               </div>
+
+              {/* Reserve workshop seats (when registering, or changing later) */}
+              {summit.published && currentUser && !profile?.isCompany && workshops.length > 0 && (!reg || editingWs) && (
+                <fieldset className="mt-5 bg-white border border-pink-100 rounded-2xl p-4">
+                  <legend className="px-1 text-sm font-bold text-gray-900">Reserve workshop seats <span className="font-normal text-gray-500">(optional)</span></legend>
+                  <div className="space-y-2 mt-1">
+                    {workshops.map((w) => {
+                      const left = seatsLeft(w);
+                      const mine = (reg?.workshops || []).includes(w.id);
+                      const full = left === 0 && !mine;
+                      return (
+                        <label key={w.id} className={`flex items-start gap-2 text-sm ${full ? 'text-gray-400' : 'text-gray-800'}`}>
+                          <input type="checkbox" className="mt-1" disabled={full} checked={pick.includes(w.id)}
+                            onChange={(e) => setPick((p) => (e.target.checked ? [...p, w.id] : p.filter((x) => x !== w.id)))} />
+                          <span>
+                            <strong>{w.title}</strong>{w.start ? ` · ${w.start}${w.end ? `–${w.end}` : ''}` : ''}{w.room ? ` · ${w.room}` : ''}
+                            <span className="block text-xs text-gray-500">{left === null ? 'Open seating' : full ? 'Full' : `${left} seat${left === 1 ? '' : 's'} left`}</span>
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                  {reg && editingWs && (
+                    <div className="flex gap-2 mt-3">
+                      <button onClick={saveMyWorkshops} className="text-sm font-semibold bg-pink-600 text-white px-4 py-2 rounded-lg">Save my workshops</button>
+                      <button onClick={() => setEditingWs(false)} className="text-sm font-semibold text-gray-600 px-3 py-2">Cancel</button>
+                    </div>
+                  )}
+                </fieldset>
+              )}
             </section>
 
-            {summit.description && <p className="text-gray-700 mt-8 whitespace-pre-wrap leading-relaxed">{summit.description}</p>}
+            {summit.description && <p className="text-gray-700 mt-8 whitespace-pre-wrap leading-relaxed max-w-3xl">{summit.description}</p>}
 
-            <div className="grid md:grid-cols-3 gap-5 mt-8">
-              {[['Agenda', summit.agenda], ['Speakers', summit.speakers], ['Workshops', summit.workshops]].map(([t, v]) =>
-                lines(v).length ? (
-                  <section key={t} className="rounded-2xl border border-gray-200 p-5">
-                    <h2 className="font-bold text-gray-900">{t}</h2>
-                    <ul className="mt-3 space-y-2 text-sm text-gray-700">
-                      {lines(v).map((l, i) => <li key={i}>{l}</li>)}
-                    </ul>
-                  </section>
-                ) : null
+            {/* Agenda */}
+            <section id="agenda" className="mt-10">
+              <h2 className="text-2xl font-bold text-gray-900">Agenda</h2>
+              {(summit.sessions || []).length === 0 ? (
+                <p className="text-gray-600 mt-2">Agenda coming soon.</p>
+              ) : (
+                <ul className="mt-4 divide-y divide-gray-100 border border-gray-200 rounded-2xl bg-white">
+                  {[...summit.sessions].sort((x, y) => String(x.start || '').localeCompare(String(y.start || ''))).map((x) => (
+                    <li key={x.id} className="flex flex-wrap sm:flex-nowrap gap-3 p-4">
+                      <span className="w-24 shrink-0 text-sm font-semibold text-gray-700">{x.start || ''}{x.end ? `–${x.end}` : ''}</span>
+                      <div className="min-w-0 flex-1">
+                        <span className={`inline-block text-[11px] font-bold px-2 py-0.5 rounded-full ${TYPE_STYLE[x.type] || TYPE_STYLE.break}`}>{TYPE_LABEL[x.type] || 'Session'}</span>
+                        <p className="font-semibold text-gray-900 mt-1">{x.title}</p>
+                        <p className="text-sm text-gray-600">
+                          {[x.room, ...(x.speakerIds || []).map((id) => (summit.speakerList || []).find((sp) => sp.id === id)?.name).filter(Boolean)].filter(Boolean).join(' · ')}
+                          {x.type === 'workshop' && x.seats ? ` · ${x.seats} seats` : ''}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               )}
-            </div>
+            </section>
+
+            {/* Speakers (only once added) */}
+            {(summit.speakerList || []).length > 0 && (
+              <section className="mt-10">
+                <h2 className="text-2xl font-bold text-gray-900">Speakers</h2>
+                <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {summit.speakerList.map((sp) => (
+                    <li key={sp.id} className="bg-white border border-gray-200 rounded-2xl p-4 text-center">
+                      {sp.photoUrl ? (
+                        <img src={sp.photoUrl} alt="" className="w-20 h-20 rounded-full object-cover mx-auto" />
+                      ) : (
+                        <div className="w-20 h-20 rounded-full bg-pink-100 text-pink-800 font-bold text-xl flex items-center justify-center mx-auto">{(sp.name || '?').charAt(0)}</div>
+                      )}
+                      <p className="font-semibold text-gray-900 mt-2">{sp.name}</p>
+                      <p className="text-xs text-gray-600">{[sp.role, sp.company].filter(Boolean).join(', ')}</p>
+                      {sp.bio && <p className="text-xs text-gray-500 mt-2">{sp.bio}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Exhibitors and partners (approved Summit requests) */}
+            {(summit.exhibitors || []).length > 0 && (
+              <section className="mt-10">
+                <h2 className="text-2xl font-bold text-gray-900">Exhibitors and partners</h2>
+                <ul className="mt-4 flex flex-wrap gap-3">
+                  {summit.exhibitors.map((e) => (
+                    <li key={e.id} className="bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm">
+                      <span className="font-semibold text-gray-900">{e.name}</span>
+                      <span className="text-gray-500"> · {PARTNER_OPTIONS[e.option] || e.option}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* FAQs */}
+            {(summit.faqs || []).length > 0 && (
+              <section className="mt-10">
+                <h2 className="text-2xl font-bold text-gray-900">FAQs</h2>
+                <div className="mt-4 space-y-2">
+                  {summit.faqs.map((f, i) => (
+                    <details key={i} className="bg-white border border-gray-200 rounded-xl p-4">
+                      <summary className="font-semibold text-gray-900 cursor-pointer">{f.q}</summary>
+                      <p className="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {(summit.sponsors || []).length > 0 && (
               <section className="mt-10">
