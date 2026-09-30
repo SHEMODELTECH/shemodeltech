@@ -521,9 +521,10 @@ const ProjectDetail = () => {
                       {getPayRangeLabel(project.teamRoles)}
                     </p>
                     <p className="text-gray-500 text-xs">
-                      Pay is per person, set per role by the project owner, and paid on verified
-                      completion. Everyone's pay is visible below. No badges are awarded on paid
-                      projects.
+                      Pay is per person, set per role, and paid by She Model Tech after the work is done
+                      and reviewed. <strong>We pay by PayPal</strong>, so you’ll need a PayPal account in your
+                      own name (add its email in Settings → Account → Payout details). Members 18 and
+                      older only. No badges are awarded on paid projects.
                     </p>
                   </div>
                 </div>

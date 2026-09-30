@@ -16,7 +16,7 @@ const ageOn = (dob) => {
 
 const PaymentAgreement = ({ open, projectTitle, roleTitle, pay, defaults = {}, onCancel, onConfirm }) => {
   const [dob, setDob] = useState('');
-  const [method, setMethod] = useState(defaults.method || 'Wise');
+  const [method, setMethod] = useState(defaults.method || 'PayPal');
   const [email, setEmail] = useState(defaults.email || '');
   const [country, setCountry] = useState(defaults.country || '');
   const [agree, setAgree] = useState(false);
@@ -43,9 +43,11 @@ const PaymentAgreement = ({ open, projectTitle, roleTitle, pay, defaults = {}, o
         <label className="block text-sm font-semibold text-gray-800 mt-4" htmlFor="pa-dob">Date of birth <span className="font-normal text-gray-500">(to confirm you’re 18 or older; we don’t store it)</span></label>
         <input id="pa-dob" type="date" className={input} max={new Date().toISOString().slice(0, 10)} value={dob} onChange={(e) => setDob(e.target.value)} />
 
-        <label className="block text-sm font-semibold text-gray-800 mt-3" htmlFor="pa-m">How would you like to be paid?</label>
+        <label className="block text-sm font-semibold text-gray-800 mt-3" htmlFor="pa-m">How would you like to be paid? <span className="font-normal text-gray-500">(She Model Tech pays by PayPal)</span></label>
         <select id="pa-m" className={input} value={method} onChange={(e) => setMethod(e.target.value)}>
-          {['Wise', 'PayPal', 'Bank transfer'].map((m) => <option key={m}>{m}</option>)}
+          <option value="PayPal">PayPal (recommended)</option>
+          <option value="Wise">Wise</option>
+          <option value="Bank transfer">Bank transfer</option>
         </select>
         {method !== 'Bank transfer' ? (
           <>
