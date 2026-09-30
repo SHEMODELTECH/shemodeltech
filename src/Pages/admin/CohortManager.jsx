@@ -237,7 +237,7 @@ const CohortManager = () => {
       });
       await updateCohort(cohort.id, { projectCount: existing + (res.created || 0) }).catch(() => {});
       setAddMore((m) => ({ ...m, [cohort.id]: false }));
-      toast.success(`${res.created} draft project${res.created === 1 ? '' : 's'} created. Read the briefs, then reveal.`);
+      toast.success(`${res.created} draft project${res.created === 1 ? '' : 's'} created. Read the briefs, then publish.`);
       await load();
     } catch (e) {
       toast.error('Generation failed.');
@@ -249,7 +249,7 @@ const CohortManager = () => {
   const reveal = async (cohort, projects) => {
     const drafts = projects.filter((p) => p.isActive === false);
     if (!drafts.length) {
-      toast.error('Nothing to reveal, generate projects first.');
+      toast.error('Nothing to publish, generate projects first.');
       return;
     }
     if (!window.confirm(`Make ${drafts.length} projects visible and open lead applications?`))
@@ -313,10 +313,10 @@ const CohortManager = () => {
       notifyLeadWaitlist(`${cohort.name || 'A new cohort'} (${projects.length} project${projects.length === 1 ? '' : 's'})`)
         .then((n) => n > 0 && toast.info(`${n} ${n === 1 ? 'person' : 'people'} on the lead waitlist were emailed.`))
         .catch(() => {});
-      toast.success('Cohort revealed. Lead applications are open.');
+      toast.success('Cohort published. Lead applications are open.');
       await load();
     } catch (e) {
-      toast.error('Could not reveal the cohort.');
+      toast.error('Could not publish the cohort.');
     }
     setBusy(null);
   };
@@ -438,35 +438,6 @@ const CohortManager = () => {
           setDeclineSponsor(null);
         }}
       />
-      {sponsorReqs.length > 0 && (
-        <div className="mb-8 bg-white border border-pink-200 rounded-xl p-5">
-          <h2 className="font-bold text-gray-900 mb-3">Sponsorship requests</h2>
-          <ul className="space-y-3">
-            {sponsorReqs.map((x) => (
-              <li key={x.id} className="border border-gray-200 rounded-lg p-3">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="font-semibold text-gray-900">{x.companyName}: {x.problemTitle || 'Sponsored cohort'}</p>
-                    <p className="text-xs text-gray-500">{x.projects} project{x.projects === 1 ? '' : 's'} · {x.people || '?'} people · ${x.budget || 0}{x.payPerPerson ? ` · $${x.payPerPerson}/person` : ''}{x.timeline ? ` · ${x.timeline}` : ''}</p>
-                  </div>
-                  {x.status === 'new' ? (
-                    <div className="flex gap-2">
-                      <button onClick={async () => { await markSponsorPaid(x, currentUser); setSponsorReqs((xs) => xs.map((y) => (y.id === x.id ? { ...y, status: 'paid' } : y))); toast.success('Payment confirmed. Create the cohort and choose this sponsor.'); }}
-                        className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg">Payment received</button>
-                      <button onClick={() => setDeclineSponsor(x)}
-                        className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
-                    </div>
-                  ) : (
-                    <span className="text-xs font-bold text-sky-700 bg-sky-50 px-2 py-1 rounded-full">Paid · ready for a cohort</span>
-                  )}
-                </div>
-                <p className="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{x.focus}</p>
-                {x.message && <p className="text-xs text-gray-500 mt-1">{x.message}</p>}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {/* Create */}
       {showNew && (
@@ -514,27 +485,6 @@ const CohortManager = () => {
                 className="w-40 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500" />
             </div>
           )}
-          <div className="mb-3">
-            <label className="block text-xs font-bold text-gray-900 mb-1" htmlFor="c-sponsor">Sponsor <span className="font-normal text-gray-500">(optional: a company funding this cohort)</span></label>
-            <select id="c-sponsor" value={sponsorReqId} onChange={(e) => {
-                setSponsorReqId(e.target.value);
-                const req = sponsorReqs.find((x) => x.id === e.target.value);
-                if (req) {
-                  setIsPaid(true);
-                  setCount(req.projects || 1);
-                  if (req.people) setTeamSize(Math.max(2, Math.round(req.people / (req.projects || 1))));
-                  if (req.payPerPerson) setPayPerPerson(req.payPerPerson);
-                }
-              }}
-              className="w-full sm:w-auto px-3 py-2 rounded-lg border border-gray-300 text-sm">
-              <option value="">No sponsor</option>
-              {sponsorReqs.filter((x) => x.status === 'paid').map((x) => (
-                <option key={x.id} value={x.id}>{x.companyName} · {x.projects} project{x.projects === 1 ? '' : 's'} · {x.people || '?'} people{x.payPerPerson ? ` · $${x.payPerPerson}/person` : ''}</option>
-              ))}
-            </select>
-            {sponsorReqs.filter((x) => x.status === 'paid').length === 0 && <p className="text-[11px] text-gray-500 mt-1">Only sponsorships you’ve confirmed as paid appear here. Confirm payment in Sponsorship requests above.</p>}
-            {sponsorReqId && <p className="text-[11px] text-gray-600 mt-1">The sponsor is added to every project workspace. She Model Tech pays the leads and collaborators.</p>}
-          </div>
           <p className="text-gray-500 text-xs mb-3 leading-relaxed">
             Everyone in the cohort starts at the same time and finishes on the same deadline. Leads can’t change these
             dates; they can request extra time, which you approve. On a paid cohort, leads can’t change anything in the
@@ -625,7 +575,7 @@ const CohortManager = () => {
                     disabled={busy === cohort.id}
                     className="bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 text-white text-xs font-semibold px-4 py-2 rounded-lg"
                   >
-                    Reveal {drafts} project{drafts === 1 ? '' : 's'}
+                    Publish {drafts} project{drafts === 1 ? '' : 's'}
                   </button>
                 )}
                 <Link
@@ -639,8 +589,7 @@ const CohortManager = () => {
                     onClick={() => setOpenCohort(openCohort === cohort.id ? null : cohort.id)}
                     className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 text-xs font-semibold px-4 py-2 rounded-lg"
                   >
-                    {openCohort === cohort.id ? 'Hide' : 'Review'} {projects.length} brief
-                    {projects.length === 1 ? '' : 's'}
+                    {openCohort === cohort.id ? 'Hide' : `Review ${projects.length} brief${projects.length === 1 ? '' : 's'}`}
                   </button>
                 )}
                 <button
@@ -847,7 +796,7 @@ const CohortManager = () => {
               {drafts > 0 && (
                 <p className="text-amber-700 text-xs mb-3">
                   {drafts} project{drafts === 1 ? ' is' : 's are'} still hidden. Read the briefs
-                  before revealing, a weak brief costs a team eight weeks.
+                  before publishing, a weak brief costs a team eight weeks.
                 </p>
               )}
 

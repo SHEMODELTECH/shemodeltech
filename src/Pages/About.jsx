@@ -3,6 +3,26 @@ import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import SocialLinks from '../components/SocialLinks';
 
+// The founder's photo from her website; her initials if it can't load.
+const FounderPhoto = () => {
+  const [failed, setFailed] = React.useState(false);
+  if (failed) {
+    return (
+      <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-pink-100 text-pink-800 text-3xl font-bold flex items-center justify-center shrink-0" aria-hidden="true">
+        YA
+      </div>
+    );
+  }
+  return (
+    <img
+      src="https://www.opeyemitaiwoadeniran.com/images/yemi-portrait.webp"
+      alt="Opeyemi (Yemi) Adeniran, founder of She Model Tech"
+      onError={() => setFailed(true)}
+      className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover shrink-0 border-4 border-pink-50"
+    />
+  );
+};
+
 const About = () => {
   const navigate = useNavigate();
 
@@ -48,6 +68,27 @@ const About = () => {
                 <p className="text-gray-600 text-sm mt-3 leading-relaxed">{d}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Meet the founder */}
+        <section className="mb-14" aria-labelledby="founder-h">
+          <h2 id="founder-h" className="text-2xl font-bold text-gray-900 mb-5">Meet the founder</h2>
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:items-center">
+            <FounderPhoto />
+            <div className="min-w-0">
+              <p className="text-xl font-bold text-gray-900">Opeyemi (Yemi) Adeniran</p>
+              <p className="text-pink-700 font-semibold text-sm mt-0.5">Founder, She Model Tech</p>
+              <p className="text-gray-700 leading-relaxed mt-3">
+                Yemi is a PhD researcher in artificial intelligence at Morgan State University and the founder of Morgan
+                TechFest, a student technology conference running since 2022. She started She Model Tech so women can
+                learn tech the way it’s really done: by building real projects together, with mentors beside them.
+              </p>
+              <div className="flex flex-wrap gap-3 mt-4">
+                <a href="https://www.opeyemitaiwoadeniran.com/" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-pink-700 hover:underline">Visit her website</a>
+                <a href="mailto:shemodeltech@gmail.com" className="text-sm font-semibold text-gray-700 hover:underline">Contact She Model Tech</a>
+              </div>
+            </div>
           </div>
         </section>
 

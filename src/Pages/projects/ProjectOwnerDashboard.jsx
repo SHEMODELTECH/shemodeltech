@@ -577,7 +577,7 @@ const ProjectOwnerDashboard = () => {
                           </div>
                         )}
                         {r.status === 'scheduled' && !revealed && (
-                          <p className="text-xs text-gray-600 mt-2">You’ll see each project here, with its workspace, once She Model Tech reveals them.</p>
+                          <p className="text-xs text-gray-600 mt-2">You’ll see each project here, with its workspace, once She Model Tech publishes them.</p>
                         )}
                       </li>
                     );

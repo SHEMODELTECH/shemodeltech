@@ -246,7 +246,7 @@ const LeadApplicationReview = () => {
                         <input type="date" value={(newDates[p.id] || {}).end || ''} min={minEndDate((newDates[p.id] || {}).start)} onChange={(e) => setNewDates((m) => ({ ...m, [p.id]: { ...(m[p.id] || {}), end: e.target.value } }))}
                           className="block mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
                       </label>
-                      <p className="text-[11px] text-gray-500 w-full">A new free cohort is created with these dates, and this project goes into it. Reveal it in Admin → Cohorts when you’re ready.</p>
+                      <p className="text-[11px] text-gray-500 w-full">A new free cohort is created with these dates, and this project goes into it. Publish it in Projects → Create a cohort when you’re ready.</p>
                     </div>
                   )}
                 </div>
