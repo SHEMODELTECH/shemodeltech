@@ -681,6 +681,7 @@ const AdminPanel = ({ only = null }) => {
     ['overview', 'Overview'],
     ['users', 'Users'],
     ...(isReviewer ? [['teachers', 'Mentors'], ['summit', 'Summit']] : []),
+    ...(isAdmin ? [['sponsors', 'Sponsors']] : []),
     ['moderation', 'Moderation'],
     // Deleting anything is admin-only: editors never see these.
     ...(isAdmin ? [['deletions', 'Deletion Requests'], ['danger', 'Danger Zone']] : []),
@@ -941,8 +942,13 @@ const AdminPanel = ({ only = null }) => {
         </div>
       )}
       {!loadingData && tab === 'overview' && isAdmin && <LaunchSettings currentUser={currentUser} />}
-      {!loadingData && tab === 'overview' && isAdmin && <SponsorsAdmin />}
-      {!loadingData && tab === 'overview' && isAdmin && <GiftsAdmin />}
+      {/* Sponsors tab (admins): sponsor thank-yous and recorded gifts. */}
+      {!loadingData && tab === 'sponsors' && isAdmin && (
+        <div>
+          <SponsorsAdmin />
+          <GiftsAdmin />
+        </div>
+      )}
       {!loadingData && tab === 'overview' && (
         <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
       )}
