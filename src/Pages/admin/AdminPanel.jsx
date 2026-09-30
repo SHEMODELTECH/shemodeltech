@@ -681,7 +681,7 @@ const AdminPanel = ({ only = null }) => {
     ['overview', 'Overview'],
     ['users', 'Users'],
     ...(isReviewer ? [['teachers', 'Mentors'], ['summit', 'Summit']] : []),
-    ...(isAdmin ? [['sponsors', 'Sponsors'], ['launch', 'Launch settings']] : []),
+    ...(isAdmin ? [['sponsors', 'Sponsors'], ['launch', 'Settings']] : []),
     ['moderation', 'Moderation'],
     // Deleting anything is admin-only: editors never see these.
     ...(isAdmin ? [['deletions', 'Deletion Requests'], ['danger', 'Danger Zone']] : []),
@@ -718,12 +718,13 @@ const AdminPanel = ({ only = null }) => {
       </p>
 
       {/* Tabs */}
-      {!only && <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200">
+      {/* One straight line of tabs; on narrow screens it scrolls sideways instead of wrapping. */}
+      {!only && <div className="flex flex-nowrap gap-1 mb-6 border-b border-gray-200 overflow-x-auto whitespace-nowrap">
         {tabs.map(([key, label]) => (
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`px-4 py-2 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === key ? 'border-pink-600 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
+            className={`shrink-0 px-3 py-2 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === key ? 'border-pink-600 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
           >
             {label}
           </button>
