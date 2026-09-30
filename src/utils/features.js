@@ -1,5 +1,5 @@
 // src/utils/features.js
-// Launch switches, controlled by admins in Admin → Overview → Launch settings.
+// Launch switches, controlled by admins in Admin → Launch settings.
 // Stored in app_settings/features. Focus mode (the first months) keeps paid work,
 // paid cohorts, and sponsorships paused, and takes organization requests as
 // "register interest" only.

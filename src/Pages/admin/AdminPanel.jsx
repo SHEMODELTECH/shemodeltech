@@ -681,7 +681,7 @@ const AdminPanel = ({ only = null }) => {
     ['overview', 'Overview'],
     ['users', 'Users'],
     ...(isReviewer ? [['teachers', 'Mentors'], ['summit', 'Summit']] : []),
-    ...(isAdmin ? [['sponsors', 'Sponsors']] : []),
+    ...(isAdmin ? [['sponsors', 'Sponsors'], ['launch', 'Launch settings']] : []),
     ['moderation', 'Moderation'],
     // Deleting anything is admin-only: editors never see these.
     ...(isAdmin ? [['deletions', 'Deletion Requests'], ['danger', 'Danger Zone']] : []),
@@ -941,7 +941,8 @@ const AdminPanel = ({ only = null }) => {
           </div>
         </div>
       )}
-      {!loadingData && tab === 'overview' && isAdmin && <LaunchSettings currentUser={currentUser} />}
+      {/* Launch settings tab (admins): switch paid features on and off. */}
+      {!loadingData && tab === 'launch' && isAdmin && <LaunchSettings currentUser={currentUser} />}
       {/* Sponsors tab (admins): sponsor thank-yous and recorded gifts. */}
       {!loadingData && tab === 'sponsors' && isAdmin && (
         <div>
