@@ -220,7 +220,7 @@ function App() {
                 <Route path="/projects/sponsor-cohort" element={<SidebarRoute><SponsorCohort /></SidebarRoute>} />
                 <Route path="/admin/cohorts" element={<StaffRoute><CohortManager /></StaffRoute>} />
                 <Route path="/admin/reviews" element={<Navigate to="/admin/projects" replace />} />
-                <Route path="/admin/projects" element={<StaffRoute><AdminPanel only="projects" /></StaffRoute>} />
+                <Route path="/admin/projects" element={<StaffRoute><AdminPanel key="admin-projects" only="projects" /></StaffRoute>} />
                 <Route path="/join/:code" element={<Navigate to="/" replace />} />
                 <Route path="/org/*" element={<Navigate to="/" replace />} />
 
@@ -289,7 +289,7 @@ function App() {
                   path="/admin"
                   element={
                     <StaffRoute>
-                      <AdminPanel />
+                      <AdminPanel key="admin-dashboard" />
                     </StaffRoute>
                   }
                 />

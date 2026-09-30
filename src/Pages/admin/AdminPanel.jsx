@@ -61,6 +61,11 @@ const AdminPanel = ({ only = null }) => {
   const [isReviewer, setIsReviewer] = useState(false); // admin OR editor: review surfaces
   const [myRole, setMyRole] = useState(null); // shown in the header badge
   const [tab, setTab] = useState(only || 'overview');
+  // Moving between the dashboard and Manage projects reuses this page, so
+  // follow the address: show the right section without a reload.
+  useEffect(() => {
+    setTab(only || 'overview');
+  }, [only]);
   // Editors can't open admin-only tabs (deleting is admin-only).
   useEffect(() => {
     if (!isAdmin && ['danger', 'deletions'].includes(tab)) setTab('overview');
