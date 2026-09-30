@@ -16,6 +16,7 @@ import SummitCard from '../../components/SummitCard';
 import OrgMembershipsCard from '../../components/OrgMembershipsCard';
 import { TIER_LABEL, companyTier } from '../../config/tiers';
 import PayoutReminder from '../../components/PayoutReminder';
+import PushPrompt from '../../components/PushPrompt';
 import {
   computeMemberEarnings,
   computeCompanyDisbursements,
@@ -217,6 +218,7 @@ const DashboardOverview = () => {
       {/* Unverified companies: status and a direct line to the team */}
       {!loading && profileData?.isCompany && <CompanyVerificationBanner profile={profileData} />}
       {!loading && !profileData?.isCompany && currentUser && <PayoutReminder uid={currentUser.uid} profile={profileData} />}
+      {!loading && currentUser && <PushPrompt />}
 
       {/* Approved lead: her project is hers to prepare before it starts. */}
       {!loading &&
