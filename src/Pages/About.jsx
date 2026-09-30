@@ -71,27 +71,6 @@ const About = () => {
           </div>
         </section>
 
-        {/* Meet the founder */}
-        <section className="mb-14" aria-labelledby="founder-h">
-          <h2 id="founder-h" className="text-2xl font-bold text-gray-900 mb-5">Meet the founder</h2>
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:items-center">
-            <FounderPhoto />
-            <div className="min-w-0">
-              <p className="text-xl font-bold text-gray-900">Opeyemi (Yemi) Adeniran</p>
-              <p className="text-pink-700 font-semibold text-sm mt-0.5">Founder, She Model Tech</p>
-              <p className="text-gray-700 leading-relaxed mt-3">
-                Yemi is a PhD researcher in artificial intelligence at Morgan State University and the founder of Morgan
-                TechFest, a student technology conference running since 2022. She started She Model Tech so women can
-                learn tech the way it’s really done: by building real projects together, with mentors beside them.
-              </p>
-              <div className="flex flex-wrap gap-3 mt-4">
-                <a href="https://www.opeyemitaiwoadeniran.com/" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-pink-700 hover:underline">Visit her website</a>
-                <a href="mailto:shemodeltech@gmail.com" className="text-sm font-semibold text-gray-700 hover:underline">Contact She Model Tech</a>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* The path: Ascend Achieve Advance */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
@@ -193,6 +172,25 @@ const About = () => {
           </div>
         </section>
 
+        {/* Meet the founder */}
+        <section className="mb-14" aria-labelledby="founder-h">
+          <h2 id="founder-h" className="text-2xl font-bold text-gray-900 mb-5">Meet the founder</h2>
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:items-center">
+            <FounderPhoto />
+            <div className="min-w-0">
+              <p className="text-xl font-bold text-gray-900">Opeyemi (Yemi) Adeniran</p>
+              <p className="text-pink-700 font-semibold text-sm mt-0.5">Founder, She Model Tech</p>
+              <p className="text-gray-700 leading-relaxed mt-3">
+                Yemi is a PhD researcher in AI and the founder of Morgan TechFest. She built She Model Tech to help women
+                learn, build, and lead in technology, so they don’t just enter the field but help shape its future.
+              </p>
+              <div className="flex flex-wrap gap-3 mt-4">
+                <a href="https://www.opeyemitaiwoadeniran.com/" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-pink-700 hover:underline">Visit her website</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="text-center">
           <p className="text-gray-500 mb-4">Ready to start building your tech career?</p>
@@ -222,9 +220,6 @@ const About = () => {
             </Link>
             <Link to="/summit" className="hover:text-pink-600">
               Summit
-            </Link>
-            <Link to="/teach" className="hover:text-pink-600">
-              Become a mentor
             </Link>
             <Link to="/terms" className="hover:text-pink-600">
               Terms
