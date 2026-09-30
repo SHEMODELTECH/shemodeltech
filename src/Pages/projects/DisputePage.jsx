@@ -25,6 +25,7 @@ import { doc, getDoc, collection, query, where, getDocs, addDoc, orderBy, onSnap
 import { db } from '../../firebase/config';
 import { toast } from 'react-toastify';
 import { alertStaff } from '../../utils/staffAlerts';
+import { buildPayoutFiles, downloadCsv } from '../../utils/payoutFiles';
 import {
   formatMoney, hasOpenDispute, confirmPaymentReceived, disputePayment,
   adjustMemberPayment, resolveDispute, markOwnerPaidAll, smtPays, notifyPaymentParticipants,
@@ -444,6 +445,38 @@ const DisputePage = () => {
                 );
               })}
             </div>
+
+            {/* Staff: one file pays everyone (PayPal Payouts or Wise batch). */}
+            {smtPays(project) && isAdmin && !isResolvedOrComplete && !project.ownerPaidAll && (() => {
+              const files = buildPayoutFiles(project, entries, payouts);
+              const stamp = new Date().toISOString().slice(0, 10);
+              return (
+                <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3">
+                  <p className="text-xs font-bold text-gray-900">Pay everyone with one upload</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <button type="button" disabled={!files.paypal.rows}
+                      onClick={() => downloadCsv(`paypal-payouts-${stamp}.csv`, files.paypal.csv)}
+                      className="text-xs font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg disabled:opacity-40">
+                      PayPal file ({files.paypal.rows}{files.paypal.rows ? `, $${files.paypal.total.toFixed(2)}` : ''})
+                    </button>
+                    <button type="button" disabled={!files.wise.rows}
+                      onClick={() => downloadCsv(`wise-batch-${stamp}.csv`, files.wise.csv)}
+                      className="text-xs font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg disabled:opacity-40">
+                      Wise file ({files.wise.rows}{files.wise.rows ? `, $${files.wise.total.toFixed(2)}` : ''})
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-gray-600 mt-2">
+                    PayPal: Business Tools → Make Payments → Payouts → upload the file. Wise Business: Payments → Batch → “Send by email” → upload.
+                    Check the total before you pay, then click the button below.
+                  </p>
+                  {files.manual.length > 0 && (
+                    <p className="text-[11px] text-amber-800 mt-1">
+                      Pay separately: {files.manual.map((m) => `${m.name} ($${m.amount.toFixed(2)}, ${m.method})`).join('; ')}.
+                    </p>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Owner: mark all paid (after adjustments this resets and must be clicked again) */}
             {/* Who sends payment: She Model Tech on its paid cohorts; otherwise the owner (company). */}
