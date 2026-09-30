@@ -155,7 +155,7 @@ const ProjectVault = () => {
         projectTitle: project.projectTitle || project.title,
         completedAt: project.completedAt?.toDate?.()?.toLocaleDateString() || 'N/A',
         teamSize: (project.members || []).length,
-        badgeCategory: project.isPaid ? '' : 'leadership',
+        badgeCategory: project.isPaid ? '' : 'mentorship', // project leads earn TechPO
         isOwner: true,
       };
     }

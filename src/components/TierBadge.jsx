@@ -1,18 +1,18 @@
 // src/components/TierBadge.jsx
 // Shows a track medal wrapped in a tier-colored ring + label.
 // The medal image is kept exactly as designed; the RING and LABEL carry the level
-// color, uniform across every track: Steel=Novice, Bronze=Associate,
-// Silver=Advanced, Gold=Expert.
+// color, uniform across every track. The label is the level name:
+// Novice, Associate, Advanced, Expert.
 
 import React from 'react';
 
 // Tier color system. Each level has a ring gradient, a solid accent, a soft
 // background, and readable text - tuned to read clearly as steel/bronze/silver/gold.
 export const TIERS = {
-  Novice:    { label: 'Steel',  ring: 'linear-gradient(135deg,#9ca3af,#6b7280)', accent: '#6b7280', bg: '#f3f4f6', text: '#374151' },
-  Associate: { label: 'Bronze', ring: 'linear-gradient(135deg,#d8975a,#a55b2e)', accent: '#b45309', bg: '#fdf3e7', text: '#92400e' },
-  Advanced:  { label: 'Silver', ring: 'linear-gradient(135deg,#e5e7eb,#9ca3af)', accent: '#94a3b8', bg: '#f8fafc', text: '#475569' },
-  Expert:    { label: 'Gold',   ring: 'linear-gradient(135deg,#fcd34d,#d97706)', accent: '#d97706', bg: '#fffbeb', text: '#92400e' },
+  Novice:    { label: 'Novice',  ring: 'linear-gradient(135deg,#9ca3af,#6b7280)', accent: '#6b7280', bg: '#f3f4f6', text: '#374151' },
+  Associate: { label: 'Associate', ring: 'linear-gradient(135deg,#d8975a,#a55b2e)', accent: '#b45309', bg: '#fdf3e7', text: '#92400e' },
+  Advanced:  { label: 'Advanced', ring: 'linear-gradient(135deg,#e5e7eb,#9ca3af)', accent: '#94a3b8', bg: '#f8fafc', text: '#475569' },
+  Expert:    { label: 'Expert',   ring: 'linear-gradient(135deg,#fcd34d,#d97706)', accent: '#d97706', bg: '#fffbeb', text: '#92400e' },
 };
 
 // Normalise any level string to a known tier (defaults to Novice).

@@ -14,10 +14,10 @@ const TRACKS = [
 ];
 
 const LEVELS = [
-  ['Novice', 'Steel', 'Your 1st and 2nd completed projects in a track.'],
-  ['Associate', 'Bronze', 'Your 3rd to 6th projects in a track.'],
-  ['Advanced', 'Silver', 'Your 7th to 11th projects in a track.'],
-  ['Expert', 'Gold', 'Your 12th project in a track, and beyond.'],
+  ['Novice', '', 'Your 1st and 2nd completed projects in a track.'],
+  ['Associate', '', 'Your 3rd to 6th projects in a track.'],
+  ['Advanced', '', 'Your 7th to 11th projects in a track.'],
+  ['Expert', '', 'Your 12th project in a track, and beyond.'],
 ];
 
 const Badges = () => (
@@ -65,7 +65,7 @@ const Badges = () => (
             <TierBadge image="/Images/TechDev.png" alt={`${lvl} badge`} level={lvl} size={56} />
           </div>
           <p className="font-bold text-gray-900 mt-2">{lvl}</p>
-          <p className="text-xs text-gray-500">{metal}</p>
+          {metal && <p className="text-xs text-gray-500">{metal}</p>}
           <p className="text-sm text-gray-700 mt-2">{desc}</p>
         </div>
       ))}

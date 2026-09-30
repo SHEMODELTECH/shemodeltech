@@ -95,6 +95,8 @@ const NotificationsPage = () => {
       navigate(n.forOwner ? `/projects/${n.projectId}/complete` : `/projects/${n.projectId}/workspace`);
       return;
     }
+    // Completed: open the Project Vault, where badges and certificates live.
+    if (n.type === 'project_completed') { navigate('/project-vault'); return; }
     if (n.projectId && projectTypes.includes(n.type)) navigate(`/projects/${n.projectId}`);
     else if (n.type === 'follow' && n.followedBy) navigate(`/profile/${n.followedByName || n.followedBy}`);
     else if (n.postId) navigate(`/community/post/${n.postId}`);

@@ -18,10 +18,10 @@ import { issueWorkRecords } from '../../utils/companyCohorts';
 import { alertStaff } from '../../utils/staffAlerts';
 
 const badgeCategories = {
-  'mentorship': { id: 'techmo', name: 'TechPO (Mentor)', color: 'from-pink-500 to-pink-600' },
+  'mentorship': { id: 'techmo', name: 'TechPO (Product / Project Owner)', color: 'from-pink-500 to-pink-600' },
   'quality-assurance': { id: 'techqa', name: 'TechQA (QA Tester)', color: 'from-pink-500 to-pink-600' },
   'development': { id: 'techdev', name: 'TechDev (Developer)', color: 'from-pink-500 to-pink-600' },
-  'leadership': { id: 'techleads', name: 'TechLeads (Leader)', color: 'from-pink-500 to-pink-600' },
+  'leadership': { id: 'techleads', name: 'TechLeads (Non-Technical)', color: 'from-pink-500 to-pink-600' },
   'design': { id: 'techarchs', name: 'TechArchs (Designer)', color: 'from-orange-500 to-orange-600' },
   'security': { id: 'techguard', name: 'TechGuard (Security)', color: 'from-red-500 to-red-600' },
 };
@@ -159,7 +159,10 @@ const ProjectCompletion = () => {
     const r = (role || '').toLowerCase();
     if (r.includes('mentor')) return 'mentorship';
     if (r.includes('qa') || r.includes('test')) return 'quality-assurance';
-    if (r.includes('lead') || r.includes('project')) return 'leadership';
+    // Leads and product/project owners earn TechPO; project managers, writers,
+    // researchers, and other non-technical roles earn TechLeads.
+    if (r.includes('lead') || r.includes('owner') || r.includes('product')) return 'mentorship';
+    if (r.includes('project') || r.includes('scrum') || r.includes('writer') || r.includes('research') || r.includes('content') || r.includes('marketing')) return 'leadership';
     if (r.includes('design')) return 'design';
     if (r.includes('security')) return 'security';
     return 'development';
@@ -349,7 +352,7 @@ const ProjectCompletion = () => {
         if (!ownerSnap.empty) ownerIsCompany = !!ownerSnap.docs[0].data().isCompany;
       } catch (_) {}
       if (!isPaidProject && !ownerIsCompany) try {
-        const ownerBadgeCount = await fetchBadgeCount(currentUser.email, 'leadership');
+        const ownerBadgeCount = await fetchBadgeCount(currentUser.email, 'mentorship');
         const ownerBadgeLevel = determineBadgeLevel(ownerBadgeCount);
 
         // Save to member_badges collection
@@ -357,9 +360,9 @@ const ProjectCompletion = () => {
           memberUid: currentUser.uid,
           memberEmail: currentUser.email,
           memberName: currentUser.displayName || currentUser.email,
-          badgeCategory: 'leadership',
+          badgeCategory: 'mentorship',
           badgeLevel: ownerBadgeLevel,
-          badgeName: 'TechLeads (Leader)',
+          badgeName: 'TechPO (Project Lead)',
           projectId: projectId,
           projectTitle: project.projectTitle || project.title,
           contribution: 'excellent',
@@ -377,12 +380,12 @@ const ProjectCompletion = () => {
           const ownerDoc = ownerSnap.docs[0];
           await updateDoc(doc(db, 'users', ownerDoc.id), {
             totalBadges: increment(1),
-            'badgeCounts.leadership': increment(1),
+            'badgeCounts.mentorship': increment(1),
             badges: arrayUnion({
-              id: 'techleads',
-              title: 'TechLeads (Leader)',
+              id: 'techmo',
+              title: 'TechPO (Project Lead)',
               level: ownerBadgeLevel,
-              category: 'leadership',
+              category: 'mentorship',
               projectId: projectId,
               awardedAt: new Date().toISOString(),
             }),
@@ -428,6 +431,7 @@ const ProjectCompletion = () => {
                 : `"${project.projectTitle || project.title}" has been completed.`,
               projectId: projectId,
               projectTitle: project.projectTitle || project.title,
+              link: isPaidProject ? '/account' : '/project-vault',
               mentionedByName: currentUser.displayName || currentUser.email,
               mentionedByPhoto: currentUser.photoURL || null,
               isRead: false,

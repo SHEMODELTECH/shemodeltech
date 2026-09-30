@@ -153,6 +153,10 @@ const NotificationBell = () => {
           break;
 
         case 'project_completed':
+          // Completed: open the Project Vault (badges and certificates).
+          navigate('/project-vault');
+          break;
+
         case 'project_application':
         case 'application_approved':
         case 'application_rejected':
