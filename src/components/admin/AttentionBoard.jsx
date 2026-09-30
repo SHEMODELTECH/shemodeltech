@@ -19,7 +19,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
   useEffect(() => {
     (async () => {
       const [
-        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments, jobDeletes,
+        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments, jobDeletes, sizeReqs,
       ] = await Promise.all([
         count(query(collection(db, 'projects'), where('reviewStatus', '==', 'submitted'))),
         count(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
@@ -51,8 +51,9 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
         isAdmin ? count(query(collection(db, 'sponsor_requests'), where('status', '==', 'new'))) : 0,
         count(query(collection(db, 'projects'), where('status', '==', 'awaiting_payment_confirmation'))),
         count(query(collection(db, 'jobs'), where('status', '==', 'removal_requested'))),
+        count(query(collection(db, 'projects'), where('sizeRequest.status', '==', 'pending'))),
       ]);
-      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments, jobDeletes });
+      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments, jobDeletes, sizeReqs });
     })();
   }, [isAdmin]);
 
@@ -62,6 +63,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ['Lead applications', c.leadApps + c.proposals, `${c.leadApps} waiting · ${c.proposals} project proposal${c.proposals === 1 ? '' : 's'}`, { to: '/admin/lead-applications' }],
     ['Payments in progress', c.payments, 'Paid projects waiting on payments or confirmations', { to: '/disputes' }],
     ['Extra time requests', c.extension, 'Leads asking for more time', { to: '/admin/projects' }],
+    ['More people requests', c.sizeReqs, 'Leads asking to add people to a paid project', { to: '/admin/projects' }],
     ['Mentor courses', c.capstone, 'Courses to approve, or deletion requests', { tab: 'teachers' }],
     ['Mentor letters', c.letters, 'Recommendation and volunteer letters', { tab: 'teachers' }],
     ...(isAdmin ? [['Mentor applications', c.mentorApps, 'People applying to mentor', { tab: 'teachers' }]] : []),

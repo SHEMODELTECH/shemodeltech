@@ -61,6 +61,7 @@ const AdminPanel = ({ only = null }) => {
   const [isReviewer, setIsReviewer] = useState(false); // admin OR editor: review surfaces
   const [myRole, setMyRole] = useState(null); // shown in the header badge
   const [tab, setTab] = useState(only || 'overview');
+  const [sizeApprove, setSizeApprove] = useState({}); // how many more people to approve, per project
   // Moving between the dashboard and Manage projects reuses this page, so
   // follow the address: show the right section without a reload.
   useEffect(() => {
@@ -991,9 +992,76 @@ const AdminPanel = ({ only = null }) => {
         </div>
       )}
 
+      {/* Leads asking for more people on a paid project; staff approve how many. */}
+      {!loadingData && tab === 'projects' && projects.some((p) => p.sizeRequest?.status === 'pending') && (
+        <div className="mb-6">
+          <h3 className="text-gray-900 font-bold mb-2">More people requested by leads</h3>
+          {projects.filter((p) => p.sizeRequest?.status === 'pending').map((p) => {
+            const asked = Number(p.sizeRequest.extra) || 1;
+            const give = Number(sizeApprove[p.id] ?? asked);
+            return (
+              <div key={p.id} className="bg-white border border-pink-200 rounded-xl p-4 mb-2">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-900">{p.projectTitle}</p>
+                    <p className="text-xs text-gray-500">
+                      {p.maxTeamSize} people now · asking for {asked} more{p.cohortPaid ? ` · $${Number(p.payPerPerson) || 0} per person` : ''}
+                    </p>
+                    <p className="text-sm text-gray-700 mt-1">{p.sizeRequest.reason}</p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <label className="text-xs text-gray-700">Approve
+                      <input type="number" min="1" max={asked} value={give}
+                        onChange={(e) => setSizeApprove((m) => ({ ...m, [p.id]: Math.max(1, Math.min(asked, Number(e.target.value) || 1)) }))}
+                        className="w-16 ml-1 px-2 py-1 rounded-lg border border-gray-300 text-sm" />
+                    </label>
+                    <button
+                      onClick={async () => {
+                        const size = (Number(p.maxTeamSize) || 0) + give;
+                        const data = {
+                          maxTeamSize: size,
+                          ...(p.cohortPaid || p.isPaid ? { totalBudget: size * (Number(p.payPerPerson) || 0) } : {}),
+                          sizeRequest: { ...p.sizeRequest, status: 'approved', approved: give, decidedBy: currentUser.email },
+                        };
+                        try {
+                          await updateDoc(doc(db, 'projects', p.id), data);
+                          setProjects((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data } : x)));
+                          if (p.submitterId) notifyMember(p.submitterId, { type: 'size_decision', title: 'More people approved', body: `"${p.projectTitle}" can now have ${size} people (${give} more). Add the roles in Edit project.`, link: `/projects/${p.id}/setup` });
+                          toast.success(`Approved ${give} more. The project now has room for ${size}.`);
+                        } catch (e) {
+                          toast.error(friendlyError(e, 'Could not approve it.'));
+                        }
+                      }}
+                      className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg"
+                    >
+                      Approve {give}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const data = { sizeRequest: { ...p.sizeRequest, status: 'declined', decidedBy: currentUser.email } };
+                        try {
+                          await updateDoc(doc(db, 'projects', p.id), data);
+                          setProjects((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data } : x)));
+                          if (p.submitterId) notifyMember(p.submitterId, { type: 'size_decision', title: 'More people not approved', body: `"${p.projectTitle}" stays at ${p.maxTeamSize} people. Message us if you'd like to talk it through.`, link: `/projects/${p.id}/setup` });
+                          toast.success('Declined.');
+                        } catch (e) {
+                          toast.error(friendlyError(e, 'Could not decline it.'));
+                        }
+                      }}
+                      className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg"
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
       {!loadingData && tab === 'projects' && projects.some((p) => p.extensionRequest?.status === 'pending') && (
         <div className="mb-6">
-          <h3 className="text-gray-900 font-bold mb-2">Extra time requested by cohort leads</h3>
+          <h3 className="text-gray-900 font-bold mb-2">Extra time requested by leads</h3>
           {projects.filter((p) => p.extensionRequest?.status === 'pending').map((p) => (
             <div key={p.id} className="bg-white border border-purple-200 rounded-xl p-4 mb-2">
               <div className="flex flex-wrap items-start justify-between gap-3">

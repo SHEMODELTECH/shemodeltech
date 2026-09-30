@@ -24,6 +24,7 @@ import {
 import { formatMoney, computeTotalBudget } from '../../utils/paidProjects';
 import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
 import { BADGE_TRACKS } from '../../config/badgeTracks';
+import { alertStaff } from '../../utils/staffAlerts';
 
 const industryTracks = [
   'healthcare', 'finance', 'education', 'ecommerce', 'entertainment', 'government',
@@ -69,6 +70,8 @@ const ProjectSetup = () => {
   const [roleTracks, setRoleTracks] = useState({}); // lead's badge tracks wanted per role (paid)
   const [fixedSize, setFixedSize] = useState(null); // number of people set by She Model Tech
   const [fixedPay, setFixedPay] = useState(null); // pay per person on paid cohorts
+  const [sizeRequest, setSizeRequest] = useState(null); // lead's pending request for more people
+  const [askMore, setAskMore] = useState({ open: false, extra: 1, reason: '' });
   const [leadDetails, setLeadDetails] = useState(''); // the lead's extra details (not the brief)
   const [projectStatus, setProjectStatus] = useState('');
   const { projectId } = useParams();
@@ -146,6 +149,7 @@ const ProjectSetup = () => {
         // She Model Tech sets how many people are on the project; the lead can't change it.
         setFixedSize(!staffEditor && Number(data.maxTeamSize) > 0 ? Number(data.maxTeamSize) : null);
         setFixedPay(data.cohortPaid ? Number(data.payPerPerson) || null : null);
+        setSizeRequest(data.sizeRequest || null);
         setAuthorized(true);
       } catch (e) {
         console.error(e);
@@ -468,6 +472,44 @@ const ProjectSetup = () => {
               needs; their numbers must add up to {fixedSize - 1}. Right now: <strong>{roles.reduce((n, r) => n + (resolveRoleName(r) ? (parseInt(r.count, 10) || 0) : 0), 0)}</strong>.
               {fixedPay != null && <> Pay is ${fixedPay} per person for every role.</>}
             </p>
+            {isPaid && (
+              sizeRequest?.status === 'pending' ? (
+                <p className="text-xs text-amber-800 mt-2">You asked for {sizeRequest.extra} more {Number(sizeRequest.extra) === 1 ? 'person' : 'people'}. She Model Tech will let you know.</p>
+              ) : !askMore.open ? (
+                <button type="button" onClick={() => setAskMore((a) => ({ ...a, open: true }))} className="mt-2 text-xs font-semibold text-pink-700 underline">
+                  Need more people? Ask She Model Tech
+                </button>
+              ) : (
+                <div className="mt-2 flex flex-wrap items-end gap-2">
+                  <label className="text-xs text-gray-700">How many more
+                    <input type="number" min="1" max="10" value={askMore.extra} onChange={(e) => setAskMore((a) => ({ ...a, extra: e.target.value }))} className="block w-20 mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                  </label>
+                  <label className="text-xs text-gray-700 flex-1 min-w-[12rem]">Why
+                    <input value={askMore.reason} maxLength={300} onChange={(e) => setAskMore((a) => ({ ...a, reason: e.target.value }))} placeholder="For example: we need a second tester for the release." className="block w-full mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const extra = Math.max(1, Math.min(10, parseInt(askMore.extra, 10) || 1));
+                      if (askMore.reason.trim().length < 10) { toast.error('Tell She Model Tech briefly why you need more people.'); return; }
+                      const req = { extra, reason: askMore.reason.trim(), status: 'pending', at: new Date().toISOString(), by: currentUser.uid };
+                      try {
+                        await updateDoc(doc(db, 'projects', projectId), { sizeRequest: req, updatedAt: serverTimestamp() });
+                        setSizeRequest(req);
+                        setAskMore({ open: false, extra: 1, reason: '' });
+                        alertStaff({ type: 'size_request', title: 'A lead asked for more people', body: `"${form.projectTitle}": ${extra} more. ${req.reason}`, link: '/admin/projects', roles: ['admin', 'editor'] });
+                        toast.success('Request sent. She Model Tech will let you know.');
+                      } catch (e) {
+                        toast.error('Could not send the request.');
+                      }
+                    }}
+                    className="text-xs font-semibold bg-pink-600 text-white px-3 py-2 rounded-lg"
+                  >
+                    Send request
+                  </button>
+                </div>
+              )
+            )}
           </div>
         )}
 
