@@ -80,10 +80,12 @@ const ProjectVault = () => {
       try {
         // Load the user's badges so we can derive certificate tier by COUNT
         // (same as the profile/dashboard), not the frozen badgeLevel.
+        let staffViewer = false;
         try {
           const { doc, getDoc } = await import('firebase/firestore');
           const uSnap = await getDoc(doc(db, 'users', currentUser.uid));
-          setIsStaffViewer(uSnap.exists() && ['admin', 'editor'].includes(uSnap.data().role));
+          staffViewer = uSnap.exists() && ['admin', 'editor'].includes(uSnap.data().role);
+          setIsStaffViewer(staffViewer);
           if (uSnap.exists()) setUserBadges(uSnap.data().badges || []);
         } catch (_) {}
         const allDisputed = [];
@@ -99,6 +101,19 @@ const ProjectVault = () => {
           const ownerSnap = await getDocs(query(collection(db, 'projects'), where('submitterId', '==', currentUser.uid)));
           ownerSnap.docs.forEach(d => involved.set(d.id, { id: d.id, ...d.data(), isOwner: true }));
         } catch (e) { console.log('Owner projects query:', e.message); }
+
+        // Projects you follow (cohorts you created or published).
+        try {
+          const obsSnap = await getDocs(query(collection(db, 'projects'), where('observers', 'array-contains', currentUser.uid)));
+          obsSnap.docs.forEach(d => { if (!involved.has(d.id)) involved.set(d.id, { id: d.id, ...d.data(), isOwner: false, isObserver: true }); });
+        } catch (e) { console.log('Followed projects query:', e.message); }
+        // She Model Tech staff see every completed project and every project waiting on payments.
+        if (staffViewer) {
+          try {
+            const doneSnap = await getDocs(query(collection(db, 'projects'), where('status', 'in', ['completed', 'awaiting_payment_confirmation'])));
+            doneSnap.docs.forEach(d => { if (!involved.has(d.id)) involved.set(d.id, { id: d.id, ...d.data(), isOwner: false, isObserver: true }); });
+          } catch (e) { console.log('Staff vault query:', e.message); }
+        }
 
         const all = Array.from(involved.values());
 
@@ -181,7 +196,7 @@ const ProjectVault = () => {
     
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Project Vault</h1>
-        <p className="text-gray-500 text-sm mb-6">Your completed projects and earned certificates.</p>
+        <p className="text-gray-500 text-sm mb-6">{isStaffViewer ? 'Every completed She Model Tech project, plus your own certificates.' : 'Your completed projects and earned certificates.'}</p>
 
         {/* Certificate Modal */}
         {viewingCert && (
@@ -480,7 +495,15 @@ const ProjectVault = () => {
                         )}
                       </div>
                       <div className="flex gap-2 flex-shrink-0">
-                        {!project.isRejected && (
+                        {project.isObserver && (
+                          <button
+                            onClick={() => window.location.assign(`/projects/${project.id}`)}
+                            className="text-gray-700 text-sm font-medium border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-all"
+                          >
+                            View project
+                          </button>
+                        )}
+                        {!project.isRejected && !project.isObserver && (
                           <button
                             onClick={() => handleViewCertificate(project)}
                             className="text-pink-600 hover:text-pink-700 text-sm font-medium border border-pink-200 px-3 py-1.5 rounded-lg hover:bg-pink-50 transition-all"

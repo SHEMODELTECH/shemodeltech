@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 
 const MyWorkspaces = () => {
@@ -58,6 +58,19 @@ const MyWorkspaces = () => {
             if (data.isActive !== false && data.status !== 'completed' && data.reviewStatus !== 'rejected') allProjects.set(d.id, data);
           });
         } catch (e) { console.log('Followed projects query skipped:', e.message); }
+
+        // She Model Tech staff see every running project, not only the ones they follow.
+        try {
+          const me = await getDoc(doc(db, 'users', currentUser.uid));
+          if (['admin', 'editor'].includes(me.data()?.role)) {
+            const running = await getDocs(query(collection(db, 'projects'), where('status', 'in', ['setup', 'active', 'awaiting_payment_confirmation'])));
+            running.docs.forEach((d) => {
+              if (allProjects.has(d.id)) return;
+              const data = { id: d.id, ...d.data(), isOwner: false, isObserver: true };
+              if (data.reviewStatus !== 'rejected') allProjects.set(d.id, data);
+            });
+          }
+        } catch (e) { console.log('Staff projects query skipped:', e.message); }
 
         const projects = Array.from(allProjects.values());
         projects.sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
