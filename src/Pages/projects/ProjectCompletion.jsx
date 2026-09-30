@@ -307,7 +307,8 @@ const ProjectCompletion = () => {
         for (const m of members) {
           paymentConfirmations[m.applicantEmail] = {
             status: 'pending', // pending -> confirmed | disputed (Phase B UI)
-            amountDue: Number(m.payAmount) || 0,
+            // Paid cohorts: She Model Tech's pay per person (not a figure a lead could edit).
+            amountDue: project.cohortPaid ? (Number(project.payPerPerson) || Number(m.payAmount) || 0) : Number(m.payAmount) || 0,
             amountPaid: null,
             memberName: m.applicantName || m.applicantEmail,
             role: m.role || '',

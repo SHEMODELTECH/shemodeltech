@@ -281,12 +281,13 @@ service cloud.firestore {
  // sets them). Company posts are the company's own and stay editable.
  && (resource.data.get('isCompanyPost', false) == true
  || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'startDate', 'endDate', 'startAt']))
- // Cohort projects: She Model Tech sets the dates (leads request extra time).
+ // Cohort projects: She Model Tech sets the dates and the number of people
+ // (leads create the roles within it, and request extra time).
  && (resource.data.get('isCohort', false) != true
- || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['startDate', 'endDate', 'startAt', 'extensionDays', 'isCohort', 'cohortId']))
+ || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['startDate', 'endDate', 'startAt', 'extensionDays', 'isCohort', 'cohortId', 'maxTeamSize']))
  // Paid cohorts: the lead can't change anything She Model Tech set.
  && (resource.data.get('cohortPaid', false) != true
- || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'projectGoals', 'industryTrack', 'teamRoles', 'proposedRoles', 'maxTeamSize', 'totalBudget', 'isPaid', 'payPerPerson', 'cohortPaid', 'requiredSkills']))
+ || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'industryTrack', 'proposedRoles', 'maxTeamSize', 'totalBudget', 'isPaid', 'payPerPerson', 'cohortPaid']))
  && appendOnly('disputeHistory')
  && appendOnly('leaveReasons')
  && appendOnly('activityLog')

@@ -274,21 +274,15 @@ const CohortManager = () => {
             observerInfo: arrayUnion(...followers),
           });
         }
-        // Paid cohorts: roles and pay are fixed by She Model Tech at reveal
-        // (the lead can't change them), so publish the proposed roles now.
+        // She Model Tech sets the number of people (and pay on paid cohorts);
+        // the lead creates the roles. No roles are published from the brief.
         if (cohort.isPaid) {
-          const roles = (p.proposedRoles || []).map((r) => ({
-            ...r,
-            count: Number(r.count) || 1,
-            payAmount: String(cohort.payPerPerson || 0),
-            // Badge tracks wanted for this role (applicants pick one; no badge on paid work).
-            wantedTracks: r.wantedTracks?.length ? r.wantedTracks : [suggestTrack(r.role)],
-          }));
+          const size = Number(p.maxTeamSize) || 0;
           batch.update(doc(db, 'projects', p.id), {
             isActive: true,
-            teamRoles: roles,
-            maxTeamSize: roles.reduce((n, r) => n + (Number(r.count) || 1), 0),
-            totalBudget: roles.reduce((n, r) => n + (Number(r.count) || 1) * (Number(cohort.payPerPerson) || 0), 0),
+            teamRoles: [],
+            payPerPerson: Number(cohort.payPerPerson) || 0,
+            totalBudget: size * (Number(cohort.payPerPerson) || 0),
           });
         } else {
           batch.update(doc(db, 'projects', p.id), { isActive: true });
@@ -733,23 +727,6 @@ const CohortManager = () => {
                             rows={5}
                             className="w-full px-3 py-2 mb-2 rounded-lg border border-gray-300 text-sm outline-none focus:border-pink-500 resize-y"
                           />
-                          {cohort.isPaid && (draft.proposedRoles || []).length > 0 && (
-                            <div className="mb-2 rounded-lg border border-gray-200 p-2">
-                              <p className="text-xs font-semibold text-gray-700 mb-1">Badge tracks wanted for each role <span className="font-normal text-gray-500">(applicants pick one; no badge on paid work)</span></p>
-                              {draft.proposedRoles.map((r, ri) => (
-                                <div key={ri} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-1 text-xs">
-                                  <span className="font-semibold text-gray-900 w-40 truncate">{r.role}</span>
-                                  {BADGE_TRACKS.map((t) => (
-                                    <label key={t.key} className="flex items-center gap-1">
-                                      <input type="checkbox" checked={(r.wantedTracks || []).includes(t.key)}
-                                        onChange={(e) => setDraft((d) => ({ ...d, proposedRoles: d.proposedRoles.map((x, xi) => xi !== ri ? x : { ...x, wantedTracks: e.target.checked ? [...(x.wantedTracks || []), t.key] : (x.wantedTracks || []).filter((k) => k !== t.key) }) }))} />
-                                      {t.name}
-                                    </label>
-                                  ))}
-                                </div>
-                              ))}
-                            </div>
-                          )}
                           <label className="flex items-center gap-2 mb-2 text-xs font-semibold text-gray-700">
                             People on this project <span className="font-normal text-gray-500">(including the lead)</span>
                             <input type="number" min="2" max="20" value={draft.teamSize || ''} onChange={(e) => setDraft((d) => ({ ...d, teamSize: e.target.value }))}
@@ -791,7 +768,6 @@ const CohortManager = () => {
                                 onClick={() => {
                                   setEditingProject(pr.id);
                                   setDraft({
-                                    proposedRoles: (pr.proposedRoles || []).map((r) => ({ ...r, wantedTracks: r.wantedTracks?.length ? r.wantedTracks : [suggestTrack(r.role)] })),
                                     teamSize: pr.maxTeamSize || '',
                                     projectTitle: pr.projectTitle || pr.title || '',
                                     projectDescription:

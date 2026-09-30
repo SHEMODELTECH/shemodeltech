@@ -67,6 +67,8 @@ const ProjectSetup = () => {
   const [paidLock, setPaidLock] = useState(false);
   const [isStaffEditor, setIsStaffEditor] = useState(false);
   const [roleTracks, setRoleTracks] = useState({}); // lead's badge tracks wanted per role (paid)
+  const [fixedSize, setFixedSize] = useState(null); // number of people set by She Model Tech
+  const [fixedPay, setFixedPay] = useState(null); // pay per person on paid cohorts
   const [leadDetails, setLeadDetails] = useState(''); // the lead's extra details (not the brief)
   const [projectStatus, setProjectStatus] = useState('');
   const { projectId } = useParams();
@@ -114,8 +116,9 @@ const ProjectSetup = () => {
           .then((u) => setCoreLock(!['admin', 'editor'].includes(u.data()?.role) && !data.isCompanyPost))
           .catch(() => setCoreLock(true));
         setOriginalStart(data.startDate || null);
-        // Paid cohorts: the lead can only change the tracks wanted and add details. Staff edit everything.
-        setPaidLock(!!data.cohortPaid && !staffEditor);
+        // Paid cohorts use the normal form now (the lead creates roles); pay and
+        // the number of people stay as She Model Tech set them.
+        setPaidLock(false);
         setRoleTracks(data.roleTracks || {});
         setLeadDetails(data.leadDetails || '');
         setProjectStatus(data.status || '');
@@ -134,12 +137,15 @@ const ProjectSetup = () => {
         // Pre-fill roles: use live teamRoles if published, else the generator's proposal.
         // Live teamRoles are "existing" (locked for paid); a fresh proposal is not.
         const liveRoles = alreadyActive && Array.isArray(data.teamRoles) && data.teamRoles.length;
-        const sourceRoles = liveRoles
-          ? data.teamRoles
-          : (Array.isArray(data.proposedRoles) ? data.proposedRoles : []);
+        // She Model Tech doesn't set roles: the lead creates them. Only roles the
+        // lead already saved are loaded (never generated suggestions).
+        const sourceRoles = Array.isArray(data.teamRoles) ? data.teamRoles : [];
         setRoles(sourceRoles.length
-          ? sourceRoles.map(r => toEditableRole(r, !!liveRoles))
+          ? sourceRoles.map(r => toEditableRole(r, false))
           : [emptyRole()]);
+        // She Model Tech sets how many people are on the project; the lead can't change it.
+        setFixedSize(!staffEditor && Number(data.maxTeamSize) > 0 ? Number(data.maxTeamSize) : null);
+        setFixedPay(data.cohortPaid ? Number(data.payPerPerson) || null : null);
         setAuthorized(true);
       } catch (e) {
         console.error(e);
@@ -173,12 +179,12 @@ const ProjectSetup = () => {
       experienceLevel: r.experienceLevel || 'any-level',
       description: (r.description || '').trim(),
       detailsLink: (r.detailsLink || '').trim(),
-      payAmount: isPaid ? (parseFloat(r.payAmount) || 0) : 0,
+      payAmount: isPaid ? (fixedPay != null ? fixedPay : (parseFloat(r.payAmount) || 0)) : 0,
     }))
     .filter(r => r.role && r.count > 0);
 
   // Validate that every NEW paid role has a pay-per-person amount.
-  const newPaidRoleMissingPay = () => isPaid && roles.some(r => {
+  const newPaidRoleMissingPay = () => isPaid && fixedPay == null && roles.some(r => {
     if (isLocked(r)) return false;               // existing roles keep their amount
     if (!resolveRoleName(r)) return false;        // blank rows are dropped, not flagged
     return !(parseFloat(r.payAmount) > 0);
@@ -233,11 +239,19 @@ const ProjectSetup = () => {
     setSaving(true);
     try {
       const teamRoles = valid;
-      const maxTeamSize = teamRoles.reduce((s, r) => s + r.count, 0);
+      const roleTotal = teamRoles.reduce((s, r) => s + r.count, 0);
+      // The number set by She Model Tech includes the lead, so roles add up to one fewer.
+      if (fixedSize && roleTotal !== fixedSize - 1) {
+        toast.error(`This project has ${fixedSize} people including you, so your roles must add up to ${fixedSize - 1}. Right now they add up to ${roleTotal}.`);
+        setSaving(false);
+        return;
+      }
+      const maxTeamSize = fixedSize || roleTotal;
 
       await updateDoc(doc(db, 'projects', projectId), {
         ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
         leadDetails: leadDetails.trim(),
+        roleTracks,
         projectGoals: form.projectGoals.trim() || null,
         industryTrack: form.industryTrack,
         ...(datesLocked ? {} : { startDate: form.startDate, endDate: form.endDate }),
@@ -267,6 +281,7 @@ const ProjectSetup = () => {
       const teamRoles = buildTeamRoles();
       await updateDoc(doc(db, 'projects', projectId), {
         ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
+        roleTracks,
         leadDetails: leadDetails.trim(),
         projectGoals: form.projectGoals.trim() || null,
         industryTrack: form.industryTrack,
@@ -446,6 +461,16 @@ const ProjectSetup = () => {
           <p className="text-gray-700 text-xs"><strong>No solo projects:</strong> a project needs a team of at least {MIN_TEAM_SIZE}. You count as one, so your roles must add up to at least {MIN_MEMBERS} {MIN_MEMBERS === 1 ? 'person' : 'people'} besides you.</p>
         </div>
 
+        {fixedSize && (
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <p className="text-gray-800 text-xs">
+              <strong>{fixedSize} people on this project, including you</strong>, set by She Model Tech. Create the roles your team
+              needs; their numbers must add up to {fixedSize - 1}. Right now: <strong>{roles.reduce((n, r) => n + (resolveRoleName(r) ? (parseInt(r.count, 10) || 0) : 0), 0)}</strong>.
+              {fixedPay != null && <> Pay is ${fixedPay} per person for every role.</>}
+            </p>
+          </div>
+        )}
+
         {isPaid ? (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
             <p className="text-gray-700 text-xs"><strong>Paid project:</strong> roles you've already posted are locked, including their pay - talent may have applied under those exact terms. You can still <strong>add new roles</strong> below, each with its own pay-per-person amount.</p>
@@ -509,10 +534,26 @@ const ProjectSetup = () => {
                 </select>
                 <input type="number" min="1" max="10" value={r.count} onChange={e => updateRole(i, 'count', e.target.value)} className={inputClass} placeholder="Count" />
                 <input type="text" value={r.skills} onChange={e => updateRole(i, 'skills', e.target.value)} className={inputClass} placeholder="Skills * (e.g., React, Node)" />
-                {isPaid && (
+                {isPaid && fixedPay == null && (
                   <input type="number" min="1" step="0.01" value={r.payAmount} onChange={e => updateRole(i, 'payAmount', e.target.value)} className={inputClass} placeholder="Pay / person ($)" />
                 )}
               </div>
+              {isPaid && resolveRoleName(r) && (
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-700">
+                  <span className="font-semibold">Badge tracks wanted:</span>
+                  {BADGE_TRACKS.map((t) => {
+                    const name = resolveRoleName(r);
+                    const cur = roleTracks[name] || [];
+                    return (
+                      <label key={t.key} className="flex items-center gap-1">
+                        <input type="checkbox" checked={cur.includes(t.key)}
+                          onChange={(e) => setRoleTracks((m) => ({ ...m, [name]: e.target.checked ? [...cur, t.key] : cur.filter((k) => k !== t.key) }))} />
+                        {t.name}
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
               <input type="text" value={r.description} onChange={e => updateRole(i, 'description', e.target.value)} className={inputClass} placeholder="What this role does (optional)" />
             </div>
           );
