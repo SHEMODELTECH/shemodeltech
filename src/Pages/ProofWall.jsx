@@ -70,14 +70,27 @@ const typeStyle = {
 };
 
 // Render the headline sentence for each event type.
-const renderHeadline = (a) => {
-  const name = <span className="font-semibold">{a.actorName || 'A member'}</span>;
-  const proj = a.projectTitle ? <span className="font-semibold">{a.projectTitle}</span> : null;
+// Headlines are clickable: the person opens her profile, the project opens its
+// page, and a badge explains how badges work.
+const linkCls = 'font-semibold text-gray-900 hover:text-pink-700 hover:underline';
+const renderHeadline = (a, go = {}) => {
+  const name = go.profile ? (
+    <button type="button" onClick={() => go.profile(a)} className={linkCls}>{a.actorName || 'A member'}</button>
+  ) : <span className="font-semibold">{a.actorName || 'A member'}</span>;
+  const proj = a.projectTitle ? (
+    a.projectId && go.project ? (
+      <button type="button" onClick={() => go.project(a)} className={linkCls}>{a.projectTitle}</button>
+    ) : <span className="font-semibold">{a.projectTitle}</span>
+  ) : null;
   switch (a.type) {
     case 'badge':
       return (
         <>
-          {name} earned the <span className="font-semibold">{a.badgeName}</span> badge
+          {name} earned the{' '}
+          {go.badges ? (
+            <button type="button" onClick={() => go.badges(a)} className={linkCls}>{a.badgeName}</button>
+          ) : <span className="font-semibold">{a.badgeName}</span>}{' '}
+          badge
         </>
       );
     case 'ship':
@@ -1021,7 +1034,11 @@ const ProofWall = () => {
                         </div>
                       )}
                       <div className="min-w-0 flex-1 text-sm sm:text-[15px] text-gray-900 leading-snug">
-                        {renderHeadline(a)}
+                        {renderHeadline(a, {
+                          profile: a.actorId && posterInfo[a.actorId]?.email ? () => navigate(`/profile/${posterInfo[a.actorId].email}`) : undefined,
+                          project: a.projectId ? () => navigate(`/projects/${a.projectId}`) : undefined,
+                          badges: () => navigate('/badges'),
+                        })}
                       </div>
                     </div>
                     {/* Body: full card width, below the header */}
@@ -1103,6 +1120,25 @@ const ProofWall = () => {
                         )
                       )}
 
+                      {/* Learn more: the project (or the member's profile for badges). */}
+                      {a.type !== 'lead' && (a.projectId || (a.actorId && posterInfo[a.actorId]?.email)) && (
+                        <button
+                          onClick={() => (a.type === 'badge' || !a.projectId)
+                            ? navigate(`/profile/${posterInfo[a.actorId]?.email}`)
+                            : navigate(`/projects/${a.projectId}`)}
+                          className="inline-flex items-center gap-1 mt-2 text-pink-700 hover:text-pink-800 text-xs font-semibold"
+                        >
+                          {a.type === 'badge' || !a.projectId ? 'View profile →' : 'View project →'}
+                        </button>
+                      )}
+                      {a.type === 'lead' && myData?.isCompany && (
+                        <button
+                          onClick={() => navigate(a.projectId ? `/projects/${a.projectId}` : '/proof-wall')}
+                          className="inline-flex items-center gap-1 mt-2 text-pink-700 hover:text-pink-800 text-xs font-semibold"
+                        >
+                          View project →
+                        </button>
+                      )}
                       {/* Needs-a-lead items are clickable: go to the project to apply. */}
                       {a.type === 'lead' && !myData?.isCompany && (
                         <button
