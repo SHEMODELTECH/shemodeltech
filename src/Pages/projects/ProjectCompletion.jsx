@@ -126,7 +126,8 @@ const ProjectCompletion = () => {
       if (data.status !== 'completed') {
         const evals = [];
         for (const member of membersList) {
-          const defaultCategory = mapRoleToCategory(member.role);
+          // The member's chosen track (one per project); the role's suggestion if none.
+          const defaultCategory = member.badgeTrack || mapRoleToCategory(member.role);
           const count = await fetchBadgeCount(member.applicantEmail, defaultCategory);
           evals.push({
             memberId: member.id,
@@ -135,6 +136,8 @@ const ProjectCompletion = () => {
             memberName: member.applicantName,
             memberRole: member.role,
             badgeCategory: defaultCategory,
+            chosenTrack: defaultCategory, // what she chose; changing it needs a reason
+            trackChangeReason: '',
             badgeLevel: determineBadgeLevel(count),
             contribution: 'good',
             notes: '',
@@ -172,13 +175,15 @@ const ProjectCompletion = () => {
     setEvaluations(prev => {
       const updated = [...prev];
       updated[index] = { ...updated[index], [field]: value };
-      // Auto-update badge level when category changes
-      if (field === 'badgeCategory') {
-        const count = updated[index].projectCount || 0;
-        updated[index].badgeLevel = determineBadgeLevel(count);
-      }
       return updated;
     });
+    // A different track: count her badges in THAT track for the level.
+    if (field === 'badgeCategory') {
+      const email = evaluations[index]?.memberEmail;
+      fetchBadgeCount(email, value).then((count) => {
+        setEvaluations((prev) => prev.map((e, i) => (i === index ? { ...e, projectCount: count, badgeLevel: determineBadgeLevel(count) } : e)));
+      }).catch(() => {});
+    }
   };
 
   // Finalize completion: evaluate contributions, award badges, mark complete
@@ -189,6 +194,8 @@ const ProjectCompletion = () => {
 
     const hasEvals = evaluations.every(e => e.contribution);
     if (!hasEvals) { toast.error('Please rate contribution for all members'); return; }
+    const missingReason = !project.isPaid && evaluations.find(e => e.awardBadge && e.chosenTrack && e.badgeCategory !== e.chosenTrack && !String(e.trackChangeReason || '').trim());
+    if (missingReason) { toast.error(`You changed ${missingReason.memberName}'s badge track. Add a short reason she'll see.`); return; }
 
     setSubmitting(true);
     try {
@@ -214,6 +221,8 @@ const ProjectCompletion = () => {
             memberEmail: ev.memberEmail,
             memberName: ev.memberName,
             badgeCategory: ev.badgeCategory,
+            chosenTrack: ev.chosenTrack || null,
+            trackChangeReason: ev.chosenTrack && ev.badgeCategory !== ev.chosenTrack ? (ev.trackChangeReason || '').trim() : null,
             badgeLevel: ev.badgeLevel,
             badgeName: badgeCategories[ev.badgeCategory]?.name || ev.badgeCategory,
             projectId: projectId,
@@ -427,7 +436,7 @@ const ProjectCompletion = () => {
               message: isPaidProject
                 ? `Work on "${project.projectTitle || project.title}" is marked done. Your pay of $${(ev.payAmount || 0).toLocaleString()} is due from the project owner - you'll be asked to confirm once you receive it. The project closes when all members confirm payment.`
                 : badgeAwarded
-                ? `"${project.projectTitle || project.title}" is complete! You earned a ${badgeCategories[ev.badgeCategory]?.name || ev.badgeCategory} badge (${ev.badgeLevel}).`
+                ? `"${project.projectTitle || project.title}" is complete! You earned a ${badgeCategories[ev.badgeCategory]?.name || ev.badgeCategory} badge (${ev.badgeLevel}).${ev.chosenTrack && ev.badgeCategory !== ev.chosenTrack && ev.trackChangeReason ? ` Your lead moved it from ${badgeCategories[ev.chosenTrack]?.name || ev.chosenTrack}: ${ev.trackChangeReason.trim()}` : ''}`
                 : `"${project.projectTitle || project.title}" has been completed.`,
               projectId: projectId,
               projectTitle: project.projectTitle || project.title,
@@ -715,7 +724,7 @@ const ProjectCompletion = () => {
                         {!project?.isPaid && ev.awardBadge && (
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                              <label className="block text-gray-400 text-xs mb-1">Badge Category</label>
+                              <label className="block text-gray-400 text-xs mb-1">Badge track <span className="text-gray-500">(she chose {badgeCategories[ev.chosenTrack]?.name || '—'})</span></label>
                               <select value={ev.badgeCategory} onChange={e => updateEval(index, 'badgeCategory', e.target.value)}
                                 className={inputClass + " appearance-none"}>
                                 {Object.entries(badgeCategories).map(([key, val]) => (
@@ -735,6 +744,14 @@ const ProjectCompletion = () => {
                                 {contributionLevels.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
                               </select>
                             </div>
+                            {ev.chosenTrack && ev.badgeCategory !== ev.chosenTrack && (
+                              <div className="sm:col-span-3">
+                                <label className="block text-gray-600 text-xs mb-1 font-semibold">Why a different track? <span className="font-normal text-gray-500">(she’ll see this)</span></label>
+                                <input value={ev.trackChangeReason || ''} maxLength={200} onChange={e => updateEval(index, 'trackChangeReason', e.target.value)}
+                                  placeholder={`Your work on this project was mainly ${(badgeCategories[ev.badgeCategory]?.name || '').split(' ')[0]}, so this counts toward ${(badgeCategories[ev.badgeCategory]?.name || '').split(' ')[0]}.`}
+                                  className={inputClass} />
+                              </div>
+                            )}
                           </div>
                         )}
 

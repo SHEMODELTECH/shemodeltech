@@ -753,6 +753,12 @@ service cloud.firestore {
  allow update: if isReviewer();
  // The project lead approves / rejects / suggests a better-fit role.
  allow update: if isSignedIn() && ownsProject(resource.data.projectId);
+ // Applicant may change her badge track (one per project) until completion.
+ allow update: if isSignedIn()
+ && resource.data.applicantUid == myUid()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['badgeTrack'])
+ && request.resource.data.badgeTrack in ['development', 'quality-assurance', 'design', 'security', 'mentorship', 'leadership']
+ && get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.get('status', '') != 'completed';
  // Applicant may ONLY leave.
  allow update: if isSignedIn()
  && resource.data.applicantUid == myUid()

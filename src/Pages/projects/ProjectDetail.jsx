@@ -27,6 +27,8 @@ import { formatMoney, getPayRangeLabel } from '../../utils/paidProjects';
 import { canApplyToCompanyCohort } from '../../utils/companyCohorts';
 import { assignAsLead } from '../../utils/leadApplications';
 import PaymentAgreement, { AGREEMENT_VERSION } from '../../components/PaymentAgreement';
+import { BADGE_TRACKS, suggestTrack, trackByKey, trackStanding } from '../../config/badgeTracks';
+import TeamStrength from '../../components/TeamStrength';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -74,6 +76,7 @@ const ProjectDetail = () => {
   const [roleFill, setRoleFill] = useState({});
   const [loading, setLoading] = useState(true);
   const [hasApplied, setHasApplied] = useState(false);
+  const [myApp, setMyApp] = useState(null); // my application (to change my badge track)
   const [wasRejected, setWasRejected] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [isMember, setIsMember] = useState(false);
@@ -82,6 +85,7 @@ const ProjectDetail = () => {
   const [showApplyForm, setShowApplyForm] = useState(false);
   const [applyForm, setApplyForm] = useState({
     role: '',
+    badgeTrack: '', // the ONE badge track this project counts toward
     skills: '',
     message: '',
     portfolioUrl: '',
@@ -141,6 +145,8 @@ const ProjectDetail = () => {
             );
             const appSnap = await getDocs(appQuery);
             const apps = appSnap.docs.map((d) => d.data());
+            const mine = appSnap.docs.find((d) => ['approved', 'submitted', 'pending'].includes(d.data().status));
+            setMyApp(mine ? { id: mine.id, ...mine.data() } : null);
             const approvedApp = apps.some((a) => a.status === 'approved');
             const pendingApp = apps.some((a) => a.status === 'submitted' || a.status === 'pending');
             const rejectedApp = apps.some((a) => a.status === 'rejected') && !approvedApp;
@@ -319,6 +325,10 @@ const ProjectDetail = () => {
       toast.error('Please select a role');
       return;
     }
+    if (!applyForm.badgeTrack) {
+      toast.error(project.isPaid ? 'Choose the badge track that fits you for this role.' : 'Choose the badge track this project counts toward.');
+      return;
+    }
     if (!applyForm.skills.trim()) {
       toast.error('Please list your relevant skills');
       return;
@@ -369,6 +379,7 @@ const ProjectDetail = () => {
         applicantName: currentUser.displayName || currentUser.email,
         applicantPhoto: currentUser.photoURL || null,
         role: applyForm.role,
+        badgeTrack: applyForm.badgeTrack,
         roleExperienceLevel: selectedRole?.experienceLevel || 'any-level',
         applicantBadgeLevel: eligibility.current || 'None',
         badgeCategory: eligibility.category,
@@ -514,6 +525,7 @@ const ProjectDetail = () => {
                 </div>
               </div>
 
+              {project.isPaid && <TeamStrength projectId={projectId} />}
               {project.isPaid && getPayRangeLabel(project.teamRoles) && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 flex items-center justify-between gap-3">
                   <div>
@@ -810,6 +822,23 @@ const ProjectDetail = () => {
                     >
                       Open Workspace
                     </button>
+                    {myApp && !project.isPaid && project.status !== 'completed' && (
+                      <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs text-gray-700">
+                        <label htmlFor="my-track" className="font-semibold">Your badge track:</label>
+                        <select id="my-track" value={myApp.badgeTrack || suggestTrack(myApp.role)}
+                          onChange={async (e) => {
+                            const v = e.target.value;
+                            try {
+                              await updateDoc(doc(db, 'project_applications', myApp.id), { badgeTrack: v });
+                              setMyApp((a) => ({ ...a, badgeTrack: v }));
+                              toast.success(`This project now counts toward ${trackByKey(v)?.name}.`);
+                            } catch (err) { toast.error('Could not change your track.'); }
+                          }}
+                          className="border border-gray-300 rounded-lg px-2 py-1 text-xs">
+                          {BADGE_TRACKS.map((t) => <option key={t.key} value={t.key}>{t.name}</option>)}
+                        </select>
+                      </div>
+                    )}
                   </div>
                 ) : hasApplied ? (
                   <div className="text-center py-4">
@@ -819,6 +848,23 @@ const ProjectDetail = () => {
                     <p className="text-gray-500 text-xs mt-1">
                       The project owner will review your application
                     </p>
+                    {myApp && !project.isPaid && project.status !== 'completed' && (
+                      <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs text-gray-700">
+                        <label htmlFor="my-track" className="font-semibold">Your badge track:</label>
+                        <select id="my-track" value={myApp.badgeTrack || suggestTrack(myApp.role)}
+                          onChange={async (e) => {
+                            const v = e.target.value;
+                            try {
+                              await updateDoc(doc(db, 'project_applications', myApp.id), { badgeTrack: v });
+                              setMyApp((a) => ({ ...a, badgeTrack: v }));
+                              toast.success(`This project now counts toward ${trackByKey(v)?.name}.`);
+                            } catch (err) { toast.error('Could not change your track.'); }
+                          }}
+                          className="border border-gray-300 rounded-lg px-2 py-1 text-xs">
+                          {BADGE_TRACKS.map((t) => <option key={t.key} value={t.key}>{t.name}</option>)}
+                        </select>
+                      </div>
+                    )}
                   </div>
                 ) : wasRejected && project.applicationsOpen === false ? (
                   <div className="text-center py-4">
@@ -876,7 +922,13 @@ const ProjectDetail = () => {
                       </label>
                       <select
                         value={applyForm.role}
-                        onChange={(e) => setApplyForm((p) => ({ ...p, role: e.target.value }))}
+                        onChange={(e) => {
+                          const role = e.target.value;
+                          const r = (project.teamRoles || []).find((x) => x.role === role);
+                          const wanted = r?.wantedTracks?.length ? r.wantedTracks : null;
+                          const suggested = suggestTrack(role);
+                          setApplyForm((p) => ({ ...p, role, badgeTrack: project.isPaid ? (wanted ? (wanted.includes(suggested) ? suggested : wanted[0]) : suggested) : suggested }));
+                        }}
                         className={inputClass + ' appearance-none'}
                       >
                         <option value="">Select a role</option>
@@ -940,6 +992,45 @@ const ProjectDetail = () => {
                         </p>
                       )}
                     </div>
+                    {/* Badge track: ONE per project. Free: any track (badge counts there,
+                        confirmed by the lead). Paid: the role's wanted tracks (no badge;
+                        shows the team's strength). */}
+                    {applyForm.role && (() => {
+                      const sel = (project.teamRoles || []).find((r) => r.role === applyForm.role);
+                      const options = project.isPaid && sel?.wantedTracks?.length ? BADGE_TRACKS.filter((t) => sel.wantedTracks.includes(t.key)) : BADGE_TRACKS;
+                      return project.isPaid ? (
+                        <div>
+                          <label className="block text-pink-600 font-semibold mb-2 text-sm" htmlFor="apply-track">Your badge track for this role *</label>
+                          <select id="apply-track" value={applyForm.badgeTrack} onChange={(e) => setApplyForm((p) => ({ ...p, badgeTrack: e.target.value }))} className={inputClass + ' appearance-none'}>
+                            <option value="">Choose a track</option>
+                            {options.map((t) => <option key={t.key} value={t.key}>{t.name} · {trackStanding(memberProfile, t.key)}</option>)}
+                          </select>
+                          <p className="text-gray-500 text-xs mt-1">Shows the team’s strength. No badge is awarded on paid projects.</p>
+                        </div>
+                      ) : (
+                        <fieldset>
+                          <legend className="block text-pink-600 font-semibold mb-2 text-sm">Which badge track should this project count toward? *</legend>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            {options.map((t) => {
+                              const on = applyForm.badgeTrack === t.key;
+                              return (
+                                <button key={t.key} type="button" aria-pressed={on} onClick={() => setApplyForm((p) => ({ ...p, badgeTrack: t.key }))}
+                                  className={`text-left rounded-xl border p-2.5 flex items-center gap-2 ${on ? 'border-pink-500 bg-pink-50 ring-1 ring-pink-500' : 'border-gray-200 bg-white hover:border-pink-300'}`}>
+                                  <img src={t.img} alt="" className="w-8 h-8 object-contain shrink-0" />
+                                  <span className="min-w-0">
+                                    <span className="block text-xs font-bold text-gray-900">{t.name}</span>
+                                    <span className="block text-[11px] text-gray-500 leading-tight">{t.desc}</span>
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <p className="text-gray-500 text-xs mt-1">
+                            One track per project. Your level counts within the track you choose; your lead confirms it matches your work. You can change it until the project is completed.
+                          </p>
+                        </fieldset>
+                      );
+                    })()}
                     <div>
                       <label className="block text-pink-600 font-semibold mb-2 text-sm">
                         Your Relevant Skills *
