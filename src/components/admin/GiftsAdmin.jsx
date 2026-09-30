@@ -38,7 +38,7 @@ const GiftsAdmin = () => {
   const input = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm';
   const total = (list || []).reduce((n, g) => n + (Number(g.amount) || 0), 0);
   return (
-    <div className="mb-8 bg-white border border-gray-200 rounded-2xl p-5">
+    <div className="mb-8 bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 min-w-0">
       <h2 className="text-lg font-bold text-gray-900">Gifts</h2>
       <p className="text-sm text-gray-500 mb-4">
         Record gifts received outside the donation tool (bank transfer or cheque). The donor is emailed a tax
@@ -65,7 +65,7 @@ const GiftsAdmin = () => {
             {['Bank transfer', 'Cheque', 'Other'].map((m) => <option key={m}>{m}</option>)}
           </select>
         </label>
-        <label className="text-xs font-semibold text-gray-700 sm:col-span-2">Did they receive anything in return?
+        <label className="text-xs font-semibold text-gray-700 sm:col-span-2 min-w-0">Did they receive anything in return?
           <select className={input} value={f.benefits} onChange={(e) => setF({ ...f, benefits: e.target.value })}>
             <option value="none">Nothing</option>
             <option value="recognition">Recognition only (name and logo on our sponsors section)</option>
@@ -85,7 +85,7 @@ const GiftsAdmin = () => {
           <ul className="space-y-2">
             {list.map((g) => (
               <li key={g.id} className="flex flex-wrap items-center justify-between gap-2 border border-gray-100 rounded-lg p-3 text-sm">
-                <span>
+                <span className="min-w-0 break-words">
                   <strong>{g.donorName}</strong>{g.organization ? ` (${g.organization})` : ''} · ${Number(g.amount).toLocaleString()} · {g.receivedOn} · {g.method}
                   <span className={`ml-2 text-[11px] font-semibold ${g.acknowledgedAt ? 'text-emerald-700' : 'text-amber-700'}`}>{g.acknowledgedAt ? 'Letter sent' : 'Letter not sent'}</span>
                 </span>

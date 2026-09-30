@@ -34,7 +34,7 @@ const SponsorsAdmin = () => {
   const active = list ? activeSponsors(list) : [];
   const input = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm';
   return (
-    <div className="mb-8 bg-white border border-gray-200 rounded-2xl p-5">
+    <div className="mb-8 bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 min-w-0">
       <h2 className="text-lg font-bold text-gray-900">Sponsors</h2>
       <p className="text-sm text-gray-500 mb-4">Companies that funded a cohort. Their logo shows in “Thank you to our sponsors” until the date you set.</p>
       <div className="grid sm:grid-cols-2 gap-3">
@@ -45,7 +45,7 @@ const SponsorsAdmin = () => {
           <input className={input} placeholder="https://" value={f.url} onChange={(e) => setF({ ...f, url: e.target.value })} />
         </label>
         <label className="text-xs font-semibold text-gray-700">Logo <span className="font-normal text-gray-500">(PNG, JPG, or WebP, up to 10 MB)</span>
-          <input type="file" accept="image/png,image/jpeg,image/webp" className="block mt-1 text-sm" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+          <input type="file" accept="image/png,image/jpeg,image/webp" className="block mt-1 text-sm w-full max-w-full" onChange={(e) => setFile(e.target.files?.[0] || null)} />
         </label>
         <label className="text-xs font-semibold text-gray-700">Show until <span className="font-normal text-gray-500">(optional)</span>
           <input type="date" className={input} min={new Date().toISOString().slice(0, 10)} value={f.until} onChange={(e) => setF({ ...f, until: e.target.value })} />
@@ -56,10 +56,10 @@ const SponsorsAdmin = () => {
       {list && list.length > 0 && (
         <ul className="mt-5 space-y-2">
           {list.map((s) => (
-            <li key={s.id} className="flex flex-wrap items-center justify-between gap-3 border border-gray-100 rounded-lg p-3">
+            <li key={s.id} className="flex flex-wrap items-center justify-between gap-3 border border-gray-100 rounded-lg p-3 min-w-0">
               <span className="flex items-center gap-3 min-w-0">
                 <img src={s.logoUrl} alt="" className="h-8 w-auto max-w-[90px] object-contain" />
-                <span className="text-sm text-gray-900">{s.name}</span>
+                <span className="text-sm text-gray-900 break-words min-w-0">{s.name}</span>
                 {!active.some((a) => a.id === s.id) && <span className="text-[11px] font-semibold text-gray-500">(ended)</span>}
               </span>
               <button onClick={async () => { if (!window.confirm(`Remove ${s.name}?`)) return; await removeSponsor(s.id); load(); }} className="text-xs font-semibold text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-50">Remove</button>

@@ -1168,9 +1168,9 @@ const AdminPanel = ({ only = null }) => {
             {filteredUsers.map((u) => (
               <div
                 key={u.id}
-                className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-lg p-3"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white border border-gray-200 rounded-lg p-3"
               >
-                <div className="min-w-0">
+                <div className="min-w-0 w-full sm:w-auto">
                   <p className="text-gray-900 text-sm font-medium truncate">
                     <Link
                       to={`/profile/${encodeURIComponent(u.email || u.id)}`}
@@ -1229,7 +1229,7 @@ const AdminPanel = ({ only = null }) => {
                     {u.email} · {u.country || 'no country'} · joined {fmtDate(u.createdAt)}
                   </p>
                 </div>
-                <div className="flex-shrink-0 flex flex-wrap items-center justify-end gap-2">
+                <div className="flex flex-wrap items-center gap-2 sm:justify-end sm:flex-shrink-0">
                   {u.id !== currentUser?.uid && (
                     <button
                       onClick={() => navigate(`/messages?to=${u.id}`)}
