@@ -26,6 +26,13 @@ messaging.onBackgroundMessage((payload) => {
     data: { link: payload.data?.link || payload.fcmOptions?.link || '/' },
   };
   self.registration.showNotification(title, options);
+  // Red number on the installed app's icon (where the device supports it).
+  const n = Number(payload.data?.badge || 0);
+  try {
+    if (self.navigator.setAppBadge) {
+      if (n > 0) self.navigator.setAppBadge(n); else self.navigator.clearAppBadge();
+    }
+  } catch (_) { /* not supported */ }
 });
 
 // Click → focus or open the app at the link.

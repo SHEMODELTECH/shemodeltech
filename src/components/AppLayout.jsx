@@ -91,6 +91,17 @@ const AppLayout = ({ children }) => {
     return () => unsub();
   }, [currentUser]);
 
+  // Red number on the installed app's icon (phone and laptop): unread
+  // notifications + unread messages. Cleared when everything is read.
+  useEffect(() => {
+    const n = (unreadNotifications || 0) + (unreadMessages || 0);
+    try {
+      if (navigator.setAppBadge) {
+        if (n > 0) navigator.setAppBadge(n); else navigator.clearAppBadge();
+      }
+    } catch (_) { /* not supported on this device */ }
+  }, [unreadNotifications, unreadMessages]);
+
   useEffect(() => {
     setSidebarOpen(false);
   }, [location.pathname]);

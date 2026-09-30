@@ -60,6 +60,20 @@ async function pruneTokens(uid, badTokens) {
   }
 }
 
+// Unread notifications + unread messages, for the red number on the app icon.
+async function unreadCountFor(uid) {
+  let n = 0;
+  try {
+    const c = await admin.firestore().collection('notifications').where('userId', '==', uid).where('isRead', '==', false).count().get();
+    n += c.data().count || 0;
+  } catch (_) { /* optional */ }
+  try {
+    const convs = await admin.firestore().collection('conversations').where('participants', 'array-contains', uid).get();
+    convs.forEach((d) => { n += Number((d.data().unreadBy || {})[uid] || 0); });
+  } catch (_) { /* optional */ }
+  return n;
+}
+
 module.exports = async (req, res) => {
   // CORS (same-origin in practice, but be permissive for the app domain)
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -116,10 +130,27 @@ module.exports = async (req, res) => {
       data: { link: link || '/' },
     };
 
-    const result = await messaging.sendEachForMulticast({
-      tokens,
-      ...messagePayload,
-    });
+    // Send per person, so each phone gets its own unread number for the app icon.
+    const byUid = {};
+    tokens.forEach((t) => { (byUid[tokenMap[t]] = byUid[tokenMap[t]] || []).push(t); });
+    const ordered = [];
+    const responses = [];
+    let successCount = 0;
+    let failureCount = 0;
+    for (const [uid, toks] of Object.entries(byUid)) {
+      const badge = await unreadCountFor(uid);
+      const r = await messaging.sendEachForMulticast({
+        tokens: toks,
+        ...messagePayload,
+        data: { ...messagePayload.data, badge: String(badge) },
+      });
+      toks.forEach((t) => ordered.push(t));
+      r.responses.forEach((x) => responses.push(x));
+      successCount += r.successCount;
+      failureCount += r.failureCount;
+    }
+    const result = { responses, successCount, failureCount };
+    tokens.splice(0, tokens.length, ...ordered);
 
     // Prune invalid tokens.
     const badByUid = {};

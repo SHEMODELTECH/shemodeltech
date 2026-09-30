@@ -170,7 +170,7 @@ module.exports = async function handler(req, res) {
 
  // STATE 6: unread notifications (messages, decisions, invitations).
  try {
-   const unread = await db.collection('notifications').where('userId', '==', user.uid).where('read', '==', false).limit(20).get();
+   const unread = await db.collection('notifications').where('userId', '==', user.uid).where('isRead', '==', false).limit(20).get();
    if (unread.size > 0) {
      items.push({
        headline: `You have ${unread.size}${unread.size === 20 ? '+' : ''} unread notification${unread.size === 1 ? '' : 's'}`,
