@@ -209,6 +209,12 @@ const ProjectDetail = () => {
       return;
     }
 
+    // Everyone joining a project has told us their age group (checked by the database too).
+    if (!memberProfile?.ageGroup) {
+      toast.error('Please tell us your age group first. Refresh the page to answer the quick question.');
+      return;
+    }
+
     // Leading a paid project is paid work: 18 and older only.
     if (project.isPaid && memberProfile?.isMinor) {
       toast.error('Paid projects are for members 18 and older. Free projects are open to you.');
@@ -324,6 +330,12 @@ const ProjectDetail = () => {
     const eligibility = checkRoleEligibility(memberProfile, selectedRole);
     if (!eligibility.eligible) {
       toast.error(eligibility.reason || 'You do not meet the level requirement for this role.');
+      return;
+    }
+
+    // Everyone joining a project has told us their age group (checked by the database too).
+    if (!memberProfile?.ageGroup) {
+      toast.error('Please tell us your age group first. Refresh the page to answer the quick question.');
       return;
     }
 

@@ -111,6 +111,10 @@ service cloud.firestore {
 
  // Self-update: cannot change own role, cannot self-award badges.
  allow update: if isSignedIn() && userId == myUid()
+ // Members must give their age group to finish sign-up (companies don't).
+ && (!touched('onboardingComplete') || request.resource.data.get('onboardingComplete', false) != true
+ || request.resource.data.get('isCompany', false) == true
+ || request.resource.data.get('ageGroup', null) in ['18plus', '13-17'])
  && (!('role' in request.resource.data)
  || request.resource.data.role == resource.data.role)
  && !touched('badges')
@@ -201,6 +205,8 @@ service cloud.firestore {
  allow create: if isSignedIn()
  && ownsNew('applicantUid')
  && request.resource.data.status == 'submitted'
+ // Everyone applying to lead has told us their age group.
+ && myUserDoc().get('ageGroup', null) in ['18plus', '13-17']
  && request.resource.data.rankedProjectIds is list
  && request.resource.data.rankedProjectIds.size() <= 3;
 
@@ -740,6 +746,8 @@ service cloud.firestore {
  allow create: if isSignedIn()
  && request.resource.data.applicantUid == myUid()
  && request.resource.data.status == 'submitted'
+ // Everyone applying has told us their age group.
+ && myUserDoc().get('ageGroup', null) in ['18plus', '13-17']
  && (get(/databases/$(database)/documents/projects/$(request.resource.data.projectId)).data.get('isPaid', false) != true
  || (myUserDoc().get('isMinor', false) != true && myUserDoc().get('adultConfirmedAt', null) != null));
  allow update: if isReviewer();

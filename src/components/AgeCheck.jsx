@@ -14,7 +14,7 @@ const AgeCheck = () => {
   const [age, setAge] = useState('');
   const [consent, setConsent] = useState(false);
   useEffect(() => {
-    if (!currentUser || sessionStorageSafe()) return;
+    if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid)).then((s) => {
       const d = s.data() || {};
       if (d.onboardingComplete && !d.isCompany && !d.ageGroup && !['admin', 'editor'].includes(d.role)) setShow(true);
@@ -45,7 +45,7 @@ const AgeCheck = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="age-h">
       <div className="w-full max-w-md bg-white rounded-2xl p-5">
         <h2 id="age-h" className="text-lg font-bold text-gray-900">One quick question</h2>
-        <p className="text-sm text-gray-600 mt-1">How old are you? Free projects are open from 13; paid projects are for members 18 and older.</p>
+        <p className="text-sm text-gray-600 mt-1">How old are you? Free projects are open from 13; paid projects are for members 18 and older. You’ll need to answer to join projects.</p>
         <div className="flex flex-wrap gap-2 mt-4">
           {[['18plus', '18 or older'], ['13-17', '13 to 17'], ['under13', 'Under 13']].map(([v, l]) => (
             <button key={v} type="button" aria-pressed={age === v} onClick={() => setAge(v)}
@@ -59,15 +59,11 @@ const AgeCheck = () => {
           </label>
         )}
         <div className="flex justify-end gap-2 mt-5">
-          <button onClick={() => { try { sessionStorage.setItem('smt-age-later', '1'); } catch (_) {} setShow(false); }} className="text-sm font-semibold text-gray-600 px-4 py-2">Later</button>
           <button onClick={save} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Save</button>
         </div>
       </div>
     </div>
   );
 };
-
-// "Later" hides it for this visit only.
-const sessionStorageSafe = () => { try { return sessionStorage.getItem('smt-age-later') === '1'; } catch (_) { return false; } };
 
 export default AgeCheck;

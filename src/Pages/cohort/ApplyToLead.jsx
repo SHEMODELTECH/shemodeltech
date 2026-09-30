@@ -10,7 +10,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { collection, query, where, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -157,6 +157,14 @@ const ApplyToLead = () => {
       }
       return;
     }
+    // Everyone applying to lead has told us their age group (the database checks too).
+    try {
+      const me = await getDoc(doc(db, 'users', currentUser.uid));
+      if (!me.data()?.ageGroup) {
+        toast.error('Please tell us your age group first. Refresh the page to answer the quick question.');
+        return;
+      }
+    } catch (_) { /* the database rule still applies */ }
     setSaving(true);
     try {
       await applyToLead({

@@ -473,7 +473,7 @@ const LandingPage = () => {
                 Summit
               </Link>
               <Link to="/support-our-mission" className="hover:text-pink-600 transition-colors font-medium">
-                Support our mission
+                Support
               </Link>
               <Link to="/terms" className="hover:text-pink-600 transition-colors font-medium">
                 Terms
