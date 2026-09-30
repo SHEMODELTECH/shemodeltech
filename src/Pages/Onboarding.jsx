@@ -11,6 +11,7 @@ import Navbar from '../components/Navbar';
 import { INDUSTRY_TRACKS } from '../utils/industryTracks';
 import { afterAuthPath } from '../utils/afterAuth';
 import { alertStaff } from '../utils/staffAlerts';
+import { ageFrom, dobFields } from '../utils/age';
 
 const BLOCKED_EMAIL_DOMAINS = [
   'gmail.com',
@@ -55,6 +56,7 @@ const Onboarding = () => {
     experienceLevel: '', // 'beginner' | 'intermediate' | 'advanced' | 'expert'
     ageGroup: '', // '18plus' | '13-17' | 'under13'
     guardianConsent: false,
+    dateOfBirth: '',
     primarySkillTrack: '', // TechPO, TechQA, TechDev, TechLeads, TechArchs, TechGuard, others, notsure
     highestEducation: '', // high_school | undergrad | masters | phd
     specialization: '',
@@ -216,6 +218,12 @@ const Onboarding = () => {
           toast.error('You need to be at least 13 to join She Model Tech.');
           return;
         }
+        if (formData.ageGroup === '13-17') {
+          const a = ageFrom(formData.dateOfBirth);
+          if (a === null) { toast.error('Please enter your date of birth.'); return; }
+          if (a < 13) { toast.error('You need to be at least 13 to join She Model Tech.'); return; }
+          if (a >= 18) { toast.error('Your date of birth shows you’re 18 or older. Choose “18 or older”.'); return; }
+        }
         if (formData.ageGroup === '13-17' && !formData.guardianConsent) {
           toast.error('Please confirm your parent or guardian knows you’re joining and agrees.');
           return;
@@ -313,6 +321,7 @@ const Onboarding = () => {
           updateData.isMinor = true;
           updateData.guardianConsent = true;
           updateData.guardianConsentAt = new Date();
+          Object.assign(updateData, dobFields(formData.dateOfBirth));
         }
       }
       if (isCompany) {
@@ -393,6 +402,14 @@ const Onboarding = () => {
                   </button>
                 ))}
               </div>
+              {formData.ageGroup === '13-17' && (
+                <label className="block mt-3 text-sm font-semibold text-gray-800">Date of birth
+                  <input type="date" max={new Date().toISOString().slice(0, 10)} value={formData.dateOfBirth}
+                    onChange={(e) => setFormData((p) => ({ ...p, dateOfBirth: e.target.value }))}
+                    className="block w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-normal" />
+                  <span className="block text-xs font-normal text-gray-500 mt-1">Paid projects open to you automatically when you turn 18.</span>
+                </label>
+              )}
               {formData.ageGroup === '13-17' && (
                 <label className="flex items-start gap-2 mt-3 text-sm text-gray-800">
                   <input type="checkbox" className="mt-1" checked={formData.guardianConsent} onChange={(e) => setFormData((p) => ({ ...p, guardianConsent: e.target.checked }))} />

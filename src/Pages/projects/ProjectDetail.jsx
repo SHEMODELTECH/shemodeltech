@@ -29,6 +29,7 @@ import { assignAsLead } from '../../utils/leadApplications';
 import PaymentAgreement, { AGREEMENT_VERSION } from '../../components/PaymentAgreement';
 import { BADGE_TRACKS, suggestTrack, trackByKey, trackStanding } from '../../config/badgeTracks';
 import TeamStrength from '../../components/TeamStrength';
+import { dobFields } from '../../utils/age';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -232,9 +233,11 @@ const ProjectDetail = () => {
       return;
     }
     if (agreement) {
+      const { dob: leadDob, ...leadPayout } = agreement;
       await updateDoc(doc(db, 'users', currentUser.uid), {
         adultConfirmedAt: serverTimestamp(),
-        payout: { ...agreement, updatedAt: new Date().toISOString() },
+        payout: { ...leadPayout, updatedAt: new Date().toISOString() },
+        ...(leadDob && !memberProfile?.dateOfBirth ? dobFields(leadDob) : {}),
       }).catch(() => {});
       setMemberProfile((p) => ({ ...(p || {}), adultConfirmedAt: new Date(), payout: agreement }));
     }
@@ -365,10 +368,12 @@ const ProjectDetail = () => {
     setSubmittingApp(true);
     try {
       if (agreement) {
-        // Only the confirmation is stored, not the date of birth.
+        // Save the date of birth once (age is worked out from it each time).
+        const { dob, ...payoutDetails } = agreement;
         await updateDoc(doc(db, 'users', currentUser.uid), {
           adultConfirmedAt: serverTimestamp(),
-          payout: { ...agreement, updatedAt: new Date().toISOString() },
+          payout: { ...payoutDetails, updatedAt: new Date().toISOString() },
+          ...(dob && !memberProfile?.dateOfBirth ? dobFields(dob) : {}),
         });
       }
       await addDoc(collection(db, 'project_applications'), {
@@ -394,7 +399,7 @@ const ProjectDetail = () => {
         portfolioUrl: applyForm.portfolioUrl.trim() || null,
         linkedinUrl: applyForm.linkedinUrl.trim() || null,
         status: 'submitted',
-        ...(agreement ? { paymentAgreement: { ...agreement, version: AGREEMENT_VERSION, acceptedAt: new Date().toISOString() } } : {}),
+        ...(agreement ? { paymentAgreement: { method: agreement.method, email: agreement.email, country: agreement.country, version: AGREEMENT_VERSION, acceptedAt: new Date().toISOString() } } : {}),
         createdAt: serverTimestamp(),
       });
       await updateDoc(doc(db, 'projects', projectId), { applicationCount: increment(1) });
@@ -490,7 +495,7 @@ const ProjectDetail = () => {
         projectTitle={project?.projectTitle}
         roleTitle={agreementFor === 'lead' ? 'Project Lead' : applyForm.role}
         pay={(project?.teamRoles || []).find((r) => r.role === applyForm.role)?.payAmount}
-        defaults={memberProfile?.payout || {}}
+        defaults={{ ...(memberProfile?.payout || {}), dateOfBirth: memberProfile?.dateOfBirth || '' }}
         onCancel={() => setAgreementOpen(false)}
         onConfirm={(details) => { setAgreementOpen(false); if (agreementFor === 'lead') handleApplyToLead(details); else handleApply(details); }}
       />
@@ -545,6 +550,17 @@ const ProjectDetail = () => {
               <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
                 {project.projectDescription}
               </p>
+              {['admin', 'editor'].includes(memberProfile?.role) && (
+                <button onClick={() => navigate(`/projects/${projectId}/setup`)} className="mb-4 text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">
+                  Edit project (She Model Tech)
+                </button>
+              )}
+              {project.leadDetails && (
+                <div className="mb-6 rounded-xl border border-pink-100 bg-pink-50/40 p-4">
+                  <p className="text-sm font-bold text-gray-900">More from the project lead</p>
+                  <p className="text-gray-700 text-sm leading-relaxed mt-1 whitespace-pre-wrap">{project.leadDetails}</p>
+                </div>
+              )}
 
               {/* Info Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
@@ -925,7 +941,8 @@ const ProjectDetail = () => {
                         onChange={(e) => {
                           const role = e.target.value;
                           const r = (project.teamRoles || []).find((x) => x.role === role);
-                          const wanted = r?.wantedTracks?.length ? r.wantedTracks : null;
+                          const leadPick = project.roleTracks?.[role];
+                          const wanted = leadPick?.length ? leadPick : r?.wantedTracks?.length ? r.wantedTracks : null;
                           const suggested = suggestTrack(role);
                           setApplyForm((p) => ({ ...p, role, badgeTrack: project.isPaid ? (wanted ? (wanted.includes(suggested) ? suggested : wanted[0]) : suggested) : suggested }));
                         }}
@@ -997,7 +1014,8 @@ const ProjectDetail = () => {
                         shows the team's strength). */}
                     {applyForm.role && (() => {
                       const sel = (project.teamRoles || []).find((r) => r.role === applyForm.role);
-                      const options = project.isPaid && sel?.wantedTracks?.length ? BADGE_TRACKS.filter((t) => sel.wantedTracks.includes(t.key)) : BADGE_TRACKS;
+                      const wantedFor = project.roleTracks?.[applyForm.role]?.length ? project.roleTracks[applyForm.role] : sel?.wantedTracks;
+                      const options = project.isPaid && wantedFor?.length ? BADGE_TRACKS.filter((t) => wantedFor.includes(t.key)) : BADGE_TRACKS;
                       return project.isPaid ? (
                         <div>
                           <label className="block text-pink-600 font-semibold mb-2 text-sm" htmlFor="apply-track">Your badge track for this role *</label>

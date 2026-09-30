@@ -23,6 +23,7 @@ import {
 } from '../../utils/projectRoles';
 import { formatMoney, computeTotalBudget } from '../../utils/paidProjects';
 import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
+import { BADGE_TRACKS } from '../../config/badgeTracks';
 
 const industryTracks = [
   'healthcare', 'finance', 'education', 'ecommerce', 'entertainment', 'government',
@@ -64,6 +65,9 @@ const ProjectSetup = () => {
   const datesLocked = cohortLock || coreLock;
   const [originalStart, setOriginalStart] = useState(null);
   const [paidLock, setPaidLock] = useState(false);
+  const [isStaffEditor, setIsStaffEditor] = useState(false);
+  const [roleTracks, setRoleTracks] = useState({}); // lead's badge tracks wanted per role (paid)
+  const [leadDetails, setLeadDetails] = useState(''); // the lead's extra details (not the brief)
   const [projectStatus, setProjectStatus] = useState('');
   const { projectId } = useParams();
   const { currentUser } = useAuth();
@@ -84,8 +88,11 @@ const ProjectSetup = () => {
         if (!snap.exists()) { toast.error('Project not found'); navigate('/projects', { replace: true }); return; }
         const data = snap.data();
 
-        // Only the confirmed lead / owner can set up / edit the project
-        if (data.submitterId !== currentUser.uid) {
+        // The lead, or She Model Tech staff (admins and editors), can edit.
+        const meSnap = await getDoc(doc(db, 'users', currentUser.uid)).catch(() => null);
+        const staffEditor = ['admin', 'editor'].includes(meSnap?.data()?.role);
+        setIsStaffEditor(staffEditor);
+        if (data.submitterId !== currentUser.uid && !staffEditor) {
           toast.error('Only the project lead can edit this.');
           navigate(`/projects/${projectId}`, { replace: true });
           return;
@@ -101,13 +108,16 @@ const ProjectSetup = () => {
         setIsEditing(alreadyActive);
         setIsPaid(!!data.isPaid);
         // Cohort projects: She Model Tech fixes the dates; paid cohorts are fully fixed.
-        setCohortLock(!!data.isCohort);
+        setCohortLock(!!data.isCohort && !staffEditor); // staff can change cohort dates
         // Leads (members) can't change the title, description, or dates; staff can.
         getDoc(doc(db, 'users', currentUser.uid))
           .then((u) => setCoreLock(!['admin', 'editor'].includes(u.data()?.role) && !data.isCompanyPost))
           .catch(() => setCoreLock(true));
         setOriginalStart(data.startDate || null);
-        setPaidLock(!!data.cohortPaid);
+        // Paid cohorts: the lead can only change the tracks wanted and add details. Staff edit everything.
+        setPaidLock(!!data.cohortPaid && !staffEditor);
+        setRoleTracks(data.roleTracks || {});
+        setLeadDetails(data.leadDetails || '');
         setProjectStatus(data.status || '');
 
         setForm({
@@ -227,6 +237,7 @@ const ProjectSetup = () => {
 
       await updateDoc(doc(db, 'projects', projectId), {
         ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
+        leadDetails: leadDetails.trim(),
         projectGoals: form.projectGoals.trim() || null,
         industryTrack: form.industryTrack,
         ...(datesLocked ? {} : { startDate: form.startDate, endDate: form.endDate }),
@@ -256,6 +267,7 @@ const ProjectSetup = () => {
       const teamRoles = buildTeamRoles();
       await updateDoc(doc(db, 'projects', projectId), {
         ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
+        leadDetails: leadDetails.trim(),
         projectGoals: form.projectGoals.trim() || null,
         industryTrack: form.industryTrack,
         // Keep every detail the lead edited, not just the brief, so a saved
@@ -296,8 +308,9 @@ const ProjectSetup = () => {
       <div className="max-w-3xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-gray-900">{form.projectTitle}</h1>
         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800">
-          <strong>Paid cohort project.</strong> She Model Tech has set the brief, roles, skills, number of people, pay,
-          and dates, so they can’t be changed here. Need more time? Use <strong>Request extra time</strong> in your workspace.
+          <strong>Paid cohort project.</strong> She Model Tech has set the brief, roles, number of people, pay, and dates.
+          You can choose the badge tracks you want for each role and add more details for your team.
+          Need more time? Use <strong>Request extra time</strong> in your workspace.
         </div>
         <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-5 space-y-3 text-sm text-gray-800">
           <p className="whitespace-pre-wrap">{form.projectDescription}</p>
@@ -310,6 +323,47 @@ const ProjectSetup = () => {
               ))}
             </ul>
           </div>
+        </div>
+        <div className="mt-5 bg-white border border-gray-200 rounded-2xl p-5 space-y-4">
+          <div>
+            <p className="text-sm font-bold text-gray-900">Badge tracks you want for each role</p>
+            <p className="text-xs text-gray-500 mb-2">Applicants pick one of these. No badge is awarded on paid projects; it shows your team’s strength.</p>
+            {roles.filter((r) => resolveRoleName(r)).map((r) => {
+              const name = resolveRoleName(r);
+              const current = roleTracks[name] || r.wantedTracks || [];
+              return (
+                <div key={name} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-1.5 text-xs border-t border-gray-100 first:border-t-0">
+                  <span className="font-semibold text-gray-900 w-full sm:w-40 truncate">{name}</span>
+                  {BADGE_TRACKS.map((t) => (
+                    <label key={t.key} className="flex items-center gap-1">
+                      <input type="checkbox" checked={current.includes(t.key)}
+                        onChange={(e) => setRoleTracks((m) => ({ ...m, [name]: e.target.checked ? [...current, t.key] : current.filter((k) => k !== t.key) }))} />
+                      {t.name}
+                    </label>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+          <div>
+            <label className="text-sm font-bold text-gray-900" htmlFor="lead-details">More about this project <span className="font-normal text-gray-500">(optional, from you as the lead)</span></label>
+            <p className="text-xs text-gray-500 mb-1">Add plans, tools, milestones, or anything that helps applicants. The brief from She Model Tech stays as it is.</p>
+            <textarea id="lead-details" rows={5} maxLength={4000} value={leadDetails} onChange={(e) => setLeadDetails(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <button
+            onClick={async () => {
+              setSaving(true);
+              try {
+                await updateDoc(doc(db, 'projects', projectId), { roleTracks, leadDetails: leadDetails.trim(), updatedAt: serverTimestamp() });
+                toast.success('Saved.');
+              } catch (e) { toast.error('Could not save.'); }
+              setSaving(false);
+            }}
+            disabled={saving}
+            className="bg-gray-900 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-60"
+          >
+            Save tracks and details
+          </button>
         </div>
         <div className="mt-5 flex gap-2">
           {projectStatus !== 'active' && (
@@ -337,6 +391,8 @@ const ProjectSetup = () => {
         <div>
           <label className={labelClass}>Description *</label>
           <textarea rows={4} value={form.projectDescription} disabled={coreLock} onChange={e => setForm(p => ({ ...p, projectDescription: e.target.value }))} className={inputClass + (coreLock ? ' opacity-60 cursor-not-allowed' : '')} />
+          <label className="block text-sm font-semibold text-gray-800 mt-4 mb-1" htmlFor="lead-details-free">More about this project <span className="font-normal text-gray-500">(optional, from the lead)</span></label>
+          <textarea id="lead-details-free" rows={4} maxLength={4000} value={leadDetails} onChange={(e) => setLeadDetails(e.target.value)} className={inputClass} placeholder="Plans, tools, milestones, or anything that helps your team." />
           {coreLock && <p className="text-xs text-gray-500 mt-1">The title, description, and dates are set by She Model Tech. Need a change? Message She Model Tech.</p>}
         </div>
         <div>

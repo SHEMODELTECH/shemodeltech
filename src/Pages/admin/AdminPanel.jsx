@@ -1087,6 +1087,13 @@ const AdminPanel = ({ only = null }) => {
                   >
                     View
                   </button>
+                  {/* Admins and editors can edit any project, created or ongoing. */}
+                  <button
+                    onClick={() => navigate(`/projects/${p.id}/setup`)}
+                    className="text-gray-700 text-xs font-semibold"
+                  >
+                    Edit
+                  </button>
                   {isAdmin && (
                     <button
                       onClick={() => deleteProject(p)}

@@ -130,7 +130,16 @@ service cloud.firestore {
  // Summit attendance is recorded by staff at check-in.
  && !touched('summitAttendance')
  // A learner under 18 (joined through a school) can't remove that flag herself.
- && (!touched('isMinor') || request.resource.data.isMinor == true)
+ // Under-18 protection: a member can't remove it herself, except automatically
+ // once her saved date of birth (dobAt) shows she has turned 18.
+ && (!touched('isMinor') || request.resource.data.isMinor == true
+ || (resource.data.get('dobAt', null) != null && !touched('dobAt')
+ && request.time > resource.data.dobAt + duration.value(6575, 'd')))
+ // While marked under 18, the date of birth can't be changed to an earlier one
+ // (no making yourself older); She Model Tech staff can correct it.
+ && (!touched('dobAt') || resource.data.get('isMinor', false) != true
+ || resource.data.get('dobAt', null) == null
+ || request.resource.data.dobAt >= resource.data.dobAt)
  // Teacher access is granted by an admin, never self-set.
  && !touched('isTeacher')
  && !touched('teacherSince')

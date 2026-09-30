@@ -7,16 +7,25 @@ import { signOut } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { auth, db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
+import { ageFrom, dobFields } from '../utils/age';
 
 const AgeCheck = () => {
   const { currentUser } = useAuth();
   const [show, setShow] = useState(false);
   const [age, setAge] = useState('');
   const [consent, setConsent] = useState(false);
+  const [dob, setDob] = useState('');
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid)).then((s) => {
       const d = s.data() || {};
+      // A member who has turned 18: paid projects open automatically.
+      if (d.isMinor && d.dateOfBirth && (ageFrom(d.dateOfBirth) || 0) >= 18) {
+        updateDoc(doc(db, 'users', currentUser.uid), { isMinor: false, ageGroup: '18plus' })
+          .then(() => toast.success('Happy 18th! Paid projects are now open to you.'))
+          .catch(() => {});
+        return;
+      }
       if (d.onboardingComplete && !d.isCompany && !d.ageGroup && !['admin', 'editor'].includes(d.role)) setShow(true);
     }).catch(() => {});
   }, [currentUser]);
@@ -29,10 +38,16 @@ const AgeCheck = () => {
       await signOut(auth).catch(() => {});
       return;
     }
+    if (age === '13-17') {
+      const a = ageFrom(dob);
+      if (a === null) return toast.error('Please enter your date of birth.');
+      if (a >= 18) return toast.error('Your date of birth shows you’re 18 or older. Choose “18 or older”.');
+      if (a < 13) return toast.error('She Model Tech is for people 13 and older.');
+    }
     if (age === '13-17' && !consent) return toast.error('Please confirm your parent or guardian knows and agrees.');
     try {
       await updateDoc(doc(db, 'users', currentUser.uid), age === '13-17'
-        ? { ageGroup: '13-17', isMinor: true, guardianConsent: true, guardianConsentAt: new Date() }
+        ? { ageGroup: '13-17', isMinor: true, guardianConsent: true, guardianConsentAt: new Date(), ...dobFields(dob) }
         : { ageGroup: '18plus' });
       setShow(false);
       toast.success('Thanks!');
@@ -52,6 +67,11 @@ const AgeCheck = () => {
               className={`text-sm font-semibold px-4 py-2 rounded-full border ${age === v ? 'bg-gray-900 border-gray-900 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>{l}</button>
           ))}
         </div>
+        {age === '13-17' && (
+          <label className="block mt-3 text-sm font-semibold text-gray-800">Date of birth
+            <input type="date" max={new Date().toISOString().slice(0, 10)} value={dob} onChange={(e) => setDob(e.target.value)} className="block w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-normal" />
+          </label>
+        )}
         {age === '13-17' && (
           <label className="flex items-start gap-2 mt-3 text-sm text-gray-800">
             <input type="checkbox" className="mt-1" checked={consent} onChange={(e) => setConsent(e.target.checked)} />

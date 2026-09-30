@@ -1,6 +1,6 @@
 // src/components/PaymentAgreement.jsx
 // Before a member applies to a She Model Tech PAID project: confirm she's 18 or
-// older (date of birth is checked, not stored), accept the terms, and say how
+// older (date of birth is asked once and saved), accept the terms, and say how
 // she'd like to be paid. No tax numbers are collected here.
 import React, { useState } from 'react';
 
@@ -15,7 +15,8 @@ const ageOn = (dob) => {
 };
 
 const PaymentAgreement = ({ open, projectTitle, roleTitle, pay, defaults = {}, onCancel, onConfirm }) => {
-  const [dob, setDob] = useState('');
+  const savedDob = defaults.dateOfBirth || '';
+  const [dob, setDob] = useState(savedDob);
   const [method, setMethod] = useState(defaults.method || 'PayPal');
   const [email, setEmail] = useState(defaults.email || '');
   const [country, setCountry] = useState(defaults.country || '');
@@ -30,7 +31,7 @@ const PaymentAgreement = ({ open, projectTitle, roleTitle, pay, defaults = {}, o
     if (!country.trim()) return setErr('Enter the country where you’ll be paid.');
     if (!agree) return setErr('Please accept the terms to continue.');
     setErr('');
-    onConfirm({ method, email: method === 'Bank transfer' ? null : email.trim().toLowerCase(), country: country.trim() });
+    onConfirm({ method, email: method === 'Bank transfer' ? null : email.trim().toLowerCase(), country: country.trim(), dob });
   };
 
   const input = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm';
@@ -40,8 +41,14 @@ const PaymentAgreement = ({ open, projectTitle, roleTitle, pay, defaults = {}, o
         <h2 id="pa-h" className="text-lg font-bold text-gray-900">Paid project agreement</h2>
         <p className="text-sm text-gray-600 mt-1">{projectTitle}{roleTitle ? ` · ${roleTitle}` : ''}{pay ? ` · $${Number(pay).toLocaleString()} per person` : ''}</p>
 
-        <label className="block text-sm font-semibold text-gray-800 mt-4" htmlFor="pa-dob">Date of birth <span className="font-normal text-gray-500">(to confirm you’re 18 or older; we don’t store it)</span></label>
-        <input id="pa-dob" type="date" className={input} max={new Date().toISOString().slice(0, 10)} value={dob} onChange={(e) => setDob(e.target.value)} />
+        {savedDob ? (
+          <p className="text-sm text-gray-700 mt-4">Date of birth on file. You can correct it in Settings.</p>
+        ) : (
+          <>
+            <label className="block text-sm font-semibold text-gray-800 mt-4" htmlFor="pa-dob">Date of birth <span className="font-normal text-gray-500">(asked once, to confirm you’re 18 or older)</span></label>
+            <input id="pa-dob" type="date" className={input} max={new Date().toISOString().slice(0, 10)} value={dob} onChange={(e) => setDob(e.target.value)} />
+          </>
+        )}
 
         <label className="block text-sm font-semibold text-gray-800 mt-3" htmlFor="pa-m">How would you like to be paid? <span className="font-normal text-gray-500">(She Model Tech pays by PayPal)</span></label>
         <select id="pa-m" className={input} value={method} onChange={(e) => setMethod(e.target.value)}>
