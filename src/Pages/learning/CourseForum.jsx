@@ -485,7 +485,7 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
           ctaLabel: 'Open the forum',
         });
       }
-      toast.success(form.kind === 'capstone' ? 'Capstone shared. A mentor or the She Model Tech team will review it.' : 'Posted.');
+      toast.success(form.kind === 'capstone' ? 'Capstone shared. A mentor or She Model Tech will review it.' : 'Posted.');
       if (form.kind === 'capstone') {
         if (onCapstonePosted) onCapstonePosted();
         alertStaff({

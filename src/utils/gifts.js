@@ -23,7 +23,7 @@ export const letterBody = (g) => {
     `<strong>Gift received:</strong> ${money(g.amount)}<br/><strong>Date received:</strong> ${nice(g.receivedOn)}<br/><strong>Method:</strong> ${esc(g.method)}`,
     benefit,
     `${ORG_LEGAL_NAME} is a tax-exempt organization under Section 501(c)(3) of the Internal Revenue Code (EIN ${ORG_EIN}). Your gift is tax-deductible to the extent allowed by law. Please keep this letter for your records.`,
-    'With gratitude,<br/>The She Model Tech team',
+    'With gratitude,<br/>She Model Tech',
   ].join('<br/><br/>');
 };
 

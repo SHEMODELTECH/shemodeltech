@@ -79,7 +79,7 @@ const PushPrompt = () => {
 
   return (
     <div className="rounded-xl border border-pink-200 bg-pink-50 p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
-      <p className="m-0 text-sm text-gray-800"><strong>Get the She Model Tech app.</strong> {text}</p>
+      <p className="m-0 text-sm text-gray-800"><strong>Get She Model Tech on your device.</strong> {text}</p>
       {step === 'install' && (
         <button onClick={install} disabled={busy} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg disabled:opacity-50">Install</button>
       )}

@@ -30,7 +30,7 @@ export const PrioritySupport = () => {
     <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
       <div>
         <p className="font-semibold text-gray-900">Priority support</p>
-        <p className="text-sm text-gray-700 mt-1">Message the She Model Tech team directly. Your requests are handled first.</p>
+        <p className="text-sm text-gray-700 mt-1">Message She Model Tech directly. Your requests are handled first.</p>
       </div>
       {teamUid && (
         <button

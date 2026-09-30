@@ -59,11 +59,11 @@ const Support = () => {
     },
     {
       q: 'How does it work?',
-      a: 'Four steps. (1) Sign up and build your profile: sign in with Google, pick your skill track, and set your experience level. It takes under a minute. (2) Join a project: browse the open projects and apply with your portfolio and LinkedIn, or apply to lead one. (3) Collaborate: once you are on a team you get the project workspace, where you discuss in the forum, share resources, and coordinate with everyone else. (4) Complete and earn your badge: when the project is done we review the work, including the commit history, and badges are awarded based on your role and contribution, building a verified record of what you actually built.',
+      a: 'Four steps. (1) Sign up and build your profile: sign in with Google, pick your skill track, and set your experience level. It takes under a minute. (2) Join a project: browse the open projects and apply with your portfolio and LinkedIn, or apply to lead one. (3) Collaborate: once you are on a team you get the project workspace, where you discuss in the forum, share resources, and coordinate with everyone else. (4) Complete and earn your badge: when the project is done we review the work, including the commit history, and badges are awarded in the track you chose, based on your contribution, building a verified record of what you actually built.',
     },
     {
       q: 'Is She Model Tech free to use?',
-      a: 'Yes, completely. There are no plans, no upgrades, and no paid tier for members. Every member gets unlimited collaborative projects, all six badge tracks, full Talent Board access, unlimited messaging, community and project workspaces, and a verifiable certificate on completion. Nothing is held back and nothing is metered. We are funded by the companies who hire from us, never by the women who learn here.',
+      a: "Yes, completely. Every member gets courses, cohort projects, all six badge tracks, certificates, messaging, workspaces, and the Summit for free. Nothing is held back and nothing is metered. We are a 501(c)(3) nonprofit, funded by donations and by companies through our company tiers, never by the women who learn here.",
     },
     {
       q: 'How do badges and Top Talent visibility work together?',
@@ -75,19 +75,19 @@ const Support = () => {
     },
     {
       q: 'Are companies on She Model Tech verified?',
-      a: 'Company accounts are self-declared, and we do not currently run an identity check on them. Please do your own due diligence before sharing personal information, signing anything, or starting unpaid work: look at the company profile, its posting history, and its activity on the platform, and search for the organisation independently. Be cautious of anyone who asks for money, bank details, or identity documents. If something seems off, report it through this support page and we will look into it.',
+      a: "Companies are verified by She Model Tech before they can post jobs, and verified companies show a badge. Still, do your own checks before sharing personal information or signing anything, and be cautious of anyone who asks for money, bank details, or identity documents. If something seems off, report it through this support page and we will look into it.",
     },
     {
       q: 'I am new to tech - where do I start?',
-      a: 'Join a project. We do not teach theory here; you learn by building alongside people at different levels, with a project lead who can point you in the right direction. Pick the track closest to what you want to do, apply to a project in a role you can grow into, and ask questions as you go. Most people learn far more in eight weeks of real work than in months of tutorials.',
+      a: "Start with a course in Learning to get the basics, then join a cohort project in a role you can grow into. You learn fastest by building alongside people at different levels, with a project lead who can point you in the right direction. Ask questions as you go.",
     },
     {
       q: 'How do projects work?',
-      a: "Project owners post projects with team roles, and members apply to join. Once accepted, teams collaborate through the project workspace. There are two types: FREE collaborative projects, where badges are automatically awarded on completion based on each member's role - these are about gaining real experience and proof of skill; and PAID projects (posted by companies), where each role carries a pay-per-person amount you see before applying - on paid projects you are compensated with money instead of badges.",
+      a: "Every project comes from a She Model Tech cohort. Members apply for a role or apply to lead, and teams work together in the project workspace. There are two types: FREE projects, where you earn a badge in the track you choose when the project is completed and reviewed; and PAID projects, run and paid for by She Model Tech, open to members 18 and older, where you are paid instead of earning a badge.",
     },
     {
       q: 'Does She Model Tech have paid projects?',
-      a: "Yes. Companies can post paid projects: the pay per person is set for every role and is visible to everyone before applying, so you know exactly what you'll earn. Payment happens on verified completion - the owner marks everyone paid, and each member confirms they received it; the project only closes when all confirmations match, and any mismatch opens a dispute reviewed with the She Model Tech team. Paid projects do not award badges - you are compensated with money instead. Your earnings (paid and pending) are tracked on your Account page. Free collaborative projects remain unlimited and are how you earn badges.",
+      a: "Yes. Paid projects are run and paid for by She Model Tech and are open to members 18 and older. The pay for each role is shown before you apply. After the work is reviewed, She Model Tech pays you by PayPal (or Wise) to an account in your own name, and you confirm you received it on the payments page. Add your PayPal email in Settings, Account, Payout details. Paid projects do not award badges; free projects are how you earn badges.",
     },
     {
       q: 'What does a project lead need to provide?',
@@ -99,7 +99,7 @@ const Support = () => {
     },
     {
       q: 'How does the project approval process work?',
-      a: 'When the work is done, the project lead submits the project for review from the Complete Project page. The submission includes the submission link from the Resources tab (a folder, such as a GitHub repository, containing all the team work, the list of team members, and the final solutions) and the project workspace link, which is added automatically. The She Model Tech team reviews it and can: (1) Approve it, after which the lead can assign badges to the team; (2) Request changes, sending it back with feedback so the team can improve and re-submit (this can happen as many times as needed); or (3) Reject it, in which case no badges are assigned and the project cannot be re-submitted. The lead, and the team, are notified at each step.',
+      a: 'When the work is done, the project lead submits the project for review from the Complete Project page. The submission includes the submission link from the Resources tab (a folder, such as a GitHub repository, containing all the team work, the list of team members, and the final solutions) and the project workspace link, which is added automatically. She Model Tech reviews it and can: (1) Approve it, after which the lead can assign badges to the team; (2) Request changes, sending it back with feedback so the team can improve and re-submit (this can happen as many times as needed); or (3) Reject it, in which case no badges are assigned and the project cannot be re-submitted. The lead, and the team, are notified at each step.',
     },
     {
       q: 'What makes a strong final project submission?',
@@ -107,7 +107,7 @@ const Support = () => {
     },
     {
       q: 'How are badges earned, and how do levels work?',
-      a: 'Badges are earned automatically when a project is completed, based on your role: developers earn TechDev, QA earn TechQA, product/project owners earn TechPO, leaders earn TechLeads, low/no-code builders earn TechArchs, security specialists earn TechGuard. Levels progress with how many badges you hold in a track: Novice (1 badge, steel ring), Associate (2-5, bronze ring), Advanced (6-10, silver ring), Expert (11+, gold ring).',
+      a: "When you apply to a free project, you choose the badge track it counts toward (one track per project). When the project is completed and reviewed, you earn a badge in that track; your lead confirms it matches your work. Levels grow with the number of badges you hold in a track: Novice (1 to 2), Associate (3 to 6), Advanced (7 to 11), and Expert (12 or more).",
     },
     {
       q: 'What are the 6 TechTalent Badges?',
@@ -115,7 +115,7 @@ const Support = () => {
     },
     {
       q: 'Do project owners earn badges too?',
-      a: 'Yes! Project owners automatically receive a TechLeads (Leadership) badge when they complete a project, plus a certificate documenting the project, team size, and badges awarded.',
+      a: "Yes. Project leads earn a TechPO badge (Product / Project Owner) when they complete a project, plus a certificate documenting the project, team size, and badges awarded.",
     },
     {
       q: 'Can I control who sees my email?',
@@ -123,7 +123,7 @@ const Support = () => {
     },
     {
       q: 'What is the Talent Board?',
-      a: 'The Talent Board is a searchable directory where companies discover women by skill track, experience level, and badges earned. Being LISTED is free: you appear automatically once you earn your first badge by completing a project, and the more badges you earn, the stronger your profile looks. Browsing is free too - every signed-in member has full access to the board and can message anyone on it, with no caps.',
+      a: "The Talent Board is where companies discover women by skill track, level, and badges earned. You are listed automatically once you earn your first badge, and the more badges you earn, the stronger your profile looks. Members under 18 are not listed.",
     },
     {
       q: 'How do I report inappropriate content or users?',

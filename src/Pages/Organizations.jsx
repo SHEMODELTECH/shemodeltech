@@ -151,7 +151,7 @@ const Organizations = () => {
             <div className="mt-5 rounded-xl bg-white border border-emerald-200 p-5">
               <p className="font-semibold text-emerald-800">Thank you. Your request has been sent.</p>
               <p className="text-sm text-gray-700 mt-1">
-                It went to the She Model Tech team, and we’ve emailed a confirmation to {form.contactEmail}. You’ll get
+                It went to She Model Tech, and we’ve emailed a confirmation to {form.contactEmail}. You’ll get
                 updates in your notifications and by email, and you can follow it below.
               </p>
             </div>
@@ -240,7 +240,7 @@ const Organizations = () => {
                   onClick={() => navigate(`/messages?to=${teamUid}&text=${encodeURIComponent('Hi She Model Tech team, I have a question about our organization request: ')}`)}
                   className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg"
                 >
-                  Message the She Model Tech team
+                  Message She Model Tech
                 </button>
               )}
             </div>

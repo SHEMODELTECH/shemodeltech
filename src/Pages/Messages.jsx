@@ -232,7 +232,7 @@ const Messages = () => {
             }
           }
           if (!allowed) {
-            toast.error('Messages with learners under 18 are limited to their school’s instructors and the She Model Tech team.');
+            toast.error('Messages with learners under 18 are limited to their school’s instructors and She Model Tech.');
             return;
           }
         }

@@ -545,7 +545,7 @@ const ProjectCompletion = () => {
                 ) : isUnderReview ? (
                   <div className="bg-pink-50 border border-pink-200 rounded-2xl p-6 text-center">
                     <h2 className="text-lg font-bold text-pink-700 mb-1">Submitted for review</h2>
-                    <p className="text-gray-600 text-sm">Your project is with the She Model Tech team. You will be notified once it is reviewed. Badges can be assigned only after approval.</p>
+                    <p className="text-gray-600 text-sm">Your project is with She Model Tech. You will be notified once it is reviewed. Badges can be assigned only after approval.</p>
                     <p className="text-gray-400 text-xs mt-3">Submission link: <a href={project.reviewSubmissionUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:underline">{project.reviewSubmissionUrl}</a></p>
                   </div>
                 ) : (

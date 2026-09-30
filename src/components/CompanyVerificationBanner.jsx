@@ -42,7 +42,7 @@ const CompanyVerificationBanner = ({ profile }) => {
             onClick={() => navigate(`/messages?to=${teamUid}`)}
             className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
           >
-            {asked ? 'Read and reply' : 'Message the She Model Tech team'}
+            {asked ? 'Read and reply' : 'Message She Model Tech'}
           </button>
         )}
         <Link to="/settings" className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2 rounded-lg hover:bg-gray-50">

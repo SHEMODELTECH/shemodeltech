@@ -233,7 +233,7 @@ const MENTOR_BENEFITS = [
   ['Networking', 'with learners, other mentors, and companies hiring through She Model Tech'],
   ['Speaking and visibility', 'opportunities to lead live sessions and workshops, and features in our community updates'],
   ['Early access to talent', 'meet motivated learners up close, helpful if you hire or lead teams'],
-  ['Priority support', 'Message the She Model Tech team directly, and your requests are handled first.'],
+  ['Priority support', 'Message She Model Tech directly, and your requests are handled first.'],
   ['Tools included', 'the Mentor Hub for written, video, and interactive courses, plus full-screen Present mode'],
 ];
 

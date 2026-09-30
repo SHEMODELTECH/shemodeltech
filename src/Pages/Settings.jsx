@@ -902,7 +902,7 @@ const IncludedTab = ({ profile }) => {
           <FeatureItem label="Become a mentor" detail="Create and publish courses, earn the Mentor badge and certificates, and request recommendation or volunteer service letters." />
           <FeatureItem label="Payment protection on paid projects" detail="Every member confirms payment before a paid project closes, with a dispute process if something goes wrong." />
           <FeatureItem label="Email updates" detail="Daily and weekly digests with new projects and courses. Choose what you receive in Settings." />
-          <FeatureItem label="Support" detail={`Reach the She Model Tech team any time at ${BRAND.supportEmail}.`} />
+          <FeatureItem label="Support" detail={`Reach She Model Tech any time at ${BRAND.supportEmail}.`} />
         </ul>
       </div>
     </div>

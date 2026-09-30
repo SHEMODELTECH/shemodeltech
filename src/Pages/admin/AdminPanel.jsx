@@ -492,7 +492,7 @@ const AdminPanel = ({ only = null }) => {
       notifyMember(u.id, {
         type: 'company_info_requested',
         title: 'We need a few details to verify your company',
-        body: 'The She Model Tech team sent you a message. Reply there, and update your company details in Settings.',
+        body: 'She Model Tech sent you a message. Reply there, and update your company details in Settings.',
         link: `/messages?with=${currentUser.uid}`,
         ctaLabel: 'Read the message',
       });

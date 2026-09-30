@@ -123,7 +123,7 @@ const HostCohort = () => {
             notifyMember(uid, {
               type: 'training_workspace',
               title: `Workspace ready: ${req.orgName || 'your training'}`,
-              body: 'We’ve opened a project workspace for this training. Use its Discussion to talk with the She Model Tech team, trainers, and assistants.',
+              body: 'We’ve opened a project workspace for this training. Use its Discussion to talk with She Model Tech, trainers, and assistants.',
               link: `/projects/${id}/workspace`,
               ctaLabel: 'Open the workspace',
             })

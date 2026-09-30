@@ -337,7 +337,7 @@ const ProjectSetup = () => {
         <div>
           <label className={labelClass}>Description *</label>
           <textarea rows={4} value={form.projectDescription} disabled={coreLock} onChange={e => setForm(p => ({ ...p, projectDescription: e.target.value }))} className={inputClass + (coreLock ? ' opacity-60 cursor-not-allowed' : '')} />
-          {coreLock && <p className="text-xs text-gray-500 mt-1">The title, description, and dates are set by She Model Tech. Need a change? Message the She Model Tech team.</p>}
+          {coreLock && <p className="text-xs text-gray-500 mt-1">The title, description, and dates are set by She Model Tech. Need a change? Message She Model Tech.</p>}
         </div>
         <div>
           <label className={labelClass}>Goals</label>

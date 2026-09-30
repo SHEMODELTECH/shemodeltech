@@ -948,7 +948,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                                   <li>
                                     <a href={capstone.forumUrl} className="font-semibold text-pink-700 hover:underline">
                                       {capstone.status === 'pending'
-                                        ? 'Your capstone is waiting for review by a mentor or the She Model Tech team'
+                                        ? 'Your capstone is waiting for review by a mentor or She Model Tech'
                                         : capstone.status === 'changes'
                                         ? 'Update your capstone: changes were requested'
                                         : 'Share your capstone project in the course forum for review'}
