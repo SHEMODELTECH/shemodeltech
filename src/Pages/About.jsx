@@ -112,16 +112,15 @@ const About = () => {
           </div>
         </section>
 
-        {/* For Startups and Organisations */}
+        {/* For companies */}
         <section className="mb-12">
           <div className="bg-pink-50 rounded-xl border border-pink-100 p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              For Startups and Organisations
+              For companies
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              Sponsor a project and fund a team of women while they build, or host
-              your own paid project and hire directly from women who have already earned a verified
-              badge with us.
+              Support our mission by funding a cohort, and hire women with verified badges through job posts and
+              the Talent Board with a company tier.
             </p>
           </div>
         </section>
