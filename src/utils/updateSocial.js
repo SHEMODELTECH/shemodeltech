@@ -83,3 +83,15 @@ export const notifyMentions = (mentions, me, activityId) => {
     }).catch(() => {});
   });
 };
+
+// Profile photos for people who reacted or commented: use the saved photo, and
+// look up anyone without one (older reactions) from their profile, once.
+const photoCache = {};
+export const fetchPhotos = async (uids) => {
+  const { doc: d, getDoc } = await import('firebase/firestore');
+  const missing = [...new Set(uids)].filter((u) => u && !(u in photoCache));
+  await Promise.all(missing.map((u) => getDoc(d(db, 'users', u))
+    .then((s) => { photoCache[u] = s.data()?.photoURL || ''; })
+    .catch(() => { photoCache[u] = ''; })));
+  return Object.fromEntries(uids.map((u) => [u, photoCache[u] || '']));
+};

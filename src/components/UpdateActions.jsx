@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { REACTIONS, listComments, postUrl, repostUpdate, setReaction } from '../utils/updateSocial';
 import CommentThread from './CommentThread';
 import ReactionsModal from './ReactionsModal';
+import { usePhotos } from '../hooks/usePhotos';
 
 const Btn = ({ onClick, children, active, label }) => (
   <button type="button" onClick={onClick} aria-label={label}
@@ -21,6 +22,7 @@ const UpdateActions = ({ a, me, onChange }) => {
   const [reposting, setReposting] = useState(false);
   const [repostText, setRepostText] = useState('');
   const [whoOpen, setWhoOpen] = useState(false); // who reacted (hover or tap)
+  const photoOf = usePhotos(Object.keys(a.reactions || {}), a.reactionPhotos);
   const mine = (a.reactions || {})[me.uid];
   const reactions = Object.values(a.reactions || {});
   const top = [...new Set(reactions)].slice(0, 3);
@@ -60,7 +62,7 @@ const UpdateActions = ({ a, me, onChange }) => {
                 {/* Small photos of the people who reacted, like LinkedIn */}
                 <span className="flex -space-x-1.5">
                   {Object.keys(a.reactions || {}).slice(0, 3).map((u) => {
-                    const photo = a.reactionPhotos?.[u];
+                    const photo = photoOf(u);
                     const name = a.reactionNames?.[u] || '?';
                     return photo ? (
                       <img key={u} src={photo} alt="" className="w-5 h-5 rounded-full border-2 border-white object-cover" />
@@ -72,7 +74,7 @@ const UpdateActions = ({ a, me, onChange }) => {
                 <span>{top.join('')} {reactions.length}</span>
               </button>
               {whoOpen && (
-                <ReactionsModal reactions={a.reactions} names={a.reactionNames} photos={a.reactionPhotos} onClose={() => setWhoOpen(false)} />
+                <ReactionsModal reactions={a.reactions} names={a.reactionNames} photos={Object.fromEntries(Object.keys(a.reactions || {}).map((u) => [u, photoOf(u)]))} onClose={() => setWhoOpen(false)} />
               )}
             </span>
           ) : <span />}

@@ -73,6 +73,14 @@ module.exports = async function handler(req, res) {
 
  let sent = 0, skipped = 0, failed = 0;
 
+ // Cohorts published in the last day (shown to everyone on the daily email).
+ let newCohorts = [];
+ try {
+ const since = admin.firestore.Timestamp.fromDate(new Date(Date.now() - 24 * 3600 * 1000));
+ const cs = await db.collection('cohorts').where('publishedAt', '>=', since).get();
+ newCohorts = cs.docs.map((d) => ({ id: d.id, ...d.data() }));
+ } catch (_) { /* optional */ }
+
  for (const uDoc of usersSnap.docs) {
  const user = { uid: uDoc.id, ...uDoc.data() };
  if (!user.email || !user.email.includes('@')) { skipped++; continue; }
@@ -167,6 +175,16 @@ module.exports = async function handler(req, res) {
      }
    }
  } catch (_) { /* non-blocking */ }
+
+ // STATE 7: a new cohort was published in the last day.
+ for (const c of newCohorts) {
+ if (c.isPaid && user.isMinor) continue; // paid cohorts are 18 and older
+ items.push({
+ headline: `New cohort: ${c.name || 'projects are open'}`,
+ detail: c.isPaid ? `Paid cohort, $${Number(c.payPerPerson) || 0} per person. Apply to lead or join a team.` : 'Free cohort. Apply to lead or join a team and earn a badge.',
+ link: `${SITE}/projects`,
+ });
+ }
 
  // STATE 6: unread notifications (messages, decisions, invitations).
  try {

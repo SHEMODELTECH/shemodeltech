@@ -2,6 +2,7 @@
 // Who reacted, in a pop-up (like the image viewer): tabs by emoji and a list
 // you can scroll. Closes with the ×, Escape, or a tap outside.
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 const ReactionsModal = ({ reactions = {}, names = {}, photos = {}, onClose }) => {
   const [tab, setTab] = useState('all');
@@ -15,8 +16,10 @@ const ReactionsModal = ({ reactions = {}, names = {}, photos = {}, onClose }) =>
   entries.forEach(([, e]) => { counts[e] = (counts[e] || 0) + 1; });
   const shown = tab === 'all' ? entries : entries.filter(([, e]) => e === tab);
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={onClose}>
+  // Rendered at the top of the page (not inside the post), so it always sits
+  // above the feed, the header, and the sidebar.
+  return createPortal(
+    <div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-4" onClick={onClose}>
       <div role="dialog" aria-modal="true" aria-label="Reactions" onClick={(e) => e.stopPropagation()}
         className="w-full max-w-md bg-white rounded-2xl shadow-xl flex flex-col max-h-[80vh]">
         <div className="flex items-center justify-between px-5 pt-4 pb-2">
@@ -47,7 +50,8 @@ const ReactionsModal = ({ reactions = {}, names = {}, photos = {}, onClose }) =>
           })}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { REACTIONS, addComment, deleteComment, notifyMentions, setCommentReaction } from '../utils/updateSocial';
 import ReactionsModal from './ReactionsModal';
+import { usePhotos } from '../hooks/usePhotos';
 import { MentionTextarea } from './MentionTextarea';
 
 // Show "@First Last" mentions in pink.
@@ -25,6 +26,7 @@ const Comment = ({ c, me, activityId, isReply, onReply, onUpdate, onDelete }) =>
   const [who, setWho] = useState(false);
   const mine = (c.reactions || {})[me.uid];
   const list = Object.entries(c.reactions || {});
+  const photoOf = usePhotos([c.uid, ...Object.keys(c.reactions || {})], { ...(c.reactionPhotos || {}), [c.uid]: c.photoURL || '' });
   const emojis = [...new Set(list.map(([, e]) => e))].slice(0, 3);
 
   const react = async (emoji) => {
@@ -38,7 +40,7 @@ const Comment = ({ c, me, activityId, isReply, onReply, onUpdate, onDelete }) =>
 
   return (
     <div className={`flex gap-2 ${isReply ? 'ml-9' : ''}`}>
-      <Avatar photo={c.photoURL} name={c.name} size={isReply ? 'w-6 h-6' : 'w-7 h-7'} />
+      <Avatar photo={photoOf(c.uid)} name={c.name} size={isReply ? 'w-6 h-6' : 'w-7 h-7'} />
       <div className="min-w-0 flex-1">
         <div className="bg-gray-50 rounded-xl px-3 py-2">
           <p className="text-xs font-semibold text-gray-900">{c.name}</p>
@@ -59,7 +61,7 @@ const Comment = ({ c, me, activityId, isReply, onReply, onUpdate, onDelete }) =>
             <span className="relative">
               <button type="button" onClick={() => setWho(true)} className="hover:underline">{emojis.join('')} {list.length}</button>
               {who && (
-                <ReactionsModal reactions={c.reactions} names={c.reactionNames} photos={c.reactionPhotos} onClose={() => setWho(false)} />
+                <ReactionsModal reactions={c.reactions} names={c.reactionNames} photos={Object.fromEntries(Object.keys(c.reactions || {}).map((u) => [u, photoOf(u)]))} onClose={() => setWho(false)} />
               )}
             </span>
           )}

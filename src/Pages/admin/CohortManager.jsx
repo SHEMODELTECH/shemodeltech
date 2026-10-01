@@ -15,7 +15,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { collection, getDocs, query, orderBy, doc, writeBatch, arrayUnion, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, writeBatch, arrayUnion, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -66,6 +66,28 @@ const PHASES = [
   { id: COHORT_STATUS.GRACE, label: 'Grace period', hint: 'Past deadline, 7 days to finish' },
   { id: COHORT_STATUS.COMPLETE, label: 'Complete', hint: 'Badges and certificates issued' },
 ];
+
+// Bell notification to members about a newly published cohort. Paid cohorts
+// go to members 18 and older; companies aren't notified.
+const announceCohort = async (cohort, count) => {
+  const users = await getDocs(collection(db, 'users'));
+  const targets = users.docs.filter((d) => {
+    const u = d.data();
+    return !u.isCompany && !(cohort.isPaid && u.isMinor) && u.onboardingComplete;
+  });
+  const title = cohort.isPaid ? 'New paid cohort' : 'New cohort';
+  const body = `${cohort.name || 'A new cohort'}: ${count} project${count === 1 ? '' : 's'}${cohort.isPaid ? `, $${Number(cohort.payPerPerson) || 0} per person` : ''}. Apply to lead or join a team.`;
+  for (let i = 0; i < targets.length; i += 400) {
+    const batch = writeBatch(db);
+    targets.slice(i, i + 400).forEach((d) => {
+      batch.set(doc(collection(db, 'notifications')), {
+        userId: d.id, type: 'cohort_published', title, message: body, link: '/projects', isRead: false, createdAt: serverTimestamp(),
+      });
+    });
+    await batch.commit();
+  }
+  return targets.length;
+};
 
 const CohortManager = () => {
   const { currentUser } = useAuth();
@@ -310,6 +332,12 @@ const CohortManager = () => {
         }
       }
 
+      // Record when the cohort went out (for the daily and weekly emails), and
+      // tell members in their notification bell.
+      updateDoc(doc(db, 'cohorts', cohort.id), { publishedAt: serverTimestamp() }).catch(() => {});
+      announceCohort(cohort, drafts.length)
+        .then((n) => n > 0 && toast.info(`${n} member${n === 1 ? '' : 's'} were notified.`))
+        .catch(() => {});
       // Email everyone on the lead waitlist: new projects need leads.
       notifyLeadWaitlist(`${cohort.name || 'A new cohort'} (${projects.length} project${projects.length === 1 ? '' : 's'})`)
         .then((n) => n > 0 && toast.info(`${n} ${n === 1 ? 'person' : 'people'} on the lead waitlist were emailed.`))

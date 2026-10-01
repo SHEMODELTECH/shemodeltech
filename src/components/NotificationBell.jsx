@@ -98,7 +98,7 @@ const NotificationBell = () => {
       await new Promise((resolve) => setTimeout(resolve, 150));
 
       // Mentions on the Proof Wall open the post they're in.
-      if (notification.type === 'mention' && notification.link) {
+      if ((notification.type === 'mention' || notification.type === 'cohort_published') && notification.link) {
         navigate(notification.link);
         return;
       }

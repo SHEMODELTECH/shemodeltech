@@ -73,13 +73,22 @@ module.exports = async function handler(req, res) {
  // Fetch this week's platform content (only what She Model Tech actually has).
  // There is no job board. The second list is paid projects posted by
  // verified companies (company_cohorts) that are open for applications.
- const [projects, paidRaw, newCourses] = await Promise.all([
- safeFetch('projects', 'createdAt', sevenDaysAgo),
- safeFetch('company_cohorts', 'createdAt', sevenDaysAgo),
+ const [cohortsNew, paidRaw, newCourses] = await Promise.all([
+ // New She Model Tech cohorts published this week (free and paid).
+ safeFetch('cohorts', 'publishedAt', sevenDaysAgo),
+ Promise.resolve([]),
  // New mentor courses published to She Model Tech Learning this week.
  safeFetch('learning_courses', 'publishedAt', sevenDaysAgo),
  ]);
  const paid = paidRaw.filter(c => c.status === 'hiring');
+ // Projects that became visible this week, from the new cohorts.
+ let projects = [];
+ for (const c of cohortsNew.slice(0, 5)) {
+ try {
+ const ps = await db.collection('projects').where('cohortId', '==', c.id).where('isActive', '==', true).limit(5).get();
+ ps.forEach((d) => projects.push({ id: d.id, ...d.data(), cohortPaid: !!c.isPaid }));
+ } catch (_) { /* optional */ }
+ }
  const newMembersCount = await safeCount('users', 'createdAt', sevenDaysAgo);
 
  console.log(`Week: ${projects.length} projects, ${paid.length} paid projects, ${newCourses.length} new courses, ${newMembersCount} new members`);
@@ -176,6 +185,13 @@ ${totalActivity === 0 ? `<p style="color:#111827;font-size:12px;text-align:cente
 <div class="st"><div class="sn">${paid.length}</div><div class="sl">Paid Projects</div></div>
 <div class="st"><div class="sn">${newMembersCount}</div><div class="sl">New Members</div></div>
 </div></div>
+
+${cohortsNew.length > 0 ? `<div class="sc"><h2>New Cohorts This Week</h2>
+${cohortsNew.slice(0,4).map(c => `<div class="it">
+<h3>${c.name || 'New cohort'}</h3>
+<p>${c.isPaid ? `Paid cohort · $${Number(c.payPerPerson) || 0} per person · 18 and older` : 'Free cohort · earn a badge'} · apply to lead or join a team</p>
+</div>`).join('')}
+<a href="${SITE}/projects" class="btn" style="color:#ffffff">See the projects</a></div>` : ''}
 
 ${projects.length > 0 ? `<div class="sc"><h2>New Projects to Join</h2>
 ${projects.slice(0,5).map(p => `<div class="it">
