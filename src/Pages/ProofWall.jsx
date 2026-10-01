@@ -556,8 +556,10 @@ const ProofWall = () => {
   return (
     // Feed plus a side panel on wide screens (like LinkedIn), so the page sits
     // balanced in the space instead of a narrow column floating off-centre.
-    <div className="w-full max-w-5xl mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_280px] xl:gap-8 xl:items-start">
-    <div className="w-full max-w-2xl mx-auto xl:max-w-none">
+    <div className="w-full max-w-[880px] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-6 xl:items-start">
+    {/* LinkedIn-like width: a narrower feed with the side panel close beside it,
+        and open space on both sides on wide screens. */}
+    <div className="w-full max-w-[600px] mx-auto xl:max-w-none">
       {/* Header: title + a filter dropdown (like a social feed's "Sort by") */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Proof Wall</h1>
