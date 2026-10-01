@@ -152,6 +152,31 @@ const ProofWall = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
+  // Line the feed up under the top search bar so its centre matches the
+  // search bar's centre (laptop widths; phones use the full width).
+  const wallRef = useRef(null);
+  const feedRef = useRef(null);
+  const [wallShift, setWallShift] = useState(null);
+  useEffect(() => {
+    const align = () => {
+      const search = document.querySelector('form[role="search"]');
+      const wall = wallRef.current;
+      const feed = feedRef.current;
+      if (!search || !wall || !feed || window.innerWidth < 1024) { setWallShift(null); return; }
+      const parent = wall.parentElement.getBoundingClientRect();
+      const s = search.getBoundingClientRect();
+      const wallRect = wall.getBoundingClientRect();
+      const feedRect = feed.getBoundingClientRect();
+      const feedOffset = feedRect.left - wallRect.left; // where the feed sits inside the wall
+      const desiredFeedLeft = s.left + s.width / 2 - feedRect.width / 2;
+      const maxShift = Math.max(0, parent.width - wallRect.width);
+      setWallShift(Math.min(maxShift, Math.max(0, desiredFeedLeft - feedOffset - parent.left)));
+    };
+    align();
+    window.addEventListener('resize', align);
+    const t = setTimeout(align, 300); // after fonts and the sidebar settle
+    return () => { window.removeEventListener('resize', align); clearTimeout(t); };
+  }, []);
   // Opened from a shared link (?post=ID): scroll to that update once it loads.
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('post');
@@ -556,10 +581,10 @@ const ProofWall = () => {
   return (
     // Feed plus a side panel on wide screens (like LinkedIn), so the page sits
     // balanced in the space instead of a narrow column floating off-centre.
-    <div className="w-full max-w-[880px] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-6 xl:items-start">
+    <div ref={wallRef} style={wallShift != null ? { marginLeft: wallShift, marginRight: 0 } : undefined} className="w-full max-w-[600px] xl:max-w-[880px] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-6 xl:items-start">
     {/* LinkedIn-like width: a narrower feed with the side panel close beside it,
         and open space on both sides on wide screens. */}
-    <div className="w-full max-w-[600px] mx-auto xl:max-w-none">
+    <div ref={feedRef} className="w-full max-w-[600px] mx-auto xl:max-w-none">
       {/* Header: title + a filter dropdown (like a social feed's "Sort by") */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Proof Wall</h1>
