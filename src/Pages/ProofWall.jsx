@@ -19,6 +19,7 @@ import { db } from '../firebase/config';
 import { toast } from 'react-toastify';
 import { uploadImageToBlob, validateImageFile } from '../utils/blobStorage';
 import { MentionTextarea } from '../components/MentionTextarea';
+import UpdateActions from '../components/UpdateActions';
 
 const fmtAgo = (ts) => {
   try {
@@ -151,6 +152,13 @@ const ProofWall = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
+  // Opened from a shared link (?post=ID): scroll to that update once it loads.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('post');
+    if (!id || !items.length) return;
+    const el = document.getElementById(`post-${id}`);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('ring-2', 'ring-pink-400'); }
+  }, [items]);
   const [posterInfo, setPosterInfo] = useState({}); // actorId -> { photoURL, email, name }
   const [loading, setLoading] = useState(true);
   const [lightbox, setLightbox] = useState(null); // full-size image URL when an image is tapped
@@ -984,7 +992,7 @@ const ProofWall = () => {
                 const isMine = uid && a.actorId === uid && a.type === 'update';
                 const isEditing = editingId === a.id;
                 return (
-                  <div key={a.id} className="bg-white border border-gray-200 rounded-xl p-4">
+                  <div key={a.id} id={`post-${a.id}`} className="bg-white border border-gray-200 rounded-xl p-4 overflow-hidden scroll-mt-20">
                     {/* Header: icon + headline, side by side */}
                     <div className="flex items-center gap-3">
                       {a.actorId ? (
@@ -1100,9 +1108,22 @@ const ProofWall = () => {
                                 src={a.imageUrl}
                                 alt="update"
                                 onClick={() => setLightbox(a.imageUrl)}
-                                className="w-full max-h-96 mt-3 rounded-lg border border-gray-200 bg-gray-50 object-contain cursor-zoom-in hover:opacity-95 transition-opacity"
+                                className="block -mx-4 mt-3 w-[calc(100%+2rem)] max-w-none h-auto max-h-[75vh] object-cover bg-gray-100 cursor-zoom-in hover:opacity-95 transition-opacity"
                                 loading="lazy"
                               />
+                            )}
+
+                            {/* A repost shows the original update inside it. */}
+                            {a.repostOf && (
+                              <div className="mt-3 border border-gray-200 rounded-xl overflow-hidden">
+                                <div className="p-3">
+                                  <p className="text-xs font-semibold text-gray-900">{a.repostOf.actorName}</p>
+                                  {a.repostOf.text && <p className="text-sm text-gray-600 mt-1 leading-relaxed">{a.repostOf.text}</p>}
+                                </div>
+                                {a.repostOf.imageUrl && (
+                                  <img src={a.repostOf.imageUrl} alt="update" onClick={() => setLightbox(a.repostOf.imageUrl)} className="block w-full h-auto max-h-[60vh] object-cover bg-gray-100 cursor-zoom-in" loading="lazy" />
+                                )}
+                              </div>
                             )}
 
                             {/* link */}
@@ -1121,7 +1142,7 @@ const ProofWall = () => {
                       )}
 
                       {/* Learn more: the project (or the member's profile for badges). */}
-                      {a.type !== 'lead' && (a.projectId || (a.actorId && posterInfo[a.actorId]?.email)) && (
+                      {a.type !== 'lead' && a.type !== 'update' && (a.projectId || (a.actorId && posterInfo[a.actorId]?.email)) && (
                         <button
                           onClick={() => (a.type === 'badge' || !a.projectId)
                             ? navigate(`/profile/${posterInfo[a.actorId]?.email}`)
@@ -1159,73 +1180,24 @@ const ProofWall = () => {
                         {a.createdAt ? <> · {fmtAgo(a.createdAt)}</> : null}
                       </div>
 
-                      {/* Actions row: Love (all) + edit/delete (own updates) */}
-                      {!isEditing && (
+                      {/* Updates only: React, Comment, Repost, Send (plus Edit/Delete on your own). */}
+                      {!isEditing && a.type === 'update' && (
                         <div className="mt-2.5">
-                          <div className="flex items-center gap-3">
-                            <button
-                              onClick={() => handleCelebrate(a)}
-                              className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full transition-all ${
-                                celebrated
-                                  ? 'bg-red-50 text-red-600'
-                                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                              }`}
-                              title={celebrated ? 'You loved this' : 'Love this'}
-                            >
-                              <span aria-hidden="true">{celebrated ? '❤️' : '🤍'}</span>
-                              Love{count > 0 ? <span className="font-bold"> · {count}</span> : null}
-                            </button>
-                            {isMine && (
-                              <>
-                                <button
-                                  onClick={() => startEdit(a)}
-                                  className="text-xs font-semibold text-gray-500 hover:text-gray-800"
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  onClick={() => handleDelete(a)}
-                                  className="text-xs font-semibold text-gray-500 hover:text-red-600"
-                                >
-                                  Delete
-                                </button>
-                              </>
-                            )}
-                          </div>
-                          {count > 0 && a.celebratedByNames && (
-                            <div className="flex items-center gap-2 mt-2">
-                              <div className="flex -space-x-2">
-                                {Object.entries(a.celebratedByNames)
-                                  .slice(0, 5)
-                                  .map(([reactorUid, name]) => {
-                                    const photo = a.celebratedByPhotos?.[reactorUid];
-                                    return photo ? (
-                                      <img
-                                        key={reactorUid}
-                                        src={photo}
-                                        alt={name}
-                                        className="w-6 h-6 rounded-full border-2 border-white object-cover"
-                                      />
-                                    ) : (
-                                      <span
-                                        key={reactorUid}
-                                        title={name}
-                                        className="w-6 h-6 rounded-full border-2 border-white bg-pink-100 text-pink-700 text-[10px] font-bold flex items-center justify-center"
-                                      >
-                                        {(name || '?').charAt(0).toUpperCase()}
-                                      </span>
-                                    );
-                                  })}
-                              </div>
-                              <p className="text-xs text-gray-400">
-                                Loved by{' '}
-                                {(() => {
-                                  const names = Object.values(a.celebratedByNames);
-                                  if (names.length <= 2) return names.join(' and ');
-                                  return `${names.slice(0, 2).join(', ')} and ${names.length - 2} other${names.length - 2 > 1 ? 's' : ''}`;
-                                })()}
-                              </p>
+                          {isMine && (
+                            <div className="flex items-center gap-3 mb-1">
+                              <button onClick={() => startEdit(a)} className="text-xs font-semibold text-gray-500 hover:text-gray-800">Edit</button>
+                              <button onClick={() => handleDelete(a)} className="text-xs font-semibold text-gray-500 hover:text-red-600">Delete</button>
                             </div>
+                          )}
+                          {uid && (
+                            <UpdateActions
+                              a={a}
+                              me={{ uid, name: myData?.displayName || currentUser?.displayName || 'A member', photoURL: myData?.photoURL || currentUser?.photoURL || null, isAdmin: myData?.role === 'admin' }}
+                              onChange={(next, reposted) => {
+                                setItems((xs) => xs.map((x) => (x.id === next.id ? next : x)));
+                                if (reposted) load(filter);
+                              }}
+                            />
                           )}
                         </div>
                       )}

@@ -984,6 +984,25 @@ service cloud.firestore {
  && request.resource.data.type in ['update', 'badge', 'ship', 'lead', 'milestone']);
  allow update: if isSignedIn()
  && changed(['celebratedBy', 'celebrateCount', 'celebratedByNames', 'celebratedByPhotos']);
+ // Reactions on updates: each person changes only her own reaction.
+ allow update: if isSignedIn() && resource.data.get('type', '') == 'update'
+ && changed(['reactions', 'reactionNames'])
+ && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()])
+ && request.resource.data.get('reactionNames', {}).diff(resource.data.get('reactionNames', {})).affectedKeys().hasOnly([myUid()]);
+ // Comment and repost counts move by one at a time.
+ allow update: if isSignedIn() && resource.data.get('type', '') == 'update'
+ && changed(['commentCount', 'repostCount'])
+ && request.resource.data.get('commentCount', 0) - resource.data.get('commentCount', 0) <= 1
+ && request.resource.data.get('commentCount', 0) - resource.data.get('commentCount', 0) >= -1
+ && request.resource.data.get('repostCount', 0) - resource.data.get('repostCount', 0) <= 1
+ && request.resource.data.get('repostCount', 0) - resource.data.get('repostCount', 0) >= 0;
+ // Comments on updates.
+ match /comments/{cid} {
+ allow read: if isSignedIn();
+ allow create: if isSignedIn() && request.resource.data.uid == myUid()
+ && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 1000;
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
+ }
  allow update: if isSignedIn() && resource.data.actorId == myUid()
  && changed(['text', 'projectTitle']);
  allow update: if isAdmin();
