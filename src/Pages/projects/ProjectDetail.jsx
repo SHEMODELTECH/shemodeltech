@@ -660,6 +660,22 @@ const ProjectDetail = () => {
                       <div>
                         <p className="text-gray-900 font-semibold text-sm">{role.role}</p>
                         <p className="text-gray-400 text-xs mt-0.5">Skills: {role.skills}</p>
+                        {/* Badge tracks: wanted tracks on paid projects; the suggested track on free ones. */}
+                        {(() => {
+                          const wanted = project.isPaid
+                            ? (project.roleTracks?.[role.role]?.length ? project.roleTracks[role.role] : role.wantedTracks || [])
+                            : [suggestTrack(role.role)];
+                          let names = wanted.map((k) => trackByKey(k)?.name).filter(Boolean);
+                          if (!names.length) names = ['Any track']; // the lead hasn't chosen yet
+                          return (
+                            <div className="flex flex-wrap items-center gap-1 mt-1.5">
+                              <span className="text-[11px] text-gray-500">{project.isPaid ? 'Badge tracks wanted:' : 'Suggested track:'}</span>
+                              {names.map((n) => (
+                                <span key={n} className="text-[11px] font-semibold bg-pink-50 text-pink-700 border border-pink-100 px-2 py-0.5 rounded-full">{n}</span>
+                              ))}
+                            </div>
+                          );
+                        })()}
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
                         {project.isPaid && (Number(role.payAmount) || 0) > 0 && (
