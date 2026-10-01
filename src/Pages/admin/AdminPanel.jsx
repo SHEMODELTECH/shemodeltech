@@ -34,6 +34,7 @@ import { unpublishFromLearning } from '../../utils/learningPublished';
 import LaunchSettings from '../../components/admin/LaunchSettings';
 import SponsorsAdmin from '../../components/admin/SponsorsAdmin';
 import GiftsAdmin from '../../components/admin/GiftsAdmin';
+import { roleSlotsOf } from '../../utils/projectSlots';
 
 const fmtDate = (ts) => {
   try {
@@ -999,13 +1000,15 @@ const AdminPanel = ({ only = null }) => {
           {projects.filter((p) => p.sizeRequest?.status === 'pending').map((p) => {
             const asked = Number(p.sizeRequest.extra) || 1;
             const give = Number(sizeApprove[p.id] ?? asked);
+            const filled = (p.teamRoles || []).reduce((n, r) => n + (Number(r.count) || 0), 0);
+            const slots = roleSlotsOf(p, filled);
             return (
               <div key={p.id} className="bg-white border border-pink-200 rounded-xl p-4 mb-2">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-semibold text-gray-900">{p.projectTitle}</p>
                     <p className="text-xs text-gray-500">
-                      {p.maxTeamSize} people now · asking for {asked} more{p.cohortPaid ? ` · $${Number(p.payPerPerson) || 0} per person` : ''}
+                      {slots + 1} people now (including the lead) · asking for {asked} more{p.cohortPaid ? ` · $${Number(p.payPerPerson) || 0} per person` : ''}
                     </p>
                     <p className="text-sm text-gray-700 mt-1">{p.sizeRequest.reason}</p>
                   </div>
@@ -1017,8 +1020,10 @@ const AdminPanel = ({ only = null }) => {
                     </label>
                     <button
                       onClick={async () => {
-                        const size = (Number(p.maxTeamSize) || 0) + give;
+                        const newSlots = slots + give;
+                        const size = newSlots + 1;
                         const data = {
+                          roleSlots: newSlots,
                           maxTeamSize: size,
                           ...(p.cohortPaid || p.isPaid ? { totalBudget: size * (Number(p.payPerPerson) || 0) } : {}),
                           sizeRequest: { ...p.sizeRequest, status: 'approved', approved: give, decidedBy: currentUser.email },
@@ -1042,7 +1047,7 @@ const AdminPanel = ({ only = null }) => {
                         try {
                           await updateDoc(doc(db, 'projects', p.id), data);
                           setProjects((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data } : x)));
-                          if (p.submitterId) notifyMember(p.submitterId, { type: 'size_decision', title: 'More people not approved', body: `"${p.projectTitle}" stays at ${p.maxTeamSize} people. Message us if you'd like to talk it through.`, link: `/projects/${p.id}/setup` });
+                          if (p.submitterId) notifyMember(p.submitterId, { type: 'size_decision', title: 'More people not approved', body: `"${p.projectTitle}" stays at ${slots + 1} people. Message us if you'd like to talk it through.`, link: `/projects/${p.id}/setup` });
                           toast.success('Declined.');
                         } catch (e) {
                           toast.error(friendlyError(e, 'Could not decline it.'));

@@ -25,6 +25,7 @@ import { formatMoney, computeTotalBudget } from '../../utils/paidProjects';
 import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
 import { BADGE_TRACKS } from '../../config/badgeTracks';
 import { alertStaff } from '../../utils/staffAlerts';
+import { roleSlotsOf } from '../../utils/projectSlots';
 
 const industryTracks = [
   'healthcare', 'finance', 'education', 'ecommerce', 'entertainment', 'government',
@@ -54,6 +55,7 @@ const toEditableRole = (r = {}, existing = false) => {
     existing,
   };
 };
+
 
 const emptyRole = () => ({
   role: '', customRole: '', skills: '', count: 1, experienceLevel: 'any-level',
@@ -147,7 +149,10 @@ const ProjectSetup = () => {
           ? sourceRoles.map(r => toEditableRole(r, false))
           : [emptyRole()]);
         // She Model Tech sets how many people are on the project; the lead can't change it.
-        setFixedSize(!staffEditor && Number(data.maxTeamSize) > 0 ? Number(data.maxTeamSize) : null);
+        const existingTotal = (Array.isArray(data.teamRoles) ? data.teamRoles : []).reduce((n, r) => n + (Number(r.count) || 0), 0);
+        const slots = roleSlotsOf(data, existingTotal);
+        // Seats for people besides the lead, set by She Model Tech (staff can change).
+        setFixedSize(!staffEditor && slots > 0 ? slots : null);
         setFixedPay(data.cohortPaid ? Number(data.payPerPerson) || null : null);
         setSizeRequest(data.sizeRequest || null);
         setAuthorized(true);
@@ -244,13 +249,14 @@ const ProjectSetup = () => {
     try {
       const teamRoles = valid;
       const roleTotal = teamRoles.reduce((s, r) => s + r.count, 0);
-      // The number set by She Model Tech includes the lead, so roles add up to one fewer.
-      if (fixedSize && roleTotal !== fixedSize - 1) {
-        toast.error(`This project has ${fixedSize} people including you, so your roles must add up to ${fixedSize - 1}. Right now they add up to ${roleTotal}.`);
+      // Roles fill the seats She Model Tech approved (people besides the lead).
+      if (fixedSize && roleTotal > fixedSize) {
+        toast.error(`Your roles add up to ${roleTotal}, but this project has ${fixedSize} ${fixedSize === 1 ? 'place' : 'places'} besides you. Ask She Model Tech for more people, or reduce a role.`);
         setSaving(false);
         return;
       }
-      const maxTeamSize = fixedSize || roleTotal;
+      const roleSlots = fixedSize || roleTotal;
+      const maxTeamSize = roleSlots + 1;
 
       await updateDoc(doc(db, 'projects', projectId), {
         ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
@@ -262,7 +268,7 @@ const ProjectSetup = () => {
         projectLink: form.projectLink.trim(),
         resources: { ...(form.submissionUrl ? { submissionUrl: form.submissionUrl.trim() } : {}) },
         teamRoles,
-        maxTeamSize,
+        ...(fixedSize ? {} : { maxTeamSize, roleSlots }),
         ...(isPaid ? { totalBudget: computeTotalBudget(teamRoles) } : {}),
         status: 'active',
         // Only stamp openedAt on first open; keep the original on later edits.
@@ -458,7 +464,9 @@ const ProjectSetup = () => {
       <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 sm:p-6 space-y-4 mt-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">Team Roles</h2>
-          <button onClick={addRole} className="text-pink-600 text-sm font-semibold">+ Add role</button>
+          {(!fixedSize || roles.reduce((n, r) => n + (resolveRoleName(r) ? (parseInt(r.count, 10) || 0) : 0), 0) < fixedSize) && (
+            <button onClick={addRole} className="text-pink-600 text-sm font-semibold">+ Add role</button>
+          )}
         </div>
 
         <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
@@ -468,8 +476,8 @@ const ProjectSetup = () => {
         {fixedSize && (
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
             <p className="text-gray-800 text-xs">
-              <strong>{fixedSize} people on this project, including you</strong>, set by She Model Tech. Create the roles your team
-              needs; their numbers must add up to {fixedSize - 1}. Right now: <strong>{roles.reduce((n, r) => n + (resolveRoleName(r) ? (parseInt(r.count, 10) || 0) : 0), 0)}</strong>.
+              <strong>{fixedSize + 1} people on this project, including you</strong>, set by She Model Tech: {fixedSize} {fixedSize === 1 ? 'place' : 'places'} for your team.
+              Roles so far: <strong>{roles.reduce((n, r) => n + (resolveRoleName(r) ? (parseInt(r.count, 10) || 0) : 0), 0)} of {fixedSize}</strong>.
               {fixedPay != null && <> Pay is ${fixedPay} per person for every role.</>}
             </p>
             {isPaid && (

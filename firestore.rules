@@ -284,10 +284,10 @@ service cloud.firestore {
  // Cohort projects: She Model Tech sets the dates and the number of people
  // (leads create the roles within it, and request extra time).
  && (resource.data.get('isCohort', false) != true
- || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['startDate', 'endDate', 'startAt', 'extensionDays', 'isCohort', 'cohortId', 'maxTeamSize']))
+ || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['startDate', 'endDate', 'startAt', 'extensionDays', 'isCohort', 'cohortId', 'maxTeamSize', 'roleSlots']))
  // Paid cohorts: the lead can't change anything She Model Tech set.
  && (resource.data.get('cohortPaid', false) != true
- || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'industryTrack', 'proposedRoles', 'maxTeamSize', 'totalBudget', 'isPaid', 'payPerPerson', 'cohortPaid']))
+ || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'industryTrack', 'proposedRoles', 'maxTeamSize', 'roleSlots', 'totalBudget', 'isPaid', 'payPerPerson', 'cohortPaid']))
  && appendOnly('disputeHistory')
  && appendOnly('leaveReasons')
  && appendOnly('activityLog')
