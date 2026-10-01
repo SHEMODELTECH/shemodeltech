@@ -9,10 +9,10 @@ export const REACTIONS = [
   ['👍', 'Like'], ['❤️', 'Love'], ['👏', 'Celebrate'], ['🙌', 'Support'], ['💡', 'Insightful'], ['😂', 'Funny'],
 ];
 
-export const setReaction = (activityId, uid, name, emoji) =>
+export const setReaction = (activityId, uid, name, emoji, photoURL = null) =>
   updateDoc(doc(db, 'activity', activityId), emoji
-    ? { [`reactions.${uid}`]: emoji, [`reactionNames.${uid}`]: name || 'A member' }
-    : { [`reactions.${uid}`]: deleteField(), [`reactionNames.${uid}`]: deleteField() });
+    ? { [`reactions.${uid}`]: emoji, [`reactionNames.${uid}`]: name || 'A member', [`reactionPhotos.${uid}`]: photoURL || '' }
+    : { [`reactions.${uid}`]: deleteField(), [`reactionNames.${uid}`]: deleteField(), [`reactionPhotos.${uid}`]: deleteField() });
 
 export const listComments = async (activityId) => {
   const s = await getDocs(query(collection(db, 'activity', activityId, 'comments'), orderBy('createdAt', 'asc')));

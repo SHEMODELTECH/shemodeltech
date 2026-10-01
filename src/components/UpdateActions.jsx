@@ -19,6 +19,7 @@ const UpdateActions = ({ a, me, onChange }) => {
   const [draft, setDraft] = useState('');
   const [reposting, setReposting] = useState(false);
   const [repostText, setRepostText] = useState('');
+  const [whoOpen, setWhoOpen] = useState(false); // who reacted (hover or tap)
   const mine = (a.reactions || {})[me.uid];
   const reactions = Object.values(a.reactions || {});
   const top = [...new Set(reactions)].slice(0, 3);
@@ -28,9 +29,11 @@ const UpdateActions = ({ a, me, onChange }) => {
     const next = mine === emoji ? null : emoji;
     const reactionsNext = { ...(a.reactions || {}) };
     const namesNext = { ...(a.reactionNames || {}) };
-    if (next) { reactionsNext[me.uid] = next; namesNext[me.uid] = me.name; } else { delete reactionsNext[me.uid]; delete namesNext[me.uid]; }
-    onChange({ ...a, reactions: reactionsNext, reactionNames: namesNext });
-    try { await setReaction(a.id, me.uid, me.name, next); } catch (e) { onChange(a); toast.error('Could not react.'); }
+    const photosNext = { ...(a.reactionPhotos || {}) };
+    if (next) { reactionsNext[me.uid] = next; namesNext[me.uid] = me.name; photosNext[me.uid] = me.photoURL || ''; }
+    else { delete reactionsNext[me.uid]; delete namesNext[me.uid]; delete photosNext[me.uid]; }
+    onChange({ ...a, reactions: reactionsNext, reactionNames: namesNext, reactionPhotos: photosNext });
+    try { await setReaction(a.id, me.uid, me.name, next, me.photoURL); } catch (e) { onChange(a); toast.error('Could not react.'); }
   };
   const toggleComments = async () => {
     const nextOpen = !open;
@@ -49,7 +52,44 @@ const UpdateActions = ({ a, me, onChange }) => {
     <div className="mt-2">
       {(reactions.length > 0 || a.commentCount > 0 || a.repostCount > 0) && (
         <div className="flex items-center justify-between text-xs text-gray-500 pb-1.5">
-          <span>{reactions.length > 0 && <>{top.join('')} {reactions.length}</>}</span>
+          {reactions.length > 0 ? (
+            <span className="relative" onMouseEnter={() => setWhoOpen(true)} onMouseLeave={() => setWhoOpen(false)}>
+              <button type="button" onClick={() => setWhoOpen((o) => !o)} aria-expanded={whoOpen} aria-label="See who reacted"
+                className="flex items-center gap-1.5 hover:underline">
+                {/* Small photos of the people who reacted, like LinkedIn */}
+                <span className="flex -space-x-1.5">
+                  {Object.keys(a.reactions || {}).slice(0, 3).map((u) => {
+                    const photo = a.reactionPhotos?.[u];
+                    const name = a.reactionNames?.[u] || '?';
+                    return photo ? (
+                      <img key={u} src={photo} alt="" className="w-5 h-5 rounded-full border-2 border-white object-cover" />
+                    ) : (
+                      <span key={u} className="w-5 h-5 rounded-full border-2 border-white bg-pink-100 text-pink-700 text-[9px] font-bold flex items-center justify-center">{name.charAt(0).toUpperCase()}</span>
+                    );
+                  })}
+                </span>
+                <span>{top.join('')} {reactions.length}</span>
+              </button>
+              {whoOpen && (
+                <div className="absolute left-0 top-full mt-1 z-20 w-60 max-h-64 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg p-2" role="dialog" aria-label="Reactions">
+                  <p className="text-[11px] font-semibold text-gray-500 px-1 pb-1">Reactions</p>
+                  {Object.entries(a.reactions || {}).map(([u, emoji]) => {
+                    const photo = a.reactionPhotos?.[u];
+                    const name = a.reactionNames?.[u] || 'A member';
+                    return (
+                      <div key={u} className="flex items-center gap-2 px-1 py-1">
+                        <span className="relative shrink-0">
+                          {photo ? <img src={photo} alt="" className="w-7 h-7 rounded-full object-cover" /> : <span className="w-7 h-7 rounded-full bg-pink-100 text-pink-700 text-xs font-bold flex items-center justify-center">{name.charAt(0).toUpperCase()}</span>}
+                          <span className="absolute -bottom-1 -right-1 text-[11px]">{emoji}</span>
+                        </span>
+                        <span className="text-xs text-gray-800 truncate">{name}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </span>
+          ) : <span />}
           <span>
             {a.commentCount > 0 && <button type="button" onClick={toggleComments} className="hover:underline">{a.commentCount} comment{a.commentCount === 1 ? '' : 's'}</button>}
             {a.commentCount > 0 && a.repostCount > 0 && ' · '}
