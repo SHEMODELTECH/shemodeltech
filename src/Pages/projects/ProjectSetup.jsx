@@ -57,6 +57,10 @@ const toEditableRole = (r = {}, existing = false) => {
 };
 
 
+// Requests for more people need a short reason.
+const MIN_REASON_WORDS = 10;
+const wordCount = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
+
 const emptyRole = () => ({
   role: '', customRole: '', skills: '', count: 1, experienceLevel: 'any-level',
   description: '', detailsLink: '', payAmount: '', existing: false,
@@ -489,22 +493,31 @@ const ProjectSetup = () => {
               sizeRequest?.status === 'pending' ? (
                 <p className="text-xs text-amber-800 mt-2">You asked for {sizeRequest.extra} more {Number(sizeRequest.extra) === 1 ? 'person' : 'people'}. She Model Tech will let you know.</p>
               ) : !askMore.open ? (
-                <button type="button" onClick={() => setAskMore((a) => ({ ...a, open: true }))} className="mt-2 text-xs font-semibold text-pink-700 underline">
-                  Need more people? Ask She Model Tech
-                </button>
+                <>
+                  {sizeRequest && sizeRequest.status !== 'pending' && (
+                    <p className={`text-xs mt-2 ${sizeRequest.status === 'approved' ? 'text-emerald-800' : 'text-gray-700'}`}>
+                      Your last request: {sizeRequest.status === 'approved' ? `approved (${sizeRequest.approved} more)` : 'not approved'}.
+                      {sizeRequest.decisionNote ? ` She Model Tech: “${sizeRequest.decisionNote}”` : ''}
+                    </p>
+                  )}
+                  <button type="button" onClick={() => setAskMore((a) => ({ ...a, open: true }))} className="mt-2 text-xs font-semibold text-pink-700 underline">
+                    Need more people? Ask She Model Tech
+                  </button>
+                </>
               ) : (
                 <div className="mt-2 flex flex-wrap items-end gap-2">
                   <label className="text-xs text-gray-700">How many more
                     <input type="number" min="1" max="10" value={askMore.extra} onChange={(e) => setAskMore((a) => ({ ...a, extra: e.target.value }))} className="block w-20 mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
                   </label>
-                  <label className="text-xs text-gray-700 flex-1 min-w-[12rem]">Why
-                    <input value={askMore.reason} maxLength={300} onChange={(e) => setAskMore((a) => ({ ...a, reason: e.target.value }))} placeholder="For example: we need a second tester for the release." className="block w-full mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
+                  <label className="text-xs text-gray-700 flex-1 min-w-[12rem]">Why <span className="text-gray-500">(at least {MIN_REASON_WORDS} words · {wordCount(askMore.reason)} so far)</span>
+                    <textarea rows={2} value={askMore.reason} maxLength={600} onChange={(e) => setAskMore((a) => ({ ...a, reason: e.target.value }))} placeholder="For example: we need a second tester to check the release on phones before launch." className="block w-full mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" />
                   </label>
                   <button
                     type="button"
                     onClick={async () => {
                       const extra = Math.max(1, Math.min(10, parseInt(askMore.extra, 10) || 1));
-                      if (askMore.reason.trim().length < 10) { toast.error('Tell She Model Tech briefly why you need more people.'); return; }
+                      const words = wordCount(askMore.reason);
+                      if (words < MIN_REASON_WORDS) { toast.error(`Tell She Model Tech why you need more people, in at least ${MIN_REASON_WORDS} words (you've written ${words}).`); return; }
                       const req = { extra, reason: askMore.reason.trim(), status: 'pending', at: new Date().toISOString(), by: currentUser.uid };
                       try {
                         await updateDoc(doc(db, 'projects', projectId), { sizeRequest: req, updatedAt: serverTimestamp() });

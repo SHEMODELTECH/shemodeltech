@@ -54,6 +54,10 @@ const statusStyle = {
 
 // `only`: show one section on its own page (Project reviews or Projects), opened
 // from the Projects menu. Without it, this is the dashboard.
+// Declining a request for more people needs a reason the lead can read.
+const MIN_DECLINE_WORDS = 10;
+const countWords = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
+
 const AdminPanel = ({ only = null }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -63,6 +67,7 @@ const AdminPanel = ({ only = null }) => {
   const [myRole, setMyRole] = useState(null); // shown in the header badge
   const [tab, setTab] = useState(only || 'overview');
   const [sizeApprove, setSizeApprove] = useState({}); // how many more people to approve, per project
+  const [sizeNote, setSizeNote] = useState({}); // staff's reason, per project (required to decline)
   // Moving between the dashboard and Manage projects reuses this page, so
   // follow the address: show the right section without a reload.
   useEffect(() => {
@@ -1011,6 +1016,11 @@ const AdminPanel = ({ only = null }) => {
                       {slots + 1} people now (including the lead) · asking for {asked} more{p.cohortPaid ? ` · $${Number(p.payPerPerson) || 0} per person` : ''}
                     </p>
                     <p className="text-sm text-gray-700 mt-1">{p.sizeRequest.reason}</p>
+                    <label className="block text-xs text-gray-700 mt-3">
+                      Your reason <span className="text-gray-500">(optional to approve; at least {MIN_DECLINE_WORDS} words to decline · {countWords(sizeNote[p.id])} so far)</span>
+                      <textarea rows={2} maxLength={600} value={sizeNote[p.id] || ''} onChange={(e) => setSizeNote((m) => ({ ...m, [p.id]: e.target.value }))}
+                        className="block w-full mt-1 px-2 py-1.5 rounded-lg border border-gray-300 text-sm" placeholder="The lead sees this." />
+                    </label>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <label className="text-xs text-gray-700">Approve
@@ -1026,12 +1036,12 @@ const AdminPanel = ({ only = null }) => {
                           roleSlots: newSlots,
                           maxTeamSize: size,
                           ...(p.cohortPaid || p.isPaid ? { totalBudget: size * (Number(p.payPerPerson) || 0) } : {}),
-                          sizeRequest: { ...p.sizeRequest, status: 'approved', approved: give, decidedBy: currentUser.email },
+                          sizeRequest: { ...p.sizeRequest, status: 'approved', approved: give, decisionNote: (sizeNote[p.id] || '').trim() || null, decidedBy: currentUser.email },
                         };
                         try {
                           await updateDoc(doc(db, 'projects', p.id), data);
                           setProjects((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data } : x)));
-                          if (p.submitterId) notifyMember(p.submitterId, { type: 'size_decision', title: 'More people approved', body: `"${p.projectTitle}" can now have ${size} people (${give} more). Add the roles in Edit project.`, link: `/projects/${p.id}/setup` });
+                          if (p.submitterId) notifyMember(p.submitterId, { type: 'size_decision', title: 'More people approved', body: `"${p.projectTitle}" can now have ${size} people (${give} more). Add the roles in Edit project.${(sizeNote[p.id] || '').trim() ? ` Note from She Model Tech: ${sizeNote[p.id].trim()}` : ''}`, link: `/projects/${p.id}/setup` });
                           toast.success(`Approved ${give} more. The project now has room for ${size}.`);
                         } catch (e) {
                           toast.error(friendlyError(e, 'Could not approve it.'));
@@ -1043,11 +1053,16 @@ const AdminPanel = ({ only = null }) => {
                     </button>
                     <button
                       onClick={async () => {
-                        const data = { sizeRequest: { ...p.sizeRequest, status: 'declined', decidedBy: currentUser.email } };
+                        const note = (sizeNote[p.id] || '').trim();
+                        if (countWords(note) < MIN_DECLINE_WORDS) {
+                          toast.error(`Add a reason of at least ${MIN_DECLINE_WORDS} words before declining (you've written ${countWords(note)}). The lead will see it.`);
+                          return;
+                        }
+                        const data = { sizeRequest: { ...p.sizeRequest, status: 'declined', decisionNote: note, decidedBy: currentUser.email } };
                         try {
                           await updateDoc(doc(db, 'projects', p.id), data);
                           setProjects((xs) => xs.map((x) => (x.id === p.id ? { ...x, ...data } : x)));
-                          if (p.submitterId) notifyMember(p.submitterId, { type: 'size_decision', title: 'More people not approved', body: `"${p.projectTitle}" stays at ${slots + 1} people. Message us if you'd like to talk it through.`, link: `/projects/${p.id}/setup` });
+                          if (p.submitterId) notifyMember(p.submitterId, { type: 'size_decision', title: 'More people not approved', body: `"${p.projectTitle}" stays at ${slots + 1} people. Reason: ${note}`, link: `/projects/${p.id}/setup` });
                           toast.success('Declined.');
                         } catch (e) {
                           toast.error(friendlyError(e, 'Could not decline it.'));
