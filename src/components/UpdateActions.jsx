@@ -3,7 +3,8 @@
 // Repost, and Send. Only for updates, not other Proof Wall items.
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { REACTIONS, addComment, deleteComment, listComments, postUrl, repostUpdate, setReaction } from '../utils/updateSocial';
+import { REACTIONS, listComments, postUrl, repostUpdate, setReaction } from '../utils/updateSocial';
+import CommentThread from './CommentThread';
 
 const Btn = ({ onClick, children, active, label }) => (
   <button type="button" onClick={onClick} aria-label={label}
@@ -16,7 +17,6 @@ const UpdateActions = ({ a, me, onChange }) => {
   const [picker, setPicker] = useState(false);
   const [comments, setComments] = useState(null);
   const [open, setOpen] = useState(false);
-  const [draft, setDraft] = useState('');
   const [reposting, setReposting] = useState(false);
   const [repostText, setRepostText] = useState('');
   const [whoOpen, setWhoOpen] = useState(false); // who reacted (hover or tap)
@@ -128,37 +128,14 @@ const UpdateActions = ({ a, me, onChange }) => {
         </div>
       )}
 
-      {open && (
-        <div className="mt-2 space-y-2">
-          <div className="flex gap-2">
-            <input value={draft} maxLength={1000} onChange={(e) => setDraft(e.target.value)} placeholder="Add a comment…"
-              onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.nextSibling?.click(); }}
-              className="flex-1 min-w-0 border border-gray-300 rounded-full px-3 py-1.5 text-sm" />
-            <button type="button" disabled={!draft.trim()} onClick={async () => {
-              const text = draft.trim(); if (!text) return;
-              try {
-                const id = await addComment(a.id, me, text);
-                setComments((c) => [...(c || []), { id, uid: me.uid, name: me.name, photoURL: me.photoURL, text }]);
-                setDraft('');
-                onChange({ ...a, commentCount: (a.commentCount || 0) + 1 });
-              } catch (e) { toast.error('Could not comment.'); }
-            }} className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-full disabled:opacity-40">Post</button>
-          </div>
-          {(comments || []).map((c) => (
-            <div key={c.id} className="flex gap-2">
-              {c.photoURL ? <img src={c.photoURL} alt="" className="w-7 h-7 rounded-full object-cover shrink-0" /> : <span className="w-7 h-7 rounded-full bg-pink-100 text-pink-700 text-xs font-bold flex items-center justify-center shrink-0">{(c.name || '?').charAt(0)}</span>}
-              <div className="min-w-0 bg-gray-50 rounded-xl px-3 py-2">
-                <p className="text-xs font-semibold text-gray-900">{c.name}</p>
-                <p className="text-sm text-gray-700 break-words">{c.text}</p>
-                {(c.uid === me.uid || me.isAdmin) && (
-                  <button type="button" onClick={async () => { try { await deleteComment(a.id, c.id); setComments((xs) => xs.filter((x) => x.id !== c.id)); onChange({ ...a, commentCount: Math.max(0, (a.commentCount || 1) - 1) }); } catch (e) { toast.error('Could not delete.'); } }}
-                    className="text-[11px] text-gray-400 hover:text-red-600 mt-0.5">Delete</button>
-                )}
-              </div>
-            </div>
-          ))}
-          {comments && comments.length === 0 && <p className="text-xs text-gray-400">No comments yet. Start the conversation.</p>}
-        </div>
+      {open && comments !== null && (
+        <CommentThread
+          activityId={a.id}
+          me={me}
+          comments={comments}
+          setComments={setComments}
+          onCountChange={(d) => onChange({ ...a, commentCount: Math.max(0, (a.commentCount || 0) + d) })}
+        />
       )}
     </div>
   );

@@ -19,17 +19,26 @@ export const listComments = async (activityId) => {
   return s.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
 
-export const addComment = async (activityId, me, text) => {
+// parentId: null for a comment, or the comment being replied to (one level, like LinkedIn).
+export const addComment = async (activityId, me, text, parentId = null) => {
   const ref = await addDoc(collection(db, 'activity', activityId, 'comments'), {
-    uid: me.uid, name: me.name || 'A member', photoURL: me.photoURL || null, text: text.trim(), createdAt: serverTimestamp(),
+    uid: me.uid, name: me.name || 'A member', photoURL: me.photoURL || null, text: text.trim(), parentId, createdAt: serverTimestamp(),
   });
   await updateDoc(doc(db, 'activity', activityId), { commentCount: increment(1) }).catch(() => {});
+  if (parentId) await updateDoc(doc(db, 'activity', activityId, 'comments', parentId), { replyCount: increment(1) }).catch(() => {});
   return ref.id;
 };
 
-export const deleteComment = async (activityId, commentId) => {
+// A reaction on a comment (each person changes only her own).
+export const setCommentReaction = (activityId, commentId, me, emoji) =>
+  updateDoc(doc(db, 'activity', activityId, 'comments', commentId), emoji
+    ? { [`reactions.${me.uid}`]: emoji, [`reactionNames.${me.uid}`]: me.name || 'A member', [`reactionPhotos.${me.uid}`]: me.photoURL || '' }
+    : { [`reactions.${me.uid}`]: deleteField(), [`reactionNames.${me.uid}`]: deleteField(), [`reactionPhotos.${me.uid}`]: deleteField() });
+
+export const deleteComment = async (activityId, commentId, parentId = null) => {
   await deleteDoc(doc(db, 'activity', activityId, 'comments', commentId));
   await updateDoc(doc(db, 'activity', activityId), { commentCount: increment(-1) }).catch(() => {});
+  if (parentId) await updateDoc(doc(db, 'activity', activityId, 'comments', parentId), { replyCount: increment(-1) }).catch(() => {});
 };
 
 // Repost: a new update that shows the original inside it.

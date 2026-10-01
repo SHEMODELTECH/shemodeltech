@@ -1001,7 +1001,18 @@ service cloud.firestore {
  match /comments/{cid} {
  allow read: if isSignedIn();
  allow create: if isSignedIn() && request.resource.data.uid == myUid()
- && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 1000;
+ && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 1000
+ && (request.resource.data.get('parentId', null) == null || request.resource.data.parentId is string);
+ // Reactions on a comment: each person changes only her own.
+ allow update: if isSignedIn()
+ && changed(['reactions', 'reactionNames', 'reactionPhotos'])
+ && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()])
+ && request.resource.data.get('reactionNames', {}).diff(resource.data.get('reactionNames', {})).affectedKeys().hasOnly([myUid()])
+ && request.resource.data.get('reactionPhotos', {}).diff(resource.data.get('reactionPhotos', {})).affectedKeys().hasOnly([myUid()]);
+ // Reply count moves by one at a time.
+ allow update: if isSignedIn() && changed(['replyCount'])
+ && request.resource.data.get('replyCount', 0) - resource.data.get('replyCount', 0) <= 1
+ && request.resource.data.get('replyCount', 0) - resource.data.get('replyCount', 0) >= -1;
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  }
  allow update: if isSignedIn() && resource.data.actorId == myUid()
