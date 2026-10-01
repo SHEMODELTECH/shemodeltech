@@ -8,8 +8,11 @@ export const MentionTextarea = ({
   placeholder = "Write something...",
   className = "",
   onMentionSelect,
+  plainNames = false, // insert "@First Last" instead of a joined handle
   ...props 
 }) => {
+  // The name people see: first and last name, else the display name.
+  const fullName = (u) => ((u.firstName && u.lastName) ? `${u.firstName} ${u.lastName}` : (u.displayName || u.email?.split('@')[0] || 'member')).trim();
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [mentionQuery, setMentionQuery] = useState('');
@@ -71,7 +74,7 @@ export const MentionTextarea = ({
     const afterMention = value.substring(textareaRef.current.selectionStart);
     
     // Format the mention based on user's display name
-    const mentionText = formatUserForMention(selectedUser);
+    const mentionText = plainNames ? `@${fullName(selectedUser)}` : formatUserForMention(selectedUser);
     const newValue = beforeMention + mentionText + ' ' + afterMention;
     
     onChange(newValue);
@@ -210,7 +213,7 @@ export const MentionTextarea = ({
                 
                 {/* Mention Preview - Hidden on very small screens */}
                 <div className="hidden xs:block text-xs sm:text-sm text-pink-600 bg-pink-500/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded flex-shrink-0 max-w-[80px] sm:max-w-[120px] truncate">
-                  {formatUserForMention(user)}
+                  {plainNames ? fullName(user) : formatUserForMention(user)}
                 </div>
               </button>
             ))}

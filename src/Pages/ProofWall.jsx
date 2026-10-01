@@ -507,7 +507,9 @@ const ProofWall = () => {
         setUploadingImg(false);
       }
 
-      await logActivity({
+      // Keep only people whose "@First Last" is still in the text.
+      const kept = updateMentions.filter((m) => updateText.includes(`@${m.name}`));
+      const newPostId = await logActivity({
         type: 'update',
         actorId: currentUser.uid,
         actorName: myData?.displayName || 'A member',
@@ -515,7 +517,7 @@ const ProofWall = () => {
         text: updateText.trim(),
         link: updateLink.trim() || null,
         imageUrl,
-        mentions: updateMentions,
+        mentions: kept,
       });
 
       // Notification to the author so it shows under "My Posts".
@@ -530,12 +532,13 @@ const ProofWall = () => {
       } catch (_) {}
 
       // Notification to each mentioned teammate so it shows under "Mentions".
-      for (const m of updateMentions) {
+      for (const m of kept) {
         if (!m.uid || m.uid === currentUser.uid) continue;
         try {
           await addDoc(collection(db, 'notifications'), {
             userId: m.uid,
             type: 'mention',
+            link: newPostId ? `/proof-wall?post=${newPostId}` : '/proof-wall',
             message: `${myData?.displayName || 'A member'} mentioned you in an update on "${updateProject.trim()}".`,
             mentionedByName: myData?.displayName || 'A member',
             mentionedByPhoto: myData?.photoURL || null,
@@ -667,11 +670,12 @@ const ProofWall = () => {
             className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none"
           />
           <MentionTextarea
+            plainNames
             value={updateText}
             onChange={setUpdateText}
             onMentionSelect={(user) => {
               const uid = user.uid || user.id;
-              const name = user.displayName || user.name || user.email;
+              const name = ((user.firstName && user.lastName) ? `${user.firstName} ${user.lastName}` : (user.displayName || user.name || user.email)).trim();
               setUpdateMentions((prev) =>
                 prev.some((m) => m.uid === uid) ? prev : [...prev, { uid, name }]
               );

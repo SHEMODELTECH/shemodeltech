@@ -97,6 +97,11 @@ const NotificationBell = () => {
       // Small delay for visual feedback
       await new Promise((resolve) => setTimeout(resolve, 150));
 
+      // Mentions on the Proof Wall open the post they're in.
+      if (notification.type === 'mention' && notification.link) {
+        navigate(notification.link);
+        return;
+      }
       // Navigate based on notification type
       switch (notification.type) {
         case 'group_post':

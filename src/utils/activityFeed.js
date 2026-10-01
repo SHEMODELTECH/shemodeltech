@@ -25,7 +25,7 @@ export const ACTIVITY_TYPES = {
 // --- Write a REAL activity event (call from badge/ship/lead/milestone moments) ---
 export const logActivity = async (event) => {
   try {
-    await addDoc(collection(db, 'activity'), {
+    const ref = await addDoc(collection(db, 'activity'), {
       type: event.type,                       // 'badge' | 'ship' | 'lead' | 'milestone' | 'update'
       actorId: event.actorId || null,
       actorName: event.actorName || 'A member',
@@ -40,6 +40,7 @@ export const logActivity = async (event) => {
       isDummy: false,
       createdAt: serverTimestamp(),
     });
+    return ref.id;
   } catch (e) {
     // Never let activity logging break the underlying action.
     console.error('logActivity failed:', e);

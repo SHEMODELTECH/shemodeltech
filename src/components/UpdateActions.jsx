@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { REACTIONS, listComments, postUrl, repostUpdate, setReaction } from '../utils/updateSocial';
 import CommentThread from './CommentThread';
+import ReactionsModal from './ReactionsModal';
 
 const Btn = ({ onClick, children, active, label }) => (
   <button type="button" onClick={onClick} aria-label={label}
@@ -53,7 +54,7 @@ const UpdateActions = ({ a, me, onChange }) => {
       {(reactions.length > 0 || a.commentCount > 0 || a.repostCount > 0) && (
         <div className="flex items-center justify-between text-xs text-gray-500 pb-1.5">
           {reactions.length > 0 ? (
-            <span className="relative" onMouseEnter={() => setWhoOpen(true)} onMouseLeave={() => setWhoOpen(false)}>
+            <span className="relative">
               <button type="button" onClick={() => setWhoOpen((o) => !o)} aria-expanded={whoOpen} aria-label="See who reacted"
                 className="flex items-center gap-1.5 hover:underline">
                 {/* Small photos of the people who reacted, like LinkedIn */}
@@ -71,22 +72,7 @@ const UpdateActions = ({ a, me, onChange }) => {
                 <span>{top.join('')} {reactions.length}</span>
               </button>
               {whoOpen && (
-                <div className="absolute left-0 top-full mt-1 z-20 w-60 max-h-64 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg p-2" role="dialog" aria-label="Reactions">
-                  <p className="text-[11px] font-semibold text-gray-500 px-1 pb-1">Reactions</p>
-                  {Object.entries(a.reactions || {}).map(([u, emoji]) => {
-                    const photo = a.reactionPhotos?.[u];
-                    const name = a.reactionNames?.[u] || 'A member';
-                    return (
-                      <div key={u} className="flex items-center gap-2 px-1 py-1">
-                        <span className="relative shrink-0">
-                          {photo ? <img src={photo} alt="" className="w-7 h-7 rounded-full object-cover" /> : <span className="w-7 h-7 rounded-full bg-pink-100 text-pink-700 text-xs font-bold flex items-center justify-center">{name.charAt(0).toUpperCase()}</span>}
-                          <span className="absolute -bottom-1 -right-1 text-[11px]">{emoji}</span>
-                        </span>
-                        <span className="text-xs text-gray-800 truncate">{name}</span>
-                      </div>
-                    );
-                  })}
-                </div>
+                <ReactionsModal reactions={a.reactions} names={a.reactionNames} photos={a.reactionPhotos} onClose={() => setWhoOpen(false)} />
               )}
             </span>
           ) : <span />}

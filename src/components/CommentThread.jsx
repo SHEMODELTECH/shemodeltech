@@ -3,7 +3,18 @@
 // replies (one level, like LinkedIn). Replying to a reply adds to the same thread.
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { REACTIONS, addComment, deleteComment, setCommentReaction } from '../utils/updateSocial';
+import { REACTIONS, addComment, deleteComment, notifyMentions, setCommentReaction } from '../utils/updateSocial';
+import ReactionsModal from './ReactionsModal';
+import { MentionTextarea } from './MentionTextarea';
+
+// Show "@First Last" mentions in pink.
+const withMentions = (text, mentions) => {
+  const names = (mentions || []).map((m) => `@${m.name}`).filter(Boolean);
+  if (!names.length) return text;
+  const esc = names.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  return String(text).split(new RegExp(`(${esc.join('|')})`, 'g')).map((part, i) => (names.includes(part)
+    ? <span key={i} className="font-semibold text-pink-700">{part}</span> : part));
+};
 
 const Avatar = ({ photo, name, size = 'w-7 h-7' }) => (photo
   ? <img src={photo} alt="" className={`${size} rounded-full object-cover shrink-0`} />
@@ -31,7 +42,7 @@ const Comment = ({ c, me, activityId, isReply, onReply, onUpdate, onDelete }) =>
       <div className="min-w-0 flex-1">
         <div className="bg-gray-50 rounded-xl px-3 py-2">
           <p className="text-xs font-semibold text-gray-900">{c.name}</p>
-          <p className="text-sm text-gray-700 break-words whitespace-pre-wrap">{c.text}</p>
+          <p className="text-sm text-gray-700 break-words whitespace-pre-wrap">{withMentions(c.text, c.mentions)}</p>
         </div>
         <div className="relative flex flex-wrap items-center gap-3 mt-1 pl-1 text-[11px] text-gray-500">
           {picker && (
@@ -45,17 +56,10 @@ const Comment = ({ c, me, activityId, isReply, onReply, onUpdate, onDelete }) =>
           <button type="button" onClick={() => setPicker((p) => !p)} aria-label="Choose a reaction" className="hover:text-gray-800">▾</button>
           <button type="button" onClick={() => onReply(c)} className="font-semibold hover:text-gray-800">Reply</button>
           {list.length > 0 && (
-            <span className="relative" onMouseEnter={() => setWho(true)} onMouseLeave={() => setWho(false)}>
-              <button type="button" onClick={() => setWho((w) => !w)} className="hover:underline">{emojis.join('')} {list.length}</button>
+            <span className="relative">
+              <button type="button" onClick={() => setWho(true)} className="hover:underline">{emojis.join('')} {list.length}</button>
               {who && (
-                <div className="absolute left-0 top-full mt-1 z-20 w-52 max-h-56 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg p-2">
-                  {list.map(([u, e]) => (
-                    <div key={u} className="flex items-center gap-2 px-1 py-1">
-                      <span className="relative"><Avatar photo={c.reactionPhotos?.[u]} name={c.reactionNames?.[u]} size="w-6 h-6" /><span className="absolute -bottom-1 -right-1 text-[10px]">{e}</span></span>
-                      <span className="text-xs text-gray-800 truncate">{c.reactionNames?.[u] || 'A member'}</span>
-                    </div>
-                  ))}
-                </div>
+                <ReactionsModal reactions={c.reactions} names={c.reactionNames} photos={c.reactionPhotos} onClose={() => setWho(false)} />
               )}
             </span>
           )}
@@ -72,17 +76,27 @@ const CommentThread = ({ activityId, me, comments, setComments, onCountChange })
   const [draft, setDraft] = useState('');
   const [replyTo, setReplyTo] = useState(null); // top-level comment being replied to
   const [replyDraft, setReplyDraft] = useState('');
+  const [mentions, setMentions] = useState([]); // people tagged in the comment being written
+  const [replyMentions, setReplyMentions] = useState([]);
+  const pick = (setter) => (u) => {
+    const uid = u.uid || u.id;
+    const name = ((u.firstName && u.lastName) ? `${u.firstName} ${u.lastName}` : (u.displayName || 'member')).trim();
+    setter((xs) => (xs.some((m) => m.uid === uid) ? xs : [...xs, { uid, name }]));
+  };
 
   const top = comments.filter((c) => !c.parentId);
   const repliesOf = (id) => comments.filter((c) => c.parentId === id);
   const update = (next) => setComments((xs) => xs.map((x) => (x.id === next.id ? next : x)));
 
-  const post = async (text, parentId = null) => {
+  const post = async (text, parentId = null, tagged = []) => {
     const t = text.trim(); if (!t) return false;
+    // Only people whose "@First Last" is still in the text.
+    const kept = tagged.filter((m) => t.includes(`@${m.name}`));
     try {
-      const id = await addComment(activityId, me, t, parentId);
-      setComments((xs) => [...xs, { id, uid: me.uid, name: me.name, photoURL: me.photoURL, text: t, parentId }]);
+      const id = await addComment(activityId, me, t, parentId, kept);
+      setComments((xs) => [...xs, { id, uid: me.uid, name: me.name, photoURL: me.photoURL, text: t, parentId, mentions: kept }]);
       onCountChange(1);
+      notifyMentions(kept, me, activityId);
       return true;
     } catch (e) { toast.error('Could not post.'); return false; }
   };
@@ -99,15 +113,18 @@ const CommentThread = ({ activityId, me, comments, setComments, onCountChange })
     const parent = c.parentId ? top.find((t) => t.id === c.parentId) || c : c;
     setReplyTo(parent);
     setReplyDraft(c.parentId ? `@${c.name} ` : '');
+    setReplyMentions(c.parentId && c.uid !== me.uid ? [{ uid: c.uid, name: c.name }] : []);
   };
 
   return (
     <div className="mt-2 space-y-3">
       <div className="flex gap-2">
-        <input value={draft} maxLength={1000} onChange={(e) => setDraft(e.target.value)} placeholder="Add a comment…"
-          onKeyDown={async (e) => { if (e.key === 'Enter' && await post(draft)) setDraft(''); }}
-          className="flex-1 min-w-0 border border-gray-300 rounded-full px-3 py-1.5 text-sm" />
-        <button type="button" disabled={!draft.trim()} onClick={async () => { if (await post(draft)) setDraft(''); }}
+        <div className="flex-1 min-w-0">
+          <MentionTextarea plainNames rows={1} value={draft} onChange={setDraft} onMentionSelect={pick(setMentions)}
+            placeholder="Add a comment… Type @ to mention someone" maxLength={1000}
+            className="w-full border border-gray-300 rounded-2xl px-3 py-1.5 text-sm resize-none" />
+        </div>
+        <button type="button" disabled={!draft.trim()} onClick={async () => { if (await post(draft, null, mentions)) { setDraft(''); setMentions([]); } }}
           className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-full disabled:opacity-40">Post</button>
       </div>
       {top.map((c) => (
@@ -118,10 +135,12 @@ const CommentThread = ({ activityId, me, comments, setComments, onCountChange })
           ))}
           {replyTo?.id === c.id && (
             <div className="ml-9 flex gap-2">
-              <input autoFocus value={replyDraft} maxLength={1000} onChange={(e) => setReplyDraft(e.target.value)} placeholder={`Reply to ${c.name}…`}
-                onKeyDown={async (e) => { if (e.key === 'Enter' && await post(replyDraft, c.id)) { setReplyDraft(''); setReplyTo(null); } }}
-                className="flex-1 min-w-0 border border-gray-300 rounded-full px-3 py-1.5 text-sm" />
-              <button type="button" disabled={!replyDraft.trim()} onClick={async () => { if (await post(replyDraft, c.id)) { setReplyDraft(''); setReplyTo(null); } }}
+              <div className="flex-1 min-w-0">
+                <MentionTextarea plainNames rows={1} autoFocus value={replyDraft} onChange={setReplyDraft} onMentionSelect={pick(setReplyMentions)}
+                  placeholder={`Reply to ${c.name}…`} maxLength={1000}
+                  className="w-full border border-gray-300 rounded-2xl px-3 py-1.5 text-sm resize-none" />
+              </div>
+              <button type="button" disabled={!replyDraft.trim()} onClick={async () => { if (await post(replyDraft, c.id, replyMentions)) { setReplyDraft(''); setReplyTo(null); setReplyMentions([]); } }}
                 className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-full disabled:opacity-40">Reply</button>
             </div>
           )}

@@ -20,9 +20,10 @@ export const listComments = async (activityId) => {
 };
 
 // parentId: null for a comment, or the comment being replied to (one level, like LinkedIn).
-export const addComment = async (activityId, me, text, parentId = null) => {
+export const addComment = async (activityId, me, text, parentId = null, mentions = []) => {
   const ref = await addDoc(collection(db, 'activity', activityId, 'comments'), {
-    uid: me.uid, name: me.name || 'A member', photoURL: me.photoURL || null, text: text.trim(), parentId, createdAt: serverTimestamp(),
+    uid: me.uid, name: me.name || 'A member', photoURL: me.photoURL || null, text: text.trim(), parentId,
+    mentions: mentions.map((m) => ({ uid: m.uid, name: m.name })), createdAt: serverTimestamp(),
   });
   await updateDoc(doc(db, 'activity', activityId), { commentCount: increment(1) }).catch(() => {});
   if (parentId) await updateDoc(doc(db, 'activity', activityId, 'comments', parentId), { replyCount: increment(1) }).catch(() => {});
@@ -65,3 +66,20 @@ export const repostUpdate = async (original, me, text) => {
 };
 
 export const postUrl = (id) => `${window.location.origin}/proof-wall?post=${id}`;
+
+// Tagged someone with "@First Last": they get a bell notification linking to the update.
+export const notifyMentions = (mentions, me, activityId) => {
+  (mentions || []).forEach((m) => {
+    if (!m.uid || m.uid === me.uid) return;
+    addDoc(collection(db, 'notifications'), {
+      userId: m.uid,
+      type: 'mention',
+      message: `${me.name || 'A member'} mentioned you in a comment on the Proof Wall.`,
+      mentionedByName: me.name || 'A member',
+      mentionedByPhoto: me.photoURL || null,
+      link: `/proof-wall?post=${activityId}`,
+      isRead: false,
+      createdAt: serverTimestamp(),
+    }).catch(() => {});
+  });
+};
