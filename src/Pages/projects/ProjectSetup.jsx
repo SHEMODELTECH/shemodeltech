@@ -72,6 +72,8 @@ const ProjectSetup = () => {
   const [roleTracks, setRoleTracks] = useState({}); // lead's badge tracks wanted per role (paid)
   const [fixedSize, setFixedSize] = useState(null); // number of people set by She Model Tech
   const [fixedPay, setFixedPay] = useState(null); // pay per person on paid cohorts
+  const [isCohortPaid, setIsCohortPaid] = useState(false);
+  const paidByShe = isCohortPaid && !isStaffEditor; // a lead on a She Model Tech paid cohort
   const [sizeRequest, setSizeRequest] = useState(null); // lead's pending request for more people
   const [askMore, setAskMore] = useState({ open: false, extra: 1, reason: '' });
   const [leadDetails, setLeadDetails] = useState(''); // the lead's extra details (not the brief)
@@ -154,6 +156,7 @@ const ProjectSetup = () => {
         // Seats for people besides the lead, set by She Model Tech (staff can change).
         setFixedSize(!staffEditor && slots > 0 ? slots : null);
         setFixedPay(data.cohortPaid ? Number(data.payPerPerson) || null : null);
+        setIsCohortPaid(!!data.cohortPaid);
         setSizeRequest(data.sizeRequest || null);
         setAuthorized(true);
       } catch (e) {
@@ -263,13 +266,14 @@ const ProjectSetup = () => {
         leadDetails: leadDetails.trim(),
         roleTracks,
         projectGoals: form.projectGoals.trim() || null,
-        industryTrack: form.industryTrack,
+        // On paid cohorts She Model Tech sets the track and budget; the lead never sends them.
+        ...(paidByShe ? {} : { industryTrack: form.industryTrack }),
         ...(datesLocked ? {} : { startDate: form.startDate, endDate: form.endDate }),
         projectLink: form.projectLink.trim(),
         resources: { ...(form.submissionUrl ? { submissionUrl: form.submissionUrl.trim() } : {}) },
         teamRoles,
         ...(fixedSize ? {} : { maxTeamSize, roleSlots }),
-        ...(isPaid ? { totalBudget: computeTotalBudget(teamRoles) } : {}),
+        ...(isPaid && !paidByShe ? { totalBudget: computeTotalBudget(teamRoles) } : {}),
         status: 'active',
         // Only stamp openedAt on first open; keep the original on later edits.
         ...(isEditing ? {} : { openedAt: serverTimestamp() }),
@@ -294,7 +298,8 @@ const ProjectSetup = () => {
         roleTracks,
         leadDetails: leadDetails.trim(),
         projectGoals: form.projectGoals.trim() || null,
-        industryTrack: form.industryTrack,
+        // On paid cohorts She Model Tech sets the track and budget; the lead never sends them.
+        ...(paidByShe ? {} : { industryTrack: form.industryTrack }),
         // Keep every detail the lead edited, not just the brief, so a saved
         // draft doesn't silently drop new dates or links.
         ...(!datesLocked && form.startDate ? { startDate: form.startDate } : {}),
