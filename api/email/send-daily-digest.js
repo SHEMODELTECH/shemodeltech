@@ -81,8 +81,21 @@ module.exports = async function handler(req, res) {
  newCohorts = cs.docs.map((d) => ({ id: d.id, ...d.data() }));
  } catch (_) { /* optional */ }
 
+ // Batches: at 500+ members (Gmail's daily limit), email half the members
+ // one weekday and the other half the next. Each member keeps her half.
+ const BATCH_AT = 500;
+ const halfOf = (uid) => [...String(uid)].reduce((n, ch) => n + ch.charCodeAt(0), 0) % 2;
+ const eligible = usersSnap.docs.filter(d => {
+ const u = d.data();
+ return u.email && u.email.includes('@') && !u.isCompany && !(u.emailPreferences && u.emailPreferences.reminders === false);
+ }).length;
+ const batching = !testTo && eligible >= BATCH_AT;
+ const todaysHalf = Math.floor(Date.now() / 86400000) % 2;
+ if (batching) console.log(`Daily digest: ${eligible} members, sending batch ${todaysHalf + 1} of 2 today`);
+
  for (const uDoc of usersSnap.docs) {
  const user = { uid: uDoc.id, ...uDoc.data() };
+ if (batching && halfOf(user.uid) !== todaysHalf) { skipped++; continue; }
  if (!user.email || !user.email.includes('@')) { skipped++; continue; }
  // Respect opt-out (default ON unless explicitly disabled).
  if (user.emailPreferences && user.emailPreferences.reminders === false) { skipped++; continue; }
@@ -208,61 +221,52 @@ module.exports = async function handler(req, res) {
    }
  } catch (_) { /* non-blocking */ }
 
- // CRITICAL: nothing pending = no email... UNLESS the user is idle and we
- // want to gently encourage them to join a project in their track. To avoid
- // spamming, this nudge is throttled (at most once every few days per user).
- if (items.length === 0) {
- const NUDGE_COOLDOWN_DAYS = 4;
- const lastNudge = tsToDate(user.lastJoinNudge);
- const cooledDown = !lastNudge || daysSince(lastNudge) >= NUDGE_COOLDOWN_DAYS;
-
- // Is the user currently idle? (no active project they're a member/lead of)
+ // JOIN A PROJECT
+ // - Members not on any project: a join suggestion every Monday, Wednesday and Friday.
+ // - Any member with nothing else waiting: always a join suggestion, so
+ //   every member hears from She Model Tech each weekday.
+ {
  const hasActiveWork = involved.some(p =>
- (p.status === 'active' || p.status === 'setup' || p.status === 'lead_recruitment')
+ ['active', 'setup', 'lead_recruitment', 'overdue'].includes(p.status)
  && ((p.members || []).includes(user.uid) || p.submitterId === user.uid)
  );
-
- if (cooledDown && !hasActiveWork) {
- // Find open projects in the user's track to recommend.
+ const weekday = new Date().getUTCDay(); // 1 Mon, 3 Wed, 5 Fri
+ const joinDay = weekday === 1 || weekday === 3 || weekday === 5;
+ if ((joinDay && !hasActiveWork) || items.length === 0) {
  const userTrack = (user.primarySkillTrack || '').toString().toLowerCase();
- const openInTrack = Object.values(projects).filter(p => {
+ const joinable = Object.values(projects).filter(p => {
  // Needs a lead, coming soon (a lead is setting up), or open for applications.
- const open = p.status === 'lead_recruitment' || p.status === 'setup' || p.status === 'active' || p.status === 'open';
+ if (!['lead_recruitment', 'setup', 'active', 'open'].includes(p.status)) return false;
  if (p.isActive === false) return false;
  if (user.isMinor && (p.isPaid || p.cohortPaid)) return false; // paid is 18+
- if (!open) return false;
- // Not already involved.
  if ((p.members || []).includes(user.uid) || p.submitterId === user.uid) return false;
- // Match track if we know it; otherwise any open project is fine.
- if (!userTrack) return true;
+ return true;
+ });
+ // Her track first, then any other project.
+ const inTrack = (p) => {
  const pTrack = (p.track || p.primaryTrack || p.category || '').toString().toLowerCase();
- return !pTrack || pTrack.includes(userTrack) || userTrack.includes(pTrack);
- }).slice(0, 3);
-
- // Has the user ever completed a project? (shapes the wording)
+ return userTrack && pTrack && (pTrack.includes(userTrack) || userTrack.includes(pTrack));
+ };
+ const picks = [...joinable.filter(inTrack), ...joinable.filter(p => !inTrack(p))].slice(0, 3);
  const hasCompleted = involved.some(p => p.status === 'completed')
  || (Array.isArray(user.badges) && user.badges.length > 0);
+ const first = (user.displayName || '').split(' ')[0] || 'there';
 
- if (openInTrack.length > 0) {
- const trackLabel = user.primarySkillTrack || 'your track';
- const headline = hasCompleted
- ? `Ready for your next project, ${ (user.displayName || '').split(' ')[0] || 'there'}?`
- : 'Join your first project and start earning badges';
- const detail = hasCompleted
- ? `Great work finishing your last project. Keep your momentum going - here are open ${trackLabel} projects looking for people like you.`
- : `You're all set up. The fastest way to grow and earn your first badge is to join a real project. Here are open ${trackLabel} projects you can join now.`;
- const howTo = ' On a project that is coming soon, tap Join to apply to lead it or join the team.';
+ if (picks.length > 0) {
+ const headline = hasActiveWork
+ ? `More projects you can join, ${first}`
+ : hasCompleted ? `Ready for your next project, ${first}?` : 'Join a project and start earning badges';
+ const detail = hasActiveWork
+ ? 'These projects are looking for people right now.'
+ : hasCompleted
+ ? 'Great work finishing your last project. Keep your momentum going with one of these.'
+ : 'The fastest way to grow and earn your first badge is to join a real project. Here are projects you can join now.';
  items.push({
  headline,
- detail: detail + howTo,
+ detail: `${detail} On a project that is coming soon, tap Join to apply to lead it or join the team.`,
  link: `${SITE}/projects`,
- suggestions: openInTrack.map(p => ({
- title: p.projectTitle || p.title || 'Open project',
- link: `${SITE}/projects/${p.id}`,
- })),
+ suggestions: picks.map(p => ({ title: p.projectTitle || p.title || 'Open project', link: `${SITE}/projects/${p.id}` })),
  });
- // Stamp the nudge so we don't repeat it tomorrow.
- try { await db.collection('users').doc(user.uid).update({ lastJoinNudge: new Date() }); } catch (_) {}
  } else {
  // Nothing to join right now: point her to the lead waitlist.
  items.push({
@@ -270,7 +274,6 @@ module.exports = async function handler(req, res) {
  detail: "New cohorts open throughout the year. Join the lead waitlist and we'll email you when a project needs a lead.",
  link: `${SITE}/apply-to-lead`,
  });
- try { await db.collection('users').doc(user.uid).update({ lastJoinNudge: new Date() }); } catch (_) {}
  }
  }
  }

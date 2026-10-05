@@ -102,6 +102,19 @@ module.exports = async function handler(req, res) {
  if (users.length === 0 && !testTo) {
  return res.json({ success: true, message: 'No members to email' });
  }
+ // Batches: under 500 members everyone gets it on Sunday. At 500+ (Gmail's
+ // daily limit), half on Sunday and half on Monday; each member keeps her half.
+ if (!testTo) {
+ const BATCH_AT = 500;
+ const halfOf = (uid) => [...String(uid)].reduce((n, ch) => n + ch.charCodeAt(0), 0) % 2;
+ const monday = new Date().getUTCDay() === 1;
+ if (users.length >= BATCH_AT) {
+ users = users.filter(u => halfOf(u.uid) === (monday ? 1 : 0));
+ console.log(`Weekly digest: sending batch ${monday ? 2 : 1} of 2 (${users.length} members)`);
+ } else if (monday) {
+ return res.json({ success: true, message: 'Under 500 members: everyone was emailed on Sunday' });
+ }
+ }
  if (testTo) {
    // Test run: just this address (it must be a member, so the email has real data).
    const one = await db.collection('users').where('email', '==', testTo).limit(1).get();
