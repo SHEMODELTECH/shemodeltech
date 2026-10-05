@@ -120,7 +120,8 @@ const Settings = () => {
         if (snap.exists()) {
           const data = snap.data();
           setProfileData(data);
-          setWeeklyDigest(data.emailPreferences?.weeklyDigest === true);
+          // On unless the member turned it off (everyone gets the weekly email by default).
+          setWeeklyDigest(data.emailPreferences?.weeklyDigest !== false);
           setReminders(data.emailPreferences?.reminders !== false);
           setForm({
             displayName: data.displayName || '',

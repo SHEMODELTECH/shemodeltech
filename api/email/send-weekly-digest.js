@@ -93,28 +93,22 @@ module.exports = async function handler(req, res) {
 
  console.log(`Week: ${projects.length} projects, ${paid.length} paid projects, ${newCourses.length} new courses, ${newMembersCount} new members`);
 
- // Subscribers (weekly digest opt-in, fall back to daily).
- const usersSnap = await db.collection('users').where('emailPreferences.weeklyDigest', '==', true).get();
- let users = usersSnap.docs
- .map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }))
- .filter(u => u.email?.includes('@'));
-
- if (users.length === 0) {
- const fallbackSnap = await db.collection('users').where('emailPreferences.dailyDigest', '==', true).get();
- users = fallbackSnap.docs
- .map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }))
- .filter(u => u.email?.includes('@'));
+ // Every individual member gets it, unless she turned the weekly email off.
+ const allUsers = await db.collection('users').get();
+ let users = allUsers.docs
+ .map(d => ({ uid: d.id, ...d.data() }))
+ .filter(u => u.email?.includes('@') && !u.isCompany && u.emailPreferences?.weeklyDigest !== false)
+ .map(u => ({ uid: u.uid, email: u.email, displayName: u.displayName, isMinor: !!u.isMinor }));
  if (users.length === 0 && !testTo) {
- return res.json({ success: true, message: 'No subscribers' });
- }
+ return res.json({ success: true, message: 'No members to email' });
  }
  if (testTo) {
    // Test run: just this address (it must be a member, so the email has real data).
    const one = await db.collection('users').where('email', '==', testTo).limit(1).get();
-   users = one.docs.map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName }));
+   users = one.docs.map(d => ({ uid: d.id, email: d.data().email, displayName: d.data().displayName, isMinor: !!d.data().isMinor }));
    if (!users.length) return res.status(404).json({ success: false, error: `No member with email ${testTo}` });
  }
- console.log(`${users.length} weekly subscribers`);
+ console.log(`${users.length} members to email (weekly)`);
 
  // Per-user weekly activity, only She Model Tech's real notification types.
  for (const user of users) {
@@ -137,6 +131,38 @@ module.exports = async function handler(req, res) {
  user.applications = []; user.approvals = []; user.badges = []; user.unreadMessages = 0;
  }
  }
+
+ // Projects members can join right now, grouped (not only this week's).
+ let joinable = [];
+ try {
+ const js = await db.collection('projects').where('status', 'in', ['lead_recruitment', 'setup', 'active']).get();
+ joinable = js.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.isActive !== false && p.reviewStatus !== 'rejected');
+ } catch (_) { /* optional */ }
+ const groupsFor = (user) => {
+ const ok = joinable.filter(p => !(user.isMinor && (p.isPaid || p.cohortPaid))); // paid is 18+
+ return {
+ needsLead: ok.filter(p => p.status === 'lead_recruitment' && !p.leadConfirmed).slice(0, 4),
+ comingSoon: ok.filter(p => p.status === 'setup').slice(0, 4),
+ open: ok.filter(p => p.status === 'active').slice(0, 4),
+ };
+ };
+ const joinSection = (user) => {
+ const g = groupsFor(user);
+ const row = (p, note) => `<div class="it"><h3><a href="${SITE}/projects/${p.id}" style="color:#111827;text-decoration:none">${p.projectTitle || 'Project'}</a></h3><p>${note}${(p.isPaid || p.cohortPaid) ? ' · Paid, 18 and older' : ''}</p></div>`;
+ const block = (title, list, note) => list.length ? `<p style="margin:10px 0 6px;font-size:12px;font-weight:bold;color:#374151;text-transform:uppercase;letter-spacing:.04em">${title}</p>${list.map(p => row(p, note)).join('')}` : '';
+ const waitlist = g.needsLead.length === 0
+ ? `<p style="font-size:12px;color:#111827;margin:10px 0 0">Want to lead a project? No project needs a lead right now. <a href="${SITE}/apply-to-lead" style="color:#2563EB">Join the lead waitlist</a> and we'll email you when one does.</p>`
+ : '';
+ if (!g.needsLead.length && !g.comingSoon.length && !g.open.length) {
+ return `<div class="sc"><h2>Projects You Can Join</h2><p style="font-size:12px;color:#111827">New cohorts open throughout the year.</p>${waitlist}</div>`;
+ }
+ return `<div class="sc"><h2>Projects You Can Join</h2>
+${block('Needs a lead', g.needsLead, 'Tap Join to apply to lead it or join the team')}
+${block('Coming soon', g.comingSoon, 'A lead is setting up roles. Tap Join to be told when roles open')}
+${block('Open for applications', g.open, 'Apply for a role now')}
+${waitlist}
+<a href="${SITE}/projects" class="btn" style="color:#ffffff">See all projects</a></div>`;
+ };
 
  // ── Weekly email template (clean, on-brand, no emojis) ──────────
  const generateEmail = (user) => {
@@ -192,6 +218,8 @@ ${cohortsNew.slice(0,4).map(c => `<div class="it">
 <p>${c.isPaid ? `Paid cohort · $${Number(c.payPerPerson) || 0} per person · 18 and older` : 'Free cohort · earn a badge'} · apply to lead or join a team</p>
 </div>`).join('')}
 <a href="${SITE}/projects" class="btn" style="color:#ffffff">See the projects</a></div>` : ''}
+
+${joinSection(user)}
 
 ${projects.length > 0 ? `<div class="sc"><h2>New Projects to Join</h2>
 ${projects.slice(0,5).map(p => `<div class="it">

@@ -216,7 +216,10 @@ module.exports = async function handler(req, res) {
  // Find open projects in the user's track to recommend.
  const userTrack = (user.primarySkillTrack || '').toString().toLowerCase();
  const openInTrack = Object.values(projects).filter(p => {
- const open = p.status === 'lead_recruitment' || p.status === 'active' || p.status === 'open';
+ // Needs a lead, coming soon (a lead is setting up), or open for applications.
+ const open = p.status === 'lead_recruitment' || p.status === 'setup' || p.status === 'active' || p.status === 'open';
+ if (p.isActive === false) return false;
+ if (user.isMinor && (p.isPaid || p.cohortPaid)) return false; // paid is 18+
  if (!open) return false;
  // Not already involved.
  if ((p.members || []).includes(user.uid) || p.submitterId === user.uid) return false;
@@ -238,9 +241,10 @@ module.exports = async function handler(req, res) {
  const detail = hasCompleted
  ? `Great work finishing your last project. Keep your momentum going - here are open ${trackLabel} projects looking for people like you.`
  : `You're all set up. The fastest way to grow and earn your first badge is to join a real project. Here are open ${trackLabel} projects you can join now.`;
+ const howTo = ' On a project that is coming soon, tap Join to apply to lead it or join the team.';
  items.push({
  headline,
- detail,
+ detail: detail + howTo,
  link: `${SITE}/projects`,
  suggestions: openInTrack.map(p => ({
  title: p.projectTitle || p.title || 'Open project',
@@ -248,6 +252,14 @@ module.exports = async function handler(req, res) {
  })),
  });
  // Stamp the nudge so we don't repeat it tomorrow.
+ try { await db.collection('users').doc(user.uid).update({ lastJoinNudge: new Date() }); } catch (_) {}
+ } else {
+ // Nothing to join right now: point her to the lead waitlist.
+ items.push({
+ headline: 'Want to lead a project?',
+ detail: "New cohorts open throughout the year. Join the lead waitlist and we'll email you when a project needs a lead.",
+ link: `${SITE}/apply-to-lead`,
+ });
  try { await db.collection('users').doc(user.uid).update({ lastJoinNudge: new Date() }); } catch (_) {}
  }
  }
