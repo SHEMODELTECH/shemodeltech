@@ -122,6 +122,16 @@ module.exports = async function handler(req, res) {
  continue;
  }
 
+ // STATE 3b: the lead of a running project who went quiet for a few days.
+ if (p.submitterId === user.uid && !isMember && p.status === 'active' && projActivity && daysSince(projActivity) >= QUIET_DAYS) {
+ items.push({
+ headline: `Your team on "${title}" needs its lead`,
+ detail: `It's been ${daysSince(projActivity)} days since you were in the workspace. Check in with your team and keep the project moving.`,
+ link: `${SITE}/projects/${p.id}/workspace`,
+ });
+ continue;
+ }
+
  // STATE 3: active member who went quiet for a few days.
  if (isMember && p.status === 'active' && projActivity && daysSince(projActivity) >= QUIET_DAYS) {
  items.push({

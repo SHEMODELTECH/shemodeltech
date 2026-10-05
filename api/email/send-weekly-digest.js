@@ -132,6 +132,38 @@ module.exports = async function handler(req, res) {
  }
  }
 
+ // Each member's own projects: ongoing ones (never completed), and any she
+ // completed this week.
+ let mine = [];
+ try {
+ const ms = await db.collection('projects').where('status', 'in', ['setup', 'active', 'overdue', 'completed']).get();
+ mine = ms.docs.map(d => ({ id: d.id, ...d.data() }));
+ } catch (_) { /* optional */ }
+ const toDate = (v) => (v?.toDate ? v.toDate() : v ? new Date(v) : null);
+ const daysLeftOf = (p) => {
+ const end = toDate(p.endDate);
+ if (!end || isNaN(end)) return null;
+ return Math.ceil((end - new Date()) / 86400000);
+ };
+ const yourProjects = (user) => {
+ const involved = mine.filter(p => (p.members || []).includes(user.uid) || p.submitterId === user.uid);
+ const ongoing = involved.filter(p => ['setup', 'active', 'overdue'].includes(p.status));
+ const doneThisWeek = involved.filter(p => p.status === 'completed' && toDate(p.completedAt) >= sevenDaysAgo);
+ if (!ongoing.length && !doneThisWeek.length) return '';
+ const label = { setup: 'Setting up', active: 'Active', overdue: 'Past the deadline' };
+ const row = (p) => {
+ const lead = p.submitterId === user.uid;
+ const left = daysLeftOf(p);
+ const when = p.status === 'overdue' ? 'Finish up and submit for review'
+ : left == null ? '' : left > 1 ? `${left} days left` : left === 1 ? '1 day left' : left === 0 ? 'Due today' : '';
+ return `<div class="it"><h3><a href="${SITE}/projects/${p.id}/workspace" style="color:#111827;text-decoration:none">${p.projectTitle || 'Project'}</a></h3><p>${lead ? 'You lead this project' : 'Team member'} · ${label[p.status]}${when ? ` · ${when}` : ''}</p></div>`;
+ };
+ return `<div class="sc"><h2>Your Projects</h2>
+${ongoing.map(row).join('')}
+${doneThisWeek.map(p => `<div class="it"><h3>Completed this week: ${p.projectTitle || 'Project'}</h3><p>Well done! See your badge and certificate in the <a href="${SITE}/project-vault" style="color:#2563EB">Project Vault</a>.</p></div>`).join('')}
+</div>`;
+ };
+
  // Projects members can join right now, grouped (not only this week's).
  let joinable = [];
  try {
@@ -218,6 +250,8 @@ ${cohortsNew.slice(0,4).map(c => `<div class="it">
 <p>${c.isPaid ? `Paid cohort · $${Number(c.payPerPerson) || 0} per person · 18 and older` : 'Free cohort · earn a badge'} · apply to lead or join a team</p>
 </div>`).join('')}
 <a href="${SITE}/projects" class="btn" style="color:#ffffff">See the projects</a></div>` : ''}
+
+${yourProjects(user)}
 
 ${joinSection(user)}
 
