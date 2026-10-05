@@ -35,6 +35,7 @@ import LaunchSettings from '../../components/admin/LaunchSettings';
 import SponsorsAdmin from '../../components/admin/SponsorsAdmin';
 import GiftsAdmin from '../../components/admin/GiftsAdmin';
 import { roleSlotsOf } from '../../utils/projectSlots';
+import ComingSoonProjects from '../../components/admin/ComingSoonProjects';
 
 const fmtDate = (ts) => {
   try {
@@ -997,6 +998,8 @@ const AdminPanel = ({ only = null }) => {
           ))}
         </div>
       )}
+
+      {!loadingData && tab === 'projects' && <ComingSoonProjects projects={projects} />}
 
       {/* Leads asking for more people on a paid project; staff approve how many. */}
       {!loadingData && tab === 'projects' && projects.some((p) => p.sizeRequest?.status === 'pending') && (

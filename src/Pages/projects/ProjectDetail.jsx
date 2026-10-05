@@ -30,6 +30,7 @@ import PaymentAgreement, { AGREEMENT_VERSION } from '../../components/PaymentAgr
 import { BADGE_TRACKS, suggestTrack, trackByKey, trackStanding } from '../../config/badgeTracks';
 import TeamStrength from '../../components/TeamStrength';
 import { dobFields } from '../../utils/age';
+import { addInterest, isInterested } from '../../utils/projectInterest';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -78,6 +79,21 @@ const ProjectDetail = () => {
   const [loading, setLoading] = useState(true);
   const [hasApplied, setHasApplied] = useState(false);
   const [myApp, setMyApp] = useState(null); // my application (to change my badge track)
+  const [interested, setInterested] = useState(false); // asked to hear when roles open
+  const [joinChoice, setJoinChoice] = useState(false); // "Join": lead it, or join the team
+  const joinTeam = async () => {
+    setJoinChoice(false);
+    try {
+      await addInterest(projectId, currentUser, memberProfile?.displayName);
+      setInterested(true);
+      toast.success("You're on the list. We'll notify you when roles open.");
+    } catch (e) {
+      toast.error('Could not save that.');
+    }
+  };
+  useEffect(() => {
+    if (currentUser && projectId) isInterested(projectId, currentUser.uid).then(setInterested).catch(() => {});
+  }, [currentUser, projectId]);
   const [wasRejected, setWasRejected] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [isMember, setIsMember] = useState(false);
@@ -490,6 +506,27 @@ const ProjectDetail = () => {
 
   return (
     <>
+      {joinChoice && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setJoinChoice(false)}>
+          <div role="dialog" aria-modal="true" aria-labelledby="join-h" onClick={(e) => e.stopPropagation()} className="w-full max-w-md bg-white rounded-2xl p-5 shadow-xl">
+            <h2 id="join-h" className="text-lg font-bold text-gray-900">How would you like to join?</h2>
+            <p className="text-sm text-gray-500 mt-1">{project?.projectTitle}</p>
+            <div className="mt-4 space-y-2">
+              <button type="button" onClick={() => { setJoinChoice(false); handleApplyToLead(); }}
+                className="w-full text-left rounded-xl border border-gray-200 hover:border-pink-400 hover:bg-pink-50 p-4">
+                <span className="block font-semibold text-gray-900">Lead this project</span>
+                <span className="block text-xs text-gray-500 mt-0.5">Apply to lead. She Model Tech reviews lead applications and may invite you to a short chat.</span>
+              </button>
+              <button type="button" onClick={joinTeam} disabled={interested}
+                className="w-full text-left rounded-xl border border-gray-200 hover:border-pink-400 hover:bg-pink-50 p-4 disabled:opacity-60">
+                <span className="block font-semibold text-gray-900">{interested ? '✓ On the list to join the team' : 'Join the team'}</span>
+                <span className="block text-xs text-gray-500 mt-0.5">Be a collaborator. We'll notify you when the lead opens roles, so you can apply first.</span>
+              </button>
+            </div>
+            <button type="button" onClick={() => setJoinChoice(false)} className="mt-4 w-full text-sm font-semibold text-gray-600 py-2">Cancel</button>
+          </div>
+        </div>
+      )}
       <PaymentAgreement
         open={agreementOpen}
         projectTitle={project?.projectTitle}
@@ -771,13 +808,15 @@ const ProjectDetail = () => {
                   </div>
                 ) : (
                   <div className="flex flex-wrap items-center justify-center gap-2">
+                    {/* One short button; members choose to lead it or join the team. */}
                     <button
-                      onClick={() => handleApplyToLead()}
+                      onClick={() => setJoinChoice(true)}
                       disabled={submittingApp}
-                      className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50"
+                      className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-8 py-2.5 rounded-lg transition-all disabled:opacity-50"
                     >
-                      Apply to Lead This Project
+                      Join
                     </button>
+                    {interested && <p className="w-full text-emerald-700 text-xs font-semibold">✓ You're on the list to join the team. We'll notify you when roles open.</p>}
                     {/* The person who created this cohort can lead it directly. */}
                     {currentUser && project.createdByUid === currentUser.uid && !project.leadConfirmed && (
                       <button
@@ -800,8 +839,20 @@ const ProjectDetail = () => {
                   A lead is setting up this project
                 </p>
                 <p className="text-gray-500 text-xs">
-                  Roles will open for applications shortly. Check back soon.
+                  Roles will open for applications shortly.
                 </p>
+                {currentUser && !memberProfile?.isCompany && (
+                  interested ? (
+                    <p className="text-emerald-700 text-sm font-semibold mt-3">✓ We'll notify you when roles open.</p>
+                  ) : (
+                    <button
+                      onClick={joinTeam}
+                      className="mt-3 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-8 py-2 rounded-lg"
+                    >
+                      Join
+                    </button>
+                  )
+                )}
               </div>
             )}
 

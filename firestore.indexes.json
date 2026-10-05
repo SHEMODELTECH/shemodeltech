@@ -135,16 +135,6 @@
       ]
     },
     {
-      "collectionGroup": "cohorts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "number",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "projects",
       "queryScope": "COLLECTION",
       "fields": [
@@ -207,6 +197,20 @@
         {
           "fieldPath": "cohortId",
           "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "lead_applications",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "rankedProjectIds",
+          "arrayConfig": "CONTAINS"
         },
         {
           "fieldPath": "status",

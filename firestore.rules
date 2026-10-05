@@ -193,6 +193,16 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  // waitlist, register interest in an upcoming cohort.
  // ---------------------------------------------------------------
+ // "Notify me when roles open" on coming-soon projects ({projectId}_{uid}).
+ match /project_interest/{id} {
+ // Names only (no contact details), so any signed-in member may read.
+ allow read: if isSignedIn();
+ allow create: if isSignedIn() && request.resource.data.uid == myUid()
+ && id == request.resource.data.projectId + '_' + myUid();
+ // The member, staff, or the project's lead (after telling everyone roles are open).
+ allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer() || ownsProject(resource.data.projectId));
+ }
+
  match /waitlist/{entryId} {
  allow read: if isSignedIn() && (ownsExisting('userId') || isReviewer());
  allow create: if isSignedIn() && ownsNew('userId');

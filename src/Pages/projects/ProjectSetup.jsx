@@ -26,6 +26,7 @@ import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
 import { BADGE_TRACKS } from '../../config/badgeTracks';
 import { alertStaff } from '../../utils/staffAlerts';
 import { roleSlotsOf } from '../../utils/projectSlots';
+import { notifyInterested } from '../../utils/projectInterest';
 
 const industryTracks = [
   'healthcare', 'finance', 'education', 'ecommerce', 'entertainment', 'government',
@@ -284,6 +285,7 @@ const ProjectSetup = () => {
         updatedAt: serverTimestamp(),
       });
       toast.success(isEditing ? 'Project updated.' : 'Project is now open for applications!');
+      if (!isEditing) notifyInterested(projectId, form.projectTitle).catch(() => {});
       navigate(`/projects/${projectId}`);
     } catch (e) {
       console.error(e);
@@ -332,6 +334,7 @@ const ProjectSetup = () => {
       try {
         await updateDoc(doc(db, 'projects', projectId), { status: 'active', openedAt: serverTimestamp(), updatedAt: serverTimestamp() });
         toast.success('Project is now open for applications!');
+        notifyInterested(projectId, form.projectTitle).catch(() => {});
         navigate(`/projects/${projectId}`);
       } catch (e) {
         toast.error('Could not open the project.');

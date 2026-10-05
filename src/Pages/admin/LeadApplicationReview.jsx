@@ -21,6 +21,7 @@ import { approveProposal, declineProposal, listOpenCohorts, listProposals, TRACK
 import NoteDialog from '../../components/NoteDialog';
 import { createCohort } from '../../utils/cohorts';
 import { checkDates, minEndDate, todayISO } from '../../utils/dateRules';
+import LeadWaitlist from '../../components/admin/LeadWaitlist';
 import {
   getApplicationsForCohort,
   groupByProject,
@@ -146,6 +147,8 @@ const LeadApplicationReview = () => {
         {waiting.length} application{waiting.length === 1 ? '' : 's'} waiting &middot;{' '}
         {unled.length} project{unled.length === 1 ? '' : 's'} need{unled.length === 1 ? 's' : ''} a lead &middot; applications are open all the time
       </p>
+
+      <LeadWaitlist />
 
       {/* Projects nobody wants - the thing most likely to be missed */}
       {unled.some((p) => !grouped.find((g) => g.project.id === p.id)?.applicants.length) && (
