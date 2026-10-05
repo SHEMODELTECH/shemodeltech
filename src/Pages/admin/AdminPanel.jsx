@@ -1162,7 +1162,7 @@ const AdminPanel = ({ only = null }) => {
                     {p.projectTitle || p.title || 'Untitled'}
                   </p>
                   <p className="text-gray-400 text-xs">
-                    {p.isGenerated ? 'Auto-generated' : `by ${p.submitterName || 'Owner'}`} ·{' '}
+                    {p.isGenerated ? 'By She Model Tech' : `by ${(p.submitterName || 'Owner').replace(' (Auto-generated)', '')}`} ·{' '}
                     {fmtDate(p.createdAt)}
                   </p>
                 </div>

@@ -73,7 +73,7 @@ const GenerateProject = () => {
         // No human owner yet - the confirmed lead becomes the owner
         submitterId: null,
         submitterEmail: null,
-        submitterName: 'She Model Tech (Auto-generated)',
+        submitterName: 'She Model Tech',
         isCompanyPost: false,
         viewCount: 0,
         applicationCount: 0,
