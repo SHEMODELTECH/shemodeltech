@@ -7,18 +7,7 @@ import { uploadImageToBlob } from '../../utils/blobStorage';
 import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { minEndDate, minStartDate } from '../../utils/dateRules';
-import {
-  PARTNER_OPTIONS,
-  PARTNER_STATUSES,
-  PARTNER_STATUS_LABELS,
-  listPartnerRequests,
-  listRegistrations,
-  listSummits,
-  saveSummit,
-  setCheckedIn,
-  setPartnerStatus,
-  emailInterested,
-} from '../../utils/summit';
+import { PARTNER_OPTIONS, PARTNER_STATUSES, PARTNER_STATUS_LABELS, listPartnerRequests, listRegistrations, listSummits, saveSummit, setCheckedIn, setPartnerStatus, emailInterested, announceSummit } from '../../utils/summit';
 import { notifyMember } from '../../utils/staffAlerts';
 
 const EMPTY = { title: '', theme: '', tagline: '', startDate: '', endDate: '', venue: '', description: '', partnerOptions: '', sessions: [], speakerList: [], faqs: [], exhibitors: [], announced: false, published: false, sponsors: [] };
@@ -61,10 +50,18 @@ const SummitTab = () => {
     setBusy(true);
     try {
       const { id, createdAt, updatedAt, ...data } = form;
-      const wasPublished = !!(summits || []).find((x) => x.id === editing)?.published;
+      const before = (summits || []).find((x) => x.id === editing);
+      const wasPublished = !!before?.published;
+      const wasAnnounced = !!before?.announced || !!before?.announceSentAt;
       const savedId = await saveSummit(editing === 'new' ? null : editing, data);
       setEditing(savedId);
       toast.success(form.published ? 'Saved. Registration is open on the Summit page.' : form.announced ? 'Saved. It shows as coming soon, with Notify me.' : 'Saved as a draft.');
+      // First announcement: "Save the date" to members (email to those who asked).
+      if (form.announced && !wasAnnounced && !form.published) {
+        const n = await announceSummit({ ...data, id: savedId }, notifyMember).catch(() => 0);
+        await saveSummit(savedId, { announceSentAt: new Date().toISOString() }).catch(() => {});
+        if (n) toast.info(`Save the date sent to ${n} ${n === 1 ? 'member' : 'members'}.`);
+      }
       if (form.published && !wasPublished) {
         const n = await emailInterested({ ...data, id: savedId }, notifyMember).catch(() => 0);
         if (n) toast.info(`${n} ${n === 1 ? 'person' : 'people'} who asked to be notified were emailed.`);

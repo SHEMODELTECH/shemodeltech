@@ -133,3 +133,27 @@ export const listMyPartnerRequests = async (uid) => {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
 export const setPartnerStatus = (id, status) => updateDoc(doc(db, 'summitPartners', id), { status });
+
+// "Save the date": when a Summit is first announced, everyone who tapped
+// Notify me gets an email and a bell notice; other members get a bell notice.
+export const announceSummit = async (summit, notify) => {
+  const when = summit.startDate ? new Date(`${summit.startDate}T12:00:00`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'date to be announced';
+  const title = `Save the date: ${summit.title}`;
+  const body = `${summit.theme ? `${summit.theme} · ` : ''}${when}${summit.venue ? ` · ${summit.venue}` : ''}. Registration opens soon; we'll let you know.`;
+  const interest = await getDocs(query(collection(db, 'summitInterest'), where('summitId', 'in', [summit.id, 'next']))).catch(() => null);
+  const asked = new Set();
+  for (const d of interest?.docs || []) {
+    const w = d.data();
+    asked.add(w.uid);
+    await notify(w.uid, { type: 'summit_announced', title, body, link: '/summit', ctaLabel: 'See the Summit', emailTo: w.email }).catch(() => {});
+  }
+  const users = await getDocs(collection(db, 'users')).catch(() => null);
+  let n = asked.size;
+  for (const u of users?.docs || []) {
+    const d = u.data();
+    if (asked.has(u.id) || d.isCompany || !d.onboardingComplete) continue;
+    await notify(u.id, { type: 'summit_announced', title, body, link: '/summit', sendEmail: false }).catch(() => {});
+    n += 1;
+  }
+  return n;
+};

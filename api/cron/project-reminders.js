@@ -333,7 +333,50 @@ module.exports = async (req, res) => {
  }
  }
 
- try { } catch (_) { /* noop */ }
+ // ── Summit reminders: 7 days and 1 day before, to everyone registered ──
+ try {
+ const SITE_URL = process.env.SITE_URL || 'https://shemodeltech.com';
+ const summits = await db.collection('summits').where('published', '==', true).get();
+ const today = new Date(); today.setUTCHours(0, 0, 0, 0);
+ for (const sDoc of summits.docs) {
+ const summit = { id: sDoc.id, ...sDoc.data() };
+ if (!summit.startDate) continue;
+ const start = new Date(`${summit.startDate}T00:00:00Z`);
+ const days = Math.round((start - today) / 86400000);
+ if (days !== 7 && days !== 1) continue;
+ const flag = days === 7 ? 'reminded7' : 'reminded1';
+ const regs = await db.collection('summitRegistrations').where('summitId', '==', summit.id).get();
+ const sessions = Array.isArray(summit.sessions) ? summit.sessions : [];
+ const when = start.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
+ const first = sessions.filter(x => x.start).map(x => x.start).sort()[0];
+ for (const r of regs.docs) {
+ const reg = r.data();
+ if (reg[flag] || !reg.email) continue;
+ const mine = sessions.filter(x => (reg.workshops || []).includes(x.id));
+ const workshopsHtml = mine.length
+ ? `<p><strong>Your workshops:</strong></p><ul>${mine.map(x => `<li>${x.title}${x.start ? `, ${x.start}` : ''}${x.room ? ` (${x.room})` : ''}</li>`).join('')}</ul>`
+ : '';
+ const headline = days === 7 ? `One week to ${summit.title}` : `${summit.title} is tomorrow`;
+ const html = `<h2>${headline}</h2>
+<p>Hi ${(reg.name || '').split(' ')[0] || 'there'}, ${days === 7 ? 'we can’t wait to see you next week' : 'see you tomorrow'}!</p>
+<p><strong>When:</strong> ${when}${first ? `, from ${first}` : ''}<br><strong>Where:</strong> ${summit.venue || 'Location to be announced on the Summit page'}</p>
+${workshopsHtml}
+<p>${days === 1 ? 'Bring your phone to check in and earn your Summit Attendee badge.' : 'See the full agenda and speakers on the Summit page.'}</p>
+<p><a href="${SITE_URL}/summit">View the Summit page</a></p>`;
+ try {
+ await sendMail({ to: reg.email, subject: headline, html });
+ await db.collection('notifications').add({
+ userId: reg.uid, type: 'summit_reminder', title: headline,
+ message: `${when}${summit.venue ? ` · ${summit.venue}` : ''}. ${days === 7 ? 'See the agenda and your workshops.' : 'See you tomorrow!'}`,
+ link: '/summit', isRead: false, createdAt: admin.firestore.FieldValue.serverTimestamp(),
+ });
+ await r.ref.update({ [flag]: true });
+ stats.summitReminders = (stats.summitReminders || 0) + 1;
+ } catch (e) { console.error('summit reminder failed:', e.message); }
+ }
+ }
+ } catch (e) { console.error('summit reminders skipped:', e.message); }
+
  return res.status(200).json({ ok: true, ...stats });
  } catch (err) {
  console.error('project-reminders failed:', err);
