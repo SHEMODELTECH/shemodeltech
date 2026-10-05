@@ -199,6 +199,24 @@ module.exports = async function handler(req, res) {
    }
  } catch (_) { /* non-blocking */ }
 
+ // STATE 4b: tapped "Lead this project" but never submitted the lead application.
+ try {
+ const intents = await db.collection('lead_intent').where('uid', '==', user.uid).get();
+ if (!intents.empty) {
+ const apps = await db.collection('lead_applications').where('applicantUid', '==', user.uid).get();
+ const applied = apps.docs.some(d => ['submitted', 'interview_scheduled', 'accepted', 'assigned'].includes(d.data().status));
+ if (!applied) {
+ const pid = intents.docs[0].data().projectId;
+ const title = projects[pid]?.projectTitle || 'the project';
+ items.push({
+ headline: 'Finish your lead application',
+ detail: `You started applying to lead "${title}", but it hasn't been sent yet. It only takes a few minutes: fill it in and tap Submit.`,
+ link: `${SITE}/apply-to-lead?project=${pid}`,
+ });
+ }
+ }
+ } catch (_) { /* optional */ }
+
  // STATE 7: a new cohort was published in the last day.
  for (const c of newCohorts) {
  if (c.isPaid && user.isMinor) continue; // paid cohorts are 18 and older

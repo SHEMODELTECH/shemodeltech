@@ -14,6 +14,7 @@ import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, getDoc
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+import { clearLeadIntent } from '../../utils/projectInterest';
 import {
   applyToLead,
   getMyApplication,
@@ -181,6 +182,7 @@ const ApplyToLead = () => {
         availabilityHours: hours ? Number(hours) : null,
       });
       toast.success('Application submitted. We\u2019ll be in touch to arrange a short chat.');
+      clearLeadIntent(currentUser.uid).catch(() => {});
       // Back to this page: it renders the "your application is in" state
       // once an application exists.
       navigate('/apply-to-lead', { replace: true });
@@ -265,6 +267,10 @@ const ApplyToLead = () => {
         to apply. We&rsquo;ll have a short chat before assigning leads, because a team is depending
         on whoever takes this on.
       </p>
+      <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <strong>Almost there:</strong> your application isn&rsquo;t sent until you fill this in and tap
+        <strong> Submit</strong> at the bottom.
+      </div>
 
       {/* Ranked choices */}
       <h2 className="text-gray-900 font-bold mb-1">

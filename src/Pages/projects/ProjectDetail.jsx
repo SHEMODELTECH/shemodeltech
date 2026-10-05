@@ -30,7 +30,7 @@ import PaymentAgreement, { AGREEMENT_VERSION } from '../../components/PaymentAgr
 import { BADGE_TRACKS, suggestTrack, trackByKey, trackStanding } from '../../config/badgeTracks';
 import TeamStrength from '../../components/TeamStrength';
 import { dobFields } from '../../utils/age';
-import { addInterest, isInterested } from '../../utils/projectInterest';
+import { addInterest, isInterested, recordLeadIntent } from '../../utils/projectInterest';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -267,6 +267,7 @@ const ProjectDetail = () => {
       return;
     }
 
+    recordLeadIntent(projectId, currentUser, memberProfile?.displayName);
     navigate(`/apply-to-lead?project=${projectId}`);
   };
 

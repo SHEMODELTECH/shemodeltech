@@ -3,11 +3,14 @@
 // is published, then removed from the list).
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
+import { inviteToLead } from '../../utils/projectInterest';
 
 const LeadWaitlist = () => {
   const [list, setList] = useState(null);
   const [open, setOpen] = useState(false);
+  const [invited, setInvited] = useState({});
   useEffect(() => {
     getDocs(query(collection(db, 'waitlist'), where('interest', '==', 'lead')))
       .then((s) => setList(s.docs.map((d) => ({ id: d.id, ...d.data() }))))
@@ -34,7 +37,22 @@ const LeadWaitlist = () => {
             return (
               <li key={w.id} className="py-2 flex flex-wrap justify-between gap-2 text-sm">
                 <span className="text-gray-900">{w.name || w.displayName || 'A member'}</span>
-                <span className="text-gray-500 text-xs">{w.email || ''}{at ? ` · joined ${at}` : ''}</span>
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className="text-gray-500 text-xs">{w.email || ''}{at ? ` · joined ${at}` : ''}</span>
+                  {w.userId && (
+                    <button
+                      type="button"
+                      disabled={invited[w.id]}
+                      onClick={async () => {
+                        try { await inviteToLead(w.userId); setInvited((m) => ({ ...m, [w.id]: true })); toast.success('Invitation sent.'); }
+                        catch (e) { toast.error('Could not send the invitation.'); }
+                      }}
+                      className="text-xs font-semibold bg-pink-600 text-white px-3 py-1 rounded-lg disabled:bg-emerald-600"
+                    >
+                      {invited[w.id] ? '✓ Invited' : 'Invite to lead'}
+                    </button>
+                  )}
+                </span>
               </li>
             );
           })}

@@ -40,3 +40,36 @@ export const notifyInterested = async (projectId, projectTitle) => {
   }
   return people.length;
 };
+
+// ── Lead intent: someone tapped "Lead this project" but may not have submitted
+//    the lead application. lead_intent/{projectId}_{uid}: projectId, uid, name, createdAt
+export const recordLeadIntent = (projectId, user, name) =>
+  setDoc(doc(db, 'lead_intent', `${projectId}_${user.uid}`), {
+    projectId, uid: user.uid, name: name || user.displayName || 'A member', createdAt: serverTimestamp(),
+  }).catch(() => {});
+
+export const listLeadIntent = async (projectId) => {
+  const s = await getDocs(query(collection(db, 'lead_intent'), where('projectId', '==', projectId)));
+  return s.docs.map((d) => ({ id: d.id, ...d.data() }));
+};
+
+// Submitted: clear her "started" entries.
+export const clearLeadIntent = async (uid) => {
+  const s = await getDocs(query(collection(db, 'lead_intent'), where('uid', '==', uid))).catch(() => null);
+  if (s) await Promise.all(s.docs.map((d) => deleteDoc(d.ref).catch(() => {})));
+};
+
+// Staff invite someone to apply to lead (a project, or any project that needs a lead).
+export const inviteToLead = (uid, project = null) =>
+  addDoc(collection(db, 'notifications'), {
+    userId: uid,
+    type: 'lead_invite',
+    title: 'You’re invited to lead',
+    message: project
+      ? `She Model Tech invites you to apply to lead "${project.projectTitle || 'a project'}". It only takes a few minutes, and your application isn’t sent until you tap Submit.`
+      : 'She Model Tech invites you to apply to lead a project. Pick a project that needs a lead and tap Submit to send your application.',
+    link: project ? `/apply-to-lead?project=${project.id}` : '/apply-to-lead',
+    ...(project ? { projectId: project.id } : {}),
+    isRead: false,
+    createdAt: serverTimestamp(),
+  });
