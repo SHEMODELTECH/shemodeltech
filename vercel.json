@@ -14,6 +14,10 @@
       "handle": "filesystem"
     },
     {
+      "src": "/api/notifications/([^/]+)",
+      "dest": "/api/notifications/[type]?type=$1"
+    },
+    {
       "src": "/__/(.*)",
       "dest": "https://she-model-tech.firebaseapp.com/__/$1"
     },
