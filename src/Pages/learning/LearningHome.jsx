@@ -214,7 +214,7 @@ const LearningHome = ({ mine = false }) => {
       {/* Hero */}
       {!mine ? (
         <section className="lr-hero">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <p className="text-sm font-semibold text-pink-700 m-0">She Model Tech Learning</p>
               {['admin', 'editor'].includes(staffRole) && (
@@ -247,7 +247,7 @@ const LearningHome = ({ mine = false }) => {
           </div>
         </section>
       ) : (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-10">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
           <h1 className="fd-display text-3xl sm:text-4xl text-gray-900">My learning</h1>
           <p className="text-gray-600 mt-2">
             {lr.signedIn && !lr.loading
@@ -257,7 +257,7 @@ const LearningHome = ({ mine = false }) => {
         </section>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Continue learning */}
         {!mine && lr.signedIn && inProgress.length > 0 && !q && (
           <section className="pt-10" aria-labelledby="continue-h">
@@ -562,9 +562,9 @@ export const LR_CSS = `
 .lr-card-top { height:88px; background:var(--t); display:flex; align-items:flex-end; justify-content:space-between;
   padding:.75rem 1rem; border-bottom:3px solid var(--c); }
 .lr-mentor-tag { display:inline-flex; align-items:center; gap:.35rem; font-size:.68rem; font-weight:800; letter-spacing:.02em;
-  color:#4338CA; background:#EEF2FF; border:1px solid #C7D2FE; padding:.12rem .5rem; border-radius:999px; }
+  color:#B0105C; background:#FDF2F7; border:1px solid #F9C6DD; padding:.12rem .5rem; border-radius:999px; }
 .lr-new { color:#fff; background:#D41470; border-radius:999px; padding:0 .4rem; font-size:.62rem; }
-.lr-mentor-band { background:linear-gradient(135deg,#EEF2FF 0%,#FDF2F7 100%); border:1px solid #E0E7FF; border-radius:1.25rem; padding:1.25rem; }
+.lr-mentor-band { background:linear-gradient(135deg,#F5F5F5 0%,#FDF2F7 100%); border:1px solid #F9C6DD; border-radius:1.25rem; padding:1.25rem; }
 .lr-inter { font-weight:700; color:var(--c); background:var(--t); padding:.1rem .45rem; border-radius:999px; }
 .lr-chips { display:flex; gap:.5rem; overflow-x:auto; scrollbar-width:none; padding-bottom:.25rem; }
 .lr-chips::-webkit-scrollbar { display:none; }

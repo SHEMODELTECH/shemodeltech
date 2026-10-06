@@ -609,19 +609,19 @@ export const LABS_CSS = `
 .course-prose .lab-opt.is-wrong { border-color:#DC2626; background:#FEF2F2; color:#B91C1C; }
 .course-prose .lab-sort-why { margin:.45rem 0 0; font-size:.88rem; color:#525252; }
 .course-prose .lab button:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
-.course-prose .py-cell { margin:1.1rem 0; border-radius:.8rem; overflow:hidden; background:#1E1B2E; }
-.course-prose .py-bar { display:flex; align-items:center; gap:.5rem; padding:.45rem .6rem; background:#2A2640; }
-.course-prose .py-label { flex:1; font-size:.75rem; font-weight:700; color:#B8B3D6; letter-spacing:.04em; }
+.course-prose .py-cell { margin:1.1rem 0; border-radius:.8rem; overflow:hidden; background:#171717; }
+.course-prose .py-bar { display:flex; align-items:center; gap:.5rem; padding:.45rem .6rem; background:#262626; }
+.course-prose .py-label { flex:1; font-size:.75rem; font-weight:700; color:#A3A3A3; letter-spacing:.04em; }
 .course-prose .py-run { font-size:.8rem; font-weight:800; color:#fff; background:var(--acc); padding:.3rem .9rem; border-radius:.45rem; }
 .course-prose .py-run:disabled { opacity:.6; }
-.course-prose .py-reset { font-size:.8rem; font-weight:700; color:#E9E7F5; background:transparent; border:1px solid rgba(255,255,255,.25); padding:.28rem .7rem; border-radius:.45rem; }
+.course-prose .py-reset { font-size:.8rem; font-weight:700; color:#F5F5F5; background:transparent; border:1px solid rgba(255,255,255,.25); padding:.28rem .7rem; border-radius:.45rem; }
 .course-prose .py-run:focus-visible, .course-prose .py-reset:focus-visible { outline:2px solid #fff; outline-offset:2px; }
-.course-prose .py-editor { display:block; width:100%; border:0; margin:0; padding:.9rem 1.1rem; background:#1E1B2E; color:#E9E7F5; resize:vertical; overflow:hidden;
+.course-prose .py-editor { display:block; width:100%; border:0; margin:0; padding:.9rem 1.1rem; background:#171717; color:#F5F5F5; resize:vertical; overflow:hidden;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.83rem; line-height:1.6; tab-size:4; white-space:pre; overflow-x:auto; }
 .course-prose .py-editor:focus { outline:2px solid var(--acc); outline-offset:-2px; }
-.course-prose .py-out { margin:0; border-radius:0; background:#0F0D1A; color:#E5E5E5; padding:.75rem 1.1rem; font-size:.82rem; border-top:1px solid #2A2640; white-space:pre-wrap; }
+.course-prose .py-out { margin:0; border-radius:0; background:#0A0A0A; color:#E5E5E5; padding:.75rem 1.1rem; font-size:.82rem; border-top:1px solid #262626; white-space:pre-wrap; }
 .course-prose .py-out.is-error { color:#FECACA; }
-.course-prose .html-cell { margin:1.1rem 0; border-radius:.8rem; overflow:hidden; background:#1E1B2E; }
+.course-prose .html-cell { margin:1.1rem 0; border-radius:.8rem; overflow:hidden; background:#171717; }
 .course-prose .html-grid { display:grid; grid-template-columns:1fr; }
 @media (min-width:900px) { .course-prose .html-grid { grid-template-columns:1fr 1fr; } }
 .course-prose .html-preview { width:100%; min-height:180px; height:100%; border:0; background:#fff; }

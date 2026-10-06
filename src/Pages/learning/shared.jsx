@@ -27,13 +27,14 @@ import TechGuardImg from '../../Images/TechGuard.png';
 import TechPOImg from '../../Images/TechMO.png';
 import TechLeadsImg from '../../Images/TechLeads.png';
 
+// Every track uses She Model Tech pink (the badge images keep their own colours).
 export const TRACK_LOOK = {
-  TechDev: { img: TechDevImg, accent: '#DC2626', tint: '#FEF2F2', short: 'Coding Developer' },
-  TechArchs: { img: TechArchsImg, accent: '#D41470', tint: '#EEF2FF', short: 'Low/No-Code' },
-  TechQA: { img: TechQAImg, accent: '#000000', tint: '#F5F5F5', short: 'Quality Tester' },
-  TechGuard: { img: TechGuardImg, accent: '#262626', tint: '#F5F5F5', short: 'Cybersecurity' },
-  TechPO: { img: TechPOImg, accent: '#7E22CE', tint: '#FAF5FF', short: 'Product Owner' },
-  TechLeads: { img: TechLeadsImg, accent: '#8C0D49', tint: '#FDF2F7', short: 'Non-Technical' },
+  TechDev: { img: TechDevImg, accent: '#D41470', tint: '#FDF2F7', short: 'Coding Developer' },
+  TechArchs: { img: TechArchsImg, accent: '#D41470', tint: '#FDF2F7', short: 'Low/No-Code' },
+  TechQA: { img: TechQAImg, accent: '#D41470', tint: '#FDF2F7', short: 'Quality Tester' },
+  TechGuard: { img: TechGuardImg, accent: '#D41470', tint: '#FDF2F7', short: 'Cybersecurity' },
+  TechPO: { img: TechPOImg, accent: '#D41470', tint: '#FDF2F7', short: 'Product Owner' },
+  TechLeads: { img: TechLeadsImg, accent: '#D41470', tint: '#FDF2F7', short: 'Non-Technical' },
   start: { img: null, accent: '#D41470', tint: '#FDF2F7', short: 'Start here' },
   company: { img: null, accent: '#D41470', tint: '#FDF2F7', short: 'For companies' },
 };
@@ -1008,7 +1009,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
 // the --acc / --tint custom properties set on .fd-root.
 export const FD_CSS = LABS_CSS + VIDEO_CSS + `
 .fd-root { --acc:#D41470; --tint:#FDF2F7; }
-.fd-display { font-family:'Archivo Black', system-ui, sans-serif; letter-spacing:-.01em; line-height:1.1; }
+.fd-display { font-family:inherit; font-weight:800; letter-spacing:-.02em; line-height:1.1; }
 
 .fd-rail { display:flex; gap:.6rem; overflow-x:auto; scrollbar-width:none; padding-bottom:.25rem; }
 .fd-rail::-webkit-scrollbar { display:none; }
@@ -1122,13 +1123,13 @@ export const FD_CSS = LABS_CSS + VIDEO_CSS + `
 .course-prose .cp-box p { margin:0; }
 .course-prose .code-wrap { position:relative; }
 .course-prose .code-wrap pre { padding-top:2.2rem; }
-.course-prose .code-copy { position:absolute; top:.5rem; right:.5rem; font-size:.75rem; font-weight:700; color:#E9E7F5; background:rgba(255,255,255,.1);
+.course-prose .code-copy { position:absolute; top:.5rem; right:.5rem; font-size:.75rem; font-weight:700; color:#F5F5F5; background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.2); padding:.25rem .6rem; border-radius:.4rem; }
 .course-prose .code-copy:hover { background:rgba(255,255,255,.18); }
 
 /* Course text */
 .course-prose { max-width:72ch; color:#404040; font-size:16px; line-height:1.75; }
-.course-prose h1 { font-family:'Archivo Black', system-ui, sans-serif; font-size:1.9rem; font-weight:400; color:#111111;
+.course-prose h1 { font-family:inherit; font-size:1.9rem; font-weight:800; color:#111111;
   line-height:1.15; margin:0 0 .75rem; letter-spacing:-.01em; }
 .course-prose h1 + p { color:#525252; font-size:1.05rem; }
 .course-prose > h2:first-child { margin-top:0; padding-top:0; border-top:0; }
@@ -1153,7 +1154,7 @@ export const FD_CSS = LABS_CSS + VIDEO_CSS + `
 .course-prose blockquote p { margin:.25rem 0; }
 .course-prose code { background:#F5F5F5; color:#111111; padding:.12rem .38rem; border-radius:.35rem; font-size:.86em;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
-.course-prose pre { background:#1E1B2E; color:#E9E7F5; border-radius:.8rem; padding:1rem 1.15rem; overflow-x:auto;
+.course-prose pre { background:#171717; color:#F5F5F5; border-radius:.8rem; padding:1rem 1.15rem; overflow-x:auto;
   margin:1.1rem 0; line-height:1.6; }
 .course-prose pre code { background:transparent; color:inherit; padding:0; font-size:.83rem; }
 .course-prose table { width:100%; border-collapse:collapse; margin:1.1rem 0; font-size:.9rem; display:block; overflow-x:auto; }
