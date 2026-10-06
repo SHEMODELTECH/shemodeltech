@@ -4,7 +4,9 @@
 //
 //   events/{id}: title, category, description, hosts, startAt (ISO, UTC),
 //     durationMins, capacity (number or null), published, status
-//     ('scheduled' | 'cancelled'), recordingUrl, announcedAt, createdAt
+//     ('scheduled' | 'cancelled'), hasRecording, showOnPage (past and cancelled
+//     events only appear when this is on), announcedAt, createdAt
+//   events/{id}/members/info: recordingUrl (any signed-in member can read it)
 //   events/{id}/private/info: joinUrl (only staff and registered people can read it)
 //   eventRegistrations/{eventId}_{uid}: eventId, uid, status ('registered' |
 //     'waitlist'), present, projectId, projectTitle (demo days), createdAt,
@@ -15,7 +17,7 @@
 // waitlist run on the server: api/cron/project-reminders.js?task=events.
 
 import {
-  addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, query,
+  addDoc, collection, deleteDoc, deleteField, doc, getCountFromServer, getDoc, getDocs, query,
   serverTimestamp, setDoc, updateDoc, where,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -57,6 +59,19 @@ export const getEvent = async (id) => {
   const s = await getDoc(doc(db, 'events', id));
   return s.exists() ? { id: s.id, ...s.data() } : null;
 };
+// Recording link: members only.
+export const getRecordingUrl = async (event) => {
+  const s = await getDoc(doc(db, 'events', event.id, 'members', 'info')).catch(() => null);
+  return (s && s.exists() && s.data().recordingUrl) || event.recordingUrl || '';
+};
+export const saveRecording = async (eventId, url) => {
+  await setDoc(doc(db, 'events', eventId, 'members', 'info'), { recordingUrl: url || '' }, { merge: true });
+  await updateDoc(doc(db, 'events', eventId), { hasRecording: !!url, recordingUrl: deleteField() });
+};
+export const setShowOnPage = (eventId, on) => updateDoc(doc(db, 'events', eventId), { showOnPage: !!on });
+// Upcoming, not cancelled: always listed. Past or cancelled: only when switched on.
+export const isListed = (e) => (isPast(e) || e.status === 'cancelled' ? e.showOnPage === true : true);
+
 export const getJoinUrl = async (eventId) => {
   const s = await getDoc(doc(db, 'events', eventId, 'private', 'info')).catch(() => null);
   return s && s.exists() ? s.data().joinUrl || '' : '';

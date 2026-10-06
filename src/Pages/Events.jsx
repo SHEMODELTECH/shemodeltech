@@ -13,8 +13,8 @@ import { db } from '../firebase/config';
 import { signInAndReturn } from './learning/LearningLayout';
 import { alertStaff, notifyMember } from '../utils/staffAlerts';
 import {
-  CATEGORY_LABEL, EVENT_CATEGORIES, cancelRegistration, downloadIcs, formatWhen, getJoinUrl,
-  googleCalendarUrl, isPast, listPublishedEvents, myRegistrations, register,
+  CATEGORY_LABEL, EVENT_CATEGORIES, cancelRegistration, downloadIcs, formatWhen, getJoinUrl, getRecordingUrl,
+  googleCalendarUrl, isListed, isPast, listPublishedEvents, myRegistrations, register,
 } from '../utils/events';
 
 // Description: three lines, with "Read more" for longer ones.
@@ -91,6 +91,13 @@ const EventCard = ({ e, reg, currentUser, onChange, highlight }) => {
   useEffect(() => {
     if (placed && !past && !cancelled) getJoinUrl(e.id).then(setJoinUrl).catch(() => {});
   }, [placed, past, cancelled, e.id]);
+
+  // Recordings are for members: load the link only for signed-in people.
+  const hasRecording = !!(e.hasRecording || e.recordingUrl);
+  const [recUrl, setRecUrl] = useState('');
+  useEffect(() => {
+    if (past && hasRecording && currentUser) getRecordingUrl(e).then(setRecUrl).catch(() => {});
+  }, [past, hasRecording, currentUser, e]);
 
   const loadProjects = async () => {
     setDemoOpen(true);
@@ -171,8 +178,16 @@ const EventCard = ({ e, reg, currentUser, onChange, highlight }) => {
       {e.description && <EventDescription text={e.description} />}
 
       {past ? (
-        e.recordingUrl ? (
-          <a href={e.recordingUrl} target="_blank" rel="noopener noreferrer" className="inline-block mt-4 text-sm font-semibold text-pink-700 hover:underline">Watch the recording →</a>
+        hasRecording ? (
+          currentUser ? (
+            recUrl ? (
+              <a href={recUrl} target="_blank" rel="noopener noreferrer" className="mt-auto pt-4 inline-block text-sm font-semibold text-pink-700 hover:underline">Watch the recording →</a>
+            ) : null
+          ) : (
+            <button onClick={() => signInAndReturn(navigate, `/events?e=${e.id}`)} className="mt-auto pt-4 text-left text-sm font-semibold text-pink-700 hover:underline">
+              Sign in to watch the recording →
+            </button>
+          )
         ) : null
       ) : cancelled ? null : (
         <div className="mt-auto pt-5">
@@ -252,7 +267,7 @@ const Events = () => {
   }, [focus, events]);
 
   const { upcoming, past } = useMemo(() => {
-    const list = (events || []).filter((e) => cat === 'all' || e.category === cat);
+    const list = (events || []).filter((e) => isListed(e) && (cat === 'all' || e.category === cat));
     return {
       upcoming: list.filter((e) => !isPast(e)),
       past: list.filter((e) => isPast(e)).reverse(),

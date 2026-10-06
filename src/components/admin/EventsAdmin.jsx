@@ -9,8 +9,8 @@ import { db } from '../../firebase/config';
 import { notifyMember } from '../../utils/staffAlerts';
 import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
 import {
-  CATEGORY_LABEL, EVENT_CATEGORIES, deleteEvent, formatWhen, getJoinUrl, isPast, listAllEvents,
-  listRegistrations, saveEvent, setPresenter,
+  CATEGORY_LABEL, EVENT_CATEGORIES, deleteEvent, formatWhen, getJoinUrl, getRecordingUrl, isPast, listAllEvents,
+  listRegistrations, saveEvent, saveRecording, setPresenter, setShowOnPage,
 } from '../../utils/events';
 
 const EMPTY = { title: '', category: 'workshop', when: '', durationMins: 60, hosts: '', description: '', capacity: '', joinUrl: '', imageUrl: '', published: false };
@@ -167,7 +167,7 @@ const EventsAdmin = () => {
 
   const showRegs = async (e) => {
     setEditing(null);
-    setRecording(e.recordingUrl || '');
+    setRecording(await getRecordingUrl(e));
     const rows = await listRegistrations(e.id);
     const withInfo = await Promise.all(rows.map(async (r) => ({ ...r, ...(await userInfo(r.uid)) })));
     withInfo.sort((a, b) => (a.status === b.status ? 0 : a.status === 'registered' ? -1 : 1));
@@ -187,18 +187,40 @@ const EventsAdmin = () => {
     showRegs(e);
   };
 
+  // Save (or remove) the recording link without emailing anyone.
+  const storeRecording = async () => {
+    const e = openRegs.event;
+    const url = recording.trim();
+    if (url && !/^https?:\/\//i.test(url)) return toast.error('The recording link should start with https://');
+    setBusy(true);
+    try {
+      await saveRecording(e.id, url);
+      toast.success(url ? 'Recording saved. Members can watch it from the event once it’s shown on the Events page.' : 'Recording removed.');
+      load();
+    } catch (err) {
+      toast.error('Could not save the recording.');
+    }
+    setBusy(false);
+  };
+
+  // Email everyone who had a place: the link goes to the event (members only).
   const sendRecording = async () => {
     const e = openRegs.event;
     if (!/^https?:\/\//i.test(recording.trim())) return toast.error('Add the recording link (starting with https://).');
     setBusy(true);
-    await updateDoc(doc(db, 'events', e.id), { recordingUrl: recording.trim() });
+    await saveRecording(e.id, recording.trim());
     const n = await tellAll(openRegs.rows.filter((r) => r.status === 'registered').map((r) => r.uid), {
       type: 'event_recording', title: `Recording: ${e.title}`,
-      body: 'Thank you for registering. The recording is ready to watch.',
-      link: recording.trim(), ctaLabel: 'Watch the recording',
+      body: 'Thank you for registering. The recording is ready to watch on the Events page.',
+      link: `/events?e=${e.id}`, ctaLabel: 'Watch the recording',
     }, setProgress);
     toast.success(`Recording saved and sent to ${n} ${n === 1 ? 'person' : 'people'}.`);
     setBusy(false);
+    load();
+  };
+
+  const toggleShow = async (e) => {
+    await setShowOnPage(e.id, !e.showOnPage).catch(() => toast.error('Could not update.'));
     load();
   };
 
@@ -308,8 +330,10 @@ const EventsAdmin = () => {
           )}
           {isPast(openRegs.event) && (
             <div className="mt-4 flex flex-wrap gap-2 items-end">
-              <label className={`${label} flex-1 min-w-[240px]`}>Recording link<input className={input} value={recording} onChange={(e) => setRecording(e.target.value)} placeholder="https://" /></label>
-              <button disabled={busy} onClick={sendRecording} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg disabled:opacity-50">Save and send to attendees</button>
+              <label className={`${label} flex-1 min-w-[240px]`}>Recording link <span className="font-normal text-gray-500">(optional)</span><input className={input} value={recording} onChange={(e) => setRecording(e.target.value)} placeholder="https://" /></label>
+              <button disabled={busy} onClick={storeRecording} className="border border-gray-300 text-gray-800 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50">Save only</button>
+              <button disabled={busy} onClick={sendRecording} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg disabled:opacity-50">Save and email attendees</button>
+              <p className="w-full text-xs text-gray-500">Optional. Only signed-in members can open the recording; visitors are asked to sign in or join first.</p>
             </div>
           )}
         </div>
@@ -328,6 +352,8 @@ const EventsAdmin = () => {
                 <p className="text-xs text-gray-600">
                   {CATEGORY_LABEL[e.category] || 'Event'} · {formatWhen(e)} ·{' '}
                   {e.status === 'cancelled' ? 'Cancelled' : !e.published ? 'Draft' : isPast(e) ? 'Past' : e.announcedAt ? 'Published and announced' : 'Published'}
+                  {e.hasRecording ? ' · Has recording' : ''}
+                  {e.published && (isPast(e) || e.status === 'cancelled') ? (e.showOnPage ? ' · Shown on Events page' : ' · Hidden from Events page') : ''}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -335,6 +361,11 @@ const EventsAdmin = () => {
                 {e.status !== 'cancelled' && <button onClick={() => startEdit(e)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">Edit</button>}
                 {e.published && e.status !== 'cancelled' && !isPast(e) && (
                   <button disabled={busy} onClick={() => cancelEvent(e)} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50">Cancel event</button>
+                )}
+                {e.published && (isPast(e) || e.status === 'cancelled') && (
+                  <button onClick={() => toggleShow(e)} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border ${e.showOnPage ? 'bg-gray-900 border-gray-900 text-white' : 'border-gray-300 hover:bg-gray-50'}`}>
+                    {e.showOnPage ? 'Hide from Events page' : 'Show on Events page'}
+                  </button>
                 )}
                 <button onClick={() => remove(e)} className="text-xs font-semibold text-red-600 px-2">Delete</button>
               </div>

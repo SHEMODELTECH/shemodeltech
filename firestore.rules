@@ -604,6 +604,11 @@ service cloud.firestore {
  allow write: if isReviewer();
  }
  }
+ // The recording link: any signed-in member.
+ match /events/{id}/members/{doc} {
+ allow read: if isSignedIn();
+ allow write: if isReviewer();
+ }
  // eventRegistrations/{eventId}_{uid}: no names or emails, so members may read
  // them (to count places). Reminders and waitlist moves are done by the server.
  match /eventRegistrations/{id} {
