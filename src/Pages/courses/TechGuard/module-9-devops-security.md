@@ -29,8 +29,8 @@ flowchart LR
 
     style C fill:#1e3a5f,color:#fff,stroke:#0f1f33,stroke-width:4px
     style S fill:#dbeafe,color:#1a202c,stroke:#1e3a5f,stroke-width:4px
-    style T fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style D fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style T fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style D fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - "Shift left" means moving checks earlier, into the pipeline and even onto the developer's machine, where problems are cheapest to fix
@@ -106,8 +106,8 @@ flowchart LR
 
     style BASE fill:#1e3a5f,color:#fff,stroke:#0f1f33,stroke-width:4px
     style BUILD fill:#dbeafe,color:#1a202c,stroke:#1e3a5f,stroke-width:4px
-    style SCAN fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style RUN fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style SCAN fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style RUN fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Scanning belongs in the pipeline, set to fail the build on critical findings, so vulnerable images never reach production
@@ -181,8 +181,8 @@ flowchart LR
 
     style CODE fill:#1e3a5f,color:#fff,stroke:#0f1f33,stroke-width:4px
     style SCAN fill:#dbeafe,color:#1a202c,stroke:#1e3a5f,stroke-width:4px
-    style REV fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style APPLY fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style REV fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style APPLY fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Scanning IaC catches a public bucket in a pull request, minutes after it's written, instead of after data has leaked

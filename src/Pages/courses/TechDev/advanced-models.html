@@ -12,7 +12,7 @@
 <style>
 :root{
   --bg:#ffffff; --surface:#f2f5f6; --surface2:#e6ecee; --ink:#26292b; --muted:#5d666a; --line:#d5dde0;
-  --orange:#ef7d1a; --red:#d4461b; --teal:#128f8f; --teal-soft:#d7efee; --maroon:#7a1d36; --good:#1c8a4a; --bad:#c0392b;
+  --orange:#D41470; --red:#d4461b; --teal:#128f8f; --teal-soft:#d7efee; --maroon:#7a1d36; --good:#111111; --bad:#c0392b;
   --display:"Bricolage Grotesque", "Segoe UI", Arial, sans-serif;
   --body:"Source Sans 3", "Segoe UI", Arial, sans-serif;
   --mono:"JetBrains Mono", "Courier New", monospace;
@@ -22,12 +22,12 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#0f1516; --surface:#182224; --surface2:#223033; --ink:#e7eced; --muted:#9fb0b4; --line:#2e3e41;
-    --orange:#f5943f; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#4cc47f; --bad:#ff6b5b; color-scheme:dark;
+    --orange:#EC5C9C; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#E5E5E5; --bad:#ff6b5b; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0f1516; --surface:#182224; --surface2:#223033; --ink:#e7eced; --muted:#9fb0b4; --line:#2e3e41;
-  --orange:#f5943f; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#4cc47f; --bad:#ff6b5b; color-scheme:dark;
+  --orange:#EC5C9C; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#E5E5E5; --bad:#ff6b5b; color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
@@ -432,7 +432,7 @@ function seg(opts,cur,on,label){
 function fig(cv,cap){return el("figure",{},cv,el("figcaption",{},cap))}
 function randn(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
 const DEMOS={};
-const PAL=["#ef7d1a","#128f8f","#7a1d36","#4a6fd1","#6a9a1f"];
+const PAL=["#D41470","#128f8f","#000000","#4a6fd1","#8C0D49"];
 function board(W,H){const cv=el("canvas");cv.width=W;cv.height=H;cv.style.width="100%";cv.style.background="var(--surface)";return cv}
 /* 1. K-means + rules */
 DEMOS.kmeans=(root)=>{

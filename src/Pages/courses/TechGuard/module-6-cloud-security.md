@@ -18,7 +18,7 @@
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#7c3a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 65, 'rankSpacing': 80, 'padding': 18}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 65, 'rankSpacing': 80, 'padding': 18}}}%%
 flowchart LR
     AWS["<b>AWS secures</b><br/><br/>Hardware, network,<br/>virtualisation"]
     LINE["<b>Responsibility<br/>boundary</b>"]
@@ -27,10 +27,10 @@ flowchart LR
 
     AWS ==> LINE ==> YOU ==> LOG
 
-    style AWS fill:#d97706,color:#fff,stroke:#7c3a00,stroke-width:4px
-    style LINE fill:#ffedd5,color:#1a202c,stroke:#d97706,stroke-width:4px
-    style YOU fill:#ffedd5,color:#1a202c,stroke:#d97706,stroke-width:4px
-    style LOG fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style AWS fill:#000000,color:#fff,stroke:#000000,stroke-width:4px
+    style LINE fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style YOU fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style LOG fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The single most important AWS security mindset is knowing which side of the responsibility boundary a given control sits on, patching the hypervisor is AWS's job, but locking down your bucket and your IAM is entirely yours
@@ -91,7 +91,7 @@ flowchart LR
     style MG fill:#0078d4,color:#fff,stroke:#004578,stroke-width:4px
     style SUB fill:#cce4f6,color:#1a202c,stroke:#0078d4,stroke-width:4px
     style RG fill:#cce4f6,color:#1a202c,stroke:#0078d4,stroke-width:4px
-    style RSRC fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style RSRC fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Azure RBAC assignments **inherit down** the hierarchy, so a role granted at the subscription level applies to every resource group and resource beneath it, which is powerful but means broad assignments have broad reach, assign at the narrowest scope that works
@@ -152,7 +152,7 @@ flowchart LR
     style ORG fill:#d93025,color:#fff,stroke:#a50e0e,stroke-width:4px
     style FOL fill:#fce8e6,color:#1a202c,stroke:#d93025,stroke-width:4px
     style PRJ fill:#fce8e6,color:#1a202c,stroke:#d93025,stroke-width:4px
-    style RES fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style RES fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - IAM inheritance means a broad grant high in the hierarchy (say, at the Organisation) reaches everything below it, so, as with Azure, you grant at the lowest level that does the job

@@ -207,7 +207,7 @@ flowchart LR
     style R fill:#f0e6ff,color:#1a202c,stroke:#6d00cc,stroke-width:4px
     style FA fill:#e2e8f0,color:#1a202c,stroke:#6d00cc,stroke-width:4px
     style FB fill:#e2e8f0,color:#1a202c,stroke:#6d00cc,stroke-width:4px
-    style AA fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style AA fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     style AB fill:#ffe3e3,color:#1a202c,stroke:#e03131,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
@@ -270,7 +270,7 @@ flowchart LR
 
     style T fill:#0067b8,color:#fff,stroke:#004578,stroke-width:4px
     style C fill:#deecf9,color:#1a202c,stroke:#0067b8,stroke-width:4px
-    style Y fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style Y fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     style N fill:#ffe3e3,color:#1a202c,stroke:#e03131,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
@@ -334,9 +334,9 @@ flowchart LR
 
     style W fill:#ea4b71,color:#fff,stroke:#b7223f,stroke-width:4px
     style IF fill:#ffe0e6,color:#1a202c,stroke:#ea4b71,stroke-width:4px
-    style S1 fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style S1 fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     style S2 fill:#ffe3e3,color:#1a202c,stroke:#e03131,stroke-width:4px
-    style F fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style F fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A **node** is n8n's term for a single step, trigger or action, matching "module" in Make and "action" in Zapier

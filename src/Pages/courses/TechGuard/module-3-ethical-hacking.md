@@ -33,7 +33,7 @@ flowchart LR
 
     style K fill:#4f46e5,color:#fff,stroke:#3730a3,stroke-width:4px
     style INFO fill:#e0e7ff,color:#1a202c,stroke:#4f46e5,stroke-width:4px
-    style EXP fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style EXP fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style PW fill:#e0e7ff,color:#1a202c,stroke:#4f46e5,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
@@ -101,7 +101,7 @@ flowchart LR
     style R fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
     style E fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
     style X fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
-    style REP fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style REP fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The scope document is not paperwork to rush past, it is your legal authorization and your protection, anything outside it is off-limits no matter how tempting the target
@@ -166,7 +166,7 @@ flowchart LR
     style T fill:#0891b2,color:#fff,stroke:#155e75,stroke-width:4px
     style PAS fill:#cffafe,color:#1a202c,stroke:#0891b2,stroke-width:4px
     style ACT fill:#cffafe,color:#1a202c,stroke:#0891b2,stroke-width:4px
-    style SURF fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style SURF fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Passive recon leaves little or no trace on the target, while active recon (like scanning) can be logged and detected, so testers weigh how much noise they're willing to make

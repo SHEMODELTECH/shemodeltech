@@ -39,7 +39,7 @@ const DatabaseSetup = () => {
       <h1>She Model Tech Database Setup</h1>
       <p>This will create all 17 collections with sample data in your Firestore database.</p>
       
-      <div style={{ background: '#fff3cd', padding: '15px', borderRadius: '5px', marginBottom: '20px' }}>
+      <div style={{ background: '#EBEBEB', padding: '15px', borderRadius: '5px', marginBottom: '20px' }}>
         <strong>Warning:</strong> Only run this once on a new database!
       </div>
 
@@ -74,7 +74,7 @@ const DatabaseSetup = () => {
       )}
 
       {result && (
-        <div style={{ marginTop: '20px', padding: '15px', background: result.success ? '#d4edda' : '#f8d7da', borderRadius: '5px' }}>
+        <div style={{ marginTop: '20px', padding: '15px', background: result.success ? '#F5F5F5' : '#f8d7da', borderRadius: '5px' }}>
           <h3>{result.success ? 'Success!' : 'Completed with Issues'}</h3>
           <p>Collections created: {result.collectionsCreated}/17</p>
           

@@ -49,7 +49,7 @@ const PrivacyPolicy = () => {
     <div style={{ fontFamily: "'Georgia','Times New Roman',serif", background: '#030712', minHeight: '100vh', color: '#FAFAFA', overflowX: 'hidden' }}>
 
       {/* ── Read progress bar ── */}
-      <div style={{ position: 'fixed', top: 0, left: 0, height: 3, zIndex: 9999, width: `${scrollProgress}%`, background: 'linear-gradient(90deg,#22c55e,#D41470)', transition: 'width 0.1s ease' }} />
+      <div style={{ position: 'fixed', top: 0, left: 0, height: 3, zIndex: 9999, width: `${scrollProgress}%`, background: 'linear-gradient(90deg,#262626,#D41470)', transition: 'width 0.1s ease' }} />
 
       {/* ── Header ── */}
       <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(3,7,18,0.93)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -73,7 +73,7 @@ const PrivacyPolicy = () => {
               style={{ display: 'none', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 8, padding: '6px 10px', color: '#EC5C9C', fontSize: 12, fontFamily: 'system-ui,sans-serif', cursor: 'pointer', whiteSpace: 'nowrap' }}>
               {tocOpen ? '✕ Close' : '☰ Contents'}
             </button>
-            <Link to="/solutions" style={{ color: '#22c55e', textDecoration: 'none', fontSize: 13, fontFamily: 'system-ui,sans-serif', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+            <Link to="/solutions" style={{ color: '#262626', textDecoration: 'none', fontSize: 13, fontFamily: 'system-ui,sans-serif', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
               ← Home
             </Link>
           </div>
@@ -133,14 +133,14 @@ const PrivacyPolicy = () => {
           {/* Intro callout */}
           <div style={{ background: 'linear-gradient(135deg,rgba(99,102,241,0.08),rgba(34,197,94,0.06))', border: '1px solid rgba(99,102,241,0.22)', borderRadius: 14, padding: '20px 22px', marginBottom: 44 }}>
             <p style={{ color: '#e0e7ff', fontFamily: 'system-ui,sans-serif', fontSize: 15, lineHeight: 1.8, margin: 0 }}>
-              At <strong style={{ color: '#EC5C9C' }}>She Model Tech</strong>, your privacy matters deeply to us. This Privacy Policy explains how we collect, use, protect, and share your information when you interact with our website (<strong style={{ color: '#22c55e' }}>shemodeltech.com</strong>) or any of our services. By using our platform, you agree to the practices described in this policy.
+              At <strong style={{ color: '#EC5C9C' }}>She Model Tech</strong>, your privacy matters deeply to us. This Privacy Policy explains how we collect, use, protect, and share your information when you interact with our website (<strong style={{ color: '#262626' }}>shemodeltech.com</strong>) or any of our services. By using our platform, you agree to the practices described in this policy.
             </p>
           </div>
 
           {/* ─── 01 Overview ─── */}
           <PPSection id="overview" number="01" title="Overview" icon="🏢">
             <p>She Model Tech is a digital innovation organization specializing in the design, development, and transformation of web and mobile applications using intelligent and cutting-edge technologies - including Artificial Intelligence (AI), machine learning, predictive analytics, and automation systems.</p>
-            <p>This policy applies to all visitors, clients, and users of <strong style={{ color: '#22c55e' }}>shemodeltech.com</strong>. We are committed to handling your data responsibly, transparently, and in alignment with applicable privacy laws.</p>
+            <p>This policy applies to all visitors, clients, and users of <strong style={{ color: '#262626' }}>shemodeltech.com</strong>. We are committed to handling your data responsibly, transparently, and in alignment with applicable privacy laws.</p>
           </PPSection>
 
           {/* ─── 02 Information We Collect ─── */}
@@ -286,7 +286,7 @@ const PrivacyPolicy = () => {
               <li>Limited employee access to personal data on a need-to-know basis</li>
               <li>Secure third-party payment processing - we do not store full payment card details</li>
             </ul>
-            <PPCallout color="#f59e0b" icon="⚠️" title="Important Notice">
+            <PPCallout color="#000000" icon="⚠️" title="Important Notice">
               While we take extensive precautions, no method of transmission over the internet or electronic storage is 100% secure. We cannot guarantee absolute security but commit to promptly notifying affected users in the event of a data breach where required by law.
             </PPCallout>
           </PPSection>
@@ -322,7 +322,7 @@ const PrivacyPolicy = () => {
               <p style={{ margin: '0 0 18px 0', color: '#D4D4D4', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.75 }}>
                 The fastest way to reach us is through the <strong style={{ color: '#FAFAFA' }}>AI chat on our home page</strong>. Head back to the homepage and use the chat to send us your question - our team reviews every conversation.
               </p>
-              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#D41470,#22c55e)', borderRadius: 10, padding: '11px 20px', textDecoration: 'none', color: '#fff', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 700, boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
+              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#D41470,#262626)', borderRadius: 10, padding: '11px 20px', textDecoration: 'none', color: '#fff', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 700, boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
                 🏠 Go to Homepage & Chat with Us
               </Link>
             </div>
@@ -333,7 +333,7 @@ const PrivacyPolicy = () => {
               <Link to="/solutions/terms" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#EC5C9C', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
                 📋 Terms of Service
               </Link>
-              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#22c55e', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
+              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#262626', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
                 🏠 Back to Home
               </Link>
             </div>
@@ -343,7 +343,7 @@ const PrivacyPolicy = () => {
           <div style={{ marginTop: 56, paddingTop: 28, borderTop: '1px solid rgba(255,255,255,0.07)', textAlign: 'center' }}>
             <p style={{ color: '#525252', fontFamily: 'system-ui,sans-serif', fontSize: 13 }}>
               © {new Date().getFullYear()} She Model Tech. All rights reserved.&nbsp;·&nbsp;
-              <Link to="/solutions" style={{ color: '#22c55e', textDecoration: 'none' }}>Home</Link>&nbsp;·&nbsp;
+              <Link to="/solutions" style={{ color: '#262626', textDecoration: 'none' }}>Home</Link>&nbsp;·&nbsp;
               <Link to="/solutions/terms" style={{ color: '#EC5C9C', textDecoration: 'none' }}>Terms of Service</Link>
             </p>
           </div>
@@ -371,7 +371,7 @@ const PrivacyPolicy = () => {
         ul { color: #D4D4D4; font-family: system-ui,sans-serif; font-size: 15px; line-height: 1.85; padding-left: 20px; margin-bottom: 14px; }
         li { margin-bottom: 8px; }
         strong { color: #FAFAFA; }
-        a  { color: #22c55e; }
+        a  { color: #262626; }
         @media (max-width: 480px) { p, ul { font-size: 14px; line-height: 1.75; } li { margin-bottom: 6px; } }
         .pp-section-body { padding-left: 0; }
         @media (min-width: 600px) { .pp-section-body { padding-left: 54px; } }
@@ -404,7 +404,7 @@ const Subsection = ({ title, children }) => (
 );
 
 const PPCallout = ({ color, icon, title, children }) => {
-  const rgb = color === '#ef4444' ? '239,68,68' : color === '#f59e0b' ? '245,158,11' : color === '#22c55e' ? '34,197,94' : '99,102,241';
+  const rgb = color === '#ef4444' ? '239,68,68' : color === '#000000' ? '245,158,11' : color === '#262626' ? '34,197,94' : '99,102,241';
   return (
     <div style={{ background: `rgba(${rgb},0.07)`, border: `1px solid rgba(${rgb},0.25)`, borderLeft: `3px solid ${color}`, borderRadius: 10, padding: '16px 18px', marginBottom: 22 }}>
       <p style={{ margin: '0 0 8px 0', fontWeight: 700, color, fontSize: 14, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', fontFamily: 'system-ui,sans-serif' }}>

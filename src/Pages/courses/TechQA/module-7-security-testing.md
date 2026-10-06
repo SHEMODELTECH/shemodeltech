@@ -29,9 +29,9 @@ flowchart LR
 
     style SC fill:#2b6cb0,color:#fff,stroke:#1e4e8c,stroke-width:4px
     style SCAN fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
-    style FIND fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style FIND fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style VER fill:#ffe3e3,color:#1a202c,stroke:#e03131,stroke-width:4px
-    style REP fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style REP fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Automated scan results always need human verification, scanners flag *potential* issues, but confirming a finding is real (and not a false positive) is a distinct, necessary step before it goes into a report
@@ -90,8 +90,8 @@ flowchart LR
 
     style LOGIN fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
     style RESP fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
-    style RL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style SESS fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style RL fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style SESS fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Checking error messages specifically for information leakage (does "wrong password" vs. "no such account" reveal which emails are registered) is a small, easy check that's frequently overlooked
@@ -149,8 +149,8 @@ flowchart LR
 
     style IN fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
     style VAL fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
-    style SAFE fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style OUT fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style SAFE fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style OUT fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Browser-side checks improve the user experience but prove nothing about security; anyone can send a request that skips them, so the server must check too

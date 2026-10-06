@@ -18,7 +18,7 @@
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#7c3a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     K["<b>Something you know</b><br/><br/>Password<br/>or PIN"]
     H["<b>Something you have</b><br/><br/>Authenticator app<br/>or security key"]
@@ -29,10 +29,10 @@ flowchart LR
     H ==> G
     A ==> G
 
-    style K fill:#d97706,color:#fff,stroke:#7c3a00,stroke-width:4px
-    style H fill:#ffedd5,color:#1a202c,stroke:#d97706,stroke-width:4px
-    style A fill:#ffedd5,color:#1a202c,stroke:#d97706,stroke-width:4px
-    style G fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style K fill:#000000,color:#fff,stroke:#000000,stroke-width:4px
+    style H fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style A fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style G fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The factors must come from **different categories**, two passwords is not MFA, because a single theft (a phishing page) could capture both, the whole point is that a different kind of factor is hard to steal in the same way
@@ -99,9 +99,9 @@ flowchart LR
     U ==> RO ==> PE ==> RES
 
     style U fill:#0f766e,color:#fff,stroke:#134e4a,stroke-width:4px
-    style RO fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style PE fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style RES fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style RO fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style PE fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style RES fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The power of RBAC is the layer of indirection, because permissions attach to roles rather than to individuals, onboarding, offboarding, and audits become "which role?" questions instead of tedious per-user permission edits
@@ -160,7 +160,7 @@ flowchart LR
     style ID fill:#4f46e5,color:#fff,stroke:#3730a3,stroke-width:4px
     style AUTHN fill:#e0e7ff,color:#1a202c,stroke:#4f46e5,stroke-width:4px
     style AUTHZ fill:#e0e7ff,color:#1a202c,stroke:#4f46e5,stroke-width:4px
-    style RES fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style RES fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Authentication and authorization are separate gates, first you prove who you are, then the system decides what that identity may do, MFA strengthens the first gate and RBAC governs the second

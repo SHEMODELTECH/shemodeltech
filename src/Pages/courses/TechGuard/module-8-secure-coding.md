@@ -32,7 +32,7 @@ flowchart LR
     style VAL fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
     style PAR fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
     style AUTHZ fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
-    style SAFE fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style SAFE fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A recurring theme across the Top 10 is **never trust input and always check authorization server-side**, the client can be manipulated, so every security decision has to be enforced on the server where the attacker can't reach it
@@ -112,10 +112,10 @@ flowchart LR
     REQ ==> AUTHN ==> AUTHZ ==> VAL ==> OK
 
     style REQ fill:#0f766e,color:#fff,stroke:#134e4a,stroke-width:4px
-    style AUTHN fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style AUTHZ fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style VAL fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style OK fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style AUTHN fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style AUTHZ fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style VAL fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style OK fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The gates are ordered and every request passes through all of them, a request that authenticates successfully still has to prove it's authorized for the specific object it asked for, which is exactly the check that's most often missed

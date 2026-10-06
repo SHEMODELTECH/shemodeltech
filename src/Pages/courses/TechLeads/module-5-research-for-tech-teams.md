@@ -32,7 +32,7 @@ flowchart LR
     style DEC fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style Q fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style DESK fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style PLAN fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style PLAN fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - If no decision depends on the answer, the research is probably not worth doing yet
@@ -91,7 +91,7 @@ flowchart LR
     style RECRUIT fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style ASK fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style RECORD fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style ORG fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style ORG fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Five to eight well-chosen interviews often reveal the main patterns in a focused question
@@ -190,7 +190,7 @@ flowchart LR
     style NOTES fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style GROUP fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style INS fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style SHARE fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style SHARE fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Report how many people each finding applies to; "4 of 6 participants" is more honest than "users"

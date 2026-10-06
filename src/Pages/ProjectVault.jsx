@@ -47,12 +47,12 @@ const deriveLevel = (badges, category) => {
   return count >= 11 ? 'Expert' : count >= 6 ? 'Advanced' : count >= 2 ? 'Associate' : count >= 1 ? 'Novice' : 'Novice';
 };
 
-// Tier ring color for the printed certificate (matches TierBadge: steel/bronze/silver/gold).
+// Tier ring color for the printed certificate (matches TierBadge: grey/light pink/pink/black).
 const tierRingCss = (level) => {
   const k = (level || '').toString().toLowerCase();
-  if (k.startsWith('expert')) return 'linear-gradient(135deg,#fcd34d,#d97706)';
-  if (k.startsWith('advanc')) return 'linear-gradient(135deg,#E5E5E5,#A3A3A3)';
-  if (k.startsWith('assoc')) return 'linear-gradient(135deg,#d8975a,#a55b2e)';
+  if (k.startsWith('expert')) return 'linear-gradient(135deg,#404040,#000000)';
+  if (k.startsWith('advanc')) return 'linear-gradient(135deg,#E0146C,#8C0D49)';
+  if (k.startsWith('assoc')) return 'linear-gradient(135deg,#F9C6DD,#EC5C9C)';
   return 'linear-gradient(135deg,#A3A3A3,#737373)';
 };
 

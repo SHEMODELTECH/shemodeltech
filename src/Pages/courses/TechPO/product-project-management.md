@@ -80,7 +80,7 @@ A roadmap is a plan for what gets built, in what order, and why, and the hardest
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#a16207', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     IDEAS["<b>Candidate Ideas</b><br/><br/>Requests, bugs,<br/>strategic bets"]
     PRIO["<b>Prioritize</b><br/><br/>RICE / value<br/>vs. effort"]
@@ -90,10 +90,10 @@ flowchart LR
     IDEAS ==> PRIO ==> PLAN ==> ROAD
     ROAD -.new signal.-> IDEAS
 
-    style IDEAS fill:#fef9c3,color:#1a202c,stroke:#a16207,stroke-width:4px
-    style PRIO fill:#fef08a,color:#1a202c,stroke:#a16207,stroke-width:4px
-    style PLAN fill:#a16207,color:#fff,stroke:#854d0e,stroke-width:4px
-    style ROAD fill:#fef9c3,color:#1a202c,stroke:#a16207,stroke-width:4px
+    style IDEAS fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style PRIO fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style PLAN fill:#000000,color:#fff,stroke:#000000,stroke-width:4px
+    style ROAD fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A roadmap without a stated prioritization method quietly becomes "whoever asked most recently or loudest," even when nobody intends that

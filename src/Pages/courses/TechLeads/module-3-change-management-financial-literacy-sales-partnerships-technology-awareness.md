@@ -79,7 +79,7 @@ Technical decisions have financial consequences, and financial constraints shape
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#15803d', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     BUD["<b>Budget</b><br/><br/>Allocated spend<br/>for the period"]
     COST["<b>Cost Analysis</b><br/><br/>Upfront + ongoing<br/>+ opportunity cost"]
@@ -89,10 +89,10 @@ flowchart LR
     BUD ==> COST ==> ROI ==> DEC
     DEC -.tracked against.-> BUD
 
-    style BUD fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style COST fill:#bbf7d0,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style ROI fill:#15803d,color:#fff,stroke:#166534,stroke-width:4px
-    style DEC fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
+    style BUD fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style COST fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style ROI fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style DEC fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A cost analysis that only counts the sticker price will consistently underestimate the real cost of a decision; maintenance and opportunity cost are easy to leave out and often add up to more than the upfront number
@@ -148,10 +148,10 @@ flowchart LR
     BD ==> DEAL ==> REL
     REL -.surfaces.-> RISK
 
-    style BD fill:#ffedd5,color:#1a202c,stroke:#c2410c,stroke-width:4px
-    style DEAL fill:#fed7aa,color:#1a202c,stroke:#c2410c,stroke-width:4px
+    style BD fill:#EBEBEB,color:#1a202c,stroke:#c2410c,stroke-width:4px
+    style DEAL fill:#EBEBEB,color:#1a202c,stroke:#c2410c,stroke-width:4px
     style REL fill:#c2410c,color:#fff,stroke:#9a3412,stroke-width:4px
-    style RISK fill:#ffedd5,color:#1a202c,stroke:#c2410c,stroke-width:4px
+    style RISK fill:#EBEBEB,color:#1a202c,stroke:#c2410c,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A deal closed with an unrealistic technical promise made during pre-sales becomes engineering's problem the moment it's signed, which is exactly why technical input during the sales conversation matters

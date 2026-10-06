@@ -31,7 +31,7 @@ flowchart LR
     style F fill:#6d28d9,color:#fff,stroke:#4c1d95,stroke-width:4px
     style CL fill:#ede9fe,color:#1a202c,stroke:#6d28d9,stroke-width:4px
     style V fill:#ede9fe,color:#1a202c,stroke:#6d28d9,stroke-width:4px
-    style S fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style S fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A well-built form is what makes everything downstream (approvals, notifications, integrations) reliable, messy or missing data at the form stage causes problems everywhere else in a workflow
@@ -89,7 +89,7 @@ flowchart LR
 
     style S fill:#e2e8f0,color:#1a202c,stroke:#b91c1c,stroke-width:4px
     style A fill:#b91c1c,color:#fff,stroke:#7f1d1d,stroke-width:4px
-    style D fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style D fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style E fill:#fee2e2,color:#1a202c,stroke:#b91c1c,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
@@ -149,7 +149,7 @@ flowchart LR
     style T fill:#e2e8f0,color:#1a202c,stroke:#0369a1,stroke-width:4px
     style C fill:#0369a1,color:#fff,stroke:#075985,stroke-width:4px
     style DC fill:#e0f2fe,color:#1a202c,stroke:#0369a1,stroke-width:4px
-    style R fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style R fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Dynamic content is what separates a genuinely useful notification from a generic, easily-ignored one, specific details make people act on a message instead of skimming past it
@@ -195,7 +195,7 @@ You have working notifications on both the approved and rejected paths of your w
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#166534', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     TR["<b>Trigger</b><br/><br/>Event in<br/>App A"]
     CN["<b>Connector</b><br/><br/>Pre-built bridge<br/>to each app"]
@@ -204,10 +204,10 @@ flowchart LR
 
     TR ==> CN ==> DM ==> AC
 
-    style TR fill:#e2e8f0,color:#1a202c,stroke:#166534,stroke-width:4px
-    style CN fill:#166534,color:#fff,stroke:#14532d,stroke-width:4px
-    style DM fill:#dcfce7,color:#1a202c,stroke:#166534,stroke-width:4px
-    style AC fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style TR fill:#e2e8f0,color:#1a202c,stroke:#262626,stroke-width:4px
+    style CN fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style DM fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style AC fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Integrations are what turn separate tools (a form, an approval step, a CRM, a chat app) into one connected workflow, without them, each tool is an isolated island requiring manual copy-paste between them

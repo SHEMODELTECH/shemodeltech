@@ -30,7 +30,7 @@ flowchart LR
     style TC fill:#2b6cb0,color:#fff,stroke:#1e4e8c,stroke-width:4px
     style WD fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
     style BR fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
-    style A fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style A fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Selenium itself has no built-in test runner or assertion library, it's paired with one (this flexibility is a strength for established teams, but means more setup for a beginner)
@@ -97,7 +97,7 @@ You have a working Selenium script that opens a real browser, navigates to a pag
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0a6847', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     B["<b>Browser</b><br/><br/>App and Cypress<br/>run together"]
     C["<b>Command</b><br/><br/>cy.get / cy.click /<br/>cy.type"]
@@ -108,11 +108,11 @@ flowchart LR
     B ==> C ==> W ==> A
     A ==> TR
 
-    style B fill:#e2e8f0,color:#1a202c,stroke:#0a6847,stroke-width:4px
-    style C fill:#17b881,color:#fff,stroke:#0a6847,stroke-width:4px
-    style W fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
-    style A fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style TR fill:#e2e8f0,color:#1a202c,stroke:#0a6847,stroke-width:4px
+    style B fill:#e2e8f0,color:#1a202c,stroke:#262626,stroke-width:4px
+    style C fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style W fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style A fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style TR fill:#e2e8f0,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Because Cypress runs in the same run-loop as the browser, it can't natively drive more than one browser tab or origin at once, a deliberate tradeoff for speed and reliability, unlike Selenium's more unrestricted (but slower) external control
@@ -173,7 +173,7 @@ You have a working Cypress test that visits a real page and asserts on its conte
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#7c3a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     TC["<b>Test Code</b><br/><br/>JS/TS, Python,<br/>Java, or C#"]
     CTX["<b>Browser Context</b><br/><br/>Isolated session<br/>(cookies, storage)"]
@@ -185,11 +185,11 @@ flowchart LR
     TC ==> L ==> BR
     BR ==> TV
 
-    style TC fill:#d97706,color:#fff,stroke:#7c3a00,stroke-width:4px
-    style CTX fill:#ffedd5,color:#1a202c,stroke:#d97706,stroke-width:4px
-    style BR fill:#e2e8f0,color:#1a202c,stroke:#d97706,stroke-width:4px
-    style L fill:#ffedd5,color:#1a202c,stroke:#d97706,stroke-width:4px
-    style TV fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style TC fill:#000000,color:#fff,stroke:#000000,stroke-width:4px
+    style CTX fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style BR fill:#e2e8f0,color:#1a202c,stroke:#000000,stroke-width:4px
+    style L fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style TV fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Playwright Test, its built-in test runner, comes with assertions, parallel execution, and retries out of the box, unlike Selenium, which needs a separate framework for all of that

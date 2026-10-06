@@ -17,7 +17,7 @@ Testing Android apps means testing against real fragmentation, many device manuf
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0a6847', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     APK["<b>App (.apk)</b><br/><br/>Built app package"]
     ADB["<b>ADB</b><br/><br/>Install, log,<br/>simulate events"]
@@ -26,10 +26,10 @@ flowchart LR
 
     APK ==> ADB ==> EM ==> E
 
-    style APK fill:#e2e8f0,color:#1a202c,stroke:#0a6847,stroke-width:4px
-    style ADB fill:#17b881,color:#fff,stroke:#0a6847,stroke-width:4px
-    style EM fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style E fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style APK fill:#e2e8f0,color:#1a202c,stroke:#262626,stroke-width:4px
+    style ADB fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style EM fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style E fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A real testing effort usually runs the same checks across a small deliberate matrix of emulators/devices (an old OS version on a small screen, a new OS version on a large screen), rather than testing on just one
@@ -79,7 +79,7 @@ Testing iOS apps happens in a much more controlled hardware and OS environment t
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#7c3a00', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     APP["<b>App Build</b><br/><br/>Built in Xcode"]
     SIM["<b>iOS Simulator</b><br/><br/>Virtual device,<br/>various OS versions"]
@@ -90,11 +90,11 @@ flowchart LR
     APP ==> SIM ==> X
     APP ==> TF ==> REV
 
-    style APP fill:#e2e8f0,color:#1a202c,stroke:#7c3a00,stroke-width:4px
-    style SIM fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style X fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
-    style TF fill:#ffedd5,color:#1a202c,stroke:#d97706,stroke-width:4px
-    style REV fill:#e2e8f0,color:#1a202c,stroke:#7c3a00,stroke-width:4px
+    style APP fill:#e2e8f0,color:#1a202c,stroke:#000000,stroke-width:4px
+    style SIM fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style X fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style TF fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style REV fill:#e2e8f0,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The iOS Simulator is fast and convenient but doesn't perfectly replicate real hardware performance, sensors, or camera behavior, some checks genuinely need a real device
@@ -164,8 +164,8 @@ flowchart LR
 
     style DATA fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
     style MAT fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
-    style ACC fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style BUG fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style ACC fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style BUG fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Emulators and simulators cover most layout checks cheaply; keep at least one real device for touch, camera, and performance

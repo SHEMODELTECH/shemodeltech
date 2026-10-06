@@ -29,9 +29,9 @@ flowchart LR
     PERM ==> R
 
     style P fill:#0f766e,color:#fff,stroke:#134e4a,stroke-width:4px
-    style CHK fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style PERM fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style R fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style CHK fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style PERM fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style R fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Permission misconfigurations are one of the largest attack surfaces on Linux, world-writable files, over-permissive directories, and stray **SUID** binaries (files that run with their owner's privileges, often root) are classic ways an attacker escalates from a normal user to root
@@ -115,7 +115,7 @@ flowchart LR
     style U fill:#0078d4,color:#fff,stroke:#004578,stroke-width:4px
     style OBJ fill:#cce4f6,color:#1a202c,stroke:#0078d4,stroke-width:4px
     style CHK fill:#cce4f6,color:#1a202c,stroke:#0078d4,stroke-width:4px
-    style R fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style R fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Because so many users historically run as local administrator, a single click on malicious software can compromise the whole machine, this is exactly why UAC and standard-user accounts exist, and why reducing admin rights is one of the highest-impact defensive changes

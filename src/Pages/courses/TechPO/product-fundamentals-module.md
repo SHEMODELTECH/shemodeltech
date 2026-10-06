@@ -31,7 +31,7 @@ flowchart LR
     style I fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style G fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style M fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style D fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style D fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A product doesn't have to move through these stages in a straight line, a mature product can find new growth through a new market or feature, this is often called a **second growth curve**
@@ -113,7 +113,7 @@ An **MVP** (Minimum Viable Product) is the smallest version of a product that st
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#166534', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     H["<b>Hypothesis</b><br/><br/>The assumption<br/>you're testing"]
     B["<b>Build</b><br/><br/>Smallest version<br/>that tests it"]
@@ -123,10 +123,10 @@ flowchart LR
     H ==> B ==> ME ==> L
     L -.-> H
 
-    style H fill:#166534,color:#fff,stroke:#14532d,stroke-width:4px
-    style B fill:#dcfce7,color:#1a202c,stroke:#166534,stroke-width:4px
-    style ME fill:#dcfce7,color:#1a202c,stroke:#166534,stroke-width:4px
-    style L fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style H fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style B fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style ME fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style L fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A common beginner mistake is building an MVP that's really just "the full product, but smaller," a true MVP is scoped around one specific hypothesis, not a miniature version of every planned feature
@@ -172,7 +172,7 @@ A **product vision** is a clear, long-term statement of what a product is trying
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#b45309', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart TB
     V["<b>Vision</b><br/><br/>Long-term,<br/>stable for years"]
     S["<b>Strategy</b><br/><br/>Chosen approach<br/>to get there"]
@@ -182,10 +182,10 @@ flowchart TB
     V ==> S ==> R
     V -.-> N
 
-    style V fill:#b45309,color:#fff,stroke:#78350f,stroke-width:4px
-    style S fill:#fef3c7,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style R fill:#fef3c7,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style N fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style V fill:#000000,color:#fff,stroke:#78350f,stroke-width:4px
+    style S fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style R fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style N fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Vision, strategy, and roadmap change at very different speeds, treating a roadmap item as if it were the vision itself (or changing the vision every time strategy shifts) is a common source of team misalignment

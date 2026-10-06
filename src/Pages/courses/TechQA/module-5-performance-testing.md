@@ -28,8 +28,8 @@ flowchart LR
 
     style TG fill:#2b6cb0,color:#fff,stroke:#1e4e8c,stroke-width:4px
     style S fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
-    style TGT fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style L fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style TGT fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style L fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - JMeter can simulate load without a browser at all, it sends the underlying HTTP requests directly, which is what lets one machine simulate far more concurrent users than would be possible driving real browsers one by one
@@ -151,8 +151,8 @@ flowchart LR
 
     style RAW fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
     style MET fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
-    style CMP fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style FIND fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style CMP fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style FIND fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Always run JMeter in **non-GUI mode** for real tests; the GUI is for building a plan and uses enough memory to distort results

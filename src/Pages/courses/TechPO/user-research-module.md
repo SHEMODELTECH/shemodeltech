@@ -31,7 +31,7 @@ flowchart LR
     style R fill:#1e40af,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style G fill:#dbeafe,color:#1a202c,stroke:#1e40af,stroke-width:4px
     style P fill:#dbeafe,color:#1a202c,stroke:#1e40af,stroke-width:4px
-    style D fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style D fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A persona is only as useful as the research behind it, a detailed-looking persona built purely from assumption can feel convincing while quietly leading a team astray
@@ -89,7 +89,7 @@ flowchart LR
     style G fill:#e2e8f0,color:#1a202c,stroke:#7e22ce,stroke-width:4px
     style Q fill:#7e22ce,color:#fff,stroke:#581c87,stroke-width:4px
     style N fill:#f3e8ff,color:#1a202c,stroke:#7e22ce,stroke-width:4px
-    style S fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style S fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Asking someone to predict their own future behavior ("Would you use a feature like this?") is notoriously unreliable, people are often wrong about their own future actions, past behavior ("Tell me about the last time...") is a much stronger signal
@@ -135,7 +135,7 @@ A **survey** collects structured responses from a larger number of people than i
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#15803d', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     D["<b>Design Survey</b><br/><br/>Mix of quant<br/>& qual questions"]
     SM["<b>Sample</b><br/><br/>Who actually<br/>gets invited"]
@@ -144,10 +144,10 @@ flowchart LR
 
     D ==> SM ==> RR ==> A
 
-    style D fill:#15803d,color:#fff,stroke:#14532d,stroke-width:4px
-    style SM fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style RR fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style A fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style D fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style SM fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style RR fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style A fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Beginners sometimes reach for a survey first, hoping to discover new insights, but surveys are generally better at confirming and measuring the size of a pattern that interviews already surfaced, since respondents can only answer the specific questions asked

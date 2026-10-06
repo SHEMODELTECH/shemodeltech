@@ -332,8 +332,8 @@ const CareerHome = () => {
               <br />
               <span style={{
                 color: 'transparent',
-                WebkitTextStroke: '2px #22c55e',
-                textStroke: '2px #22c55e',
+                WebkitTextStroke: '2px #262626',
+                textStroke: '2px #262626',
                 textShadow: '0 0 20px rgba(34, 197, 94, 0.5), 2px 2px 8px rgba(0, 0, 0, 0.9)',
                 letterSpacing: '-0.01em'
               }}>

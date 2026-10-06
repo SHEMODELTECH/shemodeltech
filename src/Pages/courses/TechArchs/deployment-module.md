@@ -30,7 +30,7 @@ flowchart LR
     style D fill:#e2e8f0,color:#1a202c,stroke:#0e7490,stroke-width:4px
     style S fill:#cffafe,color:#1a202c,stroke:#0e7490,stroke-width:4px
     style P fill:#0e7490,color:#fff,stroke:#155e75,stroke-width:4px
-    style V fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style V fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Not every no-code tool has a separate staging step, smaller tools often go straight from draft to published, larger platforms (like Salesforce) add staging because changes there can affect an entire organization at once
@@ -88,7 +88,7 @@ flowchart LR
     style R fill:#e2e8f0,color:#1a202c,stroke:#a21caf,stroke-width:4px
     style DNS fill:#a21caf,color:#fff,stroke:#701a75,stroke-width:4px
     style PR fill:#fae8ff,color:#1a202c,stroke:#a21caf,stroke-width:4px
-    style S fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style S fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The registrar and the host are almost always two different companies, connecting a custom domain means telling the registrar (through a DNS record) to point traffic at the host, rather than moving the domain itself
@@ -134,7 +134,7 @@ You have connected a custom domain to a published project by adding the correct 
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#15803d', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     M["<b>Monitoring</b><br/><br/>Confirms it's still<br/>working as expected"]
     EL["<b>Error Log</b><br/><br/>Records what<br/>went wrong, and when"]
@@ -143,10 +143,10 @@ flowchart LR
 
     M ==> EL ==> DP ==> MW
 
-    style M fill:#15803d,color:#fff,stroke:#14532d,stroke-width:4px
-    style EL fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style DP fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style MW fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style M fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style EL fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style DP fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style MW fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Most no-code platform outages people encounter aren't the platform itself failing, they're an upstream connected service changing something (like an app it integrates with updating its API), which is why checking error logs first, rather than assuming the whole platform is broken, saves time

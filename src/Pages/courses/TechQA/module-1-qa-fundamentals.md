@@ -31,7 +31,7 @@ flowchart LR
     style R fill:#2b6cb0,color:#fff,stroke:#1e4e8c,stroke-width:4px
     style D fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
     style DEV fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
-    style T fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style T fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style DEP fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
     style M fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
@@ -113,7 +113,7 @@ flowchart LR
     style TP fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
     style TCD fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
     style ES fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
-    style TE fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style TE fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style TC fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```

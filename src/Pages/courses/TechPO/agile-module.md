@@ -32,7 +32,7 @@ flowchart LR
     style PB fill:#e2e8f0,color:#1a202c,stroke:#1e40af,stroke-width:4px
     style SP fill:#1e40af,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style S fill:#dbeafe,color:#1a202c,stroke:#1e40af,stroke-width:4px
-    style R fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style R fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Once a sprint starts, the Sprint Backlog is meant to be protected from new work being added mid-sprint, this stability is what lets a team actually finish what they committed to, constantly re-prioritizing mid-sprint undermines the whole framework
@@ -140,7 +140,7 @@ flowchart LR
     style TD fill:#e2e8f0,color:#1a202c,stroke:#7e22ce,stroke-width:4px
     style IP fill:#7e22ce,color:#fff,stroke:#581c87,stroke-width:4px
     style R fill:#f3e8ff,color:#1a202c,stroke:#7e22ce,stroke-width:4px
-    style D fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style D fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - WIP limits feel counterintuitive to beginners, it seems like starting more work should mean finishing more work, but without a limit, everything ends up half-finished, and nothing actually ships, this is Kanban's central insight
@@ -186,7 +186,7 @@ You have a Kanban board with enforced WIP limits, cards that moved through it wh
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#15803d', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     G["<b>Sprint Goal</b><br/><br/>The 'why' for<br/>this sprint"]
     V["<b>Velocity</b><br/><br/>Historical points<br/>completed per sprint"]
@@ -197,10 +197,10 @@ flowchart LR
     V ==> SP
     SP ==> DoD
 
-    style G fill:#15803d,color:#fff,stroke:#14532d,stroke-width:4px
-    style V fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style SP fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style DoD fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style G fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style V fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style SP fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style DoD fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Story points being relative (not time-based) is a common point of confusion for beginners, the goal is comparing items to each other, not predicting exact hours, that's precisely why velocity (points completed historically) becomes a useful planning tool over time

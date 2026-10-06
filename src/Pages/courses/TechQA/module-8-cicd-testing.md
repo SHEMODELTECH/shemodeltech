@@ -31,9 +31,9 @@ flowchart LR
 
     style C fill:#2b6cb0,color:#fff,stroke:#1e4e8c,stroke-width:4px
     style B fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
-    style T fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style T fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style G fill:#f0e6ff,color:#1a202c,stroke:#6d00cc,stroke-width:4px
-    style D fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style D fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Because the pipeline runs the same way every time, a failure is reproducible and traceable to a specific commit, rather than a mystery discovered days later
@@ -110,9 +110,9 @@ flowchart LR
 
     style CH fill:#6d00cc,color:#fff,stroke:#4a0089,stroke-width:4px
     style SM fill:#f0e6ff,color:#1a202c,stroke:#6d00cc,stroke-width:4px
-    style FULL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style FULL fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style RES fill:#e2e8f0,color:#1a202c,stroke:#6d00cc,stroke-width:4px
-    style NEW fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style NEW fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Regression testing and new-feature testing are complementary but distinct, passing regression tests means "nothing old broke," it says nothing about whether the new feature itself works correctly, that still needs its own new test cases
@@ -171,8 +171,8 @@ flowchart LR
 
     style RUN fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
     style REP fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
-    style ART fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style TRI fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style ART fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style TRI fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The first question on any red build is whether it's a real failure or a flaky test; reports and history answer it in minutes instead of hours

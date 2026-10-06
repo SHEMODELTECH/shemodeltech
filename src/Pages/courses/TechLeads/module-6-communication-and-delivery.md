@@ -32,7 +32,7 @@ flowchart LR
     style PURP fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style AGENDA fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style FAC fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style ACT fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style ACT fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - If a meeting's purpose could be met by a written update, cancel it and send the update
@@ -91,7 +91,7 @@ flowchart LR
     style PLAN fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style TRACK fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style RAID fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style REPORT fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style REPORT fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Review the RAID log weekly; a risk log nobody reads is just a list
@@ -186,7 +186,7 @@ flowchart LR
     style AUD fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style MSG fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style STRUCT fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style ASK fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style ASK fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Write slide headlines as full statements ("Checkout errors fell 40%"), not topics ("Checkout update")

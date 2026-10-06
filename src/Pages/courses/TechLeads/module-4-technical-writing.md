@@ -32,7 +32,7 @@ flowchart LR
     style READER fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style TYPE fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style DRAFT fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style TEST fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style TEST fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Before writing, name the reader and their goal in one sentence; if you can't, the page will wander
@@ -127,7 +127,7 @@ flowchart LR
     style PROB fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style OPT fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style REC fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style REC2 fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style REC2 fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Put the recommendation and the ask near the top; busy readers may read only the first paragraph
@@ -186,7 +186,7 @@ flowchart LR
     style DRAFT fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style STRUCT fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style SENT fill:#e2e8f0,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style CHECK fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style CHECK fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Edit in passes: structure first, then paragraphs, then sentences; fixing commas on a page that needs reorganising wastes time

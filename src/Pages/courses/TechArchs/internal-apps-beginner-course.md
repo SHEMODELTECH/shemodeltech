@@ -89,7 +89,7 @@ flowchart LR
     style T fill:#e8590c,color:#fff,stroke:#bf400a,stroke-width:4px
     style CO fill:#e2e8f0,color:#1a202c,stroke:#e8590c,stroke-width:4px
     style DT fill:#e2e8f0,color:#1a202c,stroke:#e8590c,stroke-width:4px
-    style AB fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style AB fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A **Table** is Glide's term for a connected data source — a Google Sheet tab or a native Glide Table, made of rows and columns
@@ -152,7 +152,7 @@ flowchart LR
 
     style DT fill:#0d47a1,color:#fff,stroke:#08306b,stroke-width:4px
     style RG fill:#e2e8f0,color:#1a202c,stroke:#0d47a1,stroke-width:4px
-    style WF fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style WF fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A **Data Type** is a custom structure you define (like "Request" or "Task") with its own **fields** — Bubble's database is built specifically for your app, not borrowed from a spreadsheet
@@ -205,7 +205,7 @@ You have a working Bubble app with a custom Data Type, a Repeating Group display
 ### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0a8a5f', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 100, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 100, 'padding': 20}}}%%
 flowchart LR
     AB["<b>Airtable Base</b><br/><br/>Clients table<br/><br/><i>existing data</i>"]
     BL["<b>Block</b><br/><br/>List Block<br/>bound to a View"]
@@ -213,9 +213,9 @@ flowchart LR
 
     AB ==> BL ==> UG
 
-    style AB fill:#0a8a5f,color:#fff,stroke:#076647,stroke-width:4px
-    style BL fill:#e2e8f0,color:#1a202c,stroke:#0a8a5f,stroke-width:4px
-    style UG fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style AB fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style BL fill:#e2e8f0,color:#1a202c,stroke:#262626,stroke-width:4px
+    style UG fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A **Block** is Softr's pre-built page component — a List, Table, Chart, or Form — that binds directly to data from your connected source

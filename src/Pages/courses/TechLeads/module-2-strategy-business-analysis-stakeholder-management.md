@@ -78,7 +78,7 @@ Business analysis is the translation layer between what the business needs and w
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#b45309', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     REQ["<b>Vague Request</b><br/><br/>e.g. 'make<br/>onboarding faster'"]
     GATHER["<b>Requirements<br/>Gathering</b><br/><br/>Ask the right<br/>people, right questions"]
@@ -88,11 +88,11 @@ flowchart LR
 
     REQ ==> GATHER ==> ASIS ==> TOBE ==> SCOPE
 
-    style REQ fill:#fef3c7,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style GATHER fill:#fde68a,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style ASIS fill:#fde68a,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style TOBE fill:#b45309,color:#fff,stroke:#92400e,stroke-width:4px
-    style SCOPE fill:#fef3c7,color:#1a202c,stroke:#b45309,stroke-width:4px
+    style REQ fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style GATHER fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style ASIS fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style TOBE fill:#000000,color:#fff,stroke:#92400e,stroke-width:4px
+    style SCOPE fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A requirement that's never checked against a real person doing the real job tends to reflect what leadership assumes happens, not what actually happens, which is exactly why the as-is map often surprises people

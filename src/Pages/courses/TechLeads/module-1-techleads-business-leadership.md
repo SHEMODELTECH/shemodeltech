@@ -143,7 +143,7 @@ Managing a team day-to-day is about making sure work is planned, distributed, an
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0a6847', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     PLAN["<b>Sprint Planning</b><br/><br/>Priority vs.<br/>capacity"]
     DEL["<b>Delegation</b><br/><br/>Ownership +<br/>context"]
@@ -153,10 +153,10 @@ flowchart LR
     PLAN ==> DEL ==> EXEC ==> RETRO
     RETRO -.feeds back into.-> PLAN
 
-    style PLAN fill:#e2e8f0,color:#1a202c,stroke:#0a6847,stroke-width:4px
-    style DEL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style EXEC fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
-    style RETRO fill:#17b881,color:#fff,stroke:#0a6847,stroke-width:4px
+    style PLAN fill:#e2e8f0,color:#1a202c,stroke:#262626,stroke-width:4px
+    style DEL fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style EXEC fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style RETRO fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A retro is only useful if it changes the next planning cycle; a team that identifies the same issue retro after retro without any resulting change in how work is planned isn't actually retro-ing, it's just venting

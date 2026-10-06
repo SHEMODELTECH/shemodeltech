@@ -89,7 +89,7 @@ flowchart LR
 
     style DB fill:#146ef5,color:#fff,stroke:#0d4fb8,stroke-width:4px
     style CC fill:#e2e8f0,color:#1a202c,stroke:#146ef5,stroke-width:4px
-    style CMS fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style CMS fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style CL fill:#e2e8f0,color:#1a202c,stroke:#146ef5,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
@@ -154,7 +154,7 @@ flowchart LR
     style S fill:#7c3aed,color:#fff,stroke:#5b21b6,stroke-width:4px
     style C fill:#e2e8f0,color:#1a202c,stroke:#7c3aed,stroke-width:4px
     style V fill:#e2e8f0,color:#1a202c,stroke:#7c3aed,stroke-width:4px
-    style I fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style I fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A **Stack** automatically arranges the elements placed inside it (in a row, column, or grid) and re-flows them as content changes, instead of you manually positioning each one
@@ -214,7 +214,7 @@ flowchart LR
     E ==> AM ==> D
 
     style E fill:#0c6efc,color:#fff,stroke:#0a53c4,stroke-width:4px
-    style AM fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style AM fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style D fill:#e2e8f0,color:#1a202c,stroke:#0c6efc,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```

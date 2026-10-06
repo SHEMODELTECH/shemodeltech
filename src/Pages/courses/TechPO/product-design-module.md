@@ -31,7 +31,7 @@ flowchart LR
     style LF fill:#1e40af,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style L fill:#dbeafe,color:#1a202c,stroke:#1e40af,stroke-width:4px
     style A fill:#dbeafe,color:#1a202c,stroke:#1e40af,stroke-width:4px
-    style HF fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style HF fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Beginners often jump straight to high-fidelity, colorful designs, but skipping low-fidelity wireframes means structural problems (like a confusing layout) get discovered only after time was already spent on visual polish that now has to be redone
@@ -93,7 +93,7 @@ flowchart TB
     style D fill:#7e22ce,color:#fff,stroke:#581c87,stroke-width:4px
     style HP fill:#f3e8ff,color:#1a202c,stroke:#7e22ce,stroke-width:4px
     style EP fill:#fee2e2,color:#1a202c,stroke:#b91c1c,stroke-width:4px
-    style E fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style E fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Mapping only the happy path is a common beginner mistake, real users hit errors, change their minds, and take unexpected paths constantly, a flow that ignores this ends up describing an idealized product that doesn't match reality
@@ -139,7 +139,7 @@ You have a user flow diagram with a clear start and end, at least one decision p
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#15803d', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     C["<b>Consistency</b><br/><br/>Same elements,<br/>same behavior"]
     A["<b>Affordance</b><br/><br/>Looks like what<br/>it does"]
@@ -148,10 +148,10 @@ flowchart LR
 
     C ==> A ==> F ==> CL
 
-    style C fill:#15803d,color:#fff,stroke:#14532d,stroke-width:4px
-    style A fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style F fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style CL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style C fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style A fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style F fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style CL fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - These principles work together more than separately, a button with strong affordance but no feedback when clicked can still leave a user confused about whether their click actually registered

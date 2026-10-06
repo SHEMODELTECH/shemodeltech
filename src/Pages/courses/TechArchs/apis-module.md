@@ -29,7 +29,7 @@ flowchart LR
     style E fill:#1e40af,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style M fill:#dbeafe,color:#1a202c,stroke:#1e40af,stroke-width:4px
     style B fill:#dbeafe,color:#1a202c,stroke:#1e40af,stroke-width:4px
-    style R fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style R fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Most low-code and no-code platforms (from Topics in earlier modules) connect to other apps by calling their APIs behind the scenes, understanding this layer helps explain why some integrations are easy and others aren't supported at all
@@ -87,7 +87,7 @@ flowchart LR
     style EV fill:#e2e8f0,color:#1a202c,stroke:#7e22ce,stroke-width:4px
     style WH fill:#7e22ce,color:#fff,stroke:#581c87,stroke-width:4px
     style P fill:#f3e8ff,color:#1a202c,stroke:#7e22ce,stroke-width:4px
-    style L fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style L fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Webhooks are what power the instant, real-time feel of most no-code automations, without them, a "new form submission" trigger would have to check for new entries every few minutes instead of reacting immediately
@@ -133,7 +133,7 @@ An **API key** is a credential, a long string of characters that identifies who 
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#b45309', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     K["<b>API Key</b><br/><br/>Credential sent<br/>with a request"]
     A["<b>Authentication</b><br/><br/>Who is making<br/>the request"]
@@ -143,10 +143,10 @@ flowchart LR
     K ==> A ==> Z
     K ==> RL
 
-    style K fill:#b45309,color:#fff,stroke:#78350f,stroke-width:4px
-    style A fill:#fef3c7,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style Z fill:#fef3c7,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style RL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style K fill:#000000,color:#fff,stroke:#78350f,stroke-width:4px
+    style A fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style Z fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style RL fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - API keys should never be hardcoded into a shared file, script, or public repository, exposed keys can be found and misused by anyone who finds them, most no-code tools store keys securely on your behalf so you never see them in plain workflow steps

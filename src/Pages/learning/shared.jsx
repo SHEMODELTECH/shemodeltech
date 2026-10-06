@@ -30,10 +30,10 @@ import TechLeadsImg from '../../Images/TechLeads.png';
 export const TRACK_LOOK = {
   TechDev: { img: TechDevImg, accent: '#DC2626', tint: '#FEF2F2', short: 'Coding Developer' },
   TechArchs: { img: TechArchsImg, accent: '#D41470', tint: '#EEF2FF', short: 'Low/No-Code' },
-  TechQA: { img: TechQAImg, accent: '#15803D', tint: '#F0FDF4', short: 'Quality Tester' },
+  TechQA: { img: TechQAImg, accent: '#000000', tint: '#F5F5F5', short: 'Quality Tester' },
   TechGuard: { img: TechGuardImg, accent: '#262626', tint: '#F5F5F5', short: 'Cybersecurity' },
   TechPO: { img: TechPOImg, accent: '#7E22CE', tint: '#FAF5FF', short: 'Product Owner' },
-  TechLeads: { img: TechLeadsImg, accent: '#A16207', tint: '#FEFCE8', short: 'Non-Technical' },
+  TechLeads: { img: TechLeadsImg, accent: '#8C0D49', tint: '#FDF2F7', short: 'Non-Technical' },
   company: { img: null, accent: '#D41470', tint: '#FDF2F7', short: 'For companies' },
 };
 export const TRACK_ORDER = ['TechDev', 'TechArchs', 'TechQA', 'TechGuard', 'TechPO', 'TechLeads'];

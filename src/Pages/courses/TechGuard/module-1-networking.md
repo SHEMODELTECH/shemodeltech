@@ -30,7 +30,7 @@ flowchart LR
     style APP fill:#2b6cb0,color:#fff,stroke:#1e4e8c,stroke-width:4px
     style TCP fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
     style IP fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
-    style NET fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style NET fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Each layer wraps the one above it, this is called encapsulation, and the receiving device unwraps it in reverse, TCP guarantees delivery is complete and in order while IP only guarantees an attempt to route
@@ -94,7 +94,7 @@ You can send a packet to a remote host, trace the route it takes, open a real TC
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0a6847', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     C["<b>Your device</b><br/><br/>Wants the IP for<br/>example.com"]
     R["<b>Resolver</b><br/><br/>Does the lookup<br/>on your behalf"]
@@ -104,10 +104,10 @@ flowchart LR
     C ==> R ==> H
     H ==> A ==> C
 
-    style C fill:#e2e8f0,color:#1a202c,stroke:#0a6847,stroke-width:4px
-    style R fill:#17b881,color:#fff,stroke:#0a6847,stroke-width:4px
-    style H fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
-    style A fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style C fill:#e2e8f0,color:#1a202c,stroke:#262626,stroke-width:4px
+    style R fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style H fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style A fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Because the resolver trusts the answer it gets back, **DNS cache poisoning** and **spoofing** attacks try to inject a false record so that a legitimate name points to a malicious IP, this is why **DNSSEC** was introduced to cryptographically sign records
@@ -183,7 +183,7 @@ flowchart LR
     style CL fill:#e2e8f0,color:#1a202c,stroke:#5b21b6,stroke-width:4px
     style REQ fill:#7c3aed,color:#fff,stroke:#5b21b6,stroke-width:4px
     style SRV fill:#ede9fe,color:#1a202c,stroke:#7c3aed,stroke-width:4px
-    style RES fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style RES fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Because plain HTTP is unencrypted text, anyone positioned in the network path can read or modify it, a **man-in-the-middle** attack, which is exactly what TLS (HTTPS) is designed to prevent
@@ -258,8 +258,8 @@ flowchart LR
 
     style T fill:#e2e8f0,color:#1a202c,stroke:#7f1d1d,stroke-width:4px
     style FW fill:#c1121f,color:#fff,stroke:#7f1d1d,stroke-width:4px
-    style ALLOW fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
-    style DENY fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style ALLOW fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style DENY fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Firewalls come in tiers, a **packet-filtering** firewall checks each packet's headers in isolation, a **stateful** firewall tracks whole connections, and an **application-layer** firewall or **WAF** (web application firewall) inspects the actual HTTP content to block things like injection attacks

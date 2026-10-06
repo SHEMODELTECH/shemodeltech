@@ -29,8 +29,8 @@ flowchart LR
 
     style R fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
     style API fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
-    style RESP fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style T fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style RESP fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style T fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A saved collection with test scripts on each request can be run automatically as a whole, turning manual API exploration into a repeatable regression check
@@ -98,7 +98,7 @@ flowchart LR
 
     style SPEC fill:#6d00cc,color:#fff,stroke:#4a0089,stroke-width:4px
     style UI fill:#f0e6ff,color:#1a202c,stroke:#6d00cc,stroke-width:4px
-    style ACT fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style ACT fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     style CMP fill:#e2e8f0,color:#1a202c,stroke:#6d00cc,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
@@ -157,8 +157,8 @@ flowchart LR
 
     style C fill:#ff4a00,color:#fff,stroke:#c93a00,stroke-width:4px
     style A fill:#e2e8f0,color:#1a202c,stroke:#ff4a00,stroke-width:4px
-    style RUN fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
-    style REP fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
+    style RUN fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style REP fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A good suite mixes positive and negative tests; an API that returns the right data but also accepts nonsense input has only been half tested

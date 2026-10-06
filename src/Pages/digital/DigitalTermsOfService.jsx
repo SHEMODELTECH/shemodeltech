@@ -45,7 +45,7 @@ const TermsOfService = () => {
     <div style={{ fontFamily: "'Georgia','Times New Roman',serif", background: '#030712', minHeight: '100vh', color: '#FAFAFA', overflowX: 'hidden' }}>
 
       {/* ── Read progress bar ── */}
-      <div style={{ position: 'fixed', top: 0, left: 0, height: 3, zIndex: 9999, width: `${scrollProgress}%`, background: 'linear-gradient(90deg,#22c55e,#D41470)', transition: 'width 0.1s ease' }} />
+      <div style={{ position: 'fixed', top: 0, left: 0, height: 3, zIndex: 9999, width: `${scrollProgress}%`, background: 'linear-gradient(90deg,#262626,#D41470)', transition: 'width 0.1s ease' }} />
 
       {/* ── Header ── */}
       <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(3,7,18,0.93)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -66,10 +66,10 @@ const TermsOfService = () => {
               onClick={() => setTocOpen(o => !o)}
               className="mobile-toc-btn"
               aria-label="Toggle table of contents"
-              style={{ display: 'none', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 8, padding: '6px 10px', color: '#22c55e', fontSize: 12, fontFamily: 'system-ui,sans-serif', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              style={{ display: 'none', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 8, padding: '6px 10px', color: '#262626', fontSize: 12, fontFamily: 'system-ui,sans-serif', cursor: 'pointer', whiteSpace: 'nowrap' }}>
               {tocOpen ? '✕ Close' : '☰ Contents'}
             </button>
-            <Link to="/solutions" style={{ color: '#22c55e', textDecoration: 'none', fontSize: 13, fontFamily: 'system-ui,sans-serif', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+            <Link to="/solutions" style={{ color: '#262626', textDecoration: 'none', fontSize: 13, fontFamily: 'system-ui,sans-serif', display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
               ← Home
             </Link>
           </div>
@@ -82,7 +82,7 @@ const TermsOfService = () => {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {sections.map(s => (
                 <a key={s.id} href={`#${s.id}`} onClick={() => setTocOpen(false)}
-                  style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, color: activeSection === s.id ? '#22c55e' : '#A3A3A3', textDecoration: 'none', fontFamily: 'system-ui,sans-serif', background: activeSection === s.id ? 'rgba(34,197,94,0.1)' : 'rgba(255,255,255,0.05)', border: activeSection === s.id ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.08)', transition: 'all 0.2s' }}>
+                  style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, color: activeSection === s.id ? '#262626' : '#A3A3A3', textDecoration: 'none', fontFamily: 'system-ui,sans-serif', background: activeSection === s.id ? 'rgba(34,197,94,0.1)' : 'rgba(255,255,255,0.05)', border: activeSection === s.id ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.08)', transition: 'all 0.2s' }}>
                   {s.label}
                 </a>
               ))}
@@ -100,9 +100,9 @@ const TermsOfService = () => {
           {sections.map(s => (
             <a key={s.id} href={`#${s.id}`} style={{
               display: 'block', padding: '6px 10px', marginBottom: 3, borderRadius: 6, fontSize: 12,
-              color: activeSection === s.id ? '#22c55e' : '#A3A3A3',
+              color: activeSection === s.id ? '#262626' : '#A3A3A3',
               textDecoration: 'none', fontFamily: 'system-ui,sans-serif',
-              borderLeft: activeSection === s.id ? '2px solid #22c55e' : '2px solid transparent',
+              borderLeft: activeSection === s.id ? '2px solid #262626' : '2px solid transparent',
               background: activeSection === s.id ? 'rgba(34,197,94,0.07)' : 'transparent',
               transition: 'all 0.2s'
             }}>{s.label}</a>
@@ -115,9 +115,9 @@ const TermsOfService = () => {
           {/* Hero */}
           <div style={{ marginBottom: 40 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 20, padding: '5px 14px', marginBottom: 18 }}>
-              <span style={{ color: '#22c55e', fontSize: 12, fontFamily: 'system-ui,sans-serif', letterSpacing: '0.05em' }}>Legal Document</span>
+              <span style={{ color: '#262626', fontSize: 12, fontFamily: 'system-ui,sans-serif', letterSpacing: '0.05em' }}>Legal Document</span>
             </div>
-            <h1 style={{ fontSize: 'clamp(26px,6vw,54px)', fontWeight: 700, lineHeight: 1.1, marginBottom: 14, letterSpacing: '-1px', background: 'linear-gradient(135deg,#ffffff 40%,#22c55e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', wordBreak: 'break-word' }}>
+            <h1 style={{ fontSize: 'clamp(26px,6vw,54px)', fontWeight: 700, lineHeight: 1.1, marginBottom: 14, letterSpacing: '-1px', background: 'linear-gradient(135deg,#ffffff 40%,#262626)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', wordBreak: 'break-word' }}>
               Terms of Service
             </h1>
             <p style={{ color: '#A3A3A3', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.7 }}>
@@ -128,8 +128,8 @@ const TermsOfService = () => {
 
           {/* Intro callout */}
           <div style={{ background: 'linear-gradient(135deg,rgba(34,197,94,0.07),rgba(99,102,241,0.07))', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 14, padding: '20px 22px', marginBottom: 44 }}>
-            <p style={{ color: '#d1fae5', fontFamily: 'system-ui,sans-serif', fontSize: 15, lineHeight: 1.8, margin: 0 }}>
-              Welcome to <strong style={{ color: '#22c55e' }}>She Model Tech</strong>. By accessing our website, requesting a consultation, or engaging our services, you agree to be bound by these Terms of Service. Please read them carefully before proceeding.
+            <p style={{ color: '#F5F5F5', fontFamily: 'system-ui,sans-serif', fontSize: 15, lineHeight: 1.8, margin: 0 }}>
+              Welcome to <strong style={{ color: '#262626' }}>She Model Tech</strong>. By accessing our website, requesting a consultation, or engaging our services, you agree to be bound by these Terms of Service. Please read them carefully before proceeding.
             </p>
           </div>
 
@@ -141,13 +141,13 @@ const TermsOfService = () => {
 
           {/* ─── 02 Consultation Fee ─── */}
           <TosSection id="consultation" number="02" title="Consultation Fee" icon="💳" highlight>
-            <TosCallout color="#22c55e" icon="💡" title="How Our Consultation Works">
+            <TosCallout color="#262626" icon="💡" title="How Our Consultation Works">
               Before any project begins, She Model Tech conducts a comprehensive discovery consultation to understand your goals, existing systems, technical requirements, and desired outcomes. This allows us to design the most effective intelligent solution for your specific needs.
             </TosCallout>
 
             <Subsection title="Consultation Fee Amount">
-              <p>A non-refundable consultation fee of <strong style={{ color: '#22c55e', fontSize: 17 }}>$100 USD</strong> is required to initiate a formal consultation with our team.</p>
-              <TosCallout color="#f59e0b" icon="📌" title="Fee Subject to Change">
+              <p>A non-refundable consultation fee of <strong style={{ color: '#262626', fontSize: 17 }}>$100 USD</strong> is required to initiate a formal consultation with our team.</p>
+              <TosCallout color="#000000" icon="📌" title="Fee Subject to Change">
                 She Model Tech reserves the right to adjust the consultation fee at any time at its sole discretion. Any change to the fee will be reflected on our website prior to taking effect. The fee in place at the time you submit your consultation request is the fee that applies to your engagement.
               </TosCallout>
             </Subsection>
@@ -185,16 +185,16 @@ const TermsOfService = () => {
           {/* ─── 03 Process ─── */}
           <TosSection id="process" number="03" title="Our Process - What Happens After Consultation" icon="🔄">
             <p>Upon receipt and confirmation of the consultation fee, our team will follow this structured engagement process:</p>
-            <ProcessStep step={1} color="#22c55e" title="Consultation & Discovery">
+            <ProcessStep step={1} color="#262626" title="Consultation & Discovery">
               We conduct your discovery session - reviewing your goals, business model, existing platforms, and desired intelligent capabilities.
             </ProcessStep>
             <ProcessStep step={2} color="#D41470" title="Custom Service Proposal Delivery">
               We deliver a comprehensive written proposal including: recommended solution and services, how She Model Tech operates, estimated project timeline and key milestones, transparent pricing breakdown, and technology stack and AI approach.
             </ProcessStep>
-            <ProcessStep step={3} color="#f59e0b" title="Client Review & Decision">
+            <ProcessStep step={3} color="#000000" title="Client Review & Decision">
               The Client reviews the proposal at their own discretion. There is no obligation to proceed. However, if you do not proceed, the consultation fee remains non-refundable as outlined in Section 2.
             </ProcessStep>
-            <ProcessStep step={4} color="#22c55e" title="Project Agreement & Kickoff">
+            <ProcessStep step={4} color="#262626" title="Project Agreement & Kickoff">
               If the Client agrees to move forward, both parties execute a formal Project Agreement. The $100 consultation fee is credited to the first project payment and a dedicated project team is assigned.
             </ProcessStep>
             <ProcessStep step={5} color="#D41470" title="Development, Delivery & Support">
@@ -270,13 +270,13 @@ const TermsOfService = () => {
           <TosSection id="contact" number="08" title="Contact & Questions" icon="✉️">
             <p>If you have any questions about these Terms of Service, the consultation process, pricing, or any of our services, our team is ready to help.</p>
             <div style={{ background: 'linear-gradient(135deg,rgba(34,197,94,0.08),rgba(99,102,241,0.08))', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 14, padding: '22px 24px', marginTop: 18 }}>
-              <p style={{ margin: '0 0 6px 0', fontWeight: 700, color: '#22c55e', fontFamily: 'system-ui,sans-serif', fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <p style={{ margin: '0 0 6px 0', fontWeight: 700, color: '#262626', fontFamily: 'system-ui,sans-serif', fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
                 💬 Chat with us directly on our homepage
               </p>
               <p style={{ margin: '0 0 18px 0', color: '#D4D4D4', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.75 }}>
                 The fastest way to get answers is through the <strong style={{ color: '#FAFAFA' }}>AI chat on our home page</strong>. Head back to the homepage and use the chat to ask us anything - our team reviews every conversation.
               </p>
-              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#22c55e,#D41470)', borderRadius: 10, padding: '11px 20px', textDecoration: 'none', color: '#fff', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 700, boxShadow: '0 4px 20px rgba(34,197,94,0.3)' }}>
+              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#262626,#D41470)', borderRadius: 10, padding: '11px 20px', textDecoration: 'none', color: '#fff', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 700, boxShadow: '0 4px 20px rgba(34,197,94,0.3)' }}>
                 🏠 Go to Homepage & Chat with Us
               </Link>
             </div>
@@ -287,7 +287,7 @@ const TermsOfService = () => {
               <Link to="/solutions/privacy" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#EC5C9C', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
                 🔒 Privacy Policy
               </Link>
-              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#22c55e', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
+              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#262626', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
                 🏠 Back to Home
               </Link>
             </div>
@@ -297,7 +297,7 @@ const TermsOfService = () => {
           <div style={{ marginTop: 56, paddingTop: 28, borderTop: '1px solid rgba(255,255,255,0.07)', textAlign: 'center' }}>
             <p style={{ color: '#525252', fontFamily: 'system-ui,sans-serif', fontSize: 13 }}>
               © {new Date().getFullYear()} She Model Tech. All rights reserved.&nbsp;·&nbsp;
-              <Link to="/solutions" style={{ color: '#22c55e', textDecoration: 'none' }}>Home</Link>&nbsp;·&nbsp;
+              <Link to="/solutions" style={{ color: '#262626', textDecoration: 'none' }}>Home</Link>&nbsp;·&nbsp;
               <Link to="/solutions/privacy" style={{ color: '#EC5C9C', textDecoration: 'none' }}>Privacy Policy</Link>
             </p>
           </div>
@@ -326,7 +326,7 @@ const TermsOfService = () => {
         ul { color: #D4D4D4; font-family: system-ui,sans-serif; font-size: 15px; line-height: 1.85; padding-left: 20px; margin-bottom: 14px; }
         li { margin-bottom: 8px; }
         strong { color: #FAFAFA; }
-        a  { color: #22c55e; }
+        a  { color: #262626; }
 
         /* Tighter text on small screens */
         @media (max-width: 480px) {
@@ -372,7 +372,7 @@ const Subsection = ({ title, children }) => (
 );
 
 const TosCallout = ({ color, icon, title, children }) => {
-  const rgb = color === '#ef4444' ? '239,68,68' : color === '#f59e0b' ? '245,158,11' : color === '#22c55e' ? '34,197,94' : '99,102,241';
+  const rgb = color === '#ef4444' ? '239,68,68' : color === '#000000' ? '245,158,11' : color === '#262626' ? '34,197,94' : '99,102,241';
   return (
     <div style={{ background: `rgba(${rgb},0.07)`, border: `1px solid rgba(${rgb},0.25)`, borderLeft: `3px solid ${color}`, borderRadius: 10, padding: '16px 18px', marginBottom: 22 }}>
       <p style={{ margin: '0 0 8px 0', fontWeight: 700, color, fontSize: 14, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', fontFamily: 'system-ui,sans-serif' }}>
@@ -384,7 +384,7 @@ const TosCallout = ({ color, icon, title, children }) => {
 };
 
 const ProcessStep = ({ step, color, title, children }) => {
-  const rgb = color === '#22c55e' ? '34,197,94' : color === '#D41470' ? '99,102,241' : '245,158,11';
+  const rgb = color === '#262626' ? '34,197,94' : color === '#D41470' ? '99,102,241' : '245,158,11';
   return (
     <div style={{ display: 'flex', gap: 14, marginBottom: 24, alignItems: 'flex-start' }}>
       <div style={{ minWidth: 32, width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: `rgba(${rgb},0.15)`, border: `2px solid ${color}`, color, fontWeight: 700, fontSize: 13, fontFamily: 'system-ui,sans-serif', flexShrink: 0, marginTop: 2 }}>{step}</div>

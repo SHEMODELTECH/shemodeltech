@@ -30,7 +30,7 @@ flowchart LR
     style SRC fill:#0891b2,color:#fff,stroke:#155e75,stroke-width:4px
     style COL fill:#cffafe,color:#1a202c,stroke:#0891b2,stroke-width:4px
     style COR fill:#cffafe,color:#1a202c,stroke:#0891b2,stroke-width:4px
-    style AL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style AL fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The real power of a SIEM is **correlation across sources**, an event that's innocent in isolation becomes suspicious when combined with others, which is exactly what a lone log file can't show you
@@ -97,7 +97,7 @@ flowchart LR
     style AL fill:#7c3aed,color:#fff,stroke:#5b21b6,stroke-width:4px
     style T1 fill:#ede9fe,color:#1a202c,stroke:#7c3aed,stroke-width:4px
     style T2 fill:#ede9fe,color:#1a202c,stroke:#7c3aed,stroke-width:4px
-    style T3 fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style T3 fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The tiered structure exists so expensive expertise isn't spent on routine noise, Tier 1 filters the flood so Tier 2 and Tier 3 can focus on genuine, complex threats
@@ -163,7 +163,7 @@ flowchart LR
     style C fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
     style E fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
     style R fill:#fde2e2,color:#1a202c,stroke:#c1121f,stroke-width:4px
-    style L fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style L fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The phases are ordered for a reason, containing before you eradicate stops the bleeding first, and verifying clean before recovery stops you from restoring a system that's still compromised, skipping ahead is how incidents get worse

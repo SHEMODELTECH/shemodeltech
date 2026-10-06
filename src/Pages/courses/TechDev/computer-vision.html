@@ -12,7 +12,7 @@
 <style>
 :root{
   --bg:#ffffff; --surface:#f2f5f6; --surface2:#e6ecee; --ink:#26292b; --muted:#5d666a; --line:#d5dde0;
-  --orange:#ef7d1a; --red:#d4461b; --teal:#128f8f; --teal-soft:#d7efee; --maroon:#7a1d36; --good:#1c8a4a; --bad:#c0392b;
+  --orange:#D41470; --red:#d4461b; --teal:#128f8f; --teal-soft:#d7efee; --maroon:#7a1d36; --good:#111111; --bad:#c0392b;
   --display:"Bricolage Grotesque", "Segoe UI", Arial, sans-serif;
   --body:"Source Sans 3", "Segoe UI", Arial, sans-serif;
   --mono:"JetBrains Mono", "Courier New", monospace;
@@ -22,12 +22,12 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#0f1516; --surface:#182224; --surface2:#223033; --ink:#e7eced; --muted:#9fb0b4; --line:#2e3e41;
-    --orange:#f5943f; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#4cc47f; --bad:#ff6b5b; color-scheme:dark;
+    --orange:#EC5C9C; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#E5E5E5; --bad:#ff6b5b; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0f1516; --surface:#182224; --surface2:#223033; --ink:#e7eced; --muted:#9fb0b4; --line:#2e3e41;
-  --orange:#f5943f; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#4cc47f; --bad:#ff6b5b; color-scheme:dark;
+  --orange:#EC5C9C; --red:#ff7a4f; --teal:#3cc2c0; --teal-soft:#153b3b; --maroon:#e8829c; --good:#E5E5E5; --bad:#ff6b5b; color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
@@ -889,7 +889,7 @@ DEMOS.cards=(root)=>{
 DEMOS.study=(root)=>{
   const M={"GPT-4o":[0.580,0.645,0.793,0.686],"Gemini 2.0 Flash":[0.473,0.618,0.442,0.456],"Claude Sonnet 4":[0.549,0.443,0.341,0.365]};
   const T=[["ReAct",[100,90.9,81.8]],["Sequential",[90.9,72.7,72.7]],["Least-to-most",[90.9,63.6,81.8]],["Chain-of-thought",[63.6,81.8,63.6]],["Self-consistency",[81.8,36.4,27.3]],["Iterative",[81.8,0,45.5]],["Meta-prompting",[100,36.4,9.1]],["Zero-shot",[63.6,36.4,18.2]]];
-  const names=["GPT-4o","Claude Sonnet 4","Gemini 2.0 Flash"],cols=["#128f8f","#ef7d1a","#7a1d36"];
+  const names=["GPT-4o","Claude Sonnet 4","Gemini 2.0 Flash"],cols=["#128f8f","#D41470","#000000"];
   const bar=(v,max,c,lab)=>el("div",{style:"display:grid;grid-template-columns:130px 1fr 64px;gap:8px;align-items:center;margin:4px 0;font-size:15px"},el("span",{},lab),el("div",{style:"background:var(--surface2);border-radius:4px;height:18px"},el("div",{style:`width:${v/max*100}%;height:100%;background:${c};border-radius:4px`})),el("b",{style:"font-family:var(--mono);font-size:13px"},max===1?v.toFixed(3):v.toFixed(1)+"%"));
   const a=el("div"),b=el("div");let met=3,tech=0;
   function A(){a.innerHTML="";a.append(el("div",{class:"ctrls"},seg([[0,"Accuracy"],[1,"Precision"],[2,"Recall"],[3,"F1"]],met,v=>{met=v;A()},"metric")));

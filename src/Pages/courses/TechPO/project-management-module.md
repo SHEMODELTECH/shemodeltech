@@ -33,7 +33,7 @@ flowchart LR
     style IS fill:#1e40af,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style OS fill:#dbeafe,color:#1a202c,stroke:#1e40af,stroke-width:4px
     style SC fill:#fee2e2,color:#1a202c,stroke:#b91c1c,stroke-width:4px
-    style CR fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style CR fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Writing out-of-scope items explicitly feels unnecessary to beginners, but it's often what prevents the most painful disputes later, an unstated assumption is much harder to resolve than a documented exclusion
@@ -92,7 +92,7 @@ flowchart LR
     style T1 fill:#e2e8f0,color:#1a202c,stroke:#7e22ce,stroke-width:4px
     style T2 fill:#7e22ce,color:#fff,stroke:#581c87,stroke-width:4px
     style M fill:#f3e8ff,color:#1a202c,stroke:#7e22ce,stroke-width:4px
-    style CP fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style CP fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Beginners often estimate a timeline by adding up every task's duration in sequence, but tasks with no dependency on each other can run in parallel, only the critical path actually determines the deadline
@@ -138,7 +138,7 @@ You have a task list with durations and dependencies, an identified critical pat
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#b45309', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#000000', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     ID["<b>Identify Risk</b><br/><br/>Add to the<br/>risk register"]
     PR["<b>Prioritize</b><br/><br/>Likelihood ×<br/>impact"]
@@ -148,10 +148,10 @@ flowchart LR
     ID ==> PR ==> MT
     PR ==> CP
 
-    style ID fill:#e2e8f0,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style PR fill:#b45309,color:#fff,stroke:#78350f,stroke-width:4px
-    style MT fill:#fef3c7,color:#1a202c,stroke:#b45309,stroke-width:4px
-    style CP fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style ID fill:#e2e8f0,color:#1a202c,stroke:#000000,stroke-width:4px
+    style PR fill:#000000,color:#fff,stroke:#78350f,stroke-width:4px
+    style MT fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
+    style CP fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A risk register that's written once and never revisited quickly becomes useless, risks (and their likelihood or impact) change as a project progresses, reviewing it regularly is part of the practice, not an optional extra
@@ -197,7 +197,7 @@ A **budget** translates a project's scope and timeline into a financial commitme
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#15803d', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     A["<b>Allocated<br/>Budget</b><br/><br/>Total approved,<br/>by category"]
     S["<b>Actual Spend</b><br/><br/>Tracked<br/>continuously"]
@@ -207,10 +207,10 @@ flowchart LR
     A ==> S ==> B
     A ==> C
 
-    style A fill:#15803d,color:#fff,stroke:#14532d,stroke-width:4px
-    style S fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style B fill:#dcfce7,color:#1a202c,stroke:#15803d,stroke-width:4px
-    style C fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style A fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style S fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style B fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style C fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Burn rate matters more than raw remaining budget, a project could still have plenty of budget left on paper while burning through it far faster than its remaining work justifies, a warning sign that's easy to miss if you only check the total

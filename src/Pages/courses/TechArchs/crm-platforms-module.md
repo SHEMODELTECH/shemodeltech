@@ -29,9 +29,9 @@ flowchart LR
     C ==> T ==> W ==> P
 
     style C fill:#c2410c,color:#fff,stroke:#7c2d12,stroke-width:4px
-    style T fill:#ffedd5,color:#1a202c,stroke:#c2410c,stroke-width:4px
-    style W fill:#ffedd5,color:#1a202c,stroke:#c2410c,stroke-width:4px
-    style P fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style T fill:#EBEBEB,color:#1a202c,stroke:#c2410c,stroke-width:4px
+    style W fill:#EBEBEB,color:#1a202c,stroke:#c2410c,stroke-width:4px
+    style P fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - HubSpot's free tier is genuinely usable for small teams, but workflow automation, custom reporting, and advanced permissions are gated behind paid tiers, a common low-code tradeoff between accessibility and depth
@@ -90,7 +90,7 @@ flowchart LR
     style O fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style F fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
     style FL fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
-    style PL fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style PL fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Because you can create entirely new objects (not just add fields to existing ones), Salesforce's low-code ceiling is much higher than HubSpot's or Zoho's, entire custom applications can be built without traditional code
@@ -148,9 +148,9 @@ flowchart LR
     BP ==> E
 
     style M fill:#0f766e,color:#fff,stroke:#134e4a,stroke-width:4px
-    style WR fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style BP fill:#ccfbf1,color:#1a202c,stroke:#0f766e,stroke-width:4px
-    style E fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style WR fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style BP fill:#F5F5F5,color:#1a202c,stroke:#0f766e,stroke-width:4px
+    style E fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Blueprint's key difference from a simple workflow rule is enforcement, a record literally cannot skip a required stage, which matters for compliance-sensitive processes like loan approvals or refund sign-offs

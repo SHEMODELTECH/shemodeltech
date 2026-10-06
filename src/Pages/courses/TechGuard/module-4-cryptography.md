@@ -30,7 +30,7 @@ flowchart LR
     style PT fill:#7c3aed,color:#fff,stroke:#5b21b6,stroke-width:4px
     style ENC fill:#ede9fe,color:#1a202c,stroke:#7c3aed,stroke-width:4px
     style CT fill:#ede9fe,color:#1a202c,stroke:#7c3aed,stroke-width:4px
-    style DEC fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style DEC fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Symmetric is fast but has a key-distribution problem, asymmetric solves distribution but is slow, hybrid encryption uses each for what it's best at, which is exactly why HTTPS is both secure and fast
@@ -134,7 +134,7 @@ You have encrypted and decrypted a file with symmetric AES, generated an RSA key
 #### Structure at a Glance
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0a6847', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
+%%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     IN["<b>Any input</b><br/><br/>File, password,<br/>message"]
     HF["<b>Hash function</b><br/><br/>SHA-256, bcrypt,<br/>Argon2"]
@@ -143,10 +143,10 @@ flowchart LR
 
     IN ==> HF ==> DIG ==> CHK
 
-    style IN fill:#17b881,color:#fff,stroke:#0a6847,stroke-width:4px
-    style HF fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
-    style DIG fill:#d4f4dd,color:#1a202c,stroke:#2f9e44,stroke-width:4px
-    style CHK fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style IN fill:#262626,color:#fff,stroke:#262626,stroke-width:4px
+    style HF fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style DIG fill:#F5F5F5,color:#1a202c,stroke:#262626,stroke-width:4px
+    style CHK fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Encryption is two-way (you decrypt it), hashing is one-way (you can't), confusing the two is a common and dangerous mistake, you encrypt data you need to read back, you hash data you only need to verify
@@ -230,7 +230,7 @@ flowchart LR
     style ROOT fill:#2b6cb0,color:#fff,stroke:#1e4e8c,stroke-width:4px
     style INT fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
     style LEAF fill:#e2e8f0,color:#1a202c,stroke:#2b6cb0,stroke-width:4px
-    style BR fill:#fff3bf,color:#1a202c,stroke:#f08c00,stroke-width:4px
+    style BR fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - If any link in the chain is untrusted, expired, or revoked, the browser shows a certificate warning, this is the mechanism behind those "your connection is not private" pages
