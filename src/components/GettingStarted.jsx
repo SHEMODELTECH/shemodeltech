@@ -2,7 +2,8 @@
 // "Getting started" checklist at the top of a member's dashboard: five steps
 // that tick themselves off as she does each one, each with a "Show me" link to
 // the right page. It hides itself once every step is done, or when she taps
-// "Hide" (saved on her profile, so it stays hidden on every device).
+// "Hide" to fold it into a slim bar, and "Show" to open it again (saved on
+// her profile, so it stays the same on every device).
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, doc, getDocs, limit, query, updateDoc, where } from 'firebase/firestore';
@@ -25,12 +26,13 @@ const anyFound = async (queries) => {
 };
 
 const GettingStarted = ({ uid, profile }) => {
-  const [hidden, setHidden] = useState(!!profile?.gettingStartedHidden);
+  // Older versions saved gettingStartedHidden; treat that as collapsed.
+  const [collapsed, setCollapsed] = useState(!!(profile?.gettingStartedCollapsed ?? profile?.gettingStartedHidden));
   const [joined, setJoined] = useState(null);
   const [posted, setPosted] = useState(null);
 
   useEffect(() => {
-    if (!uid || hidden) return;
+    if (!uid) return;
     let dead = false;
     anyFound([
       query(collection(db, 'projects'), where('members', 'array-contains', uid), limit(1)),
@@ -43,9 +45,9 @@ const GettingStarted = ({ uid, profile }) => {
     return () => {
       dead = true;
     };
-  }, [uid, hidden]);
+  }, [uid]);
 
-  if (!uid || !profile || profile.isCompany || hidden) return null;
+  if (!uid || !profile || profile.isCompany) return null;
 
   const badges = Array.isArray(profile.badges) ? profile.badges.length : 0;
   const steps = [
@@ -86,17 +88,18 @@ const GettingStarted = ({ uid, profile }) => {
   if (doneCount === steps.length) return null;
   const next = steps.find((s) => !s.done);
 
-  const hide = async () => {
-    setHidden(true);
+  const toggle = async () => {
+    const next = !collapsed;
+    setCollapsed(next);
     try {
-      await updateDoc(doc(db, 'users', uid), { gettingStartedHidden: true });
+      await updateDoc(doc(db, 'users', uid), { gettingStartedCollapsed: next });
     } catch (_) {
-      /* hidden for this visit even if the save fails */
+      /* still toggles for this visit even if the save fails */
     }
   };
 
   return (
-    <section className="mb-6 bg-white border border-pink-200 rounded-xl p-5 sm:p-6" aria-labelledby="gs-h">
+    <section className={`mb-6 bg-white border border-pink-200 rounded-xl ${collapsed ? 'p-4' : 'p-5 sm:p-6'}`} aria-labelledby="gs-h">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h2 id="gs-h" className="text-lg font-bold text-gray-900">Getting started</h2>
@@ -104,8 +107,14 @@ const GettingStarted = ({ uid, profile }) => {
             {doneCount} of {steps.length} done. Your next step: <span className="font-semibold text-gray-900">{next.title.toLowerCase()}</span>.
           </p>
         </div>
-        <button onClick={hide} className="flex-shrink-0 text-xs font-semibold text-gray-500 hover:text-gray-900">
-          Hide
+        <button
+          onClick={toggle}
+          aria-expanded={!collapsed}
+          aria-controls="gs-body"
+          className="flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900"
+        >
+          {collapsed ? 'Show' : 'Hide'}
+          <svg className={`w-4 h-4 transition-transform ${collapsed ? '' : 'rotate-180'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
         </button>
       </div>
 
@@ -113,7 +122,8 @@ const GettingStarted = ({ uid, profile }) => {
         <div className="h-full bg-pink-600 rounded-full transition-all" style={{ width: `${(doneCount / steps.length) * 100}%` }} />
       </div>
 
-      <ol className="mt-4 divide-y divide-gray-100">
+      {!collapsed && (
+      <ol id="gs-body" className="mt-4 divide-y divide-gray-100">
         {steps.map((s, i) => (
           <li key={s.title} className="py-3 flex items-center gap-3">
             <span
@@ -148,6 +158,7 @@ const GettingStarted = ({ uid, profile }) => {
           </li>
         ))}
       </ol>
+      )}
     </section>
   );
 };
