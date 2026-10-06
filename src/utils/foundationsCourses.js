@@ -22,6 +22,7 @@ const TRACK_META = {
   TechGuard: { label: 'Network & Cybersecurity Foundations', intro: 'Protect real systems: networking, operating systems, ethical hacking, cryptography, access control, cloud security, monitoring, and DevOps security.' },
   TechPO:    { label: 'Product / Project Owner Foundations', intro: 'Own a product from idea to delivery: user research, product design, Agile, and project management.' },
   TechLeads: { label: 'Non-Technical Roles Foundations',     intro: 'Lead and support tech teams without writing code: leadership, strategy, technical writing, research, meetings, delivery, and presenting.' },
+  start:     { label: 'Start here',                         intro: 'New to She Model Tech? Learn how the platform works: projects, leading, badges, and getting seen.' },
   company:   { label: 'Understanding Badges',                intro: 'A short guide for companies: how members prove their skills here, so you can read profiles and hire with confidence.' },
 };
 

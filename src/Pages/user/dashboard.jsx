@@ -11,6 +11,7 @@ import CompanyVerificationBanner from '../../components/CompanyVerificationBanne
 import AIRecommendations from '../../components/AIRecommendations';
 import DiscoverTrack from '../../components/DiscoverTrack';
 import TierBadge from '../../components/TierBadge';
+import GettingStarted from '../../components/GettingStarted';
 import { PromotedStrip } from '../../components/PriorityBanners';
 import SummitCard from '../../components/SummitCard';
 import OrgMembershipsCard from '../../components/OrgMembershipsCard';
@@ -206,6 +207,9 @@ const DashboardOverview = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
+
+      {/* New members: five steps that tick off as she goes. */}
+      {!loading && currentUser && <GettingStarted uid={currentUser.uid} profile={profileData} />}
 
       {/* Organizations you run or belong to */}
 

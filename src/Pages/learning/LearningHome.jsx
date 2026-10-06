@@ -129,7 +129,7 @@ const LearningHome = ({ mine = false }) => {
   // Every course, tagged with its track: built-in courses in authored order,
   // then that track's published courses.
   const all = useMemo(() => {
-    const tracks = [...TRACK_ORDER, 'company'].filter(
+    const tracks = ['start', ...TRACK_ORDER, 'company'].filter(
       (t) => tracksWithCourses().includes(t) || published.some((p) => p.track === t)
     );
     return tracks.flatMap((t) => [
@@ -228,7 +228,7 @@ const LearningHome = ({ mine = false }) => {
               Learn the skills. Prove them on real projects.
             </h1>
             <p className="text-gray-600 text-lg mt-4 max-w-2xl">
-              {all.length} free, hands-on courses across six tech tracks, from your first program to AI
+              {all.filter((c) => !['company', 'start'].includes(c.track)).length} free, hands-on courses across six tech tracks, from your first program to AI
               engineering, product, security, and leadership.
             </p>
             <div className="mt-7 max-w-xl relative">
@@ -398,6 +398,7 @@ const LearningHome = ({ mine = false }) => {
                 className="h-10 min-w-[210px] rounded-lg border border-gray-300 bg-white px-3 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-500"
               >
                 <option value="all">All tracks</option>
+                {tracksWithCourses().includes('start') && <option value="start">Start here</option>}
                 {published.length > 0 && <option value="mentors">Mentor courses ({published.length})</option>}
                 {TRACK_ORDER.filter((t) => tracksWithCourses().includes(t)).map((t) => (
                   <option key={t} value={t}>{look(t).short}</option>
@@ -435,7 +436,7 @@ const LearningHome = ({ mine = false }) => {
             )}
           </div>
         ) : grouped ? (
-          [...TRACK_ORDER, 'company']
+          ['start', ...TRACK_ORDER, 'company']
             .filter((t) => filtered.some((c) => c.track === t))
             .map((t) => {
               const list = filtered.filter((c) => c.track === t);

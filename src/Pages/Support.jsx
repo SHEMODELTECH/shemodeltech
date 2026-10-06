@@ -91,7 +91,7 @@ const Support = () => {
     },
     {
       q: 'What does a project lead need to provide?',
-      a: 'As a project lead you are responsible for setting up and running the project, not just claiming it. You must provide a project submission link in the workspace Resources tab. A GitHub repository is recommended because it is free and gives the team a place to store code and track work, but you may use another platform of your choice. This submission link is required: it is how the team work is reviewed and how badges are verified on completion. As lead you also coordinate the team in the Discussion tab and mark the project complete when done. Leading earns a TechLeads (Leadership) badge.',
+      a: 'As a project lead you are responsible for setting up and running the project, not just claiming it. You must provide a project submission link in the workspace Resources tab. A GitHub repository is recommended because it is free and gives the team a place to store code and track work, but you may use another platform of your choice. This submission link is required: it is how the team work is reviewed and how badges are verified on completion. As lead you also coordinate the team in the Discussion tab and mark the project complete when done. Leading earns a TechPO (Product / Project Owner) badge.',
     },
     {
       q: 'What resources should a project lead set up?',

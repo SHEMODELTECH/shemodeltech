@@ -25,7 +25,7 @@ const OrgManager = ({ request, onCreated }) => {
   }, [request.organizationId]);
   useEffect(() => {
     if (!org) return;
-    const builtIn = tracksWithCourses().filter((t) => t !== 'company').flatMap((t) => coursesForTrack(t).map((c) => ({ track: t, slug: c.slug, title: c.title })));
+    const builtIn = tracksWithCourses().filter((t) => !['company', 'start'].includes(t)).flatMap((t) => coursesForTrack(t).map((c) => ({ track: t, slug: c.slug, title: c.title })));
     listPublished().then((l) => setCatalog([...builtIn, ...l.map(toCatalogCourse).map((c) => ({ track: c.track, slug: c.slug, title: c.title }))])).catch(() => setCatalog(builtIn));
     listTeacherCourses().then((l) => setHub(l.filter((c) => !c.published))).catch(() => {});
   }, [org]);

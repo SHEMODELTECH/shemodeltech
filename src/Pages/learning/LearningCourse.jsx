@@ -409,7 +409,7 @@ const LearningCourse = ({ reading = false }) => {
           </div>
 
           {/* Badge card */}
-          {track !== 'company' && (
+          {!['company', 'start'].includes(track) && (
             <aside className="bg-white rounded-2xl border border-gray-200 p-5">
               <div className="flex items-center gap-3">
                 {L.img && <img src={L.img} alt="" className="w-12 h-14 object-contain" />}

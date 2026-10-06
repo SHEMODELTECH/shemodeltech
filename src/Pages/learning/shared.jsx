@@ -34,6 +34,7 @@ export const TRACK_LOOK = {
   TechGuard: { img: TechGuardImg, accent: '#262626', tint: '#F5F5F5', short: 'Cybersecurity' },
   TechPO: { img: TechPOImg, accent: '#7E22CE', tint: '#FAF5FF', short: 'Product Owner' },
   TechLeads: { img: TechLeadsImg, accent: '#8C0D49', tint: '#FDF2F7', short: 'Non-Technical' },
+  start: { img: null, accent: '#D41470', tint: '#FDF2F7', short: 'Start here' },
   company: { img: null, accent: '#D41470', tint: '#FDF2F7', short: 'For companies' },
 };
 export const TRACK_ORDER = ['TechDev', 'TechArchs', 'TechQA', 'TechGuard', 'TechPO', 'TechLeads'];
@@ -573,7 +574,7 @@ export const useLearning = () => {
         }
       }
       toast.success(
-        (all && track !== 'company' ? `You finished every ${trackMeta(track).label} course.` : 'Course marked complete.') + certMsg
+        (all && !['company', 'start'].includes(track) ? `You finished every ${trackMeta(track).label} course.` : 'Course marked complete.') + certMsg
       );
     } catch (e) {
       console.error(e);
