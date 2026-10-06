@@ -46,9 +46,9 @@ const industryTracks = [
   { value: 'marketing', label: 'Marketing / Advertising' },
 ];
 
-const getIndustryLabel = (val) => industryTracks.find((t) => t.value === val)?.label || val;
+export const getIndustryLabel = (val) => industryTracks.find((t) => t.value === val)?.label || val;
 
-const formatTimeline = (t) =>
+export const formatTimeline = (t) =>
   ({
     '1-week': '1 Week',
     '2-weeks': '2 Weeks',

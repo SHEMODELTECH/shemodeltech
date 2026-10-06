@@ -63,6 +63,7 @@ const Support = lazy(() => import('./Pages/Support'));
 const TermsOfService = lazy(() => import('./Pages/TermsOfService'));
 const PrivacyPolicy = lazy(() => import('./Pages/PrivacyPolicy'));
 const ProjectsListing = lazy(() => import('./Pages/projects/ProjectsListing'));
+const PublicProjects = lazy(() => import('./Pages/projects/PublicProjects'));
 const ProjectDetail = lazy(() => import('./Pages/projects/ProjectDetail'));
 const ProjectSetup = lazy(() => import('./Pages/projects/ProjectSetup'));
 const GenerateProject = lazy(() => import('./Pages/admin/GenerateProject'));
@@ -153,6 +154,19 @@ const BasicProtectedRoute = ({ children, skipOnboardingCheck = false }) => {
 };
 
 // Wrap a page in AppShell (sidebar layout) + auth protection
+// Projects: visitors see a read-only board and sign in to open a project;
+// members get the full board inside the app.
+const ProjectsRoute = () => {
+  const { currentUser, loading } = useAuth();
+  if (loading) return null;
+  if (!currentUser) return <PublicProjects />;
+  return (
+    <SidebarRoute>
+      <ProjectsListing />
+    </SidebarRoute>
+  );
+};
+
 const SidebarRoute = ({ children }) => (
   <BasicProtectedRoute>
     <AppShell>{children}</AppShell>
@@ -330,11 +344,7 @@ function App() {
 
                 <Route
                   path="/projects"
-                  element={
-                    <SidebarRoute>
-                      <ProjectsListing />
-                    </SidebarRoute>
-                  }
+                  element={<ProjectsRoute />}
                 />
                 <Route
                   path="/projects/generate"

@@ -17,11 +17,45 @@ const KINDS = {
   team: { col: 'team_applications', title: (d) => `New team application: ${d.name || 'someone'}` },
 };
 
+const publicProjects = async (res) => {
+  try {
+    const snap = await admin.firestore().collection('projects')
+      .where('status', 'in', ['active', 'lead_recruitment', 'setup']).get();
+    const projects = snap.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .filter((p) => p.reviewStatus !== 'rejected' && p.isActive !== false && !p.isCompanyPost && !p.hidden)
+      .map((p) => ({
+        id: p.id,
+        projectTitle: p.projectTitle || p.title || 'Untitled project',
+        projectDescription: String(p.projectDescription || p.description || '').slice(0, 400),
+        status: p.status,
+        applicationsOpen: p.applicationsOpen !== false,
+        isPaid: !!p.isPaid,
+        isCohort: !!p.isCohort,
+        industryTrack: p.industryTrack || null,
+        timeline: p.timeline || null,
+        featured: !!p.featured,
+        teamRoles: (p.teamRoles || []).map((r) => ({ role: r.role, count: r.count || null, payAmount: r.payAmount || null })),
+        createdAt: p.createdAt?.toMillis ? p.createdAt.toMillis() : 0,
+      }))
+      .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || b.createdAt - a.createdAt);
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+    return res.status(200).json({ projects });
+  } catch (e) {
+    console.error('public projects failed:', e.message);
+    return res.status(500).json({ error: 'Could not load projects' });
+  }
+};
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', SITE);
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
+  // GET: the public project board for visitors who aren't signed in. Only
+  // what a project card shows (no member lists, emails, or links), cached
+  // for five minutes.
+  if (req.method === 'GET') return publicProjects(res);
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const kind = KINDS[req.body?.kind];
