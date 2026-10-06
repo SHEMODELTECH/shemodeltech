@@ -28,26 +28,26 @@ const About = () => {
         {/* The path: Ascend Achieve Advance */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            <span className="text-pink-600">Ascend</span>{' '}
-            <span className="text-amber-500">Achieve</span>{' '}
+            <span className="text-gray-900">Ascend</span>{' '}
+            <span className="text-pink-600">Achieve</span>{' '}
             <span className="text-gray-900">Advance</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <div className="w-9 h-9 rounded-lg bg-pink-50 border border-pink-100 flex items-center justify-center mb-3">
-                <span className="text-pink-600 font-extrabold">1</span>
+              <div className="w-9 h-9 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center mb-3">
+                <span className="text-gray-900 font-extrabold">1</span>
               </div>
-              <h3 className="text-pink-600 font-bold text-lg mb-2">Ascend</h3>
+              <h3 className="text-gray-900 font-bold text-lg mb-2">Ascend</h3>
               <p className="text-gray-500 text-sm">
                 Find your path. Try real roles on real projects and see where your strengths
                 actually are.
               </p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <div className="w-9 h-9 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center mb-3">
-                <span className="text-gray-900 font-extrabold">2</span>
+              <div className="w-9 h-9 rounded-lg bg-pink-50 border border-pink-100 flex items-center justify-center mb-3">
+                <span className="text-pink-600 font-extrabold">2</span>
               </div>
-              <h3 className="text-gray-900 font-bold text-lg mb-2">Achieve</h3>
+              <h3 className="text-pink-600 font-bold text-lg mb-2">Achieve</h3>
               <p className="text-gray-500 text-sm">
                 Build the proof. Complete projects with your team and earn verified badges at every
                 level.
