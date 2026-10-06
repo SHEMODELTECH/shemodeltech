@@ -5,7 +5,7 @@
 // delete/role management.
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, orderBy, limit, where, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -39,6 +39,7 @@ import ComingSoonProjects from '../../components/admin/ComingSoonProjects';
 import HeardFromSummary from '../../components/admin/HeardFromSummary';
 import AnnouncementsAdmin from '../../components/admin/AnnouncementsAdmin';
 import FeedbackSummary from '../../components/admin/FeedbackSummary';
+import { ADMIN_SECTIONS } from '../../config/adminSections';
 
 const fmtDate = (ts) => {
   try {
@@ -62,6 +63,9 @@ const statusStyle = {
 const MIN_DECLINE_WORDS = 10;
 const countWords = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
 
+const ADMIN_ONLY_TABS = ADMIN_SECTIONS.filter((x) => x[2] === 'admin').map((x) => x[0]);
+const REVIEWER_TABS = ADMIN_SECTIONS.filter((x) => x[2] === 'reviewer').map((x) => x[0]);
+
 const AdminPanel = ({ only = null }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -69,18 +73,16 @@ const AdminPanel = ({ only = null }) => {
   const [isAdmin, setIsAdmin] = useState(false); // full powers: delete, roles
   const [isReviewer, setIsReviewer] = useState(false); // admin OR editor: review surfaces
   const [myRole, setMyRole] = useState(null); // shown in the header badge
-  const [tab, setTab] = useState(only || 'overview');
+  // The section comes from the address (/admin?tab=users), so the sidebar's
+  // Admin menu can open each section directly.
+  const [searchParams] = useSearchParams();
+  const rawTab = only || searchParams.get('tab') || 'overview';
+  const tab = (!checking && !only && (
+    (ADMIN_ONLY_TABS.includes(rawTab) && !isAdmin) || (REVIEWER_TABS.includes(rawTab) && !isReviewer)
+  )) ? 'overview' : rawTab;
+  const setTab = (t) => navigate(t === 'overview' ? '/admin' : `/admin?tab=${t}`);
   const [sizeApprove, setSizeApprove] = useState({}); // how many more people to approve, per project
   const [sizeNote, setSizeNote] = useState({}); // staff's reason, per project (required to decline)
-  // Moving between the dashboard and Manage projects reuses this page, so
-  // follow the address: show the right section without a reload.
-  useEffect(() => {
-    setTab(only || 'overview');
-  }, [only]);
-  // Editors can't open admin-only tabs (deleting is admin-only).
-  useEffect(() => {
-    if (!isAdmin && ['danger', 'deletions'].includes(tab)) setTab('overview');
-  }, [isAdmin, tab]);
 
   const [stats, setStats] = useState({
     users: 0,
@@ -693,15 +695,6 @@ const AdminPanel = ({ only = null }) => {
     );
   });
 
-  const tabs = [
-    ['overview', 'Overview'],
-    ['users', 'Users'],
-    ...(isReviewer ? [['teachers', 'Mentors'], ['summit', 'Summit']] : []),
-    ...(isAdmin ? [['sponsors', 'Sponsors'], ['launch', 'Settings']] : []),
-    ['moderation', 'Moderation'],
-    // Deleting anything is admin-only: editors never see these.
-    ...(isAdmin ? [['deletions', 'Deletion Requests'], ['danger', 'Danger Zone']] : []),
-  ];
 
   const StatCard = ({ label, value, sub }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-4">
@@ -714,7 +707,7 @@ const AdminPanel = ({ only = null }) => {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 flex items-center gap-3">
-        {only === 'reviews' ? 'Project reviews' : only === 'projects' ? 'Projects' : isAdmin ? 'Admin Dashboard' : 'Editor Dashboard'}
+        {only === 'reviews' ? 'Project reviews' : only === 'projects' ? 'Projects' : (ADMIN_SECTIONS.find(([k]) => k === tab)?.[1] || (isAdmin ? 'Admin Dashboard' : 'Editor Dashboard'))}
         {myRole && (
           <span
             className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide ${
@@ -730,22 +723,9 @@ const AdminPanel = ({ only = null }) => {
           ? 'Projects submitted by their leads for She Model Tech review.'
           : only === 'projects'
           ? 'Projects to review, extra-time requests, and every active project (view or delete).'
-          : 'Important decisions and company requests. Projects, cohorts, and reviews are in the Projects menu.'}
+          : tab === 'overview' ? 'Important decisions and company requests. Projects, cohorts, and reviews are in the Projects menu.' : `${isAdmin ? 'Admin' : 'Editor'} · choose another section from the ${isAdmin ? 'Admin' : 'Editor'} menu.`}
       </p>
 
-      {/* Tabs */}
-      {/* One straight line of tabs; on narrow screens it scrolls sideways instead of wrapping. */}
-      {!only && <div className="flex flex-nowrap gap-1 mb-6 border-b border-gray-200 overflow-x-auto whitespace-nowrap">
-        {tabs.map(([key, label]) => (
-          <button
-            key={key}
-            onClick={() => setTab(key)}
-            className={`shrink-0 px-3 py-2 text-sm font-semibold border-b-2 -mb-px transition-all ${tab === key ? 'border-pink-600 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>}
 
       {loadingData && <div className="py-10 text-center text-gray-400 text-sm">Loading…</div>}
 
@@ -970,8 +950,8 @@ const AdminPanel = ({ only = null }) => {
       {!loadingData && tab === 'overview' && (
         <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
       )}
-      {!loadingData && tab === 'overview' && isAdmin && <AnnouncementsAdmin />}
-      {!loadingData && tab === 'overview' && isAdmin && <FeedbackSummary />}
+      {!loadingData && tab === 'announcements' && isAdmin && <AnnouncementsAdmin />}
+      {!loadingData && tab === 'feedback' && isAdmin && <FeedbackSummary />}
       {!loadingData && tab === 'overview' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <StatCard label="Total Users" value={stats.users} />

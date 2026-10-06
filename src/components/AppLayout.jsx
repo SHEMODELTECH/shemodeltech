@@ -7,6 +7,7 @@ import { db } from '../firebase/config';
 import { useFeatures } from '../utils/features';
 import { isBlockedForCompany } from '../utils/companyPaths';
 import AgeCheck from './AgeCheck';
+import { ADMIN_SECTIONS } from '../config/adminSections';
 
 const AppLayout = ({ children }) => {
   const { currentUser } = useAuth();
@@ -156,7 +157,15 @@ const AppLayout = ({ children }) => {
     ] : []),
     { path: '/settings', label: 'Settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
     ...(userRole === 'admin' || userRole === 'editor' ? [
-      { path: '/admin', label: userRole === 'editor' ? 'Editor' : 'Admin', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+      {
+        label: userRole === 'editor' ? 'Editor' : 'Admin',
+        isGroup: true,
+        group: 'admin',
+        icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+        children: ADMIN_SECTIONS
+          .filter(([, , who]) => who === 'all' || who === 'reviewer' || userRole === 'admin')
+          .map(([key, label]) => ({ path: key === 'overview' ? '/admin' : `/admin?tab=${key}`, label })),
+      },
     ] : []),
   ];
 
@@ -182,6 +191,10 @@ const AppLayout = ({ children }) => {
       ];
 
   const isActive = (path) => {
+    if (path.startsWith('/admin?tab=') || path === '/admin') {
+      const current = location.pathname === '/admin' ? (new URLSearchParams(location.search).get('tab') || 'overview') : null;
+      return current === (path === '/admin' ? 'overview' : path.split('tab=')[1]);
+    }
     if (path === '/proof-wall') return location.pathname === '/proof-wall';
     if (path === '/dashboard') return location.pathname === '/dashboard';
     // The staff project tools under /admin/... belong to the Projects menu.
@@ -197,10 +210,12 @@ const AppLayout = ({ children }) => {
 
   // Keep the Projects group open whenever the user is on one of its pages.
   const projectPaths = ['/projects', '/my-workspaces', '/project-vault', '/disputes', '/admin/cohorts', '/admin/lead-applications', '/admin/reviews', '/admin/projects'];
+  const [adminOpen, setAdminOpen] = useState(false);
   useEffect(() => {
     if (projectPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))) {
       setProjectsOpen(true);
     }
+    if (location.pathname === '/admin') setAdminOpen(true);
   }, [location.pathname]);
 
   const hideSidebar = location.pathname === '/community' || location.pathname.startsWith('/community/');
@@ -235,19 +250,21 @@ const AppLayout = ({ children }) => {
             // Expandable group (e.g. Projects with sub-items)
             if (item.isGroup) {
               const anyChildActive = item.children.some(c => isActive(c.path));
+              const isOpen = item.group === 'admin' ? adminOpen : projectsOpen;
+              const toggle = item.group === 'admin' ? setAdminOpen : setProjectsOpen;
               return (
                 <div key={item.label}>
                   <button
-                    onClick={() => setProjectsOpen(o => !o)}
+                    onClick={() => toggle(o => !o)}
                     className={`group w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all ${
                       anyChildActive ? 'text-pink-700 bg-pink-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   >
                     <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={item.icon} /></svg>
                     <span className="flex-1 text-left">{item.label}</span>
-                    <svg className={`w-4 h-4 transition-transform ${projectsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    <svg className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                   </button>
-                  <div className={`overflow-hidden transition-all duration-200 ${projectsOpen ? 'max-h-96 mt-2' : 'max-h-0'}`}>
+                  <div className={`overflow-hidden transition-all duration-200 ${isOpen ? 'max-h-[40rem] mt-2' : 'max-h-0'}`}>
                     <div className="ml-5 pl-3 border-l-2 border-gray-100 space-y-2 py-1">
                       {item.children.map(child => child.locked ? (
                         <div
