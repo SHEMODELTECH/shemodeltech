@@ -228,7 +228,7 @@ const CompanyCohortDetail = () => {
           <p className="text-gray-900 text-sm font-bold mb-1">Badge required to apply</p>
           <p className="text-gray-600 text-xs leading-relaxed mb-2">
             Paid company projects are open to members who have earned <strong>at least one
-            badge</strong> on a She Model Tech project. Completing one first builds your skills,
+            badge</strong> on She Model Tech. Completing one first builds your skills,
             gets you working with a real team, and shows you how projects run on the platform,
             so you&rsquo;re ready for paid work. You can see the roles and pay below; you&rsquo;ll
             be able to apply once you have a badge.

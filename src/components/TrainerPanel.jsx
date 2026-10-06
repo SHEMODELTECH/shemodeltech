@@ -39,7 +39,7 @@ const TrainerPanel = ({ uid, name }) => {
       <p>Organizations pay She Model Tech to train their learners or staff. Selected mentors deliver the training and are paid a fair fee.</p>
       {profile.isTrainer ? (
         <>
-          <p className="font-semibold text-pink-800">You’re a She Model Tech trainer.</p>
+          <p className="font-semibold text-pink-800">You’re a trainer with She Model Tech.</p>
           {assignments.length === 0 ? (
             <p className="text-gray-600">No training assignments yet. We’ll notify you when you’re assigned.</p>
           ) : (

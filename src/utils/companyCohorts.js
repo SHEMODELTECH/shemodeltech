@@ -124,7 +124,7 @@ export const canApplyToCompanyCohort = async (uid, viewer = null) => {
     if (snap.empty) {
       return {
         allowed: false,
-        reason: 'Earn one badge on a She Model Tech project to unlock paid company projects.',
+        reason: 'Earn one badge on She Model Tech to unlock paid company projects.',
       };
     }
     return { allowed: true, badgeCount: snap.size };
@@ -240,7 +240,7 @@ export const applyToCompanyCohort = async ({ cohortId, applicant, roleTitle, cov
     if (['admin', 'editor'].includes(host.role)) {
       alertStaff({
         type: 'paid_application',
-        title: 'New application for a She Model Tech paid project',
+        title: 'New application for a paid project on She Model Tech',
         body: `${applicant.displayName || applicant.email} applied for ${roleTitle} on "${c.title || 'a paid project'}".`,
         link: `/paid-projects/${cohortId}`,
         roles: ['admin', 'editor'],

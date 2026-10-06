@@ -501,7 +501,7 @@ const ProjectsListing = () => {
                         </span>
                       ) : (project.isCompanyProject || project.isCompanyPost) && hasBadge === false ? (
                         <span
-                          title="Earn one badge on a She Model Tech project to apply"
+                          title="Earn one badge on She Model Tech to apply"
                           className="px-3 py-1.5 bg-white border border-pink-300 text-pink-700 rounded-lg text-sm font-semibold"
                         >
                           Badge required

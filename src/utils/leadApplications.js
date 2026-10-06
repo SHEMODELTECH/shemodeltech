@@ -289,7 +289,7 @@ export const rejectAsLeadInviteAsContributor = async ({
     decidedAt: serverTimestamp(),
   });
 
-  let projectTitle = 'a She Model Tech project';
+  let projectTitle = 'a project on She Model Tech';
   if (suggestedProjectId) {
     try {
       const ps = await getDoc(doc(db, 'projects', suggestedProjectId));

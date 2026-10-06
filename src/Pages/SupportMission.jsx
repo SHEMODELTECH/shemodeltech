@@ -32,7 +32,7 @@ const SupportMission = () => {
               Fund a cohort
             </a>
           ) : (
-            <a href={`mailto:${TEAM_EMAIL}?subject=${encodeURIComponent('Funding a She Model Tech cohort')}`} className="bg-pink-600 hover:bg-pink-700 text-white font-bold px-6 py-3 rounded-xl">
+            <a href={`mailto:${TEAM_EMAIL}?subject=${encodeURIComponent('Funding a cohort at She Model Tech')}`} className="bg-pink-600 hover:bg-pink-700 text-white font-bold px-6 py-3 rounded-xl">
               Contact us to fund a cohort
             </a>
           )}

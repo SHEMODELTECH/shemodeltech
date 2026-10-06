@@ -292,7 +292,7 @@ const UserProfile = () => {
               {/* Companies show a badge only with Premium: the gold Verified Partner badge. */}
               {isVerifiedPartner(profile) && <PremiumBadge kind="partner" size="md" />}
               {Object.keys(profile.summitAttendance || {}).length > 0 && (
-                <span className="inline-flex items-center text-xs font-bold text-pink-800 bg-pink-50 border border-pink-200 px-2.5 py-1 rounded-full" title="Attended a She Model Tech Summit">Summit Attendee</span>
+                <span className="inline-flex items-center text-xs font-bold text-pink-800 bg-pink-50 border border-pink-200 px-2.5 py-1 rounded-full" title="Attended She Model Tech Summit">Summit Attendee</span>
               )}
               {profile.isCompany && (
                 <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-pink-100 text-pink-700 rounded-full">

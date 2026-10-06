@@ -14,7 +14,7 @@ const SponsorsStrip = ({ className = '' }) => {
   return (
     <section className={`rounded-2xl border border-pink-100 bg-white p-6 text-center ${className}`} aria-label="Our sponsors">
       <p className="text-sm font-bold uppercase tracking-widest text-pink-700">Thank you to our sponsors</p>
-      <p className="text-sm text-gray-600 mt-1">These companies funded a She Model Tech cohort.</p>
+      <p className="text-sm text-gray-600 mt-1">These companies funded cohorts on She Model Tech.</p>
       <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 list-none p-0">
         {items.map((s) => (
           <li key={s.id}>

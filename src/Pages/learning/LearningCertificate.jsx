@@ -38,7 +38,7 @@ const LearningCertificate = () => {
       <LearningLayout>
         <div className="max-w-lg mx-auto text-center py-24 px-4">
           <h1 className="text-xl font-bold text-gray-900">Certificate not found</h1>
-          <p className="text-gray-600 mt-2">This link doesn't match a She Model Tech certificate. Check the link and try again.</p>
+          <p className="text-gray-600 mt-2">This link doesn't match any certificate from She Model Tech. Check the link and try again.</p>
           <Link to="/learning" className="inline-block mt-5 text-pink-700 font-semibold hover:underline">Go to Learning</Link>
         </div>
       </LearningLayout>

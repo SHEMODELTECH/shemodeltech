@@ -18,6 +18,6 @@ export const TEAM_BENEFITS = [
   ['A reference letter', 'After six months of active work, ask for a letter describing what you did and achieved.'],
   ['Flexible hours', 'About 2 to 3 hours a week, around your studies or job. Roles last six months, and you can renew.'],
   ['Grow your skills', 'Work with a supportive team, and get free access to every She Model Tech course and project.'],
-  ['Your network', 'Meet women in tech, mentors, and partner companies, including at the She Model Tech Summit.'],
+  ['Your network', 'Meet women in tech, mentors, and partner companies, including at She Model Tech Summit.'],
   ['Make an impact', 'Help women everywhere learn, build, and lead in technology.'],
 ];

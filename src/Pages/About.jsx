@@ -80,8 +80,8 @@ const About = () => {
           {/* The four parts of the mission, and where they live on the platform */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
             {[
-              ['Mentorship', 'Experienced mentors create courses and guide learners through the Mentor Hub.', 'bg-pink-50 text-pink-700 border-pink-100'],
-              ['IT skills training', 'Free, hands-on courses in She Model Tech Learning, with certificates of completion.', 'bg-pink-50 text-pink-700 border-pink-100'],
+              ['Mentorship', 'Experienced mentors create courses in the Mentor Hub.', 'bg-pink-50 text-pink-700 border-pink-100'],
+              ['IT skills training', 'Hands-on, real-world projects built in teams, plus free courses in She Model Tech Learning with certificates of completion.', 'bg-pink-50 text-pink-700 border-pink-100'],
               ['Leadership development', 'Lead a real project team, from planning to delivery, and earn a leadership badge.', 'bg-amber-50 text-amber-700 border-amber-100'],
               ['Networking', 'Build connections on the Proof Wall and Talent Board, and through real teamwork.', 'bg-green-50 text-green-700 border-green-100'],
             ].map(([t, d, c]) => (

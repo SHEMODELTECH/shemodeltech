@@ -43,7 +43,7 @@ Only test software you own or have written permission to test. The performance a
 
 ## After the track
 
-Courses build the skill; a badge proves it. When you've worked through the modules, join a She Model Tech project as a tester. Your test cases, bug reports, and automated checks become the work that earns your Quality Tester badge.
+Courses build the skill; a badge proves it. When you've worked through the modules, join a project on She Model Tech as a tester. Your test cases, bug reports, and automated checks become the work that earns your Quality Tester badge.
 
 ### What You Learned
 - ✅ What QA is for, and how the eight modules build on each other

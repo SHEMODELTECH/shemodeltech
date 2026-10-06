@@ -59,7 +59,7 @@ const CompanyCohortList = () => {
             proof you shipped something on a real team. Have a look around here in the meantime.
           </p>
           <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">
-            Join a She Model Tech project
+            Join a project on She Model Tech
           </Link>
         </div>
       )}

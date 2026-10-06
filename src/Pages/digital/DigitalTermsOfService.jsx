@@ -154,7 +154,7 @@ const TermsOfService = () => {
 
             <Subsection title="What the Consultation Fee Covers">
               <ul>
-                <li>A dedicated discovery session with a She Model Tech solutions specialist</li>
+                <li>A dedicated discovery session with a solutions specialist from She Model Tech</li>
                 <li>In-depth review and analysis of your current digital infrastructure</li>
                 <li>Initial scoping of the intelligent system or application you wish to build or transform</li>
                 <li>Preliminary recommendations on technology approach, architecture, and AI integration</li>

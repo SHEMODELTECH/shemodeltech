@@ -65,7 +65,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ['Payments in progress', c.payments, 'Paid projects waiting on payments or confirmations', { to: '/disputes' }],
     ['Extra time requests', c.extension, 'Leads asking for more time', { to: '/admin/projects' }],
     ['More people requests', c.sizeReqs, 'Leads asking to add people to a paid project', { to: '/admin/projects' }],
-    ...(isAdmin ? [['Team applications', c.teamApps, 'People applying to join the She Model Tech team', { to: '/admin?tab=team' }]] : []),
+    ...(isAdmin ? [['Team applications', c.teamApps, 'People applying to join She Model Tech team', { to: '/admin?tab=team' }]] : []),
     ['Mentor courses', c.capstone, 'Courses to approve, or deletion requests', { tab: 'teachers' }],
     ['Mentor letters', c.letters, 'Recommendation and volunteer letters', { tab: 'teachers' }],
     ...(isAdmin ? [['Mentor applications', c.mentorApps, 'People applying to mentor', { tab: 'teachers' }]] : []),

@@ -170,7 +170,7 @@ const OrgRequestsTab = ({ isAdmin }) => {
       await updateDoc(doc(db, 'users', u.uid), approve ? { isTrainer: true, trainerRequested: false } : { trainerRequested: false });
       notifyMember(u.uid, {
         type: 'trainer_decision',
-        title: approve ? 'You’re now a She Model Tech trainer' : 'Update on your trainer request',
+        title: approve ? 'You’re now a trainer with She Model Tech' : 'Update on your trainer request',
         body: approve ? 'You can now be assigned to training contracts. Your assignments appear in the Mentor Hub.' : 'Thank you for offering. We’re not adding trainers right now, but you can ask again later.',
         link: '/teacher',
       });

@@ -83,7 +83,7 @@ const Support = () => {
     },
     {
       q: 'How do projects work?',
-      a: "Every project comes from a She Model Tech cohort. Members apply for a role or apply to lead, and teams work together in the project workspace. There are two types: FREE projects, where you earn a badge in the track you choose when the project is completed and reviewed; and PAID projects, run and paid for by She Model Tech, open to members 18 and older, where you are paid instead of earning a badge.",
+      a: "Every project comes from a cohort on She Model Tech. Members apply for a role or apply to lead, and teams work together in the project workspace. There are two types: FREE projects, where you earn a badge in the track you choose when the project is completed and reviewed; and PAID projects, run and paid for by She Model Tech, open to members 18 and older, where you are paid instead of earning a badge.",
     },
     {
       q: 'Does She Model Tech have paid projects?',

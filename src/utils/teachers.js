@@ -68,7 +68,7 @@ export const setTeacher = async (userId, value, admin) => {
     teacherAssignedBy: value ? admin.email || '' : null,
   });
   if (value) {
-    await notify(userId, 'You are now a She Model Tech mentor', 'Open the Mentor Hub in Learning to create and share courses.', '/teacher');
+    await notify(userId, 'You are now a mentor at She Model Tech', 'Open the Mentor Hub in Learning to create and share courses.', '/teacher');
   }
 };
 

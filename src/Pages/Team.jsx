@@ -112,7 +112,7 @@ const Team = () => {
 
         {/* Benefits */}
         <section className="mt-14" aria-labelledby="benefits-h">
-          <h2 id="benefits-h" className="text-2xl font-bold text-gray-900 mb-5">Why join the team</h2>
+          <h2 id="benefits-h" className="text-2xl font-bold text-gray-900 mb-5">Why join She Model Tech team</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {TEAM_BENEFITS.map(([t, d]) => (
               <div key={t} className="rounded-xl border border-gray-200 p-5">
@@ -153,7 +153,7 @@ const Team = () => {
           <button type="button" onClick={() => setApplyOpen((o) => !o)} aria-expanded={applyOpen || done} aria-controls="apply-body"
             className="w-full flex items-center justify-between gap-4 text-left border-y border-gray-200 py-4">
             <span>
-              <span id="apply-h" className="block text-2xl font-bold text-gray-900">Apply to join the team</span>
+              <span id="apply-h" className="block text-2xl font-bold text-gray-900">Apply to join She Model Tech team</span>
               <span className="block text-gray-600 text-sm mt-1">It takes about 5 minutes. We reply to every application by email.</span>
             </span>
             <svg className={`w-6 h-6 flex-shrink-0 text-gray-400 transition-transform ${applyOpen || done ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>

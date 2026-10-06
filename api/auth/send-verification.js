@@ -86,7 +86,7 @@ module.exports = async function handler(req, res) {
  <a href="${verifyUrl}" style="color:#D41470">${verifyUrl}</a>
  </p>
  <p style="font-size:13px;line-height:1.6;color:#737373;margin:0">
- If you didn't create an She Model Tech account, you can safely ignore this email.
+ If you didn't create an account on She Model Tech, you can safely ignore this email.
  </p>
  </div>
  <p style="text-align:center;font-size:12px;color:#A3A3A3;margin:20px 0">

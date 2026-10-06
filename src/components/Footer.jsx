@@ -1,6 +1,6 @@
 // src/components/Footer.jsx
 // The one site footer, used on every public page so it stays consistent:
-// logo · Team · Support Us · Terms · Privacy · social links.
+// logo · Team · Support Us · Terms · Privacy · Support · social links.
 import React from 'react';
 import { Link } from 'react-router-dom';
 import SocialLinks from './SocialLinks';
@@ -10,6 +10,7 @@ export const FOOTER_LINKS = [
   ['/support-our-mission', 'Support Us'],
   ['/terms', 'Terms'],
   ['/privacy', 'Privacy'],
+  ['/support', 'Support'],
 ];
 
 const Footer = ({ dark = false }) => (
@@ -26,7 +27,7 @@ const Footer = ({ dark = false }) => (
       <div className="flex flex-col items-center sm:items-end gap-2">
         <SocialLinks />
         <p className={`text-xs ${dark ? 'text-gray-500' : 'text-gray-400'} text-center sm:text-right`}>
-          © {new Date().getFullYear()} SHE MODEL TECH Inc., a 501(c)(3) nonprofit.
+          © {new Date().getFullYear()} SHE MODEL TECH Inc.
         </p>
       </div>
     </div>

@@ -491,7 +491,7 @@ const DashboardOverview = () => {
                 }).length === 0 && (
                   <div className="rounded-lg border border-dashed border-gray-200 p-4 text-center">
                     <p className="text-sm font-semibold text-gray-800">No badges yet</p>
-                    <p className="text-xs text-gray-500 mt-1">Complete a She Model Tech project to earn your first badge.</p>
+                    <p className="text-xs text-gray-500 mt-1">Complete a project on She Model Tech to earn your first badge.</p>
                     <Link to="/projects" className="inline-block mt-3 text-xs font-semibold text-pink-700 hover:underline">Find a project</Link>
                   </div>
                 )}

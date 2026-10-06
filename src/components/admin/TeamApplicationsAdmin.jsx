@@ -48,8 +48,8 @@ const TeamApplicationsAdmin = () => {
       setRows((xs) => xs.map((x) => (x.id === a.id ? { ...x, ...data } : x)));
       const first = (a.name || '').split(' ')[0] || 'there';
       const r = await sendEmailNow(a.email, status === 'approved'
-        ? { title: 'Welcome to the She Model Tech team!', body: `Hi ${first}, thank you for applying to be our ${roleTitle(a.role)}. We’d love to have you on the team, and we’ll be in touch shortly with next steps.${note ? ` Note from She Model Tech: ${note}` : ''}`, link: '/team', ctaLabel: 'Visit our team page' }
-        : { title: 'Your She Model Tech team application', body: `Hi ${first}, thank you for applying to be our ${roleTitle(a.role)}. We’re not able to offer you a place on the team right now. ${note} We’d love for you to stay involved as a member.`, link: '/projects', ctaLabel: 'Explore projects' });
+        ? { title: 'Welcome to She Model Tech team!', body: `Hi ${first}, thank you for applying to be our ${roleTitle(a.role)}. We’d love to have you on She Model Tech team, and we’ll be in touch shortly with next steps.${note ? ` Note from She Model Tech: ${note}` : ''}`, link: '/team', ctaLabel: 'Visit our team page' }
+        : { title: 'Your She Model Tech team application', body: `Hi ${first}, thank you for applying to be our ${roleTitle(a.role)}. We’re not able to offer you a place on She Model Tech team right now. ${note} We’d love for you to stay involved as a member.`, link: '/projects', ctaLabel: 'Explore projects' });
       toast.success(`${status === 'approved' ? 'Approved' : 'Declined'}.${r.ok ? ` ${a.name} was emailed.` : ' The email could not be sent; please contact them directly.'}`);
     } catch (e) {
       toast.error('Could not save the decision.');

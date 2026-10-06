@@ -24,7 +24,7 @@ const Badges = () => (
   <div className="max-w-4xl mx-auto">
     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">How badges work</h1>
     <p className="text-gray-600 mt-2 max-w-[65ch]">
-      Badges are verified proof of real work. You earn one each time you complete a She Model Tech project, in the track
+      Badges are verified proof of real work. You earn one each time you complete a project on She Model Tech, in the track
       that matches your role on the team. They’re never bought, and never given for courses alone.
     </p>
 

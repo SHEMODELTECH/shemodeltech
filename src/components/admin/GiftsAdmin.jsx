@@ -42,7 +42,7 @@ const GiftsAdmin = () => {
       <h2 className="text-lg font-bold text-gray-900">Gifts</h2>
       <p className="text-sm text-gray-500 mb-4">
         Record gifts received outside the donation tool (bank transfer or cheque). The donor is emailed a tax
-        acknowledgment letter with our EIN. They don’t need a She Model Tech account. Required for gifts of $250 or more.
+        acknowledgment letter with our EIN. They don’t need an account on She Model Tech. Required for gifts of $250 or more.
       </p>
       <div className="grid sm:grid-cols-2 gap-3">
         <label className="text-xs font-semibold text-gray-700">Donor name

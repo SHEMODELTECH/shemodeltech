@@ -80,7 +80,7 @@ const Login = () => {
             if (m?.google && !m?.password) {
               setError('This email is already registered with Sign in with Google. Click "Sign in with Google" above to continue. (Once signed in, you can add a password in Settings > Account.)');
             } else {
-              setInfo('You already have a She Model Tech account with this email. Sign in with your email and password, or use "Forgot password" if you don\'t remember it.');
+              setInfo('You already have an account on She Model Tech with this email. Sign in with your email and password, or use "Forgot password" if you don\'t remember it.');
             }
             return;
           }

@@ -84,7 +84,7 @@ const TeachApply = () => {
     <LearningLayout>
       <section className="lr-hero" style={{ background: 'linear-gradient(180deg,#FDF2F7 0%,#fff 100%)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <p className="text-sm font-semibold text-pink-700 mb-3">Become a She Model Tech mentor</p>
+          <p className="text-sm font-semibold text-pink-700 mb-3">Become a mentor at She Model Tech</p>
           <h1 className="fd-display text-4xl sm:text-5xl text-gray-900 max-w-3xl">Share what you know. Help others build real skills.</h1>
           <p className="text-gray-600 text-lg mt-4 max-w-2xl">
             Mentors create lessons, video courses, and guides for our tracks, and help others grow. Approved mentors get
@@ -260,7 +260,7 @@ const MENTOR_FAQ = [
   ],
   [
     'How are applications reviewed?',
-    'A She Model Tech admin reviews every application. You\'ll get a notification and an email with the decision. If it isn\'t approved, you\'ll see any note from the team and can apply again.',
+    'She Model Tech reviews every application. You\'ll get a notification and an email with the decision. If it isn\'t approved, you\'ll see any note from the team and can apply again.',
   ],
   [
     'How do I publish a course for learners?',

@@ -521,7 +521,7 @@ const LearningHome = ({ mine = false }) => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-5">
               {[
                 ['Learn', 'Take any course, free, at your own pace.'],
-                ['Build with a team', 'Join a She Model Tech project in your track and deliver real work.'],
+                ['Build with a team', 'Join a project in your track and deliver real work.'],
                 ['Earn the badge', 'Your work is reviewed and the badge goes on your profile.'],
                 ['Get seen', 'Your badges and projects show on your profile and the Talent Board, where companies hiring in tech can find you.'],
               ].map(([t, d], i) => (
