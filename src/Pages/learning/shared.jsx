@@ -399,7 +399,7 @@ export const CourseReferences = ({ refs, compact = false, inline = false }) => {
 // Self-contained HTML courses bring their own navigation, labs, and quizzes, so
 // they run full-width in a frame under a slim bar with the course controls.
 export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, onOpen, onCertificate }) => (
-  <div className="flex flex-col" style={{ height: 'calc(100vh - 4rem)' }}>
+  <div className="flex flex-col h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
     <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2.5 border-b border-gray-200 bg-white">
       <button onClick={onBack} className="fd-back">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -9,7 +9,6 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { FD_CSS } from './shared';
-import SocialLinks from '../../components/SocialLinks';
 import Footer from '../../components/Footer';
 
 // Remember where to come back to after signing in (read by afterAuthPath).
@@ -55,102 +54,84 @@ const LearningLayout = ({ children, accent, bare = false }) => {
 
   useEffect(() => setMenuOpen(false), [location.pathname, location.search]);
 
+  // Same look and positions as the main She Model Tech menu (Navbar.jsx):
+  // logo on the left, links centred, one button on the right.
   const linkCls = ({ isActive }) =>
-    `text-sm font-semibold px-3 py-2 rounded-lg transition-colors ${
-      isActive ? 'text-pink-700 bg-pink-50' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+    `px-2.5 lg:px-3 xl:px-4 py-2 text-sm xl:text-base font-semibold transition-colors border-b-2 ${
+      isActive ? 'text-pink-600 border-pink-600' : 'text-gray-700 border-transparent hover:text-pink-600'
     }`;
+  const mobileCls = ({ isActive }) =>
+    `block w-full text-left px-4 py-3 text-base font-semibold transition-colors min-h-[44px] ${
+      isActive ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
+    }`;
+
+  const items = [
+    ...(currentUser ? [] : [{ to: '/projects', label: 'Projects' }]),
+    ...(currentUser ? [{ to: '/learning/my', label: 'My learning' }] : []),
+    canTeach ? { to: '/teacher', label: 'Mentor Hub' } : { to: '/teach', label: 'Become a mentor' },
+  ];
+
+  const rightButton = currentUser ? (
+    <Link to="/dashboard" className="bg-pink-600 hover:bg-pink-700 text-white text-sm xl:text-base font-semibold px-4 py-2 rounded-lg whitespace-nowrap">
+      Back to She Model Tech
+    </Link>
+  ) : (
+    <button
+      onClick={() => signInAndReturn(navigate, location.pathname + location.search)}
+      className="bg-pink-600 hover:bg-pink-700 text-white text-sm xl:text-base font-semibold px-4 py-2 rounded-lg whitespace-nowrap"
+    >
+      Sign in
+    </button>
+  );
 
   return (
     <div className="fd-root min-h-screen bg-white" style={accent ? { '--acc': accent.accent, '--tint': accent.tint } : undefined}>
       <style>{FD_CSS}</style>
-      <header className="lr-header sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
-          {/* The logo goes to She Model Tech's home; "Learning" goes to all courses. */}
-          <div className="flex items-center gap-2.5 flex-shrink-0">
-            <Link to={currentUser ? '/dashboard' : '/'} aria-label="She Model Tech home">
-              <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-10 w-auto" />
-            </Link>
-            <span className="h-7 w-px bg-gray-200" aria-hidden="true" />
-            <Link to="/learning" className="fd-display text-lg text-gray-900 hover:text-pink-700">Learning</Link>
-          </div>
+      <header className="lr-header sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl">
+          <div className="flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] h-16 sm:h-20">
+            {/* The logo goes to She Model Tech's home; "Learning" goes to all courses. */}
+            <div className="flex items-center gap-2.5 flex-shrink-0 lg:justify-self-start">
+              <Link to={currentUser ? '/dashboard' : '/'} aria-label="She Model Tech home">
+                <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-11 sm:h-14 w-auto" />
+              </Link>
+              <span className="h-8 w-px bg-gray-200" aria-hidden="true" />
+              <Link to="/learning" className="fd-display text-lg sm:text-xl text-gray-900 hover:text-pink-600">Learning</Link>
+            </div>
 
-          <nav className="hidden md:flex items-center gap-1 ml-4" aria-label="Learning">
-            {currentUser && (
-              <NavLink to="/learning/my" className={linkCls}>
-                My learning
-              </NavLink>
-            )}
-            {canTeach ? (
-              <NavLink to="/teacher" className={linkCls}>
-                Mentor Hub
-              </NavLink>
-            ) : (
-              <NavLink to="/teach" className={linkCls}>
-                Become a mentor
-              </NavLink>
-            )}
-          </nav>
+            <nav className="hidden lg:flex items-center justify-center gap-1 xl:gap-3" aria-label="Learning">
+              {items.map((it) => (
+                <NavLink key={it.to} to={it.to} className={linkCls}>{it.label}</NavLink>
+              ))}
+            </nav>
 
-          <div className="ml-auto hidden md:flex items-center gap-2">
-            <Link
-              to={currentUser ? '/dashboard' : '/projects'}
-              className="text-sm font-semibold text-gray-600 hover:text-gray-900 px-3 py-2"
+            <div className="hidden lg:flex items-center justify-self-end">{rightButton}</div>
+
+            <button
+              className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 min-h-[44px] min-w-[44px] flex items-center justify-center"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-expanded={menuOpen}
+              aria-label="Menu"
             >
-              {currentUser ? 'Back to She Model Tech' : 'Projects'}
-            </Link>
-            {!currentUser && (
-              <button
-                onClick={() => signInAndReturn(navigate, location.pathname + location.search)}
-                className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg"
-              >
-                Sign in
-              </button>
-            )}
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                {menuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
-
-          <button
-            className="md:hidden ml-auto p-2 rounded-lg text-gray-700 hover:bg-gray-100"
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-expanded={menuOpen}
-            aria-label="Menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              {menuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
         </div>
 
         {menuOpen && (
-          <div className="md:hidden border-t border-gray-100 px-4 py-3 flex flex-col gap-1 bg-white">
-            {currentUser && (
-              <NavLink to="/learning/my" className={linkCls}>
-                My learning
-              </NavLink>
-            )}
-            {canTeach ? (
-              <NavLink to="/teacher" className={linkCls}>
-                Mentor Hub
-              </NavLink>
-            ) : (
-              <NavLink to="/teach" className={linkCls}>
-                Become a mentor
-              </NavLink>
-            )}
-            <Link to={currentUser ? '/dashboard' : '/projects'} className="text-sm font-semibold text-gray-700 px-3 py-2">
-              {currentUser ? 'Back to She Model Tech' : 'Projects'}
-            </Link>
-            {!currentUser && (
-              <button
-                onClick={() => signInAndReturn(navigate, location.pathname + location.search)}
-                className="mt-1 bg-pink-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg"
-              >
-                Sign in
-              </button>
-            )}
+          <div className="lg:hidden border-t border-gray-200 bg-white">
+            <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl py-4 space-y-2">
+              {items.map((it) => (
+                <NavLink key={it.to} to={it.to} className={mobileCls}>{it.label}</NavLink>
+              ))}
+              <div className="px-4 pt-2">{rightButton}</div>
+            </div>
           </div>
         )}
       </header>
