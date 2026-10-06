@@ -40,6 +40,24 @@ const bell = (uid, { type, title, body, link }) =>
     createdAt: serverTimestamp(),
   }).catch(() => {});
 
+const ctaUrlFor = (link) => (link ? (/^https?:\/\//i.test(link) ? link : `${SITE}${link.startsWith('/') ? link : `/${link}`}`) : SITE);
+
+// Send one email now and say whether the server accepted it.
+export const sendEmailNow = async (to, { title, body, link, ctaLabel }) => {
+  if (!to) return { ok: false, error: 'No email address.' };
+  try {
+    const r = await authFetch('/api/notifications/send-generic', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to, subject: title, heading: esc(title), body: esc(body), ctaLabel: ctaLabel || 'Open She Model Tech', ctaUrl: ctaUrlFor(link) }),
+    });
+    const j = await r.json().catch(() => ({}));
+    return r.ok && j.success !== false ? { ok: true } : { ok: false, error: j.error || `The server answered ${r.status}.` };
+  } catch (e) {
+    return { ok: false, error: e?.message || 'Network error.' };
+  }
+};
+
 const email = (to, { title, body, link, ctaLabel }) =>
   to
     ? authFetch('/api/notifications/send-generic', {
@@ -51,7 +69,7 @@ const email = (to, { title, body, link, ctaLabel }) =>
           heading: esc(title),
           body: esc(body),
           ctaLabel: ctaLabel || 'Open She Model Tech',
-          ctaUrl: link ? (/^https?:\/\//i.test(link) ? link : `${SITE}${link.startsWith('/') ? link : `/${link}`}`) : SITE,
+          ctaUrl: ctaUrlFor(link),
         }),
       }).catch(() => {})
     : Promise.resolve();

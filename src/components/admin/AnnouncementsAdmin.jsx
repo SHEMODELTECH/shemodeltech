@@ -7,7 +7,10 @@ import { addDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
-import { notifyMember } from '../../utils/staffAlerts';
+import { notifyMember, sendEmailNow } from '../../utils/staffAlerts';
+
+// The address emails are sent from (Gmail hides messages you send to yourself).
+const SENDER = 'shemodeltech@gmail.com';
 
 const AUDIENCES = [
   ['all', 'All members'],
@@ -33,6 +36,8 @@ const AnnouncementsAdmin = () => {
   const { currentUser } = useAuth();
   const [f, setF] = useState({ title: '', body: '', link: '', audience: 'all', email: true });
   const [busy, setBusy] = useState(false);
+  const [testTo, setTestTo] = useState('');
+  const [testResult, setTestResult] = useState(null); // { ok, text }
 
   const recipients = async () => {
     const users = (await getDocs(collection(db, 'users'))).docs.map((d) => ({ uid: d.id, ...d.data() }))
@@ -63,10 +68,21 @@ const AnnouncementsAdmin = () => {
 
   const test = async () => {
     if (!valid()) return;
+    const to = (testTo.trim() || currentUser.email || '').toLowerCase();
     setBusy(true);
-    await notifyMember(currentUser.uid, { ...payload(), sendEmail: f.email, emailTo: currentUser.email });
+    setTestResult(null);
+    // The bell notice goes to you; the email goes to the address above.
+    await notifyMember(currentUser.uid, { ...payload(), sendEmail: false });
+    if (!f.email) {
+      setTestResult({ ok: true, text: 'Test sent to your bell (email is turned off for this announcement).' });
+      setBusy(false);
+      return;
+    }
+    const r = await sendEmailNow(to, payload());
+    setTestResult(r.ok
+      ? { ok: true, text: `Bell notice sent, and the email was accepted for ${to}.${to === SENDER ? ' This is the same address emails are sent from, so Gmail puts it in Sent, not your Inbox. Try your personal email instead.' : ' Check the Inbox, and the Spam or Promotions folder.'}` }
+      : { ok: false, text: `Bell notice sent, but the email failed: ${r.error}` });
     setBusy(false);
-    toast.success('Test sent to you. Check your bell and email.');
   };
 
   const send = async () => {
@@ -120,6 +136,12 @@ const AnnouncementsAdmin = () => {
           Also send it by email
         </label>
       </div>
+      <label className="block text-xs font-semibold text-gray-700 mt-3">Send the test email to
+        <input className={input} type="email" value={testTo} onChange={(e) => setTestTo(e.target.value)} placeholder={`${currentUser?.email || ''} (or your personal email)`} />
+      </label>
+      {testResult && (
+        <p className={`mt-2 text-sm rounded-lg px-3 py-2 ${testResult.ok ? 'bg-emerald-50 text-emerald-900' : 'bg-red-50 text-red-800'}`}>{testResult.text}</p>
+      )}
       <div className="flex flex-wrap gap-2 mt-3">
         <button type="button" onClick={test} disabled={busy} className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg disabled:opacity-50">Send a test to me</button>
         <button type="button" onClick={send} disabled={busy} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg disabled:opacity-50">{busy ? 'Sending…' : 'Send'}</button>
