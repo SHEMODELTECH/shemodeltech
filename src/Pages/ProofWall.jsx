@@ -39,14 +39,14 @@ const fmtAgo = (ts) => {
 // Icon + color treatment per activity type (badge-forward "trophy wall" feel).
 const typeStyle = {
   badge: {
-    bg: 'bg-amber-100',
-    fg: 'text-amber-600',
+    bg: 'bg-pink-100',
+    fg: 'text-pink-600',
     shape: 'rounded-xl',
     icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
   },
   ship: {
-    bg: 'bg-green-100',
-    fg: 'text-green-600',
+    bg: 'bg-gray-100',
+    fg: 'text-gray-900',
     shape: 'rounded-xl',
     icon: 'M13 10V3L4 14h7v7l9-11h-7z',
   },
@@ -627,8 +627,8 @@ const ProofWall = () => {
           <div className="grid grid-cols-3 gap-1 mt-3">
             {[
               ['photo', 'Photo', 'text-pink-600', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'],
-              ['link', 'Link', 'text-green-600', 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'],
-              ['write', myData?.isCompany ? 'Update' : 'Progress', 'text-amber-500', 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
+              ['link', 'Link', 'text-gray-900', 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'],
+              ['write', myData?.isCompany ? 'Update' : 'Progress', 'text-pink-500', 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
             ].map(([k, label, color, d]) => (
               <button
                 key={k}
@@ -818,12 +818,12 @@ const ProofWall = () => {
                   <h3 className="text-sm font-bold text-gray-900 truncate">{m.name}</h3>
                   <div className="flex flex-wrap gap-1.5 mt-1">
                     {m.badgeName && (
-                      <span className="text-xs font-medium px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full">
+                      <span className="text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full">
                         🏅 {m.badgeName}
                       </span>
                     )}
                     {m.teachingAvg ? (
-                      <span className="text-xs font-medium px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full">
+                      <span className="text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full">
                         ★ {m.teachingAvg.toFixed(1)} teaching
                         {m.teachingCount ? ` (${m.teachingCount})` : ''}
                       </span>
@@ -884,7 +884,7 @@ const ProofWall = () => {
                       </span>
                     )}
                   </div>
-                  <span className="flex-shrink-0 text-xs font-semibold px-2.5 py-1 bg-green-50 text-green-700 rounded-full border border-green-200">
+                  <span className="flex-shrink-0 text-xs font-semibold px-2.5 py-1 bg-pink-50 text-pink-700 rounded-full border border-pink-200">
                     Accepting collaborators
                   </span>
                 </div>
@@ -895,7 +895,7 @@ const ProofWall = () => {
                 )}
                 <button
                   onClick={() => navigate(`/projects/${p.id}`)}
-                  className="mt-3 inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
+                  className="mt-3 inline-flex items-center gap-1 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
                 >
                   View &amp; apply to join →
                 </button>
@@ -929,7 +929,7 @@ const ProofWall = () => {
                     <span className="text-sm font-semibold text-gray-900 truncate">
                       {p.projectTitle || p.title || 'Untitled project'}
                     </span>
-                    <span className="flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 bg-green-50 text-green-700 rounded-full border border-green-200">
+                    <span className="flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full border border-pink-200">
                       Accepting collaborators
                     </span>
                   </button>
@@ -938,9 +938,9 @@ const ProofWall = () => {
             </div>
           )}
           {filter === 'all' && myData?.isCompany && talent.length > 0 && (
-            <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-3">
+            <div className="bg-pink-50 border border-pink-100 rounded-xl p-4 mb-3">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-amber-700 text-xs font-bold uppercase tracking-wide">
+                <p className="text-pink-700 text-xs font-bold uppercase tracking-wide">
                   Top talent
                 </p>
                 <button
@@ -970,7 +970,7 @@ const ProofWall = () => {
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-gray-900 truncate">{m.name}</p>
                       {m.badgeName && (
-                        <p className="text-[11px] text-amber-700 truncate">🏅 {m.badgeName}</p>
+                        <p className="text-[11px] text-pink-700 truncate">🏅 {m.badgeName}</p>
                       )}
                     </div>
                     {m.email && (
@@ -1197,7 +1197,7 @@ const ProofWall = () => {
                           onClick={() =>
                             navigate(a.projectId ? `/projects/${a.projectId}` : '/projects')
                           }
-                          className="inline-flex items-center gap-1 mt-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
+                          className="inline-flex items-center gap-1 mt-2 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
                         >
                           View &amp; apply to lead →
                         </button>

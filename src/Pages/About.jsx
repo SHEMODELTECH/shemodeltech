@@ -45,10 +45,10 @@ const About = () => {
               </p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <div className="w-9 h-9 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center mb-3">
-                <span className="text-amber-500 font-extrabold">2</span>
+              <div className="w-9 h-9 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center mb-3">
+                <span className="text-gray-900 font-extrabold">2</span>
               </div>
-              <h3 className="text-amber-500 font-bold text-lg mb-2">Achieve</h3>
+              <h3 className="text-gray-900 font-bold text-lg mb-2">Achieve</h3>
               <p className="text-gray-500 text-sm">
                 Build the proof. Complete projects with your team and earn verified badges at every
                 level.

@@ -1,3 +1,9 @@
+// Black scale used in place of yellow and green.
+const INK = {
+  50: '#F5F5F5', 100: '#EBEBEB', 200: '#D4D4D4', 300: '#A3A3A3', 400: '#404040',
+  500: '#111111', 600: '#000000', 700: '#000000', 800: '#000000', 900: '#000000', 950: '#000000',
+};
+
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -23,6 +29,9 @@ module.exports = {
           500: '#737373', 600: '#525252', 700: '#404040', 800: '#262626', 900: '#111111', 950: '#000000',
         },
         brand: { pink: '#D41470', black: '#000000', white: '#FFFFFF' },
+        // No yellow or green on She Model Tech: every yellow, amber, green,
+        // emerald and lime class shows as black (light shades as light grey).
+        yellow: INK, amber: INK, green: INK, emerald: INK, lime: INK,
       },
     },
   },

@@ -1043,7 +1043,7 @@ export const FD_CSS = LABS_CSS + VIDEO_CSS + `
 .fd-step.is-next .fd-card { border-color:var(--acc); }
 .fd-goal-card { flex:1; background:var(--tint); border-radius:.9rem; padding:1rem 1.1rem; }
 .fd-tag { font-size:.7rem; font-weight:700; padding:.15rem .5rem; border-radius:999px; flex-shrink:0; white-space:nowrap; }
-.fd-tag-done { background:#ECFDF5; color:#047857; }
+.fd-tag-done { background:#F5F5F5; color:#000000; }
 .fd-tag-next { background:var(--tint); color:var(--acc); }
 .fd-level { font-weight:600; color:#404040; }
 
@@ -1092,8 +1092,8 @@ export const FD_CSS = LABS_CSS + VIDEO_CSS + `
 .course-prose .qz-score { margin:0; font-size:.85rem; font-weight:700; color:var(--acc); }
 .course-prose .qz-help { margin:.25rem 0 .9rem; font-size:.88rem; color:#737373; }
 .course-prose .qz-q { background:#fff; border:1px solid #E5E5E5; border-left:4px solid #E5E5E5; border-radius:.75rem; padding:.9rem 1rem; margin-top:.75rem; }
-.course-prose .qz-q.is-yes { border-left-color:#059669; }
-.course-prose .qz-q.is-no { border-left-color:#D97706; }
+.course-prose .qz-q.is-yes { border-left-color:#000000; }
+.course-prose .qz-q.is-no { border-left-color:#D41470; }
 .course-prose .qz-n { margin:0 0 .2rem; font-size:.75rem; font-weight:700; color:#737373; text-transform:uppercase; letter-spacing:.04em; }
 .course-prose .qz-text { font-weight:600; color:#111111; }
 .course-prose .qz-text p { margin:0; }
@@ -1107,10 +1107,10 @@ export const FD_CSS = LABS_CSS + VIDEO_CSS + `
 .course-prose .qz-ans-text { margin:.2rem 0 .6rem; color:#262626; }
 .course-prose .qz-self { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; font-size:.85rem; color:#525252; }
 .course-prose .qz-mark { font-size:.82rem; font-weight:700; padding:.35rem .75rem; border-radius:999px; border:1px solid #D4D4D4; background:#fff; color:#404040; }
-.course-prose .qz-mark.is-yes { background:#ECFDF5; border-color:#059669; color:#047857; }
-.course-prose .qz-mark.is-no { background:#FFFBEB; border-color:#D97706; color:#B45309; }
+.course-prose .qz-mark.is-yes { background:#F5F5F5; border-color:#000000; color:#000000; }
+.course-prose .qz-mark.is-no { background:#FDF2F7; border-color:#D41470; color:#B0105C; }
 .course-prose .ck-count { margin:.5rem 0 .25rem; font-size:.85rem; font-weight:700; color:var(--acc); }
-.course-prose .ck-count.is-done { color:#047857; }
+.course-prose .ck-count.is-done { color:#000000; }
 .course-prose .ck-list { list-style:none; padding-left:0; }
 .course-prose .ck-list > li.ck-item { margin-left:0; padding:.35rem .5rem; border-radius:.5rem; }
 .course-prose .ck-list > li.ck-item:hover { background:#FAFAFA; }

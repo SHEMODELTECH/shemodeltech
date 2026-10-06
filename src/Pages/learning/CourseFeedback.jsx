@@ -52,7 +52,7 @@ const timeAgo = (ts) => {
 };
 
 const Star = ({ filled, className = 'w-5 h-5' }) => (
-  <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill={filled ? '#F59E0B' : 'none'} stroke={filled ? '#F59E0B' : '#D4D4D4'} strokeWidth="1.6">
+  <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill={filled ? '#000000' : 'none'} stroke={filled ? '#000000' : '#D4D4D4'} strokeWidth="1.6">
     <path strokeLinejoin="round" d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9L12 3.5z" />
   </svg>
 );

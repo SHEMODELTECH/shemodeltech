@@ -289,7 +289,7 @@ const passwordLab = (cfg) => {
     if (/(19|20)\d\d/.test(p)) { bits -= 6; flags.push('contains what looks like a year'); }
     bits = Math.max(0, bits);
     const seconds = Math.pow(2, bits) / 2 / 1e10;
-    const levels = [[28, 'Very weak', '#DC2626'], [36, 'Weak', '#D97706'], [60, 'Fair', '#CA8A04'], [80, 'Strong', '#16A34A'], [Infinity, 'Very strong', '#047857']];
+    const levels = [[28, 'Very weak', '#DC2626'], [36, 'Weak', '#D41470'], [60, 'Fair', '#525252'], [80, 'Strong', '#262626'], [Infinity, 'Very strong', '#000000']];
     const [, label, color] = levels.find(([max]) => bits < max);
     bar.style.width = `${Math.min(100, (bits / 100) * 100)}%`;
     bar.style.background = color;
@@ -585,7 +585,7 @@ export const LABS_CSS = `
 .course-prose .lab-prompt { margin:0 0 .8rem; color:#525252; font-size:.95rem; }
 .course-prose .lab-order { list-style:none; padding:0; margin:.5rem 0 0; display:grid; gap:.45rem; }
 .course-prose .lab-order-item { display:flex; align-items:center; gap:.6rem; border:1px solid #E5E5E5; border-radius:.65rem; padding:.5rem .6rem; margin:0; background:#FAFAFA; }
-.course-prose .lab-order-item.is-right { border-color:#059669; background:#ECFDF5; }
+.course-prose .lab-order-item.is-right { border-color:#000000; background:#F5F5F5; }
 .course-prose .lab-order-item.is-wrong { border-color:#DC2626; background:#FEF2F2; }
 .course-prose .lab-order-n { width:1.6rem; height:1.6rem; flex-shrink:0; border-radius:999px; background:var(--tint); color:var(--acc); font-size:.78rem; font-weight:800; display:flex; align-items:center; justify-content:center; }
 .course-prose .lab-order-text { flex:1; font-weight:600; color:#111111; font-size:.95rem; }
@@ -595,17 +595,17 @@ export const LABS_CSS = `
 .course-prose .lab-btn { font-size:.85rem; font-weight:700; padding:.5rem .9rem; border-radius:.6rem; border:1px solid #D4D4D4; background:#fff; color:#404040; }
 .course-prose .lab-primary { background:var(--acc); border-color:var(--acc); color:#fff; }
 .course-prose .lab-msg { margin:.7rem 0 0; font-weight:600; font-size:.92rem; color:#404040; }
-.course-prose .lab-msg.is-right { color:#047857; }
+.course-prose .lab-msg.is-right { color:#000000; }
 .course-prose .lab-msg.is-wrong { color:#B91C1C; }
 .course-prose .lab-sort { display:grid; gap:.6rem; }
 .course-prose .lab-sort-row { border:1px solid #E5E5E5; border-left:4px solid #E5E5E5; border-radius:.65rem; padding:.6rem .75rem; background:#FAFAFA; }
-.course-prose .lab-sort-row.is-right { border-left-color:#059669; }
+.course-prose .lab-sort-row.is-right { border-left-color:#000000; }
 .course-prose .lab-sort-row.is-wrong { border-left-color:#DC2626; }
 .course-prose .lab-sort-text { margin:0 0 .45rem; font-weight:600; color:#111111; font-size:.95rem; }
 .course-prose .lab-sort-opts { display:flex; flex-wrap:wrap; gap:.4rem; }
 .course-prose .lab-opt { font-size:.82rem; font-weight:600; padding:.35rem .7rem; border-radius:999px; border:1px solid #D4D4D4; background:#fff; color:#404040; }
 .course-prose .lab-opt.is-picked { border-color:var(--acc); background:var(--tint); color:var(--acc); }
-.course-prose .lab-opt.is-right { border-color:#059669; background:#ECFDF5; color:#047857; }
+.course-prose .lab-opt.is-right { border-color:#000000; background:#F5F5F5; color:#000000; }
 .course-prose .lab-opt.is-wrong { border-color:#DC2626; background:#FEF2F2; color:#B91C1C; }
 .course-prose .lab-sort-why { margin:.45rem 0 0; font-size:.88rem; color:#525252; }
 .course-prose .lab button:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
@@ -619,7 +619,7 @@ export const LABS_CSS = `
 .course-prose .py-editor { display:block; width:100%; border:0; margin:0; padding:.9rem 1.1rem; background:#1E1B2E; color:#E9E7F5; resize:vertical; overflow:hidden;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.83rem; line-height:1.6; tab-size:4; white-space:pre; overflow-x:auto; }
 .course-prose .py-editor:focus { outline:2px solid var(--acc); outline-offset:-2px; }
-.course-prose .py-out { margin:0; border-radius:0; background:#0F0D1A; color:#D1FAE5; padding:.75rem 1.1rem; font-size:.82rem; border-top:1px solid #2A2640; white-space:pre-wrap; }
+.course-prose .py-out { margin:0; border-radius:0; background:#0F0D1A; color:#E5E5E5; padding:.75rem 1.1rem; font-size:.82rem; border-top:1px solid #2A2640; white-space:pre-wrap; }
 .course-prose .py-out.is-error { color:#FECACA; }
 .course-prose .html-cell { margin:1.1rem 0; border-radius:.8rem; overflow:hidden; background:#1E1B2E; }
 .course-prose .html-grid { display:grid; grid-template-columns:1fr; }

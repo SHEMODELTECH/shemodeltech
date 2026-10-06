@@ -112,9 +112,9 @@ const Account = () => {
             <p className="text-2xl font-black text-pink-700 mt-1">{formatMoney(disbursements.disbursedTotal)}</p>
             <p className="text-gray-400 text-xs mt-0.5">confirmed received by members</p>
           </div>
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-            <p className="text-amber-700 text-xs uppercase tracking-wider font-semibold">Pending</p>
-            <p className="text-2xl font-black text-amber-700 mt-1">{formatMoney(disbursements.pendingTotal)}</p>
+          <div className="bg-pink-50 border border-pink-200 rounded-xl p-4">
+            <p className="text-pink-700 text-xs uppercase tracking-wider font-semibold">Pending</p>
+            <p className="text-2xl font-black text-pink-700 mt-1">{formatMoney(disbursements.pendingTotal)}</p>
             <p className="text-gray-400 text-xs mt-0.5">to be paid to all persons on ongoing projects</p>
           </div>
         </div>
@@ -134,7 +134,7 @@ const Account = () => {
                     r.state === 'completed' ? 'bg-green-100 text-green-700'
                     : r.state === 'disputed' ? 'bg-red-100 text-red-700'
                     : r.state === 'awaiting' ? 'bg-pink-100 text-pink-700'
-                    : 'bg-amber-100 text-amber-700'}`}>
+                    : 'bg-pink-100 text-pink-700'}`}>
                     {r.state === 'completed' ? 'Completed' : r.state === 'disputed' ? 'Disputed' : r.state === 'awaiting' ? 'Awaiting Confirmations' : 'Ongoing'}
                   </span>
                 </div>
@@ -153,9 +153,9 @@ const Account = () => {
             <p className="text-2xl font-black text-green-700 mt-1">{formatMoney(earnings.earnedTotal)}</p>
             <p className="text-gray-400 text-xs mt-0.5">payments confirmed received</p>
           </div>
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-            <p className="text-amber-700 text-xs uppercase tracking-wider font-semibold">Pending</p>
-            <p className="text-2xl font-black text-amber-700 mt-1">{formatMoney(earnings.pendingTotal)}</p>
+          <div className="bg-pink-50 border border-pink-200 rounded-xl p-4">
+            <p className="text-pink-700 text-xs uppercase tracking-wider font-semibold">Pending</p>
+            <p className="text-2xl font-black text-pink-700 mt-1">{formatMoney(earnings.pendingTotal)}</p>
             <p className="text-gray-400 text-xs mt-0.5">from ongoing paid projects</p>
           </div>
         </div>
@@ -176,7 +176,7 @@ const Account = () => {
                     : r.state === 'disputed' ? 'bg-red-100 text-red-700'
                     : r.state === 'forfeited' ? 'bg-gray-200 text-gray-500'
                     : r.state === 'awaiting' ? 'bg-pink-100 text-pink-700'
-                    : 'bg-amber-100 text-amber-700'}`}>
+                    : 'bg-pink-100 text-pink-700'}`}>
                     {r.state === 'paid' ? 'Paid' : r.state === 'disputed' ? 'Disputed' : r.state === 'forfeited' ? 'Forfeited' : r.state === 'awaiting' ? 'Awaiting Confirmation' : 'Pending'}
                   </span>
                 </div>
@@ -221,7 +221,7 @@ const Account = () => {
             {memberProjects.map(p => (
               <div key={p.id} onClick={() => navigate(`/projects/${p.id}`)} className="flex items-center justify-between gap-2 min-w-0 p-3 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer hover:bg-gray-100 transition-all">
                 <p className="text-gray-900 text-sm font-medium truncate min-w-0">{p.title}</p>
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full text-gray-900 flex-shrink-0 whitespace-nowrap ${p.status === 'completed' ? 'bg-pink-100' : (p.status === 'rejected' || p.status === 'cancelled') ? 'bg-red-100' : 'bg-amber-100'}`}>
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full text-gray-900 flex-shrink-0 whitespace-nowrap ${p.status === 'completed' ? 'bg-pink-100' : (p.status === 'rejected' || p.status === 'cancelled') ? 'bg-red-100' : 'bg-pink-100'}`}>
                   {p.status === 'completed' ? 'Completed' : p.status === 'rejected' ? 'Rejected' : p.status === 'cancelled' ? 'Closed' : 'Active'}
                 </span>
               </div>
@@ -248,7 +248,7 @@ const Account = () => {
                   <p className="text-gray-900 text-sm font-medium truncate min-w-0">{p.title}</p>
                   <p className="text-gray-400 text-xs">{p.memberCount} {p.memberCount === 1 ? 'member' : 'members'}</p>
                 </div>
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full text-gray-900 flex-shrink-0 whitespace-nowrap ${p.status === 'completed' ? 'bg-pink-100' : (p.status === 'rejected' || p.status === 'cancelled') ? 'bg-red-100' : 'bg-amber-100'}`}>
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full text-gray-900 flex-shrink-0 whitespace-nowrap ${p.status === 'completed' ? 'bg-pink-100' : (p.status === 'rejected' || p.status === 'cancelled') ? 'bg-red-100' : 'bg-pink-100'}`}>
                   {p.status === 'completed' ? 'Completed' : p.status === 'rejected' ? 'Rejected' : p.status === 'cancelled' ? 'Closed' : 'Active'}
                 </span>
               </div>
