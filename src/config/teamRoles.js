@@ -16,8 +16,8 @@ export const roleTitle = (id) => TEAM_ROLES.find((r) => r.id === id)?.title || i
 export const TEAM_BENEFITS = [
   ['A recommendation letter', 'After six months of active work, ask for a letter of recommendation for a job, school, or program you’re applying to.'],
   ['A volunteer service letter', 'Any time, ask for a letter confirming your role and hours with a registered 501(c)(3) nonprofit.'],
-  ['Behind the scenes', 'See how a nonprofit really runs, from partnerships and fundraising to events and community.'],
-  ['Help run She Model Tech Summit', 'Take on a role at our yearly event and be credited in the program.'],
-  ['First to hear about new roles', 'When paid or leadership roles open at She Model Tech, the team hears first.'],
+  ['Get experience', 'See how a nonprofit really runs, from partnerships and fundraising to events and community.'],
+  ['Make an impact', 'Help women grow in tech and shape our programs. Team members who go above and beyond are recognized for their commitment.'],
+  ['Lead paid cohorts', 'When a paid cohort opens, the team hears first and is invited to apply to lead. Leads are paid, and chosen by experience and badges.'],
   ['Flexible hours', 'About 2 to 3 hours a week, around your studies or job. Roles last six months, and you can renew.'],
 ];
