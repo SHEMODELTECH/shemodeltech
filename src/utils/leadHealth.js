@@ -27,6 +27,7 @@
 // All three land in the same reviewer queue. A human always makes the call -
 // nothing auto-removes a lead.
 
+import { sendPush } from './pushNotifications';
 import {
   collection,
   doc,
@@ -225,6 +226,7 @@ export const reassignLead = async ({ projectId, newLead, reviewer, reason }) => 
         read: false,
         createdAt: serverTimestamp(),
       });
+      sendPush({ recipientUid: uid, title, body, link: `/projects/${projectId}/workspace` });
     } catch (_) {
       /* non-blocking */
     }

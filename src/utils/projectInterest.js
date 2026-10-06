@@ -4,6 +4,7 @@
 //   project_interest/{projectId}_{uid}: projectId, uid, name, createdAt (no contact details)
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { sendPush } from './pushNotifications';
 
 const id = (projectId, uid) => `${projectId}_${uid}`;
 
@@ -38,6 +39,14 @@ export const notifyInterested = async (projectId, projectTitle) => {
     }).catch(() => {});
     await deleteDoc(doc(db, 'project_interest', p.id)).catch(() => {});
   }
+  if (people.length) {
+    sendPush({
+      recipientUids: people.map((p) => p.uid),
+      title: 'Roles are open',
+      body: `"${projectTitle}" is open for applications. Apply for a role now.`,
+      link: `/projects/${projectId}`,
+    });
+  }
   return people.length;
 };
 
@@ -60,8 +69,14 @@ export const clearLeadIntent = async (uid) => {
 };
 
 // Staff invite someone to apply to lead (a project, or any project that needs a lead).
-export const inviteToLead = (uid, project = null) =>
-  addDoc(collection(db, 'notifications'), {
+export const inviteToLead = (uid, project = null) => {
+  sendPush({
+    recipientUid: uid,
+    title: 'You’re invited to lead',
+    body: project ? `She Model Tech invites you to apply to lead "${project.projectTitle || 'a project'}".` : 'She Model Tech invites you to apply to lead a project.',
+    link: project ? `/apply-to-lead?project=${project.id}` : '/apply-to-lead',
+  });
+  return addDoc(collection(db, 'notifications'), {
     userId: uid,
     type: 'lead_invite',
     title: 'You’re invited to lead',
@@ -73,3 +88,4 @@ export const inviteToLead = (uid, project = null) =>
     isRead: false,
     createdAt: serverTimestamp(),
   });
+};

@@ -60,6 +60,7 @@ const Settings = () => {
   const [weeklyDigest, setWeeklyDigest] = useState(false);
   const [reminders, setReminders] = useState(true);
   const [dailyFrequency, setDailyFrequency] = useState('daily'); // 'daily' | '3x' (Mon, Wed, Fri)
+  const [pushPref, setPushPref] = useState('all'); // 'all' | 'important' | 'off'
   const [form, setForm] = useState({
     displayName: '',
     specialization: '',
@@ -125,6 +126,7 @@ const Settings = () => {
           setWeeklyDigest(data.emailPreferences?.weeklyDigest !== false);
           setReminders(data.emailPreferences?.reminders !== false);
           setDailyFrequency(data.emailPreferences?.dailyFrequency === '3x' ? '3x' : 'daily');
+          setPushPref(['important', 'off'].includes(data.pushPreference) ? data.pushPreference : 'all');
           setForm({
             displayName: data.displayName || '',
             specialization: data.specialization || '',
@@ -645,6 +647,42 @@ const Settings = () => {
                 your Home Screen (iOS 16.4 or later).
               </p>
             </details>
+          </div>
+
+          <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <h3 className="text-gray-900 font-bold text-base mb-2">Phone notifications</h3>
+            <p className="text-gray-500 text-sm mb-3">
+              Choose which notifications appear on your phone or computer. Everything still shows in your notifications on She Model Tech.
+            </p>
+            <fieldset>
+              <legend className="sr-only">Phone notifications</legend>
+              {[
+                ['all', 'All', 'Everything, including mentions and replies.'],
+                ['important', 'Important only', 'Events, deadlines, applications, decisions, and messages.'],
+                ['off', 'Off', 'No phone notifications.'],
+              ].map(([v, l, d]) => (
+                <label key={v} className="flex items-start gap-2 text-sm text-gray-700 py-1 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="push-pref"
+                    className="mt-1"
+                    checked={pushPref === v}
+                    onChange={async () => {
+                      const prev = pushPref;
+                      setPushPref(v);
+                      try {
+                        await updateDoc(doc(db, 'users', currentUser.uid), { pushPreference: v });
+                        toast.success('Saved.');
+                      } catch (err) {
+                        setPushPref(prev);
+                        toast.error('Could not update preference.');
+                      }
+                    }}
+                  />
+                  <span><span className="font-semibold text-gray-900">{l}</span> <span className="text-gray-500">· {d}</span></span>
+                </label>
+              ))}
+            </fieldset>
           </div>
 
           <div className="bg-white border border-gray-200 rounded-xl p-6">

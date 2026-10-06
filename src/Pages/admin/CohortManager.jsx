@@ -14,6 +14,7 @@
 // wastes five women's eight weeks. The convenience isn't worth that.
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { sendPush } from '../../utils/pushNotifications';
 import { useNavigate, Link } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, doc, writeBatch, arrayUnion, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -85,6 +86,11 @@ const announceCohort = async (cohort, count) => {
       });
     });
     await batch.commit();
+  }
+  // Phone push too (members choose this in Settings → Notifications).
+  // Small batches, so each server call finishes well within its time limit.
+  for (let i = 0; i < targets.length; i += 100) {
+    await sendPush({ recipientUids: targets.slice(i, i + 100).map((d) => d.id), title, body, link: '/projects' });
   }
   return targets.length;
 };

@@ -1,6 +1,7 @@
 // src/Pages/community/SubmitPost.jsx - She Model Tech Submit Post (Complete - Responsive)
 
 import React, { useState, useEffect, useRef } from 'react';
+import { sendPush } from '../../utils/pushNotifications';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
@@ -379,6 +380,13 @@ const SubmitPost = () => {
           });
           
           await batch.commit();
+          sendPush({
+            recipientUids: allTaggedUsers.map((u) => u.uid).filter(Boolean),
+            title: 'You were mentioned',
+            body: `${currentUser.displayName || 'A member'} mentioned you in a post.`,
+            link: `/community/post/${postRef.id}`,
+            level: 'social',
+          });
 
           // Send email notifications
           for (const user of allTaggedUsers) {

@@ -28,6 +28,7 @@
 
 const admin = require('../../lib/firebaseAdmin');
 const { sendMail } = require('../../lib/mailer');
+const { pushToUids } = require('../../lib/push');
 
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
@@ -219,11 +220,12 @@ async function eventTasks(db, stats) {
  html: `<h2 style="margin:0 0 12px">${evEsc(title)}</h2><p>Hi ${evEsc((u.displayName || '').split(' ')[0] || 'there')},</p>${htmlBody}<p style="margin:22px 0"><a href="${ctaUrl}" style="background:#D41470;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${evEsc(ctaLabel)}</a></p>`,
  }).catch((e) => console.error('event email failed:', e.message));
  }
+ const link = ctaUrl.startsWith(EV_SITE) ? ctaUrl.slice(EV_SITE.length) || '/events' : ctaUrl;
  await db.collection('notifications').add({
  userId: uid, recipientId: uid, type: 'event_reminder', title, body: message, message: `${title} - ${message}`,
- link: ctaUrl.startsWith(EV_SITE) ? ctaUrl.slice(EV_SITE.length) || '/events' : ctaUrl,
- isRead: false, read: false, createdAt: admin.firestore.FieldValue.serverTimestamp(),
+ link, isRead: false, read: false, createdAt: admin.firestore.FieldValue.serverTimestamp(),
  });
+ await pushToUids([uid], { title, body: message, link });
  };
 
  // Waitlist: fill free places in the order people joined.
@@ -252,8 +254,17 @@ async function eventTasks(db, stats) {
  const joinUrl = (info && info.exists && info.data().joinUrl) || `${EV_SITE}/events?e=${ev.id}`;
  for (const r of regs) {
  if (r.status !== 'registered') continue;
- // 30 minutes before (sent from 35 minutes to 10 minutes after the start).
- if (msLeft <= 35 * 60000 && !r.reminded30) {
+ // We're live now (from the start time to 10 minutes after).
+ if (msLeft <= 0 && !r.remindedLive) {
+ await tell(r.uid, `We're live now: ${ev.title}`, 'It has started. Tap to join.',
+ `<p><strong>${evEsc(ev.title)}</strong> has started. Come and join us!</p><p>Joining link: <a href="${joinUrl}">${evEsc(joinUrl)}</a></p>`,
+ joinUrl, 'Join now');
+ await r.ref.update({ remindedLive: true, reminded30: true, reminded1d: true });
+ stats.eventLiveNow = (stats.eventLiveNow || 0) + 1;
+ continue;
+ }
+ // 30 minutes before (sent from 35 minutes out until the start).
+ if (msLeft > 0 && msLeft <= 35 * 60000 && !r.reminded30) {
  await tell(r.uid, `Starting soon: ${ev.title}`, 'It starts in about 30 minutes. Use the joining link to get in.',
  `<p><strong>${evEsc(ev.title)}</strong> starts in about 30 minutes, online.</p><p>Joining link: <a href="${joinUrl}">${evEsc(joinUrl)}</a></p>`,
  joinUrl, 'Join now');
@@ -429,6 +440,14 @@ module.exports = async (req, res) => {
  await markSent(db, key, {
  projectId: project.id, daysLeft, recipients: sent, grace: isGrace,
  });
+ // Phone push to the whole team (members choose this in Settings).
+ const name = project.projectTitle || project.title || 'your project';
+ const pushTitle = isGrace ? `Overdue: ${name}` : daysLeft === 0 ? `Due today: ${name}` : daysLeft === 1 ? `Due tomorrow: ${name}` : `${daysLeft} days left: ${name}`;
+ const pushBody = isGrace
+ ? `The deadline has passed. You have ${Math.max(graceWindow - graceUsed + 1, 0)} grace day(s) left to submit.`
+ : 'Check your tasks and keep your team updated in the workspace.';
+ // eslint-disable-next-line no-await-in-loop
+ await pushToUids([project.submitterId, ...(project.members || [])], { title: pushTitle, body: pushBody, link: `/projects/${project.id}/workspace` });
  }
  }
  }

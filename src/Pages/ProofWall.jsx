@@ -4,6 +4,7 @@
 // Members can share a work-focused project update; everything else is auto-generated proof.
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { sendPush } from '../utils/pushNotifications';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -546,6 +547,16 @@ const ProofWall = () => {
             createdAt: serverTimestamp(),
           });
         } catch (_) {}
+      }
+      const tagged = kept.filter((m) => m.uid && m.uid !== currentUser.uid).map((m) => m.uid);
+      if (tagged.length) {
+        sendPush({
+          recipientUids: tagged,
+          title: 'You were mentioned',
+          body: `${myData?.displayName || 'A member'} mentioned you in an update on "${updateProject.trim()}".`,
+          link: newPostId ? `/proof-wall?post=${newPostId}` : '/proof-wall',
+          level: 'social',
+        });
       }
 
       toast.success('Update shared.');

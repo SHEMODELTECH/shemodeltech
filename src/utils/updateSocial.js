@@ -3,6 +3,7 @@
 //   activity/{id}: reactions {uid: emoji}, reactionNames {uid: name}, commentCount, repostCount
 //   activity/{id}/comments/{cid}: uid, name, photoURL, text, createdAt
 import { addDoc, collection, deleteDoc, deleteField, doc, getDocs, increment, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { sendPush } from './pushNotifications';
 import { db } from '../firebase/config';
 
 export const REACTIONS = [
@@ -69,6 +70,16 @@ export const postUrl = (id) => `${window.location.origin}/proof-wall?post=${id}`
 
 // Tagged someone with "@First Last": they get a bell notification linking to the update.
 export const notifyMentions = (mentions, me, activityId) => {
+  const uids = (mentions || []).filter((m) => m.uid && m.uid !== me.uid).map((m) => m.uid);
+  if (uids.length) {
+    sendPush({
+      recipientUids: uids,
+      title: 'You were mentioned',
+      body: `${me.name || 'A member'} mentioned you in a comment on the Proof Wall.`,
+      link: `/proof-wall?post=${activityId}`,
+      level: 'social',
+    });
+  }
   (mentions || []).forEach((m) => {
     if (!m.uid || m.uid === me.uid) return;
     addDoc(collection(db, 'notifications'), {

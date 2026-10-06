@@ -1,6 +1,7 @@
 // src/Pages/community/SinglePost.jsx - She Model Tech Single Post View
 
 import React, { useState, useEffect, useRef } from 'react';
+import { sendPush } from '../../utils/pushNotifications';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
@@ -398,6 +399,13 @@ const SinglePost = () => {
           });
           
           await batch.commit();
+          sendPush({
+            recipientUids: combined.map((u) => u.uid).filter(Boolean),
+            title: 'You were mentioned',
+            body: `${currentUser.displayName || 'A member'} mentioned you in a reply.`,
+            link: `/community/post/${postId}`,
+            level: 'social',
+          });
 
           // Send email notifications
           for (const user of combined) {

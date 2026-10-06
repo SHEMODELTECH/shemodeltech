@@ -148,7 +148,9 @@ export function listenForForegroundPush() {
 
 // Ask the server to push to one or more users. Uses the signed-in user's
 // Firebase ID token to authorize the call.
-export async function sendPush({ recipientUid, recipientUids, title, body, link }) {
+// level: 'important' (default) or 'social' (mentions and replies); each member
+// chooses which they want in Settings → Notifications.
+export async function sendPush({ recipientUid, recipientUids, title, body, link, level = 'important' }) {
   try {
     const user = auth.currentUser;
     if (!user) return;
@@ -159,7 +161,7 @@ export async function sendPush({ recipientUid, recipientUids, title, body, link 
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-      body: JSON.stringify({ recipientUid, recipientUids, title, body, link }),
+      body: JSON.stringify({ recipientUid, recipientUids, title, body, link, level }),
     });
   } catch (e) {
     // Non-blocking: push failures should never break the core action.
