@@ -8,6 +8,7 @@ import { useFeatures } from '../utils/features';
 import SponsorsStrip from '../components/SponsorsStrip';
 import Navbar from '../components/Navbar';
 import { DEDUCTIBLE_LINE, ORG_LEGAL_NAME, ORG_EIN } from '../config/nonprofit';
+import Footer from '../components/Footer';
 
 const DONATION_LINK = process.env.REACT_APP_DONATION_LINK || null;
 const TEAM_EMAIL = 'shemodeltech@gmail.com';
@@ -64,6 +65,7 @@ const SupportMission = () => {
           {ORG_LEGAL_NAME} is a 501(c)(3) nonprofit (EIN {ORG_EIN}).
         </p>
       </section>
+      <Footer />
     </div>
   );
 };

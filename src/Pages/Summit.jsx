@@ -13,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
 import { useFeatures } from '../utils/features';
 import { hasPerk } from '../config/tiers';
+import Footer from '../components/Footer';
 import {
   PARTNER_OPTIONS,
   PARTNER_OPTION_PERK,
@@ -438,12 +439,7 @@ const Summit = () => {
           </>
         )}
       </main>
-      <footer className="border-t border-gray-200 py-8">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
-          <p>SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit.</p>
-          <SocialLinks />
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

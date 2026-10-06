@@ -15,6 +15,7 @@ import TechArchs from '../Images/TechArchs.png';
 import TechGuard from '../Images/TechGuard.png';
 import SocialLinks from '../components/SocialLinks';
 import SponsorsStrip from '../components/SponsorsStrip';
+import Footer from '../components/Footer';
 
 const LandingPage = () => {
   const { currentUser } = useAuth();
@@ -452,43 +453,7 @@ const LandingPage = () => {
       {/* FOOTER */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-12"><SponsorsStrip /></div>
 
-      <footer className="border-t border-gray-200 bg-white py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <img
-                src="/Images/she-model-tech-logo.png"
-                alt="She Model Tech"
-                className="h-11 sm:h-14 w-auto"
-              />
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-gray-500 text-sm">
-              <Link to="/about" className="hover:text-pink-600 transition-colors font-medium">
-                About
-              </Link>
-              <Link to="/team" className="hover:text-pink-600 transition-colors font-medium">
-                Team
-              </Link>
-              <Link to="/support-our-mission" className="hover:text-pink-600 transition-colors font-medium">
-                Support Us
-              </Link>
-              <Link to="/terms" className="hover:text-pink-600 transition-colors font-medium">
-                Terms
-              </Link>
-              <Link to="/privacy" className="hover:text-pink-600 transition-colors font-medium">
-                Privacy
-              </Link>
-              <Link to="/support" className="hover:text-pink-600 transition-colors font-medium">
-                Support
-              </Link>
-            </div>
-            <div className="flex flex-col items-center sm:items-end gap-2">
-              <SocialLinks />
-              <p className="text-gray-500 text-xs">© {new Date().getFullYear()} SHE MODEL TECH Inc., a 501(c)(3) nonprofit.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

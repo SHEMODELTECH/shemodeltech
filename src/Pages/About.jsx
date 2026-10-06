@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import SocialLinks from '../components/SocialLinks';
+import Footer from '../components/Footer';
 
 
 const About = () => {
@@ -173,33 +174,7 @@ const About = () => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 text-gray-500 text-sm">
-            <Link to="/team" className="hover:text-pink-600">
-              Team
-            </Link>
-            <Link to="/support-our-mission" className="hover:text-pink-600">
-              Support Us
-            </Link>
-            <Link to="/terms" className="hover:text-pink-600">
-              Terms
-            </Link>
-            <Link to="/privacy" className="hover:text-pink-600">
-              Privacy
-            </Link>
-            <Link to="/support" className="hover:text-pink-600">
-              Support
-            </Link>
-          </div>
-          <div className="flex flex-col items-center sm:items-end gap-2">
-            <SocialLinks />
-            <p className="text-gray-400 text-xs text-center sm:text-right">
-              {new Date().getFullYear()} SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

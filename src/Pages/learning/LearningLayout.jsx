@@ -10,6 +10,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { FD_CSS } from './shared';
 import SocialLinks from '../../components/SocialLinks';
+import Footer from '../../components/Footer';
 
 // Remember where to come back to after signing in (read by afterAuthPath).
 export const signInAndReturn = (navigate, path) => {
@@ -162,19 +163,7 @@ const LearningLayout = ({ children, accent, bare = false }) => {
 
       <main>{children}</main>
 
-      {!bare && <footer className="border-t border-gray-100 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-sm text-gray-500">
-          <p>She Model Tech Learning. Free courses for every track.</p>
-          <div className="flex gap-5">
-            <Link to="/projects" className="hover:text-gray-900">Projects</Link>
-            <Link to="/teach" className="hover:text-gray-900">Mentor</Link>
-            <Link to="/about" className="hover:text-gray-900">About</Link>
-
-            <Link to="/support" className="hover:text-gray-900">Support</Link>
-          </div>
-          <SocialLinks size="w-4 h-4" />
-        </div>
-      </footer>}
+      {!bare && <Footer />}
     </div>
   );
 };
