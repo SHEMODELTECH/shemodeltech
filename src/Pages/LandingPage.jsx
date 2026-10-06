@@ -390,24 +390,57 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* TESTIMONIAL */}
-      <section className="py-16 border-y border-gray-200 bg-gray-50">
+      {/* TESTIMONIAL: a member's own words, and the work behind them */}
+      <section className="py-16 border-y border-gray-200 bg-white">
         <div
           id="quote"
           data-animate
-          className={`fade-up max-w-3xl mx-auto px-4 sm:px-6 text-center ${isVisible('quote') ? 'visible' : ''}`}
+          className={`fade-up max-w-5xl mx-auto px-4 sm:px-6 ${isVisible('quote') ? 'visible' : ''}`}
         >
-          <p className="text-gray-600 text-lg font-normal leading-relaxed mb-6">
-            "She Model Tech is everything we wished existed when we started our tech careers. One
-            place to find projects, earn credentials, and connect with people who are building real
-            things."
-          </p>
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold text-sm">
-              TA
-            </div>
-            <div className="text-left">
-              <div className="text-gray-900 text-sm font-semibold">Temitope A.</div>
+          <figure className="rounded-2xl bg-pink-50 p-6 sm:p-10">
+            <span className="block text-6xl leading-none font-black text-pink-600" aria-hidden="true">&ldquo;</span>
+            <blockquote className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900 leading-snug max-w-3xl">
+              This project was a milestone for me, as it was my{' '}
+              <span className="text-pink-600">first time working alone</span> under an organization.
+            </blockquote>
+            <figcaption className="mt-6 flex items-center gap-3">
+              <span className="w-12 h-12 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold" aria-hidden="true">
+                KA
+              </span>
+              <span>
+                <span className="block text-gray-900 font-bold">Khadijat Ajayi</span>
+                <span className="block text-gray-600 text-sm">Product Designer</span>
+              </span>
+            </figcaption>
+          </figure>
+
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-6 md:gap-10 items-center">
+            <img
+              src="/Images/testimonials/bank-buddy.jpg"
+              alt="Bank Buddy app screens designed by Khadijat Ajayi"
+              loading="lazy"
+              className="w-full rounded-2xl shadow-sm"
+            />
+            <div>
+              <p className="text-xs font-bold tracking-widest text-gray-500 uppercase">The project</p>
+              <h3 className="mt-2 text-2xl font-bold text-gray-900">AI-Powered Banking Assistant</h3>
+              <p className="mt-3 text-gray-600 text-lg leading-relaxed">
+                She led the design end to end, from user research to hi-fi screens, for a team building a real AI
+                banking assistant.
+              </p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {['User research', 'User flows', 'Wireframes', 'Hi-fi screens', 'Chatbot UI'].map((t) => (
+                  <li key={t} className="px-3 py-1.5 rounded-full bg-pink-50 text-pink-700 text-sm font-semibold">{t}</li>
+                ))}
+              </ul>
+              <a
+                href="https://github.com/opeyemiTaiwo/AI-Powered-Banking-Assistant-Intelligent-Customer-Service-Agent"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-5 text-sm font-semibold text-pink-700 hover:underline"
+              >
+                See the project →
+              </a>
             </div>
           </div>
         </div>

@@ -18,6 +18,6 @@ export const TEAM_BENEFITS = [
   ['A volunteer service letter', 'Any time, ask for a letter confirming your role and hours with a registered 501(c)(3) nonprofit.'],
   ['Get experience', 'See how a nonprofit really runs, from partnerships and fundraising to events and community.'],
   ['Make an impact', 'Help women grow in tech and shape our programs. Team members who go above and beyond are recognized for their commitment.'],
-  ['Lead paid cohorts', 'When a paid cohort opens, the team hears first and is invited to apply to lead. Leads are paid, and chosen by experience and badges.'],
+  ['Lead paid cohorts', 'Apply to lead paid cohorts. When applicants are equally qualified, team members are considered first.'],
   ['Flexible hours', 'About 2 to 3 hours a week, around your studies or job. Roles last six months, and you can renew.'],
 ];

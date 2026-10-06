@@ -505,6 +505,8 @@ const TeacherList = ({ access }) => {
               <li>A featured spot on the Talent Board, with learner ratings</li>
               <li>A direct line to She Model Tech</li>
               <li>A volunteer service letter any time, and a recommendation letter after your first published course</li>
+              <li>Apply to lead paid cohorts: when applicants are equally qualified, mentors are considered first</li>
+              <li>You can still join or lead any project, free or paid</li>
             </ul>
             <a href="/teach#faq" className="inline-block mt-2 font-semibold text-pink-700 hover:underline">See all benefits and FAQs</a>
           </HubToggle>
