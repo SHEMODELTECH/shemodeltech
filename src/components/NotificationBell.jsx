@@ -99,6 +99,7 @@ const NotificationBell = () => {
 
       // Mentions on the Proof Wall open the post they're in.
       if (['mention', 'cohort_published', 'lead_invite', 'summit_open', 'summit_announced', 'summit_reminder', 'feedback_request', 'announcement', 'welcome'].includes(notification.type) && notification.link) {
+        if (/^https?:\/\//i.test(notification.link)) { window.open(notification.link, '_blank', 'noopener,noreferrer'); return; }
         navigate(notification.link);
         return;
       }

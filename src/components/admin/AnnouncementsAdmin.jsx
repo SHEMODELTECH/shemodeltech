@@ -16,6 +16,19 @@ const AUDIENCES = [
 ];
 const EMAIL_CAP = 400;
 
+// Accept any way of writing a link: "/projects", "projects", "shemodeltech.com/summit",
+// "https://shemodeltech.com/summit" (all become a page on the site), or another
+// website's address (opened as is).
+export const normalizeLink = (raw) => {
+  const v = String(raw || '').trim();
+  if (!v) return '';
+  const own = v.match(/^(?:https?:\/\/)?(?:www\.)?shemodeltech\.com(\/.*)?$/i);
+  if (own) return own[1] || '/';
+  if (/^https?:\/\//i.test(v)) return v;
+  if (/^[\w-]+(\.[\w-]+)*\.[a-z]{2,}(\/.*)?$/i.test(v)) return `https://${v}`;
+  return v.startsWith('/') ? v : `/${v}`;
+};
+
 const AnnouncementsAdmin = () => {
   const { currentUser } = useAuth();
   const [f, setF] = useState({ title: '', body: '', link: '', audience: 'all', email: true });
@@ -38,14 +51,13 @@ const AnnouncementsAdmin = () => {
     type: 'announcement',
     title: f.title.trim(),
     body: f.body.trim(),
-    link: f.link.trim() || '/dashboard',
+    link: normalizeLink(f.link) || '/dashboard',
     ctaLabel: 'Open She Model Tech',
   });
 
   const valid = () => {
     if (f.title.trim().length < 3) { toast.error('Add a title.'); return false; }
     if (f.body.trim().length < 10) { toast.error('Write a short message (at least 10 characters).'); return false; }
-    if (f.link.trim() && !f.link.trim().startsWith('/')) { toast.error('Links should start with /, for example /projects or /summit.'); return false; }
     return true;
   };
 
@@ -95,7 +107,8 @@ const AnnouncementsAdmin = () => {
           <textarea className={input} rows={4} maxLength={800} value={f.body} onChange={(e) => setF({ ...f, body: e.target.value })} />
         </label>
         <label className="text-xs font-semibold text-gray-700">Link (optional)
-          <input className={input} value={f.link} onChange={(e) => setF({ ...f, link: e.target.value })} placeholder="/projects" />
+          <input className={input} value={f.link} onChange={(e) => setF({ ...f, link: e.target.value })} placeholder="shemodeltech.com/projects" />
+          <span className="block font-normal text-gray-500 mt-1">Any page on She Model Tech, or another website.{f.link.trim() ? ` Opens: ${normalizeLink(f.link)}` : ''}</span>
         </label>
         <label className="text-xs font-semibold text-gray-700">Who
           <select className={input} value={f.audience} onChange={(e) => setF({ ...f, audience: e.target.value })}>

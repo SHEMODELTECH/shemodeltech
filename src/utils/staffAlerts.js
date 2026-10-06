@@ -51,7 +51,7 @@ const email = (to, { title, body, link, ctaLabel }) =>
           heading: esc(title),
           body: esc(body),
           ctaLabel: ctaLabel || 'Open She Model Tech',
-          ctaUrl: link ? `${SITE}${link.startsWith('/') ? link : `/${link}`}` : SITE,
+          ctaUrl: link ? (/^https?:\/\//i.test(link) ? link : `${SITE}${link.startsWith('/') ? link : `/${link}`}`) : SITE,
         }),
       }).catch(() => {})
     : Promise.resolve();
