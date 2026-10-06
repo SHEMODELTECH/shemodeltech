@@ -491,8 +491,7 @@ const DashboardOverview = () => {
                 }).length === 0 && (
                   <div className="rounded-lg border border-dashed border-gray-200 p-4 text-center">
                     <p className="text-sm font-semibold text-gray-800">No badges yet</p>
-                    <p className="text-xs text-gray-500 mt-1">Complete a project on She Model Tech to earn your first badge.</p>
-                    <Link to="/projects" className="inline-block mt-3 text-xs font-semibold text-pink-700 hover:underline">Find a project</Link>
+                    <p className="text-xs text-gray-500 mt-1">Badges show the skills you've proven on real projects. Each one is reviewed and verified, and it appears on your profile and the Talent Board.</p>
                   </div>
                 )}
                 {badgeData.map((badge) => {
@@ -568,10 +567,12 @@ const DashboardOverview = () => {
                   );
                 })}
               </div>
-              <Link to="/badges" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-pink-700 hover:underline">
+              <div className="mt-4 text-center">
+              <Link to="/badges" className="inline-flex items-center gap-1 text-sm font-semibold text-pink-700 hover:underline">
                 Learn how badges work
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </Link>
+              </div>
             </div>
           )}
 
