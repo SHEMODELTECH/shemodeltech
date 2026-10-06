@@ -197,7 +197,7 @@ const LandingPage = () => {
           <p
             id="hero-desc"
             data-animate
-            className={`fade-up delay-2 text-gray-600 text-lg sm:text-2xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed ${isVisible('hero-desc') ? 'visible' : ''}`}
+            className={`fade-up delay-2 text-gray-600 text-lg max-w-3xl mx-auto mb-10 font-normal leading-relaxed ${isVisible('hero-desc') ? 'visible' : ''}`}
           >
             She Model Tech helps women build their tech careers through free courses, mentorship,
             team projects, and verified badges that showcase what they can create, contribute, and
@@ -237,7 +237,7 @@ const LandingPage = () => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-800 text-gray-900 mb-4">
               Earn Verified Credentials
             </h2>
-            <p className="text-gray-500 max-w-xl mx-auto text-base">
+            <p className="text-gray-500 max-w-xl mx-auto text-lg leading-relaxed">
               Each badge represents a verified skill track with four progression levels, Novice,
               Associate, Advanced, and Expert, earned by completing real-world projects.
             </p>
@@ -369,7 +369,7 @@ const LandingPage = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-800 text-gray-900 mb-4">
             Hire proven talent
           </h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-base">
+          <p className="text-gray-500 max-w-xl mx-auto text-lg leading-relaxed">
             She Model Tech is a community of women building real products in teams. Every badge comes
             from work that was actually shipped and reviewed, so you can hire on proof, not promises.
           </p>
@@ -397,7 +397,7 @@ const LandingPage = () => {
           data-animate
           className={`fade-up max-w-3xl mx-auto px-4 sm:px-6 text-center ${isVisible('quote') ? 'visible' : ''}`}
         >
-          <p className="text-gray-900 text-xl sm:text-2xl font-normal leading-relaxed mb-6">
+          <p className="text-gray-600 text-lg font-normal leading-relaxed mb-6">
             "She Model Tech is everything we wished existed when we started our tech careers. One
             place to find projects, earn credentials, and connect with people who are building real
             things."
