@@ -58,6 +58,7 @@ const VerifyCertificate = lazy(() => import('./Pages/VerifyCertificate'));
 const SubmitPost = lazy(() => import('./Pages/community/SubmitPost'));
 const SinglePost = lazy(() => import('./Pages/community/SinglePost'));
 const About = lazy(() => import('./Pages/About'));
+const Team = lazy(() => import('./Pages/Team'));
 const Support = lazy(() => import('./Pages/Support'));
 const TermsOfService = lazy(() => import('./Pages/TermsOfService'));
 const PrivacyPolicy = lazy(() => import('./Pages/PrivacyPolicy'));
@@ -211,6 +212,7 @@ function App() {
                 <Route path="/auth/action" element={<AuthAction />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/team" element={<Team />} />
                 {/* She Model Tech doesn't offer training programs: these pages are retired. */}
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
                 <Route path="/summit" element={<Summit />} />

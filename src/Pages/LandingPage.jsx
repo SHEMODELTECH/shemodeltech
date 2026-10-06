@@ -466,14 +466,11 @@ const LandingPage = () => {
               <Link to="/about" className="hover:text-pink-600 transition-colors font-medium">
                 About
               </Link>
-              <Link to="/learning" className="hover:text-pink-600 transition-colors font-medium">
-                Learning
-              </Link>
-              <Link to="/summit" className="hover:text-pink-600 transition-colors font-medium">
-                Summit
+              <Link to="/team" className="hover:text-pink-600 transition-colors font-medium">
+                Team
               </Link>
               <Link to="/support-our-mission" className="hover:text-pink-600 transition-colors font-medium">
-                Support
+                Support Us
               </Link>
               <Link to="/terms" className="hover:text-pink-600 transition-colors font-medium">
                 Terms

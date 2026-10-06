@@ -3,25 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import SocialLinks from '../components/SocialLinks';
 
-// The founder's photo from her website; her initials if it can't load.
-const FounderPhoto = () => {
-  const [failed, setFailed] = React.useState(false);
-  if (failed) {
-    return (
-      <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-pink-100 text-pink-800 text-3xl font-bold flex items-center justify-center shrink-0" aria-hidden="true">
-        YA
-      </div>
-    );
-  }
-  return (
-    <img
-      src="https://www.opeyemitaiwoadeniran.com/images/yemi-portrait.webp"
-      alt="Opeyemi (Yemi) Adeniran, founder of She Model Tech"
-      onError={() => setFailed(true)}
-      className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover shrink-0 border-4 border-pink-50"
-    />
-  );
-};
 
 const About = () => {
   const navigate = useNavigate();
@@ -171,25 +152,6 @@ const About = () => {
           </div>
         </section>
 
-        {/* Meet the founder */}
-        <section className="mb-14" aria-labelledby="founder-h">
-          <h2 id="founder-h" className="text-2xl font-bold text-gray-900 mb-5">Meet the founder</h2>
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:items-center">
-            <FounderPhoto />
-            <div className="min-w-0">
-              <p className="text-xl font-bold text-gray-900">Opeyemi (Yemi) Adeniran</p>
-              <p className="text-pink-700 font-semibold text-sm mt-0.5">Founder, She Model Tech</p>
-              <p className="text-gray-700 leading-relaxed mt-3">
-                Yemi is a PhD researcher in AI and the founder of Morgan TechFest. She built She Model Tech to help women
-                learn, build, and lead in technology, so they don’t just enter the field but help shape its future.
-              </p>
-              <div className="flex flex-wrap gap-3 mt-4">
-                <a href="https://www.opeyemitaiwoadeniran.com/" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-pink-700 hover:underline">Visit her website</a>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA */}
         <section className="text-center">
           <p className="text-gray-500 mb-4">Ready to start building your tech career?</p>
@@ -214,11 +176,11 @@ const About = () => {
       <footer className="border-t border-gray-200 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-gray-500 text-sm">
-            <Link to="/learning" className="hover:text-pink-600">
-              Learning
+            <Link to="/team" className="hover:text-pink-600">
+              Team
             </Link>
-            <Link to="/summit" className="hover:text-pink-600">
-              Summit
+            <Link to="/support-our-mission" className="hover:text-pink-600">
+              Support Us
             </Link>
             <Link to="/terms" className="hover:text-pink-600">
               Terms

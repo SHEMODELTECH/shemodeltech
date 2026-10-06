@@ -12,6 +12,8 @@ const Footer = ({ dark = false }) => {
           </div>
           <div className={`flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm ${dark ? 'text-gray-500' : 'text-gray-500'}`}>
             <Link to="/about" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>About</Link>
+            <Link to="/team" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>Team</Link>
+            <Link to="/support-our-mission" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>Support Us</Link>
             <Link to="/terms" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>Terms</Link>
             <Link to="/privacy" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>Privacy</Link>
             <Link to="/support" className={`${dark ? 'hover:text-white' : 'hover:text-pink-600'} transition-colors font-medium`}>Support</Link>

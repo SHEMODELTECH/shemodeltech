@@ -72,9 +72,8 @@ const Navbar = ({ cta = null }) => {
         // No Home item: the logo goes home.
         { path: '/about', label: 'About' },
         { path: '/projects', label: 'Projects' },
-        { path: '/learning', label: 'Learning' },
         { path: '/summit', label: 'Summit' },
-        { path: '/support-our-mission', label: 'Support Us' },
+        { path: '/learning', label: 'Learning' },
       ];
 
   const isActive = (path) => path === '/' ? location.pathname === '/' : (location.pathname === path || location.pathname.startsWith(path + '/'));

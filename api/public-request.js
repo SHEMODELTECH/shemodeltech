@@ -14,6 +14,7 @@ const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
 const KINDS = {
   org: { col: 'org_requests', title: (d) => `New organization request: ${d.orgName || 'an organization'}` },
   partner: { col: 'summitPartners', title: (d) => `New Summit partner request: ${d.companyName || 'a company'}` },
+  team: { col: 'team_applications', title: (d) => `New team application: ${d.name || 'someone'}` },
 };
 
 module.exports = async function handler(req, res) {
@@ -44,7 +45,12 @@ module.exports = async function handler(req, res) {
     const title = kind.title(result);
     const staff = await db.collection('users').where('role', 'in', ['admin', 'editor']).get();
     const esc = (t) => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const lines = req.body.kind === 'org'
+    // Team applications use name/email; the rest of this file reads contactEmail.
+    if (req.body.kind === 'team') { result.contactEmail = result.email; result.contactName = result.name; }
+    const TEAM_ROLE = { community: 'Community Manager', communication: 'Communication Strategist', social: 'Social Media Manager', brand: 'Brand Strategist', partnership: 'Partnership Manager', sponsorship: 'Sponsorship Manager', program: 'Program Manager', designer: 'Designer', content: 'Content Strategist' };
+    const lines = req.body.kind === 'team'
+      ? [['Name', result.name], ['Role', TEAM_ROLE[result.role] || result.role], ['Also interested in', (result.otherRoles || []).map((r) => TEAM_ROLE[r] || r).join(', ')], ['Email', result.email], ['Phone', result.phone], ['LinkedIn or portfolio', result.linkedinOrPortfolio], [result.socialPlatform, result.socialHandle], ['Hours a week', result.hours], ['Why', result.why]]
+      : req.body.kind === 'org'
       ? [['Organization', result.orgName], ['Type', result.orgType], ['Interested in', result.type], ['Learners', result.learners], ['Format', result.format], ['Timeline', result.timeline], ['Topics', result.topics], ['Courses', result.courses], ['Contact', `${result.contactName || ''} <${result.contactEmail || ''}> ${result.contactPhone || ''}`], ['Message', result.message]]
       : [['Company', result.companyName], ['Option', result.option], ['Contact', `${result.contactName || ''} <${result.contactEmail || ''}>`], ['Message', result.message]];
     const detailHtml = lines.filter(([, v]) => v).map(([k, v]) => `<p><strong>${k}:</strong> ${esc(v)}</p>`).join('');
@@ -61,7 +67,7 @@ module.exports = async function handler(req, res) {
     if (result.contactEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result.contactEmail)) {
       await sendMail({
         to: result.contactEmail,
-        subject: 'We received your request - She Model Tech',
+        subject: req.body.kind === 'team' ? 'We received your team application - She Model Tech' : 'We received your request - She Model Tech',
         text: `Thank you for contacting She Model Tech. We received your request and will reply within a few working days.\n\n${detailText}`,
         html: `<p>Thank you for contacting She Model Tech. We received your request and will reply within a few working days.</p>${detailHtml}`,
       }).catch(() => {});
@@ -71,11 +77,11 @@ module.exports = async function handler(req, res) {
         await db.collection('notifications').add({
           userId: u.id,
           recipientId: u.id,
-          type: req.body.kind === 'org' ? 'org_request' : 'summit_partner',
+          type: req.body.kind === 'org' ? 'org_request' : req.body.kind === 'team' ? 'team_application' : 'summit_partner',
           title,
           body: 'Review it in the Admin dashboard.',
           message: title,
-          link: '/admin',
+          link: req.body.kind === 'team' ? '/admin?tab=team' : '/admin',
           isRead: false,
           read: false,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),

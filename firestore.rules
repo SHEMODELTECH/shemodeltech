@@ -618,6 +618,23 @@ service cloud.firestore {
  allow update: if isReviewer();
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
  }
+ // Applications to join the She Model Tech team (anyone may apply; admins decide).
+ match /team_applications/{id} {
+ allow create: if request.resource.data.status == 'new'
+ && request.resource.data.name is string && request.resource.data.name.size() > 1 && request.resource.data.name.size() <= 120
+ && request.resource.data.email is string && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+ && request.resource.data.phone is string && request.resource.data.phone.size() <= 40
+ && request.resource.data.linkedinOrPortfolio is string && request.resource.data.linkedinOrPortfolio.size() <= 300
+ && request.resource.data.socialPlatform in ['Instagram', 'X', 'LinkedIn']
+ && request.resource.data.socialHandle is string && request.resource.data.socialHandle.size() <= 100
+ && request.resource.data.role in ['community', 'communication', 'social', 'brand', 'partnership', 'sponsorship', 'program', 'designer', 'content']
+ && request.resource.data.otherRoles is list && request.resource.data.otherRoles.size() <= 2
+ && request.resource.data.why is string && request.resource.data.why.size() <= 3000
+ && request.resource.data.get('hours', '').size() <= 60
+ && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'linkedinOrPortfolio', 'socialPlatform', 'socialHandle', 'role', 'otherRoles', 'hours', 'why', 'status', 'createdAt']);
+ allow read, update, delete: if isAdmin();
+ }
+
  match /summitPartners/{id} {
  allow create: if request.resource.data.status == 'new'
  && request.resource.data.companyName is string && request.resource.data.companyName.size() > 0 && request.resource.data.companyName.size() <= 150

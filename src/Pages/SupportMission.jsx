@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { useFeatures } from '../utils/features';
 import SponsorsStrip from '../components/SponsorsStrip';
 import Navbar from '../components/Navbar';
-import { DEDUCTIBLE_LINE } from '../config/nonprofit';
+import { DEDUCTIBLE_LINE, ORG_LEGAL_NAME, ORG_EIN } from '../config/nonprofit';
 
 const DONATION_LINK = process.env.REACT_APP_DONATION_LINK || null;
 const TEAM_EMAIL = 'shemodeltech@gmail.com';
@@ -61,10 +61,7 @@ const SupportMission = () => {
       <section className="max-w-4xl mx-auto px-6 pb-16">
         <SponsorsStrip />
         <p className="text-sm text-gray-600 mt-6 text-center">
-          {DEDUCTIBLE_LINE} Donors outside the United States should check their own country’s rules.
-        </p>
-        <p className="text-sm text-gray-600 mt-2 text-center">
-          Hiring? Companies post jobs and browse verified talent through our <Link to="/premium" className="text-pink-700 font-semibold hover:underline">company tiers</Link>.
+          {ORG_LEGAL_NAME} is a 501(c)(3) nonprofit (EIN {ORG_EIN}).
         </p>
       </section>
     </div>

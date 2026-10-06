@@ -19,7 +19,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
   useEffect(() => {
     (async () => {
       const [
-        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments, jobDeletes, sizeReqs,
+        reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments, jobDeletes, sizeReqs, teamApps,
       ] = await Promise.all([
         count(query(collection(db, 'projects'), where('reviewStatus', '==', 'submitted'))),
         count(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
@@ -52,8 +52,9 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
         count(query(collection(db, 'projects'), where('status', '==', 'awaiting_payment_confirmation'))),
         count(query(collection(db, 'jobs'), where('status', '==', 'removal_requested'))),
         count(query(collection(db, 'projects'), where('sizeRequest.status', '==', 'pending'))),
+        count(query(collection(db, 'team_applications'), where('status', '==', 'new'))),
       ]);
-      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments, jobDeletes, sizeReqs });
+      setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments, jobDeletes, sizeReqs, teamApps });
     })();
   }, [isAdmin]);
 
@@ -64,6 +65,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ['Payments in progress', c.payments, 'Paid projects waiting on payments or confirmations', { to: '/disputes' }],
     ['Extra time requests', c.extension, 'Leads asking for more time', { to: '/admin/projects' }],
     ['More people requests', c.sizeReqs, 'Leads asking to add people to a paid project', { to: '/admin/projects' }],
+    ...(isAdmin ? [['Team applications', c.teamApps, 'People applying to join the She Model Tech team', { to: '/admin?tab=team' }]] : []),
     ['Mentor courses', c.capstone, 'Courses to approve, or deletion requests', { tab: 'teachers' }],
     ['Mentor letters', c.letters, 'Recommendation and volunteer letters', { tab: 'teachers' }],
     ...(isAdmin ? [['Mentor applications', c.mentorApps, 'People applying to mentor', { tab: 'teachers' }]] : []),

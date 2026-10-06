@@ -40,6 +40,7 @@ import HeardFromSummary from '../../components/admin/HeardFromSummary';
 import AnnouncementsAdmin from '../../components/admin/AnnouncementsAdmin';
 import FeedbackSummary from '../../components/admin/FeedbackSummary';
 import { ADMIN_SECTIONS } from '../../config/adminSections';
+import TeamApplicationsAdmin from '../../components/admin/TeamApplicationsAdmin';
 
 const fmtDate = (ts) => {
   try {
@@ -951,6 +952,7 @@ const AdminPanel = ({ only = null }) => {
         <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
       )}
       {!loadingData && tab === 'announcements' && isAdmin && <AnnouncementsAdmin />}
+      {!loadingData && tab === 'team' && isAdmin && <TeamApplicationsAdmin />}
       {!loadingData && tab === 'feedback' && isAdmin && <FeedbackSummary />}
       {!loadingData && tab === 'overview' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
