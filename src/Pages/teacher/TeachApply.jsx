@@ -191,7 +191,7 @@ const TeachApply = () => {
             <li>Apply here. An admin reviews every application.</li>
             <li>Once approved, create courses in the Mentor Hub: written, video, or interactive.</li>
             <li>Submit a course for learners. After an admin approves it, it goes live in Learning.</li>
-            <li>Earn your Mentor badge and a certificate for every published course.</li>
+            <li>Earn your Mentor label and a certificate for every published course.</li>
           </ol>
           <a href="#faq" className="inline-block mt-4 text-sm font-semibold text-pink-700 hover:underline">
             Questions? See the FAQ
@@ -223,20 +223,15 @@ const TeachApply = () => {
 };
 
 const MENTOR_BENEFITS = [
-  ['Certificates', 'a Certificate of Recognition for every course you publish, ready to download and add to LinkedIn'],
-  ['Mentor badge', 'on your profile and beside your name on every course you publish'],
-  ['Recommendation letters', 'from SHE MODEL TECH Inc. for jobs, promotions, or applications, on request'],
-  ['Volunteer service letter', 'confirming your mentoring with a registered 501(c)(3) nonprofit, on request'],
-  ['Top-rated on the Talent Board', 'mentors are featured with learner ratings from their courses'],
+  ['Certificate of Recognition', 'for every course you publish, ready to download and add to LinkedIn'],
+  ['Mentor label', 'on your profile and beside your name on every course you publish'],
+  ['Letters on request', 'a volunteer service letter any time. After you’ve published at least one course, you can also ask for a recommendation letter, written at She Model Tech’s discretion'],
+  ['Featured on the Talent Board', 'mentors are shown with learner ratings from their courses'],
   ['Public recognition', 'your name on your courses, and new courses featured in "From our mentors" in Learning'],
-  ['A teaching portfolio', 'learner ratings, comments, and reactions that show the impact of your teaching'],
-  ['Impact you can share', 'how many learners enrolled in and completed your courses'],
-  ['Leadership development', 'teaching, communication, and leadership experience'],
-  ['Networking', 'with learners, other mentors, and companies hiring through She Model Tech'],
-  ['Speaking and visibility', 'opportunities to lead live sessions and workshops, and features in our community updates'],
-  ['Early access to talent', 'meet motivated learners up close, helpful if you hire or lead teams'],
-  ['Priority support', 'Message She Model Tech directly, and your requests are handled first.'],
-  ['Tools included', 'the Mentor Hub for written, video, and interactive courses, plus full-screen Present mode'],
+  ['A teaching portfolio', 'learner ratings, comments, enrollments, and completions that show the impact of your teaching'],
+  ['Grow and connect', 'teaching and leadership experience, and a network of learners, mentors, and partner companies'],
+  ['Speaking opportunities', 'you may be invited to lead live sessions or workshops, and to be featured in community updates'],
+  ['Tools and support', 'the Mentor Hub for written, video, and interactive courses, full-screen Present mode, and a direct line to She Model Tech'],
 ];
 
 const MENTOR_FAQ = [
@@ -267,12 +262,12 @@ const MENTOR_FAQ = [
     'Create your course in the Mentor Hub and choose "Learners". It goes to an admin for approval; while it waits, you can keep editing it or withdraw it. Once approved, it goes live in Learning with your name on it. If it isn\'t approved, you\'ll see the admin\'s note and can edit and resubmit.',
   ],
   [
-    'How do certificates and the Mentor badge work?',
-    'You get the Mentor badge when you\'re approved as a mentor, and a Certificate of Recognition for every course that\'s published. Download certificates from your profile or the Mentor Hub, share their verification link, or add them to LinkedIn.',
+    'How do certificates and the Mentor label work?',
+    'You get the Mentor label when your first course is published, and a Certificate of Recognition for every course that\'s published. Download certificates from your profile or the Mentor Hub, share their verification link, or add them to LinkedIn.',
   ],
   [
     'Can I get a recommendation or volunteer service letter?',
-    'Yes. In the Mentor Hub, choose "Request a letter", say what it\'s for, and give us your draft (paste it, attach it, or email it). Our team reviews and edits it, and you can download the finished letter from the Mentor Hub.',
+    'Yes. You can ask for a volunteer service letter any time, and for a recommendation letter once you\'ve published at least one course. Letters are written at She Model Tech\'s discretion. In the Mentor Hub, choose "Request a letter", say what it\'s for, and give us your draft (paste it, attach it, or email it). Our team reviews and edits it, and you can download the finished letter from the Mentor Hub.',
   ],
   [
     'How much time does mentoring take?',

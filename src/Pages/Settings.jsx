@@ -920,7 +920,7 @@ const IncludedTab = ({ profile }) => {
           <FeatureItem label="Proof Wall and public profile" detail="Share progress, show your badges and certificates, and print your profile." />
           <FeatureItem label="Verifiable, LinkedIn-ready certificates" detail="Every certificate has a public verification link and an Add to LinkedIn button." />
           <FeatureItem label="Course forums and ratings" detail="Ask questions, discuss, share capstones, and rate courses." />
-          <FeatureItem label="Become a mentor" detail="Create and publish courses, earn the Mentor badge and certificates, and request recommendation or volunteer service letters." />
+          <FeatureItem label="Become a mentor" detail="Create and publish courses, earn the Mentor label and certificates, and request volunteer service or recommendation letters." />
           <FeatureItem label="Payment protection on paid projects" detail="Every member confirms payment before a paid project closes, with a dispute process if something goes wrong." />
           <FeatureItem label="Email updates" detail="Daily and weekly digests with new projects and courses. Choose what you receive in Settings." />
           <FeatureItem label="Support" detail={`Reach She Model Tech any time at ${BRAND.supportEmail}.`} />

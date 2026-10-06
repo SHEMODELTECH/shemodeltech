@@ -121,6 +121,7 @@ const Team = () => {
               </div>
             ))}
           </div>
+          <p className="mt-5 text-sm text-gray-600">Team members are still members: you can join or lead any project, free or paid, on the same terms as everyone else.</p>
         </section>
 
         {/* Roles */}

@@ -18,23 +18,24 @@ export const PrioritySupport = () => {
   const features = useFeatures();
   const navigate = useNavigate();
   const [premium, setPremium] = useState(false);
+  const [isCompany, setIsCompany] = useState(false);
   const [teamUid, setTeamUid] = useState(null);
   useEffect(() => {
     if (!currentUser) return;
     // Mentors always; Champion companies once Company tiers is on.
-    getDoc(doc(db, 'users', currentUser.uid)).then((s) => { const d = s.data() || {}; setPremium(d.isCompany ? features.companyTiers && hasPrioritySupport(d) : hasPrioritySupport(d)); }).catch(() => {});
+    getDoc(doc(db, 'users', currentUser.uid)).then((s) => { const d = s.data() || {}; setIsCompany(!!d.isCompany); setPremium(d.isCompany ? features.companyTiers && hasPrioritySupport(d) : hasPrioritySupport(d)); }).catch(() => {});
     getStaff(['admin']).then((s) => s[0] && setTeamUid(s[0].uid)).catch(() => {});
   }, [currentUser, features.companyTiers]);
   if (!premium) return null;
   return (
     <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
       <div>
-        <p className="font-semibold text-gray-900">Priority support</p>
-        <p className="text-sm text-gray-700 mt-1">Message She Model Tech directly. Your requests are handled first.</p>
+        <p className="font-semibold text-gray-900">{isCompany ? 'Priority support' : 'A direct line to She Model Tech'}</p>
+        <p className="text-sm text-gray-700 mt-1">{isCompany ? 'Message She Model Tech directly. Your requests are handled first.' : 'Message She Model Tech directly with any question about mentoring.'}</p>
       </div>
       {teamUid && (
         <button
-          onClick={() => navigate(`/messages?to=${teamUid}&text=${encodeURIComponent('[Priority support] Hi team, I need help with: ')}`)}
+          onClick={() => navigate(`/messages?to=${teamUid}&text=${encodeURIComponent(isCompany ? '[Priority support] Hi team, I need help with: ' : 'Hi team, I need help with: ')}`)}
           className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
         >
           Message the team

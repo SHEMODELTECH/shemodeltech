@@ -240,7 +240,7 @@ export const markApproved = async (course, admin) => {
         });
         await updateDoc(doc(db, COL, course.id), { mentorBadgeCounted: true });
         if (prev === 0) {
-          await notifyUser(to, 'You earned the Mentor badge', 'It now shows on your profile and on your courses in Learning.', course.review?.submittedBy?.email ? `/profile/${course.review.submittedBy.email}` : '/learning');
+          await notifyUser(to, 'You earned the Mentor label', 'It now shows on your profile and on your courses in Learning.', course.review?.submittedBy?.email ? `/profile/${course.review.submittedBy.email}` : '/learning');
         }
       } catch (e) {
         console.error('mentor badge', e);

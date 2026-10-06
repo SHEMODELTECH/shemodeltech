@@ -166,8 +166,20 @@ const MentorLetters = ({ access }) => {
   useEffect(() => {
     myLetterRequests(access.uid).then(setReqs).catch(() => setReqs([]));
   }, [access.uid]);
+  // A recommendation letter needs at least one published course (staff exempt).
+  const [published, setPublished] = useState(null);
+  useEffect(() => {
+    getDoc(doc(db, 'users', access.uid))
+      .then((s) => setPublished((s.data()?.mentorApprovedCourses || 0) > 0))
+      .catch(() => setPublished(false));
+  }, [access.uid]);
+  const canRecommend = access.isStaff || published === true;
+  useEffect(() => {
+    if (published === false && !access.isStaff) setForm((f) => (f.type === 'recommendation' ? { ...f, type: 'volunteer' } : f));
+  }, [published, access.isStaff]);
 
   const send = async () => {
+    if (form.type === 'recommendation' && !canRecommend) return toast.error('You can ask for a recommendation letter after your first course is published.');
     const purposeWords = form.purpose.trim().split(/\s+/).filter(Boolean).length;
     if (purposeWords < 5) return toast.error(`"What is it for?" needs at least 5 words (you have ${purposeWords}).`);
     const draftWords = form.draftText.trim().split(/\s+/).filter(Boolean).length;
@@ -239,11 +251,15 @@ const MentorLetters = ({ access }) => {
             <div className="flex flex-wrap gap-2">
               {Object.entries(LETTER_TYPES).map(([v, l]) => (
                 <button key={v} type="button" aria-pressed={form.type === v} onClick={() => setForm({ ...form, type: v })}
-                  className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${form.type === v ? 'bg-pink-600 border-pink-600 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>
+                  disabled={v === 'recommendation' && !canRecommend}
+                  className={`text-sm font-semibold px-3 py-1.5 rounded-full border disabled:opacity-40 disabled:cursor-not-allowed ${form.type === v ? 'bg-pink-600 border-pink-600 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>
                   {l}
                 </button>
               ))}
             </div>
+            {!canRecommend && published !== null && (
+              <p className="text-xs text-gray-500 mt-2">You can ask for a recommendation letter after your first course is published.</p>
+            )}
           </fieldset>
           <div className="sm:col-span-2">
             <label className="block text-sm font-semibold text-gray-800 mb-1" htmlFor="lt-purpose">
@@ -484,11 +500,11 @@ const TeacherList = ({ access }) => {
         {!access.isStaff && (
           <HubToggle title="Your mentor benefits">
             <ul className="list-disc pl-5 space-y-1.5">
-              <li>A Mentor badge on your profile and on your courses</li>
+              <li>A Mentor label on your profile and on your courses</li>
               <li>A Certificate of Recognition for every published course</li>
-              <li>A spot among top-rated mentors on the Talent Board</li>
-              <li>Priority support from She Model Tech</li>
-              <li>Recommendation and volunteer service letters from SHE MODEL TECH Inc.</li>
+              <li>A featured spot on the Talent Board, with learner ratings</li>
+              <li>A direct line to She Model Tech</li>
+              <li>A volunteer service letter any time, and a recommendation letter after your first published course</li>
             </ul>
             <a href="/teach#faq" className="inline-block mt-2 font-semibold text-pink-700 hover:underline">See all benefits and FAQs</a>
           </HubToggle>
