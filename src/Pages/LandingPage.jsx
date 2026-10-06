@@ -228,7 +228,7 @@ const LandingPage = () => {
 
       {/* TECH BADGES */}
       <section className="py-20 sm:py-28 bg-gray-50 border-y border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div
             id="badges-head"
             data-animate
@@ -301,7 +301,7 @@ const LandingPage = () => {
 
       {/* LEARNING */}
       <section className="py-20 sm:py-28 bg-gradient-to-b from-pink-50/60 to-white border-y border-pink-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div
             id="learn-head"
             data-animate

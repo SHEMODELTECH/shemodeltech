@@ -70,8 +70,9 @@ const LearningLayout = ({ children, accent, bare = false }) => {
   const items = [
     { to: '/learning', label: 'Learning', active: onLearning },
     ...(currentUser ? [] : [{ to: '/projects', label: 'Projects' }]),
+    { to: '/events', label: 'Events' },
     ...(currentUser ? [{ to: '/learning/my', label: 'My learning' }] : []),
-    // Visitors see only Learning and Projects; signed-in members get the mentor link.
+    // Signed-in members also get the mentor link.
     ...(!currentUser ? [] : [canTeach ? { to: '/teacher', label: 'Mentor Hub' } : { to: '/teach', label: 'Become a mentor' }]),
   ];
 
