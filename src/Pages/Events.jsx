@@ -2,7 +2,7 @@
 // She Model Tech events (all online): upcoming events to register for, and
 // past events with recordings. Visitors can browse; registering needs an account.
 // The joining link appears only for people with a place.
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -16,6 +16,66 @@ import {
   CATEGORY_LABEL, EVENT_CATEGORIES, cancelRegistration, downloadIcs, formatWhen, getJoinUrl,
   googleCalendarUrl, isPast, listPublishedEvents, myRegistrations, register,
 } from '../utils/events';
+
+// Description: three lines, with "Read more" for longer ones.
+const EventDescription = ({ text }) => {
+  const [open, setOpen] = useState(false);
+  const long = text.length > 160;
+  return (
+    <div className="mt-3 text-sm text-gray-600 leading-relaxed">
+      <p className={`whitespace-pre-line ${open ? '' : 'line-clamp-3'}`}>{text}</p>
+      {long && (
+        <button onClick={() => setOpen((o) => !o)} className="mt-1 text-xs font-semibold text-pink-700 hover:underline">
+          {open ? 'Show less' : 'Read more'}
+        </button>
+      )}
+    </div>
+  );
+};
+
+// Three cards across on large screens (two on tablets, one on phones). With more
+// than fit, the row scrolls sideways with arrows and swipe.
+const EventRow = ({ items, render }) => {
+  const ref = useRef(null);
+  const [edges, setEdges] = useState({ start: true, end: true });
+  const update = () => {
+    const el = ref.current;
+    if (!el) return;
+    setEdges({ start: el.scrollLeft <= 4, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4 });
+  };
+  useEffect(() => {
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [items.length]);
+  const move = (dir) => ref.current?.scrollBy({ left: dir * ref.current.clientWidth, behavior: 'smooth' });
+  const scrolls = !(edges.start && edges.end);
+  return (
+    <div className="relative mt-4">
+      <div
+        ref={ref}
+        onScroll={update}
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {items.map((e) => (
+          <div key={e.id} className="snap-start flex-none w-[85%] sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]">
+            {render(e)}
+          </div>
+        ))}
+      </div>
+      {scrolls && (
+        <div className="mt-3 flex items-center justify-end gap-2">
+          <button onClick={() => move(-1)} disabled={edges.start} aria-label="Previous events" className="w-10 h-10 rounded-full border border-gray-300 bg-white flex items-center justify-center text-gray-800 hover:border-gray-500 disabled:opacity-30">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          </button>
+          <button onClick={() => move(1)} disabled={edges.end} aria-label="More events" className="w-10 h-10 rounded-full border border-gray-300 bg-white flex items-center justify-center text-gray-800 hover:border-gray-500 disabled:opacity-30">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const EventCard = ({ e, reg, currentUser, onChange, highlight }) => {
   const navigate = useNavigate();
@@ -93,29 +153,29 @@ const EventCard = ({ e, reg, currentUser, onChange, highlight }) => {
   };
 
   return (
-    <article id={`e-${e.id}`} className={`rounded-2xl border bg-white scroll-mt-28 overflow-hidden ${highlight ? 'border-pink-500 ring-2 ring-pink-200' : 'border-gray-200'}`}>
+    <article id={`e-${e.id}`} className={`h-full flex flex-col rounded-2xl border bg-white scroll-mt-28 overflow-hidden ${highlight ? 'border-pink-500 ring-2 ring-pink-200' : 'border-gray-200'}`}>
       {e.imageUrl && (
         <a href={e.imageUrl} target="_blank" rel="noopener noreferrer" className="block bg-gray-50 border-b border-gray-200" aria-label={`Open the ${e.title} flyer`}>
-          <img src={e.imageUrl} alt={`${e.title} flyer`} loading="lazy" className="w-full max-h-[480px] object-contain" />
+          <img src={e.imageUrl} alt={`${e.title} flyer`} loading="lazy" className="w-full h-44 object-cover" />
         </a>
       )}
-      <div className="p-5 sm:p-6">
+      <div className="p-5 flex-1 flex flex-col">
       <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
         <span className="px-2.5 py-1 rounded-full bg-pink-50 text-pink-700">{CATEGORY_LABEL[e.category] || 'Event'}</span>
         <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">Online</span>
         {cancelled && <span className="px-2.5 py-1 rounded-full bg-red-50 text-red-700">Cancelled</span>}
       </div>
-      <h3 className="mt-3 text-xl font-bold text-gray-900">{e.title}</h3>
+      <h3 className="mt-3 text-lg font-bold text-gray-900 leading-snug">{e.title}</h3>
       <p className="mt-1 text-sm font-semibold text-gray-700">{formatWhen(e)}{e.durationMins ? ` · ${e.durationMins} min` : ''}</p>
       {e.hosts && <p className="mt-1 text-sm text-gray-600">With {e.hosts}</p>}
-      {e.description && <p className="mt-3 text-gray-600 leading-relaxed whitespace-pre-line">{e.description}</p>}
+      {e.description && <EventDescription text={e.description} />}
 
       {past ? (
         e.recordingUrl ? (
           <a href={e.recordingUrl} target="_blank" rel="noopener noreferrer" className="inline-block mt-4 text-sm font-semibold text-pink-700 hover:underline">Watch the recording →</a>
         ) : null
       ) : cancelled ? null : (
-        <div className="mt-5">
+        <div className="mt-auto pt-5">
           {placed ? (
             <div className="space-y-3">
               <p className="text-sm font-semibold text-gray-900">✓ You’re registered{reg.present ? ` and asked to present “${reg.projectTitle}”` : ''}.</p>
@@ -188,7 +248,7 @@ const Events = () => {
   useEffect(load, [currentUser]);
 
   useEffect(() => {
-    if (focus && events) setTimeout(() => document.getElementById(`e-${focus}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    if (focus && events) setTimeout(() => document.getElementById(`e-${focus}`)?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 100);
   }, [focus, events]);
 
   const { upcoming, past } = useMemo(() => {
@@ -202,7 +262,7 @@ const Events = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-10">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
         <p className="text-sm font-semibold text-pink-700">Events</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-1">Learn, share, and celebrate together</h1>
         <p className="text-gray-600 text-lg mt-3 max-w-2xl">
@@ -230,21 +290,19 @@ const Events = () => {
             {upcoming.length === 0 ? (
               <p className="mt-3 text-gray-600">No upcoming events right now. New events are announced by email and in your notifications.</p>
             ) : (
-              <div className="mt-4 space-y-4">
-                {upcoming.map((e) => (
-                  <EventCard key={e.id} e={e} reg={regs[e.id]} currentUser={currentUser} onChange={load} highlight={focus === e.id} />
-                ))}
-              </div>
+              <EventRow
+                items={upcoming}
+                render={(e) => <EventCard e={e} reg={regs[e.id]} currentUser={currentUser} onChange={load} highlight={focus === e.id} />}
+              />
             )}
 
             {past.length > 0 && (
               <>
                 <h2 className="mt-12 text-xl font-bold text-gray-900">Past events</h2>
-                <div className="mt-4 space-y-4">
-                  {past.map((e) => (
-                    <EventCard key={e.id} e={e} reg={regs[e.id]} currentUser={currentUser} onChange={load} highlight={focus === e.id} />
-                  ))}
-                </div>
+                <EventRow
+                  items={past}
+                  render={(e) => <EventCard e={e} reg={regs[e.id]} currentUser={currentUser} onChange={load} highlight={focus === e.id} />}
+                />
               </>
             )}
           </>
