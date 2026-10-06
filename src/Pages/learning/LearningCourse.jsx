@@ -420,7 +420,7 @@ const LearningCourse = ({ reading = false }) => {
               </div>
               <p className="text-sm text-gray-600 mt-4 leading-relaxed">
                 Courses build the skill. The {track} badge comes from doing the work: join a team project,
-                deliver your part, and have it reviewed. One badge unlocks paid projects.
+                deliver your part, and have it reviewed.
               </p>
               <Link to="/projects" className="fd-link inline-block mt-3">Find a project to join</Link>
             </aside>

@@ -26,33 +26,6 @@ const About = () => {
           </p>
         </section>
 
-        {/* Who we are: registered nonprofit and mission */}
-        <section className="mb-14" aria-labelledby="who-h">
-          <div className="rounded-2xl border border-pink-100 bg-gradient-to-br from-pink-50 via-white to-pink-50 p-6 sm:p-8">
-            <h2 id="who-h" className="text-2xl font-bold text-gray-900">Who we are</h2>
-            <p className="text-gray-700 text-lg leading-relaxed mt-3">
-              <strong className="text-gray-900">SHE MODEL TECH Inc.</strong> is a registered 501(c)(3) non-profit
-              organization with the mission to empower women in tech through mentorship, IT skills training, leadership
-              development, and networking opportunities.
-            </p>
-          </div>
-
-          {/* The four parts of the mission, and where they live on the platform */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-            {[
-              ['Mentorship', 'Experienced mentors create courses and guide learners through the Mentor Hub.', 'bg-pink-50 text-pink-700 border-pink-100'],
-              ['IT skills training', 'Free, hands-on courses in She Model Tech Learning, with certificates of completion.', 'bg-pink-50 text-pink-700 border-pink-100'],
-              ['Leadership development', 'Lead a real project team, from planning to delivery, and earn a leadership badge.', 'bg-amber-50 text-amber-700 border-amber-100'],
-              ['Networking', 'Build connections on the Proof Wall and Talent Board, and through real teamwork.', 'bg-green-50 text-green-700 border-green-100'],
-            ].map(([t, d, c]) => (
-              <div key={t} className="bg-white rounded-xl border border-gray-200 p-5">
-                <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border ${c}`}>{t}</span>
-                <p className="text-gray-600 text-sm mt-3 leading-relaxed">{d}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* The path: Ascend Achieve Advance */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
@@ -87,10 +60,36 @@ const About = () => {
               </div>
               <h3 className="text-gray-900 font-bold text-lg mb-2">Advance</h3>
               <p className="text-gray-500 text-sm">
-                Get hired. Expert badges carry commit-backed evidence employers can verify
-                themselves.
+                Grow your career. Level up from Novice to Expert and lead teams.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* Who we are: registered nonprofit and mission */}
+        <section className="mb-14" aria-labelledby="who-h">
+          <div className="rounded-2xl border border-pink-100 bg-gradient-to-br from-pink-50 via-white to-pink-50 p-6 sm:p-8">
+            <h2 id="who-h" className="text-2xl font-bold text-gray-900">Who we are</h2>
+            <p className="text-gray-700 text-lg leading-relaxed mt-3">
+              <strong className="text-gray-900">SHE MODEL TECH Inc.</strong> is a registered 501(c)(3) non-profit
+              organization with the mission to empower women in tech through mentorship, IT skills training, leadership
+              development, and networking opportunities.
+            </p>
+          </div>
+
+          {/* The four parts of the mission, and where they live on the platform */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            {[
+              ['Mentorship', 'Experienced mentors create courses and guide learners through the Mentor Hub.', 'bg-pink-50 text-pink-700 border-pink-100'],
+              ['IT skills training', 'Free, hands-on courses in She Model Tech Learning, with certificates of completion.', 'bg-pink-50 text-pink-700 border-pink-100'],
+              ['Leadership development', 'Lead a real project team, from planning to delivery, and earn a leadership badge.', 'bg-amber-50 text-amber-700 border-amber-100'],
+              ['Networking', 'Build connections on the Proof Wall and Talent Board, and through real teamwork.', 'bg-green-50 text-green-700 border-green-100'],
+            ].map(([t, d, c]) => (
+              <div key={t} className="bg-white rounded-xl border border-gray-200 p-5">
+                <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border ${c}`}>{t}</span>
+                <p className="text-gray-600 text-sm mt-3 leading-relaxed">{d}</p>
+              </div>
+            ))}
           </div>
         </section>
 

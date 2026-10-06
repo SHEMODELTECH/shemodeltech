@@ -523,7 +523,7 @@ const LearningHome = ({ mine = false }) => {
                 ['Learn', 'Take any course, free, at your own pace.'],
                 ['Build with a team', 'Join a She Model Tech project in your track and deliver real work.'],
                 ['Earn the badge', 'Your work is reviewed and the badge goes on your profile.'],
-                ['Get paid work', 'One badge unlocks paid projects from verified companies.'],
+                ['Get seen', 'Your badges and projects show on your profile and the Talent Board, where companies hiring in tech can find you.'],
               ].map(([t, d], i) => (
                 <div key={t} className="flex gap-3">
                   <span className="w-7 h-7 flex-shrink-0 rounded-full bg-pink-100 text-pink-700 text-sm font-bold flex items-center justify-center">

@@ -370,33 +370,21 @@ const LandingPage = () => {
             Hire proven talent
           </h2>
           <p className="text-gray-500 max-w-xl mx-auto text-base">
-            She Model Tech is a community of builders verified by the work they have actually
-            shipped, where organizations can discover talent and post paid projects based on real,
-            verifiable proof.
+            She Model Tech is a community of women building real products in teams. Every badge comes
+            from work that was actually shipped and reviewed, so you can hire on proof, not promises.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="max-w-2xl mx-auto">
           <div
             id="company-0"
             data-animate
             className={`fade-up delay-1 border border-gray-200 rounded-2xl p-7 hover:border-pink-300 hover:shadow-sm transition-all ${isVisible('company-0') ? 'visible' : ''}`}
           >
-            <h3 className="text-xl font-700 text-gray-900 mb-2">Hire from the community</h3>
+            <h3 className="text-xl font-700 text-gray-900 mb-2">Find verified talent</h3>
             <p className="text-gray-500 text-sm leading-relaxed">
-              Browse the Talent Board, review verified badges and real project history, and reach
-              out to the people whose proof fits what you are building.
-            </p>
-          </div>
-          <div
-            id="company-1"
-            data-animate
-            className={`fade-up delay-2 border border-gray-200 rounded-2xl p-7 hover:border-pink-300 hover:shadow-sm transition-all ${isVisible('company-1') ? 'visible' : ''}`}
-          >
-            <h3 className="text-xl font-700 text-gray-900 mb-2">Post paid projects</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">
-              Bring real work to teams ready to deliver it by posting paid projects and assembling
-              talent across development.
+              Browse the Talent Board, review verified badges and real project history, and reach out
+              to the people whose work fits what you’re building.
             </p>
           </div>
         </div>
