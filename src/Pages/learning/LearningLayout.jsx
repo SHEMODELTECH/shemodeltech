@@ -65,7 +65,10 @@ const LearningLayout = ({ children, accent, bare = false }) => {
       isActive ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
     }`;
 
+  // "Learning" (all courses) is lit on every Learning page except My learning.
+  const onLearning = location.pathname.startsWith('/learning') && !location.pathname.startsWith('/learning/my');
   const items = [
+    { to: '/learning', label: 'Learning', active: onLearning },
     ...(currentUser ? [] : [{ to: '/projects', label: 'Projects' }]),
     ...(currentUser ? [{ to: '/learning/my', label: 'My learning' }] : []),
     canTeach ? { to: '/teacher', label: 'Mentor Hub' } : { to: '/teach', label: 'Become a mentor' },
@@ -90,18 +93,14 @@ const LearningLayout = ({ children, accent, bare = false }) => {
       <header className="lr-header sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl">
           <div className="flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] h-16 sm:h-20">
-            {/* The logo goes to She Model Tech's home; "Learning" goes to all courses. */}
-            <div className="flex items-center gap-2.5 flex-shrink-0 lg:justify-self-start">
-              <Link to={currentUser ? '/dashboard' : '/'} aria-label="She Model Tech home">
-                <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-11 sm:h-14 w-auto" />
-              </Link>
-              <span className="h-8 w-px bg-gray-200" aria-hidden="true" />
-              <Link to="/learning" className="fd-display text-lg sm:text-xl text-gray-900 hover:text-pink-600">Learning</Link>
-            </div>
+            {/* The logo goes to She Model Tech's home, as on every other page. */}
+            <Link to={currentUser ? '/dashboard' : '/'} aria-label="She Model Tech home" className="flex-shrink-0 flex items-center gap-2 lg:justify-self-start">
+              <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-11 sm:h-14 w-auto" />
+            </Link>
 
             <nav className="hidden lg:flex items-center justify-center gap-1 xl:gap-3" aria-label="Learning">
               {items.map((it) => (
-                <NavLink key={it.to} to={it.to} className={linkCls}>{it.label}</NavLink>
+                <NavLink key={it.to} to={it.to} end={it.to === '/learning'} className={(a) => linkCls({ isActive: it.active ?? a.isActive })}>{it.label}</NavLink>
               ))}
             </nav>
 
@@ -128,7 +127,7 @@ const LearningLayout = ({ children, accent, bare = false }) => {
           <div className="lg:hidden border-t border-gray-200 bg-white">
             <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl py-4 space-y-2">
               {items.map((it) => (
-                <NavLink key={it.to} to={it.to} className={mobileCls}>{it.label}</NavLink>
+                <NavLink key={it.to} to={it.to} end={it.to === '/learning'} className={(a) => mobileCls({ isActive: it.active ?? a.isActive })}>{it.label}</NavLink>
               ))}
               <div className="px-4 pt-2">{rightButton}</div>
             </div>
