@@ -180,8 +180,9 @@ const LearningCourse = ({ reading = false }) => {
     setSummaries((m) => ({ ...m, [partId]: entry }));
   };
 
-  // Forum participation: once other learners have posted or replied at least
-  // twice, the learner replies to someone else's post before finishing.
+  // Forum participation: once at least one other learner has posted in the
+  // course forum, the learner replies to someone else's post before finishing.
+  // If she's the first or only one there, it's skipped.
   const [forumReq, setForumReq] = useState({ required: false, done: true });
   const reloadForum = useCallback(async () => {
     if (!currentUser) return;
@@ -189,8 +190,7 @@ const LearningCourse = ({ reading = false }) => {
       const snap = await getDocs(query(collection(db, 'course_forum', courseKey(track, slug), 'threads'), limit(100)));
       const threads = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       const others = threads.filter((t) => t.uid !== currentUser.uid);
-      const otherActivity = others.length + threads.reduce((n, t) => n + (Number(t.replyCount) || 0), 0);
-      if (otherActivity < 2 || others.length === 0) {
+      if (others.length === 0) {
         setForumReq({ required: false, done: true });
         return;
       }
@@ -240,6 +240,10 @@ const LearningCourse = ({ reading = false }) => {
   if (!course) return <Navigate to="/learning" replace />;
   if (reading && !lr.loading && !lr.signedIn) return <Navigate to={`/learning/${track}/${slug}`} replace />;
 
+  // The Start Here course is an orientation: no summaries, no forum reply,
+  // and no certificate (certificates are for skill courses).
+  const noCert = track === 'start';
+
   // Open (issuing if needed) this learner's certificate for the course.
   const openCertificate = async () => {
     try {
@@ -273,9 +277,9 @@ const LearningCourse = ({ reading = false }) => {
               toast.info('Before you finish: reply to another learner in the course forum.');
               return navigate(`/learning/${track}/${slug}#forum`);
             }
-            return lr.markComplete(track, slug, course);
+            return lr.markComplete(track, slug, noCert ? null : course);
           }}
-          onCertificate={openCertificate}
+          onCertificate={noCert ? null : openCertificate}
         />
         {summaryGate && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true">
@@ -290,7 +294,7 @@ const LearningCourse = ({ reading = false }) => {
                     toast.info('One more step: reply to another learner in the course forum.');
                     navigate(`/learning/${track}/${slug}#forum`);
                   } else {
-                    lr.markComplete(track, slug, course);
+                    lr.markComplete(track, slug, noCert ? null : course);
                   }
                 }}
               />
@@ -318,14 +322,14 @@ const LearningCourse = ({ reading = false }) => {
           onPart={(i) => setParams(i > 0 ? { part: String(i + 1) } : {})}
           onBack={() => navigate(`/learning/${track}/${slug}`)}
           onOpen={(s) => navigate(`/learning/${track}/${s}`)}
-          onComplete={() => lr.markComplete(track, slug, course)}
-          onCertificate={openCertificate}
+          onComplete={() => lr.markComplete(track, slug, noCert ? null : course)}
+          onCertificate={noCert ? null : openCertificate}
           quizDone={lr.quizDoneFor(track, slug)}
           onQuizDone={(partId) => lr.saveQuizDone(track, slug, partId)}
           capstone={{ required: hasCapstone, done: capstone.status === 'approved', status: capstone.status, note: capstone.note, forumUrl: `/learning/${track}/${slug}#forum` }}
           summaries={summaries}
-          onSummary={currentUser ? saveSummary : null}
-          forum={{ ...forumReq, url: `/learning/${track}/${slug}#forum` }}
+          onSummary={currentUser && !noCert ? saveSummary : null}
+          forum={{ ...(noCert ? { required: false, done: true } : forumReq), url: `/learning/${track}/${slug}#forum` }}
         />
       </LearningLayout>
     );
@@ -399,9 +403,11 @@ const LearningCourse = ({ reading = false }) => {
                   <span className="flex items-center gap-1.5 text-sm font-semibold text-green-700">
                     <CheckIcon className="w-4 h-4" /> You completed this course
                   </span>
-                  <button onClick={openCertificate} className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2.5 rounded-lg hover:bg-gray-50">
-                    View certificate
-                  </button>
+                  {!noCert && (
+                    <button onClick={openCertificate} className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2.5 rounded-lg hover:bg-gray-50">
+                      View certificate
+                    </button>
+                  )}
                 </>
               )}
               {!lr.signedIn && <span className="text-sm text-gray-600">Free. Your progress is saved to your account.</span>}

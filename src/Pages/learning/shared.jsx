@@ -919,10 +919,10 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                             {canComplete ? 'Finished this course?' : 'Almost there'}
                           </p>
                           {canComplete ? (
-                            <p className="text-sm text-gray-600 mt-0.5">Mark it complete to get your certificate.</p>
+                            <p className="text-sm text-gray-600 mt-0.5">{onCertificate ? 'Mark it complete to get your certificate.' : 'Mark it complete when you’re done.'}</p>
                           ) : (
                             <div className="text-sm text-gray-700 mt-1">
-                              <p>To complete this course and get your certificate:</p>
+                              <p>{onCertificate ? 'To complete this course and get your certificate:' : 'To complete this course:'}</p>
                               <ul className="mt-1 space-y-1">
                                 {quizzesLeft.map((p) => (
                                   <li key={p.id}>
