@@ -64,11 +64,14 @@ const LearningLayout = ({ children, accent, bare = false }) => {
       <style>{FD_CSS}</style>
       <header className="lr-header sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
-          <Link to="/learning" className="flex items-center gap-2.5 flex-shrink-0" aria-label="She Model Tech Learning home">
-            <img src="/Images/she-model-tech-logo.png" alt="" className="h-10 w-auto" />
+          {/* The logo goes to She Model Tech's home; "Learning" goes to all courses. */}
+          <div className="flex items-center gap-2.5 flex-shrink-0">
+            <Link to={currentUser ? '/dashboard' : '/'} aria-label="She Model Tech home">
+              <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-10 w-auto" />
+            </Link>
             <span className="h-7 w-px bg-gray-200" aria-hidden="true" />
-            <span className="fd-display text-lg text-gray-900">Learning</span>
-          </Link>
+            <Link to="/learning" className="fd-display text-lg text-gray-900 hover:text-pink-700">Learning</Link>
+          </div>
 
           <nav className="hidden md:flex items-center gap-1 ml-4" aria-label="Learning">
             <NavLink to="/learning" end className={linkCls}>
@@ -92,10 +95,10 @@ const LearningLayout = ({ children, accent, bare = false }) => {
 
           <div className="ml-auto hidden md:flex items-center gap-2">
             <Link
-              to={currentUser ? '/dashboard' : '/'}
+              to={currentUser ? '/dashboard' : '/projects'}
               className="text-sm font-semibold text-gray-600 hover:text-gray-900 px-3 py-2"
             >
-              {currentUser ? 'Back to She Model Tech' : 'About She Model Tech'}
+              {currentUser ? 'Back to She Model Tech' : 'Projects'}
             </Link>
             {!currentUser && (
               <button
@@ -142,8 +145,8 @@ const LearningLayout = ({ children, accent, bare = false }) => {
                 Become a mentor
               </NavLink>
             )}
-            <Link to={currentUser ? '/dashboard' : '/'} className="text-sm font-semibold text-gray-700 px-3 py-2">
-              {currentUser ? 'Back to She Model Tech' : 'About She Model Tech'}
+            <Link to={currentUser ? '/dashboard' : '/projects'} className="text-sm font-semibold text-gray-700 px-3 py-2">
+              {currentUser ? 'Back to She Model Tech' : 'Projects'}
             </Link>
             {!currentUser && (
               <button

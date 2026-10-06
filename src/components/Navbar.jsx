@@ -63,46 +63,52 @@ const Navbar = ({ cta = null }) => {
 
   const navItems = currentUser
     ? [
-        { path: '/', label: 'Home' },
         { path: '/proof-wall', label: 'Proof Wall' },
         { path: '/projects', label: 'Projects' },
         { path: '/learning', label: 'Learning' },
         { path: '/dashboard', label: 'Dashboard' },
       ]
     : [
-        { path: '/', label: 'Home' },
+        // No Home item: the logo goes home.
+        { path: '/about', label: 'About' },
         { path: '/projects', label: 'Projects' },
         { path: '/learning', label: 'Learning' },
         { path: '/summit', label: 'Summit' },
-        { path: '/support-our-mission', label: 'Support' },
-        { path: '/about', label: 'About' },
+        { path: '/support-our-mission', label: 'Support Us' },
       ];
 
   const isActive = (path) => path === '/' ? location.pathname === '/' : (location.pathname === path || location.pathname.startsWith(path + '/'));
 
-  const getNavButtonClass = (path) => `px-2.5 lg:px-3 xl:px-4 py-2 rounded-lg text-xs lg:text-sm xl:text-base font-semibold transition-all duration-300 border ${
+  const getNavButtonClass = (path) => `px-2.5 lg:px-3 xl:px-4 py-2 text-sm xl:text-base font-semibold transition-colors border-b-2 ${
     isActive(path)
-      ? 'bg-pink-600 text-white border-pink-600'
-      : 'text-gray-700 bg-transparent border-gray-200 hover:bg-gray-50'
+      ? 'text-pink-600 border-pink-600'
+      : 'text-gray-700 border-transparent hover:text-pink-600'
   }`;
 
-  const getMobileNavButtonClass = (path) => `block w-full text-left px-4 py-3 rounded-lg text-base font-semibold transition-all min-h-[44px] border ${
+  const getMobileNavButtonClass = (path) => `block w-full text-left px-4 py-3 text-base font-semibold transition-colors min-h-[44px] ${
     isActive(path)
-      ? 'bg-pink-600 text-white border-pink-600'
-      : 'text-gray-700 bg-transparent border-gray-200 hover:bg-gray-50'
+      ? 'text-pink-600'
+      : 'text-gray-700 hover:text-pink-600'
   }`;
+
+  // Every page shows the same button for visitors, so the menu never moves.
+  const rightButton = cta || (!currentUser ? (
+    <Link to="/login" className="bg-pink-600 hover:bg-pink-700 text-white text-sm xl:text-base font-semibold px-4 py-2 rounded-lg whitespace-nowrap">
+      Get Started
+    </Link>
+  ) : null);
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] h-16 sm:h-20">
 
-            <Link to="/" className="flex-shrink-0 group flex items-center gap-2">
+            <Link to="/" aria-label="She Model Tech home" className="flex-shrink-0 group flex items-center gap-2 lg:justify-self-start">
               <img src="/Images/she-model-tech-logo.png" alt="She Model Tech" className="h-11 sm:h-14 w-auto" />
             </Link>
 
-            <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
+            <div className="hidden lg:flex items-center justify-center gap-1 xl:gap-3">
               {navItems.map((item) => (
                 <Link key={item.path} to={item.path} className={getNavButtonClass(item.path)}>
                   {item.label}
@@ -110,12 +116,12 @@ const Navbar = ({ cta = null }) => {
               ))}
             </div>
 
-            {!currentUser && cta && (
-              <div className="hidden lg:flex items-center">{cta}</div>
+            {!currentUser && (
+              <div className="hidden lg:flex items-center justify-self-end">{rightButton}</div>
             )}
 
             {currentUser && (
-              <div className="hidden lg:flex items-center gap-3 xl:gap-4">
+              <div className="hidden lg:flex items-center gap-3 xl:gap-4 justify-self-end">
                 <Link to="/messages" className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
                   <svg className="w-5 h-5 lg:w-6 lg:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -152,7 +158,7 @@ const Navbar = ({ cta = null }) => {
             )}
 
             <div className="lg:hidden flex items-center gap-2">
-            {!currentUser && cta}
+            {!currentUser && rightButton}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
