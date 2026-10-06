@@ -71,12 +71,13 @@ const LearningLayout = ({ children, accent, bare = false }) => {
     { to: '/learning', label: 'Learning', active: onLearning },
     ...(currentUser ? [] : [{ to: '/projects', label: 'Projects' }]),
     ...(currentUser ? [{ to: '/learning/my', label: 'My learning' }] : []),
-    canTeach ? { to: '/teacher', label: 'Mentor Hub' } : { to: '/teach', label: 'Become a mentor' },
+    // Visitors see only Learning and Projects; signed-in members get the mentor link.
+    ...(!currentUser ? [] : [canTeach ? { to: '/teacher', label: 'Mentor Hub' } : { to: '/teach', label: 'Become a mentor' }]),
   ];
 
   const rightButton = currentUser ? (
-    <Link to="/dashboard" className="bg-pink-600 hover:bg-pink-700 text-white text-sm xl:text-base font-semibold px-4 py-2 rounded-lg whitespace-nowrap">
-      Back to She Model Tech
+    <Link to="/projects" className="bg-pink-600 hover:bg-pink-700 text-white text-sm xl:text-base font-semibold px-4 py-2 rounded-lg whitespace-nowrap">
+      Projects
     </Link>
   ) : (
     <button

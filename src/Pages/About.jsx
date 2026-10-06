@@ -92,16 +92,22 @@ const About = () => {
           </div>
         </section>
 
-        {/* For companies */}
-        <section className="mb-12">
-          <div className="bg-pink-50 rounded-xl border border-pink-100 p-6 sm:p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              For companies
-            </h2>
-            <p className="text-gray-600 leading-relaxed">
-              Support our mission by funding a cohort, and hire women with verified badges through job posts and
-              the Talent Board with a company tier.
-            </p>
+        {/* Join us: three ways to be part of She Model Tech */}
+        <section className="mb-14" aria-labelledby="join-h">
+          <h2 id="join-h" className="text-2xl font-bold text-gray-900">Be part of She Model Tech</h2>
+          <p className="text-gray-600 mt-2 mb-6">There are three ways to join us in helping women learn, build, and lead in technology.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              ['Become a mentor', 'Share what you know. Create courses for our learners and help others build real skills.', '/teach', 'Become a mentor'],
+              ['Join the team', 'Volunteer a few hours a week in communications, community, partnerships, programs, and more.', '/team', 'See open roles'],
+              ['Partner with us', 'Fund a cohort and help more women build real products, as a company or as an individual.', '/support-our-mission', 'Support our mission'],
+            ].map(([t, d, to, cta]) => (
+              <Link key={t} to={to} className="group bg-white rounded-xl border border-gray-200 p-5 hover:border-pink-300 transition-colors flex flex-col">
+                <h3 className="font-bold text-gray-900 text-lg">{t}</h3>
+                <p className="text-gray-600 text-sm mt-2 leading-relaxed flex-1">{d}</p>
+                <span className="mt-4 text-sm font-semibold text-pink-700 group-hover:underline">{cta} →</span>
+              </Link>
+            ))}
           </div>
         </section>
 
