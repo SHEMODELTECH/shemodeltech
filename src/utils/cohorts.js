@@ -31,11 +31,12 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { fitBriefRoles } from './projectTemplates';
 
 // ---------------------------------------------------------------------
 // Shape
 // ---------------------------------------------------------------------
-export const COHORT_LENGTH_WEEKS = 8;
+export const COHORT_LENGTH_WEEKS = 6;
 export const GRACE_PERIOD_DAYS = 7;
 
 // Default number of projects per cohort. Deliberately UNDER-SUPPLIED:
@@ -293,7 +294,8 @@ export const setProjectTeamSize = async (project, size) => {
       updates.totalBudget = updates.teamRoles.reduce((t, r) => t + (Number(r.count) || 1) * (Number(r.payAmount) || 0), 0);
     }
   }
-  if (project.proposedRoles && project.proposedRoles.length) updates.proposedRoles = fitRolesToTeamSize(project.proposedRoles, n);
+  if (project.briefRoles && project.briefRoles.length) updates.proposedRoles = fitBriefRoles(project.briefRoles, n);
+  else if (project.proposedRoles && project.proposedRoles.length) updates.proposedRoles = fitRolesToTeamSize(project.proposedRoles, n);
   await updateDoc(doc(db, 'projects', project.id), updates);
 };
 

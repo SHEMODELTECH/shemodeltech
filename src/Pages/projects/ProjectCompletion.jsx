@@ -16,6 +16,7 @@ import { MIN_TEAM_SIZE, membersMeetMinTeamSize, MIN_TEAM_SIZE_MEMBERS_ERROR } fr
 import { sendPush } from '../../utils/pushNotifications';
 import { issueWorkRecords } from '../../utils/companyCohorts';
 import { alertStaff } from '../../utils/staffAlerts';
+import { suggestTrack } from '../../config/badgeTracks';
 
 const badgeCategories = {
   'mentorship': { id: 'techmo', name: 'TechPO (Product / Project Owner)', color: 'from-pink-500 to-pink-600' },
@@ -158,18 +159,8 @@ const ProjectCompletion = () => {
     }
   };
 
-  const mapRoleToCategory = (role) => {
-    const r = (role || '').toLowerCase();
-    if (r.includes('mentor')) return 'mentorship';
-    if (r.includes('qa') || r.includes('test')) return 'quality-assurance';
-    // Leads and product/project owners earn TechPO; project managers, writers,
-    // researchers, and other non-technical roles earn TechLeads.
-    if (r.includes('lead') || r.includes('owner') || r.includes('product')) return 'mentorship';
-    if (r.includes('project') || r.includes('scrum') || r.includes('writer') || r.includes('research') || r.includes('content') || r.includes('marketing')) return 'leadership';
-    if (r.includes('design')) return 'design';
-    if (r.includes('security')) return 'security';
-    return 'development';
-  };
+  // Leads and co-owners earn TechPO; other roles use their own track.
+  const mapRoleToCategory = (role) => suggestTrack(role);
 
   const updateEval = (index, field, value) => {
     setEvaluations(prev => {

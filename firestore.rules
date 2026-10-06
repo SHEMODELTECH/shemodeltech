@@ -309,10 +309,10 @@ service cloud.firestore {
  allow update: if isProjectOwner()
  // Featuring a project is a Premium feature.
  && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured']) || isPremiumUser())
- // Leads can't change a project's title, description, or dates (She Model Tech
- // sets them). Company posts are the company's own and stay editable.
+ // Leads can't change a project's title, description, problem, weekly plan, brief
+ // roles, or dates (She Model Tech sets them). Company posts are the company's own and stay editable.
  && (resource.data.get('isCompanyPost', false) == true
- || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'startDate', 'endDate', 'startAt']))
+ || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['projectTitle', 'projectDescription', 'startDate', 'endDate', 'startAt', 'problemStatement', 'weeklyPlan', 'briefRoles']))
  // Cohort projects: She Model Tech sets the dates and the number of people
  // (leads create the roles within it, and request extra time).
  && (resource.data.get('isCohort', false) != true

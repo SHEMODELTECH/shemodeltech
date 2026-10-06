@@ -23,7 +23,8 @@ import {
 } from '../../utils/projectRoles';
 import { formatMoney, computeTotalBudget } from '../../utils/paidProjects';
 import { checkDates, minEndDate, minStartDate } from '../../utils/dateRules';
-import { BADGE_TRACKS } from '../../config/badgeTracks';
+import { BADGE_TRACKS, roleTrack, trackByKey } from '../../config/badgeTracks';
+import { levelGuide, isStretch } from '../../utils/projectTemplates';
 import { alertStaff } from '../../utils/staffAlerts';
 import { roleSlotsOf } from '../../utils/projectSlots';
 import { notifyInterested } from '../../utils/projectInterest';
@@ -42,11 +43,19 @@ const labelClass = "block text-gray-700 font-semibold mb-2 text-sm";
 
 // Turn a stored role into the editable shape the dropdown understands: known
 // templates keep their value; anything else becomes a custom "Other" entry.
+// Roles from the brief (library projects) keep their name and track, and can't
+// be removed or go below their count; skills, level, and details stay editable.
 const toEditableRole = (r = {}, existing = false) => {
   const known = roleTemplates.includes(r.role);
   return {
     role: known ? r.role : '__other__',
     customRole: known ? '' : (r.role || ''),
+    fromBrief: !!r.fromBrief,
+    fixedName: r.fromBrief ? r.role : '',
+    minCount: r.fromBrief ? Math.max(1, Number(r.minCount) || Number(r.count) || 1) : 0,
+    track: r.track || '',
+    deliverable: r.deliverable || '',
+    coOwner: !!r.coOwner,
     skills: r.skills || '',
     count: r.count || 1,
     experienceLevel: experienceLevels.includes(r.experienceLevel) ? r.experienceLevel : 'any-level',
@@ -65,6 +74,7 @@ const wordCount = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).len
 const emptyRole = () => ({
   role: '', customRole: '', skills: '', count: 1, experienceLevel: 'any-level',
   description: '', detailsLink: '', payAmount: '', existing: false,
+  fromBrief: false, fixedName: '', minCount: 0, track: '', deliverable: '', coOwner: false,
 });
 
 const ProjectSetup = () => {
@@ -91,7 +101,7 @@ const ProjectSetup = () => {
   const [authorized, setAuthorized] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
-  const [form, setForm] = useState({ projectTitle: '', projectDescription: '', projectGoals: '', industryTrack: 'technology', startDate: '', endDate: '', submissionUrl: '', projectLink: '' });
+  const [form, setForm] = useState({ projectTitle: '', projectDescription: '', projectGoals: '', industryTrack: 'technology', startDate: '', endDate: '', submissionUrl: '', projectLink: '', problemStatement: '', weeklyPlan: '' });
   const [roles, setRoles] = useState([]);
 
   useEffect(() => {
@@ -145,13 +155,17 @@ const ProjectSetup = () => {
           endDate: data.endDate || '',
           submissionUrl: data.resources?.submissionUrl || '',
           projectLink: data.projectLink || '',
+          problemStatement: data.problemStatement || '',
+          weeklyPlan: Array.isArray(data.weeklyPlan) ? data.weeklyPlan.join('\n') : '',
         });
         // Pre-fill roles: use live teamRoles if published, else the generator's proposal.
         // Live teamRoles are "existing" (locked for paid); a fresh proposal is not.
         const liveRoles = alreadyActive && Array.isArray(data.teamRoles) && data.teamRoles.length;
-        // She Model Tech doesn't set roles: the lead creates them. Only roles the
-        // lead already saved are loaded (never generated suggestions).
-        const sourceRoles = Array.isArray(data.teamRoles) ? data.teamRoles : [];
+        // Roles: the live ones if the project is open; otherwise the brief's roles
+        // (library projects) plus anything the lead saved with Save & Exit.
+        const live = Array.isArray(data.teamRoles) ? data.teamRoles : [];
+        const proposed = Array.isArray(data.proposedRoles) ? data.proposedRoles : [];
+        const sourceRoles = live.length ? live : proposed.some((r) => r.fromBrief) ? proposed : [];
         setRoles(sourceRoles.length
           ? sourceRoles.map(r => toEditableRole(r, false))
           : [emptyRole()]);
@@ -180,10 +194,11 @@ const ProjectSetup = () => {
 
   const updateRole = (i, field, value) => setRoles(prev => prev.map((r, idx) => idx === i ? { ...r, [field]: value } : r));
   const addRole = () => { if (roles.length < 12) setRoles(prev => [...prev, emptyRole()]); };
-  const removeRole = (i) => setRoles(prev => prev.filter((_, idx) => idx !== i));
+  // Roles from the brief can't be removed.
+  const removeRole = (i) => setRoles(prev => prev.filter((r, idx) => idx !== i || r.fromBrief));
 
   // Resolve the display/stored role name for a row (handles the custom "Other").
-  const resolveRoleName = (r) => isLocked(r)
+  const resolveRoleName = (r) => r.fixedName ? r.fixedName : isLocked(r)
     ? (r.role || '')
     : (r.role === '__other__' ? (r.customRole || '').trim() : (r.role || '').trim());
 
@@ -197,6 +212,10 @@ const ProjectSetup = () => {
       description: (r.description || '').trim(),
       detailsLink: (r.detailsLink || '').trim(),
       payAmount: isPaid ? (fixedPay != null ? fixedPay : (parseFloat(r.payAmount) || 0)) : 0,
+      ...(r.track ? { track: r.track } : {}),
+      ...(r.deliverable ? { deliverable: r.deliverable.trim() } : {}),
+      ...(r.fromBrief ? { fromBrief: true, minCount: r.minCount } : {}),
+      ...(r.coOwner ? { coOwner: true } : {}),
     }))
     .filter(r => r.role && r.count > 0);
 
@@ -205,6 +224,12 @@ const ProjectSetup = () => {
     if (isLocked(r)) return false;               // existing roles keep their amount
     if (!resolveRoleName(r)) return false;        // blank rows are dropped, not flagged
     return !(parseFloat(r.payAmount) > 0);
+  });
+
+  // Staff can edit the problem statement and weekly plan; leads see them as set.
+  const briefFields = () => ({
+    problemStatement: form.problemStatement.trim() || null,
+    weeklyPlan: form.weeklyPlan.split('\n').map((w) => w.trim()).filter(Boolean),
   });
 
   const handleOpen = async () => {
@@ -224,6 +249,8 @@ const ProjectSetup = () => {
 
     const valid = buildTeamRoles();
     if (valid.length === 0) { toast.error('Add at least one team role'); return; }
+    const reduced = roles.find((r) => r.fromBrief && (parseInt(r.count, 10) || 0) < r.minCount);
+    if (reduced) { toast.error(`${reduced.fixedName} needs at least ${reduced.minCount} ${reduced.minCount === 1 ? 'person' : 'people'}. Roles from the brief can't be reduced.`); return; }
 
     // No solo projects: the roles must offer enough seats for a real team
     // (the owner counts as one person, so the roles cover everyone else).
@@ -267,7 +294,7 @@ const ProjectSetup = () => {
       const maxTeamSize = roleSlots + 1;
 
       await updateDoc(doc(db, 'projects', projectId), {
-        ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
+        ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim(), ...briefFields() }),
         leadDetails: leadDetails.trim(),
         roleTracks,
         projectGoals: form.projectGoals.trim() || null,
@@ -296,11 +323,13 @@ const ProjectSetup = () => {
 
   const handleSaveExit = async () => {
     if (isPaid && newPaidRoleMissingPay()) { toast.error('Set a pay-per-person amount (greater than 0) for each new role.'); return; }
+    const reduced = roles.find((r) => r.fromBrief && (parseInt(r.count, 10) || 0) < r.minCount);
+    if (reduced) { toast.error(`${reduced.fixedName} needs at least ${reduced.minCount} ${reduced.minCount === 1 ? 'person' : 'people'}. Roles from the brief can't be reduced.`); return; }
     setSaving(true);
     try {
       const teamRoles = buildTeamRoles();
       await updateDoc(doc(db, 'projects', projectId), {
-        ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim() }),
+        ...(coreLock ? {} : { projectTitle: form.projectTitle.trim(), projectDescription: form.projectDescription.trim(), ...briefFields() }),
         roleTracks,
         leadDetails: leadDetails.trim(),
         projectGoals: form.projectGoals.trim() || null,
@@ -432,6 +461,19 @@ const ProjectSetup = () => {
           <textarea id="lead-details-free" rows={4} maxLength={4000} value={leadDetails} onChange={(e) => setLeadDetails(e.target.value)} className={inputClass} placeholder="Plans, tools, milestones, or anything that helps your team." />
           {coreLock && <p className="text-xs text-gray-500 mt-1">The title, description, and dates are set by She Model Tech. Need a change? Message She Model Tech.</p>}
         </div>
+        {(form.problemStatement || form.weeklyPlan || !coreLock) && (
+          <>
+            <div>
+              <label className={labelClass}>The problem</label>
+              <textarea rows={3} value={form.problemStatement} disabled={coreLock} onChange={e => setForm(p => ({ ...p, problemStatement: e.target.value }))} className={inputClass + (coreLock ? ' opacity-60 cursor-not-allowed' : '')} />
+            </div>
+            <div>
+              <label className={labelClass}>Weekly plan <span className="font-normal text-gray-500">(one week per line)</span></label>
+              <textarea rows={6} value={form.weeklyPlan} disabled={coreLock} onChange={e => setForm(p => ({ ...p, weeklyPlan: e.target.value }))} className={inputClass + (coreLock ? ' opacity-60 cursor-not-allowed' : '')} />
+              {coreLock && <p className="text-xs text-gray-500 mt-1">Add your own milestones under “More about this project”.</p>}
+            </div>
+          </>
+        )}
         <div>
           <label className={labelClass}>Goals</label>
           <textarea rows={2} value={form.projectGoals} onChange={e => setForm(p => ({ ...p, projectGoals: e.target.value }))} className={inputClass} />
@@ -492,7 +534,8 @@ const ProjectSetup = () => {
               Roles so far: <strong>{roles.reduce((n, r) => n + (resolveRoleName(r) ? (parseInt(r.count, 10) || 0) : 0), 0)} of {fixedSize}</strong>.
               {fixedPay != null && <> Pay is ${fixedPay} per person for every role.</>}
             </p>
-            {isPaid && (
+            {/* Any lead (free or paid) can ask for more people to add roles. */}
+            {(
               sizeRequest?.status === 'pending' ? (
                 <p className="text-xs text-amber-800 mt-2">You asked for {sizeRequest.extra} more {Number(sizeRequest.extra) === 1 ? 'person' : 'people'}. She Model Tech will let you know.</p>
               ) : !askMore.open ? (
@@ -548,9 +591,9 @@ const ProjectSetup = () => {
           </div>
         ) : (
           <>
-            <p className="text-gray-500 text-xs -mt-2">Intermediate and Advanced roles can only be filled by members who've earned the matching badge level in that track. Use Beginner or Any Level for roles open to newcomers.</p>
+            <p className="text-gray-500 text-xs -mt-2">The level is a guide, not a lock: anyone can apply to any role. Beginner and Any Level show as “Good for beginners”; Intermediate and Advanced show as “Stretch role, best with some experience”.</p>
             <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
-              <p className="text-gray-700 text-xs"><strong>Note:</strong> add or remove roles to fit your project. Keep at least one Beginner or Any Level role so newcomers can join.</p>
+              <p className="text-gray-700 text-xs"><strong>Note:</strong> you can add roles to fit your project. Roles from the brief can’t be removed or reduced. It’s fine if not every role is filled. Keep at least one Beginner or Any Level role so newcomers can join.</p>
             </div>
           </>
         )}
@@ -584,11 +627,22 @@ const ProjectSetup = () => {
           return (
             <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-gray-400 text-xs font-semibold">Role {i + 1}{isPaid ? ' (new)' : ''}</span>
-                {roles.length > 1 && <button onClick={() => removeRole(i)} className="text-red-500 text-xs font-semibold">Remove</button>}
+                <span className="text-gray-400 text-xs font-semibold">Role {i + 1}{r.fromBrief ? '' : isPaid ? ' (new)' : ''}</span>
+                {r.fromBrief ? (
+                  <span className="text-[11px] font-semibold text-pink-700 bg-pink-50 border border-pink-100 rounded-full px-2 py-0.5">From the brief</span>
+                ) : (
+                  roles.length > 1 && <button onClick={() => removeRole(i)} className="text-red-500 text-xs font-semibold">Remove</button>
+                )}
               </div>
               <div className={`grid grid-cols-1 gap-3 ${isPaid ? 'sm:grid-cols-5' : 'sm:grid-cols-4'}`}>
-                {r.role === '__other__' ? (
+                {r.fromBrief ? (
+                  <div className={inputClass + ' bg-gray-50'}>
+                    <span className="font-semibold">{r.fixedName}</span>
+                    {trackByKey(roleTrack({ role: r.fixedName, track: r.track })) && (
+                      <span className="text-pink-700 text-xs font-semibold"> · {trackByKey(roleTrack({ role: r.fixedName, track: r.track })).name}</span>
+                    )}
+                  </div>
+                ) : r.role === '__other__' ? (
                   <div className="flex gap-1">
                     <input type="text" value={r.customRole || ''} onChange={e => updateRole(i, 'customRole', e.target.value)} className={inputClass} placeholder="Enter custom role" />
                     <button type="button" onClick={() => { updateRole(i, 'role', ''); updateRole(i, 'customRole', ''); }} className="text-gray-400 hover:text-gray-600 text-xs px-2 flex-shrink-0">✕</button>
@@ -603,7 +657,7 @@ const ProjectSetup = () => {
                 <select value={r.experienceLevel} onChange={e => updateRole(i, 'experienceLevel', e.target.value)} className={inputClass + ' appearance-none capitalize'}>
                   {experienceLevels.map(l => <option key={l} value={l}>{l === 'any-level' ? 'Any Level' : l.charAt(0).toUpperCase() + l.slice(1)}</option>)}
                 </select>
-                <input type="number" min="1" max="10" value={r.count} onChange={e => updateRole(i, 'count', e.target.value)} className={inputClass} placeholder="Count" />
+                <input type="number" min={r.fromBrief ? r.minCount : 1} max="10" value={r.count} onChange={e => updateRole(i, 'count', e.target.value)} className={inputClass} placeholder="Count" title={r.fromBrief ? `At least ${r.minCount}` : undefined} />
                 <input type="text" value={r.skills} onChange={e => updateRole(i, 'skills', e.target.value)} className={inputClass} placeholder="Skills * (e.g., React, Node)" />
                 {isPaid && fixedPay == null && (
                   <input type="number" min="1" step="0.01" value={r.payAmount} onChange={e => updateRole(i, 'payAmount', e.target.value)} className={inputClass} placeholder="Pay / person ($)" />
@@ -626,6 +680,9 @@ const ProjectSetup = () => {
                 </div>
               )}
               <input type="text" value={r.description} onChange={e => updateRole(i, 'description', e.target.value)} className={inputClass} placeholder="What this role does (optional)" />
+              <p className={`text-xs font-semibold ${isStretch(r.experienceLevel) ? 'text-gray-900' : 'text-pink-700'}`}>
+                {levelGuide(r.experienceLevel)}{r.fromBrief ? ` · At least ${r.minCount} ${r.minCount === 1 ? 'person' : 'people'}` : ''}
+              </p>
             </div>
           );
         })}

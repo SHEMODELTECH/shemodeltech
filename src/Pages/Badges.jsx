@@ -75,8 +75,6 @@ const Badges = () => (
     <ul className="space-y-2 text-sm text-gray-700 list-disc pl-5">
       <li><strong>The Talent Board:</strong> your first badge lists you where hiring companies search for talent.</li>
       <li><strong>Paid work:</strong> paid projects are open to members with at least one earned badge.</li>
-      <li><strong>Bigger roles:</strong> intermediate roles need an Associate badge in that track, and advanced roles need an Advanced one.</li>
-      <li><strong>Proposing projects:</strong> once you have a badge, you can propose your own project to lead.</li>
       <li><strong>A verifiable record:</strong> every badge links to the real project, so employers can see exactly what you built.</li>
     </ul>
 

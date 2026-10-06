@@ -27,7 +27,8 @@ import { formatMoney, getPayRangeLabel } from '../../utils/paidProjects';
 import { canApplyToCompanyCohort } from '../../utils/companyCohorts';
 import { assignAsLead } from '../../utils/leadApplications';
 import PaymentAgreement, { AGREEMENT_VERSION } from '../../components/PaymentAgreement';
-import { BADGE_TRACKS, suggestTrack, trackByKey, trackStanding } from '../../config/badgeTracks';
+import { BADGE_TRACKS, roleTrack, trackByKey, trackStanding } from '../../config/badgeTracks';
+import { levelGuide, isStretch } from '../../utils/projectTemplates';
 import TeamStrength from '../../components/TeamStrength';
 import { dobFields } from '../../utils/age';
 import { addInterest, isInterested, recordLeadIntent } from '../../utils/projectInterest';
@@ -355,14 +356,10 @@ const ProjectDetail = () => {
       return;
     }
 
-    // Enforced role-difficulty matching: block applications to roles the member
-    // has not earned the badge level for. Beginner / any-level roles pass freely.
+    // Every role is open to every level (the level is a guide). This records the
+    // role's track and the member's current level in it.
     const selectedRole = (project.teamRoles || []).find((r) => r.role === applyForm.role);
     const eligibility = checkRoleEligibility(memberProfile, selectedRole);
-    if (!eligibility.eligible) {
-      toast.error(eligibility.reason || 'You do not meet the level requirement for this role.');
-      return;
-    }
 
     // Everyone joining a project has told us their age group (checked by the database too).
     if (!memberProfile?.ageGroup) {
@@ -593,6 +590,13 @@ const ProjectDetail = () => {
                 </div>
               )}
 
+              {project.problemStatement && (
+                <div className="mb-4">
+                  <h3 className="text-pink-600 font-semibold text-sm mb-1">The problem</h3>
+                  <p className="text-gray-700 text-sm sm:text-base leading-relaxed">{project.problemStatement}</p>
+                </div>
+              )}
+              {project.problemStatement && <h3 className="text-pink-600 font-semibold text-sm mb-1">What the team builds</h3>}
               <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
                 {project.projectDescription}
               </p>
@@ -626,7 +630,7 @@ const ProjectDetail = () => {
                     project.maxTeamSize
                       ? `${project.maxTeamSize} people`
                       : project.proposedRoles?.length
-                        ? `${project.proposedRoles.reduce((n, r) => n + (parseInt(r.count, 10) || 1), 0)} suggested`
+                        ? `${project.proposedRoles.reduce((n, r) => n + (parseInt(r.count, 10) || 1), 0) + 1} suggested (with the lead)`
                         : 'Set by the lead',
                   ],
                   [
@@ -668,8 +672,23 @@ const ProjectDetail = () => {
               {/* Goals */}
               {project.projectGoals && (
                 <div className="mb-6">
-                  <h3 className="text-pink-600 font-semibold text-sm mb-2">Project Goals</h3>
+                  <h3 className="text-pink-600 font-semibold text-sm mb-2">{project.weeklyPlan?.length ? 'Expected outcome' : 'Project Goals'}</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">{project.projectGoals}</p>
+                </div>
+              )}
+
+              {/* Weekly plan (library projects) */}
+              {Array.isArray(project.weeklyPlan) && project.weeklyPlan.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-pink-600 font-semibold text-sm mb-2">{project.weeklyPlan.length}-week plan</h3>
+                  <ol className="space-y-1.5">
+                    {project.weeklyPlan.map((w, i) => (
+                      <li key={i} className="flex gap-3 text-sm text-gray-700">
+                        <span className="flex-shrink-0 font-semibold text-gray-900 w-16">Week {i + 1}</span>
+                        <span className="leading-relaxed">{w}</span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
               )}
 
@@ -693,6 +712,29 @@ const ProjectDetail = () => {
               </div>
             </div>
 
+            {/* Planned roles: before the lead opens the team */}
+            {!(project.teamRoles && project.teamRoles.length > 0) && (project.proposedRoles || []).some((r) => r.fromBrief) && (
+              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 sm:p-8 mb-6">
+                <h2 className="text-lg font-bold text-gray-900">Planned roles</h2>
+                <p className="text-gray-500 text-xs mt-1 mb-4">These open for applications once the lead is confirmed. Anyone can apply to any role.</p>
+                <div className="space-y-3">
+                  {project.proposedRoles.map((role, i) => (
+                    <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-gray-900 font-semibold text-sm">{role.role}{Number(role.count) > 1 ? ` · ${role.count} people` : ''}</p>
+                        <p className="text-gray-400 text-xs mt-0.5">Skills: {role.skills}</p>
+                        {role.deliverable && <p className="text-gray-600 text-xs mt-0.5">Delivers: {role.deliverable}</p>}
+                        <span className="inline-block mt-1.5 text-[11px] font-semibold bg-pink-50 text-pink-700 border border-pink-100 px-2 py-0.5 rounded-full">{trackByKey(roleTrack(role))?.name}</span>
+                      </div>
+                      <span className={`self-start flex-shrink-0 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${isStretch(role.experienceLevel) ? 'bg-gray-900 text-white border-gray-900' : 'bg-pink-50 text-pink-700 border-pink-100'}`}>
+                        {levelGuide(role.experienceLevel)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Team Roles */}
             {project.teamRoles && project.teamRoles.length > 0 && (
               <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 sm:p-8 mb-6">
@@ -706,11 +748,12 @@ const ProjectDetail = () => {
                       <div>
                         <p className="text-gray-900 font-semibold text-sm">{role.role}</p>
                         <p className="text-gray-400 text-xs mt-0.5">Skills: {role.skills}</p>
+                        {role.deliverable && <p className="text-gray-600 text-xs mt-0.5">Delivers: {role.deliverable}</p>}
                         {/* Badge tracks: wanted tracks on paid projects; the suggested track on free ones. */}
                         {(() => {
                           const wanted = project.isPaid
                             ? (project.roleTracks?.[role.role]?.length ? project.roleTracks[role.role] : role.wantedTracks || [])
-                            : [suggestTrack(role.role)];
+                            : [roleTrack(role)];
                           let names = wanted.map((k) => trackByKey(k)?.name).filter(Boolean);
                           if (!names.length) names = ['Any track']; // the lead hasn't chosen yet
                           return (
@@ -729,11 +772,9 @@ const ProjectDetail = () => {
                             {formatMoney(role.payAmount)} / person
                           </span>
                         )}
-                        {role.experienceLevel && role.experienceLevel !== 'any-level' && (
-                          <span className="text-pink-500 text-xs font-bold capitalize">
-                            {role.experienceLevel}
-                          </span>
-                        )}
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${isStretch(role.experienceLevel) ? 'bg-gray-900 text-white border-gray-900' : 'bg-pink-50 text-pink-700 border-pink-100'}`}>
+                          {levelGuide(role.experienceLevel)}
+                        </span>
                         {(() => {
                           const filled = roleFill[role.role] || 0;
                           const cap = parseInt(role.count, 10) || 0;
@@ -758,10 +799,9 @@ const ProjectDetail = () => {
               <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-8">
                 <h2 className="text-lg font-bold text-gray-900 mb-1">This project needs a lead</h2>
                 <p className="text-gray-600 text-sm mb-3">
-                  No one is leading this project yet. Apply to lead it - as the lead, you'll shape
-                  the idea, decide which roles and how many people the team needs, then open it up
-                  for others to join. Leading is its own skill path and earns a Leadership badge on
-                  completion. No badge is required to apply.
+                  No one is leading this project yet. Apply to lead it. As the lead, you guide the
+                  team through the plan, add any extra roles you need, then open it up for others
+                  to join. Leading earns a TechPO badge on completion. No badge is required to apply.
                 </p>
                 <p className="text-gray-500 text-xs mb-4">
                   New to how roles work?{' '}
@@ -917,7 +957,7 @@ const ProjectDetail = () => {
                     {myApp && !project.isPaid && project.status !== 'completed' && (
                       <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs text-gray-700">
                         <label htmlFor="my-track" className="font-semibold">Your badge track:</label>
-                        <select id="my-track" value={myApp.badgeTrack || suggestTrack(myApp.role)}
+                        <select id="my-track" value={myApp.badgeTrack || roleTrack({ role: myApp.role, track: (project.teamRoles || []).find((x) => x.role === myApp.role)?.track })}
                           onChange={async (e) => {
                             const v = e.target.value;
                             try {
@@ -943,7 +983,7 @@ const ProjectDetail = () => {
                     {myApp && !project.isPaid && project.status !== 'completed' && (
                       <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs text-gray-700">
                         <label htmlFor="my-track" className="font-semibold">Your badge track:</label>
-                        <select id="my-track" value={myApp.badgeTrack || suggestTrack(myApp.role)}
+                        <select id="my-track" value={myApp.badgeTrack || roleTrack({ role: myApp.role, track: (project.teamRoles || []).find((x) => x.role === myApp.role)?.track })}
                           onChange={async (e) => {
                             const v = e.target.value;
                             try {
@@ -1019,19 +1059,14 @@ const ProjectDetail = () => {
                           const r = (project.teamRoles || []).find((x) => x.role === role);
                           const leadPick = project.roleTracks?.[role];
                           const wanted = leadPick?.length ? leadPick : r?.wantedTracks?.length ? r.wantedTracks : null;
-                          const suggested = suggestTrack(role);
+                          const suggested = roleTrack(r || { role });
                           setApplyForm((p) => ({ ...p, role, badgeTrack: project.isPaid ? (wanted ? (wanted.includes(suggested) ? suggested : wanted[0]) : suggested) : suggested }));
                         }}
                         className={inputClass + ' appearance-none'}
                       >
                         <option value="">Select a role</option>
                         {(project.teamRoles || []).map((r, i) => {
-                          const elig = checkRoleEligibility(memberProfile, r);
-                          const lvl =
-                            r.experienceLevel && r.experienceLevel !== 'any-level'
-                              ? r.experienceLevel.charAt(0).toUpperCase() +
-                                r.experienceLevel.slice(1)
-                              : 'Any Level';
+                          const lvl = isStretch(r.experienceLevel) ? 'Stretch role' : 'Good for beginners';
                           const filled = roleFill[r.role] || 0;
                           const cap = parseInt(r.count, 10) || 0;
                           const full = cap > 0 && filled >= cap;
@@ -1040,10 +1075,9 @@ const ProjectDetail = () => {
                               ? ` · ${formatMoney(r.payAmount)}`
                               : '';
                           return (
-                            <option key={i} value={r.role} disabled={!elig.eligible}>
+                            <option key={i} value={r.role}>
                               {r.role}
                               {payLabel} · {lvl} ({filled}/{cap} filled{full ? ', full' : ''})
-                              {!elig.eligible ? ' - Locked' : ''}
                             </option>
                           );
                         })}
@@ -1053,11 +1087,10 @@ const ProjectDetail = () => {
                           const sel = (project.teamRoles || []).find(
                             (r) => r.role === applyForm.role
                           );
-                          const elig = checkRoleEligibility(memberProfile, sel);
-                          if (elig.eligible) return null;
+                          if (!sel || !isStretch(sel.experienceLevel)) return null;
                           return (
-                            <p className="text-red-600 text-xs mt-2 leading-relaxed">
-                              {elig.reason}
+                            <p className="text-gray-600 text-xs mt-2 leading-relaxed">
+                              Stretch role, best with some experience. Anyone can apply: tell the lead how you plan to take it on.
                             </p>
                           );
                         })()}
@@ -1077,13 +1110,6 @@ const ProjectDetail = () => {
                             </p>
                           );
                         })()}
-                      {(project.teamRoles || []).some(
-                        (r) => !checkRoleEligibility(memberProfile, r).eligible
-                      ) && (
-                        <p className="text-gray-400 text-xs mt-2">
-                          This role needs a higher badge. Apply to open roles first to earn it.
-                        </p>
-                      )}
                     </div>
                     {/* Badge track: ONE per project. Free: any track (badge counts there,
                         confirmed by the lead). Paid: the role's wanted tracks (no badge;

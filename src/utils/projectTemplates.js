@@ -1,1077 +1,1355 @@
 // src/utils/projectTemplates.js
-// A free, built-in library of software/AI starter projects - no API, no cost.
-// Each template matches the shape returned by generateProject() so the admin
-// "Generate" flow can publish either an AI-generated project OR a template.
+// She Model Tech's built-in project library: current AI and tech projects, free
+// to use (no AI cost). Admins publish from it on Generate Project and when
+// creating a cohort.
 //
-// Rules followed by every template (same as the AI prompt):
-//  - Any-tech or AI-based, buildable as SOFTWARE or a SIMULATION only.
-//  - No physical prototypes/hardware. Hardware ideas are framed as software/simulation.
-//  - Roles are contributor roles only (NO Project Lead - leadership is separate).
-//  - experienceLevel is one of: any-level | beginner | intermediate | advanced.
+// Every project has:
+//  - a theme (current AI and tech topics), an industry, a problem statement,
+//    a description, an expected outcome, and 6 weekly actions (cohorts run 6 weeks)
+//  - roles tied to the six badge tracks, each with skills, a deliverable, and a
+//    level. The level is a GUIDE, not a lock: anyone can apply to any role.
+//      TechDev   (development)        TechArchs (design: low/no-code)
+//      TechQA    (quality-assurance)  TechGuard (security)
+//      TechLeads (leadership: non-technical)
+//      TechPO    (mentorship): the lead, plus a co-owner seat on teams of 7+
+//  - Most projects have a role in every track. Smaller ones cover fewer, and
+//    cohorts are balanced so all six tracks are covered across the cohort.
+//  - Software or simulation only. No physical prototypes or hardware.
 
-const R = (role, skills, count, experienceLevel, description = '') => ({
-  role, skills, count, experienceLevel, description, detailsLink: '',
+export const PROJECT_WEEKS = 6;
+export const BIG_TEAM_SIZE = 7; // teams this size or bigger (lead included) get a co-owner seat
+
+export const THEMES = [
+  'AI agents and automation',
+  'AI that answers from your own documents',
+  'Testing and evaluating AI',
+  'Responsible and safe AI',
+  'Voice, image, and video AI',
+  'AI for accessibility',
+  'Cybersecurity and privacy',
+  'Data and analytics with AI',
+  'Climate and sustainability tech',
+  'Small and on-device AI',
+];
+
+// The guide shown on each role. Never a lock.
+export const levelGuide = (level) =>
+  ['intermediate', 'advanced'].includes(String(level || '').toLowerCase())
+    ? 'Stretch role, best with some experience'
+    : 'Good for beginners';
+export const isStretch = (level) => ['intermediate', 'advanced'].includes(String(level || '').toLowerCase());
+
+const role = (track) => (name, skills, deliverable, level = 'beginner', count = 1) => ({
+  role: name,
+  track,
+  skills,
+  count,
+  experienceLevel: level,
+  deliverable,
+  description: deliverable,
+  detailsLink: '',
+});
+const dev = role('development');
+const arch = role('design');
+const qa = role('quality-assurance');
+const guard = role('security');
+const leads = role('leadership');
+
+// The co-owner seat added to big teams (earns TechPO, like the lead).
+export const coOwnerRole = () => ({
+  role: 'Product Co-owner',
+  track: 'mentorship',
+  skills: 'Planning, communication, keeping a team on track',
+  count: 1,
+  experienceLevel: 'intermediate',
+  deliverable: 'Runs the weekly check-ins with the lead, keeps the task board current, and plans the final demo.',
+  description: 'Runs the weekly check-ins with the lead, keeps the task board current, and plans the final demo.',
+  detailsLink: '',
+  coOwner: true,
 });
 
-export const PROJECT_TEMPLATES = [
-  {
-    projectTitle: 'Community Skill-Swap Web App',
-    industryTrack: 'education',
-    projectDescription: 'A web app where people offer a skill they can teach and request one they want to learn, then get matched into pairs or small groups. Includes profiles, a matching feed, and in-app scheduling. Software only.',
-    projectGoals: 'Ship a working match-and-schedule flow that connects at least two complementary users end to end.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase, REST APIs', 2, 'any-level', 'Build the matching feed, profiles, and scheduling UI.'),
-      R('Designer', 'UI/UX, Figma, responsive design', 1, 'beginner', 'Design the onboarding and match screens.'),
-      R('QA Tester', 'Test cases, bug reporting', 1, 'any-level', 'Verify the match-and-schedule flow across devices.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Study-Notes Summarizer',
-    industryTrack: 'education',
-    projectDescription: 'A tool that takes long lecture notes or articles and produces concise summaries, flashcards, and quiz questions using an AI text model. Web-based; no hardware.',
-    projectGoals: 'Turn a pasted document into a summary plus 5 auto-generated flashcards reliably.',
-    proposedRoles: [
-      R('Developer', 'JavaScript, LLM/API integration', 2, 'intermediate', 'Wire the summarization and flashcard generation.'),
-      R('Data Analyst', 'Prompt design, evaluation', 1, 'any-level', 'Tune prompts and measure summary quality.'),
-      R('Designer', 'Clean reading UI', 1, 'beginner', 'Design the notes-in, cards-out experience.'),
-    ],
-  },
-  {
-    projectTitle: 'Personal Finance Budget Tracker',
-    industryTrack: 'finance',
-    projectDescription: 'A budgeting web app where users log income and expenses, set category budgets, and see monthly trends in charts. Pure software with local or cloud data.',
-    projectGoals: 'Let a user add transactions and see an accurate monthly breakdown by category.',
-    proposedRoles: [
-      R('Developer', 'React, charts, state management', 2, 'any-level', 'Build transaction entry and the dashboard charts.'),
-      R('Designer', 'Data visualization, UI', 1, 'beginner', 'Design clear charts and the budget setup flow.'),
-      R('QA Tester', 'Edge cases, validation', 1, 'beginner', 'Test calculations and input validation.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Resume & Cover Letter Assistant',
-    industryTrack: 'technology',
-    projectDescription: 'A web tool that reviews a pasted resume against a job description and suggests improvements, plus drafts a tailored cover letter with an AI model. Software only.',
-    projectGoals: 'Produce specific, actionable resume feedback and a draft cover letter from two text inputs.',
-    proposedRoles: [
-      R('Developer', 'Frontend, API integration', 2, 'intermediate', 'Build the input flow and AI integration.'),
-      R('Data Analyst', 'Prompt engineering', 1, 'any-level', 'Design prompts for useful, honest feedback.'),
-      R('Designer', 'Form and results UI', 1, 'beginner', 'Design the review and output screens.'),
-    ],
-  },
-  {
-    projectTitle: 'Telemedicine Appointment Simulator',
-    industryTrack: 'healthcare',
-    projectDescription: 'A simulated telehealth booking and virtual-waiting-room app: patients pick a provider, book a slot, and join a mock video room. A software simulation - no real medical devices or data.',
-    projectGoals: 'Complete a simulated booking from provider selection to a mock consult room.',
-    proposedRoles: [
-      R('Developer', 'React, scheduling logic', 2, 'intermediate', 'Build booking and the simulated waiting room.'),
-      R('Designer', 'Accessible healthcare UI', 1, 'any-level', 'Design clear, accessible booking screens.'),
-      R('QA Tester', 'Flow and accessibility testing', 1, 'beginner', 'Test the booking flow and accessibility.'),
-    ],
-  },
-  {
-    projectTitle: 'Smart Habit-Tracker with Streaks',
-    industryTrack: 'technology',
-    projectDescription: 'A habit-tracking app with daily check-ins, streaks, reminders, and progress charts. Optional AI nudges that suggest the best time to do a habit. Software only.',
-    projectGoals: 'Track a habit daily, maintain a streak, and visualize a week of progress.',
-    proposedRoles: [
-      R('Developer', 'Mobile-first web, notifications', 2, 'any-level', 'Build check-ins, streaks, and charts.'),
-      R('Designer', 'Motivational UI', 1, 'beginner', 'Design the streak and progress visuals.'),
-    ],
-  },
-  {
-    projectTitle: 'E-commerce Product Recommendation Engine',
-    industryTrack: 'ecommerce',
-    projectDescription: 'A recommendation module that suggests related products based on browsing and cart behavior, with a small demo storefront to showcase it. Software only.',
-    projectGoals: 'Show relevant "you may also like" suggestions driven by user behavior in a demo store.',
-    proposedRoles: [
-      R('Developer', 'JavaScript, recommendation logic', 2, 'intermediate', 'Build the demo store and recommendation module.'),
-      R('Data Analyst', 'Behavioral data, basic ML', 1, 'intermediate', 'Design the recommendation approach.'),
-      R('QA Tester', 'Scenario testing', 1, 'beginner', 'Validate recommendations across scenarios.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Customer-Support Chatbot',
-    industryTrack: 'technology',
-    projectDescription: 'A website chatbot that answers FAQs from a knowledge base and hands off to a human when unsure, using an AI text model. Web widget; software only.',
-    projectGoals: 'Answer common questions from a small knowledge base and escalate gracefully.',
-    proposedRoles: [
-      R('Developer', 'Chat UI, API integration', 2, 'intermediate', 'Build the widget and AI integration.'),
-      R('Data Analyst', 'Knowledge base, prompts', 1, 'any-level', 'Curate the knowledge base and test answers.'),
-      R('Designer', 'Conversational UI', 1, 'beginner', 'Design the chat widget.'),
-    ],
-  },
-  {
-    projectTitle: 'Open-Source Event Management Platform',
-    industryTrack: 'nonprofit',
-    projectDescription: 'A platform for community organizers to create events, sell or issue free tickets, and check in attendees with a QR scan (camera-based, no special hardware). Software only.',
-    projectGoals: 'Create an event, register attendees, and check them in with a QR scan.',
-    proposedRoles: [
-      R('Developer', 'Full-stack, QR scanning', 2, 'intermediate', 'Build event creation, tickets, and check-in.'),
-      R('Designer', 'Event and ticket UI', 1, 'beginner', 'Design event pages and tickets.'),
-      R('QA Tester', 'End-to-end testing', 1, 'any-level', 'Test the full event lifecycle.'),
-    ],
-  },
-  {
-    projectTitle: 'Cybersecurity Phishing-Awareness Trainer',
-    industryTrack: 'cybersecurity',
-    projectDescription: 'An interactive training app that shows simulated phishing emails and teaches users to spot red flags, tracking their score over time. A safe simulation - no real attacks.',
-    projectGoals: 'Run a user through simulated phishing examples and report what they missed.',
-    proposedRoles: [
-      R('Developer', 'Frontend, scoring logic', 2, 'any-level', 'Build the simulation and scoring.'),
-      R('Security Specialist', 'Phishing patterns, content', 1, 'intermediate', 'Design realistic, educational examples.'),
-      R('Designer', 'Learning UI', 1, 'beginner', 'Design the training and results screens.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Image Caption & Alt-Text Generator',
-    industryTrack: 'technology',
-    projectDescription: 'A tool that generates descriptive captions and accessibility alt-text for uploaded images using an AI vision model, to help creators make content accessible. Software only.',
-    projectGoals: 'Generate accurate, useful alt-text for an uploaded image.',
-    proposedRoles: [
-      R('Developer', 'Image upload, vision API', 2, 'intermediate', 'Build upload and caption generation.'),
-      R('Data Analyst', 'Quality evaluation', 1, 'any-level', 'Assess and improve caption accuracy.'),
-      R('Designer', 'Accessible UI', 1, 'beginner', 'Design an accessible interface.'),
-    ],
-  },
-  {
-    projectTitle: 'Local Farmers-Market Marketplace',
-    industryTrack: 'agriculture',
-    projectDescription: 'A marketplace connecting local growers with buyers: vendor listings, search by produce, and order requests with pickup scheduling. Software only.',
-    projectGoals: 'Let a buyer find a local vendor and place a pickup order request.',
-    proposedRoles: [
-      R('Developer', 'Marketplace, search', 2, 'any-level', 'Build listings, search, and ordering.'),
-      R('Designer', 'Marketplace UI', 1, 'beginner', 'Design vendor and product pages.'),
-      R('QA Tester', 'Order flow testing', 1, 'beginner', 'Test search and ordering.'),
-    ],
-  },
-  {
-    projectTitle: 'Mental-Wellness Mood Journal',
-    industryTrack: 'healthcare',
-    projectDescription: 'A private journaling app where users log daily mood, add notes, and see gentle trends over time, with optional AI-written reflective prompts. Software only; not a medical device.',
-    projectGoals: 'Log moods over a week and surface a simple, supportive trend view.',
-    proposedRoles: [
-      R('Developer', 'React, privacy-first storage', 2, 'any-level', 'Build journaling and trend views.'),
-      R('Designer', 'Calm, supportive UI', 1, 'beginner', 'Design a warm, private experience.'),
-    ],
-  },
-  {
-    projectTitle: 'Smart-City Traffic Flow Simulation',
-    industryTrack: 'transportation',
-    projectDescription: 'A browser-based simulation of traffic at an intersection where users adjust signal timing and watch the effect on congestion. A pure software simulation - no sensors or hardware.',
-    projectGoals: 'Simulate an intersection and show how signal timing changes congestion.',
-    proposedRoles: [
-      R('Developer', 'Canvas/animation, simulation logic', 2, 'intermediate', 'Build the simulation engine and controls.'),
-      R('Data Analyst', 'Traffic modeling', 1, 'intermediate', 'Design the congestion model.'),
-      R('Designer', 'Controls and visualization', 1, 'beginner', 'Design the simulation UI.'),
-    ],
-  },
-  {
-    projectTitle: 'Real Estate Listings Aggregator',
-    industryTrack: 'realestate',
-    projectDescription: 'A web app that aggregates property listings into one searchable interface with filters, map view, and saved searches. Uses sample or public data. Software only.',
-    projectGoals: 'Search listings by filters and save a search to revisit.',
-    proposedRoles: [
-      R('Developer', 'Search, maps integration', 2, 'intermediate', 'Build search, filters, and map view.'),
-      R('Designer', 'Listings UI', 1, 'beginner', 'Design search results and detail pages.'),
-      R('QA Tester', 'Filter testing', 1, 'beginner', 'Validate filters and saved searches.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Code-Review Helper',
-    industryTrack: 'technology',
-    projectDescription: 'A tool where developers paste a code snippet and get AI feedback on bugs, style, and improvements, with explanations. Web-based; software only.',
-    projectGoals: 'Return useful, specific review comments on a pasted snippet.',
-    proposedRoles: [
-      R('Developer', 'Frontend, AI integration', 2, 'intermediate', 'Build the paste-and-review flow.'),
-      R('Data Analyst', 'Prompt design, evaluation', 1, 'any-level', 'Tune prompts for accurate reviews.'),
-    ],
-  },
-  {
-    projectTitle: 'Volunteer Matching Platform',
-    industryTrack: 'nonprofit',
-    projectDescription: 'A platform matching volunteers with nonprofit opportunities by skills, availability, and location, with application tracking. Software only.',
-    projectGoals: 'Match a volunteer to a relevant opportunity and track the application.',
-    proposedRoles: [
-      R('Developer', 'Matching, full-stack', 2, 'any-level', 'Build matching and application tracking.'),
-      R('Designer', 'Onboarding UI', 1, 'beginner', 'Design volunteer and org flows.'),
-      R('QA Tester', 'Matching tests', 1, 'beginner', 'Test matching and applications.'),
-    ],
-  },
-  {
-    projectTitle: 'Inventory Management Dashboard',
-    industryTrack: 'manufacturing',
-    projectDescription: 'A dashboard for small businesses to track stock levels, set low-stock alerts, and view turnover reports. Pure software with sample or cloud data.',
-    projectGoals: 'Track stock, trigger a low-stock alert, and show a turnover report.',
-    proposedRoles: [
-      R('Developer', 'Dashboards, data tables', 2, 'any-level', 'Build inventory tracking and reports.'),
-      R('Data Analyst', 'Reporting, metrics', 1, 'beginner', 'Design turnover reports.'),
-      R('Designer', 'Dashboard UI', 1, 'beginner', 'Design the dashboard.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Language-Learning Conversation Partner',
-    industryTrack: 'education',
-    projectDescription: 'A chat app where learners practice a new language with an AI partner that adapts to their level and corrects mistakes gently. Software only.',
-    projectGoals: 'Hold a short adaptive conversation and give helpful corrections.',
-    proposedRoles: [
-      R('Developer', 'Chat UI, AI integration', 2, 'intermediate', 'Build the conversation experience.'),
-      R('Data Analyst', 'Prompt and level design', 1, 'any-level', 'Design level-appropriate prompts.'),
-      R('Designer', 'Learning UI', 1, 'beginner', 'Design the chat and feedback UI.'),
-    ],
-  },
-  {
-    projectTitle: 'Carbon Footprint Calculator',
-    industryTrack: 'energy',
-    projectDescription: 'A web app where users answer questions about travel, diet, and energy use to estimate their carbon footprint, with tips to reduce it. Software only.',
-    projectGoals: 'Estimate a footprint from user answers and suggest reductions.',
-    proposedRoles: [
-      R('Developer', 'Forms, calculation logic', 2, 'any-level', 'Build the questionnaire and results.'),
-      R('Data Analyst', 'Emissions modeling', 1, 'beginner', 'Design the calculation model.'),
-      R('Designer', 'Results visualization', 1, 'beginner', 'Design results and tips.'),
-    ],
-  },
-  {
-    projectTitle: 'Freelancer Invoice & Time Tracker',
-    industryTrack: 'finance',
-    projectDescription: 'A tool for freelancers to track billable hours per client and generate professional invoices as PDFs. Software only.',
-    projectGoals: 'Track time for a client and export a clean invoice.',
-    proposedRoles: [
-      R('Developer', 'Time tracking, PDF export', 2, 'any-level', 'Build tracking and invoice generation.'),
-      R('Designer', 'Invoice templates, UI', 1, 'beginner', 'Design invoices and the tracker UI.'),
-      R('QA Tester', 'Calculation testing', 1, 'beginner', 'Verify totals and exports.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Meeting-Notes Summarizer',
-    industryTrack: 'technology',
-    projectDescription: 'A tool that takes a meeting transcript and produces a summary, action items, and decisions using an AI model. Software only.',
-    projectGoals: 'Turn a transcript into a summary with clear action items.',
-    proposedRoles: [
-      R('Developer', 'Frontend, AI integration', 2, 'intermediate', 'Build transcript-in, summary-out.'),
-      R('Data Analyst', 'Prompt design', 1, 'any-level', 'Tune prompts for accurate action items.'),
-    ],
-  },
-  {
-    projectTitle: 'Accessibility Audit Browser Tool',
-    industryTrack: 'technology',
-    projectDescription: 'A tool that scans a web page and reports accessibility issues (contrast, alt-text, headings) with fixes. Software only.',
-    projectGoals: 'Scan a page and produce a prioritized accessibility report.',
-    proposedRoles: [
-      R('Developer', 'DOM analysis, reporting', 2, 'intermediate', 'Build the scanner and report.'),
-      R('QA Tester', 'Accessibility standards', 1, 'any-level', 'Validate against WCAG basics.'),
-      R('Designer', 'Report UI', 1, 'beginner', 'Design the audit report.'),
-    ],
-  },
-  {
-    projectTitle: 'Recipe Planner with Grocery Lists',
-    industryTrack: 'food',
-    projectDescription: 'A meal-planning app where users pick recipes for the week and get an auto-generated, de-duplicated grocery list. Software only.',
-    projectGoals: 'Plan a week of meals and generate a combined grocery list.',
-    proposedRoles: [
-      R('Developer', 'Planning, list logic', 2, 'any-level', 'Build planning and list generation.'),
-      R('Designer', 'Planner UI', 1, 'beginner', 'Design the weekly planner.'),
-    ],
-  },
-  {
-    projectTitle: 'Job Application Tracker (Kanban)',
-    industryTrack: 'technology',
-    projectDescription: 'A Kanban board for job seekers to track applications across stages (applied, interview, offer), with notes and reminders. Software only.',
-    projectGoals: 'Move an application across stages and set a reminder.',
-    proposedRoles: [
-      R('Developer', 'Drag-and-drop, state', 2, 'any-level', 'Build the board and reminders.'),
-      R('Designer', 'Kanban UI', 1, 'beginner', 'Design the board and cards.'),
-      R('QA Tester', 'Board testing', 1, 'beginner', 'Test stage moves and reminders.'),
-    ],
-  },
-  {
-    projectTitle: 'Fitness Workout Planner & Logger',
-    industryTrack: 'healthcare',
-    projectDescription: 'An app to build workout routines, log sessions, and track progress over time with charts. Software only; not a medical device.',
-    projectGoals: 'Create a routine, log a session, and view progress.',
-    proposedRoles: [
-      R('Developer', 'Logging, charts', 2, 'any-level', 'Build routines, logging, and charts.'),
-      R('Designer', 'Fitness UI', 1, 'beginner', 'Design the planner and logs.'),
-    ],
-  },
-  {
-    projectTitle: 'Digital Twin: Warehouse Robot Simulation',
-    industryTrack: 'manufacturing',
-    projectDescription: 'A browser simulation of robots moving items through a warehouse, where users tweak routes and see efficiency. A software digital twin - no physical robots.',
-    projectGoals: 'Simulate item-picking routes and report efficiency changes.',
-    proposedRoles: [
-      R('Developer', 'Simulation, animation', 2, 'intermediate', 'Build the warehouse simulation.'),
-      R('Data Analyst', 'Routing/optimization', 1, 'intermediate', 'Design the routing logic.'),
-      R('Designer', 'Simulation UI', 1, 'beginner', 'Design controls and visuals.'),
-    ],
-  },
-  {
-    projectTitle: 'Peer Code-Mentorship Matching',
-    industryTrack: 'education',
-    projectDescription: 'A platform matching junior developers with mentors by tech stack and goals, with session scheduling and feedback. Software only.',
-    projectGoals: 'Match a mentee to a mentor and schedule a first session.',
-    proposedRoles: [
-      R('Developer', 'Matching, scheduling', 2, 'any-level', 'Build matching and scheduling.'),
-      R('Mentor', 'Program design', 1, 'any-level', 'Shape the mentorship flow and norms.'),
-      R('Designer', 'Onboarding UI', 1, 'beginner', 'Design mentor/mentee flows.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Sentiment Dashboard for Reviews',
-    industryTrack: 'marketing',
-    projectDescription: 'A dashboard that ingests product reviews and shows sentiment trends and common themes using AI text analysis. Software only.',
-    projectGoals: 'Analyze a batch of reviews and visualize sentiment and themes.',
-    proposedRoles: [
-      R('Developer', 'Dashboards, AI integration', 2, 'intermediate', 'Build ingestion and the dashboard.'),
-      R('Data Analyst', 'NLP, evaluation', 1, 'intermediate', 'Design the sentiment analysis.'),
-      R('Designer', 'Data viz UI', 1, 'beginner', 'Design the dashboard.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Recipe Generator from Ingredients',
-    industryTrack: 'food',
-    projectDescription: 'A web app where users enter ingredients they have and an AI suggests recipes, with steps and substitutions. Software only.',
-    projectGoals: 'Turn a list of ingredients into at least 3 viable recipes with steps.',
-    proposedRoles: [
-      R('Developer', 'React, LLM API', 2, 'intermediate', 'Build ingredient-in, recipe-out flow.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design the input and recipe card screens.'),
-    ],
-  },
-  {
-    projectTitle: 'Local Volunteer Opportunity Finder',
-    industryTrack: 'non-profit',
-    projectDescription: 'A platform matching volunteers to nearby nonprofit opportunities by cause, skills, and availability. Software only.',
-    projectGoals: 'Match a volunteer to at least one relevant opportunity end to end.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase, geolocation', 2, 'any-level', 'Build the matching feed and filters.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design onboarding and listings.'),
-      R('QA Tester', 'Test cases', 1, 'beginner', 'Verify matching and filters.'),
-    ],
-  },
-  {
-    projectTitle: 'Habit Accountability Buddy App',
-    industryTrack: 'health',
-    projectDescription: 'An app that pairs users with an accountability partner and tracks shared streaks and check-ins. Software only.',
-    projectGoals: 'Pair two users and track a shared streak for a week.',
-    proposedRoles: [
-      R('Developer', 'React Native or web, realtime DB', 2, 'intermediate', 'Build pairing and streak tracking.'),
-      R('Designer', 'Mobile UI', 1, 'beginner', 'Design check-in screens.'),
-    ],
-  },
-  {
-    projectTitle: 'AI-Powered Flashcard Maker',
-    industryTrack: 'education',
-    projectDescription: 'A tool that converts notes or PDFs into spaced-repetition flashcards using AI. Software only.',
-    projectGoals: 'Generate a deck of spaced-repetition cards from a document.',
-    proposedRoles: [
-      R('Developer', 'JavaScript, LLM API', 2, 'intermediate', 'Build document parsing and card generation.'),
-      R('Data Analyst', 'Prompt design', 1, 'any-level', 'Tune card quality.'),
-    ],
-  },
-  {
-    projectTitle: 'Carbon Footprint Calculator',
-    industryTrack: 'environment',
-    projectDescription: 'A web calculator where users answer lifestyle questions and see their estimated carbon footprint with tips to reduce it. Software only.',
-    projectGoals: 'Produce an accurate footprint estimate with 3 actionable tips.',
-    proposedRoles: [
-      R('Developer', 'React, data viz', 2, 'any-level', 'Build the questionnaire and results.'),
-      R('Data Analyst', 'Emissions data', 1, 'any-level', 'Source and model the calculations.'),
-    ],
-  },
-  {
-    projectTitle: 'Freelancer Invoice & Time Tracker',
-    industryTrack: 'finance',
-    projectDescription: 'A tool for freelancers to track billable hours and generate professional invoices as PDFs. Software only.',
-    projectGoals: 'Track time on a project and export a clean PDF invoice.',
-    proposedRoles: [
-      R('Developer', 'Time tracking, PDF export', 2, 'any-level', 'Build tracking and invoicing.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design the dashboard and invoice template.'),
-    ],
-  },
-  {
-    projectTitle: 'Mental Health Mood Journal',
-    industryTrack: 'health',
-    projectDescription: 'A private journaling app with mood tracking, trends over time, and gentle prompts. Software only.',
-    projectGoals: 'Let a user log moods and see a weekly trend chart.',
-    proposedRoles: [
-      R('Developer', 'React, charts', 2, 'any-level', 'Build journaling and mood charts.'),
-      R('Designer', 'Calm, accessible UI', 1, 'beginner', 'Design the journaling experience.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Job Interview Practice Coach',
-    industryTrack: 'technology',
-    projectDescription: 'A simulator that asks role-specific interview questions and gives AI feedback on answers. Software only.',
-    projectGoals: 'Run a mock interview with feedback on at least 5 answers.',
-    proposedRoles: [
-      R('Developer', 'LLM integration, web', 2, 'intermediate', 'Build the Q&A and feedback loop.'),
-      R('Data Analyst', 'Prompt + rubric design', 1, 'any-level', 'Design feedback rubrics.'),
-    ],
-  },
-  {
-    projectTitle: 'Neighborhood Tool-Sharing Platform',
-    industryTrack: 'non-profit',
-    projectDescription: 'A platform where neighbors list tools to lend and request to borrow, with a reservation calendar. Software only.',
-    projectGoals: 'Let a user list a tool and another reserve it.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase', 2, 'any-level', 'Build listings and reservations.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design listing and calendar.'),
-      R('QA Tester', 'Test cases', 1, 'beginner', 'Verify reservation flow.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Language Learning Chat Partner',
-    industryTrack: 'education',
-    projectDescription: 'A chat app where learners practice a language with an AI partner that corrects and explains. Software only.',
-    projectGoals: 'Hold a short conversation with corrections in a target language.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build the chat and correction display.'),
-      R('Designer', 'Conversational UI', 1, 'beginner', 'Design the chat experience.'),
-    ],
-  },
-  {
-    projectTitle: 'Small Business Inventory Manager',
-    industryTrack: 'retail',
-    projectDescription: 'A simple inventory system for small shops to track stock, low-stock alerts, and reorder lists. Software only.',
-    projectGoals: 'Track stock levels and trigger a low-stock alert.',
-    proposedRoles: [
-      R('Developer', 'React, database', 2, 'any-level', 'Build inventory CRUD and alerts.'),
-      R('QA Tester', 'Validation testing', 1, 'beginner', 'Test stock calculations.'),
-    ],
-  },
-  {
-    projectTitle: 'Crowdsourced Local Events Map',
-    industryTrack: 'media',
-    projectDescription: 'A map-based app where users post and discover local events, filterable by category and date. Software only.',
-    projectGoals: 'Post an event and see it appear on the map for others.',
-    proposedRoles: [
-      R('Developer', 'React, maps API', 2, 'intermediate', 'Build the map and event posting.'),
-      R('Designer', 'Map UI', 1, 'beginner', 'Design event cards and filters.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Content Idea Generator',
-    industryTrack: 'media',
-    projectDescription: 'A tool that generates content ideas, titles, and outlines for a given topic and platform. Software only.',
-    projectGoals: 'Generate 10 content ideas with outlines for a topic.',
-    proposedRoles: [
-      R('Developer', 'LLM API, web', 2, 'intermediate', 'Build idea generation.'),
-      R('Data Analyst', 'Prompt design', 1, 'any-level', 'Tune idea quality.'),
-    ],
-  },
-  {
-    projectTitle: 'Pet Care Reminder & Tracker',
-    industryTrack: 'health',
-    projectDescription: 'An app to track pet feeding, walks, vet visits, and medication with reminders. Software only.',
-    projectGoals: 'Set a recurring reminder and log a completed task.',
-    proposedRoles: [
-      R('Developer', 'React, notifications', 2, 'any-level', 'Build tracking and reminders.'),
-      R('Designer', 'Friendly UI', 1, 'beginner', 'Design pet profiles and logs.'),
-    ],
-  },
-  {
-    projectTitle: 'Study Group Scheduler',
-    industryTrack: 'education',
-    projectDescription: 'A tool that finds overlapping free times for a group and schedules study sessions. Software only.',
-    projectGoals: 'Find a common slot for 3+ people and book it.',
-    proposedRoles: [
-      R('Developer', 'Calendar logic, web', 2, 'intermediate', 'Build availability matching.'),
-      R('QA Tester', 'Edge cases', 1, 'beginner', 'Test scheduling conflicts.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Email Draft Assistant',
-    industryTrack: 'technology',
-    projectDescription: 'A tool that drafts and refines emails from a short prompt, with tone options. Software only.',
-    projectGoals: 'Generate a polished email from a one-line prompt with tone control.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build draft generation and tone.'),
-      R('Designer', 'Compose UI', 1, 'beginner', 'Design the writing interface.'),
-    ],
-  },
-  {
-    projectTitle: 'Community Garden Plot Manager',
-    industryTrack: 'environment',
-    projectDescription: 'A platform to manage community garden plots, assignments, and planting schedules. Software only.',
-    projectGoals: 'Assign a plot and track a planting schedule.',
-    proposedRoles: [
-      R('Developer', 'React, database', 2, 'any-level', 'Build plot assignment and schedules.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design the plot map and calendar.'),
-    ],
-  },
-  {
-    projectTitle: 'Expense Splitting App for Groups',
-    industryTrack: 'finance',
-    projectDescription: 'An app to split shared expenses among friends and settle balances. Software only.',
-    projectGoals: 'Split an expense among a group and show who owes whom.',
-    proposedRoles: [
-      R('Developer', 'React, calculations', 2, 'any-level', 'Build splitting and balance logic.'),
-      R('QA Tester', 'Calculation testing', 1, 'beginner', 'Verify settlements.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Product Review Analyzer',
-    industryTrack: 'retail',
-    projectDescription: 'A dashboard that ingests product reviews and shows sentiment trends and common themes using AI. Software only.',
-    projectGoals: 'Analyze a batch of reviews and visualize sentiment and themes.',
-    proposedRoles: [
-      R('Developer', 'Data viz, AI integration', 2, 'intermediate', 'Build ingestion and the dashboard.'),
-      R('Data Analyst', 'NLP, sentiment', 1, 'intermediate', 'Model sentiment and themes.'),
-    ],
-  },
-  {
-    projectTitle: 'Fitness Workout Plan Builder',
-    industryTrack: 'health',
-    projectDescription: 'An app where users build custom workout plans and track progress over time. Software only.',
-    projectGoals: 'Build a weekly plan and log completed workouts.',
-    proposedRoles: [
-      R('Developer', 'React, charts', 2, 'any-level', 'Build plan builder and tracking.'),
-      R('Designer', 'Fitness UI', 1, 'beginner', 'Design plan and progress views.'),
-    ],
-  },
-  {
-    projectTitle: 'Open-Source Documentation Portal',
-    industryTrack: 'technology',
-    projectDescription: 'A clean docs site generator for open-source projects with search and versioning. Software only.',
-    projectGoals: 'Generate a searchable docs site from markdown files.',
-    proposedRoles: [
-      R('Developer', 'Static site, search', 2, 'intermediate', 'Build generation and search.'),
-      R('Designer', 'Docs UI', 1, 'beginner', 'Design navigation and layout.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Storybook Generator for Kids',
-    industryTrack: 'education',
-    projectDescription: 'A tool that turns a child\'s prompt into an illustrated short story using AI text (and placeholder art). Software only.',
-    projectGoals: 'Generate a short multi-page story from a prompt.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build story generation and paging.'),
-      R('Designer', 'Playful UI', 1, 'beginner', 'Design the storybook layout.'),
-    ],
-  },
-  {
-    projectTitle: 'Restaurant Table Reservation System',
-    industryTrack: 'food',
-    projectDescription: 'A reservation system for restaurants with availability, booking, and confirmation. Software only.',
-    projectGoals: 'Let a diner book an available table and get confirmation.',
-    proposedRoles: [
-      R('Developer', 'React, database', 2, 'any-level', 'Build availability and booking.'),
-      R('QA Tester', 'Booking edge cases', 1, 'beginner', 'Test double-booking prevention.'),
-    ],
-  },
-  {
-    projectTitle: 'Personal Knowledge Base Wiki',
-    industryTrack: 'technology',
-    projectDescription: 'A personal note-linking app where notes connect into a knowledge graph. Software only.',
-    projectGoals: 'Create linked notes and visualize their connections.',
-    proposedRoles: [
-      R('Developer', 'React, graph viz', 2, 'intermediate', 'Build notes and graph view.'),
-      R('Designer', 'Information UI', 1, 'beginner', 'Design the editing experience.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Social Media Caption Writer',
-    industryTrack: 'media',
-    projectDescription: 'A tool that writes platform-tailored captions and hashtags from an image description. Software only.',
-    projectGoals: 'Generate 5 captions with hashtags for a described post.',
-    proposedRoles: [
-      R('Developer', 'LLM API', 2, 'intermediate', 'Build caption generation.'),
-      R('Data Analyst', 'Prompt design', 1, 'any-level', 'Tune caption tone.'),
-    ],
-  },
-  {
-    projectTitle: 'Donation Tracking for Nonprofits',
-    industryTrack: 'non-profit',
-    projectDescription: 'A dashboard for nonprofits to log donations, track donors, and visualize fundraising progress. Software only.',
-    projectGoals: 'Log a donation and update a fundraising progress bar.',
-    proposedRoles: [
-      R('Developer', 'React, charts', 2, 'any-level', 'Build donation logging and dashboard.'),
-      R('QA Tester', 'Data validation', 1, 'beginner', 'Test totals and reporting.'),
-    ],
-  },
-  {
-    projectTitle: 'Code Snippet Manager',
-    industryTrack: 'technology',
-    projectDescription: 'A searchable library where developers save, tag, and reuse code snippets. Software only.',
-    projectGoals: 'Save a tagged snippet and find it by search.',
-    proposedRoles: [
-      R('Developer', 'React, search', 2, 'any-level', 'Build snippet CRUD and search.'),
-      R('Designer', 'Developer UI', 1, 'beginner', 'Design the snippet browser.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Travel Itinerary Planner',
-    industryTrack: 'travel',
-    projectDescription: 'A tool that builds a day-by-day travel itinerary from preferences and trip length using AI. Software only.',
-    projectGoals: 'Generate a 3-day itinerary tailored to stated interests.',
-    proposedRoles: [
-      R('Developer', 'LLM integration, maps', 2, 'intermediate', 'Build itinerary generation.'),
-      R('Designer', 'Travel UI', 1, 'beginner', 'Design the itinerary view.'),
-    ],
-  },
-  {
-    projectTitle: 'Classroom Quiz & Polling Tool',
-    industryTrack: 'education',
-    projectDescription: 'A live quiz and polling tool teachers run in class with instant results. Software only.',
-    projectGoals: 'Run a live poll and show real-time results.',
-    proposedRoles: [
-      R('Developer', 'Realtime DB, web', 2, 'intermediate', 'Build live polling and results.'),
-      R('QA Tester', 'Concurrency testing', 1, 'beginner', 'Test many simultaneous responses.'),
-    ],
-  },
-  {
-    projectTitle: 'Subscription Tracker & Reminder',
-    industryTrack: 'finance',
-    projectDescription: 'An app to track recurring subscriptions, costs, and renewal reminders. Software only.',
-    projectGoals: 'Track subscriptions and remind before a renewal.',
-    proposedRoles: [
-      R('Developer', 'React, notifications', 2, 'any-level', 'Build tracking and reminders.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design the dashboard.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Resume Keyword Optimizer',
-    industryTrack: 'technology',
-    projectDescription: 'A tool that compares a resume to a job description and suggests keyword improvements. Software only.',
-    projectGoals: 'Show match gaps between a resume and a job post.',
-    proposedRoles: [
-      R('Developer', 'NLP, web', 2, 'intermediate', 'Build matching and suggestions.'),
-      R('Data Analyst', 'Keyword modeling', 1, 'any-level', 'Model match scoring.'),
-    ],
-  },
-  {
-    projectTitle: 'Local Farmers Market Directory',
-    industryTrack: 'food',
-    projectDescription: 'A directory of local farmers markets with vendors, hours, and seasonal produce. Software only.',
-    projectGoals: 'List a market with vendors and let users browse by produce.',
-    proposedRoles: [
-      R('Developer', 'React, database', 2, 'any-level', 'Build directory and filters.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design market and vendor pages.'),
-    ],
-  },
-  {
-    projectTitle: 'Team Standup Bot Dashboard',
-    industryTrack: 'technology',
-    projectDescription: 'A dashboard that collects async standup updates and summarizes them for the team. Software only.',
-    projectGoals: 'Collect updates from members and show a daily summary.',
-    proposedRoles: [
-      R('Developer', 'Web, integrations', 2, 'intermediate', 'Build update collection and summary.'),
-      R('Data Analyst', 'Summary logic', 1, 'any-level', 'Design the summary view.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Plant Disease Identifier (Simulated)',
-    industryTrack: 'environment',
-    projectDescription: 'A simulated app where users describe plant symptoms and get AI-based care suggestions. Software only; no real diagnosis.',
-    projectGoals: 'Map described symptoms to plausible care suggestions.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build symptom-to-suggestion flow.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design the input and results.'),
-    ],
-  },
-  {
-    projectTitle: 'Book Club Discussion Platform',
-    industryTrack: 'media',
-    projectDescription: 'A platform for book clubs to schedule reads, post discussion threads, and track progress. Software only.',
-    projectGoals: 'Create a club, set a book, and host a discussion thread.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase', 2, 'any-level', 'Build clubs and threads.'),
-      R('Designer', 'Reading UI', 1, 'beginner', 'Design discussion and progress.'),
-    ],
-  },
-  {
-    projectTitle: 'Personal Goal OKR Tracker',
-    industryTrack: 'technology',
-    projectDescription: 'An app to set personal objectives and key results, then track progress quarterly. Software only.',
-    projectGoals: 'Set an objective with key results and track progress.',
-    proposedRoles: [
-      R('Developer', 'React, charts', 2, 'any-level', 'Build OKR tracking.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design the OKR dashboard.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Customer Feedback Categorizer',
-    industryTrack: 'retail',
-    projectDescription: 'A tool that auto-categorizes incoming customer feedback into themes for support teams. Software only.',
-    projectGoals: 'Auto-sort a batch of feedback into clear categories.',
-    proposedRoles: [
-      R('Developer', 'NLP, web', 2, 'intermediate', 'Build categorization.'),
-      R('Data Analyst', 'Theme modeling', 1, 'intermediate', 'Define and tune categories.'),
-    ],
-  },
-  {
-    projectTitle: 'Remote Team Watercooler App',
-    industryTrack: 'technology',
-    projectDescription: 'A lightweight app for remote teams to share daily prompts and casual updates. Software only.',
-    projectGoals: 'Post a daily prompt and let the team respond.',
-    proposedRoles: [
-      R('Developer', 'Realtime web', 2, 'any-level', 'Build prompts and responses.'),
-      R('Designer', 'Social UI', 1, 'beginner', 'Design the feed.'),
-    ],
-  },
-  {
-    projectTitle: 'Scholarship Matching Platform',
-    industryTrack: 'education',
-    projectDescription: 'A platform that matches students to scholarships by profile and eligibility. Software only.',
-    projectGoals: 'Match a student profile to relevant scholarships.',
-    proposedRoles: [
-      R('Developer', 'React, matching logic', 2, 'intermediate', 'Build matching and filters.'),
-      R('QA Tester', 'Eligibility testing', 1, 'beginner', 'Verify match accuracy.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Workout Form Feedback (Simulated)',
-    industryTrack: 'health',
-    projectDescription: 'A simulated coach where users describe an exercise and get AI form tips. Software only; no video analysis.',
-    projectGoals: 'Give relevant form tips for a described exercise.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build the tip engine.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design input and tips.'),
-    ],
-  },
-  {
-    projectTitle: 'Community Petition Platform',
-    industryTrack: 'non-profit',
-    projectDescription: 'A platform to create, sign, and share petitions with signature goals and updates. Software only.',
-    projectGoals: 'Create a petition and collect signatures toward a goal.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase', 2, 'any-level', 'Build petitions and signing.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design petition pages.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Meeting Scheduler Assistant',
-    industryTrack: 'technology',
-    projectDescription: 'A tool that finds meeting times across time zones and drafts invites. Software only.',
-    projectGoals: 'Find a cross-timezone slot and draft an invite.',
-    proposedRoles: [
-      R('Developer', 'Calendar logic, web', 2, 'intermediate', 'Build timezone matching.'),
-      R('Data Analyst', 'Scheduling logic', 1, 'any-level', 'Refine the matching.'),
-    ],
-  },
-  {
-    projectTitle: 'Recipe Nutrition Analyzer',
-    industryTrack: 'food',
-    projectDescription: 'A tool that estimates the nutrition of a recipe from its ingredients. Software only.',
-    projectGoals: 'Estimate calories and macros for a given recipe.',
-    proposedRoles: [
-      R('Developer', 'React, data lookup', 2, 'any-level', 'Build the analyzer.'),
-      R('Data Analyst', 'Nutrition data', 1, 'any-level', 'Source nutrition data.'),
-    ],
-  },
-  {
-    projectTitle: 'Open Data City Dashboard',
-    industryTrack: 'environment',
-    projectDescription: 'A dashboard visualizing public city data like transit, air quality, or budgets. Software only.',
-    projectGoals: 'Visualize one public dataset with interactive charts.',
-    proposedRoles: [
-      R('Developer', 'Data viz, web', 2, 'intermediate', 'Build the dashboard.'),
-      R('Data Analyst', 'Data sourcing', 1, 'any-level', 'Clean and prep the data.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Debugging Helper for Beginners',
-    industryTrack: 'technology',
-    projectDescription: 'A tool where beginners paste an error and get a plain-language explanation and fixes. Software only.',
-    projectGoals: 'Explain a pasted error and suggest a fix in plain language.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build error explanation.'),
-      R('Data Analyst', 'Prompt design', 1, 'any-level', 'Tune explanations.'),
-    ],
-  },
-  {
-    projectTitle: 'Virtual Study Room with Timers',
-    industryTrack: 'education',
-    projectDescription: 'A focus app with shared Pomodoro timers and a quiet co-working feel. Software only.',
-    projectGoals: 'Run a shared focus session with a synced timer.',
-    proposedRoles: [
-      R('Developer', 'Realtime web', 2, 'intermediate', 'Build synced timers.'),
-      R('Designer', 'Calm UI', 1, 'beginner', 'Design the focus room.'),
-    ],
-  },
-  {
-    projectTitle: 'Secondhand Marketplace for Students',
-    industryTrack: 'retail',
-    projectDescription: 'A campus marketplace for students to buy and sell used items safely. Software only.',
-    projectGoals: 'List an item and let another student message to buy.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase', 2, 'any-level', 'Build listings and messaging.'),
-      R('QA Tester', 'Flow testing', 1, 'beginner', 'Test the buy/sell flow.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Grant Proposal Drafter',
-    industryTrack: 'non-profit',
-    projectDescription: 'A tool that helps nonprofits draft grant proposal sections from a project brief. Software only.',
-    projectGoals: 'Draft key proposal sections from a short brief.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build section drafting.'),
-      R('Data Analyst', 'Prompt design', 1, 'any-level', 'Tune proposal quality.'),
-    ],
-  },
-  {
-    projectTitle: 'Personal Reading Tracker & Stats',
-    industryTrack: 'media',
-    projectDescription: 'An app to log books read, set goals, and view reading stats over time. Software only.',
-    projectGoals: 'Log books and show yearly reading stats.',
-    proposedRoles: [
-      R('Developer', 'React, charts', 2, 'any-level', 'Build logging and stats.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design the reading dashboard.'),
-    ],
-  },
-  {
-    projectTitle: 'Symptom-Based Self-Care Guide (Simulated)',
-    industryTrack: 'health',
-    projectDescription: 'A simulated tool offering general self-care info from described symptoms. Software only; not medical advice.',
-    projectGoals: 'Map symptoms to general self-care info with disclaimers.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build the guide.'),
-      R('Designer', 'Trustworthy UI', 1, 'beginner', 'Design clear, safe results.'),
-    ],
-  },
-  {
-    projectTitle: 'Crowd-Sourced Recipe Sharing Site',
-    industryTrack: 'food',
-    projectDescription: 'A site where users share recipes, rate them, and save favorites. Software only.',
-    projectGoals: 'Post a recipe and let others rate and save it.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase', 2, 'any-level', 'Build recipe CRUD and ratings.'),
-      R('Designer', 'Food UI', 1, 'beginner', 'Design recipe pages.'),
-    ],
-  },
-  {
-    projectTitle: 'Ai-Assisted Lesson Plan Builder',
-    industryTrack: 'education',
-    projectDescription: 'A tool that helps teachers build lesson plans aligned to objectives using AI. Software only.',
-    projectGoals: 'Generate a lesson plan from a topic and grade level.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build plan generation.'),
-      R('Data Analyst', 'Prompt design', 1, 'any-level', 'Align to objectives.'),
-    ],
-  },
-  {
-    projectTitle: 'Local Service Provider Directory',
-    industryTrack: 'retail',
-    projectDescription: 'A directory connecting users to local service providers with reviews and booking requests. Software only.',
-    projectGoals: 'List a provider and let a user request a booking.',
-    proposedRoles: [
-      R('Developer', 'React, database', 2, 'any-level', 'Build directory and requests.'),
-      R('QA Tester', 'Flow testing', 1, 'beginner', 'Test booking requests.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Note-to-Slide Generator',
-    industryTrack: 'technology',
-    projectDescription: 'A tool that turns bullet notes into a simple slide deck outline. Software only.',
-    projectGoals: 'Turn notes into a structured slide outline.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build the generator.'),
-      R('Designer', 'Slide UI', 1, 'beginner', 'Design the deck preview.'),
-    ],
-  },
-  {
-    projectTitle: 'Volunteer Hours Tracking System',
-    industryTrack: 'non-profit',
-    projectDescription: 'A system for organizations to log and verify volunteer hours with reports. Software only.',
-    projectGoals: 'Log volunteer hours and generate a summary report.',
-    proposedRoles: [
-      R('Developer', 'React, database', 2, 'any-level', 'Build logging and reports.'),
-      R('QA Tester', 'Report testing', 1, 'beginner', 'Verify totals.'),
-    ],
-  },
-  {
-    projectTitle: 'Personal Finance Goal Visualizer',
-    industryTrack: 'finance',
-    projectDescription: 'An app that visualizes savings goals and projects timelines to reach them. Software only.',
-    projectGoals: 'Set a savings goal and project a timeline chart.',
-    proposedRoles: [
-      R('Developer', 'React, charts', 2, 'any-level', 'Build goal projection.'),
-      R('Designer', 'Data viz UI', 1, 'beginner', 'Design the visualizer.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Trivia Game Generator',
-    industryTrack: 'media',
-    projectDescription: 'A tool that generates themed trivia quizzes with an AI question writer. Software only.',
-    projectGoals: 'Generate a themed quiz and let users play it.',
-    proposedRoles: [
-      R('Developer', 'LLM integration, web', 2, 'intermediate', 'Build generation and gameplay.'),
-      R('Designer', 'Game UI', 1, 'beginner', 'Design the quiz experience.'),
-    ],
-  },
-  {
-    projectTitle: 'Sustainable Product Comparison Tool',
-    industryTrack: 'environment',
-    projectDescription: 'A tool comparing products on sustainability metrics to help users choose greener options. Software only.',
-    projectGoals: 'Compare two products on key sustainability metrics.',
-    proposedRoles: [
-      R('Developer', 'React, data', 2, 'any-level', 'Build comparison.'),
-      R('Data Analyst', 'Sustainability data', 1, 'any-level', 'Source and model metrics.'),
-    ],
-  },
-  {
-    projectTitle: 'Mentor-Mentee Matching Platform',
-    industryTrack: 'education',
-    projectDescription: 'A platform matching mentees to mentors by goals, field, and availability. Software only.',
-    projectGoals: 'Match a mentee to a suitable mentor and start a thread.',
-    proposedRoles: [
-      R('Developer', 'React, matching', 2, 'intermediate', 'Build matching and messaging.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design profiles and matches.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Customer Support Knowledge Bot',
-    industryTrack: 'technology',
-    projectDescription: 'A bot that answers support questions from a company\'s knowledge base using AI. Software only.',
-    projectGoals: 'Answer a question accurately from a small knowledge base.',
-    proposedRoles: [
-      R('Developer', 'LLM, retrieval', 2, 'intermediate', 'Build retrieval and answering.'),
-      R('Data Analyst', 'Knowledge base prep', 1, 'any-level', 'Structure the knowledge base.'),
-    ],
-  },
-  {
-    projectTitle: 'Group Trip Expense & Planning App',
-    industryTrack: 'travel',
-    projectDescription: 'An app to plan group trips with shared itineraries and split expenses. Software only.',
-    projectGoals: 'Plan a shared itinerary and split trip expenses.',
-    proposedRoles: [
-      R('Developer', 'React, calculations', 2, 'intermediate', 'Build planning and splitting.'),
-      R('QA Tester', 'Calculation testing', 1, 'beginner', 'Verify expense splits.'),
-    ],
-  },
-  {
-    projectTitle: 'Daily Affirmation & Mood App',
-    industryTrack: 'health',
-    projectDescription: 'An app delivering daily affirmations and tracking mood responses. Software only.',
-    projectGoals: 'Deliver a daily affirmation and log a mood.',
-    proposedRoles: [
-      R('Developer', 'React, notifications', 2, 'any-level', 'Build delivery and logging.'),
-      R('Designer', 'Calm UI', 1, 'beginner', 'Design the daily experience.'),
-    ],
-  },
-  {
-    projectTitle: 'Open-Source Issue Triage Dashboard',
-    industryTrack: 'technology',
-    projectDescription: 'A dashboard that organizes and prioritizes open-source repo issues. Software only.',
-    projectGoals: 'Pull issues and sort them by priority labels.',
-    proposedRoles: [
-      R('Developer', 'API integration, web', 2, 'intermediate', 'Build issue ingestion and sorting.'),
-      R('Designer', 'Dashboard UI', 1, 'beginner', 'Design the triage board.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Cover Letter Personalizer',
-    industryTrack: 'technology',
-    projectDescription: 'A tool that tailors a cover letter to a specific job posting using AI. Software only.',
-    projectGoals: 'Personalize a cover letter to a pasted job posting.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build personalization.'),
-      R('Data Analyst', 'Prompt design', 1, 'any-level', 'Tune tailoring quality.'),
-    ],
-  },
-  {
-    projectTitle: 'Community Lost & Found Board',
-    industryTrack: 'non-profit',
-    projectDescription: 'A local board to post lost and found items with photos and locations. Software only.',
-    projectGoals: 'Post a found item and let an owner claim it.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase', 2, 'any-level', 'Build posting and claiming.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design item cards.'),
-    ],
-  },
-  {
-    projectTitle: 'Habit Streak Leaderboard',
-    industryTrack: 'health',
-    projectDescription: 'A social app where friends compete on habit streaks with a leaderboard. Software only.',
-    projectGoals: 'Track habits and rank friends on a leaderboard.',
-    proposedRoles: [
-      R('Developer', 'Realtime DB, web', 2, 'intermediate', 'Build streaks and leaderboard.'),
-      R('Designer', 'Gamified UI', 1, 'beginner', 'Design the leaderboard.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Blog Outline & SEO Helper',
-    industryTrack: 'media',
-    projectDescription: 'A tool that generates blog outlines with SEO keyword suggestions. Software only.',
-    projectGoals: 'Generate an outline with keyword suggestions for a topic.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build outline and SEO.'),
-      R('Data Analyst', 'SEO/keyword logic', 1, 'any-level', 'Tune keyword relevance.'),
-    ],
-  },
-  {
-    projectTitle: 'Inventory Forecasting Dashboard',
-    industryTrack: 'retail',
-    projectDescription: 'A dashboard that forecasts inventory needs from past sales trends. Software only.',
-    projectGoals: 'Forecast reorder needs from historical sales data.',
-    proposedRoles: [
-      R('Developer', 'Data viz, web', 2, 'intermediate', 'Build forecasting dashboard.'),
-      R('Data Analyst', 'Forecasting models', 1, 'intermediate', 'Build the forecast logic.'),
-    ],
-  },
-  {
-    projectTitle: 'Peer Code Review Practice Platform',
-    industryTrack: 'technology',
-    projectDescription: 'A platform where learners practice reviewing each other\'s code with guided rubrics. Software only.',
-    projectGoals: 'Submit code and receive a structured peer review.',
-    proposedRoles: [
-      R('Developer', 'React, Firebase', 2, 'intermediate', 'Build submission and review.'),
-      R('Designer', 'Review UI', 1, 'beginner', 'Design the review flow.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Meal Plan Generator',
-    industryTrack: 'food',
-    projectDescription: 'A tool that builds weekly meal plans from dietary preferences and goals. Software only.',
-    projectGoals: 'Generate a 7-day meal plan matching stated preferences.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build plan generation.'),
-      R('Data Analyst', 'Nutrition logic', 1, 'any-level', 'Validate plans.'),
-    ],
-  },
-  {
-    projectTitle: 'Civic Issue Reporting Map',
-    industryTrack: 'environment',
-    projectDescription: 'A map where citizens report local issues (potholes, litter) and track status. Software only.',
-    projectGoals: 'Report an issue on the map and track its status.',
-    proposedRoles: [
-      R('Developer', 'React, maps', 2, 'intermediate', 'Build reporting and status.'),
-      R('QA Tester', 'Flow testing', 1, 'beginner', 'Test the report lifecycle.'),
-    ],
-  },
-  {
-    projectTitle: 'Personal Portfolio Site Builder',
-    industryTrack: 'technology',
-    projectDescription: 'A no-code tool to build a personal portfolio site from a form. Software only.',
-    projectGoals: 'Generate a live portfolio site from entered details.',
-    proposedRoles: [
-      R('Developer', 'React, templating', 2, 'intermediate', 'Build the generator.'),
-      R('Designer', 'Portfolio templates', 1, 'beginner', 'Design template themes.'),
-    ],
-  },
-  {
-    projectTitle: 'AI Study Plan Generator',
-    industryTrack: 'education',
-    projectDescription: 'A tool that builds a study plan from exam date, topics, and available time. Software only.',
-    projectGoals: 'Generate a paced study plan from a goal and deadline.',
-    proposedRoles: [
-      R('Developer', 'LLM integration', 2, 'intermediate', 'Build plan generation.'),
-      R('Designer', 'UI/UX', 1, 'beginner', 'Design the plan view.'),
+const RAW = [
+  // ---------------- AI agents and automation ----------------
+  {
+    title: 'Job Application Assistant Agent',
+    theme: 'AI agents and automation',
+    industry: 'technology',
+    problem: 'Job seekers juggle dozens of postings, deadlines, and tailored applications in scattered notes, and miss deadlines or send generic applications.',
+    description: 'A web app with an AI agent that saves job postings, pulls out the key requirements, suggests how to tailor a resume to each one, and reminds the user of deadlines. The user approves every suggestion; the agent never applies on its own.',
+    outcome: 'A working tracker where a user pastes a posting and gets its requirements, tailoring tips, and a deadline reminder.',
+    weeks: [
+      'Interview 3 to 5 job seekers and list the steps they repeat for every application.',
+      'Design the tracker screens and write the agent instructions for reading a posting.',
+      'Build saving postings and pulling out requirements with an AI model.',
+      'Add tailoring suggestions and deadline reminders; review how resume data is stored.',
+      'Test the agent on 20 real postings and fix wrong or vague suggestions.',
+      'Polish, write a short user guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript or Python, LLM APIs, function calling', 'The agent that reads a posting and returns requirements and tailoring tips.', 'intermediate'),
+      arch('No-code Builder', 'Airtable or Softr, Zapier or Make', 'The tracker board and the reminder automation.'),
+      qa('AI Quality Tester', 'Test cases, comparing AI output to a source', 'A test sheet of 20 postings with a pass or fail for each suggestion.'),
+      guard('Security & Privacy Reviewer', 'Data privacy basics, access rules', 'A short review of how resumes and personal details are stored and who can see them.'),
+      leads('User Researcher', 'Interviews, note-taking, writing', 'Interview notes and the user guide.'),
+    ],
+  },
+  {
+    title: 'Small Business Inbox Agent',
+    theme: 'AI agents and automation',
+    industry: 'ecommerce',
+    problem: 'Small online shops lose sales because owners cannot answer every customer email quickly, and the same questions come in again and again.',
+    description: 'An AI agent that sorts incoming customer emails (order status, returns, product questions), drafts a reply from the shop policies, and waits for the owner to approve before anything is sent.',
+    outcome: 'A demo inbox where sample emails are sorted correctly and each gets a draft reply the owner can approve or edit.',
+    weeks: [
+      'Collect 50 sample customer emails and the shop policies they depend on.',
+      'Design the inbox view and define the email categories.',
+      'Build sorting and draft replies with an AI model using the policies.',
+      'Add the approve-and-edit step; check that no customer data leaks into prompts unnecessarily.',
+      'Test with the 50 emails, measure how many drafts need no edits, and fix the weak spots.',
+      'Polish, document the setup, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'Node.js or Python, email or webhook basics, LLM APIs', 'The sorting and draft-reply service.', 'intermediate'),
+      arch('No-code Builder', 'Glide or Softr, Make or Zapier', 'The owner inbox view with approve and edit buttons.'),
+      qa('QA Tester', 'Test cases, spreadsheets', 'Results for all 50 sample emails and a list of fixes.'),
+      guard('Security & Privacy Reviewer', 'Personal data handling, API keys', 'A checklist showing customer data is kept to the minimum and keys are stored safely.'),
+      leads('Researcher & Writer', 'Research, plain writing', 'The sample emails, the policy summary, and the setup guide.'),
+    ],
+  },
+  {
+    title: 'Volunteer Scheduling Agent',
+    theme: 'AI agents and automation',
+    industry: 'nonprofit',
+    problem: 'Community organizations spend hours each week matching volunteers to shifts by text and spreadsheet, and shifts still go unfilled.',
+    description: 'A scheduling tool where volunteers share availability and an AI agent proposes a fair shift plan, flags gaps, and drafts reminder messages for the coordinator to send.',
+    outcome: 'A coordinator can load a week of shifts and volunteers and get a proposed schedule with gaps highlighted.',
+    weeks: [
+      'Talk to a volunteer coordinator and map how shifts are filled today.',
+      'Design the availability form and the schedule view.',
+      'Build the scheduling logic and the AI explanation of each proposal.',
+      'Add gap alerts and reminder drafts; review who can see volunteer contact details.',
+      'Test with a realistic sample of 40 volunteers and 30 shifts; fix unfair or broken plans.',
+      'Polish, write the coordinator guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, scheduling logic, LLM APIs', 'The schedule builder and gap alerts.', 'intermediate'),
+      arch('No-code Builder', 'Google Forms or Tally, Airtable', 'The availability form and the coordinator view.'),
+      qa('QA Tester', 'Test scenarios, edge cases', 'Test results for the sample week, including edge cases like last-minute drop-outs.'),
+      guard('Security & Privacy Reviewer', 'Access control, privacy basics', 'Access rules for volunteer contact details.'),
+      leads('User Researcher', 'Interviews, writing', 'The coordinator interview summary and guide.'),
+    ],
+  },
+  {
+    title: 'Meeting Notes to Action Items Agent',
+    theme: 'AI agents and automation',
+    industry: 'technology',
+    problem: 'Teams leave meetings without clear owners or deadlines, so decisions get lost and work is repeated.',
+    description: 'A tool that takes a meeting transcript, pulls out decisions and action items with owners and dates, and sends them to a shared task board after a person confirms them.',
+    outcome: 'Paste a transcript and get a confirmed list of action items on a task board.',
+    weeks: [
+      'Gather 10 sample transcripts and agree what counts as a decision or an action item.',
+      'Design the review screen and the task board.',
+      'Build extraction of decisions and action items with an AI model.',
+      'Add the confirm step and sending items to the board; check transcript storage and deletion.',
+      'Test on all transcripts, count missed and invented items, and fix prompts.',
+      'Polish, write a how-to, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python or JavaScript, LLM APIs, JSON output', 'The extraction service with structured output.'),
+      arch('No-code Builder', 'Notion or Trello, Zapier or Make', 'The task board and the automation that fills it.'),
+      qa('AI Quality Tester', 'Comparing AI output to a source', 'A count of missed and invented items for each transcript, before and after fixes.', 'intermediate'),
+      guard('Security & Privacy Reviewer', 'Data retention, privacy basics', 'A rule for how long transcripts are kept and how they are deleted.'),
+      leads('Researcher & Writer', 'Writing, organizing information', 'The sample transcripts and the how-to guide.'),
+    ],
+  },
+  {
+    title: 'Grant Finder for Community Groups',
+    theme: 'AI agents and automation',
+    industry: 'nonprofit',
+    size: 'small',
+    problem: 'Small community groups miss funding because finding and reading grant listings takes time they do not have.',
+    description: 'A tool that reads public grant listings, matches them to a group profile (mission, location, size), and explains in plain words why each grant may fit and what it asks for.',
+    outcome: 'A group fills in its profile and gets a ranked list of matching grants with plain-language summaries.',
+    weeks: [
+      'Collect 30 public grant listings and 3 sample group profiles.',
+      'Design the profile form and the results page.',
+      'Build the matching and plain-language summaries with an AI model.',
+      'Add deadlines and "what you need to apply" checklists.',
+      'Test matches with the sample groups and fix poor matches.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'Python or JavaScript, LLM APIs', 'The matching and summary service.', 'intermediate'),
+      arch('No-code Builder', 'Softr or Glide, Airtable', 'The profile form and results page.'),
+      leads('Researcher & Writer', 'Research, plain writing', 'The grant listings collection and the guide.'),
+    ],
+  },
+
+  // ---------------- AI that answers from your own documents ----------------
+  {
+    title: 'Campus Policy Q&A Assistant',
+    theme: 'AI that answers from your own documents',
+    industry: 'education',
+    problem: 'Students struggle to find answers in long handbooks and policy pages, and staff answer the same questions every term.',
+    description: 'A chat assistant that answers student questions only from the official handbook and policy pages (retrieval-augmented generation), shows the source for every answer, and says "I do not know" when the documents do not cover it.',
+    outcome: 'An assistant that answers 30 common questions correctly with a source link for each.',
+    weeks: [
+      'Collect the public handbook pages and list 30 real student questions.',
+      'Split the documents into searchable chunks and design the chat screen.',
+      'Build search over the documents and answers that cite their source.',
+      'Add the "I do not know" rule; check that only public documents are loaded.',
+      'Test all 30 questions plus 10 tricky ones; fix wrong or unsourced answers.',
+      'Polish, write the update guide for new documents, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, embeddings, vector search, LLM APIs', 'The retrieval and answer pipeline with sources.', 'intermediate'),
+      arch('No-code Builder', 'Webflow or Softr, embed widgets', 'The chat page students use.'),
+      qa('AI Quality Tester', 'Test questions, checking answers against sources', 'A scored test set of 40 questions.'),
+      guard('Security & Privacy Reviewer', 'Data handling, prompt injection basics', 'A check that private documents cannot be loaded and that the assistant resists simple prompt tricks.'),
+      leads('Researcher & Writer', 'Research, writing questions', 'The 30 student questions and the update guide.'),
+    ],
+  },
+  {
+    title: 'Tenant Rights Helper',
+    theme: 'AI that answers from your own documents',
+    industry: 'legal',
+    problem: 'Renters often do not know their basic rights, and public guides are long and hard to search.',
+    description: 'An assistant that answers renter questions from public housing guides, cites the exact section, and clearly says it is general information, not legal advice, with links to local help.',
+    outcome: 'A helper that answers common renter questions with a cited source and a clear disclaimer.',
+    weeks: [
+      'Collect public tenant guides for one city or state and list 25 common questions.',
+      'Prepare the documents for search and design the question page.',
+      'Build cited answers from the guides.',
+      'Add the disclaimer and "find local help" links; review how questions are logged.',
+      'Test the 25 questions and edge cases; fix answers that overstate the law.',
+      'Polish, write a plain-language summary page, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, embeddings, LLM APIs', 'The cited answer pipeline.'),
+      arch('No-code Builder', 'Softr or Webflow', 'The question page and the help-links page.'),
+      qa('AI Quality Tester', 'Checking answers against sources', 'Test results for the 25 questions and edge cases.'),
+      guard('Security & Privacy Reviewer', 'Logging and privacy basics', 'A rule that questions are not stored with names or addresses.'),
+      leads('Researcher & Writer', 'Legal research basics, plain writing', 'The guide collection, the question list, and the summary page.', 'intermediate'),
+    ],
+  },
+  {
+    title: 'Clinic FAQ Assistant',
+    theme: 'AI that answers from your own documents',
+    industry: 'healthcare',
+    problem: 'Clinic front desks spend much of the day answering the same questions about hours, insurance, and visit preparation.',
+    description: 'An assistant that answers only from a clinic public information pages (hours, services, insurance, how to prepare for a visit). It never gives medical advice and points to the phone line for anything else. Uses a fictional clinic.',
+    outcome: 'An assistant that answers front-desk questions from the clinic pages and refuses medical questions politely.',
+    weeks: [
+      'Write the fictional clinic information pages and list 30 front-desk questions.',
+      'Prepare the pages for search and design the chat widget.',
+      'Build answers from the pages with sources.',
+      'Add refusal of medical questions; check no health details are stored.',
+      'Test common and tricky questions; fix any answer that sounds like medical advice.',
+      'Polish, write the handover notes, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python or JavaScript, retrieval, LLM APIs', 'The answer pipeline with refusals.'),
+      arch('No-code Builder', 'Webflow or Framer', 'The clinic site and chat widget.'),
+      qa('AI Quality Tester', 'Test cases, safety checks', 'A test log showing correct answers and correct refusals.', 'intermediate'),
+      guard('Security & Privacy Reviewer', 'Health data privacy basics', 'A review confirming no health details are kept.'),
+      leads('Researcher & Writer', 'Writing, research', 'The fictional clinic pages and handover notes.'),
+    ],
+  },
+  {
+    title: 'Open-Source Docs Chat',
+    theme: 'AI that answers from your own documents',
+    industry: 'technology',
+    problem: 'New contributors to open-source projects get stuck searching long documentation and often ask questions that are already answered.',
+    description: 'A chat tool that answers questions about one open-source project from its public docs and README files, linking to the exact page.',
+    outcome: 'A docs chat for one real open-source project that answers 30 beginner questions with links.',
+    weeks: [
+      'Pick an open-source project and list 30 beginner questions from its issues and forums.',
+      'Load and split the docs, and design the chat page.',
+      'Build search and linked answers.',
+      'Add a "suggest a docs fix" button for unanswered questions; review API key handling.',
+      'Test the 30 questions and fix gaps.',
+      'Polish, write the setup guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, embeddings, vector databases', 'The docs loader and answer service.', 'intermediate'),
+      arch('No-code Builder', 'Framer or Webflow', 'The chat page.'),
+      qa('QA Tester', 'Test cases, bug reports', 'Test results for the 30 questions.'),
+      guard('Security & Privacy Reviewer', 'API keys, rate limits', 'A check of key storage and abuse limits.'),
+      leads('Technical Writer', 'Technical writing', 'The question list and the setup guide.'),
+    ],
+  },
+  {
+    title: 'City Services Answer Bot',
+    theme: 'AI that answers from your own documents',
+    industry: 'government',
+    problem: 'Residents struggle to find how to report a pothole, renew a permit, or reach the right office on large city websites.',
+    description: 'An assistant that answers from public city service pages, gives the steps and the official link, and works in plain language.',
+    outcome: 'A bot that answers 30 common resident questions with steps and official links.',
+    weeks: [
+      'Collect public service pages for one city and list 30 resident questions.',
+      'Prepare the pages and design the question screen.',
+      'Build step-by-step answers with official links.',
+      'Add a plain-language mode; check the bot never asks for personal details.',
+      'Test all questions and fix outdated or wrong steps.',
+      'Polish, write the summary report, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, retrieval, LLM APIs', 'The answer service.'),
+      arch('No-code Builder', 'Softr or Glide', 'The resident-facing question screen.'),
+      qa('QA Tester', 'Test cases', 'Test results for all 30 questions.'),
+      guard('Security & Privacy Reviewer', 'Privacy basics, prompt injection', 'A check that the bot does not collect personal details and resists prompt tricks.', 'intermediate'),
+      leads('Researcher & Writer', 'Research, plain writing', 'The question list and the summary report.'),
+    ],
+  },
+
+  // ---------------- Testing and evaluating AI ----------------
+  {
+    title: 'Chatbot Answer Quality Scorecard',
+    theme: 'Testing and evaluating AI',
+    industry: 'technology',
+    problem: 'Teams launch chatbots without a clear way to measure whether answers are correct, safe, and helpful, so problems are found by customers.',
+    description: 'A reusable scorecard tool: upload a set of test questions and expected answers, run them against a chatbot, and get scores for correctness, safety, and tone, with failed answers listed.',
+    outcome: 'A working scorecard run on one sample chatbot, with a report of scores and failed answers.',
+    weeks: [
+      'Research how AI teams test chatbots and pick 4 scoring areas.',
+      'Write 50 test questions with expected answers and design the report.',
+      'Build the runner that sends questions and collects answers.',
+      'Build scoring with rules plus an AI judge; review how test data is stored.',
+      'Check the AI judge against human scores on 20 answers and fix disagreements.',
+      'Polish the report, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, LLM APIs, evaluation basics', 'The runner and scoring engine.', 'advanced'),
+      arch('No-code Builder', 'Looker Studio or Airtable interfaces', 'The score report dashboard.'),
+      qa('AI Quality Tester', 'Writing test cases, scoring', 'The 50 test questions and the human scores used to check the AI judge.'),
+      guard('Security & Privacy Reviewer', 'Safety testing basics', 'Safety test questions (harmful requests, prompt tricks) and their results.'),
+      leads('Researcher & Writer', 'Research, writing', 'A short summary of how AI teams test chatbots, and the guide.'),
+    ],
+  },
+  {
+    title: 'Summary Fact-Checker',
+    theme: 'Testing and evaluating AI',
+    industry: 'entertainment',
+    problem: 'AI summaries of articles sometimes add facts that are not in the original, and readers cannot tell.',
+    description: 'A tool that compares an AI summary with its source article, highlights each sentence as supported or not supported, and shows the matching source text.',
+    outcome: 'Paste an article and a summary and see every unsupported sentence highlighted.',
+    weeks: [
+      'Collect 20 articles with AI summaries and mark unsupported sentences by hand.',
+      'Design the side-by-side view.',
+      'Build sentence matching between summary and source.',
+      'Add an AI check for unsupported claims and show the matching source text.',
+      'Compare the tool with the hand-marked set and improve it.',
+      'Polish, write findings, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, NLP basics, LLM APIs', 'The matching and checking engine.', 'intermediate'),
+      arch('No-code Builder', 'Bubble or Retool', 'The side-by-side review screen.'),
+      qa('AI Quality Tester', 'Careful reading, scoring', 'The hand-marked test set and accuracy results.'),
+      guard('Security & Privacy Reviewer', 'Copyright and data use basics', 'A note on which articles can be used and how they are stored.'),
+      leads('Researcher & Writer', 'Writing, research', 'The findings write-up.'),
+    ],
+  },
+  {
+    title: 'Bias Checker for Job Descriptions',
+    theme: 'Testing and evaluating AI',
+    industry: 'marketing',
+    problem: 'Job descriptions, including AI-written ones, often use wording that discourages women and other groups from applying.',
+    description: 'A tool that scans a job description, flags wording linked to biased hiring language, explains why, and suggests neutral alternatives.',
+    outcome: 'A checker that flags and rewrites biased wording in sample job descriptions.',
+    weeks: [
+      'Research published lists of biased job-ad wording and collect 30 sample job descriptions.',
+      'Design the checker page and the explanation cards.',
+      'Build the word and phrase checks.',
+      'Add AI-suggested rewrites with explanations; review how uploaded text is handled.',
+      'Test on the 30 samples and fix false alarms.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, text processing, LLM APIs', 'The checker and rewrite service.'),
+      arch('No-code Builder', 'Webflow or Softr', 'The checker page.'),
+      qa('QA Tester', 'Test cases, spreadsheets', 'Test results with false alarms and misses listed.'),
+      guard('Security & Privacy Reviewer', 'Data handling basics', 'A rule that uploaded text is not kept.'),
+      leads('Researcher & Writer', 'Research, writing', 'The wording research summary and guide.', 'intermediate'),
+    ],
+  },
+  {
+    title: 'Prompt Regression Test Suite',
+    theme: 'Testing and evaluating AI',
+    industry: 'technology',
+    size: 'small',
+    problem: 'When teams change a prompt or switch AI models, features that used to work break quietly.',
+    description: 'A small test suite that re-runs saved prompts against a model after every change and flags answers that got worse.',
+    outcome: 'A suite that runs automatically and reports which prompts changed for the worse.',
+    weeks: [
+      'Pick a sample AI feature and save 30 prompts with good answers.',
+      'Design the pass or fail rules and the report.',
+      'Build the runner and comparison.',
+      'Run it automatically on every code change.',
+      'Test it by deliberately breaking prompts and confirm it catches them.',
+      'Polish, document, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'Python or JavaScript, GitHub Actions', 'The runner and automatic checks.', 'intermediate'),
+      qa('AI Quality Tester', 'Test design', 'The 30 saved prompts, pass rules, and the break test results.'),
+      guard('Security & Privacy Reviewer', 'Secrets in CI', 'A check that API keys are stored safely in the pipeline.'),
+    ],
+  },
+  {
+    title: 'Translation Quality Checker for Health Leaflets',
+    theme: 'Testing and evaluating AI',
+    industry: 'healthcare',
+    problem: 'Machine-translated health leaflets can change the meaning of instructions, and small clinics cannot afford to check every language.',
+    description: 'A tool that translates a leaflet back into English, compares meaning with the original, and flags sentences that may have changed. A human reviewer always makes the final call. Uses public sample leaflets.',
+    outcome: 'A checker that flags risky sentences in translated sample leaflets for human review.',
+    weeks: [
+      'Collect public leaflets in English with translations in 2 or 3 languages.',
+      'Design the review screen.',
+      'Build back-translation and meaning comparison.',
+      'Add risk flags and reviewer notes; review data handling.',
+      'Test with bilingual reviewers and fix missed problems.',
+      'Polish, write findings, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, translation APIs, LLM APIs', 'The comparison and flagging engine.', 'intermediate'),
+      arch('No-code Builder', 'Retool or Bubble', 'The reviewer screen.'),
+      qa('AI Quality Tester', 'Bilingual reading helps', 'Reviewer test results for each language.'),
+      guard('Security & Privacy Reviewer', 'Data handling basics', 'A data handling note for uploaded leaflets.'),
+      leads('Researcher & Writer', 'Research, writing', 'The leaflet collection and findings.'),
+    ],
+  },
+
+  // ---------------- Responsible and safe AI ----------------
+  {
+    title: 'AI Use Policy Builder for Schools',
+    theme: 'Responsible and safe AI',
+    industry: 'education',
+    problem: 'Many schools and training programs have no clear policy on how students and staff may use AI tools.',
+    description: 'A guided tool that asks a school about its needs and values and drafts a clear AI use policy, with examples of allowed and not-allowed uses, ready for staff to edit.',
+    outcome: 'A tool that produces an editable draft policy from a short questionnaire.',
+    weeks: [
+      'Research published school AI policies and pick the key sections.',
+      'Write the questionnaire and design the flow.',
+      'Build the draft generator with an AI model and section templates.',
+      'Add editing and export; review what data the school enters.',
+      'Test with 3 sample schools and fix unclear sections.',
+      'Polish, write a short guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript, LLM APIs, document export', 'The policy generator and export.'),
+      arch('No-code Builder', 'Typeform or Tally, Notion', 'The questionnaire flow.'),
+      qa('QA Tester', 'Test scenarios', 'Results for the 3 sample schools.'),
+      guard('Security & Privacy Reviewer', 'Privacy basics', 'A review of what school data is collected and kept.'),
+      leads('Policy Researcher & Writer', 'Research, policy writing', 'The research summary and the section templates.', 'intermediate'),
+    ],
+  },
+  {
+    title: 'Spot the AI Image Game',
+    theme: 'Responsible and safe AI',
+    industry: 'education',
+    problem: 'People share AI-generated images as real, and most do not know the signs to look for.',
+    description: 'A short web game that shows real and AI-generated images, asks players to guess, and teaches the clues after each round. Uses licensed or self-made images only.',
+    outcome: 'A playable game with at least 30 images and a lesson after each answer.',
+    weeks: [
+      'Research the visual clues of AI images and collect or create 30 images with permission.',
+      'Design the game rounds and lesson cards.',
+      'Build the game and scoring.',
+      'Add the lessons and a share-your-score page; review image licenses.',
+      'Test with 10 players and fix confusing rounds.',
+      'Polish, write the teacher guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or React', 'The game and scoring.', 'intermediate'),
+      arch('No-code Builder', 'Figma, Framer', 'The game screens and lesson cards.'),
+      qa('QA Tester', 'Play testing', 'Play test notes from 10 players.'),
+      guard('Security & Privacy Reviewer', 'Licensing and consent basics', 'A record of where every image came from and its permission.'),
+      leads('Researcher & Writer', 'Research, writing', 'The clue research and the teacher guide.'),
+    ],
+  },
+  {
+    title: 'Model Card Generator',
+    theme: 'Responsible and safe AI',
+    industry: 'technology',
+    size: 'small',
+    problem: 'Small teams ship AI models without documenting what they are for, their limits, and how they were tested.',
+    description: 'A form-based tool that walks a team through the questions of a model card and produces a clean, shareable page.',
+    outcome: 'A tool that produces a complete model card page from a guided form.',
+    weeks: [
+      'Research model card formats and list the required sections.',
+      'Write the guided questions.',
+      'Build the form and page output.',
+      'Add examples and help text for each section.',
+      'Test with 3 sample models and fix unclear questions.',
+      'Polish, document, and record the demo.',
+    ],
+    roles: [
+      arch('No-code Builder', 'Tally or Typeform, Notion or Softr', 'The guided form and the model card page.'),
+      qa('QA Tester', 'Test scenarios', 'Results for the 3 sample models.'),
+      leads('Technical Writer', 'Technical writing, research', 'The questions, help text, and examples.', 'intermediate'),
+    ],
+  },
+  {
+    title: 'AI Content Label Checker',
+    theme: 'Responsible and safe AI',
+    industry: 'marketing',
+    problem: 'Brands and creators are expected to label AI-generated ads and posts, but it is easy to forget or label them unclearly.',
+    description: 'A tool that reviews a batch of marketing posts, asks whether AI was used, checks for a clear label, and suggests label wording that fits each platform.',
+    outcome: 'A checker that reviews a batch of posts and lists missing or unclear AI labels.',
+    weeks: [
+      'Research platform rules for AI content labels and collect 40 sample posts.',
+      'Design the batch review screen.',
+      'Build the label checks.',
+      'Add suggested label wording per platform; review data handling for uploaded posts.',
+      'Test on the samples and fix wrong flags.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, LLM APIs', 'The label checks and suggestions.'),
+      arch('No-code Builder', 'Airtable, Softr', 'The batch review screen.'),
+      qa('QA Tester', 'Test cases', 'Test results for the 40 posts.'),
+      guard('Security & Privacy Reviewer', 'Data handling basics', 'A rule for how uploaded posts are stored and deleted.'),
+      leads('Researcher & Writer', 'Research, writing', 'The platform rules summary and the guide.', 'intermediate'),
+    ],
+  },
+  {
+    title: 'Homework Helper with Guardrails',
+    theme: 'Responsible and safe AI',
+    industry: 'education',
+    problem: 'Students use AI to get answers instead of learning, and teachers worry about unsafe or off-topic replies.',
+    description: 'A study helper that guides students with hints and questions instead of giving full answers, stays on school topics, and refuses unsafe requests.',
+    outcome: 'A helper that gives hints, not answers, and passes a set of safety tests.',
+    weeks: [
+      'Interview 2 or 3 teachers about what a helpful study assistant should and should not do.',
+      'Write the guardrail rules and design the chat screen.',
+      'Build the hint-first assistant.',
+      'Add topic limits and refusals; test with prompt tricks.',
+      'Run 50 test conversations and fix rule breaks.',
+      'Polish, write the teacher guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript or Python, LLM APIs, system prompts', 'The assistant with guardrails.', 'intermediate'),
+      arch('No-code Builder', 'Framer or Softr', 'The student chat page.'),
+      qa('AI Quality Tester', 'Test conversations', 'The 50 test conversations and their results.'),
+      guard('Security & Privacy Reviewer', 'Prompt injection, safety testing', 'Prompt trick tests and fixes.', 'intermediate'),
+      leads('User Researcher', 'Interviews, writing', 'Teacher interview notes and the teacher guide.'),
+    ],
+  },
+
+  // ---------------- Voice, image, and video AI ----------------
+  {
+    title: 'Receipt Scanner Expense Tracker',
+    theme: 'Voice, image, and video AI',
+    industry: 'finance',
+    problem: 'Freelancers lose receipts and spend hours typing expenses at tax time.',
+    description: 'A web app where users snap a receipt photo; an AI vision model reads the store, date, and total, suggests a category, and adds it to a monthly report.',
+    outcome: 'Upload a receipt photo and see it correctly added to a monthly expense report.',
+    weeks: [
+      'Collect 40 sample receipt photos (your own or public samples) and list expense categories.',
+      'Design the upload and report screens.',
+      'Build reading receipts with an AI vision model.',
+      'Add categories and the monthly report; review how photos and totals are stored.',
+      'Test on the 40 receipts, measure accuracy, and fix common errors.',
+      'Polish, write a user guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript or Python, vision APIs', 'The receipt reader and report.', 'intermediate'),
+      arch('No-code Builder', 'Glide or Softr, Google Sheets', 'The upload screen and the report view.'),
+      qa('QA Tester', 'Test cases, accuracy counting', 'Accuracy results for the 40 receipts.'),
+      guard('Security & Privacy Reviewer', 'Financial data privacy', 'A review of photo and data storage, with a delete option.'),
+      leads('Researcher & Writer', 'Research, writing', 'The category list and user guide.'),
+    ],
+  },
+  {
+    title: 'Plant Health Photo Checker',
+    theme: 'Voice, image, and video AI',
+    industry: 'agriculture',
+    problem: 'Small farmers and gardeners notice sick plants too late because expert advice is far away or costly.',
+    description: 'An app that looks at a leaf photo, suggests possible common problems using a public plant image dataset, explains the confidence, and recommends asking an expert when unsure.',
+    outcome: 'A checker that gives a likely problem and confidence for sample leaf photos.',
+    weeks: [
+      'Pick a public plant leaf dataset and the 5 to 8 problems to cover.',
+      'Design the photo upload and result screens.',
+      'Train or use an existing image model on the dataset.',
+      'Add confidence and "ask an expert" guidance; review photo storage.',
+      'Test on held-back photos and fix weak classes.',
+      'Polish, write care tips for each result, and record the demo.',
+    ],
+    roles: [
+      dev('Machine Learning Developer', 'Python, image classification, PyTorch or TensorFlow', 'The trained or tuned image model.', 'advanced'),
+      arch('No-code Builder', 'Glide or FlutterFlow', 'The photo upload app.'),
+      qa('QA Tester', 'Test sets, accuracy counting', 'Test results on held-back photos.'),
+      guard('Security & Privacy Reviewer', 'Data handling', 'A note on photo storage and location data.'),
+      leads('Researcher & Writer', 'Research, plain writing', 'Care tips for each result.'),
+    ],
+  },
+  {
+    title: 'Podcast Summary and Clip Finder',
+    theme: 'Voice, image, and video AI',
+    industry: 'entertainment',
+    problem: 'Podcasters spend hours finding the best moments for social clips and writing episode notes.',
+    description: 'A tool that transcribes an episode, writes show notes with timestamps, and suggests the best short clips with reasons.',
+    outcome: 'Upload an episode and get a transcript, show notes, and 5 clip suggestions with timestamps.',
+    weeks: [
+      'Collect 5 podcast episodes you have permission to use and list what podcasters need.',
+      'Design the upload and results pages.',
+      'Build transcription and show notes.',
+      'Add clip suggestions with timestamps; review audio storage and permission.',
+      'Test with the episodes and fix poor clip picks.',
+      'Polish, write a guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, speech-to-text APIs, LLM APIs', 'Transcription, show notes, and clip suggestions.', 'intermediate'),
+      arch('No-code Builder', 'Bubble or Softr', 'The upload and results pages.'),
+      qa('QA Tester', 'Listening tests', 'Notes on transcript accuracy and clip quality.'),
+      guard('Security & Privacy Reviewer', 'Permissions and storage', 'A check of audio permissions and storage limits.'),
+      leads('Content Writer', 'Writing, social media', 'Sample show notes and the guide.'),
+    ],
+  },
+  {
+    title: 'Fridge Photo Meal Planner',
+    theme: 'Voice, image, and video AI',
+    industry: 'food',
+    size: 'small',
+    problem: 'Households throw away food because they do not know what to cook with what they already have.',
+    description: 'A web app that reads a photo of fridge or pantry items, lists the ingredients, and suggests simple meals that use them first.',
+    outcome: 'A photo turns into an ingredient list and 3 meal ideas.',
+    weeks: [
+      'Collect 20 fridge and pantry photos.',
+      'Design the upload and meal idea screens.',
+      'Build ingredient detection with an AI vision model.',
+      'Add meal suggestions that use the most ingredients.',
+      'Test on the photos and fix missed items.',
+      'Polish and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript, vision APIs, LLM APIs', 'Ingredient detection and meal ideas.', 'intermediate'),
+      arch('No-code Builder', 'Glide or FlutterFlow', 'The app screens.'),
+      qa('QA Tester', 'Test cases', 'Results for the 20 photos.'),
+    ],
+  },
+  {
+    title: 'Lecture Video Chapter Maker',
+    theme: 'Voice, image, and video AI',
+    industry: 'education',
+    problem: 'Long recorded lectures are hard to revise from because students cannot find the part they need.',
+    description: 'A tool that transcribes a lecture video, splits it into titled chapters with timestamps, and writes a short summary and practice questions for each chapter.',
+    outcome: 'A lecture video gets chapters, summaries, and practice questions automatically.',
+    weeks: [
+      'Collect 5 openly licensed lecture videos.',
+      'Design the chapter view.',
+      'Build transcription and chapter splitting.',
+      'Add summaries and practice questions; review storage and licensing.',
+      'Test with students and fix confusing chapters.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, speech-to-text, LLM APIs', 'The chapter, summary, and question pipeline.', 'intermediate'),
+      arch('No-code Builder', 'Webflow or Softr', 'The chapter viewing page.'),
+      qa('QA Tester', 'User testing', 'Student test notes and fixes.'),
+      guard('Security & Privacy Reviewer', 'Licensing basics', 'A license check for every video used.'),
+      leads('Researcher & Writer', 'Writing, education', 'The guide and a sample study plan.'),
+    ],
+  },
+
+  // ---------------- AI for accessibility ----------------
+  {
+    title: 'Alt-Text Assistant for Websites',
+    theme: 'AI for accessibility',
+    industry: 'technology',
+    problem: 'Many website images have no alt text, so people using screen readers miss the content.',
+    description: 'A tool that scans a web page, finds images without alt text, drafts a description with an AI vision model, and lets the site owner approve or edit it.',
+    outcome: 'Scan a sample site and get approved alt text for every image.',
+    weeks: [
+      'Learn alt-text best practice and pick 3 sample sites.',
+      'Design the scan results and approval screen.',
+      'Build the page scanner and image finder.',
+      'Add AI-drafted descriptions and the approve step; review what is stored.',
+      'Test with a screen reader user if possible and fix poor descriptions.',
+      'Polish, write a guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript, web scraping, vision APIs', 'The scanner and description drafts.', 'intermediate'),
+      arch('No-code Builder', 'Retool or Bubble', 'The approval screen.'),
+      qa('Accessibility Tester', 'Screen readers, WCAG basics', 'Screen reader test notes.'),
+      guard('Security & Privacy Reviewer', 'Safe scraping, rate limits', 'Rules for scanning sites safely and politely.'),
+      leads('Researcher & Writer', 'Accessibility research, writing', 'The best-practice summary and guide.'),
+    ],
+  },
+  {
+    title: 'Plain-Language Form Rewriter',
+    theme: 'AI for accessibility',
+    industry: 'government',
+    problem: 'Government and benefit forms use complex language that many people cannot understand, which leads to errors and missed support.',
+    description: 'A tool that rewrites form instructions into plain language at a chosen reading level, keeps the meaning, and highlights anything a human should double-check.',
+    outcome: 'Sample forms rewritten in plain language with meaning checks passed.',
+    weeks: [
+      'Collect 10 public forms and learn plain-language guidelines.',
+      'Design the before-and-after view.',
+      'Build the rewriter with reading-level control.',
+      'Add meaning checks and highlights; review data handling.',
+      'Test with readers and fix changed meanings.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, LLM APIs', 'The rewriter with reading-level control.'),
+      arch('No-code Builder', 'Softr or Webflow', 'The before-and-after page.'),
+      qa('AI Quality Tester', 'Careful reading, meaning checks', 'Meaning check results for all 10 forms.', 'intermediate'),
+      guard('Security & Privacy Reviewer', 'Privacy basics', 'A rule that no filled-in personal details are processed.'),
+      leads('Plain-Language Writer', 'Plain writing', 'The guidelines summary and human-reviewed examples.'),
+    ],
+  },
+  {
+    title: 'Website Accessibility Checker with Fix Suggestions',
+    theme: 'AI for accessibility',
+    industry: 'technology',
+    problem: 'Small organizations do not know whether their websites work for disabled visitors, and reports from checkers are hard to act on.',
+    description: 'A tool that runs automated accessibility checks on a page and turns the results into a prioritized, plain-language fix list with code examples.',
+    outcome: 'Scan a page and get a prioritized fix list a beginner can act on.',
+    weeks: [
+      'Learn the main WCAG rules and pick 5 sample sites.',
+      'Design the report.',
+      'Build the scan using an open-source accessibility engine.',
+      'Add AI-written explanations and fix examples.',
+      'Test fixes on a sample page and confirm the issues are resolved.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript, axe-core or similar, LLM APIs', 'The scanner and fix explanations.', 'intermediate'),
+      arch('No-code Builder', 'Webflow or Framer', 'The report page.'),
+      qa('Accessibility Tester', 'Keyboard and screen reader testing', 'Before and after test results.'),
+      guard('Security & Privacy Reviewer', 'Safe scanning', 'Rules for scanning sites safely.'),
+      leads('Technical Writer', 'Writing', 'The WCAG summary and guide.'),
+    ],
+  },
+  {
+    title: 'Voice-First Bus Arrival Assistant',
+    theme: 'AI for accessibility',
+    industry: 'transportation',
+    problem: 'Riders with low vision find bus apps hard to use, especially at the stop.',
+    description: 'A voice assistant on the web that answers "When is the next bus?" using a public transit data feed, with large, high-contrast screens as a backup.',
+    outcome: 'Ask by voice and hear the next arrival for a chosen stop, using real public data.',
+    weeks: [
+      'Pick a city with an open transit data feed and talk to 2 riders about their needs.',
+      'Design the voice flow and the high-contrast screens.',
+      'Build the transit data lookup.',
+      'Add speech input and output; review location data handling.',
+      'Test with riders and fix confusing replies.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript, Web Speech API, GTFS data', 'The voice assistant and data lookup.', 'intermediate'),
+      arch('No-code Builder', 'Figma, Framer', 'The high-contrast screens.'),
+      qa('Accessibility Tester', 'User testing', 'Rider test notes and fixes.'),
+      guard('Security & Privacy Reviewer', 'Location privacy', 'A rule that location is used only on the device and not stored.'),
+      leads('User Researcher', 'Interviews, writing', 'Rider interview notes and the guide.'),
+    ],
+  },
+  {
+    title: 'Captions for Community Events',
+    theme: 'AI for accessibility',
+    industry: 'nonprofit',
+    size: 'small',
+    problem: 'Community groups post event videos without captions, so deaf and hard-of-hearing members miss out.',
+    description: 'A simple tool that creates captions for event videos, lets a volunteer correct them, and exports caption files for common video sites.',
+    outcome: 'Upload a video, correct the captions, and download a caption file.',
+    weeks: [
+      'Collect 3 event videos with permission.',
+      'Design the caption editor.',
+      'Build automatic captions.',
+      'Add the editor and caption file export.',
+      'Test with viewers and fix timing issues.',
+      'Polish and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, speech-to-text APIs', 'Caption creation and export.', 'intermediate'),
+      qa('Accessibility Tester', 'Caption checking', 'Accuracy and timing test results.'),
+      leads('Researcher & Writer', 'Writing', 'A captioning guide for volunteers.'),
+    ],
+  },
+
+  // ---------------- Cybersecurity and privacy ----------------
+  {
+    title: 'Phishing Email Trainer',
+    theme: 'Cybersecurity and privacy',
+    industry: 'cybersecurity',
+    problem: 'Most account break-ins start with a phishing email, and short training sessions are rarely practiced.',
+    description: 'A training game that shows realistic sample emails (all fictional), asks the player to spot phishing, and explains the warning signs after each answer.',
+    outcome: 'A game with 30 sample emails, scoring, and an explanation for each.',
+    weeks: [
+      'Research common phishing signs and write 30 fictional sample emails.',
+      'Design the game flow.',
+      'Build the game and scoring.',
+      'Add explanations and a progress summary; review that no real brands or links are used.',
+      'Test with 10 players and fix unclear examples.',
+      'Polish, write the trainer guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or React', 'The game and scoring.'),
+      arch('No-code Builder', 'Figma, Framer', 'The game screens.'),
+      qa('QA Tester', 'Play testing', 'Play test notes.'),
+      guard('Security Specialist', 'Phishing knowledge', 'The 30 fictional emails reviewed for realism and safety.', 'intermediate'),
+      leads('Researcher & Writer', 'Research, writing', 'The warning signs research and the trainer guide.'),
+    ],
+  },
+  {
+    title: 'Account Safety Checkup',
+    theme: 'Cybersecurity and privacy',
+    industry: 'cybersecurity',
+    problem: 'People reuse passwords and skip two-step login because they do not know where they are at risk.',
+    description: 'A guided checkup that walks a user through account safety steps and checks whether a password appears in known breaches using a privacy-safe method that never sends the password itself.',
+    outcome: 'A checkup that gives a personal safety score and a short to-do list.',
+    weeks: [
+      'Research common account risks and the privacy-safe breach check method.',
+      'Design the checkup steps.',
+      'Build the checkup and scoring.',
+      'Add the breach check using partial hashes; have the method reviewed.',
+      'Test with 10 users and fix confusing steps.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript, hashing basics, public APIs', 'The checkup and breach check.', 'intermediate'),
+      arch('No-code Builder', 'Typeform or Tally', 'The guided steps.'),
+      qa('QA Tester', 'User testing', 'User test notes.'),
+      guard('Security Specialist', 'Hashing, threat basics', 'A review proving the password never leaves the browser.', 'intermediate'),
+      leads('Researcher & Writer', 'Writing', 'The risk research and guide.'),
+    ],
+  },
+  {
+    title: 'Prompt Injection Playground',
+    theme: 'Cybersecurity and privacy',
+    industry: 'cybersecurity',
+    problem: 'Teams adding AI to their apps do not know how attackers can trick a model into ignoring its instructions.',
+    description: 'A safe practice site with a sample AI assistant and levels of defenses. Players try to make it reveal a fake secret; each level teaches a defense.',
+    outcome: 'A playground with 5 levels, each with a working defense and a lesson.',
+    weeks: [
+      'Research prompt injection types and defenses.',
+      'Design 5 levels from easy to hard.',
+      'Build the sample assistant and level system.',
+      'Add the defenses and lessons; make sure the site holds no real secrets.',
+      'Test each level with players and patch unintended shortcuts.',
+      'Polish, write the lesson pages, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript or Python, LLM APIs', 'The assistant and level system.', 'intermediate'),
+      arch('No-code Builder', 'Framer or Webflow', 'The level pages.'),
+      qa('QA Tester', 'Play testing', 'Test notes for each level.'),
+      guard('Security Specialist', 'AI security basics', 'The defenses for each level.', 'advanced'),
+      leads('Technical Writer', 'Writing', 'The lesson pages.'),
+    ],
+  },
+  {
+    title: 'Privacy Policy Explainer',
+    theme: 'Cybersecurity and privacy',
+    industry: 'legal',
+    problem: 'Almost nobody reads privacy policies, so people agree to data sharing they do not understand.',
+    description: 'A tool that reads a privacy policy and explains in plain language what data is collected, who it is shared with, and how to opt out, with quotes from the policy.',
+    outcome: 'Paste a policy and get a plain-language summary with quotes as evidence.',
+    weeks: [
+      'Collect 15 public privacy policies and agree on the summary sections.',
+      'Design the summary card.',
+      'Build the summary with quotes as evidence.',
+      'Add opt-out steps and a risk note.',
+      'Test against hand-made summaries and fix missed points.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python or JavaScript, LLM APIs', 'The summary service.'),
+      arch('No-code Builder', 'Softr or Framer', 'The summary card page.'),
+      qa('AI Quality Tester', 'Comparing summaries to sources', 'Comparison results for the 15 policies.'),
+      guard('Security & Privacy Reviewer', 'Privacy law basics', 'A review of the summary sections against privacy law basics.', 'intermediate'),
+      leads('Researcher & Writer', 'Plain writing', 'The hand-made summaries.'),
+    ],
+  },
+  {
+    title: 'Scam Text Message Checker',
+    theme: 'Cybersecurity and privacy',
+    industry: 'finance',
+    size: 'small',
+    problem: 'Older adults are often targeted by scam texts about deliveries, banks, and prizes.',
+    description: 'A simple tool where someone pastes a text message and gets a clear "likely scam" or "looks normal" result with the reasons, in large, easy-to-read type.',
+    outcome: 'A checker that correctly labels a set of sample scam and normal texts.',
+    weeks: [
+      'Collect 60 example scam and normal texts from public sources.',
+      'Design the large-type check page.',
+      'Build the checker with rules and an AI model.',
+      'Add the reasons and "what to do next" advice.',
+      'Test on the examples and fix wrong labels.',
+      'Polish and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, LLM APIs', 'The checker.'),
+      guard('Security Specialist', 'Scam patterns', 'The labeled examples and the scam rules.', 'intermediate'),
+      leads('Researcher & Writer', 'Plain writing', 'The "what to do next" advice.'),
+    ],
+  },
+
+  // ---------------- Data and analytics with AI ----------------
+  {
+    title: 'Food Bank Demand Dashboard',
+    theme: 'Data and analytics with AI',
+    industry: 'nonprofit',
+    problem: 'Food banks struggle to plan stock because demand changes with seasons, holidays, and local events.',
+    description: 'A dashboard that shows past visits and stock (sample data), forecasts next month demand, and explains the forecast in plain words.',
+    outcome: 'A dashboard with a monthly forecast and a plain-language explanation.',
+    weeks: [
+      'Build a realistic sample dataset of visits and stock and talk to a food bank volunteer.',
+      'Design the dashboard.',
+      'Build the forecast.',
+      'Add plain-language explanations; review how visitor data is kept anonymous.',
+      'Test the forecast on past months and improve it.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Data Developer', 'Python, pandas, forecasting basics', 'The forecast model.', 'intermediate'),
+      arch('No-code Builder', 'Looker Studio or Power BI', 'The dashboard.'),
+      qa('QA Tester', 'Data checks', 'A check of the forecast against past months.'),
+      guard('Security & Privacy Reviewer', 'Anonymous data basics', 'A rule that no visitor can be identified from the data.'),
+      leads('User Researcher', 'Interviews, writing', 'Volunteer interview notes and the guide.'),
+    ],
+  },
+  {
+    title: 'Ask Your Sales Data Assistant',
+    theme: 'Data and analytics with AI',
+    industry: 'ecommerce',
+    problem: 'Small shop owners have sales data but no time or skills to analyze it.',
+    description: 'An assistant where an owner uploads a sales spreadsheet and asks questions in plain English, like "Which product sold best last month?", and gets an answer with a chart.',
+    outcome: 'Upload sample sales data and get correct answers and charts for 20 common questions.',
+    weeks: [
+      'Build a sample sales dataset and list 20 owner questions.',
+      'Design the question and chart screen.',
+      'Build question-to-query with an AI model.',
+      'Add charts and answer checks; review how uploaded files are stored.',
+      'Test the 20 questions and fix wrong answers.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'Python, pandas or SQL, LLM APIs', 'The question-to-answer engine.', 'advanced'),
+      arch('No-code Builder', 'Streamlit or Retool', 'The question and chart screen.'),
+      qa('QA Tester', 'Data checks', 'Results for the 20 questions.'),
+      guard('Security & Privacy Reviewer', 'Data handling', 'A file storage and deletion rule.'),
+      leads('Researcher & Writer', 'Writing', 'The owner questions and guide.'),
+    ],
+  },
+  {
+    title: 'Neighborhood Housing Price Explorer',
+    theme: 'Data and analytics with AI',
+    industry: 'realestate',
+    problem: 'First-time renters and buyers find it hard to compare neighborhoods on price and changes over time.',
+    description: 'A map-based explorer using public housing data that compares neighborhoods and writes a short plain-language summary of each.',
+    outcome: 'An explorer that compares any two neighborhoods with charts and a summary.',
+    weeks: [
+      'Find a public housing price dataset for one city.',
+      'Design the map and comparison view.',
+      'Build data cleaning and the map.',
+      'Add comparisons and AI-written summaries.',
+      'Test summaries against the data and fix errors.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Data Developer', 'Python, maps, data cleaning', 'The cleaned data and the map.', 'intermediate'),
+      arch('No-code Builder', 'Looker Studio or Tableau Public', 'The comparison dashboard.'),
+      qa('QA Tester', 'Data checks', 'A check of summaries against the data.'),
+      guard('Security & Privacy Reviewer', 'Data licensing', 'A license and data use review.'),
+      leads('Researcher & Writer', 'Research, writing', 'Neighborhood research notes and guide.'),
+    ],
+  },
+  {
+    title: 'Athlete Training Load Tracker',
+    theme: 'Data and analytics with AI',
+    industry: 'sports',
+    problem: 'Amateur athletes overtrain or undertrain because they do not track workload over time.',
+    description: 'A tracker where athletes log workouts and effort, see weekly load trends, and get a plain-language weekly summary. It never gives medical advice.',
+    outcome: 'A tracker with weekly load charts and a summary for sample athletes.',
+    weeks: [
+      'Interview 3 athletes or coaches about what they track.',
+      'Design the log and trend screens.',
+      'Build workout logging and load calculation.',
+      'Add trends and weekly summaries; review data privacy.',
+      'Test with sample data and fix confusing charts.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, charts', 'Logging, load calculation, and summaries.'),
+      arch('No-code Builder', 'Glide or Adalo', 'The athlete app screens.'),
+      qa('QA Tester', 'Test cases', 'Test results with sample athletes.'),
+      guard('Security & Privacy Reviewer', 'Privacy basics', 'A privacy review of workout data.'),
+      leads('User Researcher', 'Interviews, writing', 'Interview notes and the guide.', 'intermediate'),
+    ],
+  },
+  {
+    title: 'Event Turnout Predictor',
+    theme: 'Data and analytics with AI',
+    industry: 'marketing',
+    size: 'small',
+    problem: 'Event organizers order too much or too little food and space because they cannot predict turnout.',
+    description: 'A simple tool that uses past event data (sign-ups, day, weather, promotion) to predict turnout and explains the main reasons.',
+    outcome: 'A predictor that estimates turnout for sample events with the reasons.',
+    weeks: [
+      'Build a sample dataset of past events.',
+      'Design the input form and result.',
+      'Build the prediction.',
+      'Add plain-language reasons.',
+      'Test on past events and improve.',
+      'Polish and record the demo.',
+    ],
+    roles: [
+      dev('Data Developer', 'Python, simple machine learning', 'The prediction and reasons.', 'intermediate'),
+      arch('No-code Builder', 'Streamlit or Glide', 'The form and result page.'),
+      leads('Researcher & Writer', 'Research, writing', 'The sample dataset notes and guide.'),
+    ],
+  },
+
+  // ---------------- Climate and sustainability tech ----------------
+  {
+    title: 'Home Energy Bill Analyzer',
+    theme: 'Climate and sustainability tech',
+    industry: 'energy',
+    problem: 'Households do not know why their energy bills are high or which changes would save the most.',
+    description: 'A tool where users enter or upload monthly bills, see usage trends, and get ranked, realistic saving tips with estimated savings.',
+    outcome: 'A tool that shows trends and ranked saving tips for sample households.',
+    weeks: [
+      'Research common energy saving actions and their typical savings.',
+      'Design the bill entry and results screens.',
+      'Build bill reading and trends.',
+      'Add ranked tips with estimates; review bill data storage.',
+      'Test with 5 sample households and fix unrealistic tips.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, charts, LLM APIs', 'Bill reading, trends, and tips.'),
+      arch('No-code Builder', 'Glide or Softr', 'The entry and results screens.'),
+      qa('QA Tester', 'Test cases', 'Results for 5 sample households.'),
+      guard('Security & Privacy Reviewer', 'Data handling', 'A bill data storage review.'),
+      leads('Researcher & Writer', 'Research, writing', 'The saving actions research and guide.', 'intermediate'),
+    ],
+  },
+  {
+    title: 'Commute Carbon Calculator',
+    theme: 'Climate and sustainability tech',
+    industry: 'transportation',
+    problem: 'Commuters and employers do not know the climate impact of daily travel or which changes matter most.',
+    description: 'A calculator that estimates commute emissions from distance and transport mode using public emission factors, and compares options like transit, carpooling, and remote days.',
+    outcome: 'A calculator that compares commute options with clear numbers and sources.',
+    weeks: [
+      'Collect public emission factors and list common commute options.',
+      'Design the calculator.',
+      'Build the calculations.',
+      'Add comparisons and a team summary for employers.',
+      'Test numbers against the sources and fix errors.',
+      'Polish, write the method page, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript', 'The calculator and comparisons.', 'intermediate'),
+      arch('No-code Builder', 'Webflow or Framer', 'The calculator page.'),
+      qa('QA Tester', 'Number checking', 'A check of results against the sources.'),
+      guard('Security & Privacy Reviewer', 'Location privacy', 'A rule that home addresses are never stored.'),
+      leads('Researcher & Writer', 'Research, writing', 'The emission factor sources and method page.'),
+    ],
+  },
+  {
+    title: 'Clothing Resale Price Helper',
+    theme: 'Climate and sustainability tech',
+    industry: 'fashion',
+    size: 'small',
+    problem: 'People keep clothes they could resell because pricing and listing take too long.',
+    description: 'A tool that reads a clothing photo, suggests a title, description, and price range from sample resale data, and creates a listing draft.',
+    outcome: 'A photo becomes a ready-to-post listing draft with a price range.',
+    weeks: [
+      'Collect sample resale listings for common items.',
+      'Design the photo-to-listing flow.',
+      'Build item recognition with an AI vision model.',
+      'Add price ranges and listing drafts.',
+      'Test with 20 items and fix poor drafts.',
+      'Polish and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript, vision APIs', 'Item recognition and listing drafts.', 'intermediate'),
+      arch('No-code Builder', 'Glide or Softr', 'The photo-to-listing flow.'),
+      qa('QA Tester', 'Test cases', 'Results for the 20 items.'),
+    ],
+  },
+  {
+    title: 'Restaurant Food Waste Tracker',
+    theme: 'Climate and sustainability tech',
+    industry: 'food',
+    problem: 'Restaurants throw away food and money because they do not track what is wasted and why.',
+    description: 'A tracker where kitchen staff log waste in seconds, and a weekly report shows patterns and AI-suggested changes to prep and ordering.',
+    outcome: 'A fast logging screen and a weekly waste report with suggestions.',
+    weeks: [
+      'Talk to a kitchen worker and list the main waste types.',
+      'Design the fast logging screen.',
+      'Build logging and the weekly report.',
+      'Add suggestions; review who can see the data.',
+      'Test with a sample week and fix slow steps.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript or Python, LLM APIs', 'Logging and weekly suggestions.'),
+      arch('No-code Builder', 'Glide or AppSheet', 'The fast logging app.'),
+      qa('QA Tester', 'Speed and usability testing', 'Test results with timing for each log.'),
+      guard('Security & Privacy Reviewer', 'Access control', 'Access rules for staff and managers.'),
+      leads('User Researcher', 'Interviews, writing', 'Kitchen interview notes and guide.', 'intermediate'),
+    ],
+  },
+  {
+    title: 'Building Material Reuse Marketplace',
+    theme: 'Climate and sustainability tech',
+    industry: 'construction',
+    problem: 'Usable building materials from renovations go to landfill because there is no easy way to pass them on.',
+    description: 'A marketplace where builders list leftover materials with photos, and an AI helper writes the listing and suggests categories and fair prices.',
+    outcome: 'A marketplace prototype with AI-assisted listings and search.',
+    weeks: [
+      'Research what materials are reused most and how they are described.',
+      'Design the listing and search screens.',
+      'Build listings and search.',
+      'Add AI listing help; review user verification and safety.',
+      'Test with 20 sample listings and fix issues.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'React, Firebase or Supabase', 'Listings and search.', 'intermediate'),
+      arch('No-code Builder', 'Sharetribe or Softr', 'The marketplace pages.'),
+      qa('QA Tester', 'Test cases', 'Results for 20 listings.'),
+      guard('Security & Privacy Reviewer', 'Trust and safety basics', 'User verification and reporting rules.'),
+      leads('Researcher & Writer', 'Research, writing', 'Materials research and guide.'),
+    ],
+  },
+
+  // ---------------- Small and on-device AI ----------------
+  {
+    title: 'Offline Study Buddy',
+    theme: 'Small and on-device AI',
+    industry: 'education',
+    problem: 'Students with poor internet cannot use online AI study tools.',
+    description: 'A study helper that runs a small AI model fully in the browser, quizzes students on their own notes, and works offline after the first load.',
+    outcome: 'A study helper that quizzes from pasted notes with the internet turned off.',
+    weeks: [
+      'Research small models that run in the browser and pick one.',
+      'Design the notes and quiz screens.',
+      'Build the in-browser model setup.',
+      'Add quizzes from notes and offline mode.',
+      'Test on low-end devices and fix slow steps.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript, WebGPU or WebLLM', 'The in-browser model and quiz generator.', 'advanced'),
+      arch('No-code Builder', 'Figma, Framer', 'The notes and quiz screens.'),
+      qa('QA Tester', 'Device testing', 'Speed tests on low-end devices.'),
+      guard('Security & Privacy Reviewer', 'Privacy basics', 'A check that notes never leave the device.'),
+      leads('Researcher & Writer', 'Research, writing', 'The model comparison and guide.'),
+    ],
+  },
+  {
+    title: 'Private Notes Search',
+    theme: 'Small and on-device AI',
+    industry: 'technology',
+    problem: 'People want to search their notes by meaning, not exact words, without uploading private notes to a server.',
+    description: 'A notes app with meaning-based search that runs a small embedding model in the browser, so notes stay on the device.',
+    outcome: 'A notes app that finds notes by meaning with no data sent to a server.',
+    weeks: [
+      'Research in-browser embedding models.',
+      'Design the notes and search screens.',
+      'Build note storage on the device.',
+      'Add meaning-based search; confirm nothing is sent to a server.',
+      'Test search quality and fix poor results.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript, embeddings, IndexedDB', 'Storage and meaning-based search.', 'intermediate'),
+      arch('No-code Builder', 'Figma, Framer', 'The app screens.'),
+      qa('QA Tester', 'Search quality testing', 'Search test results.'),
+      guard('Security & Privacy Reviewer', 'Network inspection basics', 'Proof that no notes leave the device.'),
+      leads('Technical Writer', 'Writing', 'The guide.'),
+    ],
+  },
+  {
+    title: 'Offline Travel Phrase Helper',
+    theme: 'Small and on-device AI',
+    industry: 'travel',
+    size: 'small',
+    problem: 'Travelers without data plans cannot use online translators when they need them most.',
+    description: 'A phrase helper that works offline, with common travel phrases, a small on-device translator for short sentences, and audio playback.',
+    outcome: 'A helper that translates short travel sentences with no internet.',
+    weeks: [
+      'List 100 common travel phrases for 2 languages.',
+      'Design the phrase screens.',
+      'Build offline storage and phrase lists.',
+      'Add a small on-device translator.',
+      'Test offline on phones and fix errors.',
+      'Polish and record the demo.',
+    ],
+    roles: [
+      dev('Developer', 'JavaScript, PWA, small translation models', 'Offline storage and translation.', 'intermediate'),
+      qa('QA Tester', 'Phone testing, bilingual helps', 'Offline test results.'),
+      leads('Researcher & Writer', 'Language research', 'The phrase lists.'),
+    ],
+  },
+  {
+    title: 'Factory Maintenance Log Assistant',
+    theme: 'Small and on-device AI',
+    industry: 'manufacturing',
+    problem: 'Maintenance notes are written in a hurry, so patterns that predict breakdowns are missed.',
+    description: 'A tool that reads sample maintenance logs (simulated), groups similar problems with a small model, and flags machines with rising issues. Software and simulated data only.',
+    outcome: 'A dashboard that groups log entries and flags at-risk machines in the simulated data.',
+    weeks: [
+      'Create a realistic simulated log dataset for 10 machines.',
+      'Design the dashboard.',
+      'Build problem grouping with a small model.',
+      'Add rising-issue flags; review access to the logs.',
+      'Test flags against the simulation and improve.',
+      'Polish, write the guide, and record the demo.',
+    ],
+    roles: [
+      dev('Data Developer', 'Python, text clustering', 'Grouping and flags.', 'intermediate'),
+      arch('No-code Builder', 'Retool or Power BI', 'The dashboard.'),
+      qa('QA Tester', 'Data checks', 'A check of flags against the simulation.'),
+      guard('Security & Privacy Reviewer', 'Access control', 'Access rules for the logs.'),
+      leads('Researcher & Writer', 'Research, writing', 'The simulated dataset description and guide.'),
+    ],
+  },
+  {
+    title: 'Private Journal with On-Device Summaries',
+    theme: 'Small and on-device AI',
+    industry: 'technology',
+    size: 'small',
+    problem: 'People want to reflect on their week but do not want private journal entries sent to an AI company.',
+    description: 'A journal app that writes weekly summaries with a small model running in the browser, so entries stay on the device.',
+    outcome: 'A journal that summarizes a week of entries with no data leaving the device.',
+    weeks: [
+      'Pick a small in-browser model.',
+      'Design the journal and summary screens.',
+      'Build entry storage on the device.',
+      'Add weekly summaries.',
+      'Confirm nothing leaves the device and test summary quality.',
+      'Polish and record the demo.',
+    ],
+    roles: [
+      dev('AI Developer', 'JavaScript, WebLLM', 'Storage and summaries.', 'intermediate'),
+      arch('No-code Builder', 'Figma, Framer', 'The app screens.'),
+      guard('Security & Privacy Reviewer', 'Network inspection basics', 'Proof that entries never leave the device.'),
     ],
   },
 ];
 
-// Return a random template in the same shape as generateProject().
-export const getRandomTemplate = () => {
-  const t = PROJECT_TEMPLATES[Math.floor(Math.random() * PROJECT_TEMPLATES.length)];
-  // Deep-ish copy so the caller can edit roles without mutating the library.
-  return {
-    projectTitle: t.projectTitle,
-    projectDescription: t.projectDescription,
-    projectGoals: t.projectGoals,
-    industryTrack: t.industryTrack,
-    proposedRoles: t.proposedRoles.map(r => ({ ...r })),
-  };
+const toTemplate = (p) => ({
+  projectTitle: p.title,
+  theme: p.theme,
+  industryTrack: p.industry,
+  problemStatement: p.problem,
+  projectDescription: p.description,
+  projectGoals: p.outcome,
+  weeklyPlan: p.weeks,
+  size: p.size || 'full',
+  proposedRoles: p.roles.map((r) => ({ ...r, fromBrief: true })),
+});
+
+export const PROJECT_TEMPLATES = RAW.map(toTemplate);
+export const TEMPLATE_COUNT = PROJECT_TEMPLATES.length;
+
+const NON_LEAD_TRACKS = ['development', 'design', 'quality-assurance', 'security', 'leadership'];
+
+// Fit a brief's roles to a team size (people including the lead).
+// - Every role gets one seat first (in `order`), then extra seats go round-robin.
+// - Teams of BIG_TEAM_SIZE+ get a Product Co-owner seat (TechPO).
+// - Without a size, the brief's own counts are used (plus a co-owner if big).
+// Each kept role remembers its minimum count, so a lead can't reduce it.
+export const fitBriefRoles = (briefRoles, teamSize = null, order = null) => {
+  const roles = (briefRoles || []).filter((r) => !r.coOwner).map((r) => ({ ...r }));
+  if (order) roles.sort((a, b) => order.indexOf(a.track) - order.indexOf(b.track));
+  let out;
+  const size = Number(teamSize) || 0;
+  if (!size) {
+    out = roles.map((r) => ({ ...r, count: Number(r.count) || 1 }));
+    const people = 1 + out.reduce((n, r) => n + r.count, 0);
+    if (people >= BIG_TEAM_SIZE) out.push(coOwnerRole());
+  } else {
+    let seats = Math.max(1, size - 1);
+    const withCo = size >= BIG_TEAM_SIZE;
+    if (withCo) seats -= 1;
+    out = roles.map((r) => ({ ...r, count: 0 }));
+    for (let i = 0; i < seats && out.length; i += 1) out[i % out.length].count += 1;
+    out = out.filter((r) => r.count > 0);
+    if (withCo) out.push(coOwnerRole());
+  }
+  return out.map((r) => ({ ...r, fromBrief: true, minCount: r.count }));
 };
 
-export const TEMPLATE_COUNT = PROJECT_TEMPLATES.length;
+// The tracks a set of roles covers (TechPO is always covered by the lead).
+export const tracksCovered = (roles) => {
+  const s = new Set(['mentorship']);
+  (roles || []).forEach((r) => r.track && s.add(r.track));
+  return s;
+};
+
+// Pick `count` templates for a cohort and fit their roles so that, together,
+// the cohort covers all six tracks. Skips titles already used.
+export const pickCohortSet = (count, { teamSize = null, exclude = [], theme = null } = {}) => {
+  const used = new Set(exclude.map((t) => String(t || '').trim().toLowerCase()));
+  let pool = PROJECT_TEMPLATES.filter((t) => !used.has(t.projectTitle.toLowerCase()));
+  if (theme) {
+    const themed = pool.filter((t) => t.theme === theme);
+    if (themed.length) pool = [...shuffle(themed), ...shuffle(pool.filter((t) => t.theme !== theme))];
+    else pool = shuffle(pool);
+  } else {
+    // Spread across themes: round-robin over shuffled themes.
+    const byTheme = {};
+    shuffle(pool).forEach((t) => { (byTheme[t.theme] = byTheme[t.theme] || []).push(t); });
+    const queues = shuffle(Object.keys(byTheme)).map((k) => byTheme[k]);
+    pool = [];
+    let left = true;
+    while (left) {
+      left = false;
+      queues.forEach((q) => { if (q.length) { pool.push(q.shift()); left = true; } });
+    }
+  }
+  const want = Math.max(1, count);
+  // Smaller projects suit small teams (4 people or fewer); bigger teams get full ones first.
+  const size0 = Number(teamSize) || 0;
+  if (size0 >= 5) pool = [...pool.filter((t) => t.size !== 'small'), ...pool.filter((t) => t.size === 'small')];
+  // Every title already used: allow repeats rather than come up short.
+  if (pool.length < want) pool = [...pool, ...shuffle(PROJECT_TEMPLATES.filter((t) => !pool.includes(t)))];
+  const picked = pool.slice(0, want);
+  // Make sure the briefs, together, include every track; swap a small project
+  // for a full one if a track is missing entirely.
+  const briefTracks = () => new Set(picked.flatMap((t) => t.proposedRoles.map((r) => r.track)));
+  if (NON_LEAD_TRACKS.some((tr) => !briefTracks().has(tr))) {
+    const idx = picked.findIndex((t) => t.size === 'small');
+    const full = pool.slice(want).find((t) => t.size !== 'small') || PROJECT_TEMPLATES.find((t) => t.size !== 'small' && !picked.includes(t));
+    if (idx !== -1 && full) picked[idx] = full;
+  }
+
+  // Fit roles so the cohort covers as many tracks as it can (all six whenever
+  // there are enough seats). First try rotating which tracks come first on each
+  // project; if a track is still missing, try other orders and keep the best.
+  const fitWith = (orders) => picked.map((t, i) => ({
+    ...t,
+    proposedRoles: fitBriefRoles(t.proposedRoles, teamSize, orders[i]),
+    briefRoles: t.proposedRoles,
+  }));
+  const coverage = (set) => new Set(set.flatMap((p) => p.proposedRoles.map((r) => r.track))).size;
+  const rotation = picked.map((_, i) => NON_LEAD_TRACKS.slice(i % 5).concat(NON_LEAD_TRACKS.slice(0, i % 5)));
+  let fitted = fitWith(rotation);
+  const best = new Set(picked.flatMap((t) => t.proposedRoles.map((r) => r.track))).size + (Number(teamSize) >= BIG_TEAM_SIZE ? 1 : 0);
+  for (let tries = 0; tries < 60 && coverage(fitted) < best; tries += 1) {
+    const next = fitWith(picked.map(() => shuffle(NON_LEAD_TRACKS)));
+    if (coverage(next) > coverage(fitted)) fitted = next;
+  }
+  return fitted;
+};
+
+// One project for Generate Project (skips titles already on the board).
+export const pickTemplate = ({ exclude = [], theme = null, teamSize = null } = {}) => {
+  const [t] = pickCohortSet(1, { exclude, theme, teamSize });
+  return t;
+};
+
+// Kept for older callers.
+export const getRandomTemplate = () => pickTemplate();
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}

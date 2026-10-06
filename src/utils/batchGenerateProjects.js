@@ -7,47 +7,15 @@
 // more projects than a cohort can staff produces half-empty teams that all
 // stall. Fewer, fuller teams actually finish.
 
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { PROJECT_TEMPLATES } from './projectTemplates';
+import { pickCohortSet } from './projectTemplates';
 import { logActivity as logProof } from './activityFeed';
 import { DEFAULT_PROJECTS_PER_COHORT } from './cohorts';
 
-// Shuffle a copy of an array (Fisher-Yates).
-const shuffle = (arr) => {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-};
-
-// Pick `count` templates spread across as many different tracks as possible,
-// so a batch feels diverse rather than 30 near-identical projects.
-const pickVaried = (count) => {
-  const byTrack = {};
-  PROJECT_TEMPLATES.forEach((t) => {
-    const k = t.industryTrack || 'other';
-    (byTrack[k] = byTrack[k] || []).push(t);
-  });
-  // Shuffle within each track, then round-robin across tracks.
-  const tracks = shuffle(Object.keys(byTrack));
-  const queues = tracks.map((k) => shuffle(byTrack[k]));
-  const picked = [];
-  let exhausted = false;
-  while (picked.length < count && !exhausted) {
-    exhausted = true;
-    for (const q of queues) {
-      if (q.length) {
-        picked.push(q.shift());
-        exhausted = false;
-        if (picked.length >= count) break;
-      }
-    }
-  }
-  return picked;
-};
+// Projects come from the library (projectTemplates.js). pickCohortSet spreads
+// them across themes, skips titles already on the board, and fits each team's
+// roles so the cohort, together, covers all six badge tracks.
 
 /**
  * Publish a batch of starter projects for a cohort.
@@ -78,7 +46,9 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
     teamSize = null,
     draft = true,
   } = opts;
-  const templates = pickVaried(count);
+  const snap = await getDocs(collection(db, 'projects')).catch(() => null);
+  const used = snap ? snap.docs.map((d) => d.data().projectTitle || d.data().title) : [];
+  const templates = pickCohortSet(count, { teamSize, exclude: used, theme: opts.theme || null });
   let created = 0,
     errors = 0;
   const ids = [];
@@ -89,15 +59,15 @@ export const batchGenerateProjects = async (count = DEFAULT_PROJECTS_PER_COHORT,
         projectTitle: t.projectTitle,
         projectDescription: t.projectDescription,
         projectGoals: t.projectGoals || null,
+        problemStatement: t.problemStatement || null,
+        weeklyPlan: t.weeklyPlan || [],
+        theme: t.theme || null,
         industryTrack: t.industryTrack,
         timeline: 'flexible',
-        proposedRoles: (() => {
-          // Fit the roles to the chosen team size: the lead plus (teamSize - 1) people.
-          const roles = Array.isArray(t.proposedRoles) ? t.proposedRoles.map((r) => ({ ...r, count: 0 })) : [];
-          if (!teamSize || !roles.length) return t.proposedRoles;
-          for (let i = 0; i < Math.max(1, Number(teamSize) - 1); i += 1) roles[i % roles.length].count += 1;
-          return roles.filter((r) => r.count > 0);
-        })(),
+        // Already fitted to the team size (the lead plus teamSize - 1 people).
+        // The lead can add roles but can't remove or reduce these.
+        proposedRoles: t.proposedRoles,
+        briefRoles: t.briefRoles || t.proposedRoles,
         ...(teamSize ? { maxTeamSize: Number(teamSize) } : {}),
         teamRoles: [],
         maxTeamSize: 0,

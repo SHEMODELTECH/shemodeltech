@@ -17,13 +17,18 @@ export const trackByKey = (k) => BADGE_TRACKS.find((t) => t.key === k) || null;
 // The track that best matches a role title (the suggestion shown first).
 export const suggestTrack = (role) => {
   const r = String(role || '').toLowerCase();
+  if (r.includes('non-technical') || r.includes('nontechnical')) return 'leadership';
+  if (r.includes('mentor')) return 'mentorship';
   if (r.includes('qa') || r.includes('test')) return 'quality-assurance';
   if (r.includes('lead') || r.includes('owner') || r.includes('product')) return 'mentorship';
   if (r.includes('project') || r.includes('scrum') || r.includes('writer') || r.includes('research') || r.includes('content') || r.includes('marketing')) return 'leadership';
-  if (r.includes('security') || r.includes('network') || r.includes('devops') || r.includes('cloud')) return 'security';
+  if (r.includes('security') || r.includes('privacy') || r.includes('guard') || r.includes('network') || r.includes('devops') || r.includes('cloud')) return 'security';
   if (r.includes('no-code') || r.includes('low-code') || r.includes('nocode') || r.includes('webflow') || r.includes('bubble') || r.includes('design')) return 'design';
   return 'development';
 };
+
+// A role's track: the one set on the role (library projects), else the best match for its name.
+export const roleTrack = (r) => (r && BADGE_TRACKS.some((t) => t.key === r.track) ? r.track : suggestTrack(r?.role));
 
 const ALIASES = {
   development: ['development', 'techdev', 'developer'],

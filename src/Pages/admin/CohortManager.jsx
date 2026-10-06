@@ -3,7 +3,7 @@
 // Where you actually run cohorts. Admin or editor.
 //
 // The flow this screen supports:
-// 1. Create a cohort -> dates are computed from the 8-week schedule
+// 1. Create a cohort -> dates are computed from the 6-week schedule
 // 2. Generate 6 projects (DRAFT, hidden) -> you read the briefs
 // 3. Reveal -> projects go live, lead applications open
 // 4. Advance phases -> lead review, team formation, building
@@ -44,7 +44,7 @@ import { checkDates, minEndDate, minStartDate, todayISO } from '../../utils/date
 import NoteDialog from '../../components/NoteDialog';
 import { useFeatures } from '../../utils/features';
 import { notifyLeadWaitlist } from '../../utils/projectProposals';
-import { BADGE_TRACKS, suggestTrack } from '../../config/badgeTracks';
+import { BADGE_TRACKS, suggestTrack, roleTrack, trackByKey } from '../../config/badgeTracks';
 
 const PHASES = [
   { id: COHORT_STATUS.DRAFT, label: 'Draft', hint: 'Projects generated, hidden from members' },
@@ -63,7 +63,7 @@ const PHASES = [
     label: 'Team formation',
     hint: 'Leads assigned, contributors applying',
   },
-  { id: COHORT_STATUS.BUILDING, label: 'Building', hint: 'Teams locked, 8 weeks running' },
+  { id: COHORT_STATUS.BUILDING, label: 'Building', hint: 'Teams locked, 6 weeks running' },
   { id: COHORT_STATUS.GRACE, label: 'Grace period', hint: 'Past deadline, 7 days to finish' },
   { id: COHORT_STATUS.COMPLETE, label: 'Complete', hint: 'Badges and certificates issued' },
 ];
@@ -739,6 +739,20 @@ const CohortManager = () => {
                 </div>
               )}
 
+              {/* Six-track coverage across the cohort's projects. */}
+              {openCohort === cohort.id && projects.length > 0 && (() => {
+                const covered = new Set(['mentorship']);
+                projects.forEach((pr) => ((pr.teamRoles && pr.teamRoles.length ? pr.teamRoles : pr.proposedRoles) || []).forEach((r) => covered.add(roleTrack(r))));
+                const missing = BADGE_TRACKS.filter((t) => !covered.has(t.key));
+                return (
+                  <p className={`text-xs mb-2 ${missing.length ? 'text-red-700' : 'text-gray-600'}`}>
+                    <strong>Tracks covered:</strong>{' '}
+                    {BADGE_TRACKS.map((t) => `${t.name}${covered.has(t.key) ? ' ✓' : ' ✗'}`).join(' · ')}
+                    {missing.length ? ` Missing ${missing.map((t) => t.name).join(', ')}: add a project or a bigger team.` : ''}
+                  </p>
+                );
+              })()}
+
               {/* Brief review: edit a weak brief before it goes live. */}
               {openCohort === cohort.id && (
                 <div className="border border-gray-200 rounded-lg divide-y divide-gray-100 mb-3">
@@ -824,6 +838,13 @@ const CohortManager = () => {
                           <p className="text-gray-600 text-xs mt-1.5 line-clamp-3">
                             {pr.projectDescription || pr.description}
                           </p>
+                          {((pr.teamRoles && pr.teamRoles.length ? pr.teamRoles : pr.proposedRoles) || []).length > 0 && (
+                            <p className="text-gray-500 text-[11px] mt-1">
+                              Roles: {((pr.teamRoles && pr.teamRoles.length ? pr.teamRoles : pr.proposedRoles) || [])
+                                .map((r) => `${r.role}${Number(r.count) > 1 ? ` ×${r.count}` : ''} (${trackByKey(roleTrack(r))?.name || 'track'})`)
+                                .join(' · ')}
+                            </p>
+                          )}
                         </>
                       )}
                     </div>
@@ -834,7 +855,7 @@ const CohortManager = () => {
               {drafts > 0 && (
                 <p className="text-amber-700 text-xs mb-3">
                   {drafts} project{drafts === 1 ? ' is' : 's are'} still hidden. Read the briefs
-                  before publishing, a weak brief costs a team eight weeks.
+                  before publishing, a weak brief costs a team six weeks.
                 </p>
               )}
 

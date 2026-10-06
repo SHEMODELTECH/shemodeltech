@@ -92,7 +92,7 @@ const Sponsor = () => {
       <h1 className="text-3xl font-bold text-gray-900 mb-3">Sponsor a team</h1>
       <p className="text-gray-600 mb-8 leading-relaxed">
         Your sponsorship pays training stipends to a team of women building a real product over
-        eight weeks. They finish with verified badges, a certificate, and something they can show an
+        six weeks. They finish with verified badges, a certificate, and something they can show an
         employer.
       </p>
 

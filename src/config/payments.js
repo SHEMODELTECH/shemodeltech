@@ -69,7 +69,7 @@ export const SPONSORSHIP_TIERS = [
     id: 'sponsor_team',
     name: 'Sponsor a team',
     amount: 5000,
-    blurb: 'Funds stipends for one team of ~5 women through an 8-week cohort.',
+    blurb: 'Funds stipends for one team of ~5 women through a 6-week cohort.',
   },
   {
     id: 'sponsor_two_teams',

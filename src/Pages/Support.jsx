@@ -55,7 +55,7 @@ const Support = () => {
   const faqs = [
     {
       q: 'What is She Model Tech?',
-      a: 'She Model Tech is where women build real tech experience. You join a team of women at different levels, ship a real product over eight weeks, and earn verified badges that show employers exactly what you built.',
+      a: 'She Model Tech is where women build real tech experience. You join a team of women at different levels, ship a real product over six weeks, and earn verified badges that show employers exactly what you built.',
     },
     {
       q: 'How does it work?',
