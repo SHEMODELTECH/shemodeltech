@@ -312,7 +312,7 @@ const DashboardOverview = () => {
         </div>
       )}
 
-      {/* Members: badges and account side by side; companies: what members are building. */}
+      {/* Members: account on the left, badges in the right sidebar; companies: what members are building. */}
       <div className={profileData?.isCompany ? 'grid grid-cols-1 lg:grid-cols-3 gap-6' : ''}>
         {profileData?.isCompany && (
           <div className="lg:col-span-2 space-y-6">
@@ -331,7 +331,7 @@ const DashboardOverview = () => {
         <div className={profileData?.isCompany ? 'space-y-6' : 'grid grid-cols-1 lg:grid-cols-3 gap-6 items-start'}>
           {/* Your Badges */}
           {!profileData?.isCompany && (
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-start-3 lg:row-start-1 lg:row-span-2">
               <h3 className="text-lg font-bold text-gray-900 mb-1">Your Badges</h3>
               <p className="text-gray-500 text-xs mb-4">
                 The badges you’ve earned. Each project you complete in a track adds to its level.
@@ -455,7 +455,7 @@ const DashboardOverview = () => {
 
           {/* Account & Earnings (members only) */}
           {!profileData?.isCompany && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6">
+          <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-span-2">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">My Account</h3>
               <Link to="/account" className="text-pink-600 text-sm font-medium hover:underline">
@@ -513,7 +513,7 @@ const DashboardOverview = () => {
 
           {/* Plan (members; companies see their tier at the top) */}
           {!profileData?.isCompany && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6">
+          <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-span-2">
             <h3 className="text-lg font-bold text-gray-900 mb-2">Your account</h3>
             <p className="text-pink-600 font-semibold text-lg mb-1">Free</p>
             <p className="text-gray-400 text-xs mb-3">
