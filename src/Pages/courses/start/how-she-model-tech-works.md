@@ -20,7 +20,7 @@ The menu on the left (on a phone, tap the menu icon) has everything else:
 - **Workspace**: the team space for each project you're on.
 - **Proof Wall**: what members are building, and where you share your own progress.
 - **Jobs**: roles posted by verified companies.
-- **Summit**: She Model Tech Summit, our yearly event.
+- **Events**: online workshops, tech talks, podcasts, and demo days.
 - **Talent Board**: where companies find members with verified badges.
 - **Support**: answers to common questions, and a form to contact us.
 - **Settings**: your profile, email settings, and payout details.

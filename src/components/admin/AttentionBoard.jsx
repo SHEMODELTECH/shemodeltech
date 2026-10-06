@@ -25,7 +25,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
         count(query(collection(db, 'lead_applications'), where('status', 'in', ['submitted', 'interview_scheduled']))),
         count(query(collection(db, 'project_proposals'), where('status', '==', 'new'))),
         count(query(collection(db, 'org_requests'), where('status', '==', 'new'))),
-        count(query(collection(db, 'summitPartners'), where('status', '==', 'new'))),
+        0, // Summit partner requests (retired)
         count(query(collection(db, 'mentor_letter_requests'), where('status', '==', 'pending'))),
         isAdmin ? count(query(collection(db, 'deletionRequests'), where('status', '==', 'pending'))) : 0,
         isAdmin ? count(query(collection(db, 'teacher_applications'), where('status', '==', 'pending'))) : 0,
@@ -72,7 +72,6 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     ...(isAdmin ? [['Companies to verify', c.companies, 'New company accounts waiting for verification', { tab: 'users', view: 'unverified' }]] : []),
     ...(isAdmin ? [['Sponsorship requests', c.sponsors, 'Companies asking to sponsor a cohort', { to: '/admin/cohorts' }]] : []),
     ['Job post deletion requests', c.jobDeletes, 'Companies asking to delete a job post (unpublished meanwhile)', { to: '/jobs' }],
-    ['Summit partners', c.partnersNew, 'New booth, workshop, or sponsor requests', { tab: 'summit' }],
     ...(isAdmin ? [['Deletion requests', c.deletions, 'Leads asking to delete a project', { tab: 'deletions' }]] : []),
   ];
   const total = cards.reduce((n, x) => n + (x[1] || 0), 0);

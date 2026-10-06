@@ -12,7 +12,7 @@ import DiscoverTrack from '../../components/DiscoverTrack';
 import TierBadge from '../../components/TierBadge';
 import GettingStarted from '../../components/GettingStarted';
 import { PromotedStrip } from '../../components/PriorityBanners';
-import SummitCard from '../../components/SummitCard';
+import EventsCard from '../../components/EventsCard';
 import OrgMembershipsCard from '../../components/OrgMembershipsCard';
 import { TIER_LABEL, companyTier } from '../../config/tiers';
 import PayoutReminder from '../../components/PayoutReminder';
@@ -212,8 +212,8 @@ const DashboardOverview = () => {
 
       {/* Organizations you run or belong to */}
 
-      {/* The Summit: register (members) or partner (companies) */}
-      {!loading && <SummitCard profile={profileData} />}
+      {/* The next event (all events are online) */}
+      {!loading && <EventsCard />}
 
       {/* In-app promotion: featured jobs and projects (Premium) */}
       {!loading && !profileData?.isCompany && <PromotedStrip />}
@@ -321,7 +321,7 @@ const DashboardOverview = () => {
               <p className="text-gray-500 text-sm mb-4">Follow projects, badges earned, and work shipped on the Proof Wall. Open any project to see the team.</p>
               <div className="flex flex-wrap gap-2">
                 <Link to="/proof-wall" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Open the Proof Wall</Link>
-                <Link to="/summit" className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">The Summit</Link>
+                <Link to="/events" className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">Events</Link>
               </div>
             </div>
           </div>

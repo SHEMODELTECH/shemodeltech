@@ -1,5 +1,5 @@
 // src/Pages/Premium.jsx
-// Company tiers: Supporter, Partner, Champion (they replace the old Premium).
+// Company tiers: Supporter and Champion (they replace the old Premium).
 // While "Tier payments" is off, companies "Ask about" a tier and an admin sets
 // it in Admin → Users. Members' features stay free, always.
 import React, { useEffect, useState } from 'react';
@@ -13,8 +13,7 @@ import { useFeatures } from '../utils/features';
 
 const BLURB = {
   supporter: 'Hire from our talent and show your support.',
-  partner: 'Everything in Supporter, plus featured jobs and the Summit stage.',
-  champion: 'Everything in Partner, plus a speaking slot, promotion, and priority support.',
+  champion: 'Everything in Supporter, plus featured jobs, promotion, and priority support.',
 };
 
 const Premium = () => {
@@ -42,7 +41,7 @@ const Premium = () => {
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">Company tiers</h1>
       <p className="text-gray-600 mt-2 max-w-2xl">
         She Model Tech runs every project and pays members on paid projects. Companies support the mission and work with
-        our talent through three tiers.
+        our talent through two tiers.
       </p>
       {!features.companyTiers && (
         <p className="mt-3 text-sm text-gray-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 max-w-2xl">
@@ -55,7 +54,7 @@ const Premium = () => {
         </p>
       )}
 
-      <div className="grid md:grid-cols-3 gap-4 mt-6">
+      <div className="grid md:grid-cols-2 gap-4 mt-6 max-w-3xl">
         {TIERS.map((t) => {
           const current = mine === t;
           const link = TIER_PAYMENT_LINKS[t];
@@ -84,8 +83,7 @@ const Premium = () => {
         })}
       </div>
       <p className="text-xs text-gray-500 mt-3">
-        Summit panels and speaking slots are sponsored sessions, approved by She Model Tech. Free companies can browse the
-        Talent Board and start up to 5 new conversations a month.
+        Free companies can browse the Talent Board and start up to 5 new conversations a month.
       </p>
 
       <div className="mt-8 bg-white border border-pink-200 rounded-2xl p-6">
@@ -95,7 +93,7 @@ const Premium = () => {
           mission to empower women in tech. It funds:
         </p>
         <ul className="mt-3 space-y-2 text-sm text-gray-700 list-disc pl-5">
-          <li><strong>Paid opportunities for our members:</strong> paid projects, so women earn while they learn, and fair pay for members who lead projects, create courses, and mentor.</li>
+          <li><strong>Paid opportunities for our members:</strong> paid projects, so women earn while they learn, and fair pay for members who lead paid projects.</li>
           <li><strong>Education:</strong> certifications for members, awarded on clear and fair criteria, plus support for women going to school and university.</li>
           <li><strong>Access:</strong> laptops and internet access for women who need them.</li>
           <li><strong>Community:</strong> summits and events that connect women in tech.</li>

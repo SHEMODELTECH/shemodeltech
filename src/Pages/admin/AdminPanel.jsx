@@ -28,7 +28,7 @@ import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import OrgRequestsTab from '../../components/admin/OrgRequestsTab';
-import SummitTab from '../../components/admin/SummitTab';
+import EventsAdmin from '../../components/admin/EventsAdmin';
 import AttentionBoard from '../../components/admin/AttentionBoard';
 import { unpublishFromLearning } from '../../utils/learningPublished';
 import LaunchSettings from '../../components/admin/LaunchSettings';
@@ -522,7 +522,7 @@ const AdminPanel = ({ only = null }) => {
     navigate(`/messages?to=${u.id}&text=${encodeURIComponent(starter)}`);
   };
 
-  // Company tiers (Supporter, Partner, Champion): set by an admin.
+  // Company tiers (Supporter, Champion): set by an admin.
   const [tierFor, setTierFor] = useState(null); // user being edited
   const [tierDraft, setTierDraft] = useState({ tier: '', until: '' });
   const openTier = (u) => {
@@ -1643,7 +1643,7 @@ const AdminPanel = ({ only = null }) => {
         </div>
       )}
 
-      {!loadingData && tab === 'summit' && isReviewer && <SummitTab />}
+      {!loadingData && (tab === 'events' || tab === 'summit') && isReviewer && <EventsAdmin />}
 
       {/* MODERATION */}
       {!loadingData && tab === 'moderation' && (

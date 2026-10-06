@@ -72,7 +72,7 @@ const Navbar = ({ cta = null }) => {
         // No Home item: the logo goes home.
         { path: '/about', label: 'About' },
         { path: '/projects', label: 'Projects' },
-        { path: '/summit', label: 'Summit' },
+        { path: '/events', label: 'Events' },
         { path: '/learning', label: 'Learning' },
       ];
 

@@ -48,7 +48,7 @@ service cloud.firestore {
  let t = hasProfile() ? myUserDoc().get('companyTier', '') : '';
  let until = hasProfile() ? myUserDoc().get('companyTierUntil', null) : null;
  let active = until == null || until > request.time;
- return !active ? 0 : t == 'champion' ? 3 : t == 'partner' ? 2 : t == 'supporter' ? 1 : 0;
+ return !active ? 0 : t == 'champion' ? 3 : t == 'partner' ? 3 : t == 'supporter' ? 1 : 0;
  }
  // Launch switches (Admin → Launch settings).
  function featureOn(name) {
@@ -592,7 +592,34 @@ service cloud.firestore {
  }
  }
 
- // The Summit.
+ // Events (all online). Anyone can see published events; staff manage them.
+ match /events/{id} {
+ allow read: if (resource != null && resource.data.get('published', false) == true) || isReviewer();
+ allow write: if isReviewer();
+ // The joining link: staff, and people who have a place.
+ match /private/{doc} {
+ allow read: if isReviewer() || (isSignedIn()
+ && exists(/databases/$(database)/documents/eventRegistrations/$(id + '_' + myUid()))
+ && get(/databases/$(database)/documents/eventRegistrations/$(id + '_' + myUid())).data.status == 'registered');
+ allow write: if isReviewer();
+ }
+ }
+ // eventRegistrations/{eventId}_{uid}: no names or emails, so members may read
+ // them (to count places). Reminders and waitlist moves are done by the server.
+ match /eventRegistrations/{id} {
+ allow read: if isSignedIn();
+ allow create: if isSignedIn()
+ && request.resource.data.uid == myUid()
+ && id == request.resource.data.eventId + '_' + myUid()
+ && request.resource.data.status in ['registered', 'waitlist']
+ && request.resource.data.keys().hasOnly(['eventId', 'uid', 'status', 'present', 'projectId', 'projectTitle', 'createdAt'])
+ && get(/databases/$(database)/documents/events/$(request.resource.data.eventId)).data.get('published', false) == true
+ && get(/databases/$(database)/documents/events/$(request.resource.data.eventId)).data.get('status', 'scheduled') != 'cancelled';
+ allow update: if isReviewer();
+ allow delete: if isReviewer() || (isSignedIn() && resource.data.uid == myUid());
+ }
+
+ // The Summit (retired; kept so old records stay readable).
  match /summits/{id} {
  allow read: if true;
  allow write: if isReviewer();

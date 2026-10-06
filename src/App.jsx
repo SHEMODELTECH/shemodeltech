@@ -38,7 +38,7 @@ const JobDetail = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default:
 const JobForm = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.JobForm })));
 const MyJobs = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.MyJobs })));
 const Premium = lazy(() => import('./Pages/Premium'));
-const Summit = lazy(() => import('./Pages/Summit'));
+const Events = lazy(() => import('./Pages/Events'));
 const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
@@ -229,7 +229,8 @@ function App() {
                 <Route path="/team" element={<Team />} />
                 {/* She Model Tech doesn't offer training programs: these pages are retired. */}
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
-                <Route path="/summit" element={<Summit />} />
+                <Route path="/events" element={<Events />} />
+                <Route path="/summit" element={<Navigate to="/events" replace />} />
                 <Route path="/support-our-mission" element={<SupportMission />} />
                 {/* Project proposals are closed: projects come from She Model Tech cohorts. */}
                 <Route path="/projects/propose" element={<Navigate to="/projects" replace />} />

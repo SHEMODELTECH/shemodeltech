@@ -1,16 +1,16 @@
 // src/config/tiers.js
-// Company tiers: Supporter < Partner < Champion. Set by admins in Admin → Users.
+// Company tiers: Supporter < Champion. Set by admins in Admin → Users.
+// (An older "Partner" tier is read as Champion, so nobody loses a perk.)
 // They replace the old single "Premium". While the "Company tiers" switch in
 // Admin → Launch settings is off, companies keep today's free access.
 
-export const TIERS = ['supporter', 'partner', 'champion'];
-export const TIER_LABEL = { supporter: 'Supporter', partner: 'Partner', champion: 'Champion' };
-const RANK = { supporter: 1, partner: 2, champion: 3 };
+export const TIERS = ['supporter', 'champion'];
+export const TIER_LABEL = { supporter: 'Supporter', partner: 'Champion', champion: 'Champion' };
+const RANK = { supporter: 1, partner: 3, champion: 3 };
 
 // Payment links (Vercel env), used when "Tier payments" is on.
 export const TIER_PAYMENT_LINKS = {
   supporter: process.env.REACT_APP_TIER_SUPPORTER_LINK || null,
-  partner: process.env.REACT_APP_TIER_PARTNER_LINK || null,
   champion: process.env.REACT_APP_TIER_CHAMPION_LINK || null,
 };
 
@@ -28,7 +28,7 @@ export const companyTier = (profile) => {
   if (!RANK[t]) return null;
   const until = toMs(profile.companyTierUntil);
   if (until && until < Date.now()) return null;
-  return t;
+  return t === 'partner' ? 'champion' : t;
 };
 export const tierRank = (profile) => RANK[companyTier(profile)] || 0;
 
@@ -37,13 +37,9 @@ export const PERKS = [
   ['postJobs', 'supporter', 'Post jobs'],
   ['talentBoard', 'supporter', 'Full Talent Board with unlimited messaging'],
   ['verifiedBadge', 'supporter', 'Verified Partner badge'],
-  ['summitTable', 'supporter', 'Summit exhibitor table (request)'],
-  ['featuredJobs', 'partner', 'Featured jobs'],
-  ['summitWorkshop', 'partner', 'Host a Summit workshop (request)'],
-  ['summitPanel', 'partner', 'Summit panel seat (sponsored session, approved by She Model Tech)'],
-  ['summitSpeaker', 'champion', 'Summit speaking slot (sponsored session, approved by She Model Tech)'],
-  ['prioritySupport', 'champion', 'Priority support'],
+  ['featuredJobs', 'champion', 'Featured jobs'],
   ['promotion', 'champion', 'In-app promotion (featured placement)'],
+  ['prioritySupport', 'champion', 'Priority support'],
 ];
 const PERK_MIN = Object.fromEntries(PERKS.map(([k, t]) => [k, RANK[t]]));
 

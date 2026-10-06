@@ -44,7 +44,7 @@ const isBusinessEmail = (email) => {
 };
 
 // How members found She Model Tech (counted in Admin → Users).
-export const HEARD_FROM = ['Instagram', 'LinkedIn', 'A friend or classmate', 'My school or campus group', 'An event or the Summit', 'A web search', 'Other'];
+export const HEARD_FROM = ['Instagram', 'LinkedIn', 'A friend or classmate', 'My school or campus group', 'An event or a talk', 'A web search', 'Other'];
 
 const Onboarding = () => {
   const { currentUser } = useAuth();

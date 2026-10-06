@@ -173,6 +173,106 @@ async function markSent(db, key, meta) {
 // ---------------------------------------------------------------------
 // Handler
 // ---------------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────
+// EVENTS (all online)
+// - Waitlist: when a place frees up, the earliest person waiting moves up.
+// - Reminders with the joining link: 1 day before and 30 minutes before.
+// Each send is flagged on the registration, so re-runs never double-email.
+// ─────────────────────────────────────────────────────────────
+const EV_SITE = process.env.SITE_URL || 'https://shemodeltech.com';
+const evEsc = (t) => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const evWhen = (iso) => {
+ const d = new Date(iso);
+ const day = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' });
+ const time = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York', timeZoneName: 'short' });
+ return `${day}, ${time}`;
+};
+
+async function eventTasks(db, stats) {
+ const now = Date.now();
+ const snap = await db.collection('events').where('published', '==', true).get();
+ for (const eDoc of snap.docs) {
+ const ev = { id: eDoc.id, ...eDoc.data() };
+ if (ev.status === 'cancelled' || !ev.startAt) continue;
+ const start = Date.parse(ev.startAt);
+ if (!start || start < now - 15 * 60000 || start > now + 26 * 3600000) {
+ // Only events starting within about a day need work (waitlist moves too).
+ if (!(start > now && Number(ev.capacity) > 0)) continue;
+ }
+ const regsSnap = await db.collection('eventRegistrations').where('eventId', '==', ev.id).get();
+ const regs = regsSnap.docs.map((d) => ({ ref: d.ref, ...d.data() }));
+ const userCache = {};
+ const userOf = async (uid) => {
+ if (!userCache[uid]) {
+ const u = await db.collection('users').doc(uid).get().catch(() => null);
+ userCache[uid] = u && u.exists ? u.data() : {};
+ }
+ return userCache[uid];
+ };
+ const tell = async (uid, title, message, htmlBody, ctaUrl, ctaLabel) => {
+ const u = await userOf(uid);
+ if (u.email) {
+ await sendMail({
+ to: u.email,
+ subject: title,
+ text: `${title}\n\n${message}\n\n${ctaUrl}`,
+ html: `<h2 style="margin:0 0 12px">${evEsc(title)}</h2><p>Hi ${evEsc((u.displayName || '').split(' ')[0] || 'there')},</p>${htmlBody}<p style="margin:22px 0"><a href="${ctaUrl}" style="background:#D41470;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${evEsc(ctaLabel)}</a></p>`,
+ }).catch((e) => console.error('event email failed:', e.message));
+ }
+ await db.collection('notifications').add({
+ userId: uid, recipientId: uid, type: 'event_reminder', title, body: message, message: `${title} - ${message}`,
+ link: ctaUrl.startsWith(EV_SITE) ? ctaUrl.slice(EV_SITE.length) || '/events' : ctaUrl,
+ isRead: false, read: false, createdAt: admin.firestore.FieldValue.serverTimestamp(),
+ });
+ };
+
+ // Waitlist: fill free places in the order people joined.
+ const cap = Number(ev.capacity) || 0;
+ if (cap > 0 && start > now) {
+ let placed = regs.filter((r) => r.status === 'registered').length;
+ const waiting = regs.filter((r) => r.status === 'waitlist')
+ .sort((a, b) => (a.createdAt?.toMillis?.() || 0) - (b.createdAt?.toMillis?.() || 0));
+ for (const r of waiting) {
+ if (placed >= cap) break;
+ await r.ref.update({ status: 'registered', movedUpAt: admin.firestore.FieldValue.serverTimestamp() });
+ r.status = 'registered';
+ placed += 1;
+ const url = `${EV_SITE}/events?e=${ev.id}`;
+ await tell(r.uid, `You have a place: ${ev.title}`, `${evWhen(ev.startAt)} (Eastern time). A place opened up, so you’re now registered.`,
+ `<p>A place opened up for <strong>${evEsc(ev.title)}</strong>, so you’re now registered.</p><p><strong>When:</strong> ${evWhen(ev.startAt)} (Eastern time), online.</p><p>We’ll email you the joining link before it starts.</p>`,
+ url, 'See the event');
+ stats.eventWaitlistMoves = (stats.eventWaitlistMoves || 0) + 1;
+ }
+ }
+
+ // Reminders with the joining link.
+ const msLeft = start - now;
+ if (msLeft > 26 * 3600000 || msLeft < -10 * 60000) continue;
+ const info = await db.collection('events').doc(ev.id).collection('private').doc('info').get().catch(() => null);
+ const joinUrl = (info && info.exists && info.data().joinUrl) || `${EV_SITE}/events?e=${ev.id}`;
+ for (const r of regs) {
+ if (r.status !== 'registered') continue;
+ // 30 minutes before (sent from 35 minutes to 10 minutes after the start).
+ if (msLeft <= 35 * 60000 && !r.reminded30) {
+ await tell(r.uid, `Starting soon: ${ev.title}`, 'It starts in about 30 minutes. Use the joining link to get in.',
+ `<p><strong>${evEsc(ev.title)}</strong> starts in about 30 minutes, online.</p><p>Joining link: <a href="${joinUrl}">${evEsc(joinUrl)}</a></p>`,
+ joinUrl, 'Join now');
+ await r.ref.update({ reminded30: true, reminded1d: true });
+ stats.eventReminders30 = (stats.eventReminders30 || 0) + 1;
+ continue;
+ }
+ // 1 day before (anything from 24 hours down to 40 minutes out).
+ if (msLeft <= 24 * 3600000 && msLeft > 40 * 60000 && !r.reminded1d) {
+ await tell(r.uid, `Tomorrow: ${ev.title}`, `${evWhen(ev.startAt)} (Eastern time), online. Here’s your joining link.`,
+ `<p>A reminder that <strong>${evEsc(ev.title)}</strong> is coming up.</p><p><strong>When:</strong> ${evWhen(ev.startAt)} (Eastern time), online.</p><p>Joining link: <a href="${joinUrl}">${evEsc(joinUrl)}</a></p><p>We’ll send one more reminder 30 minutes before it starts.</p>`,
+ joinUrl, 'Open the joining link');
+ await r.ref.update({ reminded1d: true });
+ stats.eventReminders1d = (stats.eventReminders1d || 0) + 1;
+ }
+ }
+ }
+}
+
 module.exports = async (req, res) => {
  // Vercel Cron sends a bearer token; reject anything else so this can't be
  // triggered by a stranger hitting the URL.
@@ -185,6 +285,17 @@ module.exports = async (req, res) => {
  }
 
  const db = admin.firestore();
+ // Frequent runs (an outside timer every few minutes) only handle events.
+ if (req.query && req.query.task === 'events') {
+ const evStats = {};
+ try {
+ await eventTasks(db, evStats);
+ return res.status(200).json({ ok: true, ...evStats });
+ } catch (e) {
+ console.error('event tasks failed:', e.message);
+ return res.status(500).json({ error: e.message });
+ }
+ }
  const stats = {
  scanned: 0, reminders: 0, graceMoved: 0, graceNudges: 0,
  lapsed: 0, healthUpdated: 0, missedCheckins: 0, errors: 0, skipped: 0,
@@ -333,49 +444,8 @@ module.exports = async (req, res) => {
  }
  }
 
- // ── Summit reminders: 7 days and 1 day before, to everyone registered ──
- try {
- const SITE_URL = process.env.SITE_URL || 'https://shemodeltech.com';
- const summits = await db.collection('summits').where('published', '==', true).get();
- const today = new Date(); today.setUTCHours(0, 0, 0, 0);
- for (const sDoc of summits.docs) {
- const summit = { id: sDoc.id, ...sDoc.data() };
- if (!summit.startDate) continue;
- const start = new Date(`${summit.startDate}T00:00:00Z`);
- const days = Math.round((start - today) / 86400000);
- if (days !== 7 && days !== 1) continue;
- const flag = days === 7 ? 'reminded7' : 'reminded1';
- const regs = await db.collection('summitRegistrations').where('summitId', '==', summit.id).get();
- const sessions = Array.isArray(summit.sessions) ? summit.sessions : [];
- const when = start.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
- const first = sessions.filter(x => x.start).map(x => x.start).sort()[0];
- for (const r of regs.docs) {
- const reg = r.data();
- if (reg[flag] || !reg.email) continue;
- const mine = sessions.filter(x => (reg.workshops || []).includes(x.id));
- const workshopsHtml = mine.length
- ? `<p><strong>Your workshops:</strong></p><ul>${mine.map(x => `<li>${x.title}${x.start ? `, ${x.start}` : ''}${x.room ? ` (${x.room})` : ''}</li>`).join('')}</ul>`
- : '';
- const headline = days === 7 ? `One week to ${summit.title}` : `${summit.title} is tomorrow`;
- const html = `<h2>${headline}</h2>
-<p>Hi ${(reg.name || '').split(' ')[0] || 'there'}, ${days === 7 ? 'we can’t wait to see you next week' : 'see you tomorrow'}!</p>
-<p><strong>When:</strong> ${when}${first ? `, from ${first}` : ''}<br><strong>Where:</strong> ${summit.venue || 'Location to be announced on the Summit page'}</p>
-${workshopsHtml}
-<p>${days === 1 ? 'Bring your phone to check in and earn your Summit Attendee badge.' : 'See the full agenda and speakers on the Summit page.'}</p>
-<p><a href="${SITE_URL}/summit">View the Summit page</a></p>`;
- try {
- await sendMail({ to: reg.email, subject: headline, html });
- await db.collection('notifications').add({
- userId: reg.uid, type: 'summit_reminder', title: headline,
- message: `${when}${summit.venue ? ` · ${summit.venue}` : ''}. ${days === 7 ? 'See the agenda and your workshops.' : 'See you tomorrow!'}`,
- link: '/summit', isRead: false, createdAt: admin.firestore.FieldValue.serverTimestamp(),
- });
- await r.ref.update({ [flag]: true });
- stats.summitReminders = (stats.summitReminders || 0) + 1;
- } catch (e) { console.error('summit reminder failed:', e.message); }
- }
- }
- } catch (e) { console.error('summit reminders skipped:', e.message); }
+ // ── Events: reminders and waitlist moves (also runs every few minutes via ?task=events) ──
+ try { await eventTasks(db, stats); } catch (e) { console.error('event tasks skipped:', e.message); }
 
  return res.status(200).json({ ok: true, ...stats });
  } catch (err) {

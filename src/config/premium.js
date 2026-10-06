@@ -1,6 +1,6 @@
 // src/config/premium.js
 // The old single "Premium" plan has been replaced by company tiers
-// (Supporter, Partner, Champion) in src/config/tiers.js. These helpers are kept
+// (Supporter, Champion) in src/config/tiers.js. These helpers are kept
 // so older screens keep working, and now read the tier instead.
 import { companyTier } from './tiers';
 

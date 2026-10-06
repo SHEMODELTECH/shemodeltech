@@ -621,7 +621,7 @@ const ProjectOwnerDashboard = () => {
                 <p className="text-gray-400 text-lg font-semibold mb-2">{isCompany ? 'No paid projects yet' : 'No projects yet'}</p>
                 <p className="text-gray-500 text-sm mb-6">
                   {isCompany
-                    ? 'She Model Tech runs every project. Explore the Talent Board, and see our company tiers for jobs, the Summit, and more.'
+                    ? 'She Model Tech runs every project. Explore the Talent Board, and see our company tiers for jobs, featured placement, and more.'
                     : 'Browse projects to find one to join or lead.'}
                 </p>
                 {isCompany ? (

@@ -13,7 +13,7 @@ export const FEATURE_DEFAULTS = {
   sponsorships: false, // companies sponsor a cohort (otherwise: register interest)
   orgTraining: false, // training and curriculum requests (otherwise: register interest)
   jobPosting: false, // companies post jobs (a Premium feature)
-  companyTiers: false, // Supporter, Partner, Champion rules apply to companies
+  companyTiers: false, // Supporter and Champion rules apply to companies
   donations: false, // online donations on Support our mission (REACT_APP_DONATION_LINK)
   premiumPayments: false, // companies pay for tiers online (otherwise: "Ask about a tier")
 };

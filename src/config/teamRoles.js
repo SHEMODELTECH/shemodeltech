@@ -6,7 +6,7 @@ export const TEAM_ROLES = [
   { id: 'social', title: 'Social Media Manager', desc: 'Plan and post on Instagram and LinkedIn, and celebrate our members’ wins.' },
   { id: 'brand', title: 'Brand Strategist', desc: 'Keep our look and voice consistent: logo pink, black, and white, everywhere.' },
   { id: 'partnership', title: 'Partnership Manager', desc: 'Build relationships with companies, schools, and communities that share our mission.' },
-  { id: 'sponsorship', title: 'Sponsorship Manager', desc: 'Find and look after sponsors who fund cohorts, laptops, and the Summit.' },
+  { id: 'sponsorship', title: 'Sponsorship Manager', desc: 'Find and look after sponsors who fund cohorts, laptops, and events.' },
   { id: 'program', title: 'Program Manager', desc: 'Run cohorts: choose leads, follow teams, and review finished projects.' },
   { id: 'designer', title: 'Designer', desc: 'Design flyers, posts, and pages that make people want to join.' },
   { id: 'content', title: 'Content Strategist', desc: 'Plan what we publish and when, from learning tips to member stories.' },
