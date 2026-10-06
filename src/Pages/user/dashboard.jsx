@@ -6,7 +6,6 @@ import { useAuth } from '../../context/AuthContext';
 import { doc, getDoc, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import FindFirstProject from '../../components/FindFirstProject';
-import DashboardLearning from '../../components/DashboardLearning';
 import CompanyVerificationBanner from '../../components/CompanyVerificationBanner';
 import AIRecommendations from '../../components/AIRecommendations';
 import DiscoverTrack from '../../components/DiscoverTrack';
@@ -316,10 +315,10 @@ const DashboardOverview = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column */}
-        <div className="lg:col-span-2 space-y-6">
-          {profileData?.isCompany ? (
+      {/* Members: badges and account side by side; companies: what members are building. */}
+      <div className={profileData?.isCompany ? 'grid grid-cols-1 lg:grid-cols-3 gap-6' : ''}>
+        {profileData?.isCompany && (
+          <div className="lg:col-span-2 space-y-6">
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-1">What She Model Tech members are building</h3>
               <p className="text-gray-500 text-sm mb-4">Follow projects, badges earned, and work shipped on the Proof Wall. Open any project to see the team.</p>
@@ -328,134 +327,11 @@ const DashboardOverview = () => {
                 <Link to="/summit" className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">The Summit</Link>
               </div>
             </div>
-          ) : (
-            <>
-              {/* Join a Project CTA */}
-              <div className="bg-pink-50 border border-pink-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Join a project</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  Browse active projects looking for collaborators. Earn badges by completing
-                  real-world work.
-                </p>
-                <button
-                  onClick={() => navigate('/projects')}
-                  className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-all"
-                >
-                  Browse Projects
-                </button>
-              </div>
-
-              {/* Learning: courses in progress and completed */}
-              <DashboardLearning profile={profileData} />
-
-              {/* Ongoing Projects */}
-              <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-gray-900">Ongoing Projects</h3>
-                  <Link
-                    to="/projects/my-projects"
-                    className="text-pink-600 text-sm font-medium hover:underline"
-                  >
-                    See All
-                  </Link>
-                </div>
-                {ongoingProjects.length === 0 ? (
-                  <p className="text-gray-400 text-sm">
-                    No ongoing projects. Browse projects to get started.
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {ongoingProjects.slice(0, 1).map((project) => (
-                      <div
-                        key={project.id}
-                        className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                        onClick={() =>
-                          navigate(
-                            project.isLead && project.status === 'setup'
-                              ? `/projects/${project.id}/setup`
-                              : `/projects/${project.id}`
-                          )
-                        }
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="text-gray-900 text-sm font-medium truncate">
-                            {project.projectTitle || project.title || 'Untitled Project'}
-                          </p>
-                          <p className="text-gray-400 text-xs mt-0.5">
-                            {project.industryTrack || project.category || 'General'}
-                          </p>
-                        </div>
-                        <span
-                          className={`text-xs font-medium px-2 py-1 rounded-md flex-shrink-0 ml-3 ${
-                            project.status === 'setup'
-                              ? 'bg-amber-50 text-amber-700'
-                              : 'bg-pink-50 text-pink-700'
-                          }`}
-                        >
-                          {project.status === 'setup' ? 'Setting up' : project.isLead ? 'Leading' : 'Active'}
-                        </span>
-                      </div>
-                    ))}
-                    {ongoingProjects.length > 1 && (
-                      <Link to="/projects/my-projects" className="inline-block text-xs font-semibold text-pink-700 hover:underline">
-                        {ongoingProjects.length - 1} more ongoing
-                      </Link>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Completed Projects */}
-              <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-gray-900">Completed Projects</h3>
-                  <Link
-                    to="/project-vault"
-                    className="text-pink-600 text-sm font-medium hover:underline"
-                  >
-                    View All
-                  </Link>
-                </div>
-                {completedProjects.length === 0 ? (
-                  <p className="text-gray-400 text-sm">
-                    No completed projects yet. Finish a project to see it here.
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {completedProjects.map((project) => (
-                      <div
-                        key={project.id}
-                        className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                        onClick={() =>
-                          navigate(
-                            project.isLead && project.status === 'setup'
-                              ? `/projects/${project.id}/setup`
-                              : `/projects/${project.id}`
-                          )
-                        }
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="text-gray-900 text-sm font-medium truncate">
-                            {project.projectTitle || project.title || 'Untitled Project'}
-                          </p>
-                          <p className="text-gray-400 text-xs mt-0.5">
-                            {project.industryTrack || project.category || 'General'}
-                          </p>
-                        </div>
-                        <span className="text-xs font-medium px-2 py-1 bg-pink-50 text-pink-700 rounded-md flex-shrink-0 ml-3">
-                          Completed
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Right column */}
-        <div className="space-y-6">
+        <div className={profileData?.isCompany ? 'space-y-6' : 'grid grid-cols-1 lg:grid-cols-3 gap-6 items-start'}>
           {/* Your Badges */}
           {!profileData?.isCompany && (
             <div className="bg-white border border-gray-200 rounded-xl p-6">
