@@ -249,11 +249,8 @@ const DashboardOverview = () => {
           </div>
         ))}
 
-      {/* Cold-start: show "find your first project" only if the user has joined none yet. */}
-      {!loading &&
-        ongoingProjects.length === 0 &&
-        completedProjects.length === 0 &&
-        !profileData?.isCompany && <FindFirstProject profile={profileData} />}
+      {/* Recommended projects: for every member, new or experienced. */}
+      {!loading && !profileData?.isCompany && <FindFirstProject profile={profileData} uid={currentUser?.uid} />}
 
       {/* AI-matched projects for this member (individuals only). */}
       {/* AI-powered project matches: free for every member */}

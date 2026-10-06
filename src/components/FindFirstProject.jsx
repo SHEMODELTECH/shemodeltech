@@ -1,12 +1,12 @@
 // src/components/FindFirstProject.jsx
-// Cold-start helper: surfaces matched projects so a new member can join one in
-// their first session. Steers toward team projects with open beginner roles.
+// "Recommended projects" on every member's dashboard: the open project that
+// best fits her profile, leaving out projects she's already on.
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { matchProjects } from '../utils/matchProjects';
 
-const FindFirstProject = ({ profile }) => {
+const FindFirstProject = ({ profile, uid }) => {
   const navigate = useNavigate();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,11 +14,14 @@ const FindFirstProject = ({ profile }) => {
   useEffect(() => {
     let active = true;
     (async () => {
-      const results = await matchProjects(profile || {}, 1); // single best match - "Browse all projects" covers the rest
+      // Single best match she isn't already on; "Browse all projects" covers the rest.
+      const results = (await matchProjects(profile || {}, 10))
+        .filter((p) => !uid || (!(p.members || []).includes(uid) && p.submitterId !== uid))
+        .slice(0, 1);
       if (active) { setMatches(results); setLoading(false); }
     })();
     return () => { active = false; };
-  }, [profile]);
+  }, [profile, uid]);
 
   if (loading) {
     return (
@@ -32,10 +35,10 @@ const FindFirstProject = ({ profile }) => {
   if (!matches.length) return null;
 
   return (
-    <div className="bg-gradient-to-br from-pink-50 to-amber-50 border border-pink-200 rounded-xl p-6 mb-6">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">Find your first project</h2>
+    <div className="bg-pink-50 border border-pink-200 rounded-xl p-6 mb-6">
+      <h2 className="text-lg font-bold text-gray-900 mb-1">Recommended projects</h2>
       <p className="text-gray-600 text-sm mb-4">
-        Joining a team is the best way to start: you build real work, earn verified badges, and get discovered. Here's a project that fits your profile.
+        Joining a team is the best way to grow: you build real work, earn verified badges, and get discovered. Here's a project that fits your profile.
       </p>
 
       <div className="space-y-3">
