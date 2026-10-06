@@ -93,7 +93,13 @@ const EventCard = ({ e, reg, currentUser, onChange, highlight }) => {
   };
 
   return (
-    <article id={`e-${e.id}`} className={`rounded-2xl border p-5 sm:p-6 bg-white scroll-mt-28 ${highlight ? 'border-pink-500 ring-2 ring-pink-200' : 'border-gray-200'}`}>
+    <article id={`e-${e.id}`} className={`rounded-2xl border bg-white scroll-mt-28 overflow-hidden ${highlight ? 'border-pink-500 ring-2 ring-pink-200' : 'border-gray-200'}`}>
+      {e.imageUrl && (
+        <a href={e.imageUrl} target="_blank" rel="noopener noreferrer" className="block bg-gray-50 border-b border-gray-200" aria-label={`Open the ${e.title} flyer`}>
+          <img src={e.imageUrl} alt={`${e.title} flyer`} loading="lazy" className="w-full max-h-[480px] object-contain" />
+        </a>
+      )}
+      <div className="p-5 sm:p-6">
       <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
         <span className="px-2.5 py-1 rounded-full bg-pink-50 text-pink-700">{CATEGORY_LABEL[e.category] || 'Event'}</span>
         <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">Online</span>
@@ -161,6 +167,7 @@ const EventCard = ({ e, reg, currentUser, onChange, highlight }) => {
           )}
         </div>
       )}
+      </div>
     </article>
   );
 };
