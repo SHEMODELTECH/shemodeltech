@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase/config';
 import { signInAndReturn } from './learning/LearningLayout';
 import { alertStaff, notifyMember } from '../utils/staffAlerts';
-import ShareButtons, { shareUrl } from '../components/ShareButtons';
+import { ShareDialogButton, shareUrl } from '../components/ShareButtons';
 import {
   CATEGORY_LABEL, EVENT_CATEGORIES, cancelRegistration, downloadIcs, formatWhen, getJoinUrl, getRecordingUrl,
   getEvent, getMyRegistration, googleCalendarUrl, isListed, isPast, listPublishedEvents, myRegistrations, register,
@@ -290,8 +290,8 @@ export const EventDetail = () => {
         ) : (
           <article className="mt-4">
             {e.imageUrl && (
-              <a href={e.imageUrl} target="_blank" rel="noopener noreferrer" className="block rounded-2xl overflow-hidden border border-gray-200 bg-gray-50" aria-label="Open the flyer full size">
-                <img src={e.imageUrl} alt={`${e.title} flyer`} className="w-full max-h-[520px] object-contain" />
+              <a href={e.imageUrl} target="_blank" rel="noopener noreferrer" className="block w-fit max-w-full rounded-2xl overflow-hidden border border-gray-200" aria-label="Open the flyer full size">
+                <img src={e.imageUrl} alt={`${e.title} flyer`} className="block w-auto h-auto max-w-full max-h-[520px]" />
               </a>
             )}
             <div className="mt-5 flex flex-wrap items-center gap-2 text-xs font-bold">
@@ -300,7 +300,12 @@ export const EventDetail = () => {
               {e.status === 'cancelled' && <span className="px-2.5 py-1 rounded-full bg-red-50 text-red-700">Cancelled</span>}
               {isPast(e) && e.status !== 'cancelled' && <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">Past event</span>}
             </div>
-            <h1 className="mt-3 text-3xl font-bold text-gray-900 leading-tight">{e.title}</h1>
+            <div className="mt-3 flex items-start justify-between gap-4">
+              <h1 className="text-3xl font-bold text-gray-900 leading-tight">{e.title}</h1>
+              {e.status !== 'cancelled' && (
+                <ShareDialogButton url={shareUrl('e', e.id)} text={shareText(e)} title={e.title} className="flex-shrink-0 mt-1 inline-flex items-center gap-1 text-sm font-semibold text-gray-700 border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50" />
+              )}
+            </div>
             <p className="mt-2 font-semibold text-gray-800">{formatWhen(e)}{e.durationMins ? ` · ${e.durationMins} min` : ''}</p>
             {e.hosts && <p className="mt-1 text-gray-600">With {e.hosts}</p>}
             {e.description && <p className="mt-5 text-gray-700 leading-relaxed whitespace-pre-line">{e.description}</p>}
@@ -309,19 +314,14 @@ export const EventDetail = () => {
               <EventActions e={e} reg={reg} currentUser={currentUser} onChange={load} onRegistered={() => setJustRegistered(true)} />
             </div>
 
-            {justRegistered ? (
-              <section className="mt-8 rounded-2xl bg-pink-50 border border-pink-200 p-5" aria-label="Invite a friend">
-                <p className="font-bold text-gray-900">You’re in! Invite a friend</p>
-                <p className="text-sm text-gray-600 mt-0.5 mb-3">Events are better together. Share it with someone who’d enjoy it.</p>
-                <ShareButtons url={shareUrl('e', e.id)} text={`I’m attending "${e.title}" with She Model Tech. Join me!`} title={e.title} />
+            {justRegistered && (
+              <section className="mt-8 rounded-2xl bg-pink-50 border border-pink-200 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" aria-label="Invite a friend">
+                <div>
+                  <p className="font-bold text-gray-900">You’re in! Invite a friend</p>
+                  <p className="text-sm text-gray-600 mt-0.5">Events are better together. Share it with someone who’d enjoy it.</p>
+                </div>
+                <ShareDialogButton url={shareUrl('e', e.id)} text={`I’m attending "${e.title}" with She Model Tech. Join me!`} title={e.title} label="Invite a friend" className="flex-shrink-0 inline-flex items-center gap-1 text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg" />
               </section>
-            ) : (
-              e.status !== 'cancelled' && (
-                <section className="mt-8 border-t border-gray-200 pt-6" aria-label="Share this event">
-                  <p className="font-semibold text-gray-900 mb-3">Share this event</p>
-                  <ShareButtons url={shareUrl('e', e.id)} text={shareText(e)} title={e.title} />
-                </section>
-              )
             )}
           </article>
         )}
