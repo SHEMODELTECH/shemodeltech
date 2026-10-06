@@ -359,24 +359,3 @@ You have a passing Playwright test that opens a real browser, performs a real us
 5. What kind of problem can an E2E test catch that unit and integration tests, run separately, might miss?
 
 *Answers: 1) An E2E test drives a real browser through an actual user flow, involving the frontend, backend, and everything between them together; an integration test checks fewer pieces, typically without a real browser or full user interaction. 2) It navigates a real, automated browser to the given URL, exactly like a person typing it in and pressing enter. 3) Because the actual goal is confirming what a real user would see and experience, not just what a function internally returns. 4) E2E tests are slower to run and more expensive to maintain, since they depend on a real browser and a fully running system, so they're reserved for the most critical user flows. 5) A problem that only appears when the full system runs together, like a frontend and backend that each work fine alone but don't actually connect or communicate correctly in practice.*
-
----
-
-## Capstone: Testing at Every Layer
-
-Take one small feature, adding a task to a list, and test it at all three layers covered in this course:
-
-1. **Unit test** the core logic in isolation (Module 1), a function that validates or transforms a task before it's saved
-2. **Integration test** the API route that uses that logic (Module 2), confirming routing, middleware, and the function all work correctly together
-3. **End-to-end test** the real user flow (Module 3), typing into an actual page and confirming the task appears on screen
-4. Deliberately break something at each layer, one at a time, a wrong calculation, a missing middleware, a broken button, and confirm the correct layer of test catches it.
-
-### Course completion checklist
-- [ ] Explained the testing pyramid and why most tests should be unit tests
-- [ ] Wrote unit tests covering a normal case, an edge case, and an error case
-- [ ] Wrote integration tests confirming an API's routing and middleware work correctly together
-- [ ] Wrote an end-to-end test that drives a real browser through an actual user flow
-- [ ] Watched a test fail for the right reason, at each of the three layers
-- [ ] Tested the same small feature at all three layers, unit, integration, and end-to-end
-
-Every piece of this course exists to answer one question, repeatedly and reliably: **when I change this code, will I find out immediately if something broke, or will a user find out first?**

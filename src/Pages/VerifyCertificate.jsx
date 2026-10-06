@@ -28,10 +28,14 @@ const VerifyCertificate = () => {
     if (!certificateId) return;
     let dead = false;
     verifyCertificate(certificateId).then((r) => {
-      if (!dead) {
-        setResult(r);
-        setLoading(false);
+      if (dead) return;
+      // A course certificate: show it on its own page (it's verified there).
+      if (r && r.courseCertificateId) {
+        navigate(`/learning/certificate/${r.courseCertificateId}`, { replace: true });
+        return;
       }
+      setResult(r);
+      setLoading(false);
     });
     return () => {
       dead = true;

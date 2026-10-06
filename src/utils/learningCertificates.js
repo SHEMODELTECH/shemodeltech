@@ -3,16 +3,18 @@
 // Certificates of completion for She Model Tech Learning courses.
 //
 //   learning_certificates/{certId}
-//     uid, name, email, courseTitle, track, trackLabel, slug, level, minutes,
+//     uid, name, courseTitle, track, trackLabel, slug, level, minutes, code,
 //     issuedAt (server time), completedOn (ISO date)
 //
 // One certificate per person per course: the id is built from the member's id,
 // the track, and the course, so issuing again returns the same certificate.
-// Certificates are public to read so anyone with the link can verify them;
-// only the learner can create their own, and nobody can change one afterwards.
+// Certificates are public to read so anyone with the link can verify them.
+// Course certificates are issued by the server (api/notifications/issue-certificate)
+// after it checks the course is finished; they never store an email.
 
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { authFetch } from './authFetch';
 
 export const certificateId = (uid, track, slug) =>
   `${uid}_${track}_${slug}`.replace(/[^A-Za-z0-9_-]/g, '-').slice(0, 400);
@@ -38,28 +40,24 @@ export const getCertificate = async (id) => {
 };
 
 /**
- * Issue (or fetch) the certificate for a completed course.
- * learner: { uid, name, email }   course: { track, trackLabel, slug, title, level, minutes }
+ * Issue (or fetch) the certificate for a completed course. The server checks
+ * the course is really finished (summaries, quizzes passed with 70%+, forum
+ * reply) and issues it; the website can't create course certificates itself.
+ * Throws an Error with `.missing` (a list of what's left) when it isn't finished.
  */
-export const issueCertificate = async (learner, course) => {
-  const id = certificateId(learner.uid, course.track, course.slug);
-  const existing = await getCertificate(id);
-  if (existing) return existing;
-  const data = {
-    uid: learner.uid,
-    name: (learner.name || learner.email || 'She Model Tech learner').trim(),
-    email: learner.email || '',
-    courseTitle: course.title,
-    track: course.track,
-    trackLabel: course.trackLabel || '',
-    slug: course.slug,
-    level: course.level || '',
-    minutes: course.minutes || 0,
-    completedOn: new Date().toISOString().slice(0, 10),
-    issuedAt: serverTimestamp(),
-  };
-  await setDoc(doc(db, 'learning_certificates', id), data);
-  return { id, ...data };
+export const issueCertificate = async (course) => {
+  const res = await authFetch('/api/notifications/issue-certificate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ track: course.track, slug: course.slug }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok || !body.id) {
+    const err = new Error(body.error || 'Could not issue the certificate.');
+    err.missing = Array.isArray(body.missing) ? body.missing : [];
+    throw err;
+  }
+  return { id: body.id };
 };
 
 // LinkedIn "Add to profile" link for a certificate.
@@ -101,8 +99,7 @@ export const issueMentorCertificate = async (mentor, course) => {
   const data = {
     type: 'mentor',
     uid: mentor.uid,
-    name: (mentor.name || mentor.email || 'She Model Tech mentor').trim(),
-    email: mentor.email || '',
+    name: (mentor.name || 'She Model Tech mentor').trim(),
     courseId: course.courseId,
     courseTitle: course.title,
     track: course.track || '',
@@ -112,7 +109,7 @@ export const issueMentorCertificate = async (mentor, course) => {
     completedOn: new Date().toISOString().slice(0, 10),
     issuedAt: serverTimestamp(),
   };
-  await setDoc(doc(db, 'learning_certificates', id), data);
+  await setDoc(doc(db, 'learning_certificates', id), { ...data, code: certificateCode(id) });
   return { id, ...data };
 };
 

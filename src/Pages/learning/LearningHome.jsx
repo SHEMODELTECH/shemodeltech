@@ -6,7 +6,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
-import { CheckIcon, TRACK_ORDER, coursePartTitles, formatTime, look, useLearning } from './shared';
+import { CheckIcon, TRACK_ORDER, certificateErrorToast, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack, trackMeta, tracksWithCourses } from '../../utils/foundationsCourses';
 import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { courseRating } from '../../utils/mentorStats';
@@ -487,6 +487,7 @@ const LearningHome = ({ mine = false }) => {
                                 if (id) navigate(`/learning/certificate/${id}`);
                               } catch (e) {
                                 console.error(e);
+                                certificateErrorToast(e);
                               }
                             }}
                             className="text-sm font-semibold border border-gray-300 bg-white px-3 py-2 rounded-lg hover:bg-gray-50"

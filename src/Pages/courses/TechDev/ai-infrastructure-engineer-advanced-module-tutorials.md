@@ -448,7 +448,7 @@ iam_project/
 
 ## Advanced Module Summary
 
-These four bonus projects extend your Final Capstone platform with the infrastructure skills that have grown fastest since the original course was built:
+These four bonus projects extend the model-serving platform you built in the main course with the infrastructure skills that have grown fastest since the original course was built:
 
 | Project | Core Skill | Extends |
 |---|---|---|

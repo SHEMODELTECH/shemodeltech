@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -514,59 +514,3 @@ research_report_project/
 **Skills:** Technical Writing, Data Visualization, Research Communication, AI Research.
 
 **Deliverable:** A short, structured research report with abstract, method, visualized results, and discussion.
-
----
-
-## Final Capstone: Reproduce a Published Paper's Core Result and Write Up Findings
-
-**Goal:** Combine every project above into one complete research effort, this is an integration exercise, not a new build.
-
-**Step 1: Create your capstone notebook.**
-Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
-
-**Step 2: Choose a paper, applying Project 1's approach.**
-Pick a paper with a result ambitious enough to be meaningful, but still reproducible with the compute and time you have.
-
-**Step 3: Explore and understand the dataset (Project 2 skills).**
-Load, inspect, and visualize the data the paper uses (or a substitute if unavailable).
-
-**Step 4: Implement the core method.**
-Use Project 3 and 5's skills as needed, you may be implementing an optimization approach, a small model, or both, depending on the paper.
-
-**Step 5: Establish a baseline (Project 4 skills).**
-Before matching the paper's full method, confirm a simple baseline behaves sensibly on your data.
-
-**Step 6: Reproduce the core result and run a small ablation (Project 6 skills).**
-Try to match the paper's reported number, and test at least one component the paper claims matters.
-
-**Step 7: Write the full research report (Project 7 skills).**
-Add a **text cell** headed `capstone_report` and write your notes in it.
-Abstract, introduction, method, results (with your number vs. the paper's number), ablation findings, discussion, and limitations.
-
-**Step 8: Reflect on what matched and what didn't.**
-Write a short, honest section: where your results matched the paper, where they diverged, and your best explanation why.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── paper_summary.md
-├── data_exploration.ipynb
-├── method_implementation.py
-├── baseline_results.md
-├── ablation_results.md
-├── capstone_report.md
-```
-
-### What You Learned
-- ✅ Selecting and scoping a real published result to reproduce
-- ✅ Applying data exploration, baseline modeling, and from-scratch implementation together
-- ✅ Running a small-scale ablation on a real reproduction
-- ✅ Writing a full, honest research report on the effort
-- ✅ Reflecting critically on gaps between your results and the original
-
-### Portfolio Project
-**Published Paper Reproduction (Capstone)**: Reproduced the core result of a published research paper from scratch, including data exploration, method implementation, baseline comparison, a small ablation study, and a full research report with an honest discussion of reproduction gaps.
-**Skills:** Research Reproduction, Python, Deep Learning Fundamentals, Experimental Design, Technical Writing, AI Research.
-
-**Deliverable:** A complete capstone folder with your paper summary, implementation, results, and a full research report comparing your findings to the original paper.

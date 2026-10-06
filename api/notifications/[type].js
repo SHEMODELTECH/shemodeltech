@@ -4,6 +4,7 @@
 
 const { sendMail } = require('../../lib/mailer');
 const { requireUser } = require('../../lib/requireUser');
+const { issueCourseCertificate } = require('../../lib/courseCertificates');
 
 // Brand/config - override via Vercel env vars, never hardcode again.
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
@@ -611,6 +612,16 @@ module.exports = async function handler(req, res) {
   // Extract notification type from URL path
   const type = req.query.type;
   console.log(`📧 Notification request: ${type}`);
+
+  // Course certificates are issued here too (Vercel Hobby allows 12 functions).
+  if (type === 'issue-certificate') {
+    try {
+      return await issueCourseCertificate(req, res, user);
+    } catch (e) {
+      console.error('issue-certificate failed:', e);
+      return res.status(500).json({ error: 'Could not issue the certificate. Please try again.' });
+    }
+  }
 
   // Check environment variables
   const missing = checkEnvVars();

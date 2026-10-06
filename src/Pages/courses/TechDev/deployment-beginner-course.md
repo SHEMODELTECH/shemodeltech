@@ -299,25 +299,3 @@ You have a real, public URL serving your app, and a code push to `main` automati
 5. What's the risk of auto-deploying straight to production without CI tests running first?
 
 *Answers: 1) Servers, networking, and scaling infrastructure, letting you focus on your app instead of managing machines. 2) The exact same packaged environment that worked locally is what runs in the cloud, removing a major source of "works here, not there" bugs. 3) Actually reaching the public URL yourself and getting a real response, e.g., via `curl` or a browser. 4) The manual step of logging in and triggering a deploy yourself, it happens automatically on every merge. 5) Untested or broken code could go live immediately, reaching real users before anyone catches the problem.*
-
----
-
-## Capstone: A Fully Automated Pipeline
-
-Combine every module into one working pipeline:
-
-1. Your app is containerized with Docker (Module 1)
-2. Every pull request automatically runs tests via GitHub Actions (Module 3)
-3. Merging to `main` automatically deploys to your cloud platform (Module 4)
-4. Make one real change (any small feature or fix), and go through the entire flow: branch, code, push, pull request, watch CI pass, merge, watch it deploy automatically, verify it's live.
-
-### Course completion checklist
-- [ ] Built a Docker image and ran it as a container
-- [ ] Explained the difference between CI and CD
-- [ ] Wrote a working GitHub Actions workflow that runs tests automatically
-- [ ] Watched a pull request fail CI, then pass after a fix
-- [ ] Deployed a real app to a public URL on a cloud platform
-- [ ] Connected a code push to an automatic live deployment
-- [ ] Completed one full change end-to-end: code to pull request to CI to merge to live deployment
-
-Every piece of this course exists to answer one question, repeatedly and automatically: **can I trust that this code will behave the same way for real users as it did on my machine?**

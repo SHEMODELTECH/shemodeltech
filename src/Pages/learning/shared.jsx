@@ -159,6 +159,9 @@ const splitAnswers = (text, n) => {
 const headingNamed = (container, re) =>
   Array.from(container.querySelectorAll('h2, h3, h4, h5')).filter((x) => re.test(x.textContent.trim()));
 
+// A quiz is passed with 70% or more of its questions marked "Got it".
+export const QUIZ_PASS = 0.7;
+
 const enhanceQuizzes = (container, key, onAllDone) => {
   headingNamed(container, /^quiz\b/i).forEach((head, qi) => {
     const list = head.nextElementSibling;
@@ -175,16 +178,24 @@ const enhanceQuizzes = (container, key, onAllDone) => {
     const score = h('p', 'qz-score');
     top.appendChild(score);
     box.appendChild(top);
-    box.appendChild(h('p', 'qz-help', 'Answer in your own words first, then reveal the model answer and mark how you did.'));
+    box.appendChild(h('p', 'qz-help', `Answer in your own words first, then reveal the model answer and mark how you did. You need ${Math.round(QUIZ_PASS * 100)}% to pass.`));
 
     const marks = questions.map((_, i) => store.get(`${key}:q${qi}:${i}`));
+    const pass = h('p', 'qz-help');
     const renderScore = () => {
       const got = marks.filter((m) => m === 'y').length;
       const done = marks.filter(Boolean).length;
+      const all = done === questions.length;
+      const passed = all && got / questions.length >= QUIZ_PASS;
       score.textContent = done ? `${got} of ${questions.length} correct` : `${questions.length} questions`;
-      box.classList.toggle('qz-complete', done === questions.length);
-      // Every question answered (marked Got it or Not yet): report this quiz done.
-      if (done === questions.length && onAllDone) onAllDone(qi);
+      box.classList.toggle('qz-complete', passed);
+      pass.hidden = !all;
+      pass.textContent = passed
+        ? `Passed: ${Math.round((got / questions.length) * 100)}%.`
+        : `You need ${Math.round(QUIZ_PASS * 100)}% to pass this quiz. Review this part, answer again, and update your marks.`;
+      pass.className = passed ? 'qz-help qz-pass' : 'qz-help qz-fail';
+      // Every question answered with 70% or more marked Got it: this quiz is passed.
+      if (passed && onAllDone) onAllDone(qi);
     };
 
     questions.forEach((li, i) => {
@@ -247,6 +258,7 @@ const enhanceQuizzes = (container, key, onAllDone) => {
       box.appendChild(card);
     });
 
+    box.appendChild(pass);
     renderScore();
     list.replaceWith(box);
     ansEl.remove();
@@ -442,6 +454,12 @@ export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, on
   </div>
 );
 
+// Explain why a certificate couldn't be issued yet (what's left to do).
+export const certificateErrorToast = (e) => {
+  if (e && e.missing && e.missing.length) toast.info(`For your certificate: ${e.missing.join(' ')}`, { autoClose: 9000 });
+  else toast.error((e && e.message) || 'Could not open your certificate. Please try again.');
+};
+
 // ---- Member progress: enrolment, last part, completion ----
 export const useLearning = () => {
   const { currentUser } = useAuth();
@@ -479,7 +497,7 @@ export const useLearning = () => {
             enrolled: d.learningEnrolled || {},
             lastPart: d.learningLastPart || {},
             done: d.foundationsCourses || {},
-            quizDone: d.learningQuizDone || {},
+            quizDone: d.learningQuizPassed || {},
           });
       } catch (e) {
         console.error('Learning: profile load failed', e);
@@ -523,26 +541,13 @@ export const useLearning = () => {
   // for courses completed before certificates existed. Returns its id.
   const ensureCertificate = async (course) => {
     if (!currentUser || !course) return null;
-    const cert = await issueCertificate(
-      {
-        uid: currentUser.uid,
-        name: state.profile?.displayName || currentUser.displayName || '',
-        email: currentUser.email || '',
-      },
-      {
-        track: course.track,
-        trackLabel: trackMeta(course.track).label.replace(/\s+Foundations$/, ''),
-        slug: course.slug,
-        title: course.title,
-        level: course.level,
-        minutes: course.minutes,
-      }
-    );
+    const cert = await issueCertificate({ track: course.track, slug: course.slug });
     return cert.id;
   };
 
-  // Quizzes finished, per part: learningQuizDone.<track>.<slug>.<partId> = true.
-  // Kept on the account so progress follows the learner across devices.
+  // Quizzes passed (70%+), per part: learningQuizPassed.<track>.<slug>.<partId> = true.
+  // Kept on the account so progress follows the learner across devices. (The older
+  // learningQuizDone counted any answer; passes are re-recorded from saved marks.)
   const quizDoneFor = (track, slug) => ((state.quizDone || {})[track] || {})[slug] || {};
   const saveQuizDone = (track, slug, partId) => {
     if (!currentUser || quizDoneFor(track, slug)[partId]) return;
@@ -553,7 +558,7 @@ export const useLearning = () => {
         [track]: { ...((s.quizDone || {})[track] || {}), [slug]: { ...(((s.quizDone || {})[track] || {})[slug] || {}), [partId]: true } },
       },
     }));
-    write({ learningQuizDone: { [track]: { [slug]: { [partId]: true } } } }).catch(() => {});
+    write({ learningQuizPassed: { [track]: { [slug]: { [partId]: true } } } }).catch(() => {});
   };
 
   const markComplete = async (track, slug, course = null) => {
@@ -572,6 +577,7 @@ export const useLearning = () => {
           certMsg = ' Your certificate is ready.';
         } catch (certErr) {
           console.error('certificate', certErr);
+          if (certErr.missing && certErr.missing.length) toast.info(`For your certificate: ${certErr.missing.join(' ')}`, { autoClose: 9000 });
         }
       }
       toast.success(
@@ -663,25 +669,24 @@ export const ModuleSummary = ({ title, saved, onSave }) => {
   );
 };
 
-export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDone, next, part, onPart, onBack, onOpen, onComplete, onCertificate, quizDone = {}, onQuizDone, capstone = null, summaries = {}, onSummary = null, forum = null }) => {
+export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDone, next, part, onPart, onBack, onOpen, onComplete, onCertificate, quizDone = {}, onQuizDone, summaries = {}, onSummary = null, forum = null }) => {
   const rendered = useMemo(() => renderCourse(course.markdown), [course]);
   const parts = useMemo(() => splitParts(rendered.html, rendered.toc), [rendered]);
   const current = Math.min(Math.max(part, 0), parts.length - 1);
   const isLast = current === parts.length - 1;
-  // What must be done before the course can be completed: every quiz, and (for
-  // courses with a capstone) a capstone post in the course forum.
+  // What must be done before the course can be completed: every quiz passed
+  // (70% or more), a summary for each module, and a forum reply when others have posted.
   const quizParts = useMemo(
     () => parts.map((p, i) => ({ i, id: p.id, title: p.title, n: countQuizzes(p.html) })).filter((p) => p.n > 0),
     [parts]
   );
   const quizzesLeft = quizParts.filter((p) => !quizDone[p.id]);
-  const capstoneLeft = capstone && capstone.required && !capstone.done;
   // Every module ends with a short summary in the learner's own words.
   const summaryParts = parts.map((p, i) => ({ i, id: p.id, title: p.title })).filter((p) => p.id !== 'overview');
   const summariesLeft = onSummary ? summaryParts.filter((p) => !summaries[p.id]) : [];
   // Once other learners are talking in the forum (2+ posts or replies), reply to one.
   const forumLeft = forum && forum.required && !forum.done;
-  const canComplete = quizzesLeft.length === 0 && !capstoneLeft && summariesLeft.length === 0 && !forumLeft;
+  const canComplete = quizzesLeft.length === 0 && summariesLeft.length === 0 && !forumLeft;
   const proseRef = useRef(null);
   const [scrollPct, setScrollPct] = useState(0);
   const [listOpen, setListOpen] = useState(false);
@@ -928,7 +933,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                                 {quizzesLeft.map((p) => (
                                   <li key={p.id}>
                                     <button onClick={() => onPart(p.i)} className="text-left font-semibold text-pink-700 hover:underline">
-                                      Answer the quiz in "{p.title}"
+                                      Pass the quiz in "{p.title}" (70% or more)
                                     </button>
                                   </li>
                                 ))}
@@ -944,20 +949,6 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                                     <a href={forum.url} className="font-semibold text-pink-700 hover:underline">
                                       Reply to another learner in the course forum
                                     </a>
-                                  </li>
-                                )}
-                                {capstoneLeft && (
-                                  <li>
-                                    <a href={capstone.forumUrl} className="font-semibold text-pink-700 hover:underline">
-                                      {capstone.status === 'pending'
-                                        ? 'Your capstone is waiting for review by a mentor or She Model Tech'
-                                        : capstone.status === 'changes'
-                                        ? 'Update your capstone: changes were requested'
-                                        : 'Share your capstone project in the course forum for review'}
-                                    </a>
-                                    {capstone.status === 'changes' && capstone.note && (
-                                      <p className="text-xs text-gray-600 mt-0.5">Reviewer's note: {capstone.note}</p>
-                                    )}
                                   </li>
                                 )}
                               </ul>
@@ -1093,6 +1084,8 @@ export const FD_CSS = LABS_CSS + VIDEO_CSS + `
 .course-prose .qz-title { margin:0; font-weight:800; color:#111111; font-size:1.05rem; }
 .course-prose .qz-score { margin:0; font-size:.85rem; font-weight:700; color:var(--acc); }
 .course-prose .qz-help { margin:.25rem 0 .9rem; font-size:.88rem; color:#737373; }
+.course-prose .qz-pass { margin:.75rem 0 0; font-weight:700; color:#111111; }
+.course-prose .qz-fail { margin:.75rem 0 0; font-weight:600; color:#D41470; }
 .course-prose .qz-q { background:#fff; border:1px solid #E5E5E5; border-left:4px solid #E5E5E5; border-radius:.75rem; padding:.9rem 1rem; margin-top:.75rem; }
 .course-prose .qz-q.is-yes { border-left-color:#000000; }
 .course-prose .qz-q.is-no { border-left-color:#D41470; }

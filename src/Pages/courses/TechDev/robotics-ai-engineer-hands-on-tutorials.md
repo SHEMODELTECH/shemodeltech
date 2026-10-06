@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing. Projects use simulation so you can complete this course without owning physical robot hardware.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -618,62 +618,3 @@ behavior_testing_project/
 **Skills:** Test Engineering, Robotics Safety, Python, Statistical Evaluation.
 
 **Deliverable:** A test suite with success-rate metrics across randomized trials, failure analysis, and a verified safety safeguard.
-
----
-
-## Final Capstone: Build a Simulated Robot That Navigates to a Goal
-
-**Goal:** Combine every project above into one complete, working simulated robot, this is an integration exercise, not a new build.
-
-**Step 1: Create your capstone notebook.**
-Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
-Copy in the final versions of your code from Projects 2–7.
-
-**Step 2: Start from your Project 1 sense-think-act diagram.**
-Confirm each part (Sense, Think, Act) has a concrete implementation from the projects you've already built.
-
-**Step 3: Wire in perception (Projects 2 & 4).**
-Connect sensor filtering and object detection as the "Sense" stage, feeding processed environment data into the next stage.
-
-**Step 4: Wire in coordinate transforms (Project 3).**
-Use your transform functions to convert detected object positions into the same coordinate frame your planner expects.
-
-**Step 5: Wire in planning or learned behavior (Projects 5 & 6).**
-Use your A* planner (or trained RL agent) as the "Think" stage, producing a path or next action based on the current perceived state.
-
-**Step 6: Simulate the "Act" stage.**
-Implement a simple simulated robot that updates its position based on the planner's output, one step per sense-think-act cycle.
-
-**Step 7: Run your Project 7 test suite against the full, integrated system.**
-Reuse your success criteria and randomized trials, but now test the complete sense-think-act loop rather than isolated pieces.
-
-**Step 8: Write the final capstone report.**
-Add a **text cell** headed `capstone_report` and write your notes in it.
-Combine your Project 1 diagram, test results, and known limitations into one write-up: what you built, how reliable it is, and what you'd improve next.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── sense_think_act_diagram.png
-├── sensor_processing.py
-├── transforms.py
-├── object_detection.py
-├── path_planning.py
-├── rl_agent.py
-├── run_tests.py
-├── capstone_report.md
-```
-
-### What You Learned
-- ✅ Integrating perception, coordinate transforms, and planning into one loop
-- ✅ Simulating a robot that senses, thinks, and acts repeatedly
-- ✅ Re-running a rigorous test suite against a fully integrated system
-- ✅ Identifying integration-specific failure modes
-- ✅ Documenting a complete robotic system for a real audience
-
-### Portfolio Project
-**Simulated Navigating Robot (Capstone)**: Built a complete simulated robot combining sensor processing, object detection, coordinate transforms, and path planning into a working sense-think-act loop, validated through a rigorous randomized test suite.
-**Skills:** Robotics AI, Computer Vision, Path Planning, Reinforcement Learning, Python, Test Engineering.
-
-**Deliverable:** A complete, tested, simulated robot capable of navigating to a goal while avoiding obstacles, plus a written capstone report.

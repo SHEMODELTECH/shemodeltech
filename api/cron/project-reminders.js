@@ -26,6 +26,7 @@
 // rate limits.
 // - Fail-soft: one bad project or one bad address never aborts the run.
 
+const { certificateCode } = require('../../lib/courseRequirements');
 const admin = require('../../lib/firebaseAdmin');
 const { sendMail } = require('../../lib/mailer');
 const { pushToUids } = require('../../lib/push');
@@ -284,6 +285,18 @@ async function eventTasks(db, stats) {
  }
 }
 
+// Older certificates stored the learner's email (certificates are public), and
+// had no code for /verify. Remove the email and add the code, a batch at a time.
+// Once they're all done this is one empty query per run.
+const tidyCertificates = async (db) => {
+ const snap = await db.collection('learning_certificates').where('email', '>=', '').limit(200).get();
+ if (snap.empty) return 0;
+ const batch = db.batch();
+ snap.docs.forEach((d) => batch.update(d.ref, { email: admin.firestore.FieldValue.delete(), code: certificateCode(d.id) }));
+ await batch.commit();
+ return snap.size;
+};
+
 module.exports = async (req, res) => {
  // Vercel Cron sends a bearer token; reject anything else so this can't be
  // triggered by a stranger hitting the URL.
@@ -301,6 +314,7 @@ module.exports = async (req, res) => {
  const evStats = {};
  try {
  await eventTasks(db, evStats);
+ evStats.certificatesTidied = await tidyCertificates(db).catch((e) => { console.error('certificate tidy failed:', e.message); return 0; });
  return res.status(200).json({ ok: true, ...evStats });
  } catch (e) {
  console.error('event tasks failed:', e.message);

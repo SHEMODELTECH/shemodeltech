@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
-import { CheckIcon, CourseReader, CourseReferences, InteractivePlayer, ModuleSummary, coursePartTitles, formatTime, look, useLearning } from './shared';
+import { CheckIcon, CourseReader, certificateErrorToast, CourseReferences, InteractivePlayer, ModuleSummary, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack } from '../../utils/foundationsCourses';
 import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
@@ -132,39 +132,6 @@ const LearningCourse = ({ reading = false }) => {
       .catch(() => {});
   }, [enrolledHere, currentUser, track, slug]);
 
-  // Courses with a capstone part need a capstone post in the forum to complete.
-  const hasCapstone = !!course && course.kind !== 'interactive' && course.kind !== 'published-html' && parts.some((t) => /capstone/i.test(t));
-  // Capstone status for this learner: null (none yet), 'pending', 'changes', or 'approved'.
-  // A capstone must be approved by an admin, an editor, or the course's mentor.
-  const [capstone, setCapstone] = useState({ status: null, note: '' });
-  const reloadCapstone = useCallback(() => {
-    if (!currentUser) return;
-    getDocs(
-      query(
-        collection(db, 'course_forum', courseKey(track, slug), 'threads'),
-        where('uid', '==', currentUser.uid),
-        where('kind', '==', 'capstone'),
-        limit(20)
-      )
-    )
-      .then((snap) => {
-        const posts = snap.docs.map((d) => d.data());
-        const approved = posts.find((p) => p.review?.status === 'approved');
-        const latest = posts.sort((a, b) => (b.at?.seconds || 0) - (a.at?.seconds || 0))[0];
-        setCapstone(
-          approved
-            ? { status: 'approved', note: '' }
-            : latest
-            ? { status: latest.review?.status || 'pending', note: latest.review?.note || '' }
-            : { status: null, note: '' }
-        );
-      })
-      .catch(() => {});
-  }, [currentUser, track, slug]);
-  useEffect(() => {
-    if (hasCapstone) reloadCapstone();
-  }, [hasCapstone, reloadCapstone]);
-
   // Module summaries, saved with this learner's progress for the course.
   const progressRef = currentUser ? doc(db, 'users', currentUser.uid, 'learning_progress', slug.replace(/[/]/g, '_')) : null;
   const [summaries, setSummaries] = useState({});
@@ -251,7 +218,7 @@ const LearningCourse = ({ reading = false }) => {
       if (id) navigate(`/learning/certificate/${id}`);
     } catch (e) {
       console.error(e);
-      toast.error('Could not open your certificate. Please try again.');
+      certificateErrorToast(e);
     }
   };
 
@@ -326,7 +293,6 @@ const LearningCourse = ({ reading = false }) => {
           onCertificate={noCert ? null : openCertificate}
           quizDone={lr.quizDoneFor(track, slug)}
           onQuizDone={(partId) => lr.saveQuizDone(track, slug, partId)}
-          capstone={{ required: hasCapstone, done: capstone.status === 'approved', status: capstone.status, note: capstone.note, forumUrl: `/learning/${track}/${slug}#forum` }}
           summaries={summaries}
           onSummary={currentUser && !noCert ? saveSummary : null}
           forum={{ ...(noCert ? { required: false, done: true } : forumReq), url: `/learning/${track}/${slug}#forum` }}
@@ -518,12 +484,10 @@ const LearningCourse = ({ reading = false }) => {
             track={track}
             slug={slug}
             courseTitle={course.title}
-            hasCapstone={hasCapstone}
             authorUid={isPublished ? course.authorUid || null : null}
             canParticipate={canParticipate}
             onEnroll={joinCourse}
             displayName={lr.profile?.displayName || ''}
-            onCapstonePosted={reloadCapstone}
             onReplied={reloadForum}
             learningId={isPublished ? course.publishedId || null : null}
           />

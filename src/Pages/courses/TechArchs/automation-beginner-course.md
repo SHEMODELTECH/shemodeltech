@@ -389,25 +389,3 @@ You have a working n8n workflow triggered by a real webhook request, branching w
 5. What kind of trigger did the lab use to receive real data from outside n8n?
 
 *Answers: 1) A single step in a workflow, either a trigger or an action, n8n's equivalent of Make's "module" or Power Automate's "connector-based action." 2) Running the platform on your own server rather than a vendor's cloud, giving more control over data location and cost, particularly at scale. 3) It branches the workflow into different paths depending on whether a condition is true or false. 4) Write actual JavaScript code directly inside a workflow step, for logic too specific or complex for a built-in visual node to express. 5) A Webhook trigger, which generates a URL that an external system (or a manual curl request) can call to start the workflow with real data.*
-
----
-
-## Capstone: The Same Automation, Four Ways
-
-Build the same small automation, "when a form or sheet gets a new entry with a status, notify the right channel differently depending on that status", in each platform covered in this course:
-
-1. In Zapier (Module 1), as a straight line with a filter step controlling whether it continues
-2. In Make (Module 2), using a router to split into two branches based on status
-3. In Power Automate (Module 3), using a condition step with a "Yes" and "No" branch
-4. In n8n (Module 4), using an IF node, and add one Function node with custom logic on top
-5. Compare all four side by side. Notice the same underlying shape, trigger, branch, action, appears in every one. Only the vocabulary (Zap vs. scenario vs. flow vs. workflow) and how much custom code is possible differ.
-
-### Course completion checklist
-- [ ] Explained the trigger, action, and workflow structure shared across automation platforms
-- [ ] Built and turned on a working Zap with data mapped from its trigger
-- [ ] Built a Make scenario with a router splitting into two tested branches
-- [ ] Built a Power Automate flow with a condition branching into two actions, and checked its run history
-- [ ] Built an n8n workflow triggered by a real webhook, with an IF node and a custom Function node
-- [ ] Built the same branching automation in all four platforms, and can point out what stayed the same versus what changed
-
-Every piece of this course exists to answer one question, repeatedly and reliably: **given a repetitive "when X happens, do Y" task, can I automate it reliably, no matter which platform a business happens to already use?**

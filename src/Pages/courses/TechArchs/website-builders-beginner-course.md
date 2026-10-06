@@ -253,24 +253,3 @@ You have a published Wix site with at least one App Market app installed and pla
 5. After publishing, how did you confirm the app was actually working, not just visually placed on the page?
 
 *Answers: 1) Wix's visual, drag-and-drop page builder, where elements are placed and resized directly on the canvas. 2) Real business functionality — such as appointment scheduling or e-commerce — that plugs directly into the site's pages, beyond what's possible with basic page elements alone. 3) Wix Bookings (appointment scheduling) or Wix Stores (e-commerce) or Wix Forms (custom forms), among others. 4) Managing what the installed apps power — viewing bookings, processing orders, or checking form submissions — separate from visually editing pages. 5) By submitting a real test booking or form entry on the live site and confirming it actually appeared in the Dashboard afterward.*
-
----
-
-## Capstone: The Same Landing Page, Three Ways
-
-Build the same small landing page — "a hero section with a headline and button, a three-item feature section, and a contact form" — in each platform covered in this course:
-
-1. In Webflow (Module 1), using Div Blocks with flexbox for the feature section, and a CMS Collection if you want the features to be dynamically managed
-2. In Framer (Module 2), using Stacks for the hero and feature layout, with at least one hover Interaction on the button
-3. In Wix (Module 3), using the drag-and-drop Editor for layout, and the Wix Forms app for the contact form
-4. Compare all three side by side. Notice the same underlying shape — hero, features, contact form — appears in every one. Only the underlying model (real CSS box model vs. auto-layout Stacks vs. free-form drag-and-drop plus installed apps) and how much fine control versus built-in convenience each gives you differ.
-
-### Course completion checklist
-- [ ] Explained the canvas, element, breakpoint, and publishing concepts shared across website builders
-- [ ] Built and published a Webflow page with a combo class and a working CMS Collection List
-- [ ] Built and published a Framer page with a Stack layout and a working hover Interaction on a Component
-- [ ] Built and published a Wix site with an App Market app installed and a confirmed real submission
-- [ ] Built the same landing page in all three platforms, and can point out what stayed the same versus what changed
-- [ ] Can explain, in one sentence per platform, who each tool is best suited for
-
-Every piece of this course exists to answer one question, repeatedly and reliably: **given a business that needs a real website, can I build it visually and get it genuinely live, no matter which platform fits that business's specific needs — design control, motion and speed, or built-in business tools?**

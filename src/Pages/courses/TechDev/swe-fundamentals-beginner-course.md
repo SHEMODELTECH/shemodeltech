@@ -707,34 +707,3 @@ Your app runs inside a Docker container, and a pull request on GitHub automatica
 5. What's the real-world consequence of skipping containerization for a team of five engineers?
 
 *Answers: 1) Environment inconsistency - "works on my machine" bugs caused by different installed versions or missing dependencies. 2) Every Python package your project depends on, and its version. 3) Opening a pull request. 4) Humans forget or skip steps under deadline pressure; automation runs every time without fail. 5) Each engineer's machine could behave slightly differently, causing bugs that only show up for some people and are hard to reproduce.*
-
----
-
-## Final Capstone: Ship Your Own Feature
-
-You now have every module of TrackIt built. For your capstone, add **one new feature end-to-end**, touching every layer you learned:
-
-1. Write a one-paragraph spec for it
-2. Add any new database fields it needs
-3. Build the endpoint(s)
-4. Add authentication/ownership checks if it touches user data
-5. Write at least two tests
-6. Open a pull request with a clear description
-7. Confirm CI passes
-
-**Suggested feature to build:** recurring tasks (a task that automatically reappears every N days once marked done).
-
-### Course completion checklist
-- [ ] `SPEC.md` written
-- [ ] API running locally with at least 3 endpoints
-- [ ] Priority queue implemented and tested
-- [ ] Database models for users and tasks
-- [ ] Written answers to the three system design questions
-- [ ] Password hashing implemented and verified
-- [ ] AI quick-add schema and validation logic written
-- [ ] Test suite passing with `pytest`
-- [ ] Dockerfile builds and runs successfully
-- [ ] CI workflow passes on a pull request
-- [ ] One capstone feature shipped end-to-end
-
-Completing all ten items means you've practiced, in a real product context, every fundamental this course set out to teach - not as isolated facts, but as decisions you made while building something real.

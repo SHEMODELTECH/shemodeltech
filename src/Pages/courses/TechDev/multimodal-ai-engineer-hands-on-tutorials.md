@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -563,77 +563,3 @@ multimodal_evaluation_project/
 **Skills:** AI Evaluation, Bias Testing, Quality Assurance, Multimodal AI, Responsible AI.
 
 **Deliverable:** A structured evaluation report with scores, failure mode analysis, and bias findings for a multimodal system.
-
----
-
-## Final Capstone: Build a Multimodal Assistant
-
-**Goal:** Combine every project above into one complete assistant that accepts text, image, and audio input and returns a relevant response, this is an integration exercise, not a new build.
-
-> **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
-
-**Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
-Copy in the final versions of your code from Projects 2–7.
-
-**Step 2: Start from your Project 1 model survey.**
-Confirm your final model choices for vision-language, speech, and (if used) image generation.
-
-**Step 3: Build the core assistant endpoint.**
-```bash
-nano assistant.py
-```
-```python
-from fastapi import FastAPI, UploadFile, Form
-app = FastAPI()
-
-@app.post("/chat")
-async def multimodal_chat(text: str = Form(None), image: UploadFile = None, audio: UploadFile = None):
-    # route to the right combination of Project 2/4/5/6 logic depending on what was provided
-    ...
-```
-
-**Step 4: Wire in image understanding (Projects 2 & 4).**
-If an image is provided, run it through your captioning/Q&A logic.
-
-**Step 5: Wire in speech input and output (Project 5).**
-If audio is provided, transcribe it; if the client requests spoken responses, synthesize the answer.
-
-**Step 6: Wire in document retrieval (Project 6).**
-If the user's question could be answered from your indexed document set, retrieve relevant context before generating the final response.
-
-**Step 7: Run your Project 7 evaluation against the full assistant.**
-Reuse your test set and metrics, but now test the complete, integrated system rather than one isolated piece.
-
-**Step 8: Write the final capstone report.**
-```bash
-nano capstone_report.md
-```
-Combine your Project 1 model choices, system architecture, evaluation results, and known limitations into one document.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── model_survey.md
-├── assistant.py
-├── test_set.md
-├── evaluation_results.md
-├── capstone_report.md
-```
-
-### What You Learned
-- ✅ Combining image, audio, and text handling into one flexible endpoint
-- ✅ Wiring in retrieval-augmented responses across modalities
-- ✅ Re-running evaluation against a fully integrated system
-- ✅ Identifying integration-specific failure modes
-- ✅ Documenting a complete multimodal assistant for a real audience
-
-### Portfolio Project
-**Multimodal AI Assistant (Capstone)**: Built a complete assistant accepting text, image, and audio input, combining vision-language understanding, speech processing, and multimodal document retrieval, with a full evaluation report.
-**Skills:** Multimodal AI, FastAPI, Vision-Language Models, Speech AI, RAG, AI Evaluation.
-
-**Deliverable:** A complete, integrated multimodal assistant, plus a written capstone report connecting it back to every project that built it.

@@ -1,0 +1,632 @@
+{
+ "TechArchs/website-builders-beginner-course": {
+  "title": "Website Builders",
+  "level": "Beginner",
+  "minutes": 165,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 5,
+  "quizParts": 4
+ },
+ "TechArchs/no-code-website-cms-developer-webflow-hands-on-tutorials": {
+  "title": "No-Code Website and CMS Developer (Webflow)",
+  "level": "Project-based",
+  "minutes": 195,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 0
+ },
+ "TechArchs/internal-apps-beginner-course": {
+  "title": "Internal Apps",
+  "level": "Beginner",
+  "minutes": 165,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 5,
+  "quizParts": 4
+ },
+ "TechArchs/no-code-web-app-builder-bubble-hands-on-tutorials": {
+  "title": "No-Code Web App Builder (Bubble)",
+  "level": "Project-based",
+  "minutes": 195,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 0
+ },
+ "TechArchs/automation-beginner-course": {
+  "title": "Automation for Builders",
+  "level": "Beginner",
+  "minutes": 195,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 5
+ },
+ "TechArchs/workflow-automation-specialist-zapier-make-hands-on-tutorials": {
+  "title": "Workflow Automation Specialist (Zapier and Make)",
+  "level": "Project-based",
+  "minutes": 195,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 0
+ },
+ "TechArchs/business-workflows-module": {
+  "title": "Business Workflows",
+  "level": "Beginner",
+  "minutes": 135,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 5,
+  "quizParts": 4
+ },
+ "TechArchs/apis-module": {
+  "title": "APIs",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechArchs/CRM_Platforms_Beginner_Course_Part1": {
+  "title": "CRM Essentials with HubSpot",
+  "level": "Beginner",
+  "minutes": 90,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 3,
+  "quizParts": 0
+ },
+ "TechArchs/crm-platforms-module": {
+  "title": "CRM Platforms",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechArchs/internal-tools-builder-retool-airtable-hands-on-tutorials": {
+  "title": "Internal Tools Builder (Retool and Airtable)",
+  "level": "Project-based",
+  "minutes": 195,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 0
+ },
+ "TechArchs/deployment-module": {
+  "title": "Deployment",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechDev/swe-fundamentals-beginner-course": {
+  "title": "Build Your First Product: A Beginner's Course in Software Engineering Fundamentals",
+  "level": "Beginner",
+  "minutes": 345,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 11,
+  "quizParts": 10
+ },
+ "TechDev/python-fundamentals-beginner-course": {
+  "title": "Python Programming Fundamentals",
+  "level": "Beginner",
+  "minutes": 315,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 10,
+  "quizParts": 9
+ },
+ "TechDev/version-control-beginner-course": {
+  "title": "Version Control for Builders",
+  "level": "Beginner",
+  "minutes": 195,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 5
+ },
+ "TechDev/web-development-beginner-course": {
+  "title": "Web Development for Builders",
+  "level": "Beginner",
+  "minutes": 195,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 5
+ },
+ "TechDev/frontend-frameworks-beginner-course": {
+  "title": "Frontend Frameworks for Builders",
+  "level": "Beginner",
+  "minutes": 195,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 5
+ },
+ "TechDev/backend-development-beginner-course": {
+  "title": "Backend Development for Builders",
+  "level": "Beginner",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 7,
+  "quizParts": 6
+ },
+ "TechDev/databases-beginner-course": {
+  "title": "Databases for Builders",
+  "level": "Beginner",
+  "minutes": 285,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 10,
+  "quizParts": 8
+ },
+ "TechDev/apis-beginner-course": {
+  "title": "APIs for Builders",
+  "level": "Beginner",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 7,
+  "quizParts": 6
+ },
+ "TechDev/testing-beginner-course": {
+  "title": "Testing for Builders",
+  "level": "Beginner",
+  "minutes": 165,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 5,
+  "quizParts": 4
+ },
+ "TechDev/deployment-beginner-course": {
+  "title": "Deployment for Builders",
+  "level": "Beginner",
+  "minutes": 195,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 5
+ },
+ "TechDev/dsa-beginner-course": {
+  "title": "Data Structures & Algorithms for Builders",
+  "level": "Beginner",
+  "minutes": 420,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 13,
+  "quizParts": 12
+ },
+ "TechDev/foundational-swe-tutorial": {
+  "title": "From Fundamentals to Product: Build \"TrackIt\" While Learning Every Core Skill",
+  "level": "Project-based",
+  "minutes": 285,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 12,
+  "quizParts": 9
+ },
+ "TechDev/computer-vision": {
+  "title": "Computer Vision",
+  "level": "Advanced",
+  "minutes": 530,
+  "trackLabel": "Coding Developer",
+  "kind": "interactive",
+  "modules": 0,
+  "quizParts": 0
+ },
+ "TechDev/advanced-models": {
+  "title": "Advanced Models",
+  "level": "Advanced",
+  "minutes": 230,
+  "trackLabel": "Coding Developer",
+  "kind": "interactive",
+  "modules": 0,
+  "quizParts": 0
+ },
+ "TechDev/ai-product-engineer-hands-on-tutorials": {
+  "title": "AI Product Engineer",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/ai-automation-engineer-hands-on-tutorials": {
+  "title": "AI Automation Engineer",
+  "level": "Project-based",
+  "minutes": 195,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 7,
+  "quizParts": 0
+ },
+ "TechDev/ai-data-engineer-hands-on-tutorials": {
+  "title": "AI Data Engineer",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/ai-agent-platform-engineer-hands-on-tutorials": {
+  "title": "AI Agent Platform Engineer",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/ai-solutions-architect-hands-on-tutorials": {
+  "title": "AI Solutions Architect",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/multimodal-ai-engineer-hands-on-tutorials": {
+  "title": "Multimodal AI Engineer",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/ai-research-engineer-hands-on-tutorials": {
+  "title": "AI Research Engineer",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/robotics-ai-engineer-hands-on-tutorials": {
+  "title": "Robotics AI Engineer",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/ai-infrastructure-engineer-hands-on-tutorials": {
+  "title": "AI Infrastructure Engineer",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/ai-infrastructure-engineer-advanced-module-tutorials": {
+  "title": "AI Infrastructure Engineer — Advanced Module: Modern IaC, GPU Scheduling & Multi-Tenant IAM",
+  "level": "Advanced",
+  "minutes": 135,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 0
+ },
+ "TechDev/ai-governance-responsible-ai-engineer-hands-on-tutorials": {
+  "title": "AI Governance and Responsible AI Engineer",
+  "level": "Project-based",
+  "minutes": 225,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 0
+ },
+ "TechDev/ai-governance-advanced-module-tutorials": {
+  "title": "AI Governance and Responsible AI Engineer — Advanced Module: EU AI Act Compliance",
+  "level": "Advanced",
+  "minutes": 135,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 6,
+  "quizParts": 0
+ },
+ "TechGuard/module-1-networking": {
+  "title": "Networking Fundamentals",
+  "level": "Beginner",
+  "minutes": 135,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 5,
+  "quizParts": 4
+ },
+ "TechGuard/module-2-operating-systems": {
+  "title": "Operating Systems",
+  "level": "Beginner",
+  "minutes": 75,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 3,
+  "quizParts": 2
+ },
+ "TechGuard/module-3-ethical-hacking": {
+  "title": "Ethical Hacking",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechGuard/module-4-cryptography": {
+  "title": "Cryptography",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechGuard/module-5-identity-access-management": {
+  "title": "Identity and Access Management",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechGuard/module-6-cloud-security": {
+  "title": "Cloud Security",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechGuard/module-7-security-monitoring": {
+  "title": "Security Monitoring",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechGuard/module-8-secure-coding": {
+  "title": "Secure Coding",
+  "level": "Beginner",
+  "minutes": 75,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 3,
+  "quizParts": 2
+ },
+ "TechGuard/module-9-devops-security": {
+  "title": "DevOps Security",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechLeads/module-1-techleads-business-leadership": {
+  "title": "Business & Leadership",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Non-Technical Roles",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechLeads/module-2-strategy-business-analysis-stakeholder-management": {
+  "title": "Strategy, Business Analysis & Stakeholder Management",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Non-Technical Roles",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechLeads/module-3-change-management-financial-literacy-sales-partnerships-technology-awareness": {
+  "title": "Change Management, Financial Literacy, Sales & Partnerships, and Technology Awareness",
+  "level": "Beginner",
+  "minutes": 135,
+  "trackLabel": "Non-Technical Roles",
+  "kind": "markdown",
+  "modules": 5,
+  "quizParts": 4
+ },
+ "TechLeads/module-4-technical-writing": {
+  "title": "Technical Writing",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Non-Technical Roles",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechLeads/module-5-research-for-tech-teams": {
+  "title": "Research for Tech Teams",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Non-Technical Roles",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechLeads/module-6-communication-and-delivery": {
+  "title": "Communication and Delivery",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Non-Technical Roles",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechPO/product-fundamentals-module": {
+  "title": "Product Fundamentals",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Product / Project Owner",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechPO/user-research-module": {
+  "title": "User Research",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Product / Project Owner",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechPO/product-design-module": {
+  "title": "Product Design",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Product / Project Owner",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechPO/agile-module": {
+  "title": "Agile",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Product / Project Owner",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechPO/project-management-module": {
+  "title": "Project Management",
+  "level": "Beginner",
+  "minutes": 135,
+  "trackLabel": "Product / Project Owner",
+  "kind": "markdown",
+  "modules": 5,
+  "quizParts": 4
+ },
+ "TechPO/product-project-management": {
+  "title": "Product & Project Management",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Product / Project Owner",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechQA/00-course-overview": {
+  "title": "Start Here: How the Quality Tester Track Works",
+  "level": "Beginner",
+  "minutes": 30,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 0
+ },
+ "TechQA/module-1-qa-fundamentals": {
+  "title": "QA Fundamentals",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechQA/module-2-manual-testing": {
+  "title": "Manual Testing",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechQA/module-3-automation-testing": {
+  "title": "Automation Testing",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechQA/module-4-api-testing": {
+  "title": "API Testing",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechQA/module-5-performance-testing": {
+  "title": "Performance Testing",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechQA/module-6-mobile-testing": {
+  "title": "Mobile Testing",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechQA/module-7-security-testing": {
+  "title": "Security Testing",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "TechQA/module-8-cicd-testing": {
+  "title": "CI/CD Testing",
+  "level": "Beginner",
+  "minutes": 105,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 4,
+  "quizParts": 3
+ },
+ "company/understanding-badges-and-ratings": {
+  "title": "Understanding Badges: A Guide for Companies",
+  "level": "Beginner",
+  "minutes": 30,
+  "trackLabel": "Understanding Badges",
+  "kind": "markdown",
+  "modules": 5,
+  "quizParts": 0
+ },
+ "start/how-she-model-tech-works": {
+  "title": "Start Here: How She Model Tech Works",
+  "level": "Beginner",
+  "minutes": 15,
+  "trackLabel": "Start here",
+  "kind": "markdown",
+  "modules": 10,
+  "quizParts": 2
+ }
+}

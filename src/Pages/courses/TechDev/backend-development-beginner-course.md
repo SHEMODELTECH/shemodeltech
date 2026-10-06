@@ -569,27 +569,3 @@ You have a running FastAPI app, viewed its automatically generated documentation
 5. What is FastAPI's main selling point, compared to Flask's more manual approach?
 
 *Answers: 1) The expected shape of incoming data, its field names and their types. 2) FastAPI automatically responds with a clear validation error describing what was wrong, without any manual checking code. 3) Interactive, browsable API documentation, generated directly from the code's routes and type declarations. 4) It tells FastAPI to parse that URL segment as an integer automatically, and to validate that it actually is one. 5) Automatic request validation and free, always up to date documentation, both driven directly by Python type hints, reducing manual, repetitive validation and documentation work.*
-
----
-
-## Capstone: The Same API, Five Ways
-
-Build the same small task API (list tasks, get one task, create a task) in each backend covered in this course:
-
-1. In Node.js (Module 1), using the built-in `http` module and manual routing
-2. In Express (Module 2), using clean route definitions and middleware
-3. In Flask (Module 3), using decorators and a minimal setup
-4. In Django (Module 4), using a real model, the ORM, and the automatic admin interface
-5. In FastAPI (Module 5), using typed models and automatic validation
-6. Test all five with the same `curl` commands, and compare the responses. Notice the underlying request and response cycle from Module 0 is identical in every one, only the language, syntax, and amount of built-in structure differ.
-
-### Course completion checklist
-- [ ] Explained the request and response cycle, and what an API is
-- [ ] Built a raw Node.js server that routes based on URL
-- [ ] Built an Express API with GET and POST routes
-- [ ] Built a Flask API producing the same behavior as the Express version
-- [ ] Built a Django model, used the automatic admin interface, and exposed the data through an API route
-- [ ] Built a FastAPI app with automatic request validation and explored its generated documentation
-- [ ] Tested all five backends with the same requests and compared the results
-
-Every piece of this course exists to answer one question, repeatedly and reliably: **given the same data and the same request, can I build a backend that handles it correctly, no matter which language or framework a project happens to use?**

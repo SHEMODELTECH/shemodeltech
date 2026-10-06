@@ -802,18 +802,16 @@ service cloud.firestore {
  // link can verify one; a learner can only issue their own; never edited.
  match /learning_certificates/{id} {
  allow read: if true;
- // Course certificates: a learner issues their own.
- allow create: if isSignedIn()
- && request.resource.data.uid == myUid()
- && id.matches(myUid() + '_.*')
- && request.resource.data.get('type', 'course') != 'mentor';
+ // Course certificates are issued only by the server (it checks the course
+ // is finished), so the website can't create them.
  // Mentor certificates: issued by an admin or editor at approval, or by the
  // mentor for their own course once it is published.
- allow create: if isReviewer() && request.resource.data.type == 'mentor';
+ allow create: if isReviewer() && request.resource.data.type == 'mentor' && !('email' in request.resource.data);
  allow create: if isSignedIn()
  && request.resource.data.type == 'mentor'
  && request.resource.data.uid == myUid()
  && id.matches(myUid() + '_mentor_.*')
+ && !('email' in request.resource.data)
  && get(/databases/$(database)/documents/teacher_courses/$(request.resource.data.courseId)).data.createdBy.uid == myUid()
  && get(/databases/$(database)/documents/teacher_courses/$(request.resource.data.courseId)).data.get('published', null) != null;
  allow update: if false;

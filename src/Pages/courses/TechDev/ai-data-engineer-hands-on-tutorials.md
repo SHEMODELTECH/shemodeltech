@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -569,67 +569,3 @@ data_validation_project/
 **Skills:** Data Quality Engineering, Data Validation, Statistical Monitoring, Python, AI Data Engineering.
 
 **Deliverable:** A validation module wired into your pipeline, tested against intentionally broken data.
-
----
-
-## Final Capstone: Build an End-to-End Data Pipeline for an AI Application
-
-**Goal:** Combine every project above into one working system, this is an integration exercise, not a new build.
-
-**Step 1: Create your capstone notebook.**
-Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
-Copy in the final versions of your code from Projects 2–7.
-
-**Step 2: Start from your Project 1 pipeline map.**
-Confirm each stage (ingestion, cleaning, storage, transformation, serving) has a concrete implementation from the projects you've already built.
-
-**Step 3: Wire ingestion and cleaning together (Projects 2 & 4).**
-Confirm your ETL pipeline's Extract and Transform steps run cleanly on a fresh batch of data.
-
-**Step 4: Load into your schema-designed store (Projects 3 & 4).**
-Confirm the Load step writes into the structure you designed in Project 3.
-
-**Step 5: Add validation (Project 7).**
-Wire your validation and drift checks into the pipeline so bad data is caught automatically.
-
-**Step 6: Produce labeled training data (Project 5).**
-Run your labeling and splitting logic against the stored, validated data to produce final train/val/test files.
-
-**Step 7: Index a document set for retrieval (Project 6).**
-If your use case includes unstructured text, build the vector store as the pipeline's final "serving" stage.
-
-**Step 8: Test the full pipeline end-to-end.**
-Run it against a completely fresh batch of raw data and confirm it produces validated, labeled, and (if applicable) indexed output without manual intervention.
-
-**Step 9: Write the final pipeline document.**
-Add a **text cell** headed `capstone_summary` and write your notes in it.
-Combine your Project 1 map, schema, validation rules, and final pipeline results into one write-up: what you built, how it handles new data, and how you'd know if it broke.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── use_case.md
-├── pipeline_diagram.png
-├── schema.sql
-├── etl.py
-├── validate.py
-├── prepare_labels.py
-├── build_vector_store.py
-├── train.csv / val.csv / test.csv
-├── capstone_summary.md
-```
-
-### What You Learned
-- ✅ Connecting ingestion, cleaning, storage, and transformation into one pipeline
-- ✅ Running validation and drift checks as part of a live pipeline
-- ✅ Producing labeled, split, model-ready data from raw input
-- ✅ Indexing unstructured data for retrieval
-- ✅ Testing a full pipeline end-to-end on fresh data
-- ✅ Documenting a complete data pipeline for a real audience
-
-### Portfolio Project
-**End-to-End AI Data Pipeline (Capstone)**: Designed and built a complete data pipeline for an AI application: automated ingestion and cleaning, a versioned schema-backed store, validation and drift monitoring, labeled training data preparation, and a document vector store for retrieval.
-**Skills:** ETL, SQL, Data Validation, Data Labeling, Vector Databases, Python, AI Data Engineering.
-
-**Deliverable:** A complete, tested, end-to-end data pipeline plus a written summary connecting it back to every project that built it.

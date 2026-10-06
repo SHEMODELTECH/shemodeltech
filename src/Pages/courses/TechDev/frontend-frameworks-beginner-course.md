@@ -446,25 +446,3 @@ You have a running Angular app with a generated component using two way binding,
 5. What makes Angular more "opinionated" than React or Vue?
 
 *Answers: 1) It attaches configuration, such as the template, styles, and a CSS selector, to the class that follows it, turning that class into a component. 2) `[(ngModel)]`, Angular's two way binding syntax. 3) Parentheses `(click)` bind to an event, running code in response; square brackets `[value]` bind a property, passing a value into the element. 4) It scaffolds a new component's files automatically, the class, template, styles, and registers it within the project. 5) Angular includes built-in, official tools for routing, forms, and HTTP requests as part of the framework itself, rather than leaving those choices to separate libraries the developer picks.*
-
----
-
-## Capstone: The Same App, Four Ways
-
-Build the same small "Say Hello" app (a text input and a live greeting) in each framework covered in this course:
-
-1. In React (Module 1), using `useState` and a child component receiving a prop
-2. In Next.js (Module 2), as one page in a multi page app, linked from a home page
-3. In Vue (Module 3), using `ref` and `v-model`
-4. In Angular (Module 4), using a generated component and `[(ngModel)]`
-5. Compare the four side by side. Notice the underlying idea, a value that changes, a template or JSX that reflects it automatically, is identical in every one. Only the syntax and surrounding structure differ.
-
-### Course completion checklist
-- [ ] Explained why frameworks exist and what a component is
-- [ ] Built a React component with state and a child component receiving a prop
-- [ ] Built a multi page Next.js app with file based routing and a dynamic route
-- [ ] Built a Vue component using `ref`, `v-model`, and `v-for`
-- [ ] Built an Angular component using a decorator and two way binding
-- [ ] Built the same small app in all four frameworks, and can point out what stayed the same versus what changed
-
-Every piece of this course exists to answer one question, repeatedly and reliably: **given the same interactive idea, can I recognize and build it, no matter which framework a project happens to use?**

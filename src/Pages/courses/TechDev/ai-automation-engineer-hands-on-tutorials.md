@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -532,74 +532,3 @@ monitoring_project/
 **Skills:** Observability, Error Handling, Reliability Engineering, Python, AI Automation Engineering.
 
 **Deliverable:** A monitored, retry-capable automation with tested error handling and a readable log trail.
-
----
-
-## Final Capstone: Build an End-to-End Automated Workflow
-
-**Goal:** Combine every project above into one complete, reliable automation, this is an integration exercise, not a new build.
-
-> **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
-
-**Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
-Copy in the final versions of your code from Projects 2–6.
-
-**Step 2: Start from your Project 1 opportunity map.**
-Confirm the workflow you're automating in the capstone matches (or reasonably extends) your originally identified opportunity.
-
-**Step 3: Build the multi-step workflow (Project 3).**
-Chain the discrete steps from your workflow map into working functions.
-
-**Step 4: Add the AI decision step (Project 4).**
-Wire in the narrow, well-scoped AI judgment for whichever step needs it.
-
-**Step 5: Add agentic tool selection where appropriate (Project 5).**
-If your workflow benefits from the AI choosing between multiple possible actions, integrate your Project 5 agent pattern.
-
-**Step 6: Add monitoring and error handling (Project 6).**
-Wire in structured logging, retries, health checks, and failure alerting across the whole workflow.
-
-**Step 7: Schedule the complete workflow (Project 2 skills).**
-```bash
-crontab -e
-```
-Add a cron entry running the full, integrated workflow on the schedule appropriate to your Project 1 use case.
-
-**Step 8: Run an end-to-end test and review the logs.**
-Trigger a full run (or wait for the schedule) and confirm the workflow completes, the AI steps behave as expected, and the log file tells a clear story.
-
-**Step 9: Write the final automation document.**
-```bash
-nano capstone_summary.md
-```
-Combine your Project 1 opportunity summary, time savings estimate, architecture of the final workflow, and a log excerpt showing a successful run.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── opportunity_summary.md
-├── workflow.py
-├── ai_decision.py
-├── agent.py
-├── monitored_automation.py
-├── automation.log
-├── capstone_summary.md
-```
-
-### What You Learned
-- ✅ Connecting opportunity assessment, workflow design, AI decisions, and monitoring into one system
-- ✅ Scheduling a fully integrated, AI-augmented workflow
-- ✅ Verifying end-to-end behavior through a real test run
-- ✅ Reading and validating a complete log trail
-- ✅ Documenting an automation for a real audience
-
-### Portfolio Project
-**End-to-End AI-Augmented Automation (Capstone)**: Built a complete automated workflow: identified from a real opportunity assessment, chaining multiple steps, incorporating an AI decision/agent step, and running reliably on a schedule with full monitoring and error handling.
-**Skills:** Python, LLM APIs, Tool Calling, Workflow Automation, Reliability Engineering, AI Automation Engineering.
-
-**Deliverable:** A live, scheduled, monitored, AI-augmented automation, plus a written summary connecting it back to every project that built it.

@@ -254,24 +254,3 @@ You have a published Softr portal connected to a real Airtable base, showing a l
 5. How did the lab keep the admin page separate from what regular client users can see?
 
 *Answers: 1) A pre-built page component — like a List, Table, Chart, or Form — that binds directly to data from a connected source such as Airtable. 2) Because a View is a specific, filtered/sorted way of looking at the data, letting you control what's shown from within Airtable itself rather than rebuilding that filtering logic in Softr. 3) A defined set of logged-in users and what pages or data they're allowed to access. 4) Matching a record's field, like an email address, to the logged-in user, so that user only sees their own record instead of every record in the table. 5) By restricting the admin page to a separate "Admin" User Group, distinct from the client-facing User Group used for record-owned data.*
-
----
-
-## Capstone: The Same Internal App, Three Ways
-
-Build the same small internal app — "a task tracker where each signed-in user only sees their own tasks, can mark a task complete, and a separate admin view shows every task from every user" — in each platform covered in this course:
-
-1. In Glide (Module 1), using a Google Sheet as the Table, Row Owners for per-user filtering, and a "Mark Complete" action
-2. In Bubble (Module 2), using a custom `Task` Data Type, a Privacy Rule for per-user restriction, and a Workflow to mark a Task complete
-3. In Softr (Module 3), using an Airtable base, record ownership via a User Group for per-user filtering, and a separate admin-only page
-4. Compare all three side by side. Notice the same underlying shape — data source, per-user filtering, an action that writes back, and a separate admin view — appears in every one. Only the underlying data model (a spreadsheet's rows, Bubble's own database, or Airtable's records) and how much custom logic each platform allows differ.
-
-### Course completion checklist
-- [ ] Explained the data source, screen, action, and permissions concepts shared across internal app builders
-- [ ] Built and published a Glide app with Row Owners and a working "Set Column Values" action writing back to a Google Sheet
-- [ ] Built a Bubble app with a custom Data Type, a Workflow creating real Things, a Conditional, and a Privacy Rule
-- [ ] Built and published a Softr portal with record ownership via a User Group and a separate admin-only page
-- [ ] Built the same per-user task tracker in all three platforms, and can point out what stayed the same versus what changed
-- [ ] Can explain, in one sentence per platform, who each tool is best suited for
-
-Every piece of this course exists to answer one question, repeatedly and reliably: **given a team that needs a real internal tool with proper permissions, can I build it on the data source that already exists — a spreadsheet, a custom database, or Airtable — no matter which platform fits the job?**

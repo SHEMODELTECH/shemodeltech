@@ -1,10 +1,11 @@
 // src/Pages/learning/CourseForum.jsx
-// A discussion forum for each course: learners ask questions, share their
-// capstone projects, and reply to each other.
+// A discussion forum for each course: learners ask questions, discuss, and
+// reply to each other. (Capstones were removed: team projects replace them.
+// Older capstone posts still show, labelled "Project share".)
 //
 //   course_forum/{courseKey}/threads/{id}
-//     uid, name, kind ('question' | 'discussion' | 'capstone'), title, body,
-//     link (optional, e.g. a capstone project URL), at, replyCount, lastAt
+//     uid, name, kind ('question' | 'discussion' | old 'capstone'), title, body,
+//     link (optional), at, replyCount, lastAt
 //   course_forum/{courseKey}/threads/{id}/replies/{rid}
 //     uid, name, body, at
 //
@@ -53,7 +54,8 @@ import { uploadDocumentToBlob, uploadImageToBlob } from '../../utils/blobStorage
 const KINDS = {
   question: { label: 'Question', cls: 'bg-pink-50 text-pink-700' },
   discussion: { label: 'Discussion', cls: 'bg-gray-100 text-gray-700' },
-  capstone: { label: 'Capstone project', cls: 'bg-pink-50 text-pink-700' },
+  // Older posts shared as capstones (capstones were removed: projects replace them).
+  capstone: { label: 'Project share', cls: 'bg-pink-50 text-pink-700' },
 };
 
 const EMOJIS = ['😀', '😂', '😊', '😍', '🤔', '😅', '🙏', '👏', '🙌', '💪', '👍', '👎', '❤️', '🔥', '🎉', '✨', '💡', '✅', '❓', '🚀', '💻', '📚', '🧠', '🌟'];
@@ -290,13 +292,6 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
       <button type="button" onClick={toggle} aria-expanded={open} className="w-full text-left p-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${k.cls}`}>{k.label}</span>
-          {t.kind === 'capstone' && (
-            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-              review?.status === 'approved' ? 'bg-green-50 text-green-700' : review?.status === 'changes' ? 'bg-amber-50 text-amber-800' : 'bg-gray-100 text-gray-600'
-            }`}>
-              {review?.status === 'approved' ? 'Approved' : review?.status === 'changes' ? 'Changes requested' : 'Waiting for review'}
-            </span>
-          )}
           <span className="text-xs text-gray-500">
             {t.name || 'Learner'} · {timeAgo(t.at)} · {count} repl{count === 1 ? 'y' : 'ies'}
           </span>
@@ -335,36 +330,6 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
               {t.link}
             </a>
           )}
-          {t.kind === 'capstone' && review?.status === 'changes' && review?.note && (
-            <p className="mt-3 text-sm bg-amber-50 border border-amber-200 rounded-lg p-3 text-gray-800">
-              <strong>Reviewer's note:</strong> {review.note}
-            </p>
-          )}
-          {t.kind === 'capstone' && canReview && me && t.uid !== me.uid && (
-            <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-3">
-              <span className="text-sm font-semibold text-gray-800 mr-auto">Review this capstone</span>
-              <button onClick={() => decide('approved')} disabled={reviewBusy || review?.status === 'approved'}
-                className="text-xs font-semibold bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50">
-                {review?.status === 'approved' ? 'Approved' : 'Approve'}
-              </button>
-              <button onClick={() => setChangesOpen(true)} disabled={reviewBusy}
-                className="text-xs font-semibold border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50">
-                Request changes
-              </button>
-            </div>
-          )}
-          <NoteDialog
-            open={changesOpen}
-            title="Request changes to this capstone"
-            description="Tell the learner what to improve. They'll see this note and can share an updated capstone."
-            placeholder="For example: add a link to your repository and describe how you tested your program."
-            required
-            confirmLabel="Send to the learner"
-            tone="primary"
-            busy={reviewBusy}
-            onCancel={() => setChangesOpen(false)}
-            onConfirm={(note) => decide('changes', note)}
-          />
           {me && (t.uid === me.uid || isStaff) && (
             <button onClick={removeThread} className="block mt-2 text-xs font-semibold text-gray-500 hover:text-red-700">Delete post</button>
           )}
@@ -515,11 +480,6 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
         </div>
         <div className="flex flex-wrap gap-2">
           <button onClick={() => startPost('question')} className="fd-btn !py-2 !px-3 text-sm">Ask a question</button>
-          {hasCapstone && (
-            <button onClick={() => startPost('capstone')} className="text-sm font-semibold border border-pink-300 text-pink-700 bg-white px-3 py-2 rounded-lg hover:bg-pink-50">
-              Share your capstone
-            </button>
-          )}
         </div>
       </div>
 
@@ -548,7 +508,7 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
         <form onSubmit={post} className="border border-gray-200 rounded-2xl p-4 bg-white mb-4 space-y-3">
           <div className="flex flex-wrap gap-2" role="group" aria-label="Type of post">
             {Object.entries(KINDS)
-              .filter(([k]) => k !== 'capstone' || hasCapstone)
+              .filter(([k]) => k !== 'capstone')
               .map(([k, v]) => (
                 <button key={k} type="button" aria-pressed={form.kind === k} onClick={() => setForm({ ...form, kind: k })}
                   className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${form.kind === k ? 'bg-gray-900 border-gray-900 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>
@@ -602,7 +562,7 @@ const CourseForum = ({ track, slug, courseTitle, hasCapstone = false, displayNam
       )}
 
       <div className="flex flex-wrap gap-2 mb-3" role="group" aria-label="Filter posts">
-        {[['all', 'All'], ['question', 'Questions'], ['discussion', 'Discussions'], ...(hasCapstone ? [['capstone', 'Capstones']] : [])].map(([v, l]) => (
+        {[['all', 'All'], ['question', 'Questions'], ['discussion', 'Discussions']].map(([v, l]) => (
           <button key={v} onClick={() => setFilter(v)} aria-pressed={filter === v}
             className={`text-xs font-semibold px-3 py-1.5 rounded-full ${filter === v ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
             {l}

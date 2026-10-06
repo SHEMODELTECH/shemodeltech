@@ -10,7 +10,7 @@
  * Per-file metadata is derived from the markdown itself:
  *   title    -> the first "# " heading
  *   summary  -> the first normal paragraph after the title
- *   projects -> count of "## " sections (projects + capstone)
+ *   projects -> count of "## " sections
  * Optional ordering: put an HTML comment "<!-- order: 2 -->" near the top of a file to
  * control where it appears in its track. Files without an order sort after ordered ones,
  * alphabetically.
@@ -19,6 +19,7 @@
 const fs = require('fs');
 const path = require('path');
 const { referencesFor } = require('./courseReferences');
+const { courseRequirements } = require('../lib/courseRequirements');
 
 const COURSES_DIR = path.join(__dirname, '..', 'src', 'Pages', 'courses');
 const OUT_FILE = path.join(__dirname, '..', 'src', 'utils', 'foundationsCoursesData.js');
@@ -250,6 +251,22 @@ const build = () => {
       `export const COURSE_COUNT = ${learnerCourses};\n` +
       `export const TRACK_COUNT = ${Object.keys(result).filter((t) => !['company', 'start'].includes(t)).length};\n`
   );
+  // What each built-in course needs for a certificate, for the server
+  // (lib/courseManifest.json is read by api/notifications/[type].js).
+  const TRACK_LABELS = {
+    TechDev: 'Coding Developer', TechArchs: 'Low/No-Code Developer', TechQA: 'Quality Tester',
+    TechGuard: 'Network & Cybersecurity', TechPO: 'Product / Project Owner', TechLeads: 'Non-Technical Roles',
+    company: 'Understanding Badges', start: 'Start here',
+  };
+  const manifest = {};
+  Object.entries(result).forEach(([track, list]) => list.forEach((c) => {
+    const req = c.kind === 'interactive' ? { modules: 0, quizParts: 0 } : courseRequirements(c.markdown);
+    manifest[`${track}/${c.slug}`] = {
+      title: c.title, level: c.level || '', minutes: c.minutes || 0, trackLabel: TRACK_LABELS[track] || track,
+      kind: c.kind || 'markdown', modules: req.modules, quizParts: req.quizParts,
+    };
+  }));
+  fs.writeFileSync(path.join(__dirname, '..', 'lib', 'courseManifest.json'), JSON.stringify(manifest, null, 1) + '\n');
   const total = Object.values(result).reduce((n, arr) => n + arr.length, 0);
   console.log(`[generateCourses] wrote ${total} course(s) across ${Object.keys(result).length} track(s).`);
 };

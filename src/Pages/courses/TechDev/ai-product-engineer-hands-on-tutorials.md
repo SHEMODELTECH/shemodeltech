@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -423,59 +423,3 @@ launch_plan_project/
 **Skills:** Product Launch Planning, Risk Management, Cross-Functional Coordination, AI Product Development.
 
 **Deliverable:** A launch plan covering scope, criteria, rollout stages, stakeholders, and post-launch monitoring.
-
----
-
-## Final Capstone: Take an AI Feature from Idea to Working Prototype
-
-**Goal:** Combine every project above into one complete, presentable body of work, this is an integration exercise, not a new build.
-
-**Step 1: Create your capstone notebook.**
-Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
-Copy in the final versions of your deliverables from Projects 1–7.
-
-**Step 2: Revisit and finalize your Project 1 brief.**
-Update it with anything learned in Project 4's discovery.
-
-**Step 3: Finalize your working prototype (Projects 2 & 3).**
-Clean up the code, fix any obvious bugs found during testing.
-
-**Step 4: Attach your discovery insights (Project 4).**
-Include a short summary of what you learned from real users and how it shaped the feature.
-
-**Step 5: Attach your designed flow (Project 5).**
-Include the happy path, error states, and uncertainty handling design.
-
-**Step 6: Attach your evaluation plan and baseline scores (Project 6).**
-
-**Step 7: Attach your launch plan (Project 7).**
-
-**Step 8: Write the capstone summary.**
-Add a **text cell** headed `capstone_summary` and write your notes in it.
-One page: the problem, the solution, what you learned, how you'd know it's working, and how you'd launch it.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── brief.md
-├── prototype.py
-├── chatbot.py
-├── discovery_doc.md
-├── flow_diagram.png
-├── evaluation_plan.md
-├── launch_plan.md
-├── capstone_summary.md
-```
-
-### What You Learned
-- ✅ Carrying one feature idea through the full product lifecycle
-- ✅ Integrating research, design, code, and evaluation into one story
-- ✅ Writing a summary that communicates the whole project at a glance
-- ✅ Presenting AI product work the way a real team would review it
-
-### Portfolio Project
-**AI Feature: Idea to Prototype (Capstone)**: Took an AI-powered feature from initial problem framing through user discovery, working prototype, UX design, evaluation planning, and launch readiness.
-**Skills:** AI Product Management, Prompt Engineering, UX Design, Evaluation Design, Technical Writing, Cross-Functional Planning.
-
-**Deliverable:** A complete, presentable capstone folder combining every artifact from Projects 1–7, with a one-page summary tying it all together.

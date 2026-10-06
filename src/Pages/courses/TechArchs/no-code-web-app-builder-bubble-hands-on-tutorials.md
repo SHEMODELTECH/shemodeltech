@@ -67,7 +67,7 @@ In the editor, click the Data tab. This is where you define what your app rememb
 A data type is a kind of thing your app stores, such as a Task or a User. It is the template for every record of that kind. Naming your data types well is really naming the nouns of your app.
 
 **Step 3: Create a Task data type.**
-Under Data types, click New type and name it `Task`. This one type will power the whole task tracker, and the capstone later.
+Under Data types, click New type and name it `Task`. This one type will power the whole task tracker.
 
 **Step 4: Understand fields.**
 A field is one piece of information on a data type, like a Task's title or due date, and each field has its own type: text, number, date, or yes/no. Choosing the right field type is what lets you sort, filter, and validate later.
@@ -325,55 +325,3 @@ Published app
 **Skills:** Responsive Design, QA Testing, Deployment, Technical Writing, No-Code Development.
 
 **Deliverable:** A live, published, responsive app with documentation and a round of user feedback.
-
----
-
-## Final Capstone: Build and Ship a Complete No-Code Web App
-
-**Goal:** Combine every project above into one original, published app. This is an integration exercise, not a new tool to learn.
-
-**Step 1: Choose your own app idea.**
-Pick something small and real, such as a habit tracker, a simple booking tool, a reading list, or a community directory. An original idea is far more compelling to an employer than a repeat of the tutorial.
-
-**Step 2: Design the data model.**
-Using your Project 2 skills, list your data types and fields before building anything, and add sample records. Every screen you build will be a view onto this model.
-
-**Step 3: Build the display screens.**
-Using your Project 3 skills, create the repeating groups and detail views that show your data, sorted sensibly.
-
-**Step 4: Add interactivity.**
-Using your Project 4 skills, build the create, edit, and delete workflows your app needs, with validation. This is the point your app becomes usable rather than just viewable.
-
-**Step 5: Add accounts and privacy.**
-Using your Project 5 skills, add sign-up and log-in, link records to their owner, and set privacy rules so the app is safe to share.
-
-**Step 6: Polish, test, and deploy.**
-Using your Project 6 skills, make it responsive, add empty states, test full journeys, and deploy to live.
-
-**Step 7: Write the capstone document.**
-Combine your app idea, data model, a list of features, the live URL, and two screenshots. This is what you hand a reviewer or employer to prove the app is real and yours.
-
-### Final Project Structure
-```text
-capstone_app (Bubble)
-│
-├── Data model (your types + fields)
-├── Display screens (repeating groups, detail views)
-├── Workflows (create / edit / delete + validation)
-├── Accounts + privacy rules
-├── Live deployment
-└── capstone_summary.md  ->  idea, model, features, URL, screenshots
-```
-
-### What You Learned
-- ✅ Turning an original idea into a designed data model
-- ✅ Building display, interactivity, accounts, and privacy end to end
-- ✅ Deploying a complete app to a live URL
-- ✅ Documenting an app for a real audience
-- ✅ Shipping a finished, original no-code product
-
-### Portfolio Project
-**Complete No-Code Web App (Capstone)**: Designed, built, secured, and published an original multi-user web app with a real data model, full CRUD, accounts, privacy rules, and a live deployment.
-**Skills:** Bubble, Data Modeling, Workflows, Authentication, Privacy, Responsive Design, Deployment, No-Code Development.
-
-**Deliverable:** A live, original, multi-user no-code web app, plus a written summary connecting it back to every project that built it.

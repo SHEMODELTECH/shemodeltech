@@ -442,27 +442,3 @@ You caught a real type error with TypeScript before it ran, and you have a layou
 5. If TypeScript catches a type mismatch, does that mean the bug would have definitely appeared for a real user, or is it usually caught earlier than that?
 
 *Answers: 1) A type system, letting you declare what kind of values variables and functions expect, so mismatches are caught before the code runs. 2) No, TypeScript is compiled into plain JavaScript first, and browsers only ever run the compiled `.js` output. 3) It applies the CSS rules inside it only when the screen matches the given condition, here, a width of 600px or less. 4) How a mobile browser sizes and scales the page, so it renders at the device's real width instead of a shrunk down desktop layout. 5) It's usually caught earlier, that's the point, the error is found while writing or compiling the code, well before it could reach a real user.*
-
----
-
-## Capstone: A Complete, Responsive Page
-
-Combine every module into one working page:
-
-1. HTML provides the structure, headings, content, a form, and a card layout (Module 1)
-2. CSS styles it, colors, spacing, hover effects, and a responsive card layout (Module 2)
-3. JavaScript adds behavior, a working form submission and an interactive counter (Module 3)
-4. TypeScript catches a mismatched type before it ever reaches the page, compiled down to the JavaScript that actually runs (Module 4)
-5. A media query makes the layout adapt when the screen narrows (Module 4)
-6. Open your finished page on both a wide browser window and a narrow one (or your phone), and confirm it looks correct, and works correctly, in both.
-
-### Course completion checklist
-- [ ] Built a real HTML page with headings, a list, an image, and a form
-- [ ] Linked and applied a separate CSS file to style that page
-- [ ] Used JavaScript to respond to a form submission and a button click
-- [ ] Compiled a TypeScript file to JavaScript
-- [ ] Caught a real type error using TypeScript before running the code
-- [ ] Added a media query that changes the layout on a narrow screen
-- [ ] Confirmed the finished page works correctly on both a wide and a narrow screen
-
-Every piece of this course exists to answer one question, repeatedly and reliably: **does this page communicate clearly, look right, and work correctly, for anyone, on any screen?**

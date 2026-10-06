@@ -940,7 +940,7 @@ const IncludedTab = ({ profile }) => {
           />
           <FeatureItem
             label="She Model Tech courses and mentor courses"
-            detail="Self-paced courses with hands-on labs, quizzes, capstone projects, and course forums, plus courses created by our mentors."
+            detail="Self-paced courses with hands-on labs, quizzes, and course forums, plus courses created by our mentors."
           />
           <FeatureItem
             label="Unlimited freelance work"
@@ -957,7 +957,7 @@ const IncludedTab = ({ profile }) => {
           <FeatureItem label="AI-powered project and job matches" detail="Personal recommendations for the projects and jobs that fit your skills and badges." />
           <FeatureItem label="Proof Wall and public profile" detail="Share progress, show your badges and certificates, and print your profile." />
           <FeatureItem label="Verifiable, LinkedIn-ready certificates" detail="Every certificate has a public verification link and an Add to LinkedIn button." />
-          <FeatureItem label="Course forums and ratings" detail="Ask questions, discuss, share capstones, and rate courses." />
+          <FeatureItem label="Course forums and ratings" detail="Ask questions, discuss, and rate courses." />
           <FeatureItem label="Become a mentor" detail="Create and publish courses, earn the Mentor label and certificates, and request volunteer service or recommendation letters." />
           <FeatureItem label="Payment protection on paid projects" detail="Every member confirms payment before a paid project closes, with a dispute process if something goes wrong." />
           <FeatureItem label="Email updates" detail="Daily and weekly digests with new projects and courses. Choose what you receive in Settings." />

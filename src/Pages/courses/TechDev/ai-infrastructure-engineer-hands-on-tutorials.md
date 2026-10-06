@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: your terminal
@@ -681,68 +681,3 @@ monitoring_alerting_project/
 **Skills:** Observability, Prometheus, Grafana, Alerting, Site Reliability Fundamentals, AI Infrastructure.
 
 **Deliverable:** A monitoring dashboard and at least one tested, working alert for your Project 6 deployment.
-
----
-
-## Final Capstone: Deploy a Scalable, Monitored Model-Serving Infrastructure on a Containerized Cloud Environment
-
-**Goal:** Combine every project above into one system, this is an integration exercise, not a new build.
-
-**Step 1: Set up your capstone project folder.**
-```bash
-mkdir capstone_project
-cd capstone_project
-```
-Copy in the final versions of your code from Projects 4, 6, and 7.
-
-**Step 2: Start from your Project 1 stack map.**
-Confirm each layer (compute, storage, networking, orchestration, serving, monitoring) has a concrete answer from the projects you've already built.
-
-**Step 3: Containerize the final version of your model API (Projects 4 & 6).**
-Rebuild and push a clean, versioned image.
-
-**Step 4: Deploy to your cloud instance/orchestrator with autoscaling configured (Projects 3 & 6).**
-Re-verify the autoscaling rule from Project 6 is active.
-
-**Step 5: Put your load balancer in front of it (Project 6).**
-Confirm traffic is distributed, not hitting one replica.
-
-**Step 6: Attach monitoring and alerting (Project 7).**
-Confirm the dashboard shows live traffic and at least one alert is configured and tested.
-
-**Step 7: Run your benchmark suite against the full system (Project 5).**
-Record final latency/throughput/cost numbers for the complete, assembled infrastructure, not just the raw model.
-
-**Step 8: Load test the whole system end-to-end.**
-Send sustained traffic and confirm: autoscaling triggers, the load balancer distributes load, and the dashboard reflects it in real time.
-
-**Step 9: Write the final infrastructure document.**
-Combine your Project 1 map, benchmark results, and monitoring dashboard screenshots into one short write-up: what you built, how it scales, how you'd know if it broke.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── main.py
-├── requirements.txt
-├── Dockerfile
-├── autoscaling_config.yaml
-├── prometheus.yml
-├── alert_rules.yaml
-├── grafana_dashboard.json
-├── benchmark_results.md
-├── stack_diagram.png
-├── infrastructure_writeup.md
-```
-
-### What You Learned
-- ✅ Integrating seven separate infrastructure projects into one system
-- ✅ Verifying an architecture map against a real, running deployment
-- ✅ End-to-end load testing across autoscaling, load balancing, and monitoring together
-- ✅ Writing infrastructure documentation for a non-technical or future audience
-
-### Portfolio Project
-**End-to-End AI Infrastructure Platform**: Designed, built, and documented a complete AI infrastructure system: a containerized, autoscaling model-serving API behind a load balancer, with full monitoring and alerting, benchmarked under real load on cloud infrastructure.
-**Skills:** Cloud Computing, Docker, Container Orchestration, Autoscaling, Load Balancing, Observability (Prometheus/Grafana), Performance Benchmarking, Technical Documentation, AI Infrastructure Engineering.
-
-**Deliverable:** A live, containerized, autoscaling, monitored model-serving system, plus a written summary connecting it back to every project that built it.

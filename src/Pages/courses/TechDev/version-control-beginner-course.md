@@ -299,27 +299,3 @@ You opened and merged a real pull request on GitHub, then deliberately caused, a
 5. Is a merge conflict a sign that something went wrong?
 
 *Answers: 1) A request to merge one branch into another, with room for discussion and review before the changes are combined, it solves the problem of changes entering the shared codebase without anyone else seeing them first. 2) Two branches changing the same lines of the same file in different ways, leaving Git unable to decide automatically which version to keep. 3) They mark the start of your current branch's version, the divider between versions, and the end of the incoming branch's version, showing both conflicting pieces so a person can choose. 4) `git add` on the resolved file, then `git commit` to finish the merge. 5) No, it's a normal, expected part of collaborating on the same files, not an error.*
-
----
-
-## Capstone: A Full Collaboration Workflow
-
-Combine every module into one working process:
-
-1. Your project is tracked locally with Git, one meaningful commit at a time (Module 1)
-2. It's backed up and shared through a GitHub repository (Module 2)
-3. New work happens on branches, never directly on `main` (Module 3)
-4. Changes are proposed through pull requests, reviewed, and merged, with any conflicts resolved by hand (Module 4)
-5. Make one real change end to end: create a branch, commit to it, push it, open a pull request, merge it, and pull the result back into your local `main`.
-
-### Course completion checklist
-- [ ] Initialized a Git repository and made multiple commits
-- [ ] Explained the difference between staging and committing
-- [ ] Connected a local repository to GitHub and pushed commits
-- [ ] Cloned a repository from GitHub
-- [ ] Created a branch and worked on it without affecting `main`
-- [ ] Opened and merged a real pull request on GitHub
-- [ ] Deliberately caused and resolved a merge conflict
-- [ ] Completed one full change end to end: branch to commit to push to pull request to merge
-
-Every piece of this course exists to answer one question, repeatedly and reliably: **can I track, share, and combine changes to this project with confidence, even when several people are touching it at once?**

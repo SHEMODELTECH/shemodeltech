@@ -357,7 +357,7 @@ human_oversight_project/
 
 ## Advanced Module Summary
 
-These four bonus projects extend your Final Capstone audit with the specific regulatory framework now driving real AI governance hiring and work in the EU and for any organization touching EU users:
+These four bonus projects extend the responsible-AI audit work from the main course with the specific regulatory framework now driving real AI governance hiring and work in the EU and for any organization touching EU users:
 
 | Project | Core Skill | Extends |
 |---|---|---|

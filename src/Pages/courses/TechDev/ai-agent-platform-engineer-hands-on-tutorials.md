@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -688,64 +688,3 @@ access_control_project/
 **Skills:** Access Control, Security Engineering, Audit Logging, Python, Agentic AI Platforms.
 
 **Deliverable:** A permission-enforced registry with a complete, reviewed audit log of allowed and denied tool calls.
-
----
-
-## Final Capstone: Build a Multi-Agent Platform
-
-**Goal:** Combine every project above into one complete platform supporting tool registration, task orchestration, monitoring, and access control, this is an integration exercise, not a new build.
-
-**Step 1: Create your capstone notebook.**
-Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
-Copy in the final versions of your code from Projects 2–7.
-
-**Step 2: Start from your Project 1 architecture diagram.**
-Confirm each component (runtime, registry, orchestration, permissions, monitoring) has a concrete implementation from the projects you've already built.
-
-**Step 3: Wire in the tool registry (Project 4).**
-Register at least 4–5 tools spanning different permission levels.
-
-**Step 4: Wire in queue-based execution (Project 5).**
-Submit agent tasks through the queue rather than running them synchronously.
-
-**Step 5: Wire in access control and audit logging (Project 7).**
-Ensure every tool call, whether allowed or denied, is checked and logged.
-
-**Step 6: Run your Project 6 evaluation suite against the full platform.**
-Reuse your test goals and criteria, but now test agents running through the complete queued, permissioned system.
-
-**Step 7: Test multi-agent, multi-user behavior.**
-Submit tasks from at least two different simulated "users" with different permission levels, and confirm the platform enforces isolation and permissions correctly for each.
-
-**Step 8: Write the final capstone report.**
-Add a **text cell** headed `capstone_report` and write your notes in it.
-Combine your Project 1 diagram, evaluation results, and audit log findings into one write-up: what you built, how reliable and secure it is, and what you'd improve next.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── architecture_diagram.png
-├── registry.py
-├── permissions.py
-├── audit_log.py
-├── agent.py
-├── tasks.py
-├── submit_task.py
-├── evaluation_report.md
-├── audit_log.jsonl
-├── capstone_report.md
-```
-
-### What You Learned
-- ✅ Integrating tool registration, queuing, permissions, and monitoring into one platform
-- ✅ Running agents through a complete, queued, permissioned execution path
-- ✅ Testing multi-agent, multi-user isolation
-- ✅ Re-running a reliability evaluation against a fully integrated system
-- ✅ Documenting a complete agent platform for a real audience
-
-### Portfolio Project
-**Multi-Agent Platform (Capstone)**: Built a complete agent platform combining a shared tool registry, queue-based task execution, permission-enforced access control, audit logging, and a reliability evaluation suite, tested across multiple simulated users.
-**Skills:** Agentic AI, Distributed Systems, Access Control, Task Queues, Python, Platform Engineering.
-
-**Deliverable:** A complete, tested, multi-agent platform, plus a written capstone report connecting it back to every project that built it.

@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -409,62 +409,3 @@ architecture_proposal_project/
 **Skills:** Executive Communication, Technical Presentation, Stakeholder Management, AI Solutions Architecture.
 
 **Deliverable:** A complete architecture proposal presentation, delivered or recorded, including a prepared response to at least one tough question.
-
----
-
-## Final Capstone: Design and Document a Complete AI Solution Architecture
-
-**Goal:** Combine every project above into one complete, presentable body of work, this is an integration exercise, not a new build.
-
-**Step 1: Create your capstone notebook.**
-Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
-Copy in the final versions of your deliverables from Projects 1–7.
-
-**Step 2: Finalize your business problem and brief (Project 1).**
-Revisit and tighten the language based on everything you've learned since.
-
-**Step 3: Finalize your architecture diagram and document (Projects 2 & 4).**
-Confirm the diagram accurately reflects your final model choice (Project 3) and all components.
-
-**Step 4: Attach your data and infrastructure design (Project 5).**
-Include storage, security, and access control decisions.
-
-**Step 5: Attach your governance and risk plan (Project 6).**
-Include risk assessment, mitigations, and incident response.
-
-**Step 6: Compile final cost estimates.**
-Combine model costs (Project 3), infrastructure costs (Project 4), and any additional governance/monitoring costs into one summary table.
-
-**Step 7: Assemble the final proposal (Project 7 format).**
-Package everything using your Project 7 presentation structure.
-
-**Step 8: Write the capstone summary.**
-Add a **text cell** headed `capstone_summary` and write your notes in it.
-One page: the business problem, the solution, the architecture, the key risks and how they're managed, and the total cost estimate.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── brief.md
-├── architecture_diagram_v2.png
-├── architecture.md
-├── comparison_matrix.md
-├── data_infra_design.md
-├── governance_risk_plan.md
-├── proposal_slides.pdf
-├── capstone_summary.md
-```
-
-### What You Learned
-- ✅ Carrying one business problem through the full architecture lifecycle
-- ✅ Integrating business, technical, data/security, and governance work into one story
-- ✅ Compiling a full cost estimate across every layer of a system
-- ✅ Writing a summary that communicates the whole project at a glance
-- ✅ Presenting architecture work the way a real stakeholder review would
-
-### Portfolio Project
-**Complete AI Solution Architecture (Capstone)**: Designed and documented an end-to-end AI solution architecture for a real business problem, including model selection, system design, data/security architecture, governance and risk planning, cost estimation, and a stakeholder-ready proposal.
-**Skills:** AI Solutions Architecture, System Design, Data & Cloud Security, Risk Management, Cost Estimation, Executive Communication.
-
-**Deliverable:** A complete, presentable capstone folder combining every artifact from Projects 1–7, with a one-page summary tying it all together.

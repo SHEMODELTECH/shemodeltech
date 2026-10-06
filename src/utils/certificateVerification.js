@@ -104,6 +104,9 @@ export const verifyCertificate = async (certificateId) => {
   try {
     const snap = await getDoc(doc(db, 'certificate_verifications', id));
     if (!snap.exists()) {
+      // Course certificates (from Learning) use the same SMT-XXXX-XXXX format.
+      const course = await getDocs(query(collection(db, 'learning_certificates'), where('code', '==', id), limit(1))).catch(() => null);
+      if (course && !course.empty) return { found: true, valid: true, courseCertificateId: course.docs[0].id };
       return {
         found: false,
         reason: 'No certificate with this ID exists in our records.',

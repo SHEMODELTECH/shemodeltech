@@ -3,7 +3,7 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
-Follow the projects in order. Each one hands off a skill or artifact to the next, ending in the Final Capstone.
+Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
 ## Before you start: set up your notebook
@@ -567,62 +567,3 @@ monitoring_dashboard_project/
 **Skills:** Flask, Python, Data Monitoring, AI Governance, Responsible AI.
 
 **Deliverable:** A working monitoring dashboard displaying flagged output counts and trends, with a defined action threshold.
-
----
-
-## Final Capstone: Conduct a Full Responsible-AI Audit
-
-**Goal:** Combine every project above into one complete audit of a sample AI system, this is an integration exercise, not a new build.
-
-**Step 1: Create your capstone notebook.**
-Create a new notebook for this project (**File → New notebook**) and name it `capstone_project`.
-Copy in the final versions of your deliverables from Projects 1–7.
-
-**Step 2: Finalize your Project 1 risk overview.**
-Update it with anything you learned from the deeper audits that followed.
-
-**Step 3: Attach your Project 3 dataset fairness audit.**
-Include representation, outcome disparity, and proxy variable findings.
-
-**Step 4: Attach your Project 4 bias evaluation.**
-Include paired-prompt test results across all tested dimensions.
-
-**Step 5: Attach your Project 5 red-team report.**
-Include boundary-hold results across all tested techniques.
-
-**Step 6: Attach your Project 6 model card and governance checklist.**
-Confirm it accurately synthesizes all findings above.
-
-**Step 7: Attach your Project 7 monitoring plan and dashboard.**
-Include the defined review threshold connecting ongoing monitoring back to governance action.
-
-**Step 8: Write the capstone audit summary.**
-Add a **text cell** headed `capstone_audit_summary` and write your notes in it.
-One page: the system audited, top risks found, evaluation results, whether you'd recommend deployment (with conditions if needed), and the ongoing monitoring plan.
-
-### Final Project Structure
-```text
-capstone_project/
-│
-├── risk_overview.md
-├── fairness_audit_report.md
-├── bias_evaluation_report.md
-├── red_team_report.md
-├── model_card.md
-├── governance_checklist.md
-├── monitoring_plan.md
-├── capstone_audit_summary.md
-```
-
-### What You Learned
-- ✅ Carrying one AI system through the full responsible-AI audit lifecycle
-- ✅ Integrating risk assessment, data audit, bias testing, and red-teaming into one story
-- ✅ Synthesizing evidence into standard governance documentation
-- ✅ Designing ongoing monitoring tied to concrete action thresholds
-- ✅ Writing a summary that communicates a full audit at a glance
-
-### Portfolio Project
-**Full Responsible-AI System Audit (Capstone)**: Conducted a complete responsible-AI audit of a sample system: risk assessment, dataset fairness audit, bias evaluation, red-team testing, model card documentation, and an ongoing monitoring plan with defined action thresholds.
-**Skills:** AI Governance, Responsible AI, Bias Testing, Red-Teaming, Risk Management, Technical Documentation.
-
-**Deliverable:** A complete, presentable capstone folder combining every artifact from Projects 1–7, with a one-page audit summary tying it all together.
