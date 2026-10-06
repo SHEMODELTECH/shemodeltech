@@ -200,12 +200,13 @@ const TeachApply = () => {
       </div>
 
       {/* FAQ: benefits and how mentoring works */}
-      <section id="faq" className="max-w-3xl mx-auto px-4 sm:px-6 pb-6 scroll-mt-24" aria-labelledby="faq-h">
+      <section id="faq" className="max-w-5xl mx-auto px-4 sm:px-6 pb-12 scroll-mt-24 text-left" aria-labelledby="faq-h">
+        <div className="max-w-3xl">
         <h2 id="faq-h" className="text-2xl font-bold text-gray-900">Frequently asked questions</h2>
         <div className="mt-5 divide-y divide-gray-200 border-y border-gray-200">
           {MENTOR_FAQ.map(([q, a], i) => (
             <details key={q} className="group py-4" open={i === 0}>
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-gray-900">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-semibold text-gray-900">
                 {q}
                 <svg className="w-5 h-5 flex-shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -214,6 +215,7 @@ const TeachApply = () => {
               <div className="mt-3 text-sm text-gray-700 leading-relaxed">{a}</div>
             </details>
           ))}
+        </div>
         </div>
       </section>
     </LearningLayout>

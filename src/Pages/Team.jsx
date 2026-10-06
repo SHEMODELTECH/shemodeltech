@@ -1,6 +1,6 @@
 // src/Pages/Team.jsx
 // Team page: the founder, why join, the roles we need, and the team application.
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -31,6 +31,14 @@ const Team = () => {
   const [f, setF] = useState(EMPTY);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  const [rolesOpen, setRolesOpen] = useState(false);
+  const [applyOpen, setApplyOpen] = useState(false);
+  useEffect(() => { if (window.location.hash === '#apply') openApply(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const openApply = (roleId) => {
+    if (roleId) setF((x) => ({ ...x, role: roleId }));
+    setApplyOpen(true);
+    setTimeout(() => document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  };
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
 
   const toggleOther = (id) => setF((x) => {
@@ -117,25 +125,41 @@ const Team = () => {
 
         {/* Roles */}
         <section className="mt-14" aria-labelledby="roles-h">
-          <h2 id="roles-h" className="text-2xl font-bold text-gray-900 mb-1">Roles we need</h2>
-          <p className="text-gray-600 text-sm mb-5">All roles are volunteer and remote.</p>
-          <ul className="divide-y divide-gray-200 border-y border-gray-200">
+          <button type="button" onClick={() => setRolesOpen((o) => !o)} aria-expanded={rolesOpen} aria-controls="roles-list"
+            className="w-full flex items-center justify-between gap-4 text-left border-y border-gray-200 py-4">
+            <span>
+              <span id="roles-h" className="block text-2xl font-bold text-gray-900">Roles we need</span>
+              <span className="block text-gray-600 text-sm mt-1">{TEAM_ROLES.length} volunteer roles, all remote. {rolesOpen ? 'Tap to hide.' : 'Tap to see them.'}</span>
+            </span>
+            <svg className={`w-6 h-6 flex-shrink-0 text-gray-400 transition-transform ${rolesOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </button>
+          {rolesOpen && (
+          <ul id="roles-list" className="divide-y divide-gray-200 border-b border-gray-200">
             {TEAM_ROLES.map((r) => (
               <li key={r.id} className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div className="min-w-0">
                   <p className="font-semibold text-gray-900">{r.title}</p>
                   <p className="text-sm text-gray-600">{r.desc}</p>
                 </div>
-                <a href="#apply" onClick={() => setF((x) => ({ ...x, role: r.id }))} className="shrink-0 text-sm font-semibold text-pink-700 hover:underline">Apply</a>
+                <button type="button" onClick={() => openApply(r.id)} className="shrink-0 text-left text-sm font-semibold text-pink-700 hover:underline">Apply</button>
               </li>
             ))}
           </ul>
+          )}
         </section>
 
         {/* Application */}
         <section id="apply" className="mt-14 scroll-mt-28" aria-labelledby="apply-h">
-          <h2 id="apply-h" className="text-2xl font-bold text-gray-900 mb-1">Apply to join the team</h2>
-          <p className="text-gray-600 text-sm mb-6">It takes about 5 minutes. We reply to every application by email.</p>
+          <button type="button" onClick={() => setApplyOpen((o) => !o)} aria-expanded={applyOpen || done} aria-controls="apply-body"
+            className="w-full flex items-center justify-between gap-4 text-left border-y border-gray-200 py-4">
+            <span>
+              <span id="apply-h" className="block text-2xl font-bold text-gray-900">Apply to join the team</span>
+              <span className="block text-gray-600 text-sm mt-1">It takes about 5 minutes. We reply to every application by email.</span>
+            </span>
+            <svg className={`w-6 h-6 flex-shrink-0 text-gray-400 transition-transform ${applyOpen || done ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </button>
+          {(applyOpen || done) && (
+          <div id="apply-body" className="mt-6">
           {done ? (
             <div className="rounded-2xl bg-pink-50 border border-pink-200 p-6">
               <p className="font-bold text-gray-900 text-lg">Thank you, your application is in!</p>
@@ -187,6 +211,8 @@ const Team = () => {
                 <p className="text-xs text-gray-500 mt-2">We use your details only to review your application and contact you about it.</p>
               </div>
             </form>
+          )}
+          </div>
           )}
         </section>
       </main>

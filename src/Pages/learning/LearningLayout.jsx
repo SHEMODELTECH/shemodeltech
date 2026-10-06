@@ -75,9 +75,6 @@ const LearningLayout = ({ children, accent, bare = false }) => {
           </div>
 
           <nav className="hidden md:flex items-center gap-1 ml-4" aria-label="Learning">
-            <NavLink to="/learning" end className={linkCls}>
-              Browse
-            </NavLink>
             {currentUser && (
               <NavLink to="/learning/my" className={linkCls}>
                 My learning
@@ -129,9 +126,6 @@ const LearningLayout = ({ children, accent, bare = false }) => {
 
         {menuOpen && (
           <div className="md:hidden border-t border-gray-100 px-4 py-3 flex flex-col gap-1 bg-white">
-            <NavLink to="/learning" end className={linkCls}>
-              Browse
-            </NavLink>
             {currentUser && (
               <NavLink to="/learning/my" className={linkCls}>
                 My learning
