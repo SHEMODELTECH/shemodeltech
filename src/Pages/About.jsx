@@ -1,12 +1,11 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import SocialLinks from '../components/SocialLinks';
 import Footer from '../components/Footer';
 
 
 const About = () => {
-  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-white">
@@ -162,12 +161,6 @@ const About = () => {
             >
               Join She Model Tech
             </Link>
-            <button
-              onClick={() => navigate('/support')}
-              className="border border-gray-300 text-gray-700 font-medium px-6 py-3 rounded-lg hover:bg-gray-50 transition-all"
-            >
-              Contact Support
-            </button>
           </div>
         </section>
       </div>
