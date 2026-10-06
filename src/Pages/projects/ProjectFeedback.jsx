@@ -44,9 +44,9 @@ const ProjectFeedback = () => {
       <h1 className="text-2xl font-bold text-gray-900">How was your project?</h1>
       <p className="text-gray-500 text-sm mt-1">{project?.projectTitle || 'Your project'} · It takes less than a minute, and helps us improve She Model Tech.</p>
       {done ? (
-        <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5">
-          <p className="font-semibold text-emerald-900">Thank you! Your feedback is in.</p>
-          <p className="text-sm text-emerald-900 mt-1">See your badge and certificate in the <Link to="/project-vault" className="underline">Project Vault</Link>, or find your <Link to="/projects" className="underline">next project</Link>.</p>
+        <div className="mt-6 bg-green-50 border border-green-200 rounded-xl p-5">
+          <p className="font-semibold text-green-900">Thank you! Your feedback is in.</p>
+          <p className="text-sm text-green-900 mt-1">See your badge and certificate in the <Link to="/project-vault" className="underline">Project Vault</Link>, or find your <Link to="/projects" className="underline">next project</Link>.</p>
         </div>
       ) : (
         <div className="mt-6 bg-white border border-gray-200 rounded-2xl p-5 space-y-5">

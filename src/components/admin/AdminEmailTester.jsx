@@ -271,7 +271,7 @@ const AdminEmailTester = () => {
         
         {/* Test Email Input */}
         <div className="mb-6">
-          <label className="block text-orange-400 font-semibold mb-3">
+          <label className="block text-amber-400 font-semibold mb-3">
             Test Email Address *
           </label>
           <input
@@ -279,7 +279,7 @@ const AdminEmailTester = () => {
             value={testEmail}
             onChange={(e) => setTestEmail(e.target.value)}
             placeholder="admin@yourcompany.com"
-            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20 transition-all duration-300"
+            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all duration-300"
           />
           <p className="text-gray-400 text-sm mt-2">
             All test emails will be sent to this address. Use your own email to verify templates and functionality.
@@ -291,7 +291,7 @@ const AdminEmailTester = () => {
           <button
             onClick={testAllEmails}
             disabled={isLoading || !testEmail}
-            className="bg-gradient-to-r from-pink-500 to-orange-600 hover:from-pink-500 hover:to-pink-600 disabled:from-gray-600 disabled:to-gray-700 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 disabled:cursor-not-allowed flex items-center"
+            className="bg-gradient-to-r from-pink-500 to-amber-600 hover:from-pink-500 hover:to-pink-600 disabled:from-gray-600 disabled:to-gray-700 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 disabled:cursor-not-allowed flex items-center"
           >
             {isLoading ? (
               <>
@@ -324,7 +324,7 @@ const AdminEmailTester = () => {
               <div className="mb-3">
                 <h5 className="text-white font-semibold text-sm mb-1">{emailTest.label}</h5>
                 <p className="text-gray-400 text-xs mb-2">{emailTest.description}</p>
-                <code className="text-orange-400 text-xs bg-black/30 px-2 py-1 rounded">
+                <code className="text-amber-400 text-xs bg-black/30 px-2 py-1 rounded">
                   {emailTest.endpoint}
                 </code>
               </div>
@@ -367,7 +367,7 @@ const AdminEmailTester = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <code className="text-orange-400 text-xs bg-black/30 px-2 py-1 rounded">
+                    <code className="text-amber-400 text-xs bg-black/30 px-2 py-1 rounded">
                       {result.endpoint}
                     </code>
                   </div>
@@ -415,9 +415,9 @@ const AdminEmailTester = () => {
           </div>
         </div>
 
-        <div className="mt-6 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
-          <h5 className="text-orange-500 font-bold mb-2">💡 Testing Tips</h5>
-          <ul className="text-orange-400 text-sm space-y-1">
+        <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+          <h5 className="text-amber-500 font-bold mb-2">💡 Testing Tips</h5>
+          <ul className="text-amber-400 text-sm space-y-1">
             <li>• Check your spam/junk folder if emails don't arrive</li>
             <li>• Test with your actual email address to verify templates</li>
             <li>• Failed tests may indicate missing API endpoints or email configuration issues</li>

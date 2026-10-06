@@ -472,8 +472,8 @@ const DashboardOverview = () => {
                         : i === 1
                           ? 'bg-pink-100 text-pink-700'
                           : i === 2
-                            ? 'bg-orange-50 text-orange-600'
-                            : 'bg-orange-100 text-orange-700'
+                            ? 'bg-amber-50 text-amber-600'
+                            : 'bg-amber-100 text-amber-700'
                     }`}
                   >
                     {level}

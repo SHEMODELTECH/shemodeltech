@@ -543,7 +543,7 @@ const MembersDirectory = () => {
       <style jsx>{`
         select option {
           background-color: white;
-          color: #111827;
+          color: #111111;
         }
       `}</style>
     </div>

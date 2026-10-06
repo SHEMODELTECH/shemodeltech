@@ -92,7 +92,7 @@ export const ClickableUserAvatar = ({
   return (
     <button
       onClick={handleClick}
-      className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-r from-pink-500 to-pink-500 flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400/50 relative flex-shrink-0 ${className}`}
+      className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-r from-pink-500 to-pink-500 flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400/50 relative flex-shrink-0 ${className}`}
       title={`View profile of ${user.displayName || user.firstName + ' ' + user.lastName || user.email?.split('@')[0] || 'user'}`}
       aria-label={`View profile of ${user.displayName || user.firstName + ' ' + user.lastName || user.email?.split('@')[0] || 'user'}`}
       {...props}
@@ -259,7 +259,7 @@ export const ClickableUserCard = ({
   return (
     <button
       onClick={handleClick}
-      className={`flex ${horizontal ? 'flex-row items-center space-x-2 sm:space-x-3' : 'flex-col items-center space-y-2'} p-2 sm:p-3 rounded-lg hover:bg-gray-100 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-400/50 cursor-pointer w-full ${className}`}
+      className={`flex ${horizontal ? 'flex-row items-center space-x-2 sm:space-x-3' : 'flex-col items-center space-y-2'} p-2 sm:p-3 rounded-lg hover:bg-gray-100 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-400/50 cursor-pointer w-full ${className}`}
       aria-label={`View profile of ${user.displayName || user.firstName + ' ' + user.lastName || user.email?.split('@')[0] || 'user'}`}
     >
       <ClickableUserAvatar
@@ -272,7 +272,7 @@ export const ClickableUserCard = ({
       <ClickableUserName
         user={user}
         showTitle={showTitle}
-        className="text-gray-900 hover:text-orange-400"
+        className="text-gray-900 hover:text-amber-400"
         onClick={(e) => e.stopPropagation()} // Prevent double click
       />
     </button>

@@ -378,7 +378,7 @@ const LearningCourse = ({ reading = false }) => {
                         )}`
                       )
                     }
-                    className="text-xs font-semibold text-indigo-700 hover:underline"
+                    className="text-xs font-semibold text-pink-700 hover:underline"
                   >
                     Ask a question
                   </button>
@@ -396,7 +396,7 @@ const LearningCourse = ({ reading = false }) => {
               <button onClick={start} className="fd-btn text-base px-6 py-3">{ctaLabel}</button>
               {done && (
                 <>
-                  <span className="flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-green-700">
                     <CheckIcon className="w-4 h-4" /> You completed this course
                   </span>
                   <button onClick={openCertificate} className="text-sm font-semibold border border-gray-300 bg-white px-4 py-2.5 rounded-lg hover:bg-gray-50">
@@ -528,12 +528,12 @@ const LearningCourse = ({ reading = false }) => {
         {isPublished && course.authorName && (
           <section className="pt-10" aria-labelledby="mentor-h">
             <h2 id="mentor-h" className="text-xl font-bold text-gray-900 mb-4">About the mentor</h2>
-            <div className="rounded-2xl border border-indigo-200 bg-white p-5">
+            <div className="rounded-2xl border border-pink-200 bg-white p-5">
               <div className="flex items-center gap-3">
                 {author?.photoURL ? (
                   <img src={author.photoURL} alt="" className="w-14 h-14 rounded-full object-cover border border-gray-100" />
                 ) : (
-                  <span className="w-14 h-14 rounded-full bg-indigo-600 text-white font-bold text-lg flex items-center justify-center" aria-hidden="true">
+                  <span className="w-14 h-14 rounded-full bg-pink-600 text-white font-bold text-lg flex items-center justify-center" aria-hidden="true">
                     {(course.authorName || 'M')[0]}
                   </span>
                 )}
@@ -577,7 +577,7 @@ const LearningCourse = ({ reading = false }) => {
                         ? navigate(`/messages?to=${course.authorUid}&text=${encodeURIComponent(`Hi ${course.authorName.split(' ')[0]}, I have a question about your course "${course.title}": `)}`)
                         : signInAndReturn(navigate, location.pathname)
                     }
-                    className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg"
+                    className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg"
                   >
                     Ask a question
                   </button>

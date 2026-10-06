@@ -20,7 +20,7 @@ const formatTimeline = (t) =>
   })[t] || t;
 
 const statusColors = {
-  submitted: 'bg-orange-500/20 text-orange-500 border-orange-500/30',
+  submitted: 'bg-amber-500/20 text-amber-500 border-amber-500/30',
   approved: 'bg-pink-600/20 text-pink-500 border-pink-600/30',
   rejected: 'bg-red-500/20 text-red-300 border-red-500/30',
   removed: 'bg-red-500/20 text-red-300 border-red-500/30',
@@ -152,7 +152,7 @@ const MyProjects = () => {
                 { label: 'Approved', value: statCounts.approved, color: 'text-pink-600' },
                 { label: 'Posted', value: statCounts.posted, color: 'text-pink-500' },
                 { label: 'Completed', value: statCounts.completed, color: 'text-pink-400' },
-                { label: 'Badges', value: statCounts.badges, color: 'text-orange-500' },
+                { label: 'Badges', value: statCounts.badges, color: 'text-amber-500' },
               ].map((s, i) => (
                 <div key={i} className="text-center">
                   <p className={`text-xl xs:text-2xl font-black ${s.color}`}>{s.value}</p>
@@ -413,7 +413,7 @@ const MyProjects = () => {
                           <h3 className="text-gray-900 font-bold text-base truncate">
                             {badge.badgeName}
                           </h3>
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-500/20 text-orange-500 border border-orange-500/30 flex-shrink-0">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500 border border-amber-500/30 flex-shrink-0">
                             {badge.badgeLevel}
                           </span>
                         </div>

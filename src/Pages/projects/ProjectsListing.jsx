@@ -436,7 +436,7 @@ const ProjectsListing = () => {
                                 ? 'bg-pink-100 text-pink-700'
                                 : 'bg-amber-100 text-gray-900'
                               : project.status === 'setup'
-                                ? 'bg-purple-100 text-gray-900'
+                                ? 'bg-pink-100 text-gray-900'
                                 : project.applicationsOpen === false
                                   ? 'bg-gray-200 text-gray-700'
                                   : 'bg-pink-100 text-gray-900'
@@ -467,7 +467,7 @@ const ProjectsListing = () => {
 
                     <div className="flex flex-wrap items-center gap-1.5 mb-3">
                       {project.isCohort && (
-                        <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[10px] font-semibold">
+                        <span className="px-2 py-0.5 bg-pink-50 text-pink-700 rounded-md text-[10px] font-semibold">
                           Cohort{project.startAt ? ` · starts ${new Date(project.startAt).toLocaleDateString()}` : ''}
                         </span>
                       )}
@@ -507,7 +507,7 @@ const ProjectsListing = () => {
                           Badge required
                         </span>
                       ) : project.status === 'setup' ? (
-                        <span className="px-3 py-1.5 bg-purple-100 text-gray-700 rounded-lg text-sm font-semibold">
+                        <span className="px-3 py-1.5 bg-pink-100 text-gray-700 rounded-lg text-sm font-semibold">
                           Ongoing application
                         </span>
                       ) : project.applicationsOpen === false ? (

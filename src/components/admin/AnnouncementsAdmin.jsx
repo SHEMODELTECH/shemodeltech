@@ -140,7 +140,7 @@ const AnnouncementsAdmin = () => {
         <input className={input} type="email" value={testTo} onChange={(e) => setTestTo(e.target.value)} placeholder={`${currentUser?.email || ''} (or your personal email)`} />
       </label>
       {testResult && (
-        <p className={`mt-2 text-sm rounded-lg px-3 py-2 ${testResult.ok ? 'bg-emerald-50 text-emerald-900' : 'bg-red-50 text-red-800'}`}>{testResult.text}</p>
+        <p className={`mt-2 text-sm rounded-lg px-3 py-2 ${testResult.ok ? 'bg-green-50 text-green-900' : 'bg-red-50 text-red-800'}`}>{testResult.text}</p>
       )}
       <div className="flex flex-wrap gap-2 mt-3">
         <button type="button" onClick={test} disabled={busy} className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg disabled:opacity-50">Send a test to me</button>

@@ -183,7 +183,7 @@ export const MentionTextarea = ({
                 key={user.uid}
                 onClick={() => selectSuggestion(user, index)}
                 className={`flex items-center space-x-2 sm:space-x-3 w-full px-2 sm:px-3 py-2 sm:py-3 text-left hover:bg-gray-100 rounded-lg transition-colors ${
-                  index === selectedSuggestionIndex ? 'bg-pink-600/20 text-orange-400' : 'text-gray-900'
+                  index === selectedSuggestionIndex ? 'bg-pink-600/20 text-amber-400' : 'text-gray-900'
                 }`}
               >
                 {/* User Avatar */}

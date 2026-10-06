@@ -91,7 +91,7 @@ const Partner = () => {
         {/* Sponsorship */}
         <div className="relative bg-white border border-gray-200 rounded-2xl p-6">
           <ComingSoonRibbon />
-          <p className="text-purple-600 font-bold text-xs uppercase tracking-wide mb-2">One-off</p>
+          <p className="text-pink-600 font-bold text-xs uppercase tracking-wide mb-2">One-off</p>
           <h2 className="text-xl font-bold text-gray-900 mb-1">Sponsor a team</h2>
           <Price
             amount={SPONSORSHIP_TIERS[0].amount}

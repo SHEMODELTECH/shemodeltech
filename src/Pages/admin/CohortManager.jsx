@@ -558,7 +558,7 @@ const CohortManager = () => {
                       ` · ${daysLeft} days left`}
                   </p>
                 </div>
-                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 uppercase">
+                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-pink-100 text-pink-700 uppercase">
                   {PHASES.find((p) => p.id === cohort.status)?.label || cohort.status}
                 </span>
               </div>
@@ -846,7 +846,7 @@ const CohortManager = () => {
                       title={ph.hint}
                       className={`text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
                         cohort.status === ph.id
-                          ? 'bg-purple-100 border-purple-300 text-purple-700'
+                          ? 'bg-pink-100 border-pink-300 text-pink-700'
                           : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
                       }`}
                     >

@@ -172,7 +172,7 @@ const TestDailyDigest = () => {
               <button 
                 onClick={testCronHeaders}
                 disabled={loading}
-                className="bg-orange-600 hover:bg-orange-700 text-white p-3 rounded-lg transition-colors disabled:opacity-50"
+                className="bg-amber-600 hover:bg-amber-700 text-white p-3 rounded-lg transition-colors disabled:opacity-50"
               >
                 ⏰ Test Cron Headers
               </button>

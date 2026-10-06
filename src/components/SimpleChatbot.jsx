@@ -311,7 +311,7 @@ const SimpleChatbot = () => {
                     </svg>
                     Start Chatting
                   </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-orange-600 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-amber-600 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
                 </button>
               </div>
 

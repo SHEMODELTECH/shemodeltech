@@ -162,7 +162,7 @@ const SubmissionForm = ({ project, onSubmit, submitting, disabled, disabledReaso
       )}
 
       {disabled && disabledReason && (
-        <p className="text-orange-700 text-xs mt-4 bg-orange-50 border border-orange-200 rounded-lg p-3">
+        <p className="text-amber-700 text-xs mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3">
           {disabledReason}
         </p>
       )}

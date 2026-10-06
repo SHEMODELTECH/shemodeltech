@@ -817,7 +817,7 @@ const ProjectDetail = () => {
                     >
                       Join
                     </button>
-                    {interested && <p className="w-full text-emerald-700 text-xs font-semibold">✓ You're on the list to join the team. We'll notify you when roles open.</p>}
+                    {interested && <p className="w-full text-green-700 text-xs font-semibold">✓ You're on the list to join the team. We'll notify you when roles open.</p>}
                     {/* The person who created this cohort can lead it directly. */}
                     {currentUser && project.createdByUid === currentUser.uid && !project.leadConfirmed && (
                       <button
@@ -844,7 +844,7 @@ const ProjectDetail = () => {
                 </p>
                 {currentUser && !memberProfile?.isCompany && (
                   interested ? (
-                    <p className="text-emerald-700 text-sm font-semibold mt-3">✓ We'll notify you when roles open.</p>
+                    <p className="text-green-700 text-sm font-semibold mt-3">✓ We'll notify you when roles open.</p>
                   ) : (
                     <button
                       onClick={joinTeam}

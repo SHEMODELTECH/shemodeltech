@@ -63,7 +63,7 @@ const LearningCertificate = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="cert-actions flex flex-wrap items-center justify-between gap-3 mb-6">
           <p className="text-sm text-gray-600">
-            <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-700">
+            <span className="inline-flex items-center gap-1.5 font-semibold text-green-700">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
@@ -144,18 +144,18 @@ const CERT_CSS = `
 .cert-logo { height:clamp(34px, 6vw, 64px); width:auto; }
 .cert-medal { height:clamp(40px, 7vw, 76px); width:auto; }
 .cert-kicker { margin-top:2%; font-size:clamp(.7rem,1.3vw,1rem); font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:var(--c); }
-.cert-small { margin-top:2.2%; font-size:clamp(.72rem,1.3vw,1rem); color:#4B5563; }
-.cert-name { margin-top:1%; font-family:'Archivo Black', Georgia, serif; font-size:clamp(1.5rem,4.6vw,3.4rem); line-height:1.1; color:#111827;
-  border-bottom:2px solid #E5E7EB; padding:0 4% 1.5%; }
-.cert-course { margin-top:1.2%; font-size:clamp(1rem,2.6vw,1.9rem); font-weight:800; color:#111827; max-width:90%; line-height:1.2; }
-.cert-meta { margin-top:1%; font-size:clamp(.7rem,1.2vw,.95rem); color:#6B7280; white-space:pre-wrap; }
+.cert-small { margin-top:2.2%; font-size:clamp(.72rem,1.3vw,1rem); color:#525252; }
+.cert-name { margin-top:1%; font-family:'Archivo Black', Georgia, serif; font-size:clamp(1.5rem,4.6vw,3.4rem); line-height:1.1; color:#111111;
+  border-bottom:2px solid #E5E5E5; padding:0 4% 1.5%; }
+.cert-course { margin-top:1.2%; font-size:clamp(1rem,2.6vw,1.9rem); font-weight:800; color:#111111; max-width:90%; line-height:1.2; }
+.cert-meta { margin-top:1%; font-size:clamp(.7rem,1.2vw,.95rem); color:#737373; white-space:pre-wrap; }
 .cert-foot { margin-top:auto; width:100%; display:grid; grid-template-columns:1fr 1fr 1fr; gap:4%; align-items:end; }
-.cert-foot-value { font-weight:700; color:#111827; font-size:clamp(.72rem,1.3vw,1rem); border-bottom:1px solid #D1D5DB; padding-bottom:.35rem; }
-.cert-foot-label { margin-top:.35rem; font-size:clamp(.6rem,1vw,.78rem); color:#6B7280; text-transform:uppercase; letter-spacing:.08em; }
+.cert-foot-value { font-weight:700; color:#111111; font-size:clamp(.72rem,1.3vw,1rem); border-bottom:1px solid #D4D4D4; padding-bottom:.35rem; }
+.cert-foot-label { margin-top:.35rem; font-size:clamp(.6rem,1vw,.78rem); color:#737373; text-transform:uppercase; letter-spacing:.08em; }
 .cert-script { font-family:'Brush Script MT','Segoe Script',cursive; font-weight:400; font-size:clamp(1rem,2vw,1.6rem); color:var(--c); }
 .cert-id { font-family:ui-monospace,Menlo,Consolas,monospace; letter-spacing:.05em; }
-.cert-org { margin-top:2.2%; font-size:clamp(.6rem,1vw,.8rem); font-weight:600; color:#4B5563; letter-spacing:.02em; }
-.cert-verify { margin-top:.6%; font-size:clamp(.55rem,.9vw,.72rem); color:#9CA3AF; }
+.cert-org { margin-top:2.2%; font-size:clamp(.6rem,1vw,.8rem); font-weight:600; color:#525252; letter-spacing:.02em; }
+.cert-verify { margin-top:.6%; font-size:clamp(.55rem,.9vw,.72rem); color:#A3A3A3; }
 @media print {
   @page { size: A4 landscape; margin: 0; }
   body * { visibility:hidden !important; }

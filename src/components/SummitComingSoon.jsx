@@ -104,7 +104,7 @@ const SummitComingSoon = ({ signedIn }) => {
               leading in tech. Free for every She Model Tech member.
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
-              <button onClick={downloadIcs} className="inline-flex items-center gap-2.5 font-bold text-base px-6 py-3.5 rounded-xl bg-white text-[#C8175D] hover:bg-[#F4E4EA]">
+              <button onClick={downloadIcs} className="inline-flex items-center gap-2.5 font-bold text-base px-6 py-3.5 rounded-xl bg-white text-[#D41470] hover:bg-[#F4E4EA]">
                 <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                 Add to calendar
               </button>
@@ -116,7 +116,7 @@ const SummitComingSoon = ({ signedIn }) => {
 
           {/* Ticket */}
           <div className="bg-white text-gray-900 rounded-[18px] overflow-hidden shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)] lg:rotate-2">
-            <div className="bg-[#C8175D] text-white px-6 py-5">
+            <div className="bg-[#D41470] text-white px-6 py-5">
               <p className="text-[13px] font-semibold opacity-85 m-0">Save the date</p>
               <p className="text-[34px] font-black tracking-[-0.03em] leading-tight mt-1 mb-0">{SUMMIT.dateLabel}</p>
               <p className="text-base font-semibold mt-1 mb-0">{SUMMIT.dayLabel}</p>
@@ -126,7 +126,7 @@ const SummitComingSoon = ({ signedIn }) => {
               <div className="grid grid-cols-3 gap-2 text-center" aria-label="Countdown">
                 {[[days, 'days'], [weeks, 'weeks'], [months, 'months']].map(([n, l]) => (
                   <div key={l} className="rounded-xl bg-[#F4E4EA] py-3">
-                    <p className="text-2xl font-black text-[#C8175D] m-0">{n}</p>
+                    <p className="text-2xl font-black text-[#D41470] m-0">{n}</p>
                     <p className="text-xs font-semibold text-gray-600 m-0">{l}</p>
                   </div>
                 ))}
@@ -135,7 +135,7 @@ const SummitComingSoon = ({ signedIn }) => {
                 <div className="flex justify-between gap-4"><dt className="text-gray-500">Format</dt><dd className="font-semibold m-0">Live, podcast-style episodes</dd></div>
                 <div className="flex justify-between gap-4"><dt className="text-gray-500">Location</dt><dd className="font-semibold m-0">To be announced</dd></div>
                 <div className="flex justify-between gap-4"><dt className="text-gray-500">Registration</dt><dd className="font-semibold m-0">Opens soon</dd></div>
-                <div className="flex justify-between gap-4"><dt className="text-gray-500">Price</dt><dd className="font-semibold m-0 text-emerald-700">Free for members</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-gray-500">Price</dt><dd className="font-semibold m-0 text-green-700">Free for members</dd></div>
               </dl>
             </div>
           </div>
@@ -157,7 +157,7 @@ const SummitComingSoon = ({ signedIn }) => {
 
       {/* ===== Why this theme ===== */}
       <section className="max-w-[1080px] mx-auto px-6 py-16">
-        <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#C8175D]">Why this theme</p>
+        <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#D41470]">Why this theme</p>
         <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mt-2 max-w-[22ch]">AI is moving faster than trust.</h2>
         <p className="mt-4 text-lg max-w-[62ch]">
           “Human in the loop” means keeping people in control of automated systems. We think it also means making sure
@@ -170,7 +170,7 @@ const SummitComingSoon = ({ signedIn }) => {
             <p className="mt-2">Entry-level roles are shifting, deepfakes blur what’s real, and the people building AI still don’t reflect the people it affects.</p>
           </div>
           <div className="rounded-2xl bg-[#F4E4EA] border border-[#EDB9CB] p-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C8175D]">The conversation</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#D41470]">The conversation</p>
             <h3 className="text-xl font-bold text-gray-900 mt-2">We’re talking about it, out loud</h3>
             <p className="mt-2">Real stories from women in the field: what worries them, what gives them hope, and what you can do next.</p>
           </div>
@@ -187,7 +187,7 @@ const SummitComingSoon = ({ signedIn }) => {
             {EPISODES.map(([title, desc], i) => (
               <li key={title} className="rounded-2xl bg-white/[0.06] border border-white/15 p-6 hover:border-[#FFB3CF]/60 transition">
                 <div className="flex items-center gap-3">
-                  <span className="w-11 h-11 rounded-full bg-[#E8317A] flex items-center justify-center text-white" aria-hidden="true">
+                  <span className="w-11 h-11 rounded-full bg-[#E0146C] flex items-center justify-center text-white" aria-hidden="true">
                     <Mic />
                   </span>
                   <p className="text-sm font-bold text-[#FFB3CF] m-0">Episode {i + 1}</p>
@@ -209,12 +209,12 @@ const SummitComingSoon = ({ signedIn }) => {
       <section className="max-w-[1080px] mx-auto px-6 py-16">
         <div className="rounded-3xl bg-white border border-[#D6D6DA] p-8 sm:p-10 grid md:grid-cols-[1fr_auto] gap-6 items-center">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#C8175D]">Between episodes</p>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#D41470]">Between episodes</p>
             <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight mt-2">Hands-on workshop sessions</h2>
             <p className="mt-3 max-w-[60ch]">Put the conversation into practice. Join guided workshops across our tech tracks and build something alongside a facilitator.</p>
             <p className="mt-2 text-sm text-gray-500">Workshop topics and facilitators will be announced soon.</p>
           </div>
-          <Link to="/learning" className="inline-flex items-center justify-center font-bold px-6 py-3.5 rounded-xl bg-[#C8175D] text-white hover:bg-[#E8317A] hover:no-underline">
+          <Link to="/learning" className="inline-flex items-center justify-center font-bold px-6 py-3.5 rounded-xl bg-[#D41470] text-white hover:bg-[#E0146C] hover:no-underline">
             Start learning now
           </Link>
         </div>
@@ -239,7 +239,7 @@ const SummitComingSoon = ({ signedIn }) => {
         {!signedIn && (
           <div className="mt-8 rounded-2xl bg-[#F4E4EA] border border-[#EDB9CB] p-6 flex flex-wrap items-center justify-between gap-4">
             <p className="m-0 font-semibold text-gray-900">Create a free account to hear first when registration opens.</p>
-            <Link to="/login" className="font-bold px-5 py-3 rounded-xl bg-[#C8175D] text-white hover:bg-[#E8317A] hover:no-underline">Create a free account</Link>
+            <Link to="/login" className="font-bold px-5 py-3 rounded-xl bg-[#D41470] text-white hover:bg-[#E0146C] hover:no-underline">Create a free account</Link>
           </div>
         )}
       </section>
@@ -252,7 +252,7 @@ const SummitComingSoon = ({ signedIn }) => {
             <p className="mt-3 text-[#F7D6E3] max-w-[50ch]">Sponsor the summit, lead a workshop, or join an episode as a guest. We’d love to hear from you.</p>
             <a
               href={`mailto:${SUMMIT.email}?subject=${encodeURIComponent(`She Model Tech Summit ${SUMMIT.year}`)}`}
-              className="inline-flex mt-6 font-bold px-6 py-3.5 rounded-xl bg-white text-[#C8175D] hover:bg-[#F4E4EA] hover:no-underline"
+              className="inline-flex mt-6 font-bold px-6 py-3.5 rounded-xl bg-white text-[#D41470] hover:bg-[#F4E4EA] hover:no-underline"
             >
               Email the team
             </a>

@@ -422,7 +422,7 @@ const AdminDashboard = () => {
                     fontFamily: '"Inter", sans-serif'
                   }}>
                 Admin{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-500 to-orange-500">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-500 to-amber-500">
                   Dashboard
                 </span>
               </h1>
@@ -434,15 +434,15 @@ const AdminDashboard = () => {
           <section className="mb-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               
-              <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-4 sm:p-6 border-2 border-orange-500/30 shadow-lg">
+              <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-4 sm:p-6 border-2 border-amber-500/30 shadow-lg">
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="text-orange-500 text-xl sm:text-2xl">🔍</div>
-                    <span className="text-orange-500 text-xs font-medium px-2 py-1 bg-orange-500/10 rounded-full border border-orange-500/30">Reviews</span>
+                    <div className="text-amber-500 text-xl sm:text-2xl">🔍</div>
+                    <span className="text-amber-500 text-xs font-medium px-2 py-1 bg-amber-500/10 rounded-full border border-amber-500/30">Reviews</span>
                   </div>
                   <div className="flex-grow">
                     <p className="text-gray-400 text-xs font-medium mb-1">Pending Reviews</p>
-                    <p className="text-2xl sm:text-3xl font-black text-orange-500 mb-1">{pendingCompletions.length}</p>
+                    <p className="text-2xl sm:text-3xl font-black text-amber-500 mb-1">{pendingCompletions.length}</p>
                     <p className="text-gray-500 text-xs">Awaiting approval</p>
                   </div>
                 </div>
@@ -483,8 +483,8 @@ const AdminDashboard = () => {
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">Project Completion Reviews</h2>
               
-              <div className="mb-6 p-4 sm:p-6 bg-orange-500/10 border-2 border-orange-500/30 rounded-xl">
-                <h4 className="text-orange-500 font-bold mb-2 text-base sm:text-lg">📋 Project Review Guidelines</h4>
+              <div className="mb-6 p-4 sm:p-6 bg-amber-500/10 border-2 border-amber-500/30 rounded-xl">
+                <h4 className="text-amber-500 font-bold mb-2 text-base sm:text-lg">📋 Project Review Guidelines</h4>
                 <p className="text-gray-600 text-sm sm:text-base mb-2">
                   Please verify the following before approving:
                 </p>
@@ -517,7 +517,7 @@ const AdminDashboard = () => {
                       <div className="mb-8">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                           <h3 className="text-xl md:text-2xl font-bold text-white">{completion.projectTitle}</h3>
-                          <span className="px-4 py-2 bg-orange-500/20 text-orange-500 rounded-full text-sm font-semibold border-2 border-orange-500/30 w-fit">
+                          <span className="px-4 py-2 bg-amber-500/20 text-amber-500 rounded-full text-sm font-semibold border-2 border-amber-500/30 w-fit">
                             ⏳ Pending Review
                           </span>
                         </div>
@@ -531,12 +531,12 @@ const AdminDashboard = () => {
                             <span className="text-pink-500 font-semibold block mb-2">👥 Team Size</span>
                             <span className="text-white font-medium">{completion.teamSize || 0} members</span>
                           </div>
-                          <div className="p-4 bg-orange-500/10 border-2 border-orange-500/30 rounded-xl">
-                            <span className="text-orange-500 font-semibold block mb-2">📅 Submitted</span>
+                          <div className="p-4 bg-amber-500/10 border-2 border-amber-500/30 rounded-xl">
+                            <span className="text-amber-500 font-semibold block mb-2">📅 Submitted</span>
                             <span className="text-white font-medium">{completion.submittedForApprovalAt?.toDate?.()?.toLocaleDateString()}</span>
                           </div>
-                          <div className="p-4 bg-orange-500/10 border-2 border-orange-500/30 rounded-xl">
-                            <span className="text-orange-500 font-semibold block mb-2">🆔 Group ID</span>
+                          <div className="p-4 bg-amber-500/10 border-2 border-amber-500/30 rounded-xl">
+                            <span className="text-amber-500 font-semibold block mb-2">🆔 Group ID</span>
                             <span className="text-white font-medium text-xs break-all">{completion.groupId}</span>
                           </div>
                         </div>
@@ -597,7 +597,7 @@ const AdminDashboard = () => {
                                   {githubUrl && (
                                     <div>
                                       <label className="text-pink-500 font-semibold block mb-2">
-                                        GitHub Repository URL: <span className="text-orange-500">*Required</span>
+                                        GitHub Repository URL: <span className="text-amber-500">*Required</span>
                                       </label>
                                       <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                                         <a 
@@ -620,7 +620,7 @@ const AdminDashboard = () => {
                                   
                                   {projectUrl && (
                                     <div>
-                                      <label className="text-orange-300 font-semibold block mb-2">
+                                      <label className="text-amber-300 font-semibold block mb-2">
                                         Project URL:
                                       </label>
                                       <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
@@ -628,13 +628,13 @@ const AdminDashboard = () => {
                                           href={projectUrl} 
                                           target="_blank" 
                                           rel="noopener noreferrer"
-                                          className="flex-1 bg-gray-800 border-2 border-orange-500/30 rounded-lg px-4 py-3 text-orange-300 hover:text-orange-200 transition-colors break-all"
+                                          className="flex-1 bg-gray-800 border-2 border-amber-500/30 rounded-lg px-4 py-3 text-amber-300 hover:text-amber-200 transition-colors break-all"
                                         >
                                           {projectUrl}
                                         </a>
                                         <button
                                           onClick={() => window.open(projectUrl, '_blank')}
-                                          className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap w-full sm:w-auto shadow-sm"
+                                          className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap w-full sm:w-auto shadow-sm"
                                         >
                                           Visit Project →
                                         </button>
@@ -669,7 +669,7 @@ const AdminDashboard = () => {
                               );
                             } else {
                               return (
-                                <div className="text-orange-500 bg-orange-500/10 border-2 border-orange-500/30 rounded-lg p-4">
+                                <div className="text-amber-500 bg-amber-500/10 border-2 border-amber-500/30 rounded-lg p-4">
                                   ⚠️ No repository or project URLs found in the completion data
                                 </div>
                               );
@@ -708,11 +708,11 @@ const AdminDashboard = () => {
                         )}
 
                         {completion.projectReview?.keyFeatures && (
-                          <div className="p-6 bg-orange-500/10 border-2 border-orange-500/30 rounded-xl">
-                            <h5 className="text-orange-400 font-bold text-lg mb-4 flex items-center">
+                          <div className="p-6 bg-amber-500/10 border-2 border-amber-500/30 rounded-xl">
+                            <h5 className="text-amber-400 font-bold text-lg mb-4 flex items-center">
                               ⭐ Key Features
                             </h5>
-                            <div className="bg-gray-900 border-2 border-orange-500/30 rounded-lg p-4">
+                            <div className="bg-gray-900 border-2 border-amber-500/30 rounded-lg p-4">
                               <p className="text-gray-500 leading-relaxed text-sm sm:text-base">
                                 {completion.projectReview.keyFeatures}
                               </p>
@@ -732,7 +732,7 @@ const AdminDashboard = () => {
                         
                         <button
                           onClick={() => rejectProjectCompletion(completion.id, completion)}
-                          className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-6 py-4 rounded-xl font-bold transition-all duration-300 shadow-xl flex items-center justify-center"
+                          className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-6 py-4 rounded-xl font-bold transition-all duration-300 shadow-xl flex items-center justify-center"
                         >
                           <span className="mr-2 text-xl">❌</span>
                           Request Changes
@@ -740,8 +740,8 @@ const AdminDashboard = () => {
                       </div>
 
                       {/* Review Guidelines Reminder */}
-                      <div className="mt-6 p-4 bg-orange-500/10 border-2 border-orange-500/30 rounded-xl">
-                        <p className="text-orange-400 text-sm">
+                      <div className="mt-6 p-4 bg-amber-500/10 border-2 border-amber-500/30 rounded-xl">
+                        <p className="text-amber-400 text-sm">
                           <strong>⚠️ Before approving:</strong> Ensure the repository is accessible, She Model Tech is added as collaborator, 
                           team member names are visible, and the project meets completion standards.
                         </p>
@@ -755,8 +755,8 @@ const AdminDashboard = () => {
               <div className="mt-12">
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">All Projects Management</h2>
                 
-                <div className="mb-6 p-4 sm:p-6 bg-orange-500/10 border-2 border-orange-500/30 rounded-xl">
-                  <h4 className="text-orange-500 font-bold mb-2 text-base sm:text-lg">🗑️ Delete Projects</h4>
+                <div className="mb-6 p-4 sm:p-6 bg-amber-500/10 border-2 border-amber-500/30 rounded-xl">
+                  <h4 className="text-amber-500 font-bold mb-2 text-base sm:text-lg">🗑️ Delete Projects</h4>
                   <p className="text-gray-600 text-sm sm:text-base">
                     Delete any project and its associated group permanently. This action cannot be undone.
                   </p>
@@ -776,7 +776,7 @@ const AdminDashboard = () => {
                           case 'approved': return 'bg-pink-500/20 text-pink-400 border-pink-500/30';
                           case 'pending':
                           case 'pending_approval':
-                          case 'submitted': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+                          case 'submitted': return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
                           case 'rejected': return 'bg-red-500/20 text-red-400 border-red-500/30';
                           default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
                         }
@@ -831,7 +831,7 @@ const AdminDashboard = () => {
                           
                           <button
                             onClick={() => deleteProject(project.id, project)}
-                            className="w-full bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded text-xs font-semibold transition-colors duration-300 shadow-sm"
+                            className="w-full bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 rounded text-xs font-semibold transition-colors duration-300 shadow-sm"
                           >
                             🗑️ Delete Project & Group
                           </button>

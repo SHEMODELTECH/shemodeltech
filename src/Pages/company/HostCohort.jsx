@@ -196,8 +196,8 @@ const HostCohort = () => {
       </p>
 
       {created && (
-        <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-          <p className="font-semibold text-emerald-800">Project added to your cohort.</p>
+        <div className="mb-6 rounded-xl border border-green-200 bg-green-50 p-4">
+          <p className="font-semibold text-green-800">Project added to your cohort.</p>
           <p className="text-sm text-gray-700 mt-1">Add another project with the same dates, or view the one you just posted.</p>
           <div className="flex flex-wrap gap-2 mt-3">
             <a href={`/projects/new-paid?group=${groupId}&start=${startDate}&end=${endDate}`} className="text-sm font-semibold bg-pink-600 text-white px-4 py-2 rounded-lg">Add another project to this cohort</a>

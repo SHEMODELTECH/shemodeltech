@@ -498,7 +498,7 @@ const ProjectSetup = () => {
               ) : !askMore.open ? (
                 <>
                   {sizeRequest && sizeRequest.status !== 'pending' && (
-                    <p className={`text-xs mt-2 ${sizeRequest.status === 'approved' ? 'text-emerald-800' : 'text-gray-700'}`}>
+                    <p className={`text-xs mt-2 ${sizeRequest.status === 'approved' ? 'text-green-800' : 'text-gray-700'}`}>
                       Your last request: {sizeRequest.status === 'approved' ? `approved (${sizeRequest.approved} more)` : 'not approved'}.
                       {sizeRequest.decisionNote ? ` She Model Tech: “${sizeRequest.decisionNote}”` : ''}
                     </p>

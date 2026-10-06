@@ -52,7 +52,7 @@ export const TaggedUsers = ({ taggedUsers = [] }) => {
               </div>
               
               {/* Professional Display Name with @ handle */}
-              <span className="text-pink-600 hover:text-orange-400 transition-colors text-xs sm:text-sm whitespace-nowrap">
+              <span className="text-pink-600 hover:text-amber-400 transition-colors text-xs sm:text-sm whitespace-nowrap">
                 @{getMentionHandle(user)}
               </span>
             </div>

@@ -50,7 +50,7 @@ const Premium = () => {
         </p>
       )}
       {mine && (
-        <p className="mt-3 text-sm font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 max-w-2xl">
+        <p className="mt-3 text-sm font-semibold text-green-800 bg-green-50 border border-green-200 rounded-lg px-3 py-2 max-w-2xl">
           Your company is on the {TIER_LABEL[mine]} tier.
         </p>
       )}
@@ -69,7 +69,7 @@ const Premium = () => {
                 ))}
               </ul>
               {current ? (
-                <p className="mt-5 text-sm font-semibold text-emerald-700">Your current tier</p>
+                <p className="mt-5 text-sm font-semibold text-green-700">Your current tier</p>
               ) : features.premiumPayments && link ? (
                 <a href={link} target="_blank" rel="noopener noreferrer" className="mt-5 text-center bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
                   Choose {TIER_LABEL[t]}

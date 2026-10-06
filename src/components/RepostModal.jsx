@@ -70,7 +70,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
               onChange={setRepostComment}
               onMentionSelect={handleMentionSelect}
               placeholder="What do you think about this post? Use @ to mention someone..."
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 resize-none min-h-[100px] transition-colors"
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-amber-400/20 resize-none min-h-[100px] transition-colors"
               rows={4}
             />
             
@@ -94,7 +94,7 @@ export const RepostModal = ({ isOpen, onClose, post, onRepost, isSubmitting }) =
                           </span>
                         )}
                       </div>
-                      <span className="text-orange-400 text-sm">
+                      <span className="text-amber-400 text-sm">
                         {getUserDisplayText(user)}
                       </span>
                       <button

@@ -117,7 +117,7 @@ const canEdit = (access, c) => access.isStaff || (c?.createdBy?.uid && c.created
 const StatusTag = ({ status }) => (
   <span
     className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-      status === 'ready' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+      status === 'ready' ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
     }`}
   >
     {status === 'ready' ? 'Ready' : 'Draft'}
@@ -206,7 +206,7 @@ const MentorLetters = ({ access }) => {
   const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   const statusTag = (st) =>
     st === 'sent'
-      ? 'bg-emerald-50 text-emerald-700'
+      ? 'bg-green-50 text-green-700'
       : st === 'declined'
       ? 'bg-gray-100 text-gray-600'
       : 'bg-amber-50 text-amber-700';
@@ -216,7 +216,7 @@ const MentorLetters = ({ access }) => {
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-semibold text-gray-900">
         <span>
           Letters from She Model Tech
-          {reqs && reqs.length > 0 && <span className="ml-2 text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">{reqs.length}</span>}
+          {reqs && reqs.length > 0 && <span className="ml-2 text-xs font-bold text-pink-700 bg-pink-50 px-2 py-0.5 rounded-full">{reqs.length}</span>}
         </span>
         <svg className="w-5 h-5 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -227,7 +227,7 @@ const MentorLetters = ({ access }) => {
         <p className="text-sm text-gray-600 max-w-2xl">
           Need a recommendation or volunteer service letter? Request one and track it here.
         </p>
-        <button onClick={() => setOpen((o) => !o)} className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+        <button onClick={() => setOpen((o) => !o)} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">
           Request a letter
         </button>
       </div>
@@ -239,7 +239,7 @@ const MentorLetters = ({ access }) => {
             <div className="flex flex-wrap gap-2">
               {Object.entries(LETTER_TYPES).map(([v, l]) => (
                 <button key={v} type="button" aria-pressed={form.type === v} onClick={() => setForm({ ...form, type: v })}
-                  className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${form.type === v ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>
+                  className={`text-sm font-semibold px-3 py-1.5 rounded-full border ${form.type === v ? 'bg-pink-600 border-pink-600 text-white' : 'bg-white border-gray-300 text-gray-700'}`}>
                   {l}
                 </button>
               ))}
@@ -256,7 +256,7 @@ const MentorLetters = ({ access }) => {
             {(() => {
               const n = form.purpose.trim().split(/\s+/).filter(Boolean).length;
               return (
-                <p id="lt-purpose-hint" aria-live="polite" className={`text-xs mt-1 ${n >= 5 ? 'text-emerald-700' : 'text-gray-500'}`}>
+                <p id="lt-purpose-hint" aria-live="polite" className={`text-xs mt-1 ${n >= 5 ? 'text-green-700' : 'text-gray-500'}`}>
                   {n >= 5 ? `${n} words. Minimum reached.` : `Minimum 5 words. You have ${n} so far.`}
                 </p>
               );
@@ -272,7 +272,7 @@ const MentorLetters = ({ access }) => {
             <input id="lt-date" type="date" min={todayISO()} className={input} value={form.deadline}
               onChange={(e) => setForm({ ...form, deadline: e.target.value })} />
           </div>
-          <div className="sm:col-span-2 rounded-lg bg-indigo-50/60 border border-indigo-100 p-3">
+          <div className="sm:col-span-2 rounded-lg bg-pink-50/60 border border-pink-100 p-3">
             <p className="text-sm font-semibold text-gray-900">Your draft letter</p>
             <p className="text-xs text-gray-600 mt-0.5">
               Give us the full letter you'd like, with the details that matter for your purpose. We review and edit it,
@@ -288,7 +288,7 @@ const MentorLetters = ({ access }) => {
               const n = form.draftText.trim().split(/\s+/).filter(Boolean).length;
               const other = !!file || form.emailingDraft;
               return (
-                <p aria-live="polite" className={`text-xs mt-1 ${n >= 50 ? 'text-emerald-700' : 'text-gray-500'}`}>
+                <p aria-live="polite" className={`text-xs mt-1 ${n >= 50 ? 'text-green-700' : 'text-gray-500'}`}>
                   {n >= 50
                     ? `${n} words. Minimum reached.`
                     : other
@@ -300,14 +300,14 @@ const MentorLetters = ({ access }) => {
             <label className="block text-sm font-semibold text-gray-800 mt-3 mb-1" htmlFor="lt-file">Or attach it</label>
             <input id="lt-file" type="file" accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
               onChange={(e) => setFile(e.target.files[0] || null)}
-              className="block w-full text-sm text-gray-700 file:mr-3 file:rounded-lg file:border-0 file:bg-white file:px-3 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-50" />
+              className="block w-full text-sm text-gray-700 file:mr-3 file:rounded-lg file:border-0 file:bg-white file:px-3 file:py-2 file:text-sm file:font-semibold file:text-pink-700 hover:file:bg-pink-50" />
             <p className="text-xs text-gray-500 mt-1">PDF, Word, or text file, up to 3 MB.{file ? ` Selected: ${file.name}` : ''}</p>
             <label className="flex items-start gap-2 mt-3 text-sm text-gray-800">
               <input type="checkbox" className="mt-1" checked={form.emailingDraft}
                 onChange={(e) => setForm({ ...form, emailingDraft: e.target.checked })} />
               <span>
                 I'll email my draft to{' '}
-                <a className="font-semibold text-indigo-700 underline"
+                <a className="font-semibold text-pink-700 underline"
                   href={`mailto:${BRAND.supportEmail}?subject=${encodeURIComponent(`Letter request draft: ${currentUser?.displayName || currentUser?.email || ''}`)}`}>
                   {BRAND.supportEmail}
                 </a>
@@ -336,7 +336,7 @@ const MentorLetters = ({ access }) => {
                 {r.adminNote && <span className="block text-xs text-gray-600 mt-0.5">Note: {r.adminNote}</span>}
                 {r.letterFile?.url && (
                   <a href={r.letterFile.url} target="_blank" rel="noopener noreferrer"
-                    className="inline-block mt-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg">
+                    className="inline-block mt-1.5 text-xs font-semibold text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-lg">
                     Download your letter
                   </a>
                 )}
@@ -490,7 +490,7 @@ const TeacherList = ({ access }) => {
               <li>Priority support from She Model Tech</li>
               <li>Recommendation and volunteer service letters from SHE MODEL TECH Inc.</li>
             </ul>
-            <a href="/teach#faq" className="inline-block mt-2 font-semibold text-indigo-700 hover:underline">See all benefits and FAQs</a>
+            <a href="/teach#faq" className="inline-block mt-2 font-semibold text-pink-700 hover:underline">See all benefits and FAQs</a>
           </HubToggle>
         )}
         {!access.isStaff && <MentorLetters access={access} />}
@@ -561,7 +561,7 @@ const TeacherList = ({ access }) => {
                   {c.kind === 'html' ? 'Interactive HTML' : c.kind === 'video' ? 'Video course' : 'Written notes'}
                 </span>
                 <StatusTag status={c.status} />
-                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${c.published ? 'bg-pink-50 text-pink-700' : 'bg-indigo-50 text-indigo-700'}`}>
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${c.published ? 'bg-pink-50 text-pink-700' : 'bg-pink-50 text-pink-700'}`}>
                   {c.published ? 'For learners' : 'For mentors'}
                 </span>
                 <ReviewTag course={c} />
@@ -655,7 +655,7 @@ const VideoLessonsEditor = ({ content, onChange }) => {
                 <input className={input} placeholder="Video link, e.g. https://www.youtube.com/watch?v=..." aria-label={`Lesson ${i + 1} video link`}
                   value={l.url} onChange={(e) => set(i, 'url', e.target.value)} />
                 {(l.url || '').trim() && (
-                  <p className={`text-xs font-semibold ${v ? 'text-emerald-700' : 'text-amber-700'}`}>
+                  <p className={`text-xs font-semibold ${v ? 'text-green-700' : 'text-amber-700'}`}>
                     {v ? `${v.provider} video: it will play inside the course.` : 'Not a recognised video link: learners will get a button that opens it in a new tab.'}
                   </p>
                 )}
@@ -1232,7 +1232,7 @@ const PublishPanel = ({ course, content, onChange, access }) => {
             </>
           ) : pub ? (
             <>
-              <strong className="text-emerald-700">Published in Learning</strong> under {trackLabel(pub.track)}. Edits here
+              <strong className="text-green-700">Published in Learning</strong> under {trackLabel(pub.track)}. Edits here
               reach students only when you update the published version.
             </>
           ) : req ? (
@@ -1432,10 +1432,10 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
       </>
     );
   } else if (course.published) {
-    tone = 'border-emerald-200 bg-emerald-50';
+    tone = 'border-green-200 bg-green-50';
     text = (
       <>
-        <strong className="text-emerald-800">Published in Learning</strong> for students. Edit it and submit an update when you want changes to go live.
+        <strong className="text-green-800">Published in Learning</strong> for students. Edit it and submit an update when you want changes to go live.
       </>
     );
   } else {
@@ -1467,7 +1467,7 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
             </button>
           )}
           {course.published && (
-            <button onClick={openCert} disabled={busy} className={`${btn} bg-indigo-600 hover:bg-indigo-700 text-white`}>
+            <button onClick={openCert} disabled={busy} className={`${btn} bg-pink-600 hover:bg-pink-700 text-white`}>
               Mentor certificate
             </button>
           )}

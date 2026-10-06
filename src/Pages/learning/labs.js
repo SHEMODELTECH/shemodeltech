@@ -289,7 +289,7 @@ const passwordLab = (cfg) => {
     if (/(19|20)\d\d/.test(p)) { bits -= 6; flags.push('contains what looks like a year'); }
     bits = Math.max(0, bits);
     const seconds = Math.pow(2, bits) / 2 / 1e10;
-    const levels = [[28, 'Very weak', '#DC2626'], [36, 'Weak', '#EA580C'], [60, 'Fair', '#CA8A04'], [80, 'Strong', '#16A34A'], [Infinity, 'Very strong', '#047857']];
+    const levels = [[28, 'Very weak', '#DC2626'], [36, 'Weak', '#D97706'], [60, 'Fair', '#CA8A04'], [80, 'Strong', '#16A34A'], [Infinity, 'Very strong', '#047857']];
     const [, label, color] = levels.find(([max]) => bits < max);
     bar.style.width = `${Math.min(100, (bits / 100) * 100)}%`;
     bar.style.background = color;
@@ -581,33 +581,33 @@ export const enhanceHtml = (container) => {
 export const LABS_CSS = `
 .course-prose .lab { margin:1.5rem 0; border:2px solid var(--acc); border-radius:1rem; padding:1rem 1.1rem; background:#fff; }
 .course-prose .lab-kicker { margin:0; font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--acc); }
-.course-prose .lab-title { margin:.15rem 0 .2rem; font-weight:800; color:#111827; font-size:1.05rem; }
-.course-prose .lab-prompt { margin:0 0 .8rem; color:#4B5563; font-size:.95rem; }
+.course-prose .lab-title { margin:.15rem 0 .2rem; font-weight:800; color:#111111; font-size:1.05rem; }
+.course-prose .lab-prompt { margin:0 0 .8rem; color:#525252; font-size:.95rem; }
 .course-prose .lab-order { list-style:none; padding:0; margin:.5rem 0 0; display:grid; gap:.45rem; }
-.course-prose .lab-order-item { display:flex; align-items:center; gap:.6rem; border:1px solid #E5E7EB; border-radius:.65rem; padding:.5rem .6rem; margin:0; background:#FAFAFA; }
+.course-prose .lab-order-item { display:flex; align-items:center; gap:.6rem; border:1px solid #E5E5E5; border-radius:.65rem; padding:.5rem .6rem; margin:0; background:#FAFAFA; }
 .course-prose .lab-order-item.is-right { border-color:#059669; background:#ECFDF5; }
 .course-prose .lab-order-item.is-wrong { border-color:#DC2626; background:#FEF2F2; }
 .course-prose .lab-order-n { width:1.6rem; height:1.6rem; flex-shrink:0; border-radius:999px; background:var(--tint); color:var(--acc); font-size:.78rem; font-weight:800; display:flex; align-items:center; justify-content:center; }
-.course-prose .lab-order-text { flex:1; font-weight:600; color:#111827; font-size:.95rem; }
-.course-prose .lab-move { width:2rem; height:2rem; border-radius:.5rem; border:1px solid #D1D5DB; background:#fff; font-weight:700; color:#374151; }
+.course-prose .lab-order-text { flex:1; font-weight:600; color:#111111; font-size:.95rem; }
+.course-prose .lab-move { width:2rem; height:2rem; border-radius:.5rem; border:1px solid #D4D4D4; background:#fff; font-weight:700; color:#404040; }
 .course-prose .lab-move:disabled { opacity:.35; }
 .course-prose .lab-actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.9rem; }
-.course-prose .lab-btn { font-size:.85rem; font-weight:700; padding:.5rem .9rem; border-radius:.6rem; border:1px solid #D1D5DB; background:#fff; color:#374151; }
+.course-prose .lab-btn { font-size:.85rem; font-weight:700; padding:.5rem .9rem; border-radius:.6rem; border:1px solid #D4D4D4; background:#fff; color:#404040; }
 .course-prose .lab-primary { background:var(--acc); border-color:var(--acc); color:#fff; }
-.course-prose .lab-msg { margin:.7rem 0 0; font-weight:600; font-size:.92rem; color:#374151; }
+.course-prose .lab-msg { margin:.7rem 0 0; font-weight:600; font-size:.92rem; color:#404040; }
 .course-prose .lab-msg.is-right { color:#047857; }
 .course-prose .lab-msg.is-wrong { color:#B91C1C; }
 .course-prose .lab-sort { display:grid; gap:.6rem; }
-.course-prose .lab-sort-row { border:1px solid #E5E7EB; border-left:4px solid #E5E7EB; border-radius:.65rem; padding:.6rem .75rem; background:#FAFAFA; }
+.course-prose .lab-sort-row { border:1px solid #E5E5E5; border-left:4px solid #E5E5E5; border-radius:.65rem; padding:.6rem .75rem; background:#FAFAFA; }
 .course-prose .lab-sort-row.is-right { border-left-color:#059669; }
 .course-prose .lab-sort-row.is-wrong { border-left-color:#DC2626; }
-.course-prose .lab-sort-text { margin:0 0 .45rem; font-weight:600; color:#111827; font-size:.95rem; }
+.course-prose .lab-sort-text { margin:0 0 .45rem; font-weight:600; color:#111111; font-size:.95rem; }
 .course-prose .lab-sort-opts { display:flex; flex-wrap:wrap; gap:.4rem; }
-.course-prose .lab-opt { font-size:.82rem; font-weight:600; padding:.35rem .7rem; border-radius:999px; border:1px solid #D1D5DB; background:#fff; color:#374151; }
+.course-prose .lab-opt { font-size:.82rem; font-weight:600; padding:.35rem .7rem; border-radius:999px; border:1px solid #D4D4D4; background:#fff; color:#404040; }
 .course-prose .lab-opt.is-picked { border-color:var(--acc); background:var(--tint); color:var(--acc); }
 .course-prose .lab-opt.is-right { border-color:#059669; background:#ECFDF5; color:#047857; }
 .course-prose .lab-opt.is-wrong { border-color:#DC2626; background:#FEF2F2; color:#B91C1C; }
-.course-prose .lab-sort-why { margin:.45rem 0 0; font-size:.88rem; color:#4B5563; }
+.course-prose .lab-sort-why { margin:.45rem 0 0; font-size:.88rem; color:#525252; }
 .course-prose .lab button:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
 .course-prose .py-cell { margin:1.1rem 0; border-radius:.8rem; overflow:hidden; background:#1E1B2E; }
 .course-prose .py-bar { display:flex; align-items:center; gap:.5rem; padding:.45rem .6rem; background:#2A2640; }
@@ -625,25 +625,25 @@ export const LABS_CSS = `
 .course-prose .html-grid { display:grid; grid-template-columns:1fr; }
 @media (min-width:900px) { .course-prose .html-grid { grid-template-columns:1fr 1fr; } }
 .course-prose .html-preview { width:100%; min-height:180px; height:100%; border:0; background:#fff; }
-.course-prose .lab-field-label { display:block; margin:.6rem 0 .2rem; font-size:.75rem; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:.04em; }
-.course-prose .lab-input { width:100%; border:1px solid #D1D5DB; border-radius:.6rem; padding:.55rem .7rem; font:inherit; font-size:.95rem; color:#111827; background:#fff; }
+.course-prose .lab-field-label { display:block; margin:.6rem 0 .2rem; font-size:.75rem; font-weight:700; color:#737373; text-transform:uppercase; letter-spacing:.04em; }
+.course-prose .lab-input { width:100%; border:1px solid #D4D4D4; border-radius:.6rem; padding:.55rem .7rem; font:inherit; font-size:.95rem; color:#111111; background:#fff; }
 .course-prose .lab-input:focus { outline:2px solid var(--acc); outline-offset:1px; border-color:transparent; }
 .course-prose .lab-input-sm { padding:.4rem .5rem; font-size:.9rem; }
 .course-prose .lab-hash { margin-top:.4rem; }
-.course-prose .lab-hash-out { display:block; word-break:break-all; background:#F3F4F6; padding:.5rem .6rem; border-radius:.5rem; font-size:.78rem; }
-.course-prose .lab-meter { height:.6rem; border-radius:999px; background:#F3F4F6; margin-top:.7rem; overflow:hidden; }
+.course-prose .lab-hash-out { display:block; word-break:break-all; background:#F5F5F5; padding:.5rem .6rem; border-radius:.5rem; font-size:.78rem; }
+.course-prose .lab-meter { height:.6rem; border-radius:999px; background:#F5F5F5; margin-top:.7rem; overflow:hidden; }
 .course-prose .lab-meter-bar { height:100%; width:0; border-radius:999px; transition:width .2s; }
-.course-prose .lab-facts { margin:.4rem 0 0; font-size:.9rem; color:#4B5563; }
+.course-prose .lab-facts { margin:.4rem 0 0; font-size:.9rem; color:#525252; }
 .course-prose .lab-rice { display:grid; gap:.7rem; grid-template-columns:1fr; }
 @media (min-width:700px) { .course-prose .lab-rice { grid-template-columns:repeat(2, minmax(0,1fr)); } }
-.course-prose .lab-rice-card { border:1px solid #E5E7EB; border-radius:.75rem; padding:.3rem .8rem .8rem; margin:0; background:#FAFAFA; }
+.course-prose .lab-rice-card { border:1px solid #E5E5E5; border-radius:.75rem; padding:.3rem .8rem .8rem; margin:0; background:#FAFAFA; }
 .course-prose .lab-rice-card legend { padding:0 .3rem; }
-.course-prose .lab-rice-name { font-weight:700; color:#111827; font-size:.92rem; }
+.course-prose .lab-rice-name { font-weight:700; color:#111111; font-size:.92rem; }
 .course-prose .lab-rice-field { display:grid; grid-template-columns:1fr 6.5rem; align-items:center; gap:.5rem; }
 .course-prose .lab-rice-field .lab-field-label { margin:.45rem 0 0; text-transform:none; letter-spacing:0; font-size:.82rem; }
 .course-prose .lab-rice-rank { margin:.3rem 0 0; padding-left:1.4rem; }
-.course-prose .lab-rice-item { display:flex; justify-content:space-between; gap:1rem; padding:.3rem 0; border-bottom:1px dashed #E5E7EB; }
+.course-prose .lab-rice-item { display:flex; justify-content:space-between; gap:1rem; padding:.3rem 0; border-bottom:1px dashed #E5E5E5; }
 .course-prose .lab-rice-score { font-weight:800; color:var(--acc); }
 @media (prefers-reduced-motion: reduce) { .course-prose .lab-meter-bar { transition:none; } }
-.course-prose .py-note { margin:-.6rem 0 1rem; font-size:.82rem; color:#6B7280; }
+.course-prose .py-note { margin:-.6rem 0 1rem; font-size:.82rem; color:#737373; }
 `;

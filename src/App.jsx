@@ -648,9 +648,9 @@ function App() {
             toastClassName="text-xs sm:text-sm"
             toastStyle={{
               backgroundColor: 'white',
-              border: '1px solid #e5e7eb',
+              border: '1px solid #E5E5E5',
               borderRadius: '0.6rem',
-              color: '#111827',
+              color: '#111111',
               margin: '0.5rem',
               minHeight: '48px',
               padding: '0.5rem 0.75rem',

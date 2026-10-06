@@ -16,10 +16,10 @@ import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firesto
 import { db } from '../firebase/config';
 
 const STATUS = {
-  submitted: { label: 'Applied', cls: 'bg-orange-50 text-orange-700 border-orange-200' },
-  pending: { label: 'Applied', cls: 'bg-orange-50 text-orange-700 border-orange-200' },
-  interview: { label: 'Interview', cls: 'bg-purple-50 text-purple-700 border-purple-200' },
-  interview_scheduled: { label: 'Interview', cls: 'bg-purple-50 text-purple-700 border-purple-200' },
+  submitted: { label: 'Applied', cls: 'bg-amber-50 text-amber-700 border-amber-200' },
+  pending: { label: 'Applied', cls: 'bg-amber-50 text-amber-700 border-amber-200' },
+  interview: { label: 'Interview', cls: 'bg-pink-50 text-pink-700 border-pink-200' },
+  interview_scheduled: { label: 'Interview', cls: 'bg-pink-50 text-pink-700 border-pink-200' },
   approved: { label: 'On the team', cls: 'bg-green-50 text-green-700 border-green-200' },
   offered_role: { label: 'Offered a role', cls: 'bg-green-50 text-green-700 border-green-200' },
   completed: { label: 'Completed', cls: 'bg-pink-50 text-pink-700 border-pink-200' },

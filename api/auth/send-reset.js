@@ -91,40 +91,40 @@ module.exports = async function handler(req, res) {
  const u = await admin.auth().getUserByEmail(email);
  const providers = (u.providerData || []).map((p) => p.providerId);
  if (providers.includes('google.com') && !providers.includes('password')) {
- googleNote = '<p style="font-size:14px;line-height:1.6;color:#374151;margin:0 0 16px;background:#f9fafb;border-radius:10px;padding:12px">You usually sign in with <strong>Google</strong>. You can keep using <strong>Sign in with Google</strong>; setting a password is optional and lets you also sign in with your email and password.</p>';
+ googleNote = '<p style="font-size:14px;line-height:1.6;color:#404040;margin:0 0 16px;background:#FAFAFA;border-radius:10px;padding:12px">You usually sign in with <strong>Google</strong>. You can keep using <strong>Sign in with Google</strong>; setting a password is optional and lets you also sign in with your email and password.</p>';
  }
  } catch (_) {
  /* ignore */
  }
 
  const html = `
- <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:520px;margin:0 auto;padding:8px;color:#111827">
+ <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:520px;margin:0 auto;padding:8px;color:#111111">
  <div style="text-align:center;padding:24px 0">
  <img src="${SITE}/Images/512X512.png" alt="She Model Tech" width="48" height="48" style="border-radius:10px" />
  </div>
- <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;padding:32px 28px">
+ <div style="background:#ffffff;border:1px solid #E5E5E5;border-radius:16px;padding:32px 28px">
  <h1 style="font-size:20px;margin:0 0 12px">Reset your password</h1>
- <p style="font-size:15px;line-height:1.6;color:#374151;margin:0 0 20px">
+ <p style="font-size:15px;line-height:1.6;color:#404040;margin:0 0 20px">
  We received a request to reset the password for your She Model Tech account. Click the button below to choose a new password.
  </p>
  ${googleNote}
  <div style="text-align:center;margin:26px 0">
- <a href="${resetUrl}" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 28px;border-radius:12px">
+ <a href="${resetUrl}" style="display:inline-block;background:#D41470;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 28px;border-radius:12px">
  Reset my password
  </a>
  </div>
- <p style="font-size:13px;line-height:1.6;color:#6b7280;margin:0 0 6px">
+ <p style="font-size:13px;line-height:1.6;color:#737373;margin:0 0 6px">
  This link expires in 1 hour. If the button doesn't work, copy and paste this link into your browser:
  </p>
  <p style="font-size:12px;line-height:1.5;word-break:break-all;margin:0 0 20px">
- <a href="${resetUrl}" style="color:#2563eb">${resetUrl}</a>
+ <a href="${resetUrl}" style="color:#D41470">${resetUrl}</a>
  </p>
- <p style="font-size:13px;line-height:1.6;color:#6b7280;margin:0">
+ <p style="font-size:13px;line-height:1.6;color:#737373;margin:0">
  If you didn't request this, you can safely ignore this email - your password won't change.
  </p>
  </div>
- <p style="text-align:center;font-size:12px;color:#9ca3af;margin:20px 0">
- She Model Tech &middot; <a href="${SITE}" style="color:#9ca3af">shemodeltech.com</a>
+ <p style="text-align:center;font-size:12px;color:#A3A3A3;margin:20px 0">
+ She Model Tech &middot; <a href="${SITE}" style="color:#A3A3A3">shemodeltech.com</a>
  </p>
  </div>`;
 

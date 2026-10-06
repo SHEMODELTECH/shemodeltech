@@ -54,8 +54,8 @@ const DeadlineBanner = ({ project }) => {
     const h = Math.floor((ms % 86400000) / 3600000);
     const when = new Date(project.startAt).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
     return (
-      <div className="rounded-xl p-4 mb-5 border bg-indigo-50 border-indigo-200">
-        <p className="font-bold text-sm text-indigo-900">
+      <div className="rounded-xl p-4 mb-5 border bg-pink-50 border-pink-200">
+        <p className="font-bold text-sm text-pink-900">
           {d > 0 ? `Starts in ${d} day${d === 1 ? '' : 's'}` : `Starts in ${h} hour${h === 1 ? '' : 's'}`}
         </p>
         <p className="text-gray-600 text-xs mt-0.5">Starts {when} · deadline {project.endDate}. Everyone in this cohort starts and finishes together.</p>
@@ -135,7 +135,7 @@ const DeadlineBanner = ({ project }) => {
         )}
         {isLead && !project.isCompanyPost && (
           requested ? (
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 uppercase">Extra time requested</span>
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-pink-100 text-pink-700 uppercase">Extra time requested</span>
           ) : (
             <button type="button" onClick={() => setOpen(!open)} className="text-pink-700 text-xs font-semibold underline">Request extra time</button>
           )

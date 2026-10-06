@@ -335,7 +335,7 @@ const ApplyToLead = () => {
         className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:border-pink-500 text-sm outline-none resize-y mb-1"
       />
       <p
-        className={`text-xs mb-6 ${pitch.trim().length >= 40 ? 'text-emerald-700' : 'text-gray-500'}`}
+        className={`text-xs mb-6 ${pitch.trim().length >= 40 ? 'text-green-700' : 'text-gray-500'}`}
         aria-live="polite"
       >
         {pitch.trim().length >= 40

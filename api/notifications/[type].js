@@ -44,12 +44,12 @@ function getApplicationApprovedEmail(applicationData, projectData) {
           <meta charset="utf-8">
           <style>
             .container { max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; }
-            .header { background: linear-gradient(135deg, #9C27B0, #7B1FA2); color: white; padding: 30px; text-align: center; }
+            .header { background: linear-gradient(135deg, #D41470, #7B1FA2); color: white; padding: 30px; text-align: center; }
             .content { padding: 30px; background-color: #f9f9f9; }
-            .button { background-color: #9C27B0; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+            .button { background-color: #D41470; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
             .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 14px; }
-            .welcome-box { background: #f3e5f5; border: 2px solid #9C27B0; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
-            .badge-box { background: #fff3e0; border: 2px solid #FF9800; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+            .welcome-box { background: #f3e5f5; border: 2px solid #D41470; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+            .badge-box { background: #FEF3C7; border: 2px solid #D97706; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
           </style>
         </head>
         <body>
@@ -60,22 +60,22 @@ function getApplicationApprovedEmail(applicationData, projectData) {
             <div class="content">
               <h2>Congratulations, ${applicationData.applicantName || 'Team Member'}!</h2>
               <div class="welcome-box">
-                <h3 style="color: #9C27B0; margin: 0;">You're In!</h3>
+                <h3 style="color: #D41470; margin: 0;">You're In!</h3>
                 <p style="margin: 10px 0; color: #7B1FA2; font-size: 18px;">Your application has been approved!</p>
               </div>
               <p>The project owner has reviewed your application and is excited to have you join their team. This is the beginning of your journey to earning valuable TechTalent Badges!</p>
               <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3 style="color: #9C27B0; margin-top: 0;">Project Details:</h3>
+                <h3 style="color: #D41470; margin-top: 0;">Project Details:</h3>
                 <p><strong>Project:</strong> ${projectTitle}</p>
                 <p><strong>Your Role:</strong> ${applicationData.roleAppliedFor || 'Team Member'}</p>
                 <p><strong>Project Owner:</strong> ${projectData?.contactName || applicationData.projectOwner || 'Project Team'}</p>
                 <p><strong>Approval Date:</strong> ${new Date().toLocaleDateString()}</p>
               </div>
               <div class="badge-box">
-                <h3 style="color: #E65100; margin-top: 0;">Earn TechTalent Badges</h3>
+                <h3 style="color: #B45309; margin-top: 0;">Earn TechTalent Badges</h3>
                 <p style="color: #666; margin: 10px 0;">As you work on this project, you'll earn <strong>TechTalent Badges</strong> that showcase your skills, achievements, and problem-solving abilities.</p>
               </div>
-              <h3 style="color: #9C27B0;">What's Next?</h3>
+              <h3 style="color: #D41470;">What's Next?</h3>
               <ul>
                 <li>Join your project group and meet your team members</li>
                 <li>Review project requirements and timeline</li>
@@ -120,9 +120,9 @@ function getApplicationRejectedEmail(applicationData, projectData, rejectionReas
             .content { padding: 30px; background-color: #f9f9f9; }
             .button { background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
             .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 14px; }
-            .info-box { background: #fff3e0; border: 2px solid #FF9800; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .info-box { background: #FEF3C7; border: 2px solid #D97706; padding: 20px; border-radius: 8px; margin: 20px 0; }
             .info-section { background: white; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #FF6B35; }
-            .feedback-section { background: #f3e5f5; border: 1px solid #9c27b0; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .feedback-section { background: #f3e5f5; border: 1px solid #D41470; padding: 20px; border-radius: 8px; margin: 20px 0; }
           </style>
         </head>
         <body>
@@ -134,7 +134,7 @@ function getApplicationRejectedEmail(applicationData, projectData, rejectionReas
             <div class="content">
               <h2>Hello ${applicantName},</h2>
               <div class="info-box">
-                <h3 style="color: #E65100; margin: 0 0 10px 0;">Application Status Update</h3>
+                <h3 style="color: #B45309; margin: 0 0 10px 0;">Application Status Update</h3>
                 <p style="margin: 5px 0; font-size: 16px;">Thank you for your interest in <strong>"${projectTitle}"</strong>.</p>
                 <p style="margin: 10px 0; color: #666;">After careful consideration, we have decided not to move forward with your application at this time.</p>
               </div>
@@ -171,14 +171,14 @@ function getApplicationRejectedEmail(applicationData, projectData, rejectionReas
 function getBadgeAwardedEmail(badgeData, projectData, memberData) {
   const badgeCategories = {
     'mentorship': { name: 'TechMO Badge', color: '#F59E0B', emoji: '🎓', image: '/Images/TechMO.png', description: 'Mentorship & Leadership Excellence' },
-    'quality-assurance': { name: 'TechQA Badge', color: '#3B82F6', emoji: '🔍', image: '/Images/TechQA.png', description: 'Quality Assurance & Testing Mastery' },
+    'quality-assurance': { name: 'TechQA Badge', color: '#D41470', emoji: '🔍', image: '/Images/TechQA.png', description: 'Quality Assurance & Testing Mastery' },
     'development': { name: 'TechDev Badge', color: '#10B981', emoji: '💻', image: '/Images/TechDev.png', description: 'Development & Programming Skills' },
-    'leadership': { name: 'TechLeads Badge', color: '#8B5CF6', emoji: '👑', image: '/Images/TechLeads.png', description: 'Technical Leadership & Project Management' },
-    'design': { name: 'TechArchs Badge', color: '#F97316', emoji: '🎨', image: '/Images/TechArchs.png', description: 'Architecture & Design Excellence' },
+    'leadership': { name: 'TechLeads Badge', color: '#D41470', emoji: '👑', image: '/Images/TechLeads.png', description: 'Technical Leadership & Project Management' },
+    'design': { name: 'TechArchs Badge', color: '#D97706', emoji: '🎨', image: '/Images/TechArchs.png', description: 'Architecture & Design Excellence' },
     'security': { name: 'TechGuard Badge', color: '#EF4444', emoji: '🛡️', image: '/Images/TechGuard.png', description: 'Security & Protection Expertise' }
   };
 
-  const badgeInfo = badgeCategories[badgeData.badgeCategory] || { name: 'TechTalent Badge', color: '#6B7280', emoji: '🏆', image: '/Images/512X512.png', description: 'Technical Excellence Recognition' };
+  const badgeInfo = badgeCategories[badgeData.badgeCategory] || { name: 'TechTalent Badge', color: '#737373', emoji: '🏆', image: '/Images/512X512.png', description: 'Technical Excellence Recognition' };
   const badgeLevel = (badgeData.badgeLevel || 'novice').charAt(0).toUpperCase() + (badgeData.badgeLevel || 'novice').slice(1);
 
   return {
@@ -192,7 +192,7 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
           <meta charset="utf-8">
           <style>
             .container { max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; }
-            .header { background: linear-gradient(135deg, ${badgeInfo.color}, #1F2937); color: white; padding: 30px; text-align: center; }
+            .header { background: linear-gradient(135deg, ${badgeInfo.color}, #262626); color: white; padding: 30px; text-align: center; }
             .content { padding: 30px; background-color: #f9f9f9; }
             .button { background-color: ${badgeInfo.color}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
             .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 14px; }
@@ -211,12 +211,12 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
               <div class="badge-showcase">
                 <img src="${SITE}${badgeInfo.image}" alt="${badgeInfo.name}" style="width: 80px; height: 80px; margin: 0 auto 15px auto; display: block; border-radius: 8px;" onerror="this.style.display='none';" />
                 <h3 style="color: ${badgeInfo.color}; margin: 0 0 5px 0; font-size: 24px;">${badgeInfo.name}</h3>
-                <p style="margin: 0 0 5px 0; color: #6B7280; font-size: 14px; font-style: italic;">${badgeInfo.description}</p>
-                <p style="margin: 5px 0; color: #4B5563; font-size: 18px; font-weight: bold;">${badgeLevel} Level</p>
-                <p style="margin: 10px 0; color: #6B7280; font-size: 14px;">Awarded for exceptional contribution to "${projectData.projectTitle}"</p>
+                <p style="margin: 0 0 5px 0; color: #737373; font-size: 14px; font-style: italic;">${badgeInfo.description}</p>
+                <p style="margin: 5px 0; color: #525252; font-size: 18px; font-weight: bold;">${badgeLevel} Level</p>
+                <p style="margin: 10px 0; color: #737373; font-size: 14px;">Awarded for exceptional contribution to "${projectData.projectTitle}"</p>
               </div>
               <p>Your project owner <strong>${projectData.contactName || 'Project Team'}</strong> has recognized your outstanding contribution!</p>
-              <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #E5E7EB;">
+              <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #E5E5E5;">
                 <h3 style="color: ${badgeInfo.color}; margin: 0 0 15px 0;">Badge Details</h3>
                 <p><strong>Project:</strong> ${projectData.projectTitle}</p>
                 <p><strong>Your Role:</strong> ${memberData.memberRole || 'Team Member'}</p>
@@ -224,8 +224,8 @@ function getBadgeAwardedEmail(badgeData, projectData, memberData) {
                 <p><strong>Contribution Quality:</strong> ${(badgeData.contribution || 'good').charAt(0).toUpperCase() + (badgeData.contribution || 'good').slice(1)}</p>
               </div>
               ${badgeData.skillsDisplayed && badgeData.skillsDisplayed.length > 0 ? `
-                <div style="background: #F3F4F6; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                  <h4 style="color: #374151; margin-top: 0;">Skills Demonstrated:</h4>
+                <div style="background: #F5F5F5; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <h4 style="color: #404040; margin-top: 0;">Skills Demonstrated:</h4>
                   <div>${badgeData.skillsDisplayed.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}</div>
                 </div>` : ''}
               ${badgeData.adminNotes ? `
@@ -269,7 +269,7 @@ function getNewApplicationEmail(body) {
             .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 14px; }
             .applicant-box { background: #e8f5e9; border: 2px solid #4CAF50; padding: 20px; border-radius: 8px; margin: 20px 0; }
             .detail-section { background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #4CAF50; }
-            .action-box { background: #fff3e0; border: 2px solid #FF9800; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center; }
+            .action-box { background: #FEF3C7; border: 2px solid #D97706; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center; }
           </style>
         </head>
         <body>
@@ -291,7 +291,7 @@ function getNewApplicationEmail(body) {
               ${skills ? `<div class="detail-section"><h3 style="color: #4CAF50; margin-top: 0;">Skills</h3><p>${skills}</p></div>` : ''}
               ${motivation ? `<div class="detail-section"><h3 style="color: #4CAF50; margin-top: 0;">Motivation</h3><p style="font-style: italic;">"${motivation}"</p></div>` : ''}
               <div class="action-box">
-                <h3 style="color: #E65100; margin-top: 0;">Action Required</h3>
+                <h3 style="color: #B45309; margin-top: 0;">Action Required</h3>
                 <p>Review this application and decide whether to approve or reject it.</p>
                 <a href="${SITE}/projects/owner-dashboard" class="button">Review Application Now</a>
               </div>
@@ -324,10 +324,10 @@ function getProjectReviewApprovedEmail(body) {
             .container { max-width: 700px; margin: 0 auto; font-family: Arial, sans-serif; }
             .header { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 30px; text-align: center; }
             .content { padding: 30px; background-color: #f9f9f9; }
-            .button { background-color: #FF9800; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 20px 0; font-weight: bold; font-size: 16px; }
+            .button { background-color: #D97706; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 20px 0; font-weight: bold; font-size: 16px; }
             .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 14px; }
             .success-box { background: #e8f5e9; border: 2px solid #4CAF50; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
-            .badge-box { background: #fff3e0; border: 2px solid #FF9800; padding: 20px; border-radius: 8px; margin: 25px 0; }
+            .badge-box { background: #FEF3C7; border: 2px solid #D97706; padding: 20px; border-radius: 8px; margin: 25px 0; }
           </style>
         </head>
         <body>
@@ -348,7 +348,7 @@ function getProjectReviewApprovedEmail(body) {
                 <p><strong>Approval Date:</strong> ${new Date(approvalDate || Date.now()).toLocaleDateString()}</p>
               </div>
               <div class="badge-box">
-                <h3 style="color: #E65100; margin-top: 0;">Next Step: Award TechTalent Badges 🏆</h3>
+                <h3 style="color: #B45309; margin-top: 0;">Next Step: Award TechTalent Badges 🏆</h3>
                 <p style="color: #666;">You can now assign TechTalent Badges to your team members based on their contributions!</p>
                 <div style="text-align: center;"><a href="${badgeAssignmentUrl}" class="button">🏆 Assign Badges Now</a></div>
               </div>
@@ -380,14 +380,14 @@ function getProjectReviewRejectedEmail(body) {
           <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 20px;">
             <tr><td align="center">
               <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; overflow: hidden;">
-                <tr><td style="background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%); padding: 40px 20px; text-align: center;">
+                <tr><td style="background: linear-gradient(135deg, #D97706 0%, #F57C00 100%); padding: 40px 20px; text-align: center;">
                   <h1 style="color: #ffffff; margin: 0; font-size: 28px;">Project Review Update</h1>
-                  <p style="color: #FFF3E0; margin: 10px 0 0 0;">Revision Required</p>
+                  <p style="color: #FEF3C7; margin: 10px 0 0 0;">Revision Required</p>
                 </td></tr>
                 <tr><td style="padding: 40px 30px;">
                   <p style="color: #333; font-size: 16px;">Hello <strong>${projectOwnerName}</strong>,</p>
                   <p style="color: #333; font-size: 16px;">Thank you for submitting <strong>"${projectTitle}"</strong> for review. We need you to make some revisions before approval.</p>
-                  <div style="background-color: #FFF3E0; border-left: 4px solid #FF9800; padding: 20px; margin: 25px 0; border-radius: 4px;">
+                  <div style="background-color: #FEF3C7; border-left: 4px solid #D97706; padding: 20px; margin: 25px 0; border-radius: 4px;">
                     <h3 style="color: #F57C00; margin: 0 0 10px 0;">Required Changes:</h3>
                     <p style="color: #333; white-space: pre-line;">${rejectionReason}</p>
                   </div>
@@ -401,7 +401,7 @@ function getProjectReviewRejectedEmail(body) {
                     </ul>
                   </div>
                   <table width="100%" style="margin: 30px 0;"><tr><td align="center">
-                    <a href="${resubmissionUrl}" style="display: inline-block; background: linear-gradient(135deg, #FF9800, #F57C00); color: #fff; text-decoration: none; padding: 15px 40px; border-radius: 25px; font-weight: bold;">Go to Group Page</a>
+                    <a href="${resubmissionUrl}" style="display: inline-block; background: linear-gradient(135deg, #D97706, #F57C00); color: #fff; text-decoration: none; padding: 15px 40px; border-radius: 25px; font-weight: bold;">Go to Group Page</a>
                   </td></tr></table>
                   <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 30px;">
                     <p><strong>Project:</strong> ${projectTitle}</p>
@@ -410,7 +410,7 @@ function getProjectReviewRejectedEmail(body) {
                   </div>
                 </td></tr>
                 <tr><td style="background-color: #f9f9f9; padding: 30px; text-align: center; border-top: 1px solid #e0e0e0;">
-                  <p style="color: #666; font-size: 14px;">Need help? Contact <a href="mailto:${SUPPORT_EMAIL}" style="color: #FF9800;">${SUPPORT_EMAIL}</a></p>
+                  <p style="color: #666; font-size: 14px;">Need help? Contact <a href="mailto:${SUPPORT_EMAIL}" style="color: #D97706;">${SUPPORT_EMAIL}</a></p>
                   <p style="color: #999; font-size: 12px;">She Model Tech | Building Tomorrow's Tech Leaders</p>
                 </td></tr>
               </table>
@@ -438,9 +438,9 @@ function getProjectSubmittedAdminEmail(projectData) {
         <head><meta charset="utf-8">
           <style>
             .container { max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; }
-            .header { background: linear-gradient(135deg, #F97316, #EA580C); color: white; padding: 30px; text-align: center; }
+            .header { background: linear-gradient(135deg, #D97706, #D97706); color: white; padding: 30px; text-align: center; }
             .content { padding: 30px; background-color: #f9f9f9; }
-            .button { background-color: #F97316; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+            .button { background-color: #D97706; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
             .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 14px; }
           </style>
         </head>
@@ -527,9 +527,9 @@ function getMentionEmail(notificationData, mentionedUser, mentioner, postData) {
         <head><meta charset="utf-8">
           <style>
             .container { max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; }
-            .header { background: linear-gradient(135deg, #3B82F6, #2563EB); color: white; padding: 30px; text-align: center; }
+            .header { background: linear-gradient(135deg, #D41470, #D41470); color: white; padding: 30px; text-align: center; }
             .content { padding: 30px; background-color: #f9f9f9; }
-            .button { background-color: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+            .button { background-color: #D41470; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
             .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 14px; }
           </style>
         </head>
@@ -539,7 +539,7 @@ function getMentionEmail(notificationData, mentionedUser, mentioner, postData) {
             <div class="content">
               <h2>Hey ${mentionedName}!</h2>
               <p><strong>${mentionerName}</strong> mentioned you in a ${notificationData.type === 'reply_mention' ? 'reply' : 'post'} on She Model Tech.</p>
-              ${postData?.content ? `<div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #3B82F6; margin: 20px 0; color: #374151;">${postData.content.substring(0, 200)}${postData.content.length > 200 ? '...' : ''}</div>` : ''}
+              ${postData?.content ? `<div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #D41470; margin: 20px 0; color: #404040;">${postData.content.substring(0, 200)}${postData.content.length > 200 ? '...' : ''}</div>` : ''}
               <div style="text-align: center;"><a href="${postUrl}" class="button">View Post</a></div>
             </div>
             <div class="footer"><p>She Model Tech Community</p></div>
@@ -563,9 +563,9 @@ function getNewApplicationToOwnerEmail(body) {
         <head><meta charset="utf-8">
           <style>
             .container { max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; }
-            .header { background: linear-gradient(135deg, #8B5CF6, #7C3AED); color: white; padding: 30px; text-align: center; }
+            .header { background: linear-gradient(135deg, #D41470, #D41470); color: white; padding: 30px; text-align: center; }
             .content { padding: 30px; background-color: #f9f9f9; }
-            .button { background-color: #8B5CF6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+            .button { background-color: #D41470; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
             .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 14px; }
           </style>
         </head>
@@ -576,7 +576,7 @@ function getNewApplicationToOwnerEmail(body) {
               <h2>Hi ${projectOwnerName || 'there'}!</h2>
               <p>Someone has applied to join your project on She Model Tech.</p>
               <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3 style="color: #8B5CF6; margin-top: 0;">Application Details</h3>
+                <h3 style="color: #D41470; margin-top: 0;">Application Details</h3>
                 <p><strong>Project:</strong> ${projectTitle}</p>
                 <p><strong>Applicant:</strong> ${applicantName || 'Not specified'} (${applicantEmail})</p>
                 <p><strong>Role:</strong> ${role || 'Not specified'}</p>
@@ -707,10 +707,10 @@ module.exports = async function handler(req, res) {
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#353331">
   <h1 style="font-size:20px;margin:0 0 16px">${heading || subject}</h1>
   <p style="font-size:15px;line-height:1.6;color:#444">${body}</p>
-  ${ctaUrl ? `<p style="margin:24px 0"><a href="${ctaUrl}" style="background:#F544CB;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${ctaLabel || 'Open She Model Tech'}</a></p>` : ''}
+  ${ctaUrl ? `<p style="margin:24px 0"><a href="${ctaUrl}" style="background:#D41470;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${ctaLabel || 'Open She Model Tech'}</a></p>` : ''}
   <hr style="border:none;border-top:1px solid #eee;margin:28px 0"/>
-  <p style="color:#9ca3af;font-size:12px">${BRAND_NAME} &middot; <a href="${SITE}" style="color:#9ca3af">shemodeltech.com</a><br/>
-  Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:#9ca3af">${SUPPORT_EMAIL}</a></p>
+  <p style="color:#A3A3A3;font-size:12px">${BRAND_NAME} &middot; <a href="${SITE}" style="color:#A3A3A3">shemodeltech.com</a><br/>
+  Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:#A3A3A3">${SUPPORT_EMAIL}</a></p>
 </div>`,
         };
         break;

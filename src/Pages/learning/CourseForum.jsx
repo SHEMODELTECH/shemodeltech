@@ -51,7 +51,7 @@ export const FORUM_LIMITS = {
 import { uploadDocumentToBlob, uploadImageToBlob } from '../../utils/blobStorage';
 
 const KINDS = {
-  question: { label: 'Question', cls: 'bg-sky-50 text-sky-700' },
+  question: { label: 'Question', cls: 'bg-pink-50 text-pink-700' },
   discussion: { label: 'Discussion', cls: 'bg-gray-100 text-gray-700' },
   capstone: { label: 'Capstone project', cls: 'bg-pink-50 text-pink-700' },
 };
@@ -292,7 +292,7 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
           <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${k.cls}`}>{k.label}</span>
           {t.kind === 'capstone' && (
             <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-              review?.status === 'approved' ? 'bg-emerald-50 text-emerald-700' : review?.status === 'changes' ? 'bg-amber-50 text-amber-800' : 'bg-gray-100 text-gray-600'
+              review?.status === 'approved' ? 'bg-green-50 text-green-700' : review?.status === 'changes' ? 'bg-amber-50 text-amber-800' : 'bg-gray-100 text-gray-600'
             }`}>
               {review?.status === 'approved' ? 'Approved' : review?.status === 'changes' ? 'Changes requested' : 'Waiting for review'}
             </span>
@@ -344,7 +344,7 @@ const Thread = ({ base, t, me, isStaff, myName, courseTitle, onDeleted, onNeedSi
             <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-3">
               <span className="text-sm font-semibold text-gray-800 mr-auto">Review this capstone</span>
               <button onClick={() => decide('approved')} disabled={reviewBusy || review?.status === 'approved'}
-                className="text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50">
+                className="text-xs font-semibold bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50">
                 {review?.status === 'approved' ? 'Approved' : 'Approve'}
               </button>
               <button onClick={() => setChangesOpen(true)} disabled={reviewBusy}

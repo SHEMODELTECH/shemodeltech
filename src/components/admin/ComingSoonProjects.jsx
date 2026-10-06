@@ -101,7 +101,7 @@ const ComingSoonProjects = ({ projects }) => {
                           <span className="text-gray-800">{x.name}</span>
                           {needsLead && (
                             <button type="button" disabled={sent} onClick={() => invite(p, x)}
-                              className="text-xs font-semibold bg-pink-600 text-white px-3 py-1 rounded-lg disabled:bg-emerald-600">
+                              className="text-xs font-semibold bg-pink-600 text-white px-3 py-1 rounded-lg disabled:bg-green-600">
                               {sent ? '✓ Invited' : open.kind === 'started' ? 'Remind to finish' : 'Invite to lead'}
                             </button>
                           )}

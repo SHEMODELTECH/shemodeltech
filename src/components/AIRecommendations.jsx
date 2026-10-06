@@ -66,7 +66,7 @@ const AIRecommendations = ({ currentUser }) => {
     <div className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 mb-6">
       <div className="flex items-center justify-between gap-3 mb-1">
         <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900">
-          <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 text-white flex items-center justify-center"><Spark /></span>
+          <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-pink-500 to-amber-400 text-white flex items-center justify-center"><Spark /></span>
           Your best matches
         </h2>
         <button
@@ -103,12 +103,12 @@ const AIRecommendations = ({ currentUser }) => {
                 </span>
               </div>
               <div className="flex flex-wrap gap-1.5 mt-1.5">
-                {project.needsLead && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-50 text-orange-700 border border-orange-200">Needs a lead</span>}
+                {project.needsLead && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">Needs a lead</span>}
                 {project.paid && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">Paid</span>}
                 {project.industry && <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{project.industry}</span>}
               </div>
               <p className="text-gray-600 text-xs mt-2 leading-relaxed flex-1">
-                <Spark className="w-3 h-3 inline text-orange-400 mr-1 -mt-0.5" />{project.reason}
+                <Spark className="w-3 h-3 inline text-amber-400 mr-1 -mt-0.5" />{project.reason}
               </p>
               <button
                 onClick={() => navigate(`/projects/${project.id}`)}

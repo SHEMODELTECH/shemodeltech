@@ -39,7 +39,7 @@ const TrainerPanel = ({ uid, name }) => {
       <p>Organizations pay She Model Tech to train their learners or staff. Selected mentors deliver the training and are paid a fair fee.</p>
       {profile.isTrainer ? (
         <>
-          <p className="font-semibold text-indigo-800">You’re a She Model Tech trainer.</p>
+          <p className="font-semibold text-pink-800">You’re a She Model Tech trainer.</p>
           {assignments.length === 0 ? (
             <p className="text-gray-600">No training assignments yet. We’ll notify you when you’re assigned.</p>
           ) : (
@@ -50,7 +50,7 @@ const TrainerPanel = ({ uid, name }) => {
                   <p className="text-gray-700">{a.topics}</p>
                   {a.timeline && <p className="text-xs text-gray-500">{a.timeline}</p>}
                   {a.workspaceProjectId && (
-                    <a href={`/projects/${a.workspaceProjectId}/workspace`} className="inline-block mt-1 text-xs font-semibold text-indigo-700 hover:underline">Open the training workspace</a>
+                    <a href={`/projects/${a.workspaceProjectId}/workspace`} className="inline-block mt-1 text-xs font-semibold text-pink-700 hover:underline">Open the training workspace</a>
                   )}
                 </li>
               ))}
@@ -63,7 +63,7 @@ const TrainerPanel = ({ uid, name }) => {
         <>
           <p className="text-gray-600">{TRAINER_CRITERIA}</p>
           <button onClick={request} disabled={busy || !eligible}
-            className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg disabled:opacity-50">
+            className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg disabled:opacity-50">
             Make me available for training contracts
           </button>
           {!eligible && <p className="text-xs text-gray-500">Publish your first course in Learning to become eligible.</p>}

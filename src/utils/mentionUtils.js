@@ -132,7 +132,7 @@ export const formatMentions = (text, taggedUsers = []) => {
     const quotedPattern = new RegExp(`@"${handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`, 'gi');
     const unquotedPattern = new RegExp(`@${handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
     
-    const replacement = `<span class="text-lime-400 hover:text-lime-300 cursor-pointer font-medium" title="${displayName}">@${handle}</span>`;
+    const replacement = `<span class="text-green-400 hover:text-green-300 cursor-pointer font-medium" title="${displayName}">@${handle}</span>`;
     
     formattedText = formattedText.replace(quotedPattern, replacement);
     formattedText = formattedText.replace(unquotedPattern, replacement);

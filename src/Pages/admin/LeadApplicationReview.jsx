@@ -37,7 +37,7 @@ import {
 
 const STATUS_STYLE = {
   [LEAD_APP_STATUS.SUBMITTED]: 'bg-gray-100 text-gray-700',
-  [LEAD_APP_STATUS.INTERVIEW_SCHEDULED]: 'bg-purple-100 text-purple-700',
+  [LEAD_APP_STATUS.INTERVIEW_SCHEDULED]: 'bg-pink-100 text-pink-700',
   [LEAD_APP_STATUS.ASSIGNED]: 'bg-green-100 text-green-700',
   [LEAD_APP_STATUS.OFFERED_ROLE]: 'bg-amber-100 text-amber-700',
   [LEAD_APP_STATUS.REJECTED]: 'bg-red-100 text-red-600',
@@ -229,7 +229,7 @@ const LeadApplicationReview = () => {
                         }
                         setPBusy(false);
                       }}
-                      className="text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
+                      className="text-xs font-semibold bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
                     >
                       Approve and make her lead
                     </button>
@@ -471,7 +471,7 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
                     'Interview scheduled and she\u2019s been notified.'
                   )
                 }
-                className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold px-4 py-2 rounded-lg"
+                className="bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold px-4 py-2 rounded-lg"
               >
                 Save &amp; notify
               </button>

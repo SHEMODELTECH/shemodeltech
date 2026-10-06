@@ -54,9 +54,12 @@ export const BRAND = {
   tagline: 'Achieve · Ascend · Advance',
   taglineWords: ['Achieve', 'Ascend', 'Advance'],
 
-  // Brand palette, sampled from the logo and the brand shape assets.
+  // Brand palette: logo pink, black, and white (backgrounds use only these,
+  // plus red / green / amber for status). Older accent colours are kept below
+  // for reference only.
+  core: { pink: '#D41470', black: '#000000', white: '#FFFFFF' },
   colors: {
-    pink: '#F544CB', // primary - tagline "Connect", wave
+    pink: '#D41470', // primary - tagline "Connect", wave
     pinkDeep: '#F72585', // logo hair
     magenta: '#EB48D5', // wave shape
     purple: '#8948EB', // burst shape, logo accent
@@ -71,9 +74,9 @@ export const BRAND = {
     starMint: '/Images/brand/shape-star-mint.png',
     burstPurple: '/Images/brand/shape-burst-purple.png',
     barGreen: '/Images/brand/shape-bar-green.png',
-    arcGreen: '/Images/brand/shape-arc-green.png',
+    arcGreen: '/Images/brand/shape-arc-black.png', // brand: black
     sparkle: '/Images/brand/shape-sparkle.png',
-    wavePink: '/Images/brand/shape-wave-pink.png',
+    wavePink: '/Images/brand/shape-wave-logo-pink.png', // brand: logo pink
   },
 
   // Photography

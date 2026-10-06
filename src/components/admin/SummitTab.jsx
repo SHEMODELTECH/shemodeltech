@@ -106,7 +106,7 @@ const SummitTab = () => {
         ) : (
           summits.map((s) => (
             <button key={s.id} onClick={() => open(s)} className="w-full text-left bg-white border border-gray-200 rounded-lg p-3 mb-2 hover:border-pink-300">
-              <p className="font-semibold text-gray-900">{s.title} {s.published ? <span className="text-xs text-emerald-700">· Registration open</span> : s.announced ? <span className="text-xs text-amber-700">· Coming soon</span> : <span className="text-xs text-gray-500">· Draft</span>}</p>
+              <p className="font-semibold text-gray-900">{s.title} {s.published ? <span className="text-xs text-green-700">· Registration open</span> : s.announced ? <span className="text-xs text-amber-700">· Coming soon</span> : <span className="text-xs text-gray-500">· Draft</span>}</p>
               <p className="text-xs text-gray-500">{s.startDate}{s.venue ? ` · ${s.venue}` : ''}</p>
             </button>
           ))
@@ -241,7 +241,7 @@ const SummitTab = () => {
                 <div key={r.id} className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-2.5 mb-1.5 text-sm">
                   <span>{r.name} <span className="text-gray-500">· {r.email}{r.shareProfile ? ' · shares profile' : ''}</span></span>
                   <button onClick={async () => { await setCheckedIn(r, !r.checkedIn); setRegs((xs) => xs.map((x) => (x.id === r.id ? { ...x, checkedIn: !r.checkedIn } : x))); }}
-                    className={`text-xs font-semibold px-3 py-1 rounded-lg ${r.checkedIn ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                    className={`text-xs font-semibold px-3 py-1 rounded-lg ${r.checkedIn ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700'}`}>
                     {r.checkedIn ? 'Checked in' : 'Check in'}
                   </button>
                 </div>

@@ -71,10 +71,10 @@ const shell = (title, body, cta) => `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#353331">
  <h1 style="font-size:20px;margin:0 0 16px">${title}</h1>
  ${body}
- ${cta ? `<p style="margin:24px 0"><a href="${cta.url}" style="background:#F544CB;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${cta.label}</a></p>` : ''}
+ ${cta ? `<p style="margin:24px 0"><a href="${cta.url}" style="background:#D41470;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${cta.label}</a></p>` : ''}
  <hr style="border:none;border-top:1px solid #eee;margin:28px 0"/>
- <p style="color:#9ca3af;font-size:12px">${BRAND_NAME} &middot; <a href="${SITE}" style="color:#9ca3af">shemodeltech.com</a><br/>
- Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:#9ca3af">${SUPPORT_EMAIL}</a></p>
+ <p style="color:#A3A3A3;font-size:12px">${BRAND_NAME} &middot; <a href="${SITE}" style="color:#A3A3A3">shemodeltech.com</a><br/>
+ Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:#A3A3A3">${SUPPORT_EMAIL}</a></p>
 </div>`;
 
 const reminderEmail = (project, daysLeft, isLead) => {

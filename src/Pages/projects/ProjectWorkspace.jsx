@@ -697,8 +697,8 @@ const ProjectWorkspace = () => {
                 <p className="text-xs text-gray-500 mb-3">They follow this workspace and take part in the Discussion.</p>
                 <div className="flex flex-wrap gap-2">
                   {project.observerInfo.map((o) => (
-                    <span key={o.uid} className="text-sm bg-indigo-50 text-indigo-800 border border-indigo-100 rounded-full px-3 py-1">
-                      {o.name} <span className="text-indigo-500 text-xs">· {o.label}</span>
+                    <span key={o.uid} className="text-sm bg-pink-50 text-pink-800 border border-pink-100 rounded-full px-3 py-1">
+                      {o.name} <span className="text-pink-500 text-xs">· {o.label}</span>
                     </span>
                   ))}
                 </div>

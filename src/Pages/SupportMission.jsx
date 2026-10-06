@@ -16,7 +16,7 @@ const SupportMission = () => {
   const features = useFeatures();
   const canGiveOnline = features.donations && DONATION_LINK;
   return (
-    <div className="bg-[#FDF4F8] min-h-screen">
+    <div className="bg-[#FDF2F7] min-h-screen">
       <Navbar />
       <section className="max-w-4xl mx-auto px-6 pt-14 pb-10">
         <p className="text-sm font-bold uppercase tracking-widest text-pink-700">Support our mission</p>

@@ -108,7 +108,7 @@ const JobCard = ({ j }) => (
     <div className="flex flex-wrap items-center gap-2">
       {j.featured && <PremiumBadge kind="featured" />}
       <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{JOB_TYPES[j.type] || j.type}</span>
-      {j.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Remote</span>}
+      {j.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-green-50 text-green-700">Remote</span>}
     </div>
     <p className="font-semibold text-gray-900 mt-2">{j.title}</p>
     <p className="text-sm text-gray-600">
@@ -118,7 +118,7 @@ const JobCard = ({ j }) => (
     </p>
     {(() => {
       const w = jobWindow(j);
-      if (w.state === 'upcoming') return <p className="text-xs text-sky-700 mt-1">Applications open {w.opens}</p>;
+      if (w.state === 'upcoming') return <p className="text-xs text-pink-700 mt-1">Applications open {w.opens}</p>;
       return w.closes ? <p className="text-xs text-gray-500 mt-1">Apply by {w.closes}</p> : null;
     })()}
   </Link>
@@ -285,13 +285,13 @@ export const JobDetail = () => {
         <div className="flex flex-wrap items-center gap-2">
           {job.featured && <PremiumBadge kind="featured" />}
           <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{JOB_TYPES[job.type] || job.type}</span>
-          {job.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Remote</span>}
+          {job.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-green-50 text-green-700">Remote</span>}
           {underReview ? (
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Under review · not accepting applications</span>
           ) : (job.status !== 'open' || win.state === 'closed') ? (
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">Closed</span>
           ) : win.state === 'upcoming' ? (
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700">Opens {fmt(win.opens)}</span>
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700">Opens {fmt(win.opens)}</span>
           ) : null}
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mt-3">{job.title}</h1>

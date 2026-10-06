@@ -20,8 +20,8 @@ const CompanyVerificationBanner = ({ profile }) => {
   const updated = status === 'details_updated';
 
   return (
-    <div className={`rounded-xl border p-5 mb-6 ${asked ? 'border-amber-200 bg-amber-50' : 'border-purple-200 bg-purple-50'}`}>
-      <p className={`text-xs font-bold uppercase tracking-wider ${asked ? 'text-amber-800' : 'text-purple-700'}`}>
+    <div className={`rounded-xl border p-5 mb-6 ${asked ? 'border-amber-200 bg-amber-50' : 'border-pink-200 bg-pink-50'}`}>
+      <p className={`text-xs font-bold uppercase tracking-wider ${asked ? 'text-amber-800' : 'text-pink-700'}`}>
         {asked ? 'Action needed' : 'Verification pending'}
       </p>
       <h2 className="text-lg font-bold text-gray-900 mt-1">

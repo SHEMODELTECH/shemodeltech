@@ -42,10 +42,10 @@ const TermsOfService = () => {
   }, []);
 
   return (
-    <div style={{ fontFamily: "'Georgia','Times New Roman',serif", background: '#030712', minHeight: '100vh', color: '#f9fafb', overflowX: 'hidden' }}>
+    <div style={{ fontFamily: "'Georgia','Times New Roman',serif", background: '#030712', minHeight: '100vh', color: '#FAFAFA', overflowX: 'hidden' }}>
 
       {/* ── Read progress bar ── */}
-      <div style={{ position: 'fixed', top: 0, left: 0, height: 3, zIndex: 9999, width: `${scrollProgress}%`, background: 'linear-gradient(90deg,#22c55e,#6366f1)', transition: 'width 0.1s ease' }} />
+      <div style={{ position: 'fixed', top: 0, left: 0, height: 3, zIndex: 9999, width: `${scrollProgress}%`, background: 'linear-gradient(90deg,#22c55e,#D41470)', transition: 'width 0.1s ease' }} />
 
       {/* ── Header ── */}
       <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(3,7,18,0.93)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -78,11 +78,11 @@ const TermsOfService = () => {
         {/* Mobile TOC dropdown */}
         {tocOpen && (
           <div className="mobile-toc-panel" style={{ background: 'rgba(3,7,18,0.97)', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '12px 16px 16px' }}>
-            <p style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 10, fontFamily: 'system-ui,sans-serif', marginTop: 0 }}>Jump to section</p>
+            <p style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#737373', marginBottom: 10, fontFamily: 'system-ui,sans-serif', marginTop: 0 }}>Jump to section</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {sections.map(s => (
                 <a key={s.id} href={`#${s.id}`} onClick={() => setTocOpen(false)}
-                  style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, color: activeSection === s.id ? '#22c55e' : '#9ca3af', textDecoration: 'none', fontFamily: 'system-ui,sans-serif', background: activeSection === s.id ? 'rgba(34,197,94,0.1)' : 'rgba(255,255,255,0.05)', border: activeSection === s.id ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.08)', transition: 'all 0.2s' }}>
+                  style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, color: activeSection === s.id ? '#22c55e' : '#A3A3A3', textDecoration: 'none', fontFamily: 'system-ui,sans-serif', background: activeSection === s.id ? 'rgba(34,197,94,0.1)' : 'rgba(255,255,255,0.05)', border: activeSection === s.id ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.08)', transition: 'all 0.2s' }}>
                   {s.label}
                 </a>
               ))}
@@ -96,11 +96,11 @@ const TermsOfService = () => {
 
         {/* Sidebar TOC - desktop only */}
         <aside className="tos-toc" style={{ position: 'sticky', top: 80, width: 200, flexShrink: 0, display: 'none' }}>
-          <p style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 14, fontFamily: 'system-ui,sans-serif' }}>Contents</p>
+          <p style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#737373', marginBottom: 14, fontFamily: 'system-ui,sans-serif' }}>Contents</p>
           {sections.map(s => (
             <a key={s.id} href={`#${s.id}`} style={{
               display: 'block', padding: '6px 10px', marginBottom: 3, borderRadius: 6, fontSize: 12,
-              color: activeSection === s.id ? '#22c55e' : '#9ca3af',
+              color: activeSection === s.id ? '#22c55e' : '#A3A3A3',
               textDecoration: 'none', fontFamily: 'system-ui,sans-serif',
               borderLeft: activeSection === s.id ? '2px solid #22c55e' : '2px solid transparent',
               background: activeSection === s.id ? 'rgba(34,197,94,0.07)' : 'transparent',
@@ -120,7 +120,7 @@ const TermsOfService = () => {
             <h1 style={{ fontSize: 'clamp(26px,6vw,54px)', fontWeight: 700, lineHeight: 1.1, marginBottom: 14, letterSpacing: '-1px', background: 'linear-gradient(135deg,#ffffff 40%,#22c55e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', wordBreak: 'break-word' }}>
               Terms of Service
             </h1>
-            <p style={{ color: '#9ca3af', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.7 }}>
+            <p style={{ color: '#A3A3A3', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.7 }}>
               Effective Date: {new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}<br />
               Last Updated: {new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
             </p>
@@ -163,7 +163,7 @@ const TermsOfService = () => {
             </Subsection>
 
             <Subsection title="Consultation Fee as Project Credit">
-              <TosCallout color="#6366f1" icon="✅" title="Good News - Your Fee Counts!">
+              <TosCallout color="#D41470" icon="✅" title="Good News - Your Fee Counts!">
                 If you choose to move forward and engage She Model Tech to build or transform your web or mobile application following the consultation, the <strong>$100 consultation fee will be applied as a credit toward your total project payment</strong>. You will not pay this amount twice - it becomes part of your project investment.
               </TosCallout>
             </Subsection>
@@ -188,7 +188,7 @@ const TermsOfService = () => {
             <ProcessStep step={1} color="#22c55e" title="Consultation & Discovery">
               We conduct your discovery session - reviewing your goals, business model, existing platforms, and desired intelligent capabilities.
             </ProcessStep>
-            <ProcessStep step={2} color="#6366f1" title="Custom Service Proposal Delivery">
+            <ProcessStep step={2} color="#D41470" title="Custom Service Proposal Delivery">
               We deliver a comprehensive written proposal including: recommended solution and services, how She Model Tech operates, estimated project timeline and key milestones, transparent pricing breakdown, and technology stack and AI approach.
             </ProcessStep>
             <ProcessStep step={3} color="#f59e0b" title="Client Review & Decision">
@@ -197,7 +197,7 @@ const TermsOfService = () => {
             <ProcessStep step={4} color="#22c55e" title="Project Agreement & Kickoff">
               If the Client agrees to move forward, both parties execute a formal Project Agreement. The $100 consultation fee is credited to the first project payment and a dedicated project team is assigned.
             </ProcessStep>
-            <ProcessStep step={5} color="#6366f1" title="Development, Delivery & Support">
+            <ProcessStep step={5} color="#D41470" title="Development, Delivery & Support">
               Our team builds and delivers your intelligent system. Upon launch, we provide ongoing support, maintenance, and optimization services.
             </ProcessStep>
           </TosSection>
@@ -273,18 +273,18 @@ const TermsOfService = () => {
               <p style={{ margin: '0 0 6px 0', fontWeight: 700, color: '#22c55e', fontFamily: 'system-ui,sans-serif', fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
                 💬 Chat with us directly on our homepage
               </p>
-              <p style={{ margin: '0 0 18px 0', color: '#d1d5db', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.75 }}>
-                The fastest way to get answers is through the <strong style={{ color: '#f9fafb' }}>AI chat on our home page</strong>. Head back to the homepage and use the chat to ask us anything - our team reviews every conversation.
+              <p style={{ margin: '0 0 18px 0', color: '#D4D4D4', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.75 }}>
+                The fastest way to get answers is through the <strong style={{ color: '#FAFAFA' }}>AI chat on our home page</strong>. Head back to the homepage and use the chat to ask us anything - our team reviews every conversation.
               </p>
-              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#22c55e,#6366f1)', borderRadius: 10, padding: '11px 20px', textDecoration: 'none', color: '#fff', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 700, boxShadow: '0 4px 20px rgba(34,197,94,0.3)' }}>
+              <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#22c55e,#D41470)', borderRadius: 10, padding: '11px 20px', textDecoration: 'none', color: '#fff', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 700, boxShadow: '0 4px 20px rgba(34,197,94,0.3)' }}>
                 🏠 Go to Homepage & Chat with Us
               </Link>
             </div>
-            <p style={{ marginTop: 20, color: '#9ca3af', fontFamily: 'system-ui,sans-serif', fontSize: 14 }}>
+            <p style={{ marginTop: 20, color: '#A3A3A3', fontFamily: 'system-ui,sans-serif', fontSize: 14 }}>
               By engaging with She Model Tech's services or paying the consultation fee, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 24 }}>
-              <Link to="/solutions/privacy" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#818cf8', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
+              <Link to="/solutions/privacy" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#EC5C9C', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
                 🔒 Privacy Policy
               </Link>
               <Link to="/solutions" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 10, padding: '10px 16px', textDecoration: 'none', color: '#22c55e', fontFamily: 'system-ui,sans-serif', fontSize: 14, fontWeight: 600 }}>
@@ -295,10 +295,10 @@ const TermsOfService = () => {
 
           {/* Footer */}
           <div style={{ marginTop: 56, paddingTop: 28, borderTop: '1px solid rgba(255,255,255,0.07)', textAlign: 'center' }}>
-            <p style={{ color: '#4b5563', fontFamily: 'system-ui,sans-serif', fontSize: 13 }}>
+            <p style={{ color: '#525252', fontFamily: 'system-ui,sans-serif', fontSize: 13 }}>
               © {new Date().getFullYear()} She Model Tech. All rights reserved.&nbsp;·&nbsp;
               <Link to="/solutions" style={{ color: '#22c55e', textDecoration: 'none' }}>Home</Link>&nbsp;·&nbsp;
-              <Link to="/solutions/privacy" style={{ color: '#818cf8', textDecoration: 'none' }}>Privacy Policy</Link>
+              <Link to="/solutions/privacy" style={{ color: '#EC5C9C', textDecoration: 'none' }}>Privacy Policy</Link>
             </p>
           </div>
         </main>
@@ -322,10 +322,10 @@ const TermsOfService = () => {
         }
 
         * { box-sizing: border-box; }
-        p  { color: #d1d5db; font-family: system-ui,sans-serif; font-size: 15px; line-height: 1.85; margin-bottom: 14px; }
-        ul { color: #d1d5db; font-family: system-ui,sans-serif; font-size: 15px; line-height: 1.85; padding-left: 20px; margin-bottom: 14px; }
+        p  { color: #D4D4D4; font-family: system-ui,sans-serif; font-size: 15px; line-height: 1.85; margin-bottom: 14px; }
+        ul { color: #D4D4D4; font-family: system-ui,sans-serif; font-size: 15px; line-height: 1.85; padding-left: 20px; margin-bottom: 14px; }
         li { margin-bottom: 8px; }
-        strong { color: #f9fafb; }
+        strong { color: #FAFAFA; }
         a  { color: #22c55e; }
 
         /* Tighter text on small screens */
@@ -355,8 +355,8 @@ const TosSection = ({ id, number, title, icon, children, highlight }) => (
         fontSize: 19
       }}>{icon}</div>
       <div style={{ minWidth: 0, flex: 1 }}>
-        <span style={{ display: 'block', fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#6b7280', fontFamily: 'system-ui,sans-serif', marginBottom: 2 }}>Section {number}</span>
-        <h2 style={{ margin: 0, fontSize: 'clamp(16px,2.8vw,22px)', fontWeight: 700, letterSpacing: '-0.3px', color: '#f3f4f6', fontFamily: "'Georgia',serif", wordBreak: 'break-word' }}>{title}</h2>
+        <span style={{ display: 'block', fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#737373', fontFamily: 'system-ui,sans-serif', marginBottom: 2 }}>Section {number}</span>
+        <h2 style={{ margin: 0, fontSize: 'clamp(16px,2.8vw,22px)', fontWeight: 700, letterSpacing: '-0.3px', color: '#F5F5F5', fontFamily: "'Georgia',serif", wordBreak: 'break-word' }}>{title}</h2>
       </div>
     </div>
     <div className="tos-section-body">{children}</div>
@@ -366,7 +366,7 @@ const TosSection = ({ id, number, title, icon, children, highlight }) => (
 
 const Subsection = ({ title, children }) => (
   <div style={{ marginBottom: 26 }}>
-    <h3 style={{ fontFamily: "'Georgia',serif", fontSize: 'clamp(13px,2vw,15px)', fontWeight: 600, color: '#e5e7eb', marginBottom: 10, paddingBottom: 8, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{title}</h3>
+    <h3 style={{ fontFamily: "'Georgia',serif", fontSize: 'clamp(13px,2vw,15px)', fontWeight: 600, color: '#E5E5E5', marginBottom: 10, paddingBottom: 8, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{title}</h3>
     {children}
   </div>
 );
@@ -378,19 +378,19 @@ const TosCallout = ({ color, icon, title, children }) => {
       <p style={{ margin: '0 0 8px 0', fontWeight: 700, color, fontSize: 14, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', fontFamily: 'system-ui,sans-serif' }}>
         <span>{icon}</span>{title}
       </p>
-      <div style={{ color: '#d1d5db', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.75 }}>{children}</div>
+      <div style={{ color: '#D4D4D4', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.75 }}>{children}</div>
     </div>
   );
 };
 
 const ProcessStep = ({ step, color, title, children }) => {
-  const rgb = color === '#22c55e' ? '34,197,94' : color === '#6366f1' ? '99,102,241' : '245,158,11';
+  const rgb = color === '#22c55e' ? '34,197,94' : color === '#D41470' ? '99,102,241' : '245,158,11';
   return (
     <div style={{ display: 'flex', gap: 14, marginBottom: 24, alignItems: 'flex-start' }}>
       <div style={{ minWidth: 32, width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: `rgba(${rgb},0.15)`, border: `2px solid ${color}`, color, fontWeight: 700, fontSize: 13, fontFamily: 'system-ui,sans-serif', flexShrink: 0, marginTop: 2 }}>{step}</div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <h4 style={{ margin: '0 0 7px', color: '#f9fafb', fontFamily: "'Georgia',serif", fontSize: 'clamp(13px,2vw,15px)', wordBreak: 'break-word' }}>{title}</h4>
-        <div style={{ color: '#9ca3af', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.75 }}>{children}</div>
+        <h4 style={{ margin: '0 0 7px', color: '#FAFAFA', fontFamily: "'Georgia',serif", fontSize: 'clamp(13px,2vw,15px)', wordBreak: 'break-word' }}>{title}</h4>
+        <div style={{ color: '#A3A3A3', fontFamily: 'system-ui,sans-serif', fontSize: 14, lineHeight: 1.75 }}>{children}</div>
       </div>
     </div>
   );

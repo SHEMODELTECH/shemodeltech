@@ -11,7 +11,7 @@ import { SPONSOR_LIMITS as L, createSponsorRequest, listMySponsorRequests } from
 import { useFeatures } from '../../utils/features';
 
 const EMPTY = { problemTitle: '', projects: 1, people: 4, budget: '', payPerPerson: '', focus: '', timeline: '', message: '' };
-const STATUS = { new: ['Received · awaiting payment', 'bg-amber-50 text-amber-800'], paid: ['Payment received · setting up', 'bg-sky-50 text-sky-700'], scheduled: ['Cohort created', 'bg-emerald-50 text-emerald-700'], declined: ['Not scheduled', 'bg-gray-100 text-gray-600'] };
+const STATUS = { new: ['Received · awaiting payment', 'bg-amber-50 text-amber-800'], paid: ['Payment received · setting up', 'bg-pink-50 text-pink-700'], scheduled: ['Cohort created', 'bg-green-50 text-green-700'], declined: ['Not scheduled', 'bg-gray-100 text-gray-600'] };
 
 const SponsorCohort = () => {
   const { currentUser } = useAuth();

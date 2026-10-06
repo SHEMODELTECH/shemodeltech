@@ -215,7 +215,7 @@ export const GroupMentionTextarea = ({
                   key={member.id || member.userId || index}
                   onClick={() => selectSuggestion(member, index)}
                   className={`flex items-center space-x-2 sm:space-x-3 w-full px-2 sm:px-3 py-2 sm:py-3 text-left hover:bg-gray-100 rounded-lg transition-colors ${
-                    index === selectedSuggestionIndex ? 'bg-pink-600/20 text-orange-400' : 'text-gray-900'
+                    index === selectedSuggestionIndex ? 'bg-pink-600/20 text-amber-400' : 'text-gray-900'
                   }`}
                 >
                   {/* Member Avatar */}
@@ -240,7 +240,7 @@ export const GroupMentionTextarea = ({
                     </div>
                     <div className="text-xs sm:text-sm text-gray-400 truncate flex items-center flex-wrap">
                       {member.role === 'admin' ? (
-                        <span className="text-orange-500 flex items-center flex-shrink-0">
+                        <span className="text-amber-500 flex items-center flex-shrink-0">
                           <span className="hidden xs:inline">👑</span>
                           <span className="ml-0.5 xs:ml-1">Admin</span>
                         </span>

@@ -29,7 +29,7 @@ import {
 
 const TYPE_STYLE = {
   keynote: 'bg-pink-100 text-pink-800',
-  panel: 'bg-violet-100 text-violet-800',
+  panel: 'bg-pink-100 text-pink-800',
   workshop: 'bg-amber-100 text-amber-800',
   break: 'bg-gray-100 text-gray-700',
 };
@@ -185,13 +185,13 @@ const Summit = () => {
         {summit === undefined ? (
           <p className="text-gray-500">Loading...</p>
         ) : !summit ? (
-          <section className="rounded-3xl bg-[#FDF4F8] border border-pink-100 p-8 sm:p-12 text-center">
+          <section className="rounded-3xl bg-[#FDF2F7] border border-pink-100 p-8 sm:p-12 text-center">
             <p className="text-pink-700 text-sm font-bold uppercase tracking-widest">She Model Tech Summit</p>
             <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mt-2">Our annual conference for women in tech</h1>
             <p className="text-gray-700 mt-3 max-w-xl mx-auto">Keynotes, panels, and hands-on workshops. Details are coming soon.</p>
             <div className="mt-6">
               {interested ? (
-                <p className="font-semibold text-emerald-800">✓ We’ll email you when registration opens.</p>
+                <p className="font-semibold text-green-800">✓ We’ll email you when registration opens.</p>
               ) : (
                 <button onClick={askNotify} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Notify me</button>
               )}
@@ -200,7 +200,7 @@ const Summit = () => {
         ) : (
           <>
             {/* Top: the conference at a glance */}
-            <section className="rounded-3xl bg-[#FDF4F8] border border-pink-100 p-6 sm:p-10">
+            <section className="rounded-3xl bg-[#FDF2F7] border border-pink-100 p-6 sm:p-10">
               <p className="text-pink-700 text-sm font-bold uppercase tracking-widest">She Model Tech Summit · our annual conference for women in tech</p>
               <h1 className="text-3xl sm:text-5xl font-black text-gray-900 mt-2 tracking-tight">{summit.theme || summit.title}</h1>
               {summit.theme && summit.title && <p className="text-base font-semibold text-gray-700 mt-1">{summit.title}</p>}
@@ -215,13 +215,13 @@ const Summit = () => {
               <div className="mt-6">
                 {!summit.published ? (
                   interested ? (
-                    <p className="font-semibold text-emerald-800">✓ We’ll email you when registration opens.</p>
+                    <p className="font-semibold text-green-800">✓ We’ll email you when registration opens.</p>
                   ) : (
                     <button onClick={askNotify} className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3 rounded-lg">Notify me</button>
                   )
                 ) : reg ? (
                   <div>
-                    <p className="font-semibold text-emerald-800">✓ You’re registered{reg.checkedIn ? ' and checked in' : ''}.</p>
+                    <p className="font-semibold text-green-800">✓ You’re registered{reg.checkedIn ? ' and checked in' : ''}.</p>
                     {workshops.length > 0 && !editingWs && (
                       <p className="text-sm text-gray-700 mt-1">
                         Your workshops: {(reg.workshops || []).length ? workshops.filter((w) => (reg.workshops || []).includes(w.id)).map((w) => w.title).join(', ') : 'none yet'}{' '}
@@ -369,14 +369,14 @@ const Summit = () => {
             )}
 
             {attendees && (
-              <section className="mt-10 rounded-2xl border border-indigo-200 bg-indigo-50/40 p-6">
+              <section className="mt-10 rounded-2xl border border-pink-200 bg-pink-50/40 p-6">
                 <h2 className="text-xl font-bold text-gray-900">Attendees open to recruiters ({attendees.length})</h2>
                 <p className="text-sm text-gray-600 mt-1">Only attendees who chose to share their Talent Board profile appear here.</p>
                 <ul className="mt-3 grid sm:grid-cols-2 gap-2">
                   {attendees.map((a) => (
                     <li key={a.uid} className="bg-white border border-gray-200 rounded-lg px-3 py-2 flex items-center justify-between">
                       <span className="text-sm font-semibold text-gray-900">{a.name}</span>
-                      <Link to={`/profile/${encodeURIComponent(a.email)}`} className="text-xs font-semibold text-indigo-700 hover:underline">View profile</Link>
+                      <Link to={`/profile/${encodeURIComponent(a.email)}`} className="text-xs font-semibold text-pink-700 hover:underline">View profile</Link>
                     </li>
                   ))}
                 </ul>
@@ -394,7 +394,7 @@ const Summit = () => {
               </ul>
               {summit.partnerOptions && <p className="text-sm text-gray-700 mt-3 whitespace-pre-wrap">{summit.partnerOptions}</p>}
               {pSent ? (
-                <p className="mt-5 font-semibold text-emerald-800">Thank you. We’ll be in touch at {pForm.contactEmail}.</p>
+                <p className="mt-5 font-semibold text-green-800">Thank you. We’ll be in touch at {pForm.contactEmail}.</p>
               ) : features.companyTiers && !Object.keys(PARTNER_OPTIONS).some((k) => hasPerk(profile, PARTNER_OPTION_PERK[k], true)) ? (
                 <p className="mt-5 text-sm text-gray-700">
                   Summit tables, workshops, panels, and speaking slots come with our company tiers.{' '}

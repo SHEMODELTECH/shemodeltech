@@ -148,8 +148,8 @@ const Organizations = () => {
               </button>
             </div>
           ) : sent ? (
-            <div className="mt-5 rounded-xl bg-white border border-emerald-200 p-5">
-              <p className="font-semibold text-emerald-800">Thank you. Your request has been sent.</p>
+            <div className="mt-5 rounded-xl bg-white border border-green-200 p-5">
+              <p className="font-semibold text-green-800">Thank you. Your request has been sent.</p>
               <p className="text-sm text-gray-700 mt-1">
                 It went to She Model Tech, and we’ve emailed a confirmation to {form.contactEmail}. You’ll get
                 updates in your notifications and by email, and you can follow it below.
@@ -256,7 +256,7 @@ const Organizations = () => {
                   {r.workspaceProjectId && (
                     <a href={`/projects/${r.workspaceProjectId}/workspace`} className="text-xs font-semibold bg-gray-900 text-white px-3 py-1.5 rounded-lg">Open workspace</a>
                   )}
-                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${r.status === 'declined' ? 'bg-gray-100 text-gray-600' : ['completed', 'active', 'signed', 'approved'].includes(r.status) ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-800'}`}>
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${r.status === 'declined' ? 'bg-gray-100 text-gray-600' : ['completed', 'active', 'signed', 'approved'].includes(r.status) ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-800'}`}>
                     {STATUS_LABELS[r.status] || r.status}
                   </span>
                 </li>

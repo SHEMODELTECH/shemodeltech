@@ -90,7 +90,7 @@ export const JoinOrganization = () => {
         ) : !org || org.status !== 'active' ? (
           <p className="text-gray-700">This invite link isn’t active. Ask your organization for a new one.</p>
         ) : member ? (
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+          <div className="rounded-2xl border border-green-200 bg-green-50 p-6">
             <h1 className="text-xl font-bold text-gray-900">You’re part of {org.name}</h1>
             <p className="text-gray-700 mt-2">Start with your organization’s courses:</p>
             <ul className="mt-2 space-y-1">
@@ -213,11 +213,11 @@ export const OrgDashboard = () => {
       </div>
 
       {editions.length > 0 && (
-        <div className="mt-5 rounded-xl border border-indigo-200 bg-white p-4">
+        <div className="mt-5 rounded-xl border border-pink-200 bg-white p-4">
           <p className="text-sm font-semibold text-gray-900">Instructor editions</p>
           <ul className="mt-2 space-y-1">
             {editions.map((e) => (
-              <li key={e.id}><Link to={`/org/${orgId}/edition/${e.id}`} className="text-indigo-700 font-semibold hover:underline">{e.title}</Link></li>
+              <li key={e.id}><Link to={`/org/${orgId}/edition/${e.id}`} className="text-pink-700 font-semibold hover:underline">{e.title}</Link></li>
             ))}
           </ul>
         </div>
@@ -248,7 +248,7 @@ export const OrgDashboard = () => {
                     <p className="text-xs text-gray-500">{m.email}{m.minor ? ' · under 18' : ''}</p>
                   </td>
                   {courses.map((c) => (
-                    <td key={c.slug} className={`p-3 ${c.status === 'Completed' ? 'text-emerald-700 font-semibold' : c.status === 'In progress' ? 'text-amber-700' : 'text-gray-500'}`}>{c.status}</td>
+                    <td key={c.slug} className={`p-3 ${c.status === 'Completed' ? 'text-green-700 font-semibold' : c.status === 'In progress' ? 'text-amber-700' : 'text-gray-500'}`}>{c.status}</td>
                   ))}
                   <td className="p-3">{certs.length}</td>
                   <td className="p-3">{badges}</td>

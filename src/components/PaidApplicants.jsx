@@ -10,8 +10,8 @@ import { decideApplication } from '../utils/companyCohorts';
 
 const STATUS = {
   submitted: ['Applied', 'bg-gray-100 text-gray-700'],
-  interview: ['Interview set', 'bg-sky-50 text-sky-700'],
-  approved: ['On the team', 'bg-emerald-50 text-emerald-700'],
+  interview: ['Interview set', 'bg-pink-50 text-pink-700'],
+  approved: ['On the team', 'bg-green-50 text-green-700'],
   rejected: ['Not selected', 'bg-gray-100 text-gray-500'],
   withdrawn: ['Withdrawn', 'bg-gray-100 text-gray-500'],
 };
@@ -110,8 +110,8 @@ const PaidApplicants = ({ cohort }) => {
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          <button disabled={busy} onClick={() => decide(a, 'approved')} className="text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg disabled:opacity-50">Approve</button>
-                          <button disabled={busy} onClick={() => decide(a, 'interview')} className="text-xs font-semibold bg-sky-600 hover:bg-sky-700 text-white px-3 py-2 rounded-lg disabled:opacity-50">Invite to interview</button>
+                          <button disabled={busy} onClick={() => decide(a, 'approved')} className="text-xs font-semibold bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg disabled:opacity-50">Approve</button>
+                          <button disabled={busy} onClick={() => decide(a, 'interview')} className="text-xs font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg disabled:opacity-50">Invite to interview</button>
                           <button disabled={busy} onClick={() => decide(a, 'rejected')} className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-2 rounded-lg disabled:opacity-50">Not selected</button>
                         </div>
                       </>

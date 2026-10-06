@@ -109,9 +109,9 @@ export const ComingSoonNotice = () => {
   // nobody mistakes a preview for the member-facing experience.
   if (isReviewer) {
     return (
-      <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-8">
-        <p className="text-purple-900 text-sm font-bold mb-1">Reviewer preview</p>
-        <p className="text-purple-800 text-xs leading-relaxed">
+      <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-8">
+        <p className="text-pink-900 text-sm font-bold mb-1">Reviewer preview</p>
+        <p className="text-pink-800 text-xs leading-relaxed">
           Paid features are live for you so you can test them. Everyone else sees
           &ldquo;coming soon&rdquo; until membership is switched on.
         </p>

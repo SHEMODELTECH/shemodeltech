@@ -65,32 +65,32 @@ module.exports = async function handler(req, res) {
  const verifyUrl = `${SITE}/auth/action?mode=verifyEmail&oobCode=${encodeURIComponent(oobCode)}`;
 
  const html = `
- <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:520px;margin:0 auto;padding:8px;color:#111827">
+ <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:520px;margin:0 auto;padding:8px;color:#111111">
  <div style="text-align:center;padding:24px 0">
  <img src="${SITE}/Images/512X512.png" alt="She Model Tech" width="48" height="48" style="border-radius:10px" />
  </div>
- <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;padding:32px 28px">
+ <div style="background:#ffffff;border:1px solid #E5E5E5;border-radius:16px;padding:32px 28px">
  <h1 style="font-size:20px;margin:0 0 12px">Welcome to She Model Tech${name ? `, ${name}` : ''}!</h1>
- <p style="font-size:15px;line-height:1.6;color:#374151;margin:0 0 20px">
+ <p style="font-size:15px;line-height:1.6;color:#404040;margin:0 0 20px">
  You're one click away. Confirm your email address to activate your account and start building.
  </p>
  <div style="text-align:center;margin:26px 0">
- <a href="${verifyUrl}" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 28px;border-radius:12px">
+ <a href="${verifyUrl}" style="display:inline-block;background:#D41470;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 28px;border-radius:12px">
  Verify my email
  </a>
  </div>
- <p style="font-size:13px;line-height:1.6;color:#6b7280;margin:0 0 6px">
+ <p style="font-size:13px;line-height:1.6;color:#737373;margin:0 0 6px">
  If the button doesn't work, copy and paste this link into your browser:
  </p>
  <p style="font-size:12px;line-height:1.5;word-break:break-all;margin:0 0 20px">
- <a href="${verifyUrl}" style="color:#2563eb">${verifyUrl}</a>
+ <a href="${verifyUrl}" style="color:#D41470">${verifyUrl}</a>
  </p>
- <p style="font-size:13px;line-height:1.6;color:#6b7280;margin:0">
+ <p style="font-size:13px;line-height:1.6;color:#737373;margin:0">
  If you didn't create an She Model Tech account, you can safely ignore this email.
  </p>
  </div>
- <p style="text-align:center;font-size:12px;color:#9ca3af;margin:20px 0">
- She Model Tech &middot; <a href="${SITE}" style="color:#9ca3af">shemodeltech.com</a>
+ <p style="text-align:center;font-size:12px;color:#A3A3A3;margin:20px 0">
+ She Model Tech &middot; <a href="${SITE}" style="color:#A3A3A3">shemodeltech.com</a>
  </p>
  </div>`;
 

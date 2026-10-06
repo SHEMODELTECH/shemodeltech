@@ -283,7 +283,7 @@ const NotificationBell = () => {
       >
         {/* Bell Icon - Responsive sizes */}
         <svg
-          className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 transition-all duration-300 group-hover:text-orange-400"
+          className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 transition-all duration-300 group-hover:text-amber-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -329,7 +329,7 @@ const NotificationBell = () => {
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-pink-600 hover:text-orange-400 text-[11px] xs:text-xs font-medium transition-colors px-2 py-1 hover:bg-gray-50 rounded hidden xs:block"
+                  className="text-pink-600 hover:text-amber-400 text-[11px] xs:text-xs font-medium transition-colors px-2 py-1 hover:bg-gray-50 rounded hidden xs:block"
                 >
                   Mark all read
                 </button>
@@ -361,7 +361,7 @@ const NotificationBell = () => {
             <div className="xs:hidden px-3 py-2 border-b border-gray-200 bg-gray-900/50">
               <button
                 onClick={markAllAsRead}
-                className="text-pink-600 hover:text-orange-400 text-xs font-medium transition-colors w-full text-left"
+                className="text-pink-600 hover:text-amber-400 text-xs font-medium transition-colors w-full text-left"
               >
                 ✓ Mark all as read
               </button>
@@ -470,7 +470,7 @@ const NotificationBell = () => {
                                 </span>
                               )}
                             {notification.badgeLevel && notification.type === 'badge_awarded' && (
-                              <span className="text-orange-500 font-medium">
+                              <span className="text-amber-500 font-medium">
                                 {' '}
                                 {notification.badgeLevel}
                               </span>
@@ -534,7 +534,7 @@ const NotificationBell = () => {
             <div className="p-3 xs:p-3 sm:p-4 border-t border-gray-200 bg-gray-100 sticky bottom-0">
               <button
                 onClick={handleViewAllNotifications}
-                className="w-full text-center text-pink-600 hover:text-orange-400 text-xs xs:text-sm font-medium transition-colors py-1 hover:bg-gray-50 rounded"
+                className="w-full text-center text-pink-600 hover:text-amber-400 text-xs xs:text-sm font-medium transition-colors py-1 hover:bg-gray-50 rounded"
               >
                 View all notifications
               </button>

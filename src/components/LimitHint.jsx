@@ -15,7 +15,7 @@ const LimitHint = ({ text, minWords = 0, minChars = 0, maxChars = 0, id, classNa
   const metMin = words >= minWords && chars >= minChars;
   const nearMax = maxChars && chars > maxChars * 0.9;
   return (
-    <p id={id} aria-live="polite" className={`text-xs mt-1 ${metMin ? 'text-emerald-700' : 'text-gray-500'} ${className}`}>
+    <p id={id} aria-live="polite" className={`text-xs mt-1 ${metMin ? 'text-green-700' : 'text-gray-500'} ${className}`}>
       {minWords > 0 &&
         (metMin
           ? `${words} word${words === 1 ? '' : 's'}. Minimum reached.`

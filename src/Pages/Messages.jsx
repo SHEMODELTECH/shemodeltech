@@ -406,7 +406,7 @@ const Messages = () => {
                       className={`
                         w-full flex items-center gap-3 px-4 py-3.5 border-b border-gray-100
                         hover:bg-gray-50 active:bg-gray-100 transition-colors text-left
-                        ${activeConvId === conv.id ? 'bg-pink-50 border-l-[3px] border-l-orange-500' : ''}
+                        ${activeConvId === conv.id ? 'bg-pink-50 border-l-[3px] border-l-amber-500' : ''}
                       `}
                     >
                       <Avatar user={conv.otherUser} />
@@ -524,7 +524,7 @@ const Messages = () => {
                       <button
                         onClick={sendMessage}
                         disabled={!newMessage.trim() || sending}
-                        className="w-11 h-11 rounded-xl bg-pink-600 hover:bg-pink-700 active:bg-orange-700 disabled:opacity-40 disabled:cursor-not-allowed text-gray-900 transition-colors flex-shrink-0 flex items-center justify-center"
+                        className="w-11 h-11 rounded-xl bg-pink-600 hover:bg-pink-700 active:bg-amber-700 disabled:opacity-40 disabled:cursor-not-allowed text-gray-900 transition-colors flex-shrink-0 flex items-center justify-center"
                         aria-label="Send"
                       >
                         {sending ? (

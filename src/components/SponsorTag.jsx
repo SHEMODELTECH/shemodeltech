@@ -33,7 +33,7 @@ const SponsorTag = ({ project, size = 'md', showLabel = true }) => {
   const logo = size === 'sm' ? 'w-4 h-4' : 'w-6 h-6';
 
   const inner = (
-    <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-purple-50 border border-purple-200">
+    <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-pink-50 border border-pink-200">
       {project.sponsorLogo && (
         <img
           src={project.sponsorLogo}
@@ -41,7 +41,7 @@ const SponsorTag = ({ project, size = 'md', showLabel = true }) => {
           className={`${logo} rounded object-contain`}
         />
       )}
-      <span className="text-[10px] font-bold uppercase tracking-wide text-purple-800">
+      <span className="text-[10px] font-bold uppercase tracking-wide text-pink-800">
         {showLabel ? 'Sponsored by ' : ''}
         {project.sponsorName}
       </span>

@@ -555,8 +555,8 @@ const ProjectOwnerDashboard = () => {
                     const [label, tone] =
                       r.status === 'declined' ? ['Not scheduled', 'bg-gray-100 text-gray-700']
                       : r.status === 'new' ? ['Received · awaiting payment', 'bg-amber-50 text-amber-800']
-                      : r.status === 'paid' ? ['Payment received · setting up', 'bg-sky-50 text-sky-700']
-                      : revealed ? ['Running', 'bg-emerald-50 text-emerald-700']
+                      : r.status === 'paid' ? ['Payment received · setting up', 'bg-pink-50 text-pink-700']
+                      : revealed ? ['Running', 'bg-green-50 text-green-700']
                       : ['Cohort created · being prepared', 'bg-pink-50 text-pink-700'];
                     return (
                       <li key={r.id} className="bg-white border border-gray-200 rounded-xl p-4">
@@ -919,14 +919,14 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                   </button>
                   <button
                     onClick={() => setInterviewFor(interviewFor === app.id ? null : app.id)}
-                    className="px-3 py-1.5 min-h-[36px] bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold rounded-lg text-xs transition-all border border-sky-200"
+                    className="px-3 py-1.5 min-h-[36px] bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold rounded-lg text-xs transition-all border border-pink-200"
                   >
                     Invite to interview
                   </button>
                 </div>
               </div>
               {interviewFor === app.id && (
-                <div className="mt-3 rounded-lg border border-sky-200 bg-sky-50/50 p-3 space-y-2">
+                <div className="mt-3 rounded-lg border border-pink-200 bg-pink-50/50 p-3 space-y-2">
                   <div className="grid sm:grid-cols-2 gap-2">
                     <label className="text-xs text-gray-700">Date and time
                       <input type="datetime-local" value={ivWhen} onChange={(e) => setIvWhen(e.target.value)} className="block w-full mt-1 px-3 py-2 rounded-lg border border-gray-300 text-sm" />
@@ -939,7 +939,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                     <textarea rows={2} maxLength={300} value={ivNote} onChange={(e) => setIvNote(e.target.value)} className="block w-full mt-1 px-3 py-2 rounded-lg border border-gray-300 text-sm" />
                   </label>
                   <div className="flex gap-2">
-                    <button onClick={() => sendInterview(app)} className="text-xs font-semibold bg-sky-600 hover:bg-sky-700 text-white px-3 py-2 rounded-lg">Send invitation</button>
+                    <button onClick={() => sendInterview(app)} className="text-xs font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg">Send invitation</button>
                     <button onClick={() => setInterviewFor(null)} className="text-xs font-semibold text-gray-600 px-3 py-2">Cancel</button>
                   </div>
                   {app.interviewAt && <p className="text-[11px] text-gray-500">Already invited for {new Date(app.interviewAt).toLocaleString()}.</p>}

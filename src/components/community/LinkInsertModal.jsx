@@ -147,7 +147,7 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
               className={`w-full p-2.5 xs:p-3 bg-gray-50 border rounded-lg text-sm xs:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-colors ${
                 urlError 
                   ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20' 
-                  : 'border-gray-200 focus:border-pink-500 focus:ring-orange-400/20'
+                  : 'border-gray-200 focus:border-pink-500 focus:ring-amber-400/20'
               }`}
               autoFocus
             />
@@ -177,7 +177,7 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
               value={linkData.text}
               onChange={(e) => setLinkData(prev => ({ ...prev, text: e.target.value }))}
               placeholder="Link text (optional - will use domain if empty)"
-              className="w-full p-2.5 xs:p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm xs:text-base text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 transition-colors"
+              className="w-full p-2.5 xs:p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm xs:text-base text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-colors"
             />
             <p className="text-gray-400 text-[10px] xs:text-xs mt-1">
               Leave empty to auto-generate from URL
@@ -187,8 +187,8 @@ const LinkInsertModal = ({ isOpen, onClose, onInsert }) => {
           {/* Preview */}
           {linkData.url && (
             <div className="p-2.5 xs:p-3 bg-pink-600/10 border border-gray-200 rounded-lg">
-              <p className="text-orange-300 text-xs xs:text-sm font-medium mb-1">Preview:</p>
-              <div className="text-pink-600 hover:text-orange-300 underline cursor-pointer text-xs xs:text-sm break-all">
+              <p className="text-amber-300 text-xs xs:text-sm font-medium mb-1">Preview:</p>
+              <div className="text-pink-600 hover:text-amber-300 underline cursor-pointer text-xs xs:text-sm break-all">
                 {linkData.text || linkData.url}
               </div>
             </div>

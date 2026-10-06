@@ -156,15 +156,15 @@ const TalentBoard = () => {
 
         {/* Top-rated mentors: rated by learners on their courses in Learning */}
         {topMentors.length > 0 && !searchTerm && !filterBadge && (
-          <div className="mb-6 rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-pink-50 p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-indigo-700">Top-rated mentors</p>
+          <div className="mb-6 rounded-2xl border border-pink-200 bg-gradient-to-br from-pink-50 to-pink-50 p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-pink-700">Top-rated mentors</p>
             <p className="text-sm text-gray-600 mb-3">Rated by learners on the courses they published in She Model Tech Learning.</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {topMentors.map((t) => {
                 const st = statsOf(t);
                 return (
                   <button key={t.id} onClick={() => navigate(`/profile/${encodeURIComponent(t.email)}`)}
-                    className="bg-white rounded-xl border border-indigo-100 p-3 text-left hover:border-indigo-300">
+                    className="bg-white rounded-xl border border-pink-100 p-3 text-left hover:border-pink-300">
                     <p className="text-sm font-semibold text-gray-900 truncate">{t.displayName || 'Mentor'}</p>
                     <p className="text-xs text-amber-600 font-semibold mt-0.5">
                       ★ {st.avg.toFixed(1)} <span className="text-gray-500 font-normal">({st.ratingCount} rating{st.ratingCount === 1 ? '' : 's'})</span>

@@ -69,7 +69,7 @@ export const CourseCard = ({ course, status, progress }) => {
           )}
         </div>
         {status === 'done' && (
-          <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
+          <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-green-700">
             <CheckIcon className="w-3.5 h-3.5" /> Completed
           </p>
         )}
@@ -276,14 +276,14 @@ const LearningHome = ({ mine = false }) => {
             <div className="lr-mentor-band">
               <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-indigo-700">New in Learning</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-pink-700">New in Learning</p>
                   <h2 id="mentors-h" className="text-xl font-bold text-gray-900 mt-1">From our mentors</h2>
                   <p className="text-sm text-gray-600 mt-1 max-w-2xl">
                     Courses created by She Model Tech mentors and approved by our team.
                   </p>
                 </div>
                 {published.length > 4 && (
-                  <button onClick={() => setTrack('mentors')} className="text-sm font-semibold text-indigo-700 hover:underline">
+                  <button onClick={() => setTrack('mentors')} className="text-sm font-semibold text-pink-700 hover:underline">
                     See all {published.length}
                   </button>
                 )}
@@ -318,7 +318,7 @@ const LearningHome = ({ mine = false }) => {
           if (!authors.length) return null;
           return (
             <section className="pt-10" aria-labelledby="instructors-h">
-              <div className="rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-5 sm:p-6">
+              <div className="rounded-2xl border border-pink-100 bg-gradient-to-br from-pink-50 to-white p-5 sm:p-6">
                 <h2 id="instructors-h" className="text-xl font-bold text-gray-900">Featured instructors</h2>
                 <p className="text-sm text-gray-600 mt-1">Mentors who create courses for She Model Tech Learning.</p>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
@@ -326,18 +326,18 @@ const LearningHome = ({ mine = false }) => {
                     const photo = a.photo || authorPhotos[a.uid];
                     const avg = a.ratingCount ? a.ratingSum / a.ratingCount : 0;
                     return (
-                      <div key={a.key} className="bg-white border border-indigo-100 rounded-2xl p-5 shadow-sm flex flex-col">
+                      <div key={a.key} className="bg-white border border-pink-100 rounded-2xl p-5 shadow-sm flex flex-col">
                         <div className="flex items-center gap-4">
                           {photo ? (
-                            <img src={photo} alt="" className="w-16 h-16 rounded-full object-cover border-2 border-indigo-100" />
+                            <img src={photo} alt="" className="w-16 h-16 rounded-full object-cover border-2 border-pink-100" />
                           ) : (
-                            <span className="w-16 h-16 rounded-full bg-indigo-600 text-white text-2xl font-bold flex items-center justify-center" aria-hidden="true">
+                            <span className="w-16 h-16 rounded-full bg-pink-600 text-white text-2xl font-bold flex items-center justify-center" aria-hidden="true">
                               {a.name[0]}
                             </span>
                           )}
                           <div className="min-w-0">
                             <p className="font-bold text-gray-900 text-lg truncate">{a.name}</p>
-                            <span className="inline-block text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-full px-2 py-0.5">Mentor</span>
+                            <span className="inline-block text-[11px] font-bold text-pink-700 bg-pink-50 border border-pink-200 rounded-full px-2 py-0.5">Mentor</span>
                           </div>
                         </div>
                         <div className="mt-4 flex items-center gap-2 text-sm">
@@ -416,7 +416,7 @@ const LearningHome = ({ mine = false }) => {
         ) : mine && !lr.signedIn ? (
           <div className="text-center py-20">
             <p className="text-gray-900 font-semibold mb-2">Sign in to see your courses</p>
-            <button onClick={() => signInAndReturn(navigate, '/learning/my')} className="fd-btn" style={{ '--acc': '#DB2777' }}>Sign in</button>
+            <button onClick={() => signInAndReturn(navigate, '/learning/my')} className="fd-btn" style={{ '--acc': '#D41470' }}>Sign in</button>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
@@ -427,9 +427,9 @@ const LearningHome = ({ mine = false }) => {
               {mine ? 'Browse the catalog and enroll in anything that interests you. Every course is free.' : 'Try a different word, or clear the filters.'}
             </p>
             {mine ? (
-              <Link to="/learning" className="fd-btn" style={{ '--acc': '#DB2777' }}>Browse courses</Link>
+              <Link to="/learning" className="fd-btn" style={{ '--acc': '#D41470' }}>Browse courses</Link>
             ) : (
-              <button onClick={() => { setQuery(''); setTrack('all'); setLevel('all'); }} className="fd-btn" style={{ '--acc': '#DB2777' }}>
+              <button onClick={() => { setQuery(''); setTrack('all'); setLevel('all'); }} className="fd-btn" style={{ '--acc': '#D41470' }}>
                 Clear filters
               </button>
             )}
@@ -549,12 +549,12 @@ const LearningHome = ({ mine = false }) => {
 };
 
 export const LR_CSS = `
-.lr-hero { background: linear-gradient(180deg, #FDF2F8 0%, #FFFFFF 100%); border-bottom:1px solid #F3F4F6; }
+.lr-hero { background: linear-gradient(180deg, #FDF2F7 0%, #FFFFFF 100%); border-bottom:1px solid #F5F5F5; }
 .lr-grid { display:grid; gap:1.25rem; grid-template-columns:1fr; }
 @media (min-width:560px) { .lr-grid { grid-template-columns:repeat(2, minmax(0,1fr)); } }
 @media (min-width:900px) { .lr-grid { grid-template-columns:repeat(3, minmax(0,1fr)); } }
 @media (min-width:1200px) { .lr-grid { grid-template-columns:repeat(4, minmax(0,1fr)); } }
-.lr-card { display:flex; flex-direction:column; background:#fff; border:1px solid #E5E7EB; border-radius:1rem; overflow:hidden;
+.lr-card { display:flex; flex-direction:column; background:#fff; border:1px solid #E5E5E5; border-radius:1rem; overflow:hidden;
   transition:border-color .15s, box-shadow .15s, transform .15s; }
 .lr-card:hover { border-color:var(--c); box-shadow:0 8px 24px rgba(17,24,39,.08); transform:translateY(-2px); }
 .lr-card:focus-visible { outline:2px solid var(--c); outline-offset:2px; }
@@ -562,17 +562,17 @@ export const LR_CSS = `
   padding:.75rem 1rem; border-bottom:3px solid var(--c); }
 .lr-mentor-tag { display:inline-flex; align-items:center; gap:.35rem; font-size:.68rem; font-weight:800; letter-spacing:.02em;
   color:#4338CA; background:#EEF2FF; border:1px solid #C7D2FE; padding:.12rem .5rem; border-radius:999px; }
-.lr-new { color:#fff; background:#DB2777; border-radius:999px; padding:0 .4rem; font-size:.62rem; }
-.lr-mentor-band { background:linear-gradient(135deg,#EEF2FF 0%,#FDF2F8 100%); border:1px solid #E0E7FF; border-radius:1.25rem; padding:1.25rem; }
+.lr-new { color:#fff; background:#D41470; border-radius:999px; padding:0 .4rem; font-size:.62rem; }
+.lr-mentor-band { background:linear-gradient(135deg,#EEF2FF 0%,#FDF2F7 100%); border:1px solid #E0E7FF; border-radius:1.25rem; padding:1.25rem; }
 .lr-inter { font-weight:700; color:var(--c); background:var(--t); padding:.1rem .45rem; border-radius:999px; }
 .lr-chips { display:flex; gap:.5rem; overflow-x:auto; scrollbar-width:none; padding-bottom:.25rem; }
 .lr-chips::-webkit-scrollbar { display:none; }
 @media (min-width:768px) { .lr-chips { flex-wrap:wrap; overflow:visible; } }
-.lr-chip { flex-shrink:0; font-size:.875rem; font-weight:600; color:#374151; background:#F3F4F6; padding:.5rem .9rem; border-radius:999px;
+.lr-chip { flex-shrink:0; font-size:.875rem; font-weight:600; color:#404040; background:#F5F5F5; padding:.5rem .9rem; border-radius:999px;
   transition:background .15s, color .15s; }
-.lr-chip:hover { background:#E5E7EB; }
-.lr-chip.is-active { background:#111827; color:#fff; }
-.lr-chip:focus-visible { outline:2px solid #DB2777; outline-offset:2px; }
+.lr-chip:hover { background:#E5E5E5; }
+.lr-chip.is-active { background:#111111; color:#fff; }
+.lr-chip:focus-visible { outline:2px solid #D41470; outline-offset:2px; }
 @media (prefers-reduced-motion: reduce) { .lr-card { transition:none; } .lr-card:hover { transform:none; } }
 `;
 

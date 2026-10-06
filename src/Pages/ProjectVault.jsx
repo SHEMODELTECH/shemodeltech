@@ -51,9 +51,9 @@ const deriveLevel = (badges, category) => {
 const tierRingCss = (level) => {
   const k = (level || '').toString().toLowerCase();
   if (k.startsWith('expert')) return 'linear-gradient(135deg,#fcd34d,#d97706)';
-  if (k.startsWith('advanc')) return 'linear-gradient(135deg,#e5e7eb,#9ca3af)';
+  if (k.startsWith('advanc')) return 'linear-gradient(135deg,#E5E5E5,#A3A3A3)';
   if (k.startsWith('assoc')) return 'linear-gradient(135deg,#d8975a,#a55b2e)';
-  return 'linear-gradient(135deg,#9ca3af,#6b7280)';
+  return 'linear-gradient(135deg,#A3A3A3,#737373)';
 };
 
 const ProjectVault = () => {
@@ -207,7 +207,7 @@ const ProjectVault = () => {
                   <div>
                     <img src="/Images/512X512.png" alt="She Model Tech" className="w-16 h-16 mx-auto mb-3" />
                     <p className="text-pink-600 text-xs font-semibold uppercase tracking-widest">Certificate of Completion</p>
-                    <div className="w-16 h-1 mx-auto mt-3 rounded-full" style={{ background: 'linear-gradient(90deg,#F544CB,#8948EB)' }} />
+                    <div className="w-16 h-1 mx-auto mt-3 rounded-full" style={{ background: 'linear-gradient(90deg,#D41470,#8948EB)' }} />
                   </div>
                   <div className="my-4">
                     <p className="text-gray-500 text-sm mb-1">This certifies that</p>
@@ -259,8 +259,8 @@ const ProjectVault = () => {
                 </div>
               </div>
               <div className="px-8 pb-6 space-y-3">
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                  <p className="text-orange-700 text-xs text-center">Please download and save your certificate. Do not rely on our server for long-term storage.</p>
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <p className="text-amber-700 text-xs text-center">Please download and save your certificate. Do not rely on our server for long-term storage.</p>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -280,21 +280,21 @@ const ProjectVault = () => {
                         .inner{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;position:relative;z-index:1;overflow:hidden}
                         .top{display:flex;flex-direction:column;align-items:center}
                         img.logo{width:1in;height:1in;margin-bottom:0.15in}
-                        .subtitle{color:#F544CB;font-size:15pt;font-weight:800;text-transform:uppercase;letter-spacing:4px}
-                        .rule{width:80px;height:3px;background:linear-gradient(90deg,#F544CB,#8948EB);border-radius:2px;margin:0.12in auto 0}
+                        .subtitle{color:#D41470;font-size:15pt;font-weight:800;text-transform:uppercase;letter-spacing:4px}
+                        .rule{width:80px;height:3px;background:linear-gradient(90deg,#D41470,#8948EB);border-radius:2px;margin:0.12in auto 0}
                         .middle{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:0;overflow:hidden}
-                        .label{color:#6b7280;font-size:12pt;margin:0.07in 0}
-                        .name{font-size:34pt;font-weight:800;color:#111827;margin:0.08in 0;font-family:Georgia,'Times New Roman',serif;line-height:1.15}
-                        .project{color:#F544CB;font-size:20pt;font-weight:700;margin:0.08in 0;max-width:85%;line-height:1.25}
-                        .role{color:#374151;font-size:13pt;margin-top:0.03in}
-                        .meta{color:#9ca3af;font-size:10pt;margin-top:0.1in}
+                        .label{color:#737373;font-size:12pt;margin:0.07in 0}
+                        .name{font-size:34pt;font-weight:800;color:#111111;margin:0.08in 0;font-family:Georgia,'Times New Roman',serif;line-height:1.15}
+                        .project{color:#D41470;font-size:20pt;font-weight:700;margin:0.08in 0;max-width:85%;line-height:1.25}
+                        .role{color:#404040;font-size:13pt;margin-top:0.03in}
+                        .meta{color:#A3A3A3;font-size:10pt;margin-top:0.1in}
                         .bottom{display:flex;flex-direction:column;align-items:center;width:100%}
-                        .meta-row{display:flex;justify-content:center;gap:1.2in;width:100%;padding-top:0.16in;border-top:1px solid #e5e7eb}
+                        .meta-row{display:flex;justify-content:center;gap:1.2in;width:100%;padding-top:0.16in;border-top:1px solid #E5E5E5}
                         .meta-col{text-align:center}
-                        .meta-col .l{font-size:8pt;color:#9ca3af;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.03in}
-                        .meta-col .v{font-size:11pt;color:#374151;font-weight:700}
-                        .org{color:#4b5563;font-size:9pt;font-weight:600;margin-top:0.12in}
-                        .site{color:#d1d5db;font-size:9pt;margin-top:0.04in}
+                        .meta-col .l{font-size:8pt;color:#A3A3A3;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.03in}
+                        .meta-col .v{font-size:11pt;color:#404040;font-weight:700}
+                        .org{color:#525252;font-size:9pt;font-weight:600;margin-top:0.12in}
+                        .site{color:#D4D4D4;font-size:9pt;margin-top:0.04in}
                         </style></head><body>
                         <div class="page">
                         <div class="border">

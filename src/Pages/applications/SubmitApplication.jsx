@@ -138,7 +138,7 @@ const SubmitApplication = () => {
                     filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.9))'
                   }}>
                 Submit Your{' '}
-                <span className="block mt-1 xs:mt-2 sm:mt-3 md:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-500 to-orange-400"
+                <span className="block mt-1 xs:mt-2 sm:mt-3 md:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-500 to-amber-400"
                       style={{
                         textShadow: 'none',
                         filter: 'drop-shadow(0 0 20px rgba(34,197,94,0.45))',
@@ -157,7 +157,7 @@ const SubmitApplication = () => {
                 <span className="text-pink-500 font-semibold block sm:inline mt-1 sm:mt-0"> Get access to exclusive opportunities</span> and connect with industry leaders.
               </p>
               
-              <div className="h-0.5 xs:h-1 sm:h-1.5 md:h-2 w-12 xs:w-16 sm:w-20 md:w-24 lg:w-32 bg-gradient-to-r from-pink-500 to-orange-400 mx-auto rounded-full shadow-2xl mb-6 xs:mb-8 sm:mb-10 md:mb-12 lg:mb-16"
+              <div className="h-0.5 xs:h-1 sm:h-1.5 md:h-2 w-12 xs:w-16 sm:w-20 md:w-24 lg:w-32 bg-gradient-to-r from-pink-500 to-amber-400 mx-auto rounded-full shadow-2xl mb-6 xs:mb-8 sm:mb-10 md:mb-12 lg:mb-16"
                    ></div>
             </div>
           </section>
@@ -168,7 +168,7 @@ const SubmitApplication = () => {
               
               {/* Status Messages */}
               {submitStatus === 'success' && (
-                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-pink-500/12 to-orange-500/12 border border-pink-500/30 rounded-lg xs:rounded-xl">
+                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-pink-500/12 to-amber-500/12 border border-pink-500/30 rounded-lg xs:rounded-xl">
                   <div className="flex items-start xs:items-center">
                     <div className="text-pink-400 text-xl xs:text-2xl mr-3 xs:mr-4 flex-shrink-0">✓</div>
                     <div className="flex-1">
@@ -180,11 +180,11 @@ const SubmitApplication = () => {
               )}
 
               {submitStatus === 'error' && (
-                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-orange-500/12 to-orange-400/12 border border-orange-500/30 rounded-lg xs:rounded-xl">
+                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-amber-500/12 to-amber-400/12 border border-amber-500/30 rounded-lg xs:rounded-xl">
                   <div className="flex items-start xs:items-center">
-                    <div className="text-orange-400 text-xl xs:text-2xl mr-3 xs:mr-4 flex-shrink-0">⚠</div>
+                    <div className="text-amber-400 text-xl xs:text-2xl mr-3 xs:mr-4 flex-shrink-0">⚠</div>
                     <div className="flex-1">
-                      <h3 className="text-orange-400 font-bold text-base xs:text-lg mb-1 xs:mb-2">Submission Failed</h3>
+                      <h3 className="text-amber-400 font-bold text-base xs:text-lg mb-1 xs:mb-2">Submission Failed</h3>
                       <p className="text-gray-700 text-xs xs:text-sm sm:text-base">There was an error submitting your application. Please try again or contact support.</p>
                     </div>
                   </div>
@@ -398,13 +398,13 @@ const SubmitApplication = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting || !formData.firstName.trim() || !formData.lastName.trim() || !formData.experience.trim() || !formData.motivation.trim()}
-                    className="group relative bg-gradient-to-r from-pink-500 to-orange-500 text-white px-6 xs:px-8 sm:px-10 md:px-12 py-3 xs:py-4 sm:py-5 md:py-6 rounded-full font-black text-sm xs:text-base sm:text-lg md:text-xl transition-all duration-500 shadow-2xl overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                    className="group relative bg-gradient-to-r from-pink-500 to-amber-500 text-white px-6 xs:px-8 sm:px-10 md:px-12 py-3 xs:py-4 sm:py-5 md:py-6 rounded-full font-black text-sm xs:text-base sm:text-lg md:text-xl transition-all duration-500 shadow-2xl overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                     style={{
                       boxShadow: '0 0 40px rgba(34,197,94,0.18), 0 20px 40px rgba(0,0,0,0.3)',
                       fontFamily: '"Inter", sans-serif'
                     }}
                   >
-                    <span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
                     <span className="relative flex items-center justify-center">
                       {isSubmitting ? (
                         <>

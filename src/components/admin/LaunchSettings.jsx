@@ -59,7 +59,7 @@ const LaunchSettings = ({ currentUser }) => {
                 <p className="text-xs mt-1.5 text-gray-500">
                   Suggested before switching on:{' '}
                   {statKey ? (
-                    <span className={value != null && value >= target ? 'text-emerald-700 font-semibold' : 'font-semibold'}>
+                    <span className={value != null && value >= target ? 'text-green-700 font-semibold' : 'font-semibold'}>
                       {value == null ? '…' : value} of {target} {goalLabel}
                     </span>
                   ) : (
@@ -73,7 +73,7 @@ const LaunchSettings = ({ currentUser }) => {
                 aria-checked={on}
                 aria-label={`${title}: ${on ? 'on' : 'off'}`}
                 onClick={() => toggle(key, !on)}
-                className={`relative inline-flex h-7 w-12 flex-shrink-0 items-center rounded-full transition ${on ? 'bg-emerald-600' : 'bg-gray-300'}`}
+                className={`relative inline-flex h-7 w-12 flex-shrink-0 items-center rounded-full transition ${on ? 'bg-green-600' : 'bg-gray-300'}`}
               >
                 <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${on ? 'translate-x-6' : 'translate-x-1'}`} />
               </button>

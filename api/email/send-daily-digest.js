@@ -382,33 +382,33 @@ function renderEmail(name, items, isNudgeOnly) {
  const rows = items.map(it => {
  const suggestionsHtml = (it.suggestions && it.suggestions.length)
  ? `<div style="margin:6px 0 12px">${it.suggestions.map(s =>
- `<a href="${s.link}" style="display:block;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;padding:9px 12px;margin-bottom:6px;text-decoration:none;color:#2563EB;font-size:13px;font-weight:600">${s.title} &rarr;</a>`
+ `<a href="${s.link}" style="display:block;background:#ffffff;border:1px solid #E5E5E5;border-radius:6px;padding:9px 12px;margin-bottom:6px;text-decoration:none;color:#D41470;font-size:13px;font-weight:600">${s.title} &rarr;</a>`
  ).join('')}</div>`
  : '';
  const btnLabel = it.suggestions ? 'Browse all projects' : 'Continue';
  return `
- <div style="border-left:4px solid #F97316;background:#fff8f5;border-radius:8px;padding:14px;margin-bottom:10px">
- <p style="margin:0 0 4px;font-size:14px;font-weight:bold;color:#2563EB">${it.headline}</p>
- <p style="margin:0 0 10px;font-size:13px;color:#111827">${it.detail}</p>
+ <div style="border-left:4px solid #D97706;background:#fff8f5;border-radius:8px;padding:14px;margin-bottom:10px">
+ <p style="margin:0 0 4px;font-size:14px;font-weight:bold;color:#D41470">${it.headline}</p>
+ <p style="margin:0 0 10px;font-size:13px;color:#111111">${it.detail}</p>
  ${suggestionsHtml}
- <a href="${it.link}" style="display:inline-block;background:linear-gradient(135deg,#F97316,#EA580C);color:#ffffff;text-decoration:none;font-weight:600;font-size:13px;padding:8px 16px;border-radius:6px">${btnLabel}</a>
+ <a href="${it.link}" style="display:inline-block;background:linear-gradient(135deg,#D97706,#D97706);color:#ffffff;text-decoration:none;font-weight:600;font-size:13px;padding:8px 16px;border-radius:6px">${btnLabel}</a>
  </div>`;
  }).join('');
 
  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
- <body style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;background:#ffffff;color:#111827">
- <div style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb">
- <div style="background:linear-gradient(135deg,#F97316,#EA580C);color:#fff;padding:24px;text-align:center">
+ <body style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;background:#ffffff;color:#111111">
+ <div style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid #E5E5E5">
+ <div style="background:linear-gradient(135deg,#D97706,#D97706);color:#fff;padding:24px;text-align:center">
  <h1 style="margin:0;font-size:19px">${isNudgeOnly ? 'There\'s a project waiting for you' : 'Pick up where you left off'}</h1>
  <p style="margin:8px 0 0;font-size:13px;opacity:.95">Hi ${name}, ${isNudgeOnly ? 'here are projects in your track to jump into' : 'here\'s what\'s waiting for you on She Model Tech'}</p>
  </div>
  <div style="padding:22px">
  ${rows}
- <p style="text-align:center;margin-top:16px"><a href="${SITE}/dashboard" style="color:#2563EB;text-decoration:none;font-size:12px;font-weight:600">Go to your dashboard</a></p>
+ <p style="text-align:center;margin-top:16px"><a href="${SITE}/dashboard" style="color:#D41470;text-decoration:none;font-size:12px;font-weight:600">Go to your dashboard</a></p>
  </div>
- <div style="background:#1f2937;color:#d1d5db;padding:16px;text-align:center;font-size:11px">
+ <div style="background:#262626;color:#D4D4D4;padding:16px;text-align:center;font-size:11px">
  <p style="margin:0"><b>She Model Tech</b> · Ascend. Achieve. Advance.</p>
- <p style="margin:6px 0 0"><a href="${SITE}/settings" style="color:#F97316;text-decoration:none">Manage email settings</a></p>
+ <p style="margin:6px 0 0"><a href="${SITE}/settings" style="color:#D97706;text-decoration:none">Manage email settings</a></p>
  </div>
  </div></body></html>`;
 }

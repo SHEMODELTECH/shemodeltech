@@ -39,7 +39,7 @@ const SummitCard = ({ profile }) => {
   };
 
   return (
-    <div className="rounded-xl border border-pink-200 bg-gradient-to-br from-pink-50 to-indigo-50 p-5 mb-6">
+    <div className="rounded-xl border border-pink-200 bg-gradient-to-br from-pink-50 to-pink-50 p-5 mb-6">
       <p className="text-xs font-bold uppercase tracking-wider text-pink-700">She Model Tech Summit</p>
       <p className="text-lg font-bold text-gray-900 mt-1">{summit.title}</p>
       <p className="text-sm text-gray-700">{when}{summit.venue ? ` · ${summit.venue}` : ''}</p>
@@ -54,7 +54,7 @@ const SummitCard = ({ profile }) => {
             ))}
           </>
         ) : reg ? (
-          <span className="text-sm font-semibold text-emerald-800">✓ You’re registered</span>
+          <span className="text-sm font-semibold text-green-800">✓ You’re registered</span>
         ) : (
           reg !== undefined && <button onClick={register} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Register free</button>
         )}

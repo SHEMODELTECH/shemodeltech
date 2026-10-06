@@ -149,7 +149,7 @@ export const VIDEO_CSS = `
 .course-prose .vid-frame { position:relative; width:100%; background:#0F0D1A; border-radius:.8rem; overflow:hidden; }
 .course-prose .vid-frame.vid-tall { max-width:420px; margin:0 auto; }
 .course-prose .vid-frame iframe, .course-prose .vid-frame video { position:absolute; inset:0; width:100%; height:100%; border:0; }
-.course-prose .vid-cap { margin-top:.4rem; font-size:.8rem; color:#6B7280; text-align:center; }
+.course-prose .vid-cap { margin-top:.4rem; font-size:.8rem; color:#737373; text-align:center; }
 .course-prose .vid-cap a { color:var(--acc); }
 .course-prose .vid-link { display:inline-block; font-weight:700; color:var(--acc); padding:.6rem 1rem; border:1px solid var(--acc); border-radius:.6rem; text-decoration:none; }
 `;

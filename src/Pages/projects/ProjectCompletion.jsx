@@ -22,7 +22,7 @@ const badgeCategories = {
   'quality-assurance': { id: 'techqa', name: 'TechQA (QA Tester)', color: 'from-pink-500 to-pink-600' },
   'development': { id: 'techdev', name: 'TechDev (Developer)', color: 'from-pink-500 to-pink-600' },
   'leadership': { id: 'techleads', name: 'TechLeads (Non-Technical)', color: 'from-pink-500 to-pink-600' },
-  'design': { id: 'techarchs', name: 'TechArchs (Designer)', color: 'from-orange-500 to-orange-600' },
+  'design': { id: 'techarchs', name: 'TechArchs (Designer)', color: 'from-amber-500 to-amber-600' },
   'security': { id: 'techguard', name: 'TechGuard (Security)', color: 'from-red-500 to-red-600' },
 };
 
@@ -787,8 +787,8 @@ const ProjectCompletion = () => {
                         )}
 
                         {!project?.isPaid && ev.contribution === 'poor' && ev.awardBadge && (
-                          <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-3">
-                            <p className="text-orange-500 text-xs">Poor contribution - badge will not be awarded even if selected.</p>
+                          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
+                            <p className="text-amber-500 text-xs">Poor contribution - badge will not be awarded even if selected.</p>
                           </div>
                         )}
 

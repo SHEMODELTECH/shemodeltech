@@ -57,8 +57,8 @@ const typeStyle = {
     icon: 'M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 2H21l-3 6 3 6h-8.5l-1-2H5a2 2 0 00-2 2zm9-13.5V9',
   },
   milestone: {
-    bg: 'bg-purple-100',
-    fg: 'text-purple-600',
+    bg: 'bg-pink-100',
+    fg: 'text-pink-600',
     shape: 'rounded-xl',
     icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',
   },
@@ -626,9 +626,9 @@ const ProofWall = () => {
           </div>
           <div className="grid grid-cols-3 gap-1 mt-3">
             {[
-              ['photo', 'Photo', 'text-sky-600', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'],
-              ['link', 'Link', 'text-emerald-600', 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'],
-              ['write', myData?.isCompany ? 'Update' : 'Progress', 'text-orange-500', 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
+              ['photo', 'Photo', 'text-pink-600', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'],
+              ['link', 'Link', 'text-green-600', 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'],
+              ['write', myData?.isCompany ? 'Update' : 'Progress', 'text-amber-500', 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'],
             ].map(([k, label, color, d]) => (
               <button
                 key={k}
@@ -823,7 +823,7 @@ const ProofWall = () => {
                       </span>
                     )}
                     {m.teachingAvg ? (
-                      <span className="text-xs font-medium px-2 py-0.5 bg-orange-50 text-orange-700 rounded-full">
+                      <span className="text-xs font-medium px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full">
                         ★ {m.teachingAvg.toFixed(1)} teaching
                         {m.teachingCount ? ` (${m.teachingCount})` : ''}
                       </span>
@@ -895,7 +895,7 @@ const ProofWall = () => {
                 )}
                 <button
                   onClick={() => navigate(`/projects/${p.id}`)}
-                  className="mt-3 inline-flex items-center gap-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
+                  className="mt-3 inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
                 >
                   View &amp; apply to join →
                 </button>
@@ -1197,7 +1197,7 @@ const ProofWall = () => {
                           onClick={() =>
                             navigate(a.projectId ? `/projects/${a.projectId}` : '/projects')
                           }
-                          className="inline-flex items-center gap-1 mt-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
+                          className="inline-flex items-center gap-1 mt-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
                         >
                           View &amp; apply to lead →
                         </button>

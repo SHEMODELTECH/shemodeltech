@@ -295,7 +295,7 @@ const UserProfile = () => {
                 <span className="inline-flex items-center text-xs font-bold text-pink-800 bg-pink-50 border border-pink-200 px-2.5 py-1 rounded-full" title="Attended a She Model Tech Summit">Summit Attendee</span>
               )}
               {profile.isCompany && (
-                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-purple-100 text-purple-700 rounded-full">
+                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-pink-100 text-pink-700 rounded-full">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                   Company / Organisation
                 </span>
@@ -337,10 +337,10 @@ const UserProfile = () => {
 
         {/* Mentor: badge, published courses, and certificates (public; prints too) */}
         {(profile.isTeacher || (profile.mentorApprovedCourses || 0) > 0 || mentorCerts.length > 0) && (
-          <div className="bg-white rounded-xl border border-indigo-200 p-6 mb-6 print:break-inside-avoid">
+          <div className="bg-white rounded-xl border border-pink-200 p-6 mb-6 print:break-inside-avoid">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="w-11 h-11 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700" aria-hidden="true">
+                <span className="w-11 h-11 rounded-full bg-pink-50 border border-pink-200 flex items-center justify-center text-pink-700" aria-hidden="true">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                   </svg>
@@ -381,12 +381,12 @@ const UserProfile = () => {
                       {(() => {
                         const pc = mentorStats?.courses.find((x) => x.teacherId === c.courseId);
                         return pc ? (
-                          <a href={`/learning/${pc.track}/${pc.slug}`} className="text-xs font-semibold text-white bg-indigo-600 px-3 py-1.5 rounded-lg hover:bg-indigo-700">
+                          <a href={`/learning/${pc.track}/${pc.slug}`} className="text-xs font-semibold text-white bg-pink-600 px-3 py-1.5 rounded-lg hover:bg-pink-700">
                             View course
                           </a>
                         ) : null;
                       })()}
-                      <a href={`/learning/certificate/${c.id}`} className="text-xs font-semibold text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-lg hover:bg-indigo-50">
+                      <a href={`/learning/certificate/${c.id}`} className="text-xs font-semibold text-pink-700 border border-pink-200 px-3 py-1.5 rounded-lg hover:bg-pink-50">
                         Certificate
                       </a>
                     </span>

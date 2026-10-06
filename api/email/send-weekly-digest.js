@@ -169,11 +169,11 @@ module.exports = async function handler(req, res) {
  const left = daysLeftOf(p);
  const when = p.status === 'overdue' ? 'Finish up and submit for review'
  : left == null ? '' : left > 1 ? `${left} days left` : left === 1 ? '1 day left' : left === 0 ? 'Due today' : '';
- return `<div class="it"><h3><a href="${SITE}/projects/${p.id}/workspace" style="color:#111827;text-decoration:none">${p.projectTitle || 'Project'}</a></h3><p>${lead ? 'You lead this project' : 'Team member'} · ${label[p.status]}${when ? ` · ${when}` : ''}</p></div>`;
+ return `<div class="it"><h3><a href="${SITE}/projects/${p.id}/workspace" style="color:#111111;text-decoration:none">${p.projectTitle || 'Project'}</a></h3><p>${lead ? 'You lead this project' : 'Team member'} · ${label[p.status]}${when ? ` · ${when}` : ''}</p></div>`;
  };
  return `<div class="sc"><h2>Your Projects</h2>
 ${ongoing.map(row).join('')}
-${doneThisWeek.map(p => `<div class="it"><h3>Completed this week: ${p.projectTitle || 'Project'}</h3><p>Well done! See your badge and certificate in the <a href="${SITE}/project-vault" style="color:#2563EB">Project Vault</a>.</p></div>`).join('')}
+${doneThisWeek.map(p => `<div class="it"><h3>Completed this week: ${p.projectTitle || 'Project'}</h3><p>Well done! See your badge and certificate in the <a href="${SITE}/project-vault" style="color:#D41470">Project Vault</a>.</p></div>`).join('')}
 </div>`;
  };
 
@@ -193,13 +193,13 @@ ${doneThisWeek.map(p => `<div class="it"><h3>Completed this week: ${p.projectTit
  };
  const joinSection = (user) => {
  const g = groupsFor(user);
- const row = (p, note) => `<div class="it"><h3><a href="${SITE}/projects/${p.id}" style="color:#111827;text-decoration:none">${p.projectTitle || 'Project'}</a></h3><p>${note}${(p.isPaid || p.cohortPaid) ? ' · Paid, 18 and older' : ''}</p></div>`;
- const block = (title, list, note) => list.length ? `<p style="margin:10px 0 6px;font-size:12px;font-weight:bold;color:#374151;text-transform:uppercase;letter-spacing:.04em">${title}</p>${list.map(p => row(p, note)).join('')}` : '';
+ const row = (p, note) => `<div class="it"><h3><a href="${SITE}/projects/${p.id}" style="color:#111111;text-decoration:none">${p.projectTitle || 'Project'}</a></h3><p>${note}${(p.isPaid || p.cohortPaid) ? ' · Paid, 18 and older' : ''}</p></div>`;
+ const block = (title, list, note) => list.length ? `<p style="margin:10px 0 6px;font-size:12px;font-weight:bold;color:#404040;text-transform:uppercase;letter-spacing:.04em">${title}</p>${list.map(p => row(p, note)).join('')}` : '';
  const waitlist = g.needsLead.length === 0
- ? `<p style="font-size:12px;color:#111827;margin:10px 0 0">Want to lead a project? No project needs a lead right now. <a href="${SITE}/apply-to-lead" style="color:#2563EB">Join the lead waitlist</a> and we'll email you when one does.</p>`
+ ? `<p style="font-size:12px;color:#111111;margin:10px 0 0">Want to lead a project? No project needs a lead right now. <a href="${SITE}/apply-to-lead" style="color:#D41470">Join the lead waitlist</a> and we'll email you when one does.</p>`
  : '';
  if (!g.needsLead.length && !g.comingSoon.length && !g.open.length) {
- return `<div class="sc"><h2>Projects You Can Join</h2><p style="font-size:12px;color:#111827">New cohorts open throughout the year.</p>${waitlist}</div>`;
+ return `<div class="sc"><h2>Projects You Can Join</h2><p style="font-size:12px;color:#111111">New cohorts open throughout the year.</p>${waitlist}</div>`;
  }
  return `<div class="sc"><h2>Projects You Can Join</h2>
 ${block('Needs a lead', g.needsLead, 'Tap Join to apply to lead it or join the team')}
@@ -218,20 +218,20 @@ ${waitlist}
 
  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style>
-body{font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;background:#ffffff;line-height:1.6;color:#111827}
-.c{background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb}
-.hd{background:linear-gradient(135deg,#F97316,#EA580C);color:#fff;padding:28px;text-align:center}
+body{font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;background:#ffffff;line-height:1.6;color:#111111}
+.c{background:#fff;border-radius:16px;overflow:hidden;border:1px solid #E5E5E5}
+.hd{background:linear-gradient(135deg,#D97706,#D97706);color:#fff;padding:28px;text-align:center}
 .hd h1{margin:0;font-size:21px}.hd p{margin:8px 0 0;font-size:13px;opacity:.95}
 .ct{padding:24px}
-.sc{margin-bottom:24px}.sc h2{color:#2563EB;font-size:15px;border-bottom:2px solid #2563EB;padding-bottom:6px;margin-bottom:14px}
+.sc{margin-bottom:24px}.sc h2{color:#D41470;font-size:15px;border-bottom:2px solid #D41470;padding-bottom:6px;margin-bottom:14px}
 .sts{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
-.st{flex:1;min-width:80px;text-align:center;background:#eff6ff;padding:12px 4px;border-radius:8px}
-.sn{font-size:22px;font-weight:bold;color:#2563EB}.sl{font-size:9px;color:#111827;text-transform:uppercase;letter-spacing:.04em}
-.it{padding:12px;margin-bottom:8px;border-radius:8px;border-left:4px solid #F97316;background:#fff8f5}
-.it h3{margin:0 0 4px;font-size:13px;color:#111827}.it p{margin:0;font-size:12px;color:#111827}
-.btn{display:block;padding:12px;border-radius:8px;text-decoration:none;text-align:center;font-weight:600;font-size:13px;margin:6px 0;color:#ffffff !important;background:linear-gradient(135deg,#F97316,#EA580C)}
-.btn.blue{background:linear-gradient(135deg,#3B82F6,#2563EB)}
-.ft{background:#1f2937;color:#d1d5db;padding:18px;text-align:center;font-size:11px}.ft a{color:#F97316;text-decoration:none}
+.st{flex:1;min-width:80px;text-align:center;background:#FDF2F7;padding:12px 4px;border-radius:8px}
+.sn{font-size:22px;font-weight:bold;color:#D41470}.sl{font-size:9px;color:#111111;text-transform:uppercase;letter-spacing:.04em}
+.it{padding:12px;margin-bottom:8px;border-radius:8px;border-left:4px solid #D97706;background:#fff8f5}
+.it h3{margin:0 0 4px;font-size:13px;color:#111111}.it p{margin:0;font-size:12px;color:#111111}
+.btn{display:block;padding:12px;border-radius:8px;text-decoration:none;text-align:center;font-weight:600;font-size:13px;margin:6px 0;color:#ffffff !important;background:linear-gradient(135deg,#D97706,#D97706)}
+.btn.blue{background:linear-gradient(135deg,#D41470,#D41470)}
+.ft{background:#262626;color:#D4D4D4;padding:18px;text-align:center;font-size:11px}.ft a{color:#D97706;text-decoration:none}
 </style></head><body><div class="c">
 <div class="hd"><h1>Your Weekly Recap</h1><p>Hi ${name}, here is your week on She Model Tech</p>
 <div style="margin-top:8px;font-size:11px;opacity:.85">${weekStart} to ${weekEnd}</div></div>
@@ -244,9 +244,9 @@ body{font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;backgr
 <div class="st"><div class="sn">${user.badges.length}</div><div class="sl">Badges</div></div>
 <div class="st"><div class="sn">${user.unreadMessages}</div><div class="sl">Messages</div></div>
 </div>
-${user.unreadMessages > 0 ? `<div class="it" style="border-left-color:#3B82F6;background:#eff6ff"><p>You have <b>${user.unreadMessages} unread message${user.unreadMessages>1?'s':''}</b> waiting.</p></div>` : ''}
+${user.unreadMessages > 0 ? `<div class="it" style="border-left-color:#D41470;background:#FDF2F7"><p>You have <b>${user.unreadMessages} unread message${user.unreadMessages>1?'s':''}</b> waiting.</p></div>` : ''}
 ${user.badges.length > 0 ? `<div class="it" style="border-left-color:#22C55E;background:#f0fdf4"><p>You earned <b>${user.badges.length} badge${user.badges.length>1?'s':''}</b> this week. Well done.</p></div>` : ''}
-${totalActivity === 0 ? `<p style="color:#111827;font-size:12px;text-align:center">A quiet week. Join a project or share a Proof Wall update to get going.</p>` : ''}
+${totalActivity === 0 ? `<p style="color:#111111;font-size:12px;text-align:center">A quiet week. Join a project or share a Proof Wall update to get going.</p>` : ''}
 <a href="${SITE}/notifications" class="btn" style="color:#ffffff">View all activity</a>
 </div>
 
@@ -284,16 +284,16 @@ ${paid.slice(0,4).map(c => `<div class="it">
 
 ${newCourses.length > 0 ? `<div class="sc"><h2>New Courses from Our Mentors</h2>
 ${newCourses.slice(0,4).map(c => `<div class="it">
-<h3><a href="${SITE}/learning/${c.track}/p-${c.id}" style="color:#111827;text-decoration:none">${c.title || 'New course'}</a></h3>
+<h3><a href="${SITE}/learning/${c.track}/p-${c.id}" style="color:#111111;text-decoration:none">${c.title || 'New course'}</a></h3>
 <p>${[c.level, c.authorName ? `by ${c.authorName}` : ''].filter(Boolean).join(' · ')}${c.summary ? ` · ${c.summary.substring(0, 80)}${c.summary.length > 80 ? '...' : ''}` : ''}</p>
 </div>`).join('')}
 <a href="${SITE}/learning" class="btn" style="color:#ffffff">Browse free courses</a></div>` : ''}
 
 <div class="sc"><h2>Quick Links</h2>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:6px"><tr>
-<td width="33%" align="center" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 4px"><a href="${SITE}/proof-wall" style="color:#2563EB;text-decoration:none;font-weight:600;font-size:12px">Proof Wall</a></td>
-<td width="33%" align="center" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 4px"><a href="${SITE}/messages" style="color:#2563EB;text-decoration:none;font-weight:600;font-size:12px">Messages</a></td>
-<td width="33%" align="center" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 4px"><a href="${SITE}/talent-board" style="color:#2563EB;text-decoration:none;font-weight:600;font-size:12px">Talent Board</a></td>
+<td width="33%" align="center" style="background:#FDF2F7;border:1px solid #bfdbfe;border-radius:8px;padding:14px 4px"><a href="${SITE}/proof-wall" style="color:#D41470;text-decoration:none;font-weight:600;font-size:12px">Proof Wall</a></td>
+<td width="33%" align="center" style="background:#FDF2F7;border:1px solid #bfdbfe;border-radius:8px;padding:14px 4px"><a href="${SITE}/messages" style="color:#D41470;text-decoration:none;font-weight:600;font-size:12px">Messages</a></td>
+<td width="33%" align="center" style="background:#FDF2F7;border:1px solid #bfdbfe;border-radius:8px;padding:14px 4px"><a href="${SITE}/talent-board" style="color:#D41470;text-decoration:none;font-weight:600;font-size:12px">Talent Board</a></td>
 </tr></table></div>
 
 </div>

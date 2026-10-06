@@ -104,7 +104,7 @@ const VerifyCertificate = () => {
                   {result.data.badges.map((b, i) => (
                     <span
                       key={i}
-                      className="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200"
+                      className="text-xs font-semibold px-2.5 py-1 rounded-full bg-pink-50 text-pink-700 border border-pink-200"
                     >
                       {typeof b === 'string'
                         ? b

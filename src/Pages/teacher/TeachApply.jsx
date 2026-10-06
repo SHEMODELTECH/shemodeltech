@@ -20,7 +20,7 @@ const WordHint = ({ id, text, min }) => {
   const n = wordCount(text);
   const ok = n >= min;
   return (
-    <p id={id} className={`text-xs mt-1 ${ok ? 'text-emerald-700' : 'text-gray-500'}`} aria-live="polite">
+    <p id={id} className={`text-xs mt-1 ${ok ? 'text-green-700' : 'text-gray-500'}`} aria-live="polite">
       {ok ? `${n} words. Minimum reached.` : `Minimum ${min} words. You have ${n} so far.`}
     </p>
   );
@@ -82,7 +82,7 @@ const TeachApply = () => {
 
   return (
     <LearningLayout>
-      <section className="lr-hero" style={{ background: 'linear-gradient(180deg,#FDF2F8 0%,#fff 100%)' }}>
+      <section className="lr-hero" style={{ background: 'linear-gradient(180deg,#FDF2F7 0%,#fff 100%)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <p className="text-sm font-semibold text-pink-700 mb-3">Become a She Model Tech mentor</p>
           <h1 className="fd-display text-4xl sm:text-5xl text-gray-900 max-w-3xl">Share what you know. Help others build real skills.</h1>
@@ -117,7 +117,7 @@ const TeachApply = () => {
               </p>
             </div>
           ) : isTeacher ? (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+            <div className="rounded-2xl border border-green-200 bg-green-50 p-6">
               <h2 className="text-xl font-bold text-gray-900">You're a mentor</h2>
               <p className="text-gray-700 mt-2">You can create and present courses in the Mentor Hub.</p>
               <Link to="/teacher" className="inline-block mt-4 bg-gray-900 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">

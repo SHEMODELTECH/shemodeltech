@@ -32,7 +32,7 @@ const FindFirstProject = ({ profile }) => {
   if (!matches.length) return null;
 
   return (
-    <div className="bg-gradient-to-br from-pink-50 to-orange-50 border border-pink-200 rounded-xl p-6 mb-6">
+    <div className="bg-gradient-to-br from-pink-50 to-amber-50 border border-pink-200 rounded-xl p-6 mb-6">
       <h2 className="text-lg font-bold text-gray-900 mb-1">Find your first project</h2>
       <p className="text-gray-600 text-sm mb-4">
         Joining a team is the best way to start: you build real work, earn verified badges, and get discovered. Here's a project that fits your profile.

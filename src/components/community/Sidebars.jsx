@@ -246,9 +246,9 @@ export const FollowSuggestionsSidebar = ({ currentUser, isMobile = false }) => {
     const statusInfo = {
       veteran: {
         label: 'Veteran',
-        color: 'text-orange-500',
-        bg: 'bg-orange-500/20',
-        border: 'border-orange-500/30',
+        color: 'text-amber-500',
+        bg: 'bg-amber-500/20',
+        border: 'border-amber-500/30',
       },
       achiever: {
         label: 'Achiever',

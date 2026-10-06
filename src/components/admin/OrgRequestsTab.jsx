@@ -51,7 +51,7 @@ const OrgManager = ({ request, onCreated }) => {
   };
 
   if (!request.organizationId) {
-    return <button onClick={create} className="text-xs font-semibold bg-indigo-600 text-white px-3 py-1.5 rounded-lg">Create organization and invite link</button>;
+    return <button onClick={create} className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg">Create organization and invite link</button>;
   }
   if (!org) return <p className="text-xs text-gray-500">Loading organization...</p>;
   const save = async (data) => {
@@ -60,9 +60,9 @@ const OrgManager = ({ request, onCreated }) => {
   };
   const inviteUrl = `${window.location.origin}/join/${org.inviteCode}`;
   return (
-    <div className="mt-3 rounded-lg border border-indigo-200 bg-indigo-50/40 p-3 space-y-2 text-sm">
+    <div className="mt-3 rounded-lg border border-pink-200 bg-pink-50/40 p-3 space-y-2 text-sm">
       <p className="font-semibold text-gray-900">
-        Organization · <Link to={`/org/${org.id}`} className="text-indigo-700 hover:underline">Open dashboard</Link>
+        Organization · <Link to={`/org/${org.id}`} className="text-pink-700 hover:underline">Open dashboard</Link>
       </p>
       <p className="text-xs text-gray-600 break-all">Invite link: {inviteUrl}</p>
       <label className="flex items-center gap-2 text-xs text-gray-700">
@@ -197,7 +197,7 @@ const OrgRequestsTab = ({ isAdmin }) => {
                   {u.displayName || u.email} <span className="text-gray-500">· {u.mentorApprovedCourses || 0} published course(s)</span>
                 </p>
                 <div className="flex gap-2">
-                  <button onClick={() => decideTrainer(u, true)} className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg">Approve</button>
+                  <button onClick={() => decideTrainer(u, true)} className="text-xs font-semibold bg-green-600 text-white px-3 py-1.5 rounded-lg">Approve</button>
                   <button onClick={() => decideTrainer(u, false)} className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
                 </div>
               </div>
@@ -271,7 +271,7 @@ const OrgRequestsTab = ({ isAdmin }) => {
                     <p className="text-xs font-semibold text-gray-700 mb-1">Assigned mentors (trainers)</p>
                     <div className="flex flex-wrap gap-1.5">
                       {(r.assignedMentors || []).map((m) => (
-                        <span key={m.uid} className="text-xs bg-indigo-50 text-indigo-800 rounded-full px-2 py-0.5">
+                        <span key={m.uid} className="text-xs bg-pink-50 text-pink-800 rounded-full px-2 py-0.5">
                           {m.name} <button onClick={() => unassign(r, m.uid)} aria-label={`Remove ${m.name}`}>×</button>
                         </span>
                       ))}
@@ -299,10 +299,10 @@ const OrgRequestsTab = ({ isAdmin }) => {
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {r.assistantProjectId ? (
                       <>
-                        <Link to={`/projects/${r.assistantProjectId}/workspace`} className="text-xs font-semibold bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700">
+                        <Link to={`/projects/${r.assistantProjectId}/workspace`} className="text-xs font-semibold bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700">
                           Open training workspace
                         </Link>
-                        <Link to={`/projects/owner-dashboard#project-${r.assistantProjectId}`} className="text-xs font-semibold border border-emerald-300 text-emerald-700 px-3 py-1.5 rounded-lg hover:bg-emerald-50">
+                        <Link to={`/projects/owner-dashboard#project-${r.assistantProjectId}`} className="text-xs font-semibold border border-green-300 text-green-700 px-3 py-1.5 rounded-lg hover:bg-green-50">
                           Manage (applicants, mark done)
                         </Link>
                       </>

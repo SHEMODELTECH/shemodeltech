@@ -87,7 +87,7 @@ const GiftsAdmin = () => {
               <li key={g.id} className="flex flex-wrap items-center justify-between gap-2 border border-gray-100 rounded-lg p-3 text-sm">
                 <span className="min-w-0 break-words">
                   <strong>{g.donorName}</strong>{g.organization ? ` (${g.organization})` : ''} · ${Number(g.amount).toLocaleString()} · {g.receivedOn} · {g.method}
-                  <span className={`ml-2 text-[11px] font-semibold ${g.acknowledgedAt ? 'text-emerald-700' : 'text-amber-700'}`}>{g.acknowledgedAt ? 'Letter sent' : 'Letter not sent'}</span>
+                  <span className={`ml-2 text-[11px] font-semibold ${g.acknowledgedAt ? 'text-green-700' : 'text-amber-700'}`}>{g.acknowledgedAt ? 'Letter sent' : 'Letter not sent'}</span>
                 </span>
                 <button
                   onClick={async () => { try { await resendLetter(g); toast.success('Letter emailed again.'); load(); } catch (e) { toast.error(e.message); } }}
