@@ -48,18 +48,6 @@ const PublicProjects = () => {
           Join a project in your track, work with a lead and a team, and earn a verified badge when the work is reviewed.
         </p>
 
-        <div className="mt-6 rounded-xl border border-pink-200 bg-pink-50 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <p className="text-sm text-gray-800">
-            <span className="font-semibold">Sign in or create a free account to join a project.</span> Free projects earn badges; paid projects pay you for your role.
-          </p>
-          <button
-            onClick={() => signInAndReturn(navigate, '/projects')}
-            className="flex-shrink-0 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-lg"
-          >
-            Sign in to join
-          </button>
-        </div>
-
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <input
             value={q}
