@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, where, onSnapshot, doc, getDoc, getDocs, limit } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, getDoc, getDocs, limit, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useFeatures } from '../utils/features';
 import { isBlockedForCompany } from '../utils/companyPaths';
@@ -89,6 +89,17 @@ const AppLayout = ({ children }) => {
       setUnreadAccount(account);
     }, () => {});
     return () => unsub();
+  }, [currentUser]);
+
+  // Remember when she was last here (once a day), for "we miss you" emails.
+  useEffect(() => {
+    if (!currentUser) return;
+    const key = `smt_seen_${currentUser.uid}`;
+    const today = new Date().toISOString().slice(0, 10);
+    try { if (localStorage.getItem(key) === today) return; } catch (_) { /* private mode */ }
+    updateDoc(doc(db, 'users', currentUser.uid), { lastSeenAt: new Date().toISOString() })
+      .then(() => { try { localStorage.setItem(key, today); } catch (_) { /* ignore */ } })
+      .catch(() => {});
   }, [currentUser]);
 
   // Red number on the installed app's icon (phone and laptop): unread

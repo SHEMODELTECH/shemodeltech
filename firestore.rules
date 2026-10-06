@@ -193,6 +193,20 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  // waitlist, register interest in an upcoming cohort.
  // ---------------------------------------------------------------
+ // Feedback after a project ({projectId}_{uid}): the member writes hers; staff read all.
+ match /project_feedback/{id} {
+ allow read: if isSignedIn() && (resource.data.uid == myUid() || isReviewer());
+ allow create, update: if isSignedIn() && request.resource.data.uid == myUid()
+ && id == request.resource.data.projectId + '_' + myUid()
+ && request.resource.data.rating is int && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+ && request.resource.data.recommend in ['yes', 'maybe', 'no'];
+ }
+
+ // One-time announcements sent by admins (a record of what was sent).
+ match /announcements/{id} {
+ allow read, create: if isAdmin();
+ }
+
  // Started a lead application ({projectId}_{uid}); names only.
  match /lead_intent/{id} {
  allow read: if isSignedIn();

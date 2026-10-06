@@ -59,6 +59,7 @@ const Settings = () => {
   const [profileData, setProfileData] = useState(null);
   const [weeklyDigest, setWeeklyDigest] = useState(false);
   const [reminders, setReminders] = useState(true);
+  const [dailyFrequency, setDailyFrequency] = useState('daily'); // 'daily' | '3x' (Mon, Wed, Fri)
   const [form, setForm] = useState({
     displayName: '',
     specialization: '',
@@ -123,6 +124,7 @@ const Settings = () => {
           // On unless the member turned it off (everyone gets the weekly email by default).
           setWeeklyDigest(data.emailPreferences?.weeklyDigest !== false);
           setReminders(data.emailPreferences?.reminders !== false);
+          setDailyFrequency(data.emailPreferences?.dailyFrequency === '3x' ? '3x' : 'daily');
           setForm({
             displayName: data.displayName || '',
             specialization: data.specialization || '',
@@ -675,9 +677,7 @@ const Settings = () => {
 
             <div className="border-t border-gray-100 mt-4 pt-4">
               <p className="text-gray-500 text-sm mb-3">
-                Get a personalized reminder only when you have something to pick up: a project
-                you're leading, a team waiting for you, or work you paused. You'll only hear from us
-                when there's something to continue, never just noise.
+                Your personal update: your projects, reminders, unread messages, and projects you can join.
               </p>
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
@@ -698,8 +698,26 @@ const Settings = () => {
                   }}
                   className="w-4 h-4"
                 />
-                <span className="text-sm text-gray-700">Remind me to pick up where I left off</span>
+                <span className="text-sm text-gray-700">Send me my personal update email</span>
               </label>
+              {reminders && (
+                <fieldset className="mt-3 ml-7">
+                  <legend className="text-xs font-semibold text-gray-700 mb-1">How often?</legend>
+                  {[['daily', 'Every weekday'], ['3x', '3 times a week (Monday, Wednesday, Friday)']].map(([v, l]) => (
+                    <label key={v} className="flex items-center gap-2 text-sm text-gray-700 py-0.5 cursor-pointer">
+                      <input type="radio" name="daily-frequency" checked={dailyFrequency === v}
+                        onChange={async () => {
+                          setDailyFrequency(v);
+                          try {
+                            await updateDoc(doc(db, 'users', currentUser.uid), { 'emailPreferences.dailyFrequency': v });
+                            toast.success('Saved.');
+                          } catch (err) { toast.error('Could not update preference.'); }
+                        }} />
+                      {l}
+                    </label>
+                  ))}
+                </fieldset>
+              )}
             </div>
           </div>
 

@@ -495,6 +495,14 @@ const ProjectVault = () => {
                         )}
                       </div>
                       <div className="flex gap-2 flex-shrink-0">
+                        {!project.isObserver && project.status === 'completed' && (
+                          <button
+                            onClick={() => window.location.assign(`/feedback/${project.id}`)}
+                            className="text-gray-700 text-sm font-medium border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-all"
+                          >
+                            Give feedback
+                          </button>
+                        )}
                         {project.isObserver && (
                           <button
                             onClick={() => window.location.assign(`/projects/${project.id}`)}

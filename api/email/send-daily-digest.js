@@ -33,6 +33,14 @@ const tsToDate = (t) => {
  catch { return null; }
 };
 const daysSince = (d) => d ? Math.floor((Date.now() - d.getTime()) / 86400000) : 999;
+// Timestamps or ISO strings.
+const anyDate = (v) => {
+ if (!v) return null;
+ const t = tsToDate(v);
+ if (t) return t;
+ const d = new Date(v);
+ return isNaN(d) ? null : d;
+};
 
 module.exports = async function handler(req, res) {
  res.setHeader('Access-Control-Allow-Origin', '*');
@@ -100,14 +108,39 @@ module.exports = async function handler(req, res) {
  // Respect opt-out (default ON unless explicitly disabled).
  if (user.emailPreferences && user.emailPreferences.reminders === false) { skipped++; continue; }
  if (user.isCompany) { skipped++; continue; }
+ // "3 times a week" members: Monday, Wednesday and Friday only.
+ if (user.emailPreferences?.dailyFrequency === '3x' && ![1, 3, 5].includes(new Date().getUTCDay())) { skipped++; continue; }
 
  const items = []; // each: { headline, detail, link }
+ const firstName = (user.displayName || '').split(' ')[0] || 'there';
 
  // Gather the projects this user is involved in.
  const involved = Object.values(projects).filter(p =>
  (p.members || []).includes(user.uid) ||
  p.submitterId === user.uid
  );
+
+ // WELCOME (new members, first 2 weeks): day 2 and day 7, until she joins a project.
+ const createdAt = anyDate(user.createdAt);
+ const onAProject = involved.some(p => ['active', 'setup', 'lead_recruitment', 'overdue', 'completed'].includes(p.status));
+ if (createdAt && daysSince(createdAt) <= 14 && !onAProject) {
+ const age = daysSince(createdAt);
+ if (age >= 7 && !user.welcome?.day7) {
+ items.push({
+ headline: `${firstName}, your first project is waiting`,
+ detail: 'Most members join their first project in week one. Pick one that interests you and tap Join: lead it, or join the team. No experience needed, your team and lead will help you grow.',
+ link: `${SITE}/projects`,
+ });
+ if (!testTo) db.collection('users').doc(user.uid).update({ 'welcome.day7': new Date().toISOString() }).catch(() => {});
+ } else if (age >= 2 && age < 7 && !user.welcome?.day2) {
+ items.push({
+ headline: `Getting started, ${firstName}`,
+ detail: 'Three steps to your first badge: 1) Take a short course in Learning. 2) Tap Join on a project and choose your badge track. 3) Meet your team in the workspace. You’ve got this.',
+ link: `${SITE}/learning`,
+ });
+ if (!testTo) db.collection('users').doc(user.uid).update({ 'welcome.day2': new Date().toISOString() }).catch(() => {});
+ }
+ }
 
  for (const p of involved) {
  const title = p.projectTitle || p.title || 'your project';
@@ -306,6 +339,20 @@ module.exports = async function handler(req, res) {
  }
 
  // Still nothing? No email.
+ // WE MISS YOU: not on the site for 30+ days. One warm message (at most
+ // once a month) instead of the usual list.
+ const lastSeen = anyDate(user.lastSeenAt);
+ if (lastSeen && daysSince(lastSeen) >= 30 && daysSince(anyDate(user.missYouAt)) >= 30) {
+ const openCount = Object.values(projects).filter(p => ['lead_recruitment', 'setup', 'active'].includes(p.status) && p.isActive !== false).length;
+ items.length = 0;
+ items.push({
+ headline: `We miss you, ${firstName}!`,
+ detail: `It’s been a while, and a lot has happened at She Model Tech. ${openCount > 0 ? `There ${openCount === 1 ? 'is 1 project' : `are ${openCount} projects`} you can join right now.` : 'New cohorts open throughout the year.'} One easy step back in: open Projects and tap Join on one that interests you.`,
+ link: `${SITE}/projects`,
+ });
+ if (!testTo) db.collection('users').doc(user.uid).update({ missYouAt: new Date().toISOString() }).catch(() => {});
+ }
+
  if (items.length === 0) { skipped++; continue; }
 
  const name = user.displayName || user.email.split('@')[0];

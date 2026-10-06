@@ -10,7 +10,7 @@ import SkillPicker from '../components/SkillPicker';
 import Navbar from '../components/Navbar';
 import { INDUSTRY_TRACKS } from '../utils/industryTracks';
 import { afterAuthPath } from '../utils/afterAuth';
-import { alertStaff } from '../utils/staffAlerts';
+import { alertStaff, notifyMember } from '../utils/staffAlerts';
 import { ageFrom, dobFields } from '../utils/age';
 
 const BLOCKED_EMAIL_DOMAINS = [
@@ -43,6 +43,9 @@ const isBusinessEmail = (email) => {
   return !BLOCKED_EMAIL_DOMAINS.includes(domain);
 };
 
+// How members found She Model Tech (counted in Admin → Users).
+export const HEARD_FROM = ['Instagram', 'LinkedIn', 'A friend or classmate', 'My school or campus group', 'An event or the Summit', 'A web search', 'Other'];
+
 const Onboarding = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -56,6 +59,7 @@ const Onboarding = () => {
     experienceLevel: '', // 'beginner' | 'intermediate' | 'advanced' | 'expert'
     ageGroup: '', // '18plus' | '13-17' | 'under13'
     guardianConsent: false,
+    heardFrom: '', // how she found She Model Tech
     dateOfBirth: '',
     primarySkillTrack: '', // TechPO, TechQA, TechDev, TechLeads, TechArchs, TechGuard, others, notsure
     highestEducation: '', // high_school | undergrad | masters | phd
@@ -228,6 +232,10 @@ const Onboarding = () => {
           toast.error('Please confirm your parent or guardian knows you’re joining and agrees.');
           return;
         }
+        if (!isCompany && !formData.heardFrom) {
+          toast.error('Please tell us how you heard about She Model Tech.');
+          return;
+        }
         if (!formData.experienceLevel) {
           toast.error('Please select your experience level');
           return;
@@ -309,6 +317,7 @@ const Onboarding = () => {
         industryInterests: formData.industryInterests,
         isCompany: isCompany,
         onboardingComplete: true,
+        ...(formData.heardFrom ? { heardFrom: formData.heardFrom } : {}),
         onboardingSkipped: false,
         onboardingCompletedAt: new Date(),
         profileComplete: true,
@@ -362,6 +371,17 @@ const Onboarding = () => {
           link: '/admin',
           roles: ['admin'],
         });
+      }
+      if (!isCompany) {
+        notifyMember(currentUser.uid, {
+          type: 'welcome',
+          title: 'Welcome to She Model Tech!',
+          body: 'Here’s how it works: join a project in a cohort, build something real with a team, and earn verified badges. Your first step: open Projects and tap Join on a project that interests you. You can lead it, or join the team.',
+          link: '/projects',
+          ctaLabel: 'Find a project',
+          emailTo: currentUser.email,
+        });
+        updateDoc(doc(db, 'users', currentUser.uid), { 'welcome.day0': new Date().toISOString() }).catch(() => {});
       }
       toast.success('Welcome to She Model Tech!');
       navigate(afterAuthPath(), { replace: true });
@@ -420,6 +440,14 @@ const Onboarding = () => {
                 <p className="mt-3 text-sm text-red-700">You need to be at least 13 to join She Model Tech. We’d love to see you when you’re 13!</p>
               )}
             </fieldset>
+            <label className="block">
+              <span className="block text-base font-bold text-gray-900 mb-1">How did you hear about She Model Tech?</span>
+              <select value={formData.heardFrom} onChange={(e) => setFormData((p) => ({ ...p, heardFrom: e.target.value }))}
+                className="w-full sm:w-80 border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white">
+                <option value="">Choose one</option>
+                {HEARD_FROM.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </label>
             <div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 mb-1">
                 What is your experience level?

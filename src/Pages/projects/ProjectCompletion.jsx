@@ -471,6 +471,19 @@ const ProjectCompletion = () => {
           /* non-blocking */
         }
       }
+      // Ask the team and the lead for quick feedback (bell notice).
+      for (const uid of [...new Set([...(project.members || []), project.submitterId].filter(Boolean))]) {
+        addDoc(collection(db, 'notifications'), {
+          userId: uid,
+          type: 'feedback_request',
+          title: 'How was your project?',
+          message: `Tell us about "${project.projectTitle || project.title}" in under a minute. It helps us improve She Model Tech.`,
+          link: `/feedback/${projectId}`,
+          projectId,
+          isRead: false,
+          createdAt: serverTimestamp(),
+        }).catch(() => {});
+      }
       toast.success(isPaidProject ? 'Work marked done! The project will fully close once all members confirm they were paid.' : 'Project completed successfully!');
 
       // Log completion

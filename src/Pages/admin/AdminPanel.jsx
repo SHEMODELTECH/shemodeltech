@@ -36,6 +36,9 @@ import SponsorsAdmin from '../../components/admin/SponsorsAdmin';
 import GiftsAdmin from '../../components/admin/GiftsAdmin';
 import { roleSlotsOf } from '../../utils/projectSlots';
 import ComingSoonProjects from '../../components/admin/ComingSoonProjects';
+import HeardFromSummary from '../../components/admin/HeardFromSummary';
+import AnnouncementsAdmin from '../../components/admin/AnnouncementsAdmin';
+import FeedbackSummary from '../../components/admin/FeedbackSummary';
 
 const fmtDate = (ts) => {
   try {
@@ -967,6 +970,8 @@ const AdminPanel = ({ only = null }) => {
       {!loadingData && tab === 'overview' && (
         <AttentionBoard isAdmin={isAdmin} onTab={(t, v) => { setUserView(v || 'all'); setTab(t); }} />
       )}
+      {!loadingData && tab === 'overview' && isAdmin && <AnnouncementsAdmin />}
+      {!loadingData && tab === 'overview' && isAdmin && <FeedbackSummary />}
       {!loadingData && tab === 'overview' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <StatCard label="Total Users" value={stats.users} />
@@ -1247,6 +1252,7 @@ const AdminPanel = ({ only = null }) => {
       {/* USERS */}
       {!loadingData && tab === 'users' && (
         <div>
+          {isAdmin && <HeardFromSummary users={users} />}
           <input
             value={userSearch}
             onChange={(e) => setUserSearch(e.target.value)}
