@@ -434,7 +434,7 @@ const LandingPage = () => {
                 ))}
               </ul>
               <a
-                href="https://github.com/opeyemiTaiwo/AI-Powered-Banking-Assistant-Intelligent-Customer-Service-Agent"
+                href="https://opeyemitaiwo.github.io/AI-Powered-Banking-Assistant-Intelligent-Customer-Service-Agent/web/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block mt-5 text-sm font-semibold text-pink-700 hover:underline"
