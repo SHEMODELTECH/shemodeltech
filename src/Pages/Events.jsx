@@ -66,7 +66,7 @@ const EventRow = ({ items, render }) => {
 const shareText = (e) => `Join me at "${e.title}", a free online ${(CATEGORY_LABEL[e.category] || 'event').toLowerCase()} with She Model Tech on ${new Date(e.startAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.`;
 
 // What you can do with one event: register, join, calendar, present, recording.
-const EventActions = ({ e, reg, currentUser, onChange, onRegistered }) => {
+const EventActions = ({ e, reg, currentUser, onChange, onRegistered, share = null }) => {
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
   const [joinUrl, setJoinUrl] = useState('');
@@ -152,7 +152,8 @@ const EventActions = ({ e, reg, currentUser, onChange, onRegistered }) => {
   return (
     <div>
       {past ? (
-        hasRecording ? (
+        <div className="flex flex-wrap items-center gap-2">
+        {hasRecording ? (
           currentUser ? (
             recUrl ? (
               <a href={recUrl} target="_blank" rel="noopener noreferrer" className="inline-block bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">Watch the recording</a>
@@ -162,7 +163,9 @@ const EventActions = ({ e, reg, currentUser, onChange, onRegistered }) => {
               Sign in to watch the recording
             </button>
           )
-        ) : null
+        ) : null}
+        {share}
+        </div>
       ) : cancelled ? null : (
         <div>
           {placed ? (
@@ -174,12 +177,14 @@ const EventActions = ({ e, reg, currentUser, onChange, onRegistered }) => {
                 )}
                 <a href={googleCalendarUrl(e, joinUrl)} target="_blank" rel="noopener noreferrer" className="border border-gray-300 text-gray-800 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-gray-50">Add to Google Calendar</a>
                 <button onClick={() => downloadIcs(e, joinUrl)} className="border border-gray-300 text-gray-800 text-sm font-semibold px-4 py-2 rounded-lg hover:bg-gray-50">Download calendar file</button>
+                {share}
                 <button onClick={doCancel} disabled={busy} className="text-sm font-semibold text-gray-500 hover:text-gray-900 px-2">Cancel my place</button>
               </div>
             </div>
           ) : reg?.status === 'waitlist' ? (
             <div className="flex flex-wrap items-center gap-3">
               <p className="text-sm font-semibold text-gray-900">You’re on the waitlist. We’ll let you know if a place opens.</p>
+              {share}
               <button onClick={doCancel} disabled={busy} className="text-sm font-semibold text-gray-500 hover:text-gray-900">Leave the waitlist</button>
             </div>
           ) : (
@@ -191,6 +196,7 @@ const EventActions = ({ e, reg, currentUser, onChange, onRegistered }) => {
                 {currentUser && e.category === 'demoday' && !demoOpen && (
                   <button onClick={loadProjects} className="border border-pink-300 text-pink-700 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-pink-50">I’d like to present</button>
                 )}
+                {share}
               </div>
               {demoOpen && (
                 <div className="rounded-xl bg-pink-50 border border-pink-200 p-4">
@@ -300,18 +306,22 @@ export const EventDetail = () => {
               {e.status === 'cancelled' && <span className="px-2.5 py-1 rounded-full bg-red-50 text-red-700">Cancelled</span>}
               {isPast(e) && e.status !== 'cancelled' && <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">Past event</span>}
             </div>
-            <div className="mt-3 flex items-start justify-between gap-4">
-              <h1 className="text-3xl font-bold text-gray-900 leading-tight">{e.title}</h1>
-              {e.status !== 'cancelled' && (
-                <ShareDialogButton url={shareUrl('e', e.id)} text={shareText(e)} title={e.title} className="flex-shrink-0 mt-1 inline-flex items-center gap-1 text-sm font-semibold text-gray-700 border border-gray-300 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50" />
-              )}
-            </div>
+            <h1 className="mt-3 text-3xl font-bold text-gray-900 leading-tight">{e.title}</h1>
             <p className="mt-2 font-semibold text-gray-800">{formatWhen(e)}{e.durationMins ? ` · ${e.durationMins} min` : ''}</p>
             {e.hosts && <p className="mt-1 text-gray-600">With {e.hosts}</p>}
             {e.description && <p className="mt-5 text-gray-700 leading-relaxed whitespace-pre-line">{e.description}</p>}
 
             <div className="mt-6">
-              <EventActions e={e} reg={reg} currentUser={currentUser} onChange={load} onRegistered={() => setJustRegistered(true)} />
+              <EventActions
+                e={e}
+                reg={reg}
+                currentUser={currentUser}
+                onChange={load}
+                onRegistered={() => setJustRegistered(true)}
+                share={e.status !== 'cancelled' ? (
+                  <ShareDialogButton url={shareUrl('e', e.id)} text={shareText(e)} title={e.title} className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-800 border border-gray-300 bg-white px-4 py-2.5 rounded-lg hover:bg-gray-50" />
+                ) : null}
+              />
             </div>
 
             {justRegistered && (
