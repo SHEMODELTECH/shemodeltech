@@ -103,7 +103,7 @@ const EventsAdmin = () => {
         const n = await tellAll(uids, {
           type: 'event_changed', title: `Time change: ${data.title}`,
           body: `The event has moved to ${formatWhen(ev)}. Your place is kept.`,
-          link: `/events?e=${id}`, ctaLabel: 'See the event',
+          link: `/events/${id}`, ctaLabel: 'See the event',
         }, setProgress);
         if (n) toast.info(`Told ${n} registered ${n === 1 ? 'person' : 'people'} about the new time.`);
       }
@@ -119,7 +119,7 @@ const EventsAdmin = () => {
             type: 'event_announced',
             title: `New event: ${data.title}`,
             body: `${CATEGORY_LABEL[data.category] || 'Event'} · ${formatWhen(ev)} · Online. ${data.description.slice(0, 160)}${data.description.length > 160 ? '…' : ''}`,
-            link: `/events?e=${id}`,
+            link: `/events/${id}`,
             ctaLabel: 'Register',
             sendEmail: u.emailPreferences?.reminders !== false,
             emailTo: u.email,
@@ -181,7 +181,7 @@ const EventsAdmin = () => {
       await notifyMember(r.uid, {
         type: 'demo_presenter_confirmed', title: `You’re presenting at ${e.title}`,
         body: `Your slot to present “${r.projectTitle}” is confirmed for ${formatWhen(e)}. We’ll share the running order before the event.`,
-        link: `/events?e=${e.id}`, ctaLabel: 'See the event',
+        link: `/events/${e.id}`, ctaLabel: 'See the event',
       });
     }
     showRegs(e);
@@ -212,7 +212,7 @@ const EventsAdmin = () => {
     const n = await tellAll(openRegs.rows.filter((r) => r.status === 'registered').map((r) => r.uid), {
       type: 'event_recording', title: `Recording: ${e.title}`,
       body: 'Thank you for registering. The recording is ready to watch on the Events page.',
-      link: `/events?e=${e.id}`, ctaLabel: 'Watch the recording',
+      link: `/events/${e.id}`, ctaLabel: 'Watch the recording',
     }, setProgress);
     toast.success(`Recording saved and sent to ${n} ${n === 1 ? 'person' : 'people'}.`);
     setBusy(false);

@@ -239,7 +239,7 @@ async function eventTasks(db, stats) {
  await r.ref.update({ status: 'registered', movedUpAt: admin.firestore.FieldValue.serverTimestamp() });
  r.status = 'registered';
  placed += 1;
- const url = `${EV_SITE}/events?e=${ev.id}`;
+ const url = `${EV_SITE}/events/${ev.id}`;
  await tell(r.uid, `You have a place: ${ev.title}`, `${evWhen(ev.startAt)} (Eastern time). A place opened up, so you’re now registered.`,
  `<p>A place opened up for <strong>${evEsc(ev.title)}</strong>, so you’re now registered.</p><p><strong>When:</strong> ${evWhen(ev.startAt)} (Eastern time), online.</p><p>We’ll email you the joining link before it starts.</p>`,
  url, 'See the event');
@@ -251,7 +251,7 @@ async function eventTasks(db, stats) {
  const msLeft = start - now;
  if (msLeft > 26 * 3600000 || msLeft < -10 * 60000) continue;
  const info = await db.collection('events').doc(ev.id).collection('private').doc('info').get().catch(() => null);
- const joinUrl = (info && info.exists && info.data().joinUrl) || `${EV_SITE}/events?e=${ev.id}`;
+ const joinUrl = (info && info.exists && info.data().joinUrl) || `${EV_SITE}/events/${ev.id}`;
  for (const r of regs) {
  if (r.status !== 'registered') continue;
  // We're live now (from the start time to 10 minutes after).

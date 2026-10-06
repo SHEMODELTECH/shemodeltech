@@ -3,13 +3,14 @@
 // members see, read-only. Opening a project asks them to sign in (or create a
 // free account) and then takes them straight to it, like enrolling in a course.
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import ProjectPayBadge from '../../components/ProjectPayBadge';
 import { getPayRangeLabel } from '../../utils/paidProjects';
 import { signInAndReturn } from '../learning/LearningLayout';
 import { getIndustryLabel, formatTimeline } from './ProjectsListing';
+import { ShareDialogButton, shareUrl } from '../../components/ShareButtons';
 
 const statusLabel = (p) =>
   p.status === 'lead_recruitment' ? 'Needs a Lead' : p.status === 'setup' ? 'Being set up' : p.applicationsOpen === false ? 'Closed' : 'Open to Join';
@@ -19,6 +20,8 @@ const PublicProjects = () => {
   const [projects, setProjects] = useState(null);
   const [q, setQ] = useState('');
   const [pay, setPay] = useState('all');
+  const [params] = useSearchParams();
+  const focus = params.get('p'); // a shared project link
 
   useEffect(() => {
     fetch('/api/public-request')
@@ -37,6 +40,11 @@ const PublicProjects = () => {
   }, [projects, q, pay]);
 
   const open = (p) => signInAndReturn(navigate, `/projects/${p.id}`);
+
+  // A shared link: bring that project into view and highlight it.
+  useEffect(() => {
+    if (focus && projects) setTimeout(() => document.getElementById(`p-${focus}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+  }, [focus, projects]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -80,10 +88,14 @@ const PublicProjects = () => {
         ) : (
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             {shown.map((p) => (
-              <button
+              <div
                 key={p.id}
+                id={`p-${p.id}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => open(p)}
-                className="text-left bg-white rounded-xl p-4 sm:p-5 border border-pink-200 hover:border-pink-400 hover:shadow-sm transition-all"
+                onKeyDown={(ev) => { if (ev.key === 'Enter') open(p); }}
+                className={`cursor-pointer text-left bg-white rounded-xl p-4 sm:p-5 border hover:border-pink-400 hover:shadow-sm transition-all ${focus === p.id ? 'border-pink-500 ring-2 ring-pink-200' : 'border-pink-200'}`}
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <h2 className="text-gray-900 font-bold text-sm sm:text-base line-clamp-2">{p.projectTitle}</h2>
@@ -102,9 +114,17 @@ const PublicProjects = () => {
                   {p.industryTrack && <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">{getIndustryLabel(p.industryTrack)}</span>}
                   {p.timeline && <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">{formatTimeline(p.timeline)}</span>}
                   {p.teamRoles.length > 0 && <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">{p.teamRoles.length} role{p.teamRoles.length === 1 ? '' : 's'}</span>}
-                  <span className="ml-auto px-3 py-1.5 bg-pink-600 text-white rounded-lg text-sm font-semibold">Sign in to join</span>
+                  <span className="ml-auto flex items-center gap-2">
+                    <ShareDialogButton
+                      url={shareUrl('p', p.id)}
+                      text={`Join a team building "${p.projectTitle}" on She Model Tech.`}
+                      title={p.projectTitle}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 border border-gray-300 bg-white text-gray-800 rounded-lg text-sm font-semibold hover:bg-gray-50"
+                    />
+                    <span className="px-3 py-1.5 bg-pink-600 text-white rounded-lg text-sm font-semibold">Sign in to join</span>
+                  </span>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         )}

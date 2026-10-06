@@ -17,6 +17,55 @@ const KINDS = {
   team: { col: 'team_applications', title: (d) => `New team application: ${d.name || 'someone'}` },
 };
 
+// Shared links (/s/e/<id>, /s/p/<id>): a tiny page with the event's or
+// project's own title, description, and image, so LinkedIn, WhatsApp, and
+// others show a proper preview card. People are sent straight on to the page.
+const htmlEsc = (t) => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const CATEGORY = { workshop: 'Workshop', talk: 'Tech talk', podcast: 'Podcast', demo: 'Live demo', demoday: 'Demo day', shoutout: 'Team shout-out' };
+const shareCard = async (req, res) => {
+  const kind = req.query.share === 'p' ? 'p' : 'e';
+  const id = String(req.query.id || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 60);
+  let title = 'She Model Tech';
+  let description = 'Build real experience, earn verified skill badges, and get discovered.';
+  let image = `${SITE}/Images/512X512.png`;
+  let target = kind === 'e' ? `${SITE}/events` : `${SITE}/projects`;
+  try {
+    if (id) {
+      const snap = await admin.firestore().collection(kind === 'e' ? 'events' : 'projects').doc(id).get();
+      const d = snap.exists ? snap.data() : null;
+      if (kind === 'e' && d && d.published) {
+        const when = d.startAt
+          ? new Date(d.startAt).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York', timeZoneName: 'short' })
+          : '';
+        title = d.title || title;
+        description = `${CATEGORY[d.category] || 'Event'} · ${when} · Online · Free. ${String(d.description || '').slice(0, 160)}`;
+        if (d.imageUrl) image = d.imageUrl;
+        target = `${SITE}/events/${id}`;
+      } else if (kind === 'p' && d && ['active', 'lead_recruitment', 'setup'].includes(d.status) && !d.isCompanyPost && d.reviewStatus !== 'rejected') {
+        title = `${d.projectTitle || d.title || 'A project'} · She Model Tech`;
+        description = `Join a team and build it for real. ${String(d.projectDescription || d.description || '').slice(0, 180)}`;
+        target = `${SITE}/projects?p=${id}`;
+      }
+    }
+  } catch (e) {
+    console.error('share card failed:', e.message);
+  }
+  const big = image !== `${SITE}/Images/512X512.png`;
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+  return res.status(200).send(`<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>${htmlEsc(title)}</title>
+<meta name="description" content="${htmlEsc(description)}">
+<meta property="og:type" content="website"><meta property="og:site_name" content="She Model Tech">
+<meta property="og:title" content="${htmlEsc(title)}"><meta property="og:description" content="${htmlEsc(description)}">
+<meta property="og:image" content="${htmlEsc(image)}"><meta property="og:url" content="${htmlEsc(target)}">
+<meta name="twitter:card" content="${big ? 'summary_large_image' : 'summary'}"><meta name="twitter:title" content="${htmlEsc(title)}">
+<meta name="twitter:description" content="${htmlEsc(description)}"><meta name="twitter:image" content="${htmlEsc(image)}">
+<link rel="canonical" href="${htmlEsc(target)}"><meta http-equiv="refresh" content="0;url=${htmlEsc(target)}">
+</head><body><script>location.replace(${JSON.stringify(target)});</script>
+<p><a href="${htmlEsc(target)}">Continue to She Model Tech</a></p></body></html>`);
+};
+
 const publicProjects = async (res) => {
   try {
     const snap = await admin.firestore().collection('projects')
@@ -55,7 +104,7 @@ module.exports = async function handler(req, res) {
   // GET: the public project board for visitors who aren't signed in. Only
   // what a project card shows (no member lists, emails, or links), cached
   // for five minutes.
-  if (req.method === 'GET') return publicProjects(res);
+  if (req.method === 'GET') return req.query && req.query.share ? shareCard(req, res) : publicProjects(res);
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const kind = KINDS[req.body?.kind];

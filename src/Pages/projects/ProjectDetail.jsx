@@ -31,6 +31,7 @@ import { BADGE_TRACKS, suggestTrack, trackByKey, trackStanding } from '../../con
 import TeamStrength from '../../components/TeamStrength';
 import { dobFields } from '../../utils/age';
 import { addInterest, isInterested, recordLeadIntent } from '../../utils/projectInterest';
+import { ShareDialogButton, shareUrl } from '../../components/ShareButtons';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -555,6 +556,13 @@ const ProjectDetail = () => {
                   {project.projectTitle}
                 </h1>
                 <div className="flex items-center gap-2 flex-shrink-0">
+                  {!project.isCompanyPost && ['active', 'lead_recruitment', 'setup'].includes(project.status) && (
+                    <ShareDialogButton
+                      url={shareUrl('p', projectId)}
+                      text={`Join a team building "${project.projectTitle}" on She Model Tech.`}
+                      title={project.projectTitle || 'Project'}
+                    />
+                  )}
                   <ProjectPayBadge isPaid={!!project.isPaid} size="md" />
                   <span
                     className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-bold border ${project.status === 'lead_recruitment' ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-pink-600/20 text-pink-500 border-pink-600/30'}`}

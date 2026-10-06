@@ -21,6 +21,7 @@ import ProjectPayBadge from '../../components/ProjectPayBadge';
 import { getPayRangeLabel } from '../../utils/paidProjects';
 import AIRecommendations from '../../components/AIRecommendations';
 import { useFeatures } from '../../utils/features';
+import { ShareDialogButton, shareUrl } from '../../components/ShareButtons';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -523,6 +524,15 @@ const ProjectsListing = () => {
                         <span className="px-3 py-1.5 bg-pink-600 text-white rounded-lg text-sm font-semibold">
                           Join the Project
                         </span>
+                      )}
+                      {!(project.isCompanyProject || project.isCompanyPost) && (
+                        <ShareDialogButton
+                          url={shareUrl('p', project.id)}
+                          text={`Join a team building "${project.projectTitle}" on She Model Tech.`}
+                          title={project.projectTitle || 'Project'}
+                          label=""
+                          className="ml-auto inline-flex items-center px-2.5 py-1.5 border border-gray-300 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-50"
+                        />
                       )}
                     </div>
 

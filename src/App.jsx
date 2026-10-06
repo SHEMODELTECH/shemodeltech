@@ -39,6 +39,7 @@ const JobForm = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m
 const MyJobs = lazy(() => import('./Pages/jobs/Jobs').then((m) => ({ default: m.MyJobs })));
 const Premium = lazy(() => import('./Pages/Premium'));
 const Events = lazy(() => import('./Pages/Events'));
+const EventDetail = lazy(() => import('./Pages/Events').then((m) => ({ default: m.EventDetail })));
 const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
 const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
@@ -160,6 +161,9 @@ const ProjectsRoute = () => {
   const { currentUser, loading } = useAuth();
   if (loading) return null;
   if (!currentUser) return <PublicProjects />;
+  // A shared project link (/projects?p=…): members go straight to the project.
+  const shared = new URLSearchParams(window.location.search).get('p');
+  if (shared) return <Navigate to={`/projects/${shared}`} replace />;
   return (
     <SidebarRoute>
       <ProjectsListing />
@@ -230,6 +234,7 @@ function App() {
                 {/* She Model Tech doesn't offer training programs: these pages are retired. */}
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
                 <Route path="/events" element={<Events />} />
+                <Route path="/events/:id" element={<EventDetail />} />
                 <Route path="/summit" element={<Navigate to="/events" replace />} />
                 <Route path="/support-our-mission" element={<SupportMission />} />
                 {/* Project proposals are closed: projects come from She Model Tech cohorts. */}

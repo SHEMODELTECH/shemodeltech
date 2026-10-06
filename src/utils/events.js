@@ -140,7 +140,7 @@ const icsText = (t) => String(t || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\
 // An .ics file with a 30-minute alert, so her own calendar reminds her too.
 export const downloadIcs = (event, joinUrl) => {
   const start = toMs(event.startAt);
-  const url = `${SITE}/events?e=${event.id}`;
+  const url = `${SITE}/events/${event.id}`;
   const body = [
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//She Model Tech//Events//EN', 'BEGIN:VEVENT',
     `UID:${event.id}@shemodeltech.com`, `DTSTAMP:${icsDate(Date.now())}`,
@@ -163,7 +163,7 @@ export const googleCalendarUrl = (event, joinUrl) => {
     action: 'TEMPLATE',
     text: event.title || 'She Model Tech event',
     dates: `${icsDate(toMs(event.startAt))}/${icsDate(eventEnd(event))}`,
-    details: `${event.description || ''}\n\nJoin: ${joinUrl || `${SITE}/events?e=${event.id}`}`,
+    details: `${event.description || ''}\n\nJoin: ${joinUrl || `${SITE}/events/${event.id}`}`,
     location: joinUrl || 'Online',
   });
   return `https://calendar.google.com/calendar/render?${p.toString()}`;

@@ -19,7 +19,7 @@ const EventsCard = () => {
         <p className="text-lg font-bold text-gray-900 mt-1">{next.title}</p>
         <p className="text-sm text-gray-700">{formatWhen(next)} · Online</p>
       </div>
-      <Link to={`/events?e=${next.id}`} className="flex-shrink-0 text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg text-center">
+      <Link to={`/events/${next.id}`} className="flex-shrink-0 text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg text-center">
         See the event
       </Link>
     </div>

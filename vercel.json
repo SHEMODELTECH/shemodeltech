@@ -22,6 +22,10 @@
       "dest": "https://she-model-tech.firebaseapp.com/__/$1"
     },
     {
+      "src": "/s/(e|p)/([^/]+)",
+      "dest": "/api/public-request?share=$1&id=$2"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
