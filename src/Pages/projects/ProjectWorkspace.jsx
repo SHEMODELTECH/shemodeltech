@@ -1,6 +1,6 @@
 // src/Pages/projects/ProjectWorkspace.jsx - Workspace with Forum + Resources
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { doc, getDoc, updateDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, arrayUnion, arrayRemove, where, getDocs, limitToLast } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -12,6 +12,9 @@ import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
 import { formatMoney } from '../../utils/paidProjects';
 import { usePresenceMany } from '../../utils/presence';
 import { PresenceView } from '../../components/PresenceBadge';
+import EmojiPicker from '../../components/EmojiPicker';
+import ReportButton from '../../components/ReportButton';
+import { teamForumLink, buildMentionables, findMentions, splitMentions, sendTeamNotices } from '../../utils/teamForum';
 
 const formatTime = (ts) => {
   if (!ts) return '';
@@ -24,13 +27,95 @@ const formatTime = (ts) => {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 };
 
+// A text box that suggests teammates after "@" and inserts "@Full Name".
+// Suggestions come only from this project's team (`people`).
+const MentionBox = ({ inputRef, value, onChange, people = [], multiline = false, onKeyDown, className = '', ...rest }) => {
+  const [match, setMatch] = useState(null); // { start, query }
+  const [active, setActive] = useState(0);
+
+  const suggestions = match
+    ? people.filter((p) => {
+        const q = match.query.toLowerCase();
+        if (!q) return true;
+        const n = p.name.toLowerCase();
+        return n.startsWith(q) || n.split(/\s+/).some((w) => w.startsWith(q));
+      }).slice(0, 6)
+    : [];
+  const open = suggestions.length > 0;
+
+  const detect = (text, cursor) => {
+    const before = text.slice(0, cursor);
+    const m = before.match(/(^|\s)@([^@\n]{0,30})$/);
+    if (!m) { setMatch(null); return; }
+    const q = m[2];
+    // Stop suggesting once the text after "@" no longer fits any name.
+    if (/\s{2,}/.test(q)) { setMatch(null); return; }
+    setMatch({ start: before.length - q.length - 1, query: q.trimStart() });
+    setActive(0);
+  };
+
+  const handleChange = (e) => {
+    onChange(e.target.value);
+    detect(e.target.value, e.target.selectionStart ?? e.target.value.length);
+  };
+
+  const pick = (p) => {
+    const el = inputRef?.current;
+    const cursor = el && typeof el.selectionStart === 'number' ? el.selectionStart : value.length;
+    const insert = `@${p.name} `;
+    const next = value.slice(0, match.start) + insert + value.slice(cursor);
+    onChange(next);
+    setMatch(null);
+    setTimeout(() => {
+      if (el) { el.focus(); el.selectionStart = el.selectionEnd = match.start + insert.length; }
+    }, 0);
+  };
+
+  const handleKeyDown = (e) => {
+    if (open) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); setActive((a) => (a + 1) % suggestions.length); return; }
+      if (e.key === 'ArrowUp') { e.preventDefault(); setActive((a) => (a - 1 + suggestions.length) % suggestions.length); return; }
+      if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); pick(suggestions[Math.min(active, suggestions.length - 1)]); return; }
+      if (e.key === 'Escape') { e.preventDefault(); setMatch(null); return; }
+    }
+    if (onKeyDown) onKeyDown(e);
+  };
+
+  const Field = multiline ? 'textarea' : 'input';
+  return (
+    <div className="relative flex-1 min-w-0">
+      <Field ref={inputRef} value={value} onChange={handleChange} onKeyDown={handleKeyDown}
+        onBlur={() => setTimeout(() => setMatch(null), 150)} className={className} {...rest} />
+      {open && (
+        <ul role="listbox" className="absolute z-30 left-0 top-full mt-1 w-64 max-w-full bg-white border border-gray-200 rounded-xl shadow-lg py-1">
+          {suggestions.map((p, i) => (
+            <li key={p.uid} role="option" aria-selected={i === active}>
+              <button type="button" onMouseDown={(e) => { e.preventDefault(); pick(p); }}
+                className={`w-full flex items-center gap-2 px-3 py-1.5 text-left text-sm ${i === active ? 'bg-pink-50 text-pink-700' : 'text-gray-700 hover:bg-gray-50'}`}>
+                {p.photo
+                  ? <img src={p.photo} alt="" className="w-5 h-5 rounded-full object-cover" />
+                  : <span className="w-5 h-5 rounded-full bg-pink-500 text-white text-[9px] font-bold flex items-center justify-center">{p.name.charAt(0).toUpperCase()}</span>}
+                <span className="truncate">{p.name}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
 const ProjectWorkspace = () => {
   const { projectId } = useParams();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('forum');
+  // ?tab=forum|resources|team opens that tab; &post=ID scrolls to a post or reply.
+  const [activeTab, setActiveTab] = useState(() => (['forum', 'resources', 'team'].includes(searchParams.get('tab')) ? searchParams.get('tab') : 'forum'));
+  const focusPostRef = useRef(searchParams.get('post'));
+  const [highlightId, setHighlightId] = useState(null);
 
   // Forum state
   const [posts, setPosts] = useState([]);
@@ -41,8 +126,12 @@ const ProjectWorkspace = () => {
   const [posting, setPosting] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
   const [replyText, setReplyText] = useState('');
+  const [replyTarget, setReplyTarget] = useState(null); // { uid, name } when replying to a reply
   const [editingPost, setEditingPost] = useState(null);
   const [editText, setEditText] = useState('');
+  const newPostRef = useRef(null);
+  const replyInputRef = useRef(null);
+  const editInputRef = useRef(null);
   const messagesEndRef = useRef(null);
   const [showReactors, setShowReactors] = useState(null); // 'postId-emoji' key
   const [lightbox, setLightbox] = useState(null); // full-size image URL when an image is tapped
@@ -154,11 +243,39 @@ const ProjectWorkspace = () => {
     return () => { if (url) URL.revokeObjectURL(url); };
   }, [newPostImage]);
 
+  // Follow ?tab= when it changes (e.g. opening a notification while already here).
   useEffect(() => {
-    if (activeTab === 'forum') messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const t = searchParams.get('tab');
+    if (['forum', 'resources', 'team'].includes(t)) setActiveTab(t);
+    if (searchParams.get('post')) focusPostRef.current = searchParams.get('post');
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (activeTab !== 'forum') return;
+    const target = focusPostRef.current;
+    if (target) {
+      // Opened from a link to one post or reply: scroll to it once it has loaded.
+      if (!posts.some((p) => p.id === target)) return;
+      focusPostRef.current = null;
+      setTimeout(() => {
+        document.getElementById(`forum-${target}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setHighlightId(target);
+        setTimeout(() => setHighlightId(null), 2500);
+      }, 50);
+      return;
+    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [posts, activeTab]);
 
   const isOwner = project?.submitterId === currentUser?.uid || project?.submitterEmail === currentUser?.email;
+
+  // Forum: who can be @mentioned (this team only) and who hears about new posts.
+  const ownerFallback = project?.submitterId ? [{ uid: project.submitterId, applicantName: project.submitterName || project.contactName || 'Project Owner' }] : [];
+  const forumPeople = buildMentionables([...teamMembers, ...ownerFallback], project?.observerInfo || []);
+  const mentionPeople = forumPeople.filter((p) => p.uid !== currentUser?.uid);
+  const teamName = project?.projectTitle || project?.title || 'your project';
+  const myName = currentUser?.displayName || currentUser?.email || 'A teammate';
+  const snippet = (t) => { const x = (t || '').replace(/\s+/g, ' ').trim(); return x.length > 120 ? `${x.slice(0, 117)}...` : x; };
 
   // My own approved application on this project (used for the leave flow + my pay).
   const myMembership = teamMembers.find(m =>
@@ -251,8 +368,10 @@ const ProjectWorkspace = () => {
         imageUrl = result?.url || result || null;
         setUploadingImage(false);
       }
-      await addDoc(collection(db, 'projects', projectId, 'forum'), {
-        text: newPost.trim(),
+      const text = newPost.trim();
+      const mentions = findMentions(text, mentionPeople);
+      const ref = await addDoc(collection(db, 'projects', projectId, 'forum'), {
+        text,
         link: newPostLink.trim() || null,
         imageUrl: imageUrl,
         authorId: currentUser.uid,
@@ -263,7 +382,16 @@ const ProjectWorkspace = () => {
         editedAt: null,
         reactions: {},
         parentId: null,
+        mentions,
       });
+      // Tell the rest of the team: a mention notice for anyone tagged, a
+      // new-post notice for everyone else (one notice each).
+      const link = teamForumLink(projectId, ref.id);
+      const body = snippet(text) || (imageUrl ? 'Shared an image.' : 'Shared a link.');
+      sendTeamNotices(currentUser.uid, [
+        ...mentions.map((uid) => [uid, { type: 'team_mention', title: `${myName} mentioned you in ${teamName}`, body, link, ctaLabel: 'Open the discussion' }]),
+        ...forumPeople.map((p) => [p.uid, { type: 'team_post', title: `${myName} posted in ${teamName}`, body, link, ctaLabel: 'Open the discussion' }]),
+      ]);
       setNewPost('');
       setNewPostLink('');
       setNewPostImage(null);
@@ -271,11 +399,27 @@ const ProjectWorkspace = () => {
     setPosting(false);
   };
 
+  const openReply = (postId, target = null) => {
+    setReplyTo(postId);
+    setEditingPost(null);
+    // Replying to a reply: one level of nesting, starting with "@Name ".
+    const t = target && target.uid !== currentUser?.uid ? target : null;
+    setReplyTarget(t);
+    setReplyText(t ? `@${t.name} ` : '');
+    setTimeout(() => {
+      const el = replyInputRef.current;
+      if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; }
+    }, 0);
+  };
+
   const handleReply = async (parentId) => {
-    if (!replyText.trim()) return;
+    const text = replyText.trim();
+    if (!text) return;
+    const target = replyTarget;
     try {
-      await addDoc(collection(db, 'projects', projectId, 'forum'), {
-        text: replyText.trim(),
+      const mentions = findMentions(text, mentionPeople);
+      const ref = await addDoc(collection(db, 'projects', projectId, 'forum'), {
+        text,
         link: null,
         authorId: currentUser.uid,
         authorEmail: currentUser.email,
@@ -285,23 +429,74 @@ const ProjectWorkspace = () => {
         editedAt: null,
         reactions: {},
         parentId,
+        mentions,
+        replyToUid: target?.uid || null,
       });
       setReplyTo(null);
       setReplyText('');
+      setReplyTarget(null);
+      // One notice each: the person replied to, then anyone tagged, then the
+      // post's author, then everyone who already replied in this thread.
+      const parent = posts.find((p) => p.id === parentId);
+      const link = teamForumLink(projectId, ref.id);
+      const body = snippet(text);
+      const n = (type, title) => ({ type, title, body, link, ctaLabel: 'Open the discussion' });
+      sendTeamNotices(currentUser.uid, [
+        ...(target ? [[target.uid, n('team_reply', `${myName} replied to you in ${teamName}`)]] : []),
+        ...mentions.map((uid) => [uid, n('team_mention', `${myName} mentioned you in ${teamName}`)]),
+        ...(parent?.authorId ? [[parent.authorId, n('team_reply', `${myName} replied to your post in ${teamName}`)]] : []),
+        ...posts.filter((p) => p.parentId === parentId).map((p) => [p.authorId, n('team_reply', `${myName} also replied to a post in ${teamName}`)]),
+      ]);
     } catch (e) { toast.error('Failed to reply'); }
   };
 
+  // Edit your own post or reply. Anyone newly tagged in the edit is told once.
   const handleEdit = async (postId) => {
-    if (!editText.trim()) return;
+    const text = editText.trim();
+    if (!text) return;
+    const item = posts.find((p) => p.id === postId);
     try {
+      const mentions = findMentions(text, mentionPeople);
       await updateDoc(doc(db, 'projects', projectId, 'forum', postId), {
-        text: editText.trim(),
+        text,
         editedAt: serverTimestamp(),
+        mentions,
       });
       setEditingPost(null);
       setEditText('');
+      // Older posts have no `mentions` field: also count tags already in the text.
+      const before = [...(item?.mentions || []), ...findMentions(item?.text, mentionPeople)];
+      const added = mentions.filter((uid) => !before.includes(uid));
+      if (added.length) {
+        const link = teamForumLink(projectId, postId);
+        sendTeamNotices(currentUser.uid, added.map((uid) => [uid, { type: 'team_mention', title: `${myName} mentioned you in ${teamName}`, body: snippet(text), link, ctaLabel: 'Open the discussion' }]));
+      }
     } catch (e) { toast.error('Failed to edit'); }
   };
+
+  const startEdit = (item) => {
+    setEditingPost(item.id);
+    setEditText(item.text || '');
+    setReplyTo(null);
+  };
+
+  // Show "@Full Name" tags in pink.
+  const renderText = (text) => splitMentions(text, forumPeople).map((seg, i) => (
+    seg.mention
+      ? <span key={i} className="text-pink-600 font-semibold">{seg.text}</span>
+      : <React.Fragment key={i}>{seg.text}</React.Fragment>
+  ));
+
+  const reportTarget = (item, kind) => ({
+    area: 'team_forum',
+    kind,
+    path: `projects/${projectId}/forum/${item.id}`,
+    link: teamForumLink(projectId, item.id),
+    excerpt: snippet(item.text),
+    authorUid: item.authorId || null,
+    authorName: item.authorName || '',
+  });
+  const me = currentUser ? { uid: currentUser.uid, name: myName } : null;
 
   const handleDelete = async (postId) => {
     if (!window.confirm('Delete this post?')) return;
@@ -482,7 +677,7 @@ const ProjectWorkspace = () => {
               <div className="text-center py-10"><p className="text-gray-400 text-sm">No posts yet. Start a discussion!</p></div>
             )}
             {topPosts.map(post => (
-              <div key={post.id} className="bg-white border border-gray-200 rounded-xl p-4">
+              <div key={post.id} id={`forum-${post.id}`} className={`bg-white border rounded-xl p-4 transition-colors ${highlightId === post.id ? 'border-pink-400 ring-2 ring-pink-100' : 'border-gray-200'}`}>
                 {/* Header: avatar + name, side by side */}
                 <div className="flex items-center gap-3">
                   <a href={`/profile/${encodeURIComponent(post.authorEmail || '')}`} className="flex-shrink-0">
@@ -505,15 +700,16 @@ const ProjectWorkspace = () => {
                     {/* Content */}
                     {editingPost === post.id ? (
                       <div className="mt-2 space-y-2">
-                        <textarea value={editText} onChange={e => setEditText(e.target.value)} className={inputCls + " resize-none"} rows={2} />
-                        <div className="flex gap-2">
+                        <MentionBox multiline inputRef={editInputRef} value={editText} onChange={setEditText} people={mentionPeople} className={inputCls + " resize-none"} rows={2} />
+                        <div className="flex items-center gap-2">
+                          <EmojiPicker targetRef={editInputRef} value={editText} onChange={setEditText} up={false} />
                           <button onClick={() => handleEdit(post.id)} className="bg-pink-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg">Save</button>
                           <button onClick={() => setEditingPost(null)} className="text-gray-500 text-xs px-3 py-1.5">Cancel</button>
                         </div>
                       </div>
                     ) : (
                       <>
-                        <p className="text-gray-700 text-sm mt-1 whitespace-pre-wrap">{post.text}</p>
+                        <p className="text-gray-700 text-sm mt-1 whitespace-pre-wrap">{renderText(post.text)}</p>
                         {post.imageUrl && <img src={post.imageUrl} alt="attachment" loading="lazy" onClick={() => setLightbox(post.imageUrl)} className="w-full max-h-96 object-contain bg-gray-50 mt-3 rounded-lg border border-gray-200 cursor-zoom-in hover:opacity-95 transition-opacity" />}
                         {post.link && <a href={post.link} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-xs hover:underline mt-2 block truncate">{post.link}</a>}
                       </>
@@ -543,20 +739,21 @@ const ProjectWorkspace = () => {
                           </div>
                         );
                       })}
-                      <button onClick={() => { setReplyTo(post.id); setReplyText(''); }} className="text-gray-500 text-xs hover:text-pink-600 ml-2">Reply</button>
+                      <button onClick={() => openReply(post.id)} className="text-gray-500 text-xs hover:text-pink-600 ml-2">Reply</button>
                       {post.authorId === currentUser?.uid && (
                         <>
-                          <button onClick={() => { setEditingPost(post.id); setEditText(post.text); }} className="text-gray-400 text-xs hover:text-gray-600 ml-1">Edit</button>
+                          <button onClick={() => startEdit(post)} className="text-gray-400 text-xs hover:text-gray-600 ml-1">Edit</button>
                           <button onClick={() => handleDelete(post.id)} className="text-gray-400 text-xs hover:text-red-500 ml-1">Delete</button>
                         </>
                       )}
+                      <ReportButton target={reportTarget(post, 'post')} me={me} className="ml-1" />
                     </div>
                     {renderReactorSummary(post)}
                     {/* Replies */}
                     {getReplies(post.id).length > 0 && (
                       <div className="mt-3 pl-4 border-l-2 border-gray-100 space-y-3">
                         {getReplies(post.id).map(reply => (
-                          <div key={reply.id} className="flex items-start gap-2">
+                          <div key={reply.id} id={`forum-${reply.id}`} className={`flex items-start gap-2 rounded-lg transition-colors ${highlightId === reply.id ? 'bg-pink-50' : ''}`}>
                             {reply.authorPhoto ? (
                               <img src={reply.authorPhoto} alt="" className="w-6 h-6 rounded-full object-cover flex-shrink-0" />
                             ) : (
@@ -568,8 +765,19 @@ const ProjectWorkspace = () => {
                                 <span className="text-gray-400 text-[10px]">{formatTime(reply.createdAt)}</span>
                                 {reply.editedAt && <span className="text-gray-400 text-[10px] italic">edited</span>}
                               </div>
-                              <p className="text-gray-600 text-xs mt-0.5">{reply.text}</p>
-                              <div className="flex items-center gap-1 mt-1">
+                              {editingPost === reply.id ? (
+                                <div className="mt-1 flex items-center gap-2">
+                                  <MentionBox inputRef={editInputRef} value={editText} onChange={setEditText} people={mentionPeople}
+                                    onKeyDown={e => { if (e.key === 'Enter') handleEdit(reply.id); if (e.key === 'Escape') setEditingPost(null); }}
+                                    className={inputCls + " text-xs"} />
+                                  <EmojiPicker targetRef={editInputRef} value={editText} onChange={setEditText} up={false} />
+                                  <button onClick={() => handleEdit(reply.id)} className="bg-pink-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex-shrink-0">Save</button>
+                                  <button onClick={() => setEditingPost(null)} className="text-gray-500 text-xs px-2 py-1.5 flex-shrink-0">Cancel</button>
+                                </div>
+                              ) : (
+                                <p className="text-gray-600 text-xs mt-0.5 whitespace-pre-wrap">{renderText(reply.text)}</p>
+                              )}
+                              <div className="flex items-center gap-1 mt-1 flex-wrap">
                                 {emojis.map(emoji => {
                                   const c = (reply.reactions?.[emoji] || []).length;
                                   const r = (reply.reactions?.[emoji] || []).includes(currentUser?.uid);
@@ -579,9 +787,16 @@ const ProjectWorkspace = () => {
                                     </button>
                                   ) : null;
                                 })}
+                                <button
+                                  onClick={() => openReply(post.id, { uid: reply.authorId, name: forumPeople.find(p => p.uid === reply.authorId)?.name || reply.authorName })}
+                                  className="text-gray-500 text-[10px] hover:text-pink-600 ml-1">Reply</button>
                                 {reply.authorId === currentUser?.uid && (
-                                  <button onClick={() => handleDelete(reply.id)} className="text-gray-400 text-[10px] hover:text-red-500 ml-1">Delete</button>
+                                  <>
+                                    <button onClick={() => startEdit(reply)} className="text-gray-400 text-[10px] hover:text-gray-600 ml-1">Edit</button>
+                                    <button onClick={() => handleDelete(reply.id)} className="text-gray-400 text-[10px] hover:text-red-500 ml-1">Delete</button>
+                                  </>
                                 )}
+                                <ReportButton target={reportTarget(reply, 'reply')} me={me} className="!text-[10px] ml-1" />
                               </div>
                             </div>
                           </div>
@@ -590,8 +805,11 @@ const ProjectWorkspace = () => {
                     )}
                     {/* Reply input */}
                     {replyTo === post.id && (
-                      <div className="mt-3 flex gap-2">
-                        <input value={replyText} onChange={e => setReplyText(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleReply(post.id)} className={inputCls + " text-xs"} placeholder="Write a reply..." />
+                      <div className="mt-3 flex items-center gap-2">
+                        <MentionBox inputRef={replyInputRef} value={replyText} onChange={setReplyText} people={mentionPeople}
+                          onKeyDown={e => { if (e.key === 'Enter') handleReply(post.id); if (e.key === 'Escape') { setReplyTo(null); setReplyTarget(null); } }}
+                          className={inputCls + " text-xs"} placeholder={replyTarget ? `Reply to ${replyTarget.name}...` : 'Write a reply... (type @ to tag a teammate)'} />
+                        <EmojiPicker targetRef={replyInputRef} value={replyText} onChange={setReplyText} />
                         <button onClick={() => handleReply(post.id)} className="bg-pink-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex-shrink-0">Reply</button>
                       </div>
                     )}
@@ -603,7 +821,7 @@ const ProjectWorkspace = () => {
 
           {/* New post */}
           <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
-            <textarea value={newPost} onChange={e => setNewPost(e.target.value)} className={inputCls + " resize-none"} rows={3} placeholder="Share an update, question, or file..." />
+            <MentionBox multiline inputRef={newPostRef} value={newPost} onChange={setNewPost} people={mentionPeople} className={inputCls + " resize-none"} rows={3} placeholder="Share an update, question, or file... Type @ to tag a teammate." />
             {newPostImage && (
               <div className="relative inline-block">
                 <img src={newPostImage.preview} alt="preview" className="max-h-40 rounded-lg border border-gray-200" />
@@ -611,6 +829,7 @@ const ProjectWorkspace = () => {
               </div>
             )}
             <div className="flex items-center gap-3">
+              <EmojiPicker targetRef={newPostRef} value={newPost} onChange={setNewPost} />
               <input value={newPostLink} onChange={e => setNewPostLink(e.target.value)} className={inputCls + " text-xs flex-1"} placeholder="Attach a link (optional)" />
               <label className="flex-shrink-0 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium px-3 py-2 rounded-lg transition-all flex items-center gap-1.5">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>

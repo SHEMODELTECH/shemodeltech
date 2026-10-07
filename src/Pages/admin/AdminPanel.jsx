@@ -25,6 +25,7 @@ import { deleteTeacherCourse, listTeacherCourses, reviewStatus } from '../../uti
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { deleteProjectActivity } from '../../utils/activityFeed';
 import ProofWallAdmin from '../../components/admin/ProofWallAdmin';
+import ReportsAdmin from '../../components/admin/ReportsAdmin';
 import { notifyMember } from '../../utils/staffAlerts';
 import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
@@ -1697,42 +1698,9 @@ const AdminPanel = ({ only = null }) => {
 
       {!loadingData && (tab === 'events' || tab === 'summit') && isReviewer && <EventsAdmin />}
 
-      {/* MODERATION */}
+      {/* MODERATION: content members reported */}
       {!loadingData && tab === 'moderation' && (
-        <div className="space-y-2">
-          <p className="text-gray-500 text-sm mb-2">
-            Recent community posts (latest 50). Delete anything that violates guidelines.
-          </p>
-          {posts.length === 0 ? (
-            <p className="text-gray-400 text-sm">No posts.</p>
-          ) : (
-            posts.map((p) => (
-              <div
-                key={p.id}
-                className="flex items-start justify-between gap-3 bg-white border border-gray-200 rounded-lg p-3"
-              >
-                <div className="min-w-0">
-                  <p className="text-gray-900 text-xs font-semibold">
-                    {p.authorName || 'Unknown'}{' '}
-                    <span className="text-gray-400 font-normal">· {fmtDate(p.createdAt)}</span>
-                  </p>
-                  {p.title && <p className="text-gray-800 text-sm font-medium mt-0.5">{p.title}</p>}
-                  <p className="text-gray-600 text-sm mt-0.5 line-clamp-3">
-                    {p.content || '(no text)'}
-                  </p>
-                </div>
-                {isAdmin && (
-                  <button
-                    onClick={() => deletePost(p)}
-                    className="flex-shrink-0 text-red-500 text-xs font-semibold"
-                  >
-                    Delete
-                  </button>
-                )}
-              </div>
-            ))
-          )}
-        </div>
+        <ReportsAdmin me={{ uid: currentUser?.uid, name: currentUser?.displayName || currentUser?.email || 'Staff' }} />
       )}
     </div>
   );

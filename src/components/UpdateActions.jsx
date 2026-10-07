@@ -3,7 +3,7 @@
 // Repost, and Send. Only for updates, not other Proof Wall items.
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { REACTIONS, listComments, postUrl, repostUpdate, setReaction } from '../utils/updateSocial';
+import { REACTIONS, listComments, notifyReaction, postUrl, repostUpdate, setReaction } from '../utils/updateSocial';
 import CommentThread from './CommentThread';
 import ReactionsModal from './ReactionsModal';
 import { usePhotos } from '../hooks/usePhotos';
@@ -36,7 +36,11 @@ const UpdateActions = ({ a, me, onChange }) => {
     if (next) { reactionsNext[me.uid] = next; namesNext[me.uid] = me.name; photosNext[me.uid] = me.photoURL || ''; }
     else { delete reactionsNext[me.uid]; delete namesNext[me.uid]; delete photosNext[me.uid]; }
     onChange({ ...a, reactions: reactionsNext, reactionNames: namesNext, reactionPhotos: photosNext });
-    try { await setReaction(a.id, me.uid, me.name, next, me.photoURL); } catch (e) { onChange(a); toast.error('Could not react.'); }
+    try {
+      await setReaction(a.id, me.uid, me.name, next, me.photoURL);
+      // Tell the author once per person, only when a reaction is added.
+      if (next && !mine) notifyReaction({ item: a, ownerUid: a.actorId, me, emoji: next, pathParts: ['activity', a.id], activityId: a.id });
+    } catch (e) { onChange(a); toast.error('Could not react.'); }
   };
   const toggleComments = async () => {
     const nextOpen = !open;
@@ -119,6 +123,7 @@ const UpdateActions = ({ a, me, onChange }) => {
       {open && comments !== null && (
         <CommentThread
           activityId={a.id}
+          ownerUid={a.actorId}
           me={me}
           comments={comments}
           setComments={setComments}

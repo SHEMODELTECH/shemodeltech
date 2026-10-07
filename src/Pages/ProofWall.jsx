@@ -22,6 +22,8 @@ import { toast } from 'react-toastify';
 import { uploadImageToBlob, validateImageFile } from '../utils/blobStorage';
 import { MentionTextarea } from '../components/MentionTextarea';
 import UpdateActions from '../components/UpdateActions';
+import EmojiPicker from '../components/EmojiPicker';
+import ReportButton from '../components/ReportButton';
 
 const fmtAgo = (ts) => {
   try {
@@ -232,6 +234,10 @@ const ProofWall = () => {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState('');
   const [editProject, setEditProject] = useState('');
+  // Emoji buttons: the composer's MentionTextarea keeps its own ref, so find its textarea.
+  const composeWrapRef = useRef(null);
+  const composeTextareaRef = { get current() { return composeWrapRef.current?.querySelector('textarea') || null; } };
+  const editTextareaRef = useRef(null);
 
   const uid = currentUser?.uid;
 
@@ -695,6 +701,7 @@ const ProofWall = () => {
             }
             className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none"
           />
+          <div ref={composeWrapRef}>
           <MentionTextarea
             plainNames
             value={updateText}
@@ -714,6 +721,8 @@ const ProofWall = () => {
             rows={3}
             className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none resize-none"
           />
+          </div>
+          <EmojiPicker targetRef={composeTextareaRef} value={updateText} onChange={setUpdateText} up={false} />
 
           {updateMentions.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
@@ -1120,12 +1129,14 @@ const ProofWall = () => {
                             className="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none"
                           />
                           <textarea
+                            ref={editTextareaRef}
                             value={editText}
                             onChange={(e) => setEditText(e.target.value)}
                             rows={2}
                             className="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none resize-none"
                           />
-                          <div className="flex gap-2">
+                          <div className="flex items-center gap-2">
+                            <EmojiPicker targetRef={editTextareaRef} value={editText} onChange={setEditText} up={false} />
                             <button
                               onClick={() => saveEdit(a)}
                               className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg"
@@ -1242,10 +1253,25 @@ const ProofWall = () => {
                       {/* Updates only: React, Comment, Repost, Send (plus Edit/Delete on your own). */}
                       {!isEditing && a.type === 'update' && (
                         <div className="mt-2.5">
-                          {isMine && (
+                          {isMine ? (
                             <div className="flex items-center gap-3 mb-1">
                               <button onClick={() => startEdit(a)} className="text-xs font-semibold text-gray-500 hover:text-gray-800">Edit</button>
                               <button onClick={() => handleDelete(a)} className="text-xs font-semibold text-gray-500 hover:text-red-600">Delete</button>
+                            </div>
+                          ) : uid && (
+                            <div className="flex items-center justify-end gap-3 mb-1">
+                              <ReportButton
+                                me={{ uid, name: myData?.displayName || currentUser?.displayName || 'A member' }}
+                                target={{
+                                  area: 'proofwall',
+                                  kind: 'post',
+                                  path: `activity/${a.id}`,
+                                  link: `/proof-wall?post=${a.id}`,
+                                  excerpt: a.text || a.repostOf?.text || '',
+                                  authorUid: a.actorId || null,
+                                  authorName: a.actorName || '',
+                                }}
+                              />
                             </div>
                           )}
                           {uid && (

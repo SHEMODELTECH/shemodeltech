@@ -98,6 +98,22 @@ service cloud.firestore {
  }
 
  // ---------------------------------------------------------------
+ // reports: members report a post, comment or reply (utils/reports.js).
+ // Anyone signed in can file one as themselves; only staff read and close them.
+ // ---------------------------------------------------------------
+ match /reports/{id} {
+ allow create: if isSignedIn()
+ && request.resource.data.reporterUid == myUid()
+ && request.resource.data.status == 'open'
+ && request.resource.data.reason in ['spam', 'harassment', 'inappropriate', 'scam', 'personal', 'other']
+ && request.resource.data.get('details', '').size() <= 500
+ && request.resource.data.get('excerpt', '').size() <= 300
+ && request.resource.data.createdAt == request.time;
+ allow read, update: if isReviewer();
+ allow delete: if isAdmin();
+ }
+
+ // ---------------------------------------------------------------
  // presence: "Active now" / "Last active ..." (utils/presence.js)
  // Signed-in members can read it; each member writes only their own, with
  // the server's time, so no one can fake being online.
@@ -387,7 +403,11 @@ service cloud.firestore {
  allow read: if isSignedIn();
  allow create: if isSignedIn() && request.resource.data.authorId == myUid();
  allow update: if isSignedIn() && changed(['reactions', 'reactorInfo']);
- allow update, delete: if isSignedIn()
+ // Authors edit only the text, tags and edit time of their own post or reply.
+ allow update: if isSignedIn() && resource.data.authorId == myUid()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt', 'mentions', 'reactions', 'reactorInfo']);
+ allow update: if isAdmin();
+ allow delete: if isSignedIn()
  && (resource.data.authorId == myUid() || isAdmin());
  }
  }
@@ -733,6 +753,13 @@ service cloud.firestore {
  || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
  && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()]))
  );
+ // The author edits her own post: title, details, link, tags and edit time only.
+ allow update: if isSignedIn() && resource.data.uid == myUid()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'body', 'link', 'editedAt', 'mentions'])
+ && request.resource.data.title is string && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 150
+ && request.resource.data.body is string && request.resource.data.body.size() <= 5000
+ && request.resource.data.editedAt == request.time
+ && request.resource.data.get('mentions', []) is list && request.resource.data.get('mentions', []).size() <= 20;
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  match /replies/{replyId} {
  allow read: if true;
@@ -740,7 +767,17 @@ service cloud.firestore {
  && request.resource.data.uid == myUid()
  && request.resource.data.body is string
  && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
- allow update: if false;
+ // The author edits her own reply; enrolled members set only their own reaction.
+ allow update: if isSignedIn() && (
+ (resource.data.uid == myUid()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['body', 'editedAt', 'mentions'])
+ && request.resource.data.body is string && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000
+ && request.resource.data.editedAt == request.time
+ && request.resource.data.get('mentions', []) is list && request.resource.data.get('mentions', []).size() <= 20)
+ || (canJoinCourse(courseKey)
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
+ && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()]))
+ );
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  }
  }
@@ -764,6 +801,13 @@ service cloud.firestore {
  || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
  && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()]))
  );
+ // The author edits her own post: title, details, link, tags and edit time only.
+ allow update: if isSignedIn() && resource.data.uid == myUid()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'body', 'link', 'editedAt', 'mentions'])
+ && request.resource.data.title is string && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 150
+ && request.resource.data.body is string && request.resource.data.body.size() <= 5000
+ && request.resource.data.editedAt == request.time
+ && request.resource.data.get('mentions', []) is list && request.resource.data.get('mentions', []).size() <= 20;
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  match /replies/{replyId} {
  allow read: if isTeacherUser() || isReviewer();
@@ -771,7 +815,17 @@ service cloud.firestore {
  && request.resource.data.uid == myUid()
  && request.resource.data.body is string
  && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
- allow update: if false;
+ // The author edits her own reply; enrolled members set only their own reaction.
+ allow update: if isSignedIn() && (
+ (resource.data.uid == myUid()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['body', 'editedAt', 'mentions'])
+ && request.resource.data.body is string && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000
+ && request.resource.data.editedAt == request.time
+ && request.resource.data.get('mentions', []) is list && request.resource.data.get('mentions', []).size() <= 20)
+ || ((isTeacherUser() || isReviewer())
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
+ && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()]))
+ );
  allow delete: if isSignedIn() && (resource.data.uid == myUid() || isAdmin());
  }
  }
@@ -1094,6 +1148,11 @@ service cloud.firestore {
  && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()])
  && request.resource.data.get('reactionNames', {}).diff(resource.data.get('reactionNames', {})).affectedKeys().hasOnly([myUid()])
  && request.resource.data.get('reactionPhotos', {}).diff(resource.data.get('reactionPhotos', {})).affectedKeys().hasOnly([myUid()]);
+ // "Already told the author about my reaction" mark: each person sets only her own.
+ allow update: if isSignedIn() && resource.data.get('type', '') == 'update'
+ && changed(['reactionNotified'])
+ && request.resource.data.get('reactionNotified', {}).diff(resource.data.get('reactionNotified', {})).affectedKeys().hasOnly([myUid()])
+ && request.resource.data.reactionNotified[myUid()] == true;
  // Comment and repost counts move by one at a time.
  allow update: if isSignedIn() && resource.data.get('type', '') == 'update'
  && changed(['commentCount', 'repostCount'])
@@ -1113,6 +1172,18 @@ service cloud.firestore {
  && request.resource.data.get('reactions', {}).diff(resource.data.get('reactions', {})).affectedKeys().hasOnly([myUid()])
  && request.resource.data.get('reactionNames', {}).diff(resource.data.get('reactionNames', {})).affectedKeys().hasOnly([myUid()])
  && request.resource.data.get('reactionPhotos', {}).diff(resource.data.get('reactionPhotos', {})).affectedKeys().hasOnly([myUid()]);
+ // The author edits her own comment or reply: only the text, tags and edit time.
+ allow update: if isSignedIn() && resource.data.uid == myUid()
+ && changed(['text', 'mentions', 'editedAt'])
+ && request.resource.data.text is string
+ && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 1000
+ && request.resource.data.get('mentions', []) is list
+ && request.resource.data.editedAt == request.time;
+ // "Already told the author about my reaction" mark on a comment.
+ allow update: if isSignedIn()
+ && changed(['reactionNotified'])
+ && request.resource.data.get('reactionNotified', {}).diff(resource.data.get('reactionNotified', {})).affectedKeys().hasOnly([myUid()])
+ && request.resource.data.reactionNotified[myUid()] == true;
  // Reply count moves by one at a time.
  allow update: if isSignedIn() && changed(['replyCount'])
  && request.resource.data.get('replyCount', 0) - resource.data.get('replyCount', 0) <= 1

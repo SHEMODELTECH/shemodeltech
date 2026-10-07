@@ -10,7 +10,7 @@ export const ADMIN_SECTIONS = [
   ['feedback', 'Member feedback', 'admin'],
   ['sponsors', 'Sponsors', 'admin'],
   ['launch', 'Settings', 'admin'],
-  ['moderation', 'Moderation', 'all'],
+  ['moderation', 'Reports', 'all'],
   ['proofwall', 'Proof Wall', 'admin'],
   ['deletions', 'Deletion Requests', 'admin'],
   ['danger', 'Danger Zone', 'admin'],

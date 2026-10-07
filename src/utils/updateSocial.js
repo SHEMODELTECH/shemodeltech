@@ -1,9 +1,12 @@
 // src/utils/updateSocial.js
 // Reactions, comments, reposts, and sharing for members' updates on the Proof Wall.
 //   activity/{id}: reactions {uid: emoji}, reactionNames {uid: name}, commentCount, repostCount
-//   activity/{id}/comments/{cid}: uid, name, photoURL, text, createdAt
+//   activity/{id}/comments/{cid}: uid, name, photoURL, text, createdAt, editedAt, mentions
+//   reactionNotified {uid: true} (on updates and comments): the author was already
+//   told about this person's reaction, so taking it off and on again doesn't re-notify.
 import { addDoc, collection, deleteDoc, deleteField, doc, getDocs, increment, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { sendPush } from './pushNotifications';
+import { notifyMember } from './staffAlerts';
 import { db } from '../firebase/config';
 
 export const REACTIONS = [
@@ -36,6 +39,14 @@ export const setCommentReaction = (activityId, commentId, me, emoji) =>
   updateDoc(doc(db, 'activity', activityId, 'comments', commentId), emoji
     ? { [`reactions.${me.uid}`]: emoji, [`reactionNames.${me.uid}`]: me.name || 'A member', [`reactionPhotos.${me.uid}`]: me.photoURL || '' }
     : { [`reactions.${me.uid}`]: deleteField(), [`reactionNames.${me.uid}`]: deleteField(), [`reactionPhotos.${me.uid}`]: deleteField() });
+
+// Edit your own comment or reply: only the text and who is tagged change.
+export const editComment = (activityId, commentId, text, mentions = []) =>
+  updateDoc(doc(db, 'activity', activityId, 'comments', commentId), {
+    text: text.trim(),
+    mentions: mentions.map((m) => ({ uid: m.uid, name: m.name })),
+    editedAt: serverTimestamp(),
+  });
 
 export const deleteComment = async (activityId, commentId, parentId = null) => {
   await deleteDoc(doc(db, 'activity', activityId, 'comments', commentId));
@@ -93,6 +104,52 @@ export const notifyMentions = (mentions, me, activityId) => {
       createdAt: serverTimestamp(),
     }).catch(() => {});
   });
+};
+
+const postLink = (activityId) => `/proof-wall?post=${activityId}`;
+
+// Someone commented or replied: tell the update's author and (for a reply) the
+// author of the comment being replied to. Anyone already told by a mention, and
+// you yourself, are skipped, and each person gets one notice.
+//   ownerUid: the update's author; parents: for a reply, the comment or reply that was
+//   answered and the top comment of the thread ([] for a new comment).
+export const notifyCommentAuthors = ({ activityId, me, ownerUid, parents = [], mentions = [], text = '' }) => {
+  const isReply = parents.length > 0;
+  const who = me.name || 'A member';
+  const told = new Set([me.uid, ...(mentions || []).map((m) => m.uid)]);
+  const snippet = String(text || '').trim().slice(0, 120);
+  const link = postLink(activityId);
+  const send = (uid, title) => {
+    if (!uid || told.has(uid)) return;
+    told.add(uid);
+    notifyMember(uid, { type: isReply ? 'proofwall_reply' : 'proofwall_comment', title, body: snippet || 'Open the Proof Wall to see it.', link, sendEmail: false });
+  };
+  parents.forEach((p) => send(p?.uid, `${who} replied to your comment on the Proof Wall`));
+  send(ownerUid, isReply ? `${who} replied to a comment on your update` : `${who} commented on your update`);
+};
+
+// Someone reacted (added, not removed or changed): bell only, at most once per
+// person per update or comment. `item` is the update or comment as it was before
+// the reaction; `ref` is its document path parts. The "already told" mark is saved
+// separately, so a reaction never fails because of it.
+const reactionToldThisSession = new Set();
+export const notifyReaction = ({ item, ownerUid, me, emoji, pathParts, activityId, isComment = false }) => {
+  if (!ownerUid || ownerUid === me.uid || !emoji) return;
+  if ((item.reactions || {})[me.uid]) return; // changing a reaction, not adding one
+  if ((item.reactionNotified || {})[me.uid]) return;
+  const key = `${pathParts.join('/')}:${me.uid}`;
+  if (reactionToldThisSession.has(key)) return;
+  reactionToldThisSession.add(key);
+  const who = me.name || 'A member';
+  notifyMember(ownerUid, {
+    type: 'proofwall_reaction',
+    title: `${who} reacted ${emoji} to your ${isComment ? 'comment' : 'update'}`,
+    body: String(item.text || '').trim().slice(0, 120) || 'Open the Proof Wall to see it.',
+    link: postLink(activityId),
+    sendEmail: false,
+    push: false,
+  });
+  updateDoc(doc(db, ...pathParts), { [`reactionNotified.${me.uid}`]: true }).catch(() => {});
 };
 
 // Profile photos for people who reacted or commented: use the saved photo, and
