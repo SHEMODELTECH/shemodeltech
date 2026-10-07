@@ -5,6 +5,8 @@
 
 **Tools needed for this module:** A web browser, a free account with a document tool such as [Google Docs](https://docs.google.com) or [Notion](https://www.notion.so), and a free account with a survey tool like [Google Forms](https://forms.google.com) or [Typeform](https://www.typeform.com). No coding environment or installs are required.
 
+If you've taken Research for Tech Teams in the TechLeads track, Topics 2 (Interviews) and 3 (Surveys) will be a refresher; they cover the same ground as its Topic 5.2, Interviews and Surveys.
+
 ### Topic 1: Personas
 
 #### Concept
@@ -14,7 +16,8 @@ A **persona** is a fictional but research-based representation of a type of user
 - A **persona** typically includes a name, role, goals, frustrations (pain points), and relevant behaviors, enough detail to make decisions concrete, without so much that it becomes a distraction
 - A **primary persona** represents the most important user segment a product is designed for, a **secondary persona** represents a smaller but still relevant segment worth considering
 - **Pain points** are the specific frustrations or obstacles a persona experiences related to the problem the product addresses, these often directly suggest what the product needs to solve
-- A persona should be built from **research patterns**, not assumptions, a persona invented without any real user input is often called an "elastic user," reshaped to justify whatever the team already wanted to build
+- A persona should be built from **research patterns**, not assumptions. Without one, teams talk about a vague "the user," which Alan Cooper called the **elastic user**: a fuzzy figure that stretches to fit whatever each person on the team wants to build. A clear persona stops that stretching
+- A **proto-persona** is a draft persona built from the team's assumptions before research is done. It's a useful starting point, as long as it's clearly labeled as assumptions and checked against real research later
 
 #### Structure at a Glance
 
@@ -43,14 +46,14 @@ Prioritizing which features matter most by checking them against a primary perso
 
 #### Lab
 
-1. **Think of a product idea** (reuse the plant-care app or expense tracker from earlier modules, or invent your own).
+1. **Think of a product idea** (reuse the plant-care app from earlier modules, or invent your own).
 2. **Write down 3 to 5 realistic assumptions** about who would use it (age range, context, motivation), labeling them clearly as assumptions, not confirmed research.
-3. **Draft a primary persona** in a shared doc, including a name, role, one or two goals, and two or three pain points, based on those assumptions.
-4. **Draft a secondary persona** representing a different, smaller user segment for the same product, and note in one sentence how their needs differ from the primary persona's.
-5. **Write one sentence identifying what real research** (which you'll do in Topics 2 and 3) would be needed to confirm or correct each persona, rather than relying on assumption alone.
+3. **Draft a primary proto-persona** in a shared doc (a proto-persona is built from assumptions, so label it that way), including a name, role, one or two goals, and two or three pain points, based on those assumptions.
+4. **Draft a secondary proto-persona** representing a different, smaller user segment for the same product, and note in one sentence how their needs differ from the primary persona's.
+5. **Write one sentence identifying what real research** (which you'll do in Topics 2 and 3) would be needed to confirm or correct each proto-persona, rather than relying on assumption alone.
 
 #### Checkpoint
-You have a primary and secondary persona for a product idea, clearly built from labeled assumptions, along with a note on what real research would be needed to validate them.
+You have a primary and secondary proto-persona for a product idea, clearly built from labeled assumptions, along with a note on what real research would be needed to validate them.
 
 #### Quiz
 1. What is a persona, and what should it be based on?
@@ -59,7 +62,7 @@ You have a primary and secondary persona for a product idea, clearly built from 
 4. What is an "elastic user," and why is it a problem?
 5. Why should personas be revisited over time rather than treated as permanent?
 
-*Answers: 1) A fictional but research-based representation of a type of user, it should be based on patterns actually observed across real users, not a single person or a guess. 2) A primary persona represents the most important user segment a product is designed for, a secondary persona represents a smaller but still relevant segment. 3) The specific frustrations or obstacles a persona experiences related to the problem, they're useful because they often directly suggest what the product needs to solve. 4) A persona invented without real user input, reshaped to justify whatever the team already wanted to build, it's a problem because it looks like user-centered evidence while actually just reflecting the team's own assumptions. 5) Because a persona based on early, limited research can go stale as a product's actual user base grows or shifts over time.*
+*Answers: 1) A fictional but research-based representation of a type of user, it should be based on patterns actually observed across real users, not a single person or a guess. 2) A primary persona represents the most important user segment a product is designed for, a secondary persona represents a smaller but still relevant segment. 3) The specific frustrations or obstacles a persona experiences related to the problem, they're useful because they often directly suggest what the product needs to solve. 4) Alan Cooper's term for a vague "user" with no clear definition, which stretches to fit whatever each team member wants to build; it's a problem because every decision can be justified, so no one is really designing for a specific person. 5) Because a persona based on early, limited research can go stale as a product's actual user base grows or shifts over time.*
 
 ---
 
@@ -163,10 +166,10 @@ Measuring how widespread a pain point uncovered in interviews actually is across
 2. **Build a short survey** (5 to 7 questions) in Google Forms or Typeform designed to measure how common that pattern is, mixing quantitative questions (multiple choice, rating scale) with one open-ended question at the end.
 3. **Review your own questions for response bias**, rewriting any that are leading, or that offer too few or unbalanced answer options.
 4. **Define your intended sample** in one or two sentences, describing who you'd actually want to invite to respond, and one reason why inviting the wrong group would bias your results.
-5. **Send the survey to 3 to 5 real people** (classmates, friends, colleagues) if possible, or simulate expected responses if that's not practical, and write one sentence noting your response rate and whether it's high enough to trust the results.
+5. **Run a pilot test with 3 to 5 people** (classmates, friends, colleagues). This is a clarity check, not real research: ask them to tell you about any question that was confusing, any missing answer option, and how long it took. Revise the survey based on their feedback. Don't treat their answers as results; 3 to 5 people is far too few to measure how common a pattern is. Write one sentence on what you would need (who, and roughly how many) for the real launch.
 
 #### Checkpoint
-You have a short survey built to measure a pattern surfaced by interviews, reviewed for response bias, with a defined intended sample and a noted response rate.
+You have a short survey built to measure a pattern surfaced by interviews, reviewed for response bias, piloted with 3 to 5 people for clarity, and paired with a defined intended sample for the real launch.
 
 #### Quiz
 1. What is the difference between quantitative and qualitative survey data?
@@ -180,8 +183,8 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
 ---
 
 ## Module Completion Checklist
-- [ ] Drafted a primary and secondary persona from labeled assumptions, noting what research is needed to validate them
+- [ ] Drafted a primary and secondary proto-persona from labeled assumptions, noting what research is needed to validate them
 - [ ] Written and reviewed a non-leading interview guide, conducted a practice interview, and synthesized its findings against the personas
-- [ ] Built and reviewed a short survey to measure a pattern from the interview, with a defined sample and noted response rate
+- [ ] Built, reviewed, and pilot-tested a short survey to measure a pattern from the interview, with a defined sample for the real launch
 - [ ] Can explain why past-behavior questions are more reliable than asking someone to predict future behavior
 - [ ] Can explain why interviews and surveys serve different purposes (depth versus breadth) rather than being interchangeable

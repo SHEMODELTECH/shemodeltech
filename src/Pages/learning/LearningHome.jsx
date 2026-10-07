@@ -480,7 +480,7 @@ const LearningHome = ({ mine = false }) => {
                         <div key={c.track + c.slug} className="flex flex-col gap-2">
                           <CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} />
                           <MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} />
-                          <button
+                          {!c.noCertificate && c.track !== 'start' && <button
                             onClick={async () => {
                               try {
                                 const id = await lr.ensureCertificate(c);
@@ -493,7 +493,7 @@ const LearningHome = ({ mine = false }) => {
                             className="text-sm font-semibold border border-gray-300 bg-white px-3 py-2 rounded-lg hover:bg-gray-50"
                           >
                             View certificate
-                          </button>
+                          </button>}
                         </div>
                       ) : (
                         <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} /></div>

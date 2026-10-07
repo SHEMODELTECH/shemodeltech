@@ -17,10 +17,10 @@ const R = (title, publisher, url, re, tracks = null) => ({ title, publisher, url
 
 // Always included for a track (shown after the course-specific matches).
 const TRACK_BASE = {
-  TechQA: [R('ISTQB Certified Tester Foundation Level syllabus', 'ISTQB', 'https://www.istqb.org/', null)],
+  TechQA: [R('ISTQB Certified Tester Foundation Level (CTFL v4.0) syllabus, on the ISTQB site', 'ISTQB', 'https://www.istqb.org/', null)],
   TechGuard: [
-    R('OWASP Top 10', 'OWASP Foundation', 'https://owasp.org/www-project-top-ten/', null),
-    R('Cybersecurity Framework', 'NIST', 'https://www.nist.gov/cyberframework', null),
+    R('OWASP Top 10:2025', 'OWASP Foundation', 'https://owasp.org/Top10/2025/', null),
+    R('Cybersecurity Framework (CSF) 2.0', 'NIST', 'https://www.nist.gov/cyberframework', null),
   ],
   TechPO: [R('Agile Coach: product management guides', 'Atlassian', 'https://www.atlassian.com/agile', null)],
 };
@@ -83,7 +83,7 @@ const REFERENCES = [
   R('Attention Is All You Need', 'Vaswani et al., 2017 (arXiv)', 'https://arxiv.org/abs/1706.03762', /transformer|self-attention/gi),
   R('Generative Adversarial Networks', 'Goodfellow et al., 2014 (arXiv)', 'https://arxiv.org/abs/1406.2661', /\bGANs?\b|generative adversarial/g),
   R('Auto-Encoding Variational Bayes', 'Kingma and Welling, 2013 (arXiv)', 'https://arxiv.org/abs/1312.6114', /\bVAEs?\b|variational autoencoder/gi),
-  R('ROS 2 documentation', 'Open Robotics', 'https://docs.ros.org/en/rolling/', /\bROS ?2?\b/g),
+  R('ROS 2 documentation', 'Open Robotics', 'https://docs.ros.org/en/jazzy/', /\bROS ?2?\b/g),
   R('Gazebo documentation', 'Open Robotics', 'https://gazebosim.org/docs', /Gazebo/g),
   R('Ray documentation', 'Anyscale', 'https://docs.ray.io/', /\bRay\b/g),
   R('MLflow documentation', 'MLflow', 'https://mlflow.org/docs/latest/', /MLflow/g),
@@ -113,14 +113,14 @@ const REFERENCES = [
   R('Metasploit documentation', 'Rapid7', 'https://docs.metasploit.com/', /Metasploit/g),
   R('Burp Suite documentation', 'PortSwigger', 'https://portswigger.net/burp/documentation', /Burp/g),
   R('How it works (TLS certificates)', "Let's Encrypt", 'https://letsencrypt.org/how-it-works/', /certificate authority|TLS certificate|Let's Encrypt/gi),
-  R('Digital Identity Guidelines: Authentication (SP 800-63B)', 'NIST', 'https://pages.nist.gov/800-63-3/sp800-63b.html', /MFA|multi-factor|passwords?\b/gi, ['TechGuard']),
+  R('Digital Identity Guidelines: Authentication (SP 800-63B-4)', 'NIST', 'https://csrc.nist.gov/pubs/sp/800/63/b/4/final', /MFA|multi-factor|passwords?\b/gi, ['TechGuard']),
   R('Passkeys and FIDO2', 'FIDO Alliance', 'https://fidoalliance.org/passkeys/', /FIDO2|WebAuthn|passkeys?/gi),
   R('IAM user guide', 'Amazon Web Services', 'https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html', /\bIAM\b/g),
   R('MITRE ATT&CK', 'MITRE', 'https://attack.mitre.org/', /ATT&CK|MITRE/g),
   R('CIS Benchmarks', 'Center for Internet Security', 'https://www.cisecurity.org/cis-benchmarks', /CIS Benchmark/g),
   R('Gitleaks', 'Gitleaks project', 'https://github.com/gitleaks/gitleaks', /Gitleaks/g),
   R('Trivy documentation', 'Aqua Security', 'https://trivy.dev/', /Trivy/g),
-  R('Checkov documentation', 'Prisma Cloud (Palo Alto Networks)', 'https://www.checkov.io/', /Checkov/g),
+  R('Checkov documentation', 'Palo Alto Networks', 'https://www.checkov.io/', /Checkov/g),
   R('Dependabot documentation', 'GitHub', 'https://docs.github.com/en/code-security/dependabot', /Dependabot/g),
 
   // ---- Product, delivery, and leadership ----
@@ -136,7 +136,7 @@ const REFERENCES = [
   R('PMBOK Guide', 'Project Management Institute', 'https://www.pmi.org/standards/pmbok', /PMBOK|project scope|work breakdown|RAID log/gi),
   R('Diátaxis: a framework for technical documentation', 'Daniele Procida', 'https://diataxis.fr/', /how-to guides?|reference page|Diátaxis/gi),
   R('Google developer documentation style guide', 'Google', 'https://developers.google.com/style', /style guide/gi),
-  R('Federal plain language guidelines', 'plainlanguage.gov', 'https://www.plainlanguage.gov/guidelines/', /plain language/gi, ['TechLeads']),
+  R('Plain language resources', 'Center for Plain Language', 'https://centerforplainlanguage.org/', /plain language/gi, ['TechLeads']),
   R('Architectural decision records', 'adr.github.io', 'https://adr.github.io/', /decision records?/gi),
   R('The Prosci ADKAR model', 'Prosci', 'https://www.prosci.com/methodology/adkar', /ADKAR|change management/gi, ['TechLeads', 'TechPO']),
   R("Kotter's 8-step process for leading change", 'Kotter', 'https://www.kotterinc.com/methodology/8-steps/', /Kotter/g),

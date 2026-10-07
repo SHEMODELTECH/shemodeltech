@@ -79,6 +79,15 @@ ai_product_brief_project/
 
 **Deliverable:** A one-page AI product brief covering problem, user, proposed solution, success metric, and risks.
 
+### Quiz
+
+1. What makes a problem well suited to AI?
+2. Complete the problem statement pattern: "[user] struggles to [task] because..."
+3. What is the difference between a success metric and a vanity metric?
+4. Why list what happens if the AI gets it wrong in the brief?
+
+*Answers: 1) It has a pattern to learn, ambiguity that fixed rules can't handle, and enough volume to be worth automating. 2) "...[reason], which causes [consequence]." 3) A success metric shows the feature is actually working, such as faster ticket resolution; a vanity metric looks good without proving value, such as "users saw the feature." 4) Planning for mistakes early shapes the design and shows whether the risk is acceptable before you build.*
+
 ---
 
 ## Project 2 (Module 2): Build an AI-Powered Feature Prototype
@@ -106,9 +115,12 @@ response = requests.post(
         "content-type": "application/json",
     },
     json={
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "max_tokens": 200,
-        "messages": [{"role": "user", "content": "Summarize this in one sentence: ..."}]
+        "messages": [{"role": "user", "content": (
+            "Summarize this in one sentence: My order arrived two days late "
+            "and the box was damaged, but the product itself works fine."
+        )}]
     }
 )
 print(response.json())
@@ -121,9 +133,27 @@ Replace the placeholder prompt with real input related to your brief's problem (
 **Step 5: Add basic input handling.**
 ```python
 def run_feature(user_input):
-    # build the prompt using user_input, call the API, return the result
-    ...
+    prompt = f"Summarize this support ticket in one sentence:\n\n{user_input}"
+    response = requests.post(
+        "https://api.anthropic.com/v1/messages",
+        headers={
+            "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+        json={
+            "model": "claude-sonnet-5-5",
+            "max_tokens": 200,
+            "messages": [{"role": "user", "content": prompt}],
+        },
+    )
+    response.raise_for_status()
+    # The reply text is in the first content block.
+    return response.json()["content"][0]["text"]
+
+print(run_feature("I was charged twice for my subscription this month. Please refund one payment."))
 ```
+Change the instruction in `prompt` to match your own brief.
 Wrapping your API call in a function makes it reusable instead of a one-off script.
 
 **Step 6: Test with 3–5 realistic examples.**
@@ -156,6 +186,15 @@ ai_feature_prototype_project/
 
 **Deliverable:** A working AI-powered feature prototype, tested against 3–5 realistic inputs.
 
+### Quiz
+
+1. Why should you never paste your API key into your code?
+2. Where is the model's reply text in the API response?
+3. Why wrap the API call in a run_feature function?
+4. Why test with 3 to 5 different realistic inputs?
+
+*Answers: 1) The key works like a password; anyone who sees the code could use it and run up charges. Store it as a secret or environment variable instead. 2) In the first content block: response.json()["content"][0]["text"]. 3) It makes the call reusable for any input instead of a one-off script. 4) One input can hide problems; several varied inputs reveal where the feature fails.*
+
 ---
 
 ## Project 3 (Module 3): Prototype a Chatbot Feature Using an LLM API
@@ -171,15 +210,39 @@ LLM APIs are **stateless**: each call has no memory of previous ones. To simulat
 **Step 3: Build a message history list.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
-history = [{"role": "system", "content": "You are a helpful assistant for [your use case]."}]
+import os
+import requests
+
+# Template: replace this system prompt with one for your own use case (Step 4).
+SYSTEM_PROMPT = "You are a helpful assistant that answers customer questions about online orders."
+
+history = []  # only "user" and "assistant" messages go here
 
 def chat(user_message):
     history.append({"role": "user", "content": user_message})
-    # call the API with the full `history` list
-    # append the assistant's reply back into `history`
+    response = requests.post(
+        "https://api.anthropic.com/v1/messages",
+        headers={
+            "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+        json={
+            "model": "claude-sonnet-5-5",
+            "max_tokens": 300,
+            "system": SYSTEM_PROMPT,   # the system prompt is a top-level field
+            "messages": history,       # the full conversation so far
+        },
+    )
+    response.raise_for_status()
+    reply = response.json()["content"][0]["text"]
+    history.append({"role": "assistant", "content": reply})
     return reply
+
+print(chat("Hi! Where can I see my order status?"))
+print(chat("And how long do refunds usually take?"))
 ```
-A **system prompt** sets the AI's role and behavior before the conversation starts.
+A **system prompt** sets the AI's role and behavior before the conversation starts. In the Messages API it goes in the top-level `"system"` field, not inside the message history. To start a fresh conversation, run `history.clear()`.
 
 **Step 4: Write a first version of your system prompt.**
 Base it on your Project 1 brief: what should this assistant do, and what should it avoid?
@@ -191,7 +254,7 @@ Run 3–4 exchanges in a row, checking that the assistant's later replies make s
 A **guardrail** is a rule that keeps the AI within intended bounds (e.g., "refuse to answer off-topic questions").
 
 **Step 7: Test edge cases.**
-Try: an off-topic question, an ambiguous question, and an empty message.
+Try: an off-topic question, an ambiguous question, and an empty message. The API rejects an empty message with an error, so add a check at the top of `chat()` (for example, `if not user_message.strip(): return "Please type a message."`) instead of letting it crash.
 
 ### Final Project Structure
 ```text
@@ -215,6 +278,15 @@ chatbot_prototype_project/
 **Skills:** Conversational AI, Prompt Engineering, Python, LLM APIs, AI Product Development.
 
 **Deliverable:** A working chatbot prototype tested across multi-turn conversations and edge cases.
+
+### Quiz
+
+1. What does it mean that LLM APIs are stateless?
+2. Where does the system prompt go in a Messages API request?
+3. After getting a reply, what must chat() do so the next turn makes sense?
+4. What is a guardrail?
+
+*Answers: 1) Each call has no memory of earlier calls, so you must resend the full conversation history every time. 2) In the top-level "system" field, not as a message inside the history list. 3) Append the reply to history as an "assistant" message. 4) A rule that keeps the AI within intended bounds, such as refusing off-topic questions.*
 
 ---
 
@@ -267,6 +339,14 @@ discovery_doc_project/
 
 **Deliverable:** A discovery doc summarizing interview insights and any resulting changes to the feature direction.
 
+### Quiz
+
+1. Why ask "Tell me about the last time you..." instead of "Would you use a feature that..."?
+2. What counts as a discovery insight?
+3. What should you do if discovery shows the real problem differs from your brief?
+
+*Answers: 1) Questions about past behavior reveal what people actually do; hypothetical questions invite guesses and polite yeses. 2) A pattern repeated across multiple people, not one person's opinion. 3) Update your problem statement to match the evidence.*
+
 ---
 
 ## Project 5 (Module 5): Design and Prototype an AI Feature Flow
@@ -315,6 +395,15 @@ feature_flow_project/
 **Skills:** UX Design, AI Product Design, Prototyping, User-Centered Design.
 
 **Deliverable:** A designed and prototyped end-to-end flow for the AI feature, covering the happy path, loading, error, and uncertainty states.
+
+### Quiz
+
+1. What is the happy path?
+2. What is latency masking?
+3. Why design a separate error state?
+4. What does uncertainty UX do?
+
+*Answers: 1) The ideal sequence of steps when everything goes right. 2) Showing the user something, such as a message or animation, while the AI works instead of a frozen screen. 3) API calls can fail, time out, or return unusable output, and users need a clear message and next step when that happens. 4) It signals that AI output may be wrong and invites correction, rather than presenting it as unquestionable fact.*
 
 ---
 
@@ -368,6 +457,15 @@ evaluation_plan_project/
 **Skills:** AI Evaluation, Quality Assurance, Metrics Design, Analytical Thinking, AI Product Development.
 
 **Deliverable:** A written evaluation plan with a test set, rubric, baseline scores, and feedback loop design.
+
+### Quiz
+
+1. Where should your test set come from?
+2. What is a rubric used for?
+3. What is the difference between quality metrics and business metrics?
+4. Why measure a baseline score before launch?
+
+*Answers: 1) From real observed successes and failures, such as your Project 2 notes, turned into concrete input and expected-output pairs. 2) Scoring subjective AI output consistently on dimensions such as accuracy, tone, and helpfulness. 3) Quality metrics judge whether the output is good; business metrics judge whether the feature reaches the product goal. 4) It gives you a reference point to compare later changes against and to set launch criteria.*
 
 ---
 
@@ -423,3 +521,11 @@ launch_plan_project/
 **Skills:** Product Launch Planning, Risk Management, Cross-Functional Coordination, AI Product Development.
 
 **Deliverable:** A launch plan covering scope, criteria, rollout stages, stakeholders, and post-launch monitoring.
+
+### Quiz
+
+1. Why launch to a limited group first?
+2. What gates moving from one rollout stage to the next?
+3. What should a post-launch monitoring plan include?
+
+*Answers: 1) Problems show up with fewer people affected, so you can fix them before a full launch. 2) Defined criteria, such as meeting the quality bar from your evaluation plan or getting positive beta feedback. 3) What you will watch in the first week and what would trigger a rollback.*

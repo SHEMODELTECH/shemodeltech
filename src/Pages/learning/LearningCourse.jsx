@@ -209,7 +209,8 @@ const LearningCourse = ({ reading = false }) => {
 
   // The Start Here course is an orientation: no summaries, no forum reply,
   // and no certificate (certificates are for skill courses).
-  const noCert = track === 'start';
+  // (Orientation pages marked <!-- certificate: none --> give no certificate either.)
+  const noCert = track === 'start' || !!course.noCertificate;
 
   // Open (issuing if needed) this learner's certificate for the course.
   const openCertificate = async () => {

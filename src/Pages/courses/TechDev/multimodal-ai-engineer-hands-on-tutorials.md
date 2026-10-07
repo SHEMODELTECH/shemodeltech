@@ -80,6 +80,15 @@ multimodal_survey_project/
 
 **Deliverable:** A model survey and comparison summary covering at least three multimodal model categories.
 
+### Quiz
+
+1. What makes a model multimodal?
+2. What does a vision-language model do, and how is it different from a speech-to-text model?
+3. Why should you write down each model's input and output formats before building anything?
+4. Name two kinds of limits that multimodal models often have beyond plain text models.
+
+*Answers: 1) It processes and/or generates more than one modality, such as text, image, audio, or video. 2) A vision-language model understands images and text together; a speech-to-text model converts spoken audio into text. 3) Your code must send data in exactly the format the model expects (for example a base64 image or an audio file) and handle what it returns. 4) Limits on image resolution or file size, audio length, or total tokens across the combined input.*
+
 ---
 
 ## Project 2 (Module 2): Build a Script That Processes Image and Text Inputs
@@ -92,8 +101,10 @@ Create a new notebook for this project (**File → New notebook**) and name it `
 %pip install requests pillow
 ```
 
+Run the API key cell from "Before you start" next, so `ANTHROPIC_API_KEY` is set.
+
 **Step 2: Load and inspect an image.**
-Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+Drag a photo into the **Files** panel and name it `test_image.jpg`. Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 from PIL import Image
 img = Image.open("test_image.jpg")
@@ -123,7 +134,7 @@ response = requests.post(
         "content-type": "application/json",
     },
     json={
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "max_tokens": 300,
         "messages": [{
             "role": "user",
@@ -136,7 +147,7 @@ response = requests.post(
 )
 print(response.json())
 ```
-The **content array** lets a single message mix multiple content types (image and text blocks) instead of just plain text.
+The **content array** lets a single message mix multiple content types (image and text blocks) instead of just plain text. The model's reply is in `response.json()["content"]`, a list of blocks; the text is in the blocks whose `type` is `"text"`.
 
 **Step 5: Test with different images and questions.**
 Run the script against 3–4 different images, asking different questions each time (description, counting objects, reading text in the image).
@@ -144,16 +155,59 @@ Run the script against 3–4 different images, asking different questions each t
 **Step 6: Handle image size limits.**
 ```python
 img.thumbnail((1024, 1024))
-img.save("resized_image.jpg")
+img.convert("RGB").save("resized_image.jpg")
 ```
-**thumbnailing** resizes an image down while preserving aspect ratio.
+**thumbnailing** resizes an image down while preserving aspect ratio. Large images cost more and can hit the API's size limit, so resizing first is a good habit. `.convert("RGB")` lets you save PNGs with transparency as JPEG.
 
 **Step 7: Wrap the logic in a reusable function.**
+This cell is the core of the whole course. Later projects reuse it, so keep it handy.
 ```python
+import base64
+import os
+import requests
+
+MEDIA_TYPES = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
+               ".gif": "image/gif", ".webp": "image/webp"}
+
+def ask_claude_about_image(image_bytes, media_type, question, max_tokens=300):
+    """Send raw image bytes plus a question to Claude and return the answer text."""
+    image_data = base64.b64encode(image_bytes).decode("utf-8")
+    response = requests.post(
+        "https://api.anthropic.com/v1/messages",
+        headers={
+            "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+        json={
+            "model": "claude-sonnet-5-5",
+            "max_tokens": max_tokens,
+            "system": "You describe images accurately. If you can't tell something from the image, say so instead of guessing.",
+            "messages": [{
+                "role": "user",
+                "content": [
+                    {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": image_data}},
+                    {"type": "text", "text": question},
+                ],
+            }],
+        },
+        timeout=60,
+    )
+    response.raise_for_status()  # stop with a clear error if the request failed
+    blocks = response.json()["content"]
+    return "".join(block["text"] for block in blocks if block["type"] == "text")
+
 def describe_image(image_path, question):
-    # encode, build request, call API, return response text
-    ...
+    """Open an image file and ask Claude a question about it."""
+    extension = os.path.splitext(image_path)[1].lower()
+    if extension not in MEDIA_TYPES:
+        raise ValueError(f"Unsupported image type: {extension}")
+    with open(image_path, "rb") as f:
+        return ask_claude_about_image(f.read(), MEDIA_TYPES[extension], question)
+
+print(describe_image("resized_image.jpg", "Describe what's in this image in two sentences."))
 ```
+The `"system"` field is a top-level instruction that applies to the whole conversation; it is not one of the messages. The `media_type` must match the real file type, which is why the function looks at the file extension.
 
 ### Final Project Structure
 ```text
@@ -177,6 +231,15 @@ image_text_project/
 
 **Deliverable:** A working script that processes image + text input and returns model responses, tested on multiple images.
 
+### Quiz
+
+1. Why do you base64-encode an image before sending it to the API?
+2. How does one message send both an image and a question?
+3. Where does the system prompt go in a Messages API request?
+4. Why does `describe_image` check the file extension?
+
+*Answers: 1) JSON requests carry text, and base64 turns the image's binary bytes into a text string that fits safely inside the JSON. 2) The message's `content` is a list holding an image block and a text block. 3) In a top-level `"system"` field, separate from the `messages` list. 4) The `media_type` in the image block must match the real file type (for example `image/jpeg` or `image/png`), and unsupported types should fail early with a clear error.*
+
 ---
 
 ## Project 3 (Module 3): Extract Features from an Image and an Audio Clip
@@ -186,8 +249,9 @@ image_text_project/
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `feature_extraction_project`.
 ```python
-%pip install pillow numpy librosa
+%pip install pillow numpy librosa matplotlib
 ```
+Upload two files to the **Files** panel: a photo named `test_image.jpg` and a short (5–30 second) audio clip named `test_audio.wav`, such as a voice memo or a music clip saved as WAV.
 
 **Step 2: Extract basic image features.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
@@ -205,8 +269,13 @@ An image is really just a **numpy array** of pixel values, `shape` gives (height
 **Step 3: Extract a basic image histogram.**
 ```python
 import matplotlib.pyplot as plt
+
+plt.figure()
 plt.hist(img_array.flatten(), bins=50)
+plt.xlabel("Pixel value (0 = dark, 255 = bright)")
+plt.ylabel("Number of pixels")
 plt.savefig("brightness_histogram.png")
+plt.show()
 ```
 A **histogram** here shows the distribution of pixel brightness values across the image.
 
@@ -221,17 +290,23 @@ print("Sample rate:", sample_rate)
 
 **Step 5: Generate a spectrogram.**
 ```python
+import librosa.display
+
 spectrogram = librosa.feature.melspectrogram(y=audio, sr=sample_rate)
-librosa.display.specshow(librosa.power_to_db(spectrogram))
+plt.figure()
+librosa.display.specshow(librosa.power_to_db(spectrogram), sr=sample_rate, x_axis="time", y_axis="mel")
+plt.colorbar(format="%+2.0f dB")
 plt.savefig("spectrogram.png")
+plt.show()
 ```
 A **spectrogram** converts audio from a waveform (amplitude over time) into a visual representation of frequency content over time.
 
 **Step 6: Extract a simple audio feature.**
 ```python
 tempo, _ = librosa.beat.beat_track(y=audio, sr=sample_rate)
-print("Estimated tempo:", tempo)
+print("Estimated tempo (beats per minute):", tempo)
 ```
+Tempo means most for music; on speech the number will be rough.
 
 **Step 7: Document what you extracted and why it matters.**
 Add a **text cell** headed `feature_notes` and write your notes in it.
@@ -263,6 +338,15 @@ feature_extraction_project/
 
 **Deliverable:** Feature extraction script with visualized outputs (histogram, spectrogram) and written notes on both modalities.
 
+### Quiz
+
+1. What does the shape of an RGB image array tell you?
+2. What is an audio sample rate?
+3. What does a spectrogram show that a waveform does not show directly?
+4. How do these hand-made features relate to what a multimodal model does?
+
+*Answers: 1) Its height, width, and number of color channels (3 for red, green, blue). 2) How many times per second the audio signal was measured. 3) Which frequencies are present and how strong they are over time. 4) A model learns its own features from the same raw numbers automatically and at much larger scale, instead of using a few hand-picked ones.*
+
 ---
 
 ## Project 4 (Module 4): Build a Simple Image Captioning Demo
@@ -271,7 +355,7 @@ feature_extraction_project/
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `image_captioning_project`.
-Copy in `process.py` from Project 2.
+In the first cells, run `%pip install requests pillow`, then the API key cell from "Before you start", then paste and run the Step 7 cell from Project 2 (the one that defines `ask_claude_about_image` and `describe_image`). You can delete its last `print(...)` line.
 
 **Step 2: Understand how vision-language models connect the two modalities.**
 A **vision transformer** encodes an image into a numeric representation; **text-image embedding alignment** means the model has learned to relate that image representation to relevant words and concepts.
@@ -280,12 +364,12 @@ A **vision transformer** encodes an image into a numeric representation; **text-
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
 def generate_caption(image_path):
-    # reuse Project 2's describe_image logic with a captioning-specific prompt
+    # Reuses Project 2's describe_image with a captioning-specific prompt
     return describe_image(image_path, "Write a single, concise caption for this image.")
 ```
 
 **Step 4: Test captioning across varied images.**
-Run captioning on 5 different images: a simple object, a complex scene, a photo with text in it, an abstract image, and one with people.
+In the **Files** panel, create a folder named `images` (right-click → **New folder**) and upload 5 different images into it: a simple object, a complex scene, a photo with text in it, an abstract image, and one with people. Then caption one of them, for example `print(generate_caption("images/your_file.jpg"))`, using your real file name.
 
 **Step 5: Add caption style control.**
 ```python
@@ -296,8 +380,10 @@ def generate_caption(image_path, style="concise"):
         "alt_text": "Write accessible alt-text for this image, suitable for a screen reader.",
     }
     return describe_image(image_path, prompts[style])
+
+print(generate_caption("images/your_file.jpg", style="alt_text"))  # use a real file name
 ```
-**alt-text** is a specific caption style written for accessibility, describing an image for someone who can't see it.
+This new version replaces the one from Step 3, and `style="concise"` keeps the old behavior as the default. **alt-text** is a specific caption style written for accessibility, describing an image for someone who can't see it.
 
 **Step 6: Evaluate caption quality manually.**
 Add a **text cell** headed `caption_evaluation` and write your notes in it.
@@ -307,8 +393,11 @@ For each test image, rate the caption 1–5 on accuracy and usefulness, noting a
 ```python
 import os
 
-for filename in os.listdir("images/"):
-    caption = generate_caption(f"images/{filename}")
+for filename in sorted(os.listdir("images")):
+    extension = os.path.splitext(filename)[1].lower()
+    if extension not in MEDIA_TYPES:  # skip non-image files
+        continue
+    caption = generate_caption(os.path.join("images", filename))
     print(f"{filename}: {caption}")
 ```
 
@@ -335,6 +424,15 @@ image_captioning_project/
 
 **Deliverable:** A batch image captioning script supporting multiple caption styles, with an evaluation of caption quality.
 
+### Quiz
+
+1. What is the difference between multimodal input and multimodal generation in this project?
+2. How does the captioning function change the model's output style without changing any API code?
+3. What makes alt-text different from a regular caption?
+4. What is a hallucinated detail in a caption, and how do you catch one?
+
+*Answers: 1) Input means sending more than one modality to the model; here the model also generates new language from an image, which is the caption. 2) It passes a different prompt to the same `describe_image` function, picked from a dictionary by style. 3) Alt-text is written for people using screen readers, so it describes what someone who can't see the image needs to know. 4) It is something the caption says is in the image but isn't; you catch it by comparing each caption to the actual image during manual review.*
+
 ---
 
 ## Project 5 (Module 5): Build an App That Takes an Image and Answers Questions About It
@@ -343,63 +441,162 @@ image_captioning_project/
 
 > **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
 
-**Step 1: Create the project notebook.**
+**Step 1: Create the project folder.**
 ```bash
 mkdir image_qa_app_project
 cd image_qa_app_project
-pip install fastapi uvicorn python-multipart
+pip install fastapi uvicorn python-multipart requests
 ```
+Copy a photo into this folder and name it `test_image.jpg`.
+
+Set your API key in the same terminal window you'll run the app from. It lives only in that terminal session, never in a file:
+```bash
+# Mac / Linux
+export ANTHROPIC_API_KEY="paste-your-key-here"
+```
+```powershell
+# Windows PowerShell
+$env:ANTHROPIC_API_KEY="paste-your-key-here"
+```
+If you open a new terminal window, set it again.
 
 **Step 2: Build an image upload endpoint.**
-```bash
-nano app.py
-```
+Create `app.py` in VS Code and paste in the code below. `ask_claude_about_image` is the same function you wrote in Project 2, Step 7.
 ```python
-from fastapi import FastAPI, UploadFile, Form
+import base64
+import os
+
+import requests
+from fastapi import FastAPI, Form, HTTPException, UploadFile
+
 app = FastAPI()
 
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png"}
+
+
+def ask_claude_about_image(image_bytes, media_type, question, max_tokens=300):
+    """Send raw image bytes plus a question to Claude and return the answer text."""
+    image_data = base64.b64encode(image_bytes).decode("utf-8")
+    response = requests.post(
+        "https://api.anthropic.com/v1/messages",
+        headers={
+            "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+        json={
+            "model": "claude-sonnet-5-5",
+            "max_tokens": max_tokens,
+            "system": "You answer questions about images accurately and briefly. If you can't tell from the image, say so.",
+            "messages": [{
+                "role": "user",
+                "content": [
+                    {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": image_data}},
+                    {"type": "text", "text": question},
+                ],
+            }],
+        },
+        timeout=60,
+    )
+    response.raise_for_status()
+    blocks = response.json()["content"]
+    return "".join(block["text"] for block in blocks if block["type"] == "text")
+
+
+def read_checked_image(image: UploadFile):
+    """Reject anything that isn't a JPEG or PNG, then return the image bytes."""
+    if image.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(status_code=400, detail="Unsupported image format. Use JPEG or PNG.")
+    image_bytes = image.file.read()
+    if not image_bytes:
+        raise HTTPException(status_code=400, detail="The image file is empty.")
+    return image_bytes
+
+
 @app.post("/ask")
-async def ask_about_image(image: UploadFile, question: str = Form(...)):
-    image_bytes = await image.read()
-    # encode image_bytes to base64, send with `question` to the vision-language model
+def ask_about_image(image: UploadFile, question: str = Form()):
+    image_bytes = read_checked_image(image)
+    answer = ask_claude_about_image(image_bytes, image.content_type, question)
     return {"answer": answer}
 ```
-`UploadFile` handles binary file uploads; `Form` handles accompanying text fields in the same request.
+`UploadFile` handles binary file uploads; `Form()` handles a text field sent in the same request. The endpoint uses a plain `def` (not `async def`) because the API call blocks while it waits; FastAPI runs plain `def` endpoints in a background thread so other requests aren't stuck.
 
-**Step 3: Wire in your Project 2/4 vision-language logic.**
-Connect the endpoint to your existing `describe_image`-style function, passing the uploaded image and the user's specific question.
+**Step 3: Start the app.**
+```bash
+uvicorn app:app --reload
+```
+Leave this terminal running. `--reload` restarts the app each time you save `app.py`. Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser to see and try your endpoints.
 
 **Step 4: Test with curl.**
+Open a second terminal in the same folder and run:
 ```bash
 curl -X POST http://localhost:8000/ask -F "image=@test_image.jpg" -F "question=What color is the car?"
 ```
+Change the question to fit your photo. You should get back JSON like `{"answer": "..."}`.
 
 **Step 5: Add speech-to-text for voice questions.**
-```python
-@app.post("/ask_voice")
-async def ask_with_voice(image: UploadFile, audio: UploadFile):
-    audio_bytes = await audio.read()
-    question = transcribe_audio(audio_bytes)  # call an STT model
-    # then proceed as in /ask
+Claude reads text and images, not audio, so you need a separate **speech-to-text (STT)** model to turn a spoken question into text. This project uses **faster-whisper**, a free, open-source version of OpenAI's Whisper model that runs on your own computer. Stop the app (**Ctrl + C**), install it, then start the app again:
+```bash
+pip install faster-whisper
+uvicorn app:app --reload
 ```
-**speech-to-text (STT)** converts spoken audio into text the rest of your pipeline can use.
+Add these lines to `app.py`: the imports at the top of the file, the rest at the bottom.
+```python
+import io
+from faster_whisper import WhisperModel
+
+# Loads a small, free speech-to-text model once, when the app starts.
+# The first run downloads it (about 150 MB).
+stt_model = WhisperModel("base", device="cpu", compute_type="int8")
+
+
+def transcribe_audio(audio_bytes):
+    """Speech-to-text: turn recorded speech into a text question."""
+    segments, _info = stt_model.transcribe(io.BytesIO(audio_bytes))
+    return " ".join(segment.text.strip() for segment in segments)
+```
+**speech-to-text (STT)** converts spoken audio into text the rest of your pipeline can use. Whisper reads common formats such as WAV, MP3, and M4A.
 
 **Step 6: Add text-to-speech for spoken answers.**
+For the reverse direction, **text-to-speech (TTS)**, this project uses **gTTS**, a free library that sends text to Google Translate's speech service and saves an MP3 (it needs an internet connection). Install it with `pip install gTTS`, then add to `app.py`: the imports at the top, the rest at the bottom.
 ```python
-def speak_answer(answer_text):
-    audio_response = call_tts_model(answer_text)
-    return audio_response
-```
-**text-to-speech (TTS)** converts generated text back into audio.
+from fastapi.responses import FileResponse
+from gtts import gTTS
 
-**Step 7: Add basic error handling for bad uploads.**
-```python
-if image.content_type not in ["image/jpeg", "image/png"]:
-    return {"error": "Unsupported image format"}
+
+def speak_answer(answer_text, out_path="answer.mp3"):
+    """Text-to-speech: save the answer as an MP3 file and return its path."""
+    gTTS(text=answer_text, lang="en").save(out_path)
+    return out_path
+
+
+@app.post("/ask_voice")
+def ask_with_voice(image: UploadFile, audio: UploadFile):
+    image_bytes = read_checked_image(image)
+    question = transcribe_audio(audio.file.read())
+    if not question:
+        raise HTTPException(status_code=400, detail="No speech found in the audio.")
+    answer = ask_claude_about_image(image_bytes, image.content_type, question)
+    print("Question:", question)
+    print("Answer:", answer)
+    return FileResponse(speak_answer(answer), media_type="audio/mpeg", filename="answer.mp3")
 ```
+The voice endpoint chains three models: Whisper (audio to text), Claude (image + text to text), and gTTS (text to audio). It prints the question and answer in the app's terminal so you can check each step. If you'd rather run TTS fully offline, `pyttsx3` is a free alternative that uses your computer's built-in voices.
+
+**Step 7: Test the error handling.**
+`read_checked_image` already rejects bad uploads. Check it by sending a file that isn't an image:
+```bash
+echo "not an image" > notes.txt
+curl -X POST http://localhost:8000/ask -F "image=@notes.txt" -F "question=What is this?"
+```
+You should get `{"detail": "Unsupported image format. Use JPEG or PNG."}` with status 400, and the app keeps running. An `HTTPException` sends a clear error to the caller instead of crashing.
 
 **Step 8: Test the full multimodal flow end-to-end.**
-Upload an image, ask a question by voice, and confirm you get back a sensible spoken (or text) answer.
+Record yourself asking a question about your photo (a phone voice memo works), save it in the project folder as `test_audio.wav` (or `.m4a`), and run:
+```bash
+curl -X POST http://localhost:8000/ask_voice -F "image=@test_image.jpg" -F "audio=@test_audio.wav" --output answer.mp3
+```
+Check the app's terminal for the transcribed question and the answer, then play `answer.mp3` to hear the spoken answer.
 
 ### Final Project Structure
 ```text
@@ -424,6 +621,15 @@ image_qa_app_project/
 
 **Deliverable:** A working image Q&A app supporting both text and voice input/output, tested end-to-end.
 
+### Quiz
+
+1. Why does the voice endpoint need Whisper and gTTS in addition to Claude?
+2. What do `UploadFile` and `Form()` each handle in the `/ask` endpoint?
+3. Where should your API key live when you run this app on your computer?
+4. What happens when someone uploads a text file instead of an image, and why is that better than letting the code continue?
+
+*Answers: 1) Claude takes text and images in and gives text out; it doesn't hear or speak audio, so Whisper turns speech into text and gTTS turns the answer text into speech. 2) `UploadFile` receives the uploaded file's bytes, and `Form()` receives a text field (the question) sent in the same request. 3) In an environment variable set in your terminal, which the code reads with `os.environ`; never in a file. 4) `read_checked_image` raises an `HTTPException` with status 400 and a clear message, so the caller learns what went wrong and the app keeps running instead of sending a bad request to the API.*
+
 ---
 
 ## Project 6 (Module 6): Build a Multimodal Document Search Tool
@@ -433,11 +639,12 @@ image_qa_app_project/
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `multimodal_search_project`.
 ```python
-%pip install chromadb sentence-transformers pillow
+%pip install chromadb sentence-transformers pillow requests
 ```
+Then run the API key cell from "Before you start", and paste and run the Project 2, Step 7 cell (`ask_claude_about_image` and `describe_image`) and the Project 4, Step 5 cell (`generate_caption` with styles). You can delete their `print(...)` lines.
 
 **Step 2: Gather a mixed document set.**
-Collect 10–15 items: some plain text documents, some images (diagrams, screenshots, photos with visible text).
+Collect 10–15 items: some plain text documents, some images (diagrams, screenshots, photos with visible text). In the **Files** panel, make two folders: `documents` for the text, saved as `.txt` files, and `images` for the pictures (JPEG or PNG). Keep each text file short (a paragraph or two), because the embedding model in Step 4 only reads roughly the first 250 words of each item.
 
 **Step 3: Understand multimodal embeddings.**
 A **multimodal embedding model** maps both text and images into the *same* numeric embedding space, so a text query can be compared directly against image embeddings.
@@ -445,44 +652,79 @@ A **multimodal embedding model** maps both text and images into the *same* numer
 **Step 4: Generate embeddings for text documents.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
 ```python
+import os
 from sentence_transformers import SentenceTransformer
+
 text_model = SentenceTransformer("all-MiniLM-L6-v2")
+
+text_documents = []   # the text of each document
+text_sources = []     # the file each one came from
+for filename in sorted(os.listdir("documents")):
+    if filename.endswith(".txt"):
+        with open(os.path.join("documents", filename), encoding="utf-8") as f:
+            text_documents.append(f.read())
+        text_sources.append(filename)
+
 text_embeddings = text_model.encode(text_documents)
+print(len(text_documents), "text documents, embedding shape:", text_embeddings.shape)
 ```
+Each document becomes a list of 384 numbers. Documents with similar meaning get similar numbers.
 
 **Step 5: Generate embeddings for images using a captioning bridge.**
 ```python
-def embed_image_via_caption(image_path):
-    caption = generate_caption(image_path)  # reuse Project 4's captioning
-    return text_model.encode([caption])[0]
+image_captions = []   # Claude's detailed caption for each image
+image_sources = []    # the file each one came from
+for filename in sorted(os.listdir("images")):
+    extension = os.path.splitext(filename)[1].lower()
+    if extension not in MEDIA_TYPES:
+        continue
+    caption = generate_caption(os.path.join("images", filename), style="detailed")
+    image_captions.append(caption)
+    image_sources.append(filename)
+    print(filename, "->", caption[:80])
+
+image_embeddings = text_model.encode(image_captions)
 ```
-A simpler alternative to a true multimodal embedding model is **caption-then-embed**: describe the image in text, then embed that description using your existing text embedding model.
+A simpler alternative to a true multimodal embedding model is **caption-then-embed**: describe the image in text (one Claude call per image, reusing Project 4's captioning), then embed that description using your existing text embedding model. The detailed style gives the search more words to match on.
 
 **Step 6: Store both types in the same vector database.**
 ```python
 import chromadb
+
 client = chromadb.Client()
-collection = client.create_collection("mixed_documents")
+collection = client.get_or_create_collection("mixed_documents")
 
 collection.add(
     documents=text_documents + image_captions,
-    embeddings=(text_embeddings.tolist() + image_embeddings.tolist()),
+    embeddings=text_embeddings.tolist() + image_embeddings.tolist(),
     ids=[f"item_{i}" for i in range(len(text_documents) + len(image_captions))],
-    metadatas=[{"type": "text"} for _ in text_documents] + [{"type": "image"} for _ in image_captions]
+    metadatas=[{"type": "text", "source": name} for name in text_sources]
+              + [{"type": "image", "source": name} for name in image_sources],
 )
+print(collection.count(), "items stored")
 ```
-**metadata** tags let you track which items are text vs. image, so results can be handled differently (e.g., displaying the actual image, not just its caption).
+**metadata** tags let you track which items are text vs. image, and which file each came from, so results can be handled differently (e.g., displaying the actual image, not just its caption). `get_or_create_collection` lets you rerun the cell without an "already exists" error. If you rerun it after changing your files, restart the runtime first so old items don't stay in the collection.
 
 **Step 7: Query across both modalities.**
 ```python
-query = "diagram showing system architecture"
-query_embedding = text_model.encode([query])
-results = collection.query(query_embeddings=query_embedding.tolist(), n_results=5)
-print(results["documents"], results["metadatas"])
+from IPython.display import Image as ShowImage, display
+
+def search(query, n_results=5):
+    query_embedding = text_model.encode([query])
+    results = collection.query(query_embeddings=query_embedding.tolist(), n_results=n_results)
+    for document, metadata, distance in zip(results["documents"][0], results["metadatas"][0], results["distances"][0]):
+        print(f"[{metadata['type']}] {metadata['source']}  (distance {distance:.3f})")
+        if metadata["type"] == "image":
+            display(ShowImage(filename=os.path.join("images", metadata["source"]), width=250))
+        else:
+            print("   ", document[:150])
+
+search("diagram showing system architecture")
 ```
+A smaller **distance** means a closer match. Image results show the actual picture, using the `source` you stored in the metadata.
 
 **Step 8: Evaluate retrieval quality across both types.**
-Try 5 queries designed to match text content and 5 designed to match image content, and manually judge relevance.
+Try 5 queries designed to match text content and 5 designed to match image content, and manually judge relevance. Add a **text cell** headed `retrieval_evaluation` and note, for each query, whether the right item came first and any surprises.
 
 ### Final Project Structure
 ```text
@@ -507,6 +749,15 @@ multimodal_search_project/
 **Skills:** Vector Databases, Multimodal Embeddings, RAG, Python, Multimodal AI.
 
 **Deliverable:** A working multimodal search tool, tested with queries targeting both text and image content.
+
+### Quiz
+
+1. What does caption-then-embed do, and why does it let one text query find images?
+2. Why must the same embedding model be used for the documents, the image captions, and the query?
+3. What is the metadata for in this search tool?
+4. In the search results, does a smaller or larger distance mean a better match?
+
+*Answers: 1) It has Claude describe each image in words, then embeds that description with the text model, so images and text end up as comparable numbers in one space. 2) Embeddings from different models live in different number spaces, so only vectors from the same model can be compared meaningfully. 3) It records whether each item is text or an image and which file it came from, so results can be shown correctly, such as displaying the actual image. 4) A smaller distance means the item is closer in meaning to the query.*
 
 ---
 
@@ -563,3 +814,12 @@ multimodal_evaluation_project/
 **Skills:** AI Evaluation, Bias Testing, Quality Assurance, Multimodal AI, Responsible AI.
 
 **Deliverable:** A structured evaluation report with scores, failure mode analysis, and bias findings for a multimodal system.
+
+### Quiz
+
+1. Why should a test set include low-quality, text-heavy, and unusual images, not just clear photos?
+2. What is a hallucination rate for an image system?
+3. What is the difference between accuracy and relevance as metrics?
+4. How do you check a multimodal system for bias?
+
+*Answers: 1) Those are the cases where multimodal systems commonly fail, and a test set of easy images would hide those weaknesses. 2) How often the output describes things that are not actually in the image. 3) Accuracy asks whether the answer is factually correct; relevance asks whether it addresses the question that was actually asked. 4) Test it on images showing a range of people, settings, and contexts, and look for systematic differences in quality, tone, or accuracy between groups.*

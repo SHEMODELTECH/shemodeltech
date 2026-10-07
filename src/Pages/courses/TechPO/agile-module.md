@@ -9,12 +9,15 @@
 
 #### Concept
 
-**Scrum** is a structured Agile framework built around fixed-length iterations called **sprints**, with a defined set of roles, meetings (called **ceremonies**), and artifacts that give a team a predictable rhythm for planning, building, and reviewing work. It's designed to make progress visible in short, regular intervals rather than waiting until an entire project is finished to check in.
+**Scrum** is a lightweight Agile framework built around fixed-length iterations called **Sprints**. It defines three **accountabilities**, five **events**, and three **artifacts** that give a team a predictable rhythm for planning, building, and inspecting work. This module follows the official [2020 Scrum Guide](https://scrumguides.org/scrum-guide.html), so you'll see its current terms (older material may say "roles," "ceremonies," "Development Team," or "Daily Standup").
 
-- A **sprint** is a fixed time period (commonly one or two weeks) during which a team commits to completing a specific set of work, sprints don't change length mid-stream, consistency is part of the point
-- The three Scrum roles are the **Product Owner** (decides what gets built and in what order), the **Scrum Master** (protects the team's process and removes blockers), and the **Development Team** (builds the work)
-- The core ceremonies are **Sprint Planning** (deciding what to work on), the **Daily Standup** (a short daily sync on progress and blockers), the **Sprint Review** (demoing completed work to stakeholders), and the **Sprint Retrospective** (reflecting on how the team can improve its process)
-- The **Product Backlog** is the full, prioritized list of everything that could be built, the **Sprint Backlog** is the smaller subset pulled into the current sprint
+- A **Sprint** is a fixed time period (one month or less, commonly one or two weeks) with a single **Sprint Goal**. Sprints don't change length mid-stream; consistency is part of the point
+- The three **accountabilities** are the **Product Owner** (maximizes the value of the product and orders the Product Backlog), the **Scrum Master** (helps the team use Scrum well and removes blockers), and the **Developers** (the people who build each Increment)
+- There are **five events**: the **Sprint** itself, which contains the other four: **Sprint Planning** (decide why, what, and how for this Sprint), the **Daily Scrum** (a 15-minute daily check on progress toward the Sprint Goal), the **Sprint Review** (inspect the outcome with stakeholders and adapt), and the **Sprint Retrospective** (improve how the team works)
+- There are **three artifacts**, each with a **commitment**:
+  - **Product Backlog** (the ordered list of everything that could be built), committed to the **Product Goal** (the long-term objective for the product)
+  - **Sprint Backlog** (the Sprint Goal, the items chosen for this Sprint, and a plan to deliver them), committed to the **Sprint Goal**
+  - **Increment** (a usable, finished piece of work that adds to everything built before), committed to the **Definition of Done**
 
 #### Structure at a Glance
 
@@ -23,8 +26,8 @@
 flowchart LR
     PB["<b>Product Backlog</b><br/><br/>Full prioritized<br/>list of work"]
     SP["<b>Sprint Planning</b><br/><br/>Pull work into<br/>Sprint Backlog"]
-    S["<b>Sprint</b><br/><br/>Fixed time period,<br/>with Daily Standups"]
-    R["<b>Review &<br/>Retrospective</b><br/><br/>Demo the work,<br/>improve the process"]
+    S["<b>Sprint</b><br/><br/>Fixed time period,<br/>with Daily Scrums"]
+    R["<b>Review &<br/>Retrospective</b><br/><br/>Inspect the Increment,<br/>improve the process"]
 
     PB ==> SP ==> S ==> R
     R -.-> PB
@@ -35,8 +38,9 @@ flowchart LR
     style R fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
-- Once a sprint starts, the Sprint Backlog is meant to be protected from new work being added mid-sprint, this stability is what lets a team actually finish what they committed to, constantly re-prioritizing mid-sprint undermines the whole framework
-- The Scrum Master role is often misunderstood as a manager, its actual job is closer to a facilitator, removing obstacles and protecting the team's process, not assigning tasks or directing the work itself
+- The team commits to the **Sprint Goal**, not to a fixed list of tasks. During the Sprint, scope may be clarified and renegotiated with the Product Owner as more is learned, as long as no changes are made that would endanger the Sprint Goal. This stability is what lets a team actually finish something valuable; constantly adding unrelated work mid-sprint undermines the whole framework
+- The **Sprint Review** is a working session, not just a demo. The Scrum Team and stakeholders inspect what was done, discuss progress toward the Product Goal, and agree on what to do next, which often updates the Product Backlog
+- The Scrum Master accountability is often misunderstood as a manager, its actual job is closer to a facilitator, removing obstacles and protecting the team's process, not assigning tasks or directing the work itself
 
 #### Where you'd actually use this
 
@@ -47,70 +51,76 @@ Software teams building a product incrementally, where stakeholders want regular
 1. **Create a free account** on Trello or Jira and set up three lists/columns, "Product Backlog," "Sprint Backlog," and "Done."
 2. **Write 8 to 10 small backlog items** for a hypothetical product (reuse the plant-care app idea from earlier modules, or pick your own), and place them all in the Product Backlog column.
 3. **Run a mock Sprint Planning session**: pick 3 to 4 items you could realistically finish in one week, and move only those into the Sprint Backlog column.
-4. **Simulate three Daily Standups** by writing one sentence each day (for three days) noting what you did, what you'll do next, and any blocker, even if the "work" is just planning.
-5. **Hold a mock Sprint Review and Retrospective**: write two sentences summarizing what would be demoed to a stakeholder, and one thing you'd change about the process next sprint.
+   Write a one-sentence **Sprint Goal** at the top of the Sprint Backlog that explains why these items matter together.
+4. **Simulate three Daily Scrums** by writing one sentence each day (for three days) about progress toward the Sprint Goal, what you'll do next, and any blocker, even if the "work" is just planning.
+5. **Hold a mock Sprint Review and Retrospective**: write two sentences on what was finished, how it moves the product toward its Product Goal, and what you'd change in the Product Backlog as a result; then write one thing you'd change about how the team works next Sprint.
 
 ```lab
 {
  "type": "sort",
- "title": "Role, ceremony, or artifact?",
+ "title": "Accountability, event, or artifact?",
  "prompt": "Sort each Scrum term into the right group.",
  "buckets": [
-  "Role",
-  "Ceremony",
+  "Accountability",
+  "Event",
   "Artifact"
  ],
  "items": [
   {
    "text": "Product Owner",
-   "bucket": "Role",
-   "why": "Decides what gets built and in what order."
+   "bucket": "Accountability",
+   "why": "Maximizes product value and orders the Product Backlog."
   },
   {
    "text": "Scrum Master",
-   "bucket": "Role",
-   "why": "Protects the team's process and removes blockers."
+   "bucket": "Accountability",
+   "why": "Helps the team use Scrum well and removes blockers."
   },
   {
-   "text": "Daily Standup",
-   "bucket": "Ceremony",
-   "why": "A short daily sync on progress and blockers."
+   "text": "Daily Scrum",
+   "bucket": "Event",
+   "why": "A 15-minute daily check on progress toward the Sprint Goal."
   },
   {
    "text": "Sprint Review",
-   "bucket": "Ceremony",
-   "why": "Demoing completed work to stakeholders."
+   "bucket": "Event",
+   "why": "A working session with stakeholders to inspect the Increment and progress toward the Product Goal."
   },
   {
    "text": "Product Backlog",
    "bucket": "Artifact",
-   "why": "The full, prioritised list of everything that could be built."
+   "why": "The ordered list of everything that could be built; its commitment is the Product Goal."
   },
   {
    "text": "Sprint Backlog",
    "bucket": "Artifact",
-   "why": "The subset of work pulled into the current sprint."
+   "why": "The Sprint Goal, the items chosen for this Sprint, and the plan to deliver them."
   },
   {
    "text": "Sprint Planning",
-   "bucket": "Ceremony",
-   "why": "Deciding what the team will work on this sprint."
+   "bucket": "Event",
+   "why": "Deciding why, what, and how the team will work this Sprint."
+  },
+  {
+   "text": "Increment",
+   "bucket": "Artifact",
+   "why": "A usable piece of finished work; its commitment is the Definition of Done."
   }
  ]
 }
 ```
 
 #### Checkpoint
-You have a Product Backlog, a Sprint Backlog pulled from it during a mock planning session, three days of simulated standup notes, and a mock review and retrospective summary.
+You have a Product Backlog, a Sprint Backlog with a Sprint Goal pulled from it during a mock planning session, three days of simulated Daily Scrum notes, and a mock review and retrospective summary.
 
 #### Quiz
-1. What are the three roles in Scrum, and what does each one do?
+1. What are the three accountabilities in Scrum, and what does each one do?
 2. What is the difference between the Product Backlog and the Sprint Backlog?
-3. Name the four core Scrum ceremonies.
-4. Why is the Sprint Backlog protected from new work once a sprint starts?
-5. What is a common misconception about the Scrum Master role?
+3. Name the five Scrum events.
+4. What does the team commit to during a Sprint, and can the scope change?
+5. What is a common misconception about the Scrum Master accountability?
 
-*Answers: 1) The Product Owner decides what gets built and in what order, the Scrum Master protects the team's process and removes blockers, the Development Team builds the work. 2) The Product Backlog is the full, prioritized list of everything that could be built, the Sprint Backlog is the smaller subset pulled into the current sprint. 3) Sprint Planning, the Daily Standup, the Sprint Review, and the Sprint Retrospective. 4) Because that stability is what lets a team actually finish what they committed to, constantly re-prioritizing mid-sprint undermines the whole framework. 5) That it's a management role, when it's actually closer to a facilitator role, focused on removing obstacles and protecting the process rather than assigning tasks or directing the work.*
+*Answers: 1) The Product Owner maximizes product value and orders the Product Backlog, the Scrum Master helps the team use Scrum well and removes blockers, and the Developers build each Increment. 2) The Product Backlog is the ordered list of everything that could be built (committed to the Product Goal); the Sprint Backlog is the Sprint Goal, the items chosen for this Sprint, and the plan to deliver them. 3) The Sprint itself, plus the four events inside it: Sprint Planning, the Daily Scrum, the Sprint Review, and the Sprint Retrospective. 4) The team commits to the Sprint Goal, not a fixed list; scope can be clarified and renegotiated with the Product Owner as long as the Sprint Goal isn't endangered. 5) That it is a management position, when it is actually closer to a facilitator, focused on removing obstacles and protecting the process rather than assigning tasks or directing the work.*
 
 ---
 
@@ -144,7 +154,7 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - WIP limits feel counterintuitive to beginners, it seems like starting more work should mean finishing more work, but without a limit, everything ends up half-finished, and nothing actually ships, this is Kanban's central insight
-- Unlike Scrum, Kanban has no required roles or fixed ceremonies, which makes it more adaptable for ongoing support or maintenance work where the flow of incoming tasks is unpredictable, but also means it provides less built-in structure for teams that need one
+- Unlike Scrum, Kanban has no required accountabilities or fixed events, which makes it more adaptable for ongoing support or maintenance work where the flow of incoming tasks is unpredictable, but also means it provides less built-in structure for teams that need one
 
 #### Where you'd actually use this
 
@@ -153,7 +163,7 @@ Ongoing support or maintenance work, bug triage, or any team whose incoming work
 #### Lab
 
 1. **Create a Kanban board** with four columns: "To Do," "In Progress," "Review," "Done."
-2. **Set a WIP limit** of 2 on both "In Progress" and "Review" (most board tools let you set and display this limit directly on the column).
+2. **Set a WIP limit** of 2 on both "In Progress" and "Review." In Jira, you can set column limits in the board settings. Trello doesn't have built-in WIP limits; either add a WIP-limit Power-Up or simply write "(max 2)" in the list name and enforce it yourself.
 3. **Add 6 to 8 small tasks** to "To Do" (reuse tasks from Topic 1's backlog, or invent new ones), and pull only up to the WIP limit into "In Progress."
 4. **Simulate moving cards through the board** over a few rounds, moving a card to "Review" only when a slot opens up, and to "Done" only after review, respecting the WIP limits the entire time even if it means leaving cards waiting in "To Do."
 5. **Note the "start" and "finish" time** (even just a rough timestamp) for two or three cards as they move across the board, and calculate a rough cycle time for each.
@@ -176,12 +186,13 @@ You have a Kanban board with enforced WIP limits, cards that moved through it wh
 
 #### Concept
 
-**Sprint Planning** is the specific Scrum ceremony where a team decides exactly what work will be pulled into the upcoming sprint, turning a long, loosely prioritized backlog into a small, concrete, and realistic commitment. Done well, it balances ambition (getting real value delivered) against honesty about how much a team can actually finish.
+**Sprint Planning** is the Scrum event where a team decides exactly what work will be pulled into the upcoming sprint, turning a long, loosely prioritized backlog into a small, concrete, and realistic commitment. Done well, it balances ambition (getting real value delivered) against honesty about how much a team can actually finish.
 
+- **Note:** story points and velocity are common add-on practices many Scrum teams use, but they are **not** part of the Scrum Guide. Scrum only requires that the team forecasts what it can do; how it estimates is up to the team.
 - **Story points** are a relative unit of effort or complexity (not time) used to estimate backlog items, commonly using a scale like 1, 2, 3, 5, 8, 13, so a "5" is meant to be roughly five times harder than a "1," not five hours of work
 - **Velocity** is how many story points a team has historically completed per sprint, used to estimate how much new work is realistic to commit to
-- A **sprint goal** is a single, short sentence describing the overall purpose of the sprint, giving the team's individual tasks a shared "why" beyond just a checklist
-- **Definition of Done** is the team's agreed checklist for when a piece of work is actually finished (tested, reviewed, deployed), not just "looks complete," this prevents ambiguity about whether something is truly ready
+- A **Sprint Goal** is a single, short sentence describing the overall purpose of the Sprint, giving the team's individual tasks a shared "why" beyond just a checklist. It is the team's commitment for the Sprint
+- **Definition of Done** (the commitment for the Increment) is the team's agreed checklist for when a piece of work is actually finished (tested, reviewed, deployed), not just "looks complete," this prevents ambiguity about whether something is truly ready
 
 #### Structure at a Glance
 
@@ -233,7 +244,7 @@ You have a sprint's worth of backlog items estimated in story points, selected t
 ---
 
 ## Module Completion Checklist
-- [ ] Built a Product and Sprint Backlog, simulated three days of standups, and written a mock review and retrospective summary
+- [ ] Built a Product and Sprint Backlog, simulated three days of Daily Scrums, and written a mock review and retrospective summary
 - [ ] Built a Kanban board with enforced WIP limits and calculated a rough cycle time for at least two cards
 - [ ] Estimated a backlog in story points, selected work to match an assumed velocity, and written a sprint goal and Definition of Done
 - [ ] Can explain the key structural difference between Scrum's fixed sprints and Kanban's continuous flow

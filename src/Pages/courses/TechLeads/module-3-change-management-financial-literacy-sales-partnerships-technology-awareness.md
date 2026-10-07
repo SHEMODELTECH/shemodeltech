@@ -72,7 +72,7 @@ You have a list of specific resistance sources, a one-sentence adoption strategy
 Technical decisions have financial consequences, and financial constraints shape technical decisions right back, which is why a tech lead needs enough fluency to have a real conversation about money, not necessarily to build the budget themselves, but to understand it well enough to make a credible case and not be talked past in a finance conversation.
 
 - **Budgeting** is planning how much money is allocated to a team or project over a period, and tracking actual spend against that plan so overages are caught early rather than at year-end
-- **ROI (Return on Investment)** is a way of expressing whether a cost is worth it, roughly, the value gained divided by what was spent to get it, used to compare different possible investments against each other
+- **ROI (Return on Investment)** is a way of expressing whether a cost is worth it, used to compare different possible investments against each other. The formula is **ROI = (gain − cost) ÷ cost**, usually shown as a percentage. Worked example: a tool costs $10,000 a year and saves the team 200 hours a year, valued at $75 an hour, so the gain is 200 × $75 = $15,000. ROI = ($15,000 − $10,000) ÷ $10,000 = 0.5, or **50%**. A positive ROI means the gain is bigger than the cost; 0% means you only broke even
 - **Cost analysis** is breaking down what something actually costs, not just the sticker price, but ongoing costs like maintenance, support, and opportunity cost (what you can't do because you chose this instead)
 - **CapEx vs. OpEx** is a useful distinction: capital expenditure (a large upfront cost, like buying hardware) versus operating expenditure (an ongoing recurring cost, like a subscription), and the two are often treated differently in a company's finances even for a similar underlying need
 
@@ -83,7 +83,7 @@ Technical decisions have financial consequences, and financial constraints shape
 flowchart LR
     BUD["<b>Budget</b><br/><br/>Allocated spend<br/>for the period"]
     COST["<b>Cost Analysis</b><br/><br/>Upfront + ongoing<br/>+ opportunity cost"]
-    ROI["<b>ROI</b><br/><br/>Value gained vs.<br/>what was spent"]
+    ROI["<b>ROI</b><br/><br/>(Gain − cost)<br/>÷ cost"]
     DEC["<b>Investment Decision</b><br/><br/>Worth it, or<br/>not, and why"]
 
     BUD ==> COST ==> ROI ==> DEC
@@ -106,7 +106,7 @@ Explaining to finance why a tool that looks more expensive upfront is actually c
 
 1. **Pick a real or hypothetical technology investment** (a new tool, a platform migration, additional infrastructure).
 2. **Run a cost analysis**: list the upfront cost, at least one ongoing cost (maintenance, support, subscription), and one opportunity cost (what you'd have to give up or delay to afford this).
-3. **Estimate a rough ROI** for the same investment: your best estimate of the value gained (time saved, revenue enabled, risk avoided) versus the total cost from step 2. Label your assumptions clearly, precision isn't the point, an honest, defensible estimate is.
+3. **Estimate a rough ROI** for the same investment: your best estimate of the value gained (time saved, revenue enabled, risk avoided) and the total cost from step 2, then calculate ROI = (gain − cost) ÷ cost. Label your assumptions clearly, precision isn't the point, an honest, defensible estimate is.
 4. **Classify the investment as CapEx or OpEx** (or a mix), and note whether that classification changes how easy it is to get approved.
 5. **Set up a simple budget-tracking check**: if you had this in a real budget, what would you check monthly to catch an overage early rather than at year-end?
 
@@ -120,7 +120,7 @@ You have a cost analysis covering upfront, ongoing, and opportunity cost, a roug
 4. What is the difference between CapEx and OpEx?
 5. Why does budgeting need ongoing tracking rather than just an initial plan?
 
-*Answers: 1) So they can have a credible conversation about money, understand financial constraints, and make a strong case for technical investments rather than being talked past in a finance conversation. 2) A way of expressing whether a cost is worth it, roughly the value gained divided by what was spent; it's used to compare different possible investments against each other. 3) Ongoing costs like maintenance and support, and opportunity cost, what you can't do because you chose this option instead. 4) CapEx is a large upfront cost, like buying hardware; OpEx is an ongoing recurring cost, like a subscription; the two are often treated differently in a company's finances even for a similar underlying need. 5) So overages are caught early, during the period, rather than discovered only at year-end when it's too late to adjust.*
+*Answers: 1) So they can have a credible conversation about money, understand financial constraints, and make a strong case for technical investments rather than being talked past in a finance conversation. 2) A way of expressing whether a cost is worth it, calculated as (gain − cost) ÷ cost; it's used to compare different possible investments against each other. 3) Ongoing costs like maintenance and support, and opportunity cost, what you can't do because you chose this option instead. 4) CapEx is a large upfront cost, like buying hardware; OpEx is an ongoing recurring cost, like a subscription; the two are often treated differently in a company's finances even for a similar underlying need. 5) So overages are caught early, during the period, rather than discovered only at year-end when it's too late to adjust.*
 
 ---
 

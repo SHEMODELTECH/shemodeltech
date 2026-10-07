@@ -7,13 +7,30 @@
 
 #### Concept
 
-The **OWASP Top 10** is the industry-standard awareness list of the most critical security risks facing web applications, published by the **Open Worldwide Application Security Project** and updated periodically. It isn't a complete checklist of everything, it's the short list of what most commonly and seriously goes wrong, and it gives developers and testers a shared vocabulary and a starting point for building and reviewing secure software. The list is worth knowing by category, and worth understanding defensively: for each risk, the goal is to know how to prevent it, not how to exploit it.
+The **OWASP Top 10** is the industry-standard awareness list of the most critical security risks facing web applications, published by the **Open Worldwide Application Security Project** and updated every few years. The current edition is the **OWASP Top 10:2025**, released in November 2025 (full details at owasp.org/Top10/2025). It isn't a complete checklist of everything, it's the short list of what most commonly and seriously goes wrong, and it gives developers and testers a shared vocabulary and a starting point for building and reviewing secure software. The list is worth knowing by category, and worth understanding defensively: for each risk, the goal is to know how to prevent it, not how to exploit it.
 
-- **Broken Access Control** (the current number one) is when users can act outside their intended permissions, the defence is server-side authorization checks on every request and deny-by-default
-- **Injection** (such as SQL injection) happens when untrusted input is interpreted as a command or query, the defence is parameterised queries and strict input validation, never building queries by string concatenation
-- **Cryptographic Failures** cover weak or missing protection of sensitive data, the defence ties back to Module 4: strong algorithms, proper key handling, encryption in transit and at rest
-- **Security Misconfiguration** covers insecure defaults, unnecessary features left on, and verbose error messages that leak internals, the defence is hardening and minimising the configuration
-- **Vulnerable and Outdated Components** is using libraries with known published flaws, the defence is dependency scanning and keeping components patched
+The 2025 list, in rank order:
+
+| Rank | Risk |
+|---|---|
+| A01 | Broken Access Control |
+| A02 | Security Misconfiguration |
+| A03 | Software Supply Chain Failures |
+| A04 | Cryptographic Failures |
+| A05 | Injection |
+| A06 | Insecure Design |
+| A07 | Authentication Failures |
+| A08 | Software or Data Integrity Failures |
+| A09 | Security Logging and Alerting Failures |
+| A10 | Mishandling of Exceptional Conditions |
+
+The five you'll meet most often in code review:
+
+- **A01 Broken Access Control** (still number one in 2025) is when users can act outside their intended permissions, the defence is server-side authorization checks on every request and deny-by-default
+- **A02 Security Misconfiguration** covers insecure defaults, unnecessary features left on, and verbose error messages that leak internals, the defence is hardening and minimising the configuration
+- **A03 Software Supply Chain Failures** (new in 2025, it widens the older "Vulnerable and Outdated Components" item) covers everything your software is built from and with: libraries, build tools, CI/CD pipelines, and the places you download them from. A compromised or vulnerable package becomes your vulnerability. The defences are: keep a **Software Bill of Materials (SBOM)**, a list of every component and version you ship; **pin dependency versions** with a lockfile and **verify** them (checksums, registry signatures) instead of pulling whatever is newest; use **signed builds** so you can prove an artifact came from your pipeline unchanged; and keep scanning and patching components
+- **A04 Cryptographic Failures** cover weak or missing protection of sensitive data, the defence ties back to Module 4: strong algorithms, proper key handling, encryption in transit and at rest
+- **A05 Injection** (such as SQL injection) happens when untrusted input is interpreted as a command or query, the defence is parameterised queries and strict input validation, never building queries by string concatenation
 
 #### Structure at a Glance
 
@@ -67,22 +84,25 @@ if (request.body.role === "admin") { deleteUser(); }
 // Safe: authorization decided server-side from the authenticated session
 if (session.user.isAdmin) { deleteUser(); }
 ```
-5. **Scan for vulnerable components** in a project you own, to see the "outdated components" risk concretely:
+5. **Check your software supply chain** in a Node.js project you own (one with a `package-lock.json`; npm 10 or newer). Scan for components with known flaws, verify the registry signatures of what you installed, and generate an SBOM:
 ```bash
 npm audit
+npm audit signatures
+npm sbom --sbom-format cyclonedx > sbom.json
 ```
+Open `sbom.json` and find one of your direct dependencies and its exact version. The lockfile pins those versions; the SBOM records them.
 
 #### Checkpoint
-You can recognise and fix an injection flaw (parameterisation) and a broken-access-control flaw (server-side authorization), and you've run a dependency scan, and you can explain the recurring principle that input is never trusted and authorization is always enforced server-side.
+You can recognise and fix an injection flaw (parameterisation) and a broken-access-control flaw (server-side authorization), you've scanned and verified your dependencies and produced an SBOM, and you can explain the recurring principle that input is never trusted and authorization is always enforced server-side.
 
 #### Quiz
-1. What is the OWASP Top 10, and who publishes it?
+1. What is the OWASP Top 10, who publishes it, and which edition is current?
 2. What causes injection, and what is the main defence against it?
 3. What is broken access control, and how do you defend against it?
-4. Why is "trust the client" a dangerous pattern, and where must security decisions be enforced?
+4. What does A03 Software Supply Chain Failures cover, and name two defences against it.
 5. Why is the OWASP Top 10 described as a baseline rather than a complete guarantee of security?
 
-*Answers: 1) An industry-standard awareness list of the most critical web application security risks, published by the Open Worldwide Application Security Project (OWASP). 2) Injection happens when untrusted input is interpreted as part of a command or query; the main defence is parameterised queries plus strict input validation, never concatenating input into queries. 3) Broken access control is when users can act outside their intended permissions; you defend against it with server-side authorization checks on every request and a deny-by-default posture. 4) Because the client can be manipulated by an attacker, so anything the client sends can be forged; security decisions must be enforced on the server, where the attacker can't tamper with them. 5) Because it covers only the most common and critical risks, not everything; clearing it is the minimum bar, and real security also requires secure design, testing, and defence in depth.*
+*Answers: 1) An industry-standard awareness list of the most critical web application security risks, published by the Open Worldwide Application Security Project (OWASP); the current edition is the OWASP Top 10:2025, released in November 2025. 2) Injection happens when untrusted input is interpreted as part of a command or query; the main defence is parameterised queries plus strict input validation, never concatenating input into queries. 3) Broken access control (A01, still number one) is when users can act outside their intended permissions; you defend against it with server-side authorization checks on every request and a deny-by-default posture. 4) Risks in everything your software is built from and with, such as vulnerable or compromised libraries, build tools, and pipelines; defences include keeping an SBOM, pinning and verifying dependencies, signed builds, and scanning and patching components (any two). 5) Because it covers only the most common and critical risks, not everything; clearing it is the minimum bar, and real security also requires secure design, testing, and defence in depth.*
 
 ---
 
@@ -127,25 +147,109 @@ Designing and reviewing any API that backs a web or mobile app, a public develop
 
 #### Lab
 
-> Harden a sample endpoint conceptually, then test one gate with `curl`. Use an app you own.
+> You'll run a tiny API on your own computer and test every gate with `curl`. Nothing leaves your machine. Needs Python 3.12+.
 
-1. **Start from an insecure endpoint** that returns any record by ID with no checks, and list what's missing (auth, object-level authz, validation, rate limit, TLS).
-2. **Add authentication**: require a valid token and reject requests without one.
-```javascript
-if (!isValidToken(request.headers.authorization)) return respond(401);
-```
-3. **Add object-level authorization**: confirm the authenticated user is allowed to access *this specific* record, defeating the top API risk.
-```javascript
-if (record.ownerId !== session.user.id) return respond(403);
-```
-4. **Add input validation and a rate limit**, and ensure the endpoint is only served over HTTPS.
-5. **Test a gate with curl**: call the endpoint without a token and confirm you get a `401`, then reason about what each other gate protects against.
+1. **Picture the insecure version first**: an endpoint `/api/records/<id>` that returns any record to anyone. List what's missing: authentication, object-level authorization, input validation, rate limiting, and TLS.
+2. **Install Flask** in a terminal:
 ```bash
-curl -i https://your-app.example/api/records/123
+pip install flask
 ```
+3. **Save this as `api.py`**. It's the same endpoint with the gates added; each gate is commented. The two demo users get random tokens every time the server starts, so no credential is written in the code.
+```python
+# api.py: a tiny records API with every security gate, for local practice only
+import re
+import secrets
+import time
+from collections import defaultdict, deque
+
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+# Two demo users. Their tokens are random and new every time the server starts,
+# so no credential is ever written in the code.
+TOKENS = {
+    secrets.token_urlsafe(16): "alice",
+    secrets.token_urlsafe(16): "bob",
+}
+
+RECORDS = {
+    123: {"id": 123, "owner": "alice", "note": "Alice's private note"},
+    124: {"id": 124, "owner": "bob", "note": "Bob's private note"},
+}
+
+RATE_LIMIT = 5    # requests allowed...
+RATE_WINDOW = 10  # ...per this many seconds, per caller
+recent_requests = defaultdict(deque)
+
+
+def is_rate_limited(caller):
+    now = time.monotonic()
+    times = recent_requests[caller]
+    while times and now - times[0] > RATE_WINDOW:
+        times.popleft()
+    if len(times) >= RATE_LIMIT:
+        return True
+    times.append(now)
+    return False
+
+
+def current_user():
+    header = request.headers.get("Authorization", "")
+    if not header.startswith("Bearer "):
+        return None
+    return TOKENS.get(header.removeprefix("Bearer "))
+
+
+@app.get("/api/records/<record_id>")
+def get_record(record_id):
+    # Gate 1: rate limit each caller (by IP address)
+    if is_rate_limited(request.remote_addr):
+        return jsonify(error="Too many requests"), 429
+
+    # Gate 2: authentication (who are you?)
+    user = current_user()
+    if user is None:
+        return jsonify(error="Authentication required"), 401
+
+    # Gate 3: input validation (IDs are digits only)
+    if not re.fullmatch(r"\d{1,9}", record_id):
+        return jsonify(error="Invalid record ID"), 400
+
+    record = RECORDS.get(int(record_id))
+    if record is None:
+        return jsonify(error="Not found"), 404
+
+    # Gate 4: object-level authorization (is THIS record yours?)
+    if record["owner"] != user:
+        return jsonify(error="Forbidden"), 403
+
+    return jsonify(record), 200
+
+
+if __name__ == "__main__":
+    for token, name in TOKENS.items():
+        print(f"Token for {name}: {token}")
+    # Local practice only: plain HTTP on your own machine.
+    # In production this must sit behind HTTPS (TLS).
+    app.run(host="127.0.0.1", port=8000)
+```
+4. **Start it** with `python api.py`. It prints a token for alice and one for bob; leave this terminal running and open a second one. (On Windows PowerShell, type `curl.exe` instead of `curl` in the next steps.)
+5. **Test authentication**: call the endpoint with no token. You should get `401`.
+```bash
+curl -i http://127.0.0.1:8000/api/records/123
+```
+6. **Test object-level authorization**: paste alice's token in place of `ALICE_TOKEN`. Record 123 is hers, so you get `200` and the note; record 124 is bob's, so you get `403`. This is the check that's most often missing in real APIs.
+```bash
+curl -i -H "Authorization: Bearer ALICE_TOKEN" http://127.0.0.1:8000/api/records/123
+curl -i -H "Authorization: Bearer ALICE_TOKEN" http://127.0.0.1:8000/api/records/124
+```
+7. **Test input validation**: request `/api/records/abc` with alice's token and confirm you get `400`.
+8. **Test the rate limit**: wait 10 seconds, then run the step 5 command six times quickly. The sixth call returns `429 Too Many Requests`.
+9. **Note the missing gate**: this server uses plain HTTP because it only listens on your own computer. Write one sentence on why a real deployment must serve it over HTTPS (hint: what would an eavesdropper see in the `Authorization` header?).
 
 #### Checkpoint
-You can identify the security gates a request should pass (transport, authentication, object-level authorization, validation, rate limiting), add them to an endpoint, and test that an unauthenticated request is rejected, and you can explain why broken object-level authorization is the top API risk.
+You can identify the security gates a request should pass (transport, authentication, object-level authorization, validation, rate limiting), you've run an endpoint that has them and watched each one return its status code (401, 403, 400, 429), and you can explain why broken object-level authorization is the top API risk.
 
 #### Quiz
 1. Why are APIs considered such a large attack surface?
@@ -161,7 +265,8 @@ You can identify the security gates a request should pass (transport, authentica
 ## Module 8 Completion Checklist
 - [ ] Recognised and fixed an injection flaw using a parameterised query
 - [ ] Recognised and fixed a broken-access-control flaw using a server-side authorization check
-- [ ] Ran a dependency scan to surface vulnerable/outdated components
-- [ ] Hardened an API endpoint with transport, authentication, object-level authorization, validation, and rate limiting
-- [ ] Tested that an unauthenticated API request is rejected
+- [ ] Can name the OWASP Top 10:2025 categories and explain the new Software Supply Chain Failures item
+- [ ] Ran a dependency scan, verified registry signatures, and generated an SBOM
+- [ ] Ran a local API with transport, authentication, object-level authorization, validation, and rate limiting gates explained
+- [ ] Tested that unauthenticated, unauthorized, invalid, and too-frequent requests are each rejected
 - [ ] Can explain the recurring principle: never trust input, and always enforce authorization server-side and per object

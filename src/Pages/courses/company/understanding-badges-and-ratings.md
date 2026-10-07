@@ -1,7 +1,7 @@
 <!-- order: 1 -->
 # Understanding Badges: A Guide for Companies
 
-This short guide explains how members prove their skills on She Model Tech, so you can read a profile and hire with confidence. She Model Tech runs on one idea: proof over pedigree. People here earn their standing by doing real project work, not by listing credentials, and once you know how to read that proof, a profile tells you far more than a resume does. Work through the sections in order.
+This short guide explains how members prove their skills on She Model Tech, so you can read a profile and hire with confidence through the Talent Board and job posts. She Model Tech runs on one idea: proof over pedigree. People here earn their standing by doing real project work, not by listing credentials, and once you know how to read that proof, a profile tells you far more than a resume does. Work through the sections in order.
 
 ---
 
@@ -27,7 +27,7 @@ Every badge belongs to one of six tracks. Each track is a family of related tech
 - **TechArchs** (Low/No-Code Developer): builds working products on no-code and low-code platforms, and automates workflows.
 - **TechQA** (Quality Tester): ensures software quality through testing, reviews, and quality control.
 - **TechGuard** (Network and Cybersecurity): protects systems and networks, and runs cloud administration and DevOps.
-- **TechPO** (Product / Project Owner): owns product vision, requirements, and the backlog, and steers projects to completion.
+- **TechPO** (Product / Project Owner): owns product vision, requirements, and the backlog, and steers projects to completion. Every project lead earns a TechPO badge.
 - **TechLeads** (Non-Technical Roles): fills delivery and non-coding roles such as project management, technical writing, and research.
 
 A member can hold badges in more than one track. Someone with TechDev and TechLeads badges has proven both hands-on building and delivery skills, which is the kind of range a small team often needs.
@@ -38,7 +38,7 @@ A member can hold badges in more than one track. Someone with TechDev and TechLe
 
 **Goal:** Learn what the level on a badge means, so you can gauge depth, not just presence.
 
-Badges within a track add up to a level, and that level reflects how much proven work a member has in that track, not how long they have been a member. As a member completes more projects in a track, their level in that track rises, so a higher level means more delivered and reviewed work in that specific area.
+Badges within a track add up to a level, and that level reflects how much proven work a member has in that track, not how long they have been a member. As a member completes more projects in a track, their level in that track rises: **Novice** (1–2 badges), **Associate** (3–6), **Advanced** (7–11), and **Expert** (12 or more). A higher level means more delivered and reviewed work in that specific area.
 
 A member can be advanced in one track and a beginner in another, and that is normal and useful information. Level tells you depth: for a small, well-scoped task, an eager lower-level member who reviewed well can be ideal, while for something you cannot afford to get wrong, you should weight the level in the exact track the work falls under.
 
@@ -46,15 +46,19 @@ Always pair the level with the track. An advanced TechQA member is a strong test
 
 ---
 
-## Section 4: Paid Projects and How Hiring Works
+## Section 4: How Hiring Works
 
-**Goal:** Learn how to turn a strong profile into real, paid work on the platform.
+**Goal:** Learn how to turn a strong profile into a hire.
 
-Projects on She Model Tech come in two kinds, and the difference matters when you hire. **Cohort projects** are free, collaborative projects run by She Model Tech: members work in a team with a lead, She Model Tech reviews the work, and that is how badges are earned. **Paid projects** are how you hire: your company posts the brief, sets the pay for each role, and pays the members you choose directly.
+Members earn badges on **cohort projects** run by She Model Tech: 6-week team projects with a lead, where She Model Tech reviews the finished work. Companies don't run projects on the platform; you hire through **job posts**.
 
-Only members who have earned **at least one badge** can apply to a paid project. That means every applicant you see has already finished a real team project and had their work reviewed, so you are choosing between people with proof, not promises. To post paid projects, your company account needs to be verified by She Model Tech first.
+- **Browse the Talent Board** to find members by track and level, and open their profiles to see each badge and the project behind it.
+- **Message members** you're interested in. Free company accounts can start a limited number of new conversations each month; company tiers include unlimited messaging.
+- **Post a job** (full-time, part-time, contract, or internship) with your own application link or email and the dates applications are open. Job posting is included in company tiers and needs a verified company account. Verification is free.
 
-When you post a paid project, the pay for each role is set up front, and applicants apply to a specific role, so both sides agree on the amount before any work starts. Because you, not She Model Tech, review the work on a paid project, it does not award a badge. Members receive a verified paid work-experience record on their profile instead. Read their existing badges to judge fit, then use a paid project to put that proven skill to work for you.
+Members apply through your link or email, so your own hiring process stays the same. Read their badges to judge fit, then interview as you normally would.
+
+You may also see **paid projects** on member profiles. These are run and paid for by She Model Tech for members 18 and older who already hold at least one badge. They don't award badges, but they show the member has delivered paid team work.
 
 ---
 
@@ -68,13 +72,13 @@ You now have every piece, and here is a reliable order for reading a profile:
 2. Look at the level in the track you care about. This tells you how much proven depth they have there.
 3. Look at the number of badges. This tells you how consistently they deliver real, shipped work.
 
-In under a minute you can move from a name to a grounded, evidence-based read on whether someone fits your project. When a profile fits, you can post a paid project and hire the member for a role directly, and the same proof-of-work system then records how the project goes, which keeps the whole platform honest over time.
+In under a minute you can move from a name to a grounded, evidence-based read on whether someone fits your role. When a profile fits, message the member or point them to your job post.
 
 ### What You Learned
 - ✅ Why proven work beats stated credentials on She Model Tech
 - ✅ The six tracks and the work each one represents
 - ✅ How badge levels show depth within a track
-- ✅ How paid projects work, and why only badge holders can apply
+- ✅ How to hire: the Talent Board, messages, and job posts
 - ✅ A fast, reliable order for reading any member profile
 
 **Deliverable:** The ability to read any She Model Tech profile and judge fit from evidence, so you can hire with confidence.

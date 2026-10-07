@@ -71,15 +71,6 @@
   "modules": 4,
   "quizParts": 3
  },
- "TechArchs/CRM_Platforms_Beginner_Course_Part1": {
-  "title": "CRM Essentials with HubSpot",
-  "level": "Beginner",
-  "minutes": 90,
-  "trackLabel": "Low/No-Code Developer",
-  "kind": "markdown",
-  "modules": 3,
-  "quizParts": 0
- },
  "TechArchs/crm-platforms-module": {
   "title": "CRM Platforms",
   "level": "Beginner",
@@ -206,15 +197,6 @@
   "modules": 13,
   "quizParts": 12
  },
- "TechDev/foundational-swe-tutorial": {
-  "title": "From Fundamentals to Product: Build \"TrackIt\" While Learning Every Core Skill",
-  "level": "Project-based",
-  "minutes": 285,
-  "trackLabel": "Coding Developer",
-  "kind": "markdown",
-  "modules": 12,
-  "quizParts": 9
- },
  "TechDev/computer-vision": {
   "title": "Computer Vision",
   "level": "Advanced",
@@ -240,34 +222,34 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 0
+  "quizParts": 7
  },
  "TechDev/ai-automation-engineer-hands-on-tutorials": {
   "title": "AI Automation Engineer",
   "level": "Project-based",
-  "minutes": 195,
+  "minutes": 210,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 0
+  "quizParts": 6
  },
  "TechDev/ai-data-engineer-hands-on-tutorials": {
   "title": "AI Data Engineer",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 240,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 0
+  "quizParts": 7
  },
  "TechDev/ai-agent-platform-engineer-hands-on-tutorials": {
   "title": "AI Agent Platform Engineer",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 240,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 0
+  "quizParts": 7
  },
  "TechDev/ai-solutions-architect-hands-on-tutorials": {
   "title": "AI Solutions Architect",
@@ -276,70 +258,70 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 0
+  "quizParts": 7
  },
  "TechDev/multimodal-ai-engineer-hands-on-tutorials": {
   "title": "Multimodal AI Engineer",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 240,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 0
+  "quizParts": 7
  },
  "TechDev/ai-research-engineer-hands-on-tutorials": {
   "title": "AI Research Engineer",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 240,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 0
+  "quizParts": 7
  },
  "TechDev/robotics-ai-engineer-hands-on-tutorials": {
   "title": "Robotics AI Engineer",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 240,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 0
+  "quizParts": 7
  },
  "TechDev/ai-infrastructure-engineer-hands-on-tutorials": {
   "title": "AI Infrastructure Engineer",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 255,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
-  "quizParts": 0
+  "modules": 9,
+  "quizParts": 7
  },
  "TechDev/ai-infrastructure-engineer-advanced-module-tutorials": {
   "title": "AI Infrastructure Engineer — Advanced Module: Modern IaC, GPU Scheduling & Multi-Tenant IAM",
   "level": "Advanced",
-  "minutes": 135,
+  "minutes": 150,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 0
+  "quizParts": 4
  },
  "TechDev/ai-governance-responsible-ai-engineer-hands-on-tutorials": {
   "title": "AI Governance and Responsible AI Engineer",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 240,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 0
+  "quizParts": 7
  },
  "TechDev/ai-governance-advanced-module-tutorials": {
   "title": "AI Governance and Responsible AI Engineer — Advanced Module: EU AI Act Compliance",
   "level": "Advanced",
-  "minutes": 135,
+  "minutes": 150,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 0
+  "quizParts": 4
  },
  "TechGuard/module-1-networking": {
   "title": "Networking Fundamentals",
@@ -405,13 +387,13 @@
   "quizParts": 3
  },
  "TechGuard/module-8-secure-coding": {
-  "title": "Secure Coding",
+  "title": "api.py: a tiny records API with every security gate, for local practice only",
   "level": "Beginner",
-  "minutes": 75,
+  "minutes": 45,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 3,
-  "quizParts": 2
+  "modules": 2,
+  "quizParts": 1
  },
  "TechGuard/module-9-devops-security": {
   "title": "DevOps Security",
@@ -537,7 +519,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 0
+  "quizParts": 0,
+  "noCertificate": true
  },
  "TechQA/module-1-qa-fundamentals": {
   "title": "QA Fundamentals",

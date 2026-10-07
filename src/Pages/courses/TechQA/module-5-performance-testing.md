@@ -1,7 +1,15 @@
 <!-- order: 6 -->
 ## Module 5: Performance Testing
 
-**Tools needed for this module:** [Apache JMeter](https://jmeter.apache.org) (requires Java), and access to any test target you're authorized to load-test (the lab uses a public demo endpoint designed for this purpose).
+**Tools needed for this module:** [Apache JMeter](https://jmeter.apache.org) (requires Java), and [Docker Desktop](https://www.docker.com/products/docker-desktop/) to run a practice target on your own computer. Every lab in this module tests **OWASP Juice Shop**, a free practice web app, running locally at http://localhost:3000. Start it in a terminal and leave it running while you work:
+
+```bash
+docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
+```
+
+When the log says the server is listening on port 3000, open http://localhost:3000 in a browser to check it's up. Press Ctrl+C in that terminal to stop it. (The `127.0.0.1:` part keeps it reachable only from your own computer, which matters because Juice Shop is deliberately insecure.)
+
+> **The rule for this whole module: never load-test a system you don't own or have written permission to test.** A load test, and especially a stress or spike test, sends the same kind of traffic as a denial-of-service attack. Pointed at someone else's site, it can slow or crash a service other people rely on, and it can break the law and the site's terms of use. "It's a public endpoint" is not permission. In a job, get written approval that names the system, the time window, and the load levels before you run anything.
 
 ### Topic 5.1: JMeter
 
@@ -43,13 +51,15 @@ Confirming a system can handle expected traffic before a big product launch or m
 
 1. **Install JMeter** (requires Java) and open it, either the GUI (`jmeter.bat` / `jmeter.sh`) or note that real load runs are typically done in non-GUI mode for accuracy.
 2. **Create a new Test Plan**, then add a **Thread Group**: set it to 10 users, with a ramp-up period of 5 seconds.
-3. **Add an HTTP Request sampler** inside the Thread Group, pointing at a test endpoint (a public demo/practice API endpoint, or a test environment you're authorized to use).
+3. **Add an HTTP Request sampler** inside the Thread Group, pointing at your local Juice Shop (start it first, as shown at the top of this module). Set **Protocol** to `http`, **Server Name or IP** to `localhost`, **Port Number** to `3000`, **Method** to `GET`, and **Path** to `/rest/products/search?q=apple`. This is Juice Shop's product search API, so each request does real work on the server.
 4. **Add a Listener**, such as "View Results in Table" or "Summary Report," to see results as the test runs.
 5. **Run the test** and observe the results: average response time, error count if any, and throughput (requests per second).
 6. **Increase the Thread Group to 50 users** and re-run, comparing the new results to the first run, does response time increase, do any errors appear that didn't before.
 
+Because JMeter and Juice Shop share one computer, your numbers describe your laptop, not a production server. That's fine for learning how to run and read tests; just say so when you report them.
+
 #### Checkpoint
-You have a working JMeter test plan with a Thread Group, an HTTP sampler, and a Listener, and you've compared results between two different load levels (10 vs. 50 users) against the same target.
+You have a working JMeter test plan with a Thread Group, an HTTP sampler, and a Listener, and you've compared results between two different load levels (10 vs. 50 users) against your local Juice Shop.
 
 #### Quiz
 1. What does a Thread Group represent, and what does each individual thread simulate?
@@ -106,22 +116,24 @@ Deciding which type to run starts with the actual business risk: an expected-tra
 
 #### Lab
 
-1. **Take the JMeter test plan from the previous lab.**
+> These runs deliberately push a server toward breaking. Run them only against your local Juice Shop at http://localhost:3000, never against a public site or any system you don't own or have written permission to test.
+
+1. **Take the JMeter test plan from the previous lab**, make sure Juice Shop is running, and check the HTTP Request still points at `localhost`, port `3000`.
 2. **Reconfigure it as a stress test:** increase the Thread Group well beyond your earlier 50-user run (for example, 200+ users) with a short ramp-up, and run it, watching for the point where errors start appearing or response times spike sharply.
 3. **Reconfigure it as a spike test:** set a very short ramp-up period (for example, all users starting within 1-2 seconds) at a moderate-to-high user count, and compare the results to the same user count with a longer ramp-up.
 4. **Write a one-paragraph summary** distinguishing what each of your three runs (load, stress, spike) was actually testing for, and what each result would (and wouldn't) tell a team making a launch decision.
 
 #### Checkpoint
-You've run at least two different load pattern types (stress and spike) against the same target using the same base test plan, and written a summary explaining what each type does and doesn't tell you.
+You've run at least two different load pattern types (stress and spike) against your local Juice Shop using the same base test plan, and written a summary explaining what each type does and doesn't tell you.
 
 #### Quiz
 1. What question does a stress test answer that a standard load test doesn't?
 2. What is a spike test simulating, and how does its setup differ from a gradual load test?
 3. What is a soak test designed to catch that a short test wouldn't?
-4. Name the three key metrics tracked across all these test types.
+4. Why must you only load-test systems you own or have written permission to test, even if an endpoint is public?
 5. Why is a performance result like "average response time: 400ms" meaningless without additional context?
 
-*Answers: 1) Where the system's actual breaking point is, and how it behaves when pushed past expected capacity, gracefully or catastrophically, rather than just confirming it handles expected traffic. 2) A sudden, sharp jump in traffic, like a flash sale or viral post; its setup uses a very short ramp-up period so many simulated users start almost simultaneously, rather than gradually over time. 3) Problems that only appear over an extended period under sustained load, like memory leaks or slow resource exhaustion, which a short test wouldn't run long enough to reveal. 4) Response time, throughput (requests per second), and error rate. 5) Because the number only means something in context, what load pattern produced it, how many users, for how long, against what environment, without that, there's no way to know if 400ms is good, bad, or comparable to any other result.*
+*Answers: 1) Where the system's actual breaking point is, and how it behaves when pushed past expected capacity, gracefully or catastrophically, rather than just confirming it handles expected traffic. 2) A sudden, sharp jump in traffic, like a flash sale or viral post; its setup uses a very short ramp-up period so many simulated users start almost simultaneously, rather than gradually over time. 3) Problems that only appear over an extended period under sustained load, like memory leaks or slow resource exhaustion, which a short test wouldn't run long enough to reveal. 4) Heavy test traffic is the same as a denial-of-service attack to the owner: it can slow or crash a service others rely on and can be illegal or break the site's terms, and being public is not permission. 5) Because the number only means something in context, what load pattern produced it, how many users, for how long, against what environment, without that, there's no way to know if 400ms is good, bad, or comparable to any other result.*
 
 ---
 
@@ -164,7 +176,7 @@ Before a big sale, a shop asks whether checkout will survive five times its norm
 
 #### Lab
 
-1. **Reuse your Topic 5.2 test plan** against the same authorised practice endpoint, and save it as `plan.jmx`.
+1. **Reuse your Topic 5.2 test plan** against your local Juice Shop at http://localhost:3000 (start it again if you stopped it), and save it as `plan.jmx`.
 2. **Run a baseline in non-GUI mode** with a small number of users, generating an HTML report:
    ```bash
    jmeter -n -t plan.jmx -l baseline.jtl -e -o baseline-report
@@ -188,8 +200,10 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
 ---
 
 ## Module 5 Completion Checklist
+- [ ] Ran OWASP Juice Shop locally as your test target
+- [ ] Can explain why you never load-test a system you don't own or have written permission to test
 - [ ] Built a working JMeter test plan with a Thread Group, HTTP sampler, and Listener
-- [ ] Compared results between two different load levels (10 vs. 50 users) against the same target
+- [ ] Compared results between two different load levels (10 vs. 50 users) against your local target
 - [ ] Run the same base test plan reconfigured as both a stress test and a spike test
 - [ ] Can name all four load pattern types (load, stress, spike, soak) and the specific question each one answers
 - [ ] Can explain why a performance number needs context (load pattern, duration, environment) to be meaningful

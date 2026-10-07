@@ -55,7 +55,7 @@ Open **Learning** at the top of the page. Every course is free, across six tech 
 
 - **Start a course** by opening it and tapping start. Your progress is saved to your account, so you can stop and pick up where you left off, on any device.
 - **Quizzes and checklists** inside each course help you check your understanding.
-- **Finish a course** to get a certificate of completion you can download and add to LinkedIn.
+- **Finish a course** to get a certificate of completion you can download and add to LinkedIn. To finish, write a short summary (30+ words) for each module, pass every quiz with 70% or more, and, once other learners have posted in the course forum, reply to one of them.
 - **My learning** shows the courses you're taking and the ones you've finished.
 
 Courses build the skill. Badges come from doing the work on a real project, which is what the next sections cover.
@@ -81,14 +81,14 @@ Tap **Join the Project** on any project you like.
 2. Choose the **badge track** this project should count toward.
 3. Share your skills, why you're interested, a portfolio or résumé link, and your LinkedIn.
 
-The project lead reviews applications. When you're approved, you'll get a notification and the project appears in your **Workspace**. Some roles need a badge first. If so, apply for an open role without that requirement to earn your first one.
+The project lead reviews applications. When you're approved, you'll get a notification and the project appears in your **Workspace**. Every role is open to every level. Roles marked **Good for beginners** are a great start; roles marked **Stretch role** are best with some experience, but you can still apply and challenge yourself.
 
 **On a project that needs a lead or is being set up**, you choose how to join:
 
 - **Lead this project**: apply to lead it (see Section 5).
 - **Be a collaborator**: we'll notify you as soon as the lead opens roles, so you can apply first.
 
-**Paid projects** are run and paid for by She Model Tech, for members 18 and older. The pay for each role is shown before you apply, and you're paid by PayPal or Wise after the work is reviewed. Add your payout email in **Settings**, **Account**. Paid projects don't award badges, so free projects are where you earn them.
+**Paid projects** are run and paid for by She Model Tech, for members 18 and older who have earned at least one badge. The pay for each role is shown before you apply, and you're paid by PayPal or Wise after the work is reviewed. Add your payout email in **Settings**, **Account**. Paid projects don't award badges, so free projects are where you earn them.
 
 #### Quiz
 1. What does the "Open to Join" label mean?
@@ -96,7 +96,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
 3. On a project that needs a lead, what happens if you choose "Be a collaborator"?
 4. Who can apply to paid projects, and do they award badges?
 
-*Answers: 1) The team is open, and you can apply for a role now. 2) The role you want on the team and the badge track the project should count toward. 3) You're notified as soon as the lead opens roles, so you can apply first. 4) Members 18 and older can apply; paid projects pay you instead of awarding a badge.*
+*Answers: 1) The team is open, and you can apply for a role now. 2) The role you want on the team and the badge track the project should count toward. 3) You're notified as soon as the lead opens roles, so you can apply first. 4) Members 18 and older who have earned at least one badge can apply; paid projects pay you instead of awarding a badge.*
 
 ---
 
@@ -121,7 +121,7 @@ She Model Tech reviews every lead application and may invite you to a short chat
 - **Runs the team** in the **Discussion** tab: plans the work, keeps everyone moving, and answers questions.
 - **Submits the project for review** when the work is done, then confirms the badges for the team once it's approved.
 
-Leads earn a TechPO (Product / Project Owner) badge when the project is completed, plus a certificate documenting the project.
+Leads earn a TechPO (Product / Project Owner) badge when the project is completed, plus a certificate documenting the project. Teams of 7 or more also have a **Product Co-owner** seat, which earns TechPO too.
 
 ---
 
@@ -135,7 +135,7 @@ Every project you join has a workspace. Open **Workspace** in the menu and choos
 - **Resources**: the submission link, meeting link, and project details your lead has added. Your work goes in the submission link, so the team's work can be reviewed.
 - **Team**: see who is on the project and their roles, and message them directly.
 
-Projects usually run for about eight weeks. Deliver your part, keep your team updated, and speak up early if you're stuck. Your lead and your team are there to help you grow.
+Projects run in 6-week cohorts. Deliver your part, keep your team updated, and speak up early if you're stuck. Your lead and your team are there to help you grow.
 
 ---
 

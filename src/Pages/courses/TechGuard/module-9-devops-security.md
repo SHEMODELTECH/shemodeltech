@@ -1,7 +1,29 @@
 <!-- order: 9 -->
 ## Module 9: DevOps Security
 
-**Tools needed for this module:** a free [GitHub](https://github.com) account, [Docker Desktop](https://www.docker.com/products/docker-desktop/), and a terminal. You'll install three free, open source scanners along the way: [Gitleaks](https://github.com/gitleaks/gitleaks) (secrets), [Trivy](https://trivy.dev) (container images), and [Checkov](https://www.checkov.io) (infrastructure code). On a Mac, `brew install gitleaks trivy` covers the first two, and `pip install checkov` installs the third.
+**Tools needed for this module:** a free [GitHub](https://github.com) account, [Docker Desktop](https://www.docker.com/products/docker-desktop/), and a terminal. You'll install three free, open source scanners along the way: [Gitleaks](https://github.com/gitleaks/gitleaks) (secrets), [Trivy](https://trivy.dev) (container images), and [Checkov](https://www.checkov.io) (infrastructure code). Security tools are themselves part of your supply chain (Topic 9.2 shows a real case), so install them only from their official sources and check what you downloaded.
+
+**Install Gitleaks** (version 8.19 or newer):
+- **Mac:** `brew install gitleaks`
+- **Windows:** `scoop install gitleaks`, or download `gitleaks_<version>_windows_x64.zip` from the [Gitleaks releases page](https://github.com/gitleaks/gitleaks/releases), unzip it, and put `gitleaks.exe` in a folder on your PATH
+- **Linux:** download `gitleaks_<version>_linux_x64.tar.gz` and the matching `gitleaks_<version>_checksums.txt` from the releases page, then verify and install:
+  ```bash
+  sha256sum --check --ignore-missing gitleaks_*_checksums.txt
+  tar -xzf gitleaks_*_linux_x64.tar.gz gitleaks
+  sudo mv gitleaks /usr/local/bin/
+  ```
+
+**Install Trivy** (use the latest release published after the March 2026 fix; never v0.69.4):
+- **Mac:** `brew install trivy`
+- **Windows:** download `trivy_<version>_windows-64bit.zip` and `trivy_<version>_checksums.txt` from the [official Trivy releases](https://github.com/aquasecurity/trivy/releases), verify the zip in PowerShell with `Get-FileHash .\trivy_<version>_windows-64bit.zip -Algorithm SHA256` and compare it with the line for that file in the checksums file, then unzip and put `trivy.exe` on your PATH
+- **Linux:** use the official apt or rpm repository from the [Trivy installation docs](https://trivy.dev), or download the `.tar.gz` and `trivy_<version>_checksums.txt` from the releases page and run `sha256sum --check --ignore-missing trivy_*_checksums.txt` before extracting
+
+After installing, run `gitleaks version` and `trivy --version` and check the numbers match the latest releases on the official pages.
+
+**Install Checkov** with [pipx](https://pipx.pypa.io), which keeps it in its own isolated environment: install pipx (`brew install pipx` on Mac, `sudo apt install pipx` on Debian/Ubuntu, or `python -m pip install --user pipx` on Windows), run `pipx ensurepath`, open a new terminal, then:
+```bash
+pipx install checkov
+```
 
 ### Topic 9.1: Securing the Pipeline
 
@@ -46,8 +68,9 @@ A developer pastes a cloud access key into a config file to test something quick
 2. **Add a fake secret on purpose:** create `config.py` containing a clearly fake value such as `API_KEY = "sk_test_fake_1234567890abcdef"` and commit it.
 3. **Scan the repository and its history** with Gitleaks, then read what it reports:
    ```bash
-   gitleaks detect --source . -v
+   gitleaks git -v .
    ```
+   `gitleaks git` scans every commit in the repository's history, which is how it finds secrets you've already "deleted". To scan a plain folder that isn't a Git repository, use `gitleaks dir -v .` instead. (Older guides use `gitleaks detect --source .`; that command is deprecated since Gitleaks 8.19.)
 4. **Store a value properly:** in the repository's **Settings → Secrets and variables → Actions**, add a secret named `DEMO_TOKEN` with any made-up value, then add a workflow at `.github/workflows/check.yml` that uses it without printing it:
    ```yaml
    name: Check
@@ -64,6 +87,7 @@ A developer pastes a cloud access key into a config file to test something quick
              DEMO_TOKEN: ${{ secrets.DEMO_TOKEN }}
            run: test -n "$DEMO_TOKEN" && echo "Secret is set"
    ```
+   For practice, `@v4` is fine. In real pipelines, pin each action to its full commit SHA instead of a tag; Topic 9.2 shows why.
 5. **Turn on Dependabot alerts** in the repository's security settings, and write two sentences on what you'd do if the fake key in step 2 had been real.
 
 #### Checkpoint
@@ -92,6 +116,12 @@ Most modern software ships in **containers**: a package holding the app plus eve
 - Containers should run as a **non-root user**, so a compromised app can't take over the whole container
 - **Pinning versions** (for example `python:3.12-slim` rather than `python:latest`) makes builds repeatable and changes deliberate
 
+**A real supply-chain lesson: the Trivy compromise (March 2026).** Attackers used stolen release credentials to publish a malicious Trivy v0.69.4 and to repoint almost all version tags of the official `trivy-action` (and `setup-trivy`) GitHub Actions to malicious code (CVE-2026-33634). Pipelines that pulled "the latest" or used a tag like `@v0.x` ran the attacker's code, with access to every secret those pipelines held. The defences are the ones from this module and Module 8:
+- Install tools only from the official site or repository, and **verify the checksum** of what you download
+- **Pin** what your pipeline runs: exact tool versions, and GitHub Actions pinned to a full commit SHA rather than a tag that can be moved
+- If a compromised version ever ran in your pipeline, treat **every secret it could reach as leaked**: revoke and replace them all
+- A security tool is still software in your supply chain; trusting its name is not the same as verifying it
+
 #### Structure at a Glance
 
 ```mermaid
@@ -119,12 +149,13 @@ A security review asks how many known vulnerabilities your production image carr
 
 #### Lab
 
-1. **Scan a full-size and a slim base image,** and compare how many vulnerabilities each reports by severity:
+1. **Check your Trivy install:** run `trivy --version` and confirm it matches the latest release published after the March 2026 fix on the [official releases page](https://github.com/aquasecurity/trivy/releases) (and is not v0.69.4). If you downloaded it by hand, confirm you verified its checksum.
+2. **Scan a full-size and a slim base image,** and compare how many vulnerabilities each reports by severity:
    ```bash
    trivy image python:3.12
    trivy image python:3.12-slim
    ```
-2. **Write a small Dockerfile** for any simple app that starts from `python:3.12-slim`, and add a non-root user:
+3. **Write a small Dockerfile** for any simple app that starts from `python:3.12-slim`, and add a non-root user:
    ```dockerfile
    FROM python:3.12-slim
    RUN useradd --create-home appuser
@@ -133,25 +164,25 @@ A security review asks how many known vulnerabilities your production image carr
    USER appuser
    CMD ["python", "app.py"]
    ```
-3. **Build it and scan your own image:**
+4. **Build it and scan your own image:**
    ```bash
    docker build -t demo-app .
    trivy image demo-app
    ```
-4. **Confirm it runs as non-root:** `docker run --rm demo-app whoami` should print `appuser`.
-5. **Write a short finding:** the difference between the two base images, the highest-severity issue in your image, and what you'd change.
+5. **Confirm it runs as non-root:** `docker run --rm demo-app whoami` should print `appuser`.
+6. **Write a short finding:** the difference between the two base images, the highest-severity issue in your image, and what you'd change.
 
 #### Checkpoint
-You've compared a full and a slim base image with Trivy, built an image that runs as a non-root user, and scanned it yourself.
+You've checked that your Trivy install is a current, verified release, compared a full and a slim base image with it, built an image that runs as a non-root user, and scanned it yourself.
 
 #### Quiz
-1. What is the difference between an image and a container?
+1. What did the March 2026 Trivy compromise teach about installing and running security tools?
 2. Why prefer a minimal base image?
 3. What does Trivy report?
 4. Why run containers as a non-root user?
 5. Why pin image versions instead of using `latest`?
 
-*Answers: 1) An image is a read-only template; a container is a running copy of it. 2) Fewer packages mean fewer vulnerabilities and a smaller attack surface. 3) Known vulnerabilities (CVEs) in the image's packages, graded by severity. 4) So if the app is compromised, the attacker has limited power inside the container. 5) Builds become repeatable, and upgrades happen deliberately rather than by surprise.*
+*Answers: 1) Security tools are part of your supply chain too: install them only from official sources, verify checksums, pin exact versions and pin GitHub Actions to commit SHAs rather than movable tags, and rotate every secret a compromised version could have reached. 2) Fewer packages mean fewer vulnerabilities and a smaller attack surface. 3) Known vulnerabilities (CVEs) in the image's packages, graded by severity. 4) So if the app is compromised, the attacker has limited power inside the container. 5) Builds become repeatable, and upgrades happen deliberately rather than by surprise.*
 
 ---
 
@@ -228,6 +259,8 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
 - [ ] Caught a deliberately committed fake secret with Gitleaks
 - [ ] Used a pipeline secret in a GitHub Actions workflow with read-only permissions
 - [ ] Turned on Dependabot alerts for a repository
+- [ ] Installed the scanners from official sources and verified a download's checksum
+- [ ] Can explain what the March 2026 Trivy compromise teaches about the software supply chain
 - [ ] Compared a full and a slim base image with Trivy
 - [ ] Built and scanned an image that runs as a non-root user
 - [ ] Scanned an insecure IaC file with Checkov and fixed two findings

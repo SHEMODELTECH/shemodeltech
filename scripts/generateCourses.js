@@ -224,6 +224,8 @@ const build = () => {
         minutes: estimateMinutes(md),
         order: readOrder(md),
         references: referencesFor(track, md),
+        // <!-- certificate: none --> marks an orientation page: it can be completed but gives no certificate.
+        ...(/<!--\s*certificate:\s*none\s*-->/i.test(md) ? { noCertificate: true } : {}),
         ...((md.match(/<!--\s*runnable:\s*(python|html)\s*-->/i) || [])[1] ? { runnable: md.match(/<!--\s*runnable:\s*(python|html)\s*-->/i)[1].toLowerCase() } : {}),
         markdown: md,
       };
@@ -264,6 +266,7 @@ const build = () => {
     manifest[`${track}/${c.slug}`] = {
       title: c.title, level: c.level || '', minutes: c.minutes || 0, trackLabel: TRACK_LABELS[track] || track,
       kind: c.kind || 'markdown', modules: req.modules, quizParts: req.quizParts,
+      ...(c.noCertificate ? { noCertificate: true } : {}),
     };
   }));
   fs.writeFileSync(path.join(__dirname, '..', 'lib', 'courseManifest.json'), JSON.stringify(manifest, null, 1) + '\n');

@@ -68,6 +68,15 @@ solutions_brief_project/
 
 **Deliverable:** A one-page solutions brief covering the business problem, stakeholders, goals, constraints, and proposed direction.
 
+### Quiz
+
+1. Who counts as a stakeholder?
+2. Why write business goals instead of technical goals in the brief?
+3. Name two kinds of constraints a solutions brief should record.
+4. How detailed should the proposed technical direction be at this stage?
+
+*Answers: 1) Anyone with a say in whether the solution succeeds, such as support leadership, IT/security, and end customers. 2) Business goals, like cutting response time by 30%, define success; a technical goal like "deploy an LLM" is only a means and may not be needed. 3) Any two of: budget, timeline, existing systems to integrate with, and compliance requirements such as data residency. 4) Brief, two or three sentences on whether AI fits and roughly what kind of solution, not a full design.*
+
 ---
 
 ## Project 2 (Module 2): Design a System Diagram for an AI Service
@@ -133,6 +142,15 @@ system_diagram_project/
 
 **Deliverable:** A labeled system diagram for your proposed AI service, validated by an outside reader.
 
+### Quiz
+
+1. In an architecture diagram, what do boxes and arrows usually represent?
+2. What does the data layer add to the basic request flow diagram?
+3. Why label every arrow?
+4. What is the point of the "read this cold" check?
+
+*Answers: 1) Boxes are components such as services or databases; arrows are data flow or requests, labeled with what is sent. 2) It shows where data is stored and which component reads and writes it. 3) Unlabeled arrows leave readers guessing what data or request moves between components. 4) If someone new to the project can explain the diagram back correctly, it communicates clearly.*
+
 ---
 
 ## Project 3 (Module 3): Compare Model Options for a Given Use Case
@@ -185,6 +203,15 @@ model_comparison_project/
 **Skills:** Technical Evaluation, Cost Analysis, Decision Documentation, AI Solutions Architecture.
 
 **Deliverable:** A comparison matrix and written recommendation for the AI approach best suited to your use case.
+
+### Quiz
+
+1. Why define evaluation criteria before comparing options?
+2. Why include a non-AI, rules-based approach in the comparison?
+3. What is the difference between prompting (including RAG) and fine-tuning?
+4. Name three common criteria for comparing model options.
+
+*Answers: 1) So every option is judged on the same factors and the choice isn't shaped by a favorite. 2) It is a baseline; if it solves the problem well enough, AI may not be worth the cost and risk. 3) Prompting adapts a general model at request time without changing its weights; fine-tuning trains the model's weights further on your data. 4) Any three of: accuracy/quality, latency, cost per request, data privacy, and ease of integration.*
 
 ---
 
@@ -239,6 +266,15 @@ full_architecture_project/
 **Skills:** System Architecture, Reference Architecture Patterns, Scalability Planning, Cost Estimation, AI Solutions Architecture.
 
 **Deliverable:** A full architecture document and diagram, covering pattern choice, components, scalability, and cost.
+
+### Quiz
+
+1. How does a RAG architecture differ from a simple API-call architecture?
+2. What does an agentic architecture let the AI do?
+3. When is a message queue useful?
+4. Why ask what happens if traffic doubles?
+
+*Answers: 1) RAG retrieves relevant data before generating a response; a simple API call just sends a prompt and returns the reply. 2) Call tools or APIs to take actions, not just generate text. 3) When requests may take a while, so they can be processed asynchronously instead of making users wait. 4) It reveals where the design would bottleneck first, so you can plan for scale.*
 
 ---
 
@@ -303,6 +339,15 @@ data_infra_layer_project/
 
 **Deliverable:** A data and infrastructure design document and diagram, mapped to your Project 1 compliance constraints.
 
+### Quiz
+
+1. Which storage type fits documents used for retrieval?
+2. What does network segmentation protect against?
+3. What is the difference between encryption in transit and encryption at rest?
+4. What does least privilege mean?
+
+*Answers: 1) A vector database. 2) A breach in one part of the system automatically exposing everything else. 3) In transit protects data moving between components; at rest protects stored data. 4) Each user or component gets only the access it strictly needs, nothing more.*
+
 ---
 
 ## Project 6 (Module 6): Write a Governance and Risk Plan
@@ -353,6 +398,15 @@ governance_risk_project/
 **Skills:** Risk Management, AI Governance, Responsible AI, Compliance, AI Solutions Architecture.
 
 **Deliverable:** A governance and risk plan covering risk assessment, mitigations, incident response, and responsible AI considerations.
+
+### Quiz
+
+1. What two questions do you ask about each risk category?
+2. Why write mitigations for the top risks first?
+3. What should an incident response plan describe?
+4. Name the three responsible AI principles covered in this project.
+
+*Answers: 1) How likely the risk is for this system, and how severe it would be if it happened. 2) They matter most, and specific mitigations there give the biggest reduction in harm for the effort. 3) Who is notified when something goes wrong, how fast, and how to roll back. 4) Fairness, transparency, and accountability.*
 
 ---
 
@@ -409,3 +463,11 @@ architecture_proposal_project/
 **Skills:** Executive Communication, Technical Presentation, Stakeholder Management, AI Solutions Architecture.
 
 **Deliverable:** A complete architecture proposal presentation, delivered or recorded, including a prepared response to at least one tough question.
+
+### Quiz
+
+1. With a mixed technical and business audience, what should you lead with?
+2. Why prepare answers to tough questions in advance?
+3. What makes a good "ask" at the end of a proposal?
+
+*Answers: 1) Business impact, then technical depth for those who want it. 2) So you can respond clearly to objections that could otherwise stall approval. 3) A specific request, such as budget approval, engineering resources, or a pilot green light.*

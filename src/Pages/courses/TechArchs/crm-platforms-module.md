@@ -11,10 +11,12 @@
 
 **HubSpot** started as marketing software and grew into a full CRM platform, which is why it's known for being approachable and tightly connecting marketing, sales, and service data in one place. Its low-code strength is the **visual workflow builder**, a drag-and-drop automation tool that lets non-developers set up multi-step processes (like lead follow-ups) without writing code.
 
-- A **contact** is HubSpot's core record, a person, with **companies**, **deals**, and **tickets** as related record types you connect to it
+- A **contact** is HubSpot's core record, a person, with three related record types you connect to it: **companies** (organizations), **deals** (possible sales), and **tickets** (support requests). Linking records is called an **association**
 - A **property** is a field on a record (like email, lifecycle stage, or a custom field you define yourself)
-- A **workflow** is an automation built from a trigger (like "form submitted") and a chain of actions (send email, update a property, notify a rep), all assembled visually
-- A **pipeline** organizes deals or tickets into stages (like "New," "Qualified," "Closed Won") so progress is visible at a glance
+- A **workflow** is an automation built from a trigger (like "form submitted") and a chain of actions (send email, update a property, notify a rep), all assembled visually. Workflows need a paid plan (Professional tier or higher)
+- A **pipeline** organizes deals or tickets into stages so progress is visible at a glance. HubSpot's default sales pipeline uses: Appointment Scheduled, Qualified to Buy, Presentation Scheduled, Decision Maker Bought-In, Contract Sent, Closed Won, and Closed Lost (you can rename or edit these)
+- **Tasks** are to-dos (call, email, follow-up) with a due date and an owner, attached to a record, and **dashboards** group reports so a team can see deals and activity at a glance
+- A **form** on your website creates or updates a **contact**, not a deal. On the free plan, deals are not created automatically; someone creates them by hand (or a paid workflow does it)
 
 #### Structure at a Glance
 
@@ -34,8 +36,8 @@ flowchart LR
     style P fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
-- HubSpot's free tier is genuinely usable for small teams, but workflow automation, custom reporting, and advanced permissions are gated behind paid tiers, a common low-code tradeoff between accessibility and depth
-- Because marketing, sales, and service data live in the same contact record, a workflow triggered by a marketing action (like a form fill) can immediately affect a sales pipeline, without any integration work
+- HubSpot's free tier is genuinely usable for small teams (contacts, companies, deals, tasks, forms, and basic dashboards), but workflow automation, custom reporting, and advanced permissions are gated behind paid tiers, a common low-code tradeoff between accessibility and depth
+- Because marketing, sales, and service data live in the same contact record, a paid-tier workflow triggered by a marketing action (like a form fill) can update a sales pipeline without any integration work
 
 #### Where you'd actually use this
 
@@ -44,22 +46,23 @@ Small to mid-sized teams that want marketing and sales in one system without hir
 #### Lab
 
 1. **Create a free HubSpot account** at [hubspot.com](https://www.hubspot.com/products/crm) using a work or personal email.
-2. **Create a contact manually**, filling in a name, email, and lifecycle stage, to see how a record's properties are structured.
-3. **Create a simple deal** and add it to the default sales pipeline, then drag it from one stage to the next to see how pipeline stages track progress.
-4. **Build a basic workflow** (Automation > Workflows > Contact-based): set the trigger to "lifecycle stage is set to Lead," then add a single action, sending an internal notification email to yourself.
-5. **Enroll your test contact** in the workflow manually and confirm the notification action fires as expected.
+2. **Create one company and three contacts.** Go to CRM > Companies and create a made-up company. Then go to CRM > Contacts and create three contacts with a first name, last name, email, and lifecycle stage. On each contact record, find the **Companies** card in the right sidebar, click **Add**, and associate the contact with your company.
+3. **Create a deal in the default pipeline.** Go to CRM > Deals, create a deal, set yourself as **Deal owner**, and associate it with one of your contacts and the company. Switch to the board view and drag the deal from "Appointment Scheduled" to "Qualified to Buy" to "Presentation Scheduled" to see how stages track progress. Optional: to change the stage names, go to Settings > Objects > Deals > Pipelines and edit them.
+4. **Create two tasks.** Open your deal, add a task called "Call customer" due today and one called "Send proposal" due tomorrow, both assigned to you. Check them under CRM > Tasks.
+5. **Build a simple dashboard.** Go to Reporting > Dashboards, create a new dashboard, and add a few reports from the report library, such as deals by stage and tasks or activities. Exact report names change over time, and the free plan limits how many dashboards and reports you can have.
+6. **Build a basic workflow (paid feature).** Workflows need a Professional-tier plan. If HubSpot offers you a free trial, you can start one (set a reminder to cancel it); otherwise, follow along by reading these steps. In Automation > Workflows, create a contact-based workflow, set the trigger to "lifecycle stage is set to Lead," and add one action: send an internal notification email to yourself. Enroll a test contact manually and confirm the notification fires.
 
 #### Checkpoint
-You have a HubSpot contact, a deal in a pipeline, and a working workflow that triggers off a property change, and you can explain what a trigger and an action are in that workflow.
+You have a company with associated contacts, a deal moving through HubSpot's default pipeline, tasks with owners and due dates, and a simple dashboard. You can explain what a workflow's trigger and actions are (and you built one if you had a trial), and why a form submission creates a contact but not a deal on the free plan.
 
 #### Quiz
 1. What is a "property" in HubSpot, and give one example?
-2. What are the four related record types mentioned that a contact connects to?
+2. What are the three related record types mentioned that a contact connects to?
 3. What two parts make up a HubSpot workflow?
 4. What is a pipeline used for?
 5. Name one capability that's gated behind HubSpot's paid tiers.
 
-*Answers: 1) A field on a record, such as email address, lifecycle stage, or a custom field you define yourself. 2) Companies, deals, tickets, and (implicitly) the contact itself as the core record they connect to. 3) A trigger (the event that starts it, like a form submission) and a chain of actions (like sending an email or updating a property). 4) Organizing deals or tickets into stages so progress is visible at a glance. 5) Workflow automation, custom reporting, or advanced permissions (any one of these is a valid answer).*
+*Answers: 1) A field on a record, such as email address, lifecycle stage, or a custom field you define yourself. 2) Companies, deals, and tickets. 3) A trigger (the event that starts it, like a form submission) and a chain of actions (like sending an email or updating a property). 4) Organizing deals or tickets into stages so progress is visible at a glance. 5) Workflow automation, custom reporting, or advanced permissions (any one of these is a valid answer).*
 
 ---
 
@@ -183,7 +186,7 @@ You have a Zoho workflow rule that fires on a status change and a working Bluepr
 ---
 
 ## Module Completion Checklist
-- [ ] Created a HubSpot contact, a deal in a pipeline, and a working property-triggered workflow
+- [ ] Created HubSpot contacts associated with a company, a deal in the default pipeline, tasks, and a simple dashboard, and built (or followed along with) a property-triggered workflow
 - [ ] Created a custom field on a Salesforce standard object and a working record-triggered Flow
 - [ ] Created a Zoho workflow rule and a Blueprint that enforces an ordered process
 - [ ] Can explain the core low-code building blocks each platform uses (HubSpot's workflows, Salesforce's objects and Flow Builder, Zoho's modules and Blueprint)
