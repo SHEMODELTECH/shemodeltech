@@ -3,9 +3,11 @@
 // learners. Levels grow with the number of approved courses.
 import React from 'react';
 
-// Shown for approved mentors (isMentor) and anyone with a published course.
+// Shown once a mentor's first course is published in Learning (not at approval).
+// `isMentor` is kept for older callers but no longer shows the label by itself.
+// eslint-disable-next-line no-unused-vars
 const MentorBadge = ({ count = 0, isMentor = false, size = 'md', showCount = false }) => {
-  if (!isMentor && count < 1) return null;
+  if (count < 1) return null;
   const level = 'Mentor';
   const sm = size === 'sm';
   return (

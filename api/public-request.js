@@ -12,8 +12,7 @@ const { sendMail } = require('../lib/mailer');
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
 const KINDS = {
-  org: { col: 'org_requests', title: (d) => `New organization request: ${d.orgName || 'an organization'}` },
-  partner: { col: 'summitPartners', title: (d) => `New Summit partner request: ${d.companyName || 'a company'}` },
+  // (Organization requests and Summit partner requests are retired.)
   team: { col: 'team_applications', title: (d) => `New team application: ${d.name || 'someone'}` },
 };
 

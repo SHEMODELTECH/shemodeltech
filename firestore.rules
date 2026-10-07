@@ -570,8 +570,8 @@ service cloud.firestore {
  match /org_requests/{id} {
  // Organizations must be signed in to send a request (so we can update them
  // and chat with them on the platform).
- allow create: if isSignedIn() && request.resource.data.requesterUid == myUid()
- && request.resource.data.status == 'new'
+ // Retired: She Model Tech no longer offers organization training. Old requests stay readable.
+ allow create: if false
  && request.resource.data.orgName is string && request.resource.data.orgName.size() > 0 && request.resource.data.orgName.size() <= 150
  && request.resource.data.contactEmail is string && request.resource.data.contactEmail.size() <= 200
  && request.resource.data.get('topics', '').size() <= 1500
@@ -677,10 +677,8 @@ service cloud.firestore {
  }
 
  match /summitPartners/{id} {
- allow create: if request.resource.data.status == 'new'
- && request.resource.data.companyName is string && request.resource.data.companyName.size() > 0 && request.resource.data.companyName.size() <= 150
- && request.resource.data.get('message', '').size() <= 1500
- && (request.resource.data.get('companyUid', null) == null || (isSignedIn() && request.resource.data.companyUid == myUid()));
+ // Retired: the Summit was replaced by Events. Old requests stay readable.
+ allow create: if false;
  allow read: if isReviewer() || (isSignedIn() && resource.data.get('companyUid', '') == myUid());
  allow update, delete: if isReviewer();
  }
@@ -799,7 +797,9 @@ service cloud.firestore {
  allow create: if isTeacherUser()
  && request.resource.data.uid == myUid()
  && request.resource.data.status == 'pending'
- && request.resource.data.type in ['recommendation', 'volunteer'];
+ && request.resource.data.type in ['recommendation', 'volunteer']
+ // A recommendation letter only after the mentor's first published course.
+ && (request.resource.data.type == 'volunteer' || myUserDoc().get('mentorApprovedCourses', 0) >= 1);
  // A mentor can withdraw a request that hasn't been handled yet.
  allow delete: if isSignedIn() && resource.data.uid == myUid() && resource.data.status == 'pending';
  // Admins and editors handle requests (mark sent with the letter, or decline).

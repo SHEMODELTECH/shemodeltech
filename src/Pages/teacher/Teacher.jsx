@@ -49,7 +49,6 @@ import { LETTER_TYPES, myLetterRequests, requestLetter, withdrawLetterRequest } 
 import { uploadDocumentToBlob } from '../../utils/blobStorage';
 import { BRAND } from '../../config/brand';
 import { PUBLISHED_PREFIX, getPublished, publishToLearning, unpublishFromLearning } from '../../utils/learningPublished';
-import TrainerPanel from '../../components/TrainerPanel';
 import { todayISO } from '../../utils/dateRules';
 
 const TRACKS = [
@@ -500,7 +499,7 @@ const TeacherList = ({ access }) => {
         {!access.isStaff && (
           <HubToggle title="Your mentor benefits">
             <ul className="list-disc pl-5 space-y-1.5">
-              <li>A Mentor label on your profile and on your courses</li>
+              <li>A Mentor label on your profile and on your courses, once your first course is published</li>
               <li>A Certificate of Recognition for every published course</li>
               <li>A featured spot on the Talent Board, with learner ratings</li>
               <li>A direct line to She Model Tech</li>

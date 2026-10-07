@@ -224,14 +224,14 @@ const TeachApply = () => {
 
 const MENTOR_BENEFITS = [
   ['Certificate of Recognition', 'for every course you publish, ready to download and add to LinkedIn'],
-  ['Mentor label', 'on your profile and beside your name on every course you publish'],
+  ['Mentor label', 'on your profile and beside your name on your courses, once your first course is published'],
   ['Letters on request', 'a volunteer service letter any time. After you’ve published at least one course, you can also ask for a recommendation letter, written at She Model Tech’s discretion'],
   ['Featured on the Talent Board', 'mentors are shown with learner ratings from their courses'],
   ['Public recognition', 'your name on your courses, and new courses featured in "From our mentors" in Learning'],
   ['A teaching portfolio', 'learner ratings, comments, enrollments, and completions that show the impact of your teaching'],
-  ['Grow and connect', 'teaching and leadership experience, and a network of learners, mentors, and partner companies'],
+  ['Grow and connect', 'teaching and leadership experience, and a network of learners and mentors'],
   ['Lead paid cohorts', 'apply to lead paid cohorts. When applicants are equally qualified, mentors are considered first'],
-  ['Speaking opportunities', 'propose a workshop or talk at one of our online events'],
+  ['Speaking opportunities', 'want to lead a workshop or talk at one of our online events? Message She Model Tech from the Mentor Hub, and we’ll let you know if it fits'],
   ['Tools and support', 'the Mentor Hub for written, video, and interactive courses, full-screen Present mode, and a direct line to She Model Tech'],
 ];
 

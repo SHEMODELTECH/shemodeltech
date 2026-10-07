@@ -11,7 +11,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -58,6 +58,9 @@ const LeadApplicationReview = () => {
 
   const [projects, setProjects] = useState([]);
   const [applications, setApplications] = useState([]);
+  // Mentors and team members are considered first when applicants are equally
+  // qualified, so their applications are tagged. uid -> { mentor, team }
+  const [tags, setTags] = useState({});
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
   // Members' project proposals waiting for a decision.
@@ -100,6 +103,26 @@ const LeadApplicationReview = () => {
           .filter((p) => !p.isCompanyPost && p.status !== 'completed' && (!p.leadConfirmed || wanted.has(p.id)))
       );
       setApplications(apps);
+      // Tag mentors (a published course) and team members (an approved team application).
+      (async () => {
+        const team = new Set();
+        try {
+          const t = await getDocs(query(collection(db, 'team_applications'), where('status', '==', 'approved')));
+          t.docs.forEach((d) => d.data().email && team.add(String(d.data().email).trim().toLowerCase()));
+        } catch (_) { /* optional */ }
+        const out = {};
+        for (const a of apps) {
+          if (!a.applicantUid || out[a.applicantUid]) continue;
+          // eslint-disable-next-line no-await-in-loop
+          const u = await getDoc(doc(db, 'users', a.applicantUid)).catch(() => null);
+          const d = u && u.exists() ? u.data() : {};
+          out[a.applicantUid] = {
+            mentor: (d.mentorApprovedCourses || 0) > 0,
+            team: team.has(String(a.applicantEmail || d.email || '').trim().toLowerCase()),
+          };
+        }
+        setTags(out);
+      })();
       listProposals().then((l) => setProposals(l.filter((x) => x.status === 'new'))).catch(() => setProposals([]));
       listOpenCohorts().then(setOpenCohorts).catch(() => setOpenCohorts([]));
     } catch (e) {
@@ -347,6 +370,12 @@ const LeadApplicationReview = () => {
                         <span className="font-semibold text-gray-900 text-sm">
                           {app.applicantName}
                         </span>
+                        {tags[app.applicantUid]?.mentor && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700 border border-pink-100" title="Considered first when equally qualified">Mentor</span>
+                        )}
+                        {tags[app.applicantUid]?.team && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-900 text-white" title="Considered first when equally qualified">Team</span>
+                        )}
                         <span
                           className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${STATUS_STYLE[app.status] || ''}`}
                         >
