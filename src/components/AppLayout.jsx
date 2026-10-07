@@ -76,7 +76,8 @@ const AppLayout = ({ children }) => {
   // All unread notifications
   useEffect(() => {
     if (!currentUser) return;
-    const q = query(collection(db, 'notifications'), where('userId', '==', currentUser.uid), where('isRead', '==', false));
+    // The badges show "9+" at most, so 100 unread is plenty to count.
+    const q = query(collection(db, 'notifications'), where('userId', '==', currentUser.uid), where('isRead', '==', false), limit(100));
     const unsub = onSnapshot(q, (snap) => {
       setUnreadNotifications(snap.size);
       // Count network (follow) notifications

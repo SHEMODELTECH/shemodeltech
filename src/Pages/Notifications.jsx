@@ -2,8 +2,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, where, orderBy, onSnapshot, updateDoc, doc, deleteDoc, getDocs, getDoc } from 'firebase/firestore';
+import { collection, query, where, orderBy, limit, onSnapshot, updateDoc, doc, deleteDoc, getDocs, getDoc, writeBatch } from 'firebase/firestore';
 import { db } from '../firebase/config';
+
+const PAGE = 50;
+
+// Every notification of this user matching an extra filter, in pages of 400
+// (a batch holds at most 500 writes). Used for "mark all read" and "clear all",
+// which must cover everything, not just the notifications on screen.
+const forEachPage = async (uid, extra, fn) => {
+  for (let i = 0; i < 50; i += 1) {
+    const q = query(collection(db, 'notifications'), where('userId', '==', uid), ...extra, limit(400));
+    // eslint-disable-next-line no-await-in-loop
+    const snap = await getDocs(q);
+    if (snap.empty) return;
+    const batch = writeBatch(db);
+    snap.docs.forEach((d) => fn(batch, d));
+    // eslint-disable-next-line no-await-in-loop
+    await batch.commit();
+    if (snap.size < 400) return;
+  }
+};
 
 const NotificationsPage = () => {
   const { currentUser } = useAuth();
@@ -14,6 +33,11 @@ const NotificationsPage = () => {
   const [processing, setProcessing] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
   const autoMarkedRef = useRef(false);
+  // Show the newest 50, with "Show more" loading 50 older at a time.
+  const [max, setMax] = useState(PAGE);
+  const [hasMore, setHasMore] = useState(false);
+  // Until the (userId, createdAt) index is built, fall back to the old query.
+  const [noIndex, setNoIndex] = useState(false);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -24,29 +48,35 @@ const NotificationsPage = () => {
 
   useEffect(() => {
     if (!currentUser) { navigate('/login'); return; }
-    const q = query(collection(db, 'notifications'), where('userId', '==', currentUser.uid));
+    const base = [collection(db, 'notifications'), where('userId', '==', currentUser.uid)];
+    const q = noIndex
+      ? query(...base, limit(max))
+      : query(...base, orderBy('createdAt', 'desc'), limit(max));
     const unsub = onSnapshot(q, (snap) => {
       const list = snap.docs
         .map(d => ({ id: d.id, ...d.data(), createdAt: d.data().createdAt?.toDate?.() || new Date() }))
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
       setNotifications(list);
+      setHasMore(snap.size >= max);
       setLoading(false);
     }, (err) => {
+      // Index not built yet: use the unordered query (still limited).
+      if (err?.code === 'failed-precondition' && !noIndex) { setNoIndex(true); return; }
       console.error('Notifications listener error:', err);
       setLoading(false);
     });
     return unsub;
-  }, [currentUser?.uid, navigate]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentUser?.uid, navigate, max, noIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Once the notifications have loaded and been shown, mark any unread ones as
   // read (once per visit) so the bell badge clears after the user has seen them.
   useEffect(() => {
-    if (autoMarkedRef.current || loading) return;
-    const unread = notifications.filter(n => !n.isRead);
-    if (unread.length === 0) return;
+    if (autoMarkedRef.current || loading || !currentUser) return;
+    if (!notifications.some(n => !n.isRead)) return;
     autoMarkedRef.current = true;
-    unread.forEach(n => { updateDoc(doc(db, 'notifications', n.id), { isRead: true }).catch(() => {}); });
-  }, [loading, notifications]);
+    // All unread ones, including older ones not on screen, so the bell clears.
+    forEachPage(currentUser.uid, [where('isRead', '==', false)], (b, d) => b.update(d.ref, { isRead: true })).catch(() => {});
+  }, [loading, notifications, currentUser]);
 
   const markAsRead = async (id) => {
     try { await updateDoc(doc(db, 'notifications', id), { isRead: true }); } catch (e) { console.error(e); }
@@ -55,8 +85,7 @@ const NotificationsPage = () => {
   const markAllAsRead = async () => {
     setProcessing(true);
     try {
-      const unread = notifications.filter(n => !n.isRead);
-      await Promise.all(unread.map(n => updateDoc(doc(db, 'notifications', n.id), { isRead: true })));
+      await forEachPage(currentUser.uid, [where('isRead', '==', false)], (b, d) => b.update(d.ref, { isRead: true }));
     } catch (e) { console.error(e); }
     setProcessing(false);
   };
@@ -68,7 +97,7 @@ const NotificationsPage = () => {
   const clearAll = async () => {
     if (!window.confirm('Clear all notifications?')) return;
     setProcessing(true);
-    try { await Promise.all(notifications.map(n => deleteDoc(doc(db, 'notifications', n.id)))); } catch (e) { console.error(e); }
+    try { await forEachPage(currentUser.uid, [], (b, d) => b.delete(d.ref)); } catch (e) { console.error(e); }
     setProcessing(false);
   };
 
@@ -102,9 +131,9 @@ const NotificationsPage = () => {
     if (n.type === 'project_completed') { navigate('/project-vault'); return; }
     if (n.projectId && projectTypes.includes(n.type)) navigate(`/projects/${n.projectId}`);
     else if (n.type === 'follow' && n.followedBy) navigate(`/profile/${n.followedByName || n.followedBy}`);
-    else if (n.postId) navigate(`/community/post/${n.postId}`);
+    else if (n.postId) navigate(`/post/${n.postId}`);
     else if (n.mentionedByEmail) navigate(`/profile/${n.mentionedByEmail}`);
-    else navigate('/community');
+    else navigate('/proof-wall');
   };
 
   const formatTime = (date) => {
@@ -251,6 +280,17 @@ const NotificationsPage = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {hasMore && (
+        <div className="text-center mt-4">
+          <button
+            onClick={() => setMax((m) => m + PAGE)}
+            className="text-sm font-semibold text-pink-700 border border-pink-200 rounded-lg px-4 py-2 hover:bg-pink-50"
+          >
+            Show older notifications
+          </button>
         </div>
       )}
     </div>

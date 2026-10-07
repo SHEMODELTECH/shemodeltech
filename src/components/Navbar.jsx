@@ -12,7 +12,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useInAppShell } from './AppShell';
 
@@ -24,8 +24,10 @@ const Navbar = ({ cta = null }) => {
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
 
+  // Inside the sidebar layout this bar is hidden and AppLayout already listens
+  // for unread counts, so don't open a second copy of the same listeners.
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser || inAppShell) return;
     const q = query(
       collection(db, 'conversations'),
       where('participants', 'array-contains', currentUser.uid)
@@ -39,14 +41,16 @@ const Navbar = ({ cta = null }) => {
       setUnreadMessages(total);
     }, () => {});
     return () => unsub();
-  }, [currentUser]);
+  }, [currentUser, inAppShell]);
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser || inAppShell) return;
+    // Only a count is shown ("9+" at most), so 100 unread is plenty.
     const q = query(
       collection(db, 'notifications'),
       where('userId', '==', currentUser.uid),
-      where('isRead', '==', false)
+      where('isRead', '==', false),
+      limit(100)
     );
     const unsub = onSnapshot(q, (snap) => {
       setUnreadNotifications(snap.size);
@@ -54,7 +58,7 @@ const Navbar = ({ cta = null }) => {
       console.error('Error listening to notifications:', err);
     });
     return () => unsub();
-  }, [currentUser]);
+  }, [currentUser, inAppShell]);
 
   // When inside AppShell (sidebar layout), don't render the top navbar.
   // This must come AFTER every hook above, so hooks run in the same order
