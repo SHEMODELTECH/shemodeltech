@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { doc, getDoc, updateDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, arrayUnion, arrayRemove, where, getDocs, limitToLast } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, arrayUnion, arrayRemove, where, getDocs, limitToLast, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import LeadCheckIn from '../../components/LeadCheckIn';
 import DeadlineBanner from '../../components/DeadlineBanner';
@@ -15,6 +15,7 @@ import { PresenceView } from '../../components/PresenceBadge';
 import EmojiPicker from '../../components/EmojiPicker';
 import ReportButton from '../../components/ReportButton';
 import { teamForumLink, buildMentionables, findMentions, splitMentions, sendTeamNotices } from '../../utils/teamForum';
+import { getUserDocCached } from '../../utils/firestoreHelpers';
 
 const formatTime = (ts) => {
   if (!ts) return '';
@@ -112,6 +113,16 @@ const ProjectWorkspace = () => {
   const [searchParams] = useSearchParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  // Staff (admins and editors) can open any workspace.
+  const [isStaffUser, setIsStaffUser] = useState(null);
+  useEffect(() => {
+    if (!currentUser?.uid) { setIsStaffUser(false); return undefined; }
+    let alive = true;
+    getUserDocCached(currentUser.uid)
+      .then((u) => { if (alive) setIsStaffUser(['admin', 'editor'].includes((u || {}).role)); })
+      .catch(() => { if (alive) setIsStaffUser(false); });
+    return () => { alive = false; };
+  }, [currentUser?.uid]);
   // ?tab=forum|resources|team opens that tab; &post=ID scrolls to a post or reply.
   const [activeTab, setActiveTab] = useState(() => (['forum', 'resources', 'team'].includes(searchParams.get('tab')) ? searchParams.get('tab') : 'forum'));
   const focusPostRef = useRef(searchParams.get('post'));
@@ -177,9 +188,42 @@ const ProjectWorkspace = () => {
     }
   }, [projectId, currentUser]);
 
+  // The workspace is for the project team only: the lead, approved members,
+  // organization observers, and staff. (The database rules enforce the same.)
+  const isTeamMember = !!(project && currentUser && (
+    project.submitterId === currentUser.uid
+    || (currentUser.email && project.submitterEmail === currentUser.email)
+    || (project.members || []).includes(currentUser.uid)
+    || (currentUser.email && (project.members || []).includes(currentUser.email))
+    || (project.observers || []).includes(currentUser.uid)
+  ));
+  const canAccess = isTeamMember || isStaffUser === true;
+  const accessKnown = !!project && (isTeamMember || isStaffUser !== null);
+
+  // Team-only resources (meeting link, details link, notes) live in
+  // projects/{id}/private/workspace. Older projects kept them on the project
+  // itself; those still show until the lead saves again.
+  useEffect(() => {
+    if (!canAccess || !projectId) return undefined;
+    let alive = true;
+    getDoc(doc(db, 'projects', projectId, 'private', 'workspace'))
+      .then((snap) => {
+        if (!alive || !snap.exists()) return;
+        const d = snap.data();
+        setResources((r) => ({
+          ...r,
+          meetingUrl: d.meetingUrl || r.meetingUrl || '',
+          detailsUrl: d.detailsUrl || r.detailsUrl || '',
+          notes: d.notes || r.notes || '',
+        }));
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [canAccess, projectId]);
+
   // Fetch team members
   useEffect(() => {
-    if (!project) return;
+    if (!project || !canAccess) return;
     const fetchTeam = async () => {
       try {
         // Get approved applications
@@ -220,11 +264,11 @@ const ProjectWorkspace = () => {
       } catch (e) { console.error('Error fetching team:', e); }
     };
     fetchTeam();
-  }, [project, projectId]);
+  }, [project, projectId, canAccess]);
 
   // Listen to forum posts
   useEffect(() => {
-    if (!projectId) return;
+    if (!projectId || !canAccess) return undefined;
     // Keep the live listener bounded: the most recent 500 posts and replies.
     const q = query(collection(db, 'projects', projectId, 'forum'), orderBy('createdAt', 'asc'), limitToLast(500));
     const unsub = onSnapshot(
@@ -235,7 +279,7 @@ const ProjectWorkspace = () => {
       (err) => console.error('Error listening to the forum:', err)
     );
     return () => unsub();
-  }, [projectId]);
+  }, [projectId, canAccess]);
 
   // Release the image preview's object URL when it is replaced, removed, or on unmount.
   useEffect(() => {
@@ -533,7 +577,16 @@ const ProjectWorkspace = () => {
     }
     setSavingResources(true);
     try {
-      await updateDoc(doc(db, 'projects', projectId), { resources });
+      // Meeting link, details link and notes are for the team only.
+      await setDoc(doc(db, 'projects', projectId, 'private', 'workspace'), {
+        meetingUrl: resources.meetingUrl || '',
+        detailsUrl: resources.detailsUrl || '',
+        notes: resources.notes || '',
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+      // Only the submission link stays on the project (reviewers use it). This
+      // also clears older copies of the private links from the project.
+      await updateDoc(doc(db, 'projects', projectId), { resources: { submissionUrl: resources.submissionUrl.trim() } });
       toast.success('Resources updated');
       logActivity(projectId, { type: 'workspace_updated', actor: currentUser?.email, actorName: currentUser?.displayName || currentUser?.email, description: 'Resources updated' });
     } catch (e) { toast.error('Failed to save'); }
@@ -615,6 +668,20 @@ const ProjectWorkspace = () => {
 
   if (loading) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
   if (!project) return <div className="text-center py-20"><p className="text-gray-900 font-semibold">Project not found</p></div>;
+  // Not on this team: a short note instead of the workspace.
+  if (!accessKnown) return <div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div></div>;
+  if (!canAccess) return (
+    <div className="max-w-md mx-auto text-center py-16 px-4">
+      <h1 className="text-xl font-bold text-gray-900">This workspace is for the project team</h1>
+      <p className="text-gray-600 text-sm mt-2">
+        Only the project lead and approved team members can see the team's discussion and resources.
+        You can read about the project and apply to join from its project page.
+      </p>
+      <Link to={`/projects/${projectId}`} className="inline-block mt-5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
+        View the project
+      </Link>
+    </div>
+  );
   if (project.reviewStatus === 'rejected') return (
     <div className="max-w-2xl mx-auto text-center py-20 px-4">
       <h2 className="text-xl font-bold text-red-600 mb-2">This project was rejected</h2>

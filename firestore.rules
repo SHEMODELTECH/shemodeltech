@@ -312,6 +312,18 @@ service cloud.firestore {
  && myEmail() in resource.data.paymentConfirmations)
  );
  }
+ // On this project's team: the lead, an approved member, an organization
+ // observer, or staff. Used for the team-only workspace (forum, private links).
+ function onTeam() {
+ let p = get(/databases/$(database)/documents/projects/$(projectId)).data;
+ return isSignedIn() && (
+ isReviewer()
+ || p.get('submitterId', '') == myUid()
+ || myUid() in p.get('members', [])
+ || myEmail() in p.get('members', [])
+ || myUid() in p.get('observers', [])
+ );
+ }
  function appendOnly(field) {
  return !(field in request.resource.data)
  || !(field in resource.data)
@@ -399,10 +411,17 @@ service cloud.firestore {
  allow update, delete: if isSignedIn()
  && (resource.data.authorUid == myUid() || isAdmin());
  }
+ // Team-only links and notes (meeting link, details link, notes).
+ match /private/{docId} {
+ allow read: if onTeam();
+ allow write: if isReviewer()
+ || get(/databases/$(database)/documents/projects/$(projectId)).data.get('submitterId', '') == myUid();
+ }
+ // The team's discussion: only the team reads it and posts in it.
  match /forum/{msgId} {
- allow read: if isSignedIn();
- allow create: if isSignedIn() && request.resource.data.authorId == myUid();
- allow update: if isSignedIn() && changed(['reactions', 'reactorInfo']);
+ allow read: if onTeam();
+ allow create: if onTeam() && request.resource.data.authorId == myUid();
+ allow update: if onTeam() && changed(['reactions', 'reactorInfo']);
  // Authors edit only the text, tags and edit time of their own post or reply.
  allow update: if isSignedIn() && resource.data.authorId == myUid()
  && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt', 'mentions', 'reactions', 'reactorInfo']);
