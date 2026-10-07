@@ -387,13 +387,13 @@
   "quizParts": 3
  },
  "TechGuard/module-8-secure-coding": {
-  "title": "api.py: a tiny records API with every security gate, for local practice only",
+  "title": "Secure Coding",
   "level": "Beginner",
-  "minutes": 45,
+  "minutes": 75,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 2,
-  "quizParts": 1
+  "modules": 3,
+  "quizParts": 2
  },
  "TechGuard/module-9-devops-security": {
   "title": "DevOps Security",

@@ -24,9 +24,16 @@ const { courseRequirements } = require('../lib/courseRequirements');
 const COURSES_DIR = path.join(__dirname, '..', 'src', 'Pages', 'courses');
 const OUT_FILE = path.join(__dirname, '..', 'src', 'utils', 'foundationsCoursesData.js');
 
+// The first "# " heading outside code blocks (a "# comment" in code isn't a title).
 const firstHeading = (md) => {
-  const m = md.match(/^#\s+(.+?)\s*$/m);
-  return m ? m[1].trim() : null;
+  let inFence = false;
+  for (const line of md.split('\n')) {
+    if (/^\s*```/.test(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    const m = line.match(/^#\s+(.+?)\s*$/);
+    if (m) return m[1].trim();
+  }
+  return null;
 };
 
 const firstParagraph = (md) => {
