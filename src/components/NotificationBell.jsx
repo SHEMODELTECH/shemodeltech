@@ -46,7 +46,7 @@ const NotificationBell = () => {
     );
 
     return unsubscribe;
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Mark notification as read
   const markAsRead = async (notificationId) => {

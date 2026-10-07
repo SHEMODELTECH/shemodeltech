@@ -72,7 +72,9 @@ export const ReactionAvatars = ({ postId, userIds = [], reactionCount, onClick }
     };
 
     fetchAvatarUsers();
-  }, [userIds]);
+    // Key on the ids' contents: a fresh [] each render (e.g. the default) would
+    // otherwise re-run this effect, set state, and re-render in a loop.
+  }, [(userIds || []).slice(0, MAX_AVATARS).join(',')]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (reactionCount === 0) return null;
 

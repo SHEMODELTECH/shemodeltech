@@ -18,7 +18,7 @@ const withMentions = (text, mentions) => {
 };
 
 const Avatar = ({ photo, name, size = 'w-7 h-7' }) => (photo
-  ? <img src={photo} alt="" className={`${size} rounded-full object-cover shrink-0`} />
+  ? <img src={photo} alt="" loading="lazy" className={`${size} rounded-full object-cover shrink-0`} />
   : <span className={`${size} rounded-full bg-pink-100 text-pink-700 text-xs font-bold flex items-center justify-center shrink-0`}>{(name || '?').charAt(0).toUpperCase()}</span>);
 
 const Comment = ({ c, me, activityId, isReply, onReply, onUpdate, onDelete }) => {

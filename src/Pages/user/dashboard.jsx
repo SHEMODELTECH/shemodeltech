@@ -102,12 +102,14 @@ const DashboardOverview = () => {
         }
 
         // Fetch ongoing projects (single where to avoid composite index; filter+sort in JS)
+        let memberProjectDocs = null; // reused below for completed projects (same query)
         try {
           const projectsQ = query(
             collection(db, 'projects'),
             where('members', 'array-contains', currentUser.uid)
           );
           const projectsSnap = await getDocs(projectsQ);
+          memberProjectDocs = projectsSnap.docs;
           const byId = new Map();
           projectsSnap.docs.forEach((d) => byId.set(d.id, { id: d.id, ...d.data() }));
 
@@ -142,12 +144,15 @@ const DashboardOverview = () => {
 
         // Fetch completed projects (single where; filter in JS)
         try {
-          const completedQ = query(
-            collection(db, 'projects'),
-            where('members', 'array-contains', currentUser.uid)
-          );
-          const completedSnap = await getDocs(completedQ);
-          const completedList = completedSnap.docs
+          let completedDocs = memberProjectDocs;
+          if (!completedDocs) {
+            const completedQ = query(
+              collection(db, 'projects'),
+              where('members', 'array-contains', currentUser.uid)
+            );
+            completedDocs = (await getDocs(completedQ)).docs;
+          }
+          const completedList = completedDocs
             .map((d) => ({ id: d.id, ...d.data() }))
             .filter((p) => p.status === 'completed');
           setCompletedProjects(completedList.slice(0, 5));
@@ -165,7 +170,7 @@ const DashboardOverview = () => {
       setLoading(false);
     };
     fetchData();
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Company dashboard: load their posted (paid) projects and applications.
   // The job board section is retired for companies - they hire via paid projects.

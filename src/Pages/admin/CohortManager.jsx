@@ -288,35 +288,41 @@ const CohortManager = () => {
     try {
       // One batch, not N writes, this is the moment members start hitting
       // the page, so it should land atomically.
-      const batch = writeBatch(db);
       // Everyone who should follow the cohort's workspaces: its creator and sponsor.
       const followers = [
         ...(cohort.creator?.uid ? [{ uid: cohort.creator.uid, name: cohort.creator.name, label: 'She Model Tech (created this cohort)' }] : []),
         ...(currentUser && currentUser.uid !== cohort.creator?.uid ? [{ uid: currentUser.uid, name: currentUser.displayName || currentUser.email, label: 'She Model Tech' }] : []),
         ...(cohort.sponsor?.uid ? [{ uid: cohort.sponsor.uid, name: cohort.sponsor.name, label: 'Sponsor' }] : []),
       ];
-      drafts.forEach((p) => {
-        if (followers.length) {
-          batch.update(doc(db, 'projects', p.id), {
-            observers: arrayUnion(...followers.map((f) => f.uid)),
-            observerInfo: arrayUnion(...followers),
-          });
-        }
-        // She Model Tech sets the number of people (and pay on paid cohorts);
-        // the lead creates the roles. No roles are published from the brief.
-        if (cohort.isPaid) {
-          const size = Number(p.maxTeamSize) || 0;
-          batch.update(doc(db, 'projects', p.id), {
-            isActive: true,
-            teamRoles: [],
-            payPerPerson: Number(cohort.payPerPerson) || 0,
-            totalBudget: size * (Number(cohort.payPerPerson) || 0),
-          });
-        } else {
-          batch.update(doc(db, 'projects', p.id), { isActive: true });
-        }
-      });
-      await batch.commit();
+      // One write per project (followers and visibility together), and a new
+      // batch every 450 projects: Firestore refuses a batch over 500 writes.
+      for (let i = 0; i < drafts.length; i += 450) {
+        const batch = writeBatch(db);
+        drafts.slice(i, i + 450).forEach((p) => {
+          const update = followers.length
+            ? {
+                observers: arrayUnion(...followers.map((f) => f.uid)),
+                observerInfo: arrayUnion(...followers),
+              }
+            : {};
+          // She Model Tech sets the number of people (and pay on paid cohorts);
+          // the lead creates the roles. No roles are published from the brief.
+          if (cohort.isPaid) {
+            const size = Number(p.maxTeamSize) || 0;
+            Object.assign(update, {
+              isActive: true,
+              teamRoles: [],
+              payPerPerson: Number(cohort.payPerPerson) || 0,
+              totalBudget: size * (Number(cohort.payPerPerson) || 0),
+            });
+          } else {
+            update.isActive = true;
+          }
+          batch.update(doc(db, 'projects', p.id), update);
+        });
+        // eslint-disable-next-line no-await-in-loop
+        await batch.commit();
+      }
       await setCohortStatus(cohort.id, COHORT_STATUS.LEAD_RECRUITMENT);
 
       // Announce each project on the Proof Wall. Generation deliberately

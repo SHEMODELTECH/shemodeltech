@@ -10,6 +10,7 @@
 // rebuild - nothing here needs editing.
 
 import { COURSES_BY_TRACK } from './foundationsCoursesData';
+import { COURSE_CONTENT } from './courseContent';
 import { applyOverrides } from './courseOverrides';
 
 // Display name + one-line intro per track. Kept here (not derived from a course file)
@@ -44,3 +45,21 @@ export const tracksWithCourses = () =>
   Object.keys(COURSES_BY_TRACK).filter((k) => (COURSES_BY_TRACK[k] || []).length > 0);
 
 export const trackHasCourses = (trackId) => coursesForTrack(trackId).length > 0;
+
+// A built-in course's full text. Course data above is metadata only (title,
+// summary, partCount, ...); the text of each course is its own small chunk,
+// downloaded the first time it's needed. Resolves to '' for courses with no
+// written text (interactive ones). Staff edits are loaded separately
+// (getOverrideContent in courseOverrides.js) and take priority over this.
+const markdownCache = new Map();
+export const loadCourseMarkdown = (trackId, slug) => {
+  const key = `${trackId}/${slug}`;
+  if (!markdownCache.has(key)) {
+    const load = COURSE_CONTENT[key];
+    const p = load ? load().then((m) => m.default || '') : Promise.resolve('');
+    // Don't keep a failed download (e.g. a network blip): let the next call retry.
+    p.catch(() => markdownCache.delete(key));
+    markdownCache.set(key, p);
+  }
+  return markdownCache.get(key);
+};

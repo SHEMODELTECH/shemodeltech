@@ -81,7 +81,7 @@ export const BRAND = {
 
   // Photography
   images: {
-    teamHero: '/Images/brand/team-hero.png',
+    teamHero: '/Images/brand/team-hero.webp',
   },
 };
 

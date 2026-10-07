@@ -68,7 +68,12 @@ const shareCard = async (req, res) => {
 const publicProjects = async (res) => {
   try {
     const snap = await admin.firestore().collection('projects')
-      .where('status', 'in', ['active', 'lead_recruitment', 'setup']).get();
+      .where('status', 'in', ['active', 'lead_recruitment', 'setup'])
+      // Only the fields a card shows (and the filters below), not whole documents.
+      .select('projectTitle', 'title', 'projectDescription', 'description', 'status', 'applicationsOpen',
+        'isPaid', 'isCohort', 'industryTrack', 'timeline', 'featured', 'teamRoles', 'createdAt',
+        'reviewStatus', 'isActive', 'isCompanyPost', 'hidden')
+      .get();
     const projects = snap.docs
       .map((d) => ({ id: d.id, ...d.data() }))
       .filter((p) => p.reviewStatus !== 'rejected' && p.isActive !== false && !p.isCompanyPost && !p.hidden)

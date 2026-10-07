@@ -50,7 +50,7 @@ const AIRecommendations = ({ currentUser }) => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [currentUser, cacheKey]);
+  }, [currentUser?.uid, cacheKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(false); }, [load]);
 

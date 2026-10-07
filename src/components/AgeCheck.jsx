@@ -2,7 +2,8 @@
 // Members who joined before sign-up asked their age are asked once. Until they
 // answer, they can't join paid projects (which need 18+); everything else works.
 import React, { useEffect, useState } from 'react';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
+import { getUserDocCached, invalidateUserDoc } from '../utils/firestoreHelpers';
 import { signOut } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { auth, db } from '../firebase/config';
@@ -17,11 +18,12 @@ const AgeCheck = () => {
   const [dob, setDob] = useState('');
   useEffect(() => {
     if (!currentUser) return;
-    getDoc(doc(db, 'users', currentUser.uid)).then((s) => {
-      const d = s.data() || {};
+    getUserDocCached(currentUser.uid).then((data) => {
+      const d = data || {};
       // A member who has turned 18: paid projects open automatically.
       if (d.isMinor && d.dateOfBirth && (ageFrom(d.dateOfBirth) || 0) >= 18) {
         updateDoc(doc(db, 'users', currentUser.uid), { isMinor: false, ageGroup: '18plus' })
+          .then(() => invalidateUserDoc(currentUser.uid))
           .then(() => toast.success('Happy 18th! Paid projects are now open to you.'))
           .catch(() => {});
         return;
@@ -49,6 +51,7 @@ const AgeCheck = () => {
       await updateDoc(doc(db, 'users', currentUser.uid), age === '13-17'
         ? { ageGroup: '13-17', isMinor: true, guardianConsent: true, guardianConsentAt: new Date(), ...dobFields(dob) }
         : { ageGroup: '18plus' });
+      invalidateUserDoc(currentUser.uid);
       setShow(false);
       toast.success('Thanks!');
     } catch (e) {

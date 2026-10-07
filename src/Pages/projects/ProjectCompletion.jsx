@@ -125,12 +125,12 @@ const ProjectCompletion = () => {
 
       // Initialize evaluations
       if (data.status !== 'completed') {
-        const evals = [];
-        for (const member of membersList) {
+        // Badge counts for all members load in parallel.
+        const evals = await Promise.all(membersList.map(async (member) => {
           // The member's chosen track (one per project); the role's suggestion if none.
           const defaultCategory = member.badgeTrack || mapRoleToCategory(member.role);
           const count = await fetchBadgeCount(member.applicantEmail, defaultCategory);
-          evals.push({
+          return {
             memberId: member.id,
             memberUid: member.applicantUid || member.applicantId || null,
             memberEmail: member.applicantEmail,
@@ -146,8 +146,8 @@ const ProjectCompletion = () => {
             awardBadge: !data.isPaid, // can be set to false (locked false when paid)
             payAmount: Number(member.payAmount) || 0,
             projectCount: count,
-          });
-        }
+          };
+        }));
         setEvaluations(evals);
       }
 

@@ -36,6 +36,11 @@ const VerifyCertificate = () => {
       }
       setResult(r);
       setLoading(false);
+    }).catch(() => {
+      // A failed lookup shows the "not found" result instead of spinning forever.
+      if (dead) return;
+      setResult({ found: false, reason: 'We could not check this certificate right now. Please try again.' });
+      setLoading(false);
     });
     return () => {
       dead = true;

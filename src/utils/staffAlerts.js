@@ -107,11 +107,11 @@ export const alertStaff = async ({ type = 'staff_alert', title, body, link = '/a
  * @param {string} uid
  * @param {object} n  { type, title, body, link, sendEmail = true, ctaLabel, emailTo }
  */
-export const notifyMember = async (uid, { type = 'update', title, body, link, sendEmail = true, ctaLabel, emailTo } = {}) => {
+export const notifyMember = async (uid, { type = 'update', title, body, link, sendEmail = true, ctaLabel, emailTo, push = true } = {}) => {
   if (!uid) return;
   try {
     await bell(uid, { type, title, body, link });
-    sendPush({ recipientUid: uid, title, body, link });
+    if (push) sendPush({ recipientUid: uid, title, body, link });
     if (sendEmail) {
       let to = emailTo;
       if (!to) {
@@ -123,4 +123,28 @@ export const notifyMember = async (uid, { type = 'update', title, body, link, se
   } catch (e) {
     console.warn('notifyMember failed:', e?.message);
   }
+};
+
+/**
+ * Tell many members the same thing (announcements). Phone notifications go out
+ * in groups (sendPush splits the list) instead of one request per person, and the bell and
+ * email go to a few people at a time in parallel, so a long list finishes in
+ * a reasonable time without flooding the server.
+ * @param {Array<{uid: string, sendEmail?: boolean, emailTo?: string}>} people
+ * @param {object} n  { type, title, body, link, ctaLabel }
+ * @param {function} [onProgress] called with (done, total)
+ * @returns {Promise<number>} how many members were told
+ */
+export const notifyMembers = async (people, n, onProgress) => {
+  const list = (people || []).filter((p) => p && p.uid);
+  if (list.length) sendPush({ recipientUids: list.map((p) => p.uid), title: n.title, body: n.body, link: n.link });
+  let done = 0;
+  for (let i = 0; i < list.length; i += 5) {
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all(list.slice(i, i + 5).map((p) =>
+      notifyMember(p.uid, { ...n, sendEmail: p.sendEmail !== false, emailTo: p.emailTo, push: false })));
+    done = Math.min(i + 5, list.length);
+    if (onProgress) onProgress(done, list.length);
+  }
+  return done;
 };

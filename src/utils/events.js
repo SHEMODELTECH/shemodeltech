@@ -47,9 +47,19 @@ export const formatWhen = (e) => {
 };
 
 // ---- Reading ----
+// Published events are shared for one minute between the dashboard card and the
+// Events page, so moving between them doesn't download every event again.
+let publishedCache = { at: 0, promise: null };
 export const listPublishedEvents = async () => {
-  const s = await getDocs(query(collection(db, 'events'), where('published', '==', true)));
-  return s.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => toMs(a.startAt) - toMs(b.startAt));
+  if (publishedCache.promise && Date.now() - publishedCache.at < 60 * 1000) return publishedCache.promise;
+  const promise = getDocs(query(collection(db, 'events'), where('published', '==', true))).then((s) =>
+    s.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => toMs(a.startAt) - toMs(b.startAt))
+  );
+  publishedCache = { at: Date.now(), promise };
+  promise.catch(() => {
+    if (publishedCache.promise === promise) publishedCache = { at: 0, promise: null };
+  });
+  return promise;
 };
 export const listAllEvents = async () => {
   const s = await getDocs(collection(db, 'events'));
@@ -79,6 +89,7 @@ export const getJoinUrl = async (eventId) => {
 
 // ---- Staff ----
 export const saveEvent = async (id, data, joinUrl) => {
+  publishedCache = { at: 0, promise: null };
   let eventId = id;
   if (id) {
     await updateDoc(doc(db, 'events', id), { ...data, updatedAt: serverTimestamp() });

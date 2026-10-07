@@ -2,6 +2,29 @@
 
 import React from 'react';
 
+// After a deploy, an open tab still points at the old JS chunk names; opening a
+// lazy page then fails with ChunkLoadError. One automatic reload fetches the
+// new build. The timestamp guard stops a reload loop if the chunk is truly gone.
+const RELOAD_KEY = 'smt_chunk_reload_at';
+const isChunkLoadError = (error) => {
+  const msg = String(error?.message || '');
+  return error?.name === 'ChunkLoadError'
+    || /Loading (CSS )?chunk [\w-]+ failed/i.test(msg)
+    || /Failed to fetch dynamically imported module/i.test(msg)
+    || /Importing a module script failed/i.test(msg);
+};
+const reloadOnceForChunkError = () => {
+  try {
+    const last = Number(sessionStorage.getItem(RELOAD_KEY) || 0);
+    if (Date.now() - last < 30000) return false;
+    sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
+  } catch (_) {
+    return false; // no storage: show the friendly screen instead of risking a loop
+  }
+  window.location.reload();
+  return true;
+};
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +35,15 @@ class ErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
+  componentDidUpdate(prevProps) {
+    // Navigating to another page clears the error screen.
+    if (this.state.hasError && prevProps.resetKey !== this.props.resetKey) {
+      this.setState({ hasError: false });
+    }
+  }
+
   componentDidCatch(error, errorInfo) {
+    if (isChunkLoadError(error) && reloadOnceForChunkError()) return;
     if (process.env.NODE_ENV === 'development') {
       console.error('Error Boundary caught:', error, errorInfo);
     }

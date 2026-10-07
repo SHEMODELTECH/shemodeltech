@@ -699,6 +699,7 @@ const TeacherEditor = ({ access }) => {
   const { currentUser } = useAuth();
   const fileRef = useRef(null);
   const [loaded, setLoaded] = useState(!id);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [existing, setExisting] = useState(null);
   const [meta, setMeta] = useState({
     title: '',
@@ -753,6 +754,7 @@ const TeacherEditor = ({ access }) => {
     })().catch((e) => {
       console.error(e);
       toast.error('Could not load this course.');
+      setLoadFailed(true); // show a message instead of a spinner that never ends
     });
   }, [id, navigate]);
 
@@ -843,6 +845,14 @@ const TeacherEditor = ({ access }) => {
     if (previewRef.current && rendered) enhanceCourseContent(previewRef.current, 'smt-teacher-preview');
   }, [rendered]);
 
+  if (!loaded && loadFailed) {
+    return (
+      <div className="max-w-lg mx-auto text-center py-24 px-4">
+        <p className="text-gray-700">Could not load this course. Check your connection and try again.</p>
+        <Link to="/teacher" className="inline-block mt-4 text-pink-700 font-semibold hover:underline">Back to the Mentor Hub</Link>
+      </div>
+    );
+  }
   if (!loaded) {
     return (
       <div className="flex justify-center py-24">
@@ -1531,6 +1541,7 @@ const TeacherViewer = ({ access }) => {
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [content, setContent] = useState(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -1545,6 +1556,7 @@ const TeacherViewer = ({ access }) => {
     })().catch((e) => {
       console.error(e);
       toast.error('Could not open this course.');
+      setFailed(true); // show a message instead of a spinner that never ends
     });
   }, [id, navigate]);
 
@@ -1585,6 +1597,14 @@ const TeacherViewer = ({ access }) => {
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   };
 
+  if (failed && (!course || content == null)) {
+    return (
+      <div className="max-w-lg mx-auto text-center py-24 px-4">
+        <p className="text-gray-700">Could not open this course. Check your connection and try again.</p>
+        <Link to="/teacher" className="inline-block mt-4 text-pink-700 font-semibold hover:underline">Back to the Mentor Hub</Link>
+      </div>
+    );
+  }
   if (!course || content == null) {
     return (
       <div className="flex justify-center py-24">
@@ -1665,6 +1685,7 @@ const TeacherFullScreen = () => {
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [content, setContent] = useState(null);
+  const [failed, setFailed] = useState(false);
   const [presenting, setPresenting] = useState(false);
   const stageRef = useRef(null);
   const proseRef = useRef(null);
@@ -1682,6 +1703,7 @@ const TeacherFullScreen = () => {
     })().catch((e) => {
       console.error(e);
       toast.error('Could not open this course.');
+      setFailed(true); // show a message instead of a spinner that never ends
     });
   }, [id, navigate]);
 
@@ -1705,6 +1727,14 @@ const TeacherFullScreen = () => {
     else if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
   };
 
+  if (failed && (!course || content == null)) {
+    return (
+      <div className="max-w-lg mx-auto text-center py-24 px-4">
+        <p className="text-gray-700">Could not open this course. Check your connection and try again.</p>
+        <Link to="/teacher" className="inline-block mt-4 text-pink-700 font-semibold hover:underline">Back to the Mentor Hub</Link>
+      </div>
+    );
+  }
   if (!course || content == null) {
     return (
       <div className="flex justify-center items-center h-screen">

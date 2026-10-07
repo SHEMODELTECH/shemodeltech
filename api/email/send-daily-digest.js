@@ -92,7 +92,7 @@ module.exports = async function handler(req, res) {
  // Unread messages: how many people each account hasn't replied to / read yet.
  const unreadPeople = {};
  try {
- const convs = await db.collection('conversations').get();
+ const convs = await db.collection('conversations').select('unreadBy').get();
  convs.docs.forEach((c) => {
  Object.entries(c.data().unreadBy || {}).forEach(([uid, n]) => {
  if (Number(n) > 0) unreadPeople[uid] = (unreadPeople[uid] || 0) + 1;
@@ -117,24 +117,26 @@ module.exports = async function handler(req, res) {
  const todaysHalf = Math.floor(Date.now() / 86400000) % 2;
  if (batching) console.log(`Daily digest: ${eligible} members, sending batch ${todaysHalf + 1} of 2 today`);
 
- for (const uDoc of usersSnap.docs) {
+ // Each member is handled on her own, a few at a time, so the run finishes
+ // inside the serverless time limit (one at a time took minutes).
+ const processUser = async (uDoc) => {
  const user = { uid: uDoc.id, ...uDoc.data() };
- if (batching && halfOf(user.uid) !== todaysHalf) { skipped++; continue; }
- if (!user.email || !user.email.includes('@')) { skipped++; continue; }
+ if (batching && halfOf(user.uid) !== todaysHalf) { skipped++; return; }
+ if (!user.email || !user.email.includes('@')) { skipped++; return; }
  // Respect opt-out (default ON unless explicitly disabled).
- if (user.emailPreferences && user.emailPreferences.reminders === false) { skipped++; continue; }
+ if (user.emailPreferences && user.emailPreferences.reminders === false) { skipped++; return; }
  // Companies: no project or learning emails, only unread messages.
  if (user.isCompany) {
  const n = unreadPeople[user.uid] || 0;
- if (!n) { skipped++; continue; }
+ if (!n) { skipped++; return; }
  try {
  await sendMail({ to: user.email, subject: unreadItem(n).headline, html: renderEmail(user.displayName || user.email.split('@')[0], [unreadItem(n)], false) });
  sent++;
  } catch (e) { console.error(`${user.email}:`, e.message); failed++; }
- continue;
+ return;
  }
  // "3 times a week" members: Monday, Wednesday and Friday only.
- if (user.emailPreferences?.dailyFrequency === '3x' && ![1, 3, 5].includes(new Date().getUTCDay())) { skipped++; continue; }
+ if (user.emailPreferences?.dailyFrequency === '3x' && ![1, 3, 5].includes(new Date().getUTCDay())) { skipped++; return; }
 
  const items = []; // each: { headline, detail, link }
  const firstName = (user.displayName || '').split(' ')[0] || 'there';
@@ -379,7 +381,7 @@ module.exports = async function handler(req, res) {
  if (!testTo) db.collection('users').doc(user.uid).update({ missYouAt: new Date().toISOString() }).catch(() => {});
  }
 
- if (items.length === 0) { skipped++; continue; }
+ if (items.length === 0) { skipped++; return; }
 
  const name = user.displayName || user.email.split('@')[0];
  const isNudgeOnly = items.length === 1 && !!items[0].suggestions;
@@ -392,6 +394,14 @@ module.exports = async function handler(req, res) {
  });
  sent++;
  } catch (e) { console.error(`${user.email}:`, e.message); failed++; }
+ };
+ const USER_CONCURRENCY = 8;
+ const docs = usersSnap.docs;
+ for (let i = 0; i < docs.length; i += USER_CONCURRENCY) {
+ // eslint-disable-next-line no-await-in-loop
+ await Promise.all(docs.slice(i, i + USER_CONCURRENCY).map((d) => processUser(d).catch((e) => {
+ console.error(`daily digest for ${d.id} failed:`, e.message); failed++;
+ })));
  }
  try { await db.collection('email_logs').add({ type: 'daily_reminder', timestamp: new Date(), stats: { sent, skipped, failed } }); } catch (_) {}
 

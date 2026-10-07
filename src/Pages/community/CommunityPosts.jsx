@@ -15,6 +15,7 @@ import {
   limit, 
   startAfter, 
   getDocs,
+  getCountFromServer,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -188,17 +189,24 @@ const CommunityPosts = () => {
     setReactionCounts(prev => ({ ...prev, ...counts }));
   };
 
+  // Posts whose reply count has already been fetched (local updates keep it current),
+  // so live snapshot updates (e.g. a like) don't re-count every post's replies.
+  const countedReplyPostsRef = useRef(new Set());
+
   const loadReplyCounts = async (posts) => {
     const counts = {};
+    const toCount = posts.filter(p => !countedReplyPostsRef.current.has(p.id));
+    toCount.forEach(p => countedReplyPostsRef.current.add(p.id));
+    if (toCount.length === 0) return;
     
-    // Fetch reply counts in parallel instead of sequentially
+    // Fetch reply counts in parallel (aggregate count - doesn't download reply docs)
     await Promise.all(
-      posts.map(async (post) => {
+      toCount.map(async (post) => {
         try {
           await safeFirestoreOperation(async () => {
             const repliesQuery = query(collection(db, 'posts', post.id, 'replies'));
-            const snapshot = await getDocs(repliesQuery);
-            counts[post.id] = snapshot.size;
+            const snapshot = await getCountFromServer(repliesQuery);
+            counts[post.id] = snapshot.data().count;
           }, `loading reply count for post ${post.id}`);
         } catch (error) {
           counts[post.id] = 0;
@@ -210,7 +218,9 @@ const CommunityPosts = () => {
   };
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    let unsubscribe = null;
+    countedReplyPostsRef.current = new Set();
+    const fetchPosts = () => {
       try {
         let q;
         
@@ -234,7 +244,7 @@ const CommunityPosts = () => {
           );
         }
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        unsubscribe = onSnapshot(q, (snapshot) => {
           const postsData = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
@@ -264,8 +274,6 @@ const CommunityPosts = () => {
           
           setLoading(false);
         });
-
-        return unsubscribe;
       } catch (error) {
         console.error('Error setting up posts listener:', error);
         setLoading(false);
@@ -273,7 +281,8 @@ const CommunityPosts = () => {
     };
 
     fetchPosts();
-  }, [currentUser, viewMode]);
+    return () => { if (unsubscribe) unsubscribe(); };
+  }, [currentUser?.uid, viewMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadMorePosts = async () => {
     if (!hasMore || loadingMore || !lastDoc) return;
@@ -604,7 +613,7 @@ const CommunityPosts = () => {
           authorTitle: currentUser.profile?.title || '',
           taggedUsers: combined,
           taggedUserIds: combined.map(user => user.uid),
-          mentions: combined.map(user => `@${user.displayName || user.email.split('@')[0]}`),
+          mentions: combined.map(user => `@${user.displayName || (user.email || '').split('@')[0]}`),
           createdAt: serverTimestamp()
         });
 

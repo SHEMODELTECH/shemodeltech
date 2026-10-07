@@ -7,7 +7,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, TRACK_ORDER, certificateErrorToast, coursePartTitles, formatTime, look, useLearning } from './shared';
-import { coursesForTrack, trackMeta, tracksWithCourses } from '../../utils/foundationsCourses';
+import { coursesForTrack, loadCourseMarkdown, trackMeta, tracksWithCourses } from '../../utils/foundationsCourses';
 import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { courseRating } from '../../utils/mentorStats';
 import { doc, getDoc } from 'firebase/firestore';
@@ -143,11 +143,27 @@ const LearningHome = ({ mine = false }) => {
   const progressOf = (c) => {
     // Only in-progress cards show a bar; skip the work for everything else.
     if (statusOf(c) !== 'enrolled') return 0;
-    const n = coursePartTitles(c).length || 1;
+    const n = c.partCount || coursePartTitles(c).length || 1;
     return Math.min(1, (lr.lastPartOf(c.track, c.slug) - 1) / n);
   };
 
   const inProgress = all.filter((c) => statusOf(c) === 'enrolled');
+
+  // Course text (for searching inside courses) is downloaded only once someone
+  // searches; until then, search covers titles, summaries, and module titles.
+  const [texts, setTexts] = useState(null);
+  const searching = !!query.trim();
+  useEffect(() => {
+    if (!searching || texts) return undefined;
+    let alive = true;
+    const keys = tracksWithCourses().flatMap((t) => coursesForTrack(t).filter((c) => c.hasMarkdown).map((c) => [t, c.slug]));
+    Promise.all(keys.map(([t, s]) => loadCourseMarkdown(t, s).then((md) => [`${t}/${s}`, md], () => [`${t}/${s}`, ''])))
+      .then((pairs) => alive && setTexts(Object.fromEntries(pairs)));
+    return () => {
+      alive = false;
+    };
+  }, [searching, texts]);
+  const textOf = (c) => c.markdown || (texts && texts[`${c.track}/${c.slug}`]) || '';
 
   // Search: every word must appear somewhere in the course (title, track,
   // level, summary, part or module titles, or the course text), in any order.
@@ -158,14 +174,15 @@ const LearningHome = ({ mine = false }) => {
         title: c.title.toLowerCase(),
         meta: `${trackMeta(c.track).label} ${look(c.track).short} ${c.track} ${c.level}`.toLowerCase(),
         // Headings stand in for part titles here: cheap, and good enough to search.
-        about: `${c.summary} ${((c.markdown || '').match(/^#{2,3}\s+.+$/gm) || []).join(' ')} ${(c.modules || []).map((m) => m.title).join(' ')} ${(c.parts || []).join(' ')}`.toLowerCase(),
-        body: (c.markdown || '')
+        about: `${c.summary} ${(textOf(c).match(/^#{2,3}\s+.+$/gm) || []).join(' ')} ${(c.modules || []).map((m) => m.title).join(' ')} ${(c.parts || []).join(' ')}`.toLowerCase(),
+        body: textOf(c)
           .replace(/```[\s\S]*?```/g, ' ')
           .replace(/<!--[\s\S]*?-->/g, ' ')
           .replace(/[#*_`>|[\]()-]/g, ' ')
           .toLowerCase(),
       })),
-    [all]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [all, texts]
   );
   const words = query
     .toLowerCase()

@@ -59,8 +59,13 @@ export const PromotedStrip = () => {
       const featuredJobs = j ? j.docs.map((d) => ({ id: d.id, ...d.data() })).filter(open) : [];
       // Only keep promoted jobs whose company is still a Champion.
       let promotedJobs = pr ? pr.docs.map((d) => ({ id: d.id, ...d.data() })).filter(open) : [];
-      const tiers = await Promise.all(promotedJobs.map((x) => getDoc(doc(db, 'users', x.companyUid)).then((u) => companyTier(u.data())).catch(() => null)));
-      promotedJobs = promotedJobs.filter((_, i) => tiers[i] === 'champion');
+      // One read per company (not per job), skipping jobs with no company.
+      const companyUids = [...new Set(promotedJobs.map((x) => x.companyUid).filter(Boolean))];
+      const tierByUid = {};
+      await Promise.all(companyUids.map((uid) => getDoc(doc(db, 'users', uid))
+        .then((u) => { tierByUid[uid] = companyTier(u.data()); })
+        .catch(() => {})));
+      promotedJobs = promotedJobs.filter((x) => tierByUid[x.companyUid] === 'champion');
       const seen = new Set();
       const jobs = [...promotedJobs, ...featuredJobs]
         .filter((x) => (seen.has(x.id) ? false : seen.add(x.id)))
@@ -70,7 +75,7 @@ export const PromotedStrip = () => {
             .map((x) => ({ kind: x.isPaid ? 'Paid project' : 'Project', title: x.projectTitle, sub: x.projectField || x.industryTrack || '', href: `/projects/${x.id}` }))
         : [];
       setItems([...jobs, ...projects].slice(0, 4));
-    });
+    }).catch(() => setItems([]));
   }, []);
   if (!items || items.length === 0) return null;
   return (

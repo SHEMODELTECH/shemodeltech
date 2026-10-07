@@ -44,11 +44,13 @@ export const useNotifications = () => {
     const unsubscribe = onSnapshot(
       notificationsQuery,
       (snapshot) => {
-        const notificationsData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate() || new Date()
-        }));
+        const notificationsData = snapshot.docs.map(doc => {
+          const data = doc.data();
+          const c = data.createdAt;
+          // Some notifications store createdAt as an ISO string or millis, not a Timestamp.
+          const createdAt = typeof c?.toDate === 'function' ? c.toDate() : (c ? new Date(c) : new Date());
+          return { id: doc.id, ...data, createdAt };
+        });
 
         setNotifications(notificationsData);
         setUnreadCount(notificationsData.filter(n => !n.isRead).length);

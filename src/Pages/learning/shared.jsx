@@ -18,7 +18,7 @@ import { coursesForTrack, trackMeta } from '../../utils/foundationsCourses';
 import { renderCourse } from '../../utils/renderCourseMarkdown';
 import { issueCertificate } from '../../utils/learningCertificates';
 import { courseKey } from '../../utils/mentorStats';
-import { LABS_CSS, enhanceHtml, enhancePython, mountLabs } from './labs';
+import { LABS_CSS, enhanceHtml, enhancePython, mountLabs, stopPython } from './labs';
 import { VIDEO_CSS, isVideoUrl, makeVideoElement } from '../../utils/videoEmbed';
 import TechDevImg from '../../Images/TechDev.png';
 import TechArchsImg from '../../Images/TechArchs.png';
@@ -65,12 +65,15 @@ export const coursePartTitles = (course) => {
   if (course.kind === 'interactive') return (course.modules || []).map((m) => m.title);
   if (course.kind === 'published-html') return [course.title];
   // Published notes load their text separately; don't cache an empty result.
+  // Built-in courses load their text on demand too (loadCourseMarkdown).
   if (!course.markdown) return [];
-  if (!partsCache.has(course.slug)) {
+  // Keyed by the text itself, so a staff-edited version doesn't reuse the
+  // original's part titles (or the other way round).
+  if (!partsCache.has(course.markdown)) {
     const r = renderCourse(course.markdown);
-    partsCache.set(course.slug, splitParts(r.html, r.toc).map((p) => p.title));
+    partsCache.set(course.markdown, splitParts(r.html, r.toc).map((p) => p.title));
   }
-  return partsCache.get(course.slug);
+  return partsCache.get(course.markdown);
 };
 
 
@@ -695,6 +698,9 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
   const proseRef = useRef(null);
   const [scrollPct, setScrollPct] = useState(0);
   const [listOpen, setListOpen] = useState(false);
+
+  // Free the in-browser Python runtime when the reader closes.
+  useEffect(() => () => stopPython(), []);
 
   // New part: start at the top.
   useEffect(() => {

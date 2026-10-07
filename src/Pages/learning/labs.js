@@ -410,6 +410,20 @@ const getWorker = () => {
   return worker;
 };
 
+// Leaving the course reader: stop the Python worker so Pyodide (tens of MB)
+// doesn't stay in memory on other pages. Any run still going ends as stopped.
+export const stopPython = () => {
+  if (!worker) return;
+  worker.terminate();
+  worker = null;
+  workerStarted = false;
+  pending.forEach((p) => {
+    clearTimeout(p.timer);
+    p.resolve({ ok: false, out: '', error: 'Stopped.' });
+  });
+  pending.clear();
+};
+
 const runPython = (code, fileName) =>
   new Promise((resolve) => {
     const id = ++seq;

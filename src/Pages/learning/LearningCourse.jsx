@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, CourseReader, certificateErrorToast, CourseReferences, InteractivePlayer, ModuleSummary, coursePartTitles, formatTime, look, useLearning } from './shared';
-import { coursesForTrack } from '../../utils/foundationsCourses';
+import { coursesForTrack, loadCourseMarkdown } from '../../utils/foundationsCourses';
 import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
 import { toast } from 'react-toastify';
@@ -65,10 +65,41 @@ const LearningCourse = ({ reading = false }) => {
   // Built-in course whose text staff edited: load the edited text.
   const [editedText, setEditedText] = useState(null);
   const needsEdited = !isPublished && baseCourse?.overrideHasContent;
+  const [editedDone, setEditedDone] = useState(false); // finished trying to load the edited text
   useEffect(() => {
-    if (!needsEdited) { setEditedText(null); return; }
-    getOverrideContent(track, slug).then(setEditedText).catch(() => setEditedText(null));
+    setEditedText(null);
+    setEditedDone(false);
+    if (!needsEdited) return undefined;
+    let alive = true;
+    getOverrideContent(track, slug)
+      .then((t) => alive && setEditedText(t))
+      .catch(() => alive && setEditedText(null))
+      .finally(() => alive && setEditedDone(true));
+    return () => {
+      alive = false;
+    };
   }, [needsEdited, track, slug, overridesVersion]);
+
+  // A built-in written course's text is downloaded on demand (its own small
+  // chunk), not with the course list. Staff edits (above) win over it.
+  const needsBuiltIn = !isPublished && !!baseCourse?.hasMarkdown;
+  const [builtIn, setBuiltIn] = useState({ key: null, text: null, error: false });
+  const builtInKey = `${track}/${slug}`;
+  const [builtInTry, setBuiltInTry] = useState(0);
+  useEffect(() => {
+    if (!needsBuiltIn) return undefined;
+    let alive = true;
+    setBuiltIn({ key: builtInKey, text: null, error: false });
+    loadCourseMarkdown(track, slug)
+      .then((text) => alive && setBuiltIn({ key: builtInKey, text, error: false }))
+      .catch(() => alive && setBuiltIn({ key: builtInKey, text: null, error: true }));
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [needsBuiltIn, builtInKey, builtInTry]);
+  const builtInText = builtIn.key === builtInKey ? builtIn.text : null;
+  const builtInError = needsBuiltIn && builtIn.key === builtInKey && builtIn.error;
 
   const pubMeta = isPublished && published ? published.find((p) => p.slug === slug) : null;
   useEffect(() => {
@@ -101,13 +132,16 @@ const LearningCourse = ({ reading = false }) => {
   }, [isPublished, authorUid, track, slug]);
 
   const course = useMemo(() => {
-    if (baseCourse && !isPublished) return editedText != null ? { ...baseCourse, markdown: editedText } : baseCourse;
+    if (baseCourse && !isPublished) {
+      if (editedText != null) return { ...baseCourse, markdown: editedText };
+      return builtInText != null ? { ...baseCourse, markdown: builtInText } : baseCourse;
+    }
     if (!baseCourse || !isPublished) return baseCourse;
     if (pubContent == null) return baseCourse;
     return baseCourse.kind === 'published-html'
       ? { ...baseCourse, html: pubContent }
       : { ...baseCourse, markdown: pubContent };
-  }, [baseCourse, isPublished, pubContent, editedText]);
+  }, [baseCourse, isPublished, pubContent, editedText, builtInText]);
   const parts = useMemo(() => (course ? coursePartTitles(course) : []), [course]);
   // Only enrolled learners (and mentors and staff) can rate, comment, and post in
   // the forum. Enrolment is read from the learner's account, and the database
@@ -162,10 +196,17 @@ const LearningCourse = ({ reading = false }) => {
         return;
       }
       let replied = false;
-      for (const t of others.slice(0, 50)) {
+      // Check threads 10 at a time (in parallel), stopping at the first reply
+      // found: much faster than one request after another, same reads at most.
+      const toCheck = others.slice(0, 50);
+      for (let i = 0; i < toCheck.length && !replied; i += 10) {
         // eslint-disable-next-line no-await-in-loop
-        const r = await getDocs(query(collection(db, 'course_forum', courseKey(track, slug), 'threads', t.id, 'replies'), where('uid', '==', currentUser.uid), limit(1)));
-        if (!r.empty) { replied = true; break; }
+        const rs = await Promise.all(
+          toCheck.slice(i, i + 10).map((t) =>
+            getDocs(query(collection(db, 'course_forum', courseKey(track, slug), 'threads', t.id, 'replies'), where('uid', '==', currentUser.uid), limit(1)))
+          )
+        );
+        replied = rs.some((r) => !r.empty);
       }
       setForumReq({ required: true, done: replied });
     } catch (_) {
@@ -176,7 +217,10 @@ const LearningCourse = ({ reading = false }) => {
     reloadForum();
   }, [reloadForum]);
   const [summaryGate, setSummaryGate] = useState(false); // interactive courses: summary before completing
-  const waiting = isPublished && (published === null || (baseCourse && pubContent == null));
+  const waiting =
+    (isPublished && (published === null || (baseCourse && pubContent == null))) ||
+    // Built-in course: wait for its text (or the staff-edited text) unless loading failed.
+    (needsBuiltIn && editedText == null && !builtInError && (builtInText == null || (needsEdited && !editedDone)));
 
   const enrolled = course && lr.isEnrolled(track, slug);
   const done = course && lr.isDone(track, slug);
@@ -200,6 +244,21 @@ const LearningCourse = ({ reading = false }) => {
       <LearningLayout>
         <div className="flex justify-center py-24">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500" />
+        </div>
+      </LearningLayout>
+    );
+  }
+  if (builtInError && editedText == null) {
+    return (
+      <LearningLayout>
+        <div className="max-w-xl mx-auto px-4 py-24 text-center">
+          <p className="text-gray-700 mb-4">We couldn't load this course. Check your connection and try again.</p>
+          <button
+            onClick={() => setBuiltInTry((n) => n + 1)}
+            className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg"
+          >
+            Try again
+          </button>
         </div>
       </LearningLayout>
     );

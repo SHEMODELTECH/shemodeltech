@@ -3,19 +3,33 @@
 // completed each course (from issued certificates) and learner ratings.
 // Everything read here is public, so it works for any visitor.
 
-import { collection, getCountFromServer, getDocs, query, where } from 'firebase/firestore';
+import { collection, count, getAggregateFromServer, getCountFromServer, getDocs, query, sum, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { PUBLISHED_PREFIX, listPublished } from './learningPublished';
 
 export const courseKey = (track, slug) => `${track}__${slug}`.replace(/[^A-Za-z0-9_-]/g, '-');
 const feedbackKey = courseKey;
 
+// { count, sum } of a course's star ratings. Counted on the server, so a
+// catalog of rated courses doesn't download every rating; falls back to
+// reading the ratings if the aggregate query isn't available.
+const ratingTotals = async (track, slug) => {
+  const col = collection(db, 'course_feedback', feedbackKey(track, slug), 'ratings');
+  try {
+    const agg = await getAggregateFromServer(col, { n: count(), total: sum('stars') });
+    return { count: agg.data().n || 0, sum: agg.data().total || 0 };
+  } catch (_) {
+    const snap = await getDocs(col);
+    const stars = snap.docs.map((d) => d.data().stars || 0);
+    return { count: stars.length, sum: stars.reduce((a, b) => a + b, 0) };
+  }
+};
+
 // Ratings only (for course cards): { avg, count }.
 export const courseRating = async (track, slug) => {
   try {
-    const snap = await getDocs(collection(db, 'course_feedback', feedbackKey(track, slug), 'ratings'));
-    const stars = snap.docs.map((d) => d.data().stars || 0);
-    return { count: stars.length, avg: stars.length ? stars.reduce((a, b) => a + b, 0) / stars.length : 0 };
+    const r = await ratingTotals(track, slug);
+    return { count: r.count, avg: r.count ? r.sum / r.count : 0 };
   } catch (_) {
     return { count: 0, avg: 0 };
   }
@@ -26,16 +40,15 @@ export const courseStats = async (track, slug) => {
   const [certs, ratings, enrolled] = await Promise.all([
     // A server-side count: doesn't download every certificate.
     getCountFromServer(query(collection(db, 'learning_certificates'), where('slug', '==', slug))).catch(() => null),
-    getDocs(collection(db, 'course_feedback', feedbackKey(track, slug), 'ratings')).catch(() => null),
+    ratingTotals(track, slug).catch(() => null),
     // Learners who enrolled (course_enrollments/{course}/learners/{uid}).
     getCountFromServer(collection(db, 'course_enrollments', courseKey(track, slug), 'learners')).catch(() => null),
   ]);
-  const stars = ratings ? ratings.docs.map((d) => d.data().stars || 0) : [];
   return {
     completions: certs ? certs.data().count : 0,
     enrollments: enrolled ? enrolled.data().count : 0,
-    ratingCount: stars.length,
-    ratingSum: stars.reduce((a, b) => a + b, 0),
+    ratingCount: ratings ? ratings.count : 0,
+    ratingSum: ratings ? ratings.sum : 0,
   };
 };
 

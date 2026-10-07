@@ -12,7 +12,8 @@ import {
   doc,
   getDoc,
   orderBy,
-  limit
+  limit,
+  documentId
 } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { toast } from 'react-toastify';
@@ -224,11 +225,51 @@ const FollowersFollowing = () => {
         return;
       }
 
-      const badgesQuery = query(collection(db, 'member_badges'), limit(2000));
-      const badgesSnapshot = await getDocs(badgesQuery);
+      // Batch-fetch related data with 'in' queries (chunks of 30) instead of
+      // 2-3 queries per member (was an N+1 of ~1,500 reads for 500 members).
+      const memberEmails = [...new Set(
+        usersSnapshot.docs.map(d => d.data().email).filter(e => e && e.includes('@'))
+      )];
+      const fetchIn = async (coll, field, values) => {
+        const out = [];
+        for (let i = 0; i < values.length; i += 30) {
+          const chunk = values.slice(i, i + 30);
+          try {
+            const snap = await getDocs(query(collection(db, coll), where(field, 'in', chunk)));
+            out.push(...snap.docs);
+          } catch (chunkError) {
+            console.error(`Error fetching ${coll} batch:`, chunkError);
+          }
+        }
+        return out;
+      };
+
+      const [badgeDocs, membershipDocs, certificateDocs] = await Promise.all([
+        fetchIn('member_badges', 'memberEmail', memberEmails),
+        fetchIn('group_members', 'userEmail', memberEmails),
+        fetchIn('certificates', 'recipientEmail', memberEmails),
+      ]);
+
+      const groupIds = [...new Set(membershipDocs.map(d => d.data().groupId).filter(id => typeof id === 'string' && id))];
+      const groupDocs = await fetchIn('groups', documentId(), groupIds);
+      const groupsById = {};
+      groupDocs.forEach(g => { groupsById[g.id] = g.data(); });
+
+      const membershipsByEmail = {};
+      membershipDocs.forEach(d => {
+        const email = d.data().userEmail;
+        if (!email) return;
+        (membershipsByEmail[email] = membershipsByEmail[email] || []).push(d);
+      });
+
+      const certificateCountByEmail = {};
+      certificateDocs.forEach(d => {
+        const email = d.data().recipientEmail;
+        if (email) certificateCountByEmail[email] = (certificateCountByEmail[email] || 0) + 1;
+      });
       
       const badgesByMember = {};
-      badgesSnapshot.docs.forEach(doc => {
+      badgeDocs.forEach(doc => {
         try {
           const badge = { id: doc.id, ...doc.data() };
           const email = badge.memberEmail;
@@ -286,20 +327,13 @@ const FollowersFollowing = () => {
               profile: userData.profile || {}
             };
 
-            const projectsQuery = query(
-              collection(db, 'group_members'),
-              where('userEmail', '==', email)
-            );
-            const projectsSnapshot = await getDocs(projectsQuery);
-            
             const projectHistory = [];
-            for (const membershipDoc of projectsSnapshot.docs) {
+            for (const membershipDoc of (membershipsByEmail[email] || [])) {
               const membershipData = membershipDoc.data();
               
               try {
-                const groupDoc = await getDoc(doc(db, 'groups', membershipData.groupId));
-                if (groupDoc.exists()) {
-                  const groupData = groupDoc.data();
+                const groupData = groupsById[membershipData.groupId];
+                if (groupData) {
                   projectHistory.push({
                     id: membershipDoc.id,
                     ...membershipData,
@@ -313,12 +347,7 @@ const FollowersFollowing = () => {
               }
             }
 
-            const certificatesQuery = query(
-              collection(db, 'certificates'),
-              where('recipientEmail', '==', email)
-            );
-            const certificatesSnapshot = await getDocs(certificatesQuery);
-            const certificates = certificatesSnapshot.docs.length;
+            const certificates = certificateCountByEmail[email] || 0;
 
             const badges = badgesByMember[email] || [];
             const badgesByCategory = badges.reduce((acc, badge) => {
@@ -557,7 +586,7 @@ const FollowersFollowing = () => {
     } else if (decodedEmail) {
       fetchUserData();
     }
-  }, [decodedEmail, currentUser, activeTab]);
+  }, [decodedEmail, currentUser?.uid, activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (activeTab === 'members') {
@@ -569,7 +598,7 @@ const FollowersFollowing = () => {
 
   useEffect(() => {
     loadFollowingStatus();
-  }, [followers, following, members, currentUser]);
+  }, [followers, following, members, currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (activeTab === 'members') {

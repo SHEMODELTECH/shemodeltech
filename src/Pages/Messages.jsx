@@ -74,10 +74,6 @@ const Messages = () => {
   const [limitedMe, setLimitedMe] = useState(false);
   const [viewerStaff, setViewerStaff] = useState(false); // staff see Champion chats marked Priority
   useEffect(() => {
-    if (!currentUser) return;
-    getDoc(doc(db, 'users', currentUser.uid)).then((snap) => setViewerStaff(['admin', 'editor'].includes(snap.data()?.role))).catch(() => {});
-  }, [currentUser]);
-  useEffect(() => {
     if (!currentUser || !features.companyTiers) { setLimitedMe(false); return; }
     getDoc(doc(db, 'users', currentUser.uid)).then(async (snap) => {
       const me = snap.data() || {};
@@ -88,7 +84,7 @@ const Messages = () => {
         setQuotaUsed(q && q.exists() ? (q.data().contacts || []).length : 0);
       }
     }).catch(() => {});
-  }, [currentUser, features.companyTiers]);
+  }, [currentUser?.uid, features.companyTiers]); // eslint-disable-line react-hooks/exhaustive-deps
   const [searchParams] = useSearchParams();
 
   const [conversations, setConversations] = useState([]);
@@ -117,13 +113,14 @@ const Messages = () => {
       try {
         const meSnap = await getDoc(doc(db, 'users', currentUser.uid));
         if (meSnap.exists()) setMyData({ uid: currentUser.uid, ...meSnap.data() });
+        setViewerStaff(['admin', 'editor'].includes(meSnap.data()?.role));
       } catch (e) {
         console.error('Error loading profile:', e);
       } finally {
         setLoading(false);
       }
     })();
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Listen to conversations
   const userCacheRef = useRef({});
@@ -138,10 +135,11 @@ const Messages = () => {
         const convs = await Promise.all(
           snap.docs.map(async (d) => {
             const data = d.data();
-            const otherId = data.participants.find(p => p !== currentUser.uid);
+            const otherId = (Array.isArray(data.participants) ? data.participants : []).find(p => p !== currentUser.uid);
+            if (!otherId) return { id: d.id, ...data, otherUser: { uid: null, displayName: 'Unknown' } };
             if (!userCacheRef.current[otherId]) {
-              const otherSnap = await getDoc(doc(db, 'users', otherId));
-              userCacheRef.current[otherId] = otherSnap.exists()
+              const otherSnap = await getDoc(doc(db, 'users', otherId)).catch(() => null);
+              userCacheRef.current[otherId] = otherSnap?.exists()
                 ? { uid: otherId, ...otherSnap.data() }
                 : { uid: otherId, displayName: 'Unknown' };
             }
@@ -160,9 +158,9 @@ const Messages = () => {
       } catch (err) {
         console.error('Error loading conversations:', err);
       }
-    });
+    }, (err) => console.error('Conversations listener error:', err));
     return () => unsub();
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // URL param ?with=uid or ?to=uid - auto-open conversation
   useEffect(() => {
@@ -185,7 +183,7 @@ const Messages = () => {
     );
     const unsub = onSnapshot(q, (snap) => {
       setMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
+    }, (err) => console.error('Messages listener error:', err));
     markAsRead(activeConvId);
     return () => unsub();
   }, [activeConvId]);

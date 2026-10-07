@@ -12,7 +12,7 @@ const MyWorkspaces = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser) { setLoading(false); return; }
     const fetchProjects = async () => {
       try {
         const allProjects = new Map();

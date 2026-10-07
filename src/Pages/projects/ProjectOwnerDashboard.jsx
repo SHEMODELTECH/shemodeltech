@@ -80,16 +80,21 @@ const ProjectOwnerDashboard = () => {
   useEffect(() => {
     if (!currentUser) { setLoading(false); return; }
     const q = query(collection(db, 'projects'), where('submitterEmail', '==', currentUser.email));
+    // Each snapshot loads applications asynchronously; only the newest
+    // snapshot (and only while mounted) may write state.
+    let seq = 0;
+    let dead = false;
     const unsub = onSnapshot(q, async (snap) => {
-      const list = [];
-      for (const d of snap.docs) {
+      const mySeq = ++seq;
+      // Projects load their applications in parallel, not one after another.
+      const list = await Promise.all(snap.docs.map(async (d) => {
         const project = { id: d.id, ...d.data() };
         // SELF-HEAL: a paid project where the owner marked everyone paid and
         // every member confirmed should be 'completed' - flip it so the card
         // stops showing "Awaiting Payment Confirmation". The write re-fires
         // this snapshot with the corrected status.
         if (isReadyToComplete(project)) {
-          const healed = await healPaidProjectStatus(project);
+          const healed = await healPaidProjectStatus(project).catch(() => false);
           if (healed) project.status = 'completed';
         }
         // Fetch applications
@@ -100,13 +105,17 @@ const ProjectOwnerDashboard = () => {
           project.pendingCount = project.applications.filter(a => a.status === 'submitted').length;
           project.approvedMembers = project.applications.filter(a => a.status === 'approved');
         } catch (e) { project.applications = []; project.pendingCount = 0; project.approvedMembers = []; }
-        list.push(project);
-      }
+        return project;
+      }));
+      if (dead || mySeq !== seq) return;
       list.sort((a, b) => (b.createdAt?.toDate?.() || 0) - (a.createdAt?.toDate?.() || 0));
       setMyProjects(list);
       setLoading(false);
+    }, (err) => {
+      console.error('Error loading your projects:', err);
+      if (!dead) setLoading(false);
     });
-    return unsub;
+    return () => { dead = true; unsub(); };
   }, [currentUser]);
 
   // Paid projects: owner marks all members paid; members then confirm receipt.

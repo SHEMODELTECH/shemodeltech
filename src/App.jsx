@@ -1,24 +1,26 @@
 // src/App.jsx - UPDATED
 
 import React, { Suspense, lazy, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { db } from './firebase/config';
-import { doc, getDoc } from 'firebase/firestore';
+import { getUserDocCached } from './utils/firestoreHelpers';
 import AppShell from './components/AppShell';
 import Navbar from './components/Navbar';
+import ErrorBoundary from './components/ErrorBoundary';
 
-// Critical path - keep eager
-import Login from './Pages/auth/Login';
-import ResetPassword from './Pages/auth/ResetPassword';
-import AuthAction from './Pages/auth/AuthAction';
-import Logout from './Pages/auth/Logout';
-import AccountTypeSelection from './Pages/auth/AccountTypeSelection';
+// Critical path - keep eager: only the landing page and the app shell.
 import LandingPage from './Pages/LandingPage';
-import Onboarding from './Pages/Onboarding';
+
+// Auth flow pages load on demand (Onboarding alone is ~1000 lines).
+const Login = lazy(() => import('./Pages/auth/Login'));
+const ResetPassword = lazy(() => import('./Pages/auth/ResetPassword'));
+const AuthAction = lazy(() => import('./Pages/auth/AuthAction'));
+const Logout = lazy(() => import('./Pages/auth/Logout'));
+const AccountTypeSelection = lazy(() => import('./Pages/auth/AccountTypeSelection'));
+const Onboarding = lazy(() => import('./Pages/Onboarding'));
 
 // Lazy-load secondary pages
 const UserDashboard = lazy(() => import('./Pages/user/dashboard'));
@@ -81,16 +83,12 @@ const Settings = lazy(() => import('./Pages/Settings'));
 const FollowList = lazy(() => import('./Pages/FollowList'));
 const Account = lazy(() => import('./Pages/Account'));
 
-try {
-  require('./services/googleFormService');
-} catch (e) {}
-
-let ErrorBoundary;
-try {
-  ErrorBoundary = require('./components/ErrorBoundary').default;
-} catch (e) {
-  ErrorBoundary = ({ children }) => children;
-}
+// Resets the page-level error screen when the member navigates elsewhere,
+// so one crashing page doesn't lock the whole app until a refresh.
+const RouteErrorBoundary = ({ children }) => {
+  const location = useLocation();
+  return <ErrorBoundary resetKey={location.pathname}>{children}</ErrorBoundary>;
+};
 
 const PageLoader = () => (
   <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
@@ -121,18 +119,29 @@ const PageLoader = () => (
 );
 
 const BasicProtectedRoute = ({ children, skipOnboardingCheck = false }) => {
-  const { currentUser, loading, getUserData } = useAuth();
+  const { currentUser, loading } = useAuth();
   const navigate = useNavigate();
   const [checkingOnboarding, setCheckingOnboarding] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     if (!loading && !currentUser) {
       navigate('/login');
       return;
     }
     if (!loading && currentUser && !skipOnboardingCheck) {
-      getUserData(currentUser.uid)
+      const uid = currentUser.uid;
+      // Shared cached read (the sidebar and age check need the same doc).
+      // Only redirect on a FRESH read, so a just-finished onboarding is never
+      // bounced back by a cached copy.
+      getUserDocCached(uid)
+        .then((userData) =>
+          userData && (!userData.accountType || !userData.onboardingComplete)
+            ? getUserDocCached(uid, 0)
+            : userData
+        )
         .then((userData) => {
+          if (cancelled) return;
           if (userData && !userData.accountType) {
             navigate('/account-type', { replace: true });
           } else if (userData && !userData.onboardingComplete) {
@@ -141,11 +150,12 @@ const BasicProtectedRoute = ({ children, skipOnboardingCheck = false }) => {
             setCheckingOnboarding(false);
           }
         })
-        .catch(() => setCheckingOnboarding(false));
+        .catch(() => { if (!cancelled) setCheckingOnboarding(false); });
     } else if (!loading) {
       setCheckingOnboarding(false);
     }
-  }, [loading, currentUser, navigate, skipOnboardingCheck, getUserData]);
+    return () => { cancelled = true; };
+  }, [loading, currentUser, navigate, skipOnboardingCheck]);
 
   if (loading || checkingOnboarding) return <PageLoader />;
   if (!currentUser) return null;
@@ -182,9 +192,9 @@ const StaffOnly = ({ children, adminOnly = false }) => {
   const [ok, setOk] = React.useState(null);
   React.useEffect(() => {
     if (!currentUser) return;
-    getDoc(doc(db, 'users', currentUser.uid))
-      .then((snap) => {
-        const role = snap.exists() ? snap.data().role : null;
+    getUserDocCached(currentUser.uid)
+      .then((data) => {
+        const role = data ? data.role : null;
         setOk(adminOnly ? role === 'admin' : role === 'admin' || role === 'editor');
       })
       .catch(() => setOk(false));
@@ -219,6 +229,7 @@ function App() {
       <AuthProvider>
         <Router>
           <div className="w-full min-h-screen overflow-x-clip">
+            <RouteErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 {/* Public - no sidebar */}
@@ -641,6 +652,7 @@ function App() {
                 />
               </Routes>
             </Suspense>
+            </RouteErrorBoundary>
           </div>
 
           <ToastContainer

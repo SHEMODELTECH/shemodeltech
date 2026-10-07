@@ -143,16 +143,16 @@ async function getTeamEmails(db, project) {
  if (project.submitterEmail) {
  people.push({ email: project.submitterEmail, isLead: true });
  }
- const uids = project.members || [];
- for (const uid of uids) {
+ const uids = (project.members || []).filter((u) => typeof u === 'string' && u);
+ // One round trip for the whole team instead of one read per member.
  try {
- // eslint-disable-next-line no-await-in-loop
- const snap = await db.collection('users').doc(uid).get();
+ const snaps = uids.length ? await db.getAll(...uids.map((uid) => db.collection('users').doc(uid))) : [];
+ snaps.forEach((snap) => {
  if (snap.exists && snap.data().email) {
  people.push({ email: snap.data().email, isLead: false });
  }
- } catch (_) { /* skip one bad member, never abort the project */ }
- }
+ });
+ } catch (_) { /* skip the members, never abort the project */ }
  // De-duplicate: the lead can also appear in members on some older docs.
  const seen = new Set();
  return people.filter(p => {
@@ -254,8 +254,10 @@ async function eventTasks(db, stats) {
  if (msLeft > 26 * 3600000 || msLeft < -10 * 60000) continue;
  const info = await db.collection('events').doc(ev.id).collection('private').doc('info').get().catch(() => null);
  const joinUrl = (info && info.exists && info.data().joinUrl) || `${EV_SITE}/events/${ev.id}`;
- for (const r of regs) {
- if (r.status !== 'registered') continue;
+ // A few registrants at a time: one at a time (email + bell + push each)
+ // could run past the serverless time limit for a big event.
+ const remindOne = async (r) => {
+ if (r.status !== 'registered') return;
  // We're live now (from the start time to 10 minutes after).
  if (msLeft <= 0 && !r.remindedLive) {
  await tell(r.uid, `We're live now: ${ev.title}`, 'It has started. Tap to join.',
@@ -263,7 +265,7 @@ async function eventTasks(db, stats) {
  joinUrl, 'Join now');
  await r.ref.update({ remindedLive: true, reminded30: true, reminded1d: true });
  stats.eventLiveNow = (stats.eventLiveNow || 0) + 1;
- continue;
+ return;
  }
  // 30 minutes before (sent from 35 minutes out until the start).
  if (msLeft > 0 && msLeft <= 35 * 60000 && !r.reminded30) {
@@ -272,7 +274,7 @@ async function eventTasks(db, stats) {
  joinUrl, 'Join now');
  await r.ref.update({ reminded30: true, reminded1d: true });
  stats.eventReminders30 = (stats.eventReminders30 || 0) + 1;
- continue;
+ return;
  }
  // 1 day before (anything from 24 hours down to 40 minutes out).
  if (msLeft <= 24 * 3600000 && msLeft > 40 * 60000 && !r.reminded1d) {
@@ -282,7 +284,9 @@ async function eventTasks(db, stats) {
  await r.ref.update({ reminded1d: true });
  stats.eventReminders1d = (stats.eventReminders1d || 0) + 1;
  }
- }
+ };
+ const results = await inBatches(regs, 5, remindOne);
+ results.forEach((x) => { if (x.status === 'rejected') console.error('event reminder failed:', x.reason?.message); });
  }
 }
 
@@ -337,7 +341,14 @@ module.exports = async (req, res) => {
 
  stats.scanned = snap.size;
 
- for (const docSnap of snap.docs) {
+ // Stop starting new projects well before the function's time limit, so the
+ // run always ends cleanly (anything left is picked up tomorrow; every send
+ // is logged, so nothing is sent twice).
+ const startedAt = Date.now();
+ const TIME_BUDGET_MS = 40000;
+ const PROJECT_CONCURRENCY = 5;
+
+ const processProject = async (docSnap) => {
  const project = { id: docSnap.id, ...docSnap.data() };
  const ref = docSnap.ref;
 
@@ -438,8 +449,14 @@ module.exports = async (req, res) => {
  } else {
  // eslint-disable-next-line no-await-in-loop
  const team = await getTeamEmails(db, project);
- const toSend = team.slice(0, emailBudget);
-
+ // Take this project's share of the budget straight away (no await in
+ // between), so projects running side by side can't overspend it.
+ const toSend = team.slice(0, Math.max(emailBudget, 0));
+ emailBudget -= toSend.length;
+ if (team.length && !toSend.length) {
+ // Out of email budget for today: leave it unlogged so tomorrow's run sends it.
+ stats.skipped += 1;
+ } else {
  // eslint-disable-next-line no-await-in-loop
  const results = await inBatches(toSend, EMAIL_CONCURRENCY, async (p) => {
  const { subject, html } = isGrace
@@ -449,7 +466,6 @@ module.exports = async (req, res) => {
  });
 
  const sent = results.filter(r => r.status === 'fulfilled').length;
- emailBudget -= toSend.length;
  if (isGrace) stats.graceNudges += sent; else stats.reminders += sent;
 
  // eslint-disable-next-line no-await-in-loop
@@ -467,6 +483,7 @@ module.exports = async (req, res) => {
  }
  }
  }
+ }
 
  if (Object.keys(updates).length) {
  // eslint-disable-next-line no-await-in-loop
@@ -477,6 +494,16 @@ module.exports = async (req, res) => {
  stats.errors += 1;
  console.error(`project ${project.id} failed:`, err.message);
  }
+ };
+ const docs = snap.docs;
+ for (let i = 0; i < docs.length; i += PROJECT_CONCURRENCY) {
+ if (Date.now() - startedAt > TIME_BUDGET_MS) {
+ stats.deferred = docs.length - i;
+ console.warn(`project-reminders: time budget reached, ${stats.deferred} projects left for the next run`);
+ break;
+ }
+ // eslint-disable-next-line no-await-in-loop
+ await Promise.all(docs.slice(i, i + PROJECT_CONCURRENCY).map(processProject));
  }
 
  // ── Events: reminders and waitlist moves (also runs every few minutes via ?task=events) ──

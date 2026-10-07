@@ -34,7 +34,7 @@ const PublicProjects = () => {
     const s = q.trim().toLowerCase();
     return (projects || []).filter(
       (p) =>
-        (!s || p.projectTitle.toLowerCase().includes(s) || p.projectDescription.toLowerCase().includes(s)) &&
+        (!s || (p.projectTitle || '').toLowerCase().includes(s) || (p.projectDescription || '').toLowerCase().includes(s)) &&
         (pay === 'all' || (pay === 'paid' ? p.isPaid : !p.isPaid))
     );
   }, [projects, q, pay]);

@@ -127,11 +127,19 @@ export const FollowSuggestionsSidebar = ({ currentUser, isMobile = false }) => {
           ...doc.data(),
         }));
 
-        const badgesQuery = query(collection(db, 'member_badges'));
-        const badgesSnapshot = await getDocs(badgesQuery);
+        // Only fetch badges for the candidate users (not the whole collection).
+        const candidateEmails = [...new Set(allUsers.map((u) => u.email).filter(Boolean))];
+        const badgeDocs = [];
+        for (let i = 0; i < candidateEmails.length; i += 30) {
+          const chunk = candidateEmails.slice(i, i + 30);
+          const snap = await getDocs(
+            query(collection(db, 'member_badges'), where('memberEmail', 'in', chunk))
+          );
+          badgeDocs.push(...snap.docs);
+        }
 
         const userActivityMap = {};
-        badgesSnapshot.docs.forEach((doc) => {
+        badgeDocs.forEach((doc) => {
           const badge = doc.data();
           if (badge.memberEmail) {
             if (!userActivityMap[badge.memberEmail]) {
@@ -203,7 +211,7 @@ export const FollowSuggestionsSidebar = ({ currentUser, isMobile = false }) => {
     };
 
     loadSuggestedUsers();
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load current user's follow counts
   useEffect(() => {
@@ -219,7 +227,7 @@ export const FollowSuggestionsSidebar = ({ currentUser, isMobile = false }) => {
     };
 
     loadUserCounts();
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCountUpdate = (countData) => {
     setUserCounts(countData.currentUser);

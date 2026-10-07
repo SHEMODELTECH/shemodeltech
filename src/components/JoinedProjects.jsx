@@ -46,6 +46,14 @@ const JoinedProjects = ({ currentUser }) => {
   useEffect(() => {
     if (!currentUser) return undefined;
     let dead = false;
+    // The same project is often referenced more than once (an application and
+    // a lead application's ranked choices): read each document once per load.
+    const cache = new Map();
+    const fetchOnce = (col, id) => {
+      const k = `${col}/${id}`;
+      if (!cache.has(k)) cache.set(k, fetchDoc(col, id));
+      return cache.get(k);
+    };
     (async () => {
       const out = [];
 
@@ -68,7 +76,7 @@ const JoinedProjects = ({ currentUser }) => {
       await Promise.all(
         [...apps.values()].map(async (a) => {
           if (!a.projectId) return;
-          const p = await fetchDoc('projects', a.projectId);
+          const p = await fetchOnce('projects', a.projectId);
           // Her own project is shown under "Projects I lead".
           if (p && p.submitterId === currentUser.uid) return;
           const done = p?.status === 'completed' && a.status === 'approved';
@@ -99,7 +107,7 @@ const JoinedProjects = ({ currentUser }) => {
         await Promise.all(
           snap.docs.map(async (d) => {
             const a = d.data();
-            const c = a.cohortId ? await fetchDoc('company_cohorts', a.cohortId) : null;
+            const c = a.cohortId ? await fetchOnce('company_cohorts', a.cohortId) : null;
             out.push({
               key: `c-${d.id}`,
               title: c?.title || 'Company project',
@@ -127,7 +135,7 @@ const JoinedProjects = ({ currentUser }) => {
             if (a.status === 'assigned') return; // she leads it: "Projects I lead"
             const ids = a.rankedProjectIds || [];
             const titles = (
-              await Promise.all(ids.map((id) => fetchDoc('projects', id)))
+              await Promise.all(ids.map((id) => fetchOnce('projects', id)))
             ).map((p, i) => p?.projectTitle || p?.title || `Choice ${i + 1}`);
             out.push({
               key: `l-${d.id}`,

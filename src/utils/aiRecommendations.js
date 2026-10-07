@@ -99,7 +99,8 @@ const gatherProjectCandidates = async (currentUser, appliedProjectIds) => {
     // collaborators AND auto-generated projects still looking for a lead.
     const snap = await getDocs(query(
       collection(db, 'projects'),
-      where('status', 'in', ['active', 'lead_recruitment'])
+      where('status', 'in', ['active', 'lead_recruitment']),
+      limit(300) // safety cap: this runs on every dashboard visit
     ));
     const applied = new Set(appliedProjectIds || []);
     return snap.docs

@@ -3,7 +3,7 @@
 // shows a count and opens the right screen. Cards with nothing waiting are quiet.
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, getCountFromServer, getDocs, query, where } from 'firebase/firestore';
+import { collection, getCountFromServer, query, where } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 
 const count = async (q) => {
@@ -17,6 +17,7 @@ const count = async (q) => {
 const AttentionBoard = ({ isAdmin, onTab }) => {
   const [c, setC] = useState(null);
   useEffect(() => {
+    let alive = true;
     (async () => {
       const [
         reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, companies, capstone, sponsors, payments, jobDeletes, sizeReqs, teamApps,
@@ -31,22 +32,24 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
         isAdmin ? count(query(collection(db, 'teacher_applications'), where('status', '==', 'pending'))) : 0,
         count(query(collection(db, 'projects'), where('extensionRequest.status', '==', 'pending'))),
         (async () => {
-          // Company accounts not yet verified (no badge yet).
-          try {
-            const s = await getDocs(query(collection(db, 'users'), where('isCompany', '==', true)));
-            return s.docs.filter((d) => !d.data().isVerified).length;
-          } catch (_) {
-            return 0;
-          }
+          // Company accounts not yet verified (no badge yet): all companies minus
+          // verified ones, as counts (no need to download every company profile).
+          const users = collection(db, 'users');
+          const [all, verified] = await Promise.all([
+            count(query(users, where('isCompany', '==', true))),
+            count(query(users, where('isCompany', '==', true), where('isVerified', '==', true))),
+          ]);
+          return Math.max(all - verified, 0);
         })(),
         (async () => {
-          // Mentor courses waiting for approval.
-          try {
-            const s = await getDocs(collection(db, 'teacher_courses'));
-            return s.docs.filter((d) => d.data().review?.status === 'pending' || d.data().removalRequest?.status === 'pending').length;
-          } catch (_) {
-            return 0;
-          }
+          // Mentor courses waiting for approval (a review, a removal request, or both).
+          const courses = collection(db, 'teacher_courses');
+          const [review, removal, both] = await Promise.all([
+            count(query(courses, where('review.status', '==', 'pending'))),
+            count(query(courses, where('removalRequest.status', '==', 'pending'))),
+            count(query(courses, where('review.status', '==', 'pending'), where('removalRequest.status', '==', 'pending'))),
+          ]);
+          return Math.max(review + removal - both, 0);
         })(),
         isAdmin ? count(query(collection(db, 'sponsor_requests'), where('status', '==', 'new'))) : 0,
         count(query(collection(db, 'projects'), where('status', '==', 'awaiting_payment_confirmation'))),
@@ -54,8 +57,10 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
         count(query(collection(db, 'projects'), where('sizeRequest.status', '==', 'pending'))),
         count(query(collection(db, 'team_applications'), where('status', '==', 'new'))),
       ]);
+      if (!alive) return;
       setC({ reviews, leadApps, proposals, orgNew, partnersNew, letters, deletions, mentorApps, extension, capstone, companies, sponsors, payments, jobDeletes, sizeReqs, teamApps });
     })();
+    return () => { alive = false; };
   }, [isAdmin]);
 
   if (!c) return <p className="text-gray-400 text-sm mb-6">Checking what needs attention…</p>;

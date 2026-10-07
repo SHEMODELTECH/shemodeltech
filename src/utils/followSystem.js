@@ -16,6 +16,7 @@ import {
   query,
   where,
   getDocs,
+  limit,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { toast } from 'react-toastify';
@@ -373,7 +374,7 @@ export const getUserIdFromEmail = async (email) => {
   if (!email) return null;
 
   try {
-    const usersQuery = query(collection(db, 'users'), where('email', '==', email));
+    const usersQuery = query(collection(db, 'users'), where('email', '==', email), limit(1));
 
     const snapshot = await getDocs(usersQuery);
     if (!snapshot.empty) {

@@ -62,17 +62,13 @@ const ImageGallery = ({ images }) => {
   }, [selectedImage, currentImageIndex]);
 
   if (!images || images.length === 0) {
-    console.log('No images provided');
     return null;
   }
 
   const validImages = images.filter(img => img && img.url);
   if (validImages.length === 0) {
-    console.log('No valid images found');
     return null;
   }
-
-  console.log('Rendering gallery with', validImages.length, 'images');
 
   const displayImages = validImages.slice(0, 4);
 

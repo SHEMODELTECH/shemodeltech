@@ -4,7 +4,7 @@
 // reviewer surfaces (lead applications, project review) but not
 // delete/role management.
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, orderBy, limit, where, addDoc, Timestamp } from 'firebase/firestore';
@@ -105,6 +105,13 @@ const AdminPanel = ({ only = null }) => {
   // Generate tab
 
   const [userSearch, setUserSearch] = useState('');
+  // Long lists render a page at a time (thousands of rows froze the tab).
+  const LIST_PAGE = 100;
+  const [userLimit, setUserLimit] = useState(LIST_PAGE);
+  const [projectLimit, setProjectLimit] = useState(LIST_PAGE);
+  // Sections already loaded on this page open: switching back to a tab shows
+  // what was loaded instead of downloading it again (Refresh still reloads).
+  const loadedTabs = useRef(new Set());
   // 'all' or 'unverified' (company accounts waiting for verification)
   const [userView, setUserView] = useState('all');
 
@@ -207,12 +214,16 @@ const AdminPanel = ({ only = null }) => {
 
   useEffect(() => {
     // Admins and editors both review projects (free and paid).
-    if ((tab === 'reviews' || only === 'projects') && isReviewer) loadReviews();
+    if ((tab === 'reviews' || only === 'projects') && isReviewer && !loadedTabs.current.has('reviews')) {
+      loadedTabs.current.add('reviews');
+      loadReviews();
+    }
   }, [tab, isReviewer, loadReviews]);
 
   // Teachers: applications to review, and who currently teaches.
   useEffect(() => {
-    if (tab === 'teachers' && isReviewer) {
+    if (tab === 'teachers' && isReviewer && !loadedTabs.current.has(`teachers_${isAdmin}`)) {
+      loadedTabs.current.add(`teachers_${isAdmin}`);
       if (isAdmin) listTeacherApplications()
         .then(setTeacherApps)
         .catch(() => setTeacherApps([]));
@@ -276,8 +287,10 @@ const AdminPanel = ({ only = null }) => {
   };
 
   useEffect(() => {
-    if (tab === 'deletions' && isAdmin) {
-      getDocs(collection(db, 'deletionRequests'))
+    if (tab === 'deletions' && isAdmin && !loadedTabs.current.has('deletions')) {
+      loadedTabs.current.add('deletions');
+      // Only pending requests (a one-field filter, no extra index needed).
+      getDocs(query(collection(db, 'deletionRequests'), where('status', '==', 'pending')))
         .then((snap) =>
           setDeletionReqs(
             snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((r) => r.status === 'pending')
@@ -429,7 +442,7 @@ const AdminPanel = ({ only = null }) => {
         getDocs(collection(db, 'users')),
         getDocs(collection(db, 'projects')),
         getDocs(query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50))).catch(() =>
-          getDocs(collection(db, 'posts'))
+          getDocs(query(collection(db, 'posts'), limit(50)))
         ),
       ]);
 
@@ -462,25 +475,37 @@ const AdminPanel = ({ only = null }) => {
     setLoadingData(false);
   }, []);
 
+  // Paid work She Model Tech posted (as a company) in the main projects collection.
+  // Worked out once per change to the lists, and the applicant counts are only
+  // fetched again when that set of projects changes (not on every edit to a user).
+  const smtPaidProjects = useMemo(() => {
+    const staffIds = new Set(users.filter((u) => ['admin', 'editor'].includes(u.role)).map((u) => u.id));
+    return projects.filter((p) => p.isCompanyPost && staffIds.has(p.submitterId) && p.status !== 'completed');
+  }, [users, projects]);
+  const smtPaidKey = smtPaidProjects.map((p) => p.id).join(',');
+  const smtPaidLoadedKey = useRef(null);
   useEffect(() => {
     if (!isReviewer || tab !== 'projects') return;
+    if (smtPaidLoadedKey.current === smtPaidKey) return;
+    smtPaidLoadedKey.current = smtPaidKey;
+    let cancelled = false;
     (async () => {
       try {
-        const staffIds = new Set(users.filter((u) => ['admin', 'editor'].includes(u.role)).map((u) => u.id));
-        // Paid work She Model Tech posted (as a company) in the main projects collection.
-        const mine = projects.filter((p) => p.isCompanyPost && staffIds.has(p.submitterId) && p.status !== 'completed');
+        const mine = smtPaidProjects;
         const withCounts = await Promise.all(
           mine.map(async (c) => {
             const a = await getDocs(query(collection(db, 'project_applications'), where('projectId', '==', c.id))).catch(() => null);
             return { ...c, title: c.projectTitle, waiting: a ? a.docs.filter((d) => d.data().status === 'submitted').length : 0 };
           })
         );
-        setSmtPaid(withCounts);
+        if (!cancelled) setSmtPaid(withCounts);
       } catch (_) {
-        setSmtPaid([]);
+        if (!cancelled) setSmtPaid([]);
       }
     })();
-  }, [isReviewer, tab, users, projects]);
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isReviewer, tab, smtPaidKey]);
 
   // Admins and editors both see the dashboard data (editors just can't delete or change roles).
   useEffect(() => {
@@ -1154,7 +1179,7 @@ const AdminPanel = ({ only = null }) => {
           {projects.filter((p) => p.status !== 'completed').length === 0 ? (
             <p className="text-gray-400 text-sm">No active projects.</p>
           ) : (
-            projects.filter((p) => p.status !== 'completed').map((p) => (
+            projects.filter((p) => p.status !== 'completed').slice(0, projectLimit).map((p) => (
               <div
                 key={p.id}
                 className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-lg p-3"
@@ -1198,6 +1223,12 @@ const AdminPanel = ({ only = null }) => {
                 </div>
               </div>
             ))
+          )}
+          {projects.filter((p) => p.status !== 'completed').length > projectLimit && (
+            <button type="button" onClick={() => setProjectLimit((n) => n + LIST_PAGE)}
+              className="w-full text-sm font-semibold text-pink-700 bg-white border border-gray-200 rounded-lg py-2.5 hover:bg-pink-50">
+              Show more projects
+            </button>
           )}
         </div>
       )}
@@ -1266,7 +1297,7 @@ const AdminPanel = ({ only = null }) => {
             <p className="text-sm text-gray-500 mb-3">No companies are waiting for verification.</p>
           )}
           <div className="space-y-2">
-            {filteredUsers.map((u) => (
+            {filteredUsers.slice(0, userLimit).map((u) => (
               <div
                 key={u.id}
                 className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white border border-gray-200 rounded-lg p-3"
@@ -1394,6 +1425,12 @@ const AdminPanel = ({ only = null }) => {
                 </div>
               </div>
             ))}
+            {filteredUsers.length > userLimit && (
+              <button type="button" onClick={() => setUserLimit((n) => n + LIST_PAGE)}
+                className="w-full text-sm font-semibold text-pink-700 bg-white border border-gray-200 rounded-lg py-2.5 hover:bg-pink-50">
+                Show more ({filteredUsers.length - userLimit} more)
+              </button>
+            )}
             {filteredUsers.length === 0 && <p className="text-gray-400 text-sm">No users match.</p>}
           </div>
         </div>

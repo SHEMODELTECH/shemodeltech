@@ -28,10 +28,11 @@ const Account = () => {
         const mProjects = [];
         const oProjects = [];
         let badges = 0;
+        let userSnap = null;
 
-        // Badge count from the user profile
+        // Badge count from the user profile (the same read also feeds the money view below)
         try {
-          const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
+          userSnap = await getDoc(doc(db, 'users', currentUser.uid));
           if (userSnap.exists()) badges = (userSnap.data().badges || []).length;
         } catch (e) { console.log('Badge count skipped:', e.message); }
 
@@ -69,7 +70,7 @@ const Account = () => {
 
         // Money view: companies see disbursements (money out); talent sees earnings.
         try {
-          const profSnap = await getDoc(doc(db, 'users', currentUser.uid));
+          const profSnap = userSnap || await getDoc(doc(db, 'users', currentUser.uid));
           const company = profSnap.exists() && !!profSnap.data().isCompany;
           setIsCompany(company);
           if (company) {

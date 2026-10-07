@@ -2,10 +2,29 @@
 // Client-side push: request permission, register the device's FCM token on the
 // user's doc, and a helper to ask the server to send a push to other users.
 
-import { getToken, onMessage, isSupported } from 'firebase/messaging';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { db, auth, messaging } from '../firebase/config';
+import { app, db, auth } from '../firebase/config';
 import { toast } from 'react-toastify';
+
+// The messaging SDK is loaded only when push is actually used (it used to be
+// in the main bundle of every page). Resolves to { m, messaging } or null
+// when this browser can't do push.
+let messagingPromise = null;
+const loadMessaging = () => {
+  if (!messagingPromise) {
+    messagingPromise = import('firebase/messaging')
+      .then(async (m) => {
+        const ok = await m.isSupported().catch(() => false);
+        if (!ok) return null;
+        try { return { m, messaging: m.getMessaging(app) }; } catch (e) {
+          console.warn('Messaging init skipped:', e?.message);
+          return null;
+        }
+      })
+      .catch(() => null);
+  }
+  return messagingPromise;
+};
 
 // Your Web Push certificate "Key pair" (VAPID public key) from Firebase Console →
 // Project Settings → Cloud Messaging → Web Push certificates.
@@ -53,8 +72,8 @@ export async function enablePushForCurrentUser({ interactive = false } = {}) {
     // On iOS, the Notification + Push APIs don't exist in a normal Safari tab -
     // they only appear once the site is installed to the Home Screen (iOS 16.4+).
     const hasPushApis = typeof Notification !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window;
-    const supported = hasPushApis && await isSupported().catch(() => false);
-    if (!supported || !messaging) {
+    const loaded = hasPushApis ? await loadMessaging() : null;
+    if (!loaded) {
       if (interactive) {
         if (isIOS && !isStandalone) {
           toast.info('On iPhone/iPad: tap Share → Add to Home Screen, then open She Model Tech from the Home Screen icon and enable notifications from there.');
@@ -86,7 +105,7 @@ export async function enablePushForCurrentUser({ interactive = false } = {}) {
     if (registration) {
       try { await navigator.serviceWorker.ready; } catch (e) { /* ignore */ }
     }
-    const token = await getToken(messaging, {
+    const token = await loaded.m.getToken(loaded.messaging, {
       vapidKey: VAPID_KEY,
       serviceWorkerRegistration: registration || undefined,
     });
@@ -134,10 +153,16 @@ export function playNotificationSound() {
 
 // Foreground messages (site open + focused) - show a toast AND play a sound,
 // since the OS notification is suppressed while the tab is focused.
-export function listenForForegroundPush() {
-  if (!messaging) return;
+// Registered once per page load: it used to be called on every sign-in,
+// stacking handlers so each push showed several toasts and chimes.
+let foregroundListening = false;
+export async function listenForForegroundPush() {
+  if (foregroundListening) return;
+  foregroundListening = true;
+  const loaded = await loadMessaging();
+  if (!loaded) return;
   try {
-    onMessage(messaging, (payload) => {
+    loaded.m.onMessage(loaded.messaging, (payload) => {
       const title = payload.notification?.title || 'She Model Tech';
       const body = payload.notification?.body || '';
       playNotificationSound();

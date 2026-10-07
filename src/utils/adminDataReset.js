@@ -8,7 +8,7 @@
 
 import { db } from '../firebase/config';
 import {
-  collection, getDocs, doc, deleteDoc, writeBatch, query, limit,
+  collection, getDocs, writeBatch, query, limit, orderBy, startAfter, documentId,
 } from 'firebase/firestore';
 
 // Top-level collections that hold test CONTENT (safe to wipe).
@@ -95,11 +95,16 @@ const deleteCollection = async (collName, onProgress) => {
 // deleting the user (keeps their account + login + basic profile).
 const resetUserBadges = async (onProgress) => {
   let reset = 0;
-  let lastCount = -1;
-  // Page through users.
+  let last = null;
+  // Page through ALL users, 200 at a time (users aren't deleted, so each page
+  // starts after the last one; a single page used to reset only 200 people).
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    const snap = await getDocs(query(collection(db, 'users'), limit(200)));
+    const page = last
+      ? query(collection(db, 'users'), orderBy(documentId()), startAfter(last), limit(200))
+      : query(collection(db, 'users'), orderBy(documentId()), limit(200));
+    // eslint-disable-next-line no-await-in-loop
+    const snap = await getDocs(page);
     if (snap.empty) break;
     const batch = writeBatch(db);
     snap.docs.forEach(d => {
@@ -110,13 +115,12 @@ const resetUserBadges = async (onProgress) => {
         badgeCounts: {},
       });
     });
+    // eslint-disable-next-line no-await-in-loop
     await batch.commit();
     reset += snap.size;
     if (onProgress) onProgress('users (badges reset)', reset);
-    // users aren't deleted, so the page won't shrink - stop after one full pass.
-    if (reset === lastCount || snap.size < 200) break;
-    lastCount = reset;
-    break; // single pass is enough since we update in place
+    if (snap.size < 200) break;
+    last = snap.docs[snap.docs.length - 1];
   }
   return reset;
 };

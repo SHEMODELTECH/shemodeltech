@@ -43,13 +43,21 @@ let _userCache = null;
 let _userCacheAt = 0;
 const USER_CACHE_MS = 60 * 1000;
 
+let _userPoolPromise = null; // shared in-flight load, so fast typing doesn't start several reads
+
 const getUserPool = async () => {
   const now = Date.now();
   if (_userCache && (now - _userCacheAt) < USER_CACHE_MS) return _userCache;
-  const snapshot = await getDocs(query(collection(db, 'users'), limit(200)));
-  _userCache = snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
-  _userCacheAt = now;
-  return _userCache;
+  if (!_userPoolPromise) {
+    _userPoolPromise = getDocs(query(collection(db, 'users'), limit(200)))
+      .then((snapshot) => {
+        _userCache = snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
+        _userCacheAt = Date.now();
+        return _userCache;
+      })
+      .finally(() => { _userPoolPromise = null; });
+  }
+  return _userPoolPromise;
 };
 
 // Search users function - searches by name and email, client-side for reliability

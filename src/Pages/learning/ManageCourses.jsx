@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
-import { originalCourse, trackMeta } from '../../utils/foundationsCourses';
+import { loadCourseMarkdown, originalCourse, trackMeta } from '../../utils/foundationsCourses';
 import { getOverride, getOverrideContent, hiddenCourses, resetCourse, saveCourseEdit, setCourseHidden } from '../../utils/courseOverrides';
 import { useStaffRole } from '../../components/MentorCourseStaffTools';
 import { useCourseOverridesVersion } from '../../components/BuiltInCourseStaffTools';
@@ -37,8 +37,12 @@ export const ManageCourses = () => {
               <span className="text-sm text-gray-800">{o.hiddenTitle || originalCourse(o.track, o.slug)?.title || o.slug} <span className="text-gray-500">· {trackMeta(o.track).label}</span></span>
               <button
                 onClick={async () => {
-                  await setCourseHidden(o.track, o.slug, false, currentUser);
-                  toast.success('Restored to Learning.');
+                  try {
+                    await setCourseHidden(o.track, o.slug, false, currentUser);
+                    toast.success('Restored to Learning.');
+                  } catch (e) {
+                    toast.error('Could not restore. Check your connection and try again.');
+                  }
                 }}
                 className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50"
               >
@@ -60,24 +64,46 @@ const EditCourse = () => {
   const original = originalCourse(track, slug);
   const [f, setF] = useState(null);
   const [busy, setBusy] = useState(false);
+  // The built-in text is loaded on demand. It's needed to tell whether the
+  // content was changed on save, so the editor waits for it.
+  const [originalMarkdown, setOriginalMarkdown] = useState(null);
+  const [loadError, setLoadError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    if (!original) return;
+    if (!original) return undefined;
+    let alive = true;
+    setLoadError(false);
     const o = getOverride(track, slug) || {};
-    getOverrideContent(track, slug)
-      .catch(() => null)
-      .then((text) => setF({
-        title: o.title || original.title,
-        summary: o.summary || original.summary || '',
-        level: o.level || original.level || 'Beginner',
-        minutes: o.minutes || original.minutes || 0,
-        markdown: text != null ? text : original.markdown || '',
-      }));
-  }, [track, slug, original]);
+    Promise.all([getOverrideContent(track, slug).catch(() => null), loadCourseMarkdown(track, slug)])
+      .then(([text, base]) => {
+        if (!alive) return;
+        setOriginalMarkdown(base || '');
+        setF({
+          title: o.title || original.title,
+          summary: o.summary || original.summary || '',
+          level: o.level || original.level || 'Beginner',
+          minutes: o.minutes || original.minutes || 0,
+          markdown: text != null ? text : base || '',
+        });
+      })
+      .catch(() => alive && setLoadError(true));
+    return () => {
+      alive = false;
+    };
+  }, [track, slug, original, attempt]);
 
   if (role === null) return <p className="p-8 text-gray-500 text-sm">Loading...</p>;
   if (!['admin', 'editor'].includes(role)) return <p className="p-8 text-gray-600">This page is for She Model Tech staff.</p>;
   if (!original) return <p className="p-8 text-gray-600">Course not found.</p>;
+  if (loadError) {
+    return (
+      <div className="p-8 text-gray-600">
+        <p>Could not load the course text. Check your connection and try again.</p>
+        <button onClick={() => setAttempt((n) => n + 1)} className="mt-3 text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">Try again</button>
+      </div>
+    );
+  }
   if (!f) return <p className="p-8 text-gray-500 text-sm">Loading course...</p>;
   const isHtml = !!original.html || original.kind === 'interactive';
 
@@ -85,7 +111,7 @@ const EditCourse = () => {
     if (f.title.trim().split(/\s+/).length < 2) return toast.error('Give the course a title of at least 2 words.');
     setBusy(true);
     try {
-      await saveCourseEdit(track, slug, { ...f, originalMarkdown: original.markdown || '' }, currentUser);
+      await saveCourseEdit(track, slug, { ...f, originalMarkdown: originalMarkdown || '' }, currentUser);
       toast.success('Saved. Learners see the changes now.');
       navigate(`/learning/${track}/${slug}`);
     } catch (e) {
@@ -136,9 +162,13 @@ const EditCourse = () => {
           <button
             onClick={async () => {
               if (!window.confirm('Undo every edit to this course and bring back the original?')) return;
-              await resetCourse(track, slug);
-              toast.success('Reset to the original.');
-              navigate(`/learning/${track}/${slug}`);
+              try {
+                await resetCourse(track, slug);
+                toast.success('Reset to the original.');
+                navigate(`/learning/${track}/${slug}`);
+              } catch (e) {
+                toast.error('Could not reset. Check your connection and try again.');
+              }
             }}
             className="text-sm font-semibold border border-gray-300 px-4 py-2.5 rounded-lg hover:bg-gray-50"
           >

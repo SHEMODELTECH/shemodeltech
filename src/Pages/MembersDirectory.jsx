@@ -114,7 +114,7 @@ const MembersDirectory = () => {
       }
     };
     fetchMembers();
-  }, [currentUser, authLoading]);
+  }, [currentUser?.uid, authLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Apply filters
   useEffect(() => {
@@ -280,7 +280,7 @@ const MembersDirectory = () => {
                         {/* Avatar */}
                         <div className="relative inline-block mb-3">
                           {member.photoURL ? (
-                            <img src={member.photoURL} alt={member.name} className="w-16 h-16 rounded-full object-cover border-2 border-gray-100 mx-auto" />
+                            <img src={member.photoURL} alt={member.name} loading="lazy" width={64} height={64} className="w-16 h-16 rounded-full object-cover border-2 border-gray-100 mx-auto" />
                           ) : (
                             <div className="w-16 h-16 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold text-lg mx-auto">
                               {member.name?.charAt(0)?.toUpperCase() || '?'}

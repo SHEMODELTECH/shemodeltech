@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs, documentId } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import FollowButton from '../components/community/FollowButton';
 
@@ -18,49 +18,50 @@ const FollowList = () => {
 
   useEffect(() => {
     if (!currentUser) return;
+    // Fetch user docs in batches of 30 (one query per chunk instead of one read per user)
+    const fetchUsersByIds = async (ids) => {
+      const unique = [...new Set(ids.filter((id) => typeof id === 'string' && id))];
+      const byId = {};
+      for (let i = 0; i < unique.length; i += 30) {
+        const chunk = unique.slice(i, i + 30);
+        try {
+          const snap = await getDocs(query(collection(db, 'users'), where(documentId(), 'in', chunk)));
+          snap.docs.forEach((d) => { byId[d.id] = { id: d.id, ...d.data() }; });
+        } catch (e) {
+          console.error('Error fetching users batch:', e);
+        }
+      }
+      return unique.map((id) => byId[id]).filter(Boolean);
+    };
     const fetchConnections = async () => {
       try {
         // Get current user's following and followers arrays
         const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
         if (!userSnap.exists()) return;
         const userData = userSnap.data();
-        const followingIds = userData.following || [];
-        const followerIds = userData.followers || [];
+        const followingIds = Array.isArray(userData.following) ? userData.following : [];
+        const followerIds = Array.isArray(userData.followers) ? userData.followers : [];
 
-        // Fetch following users
-        if (followingIds.length > 0) {
-          const followingUsers = [];
-          for (const uid of followingIds) {
-            try {
-              const uSnap = await getDoc(doc(db, 'users', uid));
-              if (uSnap.exists()) followingUsers.push({ id: uSnap.id, ...uSnap.data() });
-            } catch (e) {}
-          }
-          setFollowing(followingUsers);
-        }
-
-        // Fetch followers
-        if (followerIds.length > 0) {
-          const followerUsers = [];
-          for (const uid of followerIds) {
-            try {
-              const uSnap = await getDoc(doc(db, 'users', uid));
-              if (uSnap.exists()) followerUsers.push({ id: uSnap.id, ...uSnap.data() });
-            } catch (e) {}
-          }
-          setFollowers(followerUsers);
-        }
-      } catch (e) { console.error('Error fetching connections:', e); }
-      setLoading(false);
+        const [followingUsers, followerUsers] = await Promise.all([
+          fetchUsersByIds(followingIds),
+          fetchUsersByIds(followerIds),
+        ]);
+        if (followingIds.length > 0) setFollowing(followingUsers);
+        if (followerIds.length > 0) setFollowers(followerUsers);
+      } catch (e) {
+        console.error('Error fetching connections:', e);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchConnections();
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const renderUser = (user) => (
     <div key={user.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl">
-      <Link to={`/profile/${encodeURIComponent(user.email)}`} className="flex items-center gap-3 min-w-0 flex-1">
+      <Link to={`/profile/${encodeURIComponent(user.email || '')}`} className="flex items-center gap-3 min-w-0 flex-1">
         {user.photoURL ? (
-          <img src={user.photoURL} alt="" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+          <img src={user.photoURL} alt="" loading="lazy" width={40} height={40} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
         ) : (
           <div className="w-10 h-10 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
             {(user.displayName || 'U')[0].toUpperCase()}

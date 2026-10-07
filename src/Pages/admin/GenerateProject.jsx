@@ -5,7 +5,7 @@
 // Generated projects start in `lead_recruitment`: only "Apply to lead" is open.
 // The confirmed lead can add roles but can't remove or reduce the brief's roles.
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { doc, getDoc, getDocs, addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -24,6 +24,8 @@ const GenerateProject = () => {
   const [saving, setSaving] = useState(false);
   const [draft, setDraft] = useState(null);
   const [theme, setTheme] = useState('');
+  // Titles already on the board, read once per page open (not on every click).
+  const usedTitles = useRef(null);
 
   useEffect(() => {
     if (!currentUser) { navigate('/login', { replace: true }); return; }
@@ -45,8 +47,11 @@ const GenerateProject = () => {
     try {
       // Free, instant: the built-in library. Skip titles already on the board
       // (and the one on screen, so Regenerate shows something new).
-      const snap = await getDocs(collection(db, 'projects')).catch(() => null);
-      const used = snap ? snap.docs.map((d) => d.data().projectTitle || d.data().title) : [];
+      if (!usedTitles.current) {
+        const snap = await getDocs(collection(db, 'projects')).catch(() => null);
+        if (snap) usedTitles.current = snap.docs.map((d) => d.data().projectTitle || d.data().title);
+      }
+      const used = [...(usedTitles.current || [])];
       if (draft) used.push(draft.projectTitle);
       const result = pickTemplate({ exclude: used, theme: theme || null });
       setDraft(result);
@@ -107,6 +112,7 @@ const GenerateProject = () => {
         });
       } catch (e) { console.log('Proof log skipped:', e.message); }
       toast.success('Project published in lead recruitment.');
+      if (usedTitles.current) usedTitles.current.push(draft.projectTitle);
       setDraft(null);
       navigate('/projects');
     } catch (e) {

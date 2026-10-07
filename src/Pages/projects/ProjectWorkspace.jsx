@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { doc, getDoc, updateDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, arrayUnion, arrayRemove, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, arrayUnion, arrayRemove, where, getDocs, limitToLast } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import LeadCheckIn from '../../components/LeadCheckIn';
 import DeadlineBanner from '../../components/DeadlineBanner';
@@ -94,18 +94,25 @@ const ProjectWorkspace = () => {
         const appSnap = await getDocs(appQ);
         const members = appSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-        // Fetch user profiles for each member
-        const enriched = await Promise.all(members.map(async (m) => {
+        // Fetch user profiles for all members in batches of 30 (one query per
+        // batch instead of one per member).
+        const emails = [...new Set(members.map((m) => m.applicantEmail).filter(Boolean))];
+        const byEmail = {};
+        for (let i = 0; i < emails.length; i += 30) {
           try {
-            const userQ = query(collection(db, 'users'), where('email', '==', m.applicantEmail));
-            const userSnap = await getDocs(userQ);
-            if (!userSnap.empty) {
-              const userData = userSnap.docs[0].data();
-              return { ...m, photoURL: userData.photoURL || null, displayName: userData.displayName || m.applicantName };
-            }
+            const userSnap = await getDocs(query(collection(db, 'users'), where('email', 'in', emails.slice(i, i + 30))));
+            userSnap.docs.forEach((d) => {
+              const u = d.data();
+              if (u.email && !byEmail[u.email]) byEmail[u.email] = u;
+            });
           } catch (e) {}
-          return m;
-        }));
+        }
+        const enriched = members.map((m) => {
+          const userData = byEmail[m.applicantEmail];
+          return userData
+            ? { ...m, photoURL: userData.photoURL || null, displayName: userData.displayName || m.applicantName }
+            : m;
+        });
 
         // Add owner
         const ownerEntry = {
@@ -124,12 +131,23 @@ const ProjectWorkspace = () => {
   // Listen to forum posts
   useEffect(() => {
     if (!projectId) return;
-    const q = query(collection(db, 'projects', projectId, 'forum'), orderBy('createdAt', 'asc'));
-    const unsub = onSnapshot(q, (snap) => {
-      setPosts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
+    // Keep the live listener bounded: the most recent 500 posts and replies.
+    const q = query(collection(db, 'projects', projectId, 'forum'), orderBy('createdAt', 'asc'), limitToLast(500));
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        setPosts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      },
+      (err) => console.error('Error listening to the forum:', err)
+    );
     return () => unsub();
   }, [projectId]);
+
+  // Release the image preview's object URL when it is replaced, removed, or on unmount.
+  useEffect(() => {
+    const url = newPostImage?.preview;
+    return () => { if (url) URL.revokeObjectURL(url); };
+  }, [newPostImage]);
 
   useEffect(() => {
     if (activeTab === 'forum') messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -329,7 +347,10 @@ const ProjectWorkspace = () => {
   ];
 
   const topPosts = posts.filter(p => !p.parentId);
-  const getReplies = (parentId) => posts.filter(p => p.parentId === parentId);
+  // Group replies once per render instead of scanning every post for each thread.
+  const repliesByParent = {};
+  posts.forEach(p => { if (p.parentId) (repliesByParent[p.parentId] = repliesByParent[p.parentId] || []).push(p); });
+  const getReplies = (parentId) => repliesByParent[parentId] || [];
   const emojis = ['👍', '❤️', '🎉', '🔥', '👀'];
 
   // Build uid → name map from team members + posts
@@ -488,7 +509,7 @@ const ProjectWorkspace = () => {
                     ) : (
                       <>
                         <p className="text-gray-700 text-sm mt-1 whitespace-pre-wrap">{post.text}</p>
-                        {post.imageUrl && <img src={post.imageUrl} alt="attachment" onClick={() => setLightbox(post.imageUrl)} className="w-full max-h-96 object-contain bg-gray-50 mt-3 rounded-lg border border-gray-200 cursor-zoom-in hover:opacity-95 transition-opacity" />}
+                        {post.imageUrl && <img src={post.imageUrl} alt="attachment" loading="lazy" onClick={() => setLightbox(post.imageUrl)} className="w-full max-h-96 object-contain bg-gray-50 mt-3 rounded-lg border border-gray-200 cursor-zoom-in hover:opacity-95 transition-opacity" />}
                         {post.link && <a href={post.link} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-xs hover:underline mt-2 block truncate">{post.link}</a>}
                       </>
                     )}

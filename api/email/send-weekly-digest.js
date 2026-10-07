@@ -27,6 +27,15 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 const SITE = 'https://shemodeltech.com';
 
+// Run work for many members a few at a time, so the job finishes inside the
+// serverless time limit (strictly one at a time took minutes).
+const inGroups = async (items, size, worker) => {
+ for (let i = 0; i < items.length; i += size) {
+ // eslint-disable-next-line no-await-in-loop
+ await Promise.all(items.slice(i, i + size).map(worker));
+ }
+};
+
 module.exports = async function handler(req, res) {
  res.setHeader('Access-Control-Allow-Origin', '*');
  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
@@ -65,8 +74,9 @@ module.exports = async function handler(req, res) {
 
  const safeCount = async (col, dateField, since) => {
  try {
- const snap = await db.collection(col).where(dateField, '>=', since).get();
- return snap.size;
+ // A count query: no need to download every matching document.
+ const snap = await db.collection(col).where(dateField, '>=', since).count().get();
+ return snap.data().count || 0;
  } catch (e) { return 0; }
  };
 
@@ -124,7 +134,7 @@ module.exports = async function handler(req, res) {
  console.log(`${users.length} members to email (weekly)`);
 
  // Per-user weekly activity, only She Model Tech's real notification types.
- for (const user of users) {
+ await inGroups(users, 10, async (user) => {
  try {
  const notifSnap = await db.collection('notifications')
  .where('userId', '==', user.uid)
@@ -143,7 +153,7 @@ module.exports = async function handler(req, res) {
  } catch (e) {
  user.applications = []; user.approvals = []; user.badges = []; user.unreadMessages = 0;
  }
- }
+ });
 
  // Each member's own projects: ongoing ones (never completed), and any she
  // completed this week.
@@ -304,7 +314,7 @@ ${newCourses.slice(0,4).map(c => `<div class="it">
 
  // Send emails
  let successful = 0, failed = 0;
- for (const user of users) {
+ await inGroups(users, 8, async (user) => {
  try {
  const eng = user.applications.length + user.approvals.length + user.badges.length + user.unreadMessages;
  const range = `${subDays(new Date(),7).toLocaleDateString('en-US',{month:'short',day:'numeric'})} to ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
@@ -314,7 +324,7 @@ ${newCourses.slice(0,4).map(c => `<div class="it">
  await sendMail({ to: user.email, subject: subj, html: generateEmail(user) });
  successful++;
  } catch (err) { console.error(`${user.email}:`, err.message); failed++; }
- }
+ });
 
  try { await db.collection('email_logs').add({ type: 'weekly_digest', timestamp: new Date(), stats: { recipients: users.length, successful, failed } }); } catch (_) {}
 

@@ -33,9 +33,25 @@ export const estimateMinutes = (markdown) => {
   return Math.max(10, Math.round((words / 200 + practical * 30) / 15) * 15);
 };
 
+// The list is read by the dashboard, search, the catalog, and every course
+// page; keep it for a minute (and share a request already in flight) so moving
+// between those pages doesn't re-read the whole collection each time.
+// Publishing, updating, or removing a course clears it.
+const LIST_TTL = 60 * 1000;
+let listCache = null; // { at, promise }
+const clearListCache = () => {
+  listCache = null;
+};
 export const listPublished = async () => {
-  const snap = await getDocs(collection(db, COL));
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  if (!listCache || Date.now() - listCache.at > LIST_TTL) {
+    const promise = getDocs(collection(db, COL)).then((snap) => snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    listCache = { at: Date.now(), promise };
+    promise.catch(() => {
+      if (listCache && listCache.promise === promise) listCache = null;
+    });
+  }
+  // A copy, so callers can't change the cached list.
+  return (await listCache.promise).slice();
 };
 
 export const getPublished = async (id) => {
@@ -140,6 +156,7 @@ export const publishToLearning = async (teacherCourse, content, details, user) =
     { merge: true }
   );
   await batch.commit();
+  clearListCache();
   return ref.id;
 };
 
@@ -152,6 +169,7 @@ export const unpublishFromLearning = async (teacherCourse) => {
   batch.delete(doc(db, COL, id));
   batch.set(doc(db, 'teacher_courses', teacherCourse.id), { published: null }, { merge: true });
   await batch.commit();
+  clearListCache();
 };
 
 /**
@@ -165,6 +183,7 @@ export const removePublishedCourse = async (publishedId) => {
   for (let i = 0; i < (prev.chunkCount || 0); i++) batch.delete(doc(db, COL, publishedId, 'chunks', String(i)));
   batch.delete(doc(db, COL, publishedId));
   await batch.commit();
+  clearListCache();
   if (prev.sourceTeacherId) {
     // Tidy the Mentor Hub copy, if it still exists.
     await setDoc(doc(db, 'teacher_courses', prev.sourceTeacherId), { published: null }, { merge: true }).catch(() => {});

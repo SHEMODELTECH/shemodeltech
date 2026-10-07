@@ -31,6 +31,8 @@ const AdminDashboard = () => {
   const [pendingCompletions, setPendingCompletions] = useState([]);
   const [allProjects, setAllProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  // The project grid shows a page at a time, so a long history can't freeze the tab.
+  const [projectLimit, setProjectLimit] = useState(60);
   // Reviewer access: ADMIN or EDITOR. Editors can approve, request changes,
   // and reject project submissions - they just can't delete anything.
   // Gated on users/{uid}.role, matching firestore.rules exactly. (This screen
@@ -55,12 +57,15 @@ const AdminDashboard = () => {
       where('status', '==', 'pending_admin_approval')
     );
     
-    const unsubscribe = onSnapshot(completionsQuery, async (snapshot) => {
+    // Each update loads its details in parallel; an older update that finishes
+    // late must not overwrite a newer one, and nothing is set after unmount.
+    let latest = 0;
+    let active = true;
+    const unsubscribeSnap = onSnapshot(completionsQuery, async (snapshot) => {
+      const run = ++latest;
       console.log('Pending project reviews found:', snapshot.docs.length);
       
-      const completionsList = [];
-      
-      for (const completionDoc of snapshot.docs) {
+      const completionsList = await Promise.all(snapshot.docs.map(async (completionDoc) => {
         const completionData = { id: completionDoc.id, ...completionDoc.data() };
         
         try {
@@ -80,8 +85,9 @@ const AdminDashboard = () => {
           console.error('Error fetching completion details:', error);
         }
         
-        completionsList.push(completionData);
-      }
+        return completionData;
+      }));
+      if (!active || run !== latest) return;
       
       console.log('Processed project reviews:', completionsList.length);
       setPendingCompletions(completionsList);
@@ -91,7 +97,7 @@ const AdminDashboard = () => {
       setLoading(false);
     });
     
-    return unsubscribe;
+    return () => { active = false; unsubscribeSnap(); };
   }, [isReviewer]);
 
   // Fetch all projects
@@ -770,7 +776,7 @@ const AdminDashboard = () => {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {allProjects.map((project) => {
+                    {allProjects.slice(0, projectLimit).map((project) => {
                       const getStatusColor = (status) => {
                         switch (status) {
                           case 'approved': return 'bg-pink-500/20 text-pink-400 border-pink-500/30';
@@ -838,6 +844,12 @@ const AdminDashboard = () => {
                         </div>
                       );
                     })}
+                    {allProjects.length > projectLimit && (
+                      <button type="button" onClick={() => setProjectLimit((n) => n + 60)}
+                        className="col-span-full w-full text-sm font-semibold text-pink-400 border border-pink-500/30 rounded-xl py-3">
+                        Show more ({allProjects.length - projectLimit} more)
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

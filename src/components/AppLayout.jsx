@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, where, onSnapshot, doc, getDoc, getDocs, limit, updateDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, getDocs, limit, updateDoc } from 'firebase/firestore';
+import { getUserDocCached } from '../utils/firestoreHelpers';
 import { db } from '../firebase/config';
 import { useFeatures } from '../utils/features';
 import { isBlockedForCompany } from '../utils/companyPaths';
@@ -42,9 +43,8 @@ const AppLayout = ({ children }) => {
   // Fetch user role
   useEffect(() => {
     if (!currentUser) return;
-    getDoc(doc(db, 'users', currentUser.uid)).then(snap => {
-      if (snap.exists()) {
-        const data = snap.data();
+    getUserDocCached(currentUser.uid).then(data => {
+      if (data) {
         setUserRole(data.role || 'member');
         setIsCompany(!!data.isCompany);
         // Proposing a project unlocks after a member earns her first badge.
@@ -69,7 +69,7 @@ const AppLayout = ({ children }) => {
       let total = 0;
       snap.docs.forEach(d => { total += (d.data().unreadBy || {})[currentUser.uid] || 0; });
       setUnreadMessages(total);
-    });
+    }, () => {});
     return () => unsub();
   }, [currentUser]);
 

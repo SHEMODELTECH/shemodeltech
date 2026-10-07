@@ -39,6 +39,9 @@ module.exports = async function handler(req, res) {
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      // Give up before the function's own 60-second limit, so the member gets a
+      // clear error instead of a hung request.
+      signal: AbortSignal.timeout(55000),
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': process.env.CLAUDE_API_KEY,
@@ -59,6 +62,9 @@ module.exports = async function handler(req, res) {
     }
     return res.status(200).json(data);
   } catch (error) {
+    if (error && (error.name === 'TimeoutError' || error.name === 'AbortError')) {
+      return res.status(504).json({ error: 'The AI took too long to answer. Please try again.' });
+    }
     console.error('Claude proxy error:', error.message);
     return res.status(500).json({ error: 'Error processing request' });
   }

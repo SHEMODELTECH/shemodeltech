@@ -24,8 +24,13 @@ const ProofWallAdmin = () => {
 
   const load = useCallback(async () => {
     setRows(null);
-    const list = await getActivity(100, type || null);
-    setRows(await withoutDeletedProjects(list, { cleanUp: true }));
+    try {
+      const list = await getActivity(100, type || null);
+      setRows(await withoutDeletedProjects(list, { cleanUp: true }));
+    } catch (e) {
+      console.error(e);
+      setRows([]); // never stuck on "Loading…"
+    }
   }, [type]);
   useEffect(() => {
     load();

@@ -7,7 +7,7 @@ import { addDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
-import { notifyMember, sendEmailNow } from '../../utils/staffAlerts';
+import { notifyMember, notifyMembers, sendEmailNow } from '../../utils/staffAlerts';
 
 // The address emails are sent from (Gmail hides messages you send to yourself).
 const SENDER = 'shemodeltech@gmail.com';
@@ -93,11 +93,14 @@ const AnnouncementsAdmin = () => {
       if (!people.length) { toast.error('Nobody matches that audience yet.'); setBusy(false); return; }
       if (!window.confirm(`Send "${f.title.trim()}" to ${people.length} member${people.length === 1 ? '' : 's'}${f.email ? ' (bell and email)' : ' (bell only)'}?`)) { setBusy(false); return; }
       let emailed = 0;
-      for (const u of people) {
-        const withEmail = f.email && emailed < EMAIL_CAP && u.email;
-        await notifyMember(u.uid, { ...payload(), sendEmail: !!withEmail, emailTo: u.email });
+      // Decide who gets an email first (the first EMAIL_CAP with an address),
+      // then send a few at a time (one by one took many minutes for everyone).
+      const list = people.map((u) => {
+        const withEmail = !!(f.email && emailed < EMAIL_CAP && u.email);
         if (withEmail) emailed += 1;
-      }
+        return { uid: u.uid, sendEmail: withEmail, emailTo: u.email };
+      });
+      await notifyMembers(list, payload());
       await addDoc(collection(db, 'announcements'), {
         ...payload(), audience: f.audience, email: f.email, sentTo: people.length, emailed, sentBy: currentUser.email, createdAt: serverTimestamp(),
       }).catch(() => {});

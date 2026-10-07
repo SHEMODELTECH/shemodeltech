@@ -17,6 +17,16 @@ import {
 import { db } from '../firebase/config';
 import { deleteUser as firebaseDeleteUser } from 'firebase/auth';
 
+// Run `fn` over items a few at a time (one at a time was very slow for large
+// lists; all at once could flood the connection). Stops on the first error,
+// like the one-at-a-time loops it replaces.
+const inGroups = async (items, size, fn) => {
+  for (let i = 0; i < items.length; i += size) {
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all(items.slice(i, i + size).map(fn));
+  }
+};
+
 /**
  * Delete all content created by a user across all Firestore collections
  * Call this BEFORE deleting the Firebase Auth account
@@ -52,15 +62,16 @@ export const deleteAllUserContent = async (userId, userEmail) => {
         const repliesQuery = query(collection(db, 'posts', postDoc.id, 'replies'));
         const repliesSnapshot = await getDocs(repliesQuery);
 
-        const batch = writeBatch(db);
-        repliesSnapshot.docs.forEach((replyDoc) => {
-          batch.delete(replyDoc.ref);
-          summary.replies++;
-        });
-
-        // Delete the post itself
-        batch.delete(postDoc.ref);
-        await batch.commit();
+        // Firestore refuses a batch over 500 writes: replies go in batches of
+        // 450, and the post itself goes in the last one.
+        const refs = [...repliesSnapshot.docs.map((r) => r.ref), postDoc.ref];
+        for (let i = 0; i < refs.length; i += 450) {
+          const batch = writeBatch(db);
+          refs.slice(i, i + 450).forEach((ref) => batch.delete(ref));
+          // eslint-disable-next-line no-await-in-loop
+          await batch.commit();
+        }
+        summary.replies += repliesSnapshot.size;
         summary.posts++;
       }
       console.log(`✅ Deleted ${summary.posts} posts and ${summary.replies} associated replies`);
@@ -78,7 +89,8 @@ export const deleteAllUserContent = async (userId, userEmail) => {
       const allPostsSnapshot = await getDocs(allPostsQuery);
 
       let otherRepliesDeleted = 0;
-      for (const postDoc of allPostsSnapshot.docs) {
+      // Ten posts at a time instead of one by one.
+      await inGroups(allPostsSnapshot.docs, 10, async (postDoc) => {
         const repliesQuery = query(
           collection(db, 'posts', postDoc.id, 'replies'),
           where('authorId', '==', userId)
@@ -93,7 +105,7 @@ export const deleteAllUserContent = async (userId, userEmail) => {
           });
           await batch.commit();
         }
-      }
+      });
       summary.replies += otherRepliesDeleted;
       console.log(`✅ Deleted ${otherRepliesDeleted} replies on other users' posts`);
     } catch (error) {
@@ -158,10 +170,10 @@ export const deleteAllUserContent = async (userId, userEmail) => {
       );
       const receivedSnapshot = await getDocs(receivedNotifQuery);
 
-      for (const notifDoc of receivedSnapshot.docs) {
+      await inGroups(receivedSnapshot.docs, 20, async (notifDoc) => {
         await deleteDoc(notifDoc.ref);
         summary.notifications++;
-      }
+      });
 
       // Notifications sent BY this user
       const sentNotifQuery = query(
@@ -170,10 +182,10 @@ export const deleteAllUserContent = async (userId, userEmail) => {
       );
       const sentSnapshot = await getDocs(sentNotifQuery);
 
-      for (const notifDoc of sentSnapshot.docs) {
+      await inGroups(sentSnapshot.docs, 20, async (notifDoc) => {
         await deleteDoc(notifDoc.ref);
         summary.notifications++;
-      }
+      });
 
       // Also try email-based notifications
       if (normalizedEmail) {
@@ -183,10 +195,10 @@ export const deleteAllUserContent = async (userId, userEmail) => {
         );
         const emailSnapshot = await getDocs(emailNotifQuery);
 
-        for (const notifDoc of emailSnapshot.docs) {
+        await inGroups(emailSnapshot.docs, 20, async (notifDoc) => {
           await deleteDoc(notifDoc.ref);
           summary.notifications++;
-        }
+        });
       }
 
       console.log(`✅ Deleted ${summary.notifications} notifications`);

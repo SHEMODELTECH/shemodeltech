@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
-import { notifyMember } from '../../utils/staffAlerts';
+import { notifyMember, notifyMembers } from '../../utils/staffAlerts';
 import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
 import {
   CATEGORY_LABEL, EVENT_CATEGORIES, deleteEvent, formatWhen, getJoinUrl, getRecordingUrl, isPast, listAllEvents,
@@ -31,15 +31,10 @@ const userInfo = async (uid) => {
   return { name: d.displayName || d.email || 'Member', email: d.email || '', emailsOff: d.emailPreferences?.reminders === false };
 };
 
-// Tell a list of uids something, one at a time, with a progress count.
+// Tell a list of uids something, a few at a time, with a progress count.
 const tellAll = async (uids, n, setProgress) => {
-  let done = 0;
-  for (const uid of uids) {
-    // eslint-disable-next-line no-await-in-loop
-    await notifyMember(uid, n);
-    done += 1;
-    setProgress(`${done} of ${uids.length} sent…`);
-  }
+  const done = await notifyMembers(uids.map((uid) => ({ uid, sendEmail: n.sendEmail !== false })), n,
+    (d, total) => setProgress(`${d} of ${total} sent…`));
   setProgress('');
   return done;
 };
@@ -112,21 +107,18 @@ const EventsAdmin = () => {
         const users = (await getDocs(collection(db, 'users'))).docs
           .map((d) => ({ uid: d.id, ...d.data() }))
           .filter((u) => !u.isCompany && u.onboardingComplete);
-        let done = 0;
-        for (const u of users) {
-          // eslint-disable-next-line no-await-in-loop
-          await notifyMember(u.uid, {
+        // A few at a time, with phone notifications sent in groups.
+        const done = await notifyMembers(
+          users.map((u) => ({ uid: u.uid, sendEmail: u.emailPreferences?.reminders !== false, emailTo: u.email })),
+          {
             type: 'event_announced',
             title: `New event: ${data.title}`,
             body: `${CATEGORY_LABEL[data.category] || 'Event'} · ${formatWhen(ev)} · Online. ${data.description.slice(0, 160)}${data.description.length > 160 ? '…' : ''}`,
             link: `/events/${id}`,
             ctaLabel: 'Register',
-            sendEmail: u.emailPreferences?.reminders !== false,
-            emailTo: u.email,
-          });
-          done += 1;
-          setProgress(`Announcing: ${done} of ${users.length}…`);
-        }
+          },
+          (d, total) => setProgress(`Announcing: ${d} of ${total}…`)
+        );
         setProgress('');
         await updateDoc(doc(db, 'events', id), { announcedAt: new Date().toISOString() });
         toast.success(`Published and announced to ${done} members.`);
@@ -167,11 +159,15 @@ const EventsAdmin = () => {
 
   const showRegs = async (e) => {
     setEditing(null);
-    setRecording(await getRecordingUrl(e));
-    const rows = await listRegistrations(e.id);
-    const withInfo = await Promise.all(rows.map(async (r) => ({ ...r, ...(await userInfo(r.uid)) })));
-    withInfo.sort((a, b) => (a.status === b.status ? 0 : a.status === 'registered' ? -1 : 1));
-    setOpenRegs({ event: e, rows: withInfo });
+    try {
+      setRecording((await getRecordingUrl(e)) || '');
+      const rows = await listRegistrations(e.id);
+      const withInfo = await Promise.all(rows.map(async (r) => ({ ...r, ...(await userInfo(r.uid)) })));
+      withInfo.sort((a, b) => (a.status === b.status ? 0 : a.status === 'registered' ? -1 : 1));
+      setOpenRegs({ event: e, rows: withInfo });
+    } catch (err) {
+      toast.error('Could not load the registrations.');
+    }
   };
 
   const confirmPresenter = async (r) => {

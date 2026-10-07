@@ -84,7 +84,7 @@ const SearchPage = () => {
       }
     })();
     return () => { active = false; };
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const q = term.trim().toLowerCase();
 

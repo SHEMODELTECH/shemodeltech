@@ -1,7 +1,8 @@
 /* scripts/generateCourses.js
  *
  * Scans src/Pages/courses/<Track>/*.md and emits src/utils/foundationsCoursesData.js,
- * the data module the Foundations page reads from. This is what makes courses "pulled
+ * the data module the Foundations page reads from (metadata only), plus one module
+ * per course with its text under src/utils/courseContent/ (loaded on demand). This is what makes courses "pulled
  * from the folder": drop a new .md into a track folder and it shows up on next build.
  *
  * Runs automatically before `npm start` and `npm run build` (see package.json prestart
@@ -23,6 +24,11 @@ const { courseRequirements } = require('../lib/courseRequirements');
 
 const COURSES_DIR = path.join(__dirname, '..', 'src', 'Pages', 'courses');
 const OUT_FILE = path.join(__dirname, '..', 'src', 'utils', 'foundationsCoursesData.js');
+// Each course's full text is written to its own small module here, loaded only
+// when that course is opened (see loadCourseMarkdown in utils/foundationsCourses.js),
+// so pages that list courses don't download every course's text.
+const CONTENT_DIR = path.join(__dirname, '..', 'src', 'utils', 'courseContent');
+const { marked } = require('marked');
 
 // The first "# " heading outside code blocks (a "# comment" in code isn't a title).
 const firstHeading = (md) => {
@@ -217,13 +223,26 @@ const readInteractive = (fullPath, file, track) => {
     modules: modules.map(({ title, part }) => ({ title, part })),
     order: readOrder(html),
     references: referencesFor(track, html.replace(/<style[\s\S]*?<\/style>/gi, ' ')),
-    markdown: '',
   };
 };
 
 const readOrder = (md) => {
   const m = md.match(/<!--\s*order:\s*(\d+)\s*-->/i);
   return m ? parseInt(m[1], 10) : null;
+};
+
+// How many parts the course reader splits a course into (one per "## " section,
+// plus an "Overview" part when the intro before the first "## " is long), the same
+// way splitParts in src/Pages/learning/shared.jsx does. Lets list pages show
+// progress without loading the course text.
+const stripTags = (html) => String(html || '').replace(/<[^>]+>/g, '').trim();
+const partCount = (md) => {
+  const tokens = marked.lexer(String(md || ''));
+  const h2 = [];
+  tokens.forEach((t, i) => { if (t.type === 'heading' && t.depth === 2) h2.push(i); });
+  if (!h2.length) return 1;
+  const intro = tokens.slice(0, h2[0]).filter((t) => !(t.type === 'heading' && t.depth === 1));
+  return h2.length + (stripTags(marked.parser(intro)).length > 500 ? 1 : 0);
 };
 
 const countProjects = (md) => {
@@ -235,6 +254,7 @@ const build = () => {
   const result = {};
   if (!fs.existsSync(COURSES_DIR)) {
     fs.writeFileSync(OUT_FILE, moduleText({}));
+    writeContent({});
     console.log('[generateCourses] no courses dir; wrote empty data module.');
     return;
   }
@@ -269,6 +289,8 @@ const build = () => {
         // <!-- certificate: none --> marks an orientation page: it can be completed but gives no certificate.
         ...(/<!--\s*certificate:\s*none\s*-->/i.test(md) ? { noCertificate: true } : {}),
         ...((md.match(/<!--\s*runnable:\s*(python|html)\s*-->/i) || [])[1] ? { runnable: md.match(/<!--\s*runnable:\s*(python|html)\s*-->/i)[1].toLowerCase() } : {}),
+        hasMarkdown: true,
+        partCount: partCount(md),
         markdown: md,
       };
     });
@@ -283,7 +305,13 @@ const build = () => {
     if (courses.length) result[track] = courses.map(({ order, ...c }) => c);
   });
 
-  fs.writeFileSync(OUT_FILE, moduleText(result));
+  // Course text goes to per-course modules; the data module keeps metadata only.
+  writeContent(result);
+  const meta = {};
+  Object.entries(result).forEach(([track, list]) => {
+    meta[track] = list.map(({ markdown, ...c }) => c);
+  });
+  fs.writeFileSync(OUT_FILE, moduleText(meta));
   // A tiny summary for pages (like the front page) that only need counts, so
   // they don't pull every course's full text into their download.
   const learnerCourses = Object.entries(result)
@@ -314,6 +342,36 @@ const build = () => {
   fs.writeFileSync(path.join(__dirname, '..', 'lib', 'courseManifest.json'), JSON.stringify(manifest, null, 1) + '\n');
   const total = Object.values(result).reduce((n, arr) => n + arr.length, 0);
   console.log(`[generateCourses] wrote ${total} course(s) across ${Object.keys(result).length} track(s).`);
+};
+
+// File name for a course's text module: "TechDev/intro" -> "TechDev__intro.js".
+const contentFile = (track, slug) => `${track}__${slug}`.replace(/[^\w.-]/g, '_') + '.js';
+
+// Writes src/utils/courseContent/<Track>__<slug>.js (one per written course,
+// exporting its markdown) and index.js, a map of loaders so the bundler makes
+// one small chunk per course. Old files from removed courses are deleted.
+const writeContent = (result) => {
+  fs.mkdirSync(CONTENT_DIR, { recursive: true });
+  const keep = new Set(['index.js']);
+  const lines = [];
+  Object.entries(result).forEach(([track, list]) => list.forEach((c) => {
+    if (!c.markdown) return;
+    const file = contentFile(track, c.slug);
+    keep.add(file);
+    const text = '// AUTO-GENERATED by scripts/generateCourses.js. Do not edit by hand.\n' +
+      `export default ${JSON.stringify(c.markdown)};\n`;
+    const out = path.join(CONTENT_DIR, file);
+    // Only rewrite changed files, so the dev server doesn't rebuild every course.
+    if (!fs.existsSync(out) || fs.readFileSync(out, 'utf8') !== text) fs.writeFileSync(out, text);
+    const chunk = file.replace(/\.js$/, '');
+    lines.push(`  ${JSON.stringify(`${track}/${c.slug}`)}: () => import(/* webpackChunkName: ${JSON.stringify(`course-${chunk}`)} */ './${file}'),`);
+  }));
+  fs.readdirSync(CONTENT_DIR).forEach((f) => { if (!keep.has(f)) fs.unlinkSync(path.join(CONTENT_DIR, f)); });
+  const index = '// AUTO-GENERATED by scripts/generateCourses.js. Do not edit by hand.\n' +
+    '// Loads one course\'s text on demand: COURSE_CONTENT["Track/slug"]() -> import of { default: markdown }.\n\n' +
+    'export const COURSE_CONTENT = {\n' + lines.join('\n') + (lines.length ? '\n' : '') + '};\n';
+  const indexPath = path.join(CONTENT_DIR, 'index.js');
+  if (!fs.existsSync(indexPath) || fs.readFileSync(indexPath, 'utf8') !== index) fs.writeFileSync(indexPath, index);
 };
 
 const moduleText = (obj) =>

@@ -1,5 +1,5 @@
 // src/Pages/TalentBoard.jsx - Discover and recruit verified talent
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -125,11 +125,14 @@ const TalentBoard = () => {
     const st = statsOf(t);
     return featuredBoost + 1 + (st?.ratingCount ? st.avg * 10 + Math.min(st.ratingCount, 50) / 10 : 0) + (t.mentorApprovedCourses || 0) / 100;
   };
-  const filtered = talents
+  // Filtering and ranking run only when their inputs change, not on every render.
+  const filtered = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    return talents
     .filter(t => {
-      const matchesSearch = !searchTerm ||
-        (t.displayName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (t.specialization || '').toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = !term ||
+        (t.displayName || '').toLowerCase().includes(term) ||
+        (t.specialization || '').toLowerCase().includes(term);
       const matchesBadge =
         !filterBadge ||
         (filterBadge === 'mentors'
@@ -138,10 +141,18 @@ const TalentBoard = () => {
       return matchesSearch && matchesBadge;
     })
     .sort((a, b) => rank(b) - rank(a) || (a.displayName || '').localeCompare(b.displayName || ''));
-  const topMentors = talents
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [talents, searchTerm, filterBadge, mentorStats]);
+  const topMentors = useMemo(() => talents
     .filter((t) => isMentor(t) && statsOf(t)?.ratingCount)
     .sort((a, b) => rank(b) - rank(a))
-    .slice(0, 4);
+    .slice(0, 4),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [talents, mentorStats]);
+  // Render the grid a page at a time (the board can hold hundreds of people).
+  const PAGE = 48;
+  const [shown, setShown] = useState(PAGE);
+  useEffect(() => setShown(PAGE), [searchTerm, filterBadge]);
 
   return (
     
@@ -206,14 +217,14 @@ const TalentBoard = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filtered.map(talent => (
+            {filtered.slice(0, shown).map(talent => (
               <div
                 key={talent.id}
                 onClick={() => navigate(`/profile/${encodeURIComponent(talent.email)}`)}
                 className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-pink-300 hover:shadow-sm transition-all cursor-pointer"
               >
                 {talent.photoURL ? (
-                  <img src={talent.photoURL} alt={talent.displayName} className="w-16 h-16 rounded-full mx-auto mb-3 object-cover border-2 border-gray-100" />
+                  <img src={talent.photoURL} alt={talent.displayName} loading="lazy" width={64} height={64} className="w-16 h-16 rounded-full mx-auto mb-3 object-cover border-2 border-gray-100" />
                 ) : (
                   <div className="w-16 h-16 rounded-full mx-auto mb-3 bg-pink-600 flex items-center justify-center text-white font-bold text-lg">
                     {(talent.displayName || 'U')[0]}
@@ -244,6 +255,16 @@ const TalentBoard = () => {
                 )}
               </div>
             ))}
+          </div>
+        )}
+        {!loading && filtered.length > shown && (
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={() => setShown((n) => n + PAGE)}
+              className="px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-sm font-semibold text-gray-700 hover:bg-gray-50"
+            >
+              Show more ({filtered.length - shown} more)
+            </button>
           </div>
         )}
       </div>

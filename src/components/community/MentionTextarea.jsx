@@ -1,7 +1,7 @@
 // src/components/community/MentionTextarea.jsx - She Model Tech Mention System - FULLY RESPONSIVE
 
 import React, { useState, useRef } from 'react';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import LinkInsertModal from './LinkInsertModal';
 
@@ -38,13 +38,15 @@ const MentionTextarea = ({
       const displayNameQuery = query(
         collection(db, 'users'),
         where('displayName', '>=', searchTerm),
-        where('displayName', '<=', searchTerm + '\uf8ff')
+        where('displayName', '<=', searchTerm + '\uf8ff'),
+        limit(10)
       );
       
       const emailQuery = query(
         collection(db, 'users'),
         where('email', '>=', searchTerm),
-        where('email', '<=', searchTerm + '\uf8ff')
+        where('email', '<=', searchTerm + '\uf8ff'),
+        limit(10)
       );
       
       const [displayNameSnapshot, emailSnapshot] = await Promise.all([

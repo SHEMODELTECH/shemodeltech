@@ -8,7 +8,11 @@ import { activeSponsors, listSponsors } from '../utils/sponsors';
 const SponsorsStrip = ({ className = '' }) => {
   const [items, setItems] = useState([]);
   useEffect(() => {
-    listSponsors().then((l) => setItems(activeSponsors(l))).catch(() => setItems([]));
+    let dead = false;
+    listSponsors().then((l) => !dead && setItems(activeSponsors(l))).catch(() => !dead && setItems([]));
+    return () => {
+      dead = true;
+    };
   }, []);
   if (!items.length) return null;
   return (
@@ -20,12 +24,12 @@ const SponsorsStrip = ({ className = '' }) => {
           <li key={s.id}>
             {s.url ? (
               <a href={s.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 hover:opacity-80">
-                <img src={s.logoUrl} alt={s.name} className="h-12 w-auto max-w-[160px] object-contain" />
+                <img src={s.logoUrl} alt={s.name} loading="lazy" className="h-12 w-auto max-w-[160px] object-contain" />
                 <span className="text-xs text-gray-600">{s.name}</span>
               </a>
             ) : (
               <span className="flex flex-col items-center gap-2">
-                <img src={s.logoUrl} alt={s.name} className="h-12 w-auto max-w-[160px] object-contain" />
+                <img src={s.logoUrl} alt={s.name} loading="lazy" className="h-12 w-auto max-w-[160px] object-contain" />
                 <span className="text-xs text-gray-600">{s.name}</span>
               </span>
             )}

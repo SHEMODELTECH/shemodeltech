@@ -20,7 +20,7 @@ const NotificationsPage = () => {
     getDoc(doc(db, 'users', currentUser.uid))
       .then(s => { if (s.exists()) setIsCompany(!!s.data().isCompany); })
       .catch(() => {});
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!currentUser) { navigate('/login'); return; }
@@ -31,9 +31,12 @@ const NotificationsPage = () => {
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
       setNotifications(list);
       setLoading(false);
+    }, (err) => {
+      console.error('Notifications listener error:', err);
+      setLoading(false);
     });
     return unsub;
-  }, [currentUser, navigate]);
+  }, [currentUser?.uid, navigate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Once the notifications have loaded and been shown, mark any unread ones as
   // read (once per visit) so the bell badge clears after the user has seen them.

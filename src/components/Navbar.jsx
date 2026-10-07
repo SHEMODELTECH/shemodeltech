@@ -37,7 +37,7 @@ const Navbar = ({ cta = null }) => {
         total += unreadBy[currentUser.uid] || 0;
       });
       setUnreadMessages(total);
-    });
+    }, () => {});
     return () => unsub();
   }, [currentUser]);
 

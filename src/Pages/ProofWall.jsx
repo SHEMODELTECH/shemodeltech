@@ -16,7 +16,7 @@ import {
   deleteActivityItem,
   withoutDeletedProjects,
 } from '../utils/activityFeed';
-import { doc, getDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, getDocs, addDoc, collection, serverTimestamp, query, where, documentId } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { toast } from 'react-toastify';
 import { uploadImageToBlob, validateImageFile } from '../utils/blobStorage';
@@ -149,6 +149,19 @@ const filtersFor = (isCompany) => (isCompany ? [...FILTERS, { id: 'talent', labe
 // Filter ids that map directly to an activity `type` in the feed. Everything else
 // ('all', 'open', 'talent') loads the unfiltered feed and/or its own data source.
 const ACTIVITY_TYPE_FILTERS = ['update', 'lead', 'badge', 'ship', 'milestone'];
+
+// Fetch user docs in batches of 30 (one query per chunk instead of one read per user).
+const fetchUsersByIds = async (ids) => {
+  const unique = [...new Set(ids.filter((id) => typeof id === 'string' && id))];
+  const byId = {};
+  for (let i = 0; i < unique.length; i += 30) {
+    try {
+      const snap = await getDocs(query(collection(db, 'users'), where(documentId(), 'in', unique.slice(i, i + 30))));
+      snap.docs.forEach((d) => { byId[d.id] = d.data(); });
+    } catch (_) {}
+  }
+  return byId;
+};
 
 const ProofWall = () => {
   const { currentUser } = useAuth();
@@ -300,11 +313,17 @@ const ProofWall = () => {
 
   const load = useCallback(async (f) => {
     setLoading(true);
-    // 'all' (and non-type tabs like 'open'/'talent') load the unfiltered feed.
-    const typeFilter = ACTIVITY_TYPE_FILTERS.includes(f) ? f : null;
-    // Hide entries for projects that were deleted (admins also clear them out).
-    setItems(await withoutDeletedProjects(await getActivity(50, typeFilter), { cleanUp: isAdminRef.current }));
-    setLoading(false);
+    try {
+      // 'all' (and non-type tabs like 'open'/'talent') load the unfiltered feed.
+      const typeFilter = ACTIVITY_TYPE_FILTERS.includes(f) ? f : null;
+      // Hide entries for projects that were deleted (admins also clear them out).
+      setItems(await withoutDeletedProjects(await getActivity(50, typeFilter), { cleanUp: isAdminRef.current }));
+    } catch (e) {
+      console.error('load proof wall failed', e);
+      toast.error('Could not load the Proof Wall. Please refresh.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   // Open projects: have a lead (status 'active') and are still accepting collaborator
@@ -318,9 +337,10 @@ const ProofWall = () => {
     (async () => {
       setLoadingOpen(true);
       try {
-        const { collection: col, getDocs, query: q, where } = await import('firebase/firestore');
+        const { collection: col, getDocs, query: q, where, limit: lim } = await import('firebase/firestore');
         // Avoid composite-index needs: filter by status only, then refine in JS.
-        const snap = await getDocs(q(col(db, 'projects'), where('status', '==', 'active')));
+        // Capped so the feed never downloads an unbounded project list.
+        const snap = await getDocs(q(col(db, 'projects'), where('status', '==', 'active'), lim(200)));
         const list = snap.docs
           .map((d) => ({ id: d.id, ...d.data() }))
           .filter((p) => p.applicationsOpen !== false);
@@ -335,7 +355,7 @@ const ProofWall = () => {
     return () => {
       active = false;
     };
-  }, [filter, myData]);
+  }, [filter]);
 
   // Top Talent (companies): members who recently earned badges or are highly rated
   // Each links to their profile.
@@ -390,21 +410,18 @@ const ProofWall = () => {
 
         // Merge unique users, resolve email + photo for profile links (in parallel).
         const uids = [...new Set([...badgeByUser.keys(), ...teachByUser.keys()])];
-        const { doc: dref, getDoc } = await import('firebase/firestore');
+        const usersById = await fetchUsersByIds(uids);
         const cards = await Promise.all(
           uids.map(async (uid) => {
             let email = null,
               photoURL = null,
               displayName = null;
-            try {
-              const us = await getDoc(dref(db, 'users', uid));
-              if (us.exists()) {
-                const u = us.data();
-                email = u.email;
-                photoURL = u.photoURL;
-                displayName = u.displayName;
-              }
-            } catch (_) {}
+            const u = usersById[uid];
+            if (u) {
+              email = u.email;
+              photoURL = u.photoURL;
+              displayName = u.displayName;
+            }
             const b = badgeByUser.get(uid);
             const t = teachByUser.get(uid);
             return {
@@ -454,25 +471,13 @@ const ProofWall = () => {
     if (ids.length === 0) return;
     let cancelled = false;
     (async () => {
-      const entries = await Promise.all(
-        ids.map(async (uid) => {
-          try {
-            const us = await getDoc(doc(db, 'users', uid));
-            if (us.exists()) {
-              const u = us.data();
-              return [
-                uid,
-                {
-                  photoURL: u.photoURL || null,
-                  email: u.email || null,
-                  name: u.displayName || null,
-                },
-              ];
-            }
-          } catch (_) {}
-          return [uid, { photoURL: null, email: null, name: null }];
-        })
-      );
+      const usersById = await fetchUsersByIds(ids);
+      const entries = ids.map((uid) => {
+        const u = usersById[uid];
+        return u
+          ? [uid, { photoURL: u.photoURL || null, email: u.email || null, name: u.displayName || null }]
+          : [uid, { photoURL: null, email: null, name: null }];
+      });
       if (!cancelled)
         setPosterInfo((prev) => {
           const next = { ...prev };
@@ -494,7 +499,13 @@ const ProofWall = () => {
         if (s.exists()) setMyData({ uid: currentUser.uid, ...s.data() });
       })
       .catch(() => {});
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Release the composer's image preview URL when it's replaced or the page unmounts.
+  useEffect(() => {
+    const url = updateImage?.preview;
+    return () => { if (url) URL.revokeObjectURL(url); };
+  }, [updateImage]);
 
   const handlePostUpdate = async () => {
     if (!updateText.trim() || !updateProject.trim()) {
@@ -822,6 +833,7 @@ const ProofWall = () => {
                   <img
                     src={m.photoURL}
                     alt={m.name}
+                    loading="lazy"
                     className="w-12 h-12 rounded-full object-cover border border-gray-200 flex-shrink-0"
                   />
                 ) : (
@@ -1058,6 +1070,7 @@ const ProofWall = () => {
                                 <img
                                   src={p.photoURL}
                                   alt={a.actorName || 'member'}
+                                  loading="lazy"
                                   className="w-10 h-10 rounded-full object-cover border border-gray-200"
                                 />
                               ) : (

@@ -65,7 +65,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (!currentUser) return;
     getDoc(doc(db, 'users', currentUser.uid)).then((s) => setViewerStaff(['admin', 'editor'].includes(s.data()?.role))).catch(() => {});
-  }, [currentUser]);
+  }, [currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
   // The VIEWER's own profile - needed for the messaging rules:
   // free company accounts can't message anyone, and free individual
   // accounts can't message company accounts.
@@ -80,6 +80,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (!userParam || !currentUser) return;
+    let active = true;
 
     const fetchProfile = async () => {
       setLoading(true);
@@ -108,21 +109,32 @@ const UserProfile = () => {
           }
         }
 
-        if (!userData) {
-          const allQ = query(collection(db, 'users'), limit(50));
-          const allSnap = await getDocs(allQ);
-          const match = allSnap.docs.find(d => {
-            const data = d.data();
-            return data.email?.toLowerCase() === userParam.toLowerCase() || d.id === userParam;
-          });
-          if (match) userData = { uid: match.id, ...match.data() };
+        // Emails saved with capitals: try the exact text too (was a scan of 50 users).
+        if (!userData && userParam !== userParam.toLowerCase()) {
+          const exactSnap = await getDocs(query(collection(db, 'users'), where('email', '==', userParam), limit(1)));
+          if (!exactSnap.empty) {
+            const d = exactSnap.docs[0];
+            userData = { uid: d.id, ...d.data() };
+          }
         }
 
+        if (!active) return;
         if (userData) {
           setProfile(userData);
           if (userData?.uid) {
-            listMentorCertificates(userData.uid).then(setMentorCerts).catch(() => setMentorCerts([]));
-            mentorStatsByUid().then((all) => setMentorStats(all[userData.uid] || null)).catch(() => {});
+            listMentorCertificates(userData.uid)
+              .then((certs) => {
+                if (!active) return;
+                setMentorCerts(certs);
+                // Course stats are only shown for mentors with published courses;
+                // they cost several reads per published course, so skip otherwise.
+                if (certs.length > 0) {
+                  mentorStatsByUid().then((all) => { if (active) setMentorStats(all[userData.uid] || null); }).catch(() => {});
+                } else {
+                  setMentorStats(null);
+                }
+              })
+              .catch(() => { if (active) setMentorCerts([]); });
           }
           // Total projects DONE (paid or free). Auto-populates from the
           // projects collection: any project with status 'completed' where
@@ -145,7 +157,7 @@ const UserProfile = () => {
             try {
               collect(await getDocs(query(collection(db, 'projects'), where('submitterId', '==', userData.uid))));
             } catch (_) {}
-            setCompletedCount(done.size);
+            if (active) setCompletedCount(done.size);
           } catch (e) {
             console.log('Could not fetch completed projects:', e.message);
           }
@@ -154,17 +166,18 @@ const UserProfile = () => {
         }
       } catch (e) {
         console.error('Error loading profile:', e);
-        setNotFound(true);
+        if (active) setNotFound(true);
       }
-      setLoading(false);
+      if (active) setLoading(false);
     };
 
     fetchProfile();
-  }, [userParam, currentUser]);
+    return () => { active = false; };
+  }, [userParam, currentUser?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getInitials = (name, email) => {
     if (name) {
-      const parts = name.trim().split(' ');
+      const parts = name.trim().split(' ').filter(Boolean);
       return parts.length >= 2
         ? `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
         : name[0].toUpperCase();

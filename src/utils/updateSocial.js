@@ -99,10 +99,22 @@ export const notifyMentions = (mentions, me, activityId) => {
 // look up anyone without one (older reactions) from their profile, once.
 const photoCache = {};
 export const fetchPhotos = async (uids) => {
-  const { doc: d, getDoc } = await import('firebase/firestore');
-  const missing = [...new Set(uids)].filter((u) => u && !(u in photoCache));
-  await Promise.all(missing.map((u) => getDoc(d(db, 'users', u))
-    .then((s) => { photoCache[u] = s.data()?.photoURL || ''; })
-    .catch(() => { photoCache[u] = ''; })));
+  const { doc: d, getDoc, where, documentId } = await import('firebase/firestore');
+  const missing = [...new Set(uids)].filter((u) => typeof u === 'string' && u && !(u in photoCache));
+  // One query per 30 people instead of a read per person.
+  for (let i = 0; i < missing.length; i += 30) {
+    const chunk = missing.slice(i, i + 30);
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const s = await getDocs(query(collection(db, 'users'), where(documentId(), 'in', chunk)));
+      chunk.forEach((u) => { photoCache[u] = ''; });
+      s.docs.forEach((x) => { photoCache[x.id] = x.data()?.photoURL || ''; });
+    } catch (_) {
+      // eslint-disable-next-line no-await-in-loop
+      await Promise.all(chunk.map((u) => getDoc(d(db, 'users', u))
+        .then((s) => { photoCache[u] = s.data()?.photoURL || ''; })
+        .catch(() => { photoCache[u] = ''; })));
+    }
+  }
   return Object.fromEntries(uids.map((u) => [u, photoCache[u] || '']));
 };

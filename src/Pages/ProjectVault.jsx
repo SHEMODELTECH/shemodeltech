@@ -124,7 +124,7 @@ const ProjectVault = () => {
         // complete it now and show it on the completed wall immediately.
         for (const p of all) {
           if (isReadyToComplete(p)) {
-            const healed = await healPaidProjectStatus(p);
+            const healed = await healPaidProjectStatus(p).catch(() => false);
             if (healed) p.status = 'completed';
           }
         }

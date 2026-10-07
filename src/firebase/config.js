@@ -10,10 +10,7 @@ import {
   getRedirectResult,
   onAuthStateChanged
 } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-import { getMessaging, isSupported as messagingIsSupported } from "firebase/messaging";
 import { sanitizeErrorMessage, formatPasswordRequirementError } from "../utils/sanitizeError";
 
 // Your web app's Firebase configuration for She Model Tech
@@ -30,18 +27,24 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+export { app };
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const storage = getStorage(app);
-export const analytics = getAnalytics(app);
+// Storage is not used by the web app (uploads go through utils/blobStorage),
+// so it is no longer initialised here: that kept its SDK in the main bundle.
+// Messaging (push) is loaded on demand in utils/pushNotifications.js.
 
-// Messaging (push). Only available in supported browsers; guard at call sites.
-export let messaging = null;
-messagingIsSupported().then((ok) => {
-  if (ok) {
-    try { messaging = getMessaging(app); } catch (e) { console.warn('Messaging init skipped:', e?.message); }
-  }
-}).catch(() => {});
+// Analytics: loaded after start-up, in its own chunk, and only where the
+// browser supports it (getAnalytics throws in some privacy modes, which used
+// to crash the app before it rendered).
+export let analytics = null;
+if (typeof window !== 'undefined') {
+  import("firebase/analytics")
+    .then(({ getAnalytics, isSupported }) =>
+      isSupported().then((ok) => { if (ok) analytics = getAnalytics(app); })
+    )
+    .catch(() => {});
+}
 
 // Configure auth persistence to handle Safari storage issues
 const configurePersistence = async () => {

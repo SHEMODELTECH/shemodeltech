@@ -7,7 +7,7 @@
 // can be safely bulk-deleted once real activity flows in.
 
 import {
-  collection, addDoc, getDoc, getDocs, query, where, orderBy, limit,
+  collection, addDoc, getDoc, getDocs, query, where, orderBy, limit, documentId,
   deleteDoc, doc, serverTimestamp, writeBatch,
   updateDoc, arrayUnion, arrayRemove, increment, deleteField,
 } from 'firebase/firestore';
@@ -52,7 +52,8 @@ export const getActivity = async (max = 50, typeFilter = null) => {
   try {
     // Fetch recent activity ordered by time (single-field index, always available),
     // then filter by type client-side to avoid needing a composite index.
-    const q = query(collection(db, 'activity'), orderBy('createdAt', 'desc'), limit(max * 3));
+    // Over-fetch only when filtering by type client-side.
+    const q = query(collection(db, 'activity'), orderBy('createdAt', 'desc'), limit(typeFilter ? max * 3 : max));
     const snap = await getDocs(q);
     let rows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     if (typeFilter) rows = rows.filter(r => r.type === typeFilter);
@@ -192,12 +193,25 @@ export const deleteProjectActivity = async (projectId) => {
 export const withoutDeletedProjects = async (rows, { cleanUp = false } = {}) => {
   const ids = [...new Set(rows.map((r) => r.projectId).filter(Boolean))];
   const gone = new Set();
-  await Promise.all(ids.map(async (id) => {
+  // One 'in' query per 30 projects instead of a read per project; if a chunk's
+  // query is refused, fall back to single reads for that chunk.
+  for (let i = 0; i < ids.length; i += 30) {
+    const chunk = ids.slice(i, i + 30);
     try {
-      const s = await getDoc(doc(db, 'projects', id));
-      if (!s.exists()) gone.add(id);
-    } catch (_) { /* can't tell: keep it */ }
-  }));
+      // eslint-disable-next-line no-await-in-loop
+      const snap = await getDocs(query(collection(db, 'projects'), where(documentId(), 'in', chunk)));
+      const found = new Set(snap.docs.map((d) => d.id));
+      chunk.forEach((id) => { if (!found.has(id)) gone.add(id); });
+    } catch (_) {
+      // eslint-disable-next-line no-await-in-loop
+      await Promise.all(chunk.map(async (id) => {
+        try {
+          const s = await getDoc(doc(db, 'projects', id));
+          if (!s.exists()) gone.add(id);
+        } catch (_e) { /* can't tell: keep it */ }
+      }));
+    }
+  }
   if (cleanUp && gone.size) {
     rows.filter((r) => gone.has(r.projectId)).forEach((r) => deleteDoc(doc(db, 'activity', r.id)).catch(() => {}));
   }

@@ -28,7 +28,9 @@ const OrgManager = ({ request, onCreated }) => {
     const builtIn = tracksWithCourses().filter((t) => !['company', 'start'].includes(t)).flatMap((t) => coursesForTrack(t).map((c) => ({ track: t, slug: c.slug, title: c.title })));
     listPublished().then((l) => setCatalog([...builtIn, ...l.map(toCatalogCourse).map((c) => ({ track: c.track, slug: c.slug, title: c.title }))])).catch(() => setCatalog(builtIn));
     listTeacherCourses().then((l) => setHub(l.filter((c) => !c.published))).catch(() => {});
-  }, [org]);
+    // Once per organization: saving a setting updates `org` and must not reload the catalog.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org?.id]);
 
   const create = async () => {
     const emails = window.prompt('Email address(es) of the organization’s admins or instructors (they need She Model Tech accounts). Separate with commas.', request.contactEmail || '');

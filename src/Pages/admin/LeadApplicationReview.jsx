@@ -11,7 +11,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, documentId } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -110,12 +110,20 @@ const LeadApplicationReview = () => {
           const t = await getDocs(query(collection(db, 'team_applications'), where('status', '==', 'approved')));
           t.docs.forEach((d) => d.data().email && team.add(String(d.data().email).trim().toLowerCase()));
         } catch (_) { /* optional */ }
+        // Applicants' profiles, 30 at a time in parallel (one read per
+        // applicant, one after another, was slow with many applications).
+        const uids = [...new Set(apps.map((a) => a.applicantUid).filter(Boolean))];
+        const profiles = {};
+        const chunks = [];
+        for (let i = 0; i < uids.length; i += 30) chunks.push(uids.slice(i, i + 30));
+        await Promise.all(chunks.map((ids) =>
+          getDocs(query(collection(db, 'users'), where(documentId(), 'in', ids)))
+            .then((snap) => snap.docs.forEach((d) => { profiles[d.id] = d.data(); }))
+            .catch(() => {})));
         const out = {};
         for (const a of apps) {
           if (!a.applicantUid || out[a.applicantUid]) continue;
-          // eslint-disable-next-line no-await-in-loop
-          const u = await getDoc(doc(db, 'users', a.applicantUid)).catch(() => null);
-          const d = u && u.exists() ? u.data() : {};
+          const d = profiles[a.applicantUid] || {};
           out[a.applicantUid] = {
             mentor: (d.mentorApprovedCourses || 0) > 0,
             team: team.has(String(a.applicantEmail || d.email || '').trim().toLowerCase()),

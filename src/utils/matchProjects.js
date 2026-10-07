@@ -121,18 +121,33 @@ const scoreProject = (project, profile) => {
  * Return open projects ranked by fit for the given profile.
  * Always returns something (falls back to newest) so the wizard is never empty.
  */
+// Open projects are shared by every caller for one minute, so a dashboard that
+// re-renders (or several cards asking at once) doesn't re-download the board.
+let openCache = { at: 0, promise: null };
+const loadOpenProjects = () => {
+  if (openCache.promise && Date.now() - openCache.at < 60 * 1000) return openCache.promise;
+  const promise = getDocs(
+    query(
+      collection(db, 'projects'),
+      where('status', 'in', ['active', 'lead_recruitment', 'setup'])
+    )
+  ).then((snap) =>
+    snap.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .filter((p) => p.reviewStatus !== 'rejected')
+  );
+  openCache = { at: Date.now(), promise };
+  // A failed read is not cached.
+  promise.catch(() => {
+    if (openCache.promise === promise) openCache = { at: 0, promise: null };
+  });
+  return promise;
+};
+
 export const matchProjects = async (profile, max = 6) => {
   let docs = [];
   try {
-    const snap = await getDocs(
-      query(
-        collection(db, 'projects'),
-        where('status', 'in', ['active', 'lead_recruitment', 'setup'])
-      )
-    );
-    docs = snap.docs
-      .map((d) => ({ id: d.id, ...d.data() }))
-      .filter((p) => p.reviewStatus !== 'rejected');
+    docs = await loadOpenProjects();
   } catch (e) {
     console.error('matchProjects fetch failed:', e.message);
     return [];
