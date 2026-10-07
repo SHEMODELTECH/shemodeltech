@@ -1,5 +1,6 @@
 <!-- order: 14 -->
 <!-- level: Beginner to Intermediate -->
+<!-- references: https://www.anthropic.com/engineering/building-effective-agents https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview https://modelcontextprotocol.io/ https://github.com/modelcontextprotocol/python-sdk https://genai.owasp.org/llm-top-10/ https://genai.owasp.org/2025/12/09/owasp-genai-security-project-releases-top-10-risks-and-mitigations-for-agentic-ai-security/ https://modelcontextprotocol.io/specification/draft/basic/security_best_practices https://docs.claude.com/ -->
 # Agentic AI Fundamentals: Build, Connect and Safeguard AI Agents
 
 An AI agent is a program where a language model decides what to do next, uses tools to act, looks at the results, and keeps going until the job is done. This course explains how that works in plain words and then has you build each piece yourself in Google Colab: an agent loop with tools, a connection to tools through the Model Context Protocol (MCP), memory and document search, a pair of agents that check each other's work, safety guardrails such as a human approval step, and automated tests. You finish with a small support agent that brings all of it together.
@@ -1060,6 +1061,8 @@ The **OWASP Top 10 for LLM Applications** (from the OWASP GenAI Security Project
 - **Prompt Injection** - this module's main threat.
 - **Excessive Agency** - the agent has more tools, permissions or freedom than it needs. Least privilege and approval gates address it.
 - **Improper Output Handling** - trusting model output without checking it, for example running generated code or passing generated text straight to another system.
+
+In December 2025 OWASP also published a list just for agents, the [OWASP Top 10 for Agentic Applications](https://genai.owasp.org/2025/12/09/owasp-genai-security-project-releases-top-10-risks-and-mitigations-for-agentic-ai-security/). It covers risks such as agent behavior hijacking, tool misuse and exploitation, and identity and privilege abuse, which are exactly what the guardrails in this module defend against. Read the full list at [genai.owasp.org](https://genai.owasp.org). If your agent uses MCP, also read the [MCP Security Best Practices](https://modelcontextprotocol.io/specification/draft/basic/security_best_practices).
 
 Also remember **Unbounded Consumption**: your `max_steps` limit from Module 2 is a guardrail against runaway cost.
 

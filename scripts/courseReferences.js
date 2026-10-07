@@ -74,8 +74,11 @@ const REFERENCES = [
   R('Google Sheets function list', 'Google', 'https://support.google.com/docs/table/25273', /Google Sheets|SUMIFS|COUNTIFS|pivot table/g),
   R('Model Context Protocol specification and docs', 'Model Context Protocol', 'https://modelcontextprotocol.io/', /Model Context Protocol|\bMCP\b/g),
   R('MCP Python SDK', 'Model Context Protocol', 'https://github.com/modelcontextprotocol/python-sdk', /\bMCP\b/g),
-  R('Building effective agents', 'Anthropic', 'https://www.anthropic.com/engineering/building-effective-agents', /\bagents?\b|agentic/gi, ['TechDev']),
+  R('Building effective agents', 'Anthropic', 'https://www.anthropic.com/engineering/building-effective-agents', /\bagents?\b|agentic/gi),
   R('Tool use with Claude', 'Anthropic', 'https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview', /tool_use|tool use|tool calling/gi),
+  R('OWASP Top 10 for Agentic Applications (December 2025)', 'OWASP GenAI Security Project', 'https://genai.owasp.org/2025/12/09/owasp-genai-security-project-releases-top-10-risks-and-mitigations-for-agentic-ai-security/', /Top 10 for Agentic|agentic applications/gi),
+  R('MCP Security Best Practices', 'Model Context Protocol', 'https://modelcontextprotocol.io/specification/draft/basic/security_best_practices', /tool poisoning|confused deputy|MCP security|token passthrough/gi),
+  R('promptfoo documentation (open-source LLM testing and red teaming)', 'promptfoo', 'https://promptfoo.dev/docs/intro/', /promptfoo/gi),
   R('OWASP Top 10 for LLM Applications', 'OWASP Foundation', 'https://genai.owasp.org/llm-top-10/', /prompt injection/gi),
   R('pandas documentation', 'pandas', 'https://pandas.pydata.org/docs/', /\bpandas\b/g),
   R('NumPy documentation', 'NumPy', 'https://numpy.org/doc/stable/', /NumPy/g),
@@ -177,12 +180,24 @@ const REFERENCES = [
 
 // Pick references for one course from its text: course-specific matches first
 // (most mentioned first), then the track's base references, up to `max`.
-const referencesFor = (track, text, max = 8) => {
-  const scored = REFERENCES.filter((r) => !r.tracks || r.tracks.includes(track))
+// A course can pin its key sources so they always show, before the
+// automatically matched ones:  <!-- references: https://a.example https://b.example -->
+// (each URL must be in REFERENCES above).
+const pinnedFor = (text) => {
+  const m = String(text || '').match(/<!--\s*references:\s*([\s\S]*?)-->/i);
+  if (!m) return [];
+  const urls = m[1].split(/[\s,]+/).filter(Boolean);
+  return urls.map((u) => REFERENCES.find((r) => r.url === u)).filter(Boolean);
+};
+
+const referencesFor = (track, text, maxIn = 8) => {
+  const pinned = pinnedFor(text);
+  const max = pinned.length ? Math.max(maxIn, 10) : maxIn;
+  const scored = [...pinned, ...REFERENCES.filter((r) => !r.tracks || r.tracks.includes(track))
     .map((r) => ({ r, n: (text.match(r.re) || []).length }))
     .filter((x) => x.n > 0)
     .sort((a, b) => b.n - a.n)
-    .map((x) => x.r);
+    .map((x) => x.r)].filter((r, i, all) => all.findIndex((o) => o.url === r.url) === i);
   const out = [];
   const seen = new Set();
   [...scored.slice(0, max - (TRACK_BASE[track] || []).length), ...(TRACK_BASE[track] || [])].forEach((r) => {
