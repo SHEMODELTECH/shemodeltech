@@ -93,8 +93,12 @@ const TeachApply = () => {
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 grid lg:grid-cols-[minmax(0,1fr)_320px] gap-10 items-start">
-        <div>
+      {/* Main column: the application, then the FAQ right under it. "How it works"
+          is a sidebar beside both (it stays in view on wide screens), so there's
+          no empty space between the form and the FAQ. On phones: form, How it
+          works, then FAQ. */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 grid lg:grid-cols-[minmax(0,1fr)_320px] gap-x-10 gap-y-10 items-start">
+        <div className="lg:col-start-1 lg:row-start-1">
           {state.loading ? (
             <div className="flex justify-center py-16">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500" />
@@ -185,7 +189,7 @@ const TeachApply = () => {
           )}
         </div>
 
-        <aside className="rounded-2xl bg-gray-50 border border-gray-100 p-5">
+        <aside className="rounded-2xl bg-gray-50 border border-gray-100 p-5 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-24 self-start">
           <p className="font-bold text-gray-900 mb-3">How it works</p>
           <ol className="space-y-3 text-sm text-gray-700 list-decimal pl-5">
             <li>Apply here. An admin reviews every application.</li>
@@ -197,11 +201,9 @@ const TeachApply = () => {
             Questions? See the FAQ
           </a>
         </aside>
-      </div>
 
-      {/* FAQ: benefits and how mentoring works */}
-      <section id="faq" className="max-w-5xl mx-auto px-4 sm:px-6 pb-12 scroll-mt-24 text-left" aria-labelledby="faq-h">
-        <div className="max-w-3xl">
+        {/* FAQ: benefits and how mentoring works */}
+        <section id="faq" className="lg:col-start-1 lg:row-start-2 pb-2 scroll-mt-24 text-left" aria-labelledby="faq-h">
         <h2 id="faq-h" className="text-2xl font-bold text-gray-900">Frequently asked questions</h2>
         <div className="mt-5 divide-y divide-gray-200 border-y border-gray-200">
           {MENTOR_FAQ.map(([q, a], i) => (
@@ -216,8 +218,8 @@ const TeachApply = () => {
             </details>
           ))}
         </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </LearningLayout>
   );
 };
