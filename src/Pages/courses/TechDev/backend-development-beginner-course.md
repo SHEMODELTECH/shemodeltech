@@ -4,23 +4,27 @@
 ## Course Overview
 
 **By the end of this course, you'll be able to:**
-- Explain the request and response cycle and what a backend API is for
-- Build a small server in plain Node.js that routes by URL and returns correct status codes
-- Build the same task API (list, get one, create) in Express, Flask, and FastAPI, and test it with curl
-- Create a Django model, manage its data in the built-in admin, and serve it as JSON
-- Compare Express, Flask, Django, and FastAPI and pick a sensible one for a project
+- Explain the request and response cycle, HTTP methods, and status codes
+- Set up a FastAPI project with a clear folder structure and run it with Uvicorn
+- Build create, read, update, and delete (CRUD) endpoints with request validation using Pydantic
+- Return the right status code for every outcome and handle errors without leaking details
+- Store data in SQLite with SQLAlchemy, so it survives a restart
+- Configure the app with environment variables and log what it does
+- Write automated tests with pytest and FastAPI's TestClient
+- Rebuild part of the same API in Node.js with Express, and choose a sensible framework for a project
 
-**Who this is for:** Beginners who can build a frontend page and now want to understand what happens on the server, storing data, handling requests, and serving an API that a frontend (or anyone else) can call.
+**Who this is for:** Beginners who know basic Python (variables, functions, dictionaries, classes) and want to understand what happens on the server: receiving requests, storing data, and serving an API that a frontend, or anyone else, can call.
 
-**How the course works:** Six modules. Every topic follows the same pattern:
+**How the course works:** Eight modules. You build **one small app properly**, a task and notes API, adding one layer per module. Each module follows the same pattern:
 - **Concept** - what it is, in plain language
-- **Syntax at a Glance** - the core patterns you'll actually type
 - **Where you'd actually use this** - a real product scenario
-- **Lab** - hands-on, runnable examples
+- **Lab** - hands-on, runnable code, often ending with a short "Your turn" exercise
 - **Checkpoint**
-- **Quiz** - five questions with answers
+- **Quiz** - questions with answers
 
-**Tools needed:** [Node.js](https://nodejs.org) installed, [Python 3](https://www.python.org/downloads) installed, a terminal, and a text editor (such as [VS Code](https://code.visualstudio.com)). A tool like [curl](https://curl.se) or [Postman](https://www.postman.com) to send test requests. On Windows, run the commands in **Git Bash** (installed with [Git](https://git-scm.com/downloads)): the `curl` examples use quotes that PowerShell handles differently, and there you activate a virtual environment with `source venv/Scripts/activate` instead of `source venv/bin/activate`.
+**Tools needed:** [Python 3.12+](https://www.python.org/downloads), a terminal, a code editor such as [VS Code](https://code.visualstudio.com), [curl](https://curl.se) (built into macOS, Linux, and Windows 10+), and [Node.js](https://nodejs.org) 20+ for Module 7. On Windows, use **Git Bash** (installed with [Git](https://git-scm.com/downloads)), because PowerShell handles the `curl` quotes differently; there you activate a virtual environment with `source venv/Scripts/activate`.
+
+**What comes next:** **APIs for Builders** picks up the exact app you finish here and adds API design, GraphQL, and authentication.
 
 ---
 
@@ -30,9 +34,8 @@
 
 ### Concept
 
-A **backend** is the part of an application that runs on a server rather than in the user's browser. It receives **requests** (a browser asking for a page, an app asking for data), does something with them, reading or writing a database, checking permissions, running logic, and sends back a **response**. An **API (Application Programming Interface)** is the set of URLs and rules a backend exposes so other programs can talk to it.
+A **backend** is the part of an application that runs on a server rather than in the user's browser. It receives **requests** (a browser asking for a page, an app asking for data), does something with them (reading or writing a database, checking permissions, running logic), and sends back a **response**. An **API (Application Programming Interface)** is the set of URLs and rules a backend exposes so other programs can talk to it.
 
-The core request cycle looks the same no matter which language or framework:
 ```
 Client sends a request  ->  Server receives it  ->  Server does work
 (a browser, an app)          (routes it to code)     (reads/writes data)
@@ -40,555 +43,802 @@ Client sends a request  ->  Server receives it  ->  Server does work
 Client receives a response  <-  Server sends a response  <---
 ```
 
+Every HTTP request has a **method** that says what the client wants to do, and every response has a **status code** that says how it went:
+
+| Method | Meaning | Status code | Meaning |
+|---|---|---|---|
+| `GET` | Read something | `200` | OK |
+| `POST` | Create something | `201` | Created |
+| `PATCH` | Change part of something | `204` | Done, nothing to send back |
+| `PUT` | Replace something | `404` | Not found |
+| `DELETE` | Remove something | `422` | The data sent was invalid |
+
+The data itself usually travels as **JSON**, text that looks like a Python dictionary: `{"id": 1, "title": "Ship it", "done": false}`.
+
 ### Where you'd actually use this
 
-Anything that needs to store data beyond a single browser session, user accounts, saved orders, posts other people can see, needs a backend. The frontend displays things; the backend is what makes them real and shared.
+Anything that stores data beyond one browser session (accounts, orders, posts others can see) needs a backend. The frontend displays things; the backend makes them real and shared.
 
 ### Lab
 
-Open your browser's developer tools (right click, "Inspect"), go to the "Network" tab, then visit any website and reload the page. Watch the list of requests appear. Click on one and look at its **method** (GET, POST, and so on), its **URL**, and its **response**. You're watching a real backend, live, doing exactly what this module described.
+Open your browser's developer tools (right-click, "Inspect"), go to the "Network" tab, and reload any website. Click a request that returns data (often labeled `Fetch` or `XHR`) and find its **method**, **URL**, **status code**, and **response**. That's a real backend doing exactly what this module described.
 
 ### Checkpoint
-You can explain, in plain language, what a request and a response are, and why a browser alone cannot permanently store shared data.
+You can explain, in plain language, what a request and a response are, name the method and status code of a real request you found, and say why a browser alone can't store data that other users can see.
 
 ### Quiz
 1. What is a backend, in one sentence?
 2. What is an API?
 3. What is the difference between a request and a response?
-4. Why can't a browser alone store data that other users can see?
-5. Does every frontend interaction require a backend request?
+4. Which HTTP method and status code would you expect when a new task is successfully created?
+5. Why can't a browser alone store data that other users can see?
 
-*Answers: 1) The part of an application that runs on a server, handling data and logic that a browser alone can't. 2) The set of URLs and rules a backend exposes, letting other programs send it requests and get back structured responses. 3) A request is what the client sends to ask for something or submit data; a response is what the server sends back as a result. 4) Data stored only in a browser lives on that one device, other users have no way to reach or see it without a shared server storing it centrally. 5) No, some interactions (like a purely visual animation) are handled entirely on the frontend, with no server involved.*
+*Answers: 1) The part of an application that runs on a server, handling data and logic that a browser alone can't. 2) The set of URLs and rules a backend exposes, letting other programs send it requests and get back structured responses. 3) A request is what the client sends to ask for something or submit data; a response is what the server sends back as a result. 4) `POST`, answered with `201 Created`. 5) Data stored only in a browser lives on that one device, so other users can't reach it without a shared server storing it centrally.*
 
 ---
 
-## Module 1: Node.js - JavaScript on the Server
+## Module 1: Your First FastAPI Project
 
 **Time: about 1.5 hours**
 
 ### Concept
 
-**Node.js** is a runtime that lets JavaScript run outside the browser, on a server. This means the same language used for frontend interactivity can also read files, talk to databases, and handle network requests directly, without needing a browser at all.
+**FastAPI** is a modern Python web framework. You write ordinary Python functions, mark which URL and method each one handles, and FastAPI does the rest: reading requests, checking data, turning your return values into JSON, and generating interactive documentation from your code. **Uvicorn** is the server program that actually listens for requests and passes them to your app.
 
-### Syntax at a Glance
+A small, clear folder structure from day one saves pain later. By the end of this course your project will look like this:
 
-```javascript
-// server.js
-const http = require("http");
-
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Hello from Node.js");
-});
-
-server.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
 ```
-- `require("module")` imports a built-in or installed module (Node's version of `import`, in its classic syntax)
-- `http.createServer(callback)` creates a server; the callback runs once for every incoming request, receiving `req` (the request) and `res` (the response)
-- `res.writeHead(statusCode, headers)` sets the response status and headers before sending the body
-- `server.listen(port, callback)` starts the server listening for requests on that port
+tasks-api/
+  app/
+    __init__.py      # marks app/ as a package (can be empty)
+    main.py          # creates the app and defines the routes
+    schemas.py       # the shape of data coming in and going out (Module 2)
+    database.py      # the database connection (Module 4)
+    models.py        # the database tables (Module 4)
+    config.py        # settings read from environment variables (Module 5)
+  tests/
+    conftest.py      # shared test setup (Module 6)
+    test_tasks.py    # the tests (Module 6)
+  requirements.txt   # the packages this project needs
+```
 
 ### Where you'd actually use this
 
-Any time you want to handle HTTP requests directly with JavaScript, real time features (chat, live updates), custom protocols, or simply keeping frontend and backend in the same language across a whole project.
+Every real backend starts here. Keeping data shapes, database code, and settings in separate files means you can change each one without reading the whole app.
 
 ### Lab
 
-1. **Create a project and the server file above:**
+1. **Create the project and a virtual environment** (an isolated folder of packages just for this project):
 ```bash
-mkdir my-backend
-cd my-backend
+mkdir tasks-api
+cd tasks-api
+python3 -m venv venv
+source venv/bin/activate
+pip install "fastapi[standard]" sqlalchemy pytest
+pip freeze > requirements.txt
+mkdir app tests
+touch app/__init__.py
 ```
-Save the code from **Syntax at a Glance** as `server.js`.
+`fastapi[standard]` includes Uvicorn and the extras FastAPI's test client needs.
 
-2. **Run it:**
-```bash
-node server.js
-```
-Visit `http://localhost:3000` in your browser, or run:
-```bash
-curl http://localhost:3000
-```
-You should see `Hello from Node.js`.
+2. **Create `app/main.py`:**
+```python
+from fastapi import FastAPI
 
-3. **Respond differently based on the URL.** In `server.js`, replace the `http.createServer(...)` block with this one (keep the `require` line at the top and the `server.listen(...)` call at the bottom):
-```javascript
-const server = http.createServer((req, res) => {
-  if (req.url === "/") {
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Welcome to the homepage");
-  } else if (req.url === "/about") {
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("This is the about page");
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Not found");
-  }
-});
+app = FastAPI(title="Tasks API")
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 ```
-Restart the server (`Ctrl+C`, then `node server.js` again), then visit `/`, `/about`, and `/random-page`, notice each gets a different, correct response.
+`@app.get("/health")` is a **decorator**: it tells FastAPI "when a `GET` request arrives for `/health`, run the function below". The dictionary you return is sent back as JSON.
+
+3. **Run it** from the `tasks-api` folder (not from inside `app/`):
+```bash
+uvicorn app.main:app --reload
+```
+`app.main:app` means "the variable `app` in `app/main.py`"; `--reload` restarts the server when you save. In a second terminal:
+```bash
+curl http://localhost:8000/health
+```
+You should see `{"status":"ok"}`.
+
+4. **Open the free documentation** at `http://localhost:8000/docs`, generated from your code. Click `/health`, "Try it out", then "Execute".
+
+**Your turn:** Add a `GET /about` endpoint that returns `{"name": "Tasks API", "version": "0.1"}`. Save, and check it appears at `/docs` without restarting anything.
 
 ### Checkpoint
-You have a running Node.js server that returns different responses, including a 404, based on the request's URL.
+Your server runs with `uvicorn app.main:app --reload`, `/health` answers with JSON, and you've used the `/docs` page to call an endpoint.
 
 ### Quiz
-1. What does Node.js let JavaScript do that it can't do in a browser alone?
-2. What does `http.createServer` need to be given in order to work?
-3. What do `req` and `res` represent?
-4. What does a status code like `404` communicate?
-5. Why does the server need to be restarted after editing `server.js`?
+1. What does Uvicorn do, and what does FastAPI do?
+2. What does `app.main:app` tell Uvicorn?
+3. Why create a virtual environment for each project?
+4. What does `--reload` do, and should you use it in production?
+5. What does `@app.get("/health")` do?
 
-*Answers: 1) Run outside the browser, on a server, so it can handle network requests, read files, and connect to databases directly. 2) A callback function that runs for every incoming request and decides how to respond. 3) `req` is the incoming request (what the client sent); `res` is the response object used to send data back. 4) That the requested resource wasn't found, a standard way of communicating outcome without relying on the response body's wording alone. 5) Node runs the file as written when it starts, changes to the code aren't picked up automatically, the process has to be restarted to load them.*
+*Answers: 1) Uvicorn is the server that listens for HTTP requests; FastAPI is the framework that routes each request to your Python function and builds the response. 2) Load the module `app/main.py` and use the object named `app` inside it. 3) So each project has its own packages and versions, without clashing with other projects or the system Python. 4) It restarts the server when files change; it's for development only, not production. 5) It registers the function below it to handle `GET` requests to `/health`.*
 
 ---
 
-## Module 2: Express - A Framework for Node.js
+## Module 2: Routes, HTTP Methods, and Validation
 
 **Time: about 2 hours**
 
 ### Concept
 
-Handling routing manually with `if` statements, as in Module 1, gets unwieldy fast. **Express** is a framework built on top of Node.js that provides a clean way to define routes, handle different HTTP methods, and process request data, without writing that plumbing by hand.
+A **route** connects a method and a path to a function. Paths can contain **path parameters** (`/tasks/{task_id}`) for "which one", and the URL can carry **query parameters** (`/tasks?done=true`) for options like filtering. FastAPI reads both from your function's parameters and their **type hints**: `task_id: int` means "this must be a whole number".
 
-### Syntax at a Glance
-
-```javascript
-const express = require("express");
-const app = express();
-
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Welcome to the homepage");
-});
-
-app.get("/users/:id", (req, res) => {
-  res.send(`User ID: ${req.params.id}`);
-});
-
-app.post("/users", (req, res) => {
-  res.status(201).json({ received: req.body });
-});
-
-app.listen(3000, () => console.log("Listening on port 3000"));
-```
-- `app.get(path, handler)`, `app.post(path, handler)`, and similarly `.put`, `.delete`, define what runs for a given method and path
-- `:id` in a path is a **route parameter**, captured in `req.params.id`
-- `express.json()` middleware parses incoming JSON request bodies into `req.body`
-- `res.send(...)` sends a plain response; `res.json(...)` sends JSON; `res.status(code)` sets the status before sending
+For request bodies, a **Pydantic model** lists the fields, their types, and rules such as minimum length. If a request doesn't match, FastAPI rejects it with a `422` and a clear message before your code runs. Use separate models for what comes **in** and what goes **out**, so clients can't set fields like `id` themselves.
 
 ### Where you'd actually use this
 
-Any real Node.js API. Express (or a framework like it) is the standard way most Node.js backends are actually built, handling routing, request parsing, and middleware in a consistent, well documented way.
+Every endpoint that accepts data: a sign-up form, a comment, a settings change. Validating at the edge means the rest of your code can trust its data, and clients get a useful error instead of a crash.
 
 ### Lab
 
-1. **Install Express:**
+1. **Describe the data.** Create `app/schemas.py`:
+```python
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class TaskCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=200)
+    notes: str | None = Field(default=None, max_length=1000)
+
+
+class TaskUpdate(BaseModel):
+    title: str | None = Field(default=None, min_length=1, max_length=200)
+    notes: str | None = Field(default=None, max_length=1000)
+    done: bool | None = None
+
+
+class TaskOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)  # lets Module 4 return database rows directly
+
+    id: int
+    title: str
+    notes: str | None
+    done: bool
+```
+
+2. **Write the five routes.** Replace `app/main.py` with this. For now, tasks live in a dictionary in memory, so they disappear when the server restarts (Module 4 fixes that):
+```python
+from fastapi import FastAPI, HTTPException, status
+
+from app.schemas import TaskCreate, TaskOut, TaskUpdate
+
+app = FastAPI(title="Tasks API")
+
+tasks: dict[int, TaskOut] = {}
+next_id = 1
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.get("/tasks", response_model=list[TaskOut])
+def list_tasks(done: bool | None = None):
+    results = list(tasks.values())
+    if done is not None:
+        results = [t for t in results if t.done == done]
+    return results
+
+
+@app.get("/tasks/{task_id}", response_model=TaskOut)
+def get_task(task_id: int):
+    if task_id not in tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return tasks[task_id]
+
+
+@app.post("/tasks", response_model=TaskOut, status_code=status.HTTP_201_CREATED)
+def create_task(data: TaskCreate):
+    global next_id
+    task = TaskOut(id=next_id, title=data.title, notes=data.notes, done=False)
+    tasks[next_id] = task
+    next_id += 1
+    return task
+
+
+@app.patch("/tasks/{task_id}", response_model=TaskOut)
+def update_task(task_id: int, data: TaskUpdate):
+    if task_id not in tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+    changes = data.model_dump(exclude_none=True)  # only the fields the client sent
+    tasks[task_id] = tasks[task_id].model_copy(update=changes)
+    return tasks[task_id]
+
+
+@app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_task(task_id: int):
+    if task_id not in tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+    del tasks[task_id]
+```
+- `data: TaskCreate` makes FastAPI read the JSON body and validate it
+- `done: bool | None = None` isn't in the path, so it's an optional query parameter
+- `response_model=TaskOut` filters and documents what the endpoint returns
+
+3. **Exercise every route:**
 ```bash
+curl -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"title": "Learn FastAPI"}'
+curl -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"title": "Write tests", "notes": "use pytest"}'
+curl -X PATCH http://localhost:8000/tasks/1 -H "Content-Type: application/json" -d '{"done": true}'
+curl "http://localhost:8000/tasks?done=true"
+curl -X DELETE http://localhost:8000/tasks/2
+curl http://localhost:8000/tasks
+```
+
+4. **Break it on purpose:**
+```bash
+curl -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"title": ""}'
+curl -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"notes": "no title"}'
+curl http://localhost:8000/tasks/abc
+```
+Each returns `422` with a `detail` list naming the field and the problem. You wrote no checking code for any of them.
+
+**Your turn:** Add a `priority` field (1 to 5, default 3) to `TaskCreate` and `TaskOut` with `Field(default=3, ge=1, le=5)`, send a priority of 9, and read the error. Remove it before Module 4 (or add it to the database model there too).
+
+### Checkpoint
+You created, read, filtered, updated, and deleted tasks with curl, and triggered three different validation errors without writing any validation code.
+
+### Quiz
+1. What is the difference between a path parameter and a query parameter?
+2. Why use separate `TaskCreate` and `TaskOut` models instead of one?
+3. What happens when a request body doesn't match the Pydantic model?
+4. Why does `update_task` use `model_dump(exclude_none=True)`?
+5. Which HTTP method fits "mark task 3 as done", and why not `POST`?
+
+*Answers: 1) A path parameter identifies which resource (`/tasks/3`); a query parameter adds options such as filtering (`?done=true`). 2) Clients shouldn't send fields the server controls, like `id`, and the output can include fields the input doesn't. 3) FastAPI responds with `422` and a message describing each problem, and your function never runs. 4) So only the fields the client actually sent are changed; everything else keeps its current value. 5) `PATCH`, because it changes part of an existing task; `POST` is for creating a new one.*
+
+---
+
+## Module 3: Status Codes and Error Handling
+
+**Time: about 1.5 hours**
+
+### Concept
+
+A status code is the first thing a client checks, so it has to be honest:
+
+| Range | Meaning | Common ones |
+|---|---|---|
+| 2xx | It worked | `200` OK, `201` Created, `204` No Content |
+| 4xx | The client made a mistake | `400` Bad Request, `401` Not logged in, `403` Not allowed, `404` Not Found, `409` Conflict, `422` Invalid data |
+| 5xx | The server failed | `500` Internal Server Error, `503` Unavailable |
+
+**Expected** problems (a missing task, a duplicate email) are raised as `HTTPException` with the right 4xx code and a helpful message. **Unexpected** problems (a bug, a crashed database) become a plain `500` with a generic message, while the details go to your logs. Never send stack traces to clients: they confuse users and help attackers.
+
+### Where you'd actually use this
+
+A mobile app deciding whether to show "That task was deleted" (404), "Please fix the title" (422), or "Something went wrong, try again" (500), without parsing your message text.
+
+### Lab
+
+1. **Remove the repeated 404 checks with one helper.** In `app/main.py`, add this function above the routes:
+```python
+def get_task_or_404(task_id: int) -> TaskOut:
+    if task_id not in tasks:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"Task {task_id} not found")
+    return tasks[task_id]
+```
+Use it in `get_task` (`return get_task_or_404(task_id)`), and as the first line of `update_task` and `delete_task` in place of their `if` blocks. Raising an exception stops the function, so the rest only runs when the task exists.
+
+2. **Catch anything unexpected.** Add these imports at the top of `app/main.py`:
+```python
+from fastapi import Request
+from fastapi.responses import JSONResponse
+```
+and this handler below `app = FastAPI(...)`:
+```python
+@app.exception_handler(Exception)
+async def unexpected_error(request: Request, exc: Exception):
+    print(f"Unexpected error on {request.method} {request.url.path}: {exc!r}")  # Module 5 replaces print with logging
+    return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+```
+
+3. **Test both kinds of error.** Add a temporary route that has a bug:
+```python
+@app.get("/boom")
+def boom():
+    return 1 / 0
+```
+```bash
+curl -i http://localhost:8000/boom
+curl -i http://localhost:8000/tasks/999
+curl -i -X DELETE http://localhost:8000/tasks
+```
+`-i` shows the status line: `500` with a generic message (the real `ZeroDivisionError` appears only in your server terminal), `404`, and `405 Method Not Allowed`, which FastAPI returns because `/tasks` has no `DELETE` route. Delete `/boom` when you're done.
+
+### Checkpoint
+Your routes share one `get_task_or_404` helper, and you've seen a `404`, a `405`, and a safe `500` that hides the internal error from the client.
+
+### Quiz
+1. What is the difference between a 4xx and a 5xx status code?
+2. Why shouldn't a `500` response include the stack trace?
+3. What happens to the rest of a route function when `HTTPException` is raised?
+4. A client sends a task title of 500 characters. Which status code should it get?
+5. When would `409 Conflict` be the right answer?
+
+*Answers: 1) 4xx means the client sent something wrong; 5xx means the server failed while handling a valid request. 2) It exposes internal details that help attackers and mean nothing to users; the details belong in server logs. 3) It stops immediately and FastAPI sends the error response instead. 4) `422`, because the data fails validation (FastAPI does this automatically from `max_length`). 5) When the request clashes with the current state, such as registering an email that already exists.*
+
+---
+
+## Module 4: Storing Data in SQLite with SQLAlchemy
+
+**Time: about 2.5 hours**
+
+### Concept
+
+So far, restarting the server wipes every task. **SQLite** is a complete database stored in a single file and built into Python, with nothing to install, which makes it ideal for learning and small apps. **SQLAlchemy** is the most widely used Python database library. Its **ORM (Object-Relational Mapper)** lets you describe a table as a Python class and work with rows as objects. In the modern SQLAlchemy 2.x style:
+- A **model** class describes a table; each `Mapped[...]` attribute is a column
+- A **session** is a short conversation with the database: add, change, or delete objects, then `commit()` to save
+- `select(Task)` builds a query; `db.scalars(query)` runs it and returns objects
+- A FastAPI **dependency** (`Depends`) gives each request its own session and closes it afterwards
+
+### Where you'd actually use this
+
+Every app that remembers anything: users, orders, messages. The same pattern (models, a session per request, commit to save) works with PostgreSQL or MySQL in production.
+
+### Lab
+
+1. **Create `app/database.py`:**
+```python
+from typing import Annotated
+
+from fastapi import Depends
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+
+DATABASE_URL = "sqlite:///./tasks.db"
+
+# check_same_thread=False lets FastAPI's worker threads share the SQLite connection
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(bind=engine)
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+def get_db():
+    with SessionLocal() as db:
+        yield db
+
+
+# Type to put on a route parameter: "give me a database session"
+SessionDep = Annotated[Session, Depends(get_db)]
+```
+`get_db` opens a session, hands (`yield`s) it to the route, and closes it after the request, even if an error happened.
+
+2. **Create `app/models.py`:**
+```python
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.database import Base
+
+
+class Task(Base):
+    __tablename__ = "tasks"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(200))
+    notes: Mapped[str | None] = mapped_column(String(1000))
+    done: Mapped[bool] = mapped_column(default=False)
+```
+`str | None` makes the column optional; plain `str` makes it required. The `id` is filled in by the database.
+
+3. **Switch the routes to the database.** Replace `app/main.py` with:
+```python
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.responses import JSONResponse
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.database import Base, SessionDep, engine
+from app.models import Task
+from app.schemas import TaskCreate, TaskOut, TaskUpdate
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)  # create tables that don't exist yet
+    yield
+
+
+app = FastAPI(title="Tasks API", lifespan=lifespan)
+
+
+@app.exception_handler(Exception)
+async def unexpected_error(request: Request, exc: Exception):
+    print(f"Unexpected error on {request.method} {request.url.path}: {exc!r}")
+    return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
+
+def get_task_or_404(db: Session, task_id: int) -> Task:
+    task = db.get(Task, task_id)
+    if task is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"Task {task_id} not found")
+    return task
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.get("/tasks", response_model=list[TaskOut])
+def list_tasks(db: SessionDep, done: bool | None = None):
+    query = select(Task).order_by(Task.id)
+    if done is not None:
+        query = query.where(Task.done == done)
+    return db.scalars(query).all()
+
+
+@app.get("/tasks/{task_id}", response_model=TaskOut)
+def get_task(task_id: int, db: SessionDep):
+    return get_task_or_404(db, task_id)
+
+
+@app.post("/tasks", response_model=TaskOut, status_code=status.HTTP_201_CREATED)
+def create_task(data: TaskCreate, db: SessionDep):
+    task = Task(**data.model_dump())
+    db.add(task)
+    db.commit()
+    db.refresh(task)  # reload so task.id is filled in
+    return task
+
+
+@app.patch("/tasks/{task_id}", response_model=TaskOut)
+def update_task(task_id: int, data: TaskUpdate, db: SessionDep):
+    task = get_task_or_404(db, task_id)
+    for field, value in data.model_dump(exclude_none=True).items():
+        setattr(task, field, value)
+    db.commit()
+    db.refresh(task)
+    return task
+
+
+@app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_task(task_id: int, db: SessionDep):
+    task = get_task_or_404(db, task_id)
+    db.delete(task)
+    db.commit()
+```
+The routes return SQLAlchemy `Task` objects; `response_model=TaskOut` (with `from_attributes=True` from Module 2) converts them to JSON.
+
+4. **Prove the data survives.** Create two tasks with the Module 2 curl commands, restart the server (`Ctrl+C`, then run it again), and list the tasks. They're still there, in the new `tasks.db` file.
+
+**Your turn:** Add a `GET /tasks/count` route that returns `{"total": <number of tasks>}`. Hint: `from sqlalchemy import func`, then `db.scalar(select(func.count()).select_from(Task))`. Define it *above* `/tasks/{task_id}`, or FastAPI will try to read `count` as a task id and answer `422`.
+
+### Checkpoint
+Your tasks live in `tasks.db` and survive a server restart, and every route gets its database session through `SessionDep`.
+
+### Quiz
+1. What does an ORM let you do?
+2. What does `db.commit()` do, and what happens to your changes if you never call it?
+3. Why is `get_db` written with `yield` instead of `return`?
+4. Why call `db.refresh(task)` after committing a new task?
+5. What would you change to move this app from SQLite to PostgreSQL?
+
+*Answers: 1) Work with database tables as Python classes and rows as objects, instead of writing raw SQL for every query. 2) It saves the session's changes to the database permanently; without it, the changes are thrown away when the session closes. 3) So the session is handed to the route and then closed after the request finishes, even if an error occurred. 4) To reload the row from the database so values the database created, like the new `id`, are filled in. 5) Mainly the connection URL (and installing a PostgreSQL driver); the `check_same_thread` option is SQLite-only and would be removed.*
+
+---
+
+## Module 5: Configuration and Logging
+
+**Time: about 1.5 hours**
+
+### Concept
+
+**Configuration** is anything that changes between where the app runs: the database location, log level, secret keys. Hard-coding them means editing code to deploy and risks committing secrets to Git. Instead, read **environment variables**, values set outside the code, with safe defaults for local development.
+
+**Logging** records what your app does while it runs. Unlike `print`, Python's `logging` module adds timestamps and levels (`DEBUG`, `INFO`, `WARNING`, `ERROR`) that you can filter with a setting. In production, logs are often the only way to find out what went wrong.
+
+### Where you'd actually use this
+
+Running the same code on your laptop with a local SQLite file, and on a server with a production database and quieter logs, just by setting different environment variables. When a user reports "my task vanished at 3pm", logs are how you find out what happened.
+
+### Lab
+
+1. **Create `app/config.py`**, the one place that reads settings:
+```python
+import os
+
+APP_NAME = os.getenv("APP_NAME", "Tasks API")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./tasks.db")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+```
+
+2. **Use it in `app/database.py`.** Delete the line `DATABASE_URL = "sqlite:///./tasks.db"` and add this import instead:
+```python
+from app.config import DATABASE_URL
+```
+
+3. **Add logging to `app/main.py`.** Add these imports at the top:
+```python
+import logging
+import time
+
+from app.config import APP_NAME, LOG_LEVEL
+```
+Below the imports, set logging up once:
+```python
+logging.basicConfig(level=LOG_LEVEL, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+logger = logging.getLogger("tasks_api")
+```
+Change `app = FastAPI(title="Tasks API", lifespan=lifespan)` to `app = FastAPI(title=APP_NAME, lifespan=lifespan)`. Then add a **middleware**, code that runs around every request, below that line:
+```python
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start = time.perf_counter()
+    response = await call_next(request)
+    ms = (time.perf_counter() - start) * 1000
+    logger.info("%s %s -> %s (%.1f ms)", request.method, request.url.path, response.status_code, ms)
+    return response
+```
+Finally, in `unexpected_error`, replace the `print(...)` line with:
+```python
+    logger.exception("Unexpected error on %s %s", request.method, request.url.path)
+```
+`logger.exception` logs the full stack trace, in your logs only. Also add `logger.info("Created task %s", task.id)` just before `return task` in `create_task`, and `logger.info("Deleted task %s", task_id)` at the end of `delete_task`.
+
+4. **Run with different settings:**
+```bash
+DATABASE_URL="sqlite:///./dev.db" LOG_LEVEL=DEBUG uvicorn app.main:app --reload
+```
+Create a task with curl. The terminal shows lines like `INFO tasks_api: POST /tasks -> 201 (4.2 ms)`, and a new `dev.db` file appears. Restart normally and you're back on `tasks.db`.
+
+5. **Keep settings in a `.env` file.** Create `.env` in the project folder:
+```
+DATABASE_URL=sqlite:///./tasks.db
+LOG_LEVEL=INFO
+```
+and start the server with `uvicorn app.main:app --reload --env-file .env`. Create a `.gitignore` file listing `.env`, `venv/`, and `*.db` (one per line) so settings, packages, and data never reach Git.
+
+### Checkpoint
+Your app reads its database location and log level from environment variables, logs every request with its status and timing, and logs unexpected errors with a full stack trace that clients never see.
+
+### Quiz
+1. Why read the database URL from an environment variable instead of writing it in the code?
+2. What does `os.getenv("LOG_LEVEL", "INFO")` return if `LOG_LEVEL` isn't set?
+3. What can `logging` do that `print` can't?
+4. What is middleware, in one sentence?
+5. Why should `.env` be listed in `.gitignore`?
+
+*Answers: 1) So the same code runs in different places with different settings, and secrets never live in the code or in Git. 2) The default, `"INFO"`. 3) Add timestamps and levels, and filter how much detail is shown with a setting, without changing code. 4) Code that runs before and after every request, such as timing and logging it. 5) It often contains secrets and machine-specific settings that must not be committed or shared.*
+
+---
+
+## Module 6: Automated Tests with pytest
+
+**Time: about 2 hours**
+
+### Concept
+
+**Automated tests** are small functions that call your API and check the answers, so you can confirm in seconds that everything still works. **pytest** runs every function whose name starts with `test_`; a plain `assert` checks each result. FastAPI's **TestClient** sends requests straight to your app in memory, with no server running.
+
+Tests must never touch your real data, so you **override a dependency**: swap `get_db` for one that uses a throwaway in-memory database. A **fixture** is a pytest function that prepares something a test needs (here, a ready client) and cleans up afterwards.
+
+### Where you'd actually use this
+
+Before every deploy and on every pull request. Tests catch the "one-line change" that quietly broke deleting tasks.
+
+### Lab
+
+1. **Create `tests/conftest.py`.** pytest loads this file automatically and shares its fixtures with every test file:
+```python
+import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+
+from app.database import Base, get_db
+from app.main import app
+
+
+@pytest.fixture
+def client():
+    # A fresh in-memory database for every test, so tests never touch tasks.db
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    Base.metadata.create_all(bind=engine)
+    TestSession = sessionmaker(bind=engine)
+
+    def override_get_db():
+        with TestSession() as db:
+            yield db
+
+    app.dependency_overrides[get_db] = override_get_db
+    yield TestClient(app)
+    app.dependency_overrides.clear()
+```
+`StaticPool` keeps one connection open, so the in-memory database lives for the whole test.
+
+2. **Create `tests/test_tasks.py`:**
+```python
+def test_health(client):
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+
+def test_create_and_get_task(client):
+    response = client.post("/tasks", json={"title": "Write tests"})
+    assert response.status_code == 201
+    task = response.json()
+    assert task["title"] == "Write tests"
+    assert task["done"] is False
+
+    response = client.get(f"/tasks/{task['id']}")
+    assert response.status_code == 200
+    assert response.json() == task
+
+
+def test_empty_title_is_rejected(client):
+    response = client.post("/tasks", json={"title": ""})
+    assert response.status_code == 422
+
+
+def test_missing_task_returns_404(client):
+    response = client.get("/tasks/999")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Task 999 not found"}
+
+
+def test_update_filter_and_delete(client):
+    task_id = client.post("/tasks", json={"title": "Ship it"}).json()["id"]
+    client.post("/tasks", json={"title": "Still to do"})
+
+    response = client.patch(f"/tasks/{task_id}", json={"done": True})
+    assert response.json()["done"] is True
+
+    done_tasks = client.get("/tasks", params={"done": True}).json()
+    assert [t["id"] for t in done_tasks] == [task_id]
+
+    assert client.delete(f"/tasks/{task_id}").status_code == 204
+    assert client.get(f"/tasks/{task_id}").status_code == 404
+```
+Each test gets `client` just by naming it as a parameter.
+
+3. **Run the tests** from the `tasks-api` folder:
+```bash
+python -m pytest -v
+```
+You should see `5 passed`. `python -m` makes pytest use your virtual environment and find the `app` package. A deprecation warning mentioning `httpx2` is harmless; `pip install httpx2` silences it.
+
+4. **Watch a test catch a bug.** Change `status.HTTP_201_CREATED` to `status.HTTP_200_OK` in `app/main.py` and rerun: `test_create_and_get_task` fails and shows which assertion broke. Change it back.
+
+**Your turn:** Write `test_patch_only_changes_sent_fields`: create a task with `notes`, `PATCH` only `{"done": true}`, and assert the title and notes didn't change. Then write a test that `DELETE /tasks/999` returns `404`.
+
+### Checkpoint
+`python -m pytest` runs your test suite against a throwaway database and passes, and you've watched a test fail when you broke the code.
+
+### Quiz
+1. What does FastAPI's TestClient let you do?
+2. Why do the tests override `get_db` instead of using `tasks.db`?
+3. What is a pytest fixture?
+4. How does pytest decide which functions are tests?
+5. Why does `test_create_and_get_task` check the status code as well as the JSON body?
+
+*Answers: 1) Send requests to your app in memory and inspect the responses, without starting a server. 2) So tests start from a clean, known state every time and never change or depend on your real data. 3) A function that prepares something tests need, such as a client with a fresh database, and cleans up afterwards. 4) It runs functions whose names start with `test_` in files named `test_*.py`. 5) The status code is part of the API's contract; clients rely on `201` to know something was created.*
+
+---
+
+## Module 7: The Same API in Node.js and Express, and Choosing a Framework
+
+**Time: about 2 hours**
+
+### Concept
+
+**Node.js** runs JavaScript outside the browser, so the language of the frontend can also run a server. **Express** is the most widely used Node.js framework: you register a handler for each method and path, much like FastAPI's decorators. Rebuilding the same endpoints shows which ideas are universal (routes, methods, status codes, JSON) and which are framework conveniences: Express has no built-in validation, for example, so you check input yourself or add a library such as Zod.
+
+### Where you'd actually use this
+
+Teams that want one language across frontend and backend, real-time features such as chat, and the many existing Node.js codebases you may join.
+
+### Lab
+
+1. **Set up a Node project** in a new folder, outside `tasks-api`:
+```bash
+mkdir tasks-express
+cd tasks-express
 npm init -y
 npm install express
 ```
 
-2. **Create `app.js`** with a small in-memory task list:
+2. **Create `app.js`** with three of the same endpoints (in memory, to keep the focus on the framework):
 ```javascript
 const express = require("express");
-const app = express();
-app.use(express.json());
 
-let tasks = [
-  { id: 1, title: "Learn Express" },
-  { id: 2, title: "Build an API" }
-];
+const app = express();
+app.use(express.json()); // parse JSON request bodies into req.body
+
+const PORT = Number(process.env.PORT) || 3000;
+const tasks = new Map(); // id -> task, in memory only
+let nextId = 1;
 
 app.get("/tasks", (req, res) => {
-  res.json(tasks);
+  let results = [...tasks.values()];
+  if (req.query.done !== undefined) {
+    const done = req.query.done === "true";
+    results = results.filter((t) => t.done === done);
+  }
+  res.json(results);
 });
 
 app.get("/tasks/:id", (req, res) => {
-  const task = tasks.find((t) => t.id === Number(req.params.id));
-  if (!task) return res.status(404).json({ error: "Task not found" });
+  const task = tasks.get(Number(req.params.id));
+  if (!task) {
+    return res.status(404).json({ detail: `Task ${req.params.id} not found` });
+  }
   res.json(task);
 });
 
 app.post("/tasks", (req, res) => {
-  const newTask = { id: tasks.length + 1, title: req.body.title };
-  tasks.push(newTask);
-  res.status(201).json(newTask);
+  const { title, notes = null } = req.body ?? {};
+  // No Pydantic here: we check the input by hand
+  if (typeof title !== "string" || title.length < 1 || title.length > 200) {
+    return res.status(422).json({ detail: "title must be a string of 1 to 200 characters" });
+  }
+  const task = { id: nextId++, title, notes, done: false };
+  tasks.set(task.id, task);
+  res.status(201).json(task);
 });
 
-app.listen(3000, () => console.log("Listening on port 3000"));
+app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
 ```
+- `:id` is a route parameter, read from `req.params.id` (always a string, hence `Number(...)`)
+- `req.query` holds query parameters, also as strings
+- `res.status(code).json(data)` sets the status and sends JSON; `process.env` reads environment variables
 
-3. **Run it and test each route:**
+3. **Run and test it.** `node --watch` restarts on save, like `--reload`:
 ```bash
-node app.js
+node --watch app.js
 ```
 ```bash
-curl http://localhost:3000/tasks
+curl -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title": "Ship it"}'
 curl http://localhost:3000/tasks/1
-curl -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title":"Ship it"}'
-curl http://localhost:3000/tasks
+curl -i http://localhost:3000/tasks/9
+curl -i -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title": 123}'
+curl "http://localhost:3000/tasks?done=false"
 ```
-Notice the final `GET /tasks` now includes the task you just created with `POST`.
+Same requests, same status codes, same JSON as your FastAPI app, but type conversion, validation, and docs are now your job.
+
+### Choosing a framework
+
+All four are mature and widely used in production. Pick by your team's language and how much structure you want built in:
+
+| Framework | Language | Choose it when | Trade-off |
+|---|---|---|---|
+| **FastAPI** | Python | You're building a JSON API and want validation and docs from type hints, especially next to data or AI code | Fewer built-ins for full websites (admin, templates) |
+| **Flask** | Python | You want a tiny, flexible core for a small app or prototype | You pick and assemble validation, database, and docs yourself |
+| **Django** | Python | You're building a larger, database-heavy site that benefits from a built-in ORM, admin panel, and user accounts | More to learn up front, and more opinions about structure |
+| **Express** | JavaScript | Your team wants one language front and back, or you're joining a Node.js codebase | Very minimal: validation, structure, and docs are up to you |
+
+Everything you practiced here (routes, validation, status codes, a database layer, configuration, logging, tests) carries over to all of them.
 
 ### Checkpoint
-You have a running Express API with GET and POST routes, tested with real requests through curl.
+You rebuilt three endpoints in Express, got the same responses as your FastAPI app, and can name a sensible reason to choose each of FastAPI, Flask, Django, and Express.
 
 ### Quiz
-1. What problem does Express solve compared to Module 1's plain Node.js server?
-2. What does `:id` in a route path represent?
-3. What does `express.json()` middleware do?
-4. What HTTP method is conventionally used to create a new resource?
-5. Why does `/tasks/:id` check `if (!task)` before responding?
-
-*Answers: 1) It replaces manual `if` statement routing with a clean, consistent way to define routes, HTTP methods, and request handling. 2) A route parameter, a dynamic segment of the URL captured and made available through `req.params`. 3) It parses an incoming JSON request body so it can be read as a regular JavaScript object through `req.body`. 4) `POST`. 5) So it can return a proper `404` response with a clear error when the requested id doesn't exist, instead of crashing or returning nothing.*
-
----
-
-## Module 3: Python Flask - A Minimal Python Framework
-
-**Time: about 2 hours**
-
-### Concept
-
-**Flask** is a lightweight Python web framework. Like Express, it handles routing and requests, but with a deliberately minimal core, you add only the pieces you need, making it a common starting point for learning backend concepts in Python.
-
-### Syntax at a Glance
-
-```python
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Welcome to the homepage"
-
-@app.route("/users/<int:user_id>")
-def get_user(user_id):
-    return f"User ID: {user_id}"
-
-@app.route("/users", methods=["POST"])
-def create_user():
-    data = request.get_json()
-    return jsonify({"received": data}), 201
-
-if __name__ == "__main__":
-    app.run(debug=True, port=3000)
-```
-- `@app.route(path)` is a **decorator** that connects a URL path to the function defined directly below it
-- `<int:user_id>` in a path captures a URL segment as a typed parameter, passed as an argument to the function
-- `methods=["POST"]` restricts a route to a specific HTTP method (routes default to `GET`)
-- `request.get_json()` reads the incoming JSON body; `jsonify(...)` builds a JSON response, and `, 201` sets the status code
-
-### Where you'd actually use this
-
-Small to medium APIs, prototypes, and projects where Python's ecosystem, data science libraries, machine learning tools, scripting, is already in use, and the backend needs to fit naturally alongside that.
-
-### Lab
-
-1. **Set up a project and install Flask:**
-```bash
-mkdir my-flask-app
-cd my-flask-app
-python3 -m venv venv
-source venv/bin/activate
-pip install flask
-```
-
-2. **Create `app.py`** with the same task list idea as Module 2:
-```python
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
-
-tasks = [
-    {"id": 1, "title": "Learn Flask"},
-    {"id": 2, "title": "Build an API"}
-]
-
-@app.route("/tasks")
-def get_tasks():
-    return jsonify(tasks)
-
-@app.route("/tasks/<int:task_id>")
-def get_task(task_id):
-    task = next((t for t in tasks if t["id"] == task_id), None)
-    if task is None:
-        return jsonify({"error": "Task not found"}), 404
-    return jsonify(task)
-
-@app.route("/tasks", methods=["POST"])
-def create_task():
-    data = request.get_json()
-    new_task = {"id": len(tasks) + 1, "title": data["title"]}
-    tasks.append(new_task)
-    return jsonify(new_task), 201
-
-if __name__ == "__main__":
-    app.run(debug=True, port=3000)
-```
-
-3. **Run it and test each route:**
-```bash
-python app.py
-```
-```bash
-curl http://localhost:3000/tasks
-curl http://localhost:3000/tasks/1
-curl -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title":"Ship it"}'
-curl http://localhost:3000/tasks
-```
-Same behavior as the Express version in Module 2, different language, same underlying pattern.
-
-### Checkpoint
-You have a running Flask API with GET and POST routes, producing the same results as the Express version, tested with real requests.
-
-### Quiz
-1. What does the `@app.route(...)` decorator do?
-2. How does Flask capture a dynamic part of a URL, like an id?
-3. What does `methods=["POST"]` restrict?
-4. What does `debug=True` do when running the app?
-5. Comparing Module 2 and Module 3, what stayed the same, and what changed?
-
-*Answers: 1) It connects a specific URL path to the Python function defined directly beneath it, so that function runs when the path is requested. 2) With a typed placeholder in the route path, like `<int:task_id>`, passed automatically as an argument to the handling function. 3) It limits that route to handle only `POST` requests, rather than the default `GET`. 4) It enables automatic reloading on code changes and more detailed error pages, useful during development, not intended for production. 5) The underlying concepts, routes, methods, request bodies, status codes, stayed the same; only the language and specific syntax changed.*
-
----
-
-## Module 4: Django - A Full Batteries-Included Framework
-
-**Time: about 3 hours**
-
-### Concept
-
-**Django** is a full featured Python web framework that includes far more out of the box than Flask: a built-in database layer called an **ORM (Object-Relational Mapper)**, an admin interface generated automatically from your data, user authentication, and a defined project structure. It trades some of Flask's minimalism for a large set of built-in, well tested tools.
-
-### Syntax at a Glance
-
-```python
-# models.py, defines a database table as a Python class
-from django.db import models
-
-class Task(models.Model):
-    title = models.CharField(max_length=200)
-    done = models.BooleanField(default=False)
-```
-```python
-# views.py, handles a request and returns a response
-from django.http import JsonResponse
-from .models import Task
-
-def task_list(request):
-    tasks = Task.objects.all()
-    data = [{"id": t.id, "title": t.title} for t in tasks]
-    return JsonResponse(data, safe=False)
-```
-```python
-# urls.py, maps a URL path to a view function
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path("tasks/", views.task_list),
-]
-```
-- A **model** is a Python class representing a database table; each field (`CharField`, `BooleanField`, and so on) becomes a column
-- `Task.objects.all()` is the ORM in action, it runs a database query without writing raw SQL
-- Django separates routing (`urls.py`), logic (`views.py`), and data (`models.py`) into distinct files, rather than combining them in one place
-
-### Where you'd actually use this
-
-Larger applications that need a real database from day one, user accounts, and an admin panel to manage data, without assembling those pieces yourself from separate libraries.
-
-### Lab
-
-1. **Set up a project:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install django
-django-admin startproject mysite
-cd mysite
-python manage.py startapp tasks
-```
-
-2. **Define a model.** In `tasks/models.py`:
-```python
-from django.db import models
-
-class Task(models.Model):
-    title = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.title
-```
-Add `"tasks"` to `INSTALLED_APPS` in `mysite/settings.py`, then create and apply the database migration:
-```bash
-python manage.py makemigrations tasks
-python manage.py migrate
-```
-
-3. **Register the model with the admin site.** In `tasks/admin.py`:
-```python
-from django.contrib import admin
-from .models import Task
-
-admin.site.register(Task)
-```
-Create an admin user, then run the server:
-```bash
-python manage.py createsuperuser
-python manage.py runserver 3000
-```
-Visit `http://localhost:3000/admin`, log in, and add a few tasks directly through the automatically generated admin interface, no custom code required for this part.
-
-4. **Expose the tasks as an API.** In `tasks/views.py`:
-```python
-from django.http import JsonResponse
-from .models import Task
-
-def task_list(request):
-    tasks = Task.objects.all()
-    data = [{"id": t.id, "title": t.title} for t in tasks]
-    return JsonResponse(data, safe=False)
-```
-Now open `mysite/urls.py`. Django already created it with a route for the admin site, which you just used, so keep that route and add yours next to it. The whole file should look like this:
-```python
-from django.contrib import admin
-from django.urls import path
-
-from tasks.views import task_list
-
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("tasks/", task_list),
-]
-```
-If you replaced the whole list with only the `tasks/` route, `/admin` would stop working.
-Visit `http://localhost:3000/tasks/`, the tasks you added through the admin panel appear as JSON.
-
-### Checkpoint
-You created a Django model, added data through the automatically generated admin interface, and exposed that same data through a working API route.
-
-### Quiz
-1. What is a "model" in Django?
-2. What does the ORM let you avoid writing directly?
-3. What did the admin interface let you do without writing custom code?
-4. What is the purpose of `python manage.py migrate`?
-5. What is the main tradeoff Django makes compared to Flask?
-
-*Answers: 1) A Python class representing a database table, where each field defined on the class becomes a column. 2) Raw SQL queries, the ORM translates Python code like `Task.objects.all()` into the appropriate database query. 3) Add, edit, and view data directly through a generated web interface, based entirely on the defined model. 4) It applies pending database changes (like a newly defined model) to the actual database, creating or updating tables to match. 5) Django includes far more built-in structure and tooling out of the box, trading some of Flask's minimalism and flexibility for a larger, more opinionated, ready to use set of features.*
-
----
-
-## Module 5: FastAPI - Modern Python with Types
-
-**Time: about 2 hours**
-
-### Concept
-
-**FastAPI** is a Python framework focused on speed of both execution and development. It uses Python **type hints** to validate incoming data automatically, and generates interactive API documentation for free, directly from your code, with no separate documentation to maintain.
-
-### Syntax at a Glance
-
-```python
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-app = FastAPI()
-
-class Task(BaseModel):
-    title: str
-    done: bool = False
-
-@app.get("/tasks")
-def get_tasks():
-    return [{"id": 1, "title": "Learn FastAPI"}]
-
-@app.post("/tasks")
-def create_task(task: Task):
-    return {"id": 2, "title": task.title, "done": task.done}
-```
-- A class inheriting from `BaseModel` (from the `pydantic` library) defines the expected shape of incoming data, its fields and their types
-- Declaring a parameter's type, like `task: Task`, tells FastAPI to read, validate, and parse the request body automatically into that shape
-- `@app.get(...)` and `@app.post(...)` work the same way as Flask's route decorators
-- If incoming data doesn't match the declared types, FastAPI automatically responds with a clear validation error, no manual checking required
-
-### Where you'd actually use this
-
-APIs where request validation, clear error messages, and up to date documentation matter, particularly when other developers or teams will consume the API and need to understand its shape quickly.
-
-### Lab
-
-1. **Set up a project:**
-```bash
-mkdir my-fastapi-app
-cd my-fastapi-app
-python3 -m venv venv
-source venv/bin/activate
-pip install fastapi "uvicorn[standard]"
-```
-
-2. **Create `main.py`** with the same task list idea as the previous modules:
-```python
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-
-app = FastAPI()
-
-class Task(BaseModel):
-    title: str
-
-tasks = [
-    {"id": 1, "title": "Learn FastAPI"},
-    {"id": 2, "title": "Build an API"}
-]
-
-@app.get("/tasks")
-def get_tasks():
-    return tasks
-
-@app.get("/tasks/{task_id}")
-def get_task(task_id: int):
-    for task in tasks:
-        if task["id"] == task_id:
-            return task
-    raise HTTPException(status_code=404, detail="Task not found")
-
-@app.post("/tasks", status_code=201)
-def create_task(task: Task):
-    new_task = {"id": len(tasks) + 1, "title": task.title}
-    tasks.append(new_task)
-    return new_task
-```
-
-3. **Run it:**
-```bash
-uvicorn main:app --reload --port 3000
-```
-
-4. **Test it, and explore the free documentation.** Visit `http://localhost:3000/docs`, FastAPI generated a full interactive API explorer directly from your code, where you can try each route in the browser. Also test from the terminal:
-```bash
-curl http://localhost:3000/tasks
-curl -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title":"Ship it"}'
-```
-
-5. **Trigger a validation error on purpose:**
-```bash
-curl -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title": 123}'
-```
-FastAPI rejects it automatically, `123` is a number, not the `str` the `Task` model requires, and responds with a clear error explaining exactly what was wrong, without any manual validation code written for this case.
-
-### Checkpoint
-You have a running FastAPI app, viewed its automatically generated documentation at `/docs`, and triggered a real, automatic validation error.
-
-### Quiz
-1. What does inheriting from `BaseModel` let you define?
-2. What happens automatically if incoming request data doesn't match a declared type?
-3. What does FastAPI generate for you automatically, with no extra work, at `/docs`?
-4. What does `task_id: int` in a route function's parameters accomplish?
-5. What is FastAPI's main selling point, compared to Flask's more manual approach?
-
-*Answers: 1) The expected shape of incoming data, its field names and their types. 2) FastAPI automatically responds with a clear validation error describing what was wrong, without any manual checking code. 3) Interactive, browsable API documentation, generated directly from the code's routes and type declarations. 4) It tells FastAPI to parse that URL segment as an integer automatically, and to validate that it actually is one. 5) Automatic request validation and free, always up to date documentation, both driven directly by Python type hints, reducing manual, repetitive validation and documentation work.*
+1. What does Node.js let JavaScript do that it can't do in a browser alone?
+2. What does `express.json()` do?
+3. Why does the Express version check `title` by hand?
+4. Why does `/tasks/:id` use `Number(req.params.id)`?
+5. A team is building a large content site with user accounts and staff who need to edit data through an admin panel, all in Python. Which framework fits best, and why?
+
+*Answers: 1) Run outside the browser on a server, handling network requests, files, and databases directly. 2) It parses JSON request bodies so they're available as a JavaScript object in `req.body`. 3) Express has no built-in validation like Pydantic, so without a check (or a library such as Zod) bad data would be stored. 4) Route parameters always arrive as strings, but the Map's keys are numbers. 5) Django, because it includes an ORM, user accounts, and an automatic admin panel out of the box.*
+
+**Next:** APIs for Builders adds proper API design, GraphQL, and authentication to the app you built here.

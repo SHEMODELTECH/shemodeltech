@@ -14,7 +14,7 @@ Time: about 6 hours
 
 **Tools needed for this module:** A web browser, a free account with a document tool such as [Google Docs](https://docs.google.com) or [Notion](https://www.notion.so), and a free account with a survey tool like [Google Forms](https://forms.google.com) or [Typeform](https://www.typeform.com). No coding environment or installs are required.
 
-If you've taken Research for Tech Teams in the TechLeads track, Topics 2 (Interviews) and 3 (Surveys) will be a refresher; they cover the same ground as its Topic 5.2, Interviews and Surveys.
+This is the in-depth home for interviews and surveys on She Model Tech; the TechLeads track's Research for Tech Teams module covers desk research (sources, market sizing, and competitor analysis) and links here for interviews and surveys.
 
 ### Topic 1: Personas
 

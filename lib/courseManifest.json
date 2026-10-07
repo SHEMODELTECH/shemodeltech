@@ -137,20 +137,20 @@
  "TechDev/frontend-frameworks-beginner-course": {
   "title": "Frontend Frameworks for Builders",
   "level": "Beginner",
-  "minutes": 540,
+  "minutes": 1440,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 5,
-  "quizParts": 5
+  "modules": 13,
+  "quizParts": 13
  },
  "TechDev/backend-development-beginner-course": {
   "title": "Backend Development for Builders",
   "level": "Beginner",
-  "minutes": 690,
+  "minutes": 840,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 6,
-  "quizParts": 6
+  "modules": 8,
+  "quizParts": 8
  },
  "TechDev/databases-beginner-course": {
   "title": "Databases for Builders",
@@ -164,11 +164,11 @@
  "TechDev/apis-beginner-course": {
   "title": "APIs for Builders",
   "level": "Beginner",
-  "minutes": 570,
+  "minutes": 840,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 6,
-  "quizParts": 6
+  "modules": 8,
+  "quizParts": 8
  },
  "TechDev/testing-beginner-course": {
   "title": "Testing for Builders",
@@ -470,7 +470,7 @@
  "TechLeads/module-5-research-for-tech-teams": {
   "title": "Research for Tech Teams",
   "level": "Beginner",
-  "minutes": 420,
+  "minutes": 390,
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
   "modules": 3,
@@ -570,7 +570,7 @@
  "TechQA/module-3-automation-testing": {
   "title": "Automation Testing",
   "level": "Beginner",
-  "minutes": 540,
+  "minutes": 420,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,

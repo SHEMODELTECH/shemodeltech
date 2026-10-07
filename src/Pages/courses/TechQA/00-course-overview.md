@@ -12,7 +12,7 @@ The modules build on each other, so take them in this order:
 
 1. **QA Fundamentals.** How software gets built (the SDLC), how testing is planned alongside it (the STLC), and the principles that decide what to test. No tools needed.
 2. **Manual Testing.** Writing clear test cases, reporting bugs a developer can act on, and exploratory testing. No tools needed.
-3. **Automation Testing.** Turning repeatable checks into code with Selenium, Cypress, and Playwright.
+3. **Automation Testing.** Turning repeatable checks into code with Selenium and Playwright, and how to write tests that stay reliable.
 4. **API Testing.** Testing the services behind an app with Postman and Swagger, and running test suites from the terminal with Newman (or the Postman CLI).
 5. **Performance Testing.** Measuring how software behaves under load with Apache JMeter.
 6. **Mobile Testing.** Testing Android apps with Android Studio, and iOS apps with Xcode on a Mac.
