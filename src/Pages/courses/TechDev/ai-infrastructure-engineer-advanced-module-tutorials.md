@@ -1,4 +1,4 @@
-<!-- order: 24 -->
+<!-- order: 26 -->
 # AI Infrastructure Engineer — Advanced Module: Modern IaC, GPU Scheduling & Multi-Tenant IAM
 
 This is a bonus, advanced module extending the **AI Infrastructure Engineer Foundations Course**. It covers four skills that aren't in the original 7-project course: **Pulumi** (infrastructure as code written in general-purpose languages), **OpenTofu** (the open-source fork of Terraform), **GPU scheduling** for AI workloads, and **multi-tenant identity and access management (IAM)**. Complete the original 7 projects first — this module builds directly on your Project 3 cloud instance, Project 4 containers, and Project 6 autoscaling deployment.

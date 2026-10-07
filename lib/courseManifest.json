@@ -2,7 +2,7 @@
  "TechArchs/website-builders-beginner-course": {
   "title": "Website Builders",
   "level": "Beginner",
-  "minutes": 165,
+  "minutes": 330,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 5,
@@ -11,7 +11,7 @@
  "TechArchs/no-code-website-cms-developer-webflow-hands-on-tutorials": {
   "title": "No-Code Website and CMS Developer (Webflow)",
   "level": "Project-based",
-  "minutes": 195,
+  "minutes": 780,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
@@ -20,7 +20,7 @@
  "TechArchs/internal-apps-beginner-course": {
   "title": "Internal Apps",
   "level": "Beginner",
-  "minutes": 165,
+  "minutes": 360,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 5,
@@ -29,7 +29,7 @@
  "TechArchs/no-code-web-app-builder-bubble-hands-on-tutorials": {
   "title": "No-Code Web App Builder (Bubble)",
   "level": "Project-based",
-  "minutes": 195,
+  "minutes": 660,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
@@ -38,7 +38,7 @@
  "TechArchs/automation-beginner-course": {
   "title": "Automation for Builders",
   "level": "Beginner",
-  "minutes": 195,
+  "minutes": 390,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
@@ -47,7 +47,7 @@
  "TechArchs/workflow-automation-specialist-zapier-make-hands-on-tutorials": {
   "title": "Workflow Automation Specialist (Zapier and Make)",
   "level": "Project-based",
-  "minutes": 195,
+  "minutes": 750,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
@@ -56,7 +56,7 @@
  "TechArchs/business-workflows-module": {
   "title": "Business Workflows",
   "level": "Beginner",
-  "minutes": 135,
+  "minutes": 300,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 5,
@@ -65,7 +65,7 @@
  "TechArchs/apis-module": {
   "title": "APIs",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 180,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 4,
@@ -74,7 +74,7 @@
  "TechArchs/crm-platforms-module": {
   "title": "CRM Platforms",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 4,
@@ -83,7 +83,7 @@
  "TechArchs/internal-tools-builder-retool-airtable-hands-on-tutorials": {
   "title": "Internal Tools Builder (Retool and Airtable)",
   "level": "Project-based",
-  "minutes": 195,
+  "minutes": 750,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
@@ -92,7 +92,7 @@
  "TechArchs/deployment-module": {
   "title": "Deployment",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 180,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 4,
@@ -101,7 +101,7 @@
  "TechDev/swe-fundamentals-beginner-course": {
   "title": "Build Your First Product: A Beginner's Course in Software Engineering Fundamentals",
   "level": "Beginner",
-  "minutes": 360,
+  "minutes": 2130,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 11,
@@ -110,7 +110,7 @@
  "TechDev/python-fundamentals-beginner-course": {
   "title": "Python Programming Fundamentals",
   "level": "Beginner",
-  "minutes": 315,
+  "minutes": 720,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 10,
@@ -119,7 +119,7 @@
  "TechDev/version-control-beginner-course": {
   "title": "Version Control for Builders",
   "level": "Beginner",
-  "minutes": 195,
+  "minutes": 420,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 6,
@@ -128,7 +128,7 @@
  "TechDev/web-development-beginner-course": {
   "title": "Web Development for Builders",
   "level": "Beginner",
-  "minutes": 195,
+  "minutes": 660,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 6,
@@ -173,7 +173,7 @@
  "TechDev/testing-beginner-course": {
   "title": "Testing for Builders",
   "level": "Beginner",
-  "minutes": 165,
+  "minutes": 480,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 5,
@@ -191,11 +191,38 @@
  "TechDev/dsa-beginner-course": {
   "title": "Data Structures & Algorithms for Builders",
   "level": "Beginner",
-  "minutes": 420,
+  "minutes": 1020,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 13,
   "quizParts": 12
+ },
+ "TechDev/data-analytics-beginner-course": {
+  "title": "Data Analytics for Builders",
+  "level": "Beginner",
+  "minutes": 1350,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 9,
+  "quizParts": 8
+ },
+ "TechDev/machine-learning-fundamentals-beginner-course": {
+  "title": "Machine Learning Fundamentals",
+  "level": "Beginner",
+  "minutes": 1110,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 9,
+  "quizParts": 8
+ },
+ "TechDev/agentic-ai-fundamentals-course": {
+  "title": "Agentic AI Fundamentals: Build, Connect and Safeguard AI Agents",
+  "level": "Beginner to Intermediate",
+  "minutes": 1005,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 7
  },
  "TechDev/computer-vision": {
   "title": "Computer Vision",
@@ -218,7 +245,7 @@
  "TechDev/ai-product-engineer-hands-on-tutorials": {
   "title": "AI Product Engineer",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 765,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
@@ -227,7 +254,7 @@
  "TechDev/ai-automation-engineer-hands-on-tutorials": {
   "title": "AI Automation Engineer",
   "level": "Project-based",
-  "minutes": 210,
+  "minutes": 975,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
@@ -236,7 +263,7 @@
  "TechDev/ai-data-engineer-hands-on-tutorials": {
   "title": "AI Data Engineer",
   "level": "Project-based",
-  "minutes": 240,
+  "minutes": 1035,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
@@ -245,7 +272,7 @@
  "TechDev/ai-agent-platform-engineer-hands-on-tutorials": {
   "title": "AI Agent Platform Engineer",
   "level": "Project-based",
-  "minutes": 255,
+  "minutes": 1185,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
@@ -254,7 +281,7 @@
  "TechDev/ai-solutions-architect-hands-on-tutorials": {
   "title": "AI Solutions Architect",
   "level": "Project-based",
-  "minutes": 225,
+  "minutes": 765,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
@@ -263,7 +290,7 @@
  "TechDev/multimodal-ai-engineer-hands-on-tutorials": {
   "title": "Multimodal AI Engineer",
   "level": "Project-based",
-  "minutes": 240,
+  "minutes": 1095,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
@@ -272,7 +299,7 @@
  "TechDev/ai-research-engineer-hands-on-tutorials": {
   "title": "AI Research Engineer",
   "level": "Project-based",
-  "minutes": 240,
+  "minutes": 1065,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
@@ -281,7 +308,7 @@
  "TechDev/robotics-ai-engineer-hands-on-tutorials": {
   "title": "Robotics AI Engineer",
   "level": "Project-based",
-  "minutes": 240,
+  "minutes": 1125,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
@@ -290,7 +317,7 @@
  "TechDev/ai-infrastructure-engineer-hands-on-tutorials": {
   "title": "AI Infrastructure Engineer",
   "level": "Project-based",
-  "minutes": 255,
+  "minutes": 1365,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 9,
@@ -299,7 +326,7 @@
  "TechDev/ai-infrastructure-engineer-advanced-module-tutorials": {
   "title": "AI Infrastructure Engineer — Advanced Module: Modern IaC, GPU Scheduling & Multi-Tenant IAM",
   "level": "Advanced",
-  "minutes": 150,
+  "minutes": 975,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 6,
@@ -308,7 +335,7 @@
  "TechDev/ai-governance-responsible-ai-engineer-hands-on-tutorials": {
   "title": "AI Governance and Responsible AI Engineer",
   "level": "Project-based",
-  "minutes": 240,
+  "minutes": 915,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
@@ -317,7 +344,7 @@
  "TechDev/ai-governance-advanced-module-tutorials": {
   "title": "AI Governance and Responsible AI Engineer — Advanced Module: EU AI Act Compliance",
   "level": "Advanced",
-  "minutes": 150,
+  "minutes": 585,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 6,
@@ -326,7 +353,7 @@
  "TechGuard/module-1-networking": {
   "title": "Networking Fundamentals",
   "level": "Beginner",
-  "minutes": 135,
+  "minutes": 360,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 5,
@@ -335,7 +362,7 @@
  "TechGuard/module-2-operating-systems": {
   "title": "Operating Systems",
   "level": "Beginner",
-  "minutes": 75,
+  "minutes": 240,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
@@ -344,7 +371,7 @@
  "TechGuard/module-3-ethical-hacking": {
   "title": "Ethical Hacking",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 420,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 4,
@@ -353,7 +380,7 @@
  "TechGuard/module-4-cryptography": {
   "title": "Cryptography",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 300,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 4,
@@ -362,7 +389,7 @@
  "TechGuard/module-5-identity-access-management": {
   "title": "Identity and Access Management",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 300,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 4,
@@ -371,7 +398,7 @@
  "TechGuard/module-6-cloud-security": {
   "title": "Cloud Security",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 4,
@@ -380,7 +407,7 @@
  "TechGuard/module-7-security-monitoring": {
   "title": "Security Monitoring",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 300,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 4,
@@ -389,7 +416,7 @@
  "TechGuard/module-8-secure-coding": {
   "title": "Secure Coding",
   "level": "Beginner",
-  "minutes": 75,
+  "minutes": 300,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
@@ -398,7 +425,7 @@
  "TechGuard/module-9-devops-security": {
   "title": "DevOps Security",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 390,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 4,
@@ -561,7 +588,7 @@
  "TechQA/module-5-performance-testing": {
   "title": "Performance Testing",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 4,

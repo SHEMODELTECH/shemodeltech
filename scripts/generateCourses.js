@@ -120,7 +120,42 @@ const prettySlug = (slug) =>
 
 // Rough time to complete: reading at ~200 words a minute, plus ~30 minutes for
 // each section with hands-on work (a lab, numbered steps, or an exercise).
+// When a course states its own times ("**Time: about 2 hours**", one per "## "
+// section, or one for the whole course), the card shows their sum instead.
+const TIME_RE = /\*\*Time(?: estimate)?:?\*?\*?:?\s*(?:about\s*)?(\d+(?:\.\d+)?)(?:\s*(?:-|to|–)\s*(\d+(?:\.\d+)?))?\s*(hours?|hrs?|minutes?|mins?)?/i;
+const timeOf = (line) => {
+  const m = line && line.match(TIME_RE);
+  if (!m) return null;
+  const a = parseFloat(m[1]);
+  const b = m[2] ? parseFloat(m[2]) : a;
+  return ((a + b) / 2) * (/^min/i.test(m[3] || 'hours') ? 1 : 60);
+};
+const authoredMinutes = (md) => {
+  let inFence = false;
+  const lines = md.split('\n').filter((l) => {
+    if (/^\s*```/.test(l)) { inFence = !inFence; return false; }
+    return !inFence;
+  });
+  const isTime = (l) => /\*\*Time(?: estimate)?:?/i.test(l) && timeOf(l) != null;
+  let total = 0;
+  let found = 0;
+  lines.join('\n').split(/^##\s+/m).slice(1).forEach((s) => {
+    const line = s.split('\n').find(isTime);
+    if (!line || /total/i.test(line)) return;
+    total += timeOf(line);
+    found += 1;
+  });
+  if (!found) {
+    const first = lines.find(isTime);
+    if (!first) return null;
+    total = timeOf(first);
+  }
+  return Math.max(10, Math.round(total / 15) * 15);
+};
+
 const estimateMinutes = (md) => {
+  const authored = authoredMinutes(md);
+  if (authored) return authored;
   const words = md.split(/\s+/).filter(Boolean).length;
   const sections = md.split(/^##\s+/m).slice(1);
   const practical = sections.filter((s) => /(\bLab\b|\*\*Step \d|Practical exercise|Hands-on)/i.test(s)).length;
