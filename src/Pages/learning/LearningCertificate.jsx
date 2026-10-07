@@ -69,7 +69,7 @@ const LearningCertificate = () => {
               </svg>
               Verified certificate
             </span>{' '}
-            issued by SHE MODEL TECH Inc., a registered 501(c)(3) nonprofit
+            issued by SHE MODEL TECH Inc.
           </p>
           <div className="flex flex-wrap gap-2">
             <button onClick={() => window.print()} className="fd-btn">Download PDF</button>
@@ -122,7 +122,6 @@ const LearningCertificate = () => {
                 <p className="cert-foot-label">Certificate ID</p>
               </div>
             </div>
-            <p className="cert-org">SHE MODEL TECH Inc. is a registered 501(c)(3) nonprofit organization.</p>
             <p className="cert-verify">Verify at {certificateUrl(cert.id).replace(/^https?:\/\//, '')}</p>
           </div>
         </article>
