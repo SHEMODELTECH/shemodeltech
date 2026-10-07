@@ -516,7 +516,7 @@ const DisputePage = () => {
               <div className="space-y-1.5">
                 {project.disputeHistory.map((h, i) => (
                   <div key={i} className="flex items-start gap-2 text-xs">
-                    <span className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${h.action === 'disputed' ? 'bg-red-500' : h.action === 'confirmed' ? 'bg-pink-600' : h.action === 'resolved' ? 'bg-pink-500' : 'bg-gray-300'}`} />
+                    <span className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${h.action === 'disputed' ? 'bg-red-500' : h.action === 'confirmed' ? 'bg-pink-600' : h.action === 'resolved' ? 'bg-gray-900' : 'bg-gray-300'}`} />
                     <p className="text-gray-600 leading-relaxed">
                       <span className="font-semibold text-gray-900">{h.memberName}</span> {h.action.replace(/_/g, ' ')}{h.reason ? ` - "${h.reason}"` : ''}{h.note ? ` - ${h.note}` : ''}
                       <span className="text-gray-400"> · {formatTime(h.at)}</span>

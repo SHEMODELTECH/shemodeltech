@@ -27,7 +27,7 @@ import { formatMoney } from '../../utils/paidProjects';
 const STATUS_COPY = {
   [SPONSORSHIP_STATUS.PLEDGED]: { label: 'Awaiting payment', style: 'bg-gray-100 text-gray-800' },
   [SPONSORSHIP_STATUS.FUNDED]: { label: 'Funded', style: 'bg-pink-100 text-pink-700' },
-  [SPONSORSHIP_STATUS.DISTRIBUTED]: { label: 'Stipends paid', style: 'bg-pink-100 text-pink-700' },
+  [SPONSORSHIP_STATUS.DISTRIBUTED]: { label: 'Stipends paid', style: 'bg-gray-900 text-white' },
   [SPONSORSHIP_STATUS.CANCELLED]: { label: 'Cancelled', style: 'bg-gray-100 text-gray-500' },
 };
 

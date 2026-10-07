@@ -256,7 +256,7 @@ const Organizations = () => {
                   {r.workspaceProjectId && (
                     <a href={`/projects/${r.workspaceProjectId}/workspace`} className="text-xs font-semibold bg-gray-900 text-white px-3 py-1.5 rounded-lg">Open workspace</a>
                   )}
-                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${r.status === 'declined' ? 'bg-gray-100 text-gray-600' : ['completed', 'active', 'signed', 'approved'].includes(r.status) ? 'bg-pink-50 text-pink-700' : 'bg-gray-50 text-gray-900'}`}>
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${r.status === 'declined' ? 'bg-gray-100 text-gray-600' : ['completed', 'active', 'signed', 'approved'].includes(r.status) ? 'bg-pink-50 text-pink-700' : 'bg-gray-900 text-white'}`}>
                     {STATUS_LABELS[r.status] || r.status}
                   </span>
                 </li>
