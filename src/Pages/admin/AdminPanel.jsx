@@ -24,6 +24,7 @@ import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTea
 import { deleteTeacherCourse, listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { deleteProjectActivity } from '../../utils/activityFeed';
+import ProofWallAdmin from '../../components/admin/ProofWallAdmin';
 import { notifyMember } from '../../utils/staffAlerts';
 import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
@@ -967,6 +968,7 @@ const AdminPanel = ({ only = null }) => {
       {!loadingData && tab === 'announcements' && isAdmin && <AnnouncementsAdmin />}
       {!loadingData && tab === 'team' && isAdmin && <TeamApplicationsAdmin />}
       {!loadingData && tab === 'feedback' && isAdmin && <FeedbackSummary />}
+      {!loadingData && tab === 'proofwall' && isAdmin && <ProofWallAdmin />}
       {!loadingData && tab === 'overview' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <StatCard label="Total Users" value={stats.users} />

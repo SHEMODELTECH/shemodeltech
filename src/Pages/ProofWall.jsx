@@ -1226,11 +1226,6 @@ const ProofWall = () => {
                         {a.createdAt ? <> · {fmtAgo(a.createdAt)}</> : null}
                       </div>
 
-                      {/* Admins can remove any entry (for example, a past project). */}
-                      {myData?.role === 'admin' && !isMine && (
-                        <button onClick={() => handleDelete(a)} className="mt-1.5 text-xs font-semibold text-gray-500 hover:text-red-600">Remove</button>
-                      )}
-
                       {/* Updates only: React, Comment, Repost, Send (plus Edit/Delete on your own). */}
                       {!isEditing && a.type === 'update' && (
                         <div className="mt-2.5">

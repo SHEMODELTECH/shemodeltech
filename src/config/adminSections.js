@@ -11,6 +11,7 @@ export const ADMIN_SECTIONS = [
   ['sponsors', 'Sponsors', 'admin'],
   ['launch', 'Settings', 'admin'],
   ['moderation', 'Moderation', 'all'],
+  ['proofwall', 'Proof Wall', 'admin'],
   ['deletions', 'Deletion Requests', 'admin'],
   ['danger', 'Danger Zone', 'admin'],
 ];
