@@ -50,7 +50,7 @@ Reading firewall logs, understanding a port scan, diagnosing why a service is un
 ```bash
 ping -c 4 example.com
 ```
-That is the Mac/Linux version (`-c 4` means send 4 packets). On Windows, use `ping -n 4 example.com` instead.
+That is the Mac/Linux version (`-c 4` means send 4 packets). On Windows, use `ping -n 4 example.com` instead. Some servers are set to ignore ping, so if every packet is lost but the site loads in your browser, the host is up and simply not answering ICMP; step 3 checks it over TCP instead.
 2. **Trace the path** your packets take, hop by hop, to that host:
 ```bash
 traceroute example.com

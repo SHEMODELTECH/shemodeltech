@@ -1,9 +1,13 @@
 <!-- order: 8 -->
 ## Module 8: Secure Coding
 
+**Time: about 5 hours** (roughly 2 hours for the OWASP Top 10, 3 hours for secure APIs).
+
 **Tools needed for this module:** a code editor and a language runtime you're comfortable with (Node.js or Python are convenient for the examples), a terminal, and `curl` from Module 1 for testing endpoints. Optionally, a deliberately-vulnerable practice app like **OWASP Juice Shop** run locally, and a dependency scanner such as `npm audit`. As always, only test applications you own or that are built for training.
 
 ### Topic 8.1: OWASP Top 10
+
+Time: about 2 hours
 
 #### Concept
 
@@ -108,6 +112,8 @@ You can recognise and fix an injection flaw (parameterisation) and a broken-acce
 
 ### Topic 8.2: Secure APIs
 
+Time: about 3 hours
+
 #### Concept
 
 **APIs** are the interfaces that let applications and services talk to each other, and because they expose functionality and data directly, they're one of the biggest attack surfaces in modern software (OWASP maintains a separate API Security Top 10 for exactly this reason). A secure API treats every request as untrusted and puts it through a series of gates: prove who you are (**authentication**), prove you're allowed to do this specific thing (**authorization**), validate the input, limit the rate, and always travel over encrypted transport. The single most common API flaw is failing to check that the caller is authorized for the *specific object* they're requesting.
@@ -154,6 +160,7 @@ Designing and reviewing any API that backs a web or mobile app, a public develop
 ```bash
 pip install flask
 ```
+(If pip refuses with an "externally-managed-environment" error, which is common on recent Linux and Homebrew Python, first create and activate a virtual environment: `python3 -m venv .venv` then `source .venv/bin/activate`, or `.venv\Scripts\activate` on Windows, and run the install again.)
 3. **Save this as `api.py`**. It's the same endpoint with the gates added; each gate is commented. The two demo users get random tokens every time the server starts, so no credential is written in the code.
 ```python
 # api.py: a tiny records API with every security gate, for local practice only

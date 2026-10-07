@@ -131,8 +131,10 @@ export default App;
 ```
 Save, then type into the input in the browser. The greeting appears and updates on every keystroke, without any manual DOM code.
 
-3. **Split it into two components,** the core React pattern of breaking UI into pieces:
+3. **Split it into two components,** the core React pattern of breaking UI into pieces. Replace `src/App.jsx` again with:
 ```jsx
+import { useState } from "react";
+
 function Greeting({ name }) {
   if (!name) return null;
   return <p>Hello, {name}!</p>;
@@ -154,6 +156,8 @@ function App() {
     </div>
   );
 }
+
+export default App;
 ```
 `name` is passed into `Greeting` as a **prop**, data handed down from a parent component to a child.
 

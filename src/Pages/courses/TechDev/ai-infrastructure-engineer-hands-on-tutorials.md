@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: your terminal
 
+**Time: about 15 minutes**
+
 Unlike the other AI courses, this one works in a **terminal** on purpose: infrastructure is built, deployed, and monitored from the command line, so practising there is part of the skill. None of these projects run in Google Colab. You work in files and a terminal.
 
 **Which terminal to use.** The commands in this course are Linux commands. Use one of these:
@@ -33,6 +35,8 @@ Unlike the other AI courses, this one works in a **terminal** on purpose: infras
 
 ## Project 1 (Module 1): Map the Infrastructure Stack for an AI System
 
+**Time: about 1.5 hours**
+
 **Goal:** Before deploying anything, learn to see an AI system as a stack of layers, so every later project has a place to plug into.
 
 **Step 1: Set up a project folder for your planning docs.**
@@ -42,7 +46,7 @@ cd infra_stack_project
 ```
 
 **Step 2: Define what the system needs to do.**
-Write one sentence in a file `requirements.txt` (or `requirements.md`): what model are you serving, and who's using it? Example: "Serve an image-classification model to a mobile app, expecting 50 requests per second."
+Write one sentence in a file named `requirements.md`: what model are you serving, and who's using it? Example: "Serve an image-classification model to a mobile app, expecting 50 requests per second."
 
 **Step 3: Understand the two infrastructure modes: training vs. inference.**
 *Training* is the (usually one-time or periodic) process of teaching a model from data, heavy, GPU-hungry, can take hours. *Inference* is running the trained model to get predictions, lighter per-request, but needs to happen fast and often.
@@ -117,6 +121,8 @@ infra_stack_project/
 ---
 
 ## Project 2 (Module 2): Write Shell Scripts to Monitor System Resources
+
+**Time: about 3 hours**
 
 **Goal:** See what a machine is doing under the hood, the skill every later deployment and monitoring project depends on.
 
@@ -335,6 +341,8 @@ monitoring_project/
 
 ## Project 3 (Module 3): Deploy a Service to a Cloud Compute Instance
 
+**Time: about 3.5 hours**
+
 **Goal:** Move from your local machine to a real cloud server, the foundation every later deployment builds on.
 
 **Where this runs:** [Google Cloud Shell](https://shell.cloud.google.com), which already has the `gcloud` command-line tool. You'll create a small virtual machine on **Google Cloud Compute Engine**.
@@ -488,6 +496,8 @@ cloud_deploy_project/
 
 ## Project 4 (Module 4): Containerize and Deploy an Application
 
+**Time: about 3 hours**
+
 **Goal:** Package your service so it runs identically anywhere, the single most important habit in modern infrastructure.
 
 **Where this runs:** Steps 1 to 7 run on your computer with **Docker Desktop** installed (free for personal use, from docker.com), or in Cloud Shell, which has Docker already. Steps 8 to 11 run on your Project 3 VM. You also need a free **Docker Hub** account (hub.docker.com) to store your image.
@@ -611,6 +621,8 @@ container_project/
 ---
 
 ## Project 5 (Module 5): Benchmark Inference Performance Across Hardware Configurations
+
+**Time: about 3 hours**
 
 **Goal:** Measure, not guess, whether your infrastructure choices are actually good ones.
 
@@ -738,6 +750,8 @@ benchmark_project/
 ---
 
 ## Project 6 (Module 6): Deploy a Model Behind a Serving API with Autoscaling
+
+**Time: about 5 hours**
 
 **Goal:** The centerpiece project: turn a model into an API that runs on Kubernetes and grows and shrinks with demand automatically.
 
@@ -1003,6 +1017,8 @@ autoscaling_api_project/
 ---
 
 ## Project 7 (Module 7): Set Up Monitoring and Alerting for a Deployed Model
+
+**Time: about 3.5 hours**
 
 **Goal:** Give your Project 6 deployment eyes: know it's healthy without having to check manually.
 

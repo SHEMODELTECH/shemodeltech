@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -22,6 +24,8 @@ Prefer to work on your own computer? The same notebooks run in JupyterLab or in 
 ---
 
 ## Project 1 (Module 1): Write a Solutions Brief for a Business Problem
+
+**Time: about 1.5 hours**
 
 **Goal:** Translate a business problem into a technical direction, the first move a solutions architect makes, before any diagram or code.
 
@@ -80,6 +84,8 @@ solutions_brief_project/
 ---
 
 ## Project 2 (Module 2): Design a System Diagram for an AI Service
+
+**Time: about 2 hours**
 
 **Goal:** Visualize the service you're proposing, the first technical artifact that turns your Project 1 brief into something engineers can react to.
 
@@ -155,6 +161,8 @@ system_diagram_project/
 
 ## Project 3 (Module 3): Compare Model Options for a Given Use Case
 
+**Time: about 1.5 hours**
+
 **Goal:** Decide which AI approach actually fits the problem, replacing assumption with a documented comparison.
 
 **Step 1: Create the project notebook.**
@@ -216,6 +224,8 @@ model_comparison_project/
 ---
 
 ## Project 4 (Module 4): Design an End-to-End AI System Architecture
+
+**Time: about 2 hours**
 
 **Goal:** Expand your Project 2 diagram into a full system design, the central architecture document for the whole solution.
 
@@ -279,6 +289,8 @@ full_architecture_project/
 ---
 
 ## Project 5 (Module 5): Design the Data and Infrastructure Layer for an AI System
+
+**Time: about 2 hours**
 
 **Goal:** Fill in how data will move and be secured, the layer underneath the architecture you designed in Project 4.
 
@@ -352,6 +364,8 @@ data_infra_layer_project/
 
 ## Project 6 (Module 6): Write a Governance and Risk Plan
 
+**Time: about 1.5 hours**
+
 **Goal:** Address compliance and responsible-use concerns directly, the part of architecture that protects the organization, not just the system.
 
 **Step 1: Create the project notebook.**
@@ -411,6 +425,8 @@ governance_risk_project/
 ---
 
 ## Project 7 (Module 7): Present a Full Architecture Proposal
+
+**Time: about 2 hours**
 
 **Goal:** Package everything into a presentation for stakeholders, the skill that actually gets an architecture approved and built.
 

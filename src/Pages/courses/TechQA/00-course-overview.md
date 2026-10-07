@@ -38,7 +38,7 @@ Each module lists the tools it needs at the top. Every tool in this track is fre
 
 ## One rule for the whole track
 
-Only test software you own or have written permission to test. The performance and security labs use targets that exist for practice; never point those tools at a real site or app without permission.
+Only test software you own or have written permission to test. The performance and security labs use a deliberately vulnerable practice app running only on your own computer; never point those tools at a real site or app.
 
 ---
 

@@ -3,7 +3,7 @@
 
 Time: about 7 hours
 
-**Purpose of this module:** Learn to choose and read the metrics that show whether a product is working, prioritize a roadmap with a framework like RICE, and pick and set up the right collaboration tool for a team. It covers reading the numbers that tell you whether a product is working (Analytics), deciding what to build next and why (Roadmapping), and running the day-to-day work of a team using the tools product and project managers actually live in (Collaboration).
+**Purpose of this module:** Learn to choose and read the metrics that show whether a product is working, prioritize a roadmap with a framework like RICE, and pick and set up the right collaboration tool for a team.
 
 **Tools needed for this module:** A free account on at least one project/collaboration tool, Jira, Trello, Asana, or Notion, whichever your organization uses or you're most curious about. A spreadsheet tool (Excel, Google Sheets) is useful for the Analytics lab. No paid tools are required to complete this module.
 
@@ -162,7 +162,7 @@ You have 5-6 scored and ranked ideas, an MVP scope with explicit out-of-scope it
 4. What is feature planning, and what does it produce?
 5. What is an MVP, and what makes a scoped-down feature actually "viable" rather than just small?
 
-*Answers: 1) Saying no to good ideas because something else matters more right now, rather than simply listing ideas. 2) Deciding what to work on first based on value, effort, urgency, or strategic fit; it needs a consistent method so decisions aren't made by gut feel or by whoever asked last. 3) Reach, Impact, Confidence, Effort; it's a repeatable framework for comparing very different kinds of work against each other, scored as Reach × Impact × Confidence ÷ Effort with Confidence as a decimal, so 80% becomes 0.8. 4) Breaking a prioritized idea down into something a team can actually build; it produces a defined scope, a sequence of pieces, and a decision about what's in the first version versus later. 5) The smallest version of a feature that still delivers real value and can be learned from; it's "viable" only if it still delivers that real value, otherwise it's just small without being useful as covered in Product Fundamentals, Topic 2.*
+*Answers: 1) Saying no to good ideas because something else matters more right now, rather than simply listing ideas. 2) Deciding what to work on first based on value, effort, urgency, or strategic fit; it needs a consistent method so decisions aren't made by gut feel or by whoever asked last. 3) Reach, Impact, Confidence, Effort; it's a repeatable framework for comparing very different kinds of work against each other, scored as Reach × Impact × Confidence ÷ Effort with Confidence as a decimal, so 80% becomes 0.8. 4) Breaking a prioritized idea down into something a team can actually build; it produces a defined scope, a sequence of pieces, and a decision about what's in the first version versus later. 5) The smallest version of a feature that still delivers real value and can be learned from; it's "viable" only if it still delivers that real value; being small alone isn't enough.*
 
 ---
 

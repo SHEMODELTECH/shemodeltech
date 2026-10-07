@@ -10,6 +10,8 @@ Every step follows the same format as the rest of the course: what you're doing,
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -24,6 +26,8 @@ Prefer to work on your own computer? The same notebooks run in JupyterLab or in 
 ---
 
 ## Project 8 (Bonus Module 1): Classify an AI System's EU AI Act Risk Tier
+
+**Time: about 2 hours**
 
 **Goal:** Learn to determine which of the Act's four risk tiers an AI system falls into — the single most consequential classification decision in EU AI Act compliance, since it determines every obligation that follows.
 
@@ -118,6 +122,8 @@ eu_ai_act_classification_project/
 
 ## Project 9 (Bonus Module 2): Map Obligations to Your System's Classification
 
+**Time: about 2 hours**
+
 **Goal:** Translate a risk tier and role determination (Project 8) into a concrete list of what you actually have to do — the step that turns classification into an actionable compliance plan.
 
 ### Why This Project Matters
@@ -206,6 +212,8 @@ obligation_mapping_project/
 
 ## Project 10 (Bonus Module 3): Build a Technical Documentation Package for a High-Risk System
 
+**Time: about 2 hours**
+
 **Goal:** Produce the actual documentation artifact Article 11 requires — extending your Project 6 model card into something that would satisfy a real regulatory review.
 
 ### Why This Project Matters
@@ -283,6 +291,8 @@ technical_documentation_project/
 ---
 
 ## Project 11 (Bonus Module 4): Implement Human Oversight and Conformity Assessment Readiness
+
+**Time: about 3.5 hours**
 
 **Goal:** Build the actual mechanisms — not just documentation about them — that let a human meaningfully oversee and intervene in a high-risk AI system, and prepare for conformity assessment.
 
@@ -364,7 +374,7 @@ def call_model(prompt):
 Add this code to the end of `oversight_controls.py`.
 ```python
 def get_model_recommendation(candidate_data, model_fn=call_model):
-    check_before_running()  # refuses to run after an emergency stop (Step 4)
+    check_before_running()  # refuses to run after an emergency stop (Step 5)
     recommendation = model_fn(candidate_data)
     decision = {
         "candidate_data": candidate_data,
@@ -555,7 +565,7 @@ human_oversight_project/
 
 ## Advanced Module Summary
 
-These four bonus projects extend the responsible-AI audit work from the main course with the specific regulatory framework now driving real AI governance hiring and work in the EU and for any organization touching EU users:
+These four bonus projects extend the responsible-AI audit work from the main course with the specific regulatory framework now driving real AI governance work in the EU and for any organization touching EU users:
 
 | Project | Core Skill | Extends |
 |---|---|---|

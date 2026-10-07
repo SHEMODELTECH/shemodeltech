@@ -309,7 +309,7 @@ form.addEventListener("submit", function (event) {
 ```
 Type a name into the form and submit it. A new greeting appears on the page instantly, with no reload.
 
-4. **Add a counter,** a common small interactive pattern:
+4. **Add a counter,** a common small interactive pattern. Put the button in `index.html` above the `<script>` tag, and the code at the end of `script.js`:
 ```html
 <button id="counter-btn">Clicked 0 times</button>
 ```
@@ -352,7 +352,7 @@ Your page responds to at least two real user actions, a form submission and a bu
 **TypeScript**, type annotations are added with a colon after a name:
 ```typescript
 let age: number = 30;
-let name: string = "Alex";
+let userName: string = "Alex";
 let isActive: boolean = true;
 
 function greet(name: string, timesClicked: number): string {
@@ -414,7 +414,7 @@ Run `tsc greet.ts` again. TypeScript reports an error saying that `"three"` is a
 
 **Part B: Responsive Design**
 
-4. **Add a media query** to `style.css`, so the layout changes on small screens:
+4. **Add a media query** to `style.css`, so the layout changes on small screens, and add the `card` HTML below it to the `<body>` of `index.html`:
 ```css
 .card {
   display: flex;

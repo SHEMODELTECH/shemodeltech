@@ -119,6 +119,7 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Coaching is a repeating cycle, not a one-time event: the follow-up step is what separates a growth plan that actually happens from one that's written once and forgotten
+
 **Worked example: SBI feedback** (from the case above):
 
 > "In Thursday's release (**Situation**), you merged the sign-up form change without running the test checklist (**Behavior**). A bug sent duplicate emails to about 40 people, and the team spent Friday morning fixing it instead of finishing the design review (**Impact**)."

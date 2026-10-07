@@ -303,7 +303,7 @@ Add a router with filters that route each item based on its details, as in Proje
 Create records, send notifications, and update the systems the process touches. These actions are the actual work being automated.
 
 **Step 6: Add a human-in-the-loop step.**
-Free Zapier and Make plans have no built-in approval button, so use a sheet as the approval point. Scenario A sends the approver a Slack message or email with a link to the sheet, asking them to change `Status` to `Approved` or `Rejected`. Scenario B runs on a schedule (for example every 15 minutes): Google Sheets "Search Rows" finds rows where `Status` is `Approved` (or `Rejected`) and `Processed` is empty, runs the follow-up actions, then "Update a Row" sets `Processed` to `yes` so the row is not handled twice. You will need two active scenarios, so switch off older ones.
+Make has no built-in approval button (and free Zapier only allows two-step Zaps), so use a sheet as the approval point. Scenario A sends the approver a Slack message or email with a link to the sheet, asking them to change `Status` to `Approved` or `Rejected`. Scenario B runs on a schedule (for example every 15 minutes): Google Sheets "Search Rows" finds rows where `Status` is `Approved` (or `Rejected`) and `Processed` is empty, runs the follow-up actions, then "Update a Row" sets `Processed` to `yes` so the row is not handled twice. You will need two active scenarios, so switch off older ones.
 
 **Step 7: Add logging and error handling.**
 Add a module that logs each run (time, item, outcome) to a "Log" sheet, and add error handlers on modules that call outside apps. Logs let you prove the automation ran and diagnose issues.

@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -22,6 +24,8 @@ Prefer to work on your own computer? The same notebooks run in JupyterLab or in 
 ---
 
 ## Project 1 (Module 1): Map a Data Pipeline for an AI Use Case
+
+**Time: about 1.5 hours**
 
 **Goal:** Before writing any code, learn to see data movement as a pipeline of stages, so every later project has a place to plug into.
 
@@ -90,6 +94,8 @@ data_pipeline_map_project/
 ---
 
 ## Project 2 (Module 2): Build a Data Cleaning Script
+
+**Time: about 2.5 hours**
 
 **Goal:** Get hands-on with real, messy data, the unavoidable first technical task in almost every AI data role.
 
@@ -223,6 +229,8 @@ data_cleaning_project/
 
 ## Project 3 (Module 3): Design a Schema for a Training Dataset Store
 
+**Time: about 2 hours**
+
 **Goal:** Decide how cleaned data should be structured and stored, the step between "I have clean data" and "a model can reliably use this data."
 
 **Step 1: Create the project notebook.**
@@ -309,6 +317,8 @@ schema_design_project/
 ---
 
 ## Project 4 (Module 4): Build a Batch ETL Pipeline
+
+**Time: about 3 hours**
 
 **Goal:** Automate the move from raw data to stored data, connecting Project 2's cleaning and Project 3's schema into a repeatable process.
 
@@ -439,6 +449,8 @@ etl_pipeline_project/
 
 ## Project 5 (Module 5): Prepare a Labeled Dataset for Training
 
+**Time: about 2.5 hours**
+
 **Goal:** Take cleaned, stored data (Project 4's output) and turn it into something a model can actually be trained on.
 
 **Step 1: Create the project notebook.**
@@ -545,6 +557,8 @@ labeled_dataset_project/
 
 ## Project 6 (Module 6): Build a Vector Store from a Document Set
 
+**Time: about 3 hours**
+
 **Goal:** Extend your data engineering skills to unstructured text and the retrieval systems behind modern AI applications like RAG chatbots.
 
 **Step 1: Create the project notebook.**
@@ -588,6 +602,8 @@ for filename in sorted(os.listdir("documents")):
 print(f"{len(chunks)} chunks from {len(set(chunk_sources))} documents")
 print(chunks[0][:200])
 ```
+
+**Step 4: Generate embeddings.**
 ```python
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -664,6 +680,8 @@ vector_store_project/
 ---
 
 ## Project 7 (Module 7): Build a Data Validation and Monitoring Check
+
+**Time: about 2.5 hours**
 
 **Goal:** Add quality control on top of your pipeline, so bad data gets caught automatically instead of silently poisoning downstream models.
 

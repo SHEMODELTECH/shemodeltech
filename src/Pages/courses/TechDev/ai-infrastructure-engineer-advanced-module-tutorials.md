@@ -8,6 +8,8 @@ Every step follows the same format as the rest of the course: what you're doing,
 
 ## Before you start: your terminal
 
+**Time: about 15 minutes**
+
 Unlike the other AI courses, this one works in a **terminal** on purpose: infrastructure is built, deployed, and monitored from the command line, so practising there is part of the skill. Use Terminal on a Mac, a Linux shell, or WSL on Windows. If you'd rather not set anything up locally, [Google Cloud Shell](https://shell.cloud.google.com) gives you a free Linux terminal in your browser.
 
 **Where each project runs:**
@@ -19,6 +21,8 @@ None of these projects run in Google Colab.
 ---
 
 ## Project 9 (Bonus Module 1): Provision AI Infrastructure as Code with Pulumi
+
+**Time: about 4 hours**
 
 **Goal:** Replace manual setup (Project 3) with infrastructure defined in real code, using a general-purpose programming language instead of a domain-specific config format.
 
@@ -173,6 +177,8 @@ pulumi_iac_project/
 
 ## Project 10 (Bonus Module 2): Compare and Migrate Infrastructure with OpenTofu
 
+**Time: about 3.5 hours**
+
 **Goal:** Learn OpenTofu, the open-source, community-governed fork of Terraform that was created after Terraform's 2023 licensing change.
 
 **Where this runs:** a terminal on macOS, Linux, or WSL, using the AWS account and `aws configure` setup from Project 9.
@@ -306,6 +312,8 @@ opentofu_project/
 ---
 
 ## Project 11 (Bonus Module 3): Schedule GPU Workloads for Multi-Tenant AI Infrastructure
+
+**Time: about 4 hours**
 
 **Goal:** Manage the most expensive, most contested resource in AI infrastructure — GPUs — when multiple teams or workloads need to share a limited pool of them.
 
@@ -453,6 +461,8 @@ gpu_scheduling_project/
 ---
 
 ## Project 12 (Bonus Module 4): Implement Identity and Access Management (IAM) for AI Infrastructure
+
+**Time: about 4.5 hours**
 
 **Goal:** Control who and what can access your infrastructure — extending beyond the network-level firewall rules from Project 3 into identity-based access control across multiple teams.
 

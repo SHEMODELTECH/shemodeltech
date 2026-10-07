@@ -1,6 +1,8 @@
 <!-- order: 1 -->
 # Understanding Badges: A Guide for Companies
 
+Time: about 15 minutes
+
 This short guide explains how members prove their skills on She Model Tech, so you can read a profile and hire with confidence through the Talent Board and job posts. She Model Tech runs on one idea: proof over pedigree. People here earn their standing by doing real project work, not by listing credentials, and once you know how to read that proof, a profile tells you far more than a resume does. Work through the sections in order.
 
 ---
@@ -40,7 +42,7 @@ A member can hold badges in more than one track. Someone with TechDev and TechLe
 
 Badges within a track add up to a level, and that level reflects how much proven work a member has in that track, not how long they have been a member. As a member completes more projects in a track, their level in that track rises: **Novice** (1–2 badges), **Associate** (3–6), **Advanced** (7–11), and **Expert** (12 or more). A higher level means more delivered and reviewed work in that specific area.
 
-A member can be advanced in one track and a beginner in another, and that is normal and useful information. Level tells you depth: for a small, well-scoped task, an eager lower-level member who reviewed well can be ideal, while for something you cannot afford to get wrong, you should weight the level in the exact track the work falls under.
+A member can be advanced in one track and a beginner in another, and that is normal and useful information. Level tells you depth: for a small, well-scoped task, an eager lower-level member who interviews well can be ideal, while for something you cannot afford to get wrong, you should weight the level in the exact track the work falls under.
 
 Always pair the level with the track. An advanced TechQA member is a strong tester, but that says nothing about their coding depth, so match the level to the track that fits your need. This is the most common misread: a high level is only high for the track it sits in.
 

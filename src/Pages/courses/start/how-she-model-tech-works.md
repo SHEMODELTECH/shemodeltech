@@ -1,6 +1,8 @@
 <!-- order: 1 -->
 # Start Here: How She Model Tech Works
 
+Time: about 15 minutes
+
 New to She Model Tech? Learn how the platform works: find your way around, set up your profile, join a project or lead one, earn badges, and get seen by companies.
 
 It takes about 15 minutes. Work through the sections in order, and keep She Model Tech open in another tab so you can try each step as you read.
@@ -55,7 +57,7 @@ Open **Learning** at the top of the page. Every course is free, across six tech 
 
 - **Start a course** by opening it and tapping start. Your progress is saved to your account, so you can stop and pick up where you left off, on any device.
 - **Quizzes and checklists** inside each course help you check your understanding.
-- **Finish a course** to get a certificate of completion you can download and add to LinkedIn. To finish, write a short summary (30+ words) for each module, pass every quiz with 70% or more, and, once other learners have posted in the course forum, reply to one of them.
+- **Finish a course** to get a certificate of completion you can download and add to LinkedIn. To finish, write a short summary (30+ words) for each module, pass every quiz with 70% or more, reply to another learner in the course forum (once others have posted), and add your name. This Start Here guide has no certificate.
 - **My learning** shows the courses you're taking and the ones you've finished.
 
 Courses build the skill. Badges come from doing the work on a real project, which is what the next sections cover.
@@ -73,7 +75,7 @@ Go to **Projects**, then **All Projects**. Each project card shows a label that 
 - **Open to Join**: the team is open, and you can apply for a role now.
 - **Closed**: the team is full.
 
-Tap **Join the Project** on any project you like.
+Members 13 and older can join free projects. Tap **Join the Project** on any project you like.
 
 **On a project that is open to join**, open it and tap **Apply to this project**. You will:
 
@@ -164,7 +166,7 @@ Your **level** in a track grows with the number of badges you hold in it:
 2. What happens if She Model Tech asks for changes to a project?
 3. How many badges in a track do you need to reach Associate?
 
-*Answers: 1) When you apply to the project. 2) The team improves the work and submits it again; this can happen as many times as needed. 3) Three.*
+*Answers: 1) When you apply to the project. 2) The team improves the work and submits it again. 3) Three.*
 
 ---
 
@@ -174,7 +176,7 @@ Your **level** in a track grows with the number of badges you hold in it:
 
 - **The Proof Wall** shows what members are building. Share regular updates on your project, link to the result (a live site, demo, or published work), and add a screenshot when you can. Steady, work-focused updates help companies notice you.
 - **The Talent Board** is where verified companies find members by track, level, and badges. You're listed automatically once you earn your first badge (members under 18 are not listed).
-- **Jobs** lists roles from companies verified by She Model Tech.
+- **Jobs** lists roles from companies verified by She Model Tech. You apply through each company's own application link or email.
 
 Your profile, badges, and project history do the talking for you.
 

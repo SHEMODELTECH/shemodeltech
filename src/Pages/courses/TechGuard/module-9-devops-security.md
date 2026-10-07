@@ -1,6 +1,8 @@
 <!-- order: 9 -->
 ## Module 9: DevOps Security
 
+**Time: about 6.5 hours** (about 30 minutes to install the tools, then roughly 2 hours per topic).
+
 **Tools needed for this module:** a free [GitHub](https://github.com) account, [Docker Desktop](https://www.docker.com/products/docker-desktop/), and a terminal. You'll install three free, open source scanners along the way: [Gitleaks](https://github.com/gitleaks/gitleaks) (secrets), [Trivy](https://trivy.dev) (container images), and [Checkov](https://www.checkov.io) (infrastructure code). Security tools are themselves part of your supply chain (Topic 9.2 shows a real case), so install them only from their official sources and check what you downloaded.
 
 **Install Gitleaks** (version 8.19 or newer):
@@ -26,6 +28,8 @@ pipx install checkov
 ```
 
 ### Topic 9.1: Securing the Pipeline
+
+Time: about 2 hours
 
 #### Concept
 
@@ -65,7 +69,12 @@ A developer pastes a cloud access key into a config file to test something quick
 #### Lab
 
 1. **Create a new private GitHub repository** and clone it to your computer.
-2. **Add a fake secret on purpose:** create `config.py` containing a clearly fake value such as `API_KEY = "sk_test_fake_1234567890abcdef"` and commit it.
+2. **Add a fake secret on purpose:** create `config.py` with these two lines and commit it:
+   ```python
+   # Practice only: this is NOT a real key
+   API_KEY = "9fK2xQ7LmP4vR8tZ1wB6nY3cH5jD"
+   ```
+   The value is made up but random-looking on purpose: Gitleaks ignores obvious placeholders containing words like `fake`, `test`, or `example`, just as it would in real code.
 3. **Scan the repository and its history** with Gitleaks, then read what it reports:
    ```bash
    gitleaks git -v .
@@ -81,13 +90,13 @@ A developer pastes a cloud access key into a config file to test something quick
      check:
        runs-on: ubuntu-latest
        steps:
-         - uses: actions/checkout@v4
+         - uses: actions/checkout@v5
          - name: Confirm the secret is available
            env:
              DEMO_TOKEN: ${{ secrets.DEMO_TOKEN }}
            run: test -n "$DEMO_TOKEN" && echo "Secret is set"
    ```
-   For practice, `@v4` is fine. In real pipelines, pin each action to its full commit SHA instead of a tag; Topic 9.2 shows why.
+   For practice, `@v5` is fine. In real pipelines, pin each action to its full commit SHA instead of a tag; Topic 9.2 shows why.
 5. **Turn on Dependabot alerts** in the repository's security settings, and write two sentences on what you'd do if the fake key in step 2 had been real.
 
 #### Checkpoint
@@ -105,6 +114,8 @@ You've watched Gitleaks catch a committed secret, used a pipeline secret in a wo
 ---
 
 ### Topic 9.2: Container Security
+
+Time: about 2 hours
 
 #### Concept
 
@@ -188,6 +199,8 @@ You've checked that your Trivy install is a current, verified release, compared 
 
 ### Topic 9.3: Infrastructure as Code Security
 
+Time: about 2 hours
+
 #### Concept
 
 **Infrastructure as Code (IaC)** describes servers, networks, and storage in text files, using tools such as **Terraform** or its open source fork **OpenTofu**, so infrastructure is created the same way every time and reviewed like any other code. That also means a misconfiguration, such as a storage bucket open to the internet, can be written, reviewed, and caught before anything is created.
@@ -237,7 +250,7 @@ You only write and scan files here; nothing is created in a real cloud account, 
    ```bash
    checkov -d iac-lab
    ```
-3. **Fix two findings:** add a public access block for the bucket, and turn on server-side encryption, using the resources Checkov's messages point to. Re-run the scan and confirm those checks now pass.
+3. **Fix two findings:** add an `aws_s3_bucket_public_access_block` resource for the bucket with all four settings (`block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`) set to `true`, which fixes `CKV2_AWS_6`, and an `aws_s3_bucket_versioning` resource with `status = "Enabled"`, which fixes `CKV_AWS_21`. Each uses `bucket = aws_s3_bucket.logs.id`. Re-run the scan and confirm those checks now pass. Some checks will still fail (for example cross-region replication or KMS encryption); real teams decide which checks apply to them and skip the rest deliberately, with a written reason.
 4. **Add a `.gitignore`** in the folder that excludes `*.tfstate` and `*.tfstate.*`, and write one sentence on why.
 5. **Write a short policy** of three rules your team's infrastructure must always follow, and note which Checkov checks enforce each one.
 

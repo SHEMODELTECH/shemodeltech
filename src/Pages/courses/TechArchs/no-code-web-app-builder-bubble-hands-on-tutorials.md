@@ -296,7 +296,7 @@ Add a `creator` field of type User to the Task type, and in the Create a new Tas
 Change the repeating group's data source to Search for Tasks with the constraint creator = Current User. This single change is what makes each person see only their own tasks.
 
 **Step 8: Add privacy rules.**
-Privacy rules control which records a user is even allowed to load, enforced by the database rather than just hidden on screen. In the Data tab, under Privacy, add a rule on Task: when This Task's creator is Current User, allow finding it in searches and viewing all fields, and leave everyone else without those permissions. This is what actually protects one user's data from another.
+Privacy rules control which records a user is even allowed to load, enforced by the database rather than just hidden on screen. In the Data tab, under Privacy, add a rule on Task: when This Task's creator is Current User, allow finding it in searches and viewing all fields. Then, in the "Everyone else" row, uncheck those same permissions (they are on by default). This is what actually protects one user's data from another.
 
 ### Project Structure
 ```text

@@ -1,6 +1,8 @@
 <!-- order: 6 -->
 ## Module 5: Performance Testing
 
+**Time: about 6 hours** (roughly 2 hours per topic).
+
 **Tools needed for this module:** [Apache JMeter](https://jmeter.apache.org) (requires Java), and [Docker Desktop](https://www.docker.com/products/docker-desktop/) to run a practice target on your own computer. Every lab in this module tests **OWASP Juice Shop**, a free practice web app, running locally at http://localhost:3000. Start it in a terminal and leave it running while you work:
 
 ```bash

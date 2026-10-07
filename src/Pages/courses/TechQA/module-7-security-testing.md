@@ -52,7 +52,7 @@ Any application handling sensitive data (personal information, payment details, 
    When the log says the server is listening on port 3000, open http://localhost:3000 in a browser to check it's up. Leave the terminal running (Ctrl+C stops it). The `127.0.0.1:` part keeps the app reachable only from your own computer, which matters because it's deliberately insecure.
 2. **Install ZAP** from zaproxy.org and open it. You don't need any proxy setup for this lab.
 3. **Run ZAP's automated scan:** on the Quick Start tab choose **Automated Scan**, enter `http://localhost:3000` as the URL to attack, click **Attack**, and review the findings in the **Alerts** tab when it finishes.
-4. **Pick three findings** from the scan results, look up each one's category in the OWASP Top 10, and write one sentence per finding explaining what the underlying weakness actually is.
+4. **Pick three findings** from the scan results, look up each one's category in the OWASP Top 10 (the current edition is the 2025 list at owasp.org/Top10/2025), and write one sentence per finding explaining what the underlying weakness actually is.
 5. **Assign a severity** (critical, high, medium, low) to each of the three findings, and justify your reasoning for at least one of them in a sentence.
 
 #### Checkpoint
@@ -111,7 +111,7 @@ Any login-based application, verifying that account lockout actually kicks in af
 
 #### Lab
 
-1. **Register a test account first.** In your local Juice Shop from the Vulnerability Testing lab (or another authorized test environment with a login form), go to **Account → Login → Not yet a customer?** and create an account with a made-up email and password. Then log out and try to log in with that email and an intentionally wrong password, and note the exact error message shown.
+1. **Register a test account first.** In your local Juice Shop from the Vulnerability Testing lab (start it again with the same Docker command if you stopped it; don't use any other site for this lab), go to **Account → Login → Not yet a customer?** and create an account with a made-up email and password. Then log out and try to log in with that email and an intentionally wrong password, and note the exact error message shown.
 2. **Attempt a login with a username that doesn't exist at all**, using any password, and compare that error message word-for-word against the previous one, do they differ in a way that reveals whether an account exists.
 3. **Attempt several rapid, consecutive failed logins** against the same account (five or so) and observe whether the system locks the account, introduces a delay, or shows any rate-limiting behavior at all.
 4. **Check whether logout really ends the session.** Log in with your test account, open the browser's DevTools (F12, or right-click → Inspect), go to the **Application** tab, and find the `token` value under **Local Storage** or **Cookies** for `http://localhost:3000`. Copy it. Log out, then re-send the copied token from a terminal (replace `PASTE_TOKEN_HERE` with your token):
@@ -202,7 +202,7 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
 ---
 
 ## Module 7 Completion Checklist
-- [ ] Run an automated ZAP scan against an authorized training application
+- [ ] Run an automated ZAP scan against your local Juice Shop
 - [ ] Mapped three scan findings to OWASP Top 10 categories with plain-language explanations and justified severities
 - [ ] Documented and compared error messages for wrong-password vs. non-existent-account login attempts
 - [ ] Observed and recorded whether rate limiting/lockout triggered after repeated failed logins

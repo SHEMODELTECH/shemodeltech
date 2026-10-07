@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -32,6 +34,8 @@ os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
 ---
 
 ## Project 1 (Module 1): Diagram the Architecture of an Agent Platform
+
+**Time: about 1.5 hours**
 
 **Goal:** Plan the platform before writing any platform code, so every later project has a place to plug into.
 
@@ -122,6 +126,8 @@ agent_platform_diagram_project/
 ---
 
 ## Project 2 (Module 2): Build a Basic Tool-Calling Script
+
+**Time: about 2.5 hours**
 
 **Goal:** Build the smallest working unit, one agent calling one tool, before scaling to anything more complex.
 
@@ -244,9 +250,11 @@ Confirm the output shows only `text` blocks and no `tool_use` block: the model a
 
 ### Final Project Structure
 ```text
-tool_calling_project/
+tool_calling_project (Colab notebook)
 │
-├── tool_calling.py
+├── tool function and definition (Steps 2–3)
+├── request, parse, execute, follow-up (Steps 4–7)
+├── no-tool test (Step 8)
 ```
 
 ### What You Learned
@@ -276,6 +284,8 @@ tool_calling_project/
 ---
 
 ## Project 3 (Module 3): Build a Single-Purpose AI Agent
+
+**Time: about 3 hours**
 
 **Goal:** Turn the Project 2 script into a full agent with planning and memory, able to take multiple steps toward a goal, not just one tool call.
 
@@ -459,6 +469,8 @@ single_agent_project (Colab notebook)
 ---
 
 ## Project 4 (Module 4): Build a Platform That Registers and Runs Multiple Tools
+
+**Time: about 3 hours**
 
 **Goal:** Scale from one agent to a registry of tools multiple agents can use, the first real platform component.
 
@@ -653,6 +665,8 @@ tool_registry_project (Colab notebook)
 ---
 
 ## Project 5 (Module 5): Build a Queue-Based Agent Execution System
+
+**Time: about 4 hours**
 
 **Goal:** Add the infrastructure needed to run agents at scale, beyond one agent running synchronously in a notebook.
 
@@ -950,6 +964,8 @@ queue_execution_project/
 
 ## Project 6 (Module 6): Build an Evaluation Suite for Agent Reliability
 
+**Time: about 2.5 hours**
+
 **Goal:** Test agent behaviors before trusting them in production, the discipline that separates a working demo from a dependable platform.
 
 **Step 1: Create the project notebook.**
@@ -1079,6 +1095,8 @@ agent_evaluation_project (Colab notebook)
 ---
 
 ## Project 7 (Module 7): Add Access Control and Audit Logging to an Agent Platform
+
+**Time: about 3 hours**
 
 **Goal:** Secure and govern what agents are allowed to do, closing the loop back to Project 1's security consideration.
 

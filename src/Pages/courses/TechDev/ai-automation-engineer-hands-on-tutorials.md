@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -32,6 +34,8 @@ os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
 ---
 
 ## Project 1 (Module 1): Map an Automation Opportunity in a Workflow
+
+**Time: about 1.5 hours**
 
 **Goal:** Identify what's actually worth automating, before writing a single line of automation code.
 
@@ -95,6 +99,8 @@ automation_opportunity_project/
 ---
 
 ## Project 2 (Module 2): Build a Scheduled Automation Script
+
+**Time: about 2.5 hours**
 
 **Goal:** Build the smallest possible working automation, a script that runs on its own, on a schedule, without you triggering it manually.
 
@@ -244,6 +250,8 @@ scheduled_automation_project/
 ---
 
 ## Project 3 (Module 3): Build a Multi-Step Automated Workflow
+
+**Time: about 3 hours**
 
 **Goal:** Chain multiple steps and integrations together, moving from a single script to a real workflow.
 
@@ -409,6 +417,8 @@ multistep_workflow_project/
 
 ## Project 4 (Module 4): Add an AI Decision Step to an Existing Workflow
 
+**Time: about 2.5 hours**
+
 **Goal:** Add an LLM-driven decision into your Project 3 workflow, the point where automation stops being purely rule-based.
 
 **Step 1: Create the project notebook.**
@@ -541,6 +551,8 @@ ai_decision_step_project/
 ---
 
 ## Project 5 (Module 5): Build a Simple Task-Automation Agent
+
+**Time: about 3.5 hours**
 
 **Goal:** Replace fixed logic with agent-style tool calling, letting the AI decide *which* action to take, not just answer one narrow question.
 
@@ -754,6 +766,8 @@ task_agent_project/
 ---
 
 ## Project 6 (Module 6): Add Monitoring and Error Handling
+
+**Time: about 3 hours**
 
 **Goal:** Make your Project 5 agent (and earlier workflows) production-safe, reliable enough to trust running unattended.
 

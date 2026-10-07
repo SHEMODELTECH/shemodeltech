@@ -101,7 +101,7 @@ grep "Failed password" auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort 
 ```bash
 grep "Accepted" auth.log
 ```
-In the sample, you should find that `203.0.113.45` failed 14 times and then logged in as `deploy`, and a minute later `deploy` used `sudo` to read `/etc/shadow` (the file of password hashes). `198.51.100.23` tried 5 usernames that don't exist and gave up, and `192.0.2.10` is the normal user `alex` mistyping a password once.
+In the sample, you should find that `203.0.113.45` failed 14 times and then logged in as `deploy`, and about 30 seconds later `deploy` used `sudo` to read `/etc/shadow` (the file of password hashes). `198.51.100.23` tried 5 usernames that don't exist and gave up, and `192.0.2.10` is the normal user `alex` mistyping a password once.
 
 #### Checkpoint
 You have aggregated and searched a log, counted failures by source, defined a correlation rule, and identified whether any source crosses it, and you can explain what aggregation, normalisation, and correlation each contribute, and why tuning matters.

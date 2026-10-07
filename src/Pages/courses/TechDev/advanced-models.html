@@ -615,7 +615,7 @@ function quizBlock(qs,key){const box=el("div",{class:"quiz"});const res=(scores[
   box.append(sc,el("button",{class:"btn ghost",type:"button",onclick:()=>{for(const k in res)delete res[k];delete scores[key];store.set(K+"-scores",scores);render()}},"Reset quiz"));upd();return box}
 function renderHome(){main.append(mobileNav());const w=el("div",{class:"wrap"});main.append(w);
   const next=MODULES.find(m=>!done.has(m.n))||MODULES[0];
-  w.append(el("div",{class:"hero"},el("div",{},el("p",{class:"eyebrow"},`${MODULES.length} modules · about ${MODULES.reduce((s,m)=>s+m.mins,0)/60|0} hours · learn by doing`),el("h1",{},COURSE.headline),
+  w.append(el("div",{class:"hero"},el("div",{},el("p",{class:"eyebrow"},`${MODULES.length} modules · about ${Math.round(MODULES.reduce((s,m)=>s+m.mins,0)/60)} hours · learn by doing`),el("h1",{},COURSE.headline),
     el("p",{class:"bigidea"},COURSE.intro),
     el("button",{class:"navbtn",type:"button",onclick:()=>go(next.n)},done.size?`Continue: Module ${next.n} →`:"Start Module 1 →")),
     el("div",{class:"tryit",id:"heroLab"},el("h2",{},COURSE.hero.title),el("p",{class:"sub"},COURSE.hero.sub))));DEMOS[COURSE.hero.demo]($("#heroLab"));

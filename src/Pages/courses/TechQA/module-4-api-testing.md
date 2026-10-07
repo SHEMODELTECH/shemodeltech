@@ -115,9 +115,9 @@ Any API-first project (common with microservices) where front-end and back-end t
 
 #### Lab
 
-1. **Find a public Swagger UI to explore.** Petstore, the standard OpenAPI example, is publicly hosted; navigate to its Swagger UI page and look at the listed endpoints (for example, `GET /pet/{petId}`).
+1. **Find a public Swagger UI to explore.** Petstore, the standard OpenAPI example, is publicly hosted at `https://petstore3.swagger.io`; open it and look at the listed endpoints (for example, `GET /pet/{petId}`).
 2. **Read one endpoint's documented schema** for its response: which fields are listed, which are marked required, and what type each one is (string, integer, and so on).
-3. **Use Swagger UI's "Try it out" feature** on that endpoint: enter a sample ID, execute it, and view the real response it sends back.
+3. **Use Swagger UI's "Try it out" feature** on that endpoint: enter a sample ID (try `1` to `10`; the demo data is shared and reset now and then, so if you get a 404, try another), execute it, and view the real response it sends back.
 4. **Compare the real response against the documented schema** field by field: does every documented field appear, do the types match, is anything undocumented showing up.
 5. **Write down one mismatch or confirmation** from that comparison, either "the real response matched the schema exactly" or a specific discrepancy you noticed.
 
@@ -202,7 +202,7 @@ A developer changes how user records are returned. Instead of someone clicking t
    npm install -g newman
    newman run users-api.postman_collection.json -e test.postman_environment.json
    ```
-   The exported collection file includes the `userId` collection variable, so the chained requests work in Newman too.
+   Use your own exported file names if they differ. The exported collection file includes the `userId` collection variable, so the chained requests work in Newman too.
 
 #### Checkpoint
 You have a saved collection with positive, negative, and response-time assertions, it passes in the Collection Runner, and the same collection runs from the terminal with Newman.

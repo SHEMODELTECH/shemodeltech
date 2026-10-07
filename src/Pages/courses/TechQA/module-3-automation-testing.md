@@ -48,6 +48,7 @@ Organizations with an existing large Selenium test suite, teams needing to test 
 ```bash
 pip install selenium
 ```
+(If pip refuses with an "externally-managed-environment" error, create and activate a virtual environment first: `python3 -m venv .venv` then `source .venv/bin/activate`, or `.venv\Scripts\activate` on Windows.)
 2. **Write a script** that opens a browser and navigates to a page:
 ```python
 from selenium import webdriver
@@ -228,7 +229,7 @@ test('homepage has the right heading', async ({ page }) => {
 ```bash
 npx playwright test
 ```
-4. **Run it with the Trace Viewer enabled** on failure, then deliberately break the expected text and re-run, to see the recorded trace:
+4. **Run it with tracing turned on**, then deliberately break the expected text and re-run. In the HTML report that opens, click the failed test and open its trace:
 ```bash
 npx playwright test --trace on
 npx playwright show-report

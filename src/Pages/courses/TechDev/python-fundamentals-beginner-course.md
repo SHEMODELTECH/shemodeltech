@@ -445,7 +445,7 @@ process_payment(-10)
    "why": "The list only has positions 0 to 2."
   },
   {
-   "text": "cart_total / 0",
+   "text": "100 / 0",
    "code": true,
    "bucket": "ZeroDivisionError",
    "why": "Dividing by zero is undefined."

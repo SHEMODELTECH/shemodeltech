@@ -106,7 +106,7 @@ curl http://localhost:3000
 ```
 You should see `Hello from Node.js`.
 
-3. **Respond differently based on the URL:**
+3. **Respond differently based on the URL.** In `server.js`, replace the `http.createServer(...)` block with this one (keep the `require` line at the top and the `server.listen(...)` call at the bottom):
 ```javascript
 const server = http.createServer((req, res) => {
   if (req.url === "/") {

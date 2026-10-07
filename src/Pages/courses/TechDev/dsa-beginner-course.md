@@ -222,7 +222,7 @@ Deduplicating a list of emails before sending a campaign, checking if a user has
 # Deduplicating email addresses before a send
 raw_emails = ["a@x.com", "b@x.com", "a@x.com", "c@x.com", "b@x.com"]
 unique_emails = set(raw_emails)
-print(unique_emails)          # {'a@x.com', 'b@x.com', 'c@x.com'}
+print(unique_emails)          # {'a@x.com', 'b@x.com', 'c@x.com'} (order may vary)
 print(len(unique_emails))     # 3, duplicates removed automatically
 ```
 
@@ -251,7 +251,7 @@ shared = alice_interests & bob_interests          # intersection
 only_alice = alice_interests - bob_interests      # difference
 everyone = alice_interests | bob_interests         # union
 
-print("Shared:", shared)          # {'chess', 'coding'}
+print("Shared:", shared)          # {'chess', 'coding'} (sets print in any order)
 print("Only Alice:", only_alice)  # {'hiking', 'reading'}
 print("Everyone:", everyone)      # union of both sets
 ```
@@ -549,7 +549,7 @@ A **graph** is nodes connected by edges, without the strict parent-child limits 
 
 ### Where you'd actually use this
 
-Social networks (who's connected to whom), recommendation systems ("people who bought X also bought Y"), road/route navigation, dependency graphs (which packages depend on which others - this is literally how `pip` and `npm` resolve installs).
+Social networks (who's connected to whom), recommendation systems ("people who bought X also bought Y"), road/route navigation, dependency graphs (which packages depend on which others - package managers like `pip` and `npm` walk this kind of graph to work out what to install).
 
 ### Lab
 
@@ -596,7 +596,7 @@ You can explain why BFS, not DFS, is the right choice when you specifically need
 4. Name a real feature powered by graph traversal.
 5. In the social graph example, why might "Carol" not appear in the returned path even though she's connected to Dave?
 
-*Answers: 1) A graph allows arbitrary connections between any nodes; a tree has a strict single-parent hierarchy with no cycles. 2) A queue processes nodes level by level (FIFO), which is what produces the shortest path first. 3) That the first path found to the target is the shortest one, in terms of number of connections. 4) "Shortest path" navigation, "degrees of connection" on social networks, dependency resolution (any valid example). 5) BFS found a path through Bob first because Bob was explored before Carol reached Dave - either path is valid-length, but BFS returns whichever shortest path it finds first.*
+*Answers: 1) A graph allows arbitrary connections between any nodes; a tree has a strict single-parent hierarchy with no cycles. 2) A queue processes nodes level by level (FIFO), which is what produces the shortest path first. 3) That the first path found to the target is the shortest one, in terms of number of connections. 4) "Shortest path" navigation, "degrees of connection" on social networks, dependency resolution (any valid example). 5) Both paths (through Bob or through Carol) have the same length. Bob comes before Carol in Alice's list, so BFS reaches Dave through Bob first, marks Dave as visited, and returns that first shortest path.*
 
 ---
 

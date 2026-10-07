@@ -3,9 +3,9 @@
 
 **Time: about 7 hours** (about 2 hours for Kali setup, 2.5 hours for pen testing, 2.5 hours for reconnaissance).
 
-**Tools needed for this module:** a **Kali Linux** virtual machine (run in VirtualBox, VMware, or similar so it stays isolated), and a legal practice environment. For active exercises, use only targets you own or ones explicitly set up for learning, for example a local intentionally-vulnerable app like **OWASP Juice Shop** or **Metasploitable** in a VM on your own machine, or Nmap's sanctioned host `scanme.nmap.org`.
+**Tools needed for this module:** a **Kali Linux** virtual machine (run in VirtualBox, VMware, or similar so it stays isolated), and a legal practice environment. For active exercises, use only targets you own or ones explicitly set up for learning, for example a local intentionally-vulnerable app like **OWASP Juice Shop** or **Metasploitable** in a VM on your own machine. Put Metasploitable on a **host-only** network adapter (never bridged to your home network or the internet), because it is deliberately insecure; run Juice Shop bound to `127.0.0.1`.
 
-> **Read this before anything else.** Ethical hacking means *authorized* testing. Running these tools against a system you don't own, without explicit written permission, is illegal in most countries and can carry serious criminal penalties. The only thing separating a penetration tester from an attacker is authorization. Every lab in this module is scoped to systems you own or targets that publicly permit testing. Never point these tools anywhere else.
+> **Read this before anything else.** Ethical hacking means *authorized* testing. Running these tools against a system you don't own, without explicit written permission, is illegal in most countries and can carry serious criminal penalties. The only thing separating a penetration tester from an attacker is authorization. Every active lab in this module targets only your own Kali VM or your own local, intentionally vulnerable lab app. Never point these tools anywhere else, including public "practice" hosts.
 
 ### Topic 3.1: Kali Linux
 
@@ -56,14 +56,14 @@ Any authorized security assessment: a scheduled penetration test, a vulnerabilit
 sudo apt update && sudo apt full-upgrade -y
 ```
 3. **Explore the tool categories** from the applications menu, and note which tools map to information gathering versus exploitation.
-4. **Run one information-gathering command against a sanctioned target** (Nmap explicitly permits scanning this host for learning):
+4. **Run one information-gathering command against your own Kali VM** (`127.0.0.1` means "this machine", so you are scanning nothing but yourself):
 ```bash
-nmap scanme.nmap.org
+sudo nmap 127.0.0.1
 ```
-5. **Read the output**, identify which ports are reported open, and write one sentence explaining what that tells you about the host, without taking any further action against it.
+5. **Read the output**, identify which ports are reported open (a fresh Kali often has none, which is itself a result), and write one sentence explaining what that tells you about the host.
 
 #### Checkpoint
-You have an isolated, updated Kali VM with a clean snapshot, you can navigate its tool categories, and you've run a single information-gathering scan against a target that permits it, and you can explain why authorization and isolation matter.
+You have an isolated, updated Kali VM with a clean snapshot, you can navigate its tool categories, and you've run a single information-gathering scan against your own VM, and you can explain why authorization and isolation matter.
 
 #### Quiz
 1. What is Kali Linux, and who maintains it?
@@ -186,7 +186,7 @@ The opening phase of every penetration test, mapping an organisation's internet-
 
 #### Lab
 
-> **Stay legal.** Pick your passive-recon domain from one of these: a domain you own, or a domain you have explicit written permission to test. If you have neither, you may still look up the *public* WHOIS and DNS records of a well-known domain such as `example.com`, because reading public records is normal and legal. What you must **not** do is scan or probe any domain or host you don't own or aren't authorized to test. Active scanning in this lab goes only to `scanme.nmap.org` (Nmap permits light scanning of it, a few scans a day, no heavy or repeated scanning) or your own lab VM (Metasploitable or OWASP Juice Shop from Topic 3.2).
+> **Stay legal.** Pick your passive-recon domain from one of these: a domain you own, or a domain you have explicit written permission to test. If you have neither, you may still look up the *public* WHOIS and DNS records of a well-known domain such as `example.com`, because reading public records is normal and legal. What you must **not** do is scan or probe any domain or host you don't own or aren't authorized to test. Active scanning in this lab goes only to your own lab VM (Metasploitable or OWASP Juice Shop from Topic 3.2).
 
 1. **Do passive recon** on your chosen domain, gathering registration data (replace `yourdomain.com` with your domain). This reuses the DNS skills from Module 1:
 ```bash
@@ -202,9 +202,9 @@ dig yourdomain.com A
 dig yourdomain.com AAAA
 dig yourdomain.com MX
 ```
-3. **Do active recon** with a service-version scan against a sanctioned target:
+3. **Do active recon** by scanning every TCP port (not just the 1,000 most common) on your own lab VM:
 ```bash
-nmap -sV scanme.nmap.org
+nmap -p- <your-lab-VM-ip>
 ```
 4. **Grab service banners** from your own lab VM (Metasploitable or Juice Shop running on your machine, replace the IP with your VM's address). The `-sV` flag asks each open port what software and version it is running, and the `banner` script prints the raw greeting text each service sends:
 ```bash
@@ -214,7 +214,7 @@ Note the software names and version numbers you see. Old versions are often the 
 5. **Assemble a short attack-surface profile**: list the hosts, open ports, and services you found, and mark which came from passive versus active recon.
 
 #### Checkpoint
-You have gathered passive information on a domain you own or are authorized to research (or on public records only), performed an active service scan against a permitted target, and assembled a short attack-surface profile, and you can explain the difference between passive and active recon and why the distinction matters.
+You have gathered passive information on a domain you own or are authorized to research (or on public records only), performed an active scan against your own lab VM, and assembled a short attack-surface profile, and you can explain the difference between passive and active recon and why the distinction matters.
 
 #### Quiz
 1. What is the goal of the reconnaissance phase?
@@ -229,7 +229,7 @@ You have gathered passive information on a domain you own or are authorized to r
 
 ## Module 3 Completion Checklist
 - [ ] Set up an isolated, updated Kali VM with a clean snapshot and explored its tool categories
-- [ ] Ran an information-gathering scan against a sanctioned target and interpreted the result
+- [ ] Ran an information-gathering scan against your own Kali VM and interpreted the result
 - [ ] Wrote a scope / rules-of-engagement document for a target you own
 - [ ] Ran recon and enumeration against your own vulnerable VM and produced a short finding with impact and remediation
 - [ ] Performed both passive and active reconnaissance and assembled an attack-surface profile

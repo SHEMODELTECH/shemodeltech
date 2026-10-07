@@ -129,7 +129,7 @@ test("this test is intentionally wrong", () => {
 ```
 Run `npm test` again. Jest reports exactly which test failed, what it expected, and what it actually got. Remove this test once you've seen the failure output.
 
-4. **Add a function with an edge case, and test it:**
+4. **Add a function with an edge case, and test it.** In `cart.js`, add `applyDiscount` below `calculateTotal` and replace the `module.exports` line:
 ```javascript
 // cart.js
 function applyDiscount(total, percent) {
@@ -141,6 +141,7 @@ function applyDiscount(total, percent) {
 
 module.exports = { calculateTotal, applyDiscount };
 ```
+In `cart.test.js`, replace the `require` line at the top with this one, and add the two new tests below your existing ones:
 ```javascript
 // cart.test.js
 const { calculateTotal, applyDiscount } = require("./cart");
@@ -322,7 +323,7 @@ Critical user flows that absolutely must work end to end, signing up, checking o
 ```
 Serve it locally:
 ```bash
-npx serve . -p 3000
+npx serve . -l 3000
 ```
 This command keeps running and keeps the terminal busy, because it is serving your page. Leave it running, and open a second terminal window for the next steps. (Stop the server later with Ctrl+C.)
 

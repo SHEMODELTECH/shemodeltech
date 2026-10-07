@@ -37,7 +37,7 @@ Most real products use more than one database at once. A typical setup: PostgreS
 
 ### Lab
 
-Write, in your own words, a one-paragraph answer for TrackIt (or any product idea of yours): which of the four types above would you reach for first, and why? There's no code yet, this module is about building the decision-making habit before touching syntax.
+Write, in your own words, a one-paragraph answer for TrackIt (a simple task-tracking app we'll use as the running example in this course) or any product idea of yours: which of the four types above would you reach for first, and why? There's no code yet, this module is about building the decision-making habit before touching syntax.
 
 ### Checkpoint
 You can name all four database types above and give one reason to choose each.
@@ -122,7 +122,7 @@ Time: about 2 hours
 
 ### Where you'd actually use this
 
-Anywhere you need reliable, structured data with relationships: user accounts, orders, financial records, task management (TrackIt's actual database, if you followed the earlier course, was Postgres-shaped). It's the default safe choice for most new backend projects.
+Anywhere you need reliable, structured data with relationships: user accounts, orders, financial records, and task management, like TrackIt's tasks. It's the default safe choice for most new backend projects.
 
 ### Lab
 
@@ -294,12 +294,14 @@ db.tasks.find({ done: false }).sort({ due_date: 1 })
 pip install pymongo
 ```
 ```python
+from datetime import datetime
+
 from pymongo import MongoClient
 
 client = MongoClient("mongodb://localhost:27017")
 db = client["trackit"]
 
-db.tasks.insert_one({"title": "Review PR", "done": False, "due_date": "2026-07-05"})
+db.tasks.insert_one({"title": "Review PR", "done": False, "due_date": datetime(2026, 7, 5)})
 
 for task in db.tasks.find({"done": False}).sort("due_date", 1):
     print(task)
@@ -380,7 +382,7 @@ You can explain what makes `onSnapshot` different from a normal database query, 
 4. What's a risk of letting the client talk directly to the database, and what controls access in that case?
 5. Would Firebase be a good fit for a financial ledger requiring strict consistency guarantees? Why or why not?
 
-*Answers: 1) Realtime updates pushed automatically when data changes, without manual polling. 2) Live, collaborative, or instantly-updating features - chat, live boards, shared lists. 3) Authentication, file storage, and app hosting. 4) Users could access or modify data they shouldn't; Firebase security rules define exactly what each user is allowed to read/write. 5) Generally not the first choice - a traditional relational database offers stronger consistency guarantees better suited to financial data integrity.*
+*Answers: 1) Realtime updates pushed automatically when data changes, without manual polling. 2) Live, collaborative, or instantly-updating features - chat, live boards, shared lists. 3) Authentication, file storage, and app hosting. 4) Users could access or modify data they shouldn't; Firebase security rules define exactly what each user is allowed to read/write. 5) Generally not the first choice - a relational database gives you multi-table transactions, enforced schemas and constraints (like foreign keys and `NOT NULL`), and SQL for audits and reports, which suit financial data better.*
 
 ---
 

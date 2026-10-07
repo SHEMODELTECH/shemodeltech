@@ -44,7 +44,7 @@ Before building anything, you need three things in place: a way to write code, a
 ```bash
 python --version
 ```
-You should see something like `Python 3.12.x`. If you see an error, revisit the install step above.
+You should see something like `Python 3.12.x`. On Mac or Linux, if `python` isn't found, try `python3 --version` and use `python3` wherever this course says `python`. If you still see an error, revisit the install step above.
 
 **2. Open your terminal and try basic navigation:**
 ```bash
@@ -288,9 +288,11 @@ class TaskQueue:
         return heapq.heappop(self._heap)
 ```
 
-**3. Try it:**
+**3. Try it.** Create `try_priority.py` in the same folder and run `python try_priority.py`:
 ```python
 from datetime import date, timedelta
+
+from priority import Task, TaskQueue
 
 q = TaskQueue()
 q.add(Task(id=1, title="Later task", due_date=date.today() + timedelta(days=5), priority=1))
@@ -476,7 +478,7 @@ You can explain what a table, row, column, and foreign key are, you have `models
 
 **1. Draw TrackIt's current architecture** (pen and paper is fine):
 ```
-[Browser] --> [FastAPI app] --> [PostgreSQL database]
+[Browser] --> [FastAPI app] --> [Database (SQLite now, PostgreSQL later)]
 ```
 
 **2. Answer these three questions in writing, for TrackIt:**
@@ -573,13 +575,13 @@ Large language models (LLMs) are good at turning messy natural language into str
 **1. Define what a "parsed task" must look like:**
 ```python
 # ai_parse.py
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import date
 
 class ParsedTask(BaseModel):
     title: str
     due_date: date | None
-    priority: int  # 1-5
+    priority: int = Field(ge=1, le=5)  # must be 1 to 5
 ```
 
 **2. Write the instruction you'd send to the model:**
@@ -591,17 +593,45 @@ No preamble, no markdown formatting.
 """
 ```
 
-**3. Handle the response safely** (pseudocode, since it depends on which AI provider you use):
+This prompt lives in your server code, never in the browser. Anything sent from the browser can be read and changed by the user, so they could rewrite your instructions.
+
+**3. Call the model and handle the response safely.** This example uses Anthropic's Claude API; other providers work the same way. Run `pip install requests`, and set your API key as an environment variable named `ANTHROPIC_API_KEY` (never paste the key into your code). Add this to `ai_parse.py`:
 ```python
 import json
+import os
+
+import requests
+
+def call_llm(system_prompt: str, user_text: str) -> str:
+    response = requests.post(
+        "https://api.anthropic.com/v1/messages",
+        headers={
+            "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+        json={
+            "model": "claude-sonnet-5-5",
+            "max_tokens": 300,
+            "system": system_prompt,
+            "messages": [{"role": "user", "content": user_text}],
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+    return response.json()["content"][0]["text"]
 
 def parse_quick_add(user_text: str) -> ParsedTask:
-    raw_response = call_llm(SYSTEM_PROMPT, user_text)  # your provider's API call
+    raw_response = call_llm(SYSTEM_PROMPT, user_text)
     try:
         data = json.loads(raw_response)
         return ParsedTask(**data)
     except (json.JSONDecodeError, ValueError):
+        # pydantic's ValidationError is a kind of ValueError, so bad fields land here too
         raise ValueError("Could not parse task from AI response - ask the user to retry")
+
+if __name__ == "__main__":
+    print(parse_quick_add("Finish the budget report by Friday, it's urgent"))
 ```
 
 The key lesson: never assume the AI's output is valid. Always validate it against a schema, and always have a fallback plan for when it isn't.
@@ -672,8 +702,8 @@ When pushing over HTTPS, GitHub asks you to sign in. It does not accept your acc
 **5. Practice a real git workflow:**
 ```bash
 git checkout -b feature/task-queue
-git add priority.py test_priority.py
-git commit -m "Add priority queue with tests"
+git add SPEC.md main.py priority.py try_priority.py models.py database.py try_db.py auth.py ai_parse.py test_priority.py
+git commit -m "Add TrackIt app, priority queue, and tests"
 git push origin feature/task-queue
 ```
 On GitHub, open a pull request for this branch, even if you're working solo - this builds the habit.
@@ -742,7 +772,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: pytest
 ```
-**5. Commit everything on a branch, push, and open a pull request.** First merge your Module 8 pull request on GitHub, so the files your tests need (`priority.py` and `test_priority.py`) are on `main`. Then run:
+**5. Commit everything on a branch, push, and open a pull request.** First merge your Module 8 pull request on GitHub, so your app files and the files your tests need (`priority.py` and `test_priority.py`) are on `main`. Then run:
 ```bash
 git checkout main
 git pull

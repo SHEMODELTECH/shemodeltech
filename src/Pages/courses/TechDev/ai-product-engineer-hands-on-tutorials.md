@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -30,6 +32,8 @@ os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
 ---
 
 ## Project 1 (Module 1): Write an AI Product Brief
+
+**Time: about 1.5 hours**
 
 **Goal:** Frame a real problem in product terms before touching any code, the habit that separates a useful AI feature from a novelty.
 
@@ -92,6 +96,8 @@ ai_product_brief_project/
 
 ## Project 2 (Module 2): Build an AI-Powered Feature Prototype
 
+**Time: about 2.5 hours**
+
 **Goal:** Turn your Project 1 brief into a working piece of software for the first time.
 
 **Step 1: Create the project notebook.**
@@ -99,7 +105,7 @@ Create a new notebook for this project (**File → New notebook**) and name it `
 Keep your Project 1 brief open in another tab for reference.
 
 **Step 2: Get access to an LLM API.**
-An **API key** is a secret credential that authenticates your requests to a service, treat it like a password.
+An **API key** is a secret credential that authenticates your requests to a service; treat it like a password. If you haven't yet, follow **Your Claude API key** in "Before you start", then run the API key cell at the top of this notebook.
 
 **Step 3: Make your first API call.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
@@ -199,10 +205,12 @@ ai_feature_prototype_project/
 
 ## Project 3 (Module 3): Prototype a Chatbot Feature Using an LLM API
 
+**Time: about 2.5 hours**
+
 **Goal:** Extend your prototype into a conversational feature, the most common AI product pattern.
 
 **Step 1: Create the project notebook.**
-Create a new notebook for this project (**File → New notebook**) and name it `chatbot_prototype_project`.
+Create a new notebook for this project (**File → New notebook**) and name it `chatbot_prototype_project`. Run the API key cell from "Before you start" at the top.
 
 **Step 2: Understand conversation history.**
 LLM APIs are **stateless**: each call has no memory of previous ones. To simulate a "conversation," you resend the full **message history** with every request.
@@ -292,6 +300,8 @@ chatbot_prototype_project/
 
 ## Project 4 (Module 4): Create a Feature Discovery Doc
 
+**Time: about 1.5 hours**
+
 **Goal:** Step back from building and validate the feature against real user needs before going further.
 
 **Step 1: Create the project notebook.**
@@ -351,6 +361,8 @@ discovery_doc_project/
 
 ## Project 5 (Module 5): Design and Prototype an AI Feature Flow
 
+**Time: about 1.5 hours**
+
 **Goal:** Design the full user-facing interaction, not just the AI logic, but what the person actually sees and does.
 
 **Step 1: Create the project notebook.**
@@ -408,6 +420,8 @@ feature_flow_project/
 ---
 
 ## Project 6 (Module 6): Define an Evaluation Plan for the AI Feature
+
+**Time: about 1.5 hours**
 
 **Goal:** Decide, in advance, how you'll know if the feature is actually good, before it ships, not after complaints arrive.
 
@@ -470,6 +484,8 @@ evaluation_plan_project/
 ---
 
 ## Project 7 (Module 7): Build a Launch Plan for the AI Feature
+
+**Time: about 1.5 hours**
 
 **Goal:** Package everything you've built into a plan for actually shipping the feature.
 

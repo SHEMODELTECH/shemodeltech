@@ -102,7 +102,7 @@ Any published site, form, or app you want to present under your own business's n
 
 #### Lab
 
-There is no such thing as a free trial domain: registering a domain costs money (often around 10 to 20 US dollars a year for a `.com`), and attaching it to Glide, Webflow, Bubble, or Softr generally needs a paid plan. So this lab has a free part everyone does, and an optional paid part.
+There is no such thing as a free trial domain: registering a domain costs money (a yearly fee; check the registrar's current price), and attaching it to Glide, Webflow, Bubble, or Softr generally needs a paid plan. So this lab has a free part everyone does, and an optional paid part.
 
 **Free part (everyone):**
 

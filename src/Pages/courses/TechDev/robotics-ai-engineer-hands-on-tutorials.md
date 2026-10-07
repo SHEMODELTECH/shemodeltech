@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -22,6 +24,8 @@ Prefer to work on your own computer? The same notebooks run in JupyterLab or in 
 ---
 
 ## Project 1 (Module 1): Diagram the Components of a Robotic System
+
+**Time: about 1.5 hours**
 
 **Goal:** Before writing any code, learn to see a robot as a system of interacting parts, so every later project has a place to plug into.
 
@@ -90,6 +94,8 @@ robot_system_diagram_project/
 ---
 
 ## Project 2 (Module 2): Build a Simple Sensor-Data Processing Script
+
+**Time: about 2 hours**
 
 **Goal:** Get real (or simulated) sensor data flowing through code, the first hands-on contact with the "sense" part of your Project 1 loop.
 
@@ -201,6 +207,8 @@ sensor_processing_project/
 
 ## Project 3 (Module 3): Implement a Coordinate Transformation Calculator
 
+**Time: about 2 hours**
+
 **Goal:** Build the math layer that perception and control both depend on, translating between different frames of reference.
 
 **Step 1: Create the project notebook.**
@@ -302,6 +310,8 @@ coordinate_transform_project/
 ---
 
 ## Project 4 (Module 4): Build an Object Detection Pipeline for a Robot Camera Feed
+
+**Time: about 3 hours**
 
 **Goal:** Give the robot the ability to "see", the "sense" component of your Project 1 loop, now actually working.
 
@@ -453,6 +463,8 @@ object_detection_project/
 
 ## Project 5 (Module 5): Simulate a Path-Planning Algorithm
 
+**Time: about 3 hours**
+
 **Goal:** Give the robot the ability to decide where to go, the "think" component of your Project 1 loop.
 
 **Step 1: Create the project notebook.**
@@ -592,6 +604,8 @@ path_planning_project/
 
 ## Project 6 (Module 6): Train a Simple RL Agent in a Simulated Environment
 
+**Time: about 3.5 hours**
+
 **Goal:** Let the robot learn behavior instead of following fixed rules, an alternative to Project 5's hand-coded planning.
 
 **Step 1: Create the project notebook.**
@@ -728,6 +742,8 @@ rl_agent_project/
 ---
 
 ## Project 7 (Module 7): Test a Robot Behavior in Simulation
+
+**Time: about 3.5 hours**
 
 **Goal:** Validate a robot behavior for safety and reliability, the discipline that separates "it worked once" from "it's ready to test on real hardware."
 

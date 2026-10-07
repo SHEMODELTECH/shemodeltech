@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -32,6 +34,8 @@ os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
 ---
 
 ## Project 1 (Module 1): Survey and Compare Multimodal Models
+
+**Time: about 1.5 hours**
 
 **Goal:** Understand what tools exist before building anything, the landscape you'll be pulling from for every later project.
 
@@ -92,6 +96,8 @@ multimodal_survey_project/
 ---
 
 ## Project 2 (Module 2): Build a Script That Processes Image and Text Inputs
+
+**Time: about 3 hours**
 
 **Goal:** Handle two modalities at once for the first time, the foundational mechanic behind every later project.
 
@@ -244,6 +250,8 @@ image_text_project/
 
 ## Project 3 (Module 3): Extract Features from an Image and an Audio Clip
 
+**Time: about 2.5 hours**
+
 **Goal:** Go one level deeper into each modality, understanding what's actually being represented under the hood before combining them.
 
 **Step 1: Create the project notebook.**
@@ -351,6 +359,8 @@ feature_extraction_project/
 
 ## Project 4 (Module 4): Build a Simple Image Captioning Demo
 
+**Time: about 2 hours**
+
 **Goal:** Combine vision and language in one model output, your first true multimodal *generation* task, not just multimodal *input*.
 
 **Step 1: Create the project notebook.**
@@ -437,6 +447,8 @@ image_captioning_project/
 
 ## Project 5 (Module 5): Build an App That Takes an Image and Answers Questions About It
 
+**Time: about 4 hours**
+
 **Goal:** Build a full interactive app around a vision-language model, moving from a script to something a real user could actually use.
 
 > **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
@@ -461,7 +473,7 @@ $env:ANTHROPIC_API_KEY="paste-your-key-here"
 If you open a new terminal window, set it again.
 
 **Step 2: Build an image upload endpoint.**
-Create `app.py` in VS Code and paste in the code below. `ask_claude_about_image` is the same function you wrote in Project 2, Step 7.
+Create `app.py` in VS Code and paste in the code below. `ask_claude_about_image` is the function you wrote in Project 2, Step 7, with its system prompt adjusted for answering questions.
 ```python
 import base64
 import os
@@ -634,6 +646,8 @@ image_qa_app_project/
 
 ## Project 6 (Module 6): Build a Multimodal Document Search Tool
 
+**Time: about 3 hours**
+
 **Goal:** Extend retrieval to work across modalities, finding relevant content by meaning, whether it's stored as text or images.
 
 **Step 1: Create the project notebook.**
@@ -762,6 +776,8 @@ multimodal_search_project/
 ---
 
 ## Project 7 (Module 7): Evaluate a Multimodal System on a Test Set
+
+**Time: about 2 hours**
 
 **Goal:** Test what you've built for quality and bias, the discipline that separates a demo from something you'd trust in production.
 

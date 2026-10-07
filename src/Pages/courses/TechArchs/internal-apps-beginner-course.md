@@ -180,7 +180,7 @@ Internal tools that need real custom logic beyond a straightforward data display
 
 1. **Create a new Bubble app** and open the Data tab. Create a new **Data Type** called `Request` with fields: `Title` (text), `Status` (text), `Requester` (text).
 
-2. **Build a page with a Repeating Group** set to display a list of `Request` — this will show every Request Thing once you have some.
+2. **Build a page with a Repeating Group**: set its Type of content to `Request` and its Data source to "Do a search for Requests", then add a Text element in the first cell showing the current cell's Request's `Title`. This will show every Request Thing once you have some.
 
 3. **Add a form and a button** to the page (a text input for `Title`, another for `Requester`) with a **Workflow**: Event = "Button A is clicked," Action = "Create a new Request" using the input values.
 

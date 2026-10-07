@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -32,6 +34,8 @@ os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
 ---
 
 ## Project 1 (Module 1): Write a Risk Overview for an AI System
+
+**Time: about 1.5 hours**
 
 **Goal:** Identify what could go wrong before evaluating anything, the first move a responsible AI engineer makes, before any testing or auditing begins.
 
@@ -94,10 +98,13 @@ risk_overview_project/
 
 ## Project 2 (Module 2): Build a Script to Log and Review Model Outputs
 
+**Time: about 2.5 hours**
+
 **Goal:** Build the tooling needed to actually review model behavior, without logs, there's nothing concrete to audit later.
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `output_logging_project`.
+Run the API key cell from **Before you start**.
 
 **Step 2: Make a basic model call.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
@@ -223,6 +230,8 @@ output_logging_project/
 
 ## Project 3 (Module 3): Audit a Dataset for Fairness Issues
 
+**Time: about 2.5 hours**
+
 **Goal:** Check the data feeding the system, since biased training or context data produces biased model behavior downstream.
 
 **Step 1: Create the project notebook.**
@@ -346,11 +355,13 @@ dataset_fairness_audit_project/
 
 ## Project 4 (Module 4): Run a Bias Evaluation on a Model's Outputs
 
+**Time: about 2.5 hours**
+
 **Goal:** Check the model's actual outputs for bias, not just the data it was trained or grounded on, but what it actually produces.
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `bias_evaluation_project`.
-Copy in `log_outputs.py` from Project 2.
+Run the API key cell from **Before you start**, then copy in and run the `call_model`, `log_call`, and `call_and_log` cells from Project 2 (Steps 2–4).
 
 **Step 2: Design a paired-prompt test.**
 Add a **text cell** headed `bias_test_prompts` and write your notes in it.
@@ -460,11 +471,13 @@ bias_evaluation_project/
 
 ## Project 5 (Module 5): Red-Team a Chatbot for Unsafe Outputs
 
+**Time: about 2 hours**
+
 **Goal:** Probe the system for unsafe or manipulable behavior, actively trying to break it, rather than just testing it normally.
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `red_teaming_project`.
-Copy in `log_outputs.py` from Project 2.
+Run the API key cell from **Before you start**, then copy in and run the `call_model`, `log_call`, and `call_and_log` cells from Project 2 (Steps 2–4).
 
 **Step 2: Define the system's intended boundaries.**
 Add a **text cell** headed `boundaries` and write your notes in it.
@@ -562,6 +575,8 @@ red_teaming_project/
 
 ## Project 6 (Module 6): Write a Model Card and Governance Checklist
 
+**Time: about 1.5 hours**
+
 **Goal:** Document findings in a standard format, turning your Projects 1–5 evidence into something a real organization would actually file and reference.
 
 **Step 1: Create the project notebook.**
@@ -626,11 +641,13 @@ model_card_project/
 
 ## Project 7 (Module 7): Build a Simple AI System Monitoring Dashboard
 
+**Time: about 2.5 hours**
+
 **Goal:** Turn one-time findings into ongoing oversight, because governance isn't a single audit, it's a continuous practice.
 
 > **This project runs on your computer, not in a notebook.** It builds something that keeps running in the background (a web app, a job queue, or a scheduled task), which a notebook can't host. Make a project folder on your computer, open it in VS Code, and save each code block as the file named in its step. Run the commands in your terminal. Everything you built in the notebooks carries over.
 
-**Step 1: Create the project notebook.**
+**Step 1: Create the project folder.**
 ```bash
 mkdir monitoring_dashboard_project
 cd monitoring_dashboard_project
@@ -638,12 +655,10 @@ pip install flask pandas
 ```
 
 **Step 2: Decide what to monitor continuously.**
-```bash
-nano monitoring_plan.md
-```
-Based on Projects 4 and 5, list metrics worth tracking ongoing: rate of flagged outputs, bias-test pass rate over time, red-team boundary-hold rate.
+In VS Code, create `monitoring_plan.md` in the project folder. Based on Projects 4 and 5, list metrics worth tracking ongoing: rate of flagged outputs, bias-test pass rate over time, red-team boundary-hold rate.
 
 **Step 3: Extend your Project 2 logging with a flag field.**
+Go back to your Project 2 notebook (run the API key cell and its cells again if the session restarted). Replace the `log_call` cell with this version and run it:
 ```python
 def log_call(prompt, response, flagged=False, flag_reason=None, log_file="model_log.jsonl"):
     entry = {
@@ -656,16 +671,26 @@ def log_call(prompt, response, flagged=False, flag_reason=None, log_file="model_
 ```
 
 **Step 4: Build a simple auto-flagging rule.**
+In the same notebook, add this cell and run it. It replaces `call_and_log` so every new call is checked and flagged automatically:
 ```python
 def auto_flag(response):
     risky_terms = ["age", "race", "disability"]  # simplified example
     return any(term in response.lower() for term in risky_terms)
+
+def call_and_log(prompt, system=None):
+    response = call_model(prompt, system=system)
+    flagged = auto_flag(response)
+    log_call(prompt, response, flagged=flagged,
+             flag_reason="risky term in response" if flagged else None)
+    return response
+
+call_and_log("What questions might reveal someone's age indirectly?")
+call_and_log("Give three tips for writing a clear email.")
 ```
+Download `model_log.jsonl` from the **Files** panel and put it in your `monitoring_dashboard_project` folder.
 
 **Step 5: Build the dashboard backend.**
-```bash
-nano dashboard.py
-```
+In VS Code, create `dashboard.py`:
 ```python
 from flask import Flask, render_template
 import json
@@ -682,18 +707,15 @@ def index():
 if __name__ == "__main__":
     app.run(debug=True)
 ```
-Copy `model_log.jsonl` from your Project 2 notebook into this folder, then run `python dashboard.py` and open http://127.0.0.1:5000 in your browser.
 
 **Step 6: Build a minimal dashboard view.**
-```bash
-mkdir templates
-nano templates/dashboard.html
-```
+Create a folder named `templates` inside the project folder, and in it a file named `dashboard.html`:
 ```html
 <h1>AI System Monitoring Dashboard</h1>
 <p>Total logged calls: {{ total }}</p>
 <p>Flagged for review: {{ flagged }}</p>
 ```
+Now run `python dashboard.py` and open http://127.0.0.1:5000 in your browser. Press **Ctrl + C** in the terminal to stop it.
 
 **Step 7: Add a trend view.**
 Save this as `trends.py` and run `python trends.py`:
@@ -714,10 +736,7 @@ print(daily_flags)
 ```
 
 **Step 8: Set a review threshold and alert condition.**
-```bash
-nano monitoring_plan.md
-```
-Define: "if flagged rate exceeds X% in a week, trigger a manual review", connecting back to your Project 6 governance checklist's ongoing-review expectation.
+Add to `monitoring_plan.md`. Define: "if flagged rate exceeds X% in a week, trigger a manual review", connecting back to your Project 6 governance checklist's ongoing-review expectation.
 
 ### Final Project Structure
 ```text

@@ -1,11 +1,15 @@
 <!-- order: 10 -->
 ## Module: CRM Platforms (Low-Code / No-Code TechArchs)
 
+**Time: about 6 hours** (roughly 2 hours per platform).
+
 **Purpose:** Build business solutions without extensive programming.
 
 **Tools needed for this module:** A web browser and an email address to sign up for free tiers or trials — [HubSpot CRM](https://www.hubspot.com/products/crm) (free tier), a [Salesforce Trailhead Playground](https://trailhead.salesforce.com) (free sandbox org) or free trial, and [Zoho CRM](https://www.zoho.com/crm/) (free tier). No coding environment or installs are required, everything happens in the browser. You won't need all three set up at once, each topic only needs its own account.
 
 ### Topic 1: HubSpot
+
+Time: about 2 hours
 
 #### Concept
 
@@ -13,7 +17,7 @@
 
 - A **contact** is HubSpot's core record, a person, with three related record types you connect to it: **companies** (organizations), **deals** (possible sales), and **tickets** (support requests). Linking records is called an **association**
 - A **property** is a field on a record (like email, lifecycle stage, or a custom field you define yourself)
-- A **workflow** is an automation built from a trigger (like "form submitted") and a chain of actions (send email, update a property, notify a rep), all assembled visually. Workflows need a paid plan (Professional tier or higher)
+- A **workflow** is an automation built from a trigger (like "form submitted") and a chain of actions (send email, update a property, notify a rep), all assembled visually. Workflows need a paid plan (Professional tier or higher at the time of writing; check the current plan page)
 - A **pipeline** organizes deals or tickets into stages so progress is visible at a glance. HubSpot's default sales pipeline uses: Appointment Scheduled, Qualified to Buy, Presentation Scheduled, Decision Maker Bought-In, Contract Sent, Closed Won, and Closed Lost (you can rename or edit these)
 - **Tasks** are to-dos (call, email, follow-up) with a due date and an owner, attached to a record, and **dashboards** group reports so a team can see deals and activity at a glance
 - A **form** on your website creates or updates a **contact**, not a deal. On the free plan, deals are not created automatically; someone creates them by hand (or a paid workflow does it)
@@ -68,6 +72,8 @@ You have a company with associated contacts, a deal moving through HubSpot's def
 
 ### Topic 2: Salesforce
 
+Time: about 2 hours
+
 #### Concept
 
 **Salesforce** is the most established enterprise CRM platform, and its low-code layer is broader and more powerful than HubSpot's or Zoho's, which is also why it has a steeper learning curve. Its core low-code tools are **Flow Builder** (visual automation, replacing the older "Workflow Rules" and "Process Builder"), **Objects** (custom data structures you define without code), and **Page Layouts** (drag-and-drop screen design for how records appear to users).
@@ -108,8 +114,8 @@ Larger organizations with complex sales processes, multiple departments needing 
 1. **Sign up for a free Trailhead Playground** through [trailhead.salesforce.com](https://trailhead.salesforce.com), a disposable sandbox org meant for learning.
 2. **Explore the standard Opportunity object**, opening a sample record (or creating one) and reviewing its default fields and stage picklist.
 3. **Create a custom field** on the Opportunity object (Setup > Object Manager > Opportunity > Fields), for example a checkbox called "Requires Manager Approval."
-4. **Build a simple record-triggered flow** (Setup > Flow Builder): trigger it when an Opportunity is updated, and set the checkbox field to true, add one action, sending an email alert.
-5. **Test the flow** by editing a sample Opportunity to meet the trigger condition and confirming the flow runs.
+4. **Build a simple record-triggered flow** (in Setup, search "Flows" in Quick Find, then click New Flow and choose Record-Triggered Flow): set it to run when an Opportunity is updated and the "Requires Manager Approval" checkbox equals true, then add one action, the "Send Email" action, sending a short email to yourself.
+5. **Activate the flow, then test it** by ticking the checkbox on a sample Opportunity, saving, and confirming the email arrives.
 
 #### Checkpoint
 You have a custom field on a standard Salesforce object and a working record-triggered flow that reacts to a change on that field, and you can explain the difference between a standard and a custom object.
@@ -126,6 +132,8 @@ You have a custom field on a standard Salesforce object and a working record-tri
 ---
 
 ### Topic 3: Zoho CRM
+
+Time: about 2 hours
 
 #### Concept
 
@@ -165,7 +173,7 @@ Small and mid-sized businesses that want CRM tightly bundled with other affordab
 
 #### Lab
 
-1. **Sign up for a free Zoho CRM account** at [zoho.com/crm](https://www.zoho.com/crm/).
+1. **Sign up for a free Zoho CRM account** at [zoho.com/crm](https://www.zoho.com/crm/). Workflow rules and Blueprint may not be included in the free edition (check the current plan page). If they aren't, start Zoho's free trial of a paid edition for steps 3 to 5, or follow along by reading them.
 2. **Create a Lead record manually**, filling in name, company, and status, to see how a module's fields are structured.
 3. **Create a workflow rule** (Setup > Automation > Workflow Rules): trigger it when a Lead's status changes to "Qualified," with an action that sends a notification email.
 4. **Build a simple Blueprint** on the Leads module with three enforced stages (for example, "New," "Contacted," "Qualified"), requiring a mandatory field to be filled before moving to the next stage.

@@ -8,6 +8,8 @@ Follow the projects in order. Each one hands off a skill or artifact to the next
 
 ## Before you start: set up your notebook
 
+**Time: about 15 minutes**
+
 This course runs in **Google Colab**, a free Jupyter notebook in your browser and the standard workspace for AI and data work. There's nothing to install.
 
 1. Go to [colab.research.google.com](https://colab.research.google.com) and sign in with a Google account.
@@ -22,6 +24,8 @@ Prefer to work on your own computer? The same notebooks run in JupyterLab or in 
 ---
 
 ## Project 1 (Module 1): Summarize and Reproduce Results from a Short Paper
+
+**Time: about 2.5 hours**
 
 **Goal:** Read a research paper the way a researcher does, for what to rebuild, not just what to remember.
 
@@ -110,6 +114,8 @@ paper_reproduction_project/
 ---
 
 ## Project 2 (Module 2): Build a Data Exploration Notebook
+
+**Time: about 2 hours**
 
 **Goal:** Build the habit of understanding data before modeling it, the step most beginners skip and most experienced researchers insist on.
 
@@ -203,6 +209,8 @@ data_exploration_project/
 
 ## Project 3 (Module 3): Implement Gradient Descent from Scratch
 
+**Time: about 2 hours**
+
 **Goal:** Build the optimization algorithm underneath nearly every model you'll ever train, by hand, once, so it's never a mystery again.
 
 **Step 1: Create the project notebook.**
@@ -285,6 +293,8 @@ gradient_descent_project/
 ---
 
 ## Project 4 (Module 4): Train and Evaluate a Baseline Model
+
+**Time: about 2.5 hours**
 
 **Goal:** Establish a reference point, the number every future improvement (including Project 6's ablation study) gets measured against.
 
@@ -390,6 +400,8 @@ baseline_model_project/
 ---
 
 ## Project 5 (Module 5): Build a Small Neural Network from Scratch
+
+**Time: about 3 hours**
 
 **Goal:** Move from classical ML (Project 4) to deep learning fundamentals, by building the smallest possible neural network without a framework doing the work for you.
 
@@ -521,6 +533,8 @@ neural_network_project/
 ---
 
 ## Project 6 (Module 6): Run an Ablation Study
+
+**Time: about 3.5 hours**
 
 **Goal:** Isolate what actually matters in a model design, the core skill of empirical AI research.
 
@@ -677,6 +691,8 @@ ablation_study_project/
 ---
 
 ## Project 7 (Module 7): Write a Short Research Report
+
+**Time: about 2 hours**
 
 **Goal:** Practice communicating results clearly, the skill that turns good research into research anyone else can use.
 
