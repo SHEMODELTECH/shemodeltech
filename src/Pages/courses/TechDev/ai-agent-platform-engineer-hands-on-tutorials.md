@@ -10,6 +10,7 @@ This course is a series of hands-on projects. You learn each idea at the moment 
 - Run agent tasks in the background with a Redis-backed job queue and multiple workers
 - Test agent reliability, including hallucination handling and recovery from failing tools
 - Add permission checks, audit logging, and a sandbox mode for risky tools
+- Publish the platform's tools as an MCP server that keeps those permission checks and the audit log in front of every call
 
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
@@ -37,7 +38,7 @@ from google.colab import userdata
 os.environ["ANTHROPIC_API_KEY"] = userdata.get("ANTHROPIC_API_KEY")
 ```
 
-**One project runs on your computer.** Project 5 builds a job queue that keeps running in the background, and a notebook can't host that. It says so at the top and uses a code editor (VS Code) and your terminal instead. It needs a Mac, Linux, or Windows with **WSL** (Windows Subsystem for Linux), because the queue worker it uses doesn't run on native Windows. It also needs **Docker Desktop** to run Redis. Every other project runs in Colab.
+**One project runs on your computer.** Project 5 builds a job queue that keeps running in the background, and a notebook can't host that. It says so at the top and uses a code editor (VS Code) and your terminal instead. It needs a Mac, Linux, or Windows with **WSL** (Windows Subsystem for Linux), because the queue worker it uses doesn't run on native Windows. It also needs **Docker Desktop** to run Redis. Every other project runs in Colab (Project 8 adds one optional step on your own computer).
 
 ---
 
@@ -101,6 +102,7 @@ flowchart TB
 ```
 
 ### Final Project Structure
+
 ```text
 agent_platform_diagram_project/
 │
@@ -143,12 +145,14 @@ If you haven't built an agent before, take the Agentic AI Fundamentals course ea
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `tool_calling_project`.
+
 ```python
 %pip install requests
 ```
 
 **Step 2: Write one simple tool function.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 def get_weather(city):
     # in a real implementation, this would call a weather API
@@ -156,6 +160,7 @@ def get_weather(city):
 ```
 
 **Step 3: Describe the tool for the model.**
+
 ```python
 tool_definition = {
     "name": "get_weather",
@@ -167,9 +172,11 @@ tool_definition = {
     }
 }
 ```
+
 The **input_schema** tells the model exactly what arguments the tool expects and their types.
 
 **Step 4: Send a request with the tool available.**
+
 ```python
 import os
 import requests
@@ -192,6 +199,7 @@ print(response.json())
 ```
 
 **Step 5: Parse the tool call from the response.**
+
 ```python
 tool_block = None
 for block in response.json()["content"]:
@@ -201,9 +209,11 @@ for block in response.json()["content"]:
         tool_input = block["input"]
         print(f"Model wants to call {tool_name} with {tool_input}")
 ```
+
 The response's `content` is a list of blocks. A `tool_use` block has an `id`, the tool `name`, and the `input` arguments. We keep the whole block in `tool_block` because Step 7 needs its `id`.
 
 **Step 6: Execute the tool and get the result.**
+
 ```python
 if tool_name == "get_weather":
     result = get_weather(**tool_input)
@@ -211,6 +221,7 @@ print(result)
 ```
 
 **Step 7: Send the tool result back to the model.**
+
 ```python
 follow_up = requests.post(
     "https://api.anthropic.com/v1/messages",
@@ -234,10 +245,12 @@ for block in follow_up.json()["content"]:
     if block["type"] == "text":
         print(block["text"])
 ```
+
 A **tool_result** message feeds the tool's output back into the conversation, letting the model use it to compose a final natural-language answer. Its `tool_use_id` must match the `id` of the `tool_use` block it answers.
 
 **Step 8: Test with a request that shouldn't trigger the tool.**
 Send the same request as Step 4, with only the question changed:
+
 ```python
 no_tool_response = requests.post(
     "https://api.anthropic.com/v1/messages",
@@ -256,9 +269,11 @@ no_tool_response = requests.post(
 for block in no_tool_response.json()["content"]:
     print(block["type"], block.get("text", ""))
 ```
+
 Confirm the output shows only `text` blocks and no `tool_use` block: the model answered directly without calling `get_weather`.
 
 ### Final Project Structure
+
 ```text
 tool_calling_project (Colab notebook)
 │
@@ -305,6 +320,7 @@ Run the API key cell from "Before you start" at the top. Everything else this pr
 
 **Step 2: Define 3 tools for a single-purpose notes agent.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**. The notes live in a Python dictionary, so the agent can really search and add to them.
+
 ```python
 NOTES = {
     "Meeting prep": "Agenda: budget review, hiring plan",
@@ -328,6 +344,7 @@ def list_notes():
 
 **Step 3: Describe the tools and connect names to functions.**
 Add a **code cell**, paste in the code below, and run it.
+
 ```python
 tool_definitions = [
     {
@@ -369,10 +386,12 @@ def execute_tool(name, tool_input):
         return f"Error: unknown tool '{name}'."
     return TOOL_FUNCTIONS[name](**tool_input)
 ```
+
 `execute_tool` looks up the Python function by the name the model asked for and calls it with the model's arguments.
 
 **Step 4: Write the function that calls the model.**
 Add a **code cell**, paste in the code below, and run it. The `system` field is a top-level instruction that shapes how the model behaves for the whole conversation.
+
 ```python
 import os
 import requests
@@ -401,6 +420,7 @@ def call_model_with_tools(messages, tool_definitions):
 
 **Step 5: Implement the agent loop.**
 An **agent loop** repeatedly asks the model "given everything so far, what's the next step?", calling tools as needed, until the model decides the task is complete. Add a **code cell**, paste in the code below, and run it.
+
 ```python
 def run_agent(user_goal, max_steps=5):
     messages = [{"role": "user", "content": user_goal}]
@@ -425,25 +445,31 @@ def run_agent(user_goal, max_steps=5):
         messages.append({"role": "user", "content": tool_results})
     return "Max steps reached without completion."
 ```
+
 `max_steps` is a **safety limit**: it caps how many actions the agent can take before stopping, whether or not it's "done." The `print` line logs each step, so you can see the agent's decisions as it works.
 
 **Step 6: Test with a single-step goal.**
+
 ```python
 print(run_agent("Search my notes for 'meeting'."))
 ```
+
 You should see one logged step calling `search_notes`, then the final answer.
 
 **Step 7: Test with a multi-step goal.**
+
 ```python
 print(run_agent("Check if I have a note about groceries, and if not, create one."))
 print(NOTES)
 ```
+
 Watch the log: the agent searches first, then decides what to do based on the result. Printing `NOTES` shows whether it created anything.
 
 **Step 8: Understand the agent's memory.**
 The `messages` list grows on every step: the goal, each model reply, and each tool result. Because the whole list is sent on every call, the agent can use earlier tool results in later decisions within the same task. That list is the agent's short-term memory. Add a **text cell** and explain, in two sentences, what the agent would forget if you only sent the latest message each time.
 
 ### Final Project Structure
+
 ```text
 single_agent_project (Colab notebook)
 │
@@ -489,6 +515,7 @@ Create a new notebook for this project (**File → New notebook**) and name it `
 
 **Step 2: Add the tool functions.**
 Add a **code cell**, paste in the code below, and run it. These are the tools from Projects 2 and 3 in one place.
+
 ```python
 NOTES = {
     "Meeting prep": "Agenda: budget review, hiring plan",
@@ -516,6 +543,7 @@ def list_notes():
 
 **Step 3: Build the tool registry class.**
 A **registry** is a central catalog that stores things (here, tools) so they can be looked up by name rather than hardcoded. Add a **code cell**, paste in the whole class below (keep it in one cell, since the methods belong inside the class), and run it.
+
 ```python
 class ToolRegistry:
     def __init__(self):
@@ -539,11 +567,13 @@ class ToolRegistry:
             return f"Error: unknown tool '{name}'."
         return self.tools[name]["function"](**kwargs)
 ```
+
 `register` adds a tool, `get_tool_definitions` builds the `tools` list the API expects (name, description, input_schema), and `execute` runs a tool by name.
 
-In production platforms, tools are often served by **MCP (Model Context Protocol) servers**: separate programs that list their tools with the same name, description, and input schema, so a platform can discover and call them at run time. Your registry is the same idea inside one Python program.
+In production platforms, tools are often served by **MCP (Model Context Protocol) servers**: separate programs that list their tools with the same name, description, and input schema, so a platform can discover and call them at run time. Your registry is the same idea inside one Python program, and in Project 8 you'll publish it as an MCP server.
 
 **Step 4: Register several tools.**
+
 ```python
 registry = ToolRegistry()
 registry.register(
@@ -563,6 +593,7 @@ print([t["name"] for t in registry.get_tool_definitions()])
 
 **Step 5: Update the agent loop to use the registry.**
 This is the Project 3 loop, changed in three places: it takes a `registry`, gets its tool list from the registry, and runs tools with `registry.execute`. It also catches tool errors, which you'll test in Project 6. Add a **code cell**, paste in the code below, and run it.
+
 ```python
 import os
 import requests
@@ -617,6 +648,7 @@ def run_agent(user_goal, registry, max_steps=5):
 ```
 
 **Step 6: Add a new tool without changing the agent.**
+
 ```python
 registry.register(
     "create_note", create_note, "Create a new note with a title and content.",
@@ -627,9 +659,11 @@ registry.register(
 print(run_agent("Create a note called 'Test' with content 'Hello'.", registry))
 print(NOTES)
 ```
+
 You didn't touch `run_agent`, yet the agent can now use `create_note`. That's the point of a registry.
 
 **Step 7: Support multiple agents sharing the same registry.**
+
 ```python
 weather_agent_goal = "What's the weather in Paris?"
 notes_agent_goal = "Search my notes for 'budget'."
@@ -642,6 +676,7 @@ Add a **text cell** headed `README` and write your notes in it.
 Note the `register`, `get_tool_definitions`, and `execute` methods, and how a new tool would be added.
 
 ### Final Project Structure
+
 ```text
 tool_registry_project (Colab notebook)
 │
@@ -689,6 +724,7 @@ tool_registry_project (Colab notebook)
 > - **VS Code** to create the files, and your terminal to run commands.
 
 **Step 1: Create the project folder and a virtual environment.**
+
 ```bash
 mkdir queue_execution_project
 cd queue_execution_project
@@ -696,6 +732,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install redis rq requests
 ```
+
 A **virtual environment** (`.venv`) keeps this project's packages separate from the rest of your computer. Run `source .venv/bin/activate` again in every new terminal you open for this project.
 
 **Step 2: Understand why queuing matters.**
@@ -703,16 +740,19 @@ A **task queue** holds pending jobs until a **worker** is free to process them, 
 
 **Step 3: Start a local Redis instance with Docker.**
 Open Docker Desktop first, then run:
+
 ```bash
 docker run -d --name agent-redis -p 6379:6379 redis
 docker ps
 ```
+
 **Redis** is an in-memory data store commonly used as the backing store for task queues because of its speed. `docker ps` should list a running container named `agent-redis`.
 
 **Step 4: Export your notebook code to .py files.**
 A worker can only import code from `.py` files, not from a Colab notebook. Create these three files in the `queue_execution_project` folder (in VS Code: **File → New File**, then save with the name shown). They contain the same code as your Project 4 notebook.
 
 `tools.py`:
+
 ```python
 NOTES = {
     "Meeting prep": "Agenda: budget review, hiring plan",
@@ -739,6 +779,7 @@ def list_notes():
 ```
 
 `registry.py`:
+
 ```python
 from tools import get_weather, search_notes, create_note, list_notes
 
@@ -793,6 +834,7 @@ registry = build_registry()
 ```
 
 `agent.py`:
+
 ```python
 import os
 import requests
@@ -850,13 +892,16 @@ def run_agent(user_goal, registry, max_steps=5):
 
 **Step 5: Set your API key in the terminal (not in a file).**
 The worker reads your key from an **environment variable**. Set it in the terminal where you'll start the worker:
+
 ```bash
 export ANTHROPIC_API_KEY="paste-your-key-here"
 ```
+
 This lasts only until you close that terminal, which is what you want. Never write the key into `agent.py` or any other file, and don't commit it anywhere.
 
 **Step 6: Define the agent task as a queueable function.**
 Create `tasks.py`:
+
 ```python
 from agent import run_agent
 from registry import registry
@@ -865,10 +910,12 @@ from registry import registry
 def run_agent_task(user_goal):
     return run_agent(user_goal, registry)
 ```
+
 The queue stores a reference to `tasks.run_agent_task`; the worker imports this file to run it.
 
 **Step 7: Enqueue a task.**
 Create `submit_task.py`:
+
 ```python
 from redis import Redis
 from rq import Queue
@@ -878,23 +925,29 @@ q = Queue(connection=Redis())
 job = q.enqueue(run_agent_task, "What's the weather in Berlin?")
 print(f"Job queued: {job.id}")
 ```
+
 Run it:
+
 ```bash
 python submit_task.py
 ```
+
 `enqueue` submits the task and returns immediately with a **job ID**, without waiting for the task to finish. Copy the job ID it prints. The job just waits in Redis for now, because no worker is running yet.
 
 **Step 8: Start a worker to process the queue.**
 In the terminal where you exported `ANTHROPIC_API_KEY` (with the virtual environment active and inside the project folder), run:
+
 ```bash
 rq worker
 ```
+
 A **worker** is a separate process that pulls jobs off the queue and actually executes them. You'll see it pick up your Berlin job and print the agent's step log. Leave it running.
 
 On a Mac, if the worker crashes with an error mentioning `fork` or `objc`, stop it with **Ctrl + C**, run `export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`, and start it again.
 
 **Step 9: Check job status and results.**
 Create `check_job.py`:
+
 ```python
 import sys
 from redis import Redis
@@ -904,14 +957,18 @@ job = Job.fetch(sys.argv[1], connection=Redis())
 print("Status:", job.get_status())
 print("Result:", job.return_value())
 ```
+
 In a second terminal (activate the virtual environment there too), run it with the job ID you copied:
+
 ```bash
 python check_job.py <job-id>
 ```
+
 The status should be `finished` and the result should be the agent's answer.
 
 **Step 10: Test with multiple concurrent tasks.**
 Create `submit_many.py`:
+
 ```python
 from redis import Redis
 from rq import Queue
@@ -922,10 +979,12 @@ for goal in ["Weather in Rome?", "Search my notes for 'budget'.", "Weather in Ca
     job = q.enqueue(run_agent_task, goal)
     print(f"Queued {job.id}: {goal}")
 ```
+
 Open a third terminal, activate the virtual environment, run `export ANTHROPIC_API_KEY="paste-your-key-here"`, and start a second `rq worker`. Then run `python submit_many.py` from any terminal. Watch both worker terminals: the jobs are split between them and run at the same time, not strictly one after another.
 
 **Step 11: Shut everything down.**
 Stop each worker with **Ctrl + C**, then stop and remove Redis:
+
 ```bash
 docker stop agent-redis
 docker rm agent-redis
@@ -933,6 +992,7 @@ deactivate
 ```
 
 ### Final Project Structure
+
 ```text
 queue_execution_project/
 │
@@ -983,6 +1043,7 @@ queue_execution_project/
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `agent_evaluation_project`. This project runs in Colab.
 Run the API key cell, then paste in and run the three code cells from Project 4: the tool functions (Step 2), the `ToolRegistry` class (Step 3), and `call_model_with_tools` with `run_agent` (Step 5). Then register the tools:
+
 ```python
 registry = ToolRegistry()
 registry.register(
@@ -1007,6 +1068,7 @@ registry.register(
 
 **Step 2: Build a test set of agent goals.**
 Add a **code cell** with your goals as a Python list. Start with these and add your own until you have 10 to 15, covering simple single-tool tasks, multi-step tasks, ambiguous goals, and goals with no relevant tool:
+
 ```python
 test_goals = [
     "What's the weather in Lagos?",                                   # single tool
@@ -1025,6 +1087,7 @@ For each goal, write what a correct outcome looks like (which tool(s) should be 
 
 **Step 4: Run the test suite.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 results = []
 for goal in test_goals:
@@ -1036,6 +1099,7 @@ for goal in test_goals:
 
 **Step 5: Score correctness.**
 Add a **code cell** that records your judgement for each result, then counts them:
+
 ```python
 # Template: replace each "?" with "pass", "fail", or "partial" after reading the answers.
 scores = ["?"] * len(results)
@@ -1043,16 +1107,20 @@ scores = ["?"] * len(results)
 from collections import Counter
 print(Counter(scores))
 ```
+
 Compare each answer against your Step 3 criteria before filling in the list.
 
 **Step 6: Test hallucination handling.**
+
 ```python
 print(run_agent("Search my notes for 'quarterly tax filing' and summarise what the note says.", registry))
 ```
+
 No such note exists. Confirm the agent reports that honestly rather than inventing a plausible-sounding summary. A made-up answer here is a **hallucination**, and it's a fail.
 
 **Step 7: Test failure recovery.**
 Register a tool that always crashes, then ask the agent to use it:
+
 ```python
 def get_stock_price(symbol):
     raise ConnectionError("stock service is down")
@@ -1063,6 +1131,7 @@ registry.register(
 )
 print(run_agent("What's the stock price of ACME?", registry))
 ```
+
 The `try`/`except` in `run_agent` catches the error and sends it back as a `tool_result` with `"is_error": True`. Confirm the loop doesn't crash and the agent tells you the tool failed instead of making up a price.
 
 **Step 8: Write the evaluation report.**
@@ -1070,6 +1139,7 @@ Add a **text cell** headed `evaluation_report` and write your notes in it.
 Structure: Test set → Pass/fail/partial rates → Hallucination findings → Failure recovery findings → Recommendations.
 
 ### Final Project Structure
+
 ```text
 agent_evaluation_project (Colab notebook)
 │
@@ -1118,6 +1188,7 @@ Paste in and run two code cells from Project 4: the tool functions (Step 2) and 
 
 **Step 2: Add a risky tool and define permission levels.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 def send_email(to, subject, body):
     # A fake email tool. It only pretends to send.
@@ -1130,10 +1201,12 @@ PERMISSION_LEVELS = {
 }
 LEVEL_RANK = {"public": 0, "user": 1, "restricted": 2}
 ```
+
 Tagging each tool with a **permission level** lets the platform decide who (or which agents) can invoke it. `LEVEL_RANK` orders the levels, so a "user" caller can use "public" and "user" tools but not "restricted" ones.
 
 **Step 3: Extend the registry to check permissions.**
 Instead of rewriting `ToolRegistry`, make a **subclass**: a new class that keeps everything from `ToolRegistry` (`self.tools`, `register`, `get_tool_definitions`) and replaces only `execute`. Add a **code cell**, paste in the code below, and run it.
+
 ```python
 class SecureToolRegistry(ToolRegistry):
     def _has_access(self, user_level, required_level):
@@ -1160,9 +1233,11 @@ def build_secure_registry():
 
 registry = build_secure_registry()
 ```
+
 Every call now says which agent is calling (`agent_id`) and at what level (`user_permission_level`). A tool missing from `PERMISSION_LEVELS` defaults to "restricted". This is **least privilege**: access must be explicitly granted rather than assumed.
 
 **Step 4: Test permission enforcement.**
+
 ```python
 try:
     registry.execute("send_email", agent_id="agent-1", user_permission_level="public",
@@ -1172,10 +1247,12 @@ except PermissionError as error:
 
 print(registry.execute("get_weather", agent_id="agent-1", user_permission_level="public", city="Paris"))
 ```
+
 The first call should be blocked; the second should return the weather.
 
 **Step 5: Add audit logging for every tool call.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 import json, datetime
 
@@ -1191,10 +1268,12 @@ def log_tool_call(agent_id, tool_name, arguments, allowed, result=None):
     with open("audit_log.jsonl", "a") as f:
         f.write(json.dumps(entry) + "\n")
 ```
+
 An **audit log** is a permanent record of who did what and when. Each line of a `.jsonl` file is one JSON entry.
 
 **Step 6: Wire audit logging into the registry.**
 Replace your Step 3 class with this full version (it adds the two `log_tool_call` lines), run the cell, then rebuild the registry:
+
 ```python
 class SecureToolRegistry(ToolRegistry):
     def _has_access(self, user_level, required_level):
@@ -1212,9 +1291,11 @@ class SecureToolRegistry(ToolRegistry):
 
 registry = build_secure_registry()
 ```
+
 Denied calls are logged too. Denials are often the most important entries in a security review.
 
 **Step 7: Add a sandbox restriction for risky tools.**
+
 ```python
 def sandboxed_execute(name, agent_id, user_permission_level, **kwargs):
     required_level = PERMISSION_LEVELS.get(name, "restricted")
@@ -1235,15 +1316,19 @@ try:
 except PermissionError as error:
     print("Blocked as expected:", error)
 ```
+
 A **sandbox** here means simulating an action's effects without actually performing it, useful for testing agent behavior involving high-risk tools without real consequences. The permission check still runs first, so sandbox mode never lets a caller try a tool above its level.
 
 **Step 8: Review the audit log after a test run.**
+
 ```python
 !cat audit_log.jsonl
 ```
+
 Confirm it clearly shows which calls were allowed, which were denied, and by which agent.
 
 ### Final Project Structure
+
 ```text
 access_control_project (Colab notebook)
 │
@@ -1277,3 +1362,446 @@ access_control_project (Colab notebook)
 4. What does `sandboxed_execute` do with a restricted tool?
 
 *Answers: 1) A subclass keeps `self.tools`, `register`, and `get_tool_definitions` from the parent and only replaces `execute`; a new class with just `execute` would have no way to register or store tools. 2) It defaults to "restricted", following least privilege: access must be granted explicitly, never assumed. 3) Denials show who tried to do something they weren't allowed to, which is often the most important evidence in a security review. 4) It logs the attempt and returns a message describing what would have happened, without actually running the tool.*
+
+---
+
+## Project 8 (Module 8): Expose Your Platform's Tools Through MCP
+
+**Time: about 3 hours**
+
+**Goal:** Turn the platform's tool registry into an MCP server, so any MCP-capable app can use your tools, while the Project 7 permission checks and audit log still guard every single call.
+
+> **What you need:**
+> - **Google Colab** (recommended) or Jupyter on your own computer with Python 3.10 or newer. No Docker and nothing to keep running: the MCP server starts as a subprocess of the notebook and stops when each connection closes.
+> - Your Claude API key for Steps 7 and 8 (Steps 1 to 6 don't call Claude).
+> - Optional, for Step 10 only: an MCP-capable desktop app on your own computer.
+>
+> **Can't run it?** Read along: follow each step and study the expected output described under it. You'll still learn everything the quiz checks.
+
+This project builds on the Agentic AI Fundamentals course, Module 3, where you wrote a small MCP server, connected a `ClientSession` over stdio, and handed MCP tools to Claude. If MCP's host, client, and server roles are new to you, do that module first. Here you apply the same pieces to the platform you've built across Projects 4 to 7, and focus on the platform question MCP leaves to you: **who is calling, and are they allowed?**
+
+**Step 1: Create the project notebook and install the MCP SDK.**
+Create a new notebook (**File → New notebook**) and name it `mcp_platform_project`. Run the API key cell from "Before you start", then install the packages:
+
+```python
+%pip install "mcp>=2" requests
+```
+
+This is version 2 or later of the official MCP Python SDK, the same version the Fundamentals course uses. Its server class is `MCPServer` (`from mcp.server import MCPServer`). Older tutorials use version 1, where it was called `FastMCP`; that import doesn't work here.
+
+**Step 2: Decide how the server knows who is calling.**
+In Project 7, every call to `SecureToolRegistry.execute` passed an `agent_id` and a `user_permission_level`. An MCP tool call only carries the tool's name and its arguments, so the server needs another way to learn the caller's identity.
+
+With the **stdio** transport, the client starts the server as its own subprocess, one server per connection. That makes the launcher the natural place to set identity: the client starts the server with two **environment variables**, `AGENT_ID` and `PERMISSION_LEVEL`, and the server reads them once at startup.
+
+Two rules follow, and they are the security core of this project:
+- **The permission level is never a tool argument.** Tool arguments are written by the model. If `permission_level` were an argument, a confused or manipulated model could simply ask for "restricted".
+- **If the level is missing or unknown, fall back to the lowest one ("public").** That's least privilege again, as in Project 7.
+
+(For a remote server over Streamable HTTP there's no launcher, so identity comes from a login token instead. The MCP specification uses OAuth for this. The permission check on every call stays exactly the same.)
+
+**Step 3: Write the MCP server.**
+The `%%writefile` line saves the cell as `platform_server.py` instead of running it. The file contains your Project 4 tools and `ToolRegistry`, your Project 7 permissions, `log_tool_call`, and `SecureToolRegistry`, plus a short MCP section at the bottom. Two small changes to the old code: the tool functions now have **type hints** (`city: str`), because MCP builds each tool's input schema from them, and the audit log path is fixed next to the server file, because a desktop app may start the server from a different folder.
+
+```python
+%%writefile platform_server.py
+import datetime
+import json
+import os
+from functools import wraps
+from pathlib import Path
+
+from mcp.server import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
+
+# ---------- Tools (Projects 4 and 7), now with type hints ----------
+NOTES = {
+    "Meeting prep": "Agenda: budget review, hiring plan",
+    "Grocery list": "eggs, rice, tomatoes",
+}
+
+def get_weather(city: str) -> str:
+    # A fake weather tool. A real one would call a weather API.
+    return f"The weather in {city} is 72°F and sunny."
+
+def search_notes(query: str) -> str:
+    matches = [title for title, text in NOTES.items()
+               if query.lower() in (title + " " + text).lower()]
+    if not matches:
+        return f"No notes match '{query}'."
+    return f"Found {len(matches)} note(s): " + ", ".join(matches)
+
+def create_note(title: str, content: str) -> str:
+    NOTES[title] = content
+    return f"Created note: {title}"
+
+def list_notes() -> str:
+    return "Notes: " + ", ".join(NOTES.keys())
+
+def send_email(to: str, subject: str, body: str) -> str:
+    # A fake email tool. It only pretends to send.
+    return f"Email sent to {to} with subject '{subject}'."
+
+# ---------- Permissions and audit log (Project 7) ----------
+PERMISSION_LEVELS = {
+    "get_weather": "public",
+    "search_notes": "user",
+    "list_notes": "user",
+    "create_note": "user",
+    "send_email": "restricted",
+}
+LEVEL_RANK = {"public": 0, "user": 1, "restricted": 2}
+
+AUDIT_LOG = Path(__file__).with_name("audit_log.jsonl")
+
+def log_tool_call(agent_id, tool_name, arguments, allowed, result=None):
+    entry = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "agent_id": agent_id,
+        "tool": tool_name,
+        "arguments": arguments,
+        "allowed": allowed,
+        "result": str(result)[:200] if result is not None else None,
+    }
+    with open(AUDIT_LOG, "a") as f:
+        f.write(json.dumps(entry) + "\n")
+
+# ---------- Registry (Project 4) and secure registry (Project 7) ----------
+class ToolRegistry:
+    def __init__(self):
+        self.tools = {}
+
+    def register(self, name, function, description, input_schema):
+        self.tools[name] = {
+            "function": function,
+            "description": description,
+            "input_schema": input_schema,
+        }
+
+    def get_tool_definitions(self):
+        return [
+            {"name": name, "description": t["description"], "input_schema": t["input_schema"]}
+            for name, t in self.tools.items()
+        ]
+
+    def execute(self, name, **kwargs):
+        if name not in self.tools:
+            return f"Error: unknown tool '{name}'."
+        return self.tools[name]["function"](**kwargs)
+
+class SecureToolRegistry(ToolRegistry):
+    def _has_access(self, user_level, required_level):
+        return LEVEL_RANK[user_level] >= LEVEL_RANK[required_level]
+
+    def execute(self, name, agent_id, user_permission_level, **kwargs):
+        required_level = PERMISSION_LEVELS.get(name, "restricted")
+        allowed = self._has_access(user_permission_level, required_level)
+        if not allowed:
+            log_tool_call(agent_id, name, kwargs, allowed=False)
+            raise PermissionError(f"Access denied to tool: {name}")
+        result = self.tools[name]["function"](**kwargs)
+        log_tool_call(agent_id, name, kwargs, allowed=True, result=result)
+        return result
+
+def build_secure_registry():
+    registry = SecureToolRegistry()
+    registry.register("get_weather", get_weather, "Get the current weather for a city.",
+                      {"type": "object", "properties": {"city": {"type": "string"}}, "required": ["city"]})
+    registry.register("search_notes", search_notes, "Search saved notes by keyword.",
+                      {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]})
+    registry.register("list_notes", list_notes, "List the titles of all saved notes.",
+                      {"type": "object", "properties": {}})
+    registry.register("create_note", create_note, "Create a new note with a title and content.",
+                      {"type": "object",
+                       "properties": {"title": {"type": "string"}, "content": {"type": "string"}},
+                       "required": ["title", "content"]})
+    registry.register("send_email", send_email, "Send an email.",
+                      {"type": "object",
+                       "properties": {"to": {"type": "string"}, "subject": {"type": "string"},
+                                      "body": {"type": "string"}},
+                       "required": ["to", "subject", "body"]})
+    return registry
+
+registry = build_secure_registry()
+
+# ---------- MCP section (new) ----------
+# Who is calling: set by whoever launched this server, never by the model.
+CALLER_ID = os.environ.get("AGENT_ID", "unknown-agent")
+CALLER_LEVEL = os.environ.get("PERMISSION_LEVEL", "public")
+if CALLER_LEVEL not in LEVEL_RANK:
+    CALLER_LEVEL = "public"   # unknown level: least privilege
+
+mcp = MCPServer("agent-platform-tools")
+
+def expose(name):
+    """Publish one registry tool over MCP, with the permission check in front."""
+    original = registry.tools[name]["function"]
+
+    @wraps(original)   # copies the name and type hints, so MCP builds the right schema
+    def guarded(**kwargs):
+        try:
+            return registry.execute(name, agent_id=CALLER_ID,
+                                    user_permission_level=CALLER_LEVEL, **kwargs)
+        except PermissionError as error:
+            raise ToolError(str(error)) from error   # sent back as an error result
+
+    mcp.add_tool(guarded, name=name, description=registry.tools[name]["description"])
+
+for tool_name in registry.tools:
+    expose(tool_name)
+
+if __name__ == "__main__":
+    mcp.run()   # stdio transport by default
+```
+
+How the MCP section works:
+- `expose` wraps each registry tool in a `guarded` function. MCP only ever sees `guarded`, and `guarded` only ever runs the tool through `registry.execute`, so **no MCP call can skip the permission check or the audit log**.
+- `@wraps(original)` copies the original function's name and signature onto the wrapper. MCP reads that signature to build the input schema, so `get_weather` still advertises one required string, `city`.
+- `ToolError` is the SDK's way to send a readable error back to the client as a result with `is_error` set to `True`. Other exceptions are hidden from the client on purpose (it only sees "Error executing tool ..."), so you don't leak internal details.
+- Loading a new tool is still one `registry.register` line: the `for` loop publishes everything in the registry.
+- The server must never `print`: with stdio, standard output carries the protocol messages, and stray text would corrupt them. The SDK sends its own logs to standard error instead.
+
+**Step 4: Write a helper that connects as a given caller.**
+Each caller gets its own server process, started with its own identity. An `asynccontextmanager` lets you write `async with platform_session(...) as session:`, and closing that block stops the server process.
+
+```python
+import sys
+from contextlib import asynccontextmanager
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+server_log = open("mcp_server.log", "w")   # the server's own log messages go here
+
+@asynccontextmanager
+async def platform_session(agent_id, permission_level):
+    params = StdioServerParameters(
+        command=sys.executable,
+        args=["platform_server.py"],
+        env={"AGENT_ID": agent_id, "PERMISSION_LEVEL": permission_level},
+    )
+    async with stdio_client(params, errlog=server_log) as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+            yield session
+```
+
+The SDK starts the server with only a small set of safe environment variables plus the ones you pass in `env`. Your `ANTHROPIC_API_KEY` is not passed to the server, which is what you want: the server doesn't need it.
+
+**Step 5: List the tools and make allowed calls.**
+Colab already runs an event loop, so you can use `await` and `async with` directly at the top level of a cell.
+
+```python
+async with platform_session("notes-agent", "user") as session:
+    listed = await session.list_tools()
+    for tool in listed.tools:
+        print(tool.name, "-", tool.description)
+        print("   schema:", tool.input_schema)
+
+    result = await session.call_tool("get_weather", {"city": "Accra"})
+    print("\nget_weather:", result.content[0].text, "| error?", result.is_error)
+
+    result = await session.call_tool("search_notes", {"query": "budget"})
+    print("search_notes:", result.content[0].text, "| error?", result.is_error)
+```
+
+You should see all five tools. Each schema lists the same properties and required fields you wrote by hand in Project 4, generated from the type hints (with a few extra keys such as `title`). Both calls succeed with `error? False`. If something fails, open `mcp_server.log` in the **Files** panel to see the server's error.
+
+**Step 6: Test that a low-permission caller is refused and logged.**
+This is the most important test in the project. Connect as a "public" agent and call two tools above its level directly, without any model involved:
+
+```python
+denied_calls = [
+    ("search_notes", {"query": "budget"}),
+    ("send_email", {"to": "team@example.com", "subject": "Hi", "body": "Hello"}),
+]
+async with platform_session("intern-bot", "public") as session:
+    for name, args in denied_calls:
+        result = await session.call_tool(name, args)
+        print(name, "->", result.content[0].text, "| error?", result.is_error)
+        assert result.is_error, f"{name} should have been refused"
+        assert "Access denied" in result.content[0].text
+
+    result = await session.call_tool("get_weather", {"city": "Lagos"})
+    assert not result.is_error
+    print("get_weather ->", result.content[0].text)
+print("Permission test passed.")
+```
+
+Expected output: both restricted calls come back with `Error executing tool send_email: Access denied to tool: send_email` (and the same for `search_notes`) and `error? True`, the public `get_weather` call works, and the last line says the test passed. If an `assert` fails, the check isn't in front of that tool: look at `expose` in Step 3.
+
+Now check the audit log. The server wrote it, not the notebook, so this also proves the log works across the MCP boundary:
+
+```python
+import json
+
+with open("audit_log.jsonl") as f:
+    entries = [json.loads(line) for line in f]
+
+for e in entries:
+    status = "ALLOWED" if e["allowed"] else "DENIED "
+    print(status, e["agent_id"], e["tool"], e["arguments"])
+
+denied = [e for e in entries if e["agent_id"] == "intern-bot" and not e["allowed"]]
+assert {e["tool"] for e in denied} >= {"search_notes", "send_email"}
+print(f"\n{len(denied)} denied call(s) logged for intern-bot.")
+```
+
+You should see the two allowed calls from `notes-agent`, then two `DENIED` lines and one `ALLOWED` line for `intern-bot`.
+
+Notice that `intern-bot` could still *see* `send_email` in the tool list. Some platforms also hide tools above the caller's level from `list_tools`, which is a nice extra. But hiding is not protection: a caller can always send a `call_tool` request by name, which is exactly what this test did. The check on every call is what keeps you safe.
+
+**Step 7: Let Claude use the MCP tools.**
+This is the Project 4 agent loop with two changes: the tool list comes from the MCP server, and each tool runs with `session.call_tool` instead of `registry.execute`. The conversion from MCP tools to Claude tools is the one you saw in the Fundamentals course.
+
+```python
+import os
+import requests
+
+SYSTEM_PROMPT = ("You are a helpful assistant. Use the tools when they help. "
+                 "If a tool finds nothing, fails, or is not allowed, say so honestly.")
+
+def call_model_with_tools(messages, tool_definitions):
+    response = requests.post(
+        "https://api.anthropic.com/v1/messages",
+        headers={
+            "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+        json={
+            "model": "claude-sonnet-5-5",
+            "max_tokens": 1024,
+            "system": SYSTEM_PROMPT,
+            "tools": tool_definitions,
+            "messages": messages,
+        },
+        timeout=60,
+    )
+    response.raise_for_status()
+    return response.json()
+
+def mcp_tools_to_claude(listed):
+    return [{"name": t.name, "description": t.description or "", "input_schema": t.input_schema}
+            for t in listed.tools]
+
+async def run_mcp_agent(session, user_goal, max_steps=5):
+    tool_definitions = mcp_tools_to_claude(await session.list_tools())
+    messages = [{"role": "user", "content": user_goal}]
+    for step in range(max_steps):
+        response = call_model_with_tools(messages, tool_definitions)
+        content = response["content"]
+        messages.append({"role": "assistant", "content": content})
+
+        tool_calls = [b for b in content if b["type"] == "tool_use"]
+        if not tool_calls:
+            return "".join(b["text"] for b in content if b["type"] == "text")
+
+        print(f"Step {step}: calling {[c['name'] for c in tool_calls]}")
+        tool_results = []
+        for call in tool_calls:
+            result = await session.call_tool(call["name"], call["input"])   # runs on the MCP server
+            text = "\n".join(c.text for c in result.content if c.type == "text")
+            tool_results.append({"type": "tool_result", "tool_use_id": call["id"],
+                                 "content": text, "is_error": bool(result.is_error)})
+        messages.append({"role": "user", "content": tool_results})
+    return "Max steps reached without completion."
+```
+
+A refused call comes back from the server as an error result, and the loop passes it to Claude as a `tool_result` with `"is_error": True`, the same way Project 6 handled a crashing tool. Claude can then explain that it wasn't allowed.
+
+**Step 8: Run the agent as two different callers.**
+
+```python
+async with platform_session("notes-agent", "user") as session:
+    print(await run_mcp_agent(session, "What's the weather in Nairobi, and do I have any notes about budget?"))
+
+print("-" * 40)
+
+async with platform_session("intern-bot", "public") as session:
+    print(await run_mcp_agent(session, "Email team@example.com with the subject 'Weekly report' "
+                                       "and the body 'All tasks are on track.'"))
+```
+
+For `notes-agent`, you should see steps calling `get_weather` and `search_notes`, then an answer mentioning the weather and the "Meeting prep" note. For `intern-bot`, Claude tries `send_email`, gets the "Access denied" error, and tells you it couldn't send the email. Run the audit log cell from Step 6 again: the new denied `send_email` entry for `intern-bot` is there, recorded by the server whether the request came from a test or from Claude.
+
+**Step 9: Note what each piece is responsible for.**
+Add a **text cell** headed `responsibilities` and write one line for each: what the MCP server decides (which tools exist, whether this caller may run them, what gets logged), what the client/launcher decides (who the caller is), and what Claude decides (which allowed tool to try next). Then add one sentence on why the permission level must come from the launcher and not from a tool argument.
+
+**Step 10 (optional, on your own computer): Use the same server from a desktop app.**
+Because `platform_server.py` speaks standard MCP over stdio, any MCP-capable desktop app can launch it, with no changes. You can't do this from Colab, because the app must start the server on your own computer.
+
+1. Download `platform_server.py` from the Colab **Files** panel and save it in a folder, for example `mcp_platform` in your home folder.
+2. In a terminal, create a virtual environment in that folder and install the SDK:
+
+   ```bash
+   cd ~/mcp_platform
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install "mcp>=2"
+   ```
+
+   (On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1` instead.)
+3. Add the server to your app's MCP configuration. Many desktop apps, including Claude Desktop, use a JSON file with an `mcpServers` section. In Claude Desktop, open **Settings → Developer → Edit Config**. Example only: file locations, menu names, and the exact format can change, so check your app's MCP documentation (for Claude Desktop, see "Connect to local MCP servers" at modelcontextprotocol.io) before copying it.
+
+   ```json
+   {
+     "mcpServers": {
+       "agent-platform-tools": {
+         "command": "/Users/yourname/mcp_platform/.venv/bin/python",
+         "args": ["/Users/yourname/mcp_platform/platform_server.py"],
+         "env": {
+           "AGENT_ID": "desktop-user",
+           "PERMISSION_LEVEL": "user"
+         }
+       }
+     }
+   }
+   ```
+
+   Replace both paths with the real absolute paths on your computer (on Windows they look like `C:\\Users\\yourname\\mcp_platform\\.venv\\Scripts\\python.exe`, with doubled backslashes inside JSON). Using the virtual environment's Python makes sure the app runs the server with `mcp` installed.
+4. Fully quit and restart the app. Ask it for the weather in a city: it should call `get_weather`. Ask it to send an email: the server refuses, because this config launches it at the "user" level. Open `audit_log.jsonl` in the `mcp_platform` folder to see both calls recorded under `desktop-user`.
+5. When you're done, remove the `agent-platform-tools` entry from the config and restart the app, so the server no longer starts.
+
+Notice who sets the permission level here: the person who edits the config file. That's the same rule as Step 2: identity comes from the launcher, never from the model.
+
+**Step 11: Clean up.**
+Nothing keeps running in Colab: each server process stopped when its `async with` block ended. Download `platform_server.py` and `audit_log.jsonl` from the **Files** panel if you want to keep them. Note that `create_note` changes only last while one server process runs, because the notes live in memory; a real platform would store them in a database.
+
+### Final Project Structure
+
+```text
+mcp_platform_project (Colab notebook)
+│
+├── install and API key cells (Step 1)
+├── platform_server.py, written by %%writefile (Step 3)
+├── platform_session helper (Step 4)
+├── list/call tests and the permission test (Steps 5–6)
+├── run_mcp_agent and two-caller run (Steps 7–8)
+├── responsibilities text cell (Step 9)
+├── audit_log.jsonl and mcp_server.log (in the Files panel)
+```
+
+### What You Learned
+- ✅ Publishing an existing tool registry as an MCP server with `MCPServer`
+- ✅ Keeping permission checks and audit logging in front of every MCP tool call
+- ✅ Passing caller identity through the launcher, never through tool arguments
+- ✅ Returning readable refusals with `ToolError` instead of leaking internal errors
+- ✅ Testing that a low-permission caller is refused and logged
+- ✅ Letting Claude use MCP tools through the Messages API agent loop
+- ✅ Connecting the same server to an MCP-capable desktop app
+
+### Portfolio Project
+**Permission-Aware MCP Server for an Agent Platform**: Exposed a platform tool registry as an MCP server with least-privilege permission checks and audit logging on every call, verified with a low-permission caller test and used by a Claude agent over stdio.
+**Skills:** Model Context Protocol (MCP), Access Control, Audit Logging, Python, Agentic AI Platforms.
+
+**Deliverable:** A working `platform_server.py`, a passing permission test, and an audit log showing allowed and denied calls from different callers.
+
+### Quiz
+
+1. How does the MCP server in this project learn which agent is calling and at what permission level?
+2. Why must the permission level never be a tool argument?
+3. Why doesn't hiding a tool from `list_tools` replace the permission check on every call?
+4. Why does `guarded` raise `ToolError` instead of letting the `PermissionError` escape?
+5. What happens in the agent loop when Claude asks for a tool the caller isn't allowed to use?
+
+*Answers: 1) The client that launches the server sets the `AGENT_ID` and `PERMISSION_LEVEL` environment variables, and the server reads them once at startup, falling back to "public" if the level is missing or unknown. 2) Tool arguments are written by the model, so a confused or manipulated model could simply claim a higher level. 3) Any client can send a `call_tool` request by name without listing first, so only a check at call time actually stops it. 4) The SDK sends a `ToolError` message back as a readable error result, while other exceptions are reduced to a generic error so internal details don't leak. 5) The server refuses and logs the call, the loop sends the refusal to Claude as a `tool_result` marked `is_error`, and Claude reports that it wasn't allowed.*

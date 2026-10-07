@@ -272,11 +272,11 @@
  "TechDev/ai-agent-platform-engineer-hands-on-tutorials": {
   "title": "AI Agent Platform Engineer",
   "level": "Project-based",
-  "minutes": 1185,
+  "minutes": 1365,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 7,
-  "quizParts": 7
+  "modules": 8,
+  "quizParts": 8
  },
  "TechDev/ai-solutions-architect-hands-on-tutorials": {
   "title": "AI Solutions Architect",
@@ -308,25 +308,25 @@
  "TechDev/robotics-ai-engineer-hands-on-tutorials": {
   "title": "Robotics AI Engineer",
   "level": "Project-based",
-  "minutes": 1125,
+  "minutes": 1365,
+  "trackLabel": "Coding Developer",
+  "kind": "markdown",
+  "modules": 8,
+  "quizParts": 8
+ },
+ "TechDev/ai-infrastructure-engineer-hands-on-tutorials": {
+  "title": "AI Infrastructure Engineer",
+  "level": "Project-based",
+  "minutes": 1395,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
   "quizParts": 7
  },
- "TechDev/ai-infrastructure-engineer-hands-on-tutorials": {
-  "title": "AI Infrastructure Engineer",
-  "level": "Project-based",
-  "minutes": 1365,
-  "trackLabel": "Coding Developer",
-  "kind": "markdown",
-  "modules": 8,
-  "quizParts": 7
- },
  "TechDev/ai-infrastructure-engineer-advanced-module-tutorials": {
   "title": "AI Infrastructure Engineer — Advanced Module: Modern IaC, GPU Scheduling & Multi-Tenant IAM",
   "level": "Advanced",
-  "minutes": 975,
+  "minutes": 1065,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 4,

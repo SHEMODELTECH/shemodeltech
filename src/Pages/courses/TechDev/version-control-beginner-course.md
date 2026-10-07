@@ -70,6 +70,7 @@ Any time you want a checkpoint you can trust, before trying something risky, bef
 ### Lab
 
 1. **Set up Git and create a project:**
+
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
@@ -80,19 +81,23 @@ git init
 ```
 
 2. **Create a file and check its status:**
+
 ```bash
 echo "# Recipe Notes" > README.md
 git status
 ```
+
 Git shows `README.md` as untracked, it exists, but Git isn't saving snapshots of it yet.
 
 3. **Stage and commit it:**
+
 ```bash
 git add README.md
 git commit -m "Add project README"
 ```
 
 4. **Make a change and commit again:**
+
 ```bash
 echo "## Pasta Carbonara" >> README.md
 git add README.md
@@ -100,21 +105,26 @@ git commit -m "Add carbonara recipe heading"
 ```
 
 5. **Look at your history:**
+
 ```bash
 git log --oneline
 ```
+
 Two commits, each a snapshot you can always come back to.
 
 6. **Undo a change you haven't committed yet:**
+
 ```bash
 echo "oops, this line is a mistake" >> README.md
 git diff
 git restore README.md
 git diff
 ```
+
 `git diff` shows what changed since your last commit (added lines start with `+`). `git restore` throws away the uncommitted changes to that file, so the second `git diff` shows nothing. Be careful: restored changes are gone for good.
 
 7. **Undo a commit safely:**
+
 ```bash
 echo "## Burnt Toast" >> README.md
 git add README.md
@@ -123,6 +133,7 @@ git revert --no-edit HEAD
 git log --oneline
 cat README.md
 ```
+
 `HEAD` means "the latest commit". `git revert` doesn't delete that commit; it adds a *new* commit that reverses it. The history stays honest, and it's safe to do even after you've shared your work.
 
 ### Checkpoint
@@ -158,16 +169,19 @@ The moment your work needs to leave your laptop, to back it up, to share it with
 - Name it `recipe-notes`, leave it empty (no README), and create it
 
 2. **Connect your local repo to it:**
+
 ```bash
 git remote add origin https://github.com/yourusername/recipe-notes.git
 git branch -M main
 git push -u origin main
 ```
+
 GitHub does not accept your account password when you push over HTTPS. The first time you push, either sign in through the browser window that opens (Git Credential Manager, included with Git for Windows and GitHub Desktop), or install the [GitHub CLI](https://cli.github.com) and run `gh auth login` once before pushing, or create a personal access token on GitHub (Settings > Developer settings) and paste it when Git asks for a password.
 
 Refresh the GitHub page, your commits and files are now there.
 
 3. **Make a change and push it:**
+
 ```bash
 echo "## Tomato Soup" >> README.md
 git add README.md
@@ -176,12 +190,14 @@ git push
 ```
 
 4. **Simulate a second machine.** Clone your own repository into a separate folder, as if you were a teammate:
+
 ```bash
 cd ..
 git clone https://github.com/yourusername/recipe-notes.git recipe-notes-copy
 cd recipe-notes-copy
 cat README.md
 ```
+
 You now have an independent copy with the full history, downloaded from GitHub rather than typed by hand.
 
 ### Checkpoint
@@ -213,13 +229,16 @@ Any time more than one thing is happening at once: you're fixing a bug while a t
 ### Lab
 
 1. **Create and switch to a new branch:**
+
 ```bash
 cd ../recipe-notes
 git checkout -b add-dessert-section
 ```
+
 `-b` creates the branch and switches to it in one step.
 
 2. **Make changes on this branch only:**
+
 ```bash
 echo "## Desserts" >> README.md
 echo "### Tiramisu" >> README.md
@@ -228,20 +247,25 @@ git commit -m "Add desserts section with tiramisu"
 ```
 
 3. **Compare branches:**
+
 ```bash
 git checkout main
 cat README.md
 ```
+
 Notice the desserts section is missing here, it only exists on `add-dessert-section`. Switch back to confirm:
+
 ```bash
 git checkout add-dessert-section
 cat README.md
 ```
 
 4. **Push the branch to GitHub:**
+
 ```bash
 git push -u origin add-dessert-section
 ```
+
 On GitHub, you can now see two branches: `main`, unchanged, and `add-dessert-section`, with your new work.
 
 ### Checkpoint
@@ -280,29 +304,38 @@ Pull requests are how nearly all real-world software collaboration works, whethe
 Click "Merge pull request" on GitHub, then confirm. Your desserts section is now part of `main`.
 
 3. **Sync your local `main`:**
+
 ```bash
 git checkout main
 git pull
 cat README.md
 ```
+
 The desserts section now appears here too, `main` has caught up with the merged work.
 
 4. **Create a real merge conflict on purpose.** Make two branches that edit the exact same line differently. First create the branch:
+
 ```bash
 git checkout -b edit-title-a
 ```
+
 Open `README.md` in your editor, replace line 1 with `# My Favorite Recipes`, and save. Then commit and push:
+
 ```bash
 git add README.md
 git commit -m "Rename title to My Favorite Recipes"
 git push -u origin edit-title-a
 git checkout main
 ```
+
 Now make the second branch from `main`:
+
 ```bash
 git checkout -b edit-title-b
 ```
+
 Open `README.md` again, replace line 1 with `# Kitchen Notebook`, and save. Then:
+
 ```bash
 git add README.md
 git commit -m "Rename title to Kitchen Notebook"
@@ -310,12 +343,15 @@ git push -u origin edit-title-b
 ```
 
 5. **Merge the first branch through GitHub as in step 2, then try merging the second locally:**
+
 ```bash
 git checkout main
 git pull
 git merge edit-title-b
 ```
+
 Git reports a conflict on the first line of `README.md`. Open the file, you'll see markers like this:
+
 ```
 <<<<<<< HEAD
 # My Favorite Recipes
@@ -325,6 +361,7 @@ Git reports a conflict on the first line of `README.md`. Open the file, you'll s
 ```
 
 6. **Resolve it.** Pick one version, or write a new one, then remove the conflict markers entirely:
+
 ```bash
 # after editing README.md by hand to keep only one title line
 git add README.md

@@ -10,6 +10,7 @@ This course is a series of hands-on projects. You learn each idea at the moment 
 - Detect a colored object in a camera image with OpenCV and estimate its distance
 - Plan obstacle-avoiding paths with A* and train a Q-learning agent in a simulated environment
 - Test a robot behavior over many randomized trials and add a safety check that stops bad plans
+- Control a simulated robot with ROS 2: write a Python node that reads its pose, sends velocity commands, and follows a planned path
 
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
@@ -28,6 +29,8 @@ This course runs in **Google Colab**, a free Jupyter notebook in your browser an
 6. To use a file you downloaded, such as a CSV, drag it into the **Files** panel (the folder icon on the left). Files your code creates appear there too. Colab clears them when the session ends, so download anything you want to keep, or connect Google Drive from the same panel.
 
 Prefer to work on your own computer? The same notebooks run in JupyterLab or in VS Code with the Jupyter extension.
+
+Project 8 is the exception: it runs ROS 2 in Docker on your own computer (Windows, macOS, or Linux), not in Colab. Its **What you need** box lists the requirements, and you can read along if your computer can't run it.
 
 ---
 
@@ -65,12 +68,13 @@ flowchart LR
     A -->|environment changes| S
 ```
 
-On real robots, each part of this loop usually runs as a separate program (a **node**) that passes messages to the others through **ROS 2** (Robot Operating System 2), the standard open-source robotics framework. This course writes each part as plain Python so you can learn the ideas first; the same pieces map onto ROS 2 nodes later.
+On real robots, each part of this loop usually runs as a separate program (a **node**) that passes messages to the others through **ROS 2** (Robot Operating System 2), the standard open-source robotics framework. This course writes each part as plain Python so you can learn the ideas first, and in Project 8 you turn them into real ROS 2 nodes.
 
 **Step 8: Note one safety consideration.**
 Write one sentence: what's the worst thing that could happen if this robot's "think" step made a bad decision, and what would prevent it?
 
 ### Final Project Structure
+
 ```text
 robot_system_diagram_project/
 │
@@ -111,12 +115,14 @@ robot_system_diagram_project/
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `sensor_processing_project`.
+
 ```python
 %pip install numpy matplotlib
 ```
 
 **Step 2: Simulate a basic distance sensor.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 import numpy as np
 
@@ -125,9 +131,11 @@ def simulate_distance_sensor(num_readings=100):
     noise = np.random.normal(0, 0.05, num_readings)
     return true_distance + noise
 ```
+
 Real sensors always have **noise**: small random variation around the true value, even when the actual measured thing isn't changing.
 
 **Step 3: Visualize the raw readings.**
+
 ```python
 import matplotlib.pyplot as plt
 readings = simulate_distance_sensor()
@@ -136,13 +144,16 @@ plt.savefig("raw_readings.png")
 ```
 
 **Step 4: Apply a moving average filter.**
+
 ```python
 def moving_average(data, window=5):
     return np.convolve(data, np.ones(window)/window, mode="valid")
 ```
+
 A **moving average filter** smooths noisy data by averaging each point with its nearby neighbors.
 
 **Step 5: Compare raw vs. filtered data.**
+
 ```python
 filtered = moving_average(readings)
 plt.plot(readings, label="raw", alpha=0.5)
@@ -152,6 +163,7 @@ plt.savefig("filtered_comparison.png")
 ```
 
 **Step 6: Simulate a sensor failure.**
+
 ```python
 def simulate_sensor_with_dropout(num_readings=100, dropout_rate=0.1):
     readings = simulate_distance_sensor(num_readings)
@@ -162,9 +174,11 @@ def simulate_sensor_with_dropout(num_readings=100, dropout_rate=0.1):
 readings_with_gaps = simulate_sensor_with_dropout()
 print("Missing readings:", np.isnan(readings_with_gaps).sum())
 ```
+
 **sensor dropout** is when a sensor occasionally fails to produce a valid reading, represented here as `NaN` (not a number). A single `NaN` would make the moving average of every window it touches `NaN` too, so gaps must be handled before filtering.
 
 **Step 7: Handle missing readings.**
+
 ```python
 def handle_dropout(data):
     valid_indices = ~np.isnan(data)
@@ -174,6 +188,7 @@ repaired = handle_dropout(readings_with_gaps)
 print("Missing after repair:", np.isnan(repaired).sum())
 smoothed = moving_average(repaired)
 ```
+
 **interpolation** estimates a missing value based on the values around it. `~` means "not", so `valid_indices` marks the readings that are not `NaN`.
 
 **Step 8: Document filter parameter choices.**
@@ -181,6 +196,7 @@ Add a **text cell** headed `filtering_notes` and write your notes in it.
 Note: what window size did you use for the moving average, and what tradeoff does a larger vs. smaller window involve?
 
 ### Final Project Structure
+
 ```text
 sensor_processing_project/
 │
@@ -223,6 +239,7 @@ sensor_processing_project/
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `coordinate_transform_project`.
+
 ```python
 %pip install numpy
 ```
@@ -232,6 +249,7 @@ A **coordinate frame** is a reference point and set of axes that positions are m
 
 **Step 3: Represent a 2D position and rotation.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 import numpy as np
 
@@ -241,25 +259,31 @@ def rotation_matrix(theta):
         [np.sin(theta),  np.cos(theta)]
     ])
 ```
+
 A **rotation matrix** describes how to rotate a point by an angle `theta`, using basic trigonometry.
 
 **Step 4: Transform a point from robot frame to world frame.**
+
 ```python
 def robot_to_world(point_robot_frame, robot_position, robot_theta):
     R = rotation_matrix(robot_theta)
     return R @ point_robot_frame + robot_position
 ```
+
 The `@` operator performs **matrix multiplication**; this combines rotation and translation (the `+ robot_position` shift) into one transformation.
 
 **Step 5: Transform a point from world frame back to robot frame.**
+
 ```python
 def world_to_robot(point_world_frame, robot_position, robot_theta):
     R = rotation_matrix(robot_theta)
     return R.T @ (point_world_frame - robot_position)
 ```
+
 `R.T` (the **transpose**) reverses a rotation matrix's effect, a mathematical shortcut for "undoing" the rotation.
 
 **Step 6: Test with a concrete example.**
+
 ```python
 robot_position = np.array([5.0, 3.0])
 robot_theta = np.pi / 2  # facing 90 degrees
@@ -273,6 +297,7 @@ print("Back to robot frame (should match original):", back_to_robot)
 ```
 
 **Step 7: Visualize the transformation.**
+
 ```python
 import matplotlib.pyplot as plt
 plt.scatter(*robot_position, c="red", label="robot")
@@ -286,6 +311,7 @@ Add a **text cell** headed `README` and write your notes in it.
 Note function signatures and what each parameter means.
 
 ### Final Project Structure
+
 ```text
 coordinate_transform_project/
 │
@@ -327,12 +353,14 @@ coordinate_transform_project/
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `object_detection_project`.
+
 ```python
 %pip install opencv-python numpy matplotlib
 ```
 
 **Step 2: Load a test camera frame.**
 Take a photo of a red object (a ball, cup, or sticky note) against a plain background, and upload it to the **Files** panel as `test_frame.jpg`. No photo handy? Run this cell first to draw a practice frame with a red square in it:
+
 ```python
 import cv2
 import numpy as np
@@ -341,7 +369,9 @@ practice = np.full((480, 640, 3), 200, dtype=np.uint8)             # light gray 
 cv2.rectangle(practice, (300, 200), (360, 260), (0, 0, 255), -1)  # filled red square (BGR order)
 cv2.imwrite("test_frame.jpg", practice)
 ```
+
 Now load the frame. Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 import cv2
 import numpy as np
@@ -351,18 +381,22 @@ if frame is None:
     raise FileNotFoundError("Couldn't read test_frame.jpg. Check the file name in the Files panel.")
 print("Frame shape:", frame.shape)
 ```
+
 OpenCV represents images as **BGR** (blue-green-red, not RGB) numpy arrays by default. `cv2.imread` returns `None` instead of raising an error when it can't find a file, which is why the code checks.
 
 **Step 3: Implement simple color-based object detection.**
+
 ```python
 hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 lower_red = np.array([0, 120, 70])
 upper_red = np.array([10, 255, 255])
 mask = cv2.inRange(hsv, lower_red, upper_red)
 ```
+
 **HSV (hue, saturation, value)** color space makes it easier to detect a specific color range than raw RGB, since hue isolates "color" from "brightness." In OpenCV, hue runs from 0 to 179, and red sits at both ends, so this range catches orange-ish reds; for deep reds, also try `[170, 120, 70]` to `[179, 255, 255]`.
 
 **Step 4: Find the object's location using contours.**
+
 ```python
 contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 if contours:
@@ -372,9 +406,11 @@ if contours:
 else:
     print("No red object found. Check the color range in Step 3.")
 ```
+
 A **contour** is the outline of a connected region in the mask; a **bounding box** is the smallest rectangle containing it.
 
 **Step 5: Estimate distance from apparent size.**
+
 ```python
 def estimate_distance(pixel_width, known_object_width=0.1, focal_length=500):
     return (known_object_width * focal_length) / pixel_width
@@ -382,9 +418,11 @@ def estimate_distance(pixel_width, known_object_width=0.1, focal_length=500):
 if contours:
     print(f"Estimated distance: {estimate_distance(w):.2f} m")
 ```
+
 Objects appear smaller the farther away they are, given a known real-world size and the camera's focal length, you can estimate distance from apparent pixel size. Here `known_object_width` is the object's real width in meters (0.1 m = 10 cm) and `focal_length` is in pixels; 500 is a rough guess for a phone camera, so treat the result as an estimate until you calibrate it with an object at a measured distance.
 
 **Step 6: Draw the detection on the frame for verification.**
+
 ```python
 from IPython.display import Image, display
 
@@ -393,10 +431,12 @@ if contours:
     cv2.imwrite("annotated_frame.jpg", frame)
     display(Image("annotated_frame.jpg"))
 ```
+
 The green box should sit tightly around the object.
 
 **Step 7: Test across multiple frames with varying conditions.**
 Wrap Steps 2–5 into one function so you can run it on any frame:
+
 ```python
 def detect_red_object(image_path):
     """Return (x, y, w, h, distance_m) for the largest red object, or None."""
@@ -413,10 +453,12 @@ def detect_red_object(image_path):
 
 print(detect_red_object("test_frame.jpg"))
 ```
+
 Take 4–5 more photos: object close, far, partially occluded, and in different lighting. Upload them and run `detect_red_object` on each, noting where detection fails.
 
 **Step 8: Apply your Project 2 filtering to detection results over time.**
 A video is a series of frames, and each frame's distance estimate is a little noisy. This cell simulates 30 frames of a robot slowly approaching the object, then smooths the estimates with the Project 2 moving average:
+
 ```python
 import matplotlib.pyplot as plt
 
@@ -434,9 +476,11 @@ plt.ylabel("Distance (m)")
 plt.legend()
 plt.savefig("distance_smoothing.png")
 ```
+
 With a real video, you'd fill `measured` with `detect_red_object(...)[4]` for each frame instead.
 
 ### Final Project Structure
+
 ```text
 object_detection_project/
 │
@@ -479,12 +523,14 @@ object_detection_project/
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `path_planning_project`.
+
 ```python
 %pip install numpy matplotlib
 ```
 
 **Step 2: Represent the environment as a grid.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 import numpy as np
 
@@ -493,19 +539,23 @@ grid[3:7, 4] = 1  # obstacle wall
 start = (0, 0)
 goal = (9, 9)
 ```
+
 A **grid map** represents the environment as cells, where `0` is free space and `1` is an obstacle.
 
 **Step 3: Understand the A* search algorithm concept.**
 **A\*** finds the shortest path by exploring the most promising nodes first, using a **heuristic** (an estimate of remaining distance to the goal) to guide the search efficiently.
 
 **Step 4: Implement the heuristic function.**
+
 ```python
 def heuristic(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 ```
+
 This is **Manhattan distance**: the sum of horizontal and vertical distance, appropriate for grid movement without diagonals.
 
 **Step 5: Implement A* search.**
+
 ```python
 import heapq
 
@@ -534,9 +584,11 @@ def astar(grid, start, goal):
                     came_from[neighbor] = current
     return None
 ```
+
 A **priority queue** (via `heapq`) always processes the most promising node next, based on combined actual-distance-so-far plus estimated-remaining-distance.
 
 **Step 6: Run and visualize the path.**
+
 ```python
 import matplotlib.pyplot as plt
 
@@ -553,9 +605,11 @@ path = astar(grid, start, goal)
 print("Path length:", len(path) - 1, "moves")
 show_path(grid, path, "planned_path.png")
 ```
+
 Each cell is `(row, column)`, but a plot's x-axis is the column, which is why the plot call swaps them. The shortest path here is 18 moves, the Manhattan distance from corner to corner, because the wall doesn't block every shortest route.
 
 **Step 7: Test with a more complex obstacle layout.**
+
 ```python
 maze = np.zeros((10, 10))
 maze[2, 0:8] = 1    # wall with a gap on the right
@@ -567,9 +621,11 @@ print("Maze path length:", len(maze_path) - 1, "moves")
 assert all(maze[cell] == 0 for cell in maze_path), "Path goes through an obstacle!"
 show_path(maze, maze_path, "maze_path.png")
 ```
+
 The path now has to zigzag through the gaps. The `assert` confirms no step of the path is inside an obstacle.
 
 **Step 8: Test the "no valid path" case.**
+
 ```python
 enclosed = np.zeros((10, 10))
 enclosed[8, 8:10] = 1  # wall above the goal
@@ -577,9 +633,11 @@ enclosed[9, 8] = 1     # wall to the left of the goal
 
 print("Result when the goal is unreachable:", astar(enclosed, start, goal))
 ```
+
 The goal at `(9, 9)` is now walled in, so A* explores every reachable cell, runs out of options, and returns `None` instead of crashing or looping forever. Any code that uses the planner must check for `None` before moving.
 
 ### Final Project Structure
+
 ```text
 path_planning_project/
 │
@@ -620,6 +678,7 @@ path_planning_project/
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `rl_agent_project`.
+
 ```python
 %pip install numpy gymnasium matplotlib
 ```
@@ -629,15 +688,18 @@ An **agent** takes **actions** in an **environment**, receiving a **reward** sig
 
 **Step 3: Load a simple simulated environment.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 import gymnasium as gym
 env = gym.make("FrozenLake-v1", is_slippery=False)
 print("Actions:", env.action_space.n)
 print("States:", env.observation_space.n)
 ```
+
 **FrozenLake** is a simple grid environment where an agent must reach a goal while avoiding holes, a manageable environment for learning RL fundamentals.
 
 **Step 4: Implement Q-learning.**
+
 ```python
 import numpy as np
 
@@ -677,12 +739,14 @@ for episode in range(episodes):
 
 print("Successful training episodes:", int(sum(episode_rewards)), "of", episodes)
 ```
+
 **Q-learning** maintains a table of expected future reward for each state-action pair, updating it after every action based on the reward received. In FrozenLake the reward is 1 for reaching the goal and 0 otherwise, so each entry in `episode_rewards` is 1 (success) or 0 (fell in a hole or ran out of steps).
 
 **Step 5: Understand exploration vs. exploitation.**
 `choose_action` implements an **epsilon-greedy policy**: with probability `epsilon` it tries a random action (**exploration**) to discover potentially better strategies; otherwise it picks the best-known action (**exploitation**). At the start the Q-table is all zeros, so the agent knows nothing and `epsilon` starts at 1.0 (always explore). It shrinks after every episode, so the agent relies more on what it has learned. Breaking ties randomly matters too: if `np.argmax` always picked the first of several equal actions, an untrained agent would keep walking left into the wall and rarely find the goal.
 
 **Step 6: Evaluate the trained agent.**
+
 ```python
 successes = 0
 for _ in range(100):
@@ -696,9 +760,11 @@ for _ in range(100):
         successes += 1
 print(f"Success rate: {successes}%")  # out of 100 runs, so the count is the percentage
 ```
+
 Evaluation always picks the best-known action (no random exploration), so it measures what the agent actually learned. With `is_slippery=False` the lake is predictable, so a well-trained agent should reach 100%.
 
 **Step 7: Plot the learning curve.**
+
 ```python
 import matplotlib.pyplot as plt
 
@@ -710,6 +776,7 @@ plt.xlabel("Training episode")
 plt.ylabel(f"Success rate (average of last {window} episodes)")
 plt.savefig("learning_curve.png")
 ```
+
 Each raw reward is just 0 or 1, which makes a jagged plot, so this uses a moving average (the same idea as your Project 2 filter) to show the trend. The curve should start near 0 and rise as the agent learns. It stays a little below 1 because the agent still takes a random action at least 5% of the time during training.
 
 **Step 8: Compare RL to your Project 5 A* planner.**
@@ -717,6 +784,7 @@ Add a **text cell** headed `rl_vs_astar_notes` and write your notes in it.
 Write 3–4 sentences: when would you choose RL over A* planning, and vice versa?
 
 ### Final Project Structure
+
 ```text
 rl_agent_project/
 │
@@ -759,9 +827,11 @@ rl_agent_project/
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `behavior_testing_project`.
+
 ```python
 %pip install numpy
 ```
+
 Then paste and run your Project 5 cells that define `heuristic` (Step 4) and `astar` (Step 5).
 
 **Step 2: Choose a behavior to test.**
@@ -773,6 +843,7 @@ Write specific, measurable pass/fail conditions. The code below uses two: "reach
 
 **Step 4: Run repeated trials.**
 Add a **code cell**, paste in the code below, and run it with **Shift + Enter**.
+
 ```python
 import numpy as np
 
@@ -815,10 +886,12 @@ for trial in range(20):
 for r in results:
     print(r)
 ```
+
 Each trial builds a new random world, runs the behavior, and records whether it succeeded, how many steps it took, and why it ended. `**outcome` copies the outcome's keys into the result.
 
 **Step 5: Randomize test conditions.**
 Real environments vary, so test across more than one setting. This cell repeats the trials at three obstacle densities:
+
 ```python
 def run_suite(num_trials=20, obstacle_density=0.25, behavior=run_behavior, seed=1):
     suite_rng = np.random.default_rng(seed)  # same seed gives the same worlds every time
@@ -833,9 +906,11 @@ for density in [0.1, 0.25, 0.35]:
     results += run_suite(obstacle_density=density)
 print(len(results), "trials run")
 ```
+
 Because `run_suite` uses a fixed `seed`, it builds the same worlds every time you call it, so you can compare different behaviors on identical tests.
 
 **Step 6: Calculate success metrics.**
+
 ```python
 from collections import Counter
 
@@ -851,6 +926,7 @@ for density in [0.1, 0.25, 0.35]:
     print(f"Density {density}:", end=" ")
     summarize([r for r in results if r["density"] == density])
 ```
+
 The `if successes else 0` guard avoids dividing by zero when no trial succeeds. With more obstacles, more goals are walled off, so expect more "no path found" outcomes.
 
 **Step 7: Investigate every failure.**
@@ -859,6 +935,7 @@ For each failed trial, note what specifically went wrong (no path, collided, tim
 
 **Step 8: Add a safety check based on Project 1's consideration.**
 A planner can have bugs. This safeguard checks the whole plan *before* the robot moves and stops safely if anything is wrong, instead of driving into an obstacle:
+
 ```python
 def path_is_safe(grid, path, start, goal):
     if path is None or path[0] != start or path[-1] != goal:
@@ -895,9 +972,11 @@ summarize(run_suite(behavior=lambda g, s, t: safe_behavior(g, s, t, planner=stra
 print("A* with safeguard:")
 summarize(run_suite(behavior=safe_behavior))
 ```
+
 Without the safeguard, the buggy planner causes collisions. With it, on the same worlds, those cases become safety stops: the robot refuses to move on a bad plan. With A*, the safeguard should change nothing except turning "no path found" into a safety stop, which shows it doesn't get in the way of a correct planner. A `lambda` is a short, unnamed function, used here to pass a different planner into the same test suite.
 
 ### Final Project Structure
+
 ```text
 behavior_testing_project/
 │
@@ -928,3 +1007,699 @@ behavior_testing_project/
 4. What does the safety check do, and how did the test show it works?
 
 *Answers: 1) One run can succeed by luck; many varied trials reveal how often the behavior fails and under which conditions. 2) Reaching the goal within 200 steps, and never entering an obstacle cell. 3) It builds the same worlds every time, so different behaviors can be compared on identical tests. 4) It checks the whole planned path before moving and stops safely if any step is invalid; with the buggy planner, every collision became a safety stop on the same worlds.*
+
+---
+
+## Project 8 (Module 8): Control a Simulated Robot with ROS 2
+
+**Time: about 4 hours** (plus 10–20 minutes for the first download)
+
+> **What you need:**
+> - **Your own computer:** Windows 10/11 with **WSL 2** and **Docker Desktop**, macOS (Intel or Apple silicon) with **Docker Desktop**, or Linux with **Docker Engine**. Everything is free and open source except Docker Desktop, which is free for personal and education use.
+> - **8 GB RAM** recommended (4 GB minimum) and about **3 GB of free disk** for the image.
+> - A web browser. The robot's window shows up in a browser tab, so you don't need to install a separate display program.
+> - This project **won't run in Google Colab or on a Chromebook**. Colab can't run Docker.
+>
+> **Can't run it?** Read along: follow each step, study the code and the expected output shown, and you can still learn the ideas and pass the quiz. The controller math and its tests in Steps 7–8 are plain Python, so you can run those in Colab.
+
+**Goal:** Put your whole sense-think-act loop on a real robotics stack. You'll run **ROS 2**, write a Python node that reads a simulated robot's position and sends it velocity commands, then drive it along the path your Project 5 planner produced.
+
+**Step 1: Install Docker and create the lab folder.**
+**Docker** runs software in a **container**: a sealed-off mini Linux system with everything already installed. This means ROS 2 runs the same way on Windows, macOS, and Linux.
+- **Windows:** install WSL 2 (open PowerShell as administrator and run `wsl --install`, then restart), then install Docker Desktop and turn on **Settings → Resources → WSL integration** for Ubuntu. Run every command in this project in the **Ubuntu** terminal, not PowerShell.
+- **macOS:** install Docker Desktop and start it. Use the Terminal app.
+- **Linux:** install Docker Engine from docs.docker.com and follow its "Linux post-installation steps" so you can run `docker` without `sudo`.
+
+Check that Docker works, then create the lab folder:
+
+```bash
+docker run --rm hello-world
+mkdir -p ~/ros2_lab/ros2_ws/src
+cd ~/ros2_lab
+```
+
+You should see `Hello from Docker!`.
+
+**Step 2: Write the Dockerfile and build the image.**
+A **Dockerfile** is a recipe for building a container image. Paste this whole block into your terminal. It writes the file for you:
+
+```bash
+cat > Dockerfile <<'EOF'
+# ROS 2 Jazzy + turtlesim + a virtual screen you view in your web browser
+FROM ros:jazzy
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ros-jazzy-turtlesim \
+        python3-pytest \
+        xvfb x11vnc novnc websockify \
+    && rm -rf /var/lib/apt/lists/*
+
+# Load ROS 2 in every new terminal you open in the container
+RUN echo "source /opt/ros/jazzy/setup.bash" >> /root/.bashrc
+
+ENV DISPLAY=:1
+WORKDIR /root/ros2_ws
+
+# Start a virtual screen (Xvfb), share it over VNC (x11vnc), and serve it to the browser (noVNC)
+CMD ["bash", "-c", "Xvfb :1 -screen 0 1280x800x24 & sleep 2; x11vnc -display :1 -forever -shared -nopw -quiet -rfbport 5900 & sleep 2; exec websockify --web /usr/share/novnc 6080 localhost:5900"]
+EOF
+docker build -t ros2-jazzy-lab .
+```
+
+The build ends with a line like `naming to docker.io/library/ros2-jazzy-lab`.
+
+What this recipe does:
+- `ros:jazzy` is the **official ROS 2 image** for **ROS 2 Jazzy Jalisco**, a long-term-support (LTS) release that is supported until May 2029. It runs Ubuntu 24.04 and has builds for both Intel/AMD and Apple silicon. It already includes the `ros2` command-line tools and the `colcon` build tool.
+- `ros-jazzy-turtlesim` adds **turtlesim**, a tiny 2D robot simulator made for learning ROS 2. `python3-pytest` lets you run tests.
+- **Why a browser screen?** Turtlesim opens a window, but a container has no screen. `Xvfb` creates a virtual screen inside the container, `x11vnc` shares it, and **noVNC** (`websockify` plus `/usr/share/novnc`) shows it in your browser. This works the same way on Windows, macOS, and Linux. Other options exist, such as WSLg on Windows, XQuartz on macOS, or X11 on Linux, but each one needs different setup. For a bigger desktop image with tools like RViz, you can use `osrf/ros:jazzy-desktop` instead, but it's a much larger download.
+- To check what you got, open a terminal inside the container (Step 4) and run `printenv ROS_DISTRO` (prints `jazzy`) or `grep VERSION= /etc/os-release`. Newer ROS 2 releases exist, and their release dates and support periods are listed at docs.ros.org under "Distributions". This project uses Jazzy because it's the LTS release that most current tutorials and packages target.
+
+**Step 3: Start the container and open the browser screen.**
+
+```bash
+docker run -d --name ros2lab \
+  -p 127.0.0.1:6080:6080 \
+  -v "$HOME/ros2_lab/ros2_ws":/root/ros2_ws \
+  -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" \
+  ros2-jazzy-lab
+```
+
+- `-d` runs the container in the background, and `--name ros2lab` gives it a name to use in later commands.
+- `-p 127.0.0.1:6080:6080` makes the browser screen available **only on your own computer**. The VNC screen has no password, so don't publish it to your network.
+- `-v` shares your `~/ros2_lab/ros2_ws` folder with the container. Your code lives on your computer and survives when the container is deleted.
+- `HOST_UID` and `HOST_GID` pass in your user ID so that, in Step 6, you can give yourself ownership of files the container creates.
+
+Open **http://localhost:6080/vnc.html?autoconnect=true&resize=scale** in your browser. You should see a plain black screen. That's the empty virtual display, ready for the simulator.
+
+**Step 4: Run turtlesim.**
+Open a terminal **inside** the container. `docker exec` runs a command in a running container:
+
+```bash
+docker exec -it ros2lab bash
+```
+
+Your prompt changes to something like `root@3f2a...:/root/ros2_ws#`. Start the simulator:
+
+```bash
+ros2 run turtlesim turtlesim_node
+```
+
+You should see:
+
+```text
+[INFO] [...] [turtlesim]: Starting turtlesim with node name /turtlesim
+[INFO] [...] [turtlesim]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]
+```
+
+A blue window with a turtle in the middle appears in the browser tab. The turtle's world is about 11 × 11 meters. (0, 0) is the bottom-left corner, and `theta` is the turtle's heading in radians, with 0 meaning it faces right.
+
+**No turtle window in the browser?** Press **Ctrl+C**, then run `QT_QPA_PLATFORM=offscreen ros2 run turtlesim turtlesim_node` instead. Turtlesim then runs without any window. Everything else in this project still works, and you'll check where the turtle is with `ros2 topic echo` (Step 5) instead of watching it.
+
+Leave turtlesim running. From here on, "open a new container terminal" means: open a new terminal window on your computer and run `docker exec -it ros2lab bash`.
+
+**Step 5: Inspect nodes and topics.**
+ROS 2 programs are **nodes**. Nodes talk by publishing **messages** on named **topics**, and any node can **subscribe** to a topic to receive them. Open a new container terminal:
+
+```bash
+ros2 node list
+ros2 topic list
+```
+
+You should see:
+
+```text
+/turtlesim
+```
+
+```text
+/parameter_events
+/rosout
+/turtle1/cmd_vel
+/turtle1/color_sensor
+/turtle1/pose
+```
+
+Turtlesim **publishes** the turtle's position on `/turtle1/pose` and **subscribes** to velocity commands on `/turtle1/cmd_vel`. Look at the position:
+
+```bash
+ros2 topic echo /turtle1/pose
+```
+
+```text
+x: 5.544444561004639
+y: 5.544444561004639
+theta: 0.0
+linear_velocity: 0.0
+angular_velocity: 0.0
+---
+```
+
+The messages scroll by about 60 times a second. Press **Ctrl+C** to stop. (`ros2 topic echo /turtle1/pose --once` prints just one.) Next, see what a velocity command looks like and send one:
+
+```bash
+ros2 topic info /turtle1/cmd_vel
+ros2 interface show geometry_msgs/msg/Twist
+ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0}, angular: {z: 1.8}}"
+```
+
+`ros2 topic info` shows `Type: geometry_msgs/msg/Twist` with one subscription (turtlesim). A **Twist** message holds a `linear` and an `angular` velocity. For a ground robot, only `linear.x` (forward speed in m/s) and `angular.z` (turn rate in rad/s) matter. The turtle drives a curved line for about one second. Run `ros2 topic echo /turtle1/pose --once` again and the numbers have changed. You just closed the sense-act loop by hand. Next you'll write a node that does it automatically.
+
+**Step 6: Create a Python package.**
+ROS 2 code lives in **packages** inside a **workspace** (`/root/ros2_ws`, whose `src` folder holds your packages). In the container terminal:
+
+```bash
+cd /root/ros2_ws/src
+ros2 pkg create --build-type ament_python --license Apache-2.0 \
+  --dependencies rclpy geometry_msgs turtlesim launch launch_ros \
+  turtle_controller
+chown -R "$HOST_UID:$HOST_GID" /root/ros2_ws/src
+```
+
+`ament_python` means a pure-Python package, and `--dependencies` lists the packages yours uses. **rclpy** is the ROS 2 Python library. The `chown` line makes you the owner of the new files so you can edit them from your computer. (On Linux and WSL, files created inside the container otherwise belong to `root`.)
+
+Open the `~/ros2_lab` folder in VS Code or any editor. On Windows, run `code ~/ros2_lab` from the Ubuntu terminal. You'll find `ros2_ws/src/turtle_controller/` containing `package.xml`, `setup.py`, `setup.cfg`, a `resource/` folder, a `test/` folder, and an empty Python package folder `turtle_controller/`. You'll add your code inside that inner folder.
+
+**Step 7: Write the controller math.**
+Create `ros2_ws/src/turtle_controller/turtle_controller/controller_math.py`. It has **no ROS imports**, so you can test it with plain Python:
+
+```python
+"""Controller math for the turtle. No ROS imports, so it is easy to test."""
+
+import math
+
+
+def wrap_angle(angle):
+    """Return the same angle expressed between -pi and pi."""
+    return math.atan2(math.sin(angle), math.cos(angle))
+
+
+def clamp(value, limit):
+    """Keep value between -limit and +limit."""
+    return max(-limit, min(limit, value))
+
+
+def compute_command(x, y, theta, goal_x, goal_y,
+                    k_linear=1.5, k_angular=6.0,
+                    max_linear=2.0, max_angular=4.0,
+                    tolerance=0.1, turn_first_angle=0.5):
+    """Return (linear_speed, angular_speed, arrived) to drive toward the goal."""
+    dx = goal_x - x
+    dy = goal_y - y
+    distance = math.hypot(dx, dy)
+    if distance < tolerance:
+        return 0.0, 0.0, True
+
+    heading_error = wrap_angle(math.atan2(dy, dx) - theta)
+    angular = clamp(k_angular * heading_error, max_angular)
+    linear = clamp(k_linear * distance, max_linear)
+    if abs(heading_error) > turn_first_angle:
+        linear = 0.0  # facing the wrong way: turn in place first
+    return linear, angular, False
+
+
+class WaypointFollower:
+    """Drive to each (x, y) waypoint in order."""
+
+    def __init__(self, waypoints, **gains):
+        self.waypoints = list(waypoints)
+        self.index = 0
+        self.gains = gains
+
+    @property
+    def finished(self):
+        return self.index >= len(self.waypoints)
+
+    def update(self, x, y, theta):
+        """Return (linear_speed, angular_speed) for the current pose."""
+        while not self.finished:
+            goal_x, goal_y = self.waypoints[self.index]
+            linear, angular, arrived = compute_command(
+                x, y, theta, goal_x, goal_y, **self.gains)
+            if not arrived:
+                return linear, angular
+            self.index += 1  # reached this waypoint, move on to the next one
+        return 0.0, 0.0
+
+
+def simplify_path(cells):
+    """Keep only the start, the corners, and the end of a grid path."""
+    if len(cells) < 3:
+        return list(cells)
+    kept = [cells[0]]
+    for before, here, after in zip(cells, cells[1:], cells[2:]):
+        step_in = (here[0] - before[0], here[1] - before[1])
+        step_out = (after[0] - here[0], after[1] - here[1])
+        if step_in != step_out:
+            kept.append(here)
+    kept.append(cells[-1])
+    return kept
+
+
+def grid_path_to_waypoints(cells, num_rows=10, cell_size=1.0, margin=1.0):
+    """Convert (row, col) grid cells to turtlesim (x, y) points in meters."""
+    return [(margin + col * cell_size, margin + (num_rows - 1 - row) * cell_size)
+            for row, col in cells]
+```
+
+This is a **proportional controller**. The command is proportional to the error, so the bigger the error, the stronger the correction.
+- **Distance error:** how far away the goal is. Forward speed is `k_linear × distance`, so the turtle slows down smoothly as it gets close. It's capped at `max_linear` so it never drives too fast.
+- **Heading error:** the angle between where the turtle faces and where the goal is. The turn rate is `k_angular × heading_error`. `wrap_angle` keeps the error between −π and π so the turtle always turns the short way. Without it, a 350° error would make the turtle spin almost all the way around instead of turning 10° the other way.
+- If the goal is more than 0.5 rad (about 29°) off to the side, the turtle turns in place before it drives. The turtle "arrives" when it's within `tolerance` (0.1 m), because it never lands exactly on the point.
+- `simplify_path` and `grid_path_to_waypoints` turn a Project 5 grid path into a few turtlesim points. Row 0 is the top of your Project 5 plot, so it gets the largest `y`.
+
+**Step 8: Test the math with pytest.**
+Create `ros2_ws/src/turtle_controller/test/test_controller_math.py`. The `simulate` helper moves a pretend turtle the same way turtlesim does, so you can check that the controller really reaches its goals without running ROS:
+
+```python
+import math
+
+from turtle_controller.controller_math import (
+    compute_command, grid_path_to_waypoints, simplify_path, WaypointFollower, wrap_angle)
+
+
+def simulate(controller_step, x, y, theta, steps=2000, dt=0.05):
+    """Move a pretend turtle the way turtlesim does, using the controller's commands."""
+    for _ in range(steps):
+        linear, angular, done = controller_step(x, y, theta)
+        if done:
+            break
+        theta = wrap_angle(theta + angular * dt)
+        x += linear * math.cos(theta) * dt
+        y += linear * math.sin(theta) * dt
+    return x, y
+
+
+def test_wrap_angle_stays_between_minus_pi_and_pi():
+    assert math.isclose(wrap_angle(3 * math.pi / 2), -math.pi / 2)
+    assert math.isclose(wrap_angle(-3 * math.pi / 2), math.pi / 2)
+    assert math.isclose(wrap_angle(0.5), 0.5)
+
+
+def test_stops_when_at_goal():
+    assert compute_command(5.0, 5.0, 0.0, 5.05, 5.0) == (0.0, 0.0, True)
+
+
+def test_drives_straight_when_facing_goal():
+    linear, angular, arrived = compute_command(0.0, 0.0, 0.0, 3.0, 0.0)
+    assert linear == 2.0  # 1.5 * 3 m is capped at 2.0 m/s
+    assert angular == 0.0
+    assert not arrived
+
+
+def test_turns_in_place_when_goal_is_behind():
+    linear, angular, _ = compute_command(0.0, 0.0, 0.0, -3.0, 0.1)
+    assert linear == 0.0
+    assert abs(angular) == 4.0  # turning at the maximum rate
+
+
+def test_turns_the_short_way():
+    # Facing almost straight down (-170 degrees); goal is straight left (180 degrees).
+    _, angular, _ = compute_command(0.0, 0.0, math.radians(-170), -3.0, 0.0)
+    assert angular < 0  # a small clockwise turn, not a 350-degree counterclockwise one
+
+
+def test_reaches_a_goal_in_simulation():
+    def step(x, y, theta):
+        return compute_command(x, y, theta, 8.0, 2.0)
+
+    x, y = simulate(step, 5.54, 5.54, 0.0)
+    assert math.hypot(8.0 - x, 2.0 - y) < 0.1
+
+
+def test_simplify_path_keeps_corners_only():
+    cells = [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2)]
+    assert simplify_path(cells) == [(0, 0), (0, 2), (2, 2)]
+
+
+def test_grid_cells_become_turtlesim_points():
+    # Row 0 is the top of the Project 5 plot, so it gets the largest y.
+    assert grid_path_to_waypoints([(0, 0), (9, 9)]) == [(1.0, 10.0), (10.0, 1.0)]
+
+
+def test_follows_all_waypoints_in_order():
+    waypoints = [(2.0, 2.0), (8.0, 2.0), (8.0, 8.0)]
+    follower = WaypointFollower(waypoints)
+    visited = []
+
+    def step(x, y, theta):
+        before = follower.index
+        linear, angular = follower.update(x, y, theta)
+        if follower.index > before:
+            visited.extend(waypoints[before:follower.index])
+        return linear, angular, follower.finished
+
+    x, y = simulate(step, 5.54, 5.54, 0.0, steps=5000)
+    assert follower.finished
+    assert visited == waypoints
+    assert math.hypot(8.0 - x, 8.0 - y) < 0.1
+```
+
+Run it in the container terminal:
+
+```bash
+cd /root/ros2_ws/src/turtle_controller
+python3 -m pytest test/test_controller_math.py -v
+```
+
+The last line should read `9 passed`. `python3 -m pytest` adds the current folder to Python's search path, which is how the test finds `turtle_controller`. Testing the math on its own is fast and catches mistakes before a robot ever moves. It's the same habit you built in Project 7.
+
+**Step 9: Write the go-to-goal node.**
+Create `ros2_ws/src/turtle_controller/turtle_controller/go_to_goal.py`:
+
+```python
+from geometry_msgs.msg import Twist
+import rclpy
+from rclpy.executors import ExternalShutdownException
+from rclpy.node import Node
+from turtle_controller.controller_math import compute_command
+from turtlesim.msg import Pose
+
+
+class GoToGoal(Node):
+
+    def __init__(self):
+        super().__init__('go_to_goal')
+        self.goal_x = self.declare_parameter('goal_x', 8.0).value
+        self.goal_y = self.declare_parameter('goal_y', 2.0).value
+        self.pose = None
+        self.arrived = False
+
+        # 10 is the QoS history depth: keep up to 10 messages if the reader falls behind
+        self.cmd_pub = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
+        self.create_subscription(Pose, '/turtle1/pose', self.on_pose, 10)
+        self.create_timer(0.05, self.control_step)  # run the controller 20 times a second
+        self.get_logger().info(f'Driving to ({self.goal_x:.2f}, {self.goal_y:.2f})')
+
+    def on_pose(self, msg):
+        self.pose = msg  # remember the latest pose; the timer uses it
+
+    def control_step(self):
+        if self.pose is None:
+            return  # no pose received yet
+        linear, angular, arrived = compute_command(
+            self.pose.x, self.pose.y, self.pose.theta, self.goal_x, self.goal_y)
+        cmd = Twist()
+        cmd.linear.x = linear
+        cmd.angular.z = angular
+        self.cmd_pub.publish(cmd)
+        if arrived and not self.arrived:
+            self.get_logger().info(f'Arrived at ({self.pose.x:.2f}, {self.pose.y:.2f})')
+        self.arrived = arrived
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = GoToGoal()
+    try:
+        rclpy.spin(node)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.try_shutdown()
+
+
+if __name__ == '__main__':
+    main()
+```
+
+How it works:
+- `create_subscription(Pose, '/turtle1/pose', self.on_pose, 10)` calls `on_pose` every time a new pose arrives. That's the **sense** step.
+- `create_publisher(Twist, '/turtle1/cmd_vel', 10)` creates the channel for velocity commands. That's the **act** step.
+- `create_timer(0.05, self.control_step)` runs the **think** step 20 times a second. It takes the latest pose, runs your Step 7 controller, and publishes a Twist.
+- The `10` is the **QoS (quality of service) depth**, the number of messages that can be queued if a node falls behind.
+- `declare_parameter` makes the goal a **parameter** you can change from the command line without editing code.
+- `rclpy.init` starts ROS 2, `rclpy.spin` keeps the node running and calls your callbacks, and pressing Ctrl+C ends `spin`. Then `destroy_node` and `try_shutdown` clean up.
+
+**Step 10: Register the nodes in setup.py.**
+`ros2 run` finds Python nodes through **entry points** in `setup.py`. Replace the contents of `ros2_ws/src/turtle_controller/setup.py` with:
+
+```python
+from glob import glob
+
+from setuptools import find_packages, setup
+
+package_name = 'turtle_controller'
+
+setup(
+    name=package_name,
+    version='0.0.0',
+    packages=find_packages(exclude=['test']),
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
+    ],
+    install_requires=['setuptools'],
+    zip_safe=True,
+    maintainer='root',
+    maintainer_email='root@todo.todo',
+    description='Drive the turtlesim turtle to a goal and along waypoints',
+    license='Apache-2.0',
+    extras_require={
+        'test': [
+            'pytest',
+        ],
+    },
+    entry_points={
+        'console_scripts': [
+            'go_to_goal = turtle_controller.go_to_goal:main',
+            'waypoint_follower = turtle_controller.waypoint_follower:main',
+        ],
+    },
+)
+```
+
+Compared with the generated file, three things changed. `'go_to_goal = turtle_controller.go_to_goal:main'` means "the command `go_to_goal` runs the `main` function in `turtle_controller/go_to_goal.py`". The `waypoint_follower` line points to the file you'll write in Step 12. The `launch` line installs the launch file from Step 13. You set all three now so you only edit this file once.
+
+**Step 11: Build, source, and run.**
+In a container terminal:
+
+```bash
+cd /root/ros2_ws
+colcon build
+source install/setup.bash
+ros2 run turtle_controller go_to_goal
+```
+
+`colcon build` should end with `Summary: 1 package finished`. If you see a yellow warning from setuptools, you can ignore it. `colcon` builds every package in `src/` and puts the results in `install/`. Then `source install/setup.bash` tells this terminal where to find them. **Run the `source` line in every new terminal and after every build.** In the browser, the turtle turns toward (8, 2), drives there, and stops. The terminal shows:
+
+```text
+[INFO] [...] [go_to_goal]: Driving to (8.00, 2.00)
+[INFO] [...] [go_to_goal]: Arrived at (7.95, 2.08)
+```
+
+Your arrival numbers will be slightly different, but always within 0.1 m of the goal. Using the headless turtlesim? In another container terminal, run `ros2 topic echo /turtle1/pose --once` and check that `x` is close to 8 and `y` is close to 2.
+
+Press **Ctrl+C**, then pick another goal:
+
+```bash
+ros2 run turtle_controller go_to_goal --ros-args -p goal_x:=2.0 -p goal_y:=9.0
+```
+
+Type the values with a decimal point (`2.0`, not `2`). The parameters were declared as decimal numbers, so ROS 2 rejects a whole number with an "expecting type DOUBLE" error. To put the turtle back in the middle and erase its trail, run `ros2 service call /reset std_srvs/srv/Empty`.
+
+**Step 12: Follow the waypoints from your Project 5 planner.**
+A planner gives a path, and a controller follows it. Connect the two: create `ros2_ws/src/turtle_controller/turtle_controller/waypoint_follower.py`:
+
+```python
+from geometry_msgs.msg import Twist
+import rclpy
+from rclpy.executors import ExternalShutdownException
+from rclpy.node import Node
+from turtle_controller.controller_math import (
+    grid_path_to_waypoints, simplify_path, WaypointFollower)
+from turtlesim.msg import Pose
+
+# Output of Project 5, Step 7: print(maze_path). Paste your own path here to change the route.
+PLANNED_PATH = [
+    (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8),
+    (1, 8), (2, 8), (3, 8), (4, 8), (4, 7), (4, 6), (4, 5), (4, 4), (4, 3),
+    (4, 2), (4, 1), (5, 1), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6),
+    (6, 7), (6, 8), (6, 9), (7, 9), (8, 9), (9, 9),
+]
+
+
+class WaypointFollowerNode(Node):
+
+    def __init__(self):
+        super().__init__('waypoint_follower')
+        waypoints = grid_path_to_waypoints(simplify_path(PLANNED_PATH))
+        self.follower = WaypointFollower(waypoints)
+        self.pose = None
+        self.reported = 0  # how many reached waypoints we have logged
+
+        self.cmd_pub = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
+        self.create_subscription(Pose, '/turtle1/pose', self.on_pose, 10)
+        self.create_timer(0.05, self.control_step)
+        self.get_logger().info(f'Following {len(waypoints)} waypoints: {waypoints}')
+
+    def on_pose(self, msg):
+        self.pose = msg
+
+    def control_step(self):
+        if self.pose is None:
+            return
+        linear, angular = self.follower.update(self.pose.x, self.pose.y, self.pose.theta)
+        cmd = Twist()
+        cmd.linear.x = linear
+        cmd.angular.z = angular
+        self.cmd_pub.publish(cmd)
+
+        while self.reported < self.follower.index:
+            x, y = self.follower.waypoints[self.reported]
+            self.reported += 1
+            self.get_logger().info(f'Reached waypoint {self.reported}: ({x:.1f}, {y:.1f})')
+            if self.reported == len(self.follower.waypoints):
+                self.get_logger().info('All waypoints reached')
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = WaypointFollowerNode()
+    try:
+        rclpy.spin(node)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.try_shutdown()
+
+
+if __name__ == '__main__':
+    main()
+```
+
+`PLANNED_PATH` is the maze path that your Project 5 A* planner printed (33 cells, 32 moves). `simplify_path` keeps only the 7 corner cells, and `grid_path_to_waypoints` places each grid cell 1 m apart inside the turtle's 11 m world. The node is the same as `go_to_goal`, except it uses `WaypointFollower` to move to the next point each time it arrives. Rebuild and run:
+
+```bash
+cd /root/ros2_ws
+colcon build
+source install/setup.bash
+ros2 run turtle_controller waypoint_follower
+```
+
+The turtle first drives from the center to the start of the path, then draws the zigzag through your maze's gaps (about 30 seconds):
+
+```text
+[INFO] [...] [waypoint_follower]: Following 7 waypoints: [(1.0, 10.0), (9.0, 10.0), (9.0, 6.0), (2.0, 6.0), (2.0, 4.0), (10.0, 4.0), (10.0, 1.0)]
+[INFO] [...] [waypoint_follower]: Reached waypoint 1: (1.0, 10.0)
+...
+[INFO] [...] [waypoint_follower]: Reached waypoint 7: (10.0, 1.0)
+[INFO] [...] [waypoint_follower]: All waypoints reached
+```
+
+Press **Ctrl+C** when it's done. Want a different route? Rerun your Project 5 notebook with your own maze, `print(maze_path)`, paste the result over `PLANNED_PATH`, and rebuild. On a real robot, you would also run your Project 7 safety check on the path before driving it.
+
+**Step 13: Start everything with one launch file.**
+Opening a terminal for each node gets tedious. A **launch file** starts several nodes with one command. First press **Ctrl+C** in the terminal that's running turtlesim, so you don't end up with two simulators. Then create `ros2_ws/src/turtle_controller/launch/turtle_waypoints.launch.py` (make the `launch` folder):
+
+```python
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(package='turtlesim', executable='turtlesim_node'),
+        Node(package='turtle_controller', executable='waypoint_follower', output='screen'),
+    ])
+```
+
+ROS 2 calls `generate_launch_description()` and starts each `Node` in the list. `output='screen'` shows the follower's log messages in your terminal. Your `setup.py` from Step 10 already installs files that match `launch/*.launch.py`, so rebuild and launch:
+
+```bash
+cd /root/ros2_ws
+colcon build
+source install/setup.bash
+ros2 launch turtle_controller turtle_waypoints.launch.py
+```
+
+You should see `process started` lines for `turtlesim_node-1` and `waypoint_follower-2`, a fresh turtle in the browser tab, and then the same "Reached waypoint" messages as in Step 12. Pressing **Ctrl+C** once stops both nodes. (Headless? Run `export QT_QPA_PLATFORM=offscreen` before `ros2 launch`.)
+
+**Step 14: Next step, 3D physics with Gazebo.**
+Turtlesim has no physics: the turtle can't slip, tip, or bump into things. **Gazebo** is the open-source 3D robot simulator used with ROS 2, and **Gazebo Harmonic** is the version paired with Jazzy (install the `ros-jazzy-ros-gz` packages). The ideas carry over directly. A simulated wheeled robot in Gazebo also listens for `Twist` messages on a `cmd_vel` topic. A bridge node (`ros_gz_bridge`) connects Gazebo topics to ROS 2 topics. The main change is that the robot's position comes from **odometry** (`nav_msgs/msg/Odometry`), which stores heading as a quaternion instead of a single `theta`. Gazebo needs more memory and works best with a graphics card, so it's a good next project once this one is working.
+
+**Step 15: Clean up.**
+Press **Ctrl+C** in any terminal that's still running a node. In one container terminal, give yourself ownership of the build files (so you can delete them later without `sudo`), then leave the container:
+
+```bash
+chown -R "$HOST_UID:$HOST_GID" /root/ros2_ws
+exit
+```
+
+Type `exit` in any other container terminals too. Then, in a terminal on your computer, stop and remove the container:
+
+```bash
+docker stop ros2lab
+docker rm ros2lab
+docker ps -a
+```
+
+`docker ps -a` should no longer list `ros2lab`. Your code stays in `~/ros2_lab`. To start again later, rerun the Step 3 `docker run` command. To also free the disk space the images use, run:
+
+```bash
+docker image rm ros2-jazzy-lab ros:jazzy
+```
+
+If you don't want to keep your code, delete the folder with `rm -rf ~/ros2_lab`.
+
+### Final Project Structure
+
+```text
+ros2_lab/
+│
+├── Dockerfile
+└── ros2_ws/
+    ├── src/
+    │   └── turtle_controller/
+    │       ├── package.xml
+    │       ├── setup.py
+    │       ├── setup.cfg
+    │       ├── resource/
+    │       │   └── turtle_controller
+    │       ├── launch/
+    │       │   └── turtle_waypoints.launch.py
+    │       ├── turtle_controller/
+    │       │   ├── __init__.py
+    │       │   ├── controller_math.py
+    │       │   ├── go_to_goal.py
+    │       │   └── waypoint_follower.py
+    │       └── test/
+    │           ├── test_controller_math.py
+    │           ├── test_copyright.py
+    │           ├── test_flake8.py
+    │           └── test_pep257.py
+    ├── build/
+    ├── install/
+    └── log/
+```
+
+`build/`, `install/`, and `log/` are created by `colcon build`. The three extra test files in `test/` were generated by `ros2 pkg create`.
+
+### What You Learned
+- ✅ Running ROS 2 Jazzy in Docker, with a simulator window shown in your browser
+- ✅ Inspecting a running ROS 2 system with `ros2 node list`, `ros2 topic list`, and `ros2 topic echo`
+- ✅ Creating an `ament_python` package and registering nodes as entry points in `setup.py`
+- ✅ Writing an rclpy node with a subscriber, a publisher, and a timer
+- ✅ Steering a robot to a goal with a proportional controller
+- ✅ Testing controller math with pytest, separately from ROS
+- ✅ Following a planner's path as a list of waypoints
+- ✅ Starting several nodes with a Python launch file
+
+### Portfolio Project
+**ROS 2 Waypoint-Following Robot Controller**: Built a ROS 2 Jazzy Python package that subscribes to a simulated robot's pose, publishes velocity commands from a unit-tested proportional controller, and follows waypoints produced by an A* path planner, all started from one launch file in a Docker-based setup.
+**Skills:** ROS 2, rclpy, Robot Control, Docker, Python, Unit Testing.
+
+**Deliverable:** A `turtle_controller` package that drives the turtlesim turtle along your Project 5 path from a single `ros2 launch` command, with passing controller tests.
+
+### Quiz
+
+1. In this project, which topic does your node subscribe to, which topic does it publish to, and what message type does it publish?
+2. How does the proportional controller choose the turtle's forward speed and turn rate?
+3. Why does the controller wrap the heading error to between minus pi and pi?
+4. After `colcon build`, why must you run `source install/setup.bash` before `ros2 run`?
+5. How does the waypoint follower use the output of the Project 5 planner?
+
+*Answers: 1) It subscribes to `/turtle1/pose` to get the turtle's position and heading, and it publishes `geometry_msgs/msg/Twist` velocity commands on `/turtle1/cmd_vel`. 2) Each command is proportional to its error: forward speed is a gain times the distance to the goal, and turn rate is a gain times the heading error, both capped at a maximum. 3) So the turtle always turns the short way; without wrapping, an error just past a half turn would make it spin almost all the way around. 4) Sourcing tells that terminal where the newly built package and its nodes are installed; without it, ROS 2 can't find them. 5) It reduces the A* grid path to its corner cells, converts each cell to an x and y position in meters, and drives to each point in order, moving on when the turtle is within the tolerance.*
