@@ -98,6 +98,21 @@ service cloud.firestore {
  }
 
  // ---------------------------------------------------------------
+ // presence: "Active now" / "Last active ..." (utils/presence.js)
+ // Signed-in members can read it; each member writes only their own, with
+ // the server's time, so no one can fake being online.
+ // ---------------------------------------------------------------
+ match /presence/{uid} {
+ allow read: if isSignedIn();
+ allow create, update: if isSignedIn() && uid == myUid()
+ && request.resource.data.keys().hasOnly(['state', 'hidden', 'lastActive'])
+ && request.resource.data.state in ['online', 'offline']
+ && request.resource.data.hidden is bool
+ && request.resource.data.lastActive == request.time;
+ allow delete: if isSignedIn() && uid == myUid();
+ }
+
+ // ---------------------------------------------------------------
  // users
  // ---------------------------------------------------------------
  match /users/{userId} {

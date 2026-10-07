@@ -22,6 +22,7 @@ import {
 import { auth, db } from "../firebase/config";
 import { clearPermissionCache } from "../utils/permissions";
 import { invalidateUserDoc } from "../utils/firestoreHelpers";
+import { stopPresenceNow } from "../utils/presence";
 
 const AuthContext = createContext();
 
@@ -269,6 +270,8 @@ export const AuthProvider = ({ children }) => {
       // in must not inherit this user's permissions.
       clearPermissionCache();
       invalidateUserDoc();
+      // Show as offline right away (must happen while still signed in).
+      await stopPresenceNow().catch(() => {});
       await signOut(auth);
     } catch (error) {
       console.error("Error signing out", error);

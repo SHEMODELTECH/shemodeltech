@@ -14,6 +14,7 @@ import { mentorStatsByUid } from '../../utils/mentorStats';
 import PremiumBadge from '../../components/PremiumBadge';
 import { isPremium, isVerifiedPartner } from '../../config/premium';
 import { levelForCount } from '../../config/badgeTracks';
+import PresenceBadge from '../../components/PresenceBadge';
 
 const badgeData = [
   { id: 'techmo', title: 'TechPO', image: '/Images/TechMO.png', label: 'Product / Project Owner' },
@@ -312,6 +313,8 @@ const UserProfile = () => {
                 </span>
               )}
             </h1>
+            {/* Active now / Last active … (nothing if they've turned it off) */}
+            {profile.uid && <PresenceBadge uid={profile.uid} className="mb-1" />}
             {profile.isCompany && profile.companyProfile?.companyName && (
               <p className="text-gray-700 text-sm font-semibold">{profile.companyProfile.companyName}</p>
             )}

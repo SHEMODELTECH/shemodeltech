@@ -27,6 +27,8 @@ import { db } from '../firebase/config';
 import { sendPush } from '../utils/pushNotifications';
 import { useFeatures } from '../utils/features';
 import { FREE_MESSAGE_LIMIT, companyTier } from '../config/tiers';
+import { usePresenceMany } from '../utils/presence';
+import PresenceBadge, { PresenceView } from '../components/PresenceBadge';
 
 const getConversationId = (uid1, uid2) => [uid1, uid2].sort().join('_');
 // This month in UTC, e.g. "2026-10" (matches the database rule).
@@ -88,6 +90,8 @@ const Messages = () => {
   const [searchParams] = useSearchParams();
 
   const [conversations, setConversations] = useState([]);
+  // Who in the inbox is on She Model Tech right now (green dot beside their name).
+  const presence = usePresenceMany(conversations.map((c) => c.otherUser?.uid));
   const [activeConvId, setActiveConvId]   = useState(null);
   const [activeUser, setActiveUser]       = useState(null);
   const [messages, setMessages]           = useState([]);
@@ -446,6 +450,7 @@ const Messages = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1">
                           <p className="text-sm font-semibold text-gray-900 truncate">
+                            <PresenceView info={presence[conv.otherUser?.uid]} compact className="mr-1.5 align-middle" />
                             {getDisplayName(conv.otherUser)}
                             {viewerStaff && features.companyTiers && companyTier(conv.otherUser) === 'champion' && (
                               <span className="ml-1.5 align-middle text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">PRIORITY</span>
@@ -489,6 +494,7 @@ const Messages = () => {
                     <Avatar user={activeUser} />
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-gray-900 text-sm sm:text-base truncate">{getDisplayName(activeUser)}</p>
+                      {activeUser?.uid && <PresenceBadge uid={activeUser.uid} />}
                       {(activeUser?.specialization || (activeUser?.isCompany ? 'Company / Organisation' : '')) && (
                         <p className="text-xs text-gray-500 font-medium truncate">{activeUser?.specialization || 'Company / Organisation'}</p>
                       )}

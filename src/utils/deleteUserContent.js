@@ -16,6 +16,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { deleteUser as firebaseDeleteUser } from 'firebase/auth';
+import { stopPresenceNow } from './presence';
 
 // Run `fn` over items a few at a time (one at a time was very slow for large
 // lists; all at once could flood the connection). Stops on the first error,
@@ -401,6 +402,14 @@ export const deleteAllUserContent = async (userId, userEmail) => {
     } catch (error) {
       console.error('Error handling projects:', error);
       summary.errors.push(`Projects: ${error.message}`);
+    }
+
+    // Activity status ("Active now"): stop updating it, then remove it.
+    try {
+      await stopPresenceNow();
+      await deleteDoc(doc(db, 'presence', userId));
+    } catch (error) {
+      summary.errors.push(`Activity status: ${error.message}`);
     }
 
     // ─────────────────────────────────────────────

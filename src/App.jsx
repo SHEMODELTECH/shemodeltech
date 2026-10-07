@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
+import PresenceTracker from './components/PresenceTracker';
 import { getUserDocCached } from './utils/firestoreHelpers';
 import AppShell from './components/AppShell';
 import Navbar from './components/Navbar';
@@ -223,6 +224,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
+        <PresenceTracker />
         <Router>
           <div className="w-full min-h-screen overflow-x-clip">
             <RouteErrorBoundary>

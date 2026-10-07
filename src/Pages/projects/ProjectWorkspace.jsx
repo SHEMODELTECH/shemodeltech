@@ -10,6 +10,8 @@ import { toast } from 'react-toastify';
 import { logActivity } from '../../utils/activityLog';
 import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
 import { formatMoney } from '../../utils/paidProjects';
+import { usePresenceMany } from '../../utils/presence';
+import { PresenceView } from '../../components/PresenceBadge';
 
 const formatTime = (ts) => {
   if (!ts) return '';
@@ -51,6 +53,8 @@ const ProjectWorkspace = () => {
 
   // Team state
   const [teamMembers, setTeamMembers] = useState([]);
+  // Which teammates are on She Model Tech right now (Team tab).
+  const teamPresence = usePresenceMany(teamMembers.map((m) => m.uid));
 
   // Leave-project state (paid projects: leaving forfeits pay, requires a
   // reason, and automatically opens a dispute record for admin + owner review)
@@ -96,21 +100,21 @@ const ProjectWorkspace = () => {
 
         // Fetch user profiles for all members in batches of 30 (one query per
         // batch instead of one per member).
-        const emails = [...new Set(members.map((m) => m.applicantEmail).filter(Boolean))];
+        const emails = [...new Set([...members.map((m) => m.applicantEmail), project.submitterEmail].filter(Boolean))];
         const byEmail = {};
         for (let i = 0; i < emails.length; i += 30) {
           try {
             const userSnap = await getDocs(query(collection(db, 'users'), where('email', 'in', emails.slice(i, i + 30))));
             userSnap.docs.forEach((d) => {
               const u = d.data();
-              if (u.email && !byEmail[u.email]) byEmail[u.email] = u;
+              if (u.email && !byEmail[u.email]) byEmail[u.email] = { ...u, uid: d.id };
             });
           } catch (e) {}
         }
         const enriched = members.map((m) => {
           const userData = byEmail[m.applicantEmail];
           return userData
-            ? { ...m, photoURL: userData.photoURL || null, displayName: userData.displayName || m.applicantName }
+            ? { ...m, uid: userData.uid, photoURL: userData.photoURL || null, displayName: userData.displayName || m.applicantName }
             : m;
         });
 
@@ -120,6 +124,7 @@ const ProjectWorkspace = () => {
           applicantEmail: project.submitterEmail,
           role: 'Project Owner',
           photoURL: project.submitterPhoto || null,
+          uid: byEmail[project.submitterEmail]?.uid || null,
           isOwner: true,
         };
         setTeamMembers([ownerEntry, ...enriched]);
@@ -744,6 +749,7 @@ const ProjectWorkspace = () => {
                         {member.displayName || member.applicantName}
                       </a>
                       <p className="text-gray-500 text-xs">{member.role}</p>
+                      <PresenceView info={teamPresence[member.uid]} className="mt-0.5" />
                       <div className="flex items-center gap-3 mt-0.5">
                         {member.portfolioUrl && <a href={member.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-[10px] hover:underline">Portfolio</a>}
                         {member.linkedinUrl && <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 text-[10px] hover:underline">LinkedIn</a>}

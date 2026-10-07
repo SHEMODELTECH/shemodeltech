@@ -18,6 +18,7 @@ import { TIER_LABEL, companyTier, perksFor } from '../config/tiers';
 import { useFeatures } from '../utils/features';
 import PayoutDetails from '../components/PayoutDetails';
 import DobSettings from '../components/DobSettings';
+import { PRESENCE_PREF_EVENT } from '../utils/presence';
 
 const skillTrackOpts = [
   { id: 'TechDev', label: 'Development' },
@@ -56,6 +57,8 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [weeklyDigest, setWeeklyDigest] = useState(false);
+  // "Active now" / "Last active…" shown to other members (on unless turned off).
+  const [showActivity, setShowActivity] = useState(true);
   const [reminders, setReminders] = useState(true);
   const [dailyFrequency, setDailyFrequency] = useState('daily'); // 'daily' | '3x' (Mon, Wed, Fri)
   const [pushPref, setPushPref] = useState('all'); // 'all' | 'important' | 'off'
@@ -122,6 +125,7 @@ const Settings = () => {
           setProfileData(data);
           // On unless the member turned it off (everyone gets the weekly email by default).
           setWeeklyDigest(data.emailPreferences?.weeklyDigest !== false);
+          setShowActivity(data.showActivity !== false);
           setReminders(data.emailPreferences?.reminders !== false);
           setDailyFrequency(data.emailPreferences?.dailyFrequency === '3x' ? '3x' : 'daily');
           setPushPref(['important', 'off'].includes(data.pushPreference) ? data.pushPreference : 'all');
@@ -556,6 +560,34 @@ const Settings = () => {
           <SignInMethods />
           <DobSettings />
           <PayoutDetails />
+          <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <h3 className="text-gray-900 font-bold text-base mb-2">Activity status</h3>
+            <p className="text-gray-500 text-sm mb-4">
+              Let other members see when you're on She Model Tech: a green dot and "Active now" while you're here,
+              or when you were last active. Helpful when your project team wants to reach you. If you turn it off,
+              no one sees your status.
+            </p>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showActivity}
+                onChange={async (e) => {
+                  const next = e.target.checked;
+                  setShowActivity(next);
+                  try {
+                    await updateDoc(doc(db, 'users', currentUser.uid), { showActivity: next });
+                    window.dispatchEvent(new Event(PRESENCE_PREF_EVENT));
+                    toast.success(next ? 'Your activity status is on.' : 'Your activity status is off.');
+                  } catch (err) {
+                    setShowActivity(!next);
+                    toast.error('Could not update your activity status.');
+                  }
+                }}
+                className="w-4 h-4"
+              />
+              <span className="text-sm text-gray-700">Show when I'm active</span>
+            </label>
+          </div>
           <div className="bg-white border border-gray-200 rounded-xl p-6">
             <h3 className="text-gray-900 font-bold text-base mb-2">Push Notifications</h3>
             <p className="text-gray-500 text-sm mb-4">
