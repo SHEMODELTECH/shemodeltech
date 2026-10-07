@@ -4,6 +4,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Explain the separate jobs of HTML, CSS, and JavaScript on a web page
+- Build a page in HTML with headings, lists, images, and an accessible form
+- Style a page from a separate CSS file using selectors, a hover state, and a flexbox layout
+- Write JavaScript that responds to clicks and form submissions and updates the page without reloading
+- Catch a type error with TypeScript, and make a layout adapt to phone screens with a media query and the viewport tag
+
 **Who this is for:** Beginners who want to build real, working pages for the web, understanding not just the syntax but why each piece exists and how they fit together.
 
 **How the course works:** Five modules. Every topic follows the same pattern:
@@ -141,7 +148,7 @@ You have a real HTML file, opened directly in a browser, containing headings, a 
 
 ## Module 2: CSS - Presentation and Layout
 
-**Time: about 3 hours**
+**Time: about 2 hours**
 
 ### Concept
 
@@ -391,6 +398,8 @@ TypeScript matters as soon as a project grows past a page or two, catching typos
 ```bash
 npm install -g typescript
 ```
+If you get a permissions error, skip the install and type `npx tsc` wherever this module says `tsc`.
+
 Create a file named `greet.ts`:
 ```typescript
 function greet(name: string, timesClicked: number): string {

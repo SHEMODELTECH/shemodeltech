@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Write a risk overview that rates an AI system's risks by likelihood and severity
+- Build logging and review tools that create an audit trail of model calls
+- Audit a dataset for representation gaps, unequal outcome rates, and proxy variables
+- Run paired-prompt bias tests and red-team a chatbot, then score and report the results
+- Write a model card and a pre-deployment governance checklist from your evidence
+- Build a monitoring dashboard with automatic flagging and a review threshold
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -48,6 +56,7 @@ Example: "A resume-screening tool that ranks job applicants using an LLM."
 **Step 3: Understand the four risk categories.**
 Add a **text cell** headed `risk_overview` and write your notes in it.
 **data privacy risk** (mishandled personal data), **model risk** (biased or incorrect outputs), **operational risk** (system failures affecting real decisions), and **reputational/societal risk** (public harm or backlash).
+Organizations often structure this work with a published framework, such as the **NIST AI Risk Management Framework** (its four functions are Govern, Map, Measure, and Manage) or the **ISO/IEC 42001** standard for AI management systems. This project is the "Map" step: finding and describing the risks before you measure them.
 
 **Step 4: Assess data privacy risk for your example.**
 Ask: what personal data does this system touch, and what happens if it's exposed or misused?
@@ -298,6 +307,15 @@ print(df.groupby("gender")["hired"].mean())
 ```
 Comparing the **outcome rate** (e.g., hire rate) across groups reveals whether the historical data itself reflects unequal treatment.
 
+A common way to size the gap is the **disparate impact ratio**: each group's rate divided by the highest group's rate. In US hiring, the "four-fifths rule" from federal employment guidelines treats a ratio below 0.8 as a warning sign of adverse impact that needs investigating:
+```python
+hire_rates = df.groupby("gender")["hired"].mean()
+impact_ratio = hire_rates / hire_rates.max()
+print(impact_ratio.round(2))
+print("Below 0.8:", list(impact_ratio[impact_ratio < 0.8].index))
+```
+With this dataset, women and nonbinary applicants fall below 0.8. Note that the nonbinary group has only about 50 people, so its rate is less certain than the others.
+
 **Step 5: Check for proxy variables.**
 A **proxy variable** is a field that isn't explicitly a protected attribute (like race or gender) but correlates strongly with one, e.g., zip code often correlates with race and income.
 ```python
@@ -348,8 +366,9 @@ dataset_fairness_audit_project/
 2. What is the difference between representation and outcome rate?
 3. What is a proxy variable?
 4. Why does removing the gender column not guarantee a fair model?
+5. One group's hire rate is 0.35 and the highest group's is 0.54. What is the disparate impact ratio, and does it pass the four-fifths rule?
 
-*Answers: 1) Real hiring data is private; a made-up dataset lets you practice the audit safely, and it has bias built in so there is something to find. 2) Representation is how often each group appears in the data; outcome rate is how often each group gets a result such as being hired. 3) A field that is not a protected attribute itself but correlates strongly with one, such as zip code standing in for gender, race, or income. 4) Proxy variables like zip code can still carry the same information, so the bias can leak back in.*
+*Answers: 1) Real hiring data is private; a made-up dataset lets you practice the audit safely, and it has bias built in so there is something to find. 2) Representation is how often each group appears in the data; outcome rate is how often each group gets a result such as being hired. 3) A field that is not a protected attribute itself but correlates strongly with one, such as zip code standing in for gender, race, or income. 4) Proxy variables like zip code can still carry the same information, so the bias can leak back in. 5) About 0.65, which is 0.35 divided by 0.54; it is below 0.8, so it fails the rule and the gap needs investigating.*
 
 ---
 
@@ -651,6 +670,9 @@ model_card_project/
 ```bash
 mkdir monitoring_dashboard_project
 cd monitoring_dashboard_project
+```
+Create a **virtual environment** (a private set of Python packages for this project) and turn it on. On Mac or Linux run `python3 -m venv .venv` then `source .venv/bin/activate`. On Windows PowerShell run `py -m venv .venv` then `.venv\Scripts\Activate.ps1`. Your prompt now starts with `(.venv)`; turn it on again in any new terminal. Then install the packages:
+```bash
 pip install flask pandas
 ```
 
@@ -673,9 +695,12 @@ def log_call(prompt, response, flagged=False, flag_reason=None, log_file="model_
 **Step 4: Build a simple auto-flagging rule.**
 In the same notebook, add this cell and run it. It replaces `call_and_log` so every new call is checked and flagged automatically:
 ```python
+import re
+
 def auto_flag(response):
     risky_terms = ["age", "race", "disability"]  # simplified example
-    return any(term in response.lower() for term in risky_terms)
+    # \b means "word boundary", so "age" matches the word age but not "page" or "manage"
+    return any(re.search(rf"\b{term}\b", response.lower()) for term in risky_terms)
 
 def call_and_log(prompt, system=None):
     response = call_model(prompt, system=system)

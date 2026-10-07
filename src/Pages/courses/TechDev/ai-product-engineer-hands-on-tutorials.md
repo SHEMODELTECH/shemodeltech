@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Write a one-page AI product brief with a clear problem statement, target user, and success metric
+- Build a working feature prototype and a multi-turn chatbot that call the Claude API
+- Run lightweight user discovery and use the evidence to revise a feature's direction
+- Design the full feature flow, including loading, error, and "AI might be wrong" states
+- Write an evaluation plan with a test set, scoring rubric, and baseline score
+- Plan a staged launch with clear launch criteria, monitoring, and rollback triggers
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -436,7 +444,27 @@ Turn your documented failures and successes into a list of 10–15 concrete inpu
 A **rubric** is a scoring guide (e.g., 1–5) for judging subjective AI output on specific dimensions like accuracy, tone, and helpfulness.
 
 **Step 4: Score your Project 2/3 prototype against the test set.**
-Run each test case through your prototype and score it using your rubric.
+Run each test case through your prototype and score it using your rubric. First run the API key cell from "Before you start", then paste in and run your `run_feature` cell from Project 2 (Step 5). This cell runs every test case and prints the output next to what you expected:
+```python
+# Template: replace these examples with the 10-15 test cases from your test_cases cell.
+test_cases = [
+    {"input": "I was charged twice for my subscription this month. Please refund one payment.",
+     "expected": "Mentions the double charge and the refund request."},
+    {"input": "The app logs me out every time I switch to another tab.",
+     "expected": "Mentions being logged out when switching tabs."},
+]
+
+outputs = []
+for i, case in enumerate(test_cases, start=1):
+    output = run_feature(case["input"])
+    outputs.append(output)
+    print(f"--- Test {i}\nInput: {case['input']}\nExpected: {case['expected']}\nGot: {output}\n")
+```
+Then type your rubric scores into a list, one per test case, and average them. That average is your **baseline score**:
+```python
+scores = [4, 5]  # Template: replace with your 1-5 rubric score for each test case, in order
+print(f"Baseline score: {sum(scores) / len(scores):.1f} out of 5 across {len(scores)} test cases")
+```
 
 **Step 5: Distinguish quality metrics from business metrics.**
 **quality metrics** measure whether the AI's output is good (accuracy, relevance); **business metrics** measure whether the feature achieves your Project 1 goal (ticket resolution time, user retention).

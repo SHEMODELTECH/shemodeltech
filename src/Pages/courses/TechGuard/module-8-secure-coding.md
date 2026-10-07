@@ -3,6 +3,12 @@
 
 **Time: about 5 hours** (roughly 2 hours for the OWASP Top 10, 3 hours for secure APIs).
 
+**By the end of this module, you'll be able to:**
+- Name the OWASP Top 10:2025 categories and explain the new Software Supply Chain Failures item
+- Fix an injection flaw with a parameterised query and a broken-access-control flaw with a server-side check
+- Scan dependencies, verify registry signatures, and generate an SBOM with `npm`
+- Run a small API with authentication, object-level authorization, input validation, and rate limiting, and test each gate with `curl`
+
 **Tools needed for this module:** a code editor and a language runtime you're comfortable with (Node.js or Python are convenient for the examples), a terminal, and `curl` from Module 1 for testing endpoints. Optionally, a deliberately-vulnerable practice app like **OWASP Juice Shop** run locally, and a dependency scanner such as `npm audit`. As always, only test applications you own or that are built for training.
 
 ### Topic 8.1: OWASP Top 10

@@ -3,7 +3,14 @@
 
 This is a bonus, advanced module extending the **AI Governance and Responsible AI Engineer Foundations Course**. It covers the specific regulatory framework reshaping this field in 2026: the **EU AI Act** (Regulation (EU) 2024/1689) — the world's first comprehensive, binding AI regulation, with extraterritorial reach to any organization whose AI system or output touches people in the EU, regardless of where the company is headquartered. Complete the 7 projects of the main course first — this module turns your Project 1 risk overview, Project 4 bias evaluation, and Project 6 model card into artifacts mapped directly to real legal obligations.
 
-**A note on currency:** the EU has amended the AI Act. The **AI Omnibus**, an amending regulation proposed by the European Commission in November 2025, was published in the Official Journal on 24 July 2026 and entered into force on 27 July 2026. It postponed the application dates for high-risk obligations, so the amended timelines now apply rather than the Act's original 2026 dates. Prohibited practices and general-purpose AI (GPAI) obligations were already in force before the amendment. For exact dates, check the official consolidated text of Regulation (EU) 2024/1689 on [EUR-Lex](https://eur-lex.europa.eu), since timelines can change again.
+**By the end of this course, you'll be able to:**
+- Classify an AI system into the EU AI Act's risk tiers and decide whether you are its provider or deployer
+- Turn a high-risk classification into a list of obligations mapped to your existing governance work, with gaps named
+- Write technical documentation that covers the sections Article 11 requires
+- Build and test human override and emergency-stop controls with an audit log and an oversight dashboard
+- Assemble a conformity assessment readiness checklist
+
+**A note on currency:** the EU has amended the AI Act. The **Digital Omnibus on AI**, an amending regulation proposed by the European Commission in November 2025, was published in the Official Journal on 24 July 2026 and entered into force on 27 July 2026. It postponed the application dates for high-risk obligations: high-risk systems listed in Annex III (such as hiring tools) now have until 2 December 2027, and AI built into products covered by the EU safety laws in Annex I has until 2 August 2028. The transparency duties in Article 50 (for example, telling people they are talking to an AI, and marking AI-generated content) still apply from 2 August 2026. Prohibited practices and general-purpose AI (GPAI) obligations were already in force before the amendment, and the amendment added new prohibitions on AI systems that generate non-consensual intimate images or child sexual abuse material. For exact dates, check the official consolidated text of Regulation (EU) 2024/1689 on [EUR-Lex](https://eur-lex.europa.eu), since timelines can change again.
 
 Every step follows the same format as the rest of the course: what you're doing, what the term means, how to do it, and why it matters. **This course is educational, not legal advice.** Consult qualified legal counsel for actual compliance decisions.
 
@@ -52,7 +59,7 @@ Learn: **unacceptable risk** (banned outright — e.g., social scoring, manipula
 *Why:* Every subsequent obligation in this module depends entirely on which tier applies — get this wrong and everything built on top of it is misdirected effort.
 
 **Step 3 — Check for prohibited practices first.**
-Learn: **Article 5** bans specific practices outright, including social scoring by public or private actors (not just governments), emotion recognition in workplaces and education settings (except for medical or safety reasons), AI exploiting vulnerabilities of children or people with disabilities to cause harm, real-time remote biometric identification in public spaces by law enforcement (with narrow exceptions), and untargeted scraping of facial images to build recognition databases.
+Learn: **Article 5** bans specific practices outright, including social scoring by public or private actors (not just governments), emotion recognition in workplaces and education settings (except for medical or safety reasons), AI exploiting vulnerabilities of children or people with disabilities to cause harm, real-time remote biometric identification in public spaces by law enforcement (with narrow exceptions), and untargeted scraping of facial images to build recognition databases. Since the 2026 amendment, the list also bans AI systems that generate non-consensual intimate images or child sexual abuse material.
 Add a **text cell** headed `prohibited_practice_check` and write your notes in it.
 Using your Project 1 example system, confirm it doesn't fall into any prohibited category.
 *Why:* This check comes first because unacceptable-risk systems can't be brought into compliance at all — they simply can't be deployed, so there's no point classifying further if this applies.
@@ -64,8 +71,8 @@ For your example system (e.g., a resume-screening tool from the original course)
 *Why:* Employment and worker management is explicitly named in Annex III — a resume screener almost certainly qualifies as high-risk, which is exactly why this system was chosen as a running example throughout the original course.
 
 **Step 5 — Understand the self-assessment exception.**
-Learn: a provider whose system falls under an Annex III use case but believes it isn't actually high-risk (e.g., because it performs only a narrow procedural task or merely refines a human's prior work) must **document that assessment** before deployment, rather than simply asserting it informally.
-*Why:* This exception exists, but it isn't a loophole to skip documentation — it requires its own written justification, which is itself a compliance artifact you need to produce and retain.
+Learn: a provider whose system falls under an Annex III use case but believes it isn't actually high-risk (e.g., because it performs only a narrow procedural task or merely refines a human's prior work) must **document that assessment** before the system is placed on the market, rather than simply asserting it informally, and must still **register the system in the EU database** (Article 6(3) and Article 49). The exception never applies to a system that profiles people.
+*Why:* This exception exists, but it isn't a loophole to skip documentation — it requires its own written justification and a database registration, which are compliance artifacts you need to produce and retain. A resume screener that ranks candidates profiles them, so it can't use this exception.
 
 **Step 6 — Check for limited-risk transparency triggers.**
 Learn: **limited risk** systems — chatbots, deepfake generators, emotion-recognition or biometric-categorization systems not otherwise prohibited — must disclose to users that they're interacting with AI, even if they don't qualify as high-risk.
@@ -116,7 +123,7 @@ eu_ai_act_classification_project/
 4. What must a provider do if it believes its Annex III system is not actually high-risk?
 5. What is the difference between a provider and a deployer?
 
-*Answers: 1) A prohibited system can't be brought into compliance at all; it simply can't be deployed, so further classification is pointless. 2) No. The Act bans social scoring by public and private actors alike. 3) Employment and worker management is explicitly listed as a high-risk use case in Annex III. 4) Write down and keep a documented assessment explaining why, before deployment; it can't just assert it informally. 5) A provider develops a system and places it on the market; a deployer uses a system under its own authority. Providers carry most high-risk obligations.*
+*Answers: 1) A prohibited system can't be brought into compliance at all; it simply can't be deployed, so further classification is pointless. 2) No. The Act bans social scoring by public and private actors alike. 3) Employment and worker management is explicitly listed as a high-risk use case in Annex III. 4) Write down and keep a documented assessment explaining why before the system goes on the market, and still register the system in the EU database; it can't just assert it informally. 5) A provider develops a system and places it on the market; a deployer uses a system under its own authority. Providers carry most high-risk obligations.*
 
 ---
 
@@ -141,7 +148,7 @@ Learn: providers of high-risk systems must implement a **risk management system*
 *Why:* This is the actual checklist Articles 9–15 require — each one maps to a specific project later in this module or the original course.
 
 **Step 3 — Learn the core high-risk deployer obligations.**
-Learn: under **Article 26**, deployers must use the system according to the provider's instructions, ensure human oversight during use, monitor the system's operation, keep logs the provider requires, and conduct a fundamental-rights impact assessment where required.
+Learn: under **Article 26**, deployers must use the system according to the provider's instructions, assign human oversight to trained people, monitor the system's operation, keep the logs it generates, and, when using high-risk AI at work, inform workers' representatives and affected workers beforehand. Under **Article 27**, some deployers must also carry out a **fundamental-rights impact assessment** before first use: public bodies, private organizations providing public services, and deployers using AI for credit scoring or for life and health insurance pricing.
 *Why:* Deployer duties are lighter than provider duties, but they're not nothing — an organization that only *uses* a high-risk AI system still has real, enforceable responsibilities.
 
 **Step 4 — Cross-reference each obligation with existing course work.**
@@ -206,7 +213,7 @@ obligation_mapping_project/
 3. What does the obligation crosswalk show?
 4. What is a conformity assessment?
 
-*Answers: 1) Any three of: risk management system, data governance, technical documentation, record-keeping, human oversight, accuracy/robustness/cybersecurity, and a quality management system. 2) Yes. Under Article 26 they must follow the provider's instructions, ensure human oversight, monitor operation, keep required logs, and do a fundamental-rights impact assessment where required. 3) Which existing course artifacts already cover each legal obligation, and where gaps remain. 4) The formal process, usually a self-assessment for Annex III systems, that verifies a high-risk system meets its obligations before it goes on the market.*
+*Answers: 1) Any three of: risk management system, data governance, technical documentation, record-keeping, human oversight, accuracy/robustness/cybersecurity, and a quality management system. 2) Yes. Under Article 26 they must follow the provider's instructions, assign human oversight, monitor operation, and keep the logs; some deployers, such as public bodies, must also do a fundamental-rights impact assessment under Article 27. 3) Which existing course artifacts already cover each legal obligation, and where gaps remain. 4) The formal process, usually a self-assessment for Annex III systems, that verifies a high-risk system meets its obligations before it goes on the market.*
 
 ---
 
@@ -307,6 +314,9 @@ Project 10 *described* human oversight. This project *builds* it — because "we
 mkdir human_oversight_project
 cd human_oversight_project
 mkdir templates
+```
+Create a **virtual environment** (a private set of Python packages for this project) and turn it on. On Mac or Linux run `python3 -m venv .venv` then `source .venv/bin/activate`. On Windows PowerShell run `py -m venv .venv` then `.venv\Scripts\Activate.ps1`. Your prompt now starts with `(.venv)`; turn it on again in any new terminal. Then install the packages:
+```bash
 pip install flask requests
 ```
 Set your API key as an environment variable in the same terminal (never paste it into code). On Mac or Linux run `export ANTHROPIC_API_KEY="your-key-here"`. On Windows PowerShell run `$env:ANTHROPIC_API_KEY="your-key-here"`.
@@ -574,7 +584,7 @@ These four bonus projects extend the responsible-AI audit work from the main cou
 | 10. Technical Documentation | Article 11-compliant documentation | Project 6 (model card) |
 | 11. Human Oversight | Working oversight mechanisms + readiness | Projects 2 & 7 (logging, monitoring) |
 
-**Reminder:** this module reflects the AI Act as amended by the AI Omnibus, which entered into force on 27 July 2026. Always check current obligations and dates against the official consolidated text on [EUR-Lex](https://eur-lex.europa.eu) and with qualified legal counsel before treating any compliance work as complete. This course is educational, not legal advice.
+**Reminder:** this module reflects the AI Act as amended by the Digital Omnibus on AI, which entered into force on 27 July 2026. Always check current obligations and dates against the official consolidated text on [EUR-Lex](https://eur-lex.europa.eu) and with qualified legal counsel before treating any compliance work as complete. This course is educational, not legal advice.
 
 ### Updated Portfolio Project
 **EU AI Act Compliance Program (Advanced)** — Built a complete EU AI Act compliance workflow for a high-risk AI system: risk classification, obligation mapping, Article 11 technical documentation, and tested human oversight mechanisms, culminating in a conformity assessment readiness checklist.

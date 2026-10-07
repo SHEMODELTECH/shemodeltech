@@ -1,7 +1,15 @@
 <!-- order: 7 -->
 ## Module 6: Mobile Testing
 
-**Tools needed for this module:** [Android Studio](https://developer.android.com/studio) (includes emulators and Android debugging tools) for the Android topic, and a Mac with [Xcode](https://developer.apple.com/xcode/) (includes the iOS Simulator) for the iOS topic. Real devices are ideal but not required to start.
+**Time: about 8 hours** (3 hours each for Android and iOS, 2 hours for device coverage and accessibility).
+
+**By the end of this module, you'll be able to:**
+- Create Android emulators, connect to them with ADB, and test how an app handles interruptions
+- Run an app and a basic XCUITest on two iOS Simulator device and OS combinations
+- Build a device matrix from real usage reasoning
+- Test an app with TalkBack or VoiceOver and at the largest text size, and file device-specific accessibility bug reports
+
+**Tools needed for this module:** [Android Studio](https://developer.android.com/studio) (includes emulators and Android debugging tools) for the Android topic, and a Mac with [Xcode](https://developer.apple.com/xcode/) (includes the iOS Simulator) for the iOS topic. Real devices are ideal but not required to start. **No Mac?** Do Topics 6.1 and 6.3 on Android, read Topic 6.2, and do only its App Store guideline step (step 6); the Android work covers the same testing skills.
 
 ### Topic 6.1: Android
 

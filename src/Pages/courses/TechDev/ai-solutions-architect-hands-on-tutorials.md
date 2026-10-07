@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Turn a business problem into a solutions brief with measurable goals and constraints
+- Draw a labeled system diagram showing request flow, data, and integrations
+- Compare model options against set criteria and estimate their monthly cost
+- Choose a reference architecture (simple API call, RAG, or agentic) and explain why
+- Design the data, security, and access-control layer, and write a governance and risk plan
+- Present a full architecture proposal to a mixed audience with a clear ask
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -117,6 +125,8 @@ flowchart LR
     API <-->|read and write| DB[("Database / vector store")]
 ```
 
+To draw your own version, use the free [diagrams.net](https://app.diagrams.net) in your browser, or paste the diagram code above into [mermaid.live](https://mermaid.live), edit it, and export it as a PNG.
+
 **Step 6: Add integration points.**
 Draw connections to any existing systems named in your Project 1 constraints (e.g., "existing ticketing system").
 
@@ -183,7 +193,30 @@ Build a table: rows are your candidates, columns are your Step 2 criteria.
 **prompting** (including RAG) adapts a general model's behavior at request time without changing its weights; **fine-tuning** further trains a model's weights on your specific data.
 
 **Step 6: Estimate rough costs.**
-For each candidate, estimate cost per 1,000 requests (API pricing) or infrastructure cost (self-hosted compute).
+For each candidate, estimate cost per 1,000 requests (API pricing) or infrastructure cost (self-hosted compute). LLM APIs charge per **token** (a token is roughly three quarters of an English word), with separate prices for input and output tokens, usually quoted per million tokens. Add a **code cell**, paste in the code below, and run it with **Shift + Enter**:
+```python
+# Template: the prices below are made-up examples. Replace them with the current
+# published prices for the options you're comparing (US dollars per million tokens).
+api_options = {
+    "Large model API": {"input_per_mtok": 3.00, "output_per_mtok": 15.00},
+    "Small model API": {"input_per_mtok": 0.80, "output_per_mtok": 4.00},
+}
+avg_input_tokens = 1500     # your prompt plus any retrieved documents, per request
+avg_output_tokens = 300     # length of a typical answer
+requests_per_month = 50_000
+
+for name, price in api_options.items():
+    per_request = (avg_input_tokens * price["input_per_mtok"]
+                   + avg_output_tokens * price["output_per_mtok"]) / 1_000_000
+    print(f"{name}: ${per_request * 1000:.2f} per 1,000 requests, "
+          f"${per_request * requests_per_month:,.0f} per month")
+
+# Self-hosted: you pay for the machine by the hour, whether or not anyone uses it.
+gpu_cost_per_hour = 1.20    # Template: example price for one cloud GPU; replace with a real quote
+hours_per_month = 730       # running all month
+print(f"Self-hosted model: ${gpu_cost_per_hour * hours_per_month:,.0f} per month at any traffic level")
+```
+Change `requests_per_month` to 5,000 and to 500,000 and rerun. API cost grows with traffic, while self-hosted cost stays fixed, so the cheaper option depends on your volume.
 
 **Step 7: Make and justify a recommendation.**
 Add a **text cell** headed `recommendation` and write your notes in it.
@@ -218,8 +251,9 @@ model_comparison_project/
 2. Why include a non-AI, rules-based approach in the comparison?
 3. What is the difference between prompting (including RAG) and fine-tuning?
 4. Name three common criteria for comparing model options.
+5. Why can a self-hosted model be the more expensive choice at low traffic but the cheaper one at high traffic?
 
-*Answers: 1) So every option is judged on the same factors and the choice isn't shaped by a favorite. 2) It is a baseline; if it solves the problem well enough, AI may not be worth the cost and risk. 3) Prompting adapts a general model at request time without changing its weights; fine-tuning trains the model's weights further on your data. 4) Any three of: accuracy/quality, latency, cost per request, data privacy, and ease of integration.*
+*Answers: 1) So every option is judged on the same factors and the choice isn't shaped by a favorite. 2) It is a baseline; if it solves the problem well enough, AI may not be worth the cost and risk. 3) Prompting adapts a general model at request time without changing its weights; fine-tuning trains the model's weights further on your data. 4) Any three of: accuracy/quality, latency, cost per request, data privacy, and ease of integration. 5) A self-hosted machine costs the same every hour whatever the traffic, while API cost grows with every request, so the API is cheaper at low volume and the fixed cost wins at high volume.*
 
 ---
 
@@ -372,7 +406,7 @@ data_infra_layer_project/
 Create a new notebook for this project (**File → New notebook**) and name it `governance_risk_project`.
 
 **Step 2: Identify risk categories.**
-Common categories include **data privacy risk** (mishandled personal data), **model risk** (biased or incorrect outputs), **operational risk** (system downtime affecting the business), and **reputational risk** (public-facing AI mistakes).
+Common categories include **data privacy risk** (mishandled personal data), **model risk** (biased or incorrect outputs), **operational risk** (system downtime affecting the business), **reputational risk** (public-facing AI mistakes), and **regulatory risk** (breaking laws that apply to your system, such as data-protection rules or the EU AI Act).
 
 **Step 3: Assess each risk for your specific system.**
 Add a **text cell** headed `risk_assessment` and write your notes in it.

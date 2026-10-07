@@ -4,13 +4,21 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Describe how an operation's cost grows using Big O, and measure the difference with a timing test
+- Choose between lists, dictionaries, sets, stacks, queues, and heaps based on the operations your feature needs
+- Build a linked list and a binary search tree, and explain their trade-offs against Python's built-ins
+- Write recursive functions for nested data, and use BFS to find the shortest path in a graph
+- Sort data by one or more fields, and implement binary search on sorted data
+- Speed up repeated calculations with memoization
+
 **Who this is for:** Beginners who can write basic Python (variables, functions, loops) and want to understand data structures and algorithms not as interview trivia, but as tools you reach for when building real software.
 
 **How the course works:** Twelve modules. Every topic follows the same pattern:
 - **Concept** - what it is, in plain language
 - **Code** - a working implementation
 - **Where you'd actually use this** - a real product scenario, not a puzzle
-- **Lab** - something to build yourself
+- **Lab** - working code to run, then a short "Your turn" exercise to write yourself
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
@@ -74,6 +82,8 @@ print("Fast:", time.time() - start)
 ```
 Run it and compare the two times. The gap will surprise you.
 
+**Your turn:** Change `data` to `list(range(10000)) + [9999]` and run it again. The slow time should grow about 4 times (O(n²)), while the fast time only about doubles (O(n)).
+
 ### Checkpoint
 You ran the timing comparison and can explain, in your own words, why the fast version wins.
 
@@ -136,6 +146,8 @@ print(is_palindrome("racecar"))       # True
 print(is_palindrome("hello world"))   # False
 ```
 
+**Your turn:** Write `move_to_front(cart, item)` that removes `item` and inserts it at position 0 with `cart.insert(0, item)`. Next to each line, write its Big O cost as a comment.
+
 ### Checkpoint
 You can explain why appending to a list is fast but inserting at position 0 is slow.
 
@@ -189,6 +201,8 @@ def find_user(email: str):
 
 print(find_user("bob@example.com"))
 ```
+
+**Your turn:** Write `most_common_word(text)` that uses `word_frequency` and returns the word with the highest count (hint: `max(counts, key=counts.get)`). For the sample text it should return `"the"`.
 
 ### Checkpoint
 You can explain why looking up a user in a dictionary is faster than looping through a list of users checking each email.
@@ -256,6 +270,8 @@ print("Only Alice:", only_alice)  # {'hiking', 'reading'}
 print("Everyone:", everyone)      # union of both sets
 ```
 
+**Your turn:** Write `new_subscribers(old_list, new_list)` that returns the emails in `new_list` that weren't in `old_list`, using one set operation. Test it with two short lists.
+
 ### Checkpoint
 You can explain why `order_id in processed_order_ids` stays fast even as the set grows to a million entries, and you've used at least one set operation (`&`, `-`, or `|`).
 
@@ -313,6 +329,8 @@ playlist.add_front("Song B")
 playlist.add_front("Song A")
 print(playlist.to_list())  # ["Song A", "Song B", "Song C"]
 ```
+
+**Your turn:** Add a `contains(self, value)` method to `LinkedList` that walks the chain and returns `True` or `False`. What is its Big O cost, and why?
 
 ### Checkpoint
 You can explain why `add_front` is O(1) for a linked list but O(n) for a Python list.
@@ -384,6 +402,8 @@ enqueue_job("send welcome email to Bob")
 print(process_next_job())  # Alice's email is processed first - it was queued first
 ```
 
+**Your turn:** Write `is_balanced(text)` that uses a list as a stack to check whether brackets `(` and `)` are balanced: push on `(`, pop on `)`, and return `False` if you try to pop from an empty stack. At the end, the text is balanced only if the stack is empty. `"(a(b)c)"` should give `True`; `"(()"` and `")("` should give `False`.
+
 ### Checkpoint
 You can explain, without looking back, why undo uses a stack and background jobs use a queue.
 
@@ -446,6 +466,8 @@ file_system = {
 }
 print(count_files(file_system))  # 3
 ```
+
+**Your turn:** Write `count_comments(comment)` for a thread where each comment is a dictionary like `{"text": "Hi", "replies": [...]}`, and replies can have their own replies. Return the total number of comments, including the top one.
 
 ### Checkpoint
 You can identify the base case and recursive step in both examples above without re-reading them.
@@ -525,6 +547,8 @@ print(catalog.contains(60))  # True
 print(catalog.contains(99))  # False
 ```
 
+**Your turn:** Add a `min_value(self)` method to `BST` that returns the smallest value by following `left` from the root until there's no left child. For the catalog above it should return 20.
+
 ### Checkpoint
 You can explain why searching a balanced BST is roughly O(log n) instead of O(n).
 
@@ -585,6 +609,8 @@ def bfs_shortest_path(graph, start, target):
 print(bfs_shortest_path(graph, "Alice", "Dave"))
 # ['Alice', 'Bob', 'Dave']  -- the shortest connection path
 ```
+
+**Your turn:** Add `"Eve": ["Alice"]` to the graph and give Dave a follow back to Eve (`"Dave": ["Eve"]`). Then find the shortest path from Bob to Carol. Why doesn't the loop (Alice > Bob > Dave > Eve > Alice) make BFS run forever?
 
 ### Checkpoint
 You can explain why BFS, not DFS, is the right choice when you specifically need the *shortest* path.
@@ -650,6 +676,8 @@ print(heapq.heappop(tasks))    # (1, 'Fix login bug') - removed in O(log n)
 print(heapq.nsmallest(2, tasks))  # [(2, 'Review pull request'), (3, 'Reply to email')]
 ```
 
+**Your turn:** Sort `products_with_category` by category A to Z, but within each category by price from highest to lowest (hint: use `-p["price"]` in the key tuple).
+
 ### Checkpoint
 You can sort a list of dictionaries by one field, and by two fields with a tiebreaker.
 
@@ -702,6 +730,8 @@ sorted_ids = list(range(0, 1_000_000, 2))  # 500,000 sorted even numbers
 print(binary_search(sorted_ids, 45000))   # finds it in ~20 comparisons
 print(linear_search(sorted_ids, 45000))   # would take up to ~22,500 comparisons
 ```
+
+**Your turn:** Add a counter to `binary_search` that counts how many times the loop runs, and print it for a few targets in `sorted_ids`. It should never go above about 20, even though the list has 500,000 items.
 
 ### Checkpoint
 You can explain why binary search requires sorted data and what happens if you run it on unsorted data.
@@ -771,7 +801,13 @@ def calculate_shipping_cost(weight_kg, distance_km):
     cost = (weight_kg * 2.5) + (distance_km * 0.1)
     price_cache[key] = cost
     return cost
+
+print(calculate_shipping_cost(2, 100))   # 15.0, calculated
+print(calculate_shipping_cost(2, 100))   # 15.0, returned from the cache
+print(len(price_cache))                  # 1, only one result stored
 ```
+
+**Your turn:** Python has memoization built in. Write `fib_cached` using `from functools import cache` and the `@cache` decorator above a plain recursive Fibonacci function, then time `fib_cached(30)` against `fib_slow(30)`.
 
 ### Checkpoint
 You can explain, in plain language, why `fib_fast` avoids the repeated work that makes `fib_slow` so much slower.

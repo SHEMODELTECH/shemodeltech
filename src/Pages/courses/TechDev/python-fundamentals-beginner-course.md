@@ -4,12 +4,20 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Store data in variables of the right type and convert between types (such as text to number)
+- Write programs that make decisions with `if`/`elif`/`else` and repeat work with `for` and `while` loops
+- Write reusable functions with parameters, default values, and return values
+- Handle errors with `try`/`except`/`finally` so bad input doesn't crash your program
+- Split code into your own modules, install packages with pip, and model real things with classes
+- Save data to text and JSON files and read it back
+
 **Who this is for:** Complete beginners to programming, or anyone who has copied code before but wants to actually understand what it's doing.
 
 **How the course works:** Nine modules. Every topic follows the same pattern:
 - **Concept** - what it is, in plain language
 - **Where you'd actually use this** - a real product scenario
-- **Lab** - hands-on, runnable code
+- **Lab** - hands-on, runnable code, ending with a short "Your turn" exercise you write yourself
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
@@ -121,6 +129,8 @@ print(price_as_number + 5)     # 24.99 - works, because it's now a float
 }
 ```
 
+**Your turn:** Add a variable `cart_count` holding the text `"3"`. Convert it to an `int`, add 1, and print the result and its type.
+
 ### Checkpoint
 You ran the code above, saw each type printed correctly, and understand why `price_as_text + 5` would fail.
 
@@ -180,6 +190,8 @@ login_count += 1   # same as: login_count = login_count + 1
 print(login_count) # 1
 ```
 
+**Your turn:** Write one line that sets `can_checkout` to `True` only if `cart_total` is over 0 *and* the user is logged in *or* is a guest (`is_guest = True`). Print it, then change the values and check it again.
+
 ### Checkpoint
 You can predict the output of each print statement above before running it.
 
@@ -224,6 +236,8 @@ print(get_shipping_cost(cart_total=30, is_premium_member=False))   # 5.0
 print(get_shipping_cost(cart_total=10, is_premium_member=True))    # 0
 print(get_shipping_cost(cart_total=10, is_premium_member=False))   # 9.99
 ```
+
+**Your turn:** Write `get_grade(score)` that returns `"A"` for 90 and above, `"B"` for 80 to 89, `"C"` for 70 to 79, and `"Needs work"` otherwise. Test it with 95, 80, 72, and 40.
 
 ### Checkpoint
 You can trace through `get_shipping_cost` by hand for a new set of inputs and predict the correct output before running it.
@@ -287,6 +301,8 @@ while attempts < max_attempts and not success:
 print("Success!" if success else "Failed after all attempts")
 ```
 
+**Your turn:** Using the same `cart`, write a loop that counts how many items cost more than 3.00 and prints the count (it should be 2).
+
 ### Checkpoint
 You can explain why the `while` loop stops after exactly 3 attempts, tracing through both conditions.
 
@@ -341,6 +357,8 @@ def process_order(price, discount_percent, customer_email):
 
 print(process_order(100, 15, "alice@example.com"))
 ```
+
+**Your turn:** Write `format_price(amount)` that returns text like `"$12.50"` (hint: `f"${amount:.2f}"`). Use it inside `process_order` so the confirmation always shows two decimal places.
 
 ### Checkpoint
 You can explain what a default parameter is and identify where `process_order` reuses the other two functions.
@@ -454,6 +472,8 @@ process_payment(-10)
 }
 ```
 
+**Your turn:** Write `safe_get_email(user)` that returns `user["email"]`, but catches a `KeyError` and returns `"no email on file"` instead. Test it with `{"email": "a@b.com"}` and with `{}`.
+
 ### Checkpoint
 You can explain the difference between what happens with and without a matching `except` block for the error that occurs.
 
@@ -523,6 +543,8 @@ final = calculate_tax(price)
 print(final)
 ```
 
+**Your turn:** Add a function `format_receipt(price)` to `pricing.py` that returns text like `"Total: $86.40"`, then import it in `main.py` and print `format_receipt(final)`.
+
 ### Checkpoint
 You created your own two-file project, where `main.py` successfully imports and uses functions from `pricing.py`.
 
@@ -533,7 +555,7 @@ You created your own two-file project, where `main.py` successfully imports and 
 4. What does `from pricing import calculate_discount` do, specifically?
 5. Would `main.py` work if `pricing.py` weren't in the same folder (without further configuration)?
 
-*Answers: 1) A module is a single file; a package is a folder of related modules. 2) Install third-party code other people have published, extending what's available beyond the built-in standard library. 3) Easier to find, maintain, and reuse code as a project grows, rather than scrolling through one massive file. 4) Imports only that specific function from the `pricing` module, rather than everything in it. 5) No, not without adjusting the import path, Python needs to know where to find the module.*
+*Answers: 1) A module is a single file; a package is a folder of related modules. 2) Install third-party code other people have published, extending what's available beyond the built-in standard library. 3) Easier to find, maintain, and reuse code as a project grows, rather than scrolling through one massive file. 4) Makes that one function available by its own name in `main.py`, so you can call `calculate_discount(...)` without writing `pricing.` in front. 5) No, not without adjusting the import path, Python needs to know where to find the module.*
 
 ---
 
@@ -586,6 +608,8 @@ class RecurringTask(Task):
 weekly_task = RecurringTask("Water the plants", repeat_every_days=7)
 weekly_task.mark_complete()
 ```
+
+**Your turn:** Add a method `change_priority(self, new_priority)` to `Task` that only accepts values from 1 to 5 and raises `ValueError` otherwise. Call it with 2, then with 9 inside a `try`/`except`.
 
 ### Checkpoint
 You can explain what `self` refers to, and why `RecurringTask` doesn't need to redefine `__init__` from scratch.
@@ -644,6 +668,8 @@ with open("user.json", "r") as f:
     loaded_data = json.load(f)
     print(loaded_data["name"])   # Alice
 ```
+
+**Your turn:** Load `user.json`, add 1 to `tasks_completed`, and save it back. Run your script twice and check that the number went up each time.
 
 ### Checkpoint
 You created a text file and a JSON file, then successfully read both back and printed their contents.

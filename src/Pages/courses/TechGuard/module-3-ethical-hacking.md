@@ -3,7 +3,14 @@
 
 **Time: about 7 hours** (about 2 hours for Kali setup, 2.5 hours for pen testing, 2.5 hours for reconnaissance).
 
-**Tools needed for this module:** a **Kali Linux** virtual machine (run in VirtualBox, VMware, or similar so it stays isolated), and a legal practice environment. For active exercises, use only targets you own or ones explicitly set up for learning, for example a local intentionally-vulnerable app like **OWASP Juice Shop** or **Metasploitable** in a VM on your own machine. Put Metasploitable on a **host-only** network adapter (never bridged to your home network or the internet), because it is deliberately insecure; run Juice Shop bound to `127.0.0.1`.
+**By the end of this module, you'll be able to:**
+- Set up an isolated, updated Kali Linux VM with a clean snapshot and run a first scan against yourself
+- Write a scope (rules of engagement) document before any testing starts
+- Run recon and enumeration with `nmap` against your own local, intentionally vulnerable lab target
+- Compare passive and active reconnaissance and assemble an attack-surface profile
+- Write a short finding with impact and remediation, and explain why authorization is what makes testing legal
+
+**Tools needed for this module:** a **Kali Linux** virtual machine (run in VirtualBox, VMware, or similar so it stays isolated), and a legal practice environment. For active exercises, use only targets you own that are built for learning: a local, intentionally vulnerable app like **OWASP Juice Shop** or **Metasploitable** on your own machine. Put Metasploitable on a **host-only** network adapter (never bridged to your home network or the internet), because it is deliberately insecure; run Juice Shop inside your Kali VM, bound to `127.0.0.1` (Topic 3.2 shows how).
 
 > **Read this before anything else.** Ethical hacking means *authorized* testing. Running these tools against a system you don't own, without explicit written permission, is illegal in most countries and can carry serious criminal penalties. The only thing separating a penetration tester from an attacker is authorization. Every active lab in this module targets only your own Kali VM or your own local, intentionally vulnerable lab app. Never point these tools anywhere else, including public "practice" hosts.
 
@@ -121,11 +128,24 @@ Assessing a company's web application or network before launch, meeting a compli
 
 > Do this only against a target you own, such as a local OWASP Juice Shop or Metasploitable VM on your own machine.
 
+**First, set up your lab target** (pick one):
+
+- **Juice Shop (simplest):** inside your Kali VM, install Docker and start Juice Shop so it listens only on that VM:
+  ```bash
+  sudo apt install -y docker.io
+  sudo docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
+  ```
+  Leave it running and open a second terminal. Your target address is `127.0.0.1` (the app is on port 3000).
+- **Metasploitable 2:** download it from its official source, import it into the same hypervisor as Kali, and attach **both** VMs to the same **host-only** network. Log in to Metasploitable (the login is shown on its console) and run `ifconfig` to get its address (Metasploitable 2 is an old Linux release, so `ifconfig` is the reliable command there).
+
+Wherever the steps below say `<your-lab-VM-ip>`, use that address and nothing else.
+
 1. **Write a one-page scope document** for your lab target: which host, which IP, what's in scope, what's explicitly out of scope, and the time window. This is your practice rules of engagement.
-2. **Run the recon and enumeration phases** against your own VM, mapping open ports and running services:
+2. **Run the recon and enumeration phases** against your own lab target, mapping open ports and running services:
 ```bash
 nmap -sV <your-lab-VM-ip>
 ```
+(For Juice Shop, `nmap -sV -p 3000 127.0.0.1` is enough, since it serves one port.)
 3. **Enumerate one service** further to identify its version and any obvious misconfiguration, staying within your scope document.
 4. **Identify one documented vulnerability** in the target (intentionally-vulnerable apps ship with known issues) and note how it maps to a real risk, without weaponising anything beyond confirming it exists.
 5. **Write a mini-report** with three sections for that one finding: what it is, why it matters (impact), and how to fix it (remediation).

@@ -1,6 +1,14 @@
 <!-- order: 5 -->
 ## Module 4: API Testing
 
+**Time: about 7 hours** (2 hours each for Postman and Swagger, 3 hours for automated suites).
+
+**By the end of this module, you'll be able to:**
+- Send API requests in Postman and write test scripts that check status codes, fields, and response time
+- Read an OpenAPI (Swagger) schema and compare a live response against it
+- Build a collection with positive and negative tests and chain requests with a collection variable
+- Run the same collection from the terminal with Newman, ready for a CI/CD pipeline
+
 **Tools needed for this module:** [Postman](https://www.postman.com) (the desktop app or web app on its free tier), [Node.js](https://nodejs.org) for running collections from the terminal with Newman in Topic 4.3, and access to a public test API (the labs use a free one, no account needed for that part).
 
 ### Topic 4.1: Postman

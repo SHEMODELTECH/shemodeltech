@@ -3,6 +3,12 @@
 
 **Time: about 5 hours** (roughly 2 hours for encryption, 1.5 hours each for hashing and certificates).
 
+**By the end of this module, you'll be able to:**
+- Encrypt and decrypt a file with AES, and an RSA key pair, using OpenSSL
+- Compare symmetric, asymmetric, and hybrid encryption, and explain how TLS 1.3 combines them
+- Hash strings and files with SHA-256, show the avalanche effect, and explain why passwords need salted, slow hashes like bcrypt or Argon2
+- Read a real site's certificate chain, issuer, and expiry, and explain how a chain of trust works
+
 **Tools needed for this module:** a terminal and **OpenSSL**, which is already installed on most macOS and Linux systems (and available for Windows). You'll also use built-in hashing utilities like `sha256sum` and `md5sum` (on macOS these are `shasum -a 256` and `md5`). No programming is required, though a language of your choice is handy if you want to experiment further. All labs work on files you create yourself, plus reading the public certificate a website sends to every visitor, so they are completely legal.
 
 ### Topic 4.1: Encryption
@@ -176,8 +182,9 @@ echo -n "Hello" | sha256sum
 ```
 Compare the two digests, they should look completely unrelated.
 
-3. **Hash a file** and record its digest:
+3. **Create a file, hash it,** and record its digest:
 ```bash
+echo "my original text" > somefile.txt
 sha256sum somefile.txt
 ```
 4. **Modify the file slightly, re-hash it**, and confirm the digest changed, this is how integrity checks catch tampering.

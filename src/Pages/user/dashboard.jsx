@@ -22,6 +22,7 @@ import {
   computeCompanyDisbursements,
   formatMoney,
 } from '../../utils/paidProjects';
+import { levelForCount } from '../../config/badgeTracks';
 
 const badgeData = [
   { id: 'techmo', title: 'TechPO', image: '/Images/TechMO.png', label: 'Product / Project Owner' },
@@ -384,16 +385,9 @@ const DashboardOverview = () => {
                   const earned = matches.length > 0;
                   if (!earned) return null; // only the badges this member has earned
                   // Level is derived LIVE from how many badges earned in this track,
-                  // so it advances as more are earned (Novice 1, Associate 2-5, Advanced 6-10, Expert 11+).
+                  // so it advances as more are earned (Novice 1-2, Associate 3-6, Advanced 7-11, Expert 12+).
                   const count = matches.length;
-                  const level =
-                    count >= 11
-                      ? 'Expert'
-                      : count >= 6
-                        ? 'Advanced'
-                        : count >= 2
-                          ? 'Associate'
-                          : 'Novice';
+                  const level = levelForCount(count) || 'Novice';
                   return (
                     <div
                       key={badge.id}

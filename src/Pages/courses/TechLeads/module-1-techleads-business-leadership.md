@@ -3,6 +3,13 @@
 
 Time: about 6 hours
 
+**By the end of this module, you'll be able to:**
+- Write the same status update for a team and for stakeholders, answering what happened, what's at risk, and what's needed
+- Give feedback using the Situation-Behavior-Impact (SBI) framework, followed by an open coaching question
+- Draft a growth plan with measurable progress signals and a scheduled follow-up
+- Build a delegation matrix and plan a Sprint against real team capacity
+- Run a retrospective that produces one concrete change, and check it shows up in the next plan
+
 **Purpose of this module:** Lead technology teams without necessarily writing code. This module is about the human and organizational side of engineering leadership, communication, coaching, and team management, rather than technical execution.
 
 **Tools needed for this module:** No software installation required. A notes app or doc tool for templates (1:1 notes, feedback drafts, delegation matrix) is helpful but any notebook works. If your team already uses a project tool (Jira, Linear, Asana, etc.), you can use it for the Team Management lab, but it isn't required to start.

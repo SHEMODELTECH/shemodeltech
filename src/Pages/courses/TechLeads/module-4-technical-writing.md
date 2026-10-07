@@ -3,6 +3,13 @@
 
 Time: about 6 hours
 
+**By the end of this module, you'll be able to:**
+- Choose the right page type (tutorial, how-to, reference, explanation) for a reader's goal
+- Write a how-to guide and a GitHub README, and revise them after watching someone follow them
+- Write a decision document with fairly described options and a clear ask, plus a matching decision record
+- Take meeting notes that capture only decisions and owned, dated action items
+- Edit a page in passes (structure, then sentences) using plain language, active voice, and front-loading
+
 **Purpose of this module:** Write documentation, decisions, and updates that people can actually use. Technical writers, project coordinators, and tech leads spend much of their week writing, and clear writing is often the fastest way a non-coder makes a technical team faster.
 
 **Tools needed for this module:** A document tool (Google Docs, Notion, or any word processor) and a free [GitHub](https://github.com) account for the README lab. No coding required.
@@ -49,7 +56,7 @@ A new team member spends two days getting a project running because setup lives 
 1. **Pick a real tool or process** you know well, such as submitting expenses, setting up an app, or running a meeting template.
 2. **Write one sentence** naming the reader and the goal: "A new team member who needs to…"
 3. **Write a how-to guide** for it: a short title that states the task, one line on prerequisites, then numbered steps, each starting with a verb.
-4. **Create a GitHub repository** and write its README with four sections: what this is, who it's for, how to get started, and where to get help.
+4. **Create a GitHub repository** (on github.com, choose **New repository** and tick **Add a README file**), then edit `README.md` in the browser with the pencil icon and write four sections, each under a `## ` heading: what this is, who it's for, how to get started, and where to get help. Commit the change and check how it renders on the repository page.
 5. **Have someone follow your how-to** without your help, and note every place they paused, asked a question, or went wrong. Revise those steps.
 
 ```lab
@@ -108,7 +115,7 @@ You have a tested how-to guide revised from a real reader's attempt, and a READM
 
 Teams make expensive decisions: which tool to buy, how to design a feature, whether to delay a launch. Written decision documents make those choices clearer, fairer, and easier to revisit, because everyone reviews the same options and reasons instead of whoever spoke last in a meeting.
 
-- A **decision document** (also called a proposal or design doc) states the problem, the options, a recommendation, and the trade-offs
+- A **decision document** (also called a proposal or design doc) states the problem, the options, the criteria used to compare them, a recommendation, and the trade-offs
 - A **decision record** is a short, dated note of what was decided, by whom, and why, kept so future readers don't reopen settled questions
 - **Meeting notes** that matter capture decisions and action items (who does what, by when), not a transcript
 - Writing **options fairly**, including the ones you don't recommend, builds trust and exposes weak reasoning

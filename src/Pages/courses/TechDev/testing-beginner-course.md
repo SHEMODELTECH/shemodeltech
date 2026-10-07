@@ -3,6 +3,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Explain the testing pyramid and decide which kind of test a check belongs in
+- Write unit tests in Jest using Arrange, Act, Assert, including tests for edge cases and expected errors
+- Write integration tests that send real HTTP requests into an Express API with Supertest
+- Write end-to-end tests in Playwright that drive a real browser through a user flow
+- Read a failing test's output and tell whether it points to a logic bug or a wiring problem
+
 **Who this is for:** Beginners who can write working code and now want a reliable way to prove it keeps working, catching bugs before users do, and catching them again every time something changes.
 
 **How the course works:** Four modules. Every topic follows the same pattern:
@@ -229,8 +236,10 @@ Any API endpoint, confirming that routing, middleware (like JSON parsing or auth
 
 1. **Install Supertest** in the same project from Module 1:
 ```bash
-npm install --save-dev supertest express
+npm install express
+npm install --save-dev supertest
 ```
+Express is a normal dependency (your app needs it to run); Supertest is a dev dependency (only your tests need it).
 
 2. **Create `app.js` and `app.test.js`** using the code from **Syntax at a Glance**, then run:
 ```bash
@@ -281,15 +290,16 @@ const { test, expect } = require("@playwright/test");
 test("user can add a task and see it in the list", async ({ page }) => {
   await page.goto("http://localhost:3000");
 
-  await page.fill("#task-input", "Write end-to-end tests");
-  await page.click("#add-task-button");
+  await page.locator("#task-input").fill("Write end-to-end tests");
+  await page.locator("#add-task-button").click();
 
   await expect(page.locator("li")).toContainText("Write end-to-end tests");
 });
 ```
 - `test("description", async ({ page }) => { ... })` defines a test with access to a real, automated browser `page`
 - `page.goto(url)` navigates to a real running page, just like typing a URL into a browser
-- `page.fill(selector, text)` and `page.click(selector)` simulate real typing and clicking, using the same CSS selectors you'd use in CSS itself
+- `page.locator(selector)` finds an element using the same CSS selectors you'd use in CSS itself; `.fill(text)` and `.click()` simulate real typing and clicking, waiting automatically until the element is ready
+- In larger projects, Playwright recommends finding elements the way a user would, for example `page.getByRole("button", { name: "Add" })`, so tests keep working when IDs or classes change
 - `expect(page.locator(selector)).toContainText(text)` waits for and checks what's actually visible on the rendered page, not just a returned value
 
 ### Where you'd actually use this
@@ -333,8 +343,9 @@ mkdir e2e-tests
 cd e2e-tests
 npm init -y
 npm install --save-dev @playwright/test
-npx playwright install
+npx playwright install chromium
 ```
+The last command downloads the Chromium browser Playwright drives (`npx playwright install` with no name downloads every supported browser, which is much bigger).
 
 3. **Create `example.spec.js`** using the code from **Syntax at a Glance**, then run:
 ```bash
@@ -352,7 +363,7 @@ Watch the browser window open, type, and click entirely on its own.
 ```javascript
 test("clicking add with an empty input adds nothing", async ({ page }) => {
   await page.goto("http://localhost:3000");
-  await page.click("#add-task-button");
+  await page.locator("#add-task-button").click();
   await expect(page.locator("li")).toHaveCount(0);
 });
 ```

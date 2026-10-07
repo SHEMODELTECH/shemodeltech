@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Map the five stages of a data pipeline for an AI use case
+- Clean a messy dataset with pandas and check the result with assertions
+- Design a versioned SQL schema and build a batch ETL pipeline that loads into it
+- Prepare labeled, stratified train/validation/test splits and check them for data leakage
+- Build and query a vector store from a set of documents
+- Add schema checks, value checks, and a simple drift check that stop bad data before it is loaded
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -252,15 +260,56 @@ Add `dataset_version` and `created_at` fields to your core table.
 
 **Step 6: Write the schema as SQL.**
 ```sql
+CREATE TABLE customers (
+    id TEXT PRIMARY KEY,
+    name TEXT
+);
+
 CREATE TABLE tickets (
     ticket_id TEXT PRIMARY KEY,
     text TEXT NOT NULL,
     created_at TIMESTAMP,
     label TEXT,
+    customer_id TEXT REFERENCES customers(id),
     dataset_version TEXT
 );
 ```
-`PRIMARY KEY` uniquely identifies each row; `NOT NULL` enforces that a field can't be left empty.
+`PRIMARY KEY` uniquely identifies each row; `NOT NULL` enforces that a field can't be left empty; `REFERENCES` makes `customer_id` a foreign key pointing at `customers.id`.
+
+Now run the schema to prove it works. Python's built-in `sqlite3` module creates a small database file, so there's nothing to install. Add a **code cell**, paste in the code below, and run it:
+```python
+import sqlite3
+
+schema = """
+CREATE TABLE IF NOT EXISTS customers (
+    id TEXT PRIMARY KEY,
+    name TEXT
+);
+CREATE TABLE IF NOT EXISTS tickets (
+    ticket_id TEXT PRIMARY KEY,
+    text TEXT NOT NULL,
+    created_at TIMESTAMP,
+    label TEXT,
+    customer_id TEXT REFERENCES customers(id),
+    dataset_version TEXT
+);
+"""
+conn = sqlite3.connect("schema_test.db")
+conn.executescript(schema)
+conn.execute("INSERT OR REPLACE INTO customers VALUES ('C1', 'Ada')")
+conn.execute("INSERT OR REPLACE INTO tickets VALUES "
+             "('T001', 'I was charged twice', '2026-09-01', 'billing_issue', 'C1', 'v1')")
+conn.commit()
+
+try:
+    conn.execute("INSERT INTO tickets (ticket_id, text) VALUES ('T002', NULL)")
+except sqlite3.IntegrityError as error:
+    print("Rejected as expected:", error)
+
+print(conn.execute("SELECT * FROM tickets").fetchall())
+conn.close()
+```
+The empty-text row is rejected with `NOT NULL constraint failed: tickets.text`, which shows the schema itself guards data quality, not just your cleaning code.
 
 **Step 7: The schema.**
 Your tables and their foreign-key relationship look like this:

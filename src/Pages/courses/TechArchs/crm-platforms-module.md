@@ -3,6 +3,13 @@
 
 **Time: about 6 hours** (roughly 2 hours per platform).
 
+**By the end of this module, you'll be able to:**
+- Set up HubSpot contacts, a company, a deal in a pipeline, tasks, and a dashboard
+- Create a custom field in Salesforce and build a record-triggered flow that reacts to it
+- Build a Zoho CRM workflow rule and a Blueprint that enforces an ordered process
+- Explain the difference between a trigger-based workflow and an enforced process
+- Compare HubSpot, Salesforce, and Zoho and name a good fit for each
+
 **Purpose:** Build business solutions without extensive programming.
 
 **Tools needed for this module:** A web browser and an email address to sign up for free tiers or trials — [HubSpot CRM](https://www.hubspot.com/products/crm) (free tier), a [Salesforce Trailhead Playground](https://trailhead.salesforce.com) (free sandbox org) or free trial, and [Zoho CRM](https://www.zoho.com/crm/) (free tier). No coding environment or installs are required, everything happens in the browser. You won't need all three set up at once, each topic only needs its own account.
@@ -17,7 +24,7 @@ Time: about 2 hours
 
 - A **contact** is HubSpot's core record, a person, with three related record types you connect to it: **companies** (organizations), **deals** (possible sales), and **tickets** (support requests). Linking records is called an **association**
 - A **property** is a field on a record (like email, lifecycle stage, or a custom field you define yourself)
-- A **workflow** is an automation built from a trigger (like "form submitted") and a chain of actions (send email, update a property, notify a rep), all assembled visually. Workflows need a paid plan (Professional tier or higher at the time of writing; check the current plan page)
+- A **workflow** is an automation built from a trigger (like "form submitted") and a chain of actions (send email, update a property, notify a rep), all assembled visually. Full workflows need a paid plan (a Professional-level tier at the time of writing; check the current plan)
 - A **pipeline** organizes deals or tickets into stages so progress is visible at a glance. HubSpot's default sales pipeline uses: Appointment Scheduled, Qualified to Buy, Presentation Scheduled, Decision Maker Bought-In, Contract Sent, Closed Won, and Closed Lost (you can rename or edit these)
 - **Tasks** are to-dos (call, email, follow-up) with a due date and an owner, attached to a record, and **dashboards** group reports so a team can see deals and activity at a glance
 - A **form** on your website creates or updates a **contact**, not a deal. On the free plan, deals are not created automatically; someone creates them by hand (or a paid workflow does it)
@@ -54,7 +61,7 @@ Small to mid-sized teams that want marketing and sales in one system without hir
 3. **Create a deal in the default pipeline.** Go to CRM > Deals, create a deal, set yourself as **Deal owner**, and associate it with one of your contacts and the company. Switch to the board view and drag the deal from "Appointment Scheduled" to "Qualified to Buy" to "Presentation Scheduled" to see how stages track progress. Optional: to change the stage names, go to Settings > Objects > Deals > Pipelines and edit them.
 4. **Create two tasks.** Open your deal, add a task called "Call customer" due today and one called "Send proposal" due tomorrow, both assigned to you. Check them under CRM > Tasks.
 5. **Build a simple dashboard.** Go to Reporting > Dashboards, create a new dashboard, and add a few reports from the report library, such as deals by stage and tasks or activities. Exact report names change over time, and the free plan limits how many dashboards and reports you can have.
-6. **Build a basic workflow (paid feature).** Workflows need a Professional-tier plan. If HubSpot offers you a free trial, you can start one (set a reminder to cancel it); otherwise, follow along by reading these steps. In Automation > Workflows, create a contact-based workflow, set the trigger to "lifecycle stage is set to Lead," and add one action: send an internal notification email to yourself. Enroll a test contact manually and confirm the notification fires.
+6. **Build a basic workflow (paid feature).** Workflows need a paid plan (check the current plan for which tier). If HubSpot offers you a free trial, you can start one (set a reminder to cancel it); otherwise, follow along by reading these steps. In Automation > Workflows, create a contact-based workflow, set the trigger to "lifecycle stage is set to Lead," and add one action: send an internal notification email to yourself. Enroll a test contact manually and confirm the notification fires.
 
 #### Checkpoint
 You have a company with associated contacts, a deal moving through HubSpot's default pipeline, tasks with owners and due dates, and a simple dashboard. You can explain what a workflow's trigger and actions are (and you built one if you had a trial), and why a form submission creates a contact but not a deal on the free plan.
@@ -114,7 +121,7 @@ Larger organizations with complex sales processes, multiple departments needing 
 1. **Sign up for a free Trailhead Playground** through [trailhead.salesforce.com](https://trailhead.salesforce.com), a disposable sandbox org meant for learning.
 2. **Explore the standard Opportunity object**, opening a sample record (or creating one) and reviewing its default fields and stage picklist.
 3. **Create a custom field** on the Opportunity object (Setup > Object Manager > Opportunity > Fields), for example a checkbox called "Requires Manager Approval."
-4. **Build a simple record-triggered flow** (in Setup, search "Flows" in Quick Find, then click New Flow and choose Record-Triggered Flow): set it to run when an Opportunity is updated and the "Requires Manager Approval" checkbox equals true, then add one action, the "Send Email" action, sending a short email to yourself.
+4. **Build a simple record-triggered flow** (in Setup, search "Flows" in Quick Find, then click New Flow and choose Record-Triggered Flow): choose the Opportunity object, trigger "A record is updated", entry condition "Requires Manager Approval" equals True, run "Only when a record is updated to meet the condition requirements", and optimize for "Actions and Related Records" (sending an email is not possible in the fast field-update mode). Then add one Action element, "Send Email", with your own address as the recipient and a short subject and body.
 5. **Activate the flow, then test it** by ticking the checkbox on a sample Opportunity, saving, and confirming the email arrives.
 
 #### Checkpoint
@@ -175,8 +182,8 @@ Small and mid-sized businesses that want CRM tightly bundled with other affordab
 
 1. **Sign up for a free Zoho CRM account** at [zoho.com/crm](https://www.zoho.com/crm/). Workflow rules and Blueprint may not be included in the free edition (check the current plan page). If they aren't, start Zoho's free trial of a paid edition for steps 3 to 5, or follow along by reading them.
 2. **Create a Lead record manually**, filling in name, company, and status, to see how a module's fields are structured.
-3. **Create a workflow rule** (Setup > Automation > Workflow Rules): trigger it when a Lead's status changes to "Qualified," with an action that sends a notification email.
-4. **Build a simple Blueprint** on the Leads module with three enforced stages (for example, "New," "Contacted," "Qualified"), requiring a mandatory field to be filled before moving to the next stage.
+3. **Create a workflow rule** (Setup > Automation > Workflow Rules): trigger it when a Lead's Lead Status is updated to "Pre-Qualified" (one of Zoho's default values; you can edit the list in the field's settings), with an action that sends a notification email.
+4. **Build a simple Blueprint** (Setup > Process Management > Blueprint) on the Leads module, using the Lead Status field for its states, with three enforced stages (for example, "Not Contacted," "Contacted," "Pre-Qualified"), and set the transition into the last stage to require a mandatory field (such as a short note), so it must be filled before moving on.
 5. **Walk a test Lead through the Blueprint**, attempting to skip a stage first to see it get blocked, then completing the required field and confirming it proceeds.
 
 #### Checkpoint

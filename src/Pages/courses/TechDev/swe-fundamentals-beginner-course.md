@@ -3,6 +3,14 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Write a one-page spec that defines the problem, users, core flow, non-goals, and one success metric
+- Build and run a small FastAPI backend with endpoints that save data to a database through an ORM
+- Choose a data structure (such as a heap) by reasoning about Big O, and explain the trade-off
+- Hash passwords safely and check each endpoint for authentication, authorization, and input validation
+- Call an LLM from server code and validate its output against a schema before trusting it
+- Test your code with pytest, work on branches with pull requests, and ship with Docker and GitHub Actions CI
+
 **Who this is for:** Someone who is new to software engineering - you may have written a few lines of code before, or none at all. No prior experience with backends, databases, or AI tools is assumed.
 
 **What you'll build:** TrackIt, a real task-tracking app with an AI-powered "quick add" feature, built one module at a time.
@@ -499,9 +507,9 @@ You have a written answer to all three questions above, in your own words, even 
 2. Why does it matter whether data needs to be immediately accurate vs. eventually accurate?
 3. If your app got 100x slower under load, what would you check first?
 4. Is "add more servers" always the right first fix? Why or why not?
-5. Why do interviewers ask system design questions instead of just algorithm questions?
+5. TrackIt's "tasks completed this month" count is slow to calculate. Based on your answer to question 2, what could you do with it?
 
-*Answers: 1) A single component whose failure takes down the whole system. 2) It determines which parts need strict consistency and which can be optimized differently (e.g., cached, computed later). 3) The database, since it's usually the first bottleneck. 4) No - first find the actual bottleneck; adding servers doesn't help if the database itself is the limit. 5) Because most real engineering work is about reasoning through trade-offs, not solving isolated puzzles.*
+*Answers: 1) A single component whose failure takes down the whole system. 2) It determines which parts need strict consistency and which can be optimized differently (e.g., cached, computed later). 3) The database, since it's usually the first bottleneck. 4) No - first find the actual bottleneck; adding servers doesn't help if the database itself is the limit. 5) Because it can lag a little without harming users, you could cache it or recalculate it every few minutes instead of on every request.*
 
 ---
 
@@ -622,7 +630,9 @@ def call_llm(system_prompt: str, user_text: str) -> str:
     return response.json()["content"][0]["text"]
 
 def parse_quick_add(user_text: str) -> ParsedTask:
-    raw_response = call_llm(SYSTEM_PROMPT, user_text)
+    # The model doesn't know today's date, so tell it; otherwise "by Friday" can't become a real date
+    message = f"Today's date is {date.today().isoformat()}.\n\nTask: {user_text}"
+    raw_response = call_llm(SYSTEM_PROMPT, message)
     try:
         data = json.loads(raw_response)
         return ParsedTask(**data)
@@ -744,19 +754,27 @@ COPY . .
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-**2. Create a requirements file listing what you've installed so far:**
+**2. Tell Docker what to leave out.** `COPY . .` copies everything in your folder, including your `venv` (which only works on your own computer) and your local `trackit.db`. Create a file named `.dockerignore`:
+```
+venv/
+__pycache__/
+trackit.db
+.git/
+```
+
+**3. Create a requirements file listing what you've installed so far:**
 ```bash
 pip freeze > requirements.txt
 ```
 
-**3. Build and run your container:**
+**4. Build and run your container:**
 ```bash
 docker build -t trackit-api .
 docker run -p 8000:8000 trackit-api
 ```
 Visit `http://localhost:8000/health` again - it should work exactly as it did outside Docker.
 
-**4. Add automatic testing on every change.** Create the folders first with `mkdir -p .github/workflows` (in Windows PowerShell: `mkdir .github\workflows`), then create this file:
+**5. Add automatic testing on every change.** Create the folders first with `mkdir -p .github/workflows` (in Windows PowerShell: `mkdir .github\workflows`), then create this file:
 ```yaml
 # .github/workflows/ci.yml
 name: CI
@@ -772,12 +790,12 @@ jobs:
       - run: pip install -r requirements.txt
       - run: pytest
 ```
-**5. Commit everything on a branch, push, and open a pull request.** First merge your Module 8 pull request on GitHub, so your app files and the files your tests need (`priority.py` and `test_priority.py`) are on `main`. Then run:
+**6. Commit everything on a branch, push, and open a pull request.** First merge your Module 8 pull request on GitHub, so your app files and the files your tests need (`priority.py` and `test_priority.py`) are on `main`. Then run:
 ```bash
 git checkout main
 git pull
 git checkout -b feature/docker-ci
-git add Dockerfile requirements.txt .github/workflows/ci.yml
+git add Dockerfile .dockerignore requirements.txt .github/workflows/ci.yml
 git commit -m "Add Dockerfile and CI workflow"
 git push -u origin feature/docker-ci
 ```

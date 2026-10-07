@@ -1,7 +1,15 @@
 <!-- order: 2 -->
 ## Module 1: QA Fundamentals
 
-This module follows CTFL v4.0 topics; it doesn't give certification.
+**Time: about 5 hours** (1 hour for the SDLC, 2 hours each for the STLC and testing principles).
+
+**By the end of this module, you'll be able to:**
+- Name the six SDLC phases in order and identify QA work that happens before the Testing phase
+- Write a short test plan, two structured test cases with test data, and exit criteria for one requirement
+- Explain the seven testing principles and apply them to real decisions about what and how much to test
+- Report a clean test run honestly, without claiming the software is bug-free
+
+This module follows the ISTQB CTFL v4.0 syllabus topics; it doesn't give certification.
 
 ### Topic 1.1: SDLC (Software Development Life Cycle)
 
@@ -127,6 +135,7 @@ flowchart LR
 - A **test case** is a specific, repeatable check of one behavior, with five parts: an ID/title, preconditions, numbered steps, test data, and an expected result
 - **Test data** is the actual values fed into a test case (a valid email, an invalid password, an empty field) to make it concrete rather than theoretical
 - Test Execution isn't just "run it once", it includes logging defects, re-running failed cases after fixes, and tracking status until the exit criteria are met
+- The ISTQB CTFL v4.0 syllabus names this work slightly differently, as the test process: test planning, test monitoring and control, test analysis, test design, test implementation, test execution, and test completion. It's the same work; the six STLC phases above are the names many teams use day to day
 
 #### Where you'd actually use this
 
@@ -287,7 +296,7 @@ You can name and briefly explain all seven testing principles, and you've applie
 4. What does "defects cluster" suggest about how you should allocate testing effort?
 5. Give an example of the "absence-of-defects fallacy": a system with zero known bugs that could still be considered a failure.
 
-*Answers: 1) A passing test run means the tests that were run found no defects, it doesn't prove the software has no defects at all, so results should be reported as "no defects found in this scope," not "the software is bug-free." 2) The number of possible inputs and paths through most software is effectively infinite, so testing every combination isn't feasible; testers must choose a representative, risk-based subset instead. 3) The pesticide paradox (CTFL v4.0 calls it "tests wear out") is the pattern where running the same tests repeatedly stops catching new bugs, because those tests keep checking the same paths while new defects sit elsewhere; the fix is to periodically review and update test cases. 4) It suggests focusing testing effort on the modules or areas historically most prone to defects, rather than spreading effort evenly across all areas regardless of risk. 5) An app that has zero crashes or logged bugs but is so confusing that users can't complete their intended task, it's technically defect-free but still fails to meet the user's actual need.*
+*Answers: 1) A passing test run means the tests that were run found no defects, it doesn't prove the software has no defects at all, so results should be reported as "no defects found in this scope," not "the software is bug-free." 2) The number of possible inputs and paths through most software is effectively infinite, so testing every combination isn't feasible; testers must choose a representative, risk-based subset instead. 3) The pesticide paradox (ISTQB CTFL v4.0 calls it "tests wear out") is the pattern where running the same tests repeatedly stops catching new bugs, because those tests keep checking the same paths while new defects sit elsewhere; the fix is to periodically review and update test cases. 4) It suggests focusing testing effort on the modules or areas historically most prone to defects, rather than spreading effort evenly across all areas regardless of risk. 5) An app that has zero crashes or logged bugs but is so confusing that users can't complete their intended task, it's technically defect-free but still fails to meet the user's actual need.*
 
 ---
 

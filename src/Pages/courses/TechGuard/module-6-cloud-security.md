@@ -3,6 +3,13 @@
 
 **Time: about 6 hours** (roughly 2 hours per provider).
 
+**By the end of this module, you'll be able to:**
+- Explain the shared responsibility model and sort security tasks into provider versus customer
+- Review AWS IAM, S3 public-access settings, security groups, and CloudTrail for common misconfigurations
+- Review Azure RBAC role assignments, scopes, and NSG rules, and explain how assignments inherit
+- Review GCP IAM bindings, service accounts, and VPC firewall rules, and replace broad basic roles with narrower ones
+- Write a clear finding (risk plus fix) for a cloud misconfiguration
+
 **Tools needed for this module:** ideally a **free-tier account** for the provider you're studying (AWS, Azure, or GCP) and its web console, plus optionally the provider's command-line tool. Everything here is designed to be observe-and-inspect rather than build-and-spend, so stay within the free tier and only ever work in accounts you own. Cloud accounts are for learners 18+ or working with a parent/guardian; a payment card may be required to sign up, so set a budget alert first. Every lab also has a no-account version with sample configurations to review, which is also useful when your new account is still empty. The one idea that runs through all three topics is the **shared responsibility model**: the provider secures the cloud itself, and you secure what you put in it.
 
 ### Topic 6.1: AWS

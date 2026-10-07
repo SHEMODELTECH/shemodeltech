@@ -3,7 +3,14 @@
 
 **Time:** about 3 hours
 
-**Tools needed for this module:** A web browser, a free account with [Postman](https://www.postman.com) (for testing API calls without writing code), a free [Make](https://www.make.com) account for the webhook topic (Zapier's webhook trigger, Webhooks by Zapier, is not included in its free plan at the time of writing, 2026; Make's custom webhooks are), and a free [OpenWeatherMap](https://openweathermap.org/api) account for the API keys topic. No coding environment or installs are strictly required, Postman runs in the browser or as a lightweight desktop app.
+**By the end of this module, you'll be able to:**
+- Send GET and POST requests with Postman and read the JSON response and status code
+- Explain what endpoints, methods, request bodies, and status codes are
+- Build a Make scenario that receives a webhook payload and uses its data in an action
+- Explain the difference between webhooks and polling
+- Store an API key safely, make an authenticated request with it, and rotate it
+
+**Tools needed for this module:** A web browser, a free account with [Postman](https://www.postman.com) (for testing API calls without writing code), a free [Make](https://www.make.com) account for the webhook topic (Zapier's webhook trigger, Webhooks by Zapier, may need a paid Zapier plan, while Make's custom webhooks have worked on its free plan; check the current plan), and a free [OpenWeatherMap](https://openweathermap.org/api) account for the API keys topic. No coding environment or installs are strictly required, Postman runs in the browser or as a lightweight desktop app.
 
 ### Topic 1: Connecting APIs
 
@@ -47,7 +54,7 @@ Whenever two systems need to share data automatically, pulling customer records 
 2. **Send a GET request** to a free public test API, for example `https://jsonplaceholder.typicode.com/users`, and view the JSON response.
 3. **Identify the status code** returned (it should be 200) and look at the structure of the JSON data returned.
 4. **Send a GET request to a single endpoint**, for example `https://jsonplaceholder.typicode.com/users/1`, and compare the smaller response to the full list from step 2.
-5. **Send a POST request** to `https://jsonplaceholder.typicode.com/posts` with a simple JSON body (like `{"title": "test", "body": "hello", "userId": 1}`) and observe the response, including its status code.
+5. **Send a POST request** to `https://jsonplaceholder.typicode.com/posts` with a simple JSON body (like `{"title": "test", "body": "hello", "userId": 1}`) and observe the response. You should get status 201 (Created) and your data back with a new `id`. JSONPlaceholder is a practice API, so nothing is really saved.
 
 #### Checkpoint
 You have successfully sent a GET request and a POST request using Postman, and you can read a JSON response and identify its status code.
@@ -72,7 +79,7 @@ A **webhook** flips the usual API pattern around: instead of your system asking 
 - A **webhook URL** is an address you provide to another system, telling it where to send its automatic notifications
 - A **payload** is the data included in a webhook notification, almost always JSON, describing exactly what happened (like which record changed and how)
 - **Polling** is the older alternative to webhooks, repeatedly asking an API "anything new?" on a timer, it's less efficient and less instant than a webhook, but is used when webhooks aren't supported
-- A **webhook listener** is the receiving side, a URL you set up (often through a no-code tool like Make, or Zapier on a paid plan) that's ready to accept and act on an incoming payload
+- A **webhook listener** is the receiving side, a URL you set up (often through a no-code tool like Make or Zapier; check which plan includes webhooks) that's ready to accept and act on an incoming payload
 
 #### Structure at a Glance
 

@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing. Projects use simulation so you can complete this course without owning physical robot hardware.
 
+**By the end of this course, you'll be able to:**
+- Diagram a robot as a sense-think-act system of sensors, decision-making, and actuators
+- Filter noisy, gappy sensor data with a moving average and interpolation
+- Convert points between robot and world coordinate frames and verify the result
+- Detect a colored object in a camera image with OpenCV and estimate its distance
+- Plan obstacle-avoiding paths with A* and train a Q-learning agent in a simulated environment
+- Test a robot behavior over many randomized trials and add a safety check that stops bad plans
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -56,6 +64,8 @@ flowchart LR
     T --> A["Act: motors, arm, gripper"]
     A -->|environment changes| S
 ```
+
+On real robots, each part of this loop usually runs as a separate program (a **node**) that passes messages to the others through **ROS 2** (Robot Operating System 2), the standard open-source robotics framework. This course writes each part as plain Python so you can learn the ideas first; the same pieces map onto ROS 2 nodes later.
 
 **Step 8: Note one safety consideration.**
 Write one sentence: what's the worst thing that could happen if this robot's "think" step made a bad decision, and what would prevent it?

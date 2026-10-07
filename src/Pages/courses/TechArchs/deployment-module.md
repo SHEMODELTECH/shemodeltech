@@ -3,6 +3,13 @@
 
 **Time:** about 3 hours (plus waiting time if you connect a real domain)
 
+**By the end of this module, you'll be able to:**
+- Make a change in draft mode, preview it, publish it, and find version history
+- Explain drafts, staging environments (such as Salesforce sandboxes), and rollbacks
+- Look up A and CNAME records and find the DNS record your platform needs for a custom domain
+- Explain how registrars, hosts, DNS propagation, and HTTPS fit together
+- Read an error log from a failed automation, fix the cause, and set up a monitoring habit
+
 **Tools needed for this module:** A web browser and the free account you already used for a project in this track (for example [Glide](https://www.glideapps.com), [Softr](https://www.softr.io), [Bubble](https://bubble.io), [Webflow](https://webflow.com), [Framer](https://www.framer.com), [Wix](https://www.wix.com), Google Forms, or Make). Connecting a custom domain is optional and costs money: you buy the domain from a registrar such as [Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) or [Porkbun](https://porkbun.com), and most builders in this track (including Glide, Webflow, Bubble, and Softr) generally require a paid plan to attach one. (Google Domains no longer exists; it was moved to Squarespace in 2023.) No coding environment or installs are required.
 
 ### Topic 1: Publishing

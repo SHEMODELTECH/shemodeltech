@@ -4,6 +4,14 @@
 
 An AI agent is a program where a language model decides what to do next, uses tools to act, looks at the results, and keeps going until the job is done. This course explains how that works in plain words and then has you build each piece yourself in Google Colab: an agent loop with tools, a connection to tools through the Model Context Protocol (MCP), memory and document search, a pair of agents that check each other's work, safety guardrails such as a human approval step, and automated tests. You finish with a small support agent that brings all of it together.
 
+**By the end of this course, you'll be able to:**
+- Explain the difference between a fixed workflow and an agent, and when each is the better choice
+- Build an agent loop with the Claude API that calls your own tools, handles tool errors, and stops at a step limit
+- Write an MCP server and connect an agent to its tools
+- Add short-term memory, long-term memory, and document search (RAG) to an agent
+- Protect an agent with least privilege, input allowlists, a human approval step, and output checks
+- Test an agent offline with a fake client and evaluate it against real test cases
+
 ## Course Overview
 
 **Who this is for:** Anyone who knows basic Python (variables, functions, lists, dictionaries, loops) and wants to understand how AI agents really work before using bigger frameworks. You don't need any machine learning background.

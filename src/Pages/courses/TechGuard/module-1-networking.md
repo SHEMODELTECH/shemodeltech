@@ -3,6 +3,12 @@
 
 **Time: about 6 hours** (roughly 1.5 hours per topic).
 
+**By the end of this module, you'll be able to:**
+- Explain what IP, TCP, and UDP each guarantee, and trace a real connection with `ping`, `traceroute`, and `curl`
+- Query DNS records with `dig` or `nslookup`, read a TTL, and explain how cache poisoning works
+- Read a raw HTTP request and response, including methods, status codes, and security headers
+- Configure a default-deny firewall with `ufw` and explain stateful inspection, rule order, and egress filtering
+
 **Tools needed for this module:** a terminal (macOS Terminal, Linux shell, or Windows PowerShell), the built-in command-line utilities `ping`, `traceroute` (or `tracert` on Windows), `nslookup` and/or `dig` (`dig` is not built into Windows, so Windows users can use `nslookup` or PowerShell's `Resolve-DnsName` instead), and `curl` (in Windows PowerShell type `curl.exe`, because plain `curl` there is an alias for a different command), plus a normal web browser. For the firewall topic you'll use `ufw` on Linux, or the built-in firewall settings on macOS/Windows. Wireshark is optional if you want to watch real packets, but nothing in this module requires it. **Staying legal:** every lab here either works on your own machine or sends ordinary requests (the same as visiting a website) to public test sites such as `example.com` and `httpbin.org`. Never scan, probe, or capture traffic on networks or systems you don't own or have permission to use.
 
 ### Topic 1.1: TCP/IP
@@ -221,7 +227,7 @@ curl -I https://example.com
 ```bash
 curl -I https://example.com/thispagedoesnotexist
 ```
-Note the `4xx` code you get back.
+Note the `4xx` code you get back. (If a site answers with a `200` page instead, try `curl -I https://httpbin.org/status/404`, which always returns a 404.)
 
 4. **Send a POST request** with data and watch how it differs from a GET:
 ```bash

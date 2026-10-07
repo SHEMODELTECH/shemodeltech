@@ -3,6 +3,12 @@
 
 **Time: about 5 hours** (roughly 2 hours for SIEM, 1.5 hours each for SOC and incident response).
 
+**By the end of this module, you'll be able to:**
+- Search and count events in an authentication log with `grep`, `awk`, `sort`, and `uniq`, as a hand-built SIEM correlation
+- Write a correlation rule in words and spot a brute-force attack that ended in a successful login
+- Triage alerts by severity, decide when to escalate, and write a short SOC playbook
+- Walk a confirmed incident through the six incident-response phases, and relate them to NIST SP 800-61 Rev. 3 and NIST CSF 2.0
+
 **Tools needed for this module:** a terminal with basic text tools (`grep`, `awk`, `sort`, `uniq`), which are already on any Linux or macOS system (and available on Windows via WSL or PowerShell equivalents), and a sample log file to work with. The SIEM lab gives you a ready-made sample `auth.log` to save and analyse, because your own machine's log may be empty or missing. Only ever analyse logs from systems you own or are authorized to monitor. Optionally, a free security-monitoring platform (such as a free tier of a SIEM) if you want to see the real thing. The three topics here build on one another: a SIEM produces the alerts, a SOC triages them, and incident response handles the ones that turn out to be real.
 
 ### Topic 7.1: SIEM
@@ -186,7 +192,7 @@ Time: about 1.5 hours
 
 #### Concept
 
-**Incident Response (IR)** is the structured process for handling a confirmed security incident so as to limit damage, remove the threat, recover safely, and learn from it. When triage confirms an alert is a real incident, IR takes over with a defined lifecycle rather than improvisation, because under pressure, a clear process is what prevents mistakes like destroying evidence or reinfecting a "cleaned" system. The widely used SANS model has six phases, often remembered as **PICERL**. The other major reference is the US government's **NIST SP 800-61 Rev. 3** (2025), which organises incident response around the NIST Cybersecurity Framework 2.0 functions (Govern, Identify, Protect, Detect, Respond, Recover) and treats IR as part of everyday risk management rather than a separate checklist. Both teach the same core ideas, so this topic uses the six SANS phases because they're easy to walk through step by step.
+**Incident Response (IR)** is the structured process for handling a confirmed security incident so as to limit damage, remove the threat, recover safely, and learn from it. When triage confirms an alert is a real incident, IR takes over with a defined lifecycle rather than improvisation, because under pressure, a clear process is what prevents mistakes like destroying evidence or reinfecting a "cleaned" system. The widely used SANS model has six phases, often remembered as **PICERL**. The other major reference is the US government's **NIST SP 800-61 Rev. 3** (2025), which organises incident response around the six functions of the NIST Cybersecurity Framework (NIST CSF 2.0) (Govern, Identify, Protect, Detect, Respond, Recover) and treats IR as part of everyday risk management rather than a separate checklist. Both teach the same core ideas, so this topic uses the six SANS phases because they're easy to walk through step by step.
 
 - **Preparation** is the work done in advance: the IR plan, tools, contacts, and training, so the team isn't inventing a response mid-crisis
 - **Identification** confirms an incident is real and determines its scope (often where the SOC's triage hands off)

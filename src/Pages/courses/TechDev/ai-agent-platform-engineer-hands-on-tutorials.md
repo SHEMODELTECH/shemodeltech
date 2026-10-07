@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Diagram the core components of a multi-tenant agent platform
+- Build the full tool-calling round trip and a bounded agent loop with the Claude Messages API
+- Build a tool registry that lets several agents share tools without code changes
+- Run agent tasks in the background with a Redis-backed job queue and multiple workers
+- Test agent reliability, including hallucination handling and recovery from failing tools
+- Add permission checks, audit logging, and a sandbox mode for risky tools
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -130,6 +138,8 @@ agent_platform_diagram_project/
 **Time: about 2.5 hours**
 
 **Goal:** Build the smallest working unit, one agent calling one tool, before scaling to anything more complex.
+
+If you haven't built an agent before, take the Agentic AI Fundamentals course earlier in this track first: it covers the agent loop, tools, and MCP, and this course builds the platform around them.
 
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `tool_calling_project`.
@@ -530,6 +540,8 @@ class ToolRegistry:
         return self.tools[name]["function"](**kwargs)
 ```
 `register` adds a tool, `get_tool_definitions` builds the `tools` list the API expects (name, description, input_schema), and `execute` runs a tool by name.
+
+In production platforms, tools are often served by **MCP (Model Context Protocol) servers**: separate programs that list their tools with the same name, description, and input schema, so a platform can discover and call them at run time. Your registry is the same idea inside one Python program.
 
 **Step 4: Register several tools.**
 ```python
@@ -1205,7 +1217,11 @@ Denied calls are logged too. Denials are often the most important entries in a s
 **Step 7: Add a sandbox restriction for risky tools.**
 ```python
 def sandboxed_execute(name, agent_id, user_permission_level, **kwargs):
-    if PERMISSION_LEVELS.get(name, "restricted") == "restricted":
+    required_level = PERMISSION_LEVELS.get(name, "restricted")
+    if not registry._has_access(user_permission_level, required_level):
+        log_tool_call(agent_id, name, kwargs, allowed=False)
+        raise PermissionError(f"Access denied to tool: {name}")
+    if required_level == "restricted":
         log_tool_call(agent_id, name, kwargs, allowed=True, result="[sandbox] not actually run")
         return f"[SANDBOX MODE] Would execute {name} with {kwargs}, but did not run it."
     return registry.execute(name, agent_id=agent_id,
@@ -1219,7 +1235,7 @@ try:
 except PermissionError as error:
     print("Blocked as expected:", error)
 ```
-A **sandbox** here means simulating an action's effects without actually performing it, useful for testing agent behavior involving high-risk tools without real consequences.
+A **sandbox** here means simulating an action's effects without actually performing it, useful for testing agent behavior involving high-risk tools without real consequences. The permission check still runs first, so sandbox mode never lets a caller try a tool above its level.
 
 **Step 8: Review the audit log after a test run.**
 ```python

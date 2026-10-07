@@ -4,6 +4,14 @@
 
 Learn to turn a vague question like "how are sales going?" into a clear answer you can defend. You will follow one small online shop's orders from start to finish: asking a measurable question, exploring the data in Google Sheets, querying it with SQL, analyzing and cleaning it with Python and pandas, describing it honestly with basic statistics, drawing charts that tell the truth, and writing a one-page findings report with a recommendation.
 
+**By the end of this course, you'll be able to:**
+- Turn a vague question into a measurable one with a clear metric, dimension, and time window tied to a decision
+- Summarize data in Google Sheets with formulas, filters, and pivot tables
+- Query data with SQL using WHERE, GROUP BY, JOIN, and HAVING
+- Load, clean, and analyze data with pandas, keeping a log of every cleaning decision
+- Describe data honestly with means, medians, and fair comparisons, and draw charts that don't mislead
+- Write a one-page findings report that answers the question and makes a recommendation
+
 ## Course Overview
 
 **Who this is for:** Beginners who want to make decisions with data, whether you are building a product, running a small business, organizing an event, or just curious. You do not need a math background. Some Python helps from Module 3 onward; if you have never written Python, take the Python Programming Fundamentals course first or alongside this one.

@@ -3,6 +3,14 @@
 
 Time: about 8 hours
 
+**By the end of this module, you'll be able to:**
+- Plan a change rollout: likely resistance, an adoption strategy, a change champion, and a follow-up check
+- Run a cost analysis (upfront, ongoing, opportunity cost) and calculate ROI as (gain − cost) ÷ cost
+- Classify a cost as CapEx or OpEx and set up a monthly check that catches overspending early
+- Write an honest pre-sales answer and name a partnership dependency risk with a mitigation
+- Assess an AI proposal for wrong answers, data handling, pre-launch testing, and cost per use
+- Explain the core tradeoffs of cloud, data quality and governance, and common cybersecurity risks well enough to ask specialists good questions
+
 **Purpose of this module:** Cover the remaining breadth a tech lead needs outside pure engineering: leading people through change, speaking the language of money, understanding how the business grows externally, and staying fluent enough in emerging technology to make informed calls without being a specialist in all of it.
 
 **Tools needed for this module:** No software installation required. A spreadsheet tool (Excel, Google Sheets) is useful for the Financial Literacy lab, and any note-taking tool works for the rest.
@@ -250,7 +258,7 @@ You have one honest AI-claim assessment covering wrong answers, data, pre-launch
 4. Why do data quality and governance matter as much as simply having the data?
 5. What does "cybersecurity basics" mean for a tech lead, as opposed to a security specialist?
 
-*Answers: 1) So they can ask good questions, spot real risk, and avoid being either dismissive of something genuinely useful or oversold on something that's mostly hype, since these four areas come up constantly in leadership conversations. 2) Knowing what modern AI can and can't reliably do: it can give confident wrong answers, called hallucinations, so output must be checked, confidential or personal data shouldn't go into unapproved tools, features should be tested on real examples before launch, and each use costs money. 3) Renting computing infrastructure instead of owning hardware trades cost and scalability benefits for less direct control. 4) Because having data alone isn't useful if it's poor quality or if ownership and access aren't clear; both matter for the data to be trustworthy and usable. 5) Understanding common risk categories like phishing, weak access control, unpatched software, and third-party risk well enough to ask the right questions of a security team, not to perform the security work directly.*
+*Answers: 1) So they can ask good questions, spot real risk, and avoid being either dismissive of something genuinely useful or oversold on something that's mostly hype, since these four areas come up constantly in leadership conversations. 2) Knowing what modern AI can and can't reliably do: it can give confident wrong answers, called hallucinations, so output must be checked, confidential or personal data shouldn't go into unapproved tools, features should be tested on real examples before launch, and each use costs money. 3) You gain fast setup and easy scaling with no hardware to buy, but give up some control and take on an ongoing bill that grows with usage. 4) Because having data alone isn't useful if it's poor quality or if ownership and access aren't clear; both matter for the data to be trustworthy and usable. 5) Understanding common risk categories like phishing, weak access control, unpatched software, and third-party risk well enough to ask the right questions of a security team, not to perform the security work directly.*
 
 ---
 

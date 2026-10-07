@@ -3,6 +3,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Explain the request and response cycle and what a backend API is for
+- Build a small server in plain Node.js that routes by URL and returns correct status codes
+- Build the same task API (list, get one, create) in Express, Flask, and FastAPI, and test it with curl
+- Create a Django model, manage its data in the built-in admin, and serve it as JSON
+- Compare Express, Flask, Django, and FastAPI and pick a sensible one for a project
+
 **Who this is for:** Beginners who can build a frontend page and now want to understand what happens on the server, storing data, handling requests, and serving an API that a frontend (or anyone else) can call.
 
 **How the course works:** Six modules. Every topic follows the same pattern:
@@ -13,13 +20,13 @@
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
-**Tools needed:** [Node.js](https://nodejs.org) installed, [Python 3](https://www.python.org/downloads) installed, a terminal, and a text editor (such as [VS Code](https://code.visualstudio.com)). A tool like [curl](https://curl.se) or [Postman](https://www.postman.com) to send test requests.
+**Tools needed:** [Node.js](https://nodejs.org) installed, [Python 3](https://www.python.org/downloads) installed, a terminal, and a text editor (such as [VS Code](https://code.visualstudio.com)). A tool like [curl](https://curl.se) or [Postman](https://www.postman.com) to send test requests. On Windows, run the commands in **Git Bash** (installed with [Git](https://git-scm.com/downloads)): the `curl` examples use quotes that PowerShell handles differently, and there you activate a virtual environment with `source venv/Scripts/activate` instead of `source venv/bin/activate`.
 
 ---
 
 ## Module 0: What a Backend Actually Does
 
-Time: about 1 hour
+**Time: about 1 hour**
 
 ### Concept
 
@@ -57,7 +64,7 @@ You can explain, in plain language, what a request and a response are, and why a
 
 ## Module 1: Node.js - JavaScript on the Server
 
-Time: about 1.5 hours
+**Time: about 1.5 hours**
 
 ### Concept
 
@@ -139,7 +146,7 @@ You have a running Node.js server that returns different responses, including a 
 
 ## Module 2: Express - A Framework for Node.js
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -242,7 +249,7 @@ You have a running Express API with GET and POST routes, tested with real reques
 
 ## Module 3: Python Flask - A Minimal Python Framework
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -352,7 +359,7 @@ You have a running Flask API with GET and POST routes, producing the same result
 
 ## Module 4: Django - A Full Batteries-Included Framework
 
-Time: about 3 hours
+**Time: about 3 hours**
 
 ### Concept
 
@@ -478,7 +485,7 @@ You created a Django model, added data through the automatically generated admin
 
 ## Module 5: FastAPI - Modern Python with Types
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 

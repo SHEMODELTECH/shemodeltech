@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Read a short paper for its core claim and write a minimal script that tries to reproduce it
+- Explore a dataset for missing values, distributions, and class imbalance before modeling
+- Implement gradient descent and a small neural network with backpropagation using only NumPy
+- Train and compare baseline models using accuracy and macro F1 on a held-out test set
+- Design and run an ablation study with stated hypotheses and repeated random seeds
+- Write a short research report with a reproducible method, a results chart, and honest limitations
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -254,10 +262,30 @@ for step in range(100):
 The **learning rate** controls how big each step is: too large and it overshoots, too small and it takes forever.
 
 **Step 7: Experiment with the learning rate.**
-Run the loop with `learning_rate = 0.5` and `learning_rate = 0.001`, and observe the difference.
+Run the loop with `learning_rate = 0.5` and `learning_rate = 0.001`, and observe the difference. With 0.5, each step overshoots so far that `w` swings back and forth with growing size and the loss explodes. With 0.001, `w` is still well short of 4 after 100 steps.
 
 **Step 8: Extend to two parameters.**
-Modify the loss and gradient functions to fit `w * x + b` instead of just `w * x`. You need a second gradient for `b` (it is `2 * (prediction - y)`), and you update both `w` and `b` in each loop step.
+Modify the loss and gradient functions to fit `w * x + b` instead of just `w * x`. You need a second gradient for `b` (it is `2 * (prediction - y)`), and you update both `w` and `b` in each loop step. With two parameters, one data point isn't enough (many lines pass through a single point), so use several points and average the gradients over them. Try it yourself first, then compare with this version:
+```python
+xs = [1.0, 2.0, 3.0, 4.0]
+ys = [4.0, 7.0, 10.0, 13.0]  # true relationship: y = 3x + 1
+
+w, b = 0.0, 0.0
+learning_rate = 0.01
+for step in range(2000):
+    grad_w, grad_b = 0.0, 0.0
+    for x, y in zip(xs, ys):
+        error = (w * x + b) - y
+        grad_w += 2 * error * x
+        grad_b += 2 * error
+    w -= learning_rate * grad_w / len(xs)  # average gradient over all points
+    b -= learning_rate * grad_b / len(xs)
+    if step % 400 == 0:
+        mse = sum(((w * x + b) - y) ** 2 for x, y in zip(xs, ys)) / len(xs)
+        print(f"Step {step}: w={w:.3f}, b={b:.3f}, mean squared error={mse:.4f}")
+print(f"Final: w={w:.3f}, b={b:.3f}")
+```
+`w` should end close to 3 and `b` close to 1.
 
 ### Final Project Structure
 ```text

@@ -3,6 +3,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Explain the "works on my machine" problem and how Docker, CI, CD, and cloud hosting each help solve it
+- Write a Dockerfile, build an image, and run your app in a container
+- Write an automated test and run it on every pull request with a GitHub Actions workflow
+- Deploy a Docker-based app to a cloud platform and confirm it's live at a public URL
+- Connect deployment to CI so only changes that pass tests go live
+
 **Who this is for:** Beginners who have working code on their own machine and want to understand how it actually gets in front of real users, reliably and repeatedly.
 
 **How the course works:** Five modules. Every topic follows the same pattern:
@@ -18,7 +25,7 @@
 
 ## Module 0: Why Deployment Is Its Own Skill
 
-Time: about 1 hour
+**Time: about 1 hour**
 
 ### Concept
 
@@ -54,7 +61,7 @@ You can name the four layers above in order and explain what each one solves.
 
 ## Module 1: Docker - Same Environment, Everywhere
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -94,6 +101,8 @@ EXPOSE 8000
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
+`COPY . .` copies everything in the folder into the image. If you made a virtual environment here, create a file named `.dockerignore` containing the lines `venv/` and `__pycache__/` so those stay out of the image.
+
 **3. Build and run it:**
 ```bash
 docker build -t trackit-api .
@@ -101,7 +110,7 @@ docker run -p 8000:8000 trackit-api
 ```
 Visit `http://localhost:8000/health`. It works exactly the same as running it directly, but now it's fully packaged.
 
-**4. Prove portability - stop the container, then run it again on a completely fresh port:**
+**4. Prove portability - stop the container (press Ctrl+C in its terminal), then run it again on a completely fresh port:**
 ```bash
 docker run -p 9000:8000 trackit-api
 ```
@@ -123,7 +132,7 @@ You built a Docker image and ran two separate containers from it successfully.
 
 ## Module 2: CI/CD - Automating Trust
 
-Time: about 1.5 hours
+**Time: about 1.5 hours**
 
 ### Concept
 
@@ -181,7 +190,7 @@ Your test passes locally, and you can describe, step by step, what should happen
 
 ## Module 3: GitHub Actions - Building the Pipeline
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -193,7 +202,13 @@ Turning the CI/CD pipeline you sketched in Module 2 into something that actually
 
 ### Lab
 
-**1. Push your Module 1 and 2 code to a GitHub repository:**
+**1. Push your Module 1 and 2 code to a GitHub repository.** First create a file named `.gitignore` containing these lines, so Git skips generated files:
+```
+__pycache__/
+.pytest_cache/
+venv/
+```
+Then create an empty repository named `trackit-api` on GitHub (no README) and run:
 ```bash
 git init
 git add .
@@ -203,7 +218,7 @@ git remote add origin https://github.com/yourusername/trackit-api.git
 git push -u origin main
 ```
 
-**2. Create a workflow file:**
+**2. Create a workflow file.** Make the folders first with `mkdir -p .github/workflows` (in Windows PowerShell: `mkdir .github\workflows`), then create this file:
 ```yaml
 # .github/workflows/ci.yml
 name: CI
@@ -260,7 +275,7 @@ You have a real pull request on GitHub showing an automated check that passed (o
 
 ## Module 4: Cloud Deployment - Going Live
 
-Time: about 2.5 hours
+**Time: about 2.5 hours**
 
 ### Concept
 
@@ -278,6 +293,7 @@ The moment your app needs to be reachable by anyone other than you, on your own 
 - Click "New Web Service", connect your GitHub repository
 - Render detects your `Dockerfile` automatically and builds + deploys it
 - Once deployed, you get a public URL like `https://trackit-api.onrender.com`
+- On the free plan, the service goes to sleep after about 15 minutes without traffic, so the first request after a pause can take up to a minute. That's normal, not a bug.
 
 **2. Confirm it's really live:**
 ```bash

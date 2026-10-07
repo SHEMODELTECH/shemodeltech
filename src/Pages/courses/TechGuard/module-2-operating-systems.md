@@ -3,6 +3,13 @@
 
 **Time: about 4 hours** (roughly 2 hours per topic).
 
+**By the end of this module, you'll be able to:**
+- Read and change Linux file permissions with `ls -l` and `chmod`, and explain owner, group, and other
+- Search a Linux system for SUID and world-writable files, and explain why they enable privilege escalation
+- Inspect a Windows access token, administrator group members, and a file's ACL with `whoami /all` and `icacls`
+- Check Microsoft Defender status, read logon events 4624 and 4625, and find a registry Run-key persistence entry
+- Explain least privilege on both systems and why services shouldn't run as root or administrator
+
 **Tools needed for this module:** for the Linux topic, access to a Linux command line, this can be a real Linux machine, a virtual machine, WSL (Windows Subsystem for Linux), or a free cloud shell. For the Windows topic, a Windows machine with **PowerShell** and the built-in Command Prompt, plus the Event Viewer app that ships with Windows. Everything here uses tools already present on each system, nothing needs to be installed. Run these labs only on your own computer or a virtual machine you control, never on a shared, school, or work machine without permission.
 
 ### Topic 2.1: Linux

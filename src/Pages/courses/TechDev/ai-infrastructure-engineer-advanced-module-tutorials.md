@@ -3,6 +3,13 @@
 
 This is a bonus, advanced module extending the **AI Infrastructure Engineer Foundations Course**. It covers four skills that aren't in the original 7-project course: **Pulumi** (infrastructure as code written in general-purpose languages), **OpenTofu** (the open-source fork of Terraform), **GPU scheduling** for AI workloads, and **multi-tenant identity and access management (IAM)**. Complete the original 7 projects first — this module builds directly on your Project 3 cloud instance, Project 4 containers, and Project 6 autoscaling deployment.
 
+**By the end of this course, you'll be able to:**
+- Provision, change, and tear down a cloud VM as code with Pulumi in Python
+- Define the same VM in OpenTofu (HCL) and compare the two tools' workflows and state handling
+- Build a priority-based GPU scheduler that shares a limited pool, releases capacity, and prevents starvation
+- Build role-based access control with least privilege, temporary credentials, and an audit log
+- Test that permission checks block and allow the right actions
+
 Every step follows the same format as the rest of the course: what you're doing, what the term means, how to do it, and why it matters.
 
 
@@ -333,6 +340,7 @@ cd gpu_scheduling_project
 **Step 2 — Understand why GPU scheduling is different from CPU scheduling.**
 Learn: unlike CPU, GPUs are often **not easily subdivided** — a workload frequently needs an entire GPU (or a specific fraction via technologies like MIG — Multi-Instance GPU), and GPUs are far more expensive and scarce than CPU cores.
 *Why:* This scarcity is exactly why naive "just autoscale more replicas" thinking from Project 6 doesn't directly transfer to GPU workloads — you can't always just spin up more.
+In a real Kubernetes cluster, a pod asks for whole GPUs with `resources.limits` set to `nvidia.com/gpu: 1` (made available by NVIDIA's device plugin), and queueing tools such as **Kueue** add the priorities and per-team quotas you'll build by hand in this project.
 
 **Step 3 — Model a GPU resource pool.**
 ```bash

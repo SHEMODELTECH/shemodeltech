@@ -3,6 +3,12 @@
 
 **Time: about 5 hours** (roughly 1.5 hours for MFA, 1.5 hours for RBAC, 2 hours for IAM).
 
+**By the end of this module, you'll be able to:**
+- Set up TOTP-based MFA on an account you own, and compare SMS, TOTP, and phishing-resistant passkeys or security keys
+- Design a role-based access model that applies least privilege and separation of duties
+- Read a cloud IAM policy, spot the statement that breaks least privilege, and rewrite it
+- Explain the difference between authentication and authorization, and why the joiner/mover/leaver lifecycle is a security control
+
 **Tools needed for this module:** an **authenticator app** on your phone (such as any TOTP app) for the MFA topic, a test account you own to enable MFA on, and optionally a free-tier cloud account (AWS, Azure, or GCP) to practice real IAM. Cloud accounts are for learners 18+ or working with a parent/guardian, a payment card may be required to create one, and you should set a budget alert straight away; if you don't have one, the IAM lab gives you a sample policy to analyse instead. A terminal is useful but not required. Never practice on accounts or systems that aren't yours.
 
 ### Topic 5.1: MFA
@@ -18,6 +24,7 @@ Time: about 1.5 hours
 - **Hardware security keys** and **passkeys**, both built on **FIDO2/WebAuthn**, are the strongest common options because they're **phishing-resistant**, they cryptographically verify the real site. A **passkey** is a FIDO2 credential stored on your phone, laptop, or password manager and unlocked with your fingerprint, face, or device PIN, so many sites now let you use one instead of a password plus code
 - **SMS one-time codes** are better than nothing but the weakest form, vulnerable to SIM-swapping and interception
 - MFA's value is that it **defeats stolen-password attacks**, the credential alone no longer grants access
+- The US government's digital identity guideline, **NIST SP 800-63B-4** (2025), reflects this ranking: it treats SMS and phone-call codes as a "restricted" option, and requires services that need MFA to offer at least one phishing-resistant option. For passwords it drops forced complexity rules and routine expiry, and asks instead for length (at least 15 characters when a password is the only factor) plus checks against lists of breached passwords
 
 #### Structure at a Glance
 

@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Map a real workflow and judge which parts are worth automating
+- Build a Python script that runs on a schedule with cron or Task Scheduler and logs its own errors
+- Chain steps into a multi-step workflow with per-step error handling
+- Add a narrow AI decision step with a safe fallback when the API call fails
+- Build a tool-calling agent with an allow-list of tools and human approval for risky actions
+- Add logging, health checks, retries, and failure alerts, and test them by breaking things on purpose
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -556,6 +564,8 @@ ai_decision_step_project/
 
 **Goal:** Replace fixed logic with agent-style tool calling, letting the AI decide *which* action to take, not just answer one narrow question.
 
+If agents are new to you, the Agentic AI Fundamentals course earlier in this track explains the agent loop, tools, and guardrails in more depth and is a good foundation for this project.
+
 **Step 1: Create the project notebook.**
 Create a new notebook for this project (**File → New notebook**) and name it `task_agent_project`. Run the API key cell from **Before you start**.
 
@@ -834,18 +844,24 @@ A **health check** is a lightweight test that confirms a dependency (API, databa
 **Step 5: Add retry logic for transient failures.**
 ```python
 import time
+import requests
 
 def call_with_retry(func, *args, retries=3, delay=2):
     for attempt in range(retries):
         try:
             return func(*args)
-        except Exception as e:
+        except requests.HTTPError as e:
+            code = e.response.status_code
+            if code < 500 and code != 429:
+                raise  # permanent error, such as a bad key (401): retrying won't help
             logging.warning(f"Attempt {attempt + 1} of {retries} failed: {e}")
-            if attempt < retries - 1:
-                time.sleep(delay)
+        except requests.RequestException as e:  # network problems and timeouts
+            logging.warning(f"Attempt {attempt + 1} of {retries} failed: {e}")
+        if attempt < retries - 1:
+            time.sleep(delay)
     raise RuntimeError(f"All {retries} retries failed")
 ```
-A **transient failure** is a temporary issue (network blip, rate limit) that often succeeds if retried, unlike a permanent failure (bad input) that won't.
+A **transient failure** is a temporary issue (network blip, rate limit) that often succeeds if retried, unlike a permanent failure (bad input, a wrong API key) that won't. So this function retries only network errors, timeouts, rate limits (status 429), and server errors (status 500 and up). Any other error is raised straight away instead of wasting retries.
 
 **Step 6: Add alerting for repeated failures.**
 ```python
@@ -892,7 +908,7 @@ Then re-run the API key cell from **Before you start** to restore your real key.
 ```python
 !cat automation.log
 ```
-Confirm it tells a clear, readable story of what happened: the warnings for each retry, the errors, and the ALERT line after the third failure.
+Confirm it tells a clear, readable story of what happened: an ERROR line for each failed call and the ALERT line after the third failure. A wrong key is a permanent error (status 401), so you won't see retry warnings here; those appear for network problems or rate limits.
 
 ### Final Project Structure
 ```text

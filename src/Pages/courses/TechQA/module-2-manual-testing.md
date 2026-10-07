@@ -1,6 +1,16 @@
 <!-- order: 3 -->
 ## Module 2: Manual Testing
 
+**Time: about 6 hours** (roughly 2 hours per topic).
+
+**By the end of this module, you'll be able to:**
+- Write test cases with an ID, preconditions, numbered steps, test data, and an expected result, and run them against a real practice site
+- Write a bug report a developer can act on, with steps, expected vs. actual result, severity, priority, environment, and evidence
+- Explain the difference between severity and priority with examples
+- Plan and run a timeboxed exploratory session from a charter, keep notes, and write a debrief
+
+**Tools needed for this module:** a web browser. The labs use two free practice sites built for testers to practise on, [The Internet](https://the-internet.herokuapp.com) and [Sauce Demo](https://www.saucedemo.com). Use them only through the normal web pages, as any visitor would; no scanning or load tools.
+
 ### Topic 2.1: Test Cases
 
 *Time: about 2 hours*
@@ -46,10 +56,10 @@ Any feature that needs to be checked more than once, by more than one person, ov
 
 #### Lab
 
-1. **Pick a login form** (real or imagined: username/password fields, a "Log In" button, an error message for wrong credentials).
-2. **Write three test cases** for it: one for a valid login, one for an invalid password, and one for an empty username field. Each should have an ID, title, preconditions, numbered steps, test data, and an expected result.
-3. **"Run" each test case** by imagining executing it against the app as you understand it, and write the actual result for each.
-4. **Mark each as Pass or Fail**, and for any fail, write one sentence describing the discrepancy between expected and actual.
+1. **Open the practice login form** at https://the-internet.herokuapp.com/login. The page itself shows the valid test username and password.
+2. **Write three test cases** for it before you touch the form: one for a valid login, one for an invalid password, and one for an empty username field. Each should have an ID, title, preconditions, numbered steps, test data, and an expected result.
+3. **Run each test case** exactly as written, and record the actual result (copy any message the page shows word for word).
+4. **Mark each as Pass or Fail**, and for any fail, write one sentence describing the discrepancy between expected and actual. If a step was too vague to follow exactly, rewrite it; that's the most common test-case weakness.
 
 #### Checkpoint
 You have three properly structured test cases with real test data, "executed" with a recorded actual result, and a pass/fail verdict for each.
@@ -114,6 +124,7 @@ Any time testing (manual or exploratory) turns up unexpected behavior, an error 
 2. **Write a full bug report** for it: title, numbered steps to reproduce, expected result, actual result, a severity, a priority, and the environment (make one up: browser, OS, app version).
 3. **Justify your severity and priority choices** in one sentence each, explaining why they might differ from each other.
 4. **Rewrite the same bug as a vague, low-quality report** ("cart is broken") so you can see side by side what information the good version added.
+5. **Now report a real bug.** Sauce Demo has a test account with deliberate bugs: go to https://www.saucedemo.com, log in as `problem_user` (the password is listed on the login page), and use the shop as a customer would (browse, sort, add to cart, check out). Write a full bug report for one real problem you find, including a screenshot as evidence.
 
 ```lab
 {
@@ -211,8 +222,8 @@ New features with no existing test cases yet, areas that keep producing bugs eve
 
 #### Lab
 
-1. **Write a test charter** for a feature you use regularly (for example, "explore a music app's playlist reordering for 20 minutes, focusing on drag-and-drop edge cases").
-2. **"Run" a short exploratory session** against it, based on your real experience with the app, trying at least five different things you wouldn't find in a typical scripted test case (rapid actions, unusual orders, interrupting a step midway, and so on).
+1. **Write a test charter** for one area of Sauce Demo (https://www.saucedemo.com), for example: "Explore the checkout flow as `problem_user` for 25 minutes, focusing on form fields and the order summary." (You can compare against `standard_user`, which should behave correctly.)
+2. **Run the session** with a timer, trying at least five different things you wouldn't find in a typical scripted test case (rapid actions, unusual orders, going back midway, empty or very long field values, and so on).
 3. **Take notes as you go**, one line per thing you tried and what happened.
 4. **Write a short debrief**: what you covered, anything odd you noticed (a real bug or something you'd flag for a written test case), and what you'd explore next if you had more time.
 

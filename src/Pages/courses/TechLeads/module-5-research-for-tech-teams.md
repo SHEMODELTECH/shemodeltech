@@ -3,6 +3,13 @@
 
 Time: about 7 hours
 
+**By the end of this module, you'll be able to:**
+- Write a research question that is specific, answerable, and tied to a decision
+- Do desk research and write a one-page research plan
+- Write a non-leading interview guide with informed consent, and run two short interviews
+- Build and pilot a short, balanced survey
+- Use affinity mapping to turn notes into evidence-backed insights and recommendations, and share them in a one-page readout
+
 **Purpose of this module:** Find reliable answers to the questions teams make decisions on: what users need, what competitors do, and whether a change worked. Research roles, product coordinators, and analysts all need these skills, and none of them require code.
 
 **Tools needed for this module:** A document tool, a free survey tool such as [Google Forms](https://forms.google.com), and a spreadsheet (Google Sheets or Excel). No coding required.
@@ -208,7 +215,7 @@ After eight interviews, affinity mapping shows three clear themes. The readout l
 
 1. **Write each observation** from your Topic 5.2 interviews on its own card or sticky note (a free online whiteboard works too).
 2. **Group the cards into themes** without deciding the themes in advance, then name each group.
-3. **Write three insights** in the form "finding, so implication", each supported by at least one quote and the number of participants it applies to.
+3. **Write three insights** in the form "finding, so implication", each supported by at least one quote and the number of participants it applies to. With only two interviews, label these as early patterns to check with more people (or with your survey), not firm conclusions.
 4. **Turn each insight into one recommendation** the team could act on.
 5. **Create a one-page readout** with the question, the method, your three insights with evidence, and your recommendations.
 

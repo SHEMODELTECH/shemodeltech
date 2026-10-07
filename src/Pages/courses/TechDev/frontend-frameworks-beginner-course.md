@@ -3,6 +3,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Explain what components and declarative UI are, and why frameworks replace manual DOM updates
+- Build a React app with state, event handlers, and props passed from parent to child
+- Create a multi-page Next.js app with file-based routing, links, and a dynamic route
+- Build the same small interactive UI in Vue and in Angular, using each one's template syntax
+- Compare React, Next.js, Vue, and Angular and describe when each is a good fit
+
 **Who this is for:** Beginners who already know HTML, CSS, and JavaScript basics, and want to understand why frameworks exist, how the major ones differ, and how to build something real with each.
 
 **How the course works:** Five modules. Every topic follows the same pattern:
@@ -19,7 +26,7 @@
 
 ## Module 0: Why Frameworks Exist
 
-Time: about 1 hour
+**Time: about 1 hour**
 
 ### Concept
 
@@ -61,7 +68,7 @@ You can explain what a "component" is and why manually updating the DOM becomes 
 
 ## Module 1: React - Components and State
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -104,7 +111,7 @@ cd my-react-app
 npm install
 npm run dev
 ```
-Open the local URL shown in the terminal, typically `http://localhost:5173`.
+If the setup asks extra questions (such as whether to install and start now), choose **No** for the start question and run the commands above yourself. Open the local URL shown in the terminal, typically `http://localhost:5173`.
 
 2. **Replace `src/App.jsx`** with a small component:
 ```jsx
@@ -177,7 +184,7 @@ You have a running React app where typing into an input updates a separate child
 
 ## Module 2: Next.js - Routing and Full Applications
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -278,7 +285,7 @@ You have a multi page Next.js app with a working link between pages and one dyna
 
 ## Module 3: Vue - Templates and Reactivity
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -318,7 +325,7 @@ cd my-vue-app
 npm install
 npm run dev
 ```
-Open the local URL shown in the terminal.
+The setup asks which features to add (TypeScript, Router, and so on). Press Enter to accept the defaults (No) for each one. Open the local URL shown in the terminal.
 
 2. **Replace `src/App.vue`** with a small component:
 ```vue
@@ -378,7 +385,7 @@ You have a running Vue app with a two way bound input and a rendered list, both 
 
 ## Module 4: Angular - A Full Platform
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -422,7 +429,7 @@ ng new my-angular-app
 cd my-angular-app
 ng serve
 ```
-Open `http://localhost:4200`.
+Press Enter to accept the default answer to each setup question. Open `http://localhost:4200`.
 
 2. **Generate a new component:**
 ```bash

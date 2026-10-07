@@ -3,6 +3,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Explain canvases, elements, breakpoints, and publishing, and plan a simple site
+- Build a Webflow page with flexbox, a combo class, and a CMS collection list, then publish it
+- Build a Framer page with stacks, a button component with a hover variant, and an edited AI-generated section
+- Add a Wix app such as Bookings or Forms and confirm a live test submission in the Dashboard
+- Compare Webflow, Framer, and Wix and choose one for a given kind of site
+
 **Who this is for:** Beginners who want to build real, live websites — landing pages, portfolios, small business sites — visually, without writing HTML, CSS, or JavaScript by hand.
 
 **How the course works:** Four modules. Every topic follows the same pattern:

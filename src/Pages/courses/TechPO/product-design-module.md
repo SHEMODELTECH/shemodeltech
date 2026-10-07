@@ -3,6 +3,13 @@
 
 Time: about 6 hours
 
+**By the end of this module, you'll be able to:**
+- Build a low-fidelity wireframe in Figma with annotations, and compare two layout options
+- Map a user flow with a start, end, decision point, error path, and likely drop-off point
+- Review a design against consistency, feedback, affordances and signifiers, and cognitive load
+- Explain the difference between an affordance and a signifier, with an example
+- Explain why staying low-fidelity early leads to better structural feedback
+
 **Purpose:** Learn to sketch screens as wireframes, map the paths users take through a product, and check a design against core UX principles before anything is built.
 
 **Tools needed for this module:** A web browser and a free account with a design tool such as [Figma](https://www.figma.com) (the free Starter plan is enough for these exercises at the time of writing; check current limits on Figma's pricing page). No coding environment or installs are required.

@@ -3,6 +3,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Build a REST API with GET, POST, PATCH, and DELETE endpoints that return the right status codes
+- Build a small GraphQL API and explain when it beats REST (over-fetching and under-fetching)
+- Explain the difference between authentication and authorization, and between session and token login
+- Describe each step of the OAuth "Sign in with Google" flow
+- Create and verify a JWT, and use it to protect an API endpoint
+
 **Who this is for:** Beginners who can write basic code and want to understand how applications actually talk to each other, and how to protect that communication properly.
 
 **How the course works:** Six modules. Every topic follows the same pattern:
@@ -18,7 +25,7 @@
 
 ## Module 0: Why APIs Exist
 
-Time: about 1 hour
+**Time: about 1 hour**
 
 ### Concept
 
@@ -50,7 +57,7 @@ You found at least one real API request in your browser's network tab and can de
 
 ## Module 1: REST - The Standard Approach
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -142,7 +149,7 @@ You ran all four REST operations against your own running API and can explain wh
 
 ## Module 2: GraphQL - Asking for Exactly What You Need
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -227,7 +234,7 @@ You ran a GraphQL query that fetched nested data (a task and its owner's name) i
 
 ## Module 3: Authentication Fundamentals
 
-Time: about 1 hour
+**Time: about 1 hour**
 
 ### Concept
 
@@ -275,7 +282,7 @@ You can explain, without notes, the difference between authentication and author
 
 ## Module 4: OAuth - Letting Users Log In With Another Service
 
-Time: about 1.5 hours
+**Time: about 1.5 hours**
 
 ### Concept
 
@@ -286,6 +293,8 @@ Time: about 1.5 hours
 3. Google redirects back to your app with an authorization code
 4. Your app exchanges that code for an access token
 5. Your app uses that token to fetch the user's basic profile info from Google
+
+Two safety details real apps add: a random `state` value sent in step 1 and checked in step 3 (so an attacker can't slip their own code into your callback), and **PKCE**, a one-time secret that proves the app finishing the flow is the same one that started it. "Sign in with Google" also uses **OpenID Connect**, a layer on top of OAuth that adds an *ID token* saying who the user is. Libraries such as Authlib handle all of this for you; the code below shows only the core exchange so you can see what's happening.
 
 ### Where you'd actually use this
 
@@ -337,7 +346,7 @@ You watched a real "Sign in with Google" flow in your browser's URL bar and iden
 
 ## Module 5: JWT - A Token You Can Verify Without a Database Lookup
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 

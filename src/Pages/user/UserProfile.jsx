@@ -13,6 +13,7 @@ import { listMentorCertificates } from '../../utils/learningCertificates';
 import { mentorStatsByUid } from '../../utils/mentorStats';
 import PremiumBadge from '../../components/PremiumBadge';
 import { isPremium, isVerifiedPartner } from '../../config/premium';
+import { levelForCount } from '../../config/badgeTracks';
 
 const badgeData = [
   { id: 'techmo', title: 'TechPO', image: '/Images/TechMO.png', label: 'Product / Project Owner' },
@@ -46,7 +47,7 @@ const deriveBadgeLevel = (allBadges, badge) => {
     const f = fieldsOf(b);
     return aliases.some(a => f.some(fl => fl === a || fl.includes(a)));
   }).length;
-  return count >= 11 ? 'Expert' : count >= 6 ? 'Advanced' : count >= 2 ? 'Associate' : 'Novice';
+  return levelForCount(count) || 'Novice';
 };
 
 const UserProfile = () => {

@@ -1,7 +1,16 @@
 <!-- order: 8 -->
 ## Module 7: Security Testing
 
-**Tools needed for this module:** [ZAP](https://www.zaproxy.org) (a free, open source security testing tool, formerly OWASP ZAP and now ZAP by Checkmarx), [Docker Desktop](https://www.docker.com/products/docker-desktop/) to run the practice app, and a deliberately vulnerable practice application to test against (the labs use OWASP Juice Shop, an intentionally vulnerable training app; never test a system you don't own or have explicit written permission to test).
+**Time: about 8 hours** (3 hours for vulnerability testing, 2 hours for authentication testing, 3 hours for input validation testing).
+
+**By the end of this module, you'll be able to:**
+- Run OWASP Juice Shop on your own computer and scan it with ZAP
+- Map scan findings to OWASP Top 10:2025 categories and assign justified severities
+- Test login error messages, rate limiting, logout, and password rules against current guidance (NIST SP 800-63B-4)
+- Test inputs with boundary, type, and HTML values, and write a security bug report with a recommended fix
+- Explain why every security test needs scope and permission first
+
+**Tools needed for this module:** [ZAP](https://www.zaproxy.org) (a free, open source security testing tool, formerly OWASP ZAP and now ZAP by Checkmarx), [Docker Desktop](https://www.docker.com/products/docker-desktop/) to run the practice app, and a deliberately vulnerable practice application to test against. Every lab uses **OWASP Juice Shop**, an intentionally vulnerable training app, running only on your own computer at `http://localhost:3000`. Never point ZAP or any of these tests at a real site, a public "practice" site, or any system you don't own.
 
 ### Topic 7.1: Vulnerability Testing
 
@@ -52,7 +61,7 @@ Any application handling sensitive data (personal information, payment details, 
    When the log says the server is listening on port 3000, open http://localhost:3000 in a browser to check it's up. Leave the terminal running (Ctrl+C stops it). The `127.0.0.1:` part keeps the app reachable only from your own computer, which matters because it's deliberately insecure.
 2. **Install ZAP** from zaproxy.org and open it. You don't need any proxy setup for this lab.
 3. **Run ZAP's automated scan:** on the Quick Start tab choose **Automated Scan**, enter `http://localhost:3000` as the URL to attack, click **Attack**, and review the findings in the **Alerts** tab when it finishes.
-4. **Pick three findings** from the scan results, look up each one's category in the OWASP Top 10 (the current edition is the 2025 list at owasp.org/Top10/2025), and write one sentence per finding explaining what the underlying weakness actually is.
+4. **Pick three findings** from the scan results, look up each one's category in the current edition, the OWASP Top 10:2025 (at owasp.org/Top10/2025), and write one sentence per finding explaining what the underlying weakness actually is.
 5. **Assign a severity** (critical, high, medium, low) to each of the three findings, and justify your reasoning for at least one of them in a sentence.
 
 #### Checkpoint
@@ -81,6 +90,7 @@ You have real automated scan results from a training application, three findings
 - **Session management testing** checks how login sessions are created, how long they last, and whether they're properly invalidated on logout, an improperly handled session can let access persist longer than intended
 - **Account lockout / rate limiting** testing checks whether repeated failed login attempts are throttled or blocked, this is what prevents an attacker from simply guessing passwords indefinitely
 - **Password policy testing** checks whether weak passwords are actually rejected as the system's stated policy claims they should be
+- A useful yardstick is **NIST SP 800-63B-4** (2025), the US government's current digital identity guideline: it asks for longer passwords (at least 15 characters when the password is the only factor, 8 with MFA), checks against lists of common or breached passwords, rate limiting of failed attempts, and no forced complexity rules or routine password expiry
 
 #### Structure at a Glance
 
@@ -119,7 +129,7 @@ Any login-based application, verifying that account lockout actually kicks in af
    curl -H "Authorization: Bearer PASTE_TOKEN_HERE" http://localhost:3000/rest/user/whoami
    ```
    If the response still shows your account's email, the token wasn't invalidated on logout; write that down as a finding.
-5. **Try setting a password that's deliberately weak** (like `123` or `password`) if the app has a password policy, and confirm whether it's actually rejected as the policy would suggest.
+5. **Try registering a second test account with deliberately weak passwords** (like `123`, then `password`, then `12345`), and record which ones Juice Shop rejects. Compare the results with the NIST SP 800-63B-4 yardstick above, and write one finding for any weak password it accepts.
 
 #### Checkpoint
 You have documented results for wrong-password vs. non-existent-account error messages, observed whether rate limiting kicked in after repeated failed attempts, and confirmed whether a logged-out session was actually invalidated.

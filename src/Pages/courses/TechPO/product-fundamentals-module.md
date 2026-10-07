@@ -3,6 +3,13 @@
 
 Time: about 6 hours
 
+**By the end of this module, you'll be able to:**
+- Place a real product in its lifecycle stage using observable evidence, and name the metric that stage's team should watch
+- Write a specific, testable MVP hypothesis and design a fake door test for it
+- Explain the build-measure-learn loop and what makes an MVP different from a smaller version of the full product
+- Write a product vision, a supporting strategy, and a short roadmap that follows from them
+- Choose a north star metric and justify why it reflects real user value rather than activity that is easy to inflate
+
 **Purpose:** Learn how products move through their lifecycle, how to scope a minimum viable product (MVP) that tests one idea, and how to write a product vision with a north star metric.
 
 **Tools needed for this module:** A web browser, a free account with a collaborative document tool such as [Google Docs](https://docs.google.com) or [Notion](https://www.notion.so), and a free account with a simple board tool like [Trello](https://trello.com) (used in the lab for Topic 2). No coding environment or installs are required.
@@ -141,7 +148,7 @@ Testing whether an idea for a new product or feature is worth real investment be
 #### Lab
 
 1. **Pick a product idea** (real or hypothetical), for example, "an app that reminds people to water their houseplants."
-2. **Write a single, specific hypothesis** it should test, for example, "People will open a plant-care app at least twice a week if it sends reminders."
+2. **Write a single, specific hypothesis** it should test, for example, "At least 1 in 10 houseplant owners who visit a landing page for a watering-reminder app will sign up to be told when it launches." (A fake door test can only measure interest like this, not how people would use the real app, so keep the hypothesis about demand.)
 3. **Design a fake door test** for that hypothesis: sketch (in a doc, or with simple shapes) a single landing page with one button, like "Get notified when we launch," with no actual product behind it yet.
 4. **Set up a simple Trello board** with three columns, "Build," "Measure," "Learn," and place a card describing your fake door test in the Build column.
 5. **Write what you'd need to measure** to learn something from this test (like number of clicks or signups) and move the card to Measure, then write one sentence describing what a strong result versus a weak result would each teach you, moving the card to Learn.

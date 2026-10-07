@@ -3,6 +3,13 @@
 
 Time: about 8 hours
 
+**By the end of this module, you'll be able to:**
+- Write a scope document with in-scope and out-of-scope items, and a change request for a scope creep scenario
+- Build a timeline with durations and dependencies, find the critical path, and add a justified buffer
+- Build a risk register that rates likelihood and impact, with mitigations, a contingency plan, and owners
+- Build a budget tracker with a contingency reserve, and calculate burn rate against progress
+- Explain how scope, timeline, risk, and budget constrain each other
+
 **Purpose:** Learn to define a project's scope, build a realistic timeline, track risks by likelihood and impact, and keep spending on budget.
 
 **Tools needed for this module:** A web browser, a free account with a spreadsheet tool such as [Google Sheets](https://sheets.google.com), and a free account with a board or project tool like [Trello](https://trello.com) or [Asana](https://asana.com). No coding environment or installs are required.

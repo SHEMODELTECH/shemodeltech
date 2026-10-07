@@ -9,6 +9,7 @@ import { verificationUrl, qrCodeUrl } from '../utils/certificateVerification';
 import TierBadge from '../components/TierBadge';
 import { formatMoney, hasOpenDispute, confirmPaymentReceived, markOwnerPaidAll, isReadyToComplete, healPaidProjectStatus, smtPays } from '../utils/paidProjects';
 import { toast } from 'react-toastify';
+import { levelForCount } from '../config/badgeTracks';
 
 // Map a badge category (stored on evaluations) to its badge image in /public/Images.
 const BADGE_IMAGES = {
@@ -44,7 +45,7 @@ const deriveLevel = (badges, category) => {
     const fields = [b.category, b.id, b.title, b.badgeCategory].map(x => (x || '').toString().toLowerCase());
     return aliases.some(a => fields.some(f => f === a || f.includes(a)));
   }).length;
-  return count >= 11 ? 'Expert' : count >= 6 ? 'Advanced' : count >= 2 ? 'Associate' : count >= 1 ? 'Novice' : 'Novice';
+  return levelForCount(count) || 'Novice';
 };
 
 // Tier ring color for the printed certificate (matches TierBadge: grey/light pink/pink/black).

@@ -3,6 +3,14 @@
 
 This course turns each project into a step-by-step, hands-on build. You learn each idea at the moment you need it, while building the thing, and every project hands its result to the next one, ending in a working web app you can show anyone. Follow the projects in order.
 
+**By the end of this course, you'll be able to:**
+- Build a responsive Bubble page using containers with row and column layouts
+- Design a data type with correctly typed fields and add sample records
+- Display records in a sorted repeating group bound to a data source
+- Build workflows that create, update, and delete records, with validation and a confirmation popup
+- Add sign-up and log-in, and protect each user's data with privacy rules
+- Test, document, and share your app at its development URL
+
 **Plan check:** Every required step in this course works on Bubble's free plan. On the free plan your app runs in its development version, which you can preview and share at a `bubbleapps.io/version-test` address. Deploying to the Live version (and connecting a custom domain) needs a paid plan, so the Live deployment step in Project 6 is optional. The free plan also has usage limits (such as workload and data limits) at the time of writing (2026); a course-sized app stays well within them, but check Bubble's current pricing page.
 
 ---
@@ -223,7 +231,7 @@ In the Create action, set `title` to the Input's value, `due_date` to the date p
 Validation means checking input before you save it. On the Add task button, add a condition: when the title Input's value is empty, "This element isn't clickable". This stops users from creating broken records.
 
 **Step 6: Add a complete action.**
-In the repeating group cell, add a Checkbox, then create a workflow: when its value changes, Make changes to the current cell's Task and set `is_done` to the checkbox's value. Make changes to a thing is how users edit existing records.
+In the repeating group cell, add a Checkbox and set its preset status (initial value) to the current cell's Task's `is_done`, so it shows the saved state. Then create a workflow: when its value changes, Make changes to the current cell's Task and set `is_done` to the checkbox's value. Make changes to a thing is how users edit existing records.
 
 **Step 7: Add a delete action with a confirmation popup.**
 Bubble has no built-in "are you sure?" step, so you build one. Add a Popup element named `Confirm delete` with the text "Delete this task?" and two buttons, Confirm and Cancel. Add a small Delete icon to the cell with a workflow that, on click, uses Display data in a group/popup to send the current cell's Task to the popup (set the popup's Type of content to `Task` first), then Show the popup. In the Confirm button's workflow, Delete thing: the popup's Task, then Hide the popup. In the Cancel button's workflow, just Hide the popup. The delete only runs after the user confirms, because delete is irreversible.

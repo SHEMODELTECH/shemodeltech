@@ -3,6 +3,12 @@
 
 **Time: about 6.5 hours** (about 30 minutes to install the tools, then roughly 2 hours per topic).
 
+**By the end of this module, you'll be able to:**
+- Catch a committed secret with Gitleaks, and use a GitHub Actions secret with least-privilege `permissions:`
+- Install security tools from official sources, verify their checksums, and explain what the March 2026 Trivy compromise teaches about the supply chain
+- Compare base images with Trivy and build a container image that runs as a non-root user
+- Scan Terraform code with Checkov, fix misconfigurations, and write infrastructure security rules
+
 **Tools needed for this module:** a free [GitHub](https://github.com) account, [Docker Desktop](https://www.docker.com/products/docker-desktop/), and a terminal. You'll install three free, open source scanners along the way: [Gitleaks](https://github.com/gitleaks/gitleaks) (secrets), [Trivy](https://trivy.dev) (container images), and [Checkov](https://www.checkov.io) (infrastructure code). Security tools are themselves part of your supply chain (Topic 9.2 shows a real case), so install them only from their official sources and check what you downloaded.
 
 **Install Gitleaks** (version 8.19 or newer):
@@ -166,7 +172,7 @@ A security review asks how many known vulnerabilities your production image carr
    trivy image python:3.12
    trivy image python:3.12-slim
    ```
-3. **Write a small Dockerfile** for any simple app that starts from `python:3.12-slim`, and add a non-root user:
+3. **Write a small Dockerfile** that starts from `python:3.12-slim` and adds a non-root user. In a new folder, create a one-line `app.py` containing `print("Hello from a non-root container")`, then save this next to it as `Dockerfile`:
    ```dockerfile
    FROM python:3.12-slim
    RUN useradd --create-home appuser
@@ -250,7 +256,24 @@ You only write and scan files here; nothing is created in a real cloud account, 
    ```bash
    checkov -d iac-lab
    ```
-3. **Fix two findings:** add an `aws_s3_bucket_public_access_block` resource for the bucket with all four settings (`block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`) set to `true`, which fixes `CKV2_AWS_6`, and an `aws_s3_bucket_versioning` resource with `status = "Enabled"`, which fixes `CKV_AWS_21`. Each uses `bucket = aws_s3_bucket.logs.id`. Re-run the scan and confirm those checks now pass. Some checks will still fail (for example cross-region replication or KMS encryption); real teams decide which checks apply to them and skip the rest deliberately, with a written reason.
+3. **Fix two findings:** add a public access block with all four settings `true` (fixes `CKV2_AWS_6`) and turn on versioning (fixes `CKV_AWS_21`) by appending this to `main.tf`:
+   ```hcl
+   resource "aws_s3_bucket_public_access_block" "logs" {
+     bucket                  = aws_s3_bucket.logs.id
+     block_public_acls       = true
+     block_public_policy     = true
+     ignore_public_acls      = true
+     restrict_public_buckets = true
+   }
+
+   resource "aws_s3_bucket_versioning" "logs" {
+     bucket = aws_s3_bucket.logs.id
+     versioning_configuration {
+       status = "Enabled"
+     }
+   }
+   ```
+   Re-run the scan and confirm those two checks now pass. Some checks will still fail (for example cross-region replication or KMS encryption); real teams decide which checks apply to them and skip the rest deliberately, with a written reason.
 4. **Add a `.gitignore`** in the folder that excludes `*.tfstate` and `*.tfstate.*`, and write one sentence on why.
 5. **Write a short policy** of three rules your team's infrastructure must always follow, and note which Checkov checks enforce each one.
 

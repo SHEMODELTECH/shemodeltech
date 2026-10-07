@@ -120,9 +120,9 @@ const prettySlug = (slug) =>
 
 // Rough time to complete: reading at ~200 words a minute, plus ~30 minutes for
 // each section with hands-on work (a lab, numbered steps, or an exercise).
-// When a course states its own times ("**Time: about 2 hours**", one per "## "
+// When a course states its own times ("Time: about 2 hours", bold or not, one per "## "
 // section, or one for the whole course), the card shows their sum instead.
-const TIME_RE = /\*\*Time(?: estimate)?:?\*?\*?:?\s*(?:about\s*)?(\d+(?:\.\d+)?)(?:\s*(?:-|to|–)\s*(\d+(?:\.\d+)?))?\s*(hours?|hrs?|minutes?|mins?)?/i;
+const TIME_RE = /^\s*\**Time(?: estimate)?:?\**:?\s*(?:about\s*)?(\d+(?:\.\d+)?)(?:\s*(?:-|to|–)\s*(\d+(?:\.\d+)?))?\s*(hours?|hrs?|minutes?|mins?)?/i;
 const timeOf = (line) => {
   const m = line && line.match(TIME_RE);
   if (!m) return null;
@@ -136,7 +136,7 @@ const authoredMinutes = (md) => {
     if (/^\s*```/.test(l)) { inFence = !inFence; return false; }
     return !inFence;
   });
-  const isTime = (l) => /\*\*Time(?: estimate)?:?/i.test(l) && timeOf(l) != null;
+  const isTime = (l) => timeOf(l) != null;
   let total = 0;
   let found = 0;
   lines.join('\n').split(/^##\s+/m).slice(1).forEach((s) => {

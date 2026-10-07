@@ -3,7 +3,15 @@
 
 This course turns each project into a step-by-step, hands-on build. You learn each idea at the moment you need it, while building the thing, and every project hands its result to the next one, ending in a live, content-managed website. Follow the projects in order.
 
-**Plan check:** Every required step in this course works on Webflow's free Starter site plan, which you get when you create a site. On the free plan at the time of writing (2026), a site has a small limit on static pages (2), a cap on CMS items, a cap on form submissions, and publishes only to a free `webflow.io` subdomain; check Webflow's current plan page, because limits change. This course builds within those limits: a Home page, a Contact page, and a CMS template page. These parts need a paid site plan and are marked optional: extra static pages (separate About and Work pages) in Project 3, and connecting a custom domain in Project 6.
+**By the end of this course, you'll be able to:**
+- Build a responsive page with sections, containers, and flexbox that stacks on mobile
+- Create a reusable style system with classes, combo classes, color swatches, and components
+- Build site navigation with shared navbar and footer components and a mobile menu
+- Set up a CMS collection with a collection list and a template page for each item
+- Add tasteful interactions and a validated contact form, and test it end to end
+- Set SEO titles, alt text, and image sizes, then publish to a live webflow.io address
+
+**Plan check:** Every required step in this course works on Webflow's free Starter site plan, which you get when you create a site. The free plan has a very small limit on static pages, caps on CMS items and form submissions, and publishes only to a free `webflow.io` subdomain; check Webflow's current plan page, because limits change. This course is designed to need only two static pages (Home and Contact) plus a CMS template page. These parts need a paid site plan and are marked optional: extra static pages (separate About and Work pages) in Project 3, and connecting a custom domain in Project 6.
 
 ---
 
@@ -143,7 +151,7 @@ Style system
 **Time:** about 2.5 hours
 
 **Step 1: Plan your pages within the free limit.**
-On the free Starter plan at the time of writing, a site can have only 2 static pages (check the current plan page). So the free path uses two static pages: `Home` and `Contact`. Instead of separate About and Work pages, add two sections to Home and give them the IDs `about` and `work` (Element settings, ID field). In Project 4 a CMS template page will add one real page per project, which does not count as a static page. Planning pages up front keeps navigation simple.
+The free Starter plan allows very few static pages (check the current plan). So the free path uses just two static pages: `Home` and `Contact`. Instead of separate About and Work pages, add two sections to Home and give them the IDs `about` and `work` (Element settings, ID field). In Project 4 a CMS template page will add one real page per project, which does not count as a static page. Planning pages up front keeps navigation simple.
 
 *Optional (needs a paid site plan):* if your site is on a paid plan, you can make `About` and `Work` separate pages instead. The rest of the course works either way.
 
@@ -229,7 +237,7 @@ A collection list displays items from a collection, one block per item, like a r
 In the `work` section of your Home page (or on the Work page if you made one on a paid plan), add a Collection List bound to Projects and design one card using the collection fields. You design one card and every project appears in that style.
 
 **Step 7: Understand collection page templates.**
-A collection page is a single template that generates one live page per item, using that item's fields. One template becomes as many pages as you have items, each with its own content and URL. On the free plan at the time of writing, this template page does not count toward the static page limit.
+A collection page is a single template that generates one live page per item, using that item's fields. One template becomes as many pages as you have items, each with its own content and URL. On the free plan, this template page has not counted toward the static page limit (check the current plan).
 
 **Step 8: Design the detail template and link the cards.**
 Open the Projects template page, add your navbar and footer components, and design it with the name, image, and summary bound to the item's fields. Then link each card in the collection list to its collection page. Now every project has its own real page and URL, all from one template.

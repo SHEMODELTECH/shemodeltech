@@ -3,6 +3,13 @@
 
 **Time: about 6 hours** (roughly 2 hours per topic).
 
+**By the end of this module, you'll be able to:**
+- Build a JMeter test plan with a Thread Group, an HTTP sampler, and a Listener against a local practice app
+- Compare load, stress, spike, and soak tests, and pick the right one for a business question
+- Run JMeter in non-GUI mode and read p95, throughput, and error rate from its HTML report
+- Write a performance finding based on percentiles and a baseline, not averages
+- Explain why you only ever load-test systems you own or have written permission to test
+
 **Tools needed for this module:** [Apache JMeter](https://jmeter.apache.org) (requires Java), and [Docker Desktop](https://www.docker.com/products/docker-desktop/) to run a practice target on your own computer. Every lab in this module tests **OWASP Juice Shop**, a free practice web app, running locally at http://localhost:3000. Start it in a terminal and leave it running while you work:
 
 ```bash
@@ -190,7 +197,7 @@ Before a big sale, a shop asks whether checkout will survive five times its norm
    jmeter -n -t plan.jmx -l baseline.jtl -e -o baseline-report
    ```
 3. **Open `baseline-report/index.html`** and record the p95 response time, throughput, and error rate.
-4. **Run again at a higher load** (for example, double the users) into a new results file and report folder, and record the same three numbers.
+4. **Run again at a higher load** (for example, double the users) into a new results file and report folder, and record the same three numbers. JMeter refuses to write a report into a folder that already has files in it, so give each run new names, for example `-l run2.jtl -e -o run2-report`.
 5. **Write a one-paragraph finding** comparing the runs: the load level, what changed, and one likely cause. Use percentiles, not averages.
 
 #### Checkpoint

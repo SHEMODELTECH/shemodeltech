@@ -3,7 +3,15 @@
 
 This course turns each project into a step-by-step, hands-on build. You learn each idea at the moment you need it, while building the thing, and every project hands its result to the next one, ending in a multi-step automation that runs a real process by itself. Follow the projects in order.
 
-**Free plans only.** Every lab here works on free plans. On the free plan at the time of writing (2026), Zapier allows only two-step Zaps (one trigger plus one action) and does not include Filters, Paths, multi-step Zaps, or Webhooks by Zapier. Make's free plan does include multi-step scenarios, routers, filters, webhooks, and HTTP requests, with a monthly allowance of credits (called operations before 2025) and a limit on how many scenarios can be active at once. So Project 1 uses Zapier for a two-step example, and the multi-step, branching, and webhook projects use Make. Plans change, so check the current pricing page of each tool before you start.
+**By the end of this course, you'll be able to:**
+- Build and test a two-step Zap that maps spreadsheet data into an email
+- Build Make scenarios with routers, filters, and date formatting functions
+- Chain several modules in Make and add an error handler that logs failures
+- Receive data with a webhook and send data out with an HTTP request
+- Automate a full business process with a sheet-based approval step and logging
+- Monitor automations, design within quotas, and write a handoff document
+
+**Free plans only.** Every lab here works on free plans. Zapier's free plan has been limited to simple two-step Zaps (one trigger plus one action), without Filters, Paths, or Webhooks by Zapier. Make's free plan has included multi-step scenarios, routers, filters, webhooks, and HTTP requests, with a monthly allowance of credits (called operations before 2025) and a limit on how many scenarios can be active at once. So Project 1 uses Zapier for a two-step example, and the multi-step, branching, and webhook projects use Make. Plans change, so check the current pricing page of each tool before you start.
 
 ---
 
@@ -14,13 +22,13 @@ This course turns each project into a step-by-step, hands-on build. You learn ea
 **Goal:** Connect two apps so that an action in one automatically triggers an action in the other.
 
 **Step 1: Create a free Zapier account.**
-Go to zapier.com and sign up. Zapier connects apps without code and is one of the most widely used automation tools. The free plan is enough for this project because it needs only one trigger and one action.
+Go to zapier.com and sign up. Zapier connects apps without code and is one of the most widely used automation tools. The free plan should be enough for this project because it needs only one trigger and one action (check the current plan).
 
 **Step 2: Understand triggers.**
 A trigger is the event that starts an automation, such as a new row being added to a spreadsheet. Every automation begins with one, and choosing the right trigger decides when your automation runs.
 
 **Step 3: Understand Zaps.**
-A Zap is one automated workflow: a trigger plus one or more actions. Thinking in Zaps (this happens, so do that) is the core idea behind all automation. On the free plan, a Zap can have one action.
+A Zap is one automated workflow: a trigger plus one or more actions. Thinking in Zaps (this happens, so do that) is the core idea behind all automation. On Zapier's free plan, a Zap may be limited to one action (check the current plan).
 
 **Step 4: Pick a trigger app and event.**
 Create a Google Sheet with the headers `name`, `email` in row 1 and one sample row. In Zapier, create a Zap, choose Google Sheets as the trigger app, select "New Spreadsheet Row" as the event, connect your Google account, and pick your sheet and worksheet.
@@ -35,7 +43,7 @@ Add an action step: Gmail, "Send Email", and set the recipient (your own address
 Mapping passes data from the trigger into the action. Click into the email body and insert the `name` and `email` fields from the trigger, for example: "New sign-up: {name} ({email})". This is what makes the automation carry the specific details of each row.
 
 **Step 8: Test and turn on the Zap.**
-Use the built-in test, check the email arrives, then publish (turn on) the Zap and add a real row. Google Sheets is a polling trigger: on the free plan Zapier checks for new rows about every 15 minutes, so the email will not arrive instantly. Wait, then check the Zap's history if nothing arrives.
+Use the built-in test, check the email arrives, then publish (turn on) the Zap and add a real row. Google Sheets is a polling trigger: Zapier checks for new rows on a timer, which is slow on the free plan (check the current plan for the interval), so the email will not arrive instantly. Wait, then check the Zap's history if nothing arrives.
 
 ### Project Structure
 ```text
@@ -66,7 +74,7 @@ Zap 1
 3. You add a row and no email arrives after one minute. What is the most likely reason on the free Zapier plan?
 4. Why does this project fit on Zapier's free plan?
 
-*Answers: 1) A trigger is the event that starts the automation; an action is the work done after it fires. 2) So each run uses that row's specific details, like the person's name and email, instead of fixed text. 3) Google Sheets is a polling trigger, and on the free plan Zapier checks for new rows only about every 15 minutes. 4) It uses only one trigger and one action, which is what the free plan allows.*
+*Answers: 1) A trigger is the event that starts the automation; an action is the work done after it fires. 2) So each run uses that row's specific details, like the person's name and email, instead of fixed text. 3) Google Sheets is a polling trigger, and on the free plan Zapier checks for new rows only every several minutes. 4) It uses only one trigger and one action, which fits within the free plan's limits.*
 
 ---
 
@@ -76,7 +84,7 @@ Zap 1
 
 **Goal:** Make an automation smart enough to decide, so it acts only when it should and differently in different cases.
 
-**Why Make for this project:** In Zapier, Filters and Paths need a paid plan (or a trial). Make's free plan includes filters and routers (Make's version of Paths), so you build this project in Make. If you have a Zapier trial, you can rebuild it there afterwards to compare.
+**Why Make for this project:** In Zapier, Filters and Paths may need a paid plan or a trial (check the current plan). Make's free plan has included filters and routers (Make's version of Paths), so you build this project in Make. If you have a Zapier trial, you can rebuild it there afterwards to compare.
 
 **Step 1: Create a free Make account.**
 Go to make.com and sign up. In Make, an automation is called a **scenario**, and each step in it is a **module**. A scenario is to Make what a Zap is to Zapier.
@@ -134,7 +142,7 @@ Make scenario: Request router
 3. Why is this project built in Make instead of Zapier?
 4. Why should you test each branch separately?
 
-*Answers: 1) It lets data continue only when a condition is met, so the automation ignores items it should not act on. 2) A router splits a scenario into branches that run different modules; Zapier calls this Paths. 3) Zapier's free plan does not include Filters or Paths, while Make's free plan includes filters and routers. 4) A branch can work for one condition and silently fail for another, so each one needs its own test data.*
+*Answers: 1) It lets data continue only when a condition is met, so the automation ignores items it should not act on. 2) A router splits a scenario into branches that run different modules; Zapier calls this Paths. 3) Zapier's free plan has not included Filters or Paths, while Make's free plan has included filters and routers. 4) A branch can work for one condition and silently fail for another, so each one needs its own test data.*
 
 ---
 
@@ -208,7 +216,7 @@ Make scenario: Form intake
 
 **Goal:** Connect to apps that do not have a ready-made integration, using webhooks and simple API calls.
 
-**Why Make for this project:** Webhooks by Zapier is not available on Zapier's free plan. Make's Webhooks and HTTP modules are available on its free plan, so you build this in Make.
+**Why Make for this project:** Webhooks by Zapier may need a paid Zapier plan, while Make's Webhooks and HTTP modules have been available on its free plan (check the current plans), so you build this in Make.
 
 **Step 1: Understand APIs.**
 An API is a way for one app to talk to another over the internet using structured requests. Almost every modern app has one, which unlocks thousands of tools that have no drag-and-drop connector.
@@ -285,7 +293,7 @@ Make scenario: Custom integration
 
 **Time:** about 3 to 4 hours
 
-**Goal:** Combine your skills into one automation that runs a complete, realistic business process. Build it in Make, because it needs several steps, branching, and logging, which Zapier's free plan does not allow.
+**Goal:** Combine your skills into one automation that runs a complete, realistic business process. Build it in Make, because it needs several steps, branching, and logging, which Zapier's free plan may not allow.
 
 **Step 1: Choose a real process.**
 Pick one: new-lead handling, order fulfilment, content publishing, or onboarding. A recognisable business process makes your portfolio piece instantly understandable.
@@ -303,7 +311,7 @@ Add a router with filters that route each item based on its details, as in Proje
 Create records, send notifications, and update the systems the process touches. These actions are the actual work being automated.
 
 **Step 6: Add a human-in-the-loop step.**
-Make has no built-in approval button (and free Zapier only allows two-step Zaps), so use a sheet as the approval point. Scenario A sends the approver a Slack message or email with a link to the sheet, asking them to change `Status` to `Approved` or `Rejected`. Scenario B runs on a schedule (for example every 15 minutes): Google Sheets "Search Rows" finds rows where `Status` is `Approved` (or `Rejected`) and `Processed` is empty, runs the follow-up actions, then "Update a Row" sets `Processed` to `yes` so the row is not handled twice. You will need two active scenarios, so switch off older ones.
+Make has no built-in approval button (and Zapier's free plan may not allow multi-step Zaps), so use a sheet as the approval point. Scenario A sends the approver a Slack message or email with a link to the sheet, asking them to change `Status` to `Approved` or `Rejected`. Scenario B runs on a schedule (for example every 15 minutes): Google Sheets "Search Rows" finds rows where `Status` is `Approved` (or `Rejected`) and `Processed` is empty, runs the follow-up actions, then "Update a Row" sets `Processed` to `yes` so the row is not handled twice. You will need two active scenarios, so switch off older ones.
 
 **Step 7: Add logging and error handling.**
 Add a module that logs each run (time, item, outcome) to a "Log" sheet, and add error handlers on modules that call outside apps. Logs let you prove the automation ran and diagnose issues.

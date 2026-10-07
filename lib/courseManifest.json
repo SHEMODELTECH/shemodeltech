@@ -5,7 +5,7 @@
   "minutes": 330,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
-  "modules": 5,
+  "modules": 4,
   "quizParts": 4
  },
  "TechArchs/no-code-website-cms-developer-webflow-hands-on-tutorials": {
@@ -23,7 +23,7 @@
   "minutes": 360,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
-  "modules": 5,
+  "modules": 4,
   "quizParts": 4
  },
  "TechArchs/no-code-web-app-builder-bubble-hands-on-tutorials": {
@@ -41,7 +41,7 @@
   "minutes": 390,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
-  "modules": 6,
+  "modules": 5,
   "quizParts": 5
  },
  "TechArchs/workflow-automation-specialist-zapier-make-hands-on-tutorials": {
@@ -59,7 +59,7 @@
   "minutes": 300,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
-  "modules": 5,
+  "modules": 4,
   "quizParts": 4
  },
  "TechArchs/apis-module": {
@@ -68,7 +68,7 @@
   "minutes": 180,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechArchs/crm-platforms-module": {
@@ -77,7 +77,7 @@
   "minutes": 360,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechArchs/internal-tools-builder-retool-airtable-hands-on-tutorials": {
@@ -95,7 +95,7 @@
   "minutes": 180,
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechDev/swe-fundamentals-beginner-course": {
@@ -104,7 +104,7 @@
   "minutes": 2130,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 11,
+  "modules": 10,
   "quizParts": 10
  },
  "TechDev/python-fundamentals-beginner-course": {
@@ -113,7 +113,7 @@
   "minutes": 720,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 10,
+  "modules": 9,
   "quizParts": 9
  },
  "TechDev/version-control-beginner-course": {
@@ -122,52 +122,52 @@
   "minutes": 420,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 6,
+  "modules": 5,
   "quizParts": 5
  },
  "TechDev/web-development-beginner-course": {
   "title": "Web Development for Builders",
   "level": "Beginner",
-  "minutes": 660,
+  "minutes": 600,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 6,
+  "modules": 5,
   "quizParts": 5
  },
  "TechDev/frontend-frameworks-beginner-course": {
   "title": "Frontend Frameworks for Builders",
   "level": "Beginner",
-  "minutes": 195,
+  "minutes": 540,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 6,
+  "modules": 5,
   "quizParts": 5
  },
  "TechDev/backend-development-beginner-course": {
   "title": "Backend Development for Builders",
   "level": "Beginner",
-  "minutes": 225,
+  "minutes": 690,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 7,
+  "modules": 6,
   "quizParts": 6
  },
  "TechDev/databases-beginner-course": {
   "title": "Databases for Builders",
   "level": "Beginner",
-  "minutes": 285,
+  "minutes": 780,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 10,
+  "modules": 8,
   "quizParts": 8
  },
  "TechDev/apis-beginner-course": {
   "title": "APIs for Builders",
   "level": "Beginner",
-  "minutes": 225,
+  "minutes": 570,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 7,
+  "modules": 6,
   "quizParts": 6
  },
  "TechDev/testing-beginner-course": {
@@ -176,16 +176,16 @@
   "minutes": 480,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 5,
+  "modules": 4,
   "quizParts": 4
  },
  "TechDev/deployment-beginner-course": {
   "title": "Deployment for Builders",
   "level": "Beginner",
-  "minutes": 195,
+  "minutes": 540,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 6,
+  "modules": 5,
   "quizParts": 5
  },
  "TechDev/dsa-beginner-course": {
@@ -194,7 +194,7 @@
   "minutes": 1020,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 13,
+  "modules": 12,
   "quizParts": 12
  },
  "TechDev/data-analytics-beginner-course": {
@@ -203,7 +203,7 @@
   "minutes": 1350,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 9,
+  "modules": 8,
   "quizParts": 8
  },
  "TechDev/machine-learning-fundamentals-beginner-course": {
@@ -212,7 +212,7 @@
   "minutes": 1110,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 9,
+  "modules": 8,
   "quizParts": 8
  },
  "TechDev/agentic-ai-fundamentals-course": {
@@ -221,7 +221,7 @@
   "minutes": 1005,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/computer-vision": {
@@ -248,7 +248,7 @@
   "minutes": 765,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/ai-automation-engineer-hands-on-tutorials": {
@@ -257,7 +257,7 @@
   "minutes": 975,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 7,
+  "modules": 6,
   "quizParts": 6
  },
  "TechDev/ai-data-engineer-hands-on-tutorials": {
@@ -266,7 +266,7 @@
   "minutes": 1035,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/ai-agent-platform-engineer-hands-on-tutorials": {
@@ -275,7 +275,7 @@
   "minutes": 1185,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/ai-solutions-architect-hands-on-tutorials": {
@@ -284,7 +284,7 @@
   "minutes": 765,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/multimodal-ai-engineer-hands-on-tutorials": {
@@ -293,7 +293,7 @@
   "minutes": 1095,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/ai-research-engineer-hands-on-tutorials": {
@@ -302,7 +302,7 @@
   "minutes": 1065,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/robotics-ai-engineer-hands-on-tutorials": {
@@ -311,7 +311,7 @@
   "minutes": 1125,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/ai-infrastructure-engineer-hands-on-tutorials": {
@@ -320,7 +320,7 @@
   "minutes": 1365,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 9,
+  "modules": 8,
   "quizParts": 7
  },
  "TechDev/ai-infrastructure-engineer-advanced-module-tutorials": {
@@ -329,7 +329,7 @@
   "minutes": 975,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 6,
+  "modules": 4,
   "quizParts": 4
  },
  "TechDev/ai-governance-responsible-ai-engineer-hands-on-tutorials": {
@@ -338,7 +338,7 @@
   "minutes": 915,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 8,
+  "modules": 7,
   "quizParts": 7
  },
  "TechDev/ai-governance-advanced-module-tutorials": {
@@ -347,7 +347,7 @@
   "minutes": 585,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
-  "modules": 6,
+  "modules": 4,
   "quizParts": 4
  },
  "TechGuard/module-1-networking": {
@@ -356,7 +356,7 @@
   "minutes": 360,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 5,
+  "modules": 4,
   "quizParts": 4
  },
  "TechGuard/module-2-operating-systems": {
@@ -365,7 +365,7 @@
   "minutes": 240,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 3,
+  "modules": 2,
   "quizParts": 2
  },
  "TechGuard/module-3-ethical-hacking": {
@@ -374,7 +374,7 @@
   "minutes": 420,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechGuard/module-4-cryptography": {
@@ -383,7 +383,7 @@
   "minutes": 300,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechGuard/module-5-identity-access-management": {
@@ -392,7 +392,7 @@
   "minutes": 300,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechGuard/module-6-cloud-security": {
@@ -401,7 +401,7 @@
   "minutes": 360,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechGuard/module-7-security-monitoring": {
@@ -410,7 +410,7 @@
   "minutes": 300,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechGuard/module-8-secure-coding": {
@@ -419,124 +419,124 @@
   "minutes": 300,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 3,
+  "modules": 2,
   "quizParts": 2
  },
  "TechGuard/module-9-devops-security": {
   "title": "DevOps Security",
   "level": "Beginner",
-  "minutes": 390,
+  "minutes": 360,
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechLeads/module-1-techleads-business-leadership": {
   "title": "Business & Leadership",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechLeads/module-2-strategy-business-analysis-stakeholder-management": {
   "title": "Strategy, Business Analysis & Stakeholder Management",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechLeads/module-3-change-management-financial-literacy-sales-partnerships-technology-awareness": {
   "title": "Change Management, Financial Literacy, Sales & Partnerships, and Technology Awareness",
   "level": "Beginner",
-  "minutes": 135,
+  "minutes": 480,
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
-  "modules": 5,
+  "modules": 4,
   "quizParts": 4
  },
  "TechLeads/module-4-technical-writing": {
   "title": "Technical Writing",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechLeads/module-5-research-for-tech-teams": {
   "title": "Research for Tech Teams",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 420,
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechLeads/module-6-communication-and-delivery": {
   "title": "Communication and Delivery",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechPO/product-fundamentals-module": {
   "title": "Product Fundamentals",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechPO/user-research-module": {
   "title": "User Research",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechPO/product-design-module": {
   "title": "Product Design",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechPO/agile-module": {
   "title": "Agile",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechPO/project-management-module": {
   "title": "Project Management",
   "level": "Beginner",
-  "minutes": 135,
+  "minutes": 480,
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
-  "modules": 5,
+  "modules": 4,
   "quizParts": 4
  },
  "TechPO/product-project-management": {
   "title": "Analytics, Roadmapping & Collaboration",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 420,
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechQA/00-course-overview": {
@@ -552,37 +552,37 @@
  "TechQA/module-1-qa-fundamentals": {
   "title": "QA Fundamentals",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 300,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechQA/module-2-manual-testing": {
   "title": "Manual Testing",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechQA/module-3-automation-testing": {
   "title": "Automation Testing",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 540,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechQA/module-4-api-testing": {
   "title": "API Testing",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 420,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechQA/module-5-performance-testing": {
@@ -591,40 +591,40 @@
   "minutes": 360,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechQA/module-6-mobile-testing": {
   "title": "Mobile Testing",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 480,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechQA/module-7-security-testing": {
   "title": "Security Testing",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 480,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "TechQA/module-8-cicd-testing": {
   "title": "CI/CD Testing",
   "level": "Beginner",
-  "minutes": 105,
+  "minutes": 360,
   "trackLabel": "Quality Tester",
   "kind": "markdown",
-  "modules": 4,
+  "modules": 3,
   "quizParts": 3
  },
  "company/understanding-badges-and-ratings": {
   "title": "Understanding Badges: A Guide for Companies",
   "level": "Beginner",
-  "minutes": 30,
+  "minutes": 15,
   "trackLabel": "Understanding Badges",
   "kind": "markdown",
   "modules": 5,
@@ -636,7 +636,7 @@
   "minutes": 15,
   "trackLabel": "Start here",
   "kind": "markdown",
-  "modules": 10,
+  "modules": 9,
   "quizParts": 2
  }
 }

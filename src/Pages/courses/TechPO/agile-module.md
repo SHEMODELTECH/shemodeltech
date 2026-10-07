@@ -3,6 +3,14 @@
 
 Time: about 6 hours
 
+**By the end of this module, you'll be able to:**
+- Name the Scrum accountabilities, events, and artifacts from the 2020 Scrum Guide and explain what each is for
+- Run a mock Sprint: build a Product and Sprint Backlog, write a Sprint Goal, and hold a review and retrospective
+- Set up a Kanban board with WIP limits and calculate a rough cycle time
+- Estimate backlog items in story points and select a Sprint's worth of work against a velocity
+- Write a Definition of Done and explain the problem it prevents
+- Compare Scrum's fixed Sprints with Kanban's continuous flow and say when each fits better
+
 **Purpose:** Run product work in short, predictable cycles using Scrum, Kanban, and Sprint Planning.
 
 **Tools needed for this module:** A web browser and a free account with a board tool such as [Trello](https://trello.com) or [Jira](https://www.atlassian.com/software/jira) (Jira's free tier is closer to what real Scrum/Kanban teams use, but Trello works fine for the exercises in this module). No coding environment or installs are required.

@@ -3,6 +3,13 @@
 
 Time: about 6 hours
 
+**By the end of this module, you'll be able to:**
+- Write an outcome-based meeting purpose and a timed agenda, and close a meeting with owned, dated actions
+- Break a project into tasks and milestones with owners and dependencies
+- Build a RAID log and tell risks, assumptions, issues, and dependencies apart
+- Write a status update that answers what happened, what's at risk, and what's needed
+- Build and rehearse a five-slide presentation that leads with the ask and follows situation, complication, resolution
+
 **Purpose of this module:** Keep projects moving and people aligned: run useful meetings, track work and risks, and present clearly to any audience. These are the everyday skills of project coordinators, delivery managers, and anyone who helps a tech team ship.
 
 **Tools needed for this module:** A document tool, a spreadsheet, and presentation software (Google Slides, PowerPoint, or Keynote). A free project board such as [Trello](https://trello.com) is useful but optional.

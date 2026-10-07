@@ -5,7 +5,14 @@
 
 **Time:** about 5 hours
 
-**Tools needed for this module:** A web browser and an email address to sign up for free tiers — a form tool like [Google Forms](https://forms.google.com) or [Jotform](https://www.jotform.com), Google Sheets, and the automation platform [Make](https://www.make.com). The labs use Make because on the free plan at the time of writing (2026), Zapier allows only two-step Zaps (one trigger plus one action), with no filters, paths, or multi-step Zaps, while Make's free plan allows multi-step scenarios, routers, and filters within a monthly credit allowance and a limit on active scenarios. Check each tool's current plan page, because limits change. No coding environment or installs are required, everything happens in the browser. You won't need every tool set up at once, each topic only needs its own account.
+**By the end of this module, you'll be able to:**
+- Build a form with conditional logic and required fields that sends submissions to a spreadsheet
+- Build a sheet-based approval process in Make with separate Approved and Rejected routes
+- Add notifications that use dynamic content from the original submission
+- Connect the workflow to another system with correct data mapping
+- Explain escalation rules and how usage-based pricing (tasks, credits) affects workflow design
+
+**Tools needed for this module:** A web browser and an email address to sign up for free tiers — a form tool like [Google Forms](https://forms.google.com) or [Jotform](https://www.jotform.com), Google Sheets, and the automation platform [Make](https://www.make.com). The labs use Make because Zapier's free plan has been limited to simple two-step Zaps without filters or paths, while Make's free plan has included multi-step scenarios, routers, and filters (within a monthly credit allowance and a limit on active scenarios). Check each tool's current plan page, because limits change. No coding environment or installs are required, everything happens in the browser. You won't need every tool set up at once, each topic only needs its own account.
 
 ### Topic 1: Forms
 
@@ -106,10 +113,11 @@ Any decision that needs sign-off before proceeding, expense approvals, time-off 
 #### Lab
 
 1. **Continue from the Time Off Request form** built in Topic 1 (or use any existing form with a spreadsheet destination).
-2. **Add two columns** to the right of the form's columns in the responses sheet: `Status` and `Processed`. Make has no built-in approval button (and free Zapier only allows two-step Zaps), so the approver will decide by typing `Approved` or `Rejected` in the `Status` column (tip: use Data, Data validation, Dropdown to offer only those two values).
+2. **Add two columns** to the right of the form's columns in the responses sheet: `Status` and `Processed`. Make has no built-in approval button (and Zapier's free plan may not allow multi-step Zaps; check the current plan), so the approver will decide by typing `Approved` or `Rejected` in the `Status` column (tip: use Data, Data validation, Dropdown to offer only those two values).
 3. **Scenario A (ask for approval)**: in Make, create a scenario with Google Sheets "Watch New Rows" on the responses sheet, then Gmail "Send an Email" to a fixed approver (yourself, for testing). Include the request details and the link to the sheet, with the instruction "Set Status to Approved or Rejected". Schedule it and switch it on.
 4. **Scenario B (act on the decision)**: create a second scenario with Google Sheets "Search Rows" that finds rows where `Status` is not empty and `Processed` is empty. Add a Router with two routes: filter one on `Status` equal to `Approved`, the other on `Status` equal to `Rejected`. On both routes, end with Google Sheets "Update a Row" that sets `Processed` to `yes` (map the row number from Search Rows), so the same row is never handled twice. Schedule it (for example every 15 minutes) and switch it on. Your free plan's active-scenario limit may mean switching off older scenarios first.
 5. **Test both paths** by submitting two test requests, setting one row's Status to Approved and the other to Rejected, then clicking "Run once" on Scenario B and confirming each row is marked as processed through the correct route.
+6. **Optional, add an escalation**: create a third scenario scheduled once a day, with Google Sheets "Search Rows" for rows where `Status` is empty, a filter that keeps only rows whose `Timestamp` is earlier than `addDays(now; -2)` (use the Date "earlier than" operator), and a Gmail email reminding the approver. If your plan has no free active-scenario slot, write this design down instead of building it.
 
 #### Checkpoint
 You have a working approval step that routes a submission to an approver, who decides by updating the Status column, and a second scenario that handles Approved and Rejected rows on separate routes. You can explain what an escalation rule is for (for example, a scheduled reminder for rows still blank after two days).
@@ -225,7 +233,7 @@ Connecting a form to a CRM, connecting a CRM to a spreadsheet or accounting tool
 1. **Continue from the full form-to-notification workflow** built across Topics 1–3.
 2. **Add one more step to the "Approved" route in Scenario B**: connect to a CRM tool (or a second spreadsheet, standing in for one) and create a new record using the connector for that app.
 3. **Map the data**, connecting the form's name, date, and reason fields to the corresponding fields in the CRM or second spreadsheet.
-4. **Check the multi-step chain**: confirm that one form submission now results in an approval email (Scenario A), and, once the approver sets the Status, a notification, a new CRM record, and the Processed mark (Scenario B). Build this in Make: on Zapier's free plan a Zap can only have one action.
+4. **Check the multi-step chain**: confirm that one form submission now results in an approval email (Scenario A), and, once the approver sets the Status, a notification, a new CRM record, and the Processed mark (Scenario B). Build this in Make: on Zapier's free plan a Zap may be limited to one action (check the current plan).
 5. **Submit one final test request** end-to-end and trace it through every step, form, approval, notification, and integration, confirming each one fires correctly in sequence.
 
 #### Checkpoint
@@ -238,7 +246,7 @@ You have a full multi-step automation in Make where a single form submission res
 4. What is a multi-step zap (or scenario)?
 5. What's a common pricing model for no-code integration platforms, and why does it matter for workflow design?
 
-*Answers: 1) A pre-built bridge to a specific service (like Google Sheets, Slack, or a CRM) that handles authentication and API calls behind the scenes. 2) A trigger is the event in one app that starts the integration, an action is what happens next in another app as a result. 3) Connecting a field from the trigger app to a field in the action app, so the right data lands in the right place, it's necessary because apps don't automatically know which of their fields correspond to which of another app's fields. 4) A chain of several actions triggered by a single event, for example a form submission triggering an approval email, then a CRM update, then a Slack notification; Make's free plan allows this, while multi-step Zaps need a paid Zapier plan. 5) Platforms charge by monthly usage, tasks in Zapier and credits (formerly operations) in Make, which matters because a workflow with many chained steps or high volume can add up quickly.*
+*Answers: 1) A pre-built bridge to a specific service (like Google Sheets, Slack, or a CRM) that handles authentication and API calls behind the scenes. 2) A trigger is the event in one app that starts the integration, an action is what happens next in another app as a result. 3) Connecting a field from the trigger app to a field in the action app, so the right data lands in the right place, it's necessary because apps don't automatically know which of their fields correspond to which of another app's fields. 4) A chain of several actions triggered by a single event, for example a form submission triggering an approval email, then a CRM update, then a Slack notification; Make's free plan has allowed this, while multi-step Zaps may need a paid Zapier plan. 5) Platforms charge by monthly usage, tasks in Zapier and credits (formerly operations) in Make, which matters because a workflow with many chained steps or high volume can add up quickly.*
 
 ---
 

@@ -1,7 +1,16 @@
 <!-- order: 9 -->
 ## Module 8: CI/CD Testing
 
-**Tools needed for this module:** A free [GitHub](https://github.com) account (for GitHub Actions), and a small existing test suite to run (the labs reuse simple tests, any language is fine).
+**Time: about 6 hours** (roughly 2 hours per topic).
+
+**By the end of this module, you'll be able to:**
+- Build a GitHub Actions workflow that runs your tests on every push and pull request
+- Trace a failing pipeline run to the exact commit and step that broke it
+- Set up a smoke-test subset with pytest markers that runs before the full regression suite
+- Save a JUnit test report as a pipeline artifact on every run, even when tests fail
+- Recognise a flaky test and write a triage note to fix or quarantine it
+
+**Tools needed for this module:** A free [GitHub](https://github.com) account (for GitHub Actions), and a small existing test suite to run (the labs reuse simple tests, any language is fine; Topic 8.1 gives you a starter Python test if you don't have one).
 
 ### Topic 8.1: Automated Pipelines
 
@@ -47,7 +56,21 @@ Any team merging code frequently, catching a broken build or a failing test with
 
 #### Lab
 
-1. **Create a small project on GitHub** (or use an existing one) with a simple automated test already in it, any language is fine (a basic Python `pytest` test, a JavaScript test, anything that runs from the command line with a clear pass/fail exit code).
+1. **Create a small project on GitHub** (or use an existing one) with a simple automated test already in it, any language is fine (anything that runs from the command line with a clear pass/fail exit code). If you don't have one, create a new repository and add these two Python files at its root:
+   ```python
+   # calculator.py
+   def add(a, b):
+       return a + b
+   ```
+   ```python
+   # test_calculator.py
+   from calculator import add
+
+
+   def test_add():
+       assert add(2, 3) == 5
+   ```
+   (Run `pytest` on your computer first to check it passes; pytest finds files named `test_*.py` automatically.)
 2. **Add a GitHub Actions workflow file** at `.github/workflows/test.yml`. This one is for a Python project using pytest; for another language, swap the setup step and the install and test commands (for example `actions/setup-node`, `npm ci`, and `npm test`):
 ```yaml
 name: Run Tests
@@ -215,7 +238,7 @@ Merges keep failing on a login test that passes when re-run. The saved reports s
    pytest --junitxml=report.xml
    ```
    (Most test runners can write JUnit XML too: Playwright has a built-in `junit` reporter, and Jest does it with the `jest-junit` package.)
-2. **Save the report as an artifact** by adding this step after your tests in the workflow file:
+2. **Save the report as an artifact** by adding this step after your tests in the workflow file, indented to line up with your other `- name:` steps:
    ```yaml
    - name: Upload test report
      if: always()

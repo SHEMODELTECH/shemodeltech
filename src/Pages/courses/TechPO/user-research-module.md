@@ -3,6 +3,13 @@
 
 Time: about 6 hours
 
+**By the end of this module, you'll be able to:**
+- Draft primary and secondary proto-personas from clearly labeled assumptions
+- Write an interview guide of open, non-leading questions about past behavior, and run a practice interview
+- Synthesize interview notes and compare them against your persona assumptions
+- Build and pilot a short survey that measures how common a pattern is, checked for response bias
+- Explain when to use interviews (depth) versus surveys (breadth), and why a biased sample can't be fixed with more responses
+
 **Purpose:** Learn who your users are and what they need by building personas, running interviews, and designing surveys.
 
 **Tools needed for this module:** A web browser, a free account with a document tool such as [Google Docs](https://docs.google.com) or [Notion](https://www.notion.so), and a free account with a survey tool like [Google Forms](https://forms.google.com) or [Typeform](https://www.typeform.com). No coding environment or installs are required.

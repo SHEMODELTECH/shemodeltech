@@ -3,6 +3,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Describe any internal app as a data source, screens, actions, and permissions
+- Build a Glide app on a Google Sheet with a list, a detail screen, and a button that writes back to the sheet
+- Build a Bubble app with a custom data type, a repeating group, a create workflow, a conditional, and a privacy rule
+- Build a Softr portal on Airtable that shows each signed-in client only their own record
+- Explain why data-level permissions (privacy rules, record ownership) matter more than hiding things on screen
+
 **Who this is for:** Beginners who want to build functional, data-driven apps — task trackers, client portals, inventory tools, request forms with a review queue — connected to real data, with logins and permissions, without writing a traditional backend.
 
 **How the course works:** Four modules. Every topic follows the same pattern:
@@ -186,11 +193,11 @@ Internal tools that need real custom logic beyond a straightforward data display
 
 4. **Preview the app, submit the form,** and confirm a new Thing appears automatically in the Repeating Group without refreshing the page.
 
-5. **Add a Conditional** to the Repeating Group's row: "When this Request's Status is Urgent, background color is red."
+5. **Add a Conditional** to the Text element inside the cell (or a Group holding it): on its Conditional tab, add "When Current cell's Request's Status is Urgent", then set the property Background style to a red flat color (or Font color to red).
 
 6. **Manually set one Thing's Status to "Urgent"** in the Data tab, and confirm that row highlights red in the app.
 
-7. **Add a Privacy Rule** limiting visibility of `Request` Things to only logged-in users, and confirm a logged-out preview no longer shows the Repeating Group's contents.
+7. **Add a Privacy Rule**: in the Data tab, open Privacy, select `Request`, and define a new rule with the condition "Current User is logged in" that allows "View all fields" and "Find this in searches". Then, in the "Everyone else (default permissions)" row, uncheck those same permissions (they are on by default). Preview while logged out and confirm the Repeating Group is empty. (To see it filled again, you would add sign-up and log-in, as the Bubble course does.)
 
 ### Checkpoint
 You have a working Bubble app with a custom Data Type, a Repeating Group displaying real Things, a Workflow that creates new Things from a form, a working Conditional, and a Privacy Rule restricting visibility to logged-in users.

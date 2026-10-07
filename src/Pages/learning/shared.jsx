@@ -623,6 +623,11 @@ export const splitParts = (html, toc) => {
   return parts;
 };
 
+// Overview, setup, checklist and recap sections aren't lessons, so they need no
+// summary. Keep this rule the same as NO_SUMMARY in lib/courseRequirements.js.
+const NO_SUMMARY = /\b(course overview|before you start|completion checklist|module summary)\b/i;
+export const needsSummary = (p) => p.id !== 'overview' && !NO_SUMMARY.test(String(p.title || ''));
+
 // "What did you learn?" at the end of each module. Required for the certificate.
 const SUMMARY_MIN_WORDS = 30;
 const SUMMARY_MAX_CHARS = 1500;
@@ -682,7 +687,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
   );
   const quizzesLeft = quizParts.filter((p) => !quizDone[p.id]);
   // Every module ends with a short summary in the learner's own words.
-  const summaryParts = parts.map((p, i) => ({ i, id: p.id, title: p.title })).filter((p) => p.id !== 'overview');
+  const summaryParts = parts.map((p, i) => ({ i, id: p.id, title: p.title })).filter((p) => needsSummary(p));
   const summariesLeft = onSummary ? summaryParts.filter((p) => !summaries[p.id]) : [];
   // Once other learners are talking in the forum (2+ posts or replies), reply to one.
   const forumLeft = forum && forum.required && !forum.done;
@@ -884,7 +889,7 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
                 dangerouslySetInnerHTML={{ __html: parts[current].html }}
               />
 
-              {onSummary && parts[current].id !== 'overview' && (
+              {onSummary && needsSummary(parts[current]) && (
                 <ModuleSummary
                   key={parts[current].id}
                   title={parts[current].title}

@@ -3,6 +3,14 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Compare relational, document, realtime, and in-memory databases and say what each is best at
+- Read and write core SQL: create a table, insert, select with a filter and a join, update, and delete
+- Create and query tables in PostgreSQL and MySQL, and connect to Postgres from Python
+- Store and query documents with different shapes in MongoDB
+- Build a live Firestore listener, and use Redis for caching and rate limiting
+- Justify which database fits a given product feature
+
 **Who this is for:** Beginners who can write basic code (any language) and want to understand databases not as abstract theory, but as tools you choose deliberately based on what your product actually needs.
 
 **How the course works:** Eight modules. Every topic follows the same pattern:
@@ -18,7 +26,7 @@
 
 ## Module 0: Why Databases, and Why So Many Kinds
 
-Time: about 1 hour
+**Time: about 1 hour**
 
 ### Concept
 
@@ -55,7 +63,7 @@ You can name all four database types above and give one reason to choose each.
 
 ## Module 1: SQL Fundamentals
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -96,6 +104,8 @@ UPDATE users SET email = 'alice.new@example.com' WHERE id = 1;
 DELETE FROM users WHERE id = 1;
 ```
 
+(The `JOIN` example assumes a second table, `tasks`, whose `owner_id` column holds the `id` of the user who owns each task.)
+
 Translate each query above into a plain-English sentence, on paper or in a notes file, before moving on. This is the actual skill - reading SQL fluently, not memorizing syntax.
 
 ### Checkpoint
@@ -114,7 +124,7 @@ You can read each query above and explain what it does without looking at the co
 
 ## Module 2: PostgreSQL - A Real Relational Database
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -149,16 +159,18 @@ INSERT INTO tasks (title, due_date) VALUES ('Review PR', '2026-07-05');
 SELECT * FROM tasks WHERE done = FALSE ORDER BY due_date ASC;
 ```
 
-**3. Connect from Python.** Install the Postgres driver first:
+You'll also see newer Postgres code write the `id` column as `id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY`. That's the SQL-standard way to get the same auto-numbering as `SERIAL`; both work.
+
+**3. Connect from Python.** Install psycopg, the Postgres driver for Python (version 3), first:
 ```bash
-pip install psycopg2-binary
+pip install "psycopg[binary]"
 ```
 Keep your database password out of your code: set it as an environment variable named `PGPASSWORD` (for example `export PGPASSWORD="your-postgres-password"` in the terminal you'll run Python from), then run:
 ```python
 import os
-import psycopg2
+import psycopg
 
-conn = psycopg2.connect(
+conn = psycopg.connect(
     dbname="trackit",
     user="postgres",
     password=os.environ["PGPASSWORD"],
@@ -187,7 +199,7 @@ You have a running Postgres database with a real table, and you queried it both 
 
 ## Module 3: MySQL - Postgres's Widely-Used Cousin
 
-Time: about 1.5 hours
+**Time: about 1.5 hours**
 
 ### Concept
 
@@ -204,9 +216,9 @@ You'll often encounter MySQL rather than choose it fresh - many existing systems
 ```bash
 mysql -u root -p
 ```
-- **Or use Docker** (if you have [Docker](https://www.docker.com) installed). This starts MySQL 8 in a container, then opens its command-line client. Replace `choose-a-password` with a password of your own, and type it again when asked:
+- **Or use Docker** (if you have [Docker](https://www.docker.com) installed). This starts MySQL 8.4 (the long-term support release) in a container, then opens its command-line client. Replace `choose-a-password` with a password of your own, and type it again when asked:
 ```bash
-docker run --name trackit-mysql -e MYSQL_ROOT_PASSWORD=choose-a-password -p 3306:3306 -d mysql:8
+docker run --name trackit-mysql -e MYSQL_ROOT_PASSWORD=choose-a-password -p 3306:3306 -d mysql:8.4
 docker exec -it trackit-mysql mysql -u root -p
 ```
 If the second command says it can't connect, wait 20 to 30 seconds for MySQL to finish starting, then run it again.
@@ -252,7 +264,7 @@ You can list at least two syntax differences between Postgres and MySQL for the 
 
 ## Module 4: MongoDB - Thinking in Documents, Not Tables
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -323,7 +335,7 @@ You inserted two documents with different fields into the same collection withou
 
 ## Module 5: Firebase - Realtime Data With Minimal Backend
 
-Time: about 2 hours
+**Time: about 2 hours**
 
 ### Concept
 
@@ -335,9 +347,19 @@ A live chat feature, a collaborative to-do list where changes appear instantly f
 
 ### Lab
 
-**1. Create a free Firebase project at [firebase.google.com](https://firebase.google.com) and enable Firestore.**
+**1. Create a free Firebase project at [firebase.google.com](https://firebase.google.com).** In the console:
+- Open **Firestore Database**, click **Create database**, and choose **Start in test mode**. (Production mode blocks all reads and writes until you write security rules, so the code below would fail with a permission error. Test mode rules expire after 30 days; you must write real rules before anyone else uses the app.)
+- Open **Project settings**, and under **Your apps** click the web icon (`</>`) to register a web app. Copy the `firebaseConfig` object it shows you.
 
-**2. Write and read data (JavaScript, e.g. in a web app):**
+**2. Make a small web project** to run the code in:
+```bash
+npm create vite@latest firebase-demo -- --template vanilla
+cd firebase-demo
+npm install
+npm install firebase
+```
+
+**3. Write and read data.** Replace everything in `src/main.js` with the code below, paste in your own config values, then run `npm run dev`, open the page, and open the browser's developer console (right click, Inspect, Console) to see the output. The Firebase web config is not a secret password: it only identifies your project, and your security rules decide who can read and write.
 ```javascript
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, onSnapshot, query, where } from "firebase/firestore";
@@ -370,10 +392,10 @@ onSnapshot(tasksQuery, (snapshot) => {
 });
 ```
 
-**3. The key idea to notice:** `onSnapshot` doesn't just fetch data once, it keeps listening. If another user adds a task from a different device, your app updates instantly without you writing any polling or websocket code yourself.
+**4. The key idea to notice:** `onSnapshot` doesn't just fetch data once, it keeps listening. Try it: keep the console open, then add a document to the `tasks` collection by hand in the Firebase console (with `done` set to `false`). Your page logs the new list instantly, without you writing any polling or websocket code yourself.
 
 ### Checkpoint
-You can explain what makes `onSnapshot` different from a normal database query, and why that matters for realtime features.
+You saw a task you added in the Firebase console appear in your page's console instantly, and you can explain what makes `onSnapshot` different from a normal database query.
 
 ### Quiz
 1. What does Firestore give you that a typical SQL query doesn't, out of the box?
@@ -388,7 +410,7 @@ You can explain what makes `onSnapshot` different from a normal database query, 
 
 ## Module 6: Redis - Extreme Speed for the Right Job
 
-Time: about 1.5 hours
+**Time: about 1.5 hours**
 
 ### Concept
 
@@ -400,7 +422,7 @@ Caching (storing the result of an expensive database query so you don't recomput
 
 ### Lab
 
-**1. Install Redis** (or use a free hosted instance like [Upstash](https://upstash.com)).
+**1. Install Redis** (or use a free hosted instance like [Upstash](https://upstash.com)). Redis doesn't run natively on Windows; there, the easiest option is Docker: `docker run --name trackit-redis -p 6379:6379 -d redis:8`, then use `docker exec -it trackit-redis redis-cli` wherever this module says `redis-cli`.
 
 **2. Basic key-value operations:**
 Start the Redis command-line client:
@@ -472,7 +494,7 @@ You can explain why Redis is fast (in-memory) and why it's usually paired with, 
 
 ## Module 7: Choosing the Right Database for the Job
 
-Time: about 1 hour
+**Time: about 1 hour**
 
 ### Concept
 

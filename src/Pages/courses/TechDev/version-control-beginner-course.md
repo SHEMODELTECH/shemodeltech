@@ -3,6 +3,13 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Explain what Git does and what GitHub adds on top of it
+- Create a repository, stage and commit changes, read the history, and undo mistakes with `git restore` and `git revert`
+- Push a local repository to GitHub and clone it onto another machine
+- Use branches to work on a change without touching `main`
+- Open and merge a pull request, and resolve a merge conflict by hand
+
 **Who this is for:** Beginners who write code (or documents, or config files) and want a reliable way to track changes, collaborate with others, and undo mistakes without panic.
 
 **How the course works:** Five modules. Every topic follows the same pattern:
@@ -12,7 +19,7 @@
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
-**Tools needed:** A terminal, [Git](https://git-scm.com/downloads) installed, and a free [GitHub](https://github.com) account.
+**Tools needed:** A terminal, [Git](https://git-scm.com/downloads) installed, and a free [GitHub](https://github.com) account. On Windows, run the commands in **Git Bash** (installed with Git), since some commands here (like `echo ... > README.md` and `cat`) behave differently in PowerShell.
 
 ---
 
@@ -98,17 +105,37 @@ git log --oneline
 ```
 Two commits, each a snapshot you can always come back to.
 
+6. **Undo a change you haven't committed yet:**
+```bash
+echo "oops, this line is a mistake" >> README.md
+git diff
+git restore README.md
+git diff
+```
+`git diff` shows what changed since your last commit (added lines start with `+`). `git restore` throws away the uncommitted changes to that file, so the second `git diff` shows nothing. Be careful: restored changes are gone for good.
+
+7. **Undo a commit safely:**
+```bash
+echo "## Burnt Toast" >> README.md
+git add README.md
+git commit -m "Add a recipe I regret"
+git revert --no-edit HEAD
+git log --oneline
+cat README.md
+```
+`HEAD` means "the latest commit". `git revert` doesn't delete that commit; it adds a *new* commit that reverses it. The history stays honest, and it's safe to do even after you've shared your work.
+
 ### Checkpoint
-You have a local Git repository with at least two commits, and you can explain what `git add` does differently from `git commit`.
+You have a local Git repository with several commits (including one revert), and you can explain what `git add` does differently from `git commit`.
 
 ### Quiz
 1. What does `git init` do?
 2. What is the difference between staging a file and committing it?
-3. What does `git status` show you?
+3. You committed a change and later realize it was wrong. Which command undoes it, and does it erase the old commit?
 4. What does a commit message describe?
 5. If you never run `git add`, can `git commit` still save your changes?
 
-*Answers: 1) It turns the current folder into a Git repository, starting change tracking. 2) Staging marks which changes will be included in the next snapshot; committing actually saves that snapshot with a message. 3) Which files are changed, staged, or untracked, so you know what will happen on your next commit. 4) What changed and why, so the history is understandable later, by you or anyone else. 5) No, only staged changes get included in a commit, unstaged changes are left out.*
+*Answers: 1) It turns the current folder into a Git repository, starting change tracking. 2) Staging marks which changes will be included in the next snapshot; committing actually saves that snapshot with a message. 3) `git revert`, which adds a new commit that reverses the old one; the old commit stays in the history. 4) What changed and why, so the history is understandable later, by you or anyone else. 5) No, only staged changes get included in a commit, unstaged changes are left out.*
 
 ---
 

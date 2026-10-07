@@ -3,6 +3,13 @@
 
 Time: about 7 hours
 
+**By the end of this module, you'll be able to:**
+- Choose and justify 2 to 3 KPIs for a feature, and spot a metric that misleads without context
+- Design an A/B test with a clear win condition, and explain why statistical significance matters
+- Calculate RICE scores to rank a backlog, and scope the top idea into an MVP with explicit out-of-scope items
+- Explain a roadmap decision to a stakeholder using your prioritization criteria
+- Compare Jira, Trello, Asana, and Notion, and set up a working board in the tool that fits a given team
+
 **Purpose of this module:** Learn to choose and read the metrics that show whether a product is working, prioritize a roadmap with a framework like RICE, and pick and set up the right collaboration tool for a team.
 
 **Tools needed for this module:** A free account on at least one project/collaboration tool, Jira, Trello, Asana, or Notion, whichever your organization uses or you're most curious about. A spreadsheet tool (Excel, Google Sheets) is useful for the Analytics lab. No paid tools are required to complete this module.

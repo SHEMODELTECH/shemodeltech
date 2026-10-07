@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Compare vision-language, speech, and image-generation models by format, limits, and cost
+- Send images and text together to the Claude API and reuse that call in later projects
+- Extract basic image and audio features, including a histogram and a spectrogram
+- Build an image captioning tool and a FastAPI app that answers typed or spoken questions about an image
+- Build a search tool that finds text documents and images with one text query
+- Evaluate a multimodal system for accuracy, hallucination, failure modes, and bias
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 
@@ -457,8 +465,23 @@ image_captioning_project/
 ```bash
 mkdir image_qa_app_project
 cd image_qa_app_project
+```
+Create a **virtual environment** (a private set of Python packages for this project) and turn it on. On Mac or Linux:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+On Windows PowerShell:
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+Your prompt now starts with `(.venv)`. Turn it on again the same way in every new terminal you use for this project. Then install the packages:
+```bash
 pip install fastapi uvicorn python-multipart requests
 ```
+Many newer Mac and Linux setups refuse `pip install` outside a virtual environment, which is why this step comes first.
+
 Copy a photo into this folder and name it `test_image.jpg`.
 
 Set your API key in the same terminal window you'll run the app from. It lives only in that terminal session, never in a file:
@@ -470,7 +493,7 @@ export ANTHROPIC_API_KEY="paste-your-key-here"
 # Windows PowerShell
 $env:ANTHROPIC_API_KEY="paste-your-key-here"
 ```
-If you open a new terminal window, set it again.
+If you open a new terminal window, set it again (and turn the virtual environment back on).
 
 **Step 2: Build an image upload endpoint.**
 Create `app.py` in VS Code and paste in the code below. `ask_claude_about_image` is the function you wrote in Project 2, Step 7, with its system prompt adjusted for answering questions.

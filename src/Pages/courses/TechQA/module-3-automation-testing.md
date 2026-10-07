@@ -1,6 +1,14 @@
 <!-- order: 4 -->
 ## Module 3: Automation Testing
 
+**Time: about 9 hours** (roughly 3 hours per framework, including installation).
+
+**By the end of this module, you'll be able to:**
+- Write and run a Selenium script in Python that opens a browser, locates an element, and asserts on it
+- Write and run a Cypress test, and read a passing and a failing run in the Test Runner
+- Write and run a Playwright test across Chromium, Firefox, and WebKit, and debug a failure with the Trace Viewer
+- Compare how Selenium, Cypress, and Playwright work, and choose one for a given team
+
 **Tools needed for this module:** [Node.js](https://nodejs.org) (for Cypress and Playwright), a Java or Python setup (for Selenium; since Selenium 4.6, the built-in Selenium Manager downloads the right browser driver for you), and a code editor like VS Code. You won't need all three frameworks installed at once, each topic only needs its own setup.
 
 ### Topic 3.1: Selenium

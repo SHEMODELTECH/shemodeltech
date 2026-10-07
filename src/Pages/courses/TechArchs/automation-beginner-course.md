@@ -3,6 +3,14 @@
 
 ## Course Overview
 
+**By the end of this course, you'll be able to:**
+- Describe any automation as a trigger, actions, and data mapping
+- Build and turn on a two-step Zap that maps spreadsheet data into a message
+- Build a Make scenario with a router and filters, and test each branch
+- Explain how Power Automate flows use connectors, conditions, and run history
+- Run n8n locally and build a webhook-triggered workflow with an IF node and a Code node
+- Compare Zapier, Make, Power Automate, and n8n and pick one for a given task
+
 **Who this is for:** Beginners who want to connect apps and automate repetitive work, sending a Slack message when a form is submitted, saving email attachments to a folder, syncing a spreadsheet to a CRM, without writing a traditional backend.
 
 **How the course works:** Five modules. Every topic follows the same pattern:
@@ -17,7 +25,7 @@
 
 **Tools needed:** Free accounts on [Zapier](https://zapier.com) and [Make](https://www.make.com), plus [n8n](https://n8n.io) installed locally (free; n8n's cloud version is paid, with a free trial). [Power Automate](https://powerautomate.microsoft.com) cloud flows generally need a work or school Microsoft account (for example, your university or employer account); a personal outlook.com account usually can't create them. If you don't have one, follow Module 3 along and build the same logic in Make. You won't need all four at once, each module only needs its own tool.
 
-**Free plan limits:** On the free plan at the time of writing (2026), Zapier allows only two-step Zaps (one trigger plus one action), without Filters, Paths, or Webhooks by Zapier, and polling triggers check for new data about every 15 minutes. Make's free plan includes multi-step scenarios, routers, filters, and webhooks, within a monthly credit allowance (credits were called operations before 2025). Check each tool's current plan page, because limits change.
+**Free plan limits:** Free plans change often, so check the current plan page of each tool before you start. Zapier's free plan has been limited to simple Zaps (a trigger plus one action), without Filters, Paths, or Webhooks by Zapier, and its polling triggers check for new data only every several minutes. Make's free plan has included multi-step scenarios, routers, filters, and webhooks, within a monthly credit allowance (credits were called operations before 2025). That is why the Zapier lab uses two steps and the branching labs use Make.
 
 ---
 
@@ -156,7 +164,7 @@ flowchart LR
 - Each step picks an **app** and an **event** within that app (the trigger event, or the action event)
 - Fields in a later step can be filled with a **dynamic value** from an earlier step, inserted by clicking it from a list rather than typing it manually
 - A **filter** step can stop the Zap from continuing unless a condition is met (for example, only continue if a field equals a specific value)
-- On the free plan, a Zap can have only one trigger and one action. The three-step Zap in the diagram above, and Filter steps, need a paid plan or a trial, which is why this module's lab uses two steps
+- Zapier's free plan may allow only one trigger and one action per Zap (check the current plan). The three-step Zap in the diagram above, and Filter steps, may need a paid plan or a trial, which is why this module's lab uses two steps
 
 ### Where you'd actually use this
 
@@ -174,7 +182,7 @@ Fast, simple automations where the app you need is popular and well supported, n
 
 5. **Test the step,** using the sample row Zapier pulled earlier, and confirm the message actually arrives with the real data filled in.
 
-6. **Turn the Zap on.** Add a new row to the sheet, and confirm the automation runs on its own, with no manual step required. Be patient: Google Sheets is a polling trigger, and on the free plan Zapier checks for new rows about every 15 minutes. If nothing arrives after 20 minutes, open the Zap's history to see what happened.
+6. **Turn the Zap on.** Add a new row to the sheet, and confirm the automation runs on its own, with no manual step required. Be patient: Google Sheets is a polling trigger, so Zapier checks for new rows on a timer, and on the free plan that timer is slow (check the current plan for the interval). If nothing arrives after that interval plus a few minutes, open the Zap's history to see what happened.
 
 ### Checkpoint
 You have a working, turned-on Zap that reacts to a real new row in a spreadsheet and sends a message containing that row's actual data.
@@ -186,7 +194,7 @@ You have a working, turned-on Zap that reacts to a real new row in a spreadsheet
 4. Why does Zapier ask for a sample row of data before you finish building a Zap?
 5. What has to happen for an automation to actually start running on its own, after it's built, and how quickly does a Google Sheets Zap react on the free plan?
 
-*Answers: 1) Zapier's term for a workflow, a trigger connected to one or more actions. 2) Insert real data from an earlier step directly into a later step's field, rather than hardcoding static text. 3) To stop the Zap from continuing past that point unless a specific condition is met. 4) So each step can be tested with realistic data while building, confirming the automation behaves correctly before turning it on for real events. 5) The Zap needs to be turned on (published); once on, a polling trigger like Google Sheets checks for new rows about every 15 minutes on the free plan, so it is not instant.*
+*Answers: 1) Zapier's term for a workflow, a trigger connected to one or more actions. 2) Insert real data from an earlier step directly into a later step's field, rather than hardcoding static text. 3) To stop the Zap from continuing past that point unless a specific condition is met. 4) So each step can be tested with realistic data while building, confirming the automation behaves correctly before turning it on for real events. 5) The Zap needs to be turned on (published); once on, a polling trigger like Google Sheets checks for new rows on a timer, which is slow on the free plan, so it is not instant.*
 
 ---
 
@@ -196,7 +204,7 @@ You have a working, turned-on Zap that reacts to a real new row in a spreadsheet
 
 ### Concept
 
-**Make** (formerly Integromat) uses a **visual canvas** where modules are connected with lines you can see and rearrange, and supports branching, running different paths depending on a condition, more directly than Zapier's mostly linear structure. This makes it well suited to automations with more than one possible outcome. Routers and filters are included in Make's free plan, so everything in this lab is free (each module run uses credits from your monthly allowance).
+**Make** (formerly Integromat) uses a **visual canvas** where modules are connected with lines you can see and rearrange, and supports branching, running different paths depending on a condition, more directly than Zapier's mostly linear structure. This makes it well suited to automations with more than one possible outcome. Routers and filters have been included in Make's free plan, so this lab should cost nothing (each module run uses credits from your monthly allowance; check the current plan).
 
 ### Structure at a Glance
 

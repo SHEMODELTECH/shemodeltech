@@ -3,6 +3,14 @@
 
 This course turns each project into a step-by-step, hands-on build. You learn each idea at the moment you need it, while building the thing, and every project hands its result to the next one, ending in a real internal tool a team could use to run part of their work. Follow the projects in order.
 
+**By the end of this course, you'll be able to:**
+- Design a relational Airtable base with linked tables, typed fields, and filtered views
+- Add formulas, rollups, lookups, and an email automation in Airtable
+- Connect Retool to Airtable with a scoped Personal Access Token and build a master-detail app
+- Build create, update, and confirmed delete actions with success and error feedback
+- Explain the difference between hiding controls and enforcing permissions, and add a change log
+- Release a tool to test users with documentation and an onboarding walkthrough
+
 **Plan check:** The core of this course works on Airtable's free plan and Retool's free plan. On the free plans at the time of writing (2026), Airtable limits records per base and automation runs per month, and Retool limits the number of users you can invite; check each company's current pricing page, because limits change. These parts need a paid Retool plan and are concept-only or optional on free: restricting query permissions by role (Project 5, Step 5) and separate staging and production environments (Project 6, Step 4). The free path shows you how to build role-aware views with the current user's email instead.
 
 ---
@@ -235,7 +243,7 @@ Queries can run on events, like a button click or a form submit. Add an event ha
 On `updateOrder`, add a success event handler that shows a notification ("Order saved") and triggers `getOrders` to refresh the table, and a failure handler that shows an error notification. Clear feedback tells users their change worked and keeps the tool showing current data.
 
 **Step 6: Build a create-record form.**
-Add a second form and a query `createOrder` with action "Create record" on `Orders`, including order number, amount, status, order date, and the linked customer, so a team can run the whole workflow rather than only editing existing data. Refresh `getOrders` on success.
+Add a second form and a query `createOrder` with action "Create record" on `Orders`, including order number, amount, status, order date, and the linked customer, so a team can run the whole workflow rather than only editing existing data. Refresh `getOrders` on success. For the customer, create a query `getCustomers` ("List records" on `Customers`) and a Select whose option values are `{{ getCustomers.data.records.map(r => r.id) }}` and labels are `{{ getCustomers.data.records.map(r => r.fields.name) }}`. Airtable expects a linked-record field as a list of record IDs, so set the `customer` field in `createOrder` to `{{ [customerSelect.value] }}` (use your Select's actual name).
 
 **Step 7: Understand confirmation on destructive actions.**
 A confirmation step asks the user to confirm before an irreversible action like delete. Deletes and bulk changes are dangerous, and confirmation prevents costly mistakes.

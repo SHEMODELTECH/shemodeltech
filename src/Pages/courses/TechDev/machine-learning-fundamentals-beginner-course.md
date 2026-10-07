@@ -4,6 +4,14 @@
 
 Learn how machine learning actually works by building it yourself, step by step. You will prepare data, train regression and classification models, catch overfitting and data leakage, group data with clustering, see what a neural network really does, and finish with a small end-to-end project that includes a fairness check and a model card. Everything runs free in your browser with Google Colab and scikit-learn.
 
+**By the end of this course, you'll be able to:**
+- Explain what supervised and unsupervised learning are, and when machine learning is (and isn't) the right tool
+- Prepare data for a model by splitting it first, encoding categories, and scaling numbers without leaking test data
+- Train and evaluate regression and classification models in scikit-learn against a simple baseline
+- Detect overfitting and data leakage, and tune a model honestly with cross-validation and pipelines
+- Group unlabeled data with k-means and describe what a small neural network learns
+- Check a model's performance across groups and document it in a model card
+
 ## Course Overview
 
 **Who this is for:** People who can write basic Python (variables, functions, loops, lists and dictionaries) and want to understand machine learning well enough to build, evaluate and explain a simple model honestly. If you have taken the Python Fundamentals course, you have enough Python. The "Data Analytics for Builders" course is a helpful extra step before this one, because you will use pandas DataFrames and simple charts throughout. You do not need advanced math. When a formula matters, it is explained in plain words first.

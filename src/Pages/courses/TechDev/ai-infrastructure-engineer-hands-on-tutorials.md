@@ -3,6 +3,14 @@
 
 This course is a series of hands-on projects. You learn each idea at the moment you need it, while building the thing.
 
+**By the end of this course, you'll be able to:**
+- Map the layers of an AI infrastructure stack and choose compute, storage, networking, and orchestration options
+- Write Bash scripts that monitor CPU, memory, disk, and network, with alerts, logs, and a cron schedule
+- Create a cloud VM, open a port safely, deploy a service to it, and shut it down to control cost
+- Package a service as a Docker image, push it to a registry, and run it on a server
+- Benchmark latency, throughput, and cost per 1,000 requests across two machine types
+- Deploy a model API on Kubernetes with autoscaling, then add Prometheus metrics and an alert rule
+
 Follow the projects in order. Each one hands off a skill or artifact to the next.
 
 

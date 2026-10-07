@@ -3,9 +3,18 @@
 
 Time: about 6 hours
 
+**By the end of this module, you'll be able to:**
+- Trace a piece of technical work to the business goal it serves
+- Compare build, buy, and partner options on cost, control, and speed, and make a reasoned choice
+- Turn a vague request into functional and non-functional requirements
+- Draw as-is and to-be process maps and name the gap between them as the real scope
+- Place stakeholders on a power/interest grid, write an ask-first case, and state your BATNA before negotiating
+
 **Purpose of this module:** Round out the business side of technology leadership, thinking beyond the current sprint (Strategy), translating business needs into buildable work (Business Analysis), and getting buy-in from the people who aren't in the room day to day (Stakeholder Management).
 
 **Tools needed for this module:** No software installation required. A whiteboard or diagramming tool (physical whiteboard, or something like Miro/FigJam/Lucidchart) is useful for process mapping and is referenced in the Business Analysis lab, but pen and paper work just as well to start.
+
+**If you don't have a team or organization to draw on yet:** use your She Model Tech project team, or the sign-up page case from Module 1 (the three-person volunteer team, and the sponsor who has asked whether the page can also take payments). That payment request works well for the build-vs-buy-vs-partner, requirements, and stakeholder labs.
 
 ### Topic 2.1: Strategy
 
