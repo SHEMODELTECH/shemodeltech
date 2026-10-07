@@ -766,7 +766,9 @@ service cloud.firestore {
  allow create: if canJoinCourse(courseKey)
  && request.resource.data.uid == myUid()
  && request.resource.data.body is string
- && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
+ && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000
+ // A nested reply points at the reply it answers (same post).
+ && (request.resource.data.get('parentReplyId', null) == null || request.resource.data.parentReplyId is string);
  // The author edits her own reply; enrolled members set only their own reaction.
  allow update: if isSignedIn() && (
  (resource.data.uid == myUid()
@@ -814,7 +816,9 @@ service cloud.firestore {
  allow create: if (isTeacherUser() || isReviewer())
  && request.resource.data.uid == myUid()
  && request.resource.data.body is string
- && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000;
+ && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000
+ // A nested reply points at the reply it answers (same post).
+ && (request.resource.data.get('parentReplyId', null) == null || request.resource.data.parentReplyId is string);
  // The author edits her own reply; enrolled members set only their own reaction.
  allow update: if isSignedIn() && (
  (resource.data.uid == myUid()

@@ -246,7 +246,46 @@ const ReactionRow = ({ reactions, me, onReact, small = false }) =>
   });
 
 // One reply: reactions, edit, reply-to, report, delete.
-const Reply = ({ r, base, threadId, threadLink, me, myName, isStaff, people, canParticipate, onNeedSignIn, onNeedEnroll, onReplyTo, onRemove, onChanged, courseTitle }) => {
+// How far replies indent. Deeper replies keep nesting but stop moving right,
+// so long conversations still fit on a phone.
+const MAX_INDENT = 4;
+
+// A reply box that opens right under the reply being answered.
+const InlineReplyForm = ({ id, people, selfUid, toName, busy, onSubmit, onCancel }) => {
+  const [text, setText] = useState('');
+  const [file, setFile] = useState(null);
+  const ref = useRef(null);
+  useEffect(() => { setTimeout(() => ref.current?.focus(), 30); }, []);
+  const submit = async (e) => {
+    e.preventDefault();
+    const ok = await onSubmit(text, file);
+    if (ok) { setText(''); setFile(null); }
+  };
+  return (
+    <form onSubmit={submit} className="mt-2">
+      <label className="sr-only" htmlFor={id}>Reply to {toName}</label>
+      <MentionField textareaRef={ref} id={id} rows={2} value={text} onChange={setText} people={people} selfUid={selfUid}
+        maxLength={FORUM_LIMITS.replyMaxChars} placeholder={`Reply to ${toName}`}
+        className="w-full rounded-lg border border-gray-300 p-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-pink-500" />
+      <LimitHint text={text} minWords={FORUM_LIMITS.replyMinWords} maxChars={FORUM_LIMITS.replyMaxChars} />
+      <div className="flex flex-wrap items-center gap-2 mt-2">
+        <button type="submit" disabled={busy || (!text.trim() && !file)} className="fd-btn !py-1.5 !px-3 text-sm disabled:opacity-50">
+          {busy ? 'Posting...' : 'Reply'}
+        </button>
+        <button type="button" onClick={onCancel} className="text-sm font-semibold text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100">Cancel</button>
+        <EmojiPicker targetRef={ref} value={text} onChange={setText} />
+        <AttachButton id={`${id}-file`} file={file} onFile={setFile} />
+      </div>
+    </form>
+  );
+};
+
+const Reply = ({ r, base, threadId, threadLink, me, myName, isStaff, people, canParticipate, onNeedSignIn, onNeedEnroll, onRemove, onChanged, courseTitle,
+  depth = 0, childrenOf, onSubmitReply, busy, renderReply }) => {
+  const [replying, setReplying] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const kids = childrenOf(r.id);
+  const countAll = (id) => childrenOf(id).reduce((n, c) => n + 1 + countAll(c.id), 0);
   const [reactions, setReactions] = useState(r.reactions || {});
   const [showPicker, setShowPicker] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -313,8 +352,15 @@ const Reply = ({ r, base, threadId, threadLink, me, myName, isStaff, people, can
   };
 
   const mineReply = me && r.uid === me.uid;
+  const startReply = () => {
+    if (!me) return onNeedSignIn();
+    if (!canParticipate) return onNeedEnroll();
+    setCollapsed(false);
+    setReplying(true);
+  };
   return (
-    <li className="bg-gray-50 border border-gray-100 rounded-lg p-3">
+    <li>
+    <div id={`forum-reply-${r.id}`} className="bg-gray-50 border border-gray-100 rounded-lg p-3 scroll-mt-24">
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs text-gray-500">
           <span className="font-semibold text-gray-800">{r.name || 'Learner'}</span> · {timeAgo(r.at)}<Edited at={r.editedAt} />
@@ -365,10 +411,29 @@ const Reply = ({ r, base, threadId, threadLink, me, myName, isStaff, people, can
             </span>
           )}
         </span>
-        {!mineReply && (
-          <button type="button" onClick={() => onReplyTo(r)} className="text-xs font-semibold text-pink-700 hover:underline px-1">Reply</button>
+        <button type="button" onClick={startReply} className="text-xs font-semibold text-pink-700 hover:underline px-1">Reply</button>
+        {kids.length > 0 && (
+          <button type="button" onClick={() => setCollapsed((c) => !c)} aria-expanded={!collapsed}
+            className="text-xs font-semibold text-gray-500 hover:text-gray-900 px-1">
+            {collapsed ? `Show ${countAll(r.id)} repl${countAll(r.id) === 1 ? 'y' : 'ies'}` : 'Hide replies'}
+          </button>
         )}
       </div>
+      {replying && me && (
+        <InlineReplyForm id={`reply-to-${r.id}`} people={people} selfUid={me.uid} toName={r.name || 'Learner'} busy={busy}
+          onCancel={() => setReplying(false)}
+          onSubmit={async (text, file) => {
+            const ok = await onSubmitReply(text, file, r);
+            if (ok) setReplying(false);
+            return ok;
+          }} />
+      )}
+    </div>
+    {kids.length > 0 && !collapsed && (
+      <ul className={`mt-2 space-y-2 ${depth < MAX_INDENT ? 'ml-3 sm:ml-5 pl-3 border-l-2 border-pink-100' : ''}`}>
+        {kids.map((c) => renderReply(c, depth + 1))}
+      </ul>
+    )}
     </li>
   );
 };
@@ -426,7 +491,6 @@ const Thread = ({ base, t: initial, me, isStaff, myName, courseTitle, onDeleted,
   };
   const [replies, setReplies] = useState(null);
   const [text, setText] = useState('');
-  const [replyTo, setReplyTo] = useState(null); // { uid, name } when replying to a reply
   const [busy, setBusy] = useState(false);
   const [count, setCount] = useState(t.replyCount || 0);
   const location = useLocation();
@@ -456,23 +520,6 @@ const Thread = ({ base, t: initial, me, isStaff, myName, courseTitle, onDeleted,
     if (!replies) load().catch(() => setReplies([]));
     setTimeout(() => replyRef.current?.focus(), 50);
   };
-  // "Reply" on a reply: focus the reply box with "@Name " filled in.
-  const replyToReply = (r) => {
-    if (!me) return onNeedSignIn();
-    if (!canParticipate) return onNeedEnroll();
-    const tag = `@${r.name || 'Learner'} `;
-    setReplyTo({ uid: r.uid, name: r.name || 'Learner' });
-    setText((cur) => (cur.includes(tag.trim()) ? cur : cur.trim() ? `${cur.trim()} ${tag}` : tag));
-    setTimeout(() => {
-      const el = replyRef.current;
-      if (el) {
-        el.focus();
-        el.selectionStart = el.selectionEnd = el.value.length;
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 50);
-  };
-
   // Opened from a shared link: expand this post and scroll to it.
   useEffect(() => {
     if (!autoOpen) return undefined;
@@ -489,25 +536,30 @@ const Thread = ({ base, t: initial, me, isStaff, myName, courseTitle, onDeleted,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoOpen]);
 
-  const reply = async (e) => {
-    e.preventDefault();
-    const body = text.trim();
-    if (!body && !file) return;
-    if (body && countWords(body) < FORUM_LIMITS.replyMinWords)
-      return toast.error(`Replies need at least ${FORUM_LIMITS.replyMinWords} words (you have ${countWords(body)}).`);
+  // Post a reply to the post (parent = null) or to another reply (parent = that reply).
+  // Returns true when it was posted.
+  const postReply = async (rawText, attachFile, parent = null) => {
+    const body = (rawText || '').trim();
+    if (!body && !attachFile) return false;
+    if (body && countWords(body) < FORUM_LIMITS.replyMinWords) {
+      toast.error(`Replies need at least ${FORUM_LIMITS.replyMinWords} words (you have ${countWords(body)}).`);
+      return false;
+    }
     setBusy(true);
     try {
-      const attachment = await uploadAttachment(file, 'forum');
+      const attachment = await uploadAttachment(attachFile, 'forum');
       const mentions = findMentions(body, people, me.uid);
-      const data = { uid: me.uid, name: myName, body: body || '(attachment)', attachment, at: serverTimestamp(), ...(mentions.length ? { mentions } : {}) };
+      const data = {
+        uid: me.uid, name: myName, body: body || '(attachment)', attachment, at: serverTimestamp(),
+        ...(parent ? { parentReplyId: parent.id } : {}),
+        ...(mentions.length ? { mentions } : {}),
+      };
       const ref = await addDoc(collection(db, base, 'threads', t.id, 'replies'), data);
       await updateDoc(doc(db, base, 'threads', t.id), { replyCount: increment(1), lastAt: serverTimestamp() }).catch(() => {});
       setReplies((rs) => [...(rs || []), { id: ref.id, ...data, at: new Date() }]);
       setCount((c) => c + 1);
-      setText('');
-      setFile(null);
       if (onReplied) onReplied();
-      // One notice per person: the post's author, the person replied to, then anyone mentioned.
+      // One notice per person: the person replied to, the post's author, then anyone mentioned.
       const told = new Set([me.uid]);
       const tell = (uid, n) => {
         if (!uid || told.has(uid)) return;
@@ -515,16 +567,24 @@ const Thread = ({ base, t: initial, me, isStaff, myName, courseTitle, onDeleted,
         notifyMember(uid, { link: threadLink, sendEmail: false, ...n });
       };
       const snippet = body.slice(0, 140);
+      if (parent) tell(parent.uid, { type: 'forum_reply', title: `${myName} replied to your reply`, body: `On "${t.title}" in ${courseTitle}: ${snippet}`, ctaLabel: 'Read the reply' });
       tell(t.uid, { type: 'forum_reply', title: `${myName} replied to your post`, body: `"${t.title}" in ${courseTitle}: ${snippet}`, ctaLabel: 'Read the reply' });
-      if (replyTo && body.includes(`@${replyTo.name}`))
-        tell(replyTo.uid, { type: 'forum_reply', title: `${myName} replied to you`, body: `On "${t.title}" in ${courseTitle}: ${snippet}`, ctaLabel: 'Read the reply' });
       mentions.forEach((uid) =>
         tell(uid, { type: 'forum_mention', title: `${myName} mentioned you in ${courseTitle}`, body: `On "${t.title}": ${snippet}`, ctaLabel: 'Read it' }));
-      setReplyTo(null);
+      setBusy(false);
+      return true;
     } catch (err) {
       toast.error(friendlyError(err, 'Could not post your reply.'));
+      setBusy(false);
+      return false;
     }
-    setBusy(false);
+  };
+
+  // The reply box at the bottom: a reply to the post itself.
+  const reply = async (e) => {
+    e.preventDefault();
+    const ok = await postReply(text, file, null);
+    if (ok) { setText(''); setFile(null); }
   };
 
   const startEdit = () => {
@@ -583,6 +643,24 @@ const Thread = ({ base, t: initial, me, isStaff, myName, courseTitle, onDeleted,
       toast.error(friendlyError(err, 'Could not delete it.'));
     }
   };
+
+  // Replies as a tree: each reply sits under the one it answers. A reply whose
+  // parent was deleted moves up to the top level.
+  const replyIds = new Set((replies || []).map((r) => r.id));
+  const kidsByParent = {};
+  (replies || []).forEach((r) => {
+    const p = r.parentReplyId && replyIds.has(r.parentReplyId) ? r.parentReplyId : '';
+    (kidsByParent[p] = kidsByParent[p] || []).push(r);
+  });
+  const childrenOf = (id) => kidsByParent[id] || [];
+  const topReplies = childrenOf('');
+  const renderReply = (r, depth) => (
+    <Reply key={r.id} r={r} base={base} threadId={t.id} threadLink={threadLink} me={me} myName={myName} isStaff={isStaff} people={people}
+      canParticipate={canParticipate} onNeedSignIn={onNeedSignIn} onNeedEnroll={onNeedEnroll} courseTitle={courseTitle}
+      onRemove={removeReply} depth={depth} childrenOf={childrenOf} renderReply={renderReply} busy={busy}
+      onSubmitReply={postReply}
+      onChanged={(nr) => setReplies((rs) => rs.map((x) => (x.id === nr.id ? nr : x)))} />
+  );
 
   const k = KINDS[t.kind] || KINDS.discussion;
   const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
@@ -672,12 +750,7 @@ const Thread = ({ base, t: initial, me, isStaff, myName, courseTitle, onDeleted,
               me={me ? { uid: me.uid, name: myName } : null} />
           </div>
           <ul className="mt-4 space-y-2">
-            {(replies || []).map((r) => (
-              <Reply key={r.id} r={r} base={base} threadId={t.id} threadLink={threadLink} me={me} myName={myName} isStaff={isStaff} people={people}
-                canParticipate={canParticipate} onNeedSignIn={onNeedSignIn} onNeedEnroll={onNeedEnroll} courseTitle={courseTitle}
-                onReplyTo={replyToReply} onRemove={removeReply}
-                onChanged={(nr) => setReplies((rs) => rs.map((x) => (x.id === nr.id ? nr : x)))} />
-            ))}
+            {topReplies.map((r) => renderReply(r, 0))}
             {replies && replies.length === 0 && <li className="text-sm text-gray-500">No replies yet.</li>}
             {!replies && <li className="text-sm text-gray-500">Loading replies...</li>}
           </ul>
