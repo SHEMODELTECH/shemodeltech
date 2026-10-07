@@ -1,9 +1,13 @@
 <!-- order: 1 -->
 ## Module 1: TechLeads (Business & Leadership)
 
+Time: about 6 hours
+
 **Purpose of this module:** Lead technology teams without necessarily writing code. This module is about the human and organizational side of engineering leadership, communication, coaching, and team management, rather than technical execution.
 
 **Tools needed for this module:** No software installation required. A notes app or doc tool for templates (1:1 notes, feedback drafts, delegation matrix) is helpful but any notebook works. If your team already uses a project tool (Jira, Linear, Asana, etc.), you can use it for the Team Management lab, but it isn't required to start.
+
+**If you don't manage anyone yet:** that's fine. For every lab that mentions "your team" or "a report," use your She Model Tech project team (or this short case: You've been asked to lead a three-person volunteer team building a sign-up page for a community coding workshop, due in six weeks. Amara, the designer, is reliable but quiet in meetings; Jordan, a developer, works fast but often skips testing, and last week a bug reached users; Priya, a content writer, is new and unsure what's expected of her. Your sponsor wants a weekly update and has just asked whether the page can also take payments.) You can reuse the same case in Module 3's change-management lab.
 
 ### Topic 1.1: Communication
 
@@ -42,6 +46,20 @@ flowchart LR
 - Good status reporting answers three questions every time, regardless of format: what happened, what's at risk, and what's needed, so the reader never has to ask a follow-up just to understand the basics
 - The same information often needs two versions: a detailed one for the team, and a compressed one for stakeholders who only need the headline and the ask
 
+**Worked example: a stakeholder status update** (from the case above). Notice that the ask comes first and all three questions are answered:
+
+> **Sign-up page, week 3: at risk (amber)**
+>
+> **Decision needed by Friday:** launch on the planned date without payments, or add payments and launch about two weeks later.
+>
+> **What happened:** the design is finished and the form works; a bug that sent duplicate confirmation emails was found and fixed this week.
+>
+> **What's at risk:** adding payments needs about two extra weeks of building and testing.
+>
+> **Our recommendation:** launch on time and add payments in a second release.
+>
+> **Next update:** Monday.
+
 #### Where you'd actually use this
 
 Writing a weekly status update that a busy VP can read in thirty seconds and still understand the real risk, explaining to product why a "simple" feature request actually needs three weeks, or flagging to your manager early that a deadline is at risk instead of surprising them the week it slips.
@@ -49,7 +67,7 @@ Writing a weekly status update that a busy VP can read in thirty seconds and sti
 #### Lab
 
 1. **Pick a real (or recent) technical situation** on your team, a delay, an incident, an architecture decision, anything with some complexity behind it.
-2. **Write two versions of a status update about it:**
+2. **Write two versions of a status update about it** (use the worked example above as a model):
    - A **team version**: detailed, technical, assumes shared context.
    - A **stakeholder version**: 3-5 sentences, no jargon, leads with impact and what's needed from the reader.
 3. **Check your stakeholder version against the three-question test**: does it answer what happened, what's at risk, and what's needed, without the reader having to ask?
@@ -101,6 +119,12 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Coaching is a repeating cycle, not a one-time event: the follow-up step is what separates a growth plan that actually happens from one that's written once and forgotten
+**Worked example: SBI feedback** (from the case above):
+
+> "In Thursday's release (**Situation**), you merged the sign-up form change without running the test checklist (**Behavior**). A bug sent duplicate emails to about 40 people, and the team spent Friday morning fixing it instead of finishing the design review (**Impact**)."
+
+Then follow with an open coaching question rather than a fix: "What would help you run the checklist when you're under time pressure?" Notice there's no label like "careless," only what happened and what it caused.
+
 - Feedback lands better close to the moment it happens; SBI works whether it's given the same day or saved for a scheduled 1:1, but waiting too long makes the "situation" harder for both people to recall accurately
 
 #### Where you'd actually use this
@@ -112,7 +136,7 @@ Giving a report specific, non-personal feedback after a rough code review discus
 1. **Pick a real situation** where someone's behavior (yours, a report's, a peer's) had a noticeable impact, positive or negative.
 2. **Write it up using SBI:** one or two sentences each for the Situation, the Behavior, and the Impact. Keep it factual and specific, avoid labels like "unprofessional" or "great attitude."
 3. **Run (or role-play) a 1:1** using that SBI feedback: deliver it, then ask an open coaching question ("What do you think led to that?" or "What would you try differently next time?") instead of immediately prescribing a fix.
-4. **Draft a one-page growth plan** for a real or hypothetical report: 2-3 specific skills or experiences, how you'll know progress is happening, and when you'll next check in.
+4. **Draft a one-page growth plan** for a real report, a She Model Tech teammate, or someone from the case above (for example Priya or Jordan): 2-3 specific skills or experiences, how you'll know progress is happening, and when you'll next check in.
 5. **Schedule the follow-up** on a real calendar, even if it's a placeholder, so the growth plan doesn't quietly expire.
 
 #### Checkpoint
@@ -168,11 +192,11 @@ Deciding what a team commits to next sprint given real capacity instead of wishf
 
 #### Lab
 
-1. **Build a simple delegation matrix** for your current or a hypothetical team: list 3-5 pieces of ongoing work, who owns each one, and one sentence on what context or authority they need to actually own it (not just execute it).
+1. **Build a simple delegation matrix** for your current team, your She Model Tech project team, or the case team above: list 3-5 pieces of ongoing work, who owns each one, and one sentence on what context or authority they need to actually own it (not just execute it).
 2. **Run a lightweight sprint/iteration planning exercise:** list your team's top 5-8 candidate tasks, rough-size each one, and sequence them against your team's real capacity for the period, cutting anything that doesn't fit rather than overcommitting.
 3. **Run (or role-play) a retro** on a recent piece of work: gather 3 "what worked," 3 "what didn't," and narrow it down to exactly one concrete change you'll actually make next cycle.
 4. **Check your retro output against the planning exercise**: does the one concrete change actually show up in how you planned the next round of work?
-5. **Do a quick team-health gut check:** for each person on your team (or a hypothetical one), note one signal of workload or morale you'd want to watch, even if nothing is currently wrong.
+5. **Do a quick team-health gut check:** for each person on your team (or each person in the case above), note one signal of workload or morale you'd want to watch, even if nothing is currently wrong.
 
 #### Checkpoint
 You have a delegation matrix with real ownership and context notes, a sprint plan sized against real capacity, and one retro that produced exactly one concrete change which shows up in that plan.

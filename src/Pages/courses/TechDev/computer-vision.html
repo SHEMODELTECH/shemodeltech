@@ -5,7 +5,7 @@
 <!-- level: Advanced -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Computer Vision — Student Edition</title>
+<title>Computer Vision — Self-paced</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -521,14 +521,14 @@ const MODULES=[
  goals:["See how the course ideas combine in a real study","Explain what a multimodal LLM is","Compare prompting strategies","Read results with accuracy, precision, recall and F1"],
  sections:[
  {h:"The question",b:`<p><b>Multimodal large language models (MLLMs)</b> can take images as well as text — they turn image patches into tokens, much like a Vision Transformer. Could they help analyse crime-scene video the way a forensic expert would?</p>
- <p>Research by your instructor, Opeyemi Adeniran, asked three questions:</p>
+ <p>Research by Opeyemi Adeniran, She Model Tech, asked three questions:</p>
  <ol class="steps"><li>How closely can MLLMs approximate human forensic reasoning?</li><li>Which <b>prompting techniques</b> give the most reliable, human-aligned outputs?</li><li>How do differences between models change how well prompting works?</li></ol>`},
  {h:"How the study worked",b:`<ul><li><b>Data:</b> 5,714 frames from the UCF-Crime video dataset, covering 11 crime categories.</li><li><b>Pipeline:</b> load frames → encode them → send 10 frames at a time to each model → receive a structured (JSON) answer.</li><li><b>Models:</b> GPT-4o, Claude Sonnet 4 and Gemini 2.0 Flash.</li><li><b>Evaluation:</b> a 10-question forensic rubric — crime type and intent, timeline, people and behaviour, physical evidence, violence and weapons, coordination, method, scene context, escape route, and whether the narrative is court-ready.</li></ul>
  <p><b>Eight prompting strategies</b> were compared:</p>
  <table class="tbl"><tr><th>Strategy</th><th>How it asks</th></tr>
  <tr><td>Zero-shot</td><td>Direct instruction, no examples</td></tr><tr><td>Sequential</td><td>Five stages from scene overview to detailed timeline</td></tr><tr><td>Least-to-most</td><td>Eight levels from simple objects to complex activity</td></tr><tr><td>ReAct</td><td>A think → act → observe → decide cycle</td></tr><tr><td>Iterative</td><td>Four rounds: people, actions, criminal elements, critical review</td></tr><tr><td>Meta-prompting</td><td>The model writes its own specialised prompts</td></tr><tr><td>Self-consistency</td><td>Five independent analyses, then a consensus</td></tr><tr><td>Chain-of-thought</td><td>Six reasoning steps from observation to interpretation</td></tr></table>`},
  {h:"What they found",b:`<p>Results were scored with the metrics from Module 11 — accuracy, precision, recall and F1 — plus how consistently the models agreed.</p>
- <ul><li><b>GPT-4o</b> came closest to human forensic reasoning (F1 0.686, accuracy 0.580), then Gemini (F1 0.456) and Claude (F1 0.365).</li><li><b>ReAct</b> was the most reliable prompting technique across all three models (100%, 90.9% and 81.8% consistency).</li><li>GPT-4o stayed stable whatever the prompt; Claude\u2019s results varied most between techniques.</li></ul>
+ <ul><li><b>GPT-4o</b> came closest to human forensic reasoning (F1 0.686, accuracy 0.580), then Gemini (F1 0.456) and Claude (F1 0.365).</li><li>These F1 scores are <b>macro-averages</b>: F1 was computed for each of the 11 crime categories and then averaged. That is why GPT-4o\u2019s F1 (0.686) is lower than 2PR/(P + R) using its averaged precision (0.645) and recall (0.793), which would give 0.711.</li><li><b>ReAct</b> was the most reliable prompting technique across all three models (100%, 90.9% and 81.8% consistency).</li><li>GPT-4o stayed stable whatever the prompt; Claude\u2019s results varied most between techniques.</li></ul>
  <p>Explore the numbers in the lab. Notice how a model can have high recall but lower precision — the same trade-off you saw with the decision threshold.</p>`,lab:true},
  {h:"Why it matters, and what\u2019s next",b:`<p>The study connects much of this course: images as data (Modules 1–3), deep vision models and transformers (Module 12), evaluation metrics (Module 11) and careful reasoning about identity and events (Module 13).</p>
  <p><b>Take-aways:</b> how you ask matters as much as which model you use, and results must be measured, not assumed — especially when the stakes are legal.</p>
@@ -695,7 +695,7 @@ DEMOS.toolkit=(root)=>{
   const ans=el("div"),chips=el("div",{class:"chips"});let reveal=false,cur=0;
   const show=()=>{const[t,lib,code]=T[cur];ans.innerHTML="";ans.append(el("h3",{style:"margin-top:14px"},t),reveal?el("div",{},el("p",{},"Library: ",el("b",{},lib)),el("pre",{class:"code"},code)):el("button",{class:"btn",type:"button",onclick:()=>{reveal=true;show()}},"Reveal the library"))};
   T.forEach((t,i)=>chips.append(el("button",{class:"chip",type:"button","aria-pressed":String(!i),onclick:e=>{chips.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed","false"));e.currentTarget.setAttribute("aria-pressed","true");cur=i;reveal=false;show()}},t[0])));
-  root.append(el("p",{class:"note",style:"margin-top:0"},"Pick a task, let the class call out the library, then reveal the code."),chips,ans);show();
+  root.append(el("p",{class:"note",style:"margin-top:0"},"Pick a task, pause and guess the library, then reveal the code."),chips,ans);show();
 };
 /* 6. intensity transforms */
 DEMOS.intensity=(root)=>{
@@ -894,7 +894,7 @@ DEMOS.study=(root)=>{
   const a=el("div"),b=el("div");let met=3,tech=0;
   function A(){a.innerHTML="";a.append(el("div",{class:"ctrls"},seg([[0,"Accuracy"],[1,"Precision"],[2,"Recall"],[3,"F1"]],met,v=>{met=v;A()},"metric")));
     Object.entries(M).sort((x,y)=>y[1][met]-x[1][met]).forEach(([n,v])=>a.append(bar(v[met],1,cols[names.indexOf(n)],n)));
-    const m=["Accuracy: share of all crime-category calls that were right.","Precision: of the crimes a model flagged, how many were real.","Recall: of the real crimes, how many the model found.","F1: balance of precision and recall."][met];a.append(el("p",{class:"note"},m+" Notice GPT-4o\u2019s recall is much higher than its precision."))}
+    const m=["Accuracy: share of all crime-category calls that were right.","Precision: of the crimes a model flagged, how many were real.","Recall: of the real crimes, how many the model found.","F1: balance of precision and recall, averaged over the 11 crime categories (a macro-average), so it can differ from 2PR/(P + R) of the averaged precision and recall."][met];a.append(el("p",{class:"note"},m+" Notice GPT-4o\u2019s recall is much higher than its precision."))}
   function B(){b.innerHTML="";b.append(el("div",{class:"chips",style:"margin-bottom:10px"},...T.map(([t],i)=>el("button",{class:"chip",type:"button","aria-pressed":String(i===tech),onclick:()=>{tech=i;B()}},t))));
     T[tech][1].forEach((v,i)=>b.append(bar(v,100,cols[i],names[i])));b.append(el("p",{class:"note"},"Consistency: how often the three evaluator models agreed the output was human-aligned. Compare ReAct (stable for everyone) with Meta-prompting (great for one model, poor for another)."))}
   const pa=el("div",{},el("h3",{},"Research question 1 — model performance"),a),pb=el("div",{},el("h3",{},"Research question 2 — prompting techniques"),b);pb.hidden=true;
@@ -907,7 +907,7 @@ DEMOS.cards=(root)=>{let order=CARDS.map((_,i)=>i),i=0,f=false;const card=el("bu
   const show=()=>{const[q,a]=CARDS[order[i]];card.innerHTML=f?`<span style="font-size:13px;color:var(--teal);font-weight:600">Answer</span><br>${a}`:`<span style="font-size:13px;color:var(--orange);font-weight:600">Question</span><br>${q}`;cnt.textContent=`Card ${i+1} of ${order.length} · tap the card to flip`};
   card.onclick=()=>{f=!f;show()};root.append(card,el("div",{class:"ctrls"},el("button",{class:"btn ghost",type:"button",onclick:()=>{i=(i-1+order.length)%order.length;f=false;show()}},"← Previous"),el("button",{class:"btn",type:"button",onclick:()=>{i=(i+1)%order.length;f=false;show()}},"Next →"),el("button",{class:"btn ghost",type:"button",onclick:()=>{order.sort(()=>Math.random()-.5);i=0;f=false;show()}},"Shuffle")),cnt);show()};
 function pct(n){const m=MODULES[n-1];if(done.has(n))return 100;const s=scores[n];return s?Math.round(s.answered/m.quiz.length*80):0}
-function buildRail(){rail.innerHTML="";rail.append(el("div",{class:"brand"},COURSE.title,el("small",{},"Student edition · "+COURSE.tag)));
+function buildRail(){rail.innerHTML="";rail.append(el("div",{class:"brand"},COURSE.title,el("small",{},"Self-paced · "+COURSE.tag)));
   rail.append(el("button",{class:"mod","aria-current":String(cur===0),onclick:()=>go(0)},el("span",{class:"px"},"◻"),"Start here"));
   PARTS.forEach((p,pi)=>{rail.append(el("div",{class:"part"},p));MODULES.filter(m=>m.part===pi).forEach(m=>{const v=pct(m.n);rail.append(el("button",{class:"mod"+(done.has(m.n)?" done":""),"aria-current":String(cur===m.n),onclick:()=>go(m.n)},el("span",{class:"px"},String(m.n).padStart(2,"0")),el("span",{style:"flex:1"},m.short,el("span",{class:"bar","aria-hidden":"true"},el("i",{style:`width:${v}%`})))))})});
   rail.append(el("div",{class:"part"},"Wrap up"),el("button",{class:"mod","aria-current":String(cur===REVIEW),onclick:()=>go(REVIEW)},el("span",{class:"px"},"★"),"Review & final quiz"));
@@ -932,7 +932,7 @@ function renderHome(){main.append(mobileNav());const w=el("div",{class:"wrap"});
     w.append(el("div",{class:"map",style:"margin-top:8px"},...MODULES.filter(m=>m.part===pi).map(m=>el("button",{type:"button",onclick:()=>go(m.n)},el("span",{class:"px",style:done.has(m.n)?"background:var(--teal);color:#fff":""},String(m.n).padStart(2,"0")),el("br"),el("b",{},m.title),el("br"),el("span",{style:"font-size:14px;color:var(--muted)"},`~${m.mins} min${done.has(m.n)?" · complete ✓":""}`),el("span",{class:"bar"},el("i",{style:`width:${pct(m.n)}%`}))))))})}
 function renderModule(m){main.append(mobileNav());const w=el("div",{class:"wrap"});main.append(w);
   w.append(el("p",{class:"eyebrow"},`Module ${m.n} of ${MODULES.length} · ${PARTS[m.part]}`),el("h1",{style:"max-width:22ch"},m.title),
-    el("div",{class:"meta"},el("span",{},`About ${m.mins} minutes`),el("span",{},m.slides),el("span",{},`${m.sections.length} sections · 1 lab · ${m.quiz.length}-question quiz`)),
+    el("div",{class:"meta"},el("span",{},`About ${m.mins} minutes`),el("span",{},`${m.sections.length} sections · 1 lab · ${m.quiz.length}-question quiz`)),
     el("div",{class:"goals"},el("h3",{},"By the end you will be able to"),el("ul",{},...m.goals.map(g=>el("li",{},g)))));
   m.sections.forEach((s,i)=>{w.append(el("section",{class:"lesson"},el("h2",{},el("span",{class:"sn"},`${m.n}.${i+1}`),s.h),el("div",{html:s.b})));
     if(s.lab){const lab=el("section",{class:"tryit","aria-label":"Interactive lab"},el("h2",{},"Try it yourself"),el("p",{class:"sub"},"Everything below is live — experiment freely."));w.append(lab);DEMOS[m.demo](lab)}});

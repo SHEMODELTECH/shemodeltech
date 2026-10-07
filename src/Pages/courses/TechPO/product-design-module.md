@@ -1,9 +1,11 @@
 <!-- order: 3 -->
 ## Module: Product Design (TechPO: Product & Project Management)
 
-**Purpose:** Plan, build, and deliver technology products.
+Time: about 6 hours
 
-**Tools needed for this module:** A web browser and a free account with a design tool such as [Figma](https://www.figma.com) (its free tier is enough for every exercise in this module). No coding environment or installs are required.
+**Purpose:** Learn to sketch screens as wireframes, map the paths users take through a product, and check a design against core UX principles before anything is built.
+
+**Tools needed for this module:** A web browser and a free account with a design tool such as [Figma](https://www.figma.com) (the free Starter plan is enough for these exercises at the time of writing; check current limits on Figma's pricing page). No coding environment or installs are required.
 
 ### Topic 1: Wireframes
 
@@ -133,7 +135,7 @@ You have a user flow diagram with a clear start and end, at least one decision p
 
 - **Consistency** means similar elements look and behave the same way throughout a product, inconsistency forces users to relearn things that should already feel familiar
 - **Feedback** means the product clearly responds to a user's action (a button visibly pressing, a loading spinner, a confirmation message), without it, users are left unsure whether anything happened at all
-- **Affordance** is a visual cue suggesting how an element can be used, a button that looks raised suggests it can be pressed, a design that removes affordances entirely (flat, ambiguous elements) can leave users unsure what's even interactive
+- **Affordance and signifier** are two related ideas from designer Don Norman. An **affordance** is what an element actually lets you do: a button can be pressed, a text field can be typed into. A **signifier** is the visible cue that tells users that action is possible: a raised look or shadow on the button, a blinking cursor in the field. A design that removes signifiers (flat, ambiguous elements) can leave users unsure what's even interactive, even though the affordance is still there
 - **Cognitive load** is the mental effort required to use an interface, reducing unnecessary choices, steps, or information at any one moment is one of the most reliable ways to make a product feel easier to use
 
 #### Structure at a Glance
@@ -142,7 +144,7 @@ You have a user flow diagram with a clear start and end, at least one decision p
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#262626', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     C["<b>Consistency</b><br/><br/>Same elements,<br/>same behavior"]
-    A["<b>Affordance</b><br/><br/>Looks like what<br/>it does"]
+    A["<b>Affordance and<br/>Signifier</b><br/><br/>Shows what it<br/>lets you do"]
     F["<b>Feedback</b><br/><br/>Visible response<br/>to action"]
     CL["<b>Cognitive Load</b><br/><br/>Reduced mental<br/>effort"]
 
@@ -154,7 +156,7 @@ flowchart LR
     style CL fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
-- These principles work together more than separately, a button with strong affordance but no feedback when clicked can still leave a user confused about whether their click actually registered
+- These principles work together more than separately, a button with a clear signifier but no feedback when clicked can still leave a user confused about whether their click actually registered
 - Breaking a principle isn't automatically wrong, but it should be a deliberate, considered choice made for a specific reason, not an accident from not knowing the principle existed in the first place
 
 #### Where you'd actually use this
@@ -166,20 +168,20 @@ Reviewing a wireframe or user flow (from Topics 1 and 2) for usability issues be
 1. **Return to the wireframe** built in Topic 1 (or the flow from Topic 2).
 2. **Review it against consistency**: check that similar elements (like buttons or navigation) look and behave the same way everywhere they appear, and note one inconsistency to fix if you find one.
 3. **Review it against feedback**: identify one user action in the design (like tapping a button) and describe exactly what visible feedback the user would see confirming it worked.
-4. **Review it against affordance**: pick one interactive element and evaluate whether its appearance makes clear that it's interactive, revising it if it doesn't.
+4. **Review it against affordance and signifiers**: pick one interactive element, write what it affords (what it lets the user do), then check whether it has a clear signifier (a visual cue showing it's interactive), revising it if it doesn't.
 5. **Review it against cognitive load**: count how many choices or pieces of information are presented on the busiest screen, and suggest one specific way to reduce that number without losing important functionality.
 
 #### Checkpoint
-You have reviewed your own wireframe or flow against all four principles, consistency, feedback, affordance, and cognitive load, with at least one specific, written improvement identified for each.
+You have reviewed your own wireframe or flow against all four principles, consistency, feedback, affordance and signifiers, and cognitive load, with at least one specific, written improvement identified for each.
 
 #### Quiz
 1. What is "consistency" in UX, and why does inconsistency create extra work for users?
 2. What is "feedback," and what happens to a user's experience without it?
-3. What is an "affordance"? Give an example.
+3. What is the difference between an "affordance" and a "signifier"? Give an example.
 4. What is "cognitive load," and what's one reliable way to reduce it?
 5. Are UX principles meant to be followed without exception? Explain briefly.
 
-*Answers: 1) Similar elements looking and behaving the same way throughout a product, inconsistency creates extra work because it forces users to relearn things that should already feel familiar from elsewhere in the product. 2) A clear response to a user's action, like a visible button press or a confirmation message, without it users are left unsure whether their action actually registered. 3) A visual cue suggesting how an element can be used, for example a button that looks raised suggests it can be pressed. 4) The mental effort required to use an interface, one reliable way to reduce it is cutting unnecessary choices, steps, or information presented at any one moment. 5) No, they're defaults that require a deliberate reason to break, not rigid rules, breaking one should be a considered choice made for a specific reason rather than an accident.*
+*Answers: 1) Similar elements looking and behaving the same way throughout a product, inconsistency creates extra work because it forces users to relearn things that should already feel familiar from elsewhere in the product. 2) A clear response to a user's action, like a visible button press or a confirmation message, without it users are left unsure whether their action actually registered. 3) An affordance is what an element lets you do, for example a button can be pressed; a signifier is the visual cue that shows that action is possible, for example the button's raised look. 4) The mental effort required to use an interface, one reliable way to reduce it is cutting unnecessary choices, steps, or information presented at any one moment. 5) No, they're defaults that require a deliberate reason to break, not rigid rules, breaking one should be a considered choice made for a specific reason rather than an accident.*
 
 ---
 

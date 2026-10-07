@@ -411,8 +411,48 @@ ORDER BY due_date ASC, priority ASC;
 ```
 This says: "Get the title, due date, and priority of every unfinished task belonging to user 1, ordered by soonest due date."
 
+**4. Create the database and its tables.** `models.py` only *describes* the tables; nothing exists on disk yet. Create `database.py`. We use SQLite here, a relational database stored in a single file, so there is nothing extra to install. Later you can swap the URL for a PostgreSQL one without changing your models.
+```python
+# database.py
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from models import Base
+
+engine = create_engine("sqlite:///trackit.db")
+SessionLocal = sessionmaker(bind=engine)
+
+def init_db():
+    # Creates any tables that don't exist yet. Safe to run every time the app starts.
+    Base.metadata.create_all(engine)
+```
+
+Then create the tables when the API starts, by adding these lines to `main.py` right after `app = FastAPI(...)`:
+```python
+from database import init_db
+
+init_db()
+```
+
+**5. Save and read back real data.** Create `try_db.py` and run it with `python try_db.py`:
+```python
+# try_db.py
+from database import SessionLocal, init_db
+from models import User, Task
+
+init_db()
+with SessionLocal() as session:
+    user = User(email="ada@example.com", hashed_password="not-a-real-hash-yet")
+    user.tasks.append(Task(title="Write the spec", priority=1))
+    session.add(user)
+    session.commit()
+
+    for task in session.query(Task).filter(Task.owner_id == user.id, Task.done == False):
+        print(task.title, task.priority)   # Write the spec 1
+```
+A file called `trackit.db` now exists in your project folder. Run the script a second time and you'll get an error, because `email` is `unique=True` and that email is already saved. That's the database protecting your data. Delete `trackit.db` if you want to start fresh.
+
 ### Checkpoint
-You can explain what a table, row, column, and foreign key are, and you have `models.py` defining two linked tables.
+You can explain what a table, row, column, and foreign key are, you have `models.py` defining two linked tables, and running `try_db.py` created `trackit.db` with a saved task.
 
 ### Quiz
 1. What's the difference between a table and a database?
@@ -474,24 +514,24 @@ You have a written answer to all three questions above, in your own words, even 
 
 **1. Install dependencies:**
 ```bash
-pip install passlib bcrypt python-jose
+pip install bcrypt
 ```
 
 **2. Hash and verify passwords:**
 ```python
 # auth.py
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import bcrypt
 
 def hash_password(plain: str) -> str:
-    return pwd_context.hash(plain)
+    # gensalt() adds random data, so the same password gives a different hash each time
+    return bcrypt.hashpw(plain.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
 ```
+bcrypt works on bytes, which is why we `.encode()` the text first. It only accepts passwords up to 72 bytes, so set a sensible maximum password length in your signup form.
 
-**3. Try it:**
+**3. Try it** (add this to the bottom of `auth.py` and run `python auth.py`):
 ```python
 hashed = hash_password("mypassword123")
 print(hashed)                              # unreadable hash, not the real password
@@ -621,7 +661,15 @@ def test_same_due_date_breaks_tie_by_priority():
 pytest test_priority.py -v
 ```
 
-**4. Practice a real git workflow:**
+**4. Connect your project to GitHub.** Your repository only exists on your computer so far (you ran `git init` in Module 0), so there is nowhere to push yet. On [github.com](https://github.com), click **New repository**, name it `trackit`, and leave it empty (no README, .gitignore, or license). Copy the URL GitHub shows you, then run:
+```bash
+git branch -M main
+git remote add origin https://github.com/YOUR-USERNAME/trackit.git
+git push -u origin main
+```
+When pushing over HTTPS, GitHub asks you to sign in. It does not accept your account password here: sign in through the browser window that Git Credential Manager opens, or install the [GitHub CLI](https://cli.github.com) and run `gh auth login` once, or paste a personal access token when asked for a password.
+
+**5. Practice a real git workflow:**
 ```bash
 git checkout -b feature/task-queue
 git add priority.py test_priority.py
@@ -678,7 +726,7 @@ docker run -p 8000:8000 trackit-api
 ```
 Visit `http://localhost:8000/health` again - it should work exactly as it did outside Docker.
 
-**4. Add automatic testing on every change:**
+**4. Add automatic testing on every change.** Create the folders first with `mkdir -p .github/workflows` (in Windows PowerShell: `mkdir .github\workflows`), then create this file:
 ```yaml
 # .github/workflows/ci.yml
 name: CI
@@ -687,14 +735,23 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
       - run: pytest
 ```
-Push this file and open a pull request - you'll see GitHub automatically run your tests.
+**5. Commit everything on a branch, push, and open a pull request.** First merge your Module 8 pull request on GitHub, so the files your tests need (`priority.py` and `test_priority.py`) are on `main`. Then run:
+```bash
+git checkout main
+git pull
+git checkout -b feature/docker-ci
+git add Dockerfile requirements.txt .github/workflows/ci.yml
+git commit -m "Add Dockerfile and CI workflow"
+git push -u origin feature/docker-ci
+```
+Open a pull request on GitHub for `feature/docker-ci` - you'll see GitHub automatically run your tests.
 
 ### Checkpoint
 Your app runs inside a Docker container, and a pull request on GitHub automatically triggers your test suite.

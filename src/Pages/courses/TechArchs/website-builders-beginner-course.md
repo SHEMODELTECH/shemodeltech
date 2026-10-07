@@ -13,11 +13,15 @@
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
-**Tools needed:** Free accounts on [Webflow](https://webflow.com), [Framer](https://framer.com), and [Wix](https://wix.com). You won't need all three at once — each module only needs its own tool.
+**Time:** about 6 hours in total
+
+**Tools needed:** Free accounts on [Webflow](https://webflow.com), [Framer](https://framer.com), and [Wix](https://wix.com). You won't need all three at once — each module only needs its own tool. These tools update their interfaces often, so if a button or panel name in a lab doesn't match exactly, look for the closest equivalent or search the tool's help center.
 
 ---
 
 ## Module 0: What Website Builders Actually Do
+
+**Time:** about 30 minutes
 
 ### Concept
 
@@ -69,6 +73,8 @@ You can describe the canvas, element, breakpoint, and publishing concepts, and y
 ---
 
 ## Module 1: Webflow - Visual Control with Real CSS Underneath
+
+**Time:** about 2 hours
 
 ### Concept
 
@@ -134,9 +140,11 @@ You have a published Webflow page with a styled Div Block using a combo class, a
 
 ## Module 2: Framer - Design-First with Motion and AI
 
+**Time:** about 1.5 hours
+
 ### Concept
 
-**Framer** grew out of a design and prototyping tool, and carries that heritage into how it builds real, live websites: layout is built with **Stacks** (an auto-arranging container, similar to auto-layout in design tools), and it emphasizes polished animations, interactive components, and AI-assisted site generation as first-class features rather than add-ons.
+**Framer** grew out of a design and prototyping tool, and carries that heritage into how it builds real, live websites: layout is built with **stacks**, frames set to an auto-arranging Stack layout (similar to auto-layout in design tools), and it emphasizes polished animations, interactive components, and AI-assisted site generation as first-class features rather than add-ons.
 
 ### Structure at a Glance
 
@@ -157,10 +165,10 @@ flowchart LR
     style I fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
-- A **Stack** automatically arranges the elements placed inside it (in a row, column, or grid) and re-flows them as content changes, instead of you manually positioning each one
+- A **Stack** (a frame whose layout is set to Stack) automatically arranges the elements placed inside it (in a row, column, or grid) and re-flows them as content changes, instead of you manually positioning each one
 - A **Component** is a reusable element (like a button or navigation bar) — editing the original Component updates every place it's used
 - A **Variant** defines an alternate visual state of a Component, such as how a button looks on hover versus its default appearance
-- An **Interaction** connects a **trigger** (hover, click, scroll into view) to a resulting animation or Variant change
+- An **Interaction** connects a **trigger** (hover, click, scroll into view) to a resulting animation or Variant change. Framer groups some of these under names like interactions or effects, and the exact labels change between versions
 
 ### Where you'd actually use this
 
@@ -168,15 +176,15 @@ High-design marketing and landing pages where motion and polish matter, portfoli
 
 ### Lab
 
-1. **Create a new Framer project.** Add a **Stack** to the canvas and set its direction to vertical.
+1. **Create a new Framer project.** Add a frame to the canvas, set its layout to **Stack**, and set its direction to vertical.
 
 2. **Add a Heading and a Text element inside the Stack,** and notice how they automatically space themselves according to the Stack's settings, without manual positioning.
 
 3. **Create a Button Component.** Style its default appearance, then add a **Hover Variant** with a different background color.
 
-4. **Add an Interaction** connecting the "on hover" trigger to a smooth transition into the Hover Variant, and preview it to confirm the button animates on mouseover.
+4. **Add a hover interaction** in the Button Component so that hovering switches to the Hover Variant with a smooth transition (the exact panel name may differ in your version of Framer), and preview it to confirm the button animates on mouseover.
 
-5. **Try Framer AI:** use the AI site/section generator with a short prompt (e.g., "a pricing section for a SaaS product") and review the generated Stack-based layout it produces.
+5. **Try Framer's AI tools:** use Framer's AI page or section generator (its name changes between versions) with a short prompt (e.g., "a pricing section for a SaaS product") and review the generated layout it produces.
 
 6. **Adjust the AI-generated section** by editing text directly and swapping one element's Stack arrangement (e.g., row to column) to see how children reflow automatically.
 
@@ -197,6 +205,8 @@ You have a published Framer page using at least one Stack for layout, a Button C
 ---
 
 ## Module 3: Wix - All-in-One Business Website Builder
+
+**Time:** about 1.5 hours
 
 ### Concept
 
@@ -232,11 +242,11 @@ A small business owner who needs a working website fast, along with real functio
 
 2. **Open the Editor and add a Section** with a heading, a paragraph of text, and a button, placing and resizing each element directly on the canvas.
 
-3. **Open the App Market and add the Wix Bookings app** (or Wix Forms, if Bookings doesn't fit your example business).
+3. **Add the Wix Bookings app** from the Wix App Market (in the editor, look for an "Add Apps" or "App Market" button), or add a form instead if Bookings doesn't fit your example business (in some Wix editors, forms are added from the Add Elements panel rather than the App Market).
 
 4. **Configure one basic setting** in the app — for Bookings, create a single service with a name and duration; for Forms, add one custom field.
 
-5. **Add the app's element to a page** — drag the Booking Calendar (or the Form) onto your page from the Add panel, now that the app is installed.
+5. **Add the app's element to a page** — place the booking widget (or the form) onto your page from the Add Elements panel, if the app didn't add it for you when installed.
 
 6. **Publish the site,** then submit a real test booking or form entry on the live published page.
 

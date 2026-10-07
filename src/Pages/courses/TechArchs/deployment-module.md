@@ -1,7 +1,9 @@
 <!-- order: 12 -->
 ## Module: Deployment
 
-**Tools needed for this module:** A web browser, a free account with a no-code hosting or app-builder platform (such as [Netlify](https://www.netlify.com), [Glide](https://www.glideapps.com), or whatever platform your earlier modules' project was built on), and optionally a domain registrar account (like [Namecheap](https://www.namecheap.com) or [Google Domains](https://domains.google)) if you want to try a custom domain. No coding environment or installs are required.
+**Time:** about 3 hours (plus waiting time if you connect a real domain)
+
+**Tools needed for this module:** A web browser and the free account you already used for a project in this track (for example [Glide](https://www.glideapps.com), [Softr](https://www.softr.io), [Bubble](https://bubble.io), [Webflow](https://webflow.com), [Framer](https://www.framer.com), [Wix](https://www.wix.com), Google Forms, or Make). Connecting a custom domain is optional and costs money: you buy the domain from a registrar such as [Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) or [Porkbun](https://porkbun.com), and most builders in this track (including Glide, Webflow, Bubble, and Softr) generally require a paid plan to attach one. (Google Domains no longer exists; it was moved to Squarespace in 2023.) No coding environment or installs are required.
 
 ### Topic 1: Publishing
 
@@ -11,7 +13,7 @@
 
 - A **draft** (or preview) is a private, editable version of what you're building, only visible to you and collaborators, changes here don't affect real users
 - **Publishing** (or "going live") takes the current draft and makes it the version real users see and interact with
-- A **staging environment** is a separate, semi-public copy used for final testing before publishing to production, common in larger low-code platforms like Salesforce
+- A **staging environment** is a separate copy used for final testing before publishing to production. In larger low-code platforms it is private: Salesforce, for example, uses **sandboxes**, private copies of your organization's setup where admins build and test changes before deploying them to the live (production) org. Some smaller tools offer a similar idea, such as Webflow's free `webflow.io` staging address
 - **Version history** keeps a record of previous published versions, so you can roll back if a new publish introduces a problem
 
 #### Structure at a Glance
@@ -20,7 +22,7 @@
 %%{init: {'theme':'base', 'themeVariables': {'fontSize':'22px', 'primaryTextColor':'#1a202c', 'primaryBorderColor':'#0e7490', 'lineColor':'#333333'}, 'flowchart': {'nodeSpacing': 70, 'rankSpacing': 90, 'padding': 20}}}%%
 flowchart LR
     D["<b>Draft</b><br/><br/>Private, editable,<br/>only you see it"]
-    S["<b>Staging</b><br/><br/>Semi-public final<br/>test copy"]
+    S["<b>Staging</b><br/><br/>Separate private<br/>test copy"]
     P["<b>Publish</b><br/><br/>Live version real<br/>users see"]
     V["<b>Version History</b><br/><br/>Roll back if<br/>needed"]
 
@@ -33,7 +35,7 @@ flowchart LR
     style V fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
-- Not every no-code tool has a separate staging step, smaller tools often go straight from draft to published, larger platforms (like Salesforce) add staging because changes there can affect an entire organization at once
+- Not every no-code tool has a separate staging step, smaller tools often go straight from draft to published, larger platforms (like Salesforce, with its sandboxes) add a separate testing copy because changes there can affect an entire organization at once
 - Version history is what makes publishing low-risk, if something breaks after a publish, rolling back to the previous version is usually a single click rather than manually undoing changes
 
 #### Where you'd actually use this
@@ -58,7 +60,7 @@ You have made a change in draft mode, previewed it privately, published it live,
 4. Why might a large platform like Salesforce include a staging step that a smaller tool doesn't?
 5. Why does version history make publishing lower-risk?
 
-*Answers: 1) A draft is private and editable, visible only to you, a published version is live and visible to real users. 2) A separate, semi-public copy used for final testing before publishing to production, commonly used on larger low-code platforms where changes can affect an entire organization. 3) Keeping a record of previous published versions so you can roll back if a new publish introduces a problem. 4) Because changes on a large platform can affect an entire organization at once, an extra testing step reduces the risk of a mistake reaching everyone immediately. 5) Because rolling back to a previous version is usually a single click, rather than manually undoing every change by hand.*
+*Answers: 1) A draft is private and editable, visible only to you, a published version is live and visible to real users. 2) A separate copy used for final testing before publishing to production, commonly used on larger low-code platforms where changes can affect an entire organization, for example Salesforce's private sandboxes. 3) Keeping a record of previous published versions so you can roll back if a new publish introduces a problem. 4) Because changes on a large platform can affect an entire organization at once, testing in a private sandbox first reduces the risk of a mistake reaching everyone immediately. 5) Because rolling back to a previous version is usually a single click, rather than manually undoing every change by hand.*
 
 ---
 
@@ -68,7 +70,7 @@ You have made a change in draft mode, previewed it privately, published it live,
 
 A **domain** is the human-readable address (like `yourbusiness.com`) that points to where your published site or app actually lives, rather than making users type a long, tool-generated address. Connecting a custom domain is usually a no-code process involving a domain registrar and a few settings changes, not writing any code.
 
-- A **domain registrar** is the service you buy a domain name from (like Namecheap or Google Domains), separate from the hosting platform where your site or app actually runs
+- A **domain registrar** is the service you buy a domain name from (like Cloudflare Registrar or Porkbun), separate from the hosting platform where your site or app actually runs
 - **DNS records** are entries that tell the internet where a domain should point, the most common ones for connecting a custom domain are a **CNAME** (pointing a subdomain to another address) and an **A record** (pointing a domain directly to a numeric IP address)
 - **Propagation** is the delay between changing a DNS record and that change taking effect everywhere on the internet, it can take anywhere from minutes to (rarely) up to 48 hours
 - **SSL/HTTPS** is the encryption that makes a connection secure (shown as a padlock in the browser), most no-code hosting platforms provision this automatically for free once a custom domain is connected
@@ -96,18 +98,25 @@ flowchart LR
 
 #### Where you'd actually use this
 
-Any published site, form, or app you want to present under your own business's name (`yourbusiness.com`) instead of a generic tool-provided address (like `yourbusiness.glideapp.io`), which matters for branding and for how trustworthy a link looks to customers.
+Any published site, form, or app you want to present under your own business's name (`yourbusiness.com`) instead of a generic tool-provided address (like `yourbusiness.webflow.io`), which matters for branding and for how trustworthy a link looks to customers.
 
 #### Lab
 
-1. **Register a low-cost or free trial domain** through a registrar such as Namecheap, or use a free subdomain option if you'd rather not purchase one.
-2. **Open your published project's hosting settings** (from Topic 1) and find the "custom domain" option, most no-code platforms provide the exact DNS record you need to add.
-3. **Add the required DNS record** in your registrar's DNS settings, copying the CNAME or A record value exactly as instructed by your hosting platform.
-4. **Wait for propagation** and periodically check whether your custom domain now loads your published project (a DNS checker tool online can confirm propagation status if it's taking a while).
-5. **Confirm SSL/HTTPS is active** once the domain resolves, by checking for the padlock icon in your browser's address bar.
+There is no such thing as a free trial domain: registering a domain costs money (often around 10 to 20 US dollars a year for a `.com`), and attaching it to Glide, Webflow, Bubble, or Softr generally needs a paid plan. So this lab has a free part everyone does, and an optional paid part.
+
+**Free part (everyone):**
+
+1. **Look up real DNS records**: open a free DNS lookup tool such as [Google Admin Toolbox Dig](https://toolbox.googleapps.com/apps/dig/) or [whatsmydns.net](https://www.whatsmydns.net), and look up the A record of a site you know (for example `wikipedia.org`) and the CNAME record of a `www` subdomain of a few sites you know (many `www` addresses are CNAMEs; some return no CNAME, which is also useful to see). Note what each record points to.
+2. **Find your platform's custom domain settings**: open the project you published in Topic 1 and find its "custom domain" (or "domains") settings page. Even if it asks you to upgrade, read which record type (CNAME or A) and value it would ask you to add, and write it down.
+3. **Check HTTPS on your free address**: open your project's free tool-provided address and confirm the padlock icon is shown.
+
+**Optional paid part (needs a paid plan and a purchased domain, follow along if you don't have them):**
+
+4. **Buy a domain** from a registrar such as Cloudflare Registrar or Porkbun, then **add the required DNS record** in the registrar's DNS settings, copying the CNAME or A record value exactly as your hosting platform instructs.
+5. **Wait for propagation** and use a DNS lookup tool to check when the new record appears, then confirm your custom domain loads your project with SSL/HTTPS active (the padlock icon).
 
 #### Checkpoint
-You have connected a custom domain to a published project by adding the correct DNS record, waited for propagation, and confirmed the domain loads securely over HTTPS.
+You have looked up real A and CNAME records, found the exact record your platform would need for a custom domain, and confirmed your published project loads over HTTPS. If you did the optional part, your custom domain now loads your project securely.
 
 #### Quiz
 1. What is the difference between a domain registrar and a hosting platform?
@@ -180,7 +189,7 @@ You have located and read an error log entry from a deliberate failure, fixed th
 
 ## Module Completion Checklist
 - [ ] Made a change in draft mode, previewed it, published it live, and located version history
-- [ ] Connected a custom domain by adding the correct DNS record and confirmed it loads securely over HTTPS
+- [ ] Looked up real DNS records and found the record your platform needs for a custom domain (optional: connected a purchased domain and confirmed it loads securely over HTTPS)
 - [ ] Deliberately triggered and read an error log entry, then fixed the underlying issue
 - [ ] Set up a recurring habit to monitor a published automation or solution going forward
 - [ ] Can explain why deprecation of a connected service can break a solution without warning

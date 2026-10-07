@@ -13,6 +13,8 @@ When the log says the server is listening on port 3000, open http://localhost:30
 
 ### Topic 5.1: JMeter
 
+*Time: about 2 hours*
+
 #### Concept
 
 **Apache JMeter** is an open source tool for sending many requests, simulating many users, at a system to measure how it behaves under load. Where functional testing asks "does this work correctly," JMeter asks "does this still work correctly, and fast enough, when a hundred or a thousand people hit it at once."
@@ -73,6 +75,8 @@ You have a working JMeter test plan with a Thread Group, an HTTP sampler, and a 
 ---
 
 ### Topic 5.2: Load Testing
+
+*Time: about 2 hours*
 
 #### Concept
 
@@ -138,6 +142,8 @@ You've run at least two different load pattern types (stress and spike) against 
 ---
 
 ### Topic 5.3: Reading and Reporting Performance Results
+
+*Time: about 2 hours*
 
 #### Concept
 

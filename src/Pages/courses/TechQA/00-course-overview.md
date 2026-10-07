@@ -13,10 +13,10 @@ The modules build on each other, so take them in this order:
 1. **QA Fundamentals.** How software gets built (the SDLC), how testing is planned alongside it (the STLC), and the principles that decide what to test. No tools needed.
 2. **Manual Testing.** Writing clear test cases, reporting bugs a developer can act on, and exploratory testing. No tools needed.
 3. **Automation Testing.** Turning repeatable checks into code with Selenium, Cypress, and Playwright.
-4. **API Testing.** Testing the services behind an app with Postman and Swagger.
+4. **API Testing.** Testing the services behind an app with Postman and Swagger, and running test suites from the terminal with Newman (or the Postman CLI).
 5. **Performance Testing.** Measuring how software behaves under load with Apache JMeter.
 6. **Mobile Testing.** Testing Android apps with Android Studio, and iOS apps with Xcode on a Mac.
-7. **Security Testing.** Finding common weaknesses with OWASP ZAP, against a practice app built for the purpose.
+7. **Security Testing.** Finding common weaknesses with ZAP (now ZAP by Checkmarx), against a practice app built for the purpose.
 8. **CI/CD Testing.** Running your tests automatically on every change with GitHub Actions.
 
 ---
@@ -32,7 +32,7 @@ Every topic follows the same pattern, so you always know what comes next:
 - **Checkpoint:** what you should be able to do before moving on.
 - **Quiz:** five questions, with answers.
 
-Each module lists the tools it needs at the top. Every tool in this track is free, and you only install a module's tools when you reach it. Module 6's iOS topic needs a Mac; if you don't have one, the Android topic covers the same skills.
+Each module lists the tools it needs at the top. Every tool in this track is free or has a free tier that covers the labs, and you only install a module's tools when you reach it. Module 6's iOS topic needs a Mac; if you don't have one, the Android topic covers the same skills.
 
 ---
 

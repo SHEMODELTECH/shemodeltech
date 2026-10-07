@@ -1,16 +1,18 @@
 <!-- order: 8 -->
 ## Module 7: Security Testing
 
-**Tools needed for this module:** [OWASP ZAP](https://www.zaproxy.org) (a free, open source security testing tool), and a deliberately vulnerable practice application to test against (the lab uses OWASP's own intentionally vulnerable training app, never test a system you don't own or have explicit written permission to test).
+**Tools needed for this module:** [ZAP](https://www.zaproxy.org) (a free, open source security testing tool, formerly OWASP ZAP and now ZAP by Checkmarx), [Docker Desktop](https://www.docker.com/products/docker-desktop/) to run the practice app, and a deliberately vulnerable practice application to test against (the labs use OWASP Juice Shop, an intentionally vulnerable training app; never test a system you don't own or have explicit written permission to test).
 
 ### Topic 7.1: Vulnerability Testing
+
+*Time: about 3 hours*
 
 #### Concept
 
 **Vulnerability testing** is checking an application for weaknesses that could be exploited to cause harm, exposing data, bypassing controls, or disrupting the system, before someone with bad intent finds them first. As a QA activity, it's about systematically checking for well-known categories of weakness, not "hacking" in an open-ended sense, and it's always done against systems you're explicitly authorized to test.
 
 - The **OWASP Top 10** is a regularly updated list of the most critical, common web application security risks (things like injection flaws, broken access control, and security misconfiguration), it's the standard reference point for what to check for
-- A **vulnerability scanner** (like OWASP ZAP) automatically probes an application for known categories of weakness and reports what it finds, flagging things for a human to investigate further
+- A **vulnerability scanner** (like ZAP) automatically probes an application for known categories of weakness and reports what it finds, flagging things for a human to investigate further
 - **Input validation testing** checks whether an application properly rejects or safely handles unexpected, malformed, or unusually long input, rather than assuming all input will be well-formed
 - A finding's **severity** (critical, high, medium, low) reflects how much potential harm a specific weakness could enable if actually exploited, this drives how urgently it needs fixing
 
@@ -43,9 +45,13 @@ Any application handling sensitive data (personal information, payment details, 
 
 #### Lab
 
-1. **Set up OWASP's intentionally vulnerable training application** (for example, OWASP Juice Shop, designed specifically to be tested against safely), running it locally.
-2. **Install OWASP ZAP** and configure it to proxy traffic to your locally running training app.
-3. **Run ZAP's automated scan** against the training app and review the findings it generates.
+1. **Start OWASP Juice Shop locally.** It's an intentionally vulnerable training app, built to be tested against safely. With Docker Desktop running, open a terminal and run:
+   ```bash
+   docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
+   ```
+   When the log says the server is listening on port 3000, open http://localhost:3000 in a browser to check it's up. Leave the terminal running (Ctrl+C stops it). The `127.0.0.1:` part keeps the app reachable only from your own computer, which matters because it's deliberately insecure.
+2. **Install ZAP** from zaproxy.org and open it. You don't need any proxy setup for this lab.
+3. **Run ZAP's automated scan:** on the Quick Start tab choose **Automated Scan**, enter `http://localhost:3000` as the URL to attack, click **Attack**, and review the findings in the **Alerts** tab when it finishes.
 4. **Pick three findings** from the scan results, look up each one's category in the OWASP Top 10, and write one sentence per finding explaining what the underlying weakness actually is.
 5. **Assign a severity** (critical, high, medium, low) to each of the three findings, and justify your reasoning for at least one of them in a sentence.
 
@@ -64,6 +70,8 @@ You have real automated scan results from a training application, three findings
 ---
 
 ### Topic 7.2: Authentication Testing
+
+*Time: about 2 hours*
 
 #### Concept
 
@@ -103,10 +111,14 @@ Any login-based application, verifying that account lockout actually kicks in af
 
 #### Lab
 
-1. **Using the same OWASP training application** from the Vulnerability Testing lab (or another authorized test environment with a login form), attempt to log in with an intentionally wrong password for a known valid username, and note the exact error message shown.
+1. **Register a test account first.** In your local Juice Shop from the Vulnerability Testing lab (or another authorized test environment with a login form), go to **Account → Login → Not yet a customer?** and create an account with a made-up email and password. Then log out and try to log in with that email and an intentionally wrong password, and note the exact error message shown.
 2. **Attempt a login with a username that doesn't exist at all**, using any password, and compare that error message word-for-word against the previous one, do they differ in a way that reveals whether an account exists.
 3. **Attempt several rapid, consecutive failed logins** against the same account (five or so) and observe whether the system locks the account, introduces a delay, or shows any rate-limiting behavior at all.
-4. **Log in successfully, then log out, and try re-using the same session (if you can inspect or replay the session token/cookie)** to see whether it was actually invalidated on logout.
+4. **Check whether logout really ends the session.** Log in with your test account, open the browser's DevTools (F12, or right-click → Inspect), go to the **Application** tab, and find the `token` value under **Local Storage** or **Cookies** for `http://localhost:3000`. Copy it. Log out, then re-send the copied token from a terminal (replace `PASTE_TOKEN_HERE` with your token):
+   ```bash
+   curl -H "Authorization: Bearer PASTE_TOKEN_HERE" http://localhost:3000/rest/user/whoami
+   ```
+   If the response still shows your account's email, the token wasn't invalidated on logout; write that down as a finding.
 5. **Try setting a password that's deliberately weak** (like `123` or `password`) if the app has a password policy, and confirm whether it's actually rejected as the policy would suggest.
 
 #### Checkpoint
@@ -124,6 +136,8 @@ You have documented results for wrong-password vs. non-existent-account error me
 ---
 
 ### Topic 7.3: Input Validation Testing
+
+*Time: about 3 hours*
 
 #### Concept
 
@@ -164,13 +178,13 @@ A comment box shows your text back on the page. You enter a comment containing s
 
 Use only **OWASP Juice Shop**, an application built to be attacked for training, running on your own computer. Never test a site you don't own or have written permission to test.
 
-1. **Start Juice Shop locally** with Docker, then open `http://localhost:3000`:
+1. **Start Juice Shop locally** with the same Docker command as in Topic 7.1, then open `http://localhost:3000`:
    ```bash
-   docker run --rm -p 3000:3000 bkimminich/juice-shop
+   docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
    ```
 2. **Map the inputs:** list every place a user can type or upload something (search, login, feedback, account fields).
 3. **Try boundary and type inputs** in three of them: an empty value, a very long value, a value of the wrong type, and a short piece of HTML such as `<b>test</b>`. Note whether each is rejected cleanly or shown back unencoded.
-4. **Run an automated scan** with OWASP ZAP against `http://localhost:3000` only, and read the input-related alerts it raises.
+4. **Run an automated scan** with ZAP against `http://localhost:3000` only, and read the input-related alerts it raises.
 5. **Write one security bug report** for your most serious finding: the input, the steps, what happened, the risk, and the fix you'd recommend (server-side validation, output encoding, or parameterised queries).
 
 #### Checkpoint
@@ -188,7 +202,7 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
 ---
 
 ## Module 7 Completion Checklist
-- [ ] Run an automated OWASP ZAP scan against an authorized training application
+- [ ] Run an automated ZAP scan against an authorized training application
 - [ ] Mapped three scan findings to OWASP Top 10 categories with plain-language explanations and justified severities
 - [ ] Documented and compared error messages for wrong-password vs. non-existent-account login attempts
 - [ ] Observed and recorded whether rate limiting/lockout triggered after repeated failed logins

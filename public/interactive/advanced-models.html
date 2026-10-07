@@ -5,7 +5,7 @@
 <!-- level: Advanced -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Advanced Models — Student Edition</title>
+<title>Advanced Models — Self-paced</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -600,7 +600,7 @@ DEMOS.cards=(root)=>{let order=CARDS.map((_,i)=>i),i=0,f=false;const card=el("bu
   const show=()=>{const[q,a]=CARDS[order[i]];card.innerHTML=f?`<span style="font-size:13px;color:var(--teal);font-weight:600">Answer</span><br>${a}`:`<span style="font-size:13px;color:var(--orange);font-weight:600">Question</span><br>${q}`;cnt.textContent=`Card ${i+1} of ${order.length} · tap the card to flip`};
   card.onclick=()=>{f=!f;show()};root.append(card,el("div",{class:"ctrls"},el("button",{class:"btn ghost",type:"button",onclick:()=>{i=(i-1+order.length)%order.length;f=false;show()}},"← Previous"),el("button",{class:"btn",type:"button",onclick:()=>{i=(i+1)%order.length;f=false;show()}},"Next →"),el("button",{class:"btn ghost",type:"button",onclick:()=>{order.sort(()=>Math.random()-.5);i=0;f=false;show()}},"Shuffle")),cnt);show()};
 function pct(n){const m=MODULES[n-1];if(done.has(n))return 100;const s=scores[n];return s?Math.round(s.answered/m.quiz.length*80):0}
-function buildRail(){rail.innerHTML="";rail.append(el("div",{class:"brand"},COURSE.title,el("small",{},"Student edition · "+COURSE.tag)));
+function buildRail(){rail.innerHTML="";rail.append(el("div",{class:"brand"},COURSE.title,el("small",{},"Self-paced · "+COURSE.tag)));
   rail.append(el("button",{class:"mod","aria-current":String(cur===0),onclick:()=>go(0)},el("span",{class:"px"},"◻"),"Start here"));
   PARTS.forEach((p,pi)=>{rail.append(el("div",{class:"part"},p));MODULES.filter(m=>m.part===pi).forEach(m=>{const v=pct(m.n);rail.append(el("button",{class:"mod"+(done.has(m.n)?" done":""),"aria-current":String(cur===m.n),onclick:()=>go(m.n)},el("span",{class:"px"},String(m.n).padStart(2,"0")),el("span",{style:"flex:1"},m.short,el("span",{class:"bar","aria-hidden":"true"},el("i",{style:`width:${v}%`})))))})});
   rail.append(el("div",{class:"part"},"Wrap up"),el("button",{class:"mod","aria-current":String(cur===REVIEW),onclick:()=>go(REVIEW)},el("span",{class:"px"},"★"),"Review & final quiz"));
@@ -625,7 +625,7 @@ function renderHome(){main.append(mobileNav());const w=el("div",{class:"wrap"});
     w.append(el("div",{class:"map",style:"margin-top:8px"},...MODULES.filter(m=>m.part===pi).map(m=>el("button",{type:"button",onclick:()=>go(m.n)},el("span",{class:"px",style:done.has(m.n)?"background:var(--teal);color:#fff":""},String(m.n).padStart(2,"0")),el("br"),el("b",{},m.title),el("br"),el("span",{style:"font-size:14px;color:var(--muted)"},`~${m.mins} min${done.has(m.n)?" · complete ✓":""}`),el("span",{class:"bar"},el("i",{style:`width:${pct(m.n)}%`}))))))})}
 function renderModule(m){main.append(mobileNav());const w=el("div",{class:"wrap"});main.append(w);
   w.append(el("p",{class:"eyebrow"},`Module ${m.n} of ${MODULES.length} · ${PARTS[m.part]}`),el("h1",{style:"max-width:22ch"},m.title),
-    el("div",{class:"meta"},el("span",{},`About ${m.mins} minutes`),el("span",{},m.slides),el("span",{},`${m.sections.length} sections · 1 lab · ${m.quiz.length}-question quiz`)),
+    el("div",{class:"meta"},el("span",{},`About ${m.mins} minutes`),el("span",{},`${m.sections.length} sections · 1 lab · ${m.quiz.length}-question quiz`)),
     el("div",{class:"goals"},el("h3",{},"By the end you will be able to"),el("ul",{},...m.goals.map(g=>el("li",{},g)))));
   m.sections.forEach((s,i)=>{w.append(el("section",{class:"lesson"},el("h2",{},el("span",{class:"sn"},`${m.n}.${i+1}`),s.h),el("div",{html:s.b})));
     if(s.lab){const lab=el("section",{class:"tryit","aria-label":"Interactive lab"},el("h2",{},"Try it yourself"),el("p",{class:"sub"},"Everything below is live — experiment freely."));w.append(lab);DEMOS[m.demo](lab)}});

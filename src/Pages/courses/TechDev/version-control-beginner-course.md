@@ -18,6 +18,8 @@
 
 ## Module 0: Why Version Control Is Its Own Skill
 
+**Time: about 1 hour**
+
 ### Concept
 
 **Version control** is a system that records changes to a set of files over time, so you can recall specific versions later, see who changed what, and combine changes from multiple people without overwriting each other's work. Without it, teams end up with folders named `project_final.zip`, `project_final_v2.zip`, and `project_final_v2_ACTUALLY_FINAL.zip`, and nobody is fully sure which one is correct.
@@ -47,6 +49,8 @@ You can explain, in one sentence each, what Git does and what GitHub adds on top
 ---
 
 ## Module 1: Git - Tracking Changes Locally
+
+**Time: about 2 hours**
 
 ### Concept
 
@@ -110,6 +114,8 @@ You have a local Git repository with at least two commits, and you can explain w
 
 ## Module 2: GitHub - Sharing Your History Online
 
+**Time: about 1 hour**
+
 ### Concept
 
 A local Git repository lives only on your machine until you connect it to a **remote**, a copy of the repository hosted elsewhere, most commonly on GitHub. **Pushing** sends your local commits to the remote. **Pulling** brings down commits made by others (or by you, on a different machine) into your local copy.
@@ -130,6 +136,8 @@ git remote add origin https://github.com/yourusername/recipe-notes.git
 git branch -M main
 git push -u origin main
 ```
+GitHub does not accept your account password when you push over HTTPS. The first time you push, either sign in through the browser window that opens (Git Credential Manager, included with Git for Windows and GitHub Desktop), or install the [GitHub CLI](https://cli.github.com) and run `gh auth login` once before pushing, or create a personal access token on GitHub (Settings > Developer settings) and paste it when Git asks for a password.
+
 Refresh the GitHub page, your commits and files are now there.
 
 3. **Make a change and push it:**
@@ -164,6 +172,8 @@ You have pushed commits from your machine to a real GitHub repository, and clone
 ---
 
 ## Module 3: Branches - Working Without Breaking Things
+
+**Time: about 1 hour**
 
 ### Concept
 
@@ -223,6 +233,8 @@ You created a branch, made commits only on it, and can show that `main` was unaf
 
 ## Module 4: Pull Requests and Merge Conflicts - Combining Work
 
+**Time: about 2 hours**
+
 ### Concept
 
 A **pull request** (PR) is a request to merge one branch into another, typically into `main`, along with a space to discuss, review, and comment on the proposed changes before they're combined. It's the standard way collaborators (and reviewers) approve work before it becomes part of the shared codebase.
@@ -248,18 +260,23 @@ cat README.md
 ```
 The desserts section now appears here too, `main` has caught up with the merged work.
 
-4. **Create a real merge conflict on purpose.** Make two branches that edit the exact same line differently:
+4. **Create a real merge conflict on purpose.** Make two branches that edit the exact same line differently. First create the branch:
 ```bash
 git checkout -b edit-title-a
-sed -i '1s/.*/# My Favorite Recipes/' README.md
+```
+Open `README.md` in your editor, replace line 1 with `# My Favorite Recipes`, and save. Then commit and push:
+```bash
 git add README.md
 git commit -m "Rename title to My Favorite Recipes"
 git push -u origin edit-title-a
 git checkout main
 ```
+Now make the second branch from `main`:
 ```bash
 git checkout -b edit-title-b
-sed -i '1s/.*/# Kitchen Notebook/' README.md
+```
+Open `README.md` again, replace line 1 with `# Kitchen Notebook`, and save. Then:
+```bash
 git add README.md
 git commit -m "Rename title to Kitchen Notebook"
 git push -u origin edit-title-b

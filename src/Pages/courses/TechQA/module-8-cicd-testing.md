@@ -5,6 +5,8 @@
 
 ### Topic 8.1: Automated Pipelines
 
+*Time: about 2 hours*
+
 #### Concept
 
 A **CI/CD pipeline** automatically builds, tests, and (optionally) deploys code every time it changes, rather than someone manually remembering to run tests before each release. **CI (Continuous Integration)** is the "build and test automatically on every change" part; **CD (Continuous Delivery/Deployment)** extends that to automatically preparing or actually releasing the change. For QA, this matters because it's what turns your test suite from something run occasionally by a person into something run automatically, every time, without being forgotten.
@@ -54,11 +56,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Install dependencies
         run: pip install pytest
       - name: Run tests
@@ -84,6 +86,8 @@ You have a working GitHub Actions pipeline that runs automatically on push, and 
 
 ### Topic 8.2: Regression Testing
 
+*Time: about 2 hours*
+
 #### Concept
 
 **Regression testing** is re-running existing tests after a change to confirm that the change didn't break anything that used to work. It exists because fixing one thing or adding a new feature can quietly break something unrelated, and without deliberately re-checking, that kind of breakage often isn't discovered until a user finds it. Inside a CI/CD pipeline, regression testing is what the automated "Test Stage" is actually doing on every single run.
@@ -91,7 +95,7 @@ You have a working GitHub Actions pipeline that runs automatically on push, and 
 - A **regression test suite** is the set of existing tests re-run after a change, specifically to catch this kind of unintended breakage, as distinct from new tests written for the new change itself
 - **Test suite maintenance** is the ongoing work of updating, removing, or rewriting tests as the application itself changes, an outdated regression suite either misses real regressions or fails on things that aren't actually broken
 - **Smoke tests** are a small, fast subset of the regression suite covering only the most critical functionality, often run first (or on every commit) before the full, slower suite runs
-- **Test flakiness** (a test that sometimes passes and sometimes fails with no code change) undermines trust in a regression suite over time, flaky tests need to be fixed or removed, not silently ignored
+- **Test flakiness** (a test that sometimes passes and sometimes fails with no code change) undermines trust in a regression suite; Topic 8.3 covers how to handle it
 
 #### Structure at a Glance
 
@@ -128,7 +132,27 @@ Every single pipeline run in Module 8.1 is regression testing in practice, but i
 2. **Add one new test** covering a new, small piece of functionality you add to the project (anything simple, a new function that formats a string a certain way, for example).
 3. **Deliberately introduce a small, unrelated bug elsewhere in the code**, something that would break a different, existing test that has nothing to do with your new feature.
 4. **Run the full test suite** and confirm the existing test (unrelated to your new feature) fails, this is regression testing doing its job, catching unintended breakage.
-5. **Designate two or three of your fastest, most critical tests as a "smoke test" subset** (in GitHub Actions, this could be a separate, earlier step that runs just those before the full suite runs), and update your workflow file to run them first.
+5. **Designate two or three of your fastest, most critical tests as a "smoke test" subset.** With pytest, tag each one with a marker:
+   ```python
+   import pytest
+
+   @pytest.mark.smoke
+   def test_addition():
+       assert 1 + 1 == 2
+   ```
+   Register the marker in a `pytest.ini` file in the project's root folder, so pytest knows it and doesn't warn about it:
+   ```ini
+   [pytest]
+   markers =
+       smoke: fast checks of the most critical behavior
+   ```
+   Then, in your workflow file, replace the `Run tests` step with these two steps, so the smoke tests run first (if they fail, the full suite is skipped):
+   ```yaml
+         - name: Run smoke tests
+           run: pytest -m smoke
+         - name: Run full test suite
+           run: pytest
+   ```
 6. **Fix the unrelated bug, push again**, and confirm the full suite passes, including both your new test and the previously-broken one.
 
 #### Checkpoint
@@ -146,6 +170,8 @@ You have a project where a deliberately introduced, unrelated bug was caught by 
 ---
 
 ### Topic 8.3: Test Reports and Flaky Tests
+
+*Time: about 2 hours*
 
 #### Concept
 
@@ -184,7 +210,7 @@ Merges keep failing on a login test that passes when re-run. The saved reports s
 
 #### Lab
 
-1. **Reuse the repository and workflow from Topic 8.1.** If your tests use pytest, change the test step to write a JUnit report:
+1. **Reuse the repository and workflow from Topics 8.1 and 8.2.** If your tests use pytest, change the full test suite step to write a JUnit report:
    ```bash
    pytest --junitxml=report.xml
    ```
@@ -193,7 +219,7 @@ Merges keep failing on a login test that passes when re-run. The saved reports s
    ```yaml
    - name: Upload test report
      if: always()
-     uses: actions/upload-artifact@v4
+     uses: actions/upload-artifact@v5
      with:
        name: test-report
        path: report.xml

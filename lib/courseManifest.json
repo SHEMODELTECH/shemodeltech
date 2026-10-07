@@ -15,7 +15,7 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 0
+  "quizParts": 6
  },
  "TechArchs/internal-apps-beginner-course": {
   "title": "Internal Apps",
@@ -33,7 +33,7 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 0
+  "quizParts": 6
  },
  "TechArchs/automation-beginner-course": {
   "title": "Automation for Builders",
@@ -51,7 +51,7 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 0
+  "quizParts": 6
  },
  "TechArchs/business-workflows-module": {
   "title": "Business Workflows",
@@ -87,7 +87,7 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 0
+  "quizParts": 6
  },
  "TechArchs/deployment-module": {
   "title": "Deployment",
@@ -101,7 +101,7 @@
  "TechDev/swe-fundamentals-beginner-course": {
   "title": "Build Your First Product: A Beginner's Course in Software Engineering Fundamentals",
   "level": "Beginner",
-  "minutes": 345,
+  "minutes": 360,
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 11,
@@ -504,7 +504,7 @@
   "quizParts": 4
  },
  "TechPO/product-project-management": {
-  "title": "Product & Project Management",
+  "title": "Analytics, Roadmapping & Collaboration",
   "level": "Beginner",
   "minutes": 105,
   "trackLabel": "Product / Project Owner",

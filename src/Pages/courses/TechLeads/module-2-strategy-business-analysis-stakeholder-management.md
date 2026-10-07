@@ -1,6 +1,8 @@
 <!-- order: 2 -->
 ## Module 2: Strategy, Business Analysis & Stakeholder Management
 
+Time: about 6 hours
+
 **Purpose of this module:** Round out the business side of technology leadership, thinking beyond the current sprint (Strategy), translating business needs into buildable work (Business Analysis), and getting buy-in from the people who aren't in the room day to day (Stakeholder Management).
 
 **Tools needed for this module:** No software installation required. A whiteboard or diagramming tool (physical whiteboard, or something like Miro/FigJam/Lucidchart) is useful for process mapping and is referenced in the Business Analysis lab, but pen and paper work just as well to start.
@@ -135,6 +137,15 @@ Requirements and process maps only matter if the people who can approve, fund, o
 - **Negotiation** is finding an agreement between parties with different (and sometimes conflicting) interests, most useful when framed around each side's underlying interest, not just their stated opening position
 - **BATNA (Best Alternative To a Negotiated Agreement)** is your fallback if no agreement is reached; knowing it clearly before a negotiation starts is what keeps you from accepting a worse deal than walking away would give you
 
+**The power/interest grid.** The most common stakeholder map places each person by how much power they have over the decision and how much interest they have in it. Each of the four boxes has a standard action:
+
+| | **Low interest** | **High interest** |
+|---|---|---|
+| **High power** | **Keep satisfied:** brief, occasional updates focused on what they care about; don't overload them | **Manage closely:** involve them early and often, and get their input before decisions |
+| **Low power** | **Monitor:** light-touch, check in now and then in case their position changes | **Keep informed:** regular updates, and use them as a source of feedback and early warnings |
+
+For example, a VP who funds the project but rarely asks about it is "keep satisfied"; the support team lead who will live with the new tool every day but can't approve it is "keep informed."
+
 #### Structure at a Glance
 
 ```mermaid
@@ -164,14 +175,14 @@ Pitching a technical investment to executives who care about the business outcom
 
 #### Lab
 
-1. **Pick a real decision or ask** you need buy-in for (more headcount, more time, approval for a technical investment) and **build a quick stakeholder map**: list the key people, and rate each as high/low influence and high/low interest.
+1. **Pick a real decision or ask** you need buy-in for (more headcount, more time, approval for a technical investment) and **build a quick stakeholder map**: list the key people, rate each as high/low power (influence) and high/low interest, place them in the four boxes of the power/interest grid, and write the matching action next to each name (manage closely, keep satisfied, keep informed, or monitor).
 2. **Prepare a short case for the highest-influence stakeholder**, 3-5 sentences, leading with the ask or takeaway first, with just enough supporting detail after it to be credible.
 3. **Deliver (or role-play) that case** and note whether you actually led with the ask, it's a surprisingly common slip to bury it in the third sentence.
 4. **Before a real or hypothetical negotiation on the same ask, write down your BATNA**: what happens, concretely, if no agreement is reached at all.
 5. **Write down what you believe the other side's underlying interest is** (not their stated position), and one way to frame the ask that speaks to that interest directly.
 
 #### Checkpoint
-You have a stakeholder map with influence/interest ratings, a short ask-first case for your highest-influence stakeholder, a clearly stated BATNA, and one sentence connecting your ask to the other side's actual underlying interest.
+You have a power/interest grid with each stakeholder placed and an action noted for each, a short ask-first case for your highest-influence stakeholder, a clearly stated BATNA, and one sentence connecting your ask to the other side's actual underlying interest.
 
 #### Quiz
 1. Why does stakeholder management matter even if the requirements and process work are already solid?

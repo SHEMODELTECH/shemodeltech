@@ -1,11 +1,15 @@
 <!-- order: 3 -->
 ## Module 3: Ethical Hacking
 
+**Time: about 7 hours** (about 2 hours for Kali setup, 2.5 hours for pen testing, 2.5 hours for reconnaissance).
+
 **Tools needed for this module:** a **Kali Linux** virtual machine (run in VirtualBox, VMware, or similar so it stays isolated), and a legal practice environment. For active exercises, use only targets you own or ones explicitly set up for learning, for example a local intentionally-vulnerable app like **OWASP Juice Shop** or **Metasploitable** in a VM on your own machine, or Nmap's sanctioned host `scanme.nmap.org`.
 
 > **Read this before anything else.** Ethical hacking means *authorized* testing. Running these tools against a system you don't own, without explicit written permission, is illegal in most countries and can carry serious criminal penalties. The only thing separating a penetration tester from an attacker is authorization. Every lab in this module is scoped to systems you own or targets that publicly permit testing. Never point these tools anywhere else.
 
 ### Topic 3.1: Kali Linux
+
+Time: about 2 hours
 
 #### Concept
 
@@ -74,6 +78,8 @@ You have an isolated, updated Kali VM with a clean snapshot, you can navigate it
 
 ### Topic 3.2: Pen Testing
 
+Time: about 2.5 hours
+
 #### Concept
 
 **Penetration testing** is an authorized, simulated attack on a system carried out to find and safely demonstrate exploitable weaknesses before a real attacker does. What makes it a discipline rather than random poking is that it follows a defined **methodology** with agreed **scope**, and its true deliverable is not the break-in but the **report** that tells the organisation what's wrong and how to fix it. A pentest proves risk is real, a **vulnerability** is a weakness, an **exploit** is the demonstration that the weakness can actually be used.
@@ -140,6 +146,8 @@ You have written a scope document, run recon and enumeration against a target yo
 
 ### Topic 3.3: Reconnaissance
 
+Time: about 2.5 hours
+
 #### Concept
 
 **Reconnaissance** is the information-gathering first phase of any assessment, where you build a picture of the target's **attack surface** before touching anything sensitive. It splits into **passive** recon, learning about a target without directly interacting with it, and **active** recon, directly probing it. The better your recon, the more focused and less noisy every later step becomes. Recon is also a defensive skill: seeing what an attacker can easily learn about your organisation tells you what to lock down or hide.
@@ -178,27 +186,35 @@ The opening phase of every penetration test, mapping an organisation's internet-
 
 #### Lab
 
-> Passive steps here use a domain you own or are authorized to research. Active scanning is directed only at `scanme.nmap.org` (which permits it) or your own host.
+> **Stay legal.** Pick your passive-recon domain from one of these: a domain you own, or a domain you have explicit written permission to test. If you have neither, you may still look up the *public* WHOIS and DNS records of a well-known domain such as `example.com`, because reading public records is normal and legal. What you must **not** do is scan or probe any domain or host you don't own or aren't authorized to test. Active scanning in this lab goes only to `scanme.nmap.org` (Nmap permits light scanning of it, a few scans a day, no heavy or repeated scanning) or your own lab VM (Metasploitable or OWASP Juice Shop from Topic 3.2).
 
-1. **Do passive recon** on a domain you own, gathering registration and DNS data (this reuses the DNS skills from Module 1):
+1. **Do passive recon** on your chosen domain, gathering registration data (replace `yourdomain.com` with your domain). This reuses the DNS skills from Module 1:
 ```bash
 whois yourdomain.com
-dig yourdomain.com ANY
+dig yourdomain.com NS
+dig yourdomain.com TXT
 ```
+You may see guides that use `dig yourdomain.com ANY` to get "everything at once". Don't rely on it: many DNS servers now return a minimal answer to ANY queries (this is allowed by RFC 8482), so you can miss records. Query each record type you care about instead. (On Windows without `dig`, use `Resolve-DnsName yourdomain.com -Type NS`, and so on.)
+
 2. **Enumerate DNS records** to find hosts and mail servers tied to the domain:
 ```bash
 dig yourdomain.com A
+dig yourdomain.com AAAA
 dig yourdomain.com MX
 ```
 3. **Do active recon** with a service-version scan against a sanctioned target:
 ```bash
 nmap -sV scanme.nmap.org
 ```
-4. **Grab service banners** from the open ports to identify software and versions, part of understanding the surface.
+4. **Grab service banners** from your own lab VM (Metasploitable or Juice Shop running on your machine, replace the IP with your VM's address). The `-sV` flag asks each open port what software and version it is running, and the `banner` script prints the raw greeting text each service sends:
+```bash
+nmap -sV --script=banner <your-lab-VM-ip>
+```
+Note the software names and version numbers you see. Old versions are often the first clue to a known vulnerability.
 5. **Assemble a short attack-surface profile**: list the hosts, open ports, and services you found, and mark which came from passive versus active recon.
 
 #### Checkpoint
-You have gathered passive information on a domain you own, performed an active service scan against a permitted target, and assembled a short attack-surface profile, and you can explain the difference between passive and active recon and why the distinction matters.
+You have gathered passive information on a domain you own or are authorized to research (or on public records only), performed an active service scan against a permitted target, and assembled a short attack-surface profile, and you can explain the difference between passive and active recon and why the distinction matters.
 
 #### Quiz
 1. What is the goal of the reconnaissance phase?

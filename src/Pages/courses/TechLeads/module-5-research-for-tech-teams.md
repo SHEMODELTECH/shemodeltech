@@ -1,9 +1,13 @@
 <!-- order: 5 -->
 ## Module 5: Research for Tech Teams
 
+Time: about 7 hours
+
 **Purpose of this module:** Find reliable answers to the questions teams make decisions on: what users need, what competitors do, and whether a change worked. Research roles, product coordinators, and analysts all need these skills, and none of them require code.
 
 **Tools needed for this module:** A document tool, a free survey tool such as [Google Forms](https://forms.google.com), and a spreadsheet (Google Sheets or Excel). No coding required.
+
+If you're also taking the TechPO track, its User Research module covers similar ground (interviews and surveys) from a product angle, so parts of Topic 5.2 will feel familiar.
 
 ### Topic 5.1: Framing Research Questions
 

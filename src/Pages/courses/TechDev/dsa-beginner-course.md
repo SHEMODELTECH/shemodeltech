@@ -14,11 +14,13 @@
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
-**Tools needed:** Python 3.10+, a code editor, and a terminal. (If you completed the previous "Build Your First Product" course, you already have everything set up.)
+**Tools needed:** Python 3.12+, a code editor, and a terminal. If you completed She Model Tech's "Build Your First Product" course (Software Engineering Fundamentals, where you built TrackIt), you already have everything set up.
 
 ---
 
 ## Module 0: Why This Matters - Big O and How to Think About Speed
+
+**Time: about 1 hour**
 
 ### Concept
 
@@ -88,6 +90,8 @@ You ran the timing comparison and can explain, in your own words, why the fast v
 
 ## Module 1: Arrays & Strings - The Structures You Already Use
 
+**Time: about 1 hour**
+
 ### Concept
 
 An **array** (Python's `list`) stores items in order, each accessible instantly by position (index). Strings behave similarly - a sequence of characters.
@@ -100,7 +104,7 @@ Key operations and their costs:
 
 ### Where you'd actually use this
 
-A product's activity feed, a shopping cart, a list of search results - anything ordered and iterated over sequentially is an array. Knowing that inserting at the *front* is expensive is why systems that need fast inserts at both ends use a different structure (see Module 4: deques).
+A product's activity feed, a shopping cart, a list of search results - anything ordered and iterated over sequentially is an array. Knowing that inserting at the *front* is expensive is why systems that need fast inserts at both ends use a different structure (see Module 5: deques).
 
 ### Lab
 
@@ -148,6 +152,8 @@ You can explain why appending to a list is fast but inserting at position 0 is s
 
 ## Module 2: Hash Maps - The Structure Behind Fast Lookups
 
+**Time: about 1 hour**
+
 ### Concept
 
 A **hash map** (Python's `dict`) stores key-value pairs and gives near-instant O(1) lookup, insert, and delete by key, regardless of size. It does this by converting each key into a number (a hash) that tells it exactly where to store the value.
@@ -194,11 +200,13 @@ You can explain why looking up a user in a dictionary is faster than looping thr
 4. Name two real product features that rely on hash maps.
 5. Is dictionary order guaranteed in modern Python?
 
-*Answers: 1) Speed - O(1) lookups at the cost of using more memory than a plain list. 2) The dictionary jumps directly to the value via the hashed key instead of checking every item one by one. 3) It would raise a `KeyError` because the key doesn't exist yet. 4) User lookup by email/username, caching, deduplication, counting/analytics (any two). 5) Yes, as of Python 3.7+, dictionaries preserve insertion order - but you should not rely on this for correctness-critical logic.*
+*Answers: 1) Speed - O(1) lookups at the cost of using more memory than a plain list. 2) The dictionary jumps directly to the value via the hashed key instead of checking every item one by one. 3) It would raise a `KeyError` because the key doesn't exist yet. 4) User lookup by email/username, caching, deduplication, counting/analytics (any two). 5) Yes. Since Python 3.7, the language guarantees that dictionaries keep keys in the order they were inserted.*
 
 ---
 
 ## Module 3: Sets - Fast Membership and Uniqueness
+
+**Time: about 1 hour**
 
 ### Concept
 
@@ -264,6 +272,8 @@ You can explain why `order_id in processed_order_ids` stays fast even as the set
 
 ## Module 4: Linked Lists - When Order Matters More Than Instant Access
 
+**Time: about 2 hours**
+
 ### Concept
 
 A **linked list** stores items as a chain of nodes, each pointing to the next. Unlike arrays, you can't jump to item #500 instantly - you must walk the chain. But inserting or removing a node once you're there is O(1), since you're just changing pointers, not shifting memory.
@@ -319,6 +329,8 @@ You can explain why `add_front` is O(1) for a linked list but O(n) for a Python 
 ---
 
 ## Module 5: Stacks & Queues - Order of Operations
+
+**Time: about 1 hour**
 
 ### Concept
 
@@ -388,6 +400,8 @@ You can explain, without looking back, why undo uses a stack and background jobs
 
 ## Module 6: Recursion - Functions That Call Themselves
 
+**Time: about 2 hours**
+
 ### Concept
 
 **Recursion** is when a function solves a problem by calling itself on a smaller version of the same problem, until it reaches a **base case** simple enough to answer directly. Every recursive function needs: (1) a base case that stops it, and (2) a step that moves toward that base case.
@@ -448,6 +462,8 @@ You can identify the base case and recursive step in both examples above without
 ---
 
 ## Module 7: Trees - Hierarchies in Code
+
+**Time: about 2 hours**
 
 ### Concept
 
@@ -525,6 +541,8 @@ You can explain why searching a balanced BST is roughly O(log n) instead of O(n)
 
 ## Module 8: Graphs - Modeling Real Relationships
 
+**Time: about 2 hours**
+
 ### Concept
 
 A **graph** is nodes connected by edges, without the strict parent-child limits of a tree - any node can connect to any other. **BFS** (breadth-first search) explores level by level, good for finding the shortest path. **DFS** (depth-first search) explores as deep as possible before backtracking, good for exploring all possibilities.
@@ -584,9 +602,11 @@ You can explain why BFS, not DFS, is the right choice when you specifically need
 
 ## Module 9: Sorting - Order Matters, and So Does Cost
 
+**Time: about 1 hour**
+
 ### Concept
 
-Python's built-in `sorted()` uses an efficient O(n log n) algorithm - you'll use it constantly. But understanding *how* sorting works matters when you need custom ordering logic, and understanding the cost matters when deciding whether to sort at all versus using a structure (like the heap from the previous course) that avoids full re-sorting.
+Python's built-in `sorted()` uses an efficient O(n log n) algorithm - you'll use it constantly. But understanding *how* sorting works matters when you need custom ordering logic, and understanding the cost matters when deciding whether to sort at all versus using a structure that avoids full re-sorting. One such structure is a **heap** (Python's built-in `heapq` module): it always keeps the smallest item at the front, so you can add an item or take the smallest one out in O(log n) without re-sorting everything. (If you took the "Build Your First Product" course, this is the structure behind TrackIt's task queue.)
 
 ### Where you'd actually use this
 
@@ -616,7 +636,18 @@ products_with_category = [
     {"name": "Mouse", "category": "Electronics", "price": 25},
 ]
 sorted_products = sorted(products_with_category, key=lambda p: (p["category"], p["price"]))
-print([p["name"] for p in sorted_products])
+print([p["name"] for p in sorted_products])  # ['Mouse', 'Laptop', 'Desk']
+
+# A heap: get the most urgent task without re-sorting the whole list
+import heapq
+
+tasks = []  # (priority, name) - lower number = more urgent
+heapq.heappush(tasks, (3, "Reply to email"))
+heapq.heappush(tasks, (1, "Fix login bug"))
+heapq.heappush(tasks, (2, "Review pull request"))
+print(tasks[0])                # (1, 'Fix login bug') - the smallest is always at index 0
+print(heapq.heappop(tasks))    # (1, 'Fix login bug') - removed in O(log n)
+print(heapq.nsmallest(2, tasks))  # [(2, 'Review pull request'), (3, 'Reply to email')]
 ```
 
 ### Checkpoint
@@ -629,11 +660,13 @@ You can sort a list of dictionaries by one field, and by two fields with a tiebr
 4. If you need "top 5 most urgent items" repeatedly, why might a heap beat re-sorting every time?
 5. Does `sorted()` change the original list?
 
-*Answers: 1) Use each item's price as the value to compare when ordering. 2) Sorting by a tuple sorts by the first value, then breaks ties with the second, in one pass. 3) O(n log n). 4) Because re-sorting the whole list every time repeats work; a heap keeps the top item accessible in O(log n) per update. 5) No - `sorted()` returns a new list; `.sort()` would modify the original in place.*
+*Answers: 1) Use each item's price as the value to compare when ordering. 2) Sorting by a tuple sorts by the first value, then breaks ties with the second, in one pass. 3) O(n log n). 4) Because re-sorting the whole list every time repeats work; a heap keeps the most urgent item at the front, and each add or remove costs only O(log n). 5) No - `sorted()` returns a new list; `.sort()` would modify the original in place.*
 
 ---
 
 ## Module 10: Searching & Binary Search
+
+**Time: about 1 hour**
 
 ### Concept
 
@@ -685,6 +718,8 @@ You can explain why binary search requires sorted data and what happens if you r
 ---
 
 ## Module 11: Dynamic Programming - Avoiding Repeated Work
+
+**Time: about 2 hours**
 
 ### Concept
 

@@ -1,11 +1,13 @@
 <!-- order: 6 -->
-## Module 4: TechPO (Product & Project Management)
+## Module: Analytics, Roadmapping & Collaboration (TechPO: Product & Project Management)
 
-**Purpose of this module:** Plan, build, and deliver technology products. This module covers reading the numbers that tell you whether a product is working (Analytics), deciding what to build next and why (Roadmapping), and running the day-to-day work of a team using the tools product and project managers actually live in (Collaboration).
+Time: about 7 hours
+
+**Purpose of this module:** Learn to choose and read the metrics that show whether a product is working, prioritize a roadmap with a framework like RICE, and pick and set up the right collaboration tool for a team. It covers reading the numbers that tell you whether a product is working (Analytics), deciding what to build next and why (Roadmapping), and running the day-to-day work of a team using the tools product and project managers actually live in (Collaboration).
 
 **Tools needed for this module:** A free account on at least one project/collaboration tool, Jira, Trello, Asana, or Notion, whichever your organization uses or you're most curious about. A spreadsheet tool (Excel, Google Sheets) is useful for the Analytics lab. No paid tools are required to complete this module.
 
-### Topic 4.1: Analytics
+### Topic 1: Analytics
 
 #### Concept
 
@@ -66,16 +68,17 @@ You have 2-3 justified KPIs for a real feature, a list of relevant product metri
 
 ---
 
-### Topic 4.2: Roadmapping
+### Topic 2: Roadmapping
 
 #### Concept
 
 A roadmap is a plan for what gets built, in what order, and why, and the hardest part isn't listing ideas, it's saying no to good ideas because something else matters more right now. Roadmapping is the discipline of making that tradeoff deliberately and defensibly, instead of building whatever was requested most recently or loudest.
 
 - **Prioritization** is deciding what to work on first based on a consistent method (value, effort, urgency, strategic fit), rather than gut feel or whoever asked last
-- **Prioritization frameworks** like RICE (Reach, Impact, Confidence, Effort) or a simple value-vs-effort matrix give a repeatable way to compare very different kinds of work against each other
+- **Prioritization frameworks** like RICE (Reach, Impact, Confidence, Effort) or a simple value-vs-effort matrix give a repeatable way to compare very different kinds of work against each other. The RICE score is **Reach × Impact × Confidence ÷ Effort**, where Confidence is a percentage converted to a decimal before you multiply (80% becomes 0.8). Worked example: a fix that reaches 6,000 users, with impact 1, 90% confidence, and 1 person-month of effort scores 6,000 × 1 × 0.9 ÷ 1 = **5,400**; a dark mode that reaches 4,000 users, with impact 0.5, 80% confidence, and 2 person-months scores 4,000 × 0.5 × 0.8 ÷ 2 = **800**, so the fix ranks higher
 - **Feature planning** is breaking a prioritized idea down into something a team can actually build, scoping it, sequencing the pieces, and deciding what's in the first version versus a later one
-- **MVP (Minimum Viable Product)** is the smallest version of a feature that still delivers real value and can be learned from, useful for testing an idea before committing to the full build
+
+**Recap: MVP.** Feature planning usually ends with an MVP (Minimum Viable Product): the smallest version that still delivers real value and can be learned from. The Product Fundamentals module (Topic 2: MVP) covers this in depth; here you just apply it when you scope your top-ranked idea.
 
 #### Structure at a Glance
 
@@ -97,7 +100,6 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A roadmap without a stated prioritization method quietly becomes "whoever asked most recently or loudest," even when nobody intends that
-- An MVP that's scoped too small to deliver any real value isn't actually minimum viable, it's just small, the "viable" part is what makes it worth shipping and learning from
 
 #### Where you'd actually use this
 
@@ -106,16 +108,16 @@ Explaining to a stakeholder why their feature request is ranked below another on
 #### Lab
 
 1. **List 5-6 real or plausible candidate features/ideas** for a product you know (or a hypothetical one).
-2. **Score each one using a simple framework** (RICE, or a value-vs-effort 2x2), and rank them. Write one sentence on which framework you chose and why.
+2. **Score each one using a simple framework** (RICE, or a value-vs-effort 2x2), and rank them. If you use RICE, write Confidence as a percentage but convert it to a decimal in the formula (80% → 0.8). Write one sentence on which framework you chose and why.
 3. **Pick your top-ranked idea and do feature planning on it**: scope out an MVP version, list what's explicitly out of scope for v1, and sequence 2-3 follow-on pieces for later.
 4. **Write the one-sentence "why" you'd give a stakeholder** whose lower-ranked idea didn't make the cut, using the criteria from your framework, not just "we decided."
-5. **Revisit your ranking after a hypothetical new signal** (a competitor launches something, a KPI from Topic 4.1 starts declining) and note whether and how the priority order would change.
+5. **Revisit your ranking after a hypothetical new signal** (a competitor launches something, a KPI from Topic 1 starts declining) and note whether and how the priority order would change.
 
 ```lab
 {
  "type": "rice",
  "title": "Prioritise a real backlog with RICE",
- "prompt": "Four ideas for a study app. Change any number and watch the ranking update. RICE score = Reach × Impact × Confidence ÷ Effort.",
+ "prompt": "Four ideas for a study app. Change any number and watch the ranking update. Confidence is entered as a percentage; the score converts it to a decimal (80% → 0.8), so RICE score = Reach × Impact × (Confidence ÷ 100) ÷ Effort.",
  "items": [
   {
    "name": "Dark mode",
@@ -160,11 +162,11 @@ You have 5-6 scored and ranked ideas, an MVP scope with explicit out-of-scope it
 4. What is feature planning, and what does it produce?
 5. What is an MVP, and what makes a scoped-down feature actually "viable" rather than just small?
 
-*Answers: 1) Saying no to good ideas because something else matters more right now, rather than simply listing ideas. 2) Deciding what to work on first based on value, effort, urgency, or strategic fit; it needs a consistent method so decisions aren't made by gut feel or by whoever asked last. 3) Reach, Impact, Confidence, Effort; it's a repeatable framework for comparing very different kinds of work against each other. 4) Breaking a prioritized idea down into something a team can actually build; it produces a defined scope, a sequence of pieces, and a decision about what's in the first version versus later. 5) The smallest version of a feature that still delivers real value and can be learned from; it's "viable" only if it still delivers that real value, otherwise it's just small without being useful.*
+*Answers: 1) Saying no to good ideas because something else matters more right now, rather than simply listing ideas. 2) Deciding what to work on first based on value, effort, urgency, or strategic fit; it needs a consistent method so decisions aren't made by gut feel or by whoever asked last. 3) Reach, Impact, Confidence, Effort; it's a repeatable framework for comparing very different kinds of work against each other, scored as Reach × Impact × Confidence ÷ Effort with Confidence as a decimal, so 80% becomes 0.8. 4) Breaking a prioritized idea down into something a team can actually build; it produces a defined scope, a sequence of pieces, and a decision about what's in the first version versus later. 5) The smallest version of a feature that still delivers real value and can be learned from; it's "viable" only if it still delivers that real value, otherwise it's just small without being useful as covered in Product Fundamentals, Topic 2.*
 
 ---
 
-### Topic 4.3: Collaboration
+### Topic 3: Collaboration
 
 #### Concept
 
@@ -173,7 +175,7 @@ Plans and priorities only matter if the team can actually see and act on them da
 - **Jira** is built for structured, engineering-heavy workflows, tickets, sprints, backlogs, and detailed workflow states, and is the most common choice on software teams that need that level of structure
 - **Trello** is a lightweight, visual, card-based board (a direct Kanban implementation), well suited to simpler workflows or smaller teams that don't need Jira's depth of configuration
 - **Asana** sits between the two, task- and project-oriented with more structure than Trello but less engineering-specific overhead than Jira, often used by cross-functional or less purely-technical teams
-- **Notion** is a flexible workspace/wiki tool, better suited to documentation, planning docs, and knowledge management than to running a live sprint board, though it's often used alongside one of the other three rather than instead of it
+- **Notion** is a flexible workspace/wiki tool, strongest for documentation, planning docs, and knowledge management. It also has built-in Projects (task databases that can include sprints), so some small teams run their work there too, but many teams still pair it with Jira, Trello, or Asana for day-to-day tracking
 
 #### Structure at a Glance
 
@@ -198,7 +200,7 @@ flowchart LR
     style NOTION fill:#ddd6fe,color:#1a202c,stroke:#6d28d9,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
-- These four aren't strict alternatives, a real team often runs Jira or Asana for active work tracking alongside Notion for the surrounding documentation and planning context
+- These four aren't strict alternatives, and their features overlap more each year; a real team often runs Jira or Asana for active work tracking alongside Notion for the surrounding documentation and planning context
 - Choosing a tool with more structure than a team actually needs (e.g. full Jira for a five-person team with a simple workflow) tends to create overhead that outweighs the benefit; matching tool to actual need matters more than picking the "best" tool in the abstract
 
 #### Where you'd actually use this
@@ -220,14 +222,14 @@ You have a tool recommendation with reasoning for a specific team, one working b
 1. What kind of workflow is Jira built for, and what does that structure suit well?
 2. How is Trello different from Jira?
 3. Where does Asana typically sit relative to Trello and Jira?
-4. What is Notion best suited for, and how does it usually relate to the other three tools rather than replace them?
+4. What is Notion strongest at, and how do teams often use it alongside the other three?
 5. Why can choosing a tool with more structure than a team needs create a problem?
 
-*Answers: 1) Structured, engineering-heavy workflows with tickets, sprints, backlogs, and detailed workflow states; this suits software teams that need that level of structure. 2) Trello is a lightweight, visual, card-based Kanban board, well suited to simpler workflows or smaller teams that don't need Jira's depth of configuration. 3) Between the two, more structure than Trello but less engineering-specific overhead than Jira, often used by cross-functional or less purely-technical teams. 4) A flexible workspace/wiki tool best suited for documentation, planning docs, and knowledge management; it's usually used alongside a tracking tool like Jira, Trello, or Asana rather than instead of one. 5) It tends to create overhead, extra configuration and process, that outweighs the benefit, since the team didn't need that level of structure in the first place.*
+*Answers: 1) Structured, engineering-heavy workflows with tickets, sprints, backlogs, and detailed workflow states; this suits software teams that need that level of structure. 2) Trello is a lightweight, visual, card-based Kanban board, well suited to simpler workflows or smaller teams that don't need Jira's depth of configuration. 3) Between the two, more structure than Trello but less engineering-specific overhead than Jira, often used by cross-functional or less purely-technical teams. 4) Documentation, planning docs, and knowledge management; it has built-in Projects with sprints that some small teams use, but many teams pair it with Jira, Trello, or Asana for day-to-day tracking. 5) It tends to create overhead, extra configuration and process, that outweighs the benefit, since the team didn't need that level of structure in the first place.*
 
 ---
 
-## Module 4 Completion Checklist
+## Module Completion Checklist
 - [ ] Chosen and justified 2-3 KPIs and relevant product metrics for a real feature
 - [ ] Designed an A/B test with a defined win condition and considered statistical significance
 - [ ] Scored and ranked 5-6 candidate ideas using a prioritization framework

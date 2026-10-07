@@ -1,9 +1,13 @@
 <!-- order: 7 -->
 ## Module 7: Security Monitoring
 
-**Tools needed for this module:** a terminal with basic text tools (`grep`, `awk`, `sort`, `uniq`), which are already on any Linux or macOS system (and available on Windows via WSL or PowerShell equivalents), and a sample log file to work with, you can use your own system's authentication log from Module 2, or any log you own. Optionally, a free security-monitoring platform (such as a free tier of a SIEM) if you want to see the real thing. The three topics here build on one another: a SIEM produces the alerts, a SOC triages them, and incident response handles the ones that turn out to be real.
+**Time: about 5 hours** (roughly 2 hours for SIEM, 1.5 hours each for SOC and incident response).
+
+**Tools needed for this module:** a terminal with basic text tools (`grep`, `awk`, `sort`, `uniq`), which are already on any Linux or macOS system (and available on Windows via WSL or PowerShell equivalents), and a sample log file to work with. The SIEM lab gives you a ready-made sample `auth.log` to save and analyse, because your own machine's log may be empty or missing. Only ever analyse logs from systems you own or are authorized to monitor. Optionally, a free security-monitoring platform (such as a free tier of a SIEM) if you want to see the real thing. The three topics here build on one another: a SIEM produces the alerts, a SOC triages them, and incident response handles the ones that turn out to be real.
 
 ### Topic 7.1: SIEM
+
+Time: about 2 hours
 
 #### Concept
 
@@ -42,7 +46,46 @@ Centralised monitoring in any organisation with more than a handful of systems: 
 
 #### Lab
 
-> This mini-SIEM exercise uses command-line tools on a log you own (for example a copy of `/var/log/auth.log`).
+> This mini-SIEM exercise uses command-line tools on a log file. Use the sample below: your own `/var/log/auth.log` may be empty (a home machine rarely gets SSH logins) or may not exist at all, because recent Ubuntu and Debian versions can keep these records only in the systemd journal. Only analyse logs from systems you own or are authorized to monitor. The IP addresses in the sample come from ranges reserved for documentation, so they don't belong to anyone real.
+
+**Get the sample log.** Copy the block below into a plain-text file named `auth.log` in your working folder (use any text editor, or run `cat > auth.log`, paste, press Enter, then press Ctrl+D). It's a fictional server, `web01`, over one night:
+
+```text
+Oct  5 02:58:11 web01 sshd[2104]: Accepted publickey for alex from 192.0.2.10 port 50122 ssh2: ED25519 SHA256:k3Yx9pQe1sVd8nT0aB2cLmZr4wF6hJ7uXo5gP1iRtE8
+Oct  5 02:58:11 web01 sshd[2107]: pam_unix(sshd:session): session opened for user alex(uid=1000) by (uid=0)
+Oct  5 03:02:40 web01 sshd[2110]: Failed password for invalid user admin from 198.51.100.23 port 41822 ssh2
+Oct  5 03:02:44 web01 sshd[2113]: Failed password for invalid user test from 198.51.100.23 port 41830 ssh2
+Oct  5 03:02:49 web01 sshd[2116]: Failed password for invalid user oracle from 198.51.100.23 port 41836 ssh2
+Oct  5 03:02:53 web01 sshd[2119]: Failed password for invalid user ubuntu from 198.51.100.23 port 41840 ssh2
+Oct  5 03:02:58 web01 sshd[2122]: Failed password for invalid user pi from 198.51.100.23 port 41848 ssh2
+Oct  5 03:14:02 web01 sshd[2125]: Failed password for root from 203.0.113.45 port 52310 ssh2
+Oct  5 03:14:05 web01 sshd[2128]: Failed password for root from 203.0.113.45 port 52316 ssh2
+Oct  5 03:14:09 web01 sshd[2131]: Failed password for root from 203.0.113.45 port 52322 ssh2
+Oct  5 03:14:12 web01 sshd[2134]: Failed password for deploy from 203.0.113.45 port 52328 ssh2
+Oct  5 03:14:16 web01 sshd[2137]: Failed password for deploy from 203.0.113.45 port 52334 ssh2
+Oct  5 03:14:19 web01 sshd[2140]: Failed password for root from 203.0.113.45 port 52340 ssh2
+Oct  5 03:14:23 web01 sshd[2143]: Failed password for deploy from 203.0.113.45 port 52346 ssh2
+Oct  5 03:14:26 web01 sshd[2146]: Failed password for root from 203.0.113.45 port 52352 ssh2
+Oct  5 03:14:30 web01 sshd[2149]: Failed password for deploy from 203.0.113.45 port 52358 ssh2
+Oct  5 03:14:33 web01 sshd[2152]: Failed password for deploy from 203.0.113.45 port 52364 ssh2
+Oct  5 03:14:37 web01 sshd[2155]: Failed password for root from 203.0.113.45 port 52370 ssh2
+Oct  5 03:14:40 web01 sshd[2158]: Failed password for deploy from 203.0.113.45 port 52376 ssh2
+Oct  5 03:14:44 web01 sshd[2161]: Failed password for deploy from 203.0.113.45 port 52382 ssh2
+Oct  5 03:14:47 web01 sshd[2164]: Failed password for deploy from 203.0.113.45 port 52388 ssh2
+Oct  5 03:14:51 web01 sshd[2167]: Accepted password for deploy from 203.0.113.45 port 52398 ssh2
+Oct  5 03:14:51 web01 sshd[2170]: pam_unix(sshd:session): session opened for user deploy(uid=1001) by (uid=0)
+Oct  5 03:15:20 web01 sudo:   deploy : TTY=pts/1 ; PWD=/home/deploy ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Oct  5 03:40:07 web01 sshd[2173]: Failed password for alex from 192.0.2.10 port 50544 ssh2
+Oct  5 03:40:12 web01 sshd[2176]: Accepted password for alex from 192.0.2.10 port 50544 ssh2
+Oct  5 03:52:30 web01 sshd[2179]: Received disconnect from 203.0.113.45 port 52398:11: disconnected by user
+Oct  5 03:52:30 web01 sshd[2182]: pam_unix(sshd:session): session closed for user deploy
+```
+
+**Optional, your own logs:** if your Linux machine runs an SSH server, you can export its SSH log from the journal and analyse that too:
+```bash
+sudo journalctl -u ssh --no-pager > my-ssh.log
+```
+(The service is called `ssh` on Ubuntu/Debian and `sshd` on Fedora/RHEL, so use `-u sshd` there.) Then run the commands below on `my-ssh.log` instead of `auth.log`. If it's empty, nobody has tried to log in, so stick with the sample.
 
 1. **Aggregate and search** a log for failed authentication events, the raw material of a brute-force alert:
 ```bash
@@ -54,7 +97,11 @@ grep "Failed password" auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort 
 ```
 3. **Define a correlation rule in words**: for example, "more than 10 failed logins from one IP within a short window is an alert."
 4. **Check whether any IP crosses your threshold**, and if so, treat it as a raised alert.
-5. **Note the follow-up signal**: search for a successful login (`Accepted password`) from any IP that also had many failures, that combination is what makes a real correlation rule valuable.
+5. **Note the follow-up signal**: search for a successful login from any IP that also had many failures, that combination is what makes a real correlation rule valuable:
+```bash
+grep "Accepted" auth.log
+```
+In the sample, you should find that `203.0.113.45` failed 14 times and then logged in as `deploy`, and a minute later `deploy` used `sudo` to read `/etc/shadow` (the file of password hashes). `198.51.100.23` tried 5 usernames that don't exist and gave up, and `192.0.2.10` is the normal user `alex` mistyping a password once.
 
 #### Checkpoint
 You have aggregated and searched a log, counted failures by source, defined a correlation rule, and identified whether any source crosses it, and you can explain what aggregation, normalisation, and correlation each contribute, and why tuning matters.
@@ -71,6 +118,8 @@ You have aggregated and searched a log, counted failures by source, defined a co
 ---
 
 ### Topic 7.2: SOC
+
+Time: about 1.5 hours
 
 #### Concept
 
@@ -133,9 +182,11 @@ You have triaged a set of alerts with severity and reasoning, made an escalation
 
 ### Topic 7.3: Incident Response
 
+Time: about 1.5 hours
+
 #### Concept
 
-**Incident Response (IR)** is the structured process for handling a confirmed security incident so as to limit damage, remove the threat, recover safely, and learn from it. When triage confirms an alert is a real incident, IR takes over with a defined lifecycle rather than improvisation, because under pressure, a clear process is what prevents mistakes like destroying evidence or reinfecting a "cleaned" system. The widely used SANS model has six phases, often remembered as **PICERL**.
+**Incident Response (IR)** is the structured process for handling a confirmed security incident so as to limit damage, remove the threat, recover safely, and learn from it. When triage confirms an alert is a real incident, IR takes over with a defined lifecycle rather than improvisation, because under pressure, a clear process is what prevents mistakes like destroying evidence or reinfecting a "cleaned" system. The widely used SANS model has six phases, often remembered as **PICERL**. The other major reference is the US government's **NIST SP 800-61 Rev. 3** (2025), which organises incident response around the NIST Cybersecurity Framework 2.0 functions (Govern, Identify, Protect, Detect, Respond, Recover) and treats IR as part of everyday risk management rather than a separate checklist. Both teach the same core ideas, so this topic uses the six SANS phases because they're easy to walk through step by step.
 
 - **Preparation** is the work done in advance: the IR plan, tools, contacts, and training, so the team isn't inventing a response mid-crisis
 - **Identification** confirms an incident is real and determines its scope (often where the SOC's triage hands off)

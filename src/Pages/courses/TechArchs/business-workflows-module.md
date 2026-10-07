@@ -3,7 +3,9 @@
 
 **Purpose:** Build business solutions without extensive programming.
 
-**Tools needed for this module:** A web browser and an email address to sign up for free tiers — a form tool like [Google Forms](https://forms.google.com) or [Jotform](https://www.jotform.com), and a general automation platform like [Zapier](https://zapier.com) or [Make](https://www.make.com) (both have usable free tiers). No coding environment or installs are required, everything happens in the browser. You won't need every tool set up at once, each topic only needs its own account.
+**Time:** about 5 hours
+
+**Tools needed for this module:** A web browser and an email address to sign up for free tiers — a form tool like [Google Forms](https://forms.google.com) or [Jotform](https://www.jotform.com), Google Sheets, and the automation platform [Make](https://www.make.com). The labs use Make because on the free plan at the time of writing (2026), Zapier allows only two-step Zaps (one trigger plus one action), with no filters, paths, or multi-step Zaps, while Make's free plan allows multi-step scenarios, routers, and filters within a monthly credit allowance and a limit on active scenarios. Check each tool's current plan page, because limits change. No coding environment or installs are required, everything happens in the browser. You won't need every tool set up at once, each topic only needs its own account.
 
 ### Topic 1: Forms
 
@@ -12,8 +14,8 @@
 **Forms** are the entry point of most business workflows, the place where a human's input (a request, an application, an order) becomes structured data a system can act on. A no-code form builder lets you design that entry point visually, choosing field types and rules without writing validation code yourself.
 
 - A **field** is a single input on a form, common types are short text, dropdown, checkbox, date, and file upload
-- **Conditional logic** shows or hides fields based on an earlier answer, so a form only asks relevant questions (for example, only showing "reason for return" if "request type" is set to Return)
-- **Validation** enforces a field's format before submission (a valid email, a number within a range, a required field that can't be left blank), without the form builder needing to write any code
+- **Conditional logic** shows or skips questions based on an earlier answer, so a form only asks relevant questions (for example, only asking "reason for return" if "request type" is set to Return). Tools differ: Jotform can show or hide individual fields, while Google Forms works by sending people to a different section based on their answer
+- **Validation** enforces a field's format before submission (a valid email, a number within a range, a required field that can't be left blank), without the form builder needing to write any code. Simple tools have limits: Google Forms cannot check that one date comes after another
 - A **submission** is one completed instance of the form, typically stored as a row in a connected spreadsheet or database, ready to feed the rest of a workflow
 
 #### Structure at a Glance
@@ -35,7 +37,7 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - A well-built form is what makes everything downstream (approvals, notifications, integrations) reliable, messy or missing data at the form stage causes problems everywhere else in a workflow
-- Most no-code form tools store submissions in a connected spreadsheet automatically, which is often the simplest possible "database" for a small workflow, no separate setup required
+- Most no-code form tools can send submissions to a spreadsheet, which is often the simplest possible "database" for a small workflow. Usually you switch this on once: in Google Forms, open the Responses tab and click "Link to Sheets"
 
 #### Where you'd actually use this
 
@@ -44,13 +46,14 @@ Any process that starts with someone requesting or reporting something, expense 
 #### Lab
 
 1. **Create a free account** with a form tool such as [Google Forms](https://forms.google.com) or [Jotform](https://www.jotform.com).
-2. **Build a simple "Time Off Request" form** with fields for name, start date, end date, and reason (dropdown: Vacation, Sick, Other).
-3. **Add conditional logic** so an extra "please specify" text field only appears when "Other" is selected as the reason.
-4. **Add validation** requiring the start date field and setting the end date to only accept dates after the start date, if your tool supports it.
-5. **Submit a test entry** and confirm it lands as a new row in the form's connected spreadsheet, with all fields captured correctly.
+2. **Build a simple "Time Off Request" form** with fields for name, email, start date, end date, and reason (dropdown: Vacation, Sick, Other).
+3. **Add conditional logic** so a "please specify" question is only asked when "Other" is selected as the reason. In Google Forms, put the "Reason" dropdown as the last question of section 1, put "Please specify" in a new section 2, and add a section 3 (can be empty, or holding a final "Anything else?" question). On the Reason question, open the three-dot menu, choose "Go to section based on answer", send "Other" to section 2 and the other answers to section 3. Set section 2's "After section 2" option to "Submit form" or section 3. In Jotform, use Settings, Conditions, "Show/Hide Field" instead.
+4. **Add validation**: mark name, start date, and end date as required. Google Forms cannot check that the end date is after the start date, so either check it later in your automation (a filter that flags rows where end date is before start date) or use Jotform, whose date field can limit allowed dates.
+5. **Connect a spreadsheet**: in Google Forms, open the Responses tab and click "Link to Sheets" to create a responses sheet (Jotform can do this through its Google Sheets integration).
+6. **Submit a test entry** and confirm it lands as a new row in the linked spreadsheet, with all fields captured correctly.
 
 #### Checkpoint
-You have a working form with conditional logic and validation, and a test submission has landed correctly in a connected spreadsheet.
+You have a working form with conditional logic and required fields, and a test submission has landed correctly in a linked spreadsheet.
 
 #### Quiz
 1. What is "conditional logic" in a form, and give an example use case?
@@ -59,7 +62,7 @@ You have a working form with conditional logic and validation, and a test submis
 4. Why does the quality of a form's data matter for the rest of a workflow?
 5. What's a common, no-setup destination for storing form submissions?
 
-*Answers: 1) Logic that shows or hides fields based on an earlier answer, for example only showing a "reason for return" field if the request type is set to Return. 2) It enforces a field's format before submission, like requiring a valid email, a number within a range, or a required field that can't be blank. 3) One completed instance of the form; it typically ends up as a row in a connected spreadsheet or database. 4) Because approvals, notifications, and integrations downstream all depend on that data being complete and consistent, messy data at the form stage causes problems everywhere else. 5) A connected spreadsheet, which most no-code form tools support automatically.*
+*Answers: 1) Logic that shows or skips questions based on an earlier answer, for example only asking a "reason for return" field if the request type is set to Return. 2) It enforces a field's format before submission, like requiring a valid email, a number within a range, or a required field that can't be blank. 3) One completed instance of the form; it typically ends up as a row in a connected spreadsheet or database. 4) Because approvals, notifications, and integrations downstream all depend on that data being complete and consistent, messy data at the form stage causes problems everywhere else. 5) A linked spreadsheet; in Google Forms you create the link once from the Responses tab with Link to Sheets.*
 
 ---
 
@@ -103,13 +106,13 @@ Any decision that needs sign-off before proceeding, expense approvals, time-off 
 #### Lab
 
 1. **Continue from the Time Off Request form** built in Topic 1 (or use any existing form with a spreadsheet destination).
-2. **In an automation tool** like Zapier or Make, create a new automation triggered by "new row added" on that spreadsheet.
-3. **Add an approval-style step**: send an email to a fixed approver (yourself, for testing) containing the request details and two links or buttons, "Approve" and "Reject" (many tools offer a built-in approval action for exactly this).
-4. **Wire up the decision branch**: if approved, add an action that updates the spreadsheet row's status to "Approved," if rejected, update it to "Rejected."
-5. **Test both paths** by submitting two test requests and clicking Approve on one and Reject on the other, then confirm the spreadsheet reflects each outcome correctly.
+2. **Add two columns** to the right of the form's columns in the responses sheet: `Status` and `Processed`. Free Zapier and Make plans have no built-in approval button, so the approver will decide by typing `Approved` or `Rejected` in the `Status` column (tip: use Data, Data validation, Dropdown to offer only those two values).
+3. **Scenario A (ask for approval)**: in Make, create a scenario with Google Sheets "Watch New Rows" on the responses sheet, then Gmail "Send an Email" to a fixed approver (yourself, for testing). Include the request details and the link to the sheet, with the instruction "Set Status to Approved or Rejected". Schedule it and switch it on.
+4. **Scenario B (act on the decision)**: create a second scenario with Google Sheets "Search Rows" that finds rows where `Status` is not empty and `Processed` is empty. Add a Router with two routes: filter one on `Status` equal to `Approved`, the other on `Status` equal to `Rejected`. On both routes, end with Google Sheets "Update a Row" that sets `Processed` to `yes` (map the row number from Search Rows), so the same row is never handled twice. Schedule it (for example every 15 minutes) and switch it on. Your free plan's active-scenario limit may mean switching off older scenarios first.
+5. **Test both paths** by submitting two test requests, setting one row's Status to Approved and the other to Rejected, then clicking "Run once" on Scenario B and confirming each row is marked as processed through the correct route.
 
 #### Checkpoint
-You have a working approval step that routes a submission to an approver and updates a record differently depending on Approved versus Rejected, and you can explain what an escalation rule is for.
+You have a working approval step that routes a submission to an approver, who decides by updating the Status column, and a second scenario that handles Approved and Rejected rows on separate routes. You can explain what an escalation rule is for (for example, a scheduled reminder for rows still blank after two days).
 
 #### Quiz
 1. What is the difference between a fixed approver and a dynamic approver?
@@ -162,10 +165,10 @@ Anywhere a person needs to know something changed without checking manually, a r
 #### Lab
 
 1. **Continue from the approval automation** built in Topic 2.
-2. **Add a notification step** that fires after the decision branch, on the "Approved" path, send an email to the original requester using dynamic content to include their name and the approved dates.
-3. **Add a second notification** on the "Rejected" path, with a different message and, if your tool supports it, a different channel (for example, a Slack message to a manager instead of an email).
+2. **Add a notification step** in Scenario B, on the "Approved" route before "Update a Row", send an email to the original requester using dynamic content to include their name and the approved dates.
+3. **Add a second notification** on the "Rejected" route, with a different message and, if your tool supports it, a different channel (for example, a Slack message to a manager instead of an email).
 4. **Personalize the message** using at least two dynamic fields (like name and date range) pulled from the original submission.
-5. **Re-run both test cases** from Topic 2 and confirm each one triggers the correct notification, with the correct dynamic content filled in.
+5. **Submit two new test requests**, set their Status values, run Scenario B, and confirm each one triggers the correct notification, with the correct dynamic content filled in.
 
 #### Checkpoint
 You have working notifications on both the approved and rejected paths of your workflow, each using dynamic content pulled from the original submission.
@@ -211,7 +214,7 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Integrations are what turn separate tools (a form, an approval step, a CRM, a chat app) into one connected workflow, without them, each tool is an isolated island requiring manual copy-paste between them
-- Most no-code platforms charge based on the number of "tasks" (individual actions run) per month, which matters when designing a multi-step workflow that might trigger dozens of times a day
+- Most no-code platforms charge based on usage per month: Zapier counts "tasks" (individual actions run), and Make counts "credits" (called "operations" until 2025, roughly one per module run). This matters when designing a multi-step workflow that might trigger dozens of times a day
 
 #### Where you'd actually use this
 
@@ -220,13 +223,13 @@ Connecting a form to a CRM, connecting a CRM to a spreadsheet or accounting tool
 #### Lab
 
 1. **Continue from the full form-to-notification workflow** built across Topics 1–3.
-2. **Add one more step to the "Approved" path**: connect to a CRM tool (or a second spreadsheet, standing in for one) and create a new record using the connector for that app.
+2. **Add one more step to the "Approved" route in Scenario B**: connect to a CRM tool (or a second spreadsheet, standing in for one) and create a new record using the connector for that app.
 3. **Map the data**, connecting the form's name, date, and reason fields to the corresponding fields in the CRM or second spreadsheet.
-4. **Turn this into a multi-step chain**: confirm that a single trigger (the original form submission) now results in an approval email, a status update, a notification, and a new CRM record, all from one event.
+4. **Check the multi-step chain**: confirm that one form submission now results in an approval email (Scenario A), and, once the approver sets the Status, a notification, a new CRM record, and the Processed mark (Scenario B). Build this in Make: on Zapier's free plan a Zap can only have one action.
 5. **Submit one final test request** end-to-end and trace it through every step, form, approval, notification, and integration, confirming each one fires correctly in sequence.
 
 #### Checkpoint
-You have a full multi-step automation where a single form submission results in an approval step, a notification, and a downstream integration creating a record in another system, and you can explain what a connector and a data mapping are.
+You have a full multi-step automation in Make where a single form submission results in an approval step, a notification, and a downstream integration creating a record in another system, and you can explain what a connector and a data mapping are.
 
 #### Quiz
 1. What is a "connector" in a no-code integration platform?
@@ -235,7 +238,7 @@ You have a full multi-step automation where a single form submission results in 
 4. What is a multi-step zap (or scenario)?
 5. What's a common pricing model for no-code integration platforms, and why does it matter for workflow design?
 
-*Answers: 1) A pre-built bridge to a specific service (like Google Sheets, Slack, or a CRM) that handles authentication and API calls behind the scenes. 2) A trigger is the event in one app that starts the integration, an action is what happens next in another app as a result. 3) Connecting a field from the trigger app to a field in the action app, so the right data lands in the right place, it's necessary because apps don't automatically know which of their fields correspond to which of another app's fields. 4) A chain of several actions triggered by a single event, for example a form submission triggering an approval email, then a CRM update, then a Slack notification. 5) Most platforms charge based on the number of tasks (individual actions run) per month, which matters because a workflow with many chained steps or high volume can add up quickly.*
+*Answers: 1) A pre-built bridge to a specific service (like Google Sheets, Slack, or a CRM) that handles authentication and API calls behind the scenes. 2) A trigger is the event in one app that starts the integration, an action is what happens next in another app as a result. 3) Connecting a field from the trigger app to a field in the action app, so the right data lands in the right place, it's necessary because apps don't automatically know which of their fields correspond to which of another app's fields. 4) A chain of several actions triggered by a single event, for example a form submission triggering an approval email, then a CRM update, then a Slack notification; Make's free plan allows this, while multi-step Zaps need a paid Zapier plan. 5) Platforms charge by monthly usage, tasks in Zapier and credits (formerly operations) in Make, which matters because a workflow with many chained steps or high volume can add up quickly.*
 
 ---
 

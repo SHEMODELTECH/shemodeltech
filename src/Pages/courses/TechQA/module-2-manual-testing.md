@@ -3,6 +3,8 @@
 
 ### Topic 2.1: Test Cases
 
+*Time: about 2 hours*
+
 #### Concept
 
 A **test case** is a specific, repeatable procedure, one set of preconditions, steps, inputs, and an expected result, that checks a single piece of behavior. Manual testing runs on test cases the way automation runs on scripts, they're the actual unit of testing work, and writing them well is what separates "I clicked around and it seemed fine" from a defensible, repeatable check.
@@ -64,6 +66,8 @@ You have three properly structured test cases with real test data, "executed" wi
 ---
 
 ### Topic 2.2: Bug Reporting
+
+*Time: about 2 hours*
 
 #### Concept
 
@@ -162,6 +166,8 @@ You have one complete, well-structured bug report with all required fields, a ju
 ---
 
 ### Topic 2.3: Exploratory Testing
+
+*Time: about 2 hours*
 
 #### Concept
 

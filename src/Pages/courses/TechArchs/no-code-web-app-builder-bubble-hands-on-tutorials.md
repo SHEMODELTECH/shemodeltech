@@ -3,14 +3,18 @@
 
 This course turns each project into a step-by-step, hands-on build. You learn each idea at the moment you need it, while building the thing, and every project hands its result to the next one, ending in a working web app you can show anyone. Follow the projects in order.
 
+**Plan check:** Every required step in this course works on Bubble's free plan. On the free plan your app runs in its development version, which you can preview and share at a `bubbleapps.io/version-test` address. Deploying to the Live version (and connecting a custom domain) needs a paid plan, so the Live deployment step in Project 6 is optional. The free plan also has usage limits (such as workload and data limits) at the time of writing (2026); a course-sized app stays well within them, but check Bubble's current pricing page.
+
 ---
 
 ## Project 1 (Module 1): Set Up Your First Bubble App and Page
 
 **Goal:** Get a real Bubble app running with a page you designed, so every later project has a home.
 
+**Time:** about 1.5 hours
+
 **Step 1: Create your Bubble account and app.**
-Go to bubble.io, sign up, and click Create an app. Give it a clear name like `task-tracker`. Everything in this course lives inside this one app, and it gives you a live URL from day one.
+Go to bubble.io, sign up for a free account, and click Create an app. Give it a clear name like `task-tracker`. Everything in this course lives inside this one app, and from day one you can preview it in your browser at its development (version-test) URL.
 
 **Step 2: Get to know the editor.**
 The Bubble editor is where you build. It has a visual canvas in the middle, an elements panel on the left, and tabs across the top: Design controls how a page looks, Workflow controls what it does, and Data controls what it stores. Knowing which tab does what will save you a lot of time.
@@ -27,38 +31,48 @@ A responsive layout rearranges elements to fit any screen size, from phone to de
 **Step 6: Group elements into a container.**
 Select your Text and Button, right-click, and choose Group elements in a Container, then set the container to Column layout. Containers are how you control spacing and keep a layout from breaking on smaller screens.
 
-**Step 7: Preview your app live.**
-Click Preview in the top right. Your page opens in a new tab at a real bubbleapps.io URL. Building and previewing in a tight loop lets you catch layout problems while they are still small.
+**Step 7: Preview your app.**
+Click Preview in the top right. Your page opens in a new tab at an address like `task-tracker.bubbleapps.io/version-test`. This development version works on the free plan and you can share the link with others. Building and previewing in a tight loop lets you catch layout problems while they are still small.
 
 **Step 8: Document your app structure.**
-In a notes doc, write your app name, its URL, and the pages you plan to build, and keep it updated as you go. A simple one-page map keeps a growing project from turning into a maze of unnamed pages.
+In a notes doc, write your app name, its preview URL, and the pages you plan to build, and keep it updated as you go. A simple one-page map keeps a growing project from turning into a maze of unnamed pages.
 
-### Final Project Structure
+### Project Structure
 ```text
 task-tracker (Bubble app)
 │
 ├── index (page)  ->  Text + Button in a Column container
-└── app_notes.md  ->  app name, URL, planned pages
+└── app_notes.md  ->  app name, preview URL, planned pages
 ```
 
 ### What You Learned
 - ✅ Creating a Bubble app and understanding the editor tabs
 - ✅ What pages, elements, and containers are
 - ✅ Building inside a responsive layout instead of fixed positions
-- ✅ Previewing an app on a live URL
+- ✅ Previewing an app at its development URL
 - ✅ Keeping a simple map of your app's structure
 
 ### Portfolio Project
-**Bubble App Foundation**: Set up a live no-code web app with a responsive, container-based home page and a documented page structure.
+**Bubble App Foundation**: Set up a no-code web app with a responsive, container-based home page and a documented page structure.
 **Skills:** Bubble, Responsive Layout, No-Code App Design, UI Structure.
 
-**Deliverable:** A live Bubble app with a designed home page and a written structure map.
+**Deliverable:** A Bubble app you can preview at its URL, with a designed home page and a written structure map.
+
+### Quiz
+
+1. What does each of the Design, Workflow, and Data tabs control?
+2. Why place elements inside containers with a row or column layout?
+3. On the free plan, where can you open and share your app?
+
+*Answers: 1) Design controls how a page looks, Workflow controls what it does, and Data controls what it stores. 2) Containers make the layout responsive, so elements rearrange to fit any screen instead of breaking at fixed positions. 3) At its development version URL, the bubbleapps.io address ending in version-test.*
 
 ---
 
 ## Project 2 (Module 2): Design a Real Data Structure
 
 **Goal:** Define the data your app stores, the single most important decision in any app.
+
+**Time:** about 1.5 hours
 
 **Step 1: Open the Data tab.**
 In the editor, click the Data tab. This is where you define what your app remembers, separate from how any screen looks.
@@ -84,7 +98,7 @@ In the Data tab under App data, click New entry and add three sample tasks with 
 **Step 8: Document your data model.**
 In your notes, list each data type and its fields with their types. This is the reference you will check constantly while building features.
 
-### Final Project Structure
+### Project Structure
 ```text
 Data model
 │
@@ -111,11 +125,22 @@ Data model
 
 **Deliverable:** A documented data model with a Task type, correctly typed fields, and sample records.
 
+### Quiz
+
+1. What is the difference between a data type and a record (Thing)?
+2. Why is `due_date` a date field rather than a text field?
+3. Which field type fits `is_done`, and why?
+4. Why add sample records by hand before building screens?
+
+*Answers: 1) A data type is the template for a kind of thing, like Task; a record is one actual entry of that type, like a specific task. 2) A date field can be sorted and filtered by date correctly, which text cannot. 3) Yes/no, because a task is either done or not. 4) So you can build and test screens against real-looking data without waiting for users.*
+
 ---
 
 ## Project 3 (Module 3): Display Data on the Page
 
 **Goal:** Show your stored records on screen in a list that updates itself.
+
+**Time:** about 1.5 hours
 
 **Step 1: Understand repeating groups.**
 A repeating group is an element that shows one row per record, automatically, however many records there are. It is how every list in a no-code app is built.
@@ -141,7 +166,7 @@ Preview the app; your three sample tasks should appear in due-date order. Add a 
 **Step 8: Document the display logic.**
 Note which page shows which data type, the data source used, and the sort order. When a list later shows the wrong items, this note is the first place to look.
 
-### Final Project Structure
+### Project Structure
 ```text
 index (page)
 │
@@ -165,45 +190,58 @@ index (page)
 
 **Deliverable:** A page that displays live, sorted records from your data type in a repeating group.
 
+### Quiz
+
+1. What do a repeating group's Type of content and Data source each decide?
+2. Why do you only design the first cell?
+3. What does "current cell's Task" refer to?
+4. How do you prove the list is data-driven rather than hardcoded?
+
+*Answers: 1) Type of content sets what kind of record each row is; Data source sets which records are pulled. 2) The repeating group applies that one design to every record automatically. 3) The specific Task record shown in that row. 4) Add a new record in the Data tab, refresh the preview, and see it appear without changing the page.*
+
 ---
 
 ## Project 4 (Module 4): Let Users Create and Change Data
 
 **Goal:** Add the input form and actions that let users create, complete, and delete records.
 
+**Time:** about 2 hours
+
 **Step 1: Understand workflows.**
 A workflow is a sequence of actions that runs when something happens, such as a button click. Every interactive feature in your app is a workflow: an event followed by one or more actions.
 
 **Step 2: Build an input form.**
-Add an Input for the task title, a DatePicker for the due date, a Dropdown for priority, and a Button labelled `Add task`. Match each input to a field you defined in Project 2.
+Add an Input for the task title, a Date/Time Picker for the due date, a Dropdown for priority (static choices: Low, Medium, High), and a Button labelled `Add task`. Match each input to a field you defined in Project 2.
 
 **Step 3: Create a "Create a new Task" workflow.**
 Click the Add task button, choose Start/Edit workflow, then add the action Create a new thing, type `Task`. This action turns what the user typed into a real record in your database.
 
 **Step 4: Map inputs to fields.**
-In the Create action, set `title` to the Input's value, `due_date` to the DatePicker's value, `priority` to the Dropdown's value, and `is_done` to no. A missed mapping is why an app saves a blank task.
+In the Create action, set `title` to the Input's value, `due_date` to the date picker's value, `priority` to the Dropdown's value, and `is_done` to no. A missed mapping is why an app saves a blank task.
 
 **Step 5: Add validation.**
-Validation means checking input before you save it. Add a condition on the button so it is only clickable when the title input is not empty, which stops users from creating broken records.
+Validation means checking input before you save it. On the Add task button, add a condition: when the title Input's value is empty, "This element isn't clickable". This stops users from creating broken records.
 
 **Step 6: Add a complete action.**
 In the repeating group cell, add a Checkbox, then create a workflow: when its value changes, Make changes to the current cell's Task and set `is_done` to the checkbox's value. Make changes to a thing is how users edit existing records.
 
-**Step 7: Add a delete action.**
-Add a small Delete icon to the cell with a workflow that, on click, deletes the current cell's Task. Add a confirmation condition first, since delete is irreversible.
+**Step 7: Add a delete action with a confirmation popup.**
+Bubble has no built-in "are you sure?" step, so you build one. Add a Popup element named `Confirm delete` with the text "Delete this task?" and two buttons, Confirm and Cancel. Add a small Delete icon to the cell with a workflow that, on click, uses Display data in a group/popup to send the current cell's Task to the popup (set the popup's Type of content to `Task` first), then Show the popup. In the Confirm button's workflow, Delete thing: the popup's Task, then Hide the popup. In the Cancel button's workflow, just Hide the popup. The delete only runs after the user confirms, because delete is irreversible.
 
 **Step 8: Reset inputs after creating.**
-Add a final action to the Add task workflow: Reset the inputs. Clearing the form after saving stops users from accidentally submitting duplicates.
+Add a final action to the Add task workflow: Reset relevant inputs. Clearing the form after saving stops users from accidentally submitting duplicates.
 
-### Final Project Structure
+### Project Structure
 ```text
 Workflows
 │
-├── When "Add task" clicked (only when title is not empty)
+├── When "Add task" clicked (not clickable when title is empty)
 │     -> Create a new Task (map title, due_date, priority, is_done=no)
-│     -> Reset inputs
+│     -> Reset relevant inputs
 ├── When cell checkbox changes -> Make changes to Task (is_done)
-└── When cell delete clicked (confirm) -> Delete Task
+├── When cell delete icon clicked -> Display Task in popup -> Show "Confirm delete"
+├── When Confirm clicked -> Delete popup's Task -> Hide popup
+└── When Cancel clicked -> Hide popup
 ```
 
 ### What You Learned
@@ -211,7 +249,7 @@ Workflows
 - ✅ Creating records from user input and mapping inputs to fields
 - ✅ Validating input before saving
 - ✅ Editing records with Make changes to a thing
-- ✅ Deleting records safely with confirmation
+- ✅ Deleting records safely with a confirmation popup
 
 ### Portfolio Project
 **Interactive CRUD App**: Added create, complete, and delete features driven by user input, with validation and safe deletes.
@@ -219,23 +257,34 @@ Workflows
 
 **Deliverable:** A working app where users can create, complete, and delete records themselves.
 
+### Quiz
+
+1. What two parts make up every workflow?
+2. Why might an app save a blank task even though the user typed a title?
+3. Which action edits an existing record, such as marking a task done?
+4. How do you make deleting a task require confirmation in Bubble?
+
+*Answers: 1) An event (something that happens, like a click) followed by one or more actions. 2) The Input's value was not mapped to the title field in the Create a new thing action. 3) Make changes to a thing. 4) Show a Popup with Confirm and Cancel buttons, and put the Delete thing action only in the Confirm button's workflow.*
+
 ---
 
 ## Project 5 (Module 5): Add User Accounts and Private Data
 
 **Goal:** Let people sign up, log in, and see only their own data.
 
+**Time:** about 2 hours
+
 **Step 1: Understand the User type.**
 Bubble gives every app a built-in User data type for accounts, and you can add your own fields to it, like `name`. Because accounts are so common, you do not have to build login from scratch.
 
 **Step 2: Build sign-up and log-in forms.**
-Add inputs for email and password and two buttons, Sign up and Log in. These two flows are the front door of almost every app.
+Add inputs for email and password (set the password input's content format to Password) and two buttons, Sign up and Log in. These two flows are the front door of almost every app.
 
 **Step 3: Create the sign-up workflow.**
 On Sign up, add the action Sign the user up, using the email and password inputs. This both creates the account and logs the person in.
 
 **Step 4: Create the log-in workflow.**
-On Log in, add the action Log the user in with the email and password inputs, so returning users have a way back in.
+On Log in, add the action Log the user in with the email and password inputs, so returning users have a way back in. Also add a Log out button with the action Log the user out.
 
 **Step 5: Understand Current User.**
 Current User is whoever is logged in right now. You can attach data to them and reference them in workflows, which is how an app personalises itself for each person.
@@ -244,12 +293,12 @@ Current User is whoever is logged in right now. You can attach data to them and 
 Add a `creator` field of type User to the Task type, and in the Create a new Task action, set `creator` to Current User. Without an owner field you cannot later filter tasks by who created them.
 
 **Step 7: Filter the list to the current user.**
-Change the repeating group's data source to Search for Tasks where creator = Current User. This single change is what makes each person see only their own tasks.
+Change the repeating group's data source to Search for Tasks with the constraint creator = Current User. This single change is what makes each person see only their own tasks.
 
 **Step 8: Add privacy rules.**
-Privacy rules control which records a user is even allowed to load, enforced by the database rather than just hidden on screen. Add a rule so a Task is only visible when its creator is the Current User, which is what actually protects one user's data from another.
+Privacy rules control which records a user is even allowed to load, enforced by the database rather than just hidden on screen. In the Data tab, under Privacy, add a rule on Task: when This Task's creator is Current User, allow finding it in searches and viewing all fields, and leave everyone else without those permissions. This is what actually protects one user's data from another.
 
-### Final Project Structure
+### Project Structure
 ```text
 Accounts + privacy
 │
@@ -261,7 +310,7 @@ Accounts + privacy
 
 ### What You Learned
 - ✅ Using Bubble's built-in User type
-- ✅ Building sign-up and log-in workflows
+- ✅ Building sign-up, log-in, and log-out workflows
 - ✅ What Current User is and how to reference it
 - ✅ Linking records to their owner
 - ✅ Enforcing real privacy with database privacy rules
@@ -272,43 +321,56 @@ Accounts + privacy
 
 **Deliverable:** An app where users sign up, log in, and can only see and change their own records.
 
+### Quiz
+
+1. What does the Sign the user up action do besides creating the account?
+2. Why does the Task type need a `creator` field?
+3. Why is filtering the repeating group by creator not enough on its own to protect data?
+4. What does a privacy rule on Task do?
+
+*Answers: 1) It also logs the new user in. 2) So each task records who made it, which lets you filter and protect tasks by owner. 3) It only changes what one list shows; the data could still be loaded another way unless the database blocks it. 4) It makes the database only let a user find and view Tasks whose creator is that user.*
+
 ---
 
 ## Project 6 (Module 6): Polish, Test, and Publish
 
-**Goal:** Take your app from "works on my screen" to a shareable, tested, published product.
+**Goal:** Take your app from "works on my screen" to a shareable, tested product.
+
+**Time:** about 2.5 hours
 
 **Step 1: Test responsiveness.**
-Use Bubble's responsive preview to view your app at phone, tablet, and desktop widths. Most of your users will be on phones, so an app that only looks right on desktop will feel broken to them.
+Use Bubble's responsive viewer to view your app at phone, tablet, and desktop widths. Most of your users will be on phones, so an app that only looks right on desktop will feel broken to them.
 
 **Step 2: Fix layout issues per breakpoint.**
 Adjust container widths, min-widths, and hidden elements so each width looks intentional. This is where an app goes from amateur to professional in the first few seconds.
 
 **Step 3: Add loading and empty states.**
-Show a friendly message when the task list is empty, such as "No tasks yet, add your first one". An empty screen looks like a bug; an empty state tells the user what to do next.
+Show a friendly message when the task list is empty, such as "No tasks yet, add your first one". An empty screen looks like a bug; an empty state tells the user what to do next. One way: add a Text with that message and a condition so it is visible only when the repeating group's list of Tasks count is 0.
 
 **Step 4: Test every workflow deliberately.**
 Sign up as a new user, create tasks, complete them, delete one, log out, and log back in, confirming your data persists and stays private. Clicking through as a real user, in order, catches gaps you miss when testing pieces in isolation.
 
 **Step 5: Understand versions and deployment.**
-Bubble has a development version where you build and a live version your users see, and deploying pushes your work from development to live. Keeping them separate means you can build safely without breaking what people are already using.
+Bubble has a development version where you build (the version-test URL) and a Live version for real users, and deploying pushes your work from development to Live. Keeping them separate means you can build safely without breaking what people are already using. On the free plan you work and share in the development version; deploying to Live needs a paid plan.
 
-**Step 6: Deploy to live.**
-Click Deploy current version to Live, then visit your live URL and run through the app once more to confirm it behaves the same as in development.
+**Step 6: Share your app (Live deploy optional).**
+Free path: copy your version-test URL, open it in a private browser window, and run through the app once more as a new user to confirm it works for someone who isn't logged into the editor.
+
+*Optional (needs a paid plan):* click Deploy current version to Live, then visit your live URL (without `/version-test`) and run through the app again to confirm it behaves the same as in development.
 
 **Step 7: Write a short product README.**
-Create a doc covering what the app does, who it is for, how to use it, and the live URL. This is what a reviewer or employer reads before they even click.
+Create a doc covering what the app does, who it is for, how to use it, and the app's URL. This is what a reviewer reads before they even click.
 
 **Step 8: Share it and gather one round of feedback.**
-Send the live link to two people, ask them to complete one task in the app, and note what confused them. Real users find issues you cannot see because you built it.
+Send the link to two people, ask them to complete one task in the app, and note what confused them. Real users find issues you cannot see because you built it.
 
-### Final Project Structure
+### Project Structure
 ```text
-Published app
+Shareable app
 │
 ├── Responsive across phone / tablet / desktop
 ├── Empty + loading states
-├── Live deployment (separate from development)
+├── Shared via version-test URL (Live deployment optional, paid plan)
 ├── product_readme.md
 └── feedback_notes.md
 ```
@@ -318,10 +380,19 @@ Published app
 - ✅ Designing empty and loading states
 - ✅ Testing full user journeys in order
 - ✅ The difference between development and live versions
-- ✅ Deploying, documenting, and gathering feedback
+- ✅ Sharing, documenting, and gathering feedback
 
 ### Portfolio Project
-**Published, Tested Web App**: Polished an app for all screen sizes, tested full user journeys, deployed it live, and documented it for a real audience.
-**Skills:** Responsive Design, QA Testing, Deployment, Technical Writing, No-Code Development.
+**Tested, Shareable Web App**: Polished an app for all screen sizes, tested full user journeys, shared it with real users, and documented it for a real audience.
+**Skills:** Responsive Design, QA Testing, Deployment Concepts, Technical Writing, No-Code Development.
 
-**Deliverable:** A live, published, responsive app with documentation and a round of user feedback.
+**Deliverable:** A responsive, shareable app (on its version-test URL, or Live on a paid plan) with documentation and a round of user feedback.
+
+### Quiz
+
+1. Why does an empty list need an empty state?
+2. Why test the whole user journey in order, not just each feature separately?
+3. What is the difference between Bubble's development and Live versions?
+4. On the free plan, how do you share your app with testers?
+
+*Answers: 1) An empty screen looks like a bug, while an empty state tells the user what to do next. 2) Running through as a real user catches gaps between features, like data not persisting after log out and log in. 3) Development is where you build and test; Live is the version real users see, and deploying copies development to Live. 4) Send them the development version URL, the bubbleapps.io address ending in version-test.*

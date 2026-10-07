@@ -18,6 +18,8 @@
 
 ## Module 0: Why Databases, and Why So Many Kinds
 
+Time: about 1 hour
+
 ### Concept
 
 A **database** stores data so it survives after your program stops running, and so multiple users or processes can read and write it safely at the same time. There isn't one "best" database - each type makes different trade-offs:
@@ -52,6 +54,8 @@ You can name all four database types above and give one reason to choose each.
 ---
 
 ## Module 1: SQL Fundamentals
+
+Time: about 2 hours
 
 ### Concept
 
@@ -110,6 +114,8 @@ You can read each query above and explain what it does without looking at the co
 
 ## Module 2: PostgreSQL - A Real Relational Database
 
+Time: about 2 hours
+
 ### Concept
 
 **PostgreSQL** ("Postgres") is a free, production-grade relational database used by companies at every scale. It fully supports SQL plus extra features like advanced indexing, JSON columns, and strong data-integrity guarantees.
@@ -143,11 +149,21 @@ INSERT INTO tasks (title, due_date) VALUES ('Review PR', '2026-07-05');
 SELECT * FROM tasks WHERE done = FALSE ORDER BY due_date ASC;
 ```
 
-**3. Connect from Python:**
+**3. Connect from Python.** Install the Postgres driver first:
+```bash
+pip install psycopg2-binary
+```
+Keep your database password out of your code: set it as an environment variable named `PGPASSWORD` (for example `export PGPASSWORD="your-postgres-password"` in the terminal you'll run Python from), then run:
 ```python
+import os
 import psycopg2
 
-conn = psycopg2.connect(dbname="trackit", user="postgres", password="yourpassword")
+conn = psycopg2.connect(
+    dbname="trackit",
+    user="postgres",
+    password=os.environ["PGPASSWORD"],
+    host="localhost",
+)
 cur = conn.cursor()
 cur.execute("SELECT title, due_date FROM tasks WHERE done = FALSE ORDER BY due_date ASC;")
 for row in cur.fetchall():
@@ -171,6 +187,8 @@ You have a running Postgres database with a real table, and you queried it both 
 
 ## Module 3: MySQL - Postgres's Widely-Used Cousin
 
+Time: about 1.5 hours
+
 ### Concept
 
 **MySQL** is another free, production-grade relational database, and the most widely deployed one historically (WordPress, many PHP apps, and countless startups run on it). It uses the same core SQL you already learned, with small syntax differences from Postgres.
@@ -181,7 +199,19 @@ You'll often encounter MySQL rather than choose it fresh - many existing systems
 
 ### Lab
 
-**1. Install MySQL** (or use a free hosted instance like [PlanetScale](https://planetscale.com)).
+**1. Get a MySQL server running locally.** Pick one option:
+- **Install it:** download MySQL Community Server from [dev.mysql.com/downloads](https://dev.mysql.com/downloads/mysql/) (on macOS you can also run `brew install mysql`, then `brew services start mysql`). Then open the MySQL command-line client:
+```bash
+mysql -u root -p
+```
+- **Or use Docker** (if you have [Docker](https://www.docker.com) installed). This starts MySQL 8 in a container, then opens its command-line client. Replace `choose-a-password` with a password of your own, and type it again when asked:
+```bash
+docker run --name trackit-mysql -e MYSQL_ROOT_PASSWORD=choose-a-password -p 3306:3306 -d mysql:8
+docker exec -it trackit-mysql mysql -u root -p
+```
+If the second command says it can't connect, wait 20 to 30 seconds for MySQL to finish starting, then run it again.
+
+Hosted MySQL services also exist, but free tiers change often (PlanetScale, once a popular free option, ended its free plan in 2024), so check current free tiers before relying on one. A local server is all you need for this lab.
 
 **2. The same task table, in MySQL syntax - notice the small differences from Postgres:**
 ```sql
@@ -222,6 +252,8 @@ You can list at least two syntax differences between Postgres and MySQL for the 
 
 ## Module 4: MongoDB - Thinking in Documents, Not Tables
 
+Time: about 2 hours
+
 ### Concept
 
 **MongoDB** is a document database - instead of rows and columns, it stores data as JSON-like documents, and records in the same collection don't need identical fields. There are no joins by default; related data is often nested directly inside a document instead of split across tables.
@@ -232,11 +264,10 @@ Data whose shape varies or evolves often - product catalogs where different prod
 
 ### Lab
 
-**1. Install MongoDB** (or use a free hosted cluster on [MongoDB Atlas](https://www.mongodb.com/atlas)).
+**1. Install MongoDB** (or use a free hosted cluster on [MongoDB Atlas](https://www.mongodb.com/atlas)). You'll also need **mongosh**, the MongoDB Shell, from [mongodb.com/try/download/shell](https://www.mongodb.com/try/download/shell). (Older tutorials use a command called `mongo`; that legacy shell was removed in MongoDB 6, so use `mongosh`.)
 
-**2. Insert and query documents:**
+**2. Insert and query documents.** Open the shell by running `mongosh` in your terminal (it connects to your local MongoDB by default), or use the shell built into MongoDB Compass, then type:
 ```javascript
-// Using the mongo shell or MongoDB Compass
 use trackit
 
 db.tasks.insertOne({
@@ -258,7 +289,10 @@ db.tasks.find({ done: false }).sort({ due_date: 1 })
 
 **3. Notice the key difference:** the two task documents have different fields (`tags` vs. `design_tool`), which would require a schema change or a nullable column in a relational database, but is just normal here.
 
-**4. Connect from Python:**
+**4. Connect from Python.** Install the driver first:
+```bash
+pip install pymongo
+```
 ```python
 from pymongo import MongoClient
 
@@ -287,6 +321,8 @@ You inserted two documents with different fields into the same collection withou
 
 ## Module 5: Firebase - Realtime Data With Minimal Backend
 
+Time: about 2 hours
+
 ### Concept
 
 **Firebase** (specifically **Firestore**, its modern database) is a hosted, document-style database built for apps that need live updates pushed to users instantly, often with little to no custom backend code. It also bundles authentication, file storage, and hosting.
@@ -304,7 +340,16 @@ A live chat feature, a collaborative to-do list where changes appear instantly f
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, onSnapshot, query, where } from "firebase/firestore";
 
-const app = initializeApp({ /* your Firebase config */ });
+// Template: replace firebaseConfig with the config object shown in your
+// Firebase console (Project settings > Your apps > SDK setup and configuration)
+const firebaseConfig = {
+  apiKey: "REPLACE_ME",
+  authDomain: "REPLACE_ME",
+  projectId: "REPLACE_ME",
+  appId: "REPLACE_ME",
+};
+
+const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Add a task
@@ -341,6 +386,8 @@ You can explain what makes `onSnapshot` different from a normal database query, 
 
 ## Module 6: Redis - Extreme Speed for the Right Job
 
+Time: about 1.5 hours
+
 ### Concept
 
 **Redis** is an in-memory key-value store - data lives in RAM instead of on disk, making it extremely fast, but typically used for data that's okay to lose or that's a copy of data stored durably elsewhere. It's not usually your primary database; it's a specialized tool alongside one.
@@ -354,14 +401,23 @@ Caching (storing the result of an expensive database query so you don't recomput
 **1. Install Redis** (or use a free hosted instance like [Upstash](https://upstash.com)).
 
 **2. Basic key-value operations:**
+Start the Redis command-line client:
 ```bash
 redis-cli
+```
+Then type these commands one at a time:
+```
 SET user:1:name "Alice"
 GET user:1:name
-EXPIRE user:1:name 3600   # this key disappears automatically after 1 hour
+EXPIRE user:1:name 3600
+TTL user:1:name
 ```
+`EXPIRE` tells Redis to delete the key automatically after 3600 seconds (1 hour). `TTL` shows how many seconds are left. (Type each command exactly as shown: `redis-cli` doesn't understand `#` comments, so don't paste notes onto the same line.)
 
-**3. Caching an expensive database query, from Python:**
+**3. Caching an expensive database query, from Python.** Install the Redis client library, then save this as `cache_demo.py`:
+```bash
+pip install redis
+```
 ```python
 import redis
 import json
@@ -377,11 +433,11 @@ def get_trending_tasks():
     # Pretend this is an expensive database query
     result = ["Write course notes", "Design logo", "Review PR"]
 
-    r.setex(cache_key, 60, json.dumps(result))   # cache for 60 seconds
+    r.set(cache_key, json.dumps(result), ex=60)   # cache for 60 seconds
     return result
 ```
 
-**4. Rate limiting a user's requests:**
+**4. Rate limiting a user's requests.** Add this to the same file (it reuses the `r` connection from step 3), then try it out by adding the lines at the bottom:
 ```python
 def is_rate_limited(user_id: str, limit: int = 5) -> bool:
     key = f"rate_limit:{user_id}"
@@ -389,7 +445,14 @@ def is_rate_limited(user_id: str, limit: int = 5) -> bool:
     if count == 1:
         r.expire(key, 60)        # only set expiry on the first request in this window
     return count > limit
+
+print(get_trending_tasks())   # first call: computes and caches the result
+print(get_trending_tasks())   # second call: served from Redis
+
+for attempt in range(1, 8):
+    print(attempt, "limited" if is_rate_limited("alice") else "allowed")
 ```
+Run `python3 cache_demo.py`. Attempts 1 to 5 are allowed and attempts 6 and 7 are limited; wait a minute and they're allowed again.
 
 ### Checkpoint
 You can explain why Redis is fast (in-memory) and why it's usually paired with, not a replacement for, a primary database.
@@ -397,7 +460,7 @@ You can explain why Redis is fast (in-memory) and why it's usually paired with, 
 ### Quiz
 1. What makes Redis faster than a typical disk-based database?
 2. Why is Redis usually not your main/primary database?
-3. What does `EXPIRE` (or `setex`) let you do that's useful for caching?
+3. What does `EXPIRE` (or the `ex=` option on `set`) let you do that's useful for caching?
 4. In the rate-limiting example, what does `r.incr(key)` do the first time it's called for a new key?
 5. Name two real product features that rely on something like Redis.
 
@@ -406,6 +469,8 @@ You can explain why Redis is fast (in-memory) and why it's usually paired with, 
 ---
 
 ## Module 7: Choosing the Right Database for the Job
+
+Time: about 1 hour
 
 ### Concept
 
@@ -452,7 +517,7 @@ You produced your own reasoning for all four scenarios above before checking the
 - [ ] Explained all four database types and when to reach for each
 - [ ] Read and written core SQL: CREATE, INSERT, SELECT, JOIN, UPDATE, DELETE
 - [ ] Created a real table in PostgreSQL and queried it from Python
-- [ ] Created the same table in MySQL and identified syntax differences from Postgres
+- [ ] Created the same table in MySQL (local install or Docker) and identified syntax differences from Postgres
 - [ ] Inserted documents with different fields into the same MongoDB collection
 - [ ] Built a realtime Firestore listener in Firebase
 - [ ] Implemented caching and rate limiting with Redis

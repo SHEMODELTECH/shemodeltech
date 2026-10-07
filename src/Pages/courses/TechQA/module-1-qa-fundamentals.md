@@ -1,7 +1,11 @@
 <!-- order: 2 -->
 ## Module 1: QA Fundamentals
 
+This module follows CTFL v4.0 topics; it doesn't give certification.
+
 ### Topic 1.1: SDLC (Software Development Life Cycle)
+
+*Time: about 1 hour*
 
 #### Concept
 
@@ -84,9 +88,11 @@ You can name all six SDLC phases in order, explain what each phase hands off to 
 
 ### Topic 1.2: STLC (Software Testing Life Cycle)
 
+*Time: about 2 hours*
+
 #### Concept
 
-The **Software Testing Life Cycle (STLC)** is the sequence of phases *within* the SDLC's Testing phase, zoomed in. Where the SDLC tells you software has reached "Testing," the STLC tells you what actually happens during that phase, step by step, from figuring out what needs testing to formally closing testing out.
+The **Software Testing Life Cycle (STLC)** is the sequence of testing activities that runs *alongside* the SDLC. It doesn't wait for the SDLC's Testing phase: Requirement Analysis starts while the requirements are being written, planning and test case writing happen during design and development, and execution peaks once there's a build to test. Where the SDLC describes the whole project, the STLC describes testing's own work, step by step, from figuring out what needs testing to formally closing testing out.
 
 - **Requirement Analysis** - understanding what needs to be tested, from a testing point of view
 - **Test Planning** - deciding scope, approach, resources, and schedule for testing
@@ -118,7 +124,7 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - Each STLC phase has its own **entry criteria** (what must be true before it can start) and **exit criteria** (what must be true before it's considered done)
-- A **test case** is a specific, repeatable set of steps, inputs, and expected results used to check one behavior
+- A **test case** is a specific, repeatable check of one behavior, with five parts: an ID/title, preconditions, numbered steps, test data, and an expected result
 - **Test data** is the actual values fed into a test case (a valid email, an invalid password, an empty field) to make it concrete rather than theoretical
 - Test Execution isn't just "run it once", it includes logging defects, re-running failed cases after fixes, and tracking status until the exit criteria are met
 
@@ -137,7 +143,7 @@ Any time a feature or build is handed to QA and you need a repeatable, defensibl
 {
  "type": "order",
  "title": "Put the STLC phases in order",
- "prompt": "These are the testing steps inside the SDLC's Testing phase. Arrange them from first to last.",
+ "prompt": "These are the testing steps that run alongside the SDLC. Arrange them from first to last.",
  "items": [
   "Requirement Analysis",
   "Test Planning",
@@ -156,15 +162,17 @@ You have a short test plan, two properly structured test cases with real test da
 #### Quiz
 1. What are the six phases of the STLC, in order?
 2. What is the difference between "entry criteria" and "exit criteria" for a phase?
-3. What four things should a well-written test case include?
+3. What five things should a well-written test case include?
 4. What is "test data," and why does a test case need it to be concrete rather than theoretical?
 5. Is running each test case exactly once enough to consider Test Execution complete? Why or why not?
 
-*Answers: 1) Requirement Analysis, Test Planning, Test Case Development, Environment Setup, Test Execution, Test Closure. 2) Entry criteria are the conditions that must be true before a phase can begin; exit criteria are the conditions that must be true before it can be considered finished. 3) A title, preconditions, numbered steps, and an expected result (with test data feeding the steps). 4) Test data is the actual values used in a test case (a specific input); without it, a test case is just a description of an idea rather than something repeatable and checkable. 5) No, Test Execution also includes logging any defects found and re-running failed cases after fixes, until the exit criteria (like "no open critical defects") are actually met.*
+*Answers: 1) Requirement Analysis, Test Planning, Test Case Development, Environment Setup, Test Execution, Test Closure. 2) Entry criteria are the conditions that must be true before a phase can begin; exit criteria are the conditions that must be true before it can be considered finished. 3) An ID/title, preconditions, numbered steps, test data, and an expected result. 4) Test data is the actual values used in a test case (a specific input); without it, a test case is just a description of an idea rather than something repeatable and checkable. 5) No, Test Execution also includes logging any defects found and re-running failed cases after fixes, until the exit criteria (like "no open critical defects") are actually met.*
 
 ---
 
 ### Topic 1.3: Testing Principles
+
+*Time: about 2 hours*
 
 #### Concept
 
@@ -174,9 +182,9 @@ You have a short test plan, two properly structured test cases with real test da
 - **Exhaustive testing is impossible** - you can't test every input and every path; you have to choose, based on risk
 - **Early testing saves time and cost** - the earlier a defect is found (ideally during Requirements or Design), the cheaper it is to fix
 - **Defects cluster** - a small number of modules usually contain most of the defects; testing effort should focus there
-- **Beware the pesticide paradox** - running the same tests repeatedly eventually stops finding new bugs; tests need to be reviewed and updated
+- **Tests wear out** (often called the *pesticide paradox*) - running the same tests repeatedly eventually stops finding new bugs, because they keep checking the same paths; tests need to be reviewed and updated
 - **Testing is context-dependent** - a banking app and a game are tested differently, because "quality" means different things for each
-- **Absence-of-errors is a fallacy** - a system that's technically bug-free can still fail if it doesn't meet the user's actual needs
+- **Absence-of-defects fallacy** (also called the *absence-of-errors fallacy*) - a system that's technically bug-free can still fail if it doesn't meet the user's actual needs
 
 #### Structure at a Glance
 
@@ -188,9 +196,9 @@ flowchart TB
     P2["Exhaustive testing<br/>is impossible"]
     P3["Early testing<br/>saves cost"]
     P4["Defects cluster"]
-    P5["Pesticide<br/>paradox"]
+    P5["Tests wear out<br/>(pesticide paradox)"]
     P6["Context-<br/>dependent"]
-    P7["Absence-of-errors<br/>is a fallacy"]
+    P7["Absence-of-defects<br/>fallacy"]
 
     P ==> P1
     P ==> P2
@@ -232,7 +240,7 @@ Any time you need to explain testing decisions to someone else, why you're not t
   "Exhaustive testing is impossible",
   "Early testing saves cost",
   "Defects cluster",
-  "Pesticide paradox"
+  "Tests wear out (pesticide paradox)"
  ],
  "items": [
   {
@@ -242,7 +250,7 @@ Any time you need to explain testing decisions to someone else, why you're not t
   },
   {
    "text": "The same 200 regression tests have passed for a year, but users keep finding new bugs.",
-   "bucket": "Pesticide paradox",
+   "bucket": "Tests wear out (pesticide paradox)",
    "why": "Tests that never change stop finding new bugs; they need reviewing and updating."
   },
   {
@@ -257,7 +265,7 @@ Any time you need to explain testing decisions to someone else, why you're not t
   },
   {
    "text": "The team rewrites old test cases to cover new features and edge cases.",
-   "bucket": "Pesticide paradox",
+   "bucket": "Tests wear out (pesticide paradox)",
    "why": "Refreshing tests is the cure for the pesticide paradox."
   },
   {
@@ -277,9 +285,9 @@ You can name and briefly explain all seven testing principles, and you've applie
 2. Why is exhaustive testing considered impossible in practice?
 3. What is the "pesticide paradox," and what should you do about it?
 4. What does "defects cluster" suggest about how you should allocate testing effort?
-5. Give an example of the "absence-of-errors fallacy": a system with zero known bugs that could still be considered a failure.
+5. Give an example of the "absence-of-defects fallacy": a system with zero known bugs that could still be considered a failure.
 
-*Answers: 1) A passing test run means the tests that were run found no defects, it doesn't prove the software has no defects at all, so results should be reported as "no defects found in this scope," not "the software is bug-free." 2) The number of possible inputs and paths through most software is effectively infinite, so testing every combination isn't feasible; testers must choose a representative, risk-based subset instead. 3) The pesticide paradox is the pattern where running the same tests repeatedly stops catching new bugs, because the software has effectively become "resistant" to those specific tests; the fix is to periodically review and update test cases. 4) It suggests focusing testing effort on the modules or areas historically most prone to defects, rather than spreading effort evenly across all areas regardless of risk. 5) An app that has zero crashes or logged bugs but is so confusing that users can't complete their intended task, it's technically defect-free but still fails to meet the user's actual need.*
+*Answers: 1) A passing test run means the tests that were run found no defects, it doesn't prove the software has no defects at all, so results should be reported as "no defects found in this scope," not "the software is bug-free." 2) The number of possible inputs and paths through most software is effectively infinite, so testing every combination isn't feasible; testers must choose a representative, risk-based subset instead. 3) The pesticide paradox (CTFL v4.0 calls it "tests wear out") is the pattern where running the same tests repeatedly stops catching new bugs, because those tests keep checking the same paths while new defects sit elsewhere; the fix is to periodically review and update test cases. 4) It suggests focusing testing effort on the modules or areas historically most prone to defects, rather than spreading effort evenly across all areas regardless of risk. 5) An app that has zero crashes or logged bugs but is so confusing that users can't complete their intended task, it's technically defect-free but still fails to meet the user's actual need.*
 
 ---
 
@@ -288,4 +296,4 @@ You can name and briefly explain all seven testing principles, and you've applie
 - [ ] Written a short test plan and two structured test cases mapped to STLC phases
 - [ ] Defined exit criteria for a test cycle
 - [ ] Named and applied at least two of the seven testing principles to a concrete scenario
-- [ ] Can explain, in plain language, how the SDLC, the STLC, and testing principles relate to each other (SDLC = the whole project's life, STLC = testing's life inside it, principles = the ground rules that shape decisions in both)
+- [ ] Can explain, in plain language, how the SDLC, the STLC, and testing principles relate to each other (SDLC = the whole project's life, STLC = testing's own life cycle running alongside it, principles = the ground rules that shape decisions in both)

@@ -19,6 +19,8 @@
 
 ## Module 0: How a Web Page Actually Works
 
+**Time: about 1 hour**
+
 ### Concept
 
 A web page is built from three layers, each with its own job:
@@ -51,6 +53,8 @@ You can name the three layers of a web page and explain what each one is respons
 ---
 
 ## Module 1: HTML - Structure and Content
+
+**Time: about 2 hours**
 
 ### Concept
 
@@ -136,6 +140,8 @@ You have a real HTML file, opened directly in a browser, containing headings, a 
 ---
 
 ## Module 2: CSS - Presentation and Layout
+
+**Time: about 3 hours**
 
 ### Concept
 
@@ -239,6 +245,8 @@ Your page is visibly styled, fonts, colors, spacing, and a hover effect on the b
 
 ## Module 3: JavaScript - Behavior and Interactivity
 
+**Time: about 3 hours**
+
 ### Concept
 
 **JavaScript** runs in the browser and lets a page respond to events, a click, a keystroke, a page load, by changing content, styling, or data on the fly. Where HTML and CSS describe a static page, JavaScript is what makes it dynamic and interactive.
@@ -331,6 +339,8 @@ Your page responds to at least two real user actions, a form submission and a bu
 
 ## Module 4: TypeScript and Responsive Design - Safer Code, Any Screen
 
+**Time: about 2 hours**
+
 ### Concept
 
 **TypeScript** is JavaScript with an added **type system**, you can declare what kind of value a variable should hold (a number, a string, a specific shape of object), and tools catch mismatches before the code ever runs in a browser. It compiles down to regular JavaScript, so browsers never run TypeScript directly.
@@ -400,7 +410,7 @@ This produces `greet.js`, plain JavaScript a browser can run.
 ```typescript
 console.log(greet("Alex", "three"));
 ```
-Run `tsc greet.ts` again. TypeScript refuses to compile cleanly, and reports that `"three"` is a string where a `number` was expected, catching the mistake before it ever reaches a browser or a user.
+Run `tsc greet.ts` again. TypeScript reports an error saying that `"three"` is a string where a `number` was expected, catching the mistake before it ever reaches a browser or a user. Note that by default `tsc` still writes `greet.js` even when there are errors, so always read the error output and fix it. To make TypeScript refuse to produce JavaScript while errors exist, run `tsc --noEmitOnError greet.ts` (or set `"noEmitOnError": true` in a `tsconfig.json` file).
 
 **Part B: Responsive Design**
 
@@ -426,13 +436,13 @@ Run `tsc greet.ts` again. TypeScript refuses to compile cleanly, and reports tha
 ```
 Resize your browser window, or open your page on a phone, narrower than 600px. The items stack vertically instead of sitting side by side.
 
-5. **Make the viewport behave correctly on mobile.** Confirm this tag is present in `<head>`, it tells mobile browsers to render at the device's actual width rather than zooming out:
+5. **Make the viewport behave correctly on mobile.** Add this tag inside the `<head>` of your HTML page (if it isn't there already), it tells mobile browsers to render at the device's actual width rather than zooming out:
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 ```
 
 ### Checkpoint
-You caught a real type error with TypeScript before it ran, and you have a layout that visibly changes shape when the screen narrows below 600px.
+You caught a real type error with TypeScript before it ran, you added the viewport tag, and you have a layout that visibly changes shape when the screen narrows below 600px.
 
 ### Quiz
 1. What does TypeScript add to plain JavaScript?

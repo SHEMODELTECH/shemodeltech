@@ -1,9 +1,13 @@
 <!-- order: 6 -->
 ## Module 6: Cloud Security
 
-**Tools needed for this module:** ideally a **free-tier account** for the provider you're studying (AWS, Azure, or GCP) and its web console, plus optionally the provider's command-line tool. Everything here is designed to be observe-and-inspect rather than build-and-spend, so stay within the free tier and only ever work in accounts you own. The one idea that runs through all three topics is the **shared responsibility model**: the provider secures the cloud itself, and you secure what you put in it.
+**Time: about 6 hours** (roughly 2 hours per provider).
+
+**Tools needed for this module:** ideally a **free-tier account** for the provider you're studying (AWS, Azure, or GCP) and its web console, plus optionally the provider's command-line tool. Everything here is designed to be observe-and-inspect rather than build-and-spend, so stay within the free tier and only ever work in accounts you own. Cloud accounts are for learners 18+ or working with a parent/guardian; a payment card may be required to sign up, so set a budget alert first. Every lab also has a no-account version with sample configurations to review, which is also useful when your new account is still empty. The one idea that runs through all three topics is the **shared responsibility model**: the provider secures the cloud itself, and you secure what you put in it.
 
 ### Topic 6.1: AWS
+
+Time: about 2 hours
 
 #### Concept
 
@@ -13,7 +17,7 @@
 - **IAM** controls identities and fine-grained permissions, following least privilege and using **roles** for services rather than long-lived keys
 - **Security groups** are stateful virtual firewalls attached to instances, controlling inbound and outbound traffic by port and source (this reuses your Module 1 knowledge)
 - **S3 bucket** configuration is a classic risk area, a bucket accidentally set to public has caused many well-known data leaks, so "block public access" settings matter
-- **CloudTrail** records API activity across the account, providing the audit trail you need to investigate what happened
+- **CloudTrail** records API activity across the account. Its **event history** is always on and shows the last 90 days of management events, but for long-term logging you need to create a **trail**, which saves the records to an S3 bucket you control
 
 #### Structure at a Glance
 
@@ -38,17 +42,58 @@ flowchart LR
 
 #### Where you'd actually use this
 
-Securing infrastructure hosted on AWS: reviewing IAM permissions for over-privilege, confirming storage buckets aren't public, tightening security-group rules, and making sure CloudTrail is on so you have an audit trail. This is everyday work for anyone defending an AWS environment.
+Securing infrastructure hosted on AWS: reviewing IAM permissions for over-privilege, confirming storage buckets aren't public, tightening security-group rules, and making sure a CloudTrail trail exists so you keep a long-term audit trail. This is everyday work for anyone defending an AWS environment.
 
 #### Lab
 
 > Observe-only steps in a free-tier account you own, nothing here should incur cost.
 
+> **Before you start:** cloud accounts are for learners **18+ or working with a parent/guardian**. A **payment card may be required** to create a cloud account, so **set a budget alert** (for example at $1) as soon as the account exists, and only ever work in an account you own. **No account, or is your new account empty?** A brand-new account has almost nothing to inspect, so use the sample configuration under "No-account version" below. Reviewing it teaches the same skills.
+
 1. **Open the IAM console** and review the users and roles, note which have broad permissions and ask whether they need them.
 2. **Inspect an S3 bucket's public-access settings**, confirm "Block all public access" is on for a bucket that shouldn't be public.
 3. **Look at a security group's inbound rules**, identify any rule allowing traffic from `0.0.0.0/0` (anywhere) and reason about whether that's appropriate.
-4. **Confirm CloudTrail is enabled**, and open the event history to see recent API activity recorded in the account.
+4. **Open CloudTrail's event history** to see recent API activity (this is always on and keeps 90 days). Then open **Trails** and check whether a trail exists. If none does, the account has no long-term log, which is itself a finding.
 5. **Write one finding**: pick the weakest configuration you saw and describe the risk and the fix, in the mini-report style from Module 3.
+
+**No-account version.** Review these three sample settings from a fictional company account and write a finding for each.
+
+An IAM policy attached to a developer:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {"Effect": "Allow", "Action": "*", "Resource": "*"}
+  ]
+}
+```
+
+A bucket policy on `example-customer-uploads`:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::example-customer-uploads/*"
+    }
+  ]
+}
+```
+
+A security group's inbound rules:
+
+| Type | Protocol | Port | Source |
+|---|---|---|---|
+| SSH | TCP | 22 | 0.0.0.0/0 |
+| HTTPS | TCP | 443 | 0.0.0.0/0 |
+| MySQL | TCP | 3306 | 0.0.0.0/0 |
+
+Hints: the IAM policy gives the developer full admin over everything (fix: grant only the services they need). `"Principal": "*"` makes every customer upload readable by anyone on the internet (fix: remove the statement and turn on Block Public Access). SSH and the database are open to the whole internet (fix: limit SSH to your own IP or use a managed access service, and allow 3306 only from the app server). HTTPS open to everyone is normal for a public website.
 
 #### Checkpoint
 You can navigate AWS IAM, S3 public-access settings, security-group rules, and CloudTrail, and you can explain the shared responsibility model and identify which security tasks are yours versus AWS's.
@@ -60,11 +105,13 @@ You can navigate AWS IAM, S3 public-access settings, security-group rules, and C
 4. Why are IAM roles generally preferred over long-lived access keys?
 5. What does CloudTrail provide, and why does it matter for security?
 
-*Answers: 1) AWS is responsible for security *of* the cloud, the physical infrastructure, hardware, network, and virtualisation layer; the customer is responsible for security *in* the cloud, their data, access controls (IAM), and configuration. 2) Because access settings are the customer's responsibility, and a bucket accidentally set to public exposes its contents to anyone; this configuration mistake has caused many well-known data leaks. 3) A stateful virtual firewall attached to instances that controls inbound and outbound traffic by port, protocol, and source. 4) Roles provide short-lived, automatically-rotated credentials, so there's no static key sitting around to be leaked or stolen. 5) CloudTrail records API activity across the account, giving an audit trail that is essential for investigating what happened during and after an incident.*
+*Answers: 1) AWS is responsible for security *of* the cloud, the physical infrastructure, hardware, network, and virtualisation layer; the customer is responsible for security *in* the cloud, their data, access controls (IAM), and configuration. 2) Because access settings are the customer's responsibility, and a bucket accidentally set to public exposes its contents to anyone; this configuration mistake has caused many well-known data leaks. 3) A stateful virtual firewall attached to instances that controls inbound and outbound traffic by port, protocol, and source. 4) Roles provide short-lived, automatically-rotated credentials, so there's no static key sitting around to be leaked or stolen. 5) CloudTrail records API activity across the account (event history keeps 90 days; a trail stores logs long-term), giving an audit trail that is essential for investigating what happened during and after an incident.*
 
 ---
 
 ### Topic 6.2: Azure
+
+Time: about 2 hours
 
 #### Concept
 
@@ -105,11 +152,33 @@ Securing workloads in Azure or a Microsoft 365 organisation: managing identities
 
 > Observe-only in a free/trial account you own.
 
+> **Before you start:** cloud accounts are for learners **18+ or working with a parent/guardian**. A **payment card may be required** to create a cloud account, so **set a budget alert** (for example at $1) as soon as the account exists, and only ever work in an account you own. **No account, or is your new account empty?** A brand-new account has almost nothing to inspect, so use the sample configuration under "No-account version" below. Reviewing it teaches the same skills.
+
 1. **Open Microsoft Entra ID** and review the users and groups, and check whether MFA is enforced.
 2. **Examine a role assignment** on a resource group, note the role, the scope, and who holds it, and consider whether the scope is as narrow as it could be.
 3. **Look at a Network Security Group's rules**, and identify any rule that allows broad inbound access.
 4. **Open Microsoft Defender for Cloud** and read your secure score plus its top recommendations.
 5. **Write one finding** based on a recommendation or an over-broad role assignment, describing the risk and the fix.
+
+**No-account version.** Review these sample settings from a fictional subscription and write a finding for each.
+
+Role assignments:
+
+| Who | Role | Scope |
+|---|---|---|
+| intern@example.com | Owner | Subscription "Production" |
+| reporting-app (managed identity) | Storage Blob Data Reader | Storage account "reports" |
+| helpdesk group | Virtual Machine Contributor | Resource group "test-vms" |
+
+Network Security Group inbound rules (lower priority number is checked first):
+
+| Priority | Name | Port | Source | Action |
+|---|---|---|---|---|
+| 100 | Allow-RDP | 3389 | Any | Allow |
+| 200 | Allow-HTTPS | 443 | Any | Allow |
+| 4096 | Deny-All | Any | Any | Deny |
+
+Hints: an intern with Owner on the whole production subscription can change or delete everything in it (fix: a narrow role on just the resource group they work in). The reporting app's assignment is a good example of least privilege at a narrow scope. Remote Desktop (3389) open to "Any" is a top target for password-guessing attacks (fix: restrict the source or use Azure Bastion).
 
 #### Checkpoint
 You can navigate Entra ID, an Azure RBAC role assignment and its scope, an NSG's rules, and Defender for Cloud's secure score, and you can explain how RBAC inheritance works and why identity is central to Azure security.
@@ -127,12 +196,14 @@ You can navigate Entra ID, an Azure RBAC role assignment and its scope, an NSG's
 
 ### Topic 6.3: GCP
 
+Time: about 2 hours
+
 #### Concept
 
 **Google Cloud Platform (GCP)** organises everything into a **resource hierarchy**, Organisation at the top, then Folders, then Projects, then the resources themselves, and **IAM policies** applied at any level **inherit** downward. Access is granted by binding an identity to a **role** on a resource, following least privilege. GCP leans heavily on **service accounts** as identities for workloads (as opposed to human users), filters traffic with **VPC firewall rules**, and gives you **Security Command Center** for centralised visibility into misconfigurations and threats. The shared responsibility model applies here too.
 
 - The **resource hierarchy** runs Organisation → Folders → Projects → Resources, and IAM policies inherit from each level down to the ones below
-- **IAM roles** come in three kinds: **primitive** (broad, legacy: owner/editor/viewer), **predefined** (curated for specific services), and **custom** (you define exactly the permissions), predefined and custom support least privilege far better than primitive
+- **IAM roles** come in three kinds: **basic** (broad, legacy: Owner/Editor/Viewer, which older docs call "primitive" roles), **predefined** (curated for specific services), and **custom** (you define exactly the permissions), predefined and custom support least privilege far better than basic roles
 - **Service accounts** are identities for applications and workloads rather than people, and securing them (and their keys) is a major GCP concern
 - **VPC firewall rules** control traffic within your Google Cloud network by protocol, port, and source/target
 - **Security Command Center** is the central place to see misconfigurations, vulnerabilities, and threats across your projects
@@ -160,17 +231,47 @@ flowchart LR
 
 #### Where you'd actually use this
 
-Securing workloads on Google Cloud: reviewing IAM bindings for over-privilege, replacing broad primitive roles with predefined or custom ones, locking down service accounts and their keys, tightening VPC firewall rules, and monitoring findings in Security Command Center. This is the core of GCP defensive work.
+Securing workloads on Google Cloud: reviewing IAM bindings for over-privilege, replacing broad basic roles with predefined or custom ones, locking down service accounts and their keys, tightening VPC firewall rules, and monitoring findings in Security Command Center. This is the core of GCP defensive work.
 
 #### Lab
 
 > Observe-only in a free-tier account you own.
 
-1. **Open IAM for a project** and review the principals and the roles bound to them, noting any use of the broad primitive roles (owner/editor/viewer).
+> **Before you start:** cloud accounts are for learners **18+ or working with a parent/guardian**. A **payment card may be required** to create a cloud account, so **set a budget alert** (for example at $1) as soon as the account exists, and only ever work in an account you own. **No account, or is your new account empty?** A brand-new account has almost nothing to inspect, so use the sample configuration under "No-account version" below. Reviewing it teaches the same skills.
+
+1. **Open IAM for a project** and review the principals and the roles bound to them, noting any use of the broad basic roles (Owner/Editor/Viewer).
 2. **Inspect a service account**, see what it's used for and whether it has more permissions than it needs.
 3. **Look at the VPC firewall rules**, and identify any rule allowing broad inbound access (`0.0.0.0/0`).
 4. **Open Security Command Center** (where available on your tier) and review any findings it reports.
-5. **Write one finding**: choose the weakest configuration, likely an over-broad primitive role or an over-permissioned service account, and describe the risk and the fix.
+5. **Write one finding**: choose the weakest configuration, likely an over-broad basic role or an over-permissioned service account, and describe the risk and the fix.
+
+**No-account version.** Review this sample IAM policy for a fictional project, plus its firewall rules, and write a finding for each problem.
+
+```json
+{
+  "bindings": [
+    {
+      "role": "roles/editor",
+      "members": ["serviceAccount:web-app@example-project.iam.gserviceaccount.com"]
+    },
+    {
+      "role": "roles/storage.objectViewer",
+      "members": ["serviceAccount:report-job@example-project.iam.gserviceaccount.com"]
+    },
+    {
+      "role": "roles/owner",
+      "members": ["user:former-contractor@example.com"]
+    }
+  ]
+}
+```
+
+| Name | Direction | Ports | Source ranges | Action |
+|---|---|---|---|---|
+| allow-ssh-all | Ingress | tcp:22 | 0.0.0.0/0 | Allow |
+| allow-internal | Ingress | all | 10.128.0.0/9 | Allow |
+
+Hints: the web app's service account has the broad basic Editor role, so a bug in the app could change almost anything in the project (fix: a predefined role for just what it uses). The report job is a good least-privilege example. A former contractor still holds Owner, a failed "leaver" step (fix: remove them now). SSH open to the whole internet should be limited to known IP ranges or Identity-Aware Proxy.
 
 #### Checkpoint
 You can navigate GCP's resource hierarchy and IAM bindings, inspect a service account, review VPC firewall rules, and read Security Command Center findings, and you can explain IAM inheritance and why service accounts need special care.
@@ -182,7 +283,7 @@ You can navigate GCP's resource hierarchy and IAM bindings, inspect a service ac
 4. What does it mean that GCP IAM policies "inherit," and what's the practical advice that follows?
 5. Why is a leaked service-account key so dangerous?
 
-*Answers: 1) Organisation, Folders, Projects, and Resources. 2) Primitive (broad legacy roles: owner/editor/viewer), predefined (curated per service), and custom (you define exact permissions); predefined and custom roles support least privilege far better than primitive. 3) A service account is an identity for an application or workload rather than a human user; it lets software authenticate and act with its own permissions. 4) A policy applied at a higher level of the hierarchy applies to everything beneath it; the practical advice is to grant access at the lowest level that meets the need so it doesn't spread further than intended. 5) Service accounts are powerful non-human identities, so a leaked key can give an attacker whatever access that account holds, potentially as damaging as a leaked administrator password.*
+*Answers: 1) Organisation, Folders, Projects, and Resources. 2) Basic (broad legacy roles: Owner/Editor/Viewer), predefined (curated per service), and custom (you define exact permissions); predefined and custom roles support least privilege far better than basic roles. 3) A service account is an identity for an application or workload rather than a human user; it lets software authenticate and act with its own permissions. 4) A policy applied at a higher level of the hierarchy applies to everything beneath it; the practical advice is to grant access at the lowest level that meets the need so it doesn't spread further than intended. 5) Service accounts are powerful non-human identities, so a leaked key can give an attacker whatever access that account holds, potentially as damaging as a leaked administrator password.*
 
 ---
 

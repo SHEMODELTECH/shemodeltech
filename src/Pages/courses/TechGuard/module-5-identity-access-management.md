@@ -1,9 +1,13 @@
 <!-- order: 5 -->
 ## Module 5: Identity and Access Management
 
-**Tools needed for this module:** an **authenticator app** on your phone (such as any TOTP app) for the MFA topic, a test account you own to enable MFA on, and optionally a free-tier cloud account (AWS, Azure, or GCP) to practice real IAM. A terminal is useful but not required. Never practice on accounts or systems that aren't yours.
+**Time: about 5 hours** (roughly 1.5 hours for MFA, 1.5 hours for RBAC, 2 hours for IAM).
+
+**Tools needed for this module:** an **authenticator app** on your phone (such as any TOTP app) for the MFA topic, a test account you own to enable MFA on, and optionally a free-tier cloud account (AWS, Azure, or GCP) to practice real IAM. Cloud accounts are for learners 18+ or working with a parent/guardian, a payment card may be required to create one, and you should set a budget alert straight away; if you don't have one, the IAM lab gives you a sample policy to analyse instead. A terminal is useful but not required. Never practice on accounts or systems that aren't yours.
 
 ### Topic 5.1: MFA
+
+Time: about 1.5 hours
 
 #### Concept
 
@@ -11,7 +15,7 @@
 
 - The three **factor categories** are knowledge (something you know), possession (something you have), and inherence (something you are)
 - **TOTP** (time-based one-time password) apps generate a rotating 6-digit code, a "have" factor that's far stronger than SMS
-- **Hardware security keys** using **FIDO2/WebAuthn** are the strongest common option because they're **phishing-resistant**, they cryptographically verify the real site
+- **Hardware security keys** and **passkeys**, both built on **FIDO2/WebAuthn**, are the strongest common options because they're **phishing-resistant**, they cryptographically verify the real site. A **passkey** is a FIDO2 credential stored on your phone, laptop, or password manager and unlocked with your fingerprint, face, or device PIN, so many sites now let you use one instead of a password plus code
 - **SMS one-time codes** are better than nothing but the weakest form, vulnerable to SIM-swapping and interception
 - MFA's value is that it **defeats stolen-password attacks**, the credential alone no longer grants access
 
@@ -36,7 +40,7 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - The factors must come from **different categories**, two passwords is not MFA, because a single theft (a phishing page) could capture both, the whole point is that a different kind of factor is hard to steal in the same way
-- Not all MFA is equal, SMS can be intercepted or SIM-swapped, TOTP is much stronger, and hardware security keys are phishing-resistant, so the choice of second factor materially changes how much protection you get
+- Not all MFA is equal, SMS can be intercepted or SIM-swapped, TOTP is much stronger, and hardware security keys and passkeys are phishing-resistant, so the choice of second factor materially changes how much protection you get
 
 #### Where you'd actually use this
 
@@ -50,7 +54,8 @@ Protecting every account that matters: email, cloud consoles, admin panels, bank
 2. **Enable TOTP-based MFA**, which will display a QR code representing a shared secret.
 3. **Scan the QR code with an authenticator app**, which then begins generating rotating 6-digit codes.
 4. **Enter the current code to confirm setup**, and save any backup/recovery codes somewhere safe.
-5. **Compare the options**: write down, for your account, whether it also supports a hardware security key, and explain why that would be stronger than the TOTP you just set up.
+5. **Compare the options**: write down, for your account, whether it also supports a passkey or a hardware security key, and explain why that would be stronger than the TOTP you just set up.
+6. **See why the password alone isn't enough**: MFA exists because passwords are often weak, reused, or stolen. Use the widget below to test how quickly a common-looking password like `sunshine1` could be cracked, then try a long passphrase. Even a strong password can be phished, which is why the second factor matters. (Don't type a password you really use.)
 
 ```lab
 {
@@ -67,14 +72,16 @@ You have enabled TOTP-based MFA on an account you own, verified it with a code f
 1. What are the three categories of authentication factors?
 2. Why is using two passwords not considered true multi-factor authentication?
 3. Why is SMS-based MFA considered the weakest common option?
-4. What makes hardware security keys (FIDO2/WebAuthn) phishing-resistant?
+4. What makes hardware security keys and passkeys (FIDO2/WebAuthn) phishing-resistant?
 5. What class of attack does MFA primarily defend against?
 
-*Answers: 1) Something you know (knowledge), something you have (possession), and something you are (inherence). 2) Because both factors come from the same category (knowledge), so a single attack such as a phishing page could capture both at once; true MFA requires factors from different categories. 3) SMS codes can be intercepted or stolen through SIM-swapping and other attacks on the phone network, unlike app-based or hardware factors. 4) They cryptographically verify the identity of the real site during login, so a fake phishing site can't relay or reuse the authentication. 5) Account takeover using stolen or guessed passwords, the password alone is no longer enough to log in.*
+*Answers: 1) Something you know (knowledge), something you have (possession), and something you are (inherence). 2) Because both factors come from the same category (knowledge), so a single attack such as a phishing page could capture both at once; true MFA requires factors from different categories. 3) SMS codes can be intercepted or stolen through SIM-swapping and other attacks on the phone network, unlike app-based or hardware factors. 4) They cryptographically verify the identity of the real site during login (the credential only works for the site it was created for), so a fake phishing site can't relay or reuse the authentication. 5) Account takeover using stolen or guessed passwords, the password alone is no longer enough to log in.*
 
 ---
 
 ### Topic 5.2: RBAC
+
+Time: about 1.5 hours
 
 #### Concept
 
@@ -117,7 +124,7 @@ Structuring access in any application or cloud environment, defining who can rea
 2. **Design three roles** (for example Author, Editor, Viewer) and, in a small table, list the exact permissions each role gets.
 3. **Apply least privilege**: for each permission, ask whether that role truly needs it, and remove anything that fails the test.
 4. **Add a separation-of-duties rule**: ensure no single role can both write and publish its own post, and note why that matters.
-5. **Assign sample users to roles** and, for two of them, write out exactly what they can and cannot do, purely from their role assignments. (If you have a cloud free tier, implement one of these roles in its IAM as a bonus.)
+5. **Assign sample users to roles** and, for two of them, write out exactly what they can and cannot do, purely from their role assignments. (If you have a cloud free tier, implement one of these roles in its IAM as a bonus. Same rules as the IAM lab: 18+ or with a parent/guardian, and set a budget alert.)
 
 #### Checkpoint
 You have designed a role-permission model for a scenario, applied least privilege, added a separation-of-duties constraint, and mapped users to roles, and you can explain how RBAC simplifies audits and offboarding compared with per-user permissions.
@@ -134,6 +141,8 @@ You have designed a role-permission model for a scenario, applied least privileg
 ---
 
 ### Topic 5.3: IAM
+
+Time: about 2 hours
 
 #### Concept
 
@@ -172,13 +181,48 @@ Managing user and service access in a cloud environment, implementing single sig
 
 #### Lab
 
-> Use a cloud free-tier account you own, or work through this conceptually if you don't have one.
+> **Before you start:** this lab uses a cloud free-tier account you own (AWS, Azure, or GCP). It is for learners **18+ or working with a parent/guardian**. A **payment card may be required** to create a cloud account, so **set a budget alert** (for example at $1) as soon as the account exists, and delete what you create when you finish. Only ever work in your own account. **No account?** Skip to the "No-account version" below, which covers the same ideas with a sample policy.
 
 1. **Create a new identity** (an IAM user or equivalent) with no permissions attached, representing a "joiner."
 2. **Attach a scoped permission set** (a policy or role) that grants only what a specific job needs, applying least privilege from Topic 5.2.
 3. **Turn on MFA** for that identity, tying together authentication (5.1) and this topic.
 4. **Test the boundaries**: confirm the identity can do what its role allows and is denied something outside it, this is authorization in action.
 5. **Deprovision it**: remove the identity's access as if they'd left, and note why prompt deprovisioning is a security control, not just housekeeping.
+
+**No-account version.** Read this sample AWS IAM policy, written for a "Report Analyst" who should only read monthly reports from one storage bucket:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadReports",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": "arn:aws:s3:::example-reports-bucket/monthly/*"
+    },
+    {
+      "Sid": "ListReportsFolder",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::example-reports-bucket",
+      "Condition": {"StringLike": {"s3:prefix": ["monthly/*"]}}
+    },
+    {
+      "Sid": "TooBroad",
+      "Effect": "Allow",
+      "Action": ["s3:*"],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+Then answer, in writing:
+1. What do the first two statements allow? (Reading and listing files in the `monthly/` folder of one bucket.)
+2. Which statement breaks least privilege, and what could this analyst do because of it? (`TooBroad` allows every storage action, including deleting, on every bucket in the account.)
+3. Rewrite the policy with that statement removed. Would the analyst be denied if they tried to delete a report? (Yes: anything not explicitly allowed is denied by default.)
+4. Where would MFA fit for this identity, and what should happen to this policy when the analyst leaves the company? (Require MFA at sign-in; remove the user and its access promptly when they leave.)
 
 #### Checkpoint
 You have created an identity, granted it least-privilege authorization, enabled MFA, tested that authorization limits it correctly, and deprovisioned it, and you can explain the difference between authentication and authorization and why the identity lifecycle matters.

@@ -1,9 +1,13 @@
 <!-- order: 4 -->
 ## Module 4: Cryptography
 
-**Tools needed for this module:** a terminal and **OpenSSL**, which is already installed on most macOS and Linux systems (and available for Windows). You'll also use built-in hashing utilities like `sha256sum` and `md5sum` (on macOS these are `shasum -a 256` and `md5`). No programming is required, though a language of your choice is handy if you want to experiment further.
+**Time: about 5 hours** (roughly 2 hours for encryption, 1.5 hours each for hashing and certificates).
+
+**Tools needed for this module:** a terminal and **OpenSSL**, which is already installed on most macOS and Linux systems (and available for Windows). You'll also use built-in hashing utilities like `sha256sum` and `md5sum` (on macOS these are `shasum -a 256` and `md5`). No programming is required, though a language of your choice is handy if you want to experiment further. All labs work on files you create yourself, plus reading the public certificate a website sends to every visitor, so they are completely legal.
 
 ### Topic 4.1: Encryption
+
+Time: about 2 hours
 
 #### Concept
 
@@ -13,7 +17,7 @@
 - A **key** is the secret value that controls the transformation, security depends on the key staying secret, not the algorithm staying secret
 - **Symmetric encryption** (for example **AES**) uses one shared key, it's fast and ideal for bulk data, but distributing the key safely is the hard part
 - **Asymmetric encryption** (for example **RSA**) uses a public key (shareable) and a private key (kept secret), solving key distribution at the cost of speed
-- **Hybrid** systems (like **TLS**) use asymmetric encryption to exchange a symmetric key, then switch to fast symmetric encryption for the actual data
+- **Hybrid** systems (like **TLS**) use public-key cryptography to agree a shared session key, then switch to fast symmetric encryption for the actual data. In modern TLS 1.3 this is a key *agreement* (ephemeral Diffie-Hellman, usually the elliptic-curve version, ECDHE): both sides compute the same session key without it ever being sent, and the server's certificate key is used to *sign* the exchange so you know who you're talking to, not to encrypt the session key
 
 #### Structure at a Glance
 
@@ -89,7 +93,7 @@ cat rsa.dec
   {
    "text": "Your browser uses public-key cryptography to agree a session key, then encrypts the page with that key.",
    "bucket": "Hybrid",
-   "why": "That's how TLS works: asymmetric to exchange a key, then fast symmetric encryption."
+   "why": "That's how TLS works: public-key cryptography to agree a session key, then fast symmetric encryption."
   },
   {
    "text": "Two offices share one secret key and must find a safe way to hand it over.",
@@ -115,11 +119,13 @@ You have encrypted and decrypted a file with symmetric AES, generated an RSA key
 4. Why do real-world systems like TLS combine both types (hybrid encryption)?
 5. What does Kerckhoffs's principle say a cryptosystem's security should depend on?
 
-*Answers: 1) Plaintext is the readable original data; ciphertext is the scrambled, unreadable output of encrypting it. 2) Symmetric encryption uses the same key to encrypt and decrypt, while asymmetric encryption uses a matched public/private key pair where one key encrypts and only the other decrypts. 3) Key distribution, sharing a secret key safely; asymmetric encryption lets you share a public key openly while keeping the private key secret. 4) Asymmetric encryption is slow but solves key distribution, and symmetric is fast but needs a shared key; hybrid uses asymmetric to exchange a symmetric key, then symmetric for the bulk data, getting both security and speed. 5) The secrecy of the key, not the secrecy of the algorithm; the algorithm can be public and still be secure.*
+*Answers: 1) Plaintext is the readable original data; ciphertext is the scrambled, unreadable output of encrypting it. 2) Symmetric encryption uses the same key to encrypt and decrypt, while asymmetric encryption uses a matched public/private key pair where one key encrypts and only the other decrypts. 3) Key distribution, sharing a secret key safely; asymmetric encryption lets you share a public key openly while keeping the private key secret. 4) Asymmetric encryption is slow but solves key distribution, and symmetric is fast but needs a shared key; hybrid uses public-key cryptography to agree a shared symmetric session key (in TLS 1.3, an ECDHE key agreement), then symmetric encryption for the bulk data, getting both security and speed. 5) The secrecy of the key, not the secrecy of the algorithm; the algorithm can be public and still be secure.*
 
 ---
 
 ### Topic 4.2: Hashing
+
+Time: about 1.5 hours
 
 #### Concept
 
@@ -205,6 +211,8 @@ You can hash strings and files, you've seen the avalanche effect by changing a s
 
 ### Topic 4.3: Certificates
 
+Time: about 1.5 hours
+
 #### Concept
 
 A digital **certificate** solves a trust problem: when your browser receives a public key claiming to belong to `example.com`, how does it know that's true and not an imposter's key? A certificate binds a public key to an identity, and that binding is vouched for by a trusted **Certificate Authority (CA)**. Your device already trusts a set of root CAs, and through a **chain of trust** that trust extends to the site's certificate. This machinery, collectively called **PKI** (public key infrastructure), is what makes HTTPS trustworthy and not just encrypted.
@@ -213,7 +221,7 @@ A digital **certificate** solves a trust problem: when your browser receives a p
 - A **Certificate Authority (CA)** is a trusted third party that verifies identity and signs certificates
 - The **chain of trust** runs from a **root CA** (trusted by your device) to an **intermediate CA** to the site's **leaf certificate**, each link signing the next
 - **PKI** is the whole system of CAs, keys, policies, and procedures that makes this trust work at scale
-- Certificates have an **expiry** date and can be **revoked** early (via mechanisms like CRLs and OCSP) if a key is compromised
+- Certificates have an **expiry** date and can be **revoked** early if a key is compromised. The main revocation mechanism today is the **CRL** (certificate revocation list, a signed list of revoked certificates that the CA publishes). An older live-lookup method, **OCSP**, is being phased out, for example Let's Encrypt ended its OCSP service in 2025. Certificate lifetimes are also getting shorter across the industry, so a stolen key is useful for less time, which is why sites now renew certificates automatically (for example with the ACME protocol)
 
 #### Structure at a Glance
 
@@ -234,7 +242,7 @@ flowchart LR
     linkStyle default stroke-width:4px,stroke:#333333
 ```
 - If any link in the chain is untrusted, expired, or revoked, the browser shows a certificate warning, this is the mechanism behind those "your connection is not private" pages
-- Certificates only prove identity and enable trusted key exchange, the actual data encryption is done by TLS using the keys the certificate helped establish, this is why certificates and encryption are related but distinct
+- Certificates only prove identity and enable trusted key exchange, the actual data encryption is done by TLS using session keys from a key exchange that the certificate authenticates, this is why certificates and encryption are related but distinct
 
 #### Where you'd actually use this
 

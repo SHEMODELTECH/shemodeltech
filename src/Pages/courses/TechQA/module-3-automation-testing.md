@@ -1,9 +1,11 @@
 <!-- order: 4 -->
 ## Module 3: Automation Testing
 
-**Tools needed for this module:** [Node.js](https://nodejs.org) (for Cypress and Playwright), a Java or Python setup plus a browser driver (for Selenium), and a code editor like VS Code. You won't need all three frameworks installed at once, each topic only needs its own setup.
+**Tools needed for this module:** [Node.js](https://nodejs.org) (for Cypress and Playwright), a Java or Python setup (for Selenium; since Selenium 4.6, the built-in Selenium Manager downloads the right browser driver for you), and a code editor like VS Code. You won't need all three frameworks installed at once, each topic only needs its own setup.
 
 ### Topic 3.1: Selenium
+
+*Time: about 3 hours*
 
 #### Concept
 
@@ -69,6 +71,8 @@ driver.quit()
 ```
 6. **Run the script** and confirm the browser opens visibly, navigates, and the assertion passes without an error.
 
+> **Note:** The labs in this module check that https://example.com shows the heading "Example Domain". If that page's heading ever changes, update the expected text in your test to match what the page shows.
+
 #### Checkpoint
 You have a working Selenium script that opens a real browser, navigates to a page, locates an element, and asserts on its content, and you can explain what the WebDriver's job is in that chain.
 
@@ -85,11 +89,13 @@ You have a working Selenium script that opens a real browser, navigates to a pag
 
 ### Topic 3.2: Cypress
 
+*Time: about 3 hours*
+
 #### Concept
 
 **Cypress** is a JavaScript-based testing framework built specifically for testing modern web apps, and it runs *inside* the browser alongside your application, rather than communicating with it externally like Selenium does. That architectural difference is why Cypress tests tend to be faster and less flaky, and why Cypress comes with built-in features (automatic waiting, time-travel debugging) that Selenium leaves to you to build yourself.
 
-- A **command** (like `cy.get()` or `cy.click()`) queues an action or query, Cypress runs commands in order automatically
+- A **command** (like `cy.visit(url)` or `cy.get(selector).click()`) queues an action or query, Cypress runs commands in order automatically
 - **Automatic waiting** means Cypress retries certain commands and assertions for a few seconds before failing, instead of failing instantly if an element isn't there yet
 - The **Test Runner** is Cypress's own visual interface, showing each command as it runs, with a snapshot of the app's state at that exact moment
 - **Fixtures** are stored test data (usually JSON files) you can load into a test rather than hardcoding values inline
@@ -115,7 +121,7 @@ flowchart LR
     style TR fill:#e2e8f0,color:#1a202c,stroke:#262626,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
-- Because Cypress runs in the same run-loop as the browser, it can't natively drive more than one browser tab or origin at once, a deliberate tradeoff for speed and reliability, unlike Selenium's more unrestricted (but slower) external control
+- Because Cypress runs in the same run-loop as the browser, it can't drive more than one browser tab at once, a deliberate tradeoff for speed and reliability, unlike Selenium's more unrestricted (but slower) external control. (Visiting more than one origin, such as a separate login site, has been supported since Cypress 12 through `cy.origin()`.)
 - Cypress supports JavaScript and TypeScript only, it does not support Java, Python, or C# the way Selenium does
 
 #### Where you'd actually use this
@@ -155,11 +161,13 @@ You have a working Cypress test that visits a real page and asserts on its conte
 4. What are "fixtures" used for in Cypress?
 5. Name one capability Selenium has that Cypress deliberately doesn't support in the same way, and why.
 
-*Answers: 1) Cypress runs inside the browser alongside the application itself, while Selenium communicates with a separate browser process from the outside; this is why Cypress tends to be faster and less flaky. 2) It means Cypress automatically retries certain commands and assertions for a few seconds before failing, instead of failing instantly if an element hasn't appeared yet, solving a major source of flaky tests. 3) A visual interface that shows each command as it runs, with a snapshot of the app's exact state at that moment, useful for debugging test failures. 4) Storing test data, usually as JSON files, that can be loaded into a test rather than hardcoding values directly in the test code. 5) Native support for multiple browser tabs or origins in a single test, and support for languages beyond JavaScript/TypeScript (Java, Python, C#); Cypress trades these off deliberately in exchange for running in-browser and being faster and more reliable.*
+*Answers: 1) Cypress runs inside the browser alongside the application itself, while Selenium communicates with a separate browser process from the outside; this is why Cypress tends to be faster and less flaky. 2) It means Cypress automatically retries certain commands and assertions for a few seconds before failing, instead of failing instantly if an element hasn't appeared yet, solving a major source of flaky tests. 3) A visual interface that shows each command as it runs, with a snapshot of the app's exact state at that moment, useful for debugging test failures. 4) Storing test data, usually as JSON files, that can be loaded into a test rather than hardcoding values directly in the test code. 5) Driving multiple browser tabs in a single test (since Cypress 12, multiple origins work through `cy.origin()`), and support for languages beyond JavaScript/TypeScript (Java, Python, C#); Cypress trades these off deliberately in exchange for running in-browser and being faster and more reliable.*
 
 ---
 
 ### Topic 3.3: Playwright
+
+*Time: about 3 hours*
 
 #### Concept
 
@@ -207,9 +215,9 @@ npm init playwright@latest
 ```
 This installs Playwright Test and the browser engines it needs.
 
-2. **Open the generated example test file** and replace it with a basic test:
-```javascript
-const { test, expect } = require('@playwright/test');
+2. **Open the generated example test file** (`tests/example.spec.ts`) and replace its contents with a basic test:
+```typescript
+import { test, expect } from '@playwright/test';
 
 test('homepage has the right heading', async ({ page }) => {
   await page.goto('https://example.com');
@@ -225,10 +233,12 @@ npx playwright test
 npx playwright test --trace on
 npx playwright show-report
 ```
-5. **Try running the same test across multiple browser engines** in one command, to see Playwright's cross-browser support directly:
+5. **Look at the cross-browser results.** The scaffold's `playwright.config.ts` defines three projects (chromium, firefox, webkit), so the plain `npx playwright test` you already ran executed your test once in each engine; the report lists all three. To run just one engine, pick its project by name:
 ```bash
-npx playwright test --browser=all
+npx playwright test --project=firefox
 ```
+
+> **Note:** If the heading on https://example.com ever changes, update `'Example Domain'` to the text the page shows (this applies to the Cypress test too).
 
 #### Checkpoint
 You have a working Playwright test that navigates to a page and asserts on its content, you've run it across multiple browser engines, and you've inspected at least one recorded trace.

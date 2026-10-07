@@ -12,11 +12,13 @@
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
-**Tools needed:** Python 3.10+, a terminal, and a tool for testing API requests like `curl` or [Postman](https://www.postman.com).
+**Tools needed:** Python 3.12+, a terminal, and a tool for testing API requests like `curl` or [Postman](https://www.postman.com).
 
 ---
 
 ## Module 0: Why APIs Exist
+
+Time: about 1 hour
 
 ### Concept
 
@@ -48,6 +50,8 @@ You found at least one real API request in your browser's network tab and can de
 
 ## Module 1: REST - The Standard Approach
 
+Time: about 2 hours
+
 ### Concept
 
 **REST** (Representational State Transfer) organizes an API around **resources** (things like `users` or `tasks`), each with its own URL, and uses standard HTTP methods to act on them:
@@ -59,7 +63,7 @@ You found at least one real API request in your browser's network tab and can de
 | PUT/PATCH | Update data | `PATCH /tasks/5` |
 | DELETE | Remove data | `DELETE /tasks/5` |
 
-Responses use **status codes** to signal what happened: `200` (success), `201` (created), `400` (bad request), `401` (not authenticated), `404` (not found), `500` (server error).
+Responses use **status codes** to signal what happened: `200` (success), `201` (created), `400` (bad request), `401` (not authenticated: we don't know who you are), `403` (forbidden: we know who you are, but you aren't allowed to do this), `404` (not found), `500` (server error).
 
 ### Where you'd actually use this
 
@@ -67,7 +71,11 @@ REST is the default choice for most APIs, both public (Stripe, GitHub, Twitter/X
 
 ### Lab
 
-**1. Build a small REST API:**
+**1. Build a small REST API.** First install FastAPI and the Uvicorn server:
+```bash
+pip install fastapi "uvicorn[standard]"
+```
+Then save this as `main.py`:
 ```python
 # main.py
 from fastapi import FastAPI, HTTPException
@@ -134,6 +142,8 @@ You ran all four REST operations against your own running API and can explain wh
 
 ## Module 2: GraphQL - Asking for Exactly What You Need
 
+Time: about 2 hours
+
 ### Concept
 
 **GraphQL** exposes a single endpoint, and instead of the server deciding what data each URL returns, the client sends a **query** describing exactly the fields it wants. This avoids two common REST problems: **over-fetching** (getting more data than you need) and **under-fetching** (needing to call multiple endpoints to assemble one screen's worth of data).
@@ -164,9 +174,9 @@ query {
 }
 ```
 
-**2. A minimal GraphQL server in Python (using `strawberry`):**
+**2. A minimal GraphQL server in Python (using `strawberry`).** The quotes around the package name stop shells like zsh (the default on macOS) from misreading the square brackets:
 ```bash
-pip install strawberry-graphql[fastapi]
+pip install "strawberry-graphql[fastapi]"
 ```
 ```python
 # graphql_app.py
@@ -217,6 +227,8 @@ You ran a GraphQL query that fetched nested data (a task and its owner's name) i
 
 ## Module 3: Authentication Fundamentals
 
+Time: about 1 hour
+
 ### Concept
 
 **Authentication** answers "who is this?" **Authorization** answers "what are they allowed to do?" These are different problems and get confused constantly. There are two common ways to keep someone "logged in" across requests:
@@ -263,6 +275,8 @@ You can explain, without notes, the difference between authentication and author
 
 ## Module 4: OAuth - Letting Users Log In With Another Service
 
+Time: about 1.5 hours
+
 ### Concept
 
 **OAuth** is a standard that lets a user grant one application limited access to their data on another service, without ever sharing their password with the first application. This is what powers "Sign in with Google" or "Sign in with GitHub." The core flow:
@@ -281,15 +295,16 @@ Any "Sign in with Google/GitHub/Apple" button. It's also how your app can act on
 
 **1. Trace the flow yourself:** go to a website with a "Sign in with Google" button, click it, and watch the URL bar carefully. You'll see it redirect to `accounts.google.com` with parameters, then redirect back to the original site with a `code` parameter in the URL. That's step 3 of the flow above, happening in front of you.
 
-**2. A simplified version of step 4 (exchanging the code for a token):**
+**2. A simplified version of step 4 (exchanging the code for a token).** You get a client ID and client secret when you register your app with Google. Like any secret, keep them out of your code: set them as environment variables (`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`) and read them with `os.environ`. Install the library with `pip install requests`.
 ```python
+import os
 import requests
 
 def exchange_code_for_token(code: str):
     response = requests.post("https://oauth2.googleapis.com/token", data={
         "code": code,
-        "client_id": "YOUR_CLIENT_ID",
-        "client_secret": "YOUR_CLIENT_SECRET",
+        "client_id": os.environ["GOOGLE_CLIENT_ID"],
+        "client_secret": os.environ["GOOGLE_CLIENT_SECRET"],
         "redirect_uri": "https://yourapp.com/callback",
         "grant_type": "authorization_code",
     })
@@ -322,6 +337,8 @@ You watched a real "Sign in with Google" flow in your browser's URL bar and iden
 
 ## Module 5: JWT - A Token You Can Verify Without a Database Lookup
 
+Time: about 2 hours
+
 ### Concept
 
 A **JWT** (JSON Web Token) is a compact, signed piece of text that encodes claims about a user (like their ID) in a way the server can verify without storing anything. It has three parts separated by dots: header, payload, and signature. Because it's signed, the server can trust the payload wasn't tampered with, as long as it checks the signature.
@@ -332,18 +349,29 @@ APIs that need to scale across multiple servers without a shared session store, 
 
 ### Lab
 
-**1. Create and verify a JWT:**
+**1. Create and verify a JWT.** Install the PyJWT library (you import it as `jwt`):
+```bash
+pip install pyjwt
+```
+The secret key that signs your tokens must never appear in your code. Generate a random one and store it in an environment variable (on Windows PowerShell, use `$env:JWT_SECRET_KEY = "<paste the printed value>"` instead of `export`):
+```bash
+python3 -c "import secrets; print(secrets.token_hex(32))"
+export JWT_SECRET_KEY="<paste the printed value here>"
+```
+Save this as `auth.py` and run it with `python3 auth.py`:
 ```python
-from jose import jwt
-from datetime import datetime, timedelta
+import os
+from datetime import datetime, timedelta, timezone
 
-SECRET_KEY = "replace-with-env-variable-in-production"
+import jwt  # from the PyJWT package
+
+SECRET_KEY = os.environ["JWT_SECRET_KEY"]
 ALGORITHM = "HS256"
 
 def create_token(user_id: int) -> str:
     payload = {
         "sub": str(user_id),
-        "exp": datetime.utcnow() + timedelta(minutes=30),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30),
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -358,7 +386,7 @@ print(verify_token(token))    # 42, if the token is valid and unexpired
 
 **2. Paste your generated token into [jwt.io](https://jwt.io) to see the decoded header and payload. Notice that the payload is readable, not encrypted, anyone can see it. The signature is what prevents tampering, not secrecy.**
 
-**3. Using it to protect an endpoint:**
+**3. Using it to protect an endpoint.** Add this to the bottom of `auth.py` (it reuses `verify_token` from step 1), then run `uvicorn auth:app --reload` and call it with `curl http://localhost:8000/me -H "Authorization: Bearer <your token>"`:
 ```python
 from fastapi import FastAPI, HTTPException, Header
 
@@ -369,7 +397,7 @@ def get_my_profile(authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     try:
         user_id = verify_token(token)
-    except Exception:
+    except jwt.InvalidTokenError:  # bad signature, malformed, or expired
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     return {"user_id": user_id}
 ```
@@ -384,4 +412,4 @@ You generated a real JWT, decoded it on jwt.io to see its contents, and used it 
 4. Why does a JWT avoid the "shared session store across servers" problem from Module 3?
 5. What happens if you try to `verify_token` a token after its `exp` time has passed?
 
-*Answers: 1) Header, payload, and signature. 2) Just encoded (readable by anyone), not encrypted - never put secrets in the payload. 3) Tampering - if anyone changes the payload without the secret key, the signature won't match and verification will fail. 4) Any server holding the same secret key can verify the token independently, with no need to check a shared store. 5) It raises an error, since the token is expired and should be rejected.*
+*Answers: 1) Header, payload, and signature. 2) Just encoded (readable by anyone), not encrypted - never put secrets in the payload. 3) Tampering - if anyone changes the payload without the secret key, the signature won't match and verification will fail. 4) Any server holding the same secret key can verify the token independently, with no need to check a shared store. 5) `jwt.decode` raises an `ExpiredSignatureError` (a kind of `InvalidTokenError`), so the token is rejected.*

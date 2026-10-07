@@ -5,6 +5,8 @@
 
 ### Topic 6.1: Android
 
+*Time: about 3 hours*
+
 #### Concept
 
 Testing Android apps means testing against real fragmentation, many device manufacturers, many screen sizes, and multiple OS versions all still in active use at once, which is very different from testing a website that renders roughly the same everywhere. Android testing tools exist specifically to manage that variety, letting you test broadly without owning every physical device yourself.
@@ -67,6 +69,8 @@ You have two emulators running with different configurations, you've confirmed A
 
 ### Topic 6.2: iOS
 
+*Time: about 3 hours*
+
 #### Concept
 
 Testing iOS apps happens in a much more controlled hardware and OS environment than Android, fewer device models, tighter OS version adoption, but comes with its own strict platform rules (Apple's App Store review guidelines) and its own tooling built around Xcode. Knowing the iOS-specific tools matters because they don't map one-to-one onto Android's, even though the underlying goal, verifying the app works correctly, is the same.
@@ -74,7 +78,7 @@ Testing iOS apps happens in a much more controlled hardware and OS environment t
 - The **iOS Simulator** (built into Xcode) runs a virtual iOS device on a Mac, similar in purpose to the Android Emulator, but it simulates iOS software behavior rather than emulating real device hardware
 - **XCUITest** is Apple's own UI testing framework, built into Xcode, used to write automated tests that interact with the app's real interface
 - **TestFlight** is Apple's platform for distributing pre-release builds to real testers on real devices, before a public App Store release
-- **App Store Review Guidelines** are Apple's rules every app must pass before release; testing for compliance (privacy prompts, required disclosures, prohibited behaviors) is its own category of iOS-specific testing that has no Android equivalent
+- **App Store Review Guidelines** are Apple's rules every app must pass before release; testing for compliance (privacy prompts, required disclosures, prohibited behaviors) is its own category of testing; Android has its counterpart in Google Play's Developer Program Policies and app review, but the two sets of rules differ, so each platform needs its own compliance checks
 
 #### Structure at a Glance
 
@@ -108,11 +112,12 @@ Verifying an app works correctly across supported iOS versions on a Mac-based wo
 
 1. **Open Xcode and create a new iOS app project** using a basic template (or use an existing sample project).
 2. **Run the app on the iOS Simulator**, choosing a specific simulated device and iOS version from Xcode's device selector.
-3. **Write a basic XCUITest** (Xcode can generate a UI test target automatically): record or write a test that launches the app and taps a button or checks a label's text exists.
+3. **Write a basic XCUITest** (Xcode can generate a UI test target automatically): record or write a test that launches the app and taps a button or checks a label's text exists. The `@MainActor` line runs the test on the main thread, which UI tests need; without it, Swift 6's strict concurrency checking reports errors.
 ```swift
 import XCTest
 
 final class BasicUITests: XCTestCase {
+    @MainActor
     func testAppLaunches() throws {
         let app = XCUIApplication()
         app.launch()
@@ -131,14 +136,16 @@ You have a passing XCUITest run against at least two different Simulator device/
 1. What is the iOS Simulator, and how is it different from emulating real device hardware?
 2. What is XCUITest?
 3. What is TestFlight used for, and why does it matter beyond just Simulator testing?
-4. What are App Store Review Guidelines, and why is testing for compliance with them its own category with no direct Android equivalent?
+4. What are App Store Review Guidelines, and why can't you reuse your Android compliance checks for them?
 5. Name one thing the iOS Simulator can't fully replicate compared to a real device.
 
-*Answers: 1) A virtual iOS device running on a Mac; it's different from hardware emulation because it simulates the iOS software's behavior rather than emulating the actual physical hardware components. 2) Apple's own UI testing framework, built into Xcode, used to write automated tests that interact with the app's real interface. 3) A platform for distributing pre-release builds to real testers on real devices before a public release; it matters because it catches real-device issues and real usage patterns that Simulator-only testing can miss. 4) Apple's rules that every app must pass before release, covering things like required privacy disclosures and prohibited behaviors; it's its own testing category because Android's app store review process has different rules, so this specific compliance checking doesn't transfer over. 5) Real hardware performance, sensors, or camera behavior, some checks genuinely require testing on a real device rather than the Simulator.*
+*Answers: 1) A virtual iOS device running on a Mac; it's different from hardware emulation because it simulates the iOS software's behavior rather than emulating the actual physical hardware components. 2) Apple's own UI testing framework, built into Xcode, used to write automated tests that interact with the app's real interface. 3) A platform for distributing pre-release builds to real testers on real devices before a public release; it matters because it catches real-device issues and real usage patterns that Simulator-only testing can miss. 4) Apple's rules that every app must pass before release, covering things like required privacy disclosures and prohibited behaviors; Google Play has its own Developer Program Policies and app review, but the rules differ between the two stores, so compliance checks written for one platform don't transfer directly to the other. 5) Real hardware performance, sensors, or camera behavior, some checks genuinely require testing on a real device rather than the Simulator.*
 
 ---
 
 ### Topic 6.3: Device Coverage and Accessibility
+
+*Time: about 2 hours*
 
 #### Concept
 

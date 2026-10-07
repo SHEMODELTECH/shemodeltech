@@ -18,6 +18,8 @@
 
 ## Module 0: Why Deployment Is Its Own Skill
 
+Time: about 1 hour
+
 ### Concept
 
 Writing code that works on your laptop is only part of the job. **Deployment** is the process of getting that code running reliably somewhere else, a server the public can reach, in a way that keeps working as your code and team grow. The classic failure mode is "it works on my machine", where code behaves differently once it leaves your laptop because of version differences, missing configuration, or environment quirks.
@@ -51,6 +53,8 @@ You can name the four layers above in order and explain what each one solves.
 ---
 
 ## Module 1: Docker - Same Environment, Everywhere
+
+Time: about 2 hours
 
 ### Concept
 
@@ -119,6 +123,8 @@ You built a Docker image and ran two separate containers from it successfully.
 
 ## Module 2: CI/CD - Automating Trust
 
+Time: about 1.5 hours
+
 ### Concept
 
 **Continuous Integration (CI)** automatically runs checks, tests, linting, builds, every time code changes, so problems are caught immediately instead of discovered later. **Continuous Deployment (CD)** takes it further: code that passes those checks gets automatically shipped to production, without someone manually copying files.
@@ -144,8 +150,9 @@ def test_health_check():
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 ```
+Install the app's dependencies plus the test tools (`httpx` is what `TestClient` uses under the hood), then run the test:
 ```bash
-pip install pytest httpx
+pip install -r requirements.txt pytest httpx
 pytest test_main.py -v
 ```
 
@@ -173,6 +180,8 @@ Your test passes locally, and you can describe, step by step, what should happen
 ---
 
 ## Module 3: GitHub Actions - Building the Pipeline
+
+Time: about 2 hours
 
 ### Concept
 
@@ -210,10 +219,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -251,6 +260,8 @@ You have a real pull request on GitHub showing an automated check that passed (o
 
 ## Module 4: Cloud Deployment - Going Live
 
+Time: about 2.5 hours
+
 ### Concept
 
 **Cloud deployment** means running your containerized, tested app on infrastructure managed by a cloud provider (AWS, Google Cloud, Azure, or simpler platforms like Render, Railway, or Fly.io) instead of your own laptop. Beginners generally start with a **Platform-as-a-Service (PaaS)**, which handles servers, networking, and scaling for you, before eventually needing more control from raw cloud infrastructure.
@@ -274,22 +285,42 @@ curl https://trackit-api.onrender.com/health
 ```
 You should get the same `{"status": "ok"}` response you saw locally, now reachable from anywhere in the world.
 
-**3. Complete the loop: connect deployment to your CI pipeline.** Most PaaS platforms, including Render, can auto-deploy whenever you push to `main`. Enable that setting, then make a small change (like editing the health check message), push it, and watch it go live automatically, no manual deploy step at all.
+**3. Complete the loop: connect deployment to your CI pipeline.** By default, Render redeploys on every push to `main`, even if your tests fail. You want the opposite: deploy only code that has passed CI. Choose one of these two setups:
 
+- **Option A (simplest): let Render wait for CI.** In your Render service, open **Settings**, find **Auto-Deploy**, and choose the option to deploy only after checks pass (on Render it's labeled "After CI Checks Pass"; if your dashboard shows a different label, pick the one that waits for checks). Render then waits for your GitHub Actions workflow to succeed on `main` before deploying.
+- **Option B: trigger the deploy from your workflow.** In Render, set **Auto-Deploy** to **Off** and copy the service's **Deploy Hook** URL (under Settings). In GitHub, go to your repository's **Settings > Secrets and variables > Actions** and add it as a secret named `RENDER_DEPLOY_HOOK_URL` (treat it like a password, never paste it into your code). Then add this job to the bottom of `.github/workflows/ci.yml`, indented at the same level as `test:`:
+```yaml
+  deploy:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy
+        run: curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+```
+`needs: test` means this job runs only if the `test` job passed, and the `if:` line means it runs only for pushes to `main` (including merged pull requests), not for pull requests that are still open.
+
+Either way, ship changes through a pull request rather than pushing straight to `main`. Make a small change on a new branch:
 ```python
 @app.get("/health")
 def health():
     return {"status": "ok", "version": "1.1"}
 ```
+Because this changes what `/health` returns, update the expected value in `test_main.py` to `{"status": "ok", "version": "1.1"}` too, or CI will (correctly) fail. Then:
 ```bash
-git add main.py
+git checkout main
+git pull
+git checkout -b bump-version
+git add main.py test_main.py
 git commit -m "Bump health check version"
-git push origin main
+git push origin bump-version
 ```
-Wait a minute, then check the live URL again, your change is there, without you touching the server directly.
+Open a pull request on GitHub, wait for the CI check to pass, then click **Merge**. The merge updates `main`, CI runs again on `main`, and only after it passes does the new version deploy. Wait a minute or two, then check the live URL again: your change is there, without you touching the server directly.
 
 ### Checkpoint
-You have a real, public URL serving your app, and a code push to `main` automatically updates it live.
+You have a real, public URL serving your app, and merging a pull request into `main` automatically updates it live, but only after CI passes.
 
 ### Quiz
 1. What does a PaaS handle for you that raw cloud infrastructure wouldn't?
@@ -298,4 +329,4 @@ You have a real, public URL serving your app, and a code push to `main` automati
 4. What does connecting deployment to your CI pipeline eliminate from your workflow?
 5. What's the risk of auto-deploying straight to production without CI tests running first?
 
-*Answers: 1) Servers, networking, and scaling infrastructure, letting you focus on your app instead of managing machines. 2) The exact same packaged environment that worked locally is what runs in the cloud, removing a major source of "works here, not there" bugs. 3) Actually reaching the public URL yourself and getting a real response, e.g., via `curl` or a browser. 4) The manual step of logging in and triggering a deploy yourself, it happens automatically on every merge. 5) Untested or broken code could go live immediately, reaching real users before anyone catches the problem.*
+*Answers: 1) Servers, networking, and scaling infrastructure, letting you focus on your app instead of managing machines. 2) The exact same packaged environment that worked locally is what runs in the cloud, removing a major source of "works here, not there" bugs. 3) Actually reaching the public URL yourself and getting a real response, e.g., via `curl` or a browser. 4) The manual step of logging in and triggering a deploy yourself; every merge to `main` that passes CI deploys automatically. 5) Untested or broken code could go live immediately, reaching real users before anyone catches the problem.*

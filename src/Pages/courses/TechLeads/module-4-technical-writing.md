@@ -1,6 +1,8 @@
 <!-- order: 4 -->
 ## Module 4: Technical Writing
 
+Time: about 6 hours
+
 **Purpose of this module:** Write documentation, decisions, and updates that people can actually use. Technical writers, project coordinators, and tech leads spend much of their week writing, and clear writing is often the fastest way a non-coder makes a technical team faster.
 
 **Tools needed for this module:** A document tool (Google Docs, Notion, or any word processor) and a free [GitHub](https://github.com) account for the README lab. No coding required.

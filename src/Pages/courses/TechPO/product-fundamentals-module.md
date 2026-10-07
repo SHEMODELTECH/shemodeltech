@@ -1,7 +1,9 @@
 <!-- order: 1 -->
 ## Module: Product Fundamentals (TechPO: Product & Project Management)
 
-**Purpose:** Plan, build, and deliver technology products.
+Time: about 6 hours
+
+**Purpose:** Learn how products move through their lifecycle, how to scope a minimum viable product (MVP) that tests one idea, and how to write a product vision with a north star metric.
 
 **Tools needed for this module:** A web browser, a free account with a collaborative document tool such as [Google Docs](https://docs.google.com) or [Notion](https://www.notion.so), and a free account with a simple board tool like [Trello](https://trello.com) (used in the lab for Topic 2). No coding environment or installs are required.
 

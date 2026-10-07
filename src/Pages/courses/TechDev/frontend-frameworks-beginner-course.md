@@ -19,6 +19,8 @@
 
 ## Module 0: Why Frameworks Exist
 
+Time: about 1 hour
+
 ### Concept
 
 Plain JavaScript works fine for small pages, but as an app grows, manually finding elements and updating them (`document.querySelector`, `element.textContent = ...`) becomes repetitive and error prone. A **frontend framework** provides a structured way to build **components**, self contained, reusable pieces of UI, and automatically keeps the page in sync with your data, so you describe *what* the page should look like, and the framework figures out *how* to update it.
@@ -59,6 +61,8 @@ You can explain what a "component" is and why manually updating the DOM becomes 
 
 ## Module 1: React - Components and State
 
+Time: about 2 hours
+
 ### Concept
 
 **React** builds UI out of **components**, JavaScript functions that return markup (written in a syntax called **JSX**, which looks like HTML inside JavaScript). A component can hold **state**, data that changes over time, and React automatically re-renders the component whenever that state changes.
@@ -95,7 +99,7 @@ Any interactive piece of UI that needs to remember something between renders, a 
 
 1. **Create a React project:**
 ```bash
-npx create-vite@latest my-react-app -- --template react
+npm create vite@latest my-react-app -- --template react
 cd my-react-app
 npm install
 npm run dev
@@ -169,6 +173,8 @@ You have a running React app where typing into an input updates a separate child
 
 ## Module 2: Next.js - Routing and Full Applications
 
+Time: about 2 hours
+
 ### Concept
 
 **Next.js** is a framework built on top of React that adds the pieces a full application typically needs: **file based routing** (a file's location in the project determines its URL), **server rendering** (pages can be built on the server before reaching the browser, improving speed and search engine visibility), and built in tools for data fetching and layouts.
@@ -177,20 +183,20 @@ You have a running React app where typing into an input updates a separate child
 
 ```
 app/
-  page.jsx           -> /
+  page.tsx           -> /
   about/
-    page.jsx         -> /about
+    page.tsx         -> /about
   blog/
     [slug]/
-      page.jsx        -> /blog/anything (dynamic route)
+      page.tsx        -> /blog/anything (dynamic route)
 ```
-```jsx
-// app/about/page.jsx
+```tsx
+// app/about/page.tsx
 export default function AboutPage() {
   return <h1>About Us</h1>;
 }
 ```
-- Each `page.jsx` file's folder path becomes its URL, no separate router configuration needed
+- Each `page.tsx` file's folder path becomes its URL, no separate router configuration needed
 - A folder name in square brackets, like `[slug]`, creates a **dynamic route**, matching any value in that URL position
 - The `Link` component (`import Link from "next/link"`) navigates between pages without a full page reload: `<Link href="/about">About</Link>`
 
@@ -206,10 +212,12 @@ npx create-next-app@latest my-next-app
 cd my-next-app
 npm run dev
 ```
+Accept the recommended defaults when asked. By default, `create-next-app` sets up **TypeScript** and creates the home page at `app/page.tsx`, so every page in this lab is a `page.tsx` file. TypeScript files accept the same JSX you already know. (If you prefer plain JavaScript, run `npx create-next-app@latest my-next-app --js` instead and name every file `page.js` rather than `page.tsx`. Pick one style; don't create both `page.js` and `page.tsx` in the same folder.) If you chose to use a `src/` directory, the `app` folder is at `src/app`.
+
 Open `http://localhost:3000`.
 
-2. **Add a second page.** Create `app/about/page.jsx`:
-```jsx
+2. **Add a second page.** Create `app/about/page.tsx`:
+```tsx
 export default function AboutPage() {
   return (
     <div>
@@ -221,8 +229,8 @@ export default function AboutPage() {
 ```
 Visit `http://localhost:3000/about`, no router setup was needed, the file's location defined the URL.
 
-3. **Link the two pages together.** Edit `app/page.jsx`:
-```jsx
+3. **Link the two pages together.** Replace everything in the existing `app/page.tsx` with:
+```tsx
 import Link from "next/link";
 
 export default function HomePage() {
@@ -236,12 +244,18 @@ export default function HomePage() {
 ```
 Click the link. The page changes instantly, without a full browser reload.
 
-4. **Add a dynamic route.** Create `app/blog/[slug]/page.jsx`:
-```jsx
-export default function BlogPost({ params }) {
-  return <h1>Reading post: {params.slug}</h1>;
+4. **Add a dynamic route.** Create `app/blog/[slug]/page.tsx`:
+```tsx
+export default async function BlogPost({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  return <h1>Reading post: {slug}</h1>;
 }
 ```
+In Next.js 15 and later, `params` is a Promise, so the component is `async` and uses `await params` to get the `slug`. The `: { params: Promise<{ slug: string }> }` part is a TypeScript type that describes this. (In a `page.js` file, write `export default async function BlogPost({ params }) {` and leave the type out.)
 Visit `http://localhost:3000/blog/hello-world` and `http://localhost:3000/blog/anything-else`. One file handles every possible slug.
 
 ### Checkpoint
@@ -259,6 +273,8 @@ You have a multi page Next.js app with a working link between pages and one dyna
 ---
 
 ## Module 3: Vue - Templates and Reactivity
+
+Time: about 2 hours
 
 ### Concept
 
@@ -358,6 +374,8 @@ You have a running Vue app with a two way bound input and a rendered list, both 
 
 ## Module 4: Angular - A Full Platform
 
+Time: about 2 hours
+
 ### Concept
 
 **Angular** is a complete application platform, more opinionated and structured than React or Vue. Components are defined with **classes** and **decorators** (special annotations that add metadata), templates use their own syntax, and Angular includes built-in tools for routing, forms, and HTTP requests as part of the framework itself, rather than separate libraries.
@@ -374,7 +392,7 @@ import { Component } from "@angular/core";
     <button (click)="increment()">Click me</button>
   `
 })
-export class CounterComponent {
+export class Counter {
   count = 0;
 
   increment() {
@@ -406,32 +424,40 @@ Open `http://localhost:4200`.
 ```bash
 ng generate component greeting
 ```
-This creates `src/app/greeting/greeting.component.ts` along with its template and styles.
+This creates a `src/app/greeting/` folder containing `greeting.ts` (the component class) plus its template (`greeting.html`) and styles. Recent Angular versions (20 and later) name files without a `.component` suffix, so the class is called `Greeting` and lives in `greeting.ts`.
 
-3. **Edit `greeting.component.ts`:**
+3. **Replace everything in `src/app/greeting/greeting.ts` with:**
 ```typescript
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-greeting",
-  standalone: true,
   imports: [FormsModule],
   template: `
     <h1>Say Hello</h1>
     <input [(ngModel)]="name" placeholder="Enter your name" />
-    <p *ngIf="name">Hello, {{ name }}!</p>
+    @if (name) {
+      <p>Hello, {{ name }}!</p>
+    }
   `
 })
-export class GreetingComponent {
+export class Greeting {
   name = "";
 }
 ```
-`[(ngModel)]` is Angular's two way binding syntax, equivalent to Vue's `v-model`. `*ngIf` conditionally renders an element, equivalent to Vue's `v-if`.
+`[(ngModel)]` is Angular's two way binding syntax, equivalent to Vue's `v-model`. `@if (name) { ... }` is Angular's built-in control flow: it renders the block only when the condition is true, equivalent to Vue's `v-if`. (Older tutorials use `*ngIf` for this; it is deprecated, so use `@if` in new code.) Components are standalone by default, so you list what the template needs (here `FormsModule`, for `ngModel`) in `imports`. Because this component uses an inline `template`, you can delete the generated `greeting.html` file.
 
-4. **Use the component.** In `src/app/app.component.ts`, add `GreetingComponent` to the `imports` array and reference it in the template:
+4. **Use the component.** Open `src/app/app.ts` (the root component, class `App`). Add the import at the top of the file and add `Greeting` to the `imports` array inside `@Component`:
 ```typescript
-template: `<app-greeting></app-greeting>`
+import { Greeting } from "./greeting/greeting";
+```
+```typescript
+imports: [Greeting],
+```
+If the array already lists something (such as `RouterOutlet`), keep it and add `Greeting` after a comma. Then replace everything in `src/app/app.html` (the root component's template) with:
+```html
+<app-greeting />
 ```
 Save and check the browser, typing into the input updates the greeting live.
 
@@ -440,9 +466,9 @@ You have a running Angular app with a generated component using two way binding,
 
 ### Quiz
 1. What does the `@Component` decorator do?
-2. What is the Angular equivalent of Vue's `v-model`?
+2. What is the Angular equivalent of Vue's `v-model`, and how do you show an element only when a condition is true?
 3. What is the difference between `(click)="..."` and `[value]="..."` in Angular templates?
 4. What does `ng generate component <name>` do?
 5. What makes Angular more "opinionated" than React or Vue?
 
-*Answers: 1) It attaches configuration, such as the template, styles, and a CSS selector, to the class that follows it, turning that class into a component. 2) `[(ngModel)]`, Angular's two way binding syntax. 3) Parentheses `(click)` bind to an event, running code in response; square brackets `[value]` bind a property, passing a value into the element. 4) It scaffolds a new component's files automatically, the class, template, styles, and registers it within the project. 5) Angular includes built-in, official tools for routing, forms, and HTTP requests as part of the framework itself, rather than leaving those choices to separate libraries the developer picks.*
+*Answers: 1) It attaches configuration, such as the template, styles, and a CSS selector, to the class that follows it, turning that class into a component. 2) `[(ngModel)]` is Angular's two way binding syntax; the built-in `@if (condition) { ... }` block renders content only when the condition is true. 3) Parentheses `(click)` bind to an event, running code in response; square brackets `[value]` bind a property, passing a value into the element. 4) It scaffolds a new component's files automatically: a folder with the class file, its template, and its styles, ready to import where you want to use it. 5) Angular includes built-in, official tools for routing, forms, and HTTP requests as part of the framework itself, rather than leaving those choices to separate libraries the developer picks.*

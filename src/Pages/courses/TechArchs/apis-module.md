@@ -1,7 +1,9 @@
 <!-- order: 8 -->
 ## Module: APIs
 
-**Tools needed for this module:** A web browser, a free account with [Postman](https://www.postman.com) (for testing API calls without writing code), and optionally a free account with [Zapier](https://zapier.com) or [Make](https://www.make.com) for the webhook topic. No coding environment or installs are strictly required, Postman runs in the browser or as a lightweight desktop app.
+**Time:** about 3 hours
+
+**Tools needed for this module:** A web browser, a free account with [Postman](https://www.postman.com) (for testing API calls without writing code), a free [Make](https://www.make.com) account for the webhook topic (Zapier's webhook trigger, Webhooks by Zapier, is not included in its free plan at the time of writing, 2026; Make's custom webhooks are), and a free [OpenWeatherMap](https://openweathermap.org/api) account for the API keys topic. No coding environment or installs are strictly required, Postman runs in the browser or as a lightweight desktop app.
 
 ### Topic 1: Connecting APIs
 
@@ -70,7 +72,7 @@ A **webhook** flips the usual API pattern around: instead of your system asking 
 - A **webhook URL** is an address you provide to another system, telling it where to send its automatic notifications
 - A **payload** is the data included in a webhook notification, almost always JSON, describing exactly what happened (like which record changed and how)
 - **Polling** is the older alternative to webhooks, repeatedly asking an API "anything new?" on a timer, it's less efficient and less instant than a webhook, but is used when webhooks aren't supported
-- A **webhook listener** is the receiving side, a URL you set up (often through a no-code tool like Zapier or Make) that's ready to accept and act on an incoming payload
+- A **webhook listener** is the receiving side, a URL you set up (often through a no-code tool like Make, or Zapier on a paid plan) that's ready to accept and act on an incoming payload
 
 #### Structure at a Glance
 
@@ -99,11 +101,11 @@ Any automation that needs to react the instant something happens, an instant Sla
 
 #### Lab
 
-1. **Create a free account** on [Zapier](https://zapier.com) or [Make](https://www.make.com) if you don't already have one.
-2. **Create a new automation using "Webhook" as the trigger**, the tool will generate a unique webhook URL for you.
-3. **Send a test payload to that URL** using Postman (a POST request with a small JSON body like `{"name": "Test User", "event": "signup"}`), to simulate an external system calling your webhook.
-4. **Confirm the automation tool received the payload**, most tools show a "test succeeded" screen with the JSON data you sent, laid out field by field.
-5. **Add a simple action** after the webhook trigger, such as sending yourself an email that includes the "name" field from the payload, then resend the test payload to confirm it works end to end.
+1. **Create a free account** on [Make](https://www.make.com) if you don't already have one.
+2. **Create a new scenario with a Custom webhook trigger**: click the plus, choose Webhooks, then "Custom webhook", click "Add", give it a name, and save. Make generates a unique webhook URL; copy it. Make now waits for data so it can learn the payload's structure.
+3. **Send a test payload to that URL** using Postman: a POST request to your webhook URL, with Body set to raw and JSON, containing `{"name": "Test User", "event": "signup"}`. This simulates an external system calling your webhook.
+4. **Confirm Make received the payload**: the webhook module shows "Successfully determined", and the fields `name` and `event` are now available to map.
+5. **Add a simple action** after the webhook trigger, such as Gmail "Send an Email" to yourself that includes the `name` field from the payload. Click "Run once", resend the request from Postman, and confirm the email arrives with the name filled in.
 
 #### Checkpoint
 You have created a webhook URL, sent a test payload to it using Postman, and confirmed an automation correctly received and used data from that payload.
@@ -159,10 +161,11 @@ Any time a no-code tool asks you to "connect an account" or "enter an API key" t
 #### Lab
 
 1. **Create a free account** on a public API service that issues test keys, for example [OpenWeatherMap](https://openweathermap.org/api), which offers a free tier for learning.
-2. **Generate an API key** from that service's dashboard, and copy it somewhere safe temporarily (never paste it into a public document or chat).
-3. **Use Postman to send a GET request** to the weather API's endpoint, including your API key as a query parameter or header, exactly as that API's documentation specifies.
-4. **Deliberately send the same request with the key removed or altered**, and observe the error response and its status code (this simulates what an invalid key looks like).
-5. **Rotate the key** by generating a new one from the dashboard (if supported on the free tier) and confirm the old key stops working while the new one succeeds.
+2. **Find your API key** on the "API keys" tab of your OpenWeatherMap account (one is created when you sign up). **Warning:** a new key can take up to about 2 hours to activate. Until then, requests return a 401 "Invalid API key" error even though the key is correct, so create the account early and do something else while you wait. Never paste the key into a public document or chat.
+3. **Store the key in Postman, not in the URL**: create an environment, add a variable `owm_key` with your key as the value (mark it as secret if offered), and select that environment.
+4. **Send a GET request** to `https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid={{owm_key}}`. Postman fills in the key from your variable. You should get status 200 and JSON with the current weather.
+5. **Deliberately send the same request with the key altered** (for example, replace `{{owm_key}}` with `abc123`) and observe the 401 error response. This is what an invalid key looks like.
+6. **Rotate the key**: on the API keys tab, generate a new key, update your `owm_key` variable, then delete the old key. Confirm the new key works (allowing for activation time) and the old one no longer does.
 
 #### Checkpoint
 You have generated an API key, made a successful authenticated request with it, and seen what an API's error response looks like when the key is missing or invalid.

@@ -1,6 +1,8 @@
 <!-- order: 6 -->
 ## Module 6: Communication and Delivery
 
+Time: about 6 hours
+
 **Purpose of this module:** Keep projects moving and people aligned: run useful meetings, track work and risks, and present clearly to any audience. These are the everyday skills of project coordinators, delivery managers, and anyone who helps a tech team ship.
 
 **Tools needed for this module:** A document tool, a spreadsheet, and presentation software (Google Slides, PowerPoint, or Keynote). A free project board such as [Trello](https://trello.com) is useful but optional.
@@ -167,7 +169,8 @@ Sooner or later every project needs to be explained to people who weren't part o
 
 - **Audience analysis** asks who will be there, what they already know, what they care about, and what decision they can make
 - The **key message** is the one sentence you want the audience to remember; everything else supports it
-- Structures such as **situation, complication, resolution** give a presentation a clear, logical flow
+- **Lead with the ask:** open with the decision or action you need, so busy listeners know why they're there (the same rule as putting the ask near the top of a decision document in Module 4)
+- After the ask, structures such as **situation, complication, resolution** give the supporting case a clear, logical flow
 - **One idea per slide**, with a headline that states the point, keeps slides readable
 - A **demo** shows real work; rehearse it and keep a backup (screenshots or a recording) in case something fails
 
@@ -178,10 +181,10 @@ Sooner or later every project needs to be explained to people who weren't part o
 flowchart LR
     AUD["<b>Audience</b><br/><br/>What they know<br/>and need"]
     MSG["<b>Key message</b><br/><br/>One sentence<br/>to remember"]
-    STRUCT["<b>Structure</b><br/><br/>Situation,<br/>complication, resolution"]
-    ASK["<b>The ask</b><br/><br/>Decision or<br/>action needed"]
+    ASK["<b>The ask, up front</b><br/><br/>Decision or<br/>action needed"]
+    STRUCT["<b>Supporting case</b><br/><br/>Situation,<br/>complication, resolution"]
 
-    AUD ==> MSG ==> STRUCT ==> ASK
+    AUD ==> MSG ==> ASK ==> STRUCT
 
     style AUD fill:#1d4ed8,color:#fff,stroke:#1e3a8a,stroke-width:4px
     style MSG fill:#dbeafe,color:#1a202c,stroke:#1d4ed8,stroke-width:4px
@@ -191,32 +194,33 @@ flowchart LR
 ```
 - Write slide headlines as full statements ("Checkout errors fell 40%"), not topics ("Checkout update")
 - Rehearse aloud at least once, timed; most presentations run longer than planned
+- You can repeat the ask on your last slide, but never save it for the end only
 
 #### Where you'd actually use this
 
-A team needs budget to fix a slow checkout. Instead of twenty slides of technical detail, a five-slide presentation leads with the lost sales, shows the fix and its cost, and ends with a clear ask. Leaders approve it in the meeting.
+A team needs budget to fix a slow checkout. Instead of twenty slides of technical detail, a five-slide presentation opens with the ask (approve the fix), then shows the lost sales, the fix, and its cost. Leaders approve it in the meeting.
 
 #### Lab
 
 1. **Choose a real update or proposal** you could present: a project result, a recommendation, or your Module 5 research readout.
 2. **Write an audience analysis** covering who, what they know, what they care about, and what they can decide.
 3. **Write your key message** in one sentence, and your ask in one sentence.
-4. **Build a five-slide presentation** using situation, complication, and resolution, with one idea per slide and statement headlines.
+4. **Build a five-slide presentation**: slide 1 states your ask, then situation, complication, and resolution, with one idea per slide and statement headlines.
 5. **Rehearse it aloud, timed,** for a friend or colleague, and ask them to repeat your key message back. Revise until they can.
 
 ```lab
 {
  "type": "order",
  "title": "Order a stakeholder presentation",
- "prompt": "Arrange these slides into situation, complication, resolution, then the ask.",
+ "prompt": "Arrange these slides: the ask first, then situation, complication, and resolution.",
  "items": [
+  "Decision needed today: approve the checkout fix",
   "Checkout handles 2,000 orders a day",
   "Slow pages now lose us about 8% of carts",
   "Fix: cache product data and shrink images",
-  "Cost: two engineers for three weeks",
-  "Decision needed today: approve the fix"
+  "Cost: two engineers for three weeks"
  ],
- "explain": "Situation, complication, resolution with its cost, then the clear ask at the end."
+ "explain": "Lead with the ask so leaders know what they're deciding, then situation, complication, and the resolution with its cost."
 }
 ```
 
@@ -226,11 +230,11 @@ You have an audience analysis, a five-slide presentation with statement headline
 #### Quiz
 1. What does audience analysis cover?
 2. What is a key message?
-3. Describe the situation, complication, resolution structure.
+3. Where should the ask go in a stakeholder presentation, and what structure supports it?
 4. Why write slide headlines as full statements?
 5. What should you prepare in case a demo fails?
 
-*Answers: 1) Who will be there, what they already know, what they care about, and what they can decide. 2) The one sentence you want the audience to remember. 3) Describe the current situation, the problem or change that complicates it, then the resolution you propose. 4) The audience gets the point even if they only read the headlines. 5) A backup such as screenshots or a recording.*
+*Answers: 1) Who will be there, what they already know, what they care about, and what they can decide. 2) The one sentence you want the audience to remember. 3) State the ask up front; then support it with situation (where things stand), complication (the problem or change), and resolution (what you propose). 4) The audience gets the point even if they only read the headlines. 5) A backup such as screenshots or a recording.*
 
 ---
 

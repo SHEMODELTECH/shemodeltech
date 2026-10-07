@@ -1,7 +1,9 @@
 <!-- order: 4 -->
 ## Module: Agile (TechPO: Product & Project Management)
 
-**Purpose:** Plan, build, and deliver technology products.
+Time: about 6 hours
+
+**Purpose:** Run product work in short, predictable cycles using Scrum, Kanban, and Sprint Planning.
 
 **Tools needed for this module:** A web browser and a free account with a board tool such as [Trello](https://trello.com) or [Jira](https://www.atlassian.com/software/jira) (Jira's free tier is closer to what real Scrum/Kanban teams use, but Trello works fine for the exercises in this module). No coding environment or installs are required.
 

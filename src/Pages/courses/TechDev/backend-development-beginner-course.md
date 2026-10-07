@@ -19,6 +19,8 @@
 
 ## Module 0: What a Backend Actually Does
 
+Time: about 1 hour
+
 ### Concept
 
 A **backend** is the part of an application that runs on a server rather than in the user's browser. It receives **requests** (a browser asking for a page, an app asking for data), does something with them, reading or writing a database, checking permissions, running logic, and sends back a **response**. An **API (Application Programming Interface)** is the set of URLs and rules a backend exposes so other programs can talk to it.
@@ -54,6 +56,8 @@ You can explain, in plain language, what a request and a response are, and why a
 ---
 
 ## Module 1: Node.js - JavaScript on the Server
+
+Time: about 1.5 hours
 
 ### Concept
 
@@ -134,6 +138,8 @@ You have a running Node.js server that returns different responses, including a 
 ---
 
 ## Module 2: Express - A Framework for Node.js
+
+Time: about 2 hours
 
 ### Concept
 
@@ -235,6 +241,8 @@ You have a running Express API with GET and POST routes, tested with real reques
 ---
 
 ## Module 3: Python Flask - A Minimal Python Framework
+
+Time: about 2 hours
 
 ### Concept
 
@@ -344,6 +352,8 @@ You have a running Flask API with GET and POST routes, producing the same result
 
 ## Module 4: Django - A Full Batteries-Included Framework
 
+Time: about 3 hours
+
 ### Concept
 
 **Django** is a full featured Python web framework that includes far more out of the box than Flask: a built-in database layer called an **ORM (Object-Relational Mapper)**, an admin interface generated automatically from your data, user authentication, and a defined project structure. It trades some of Flask's minimalism for a large set of built-in, well tested tools.
@@ -437,15 +447,19 @@ def task_list(request):
     data = [{"id": t.id, "title": t.title} for t in tasks]
     return JsonResponse(data, safe=False)
 ```
-In `mysite/urls.py`:
+Now open `mysite/urls.py`. Django already created it with a route for the admin site, which you just used, so keep that route and add yours next to it. The whole file should look like this:
 ```python
+from django.contrib import admin
 from django.urls import path
+
 from tasks.views import task_list
 
 urlpatterns = [
+    path("admin/", admin.site.urls),
     path("tasks/", task_list),
 ]
 ```
+If you replaced the whole list with only the `tasks/` route, `/admin` would stop working.
 Visit `http://localhost:3000/tasks/`, the tasks you added through the admin panel appear as JSON.
 
 ### Checkpoint
@@ -463,6 +477,8 @@ You created a Django model, added data through the automatically generated admin
 ---
 
 ## Module 5: FastAPI - Modern Python with Types
+
+Time: about 2 hours
 
 ### Concept
 

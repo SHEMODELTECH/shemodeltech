@@ -1,7 +1,9 @@
 <!-- order: 2 -->
 ## Module: User Research (TechPO: Product & Project Management)
 
-**Purpose:** Plan, build, and deliver technology products.
+Time: about 6 hours
+
+**Purpose:** Learn who your users are and what they need by building personas, running interviews, and designing surveys.
 
 **Tools needed for this module:** A web browser, a free account with a document tool such as [Google Docs](https://docs.google.com) or [Notion](https://www.notion.so), and a free account with a survey tool like [Google Forms](https://forms.google.com) or [Typeform](https://www.typeform.com). No coding environment or installs are required.
 

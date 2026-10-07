@@ -1,9 +1,13 @@
 <!-- order: 1 -->
 ## Module 1: Networking Fundamentals
 
-**Tools needed for this module:** a terminal (macOS Terminal, Linux shell, or Windows PowerShell), the built-in command-line utilities `ping`, `traceroute` (or `tracert` on Windows), `nslookup` and/or `dig`, and `curl`, plus a normal web browser. For the firewall topic you'll use `ufw` on Linux, or the built-in firewall settings on macOS/Windows. Wireshark is optional if you want to watch real packets, but nothing in this module requires it.
+**Time: about 6 hours** (roughly 1.5 hours per topic).
+
+**Tools needed for this module:** a terminal (macOS Terminal, Linux shell, or Windows PowerShell), the built-in command-line utilities `ping`, `traceroute` (or `tracert` on Windows), `nslookup` and/or `dig` (`dig` is not built into Windows, so Windows users can use `nslookup` or PowerShell's `Resolve-DnsName` instead), and `curl` (in Windows PowerShell type `curl.exe`, because plain `curl` there is an alias for a different command), plus a normal web browser. For the firewall topic you'll use `ufw` on Linux, or the built-in firewall settings on macOS/Windows. Wireshark is optional if you want to watch real packets, but nothing in this module requires it. **Staying legal:** every lab here either works on your own machine or sends ordinary requests (the same as visiting a website) to public test sites such as `example.com` and `httpbin.org`. Never scan, probe, or capture traffic on networks or systems you don't own or have permission to use.
 
 ### Topic 1.1: TCP/IP
+
+Time: about 1.5 hours
 
 #### Concept
 
@@ -12,7 +16,7 @@
 - An **IP address** identifies a device on a network (for example `192.168.1.10` in IPv4, or a longer IPv6 address)
 - A **packet** is the unit of data IP moves around, wrapped with source and destination addresses
 - **TCP** is connection-oriented and reliable, it opens a connection with a three-way handshake (SYN, SYN-ACK, ACK), acknowledges received data, and retransmits what's missing
-- **UDP** is the connectionless alternative, faster but with no delivery guarantees, used for things like DNS lookups and video streaming
+- **UDP** is the connectionless alternative, faster but with no delivery guarantees, used for things like DNS lookups, video calls and online games (most video streaming sites actually use TCP, over HTTP)
 - A **port** is a number that identifies a specific service on a host (for example 80 for HTTP, 443 for HTTPS, 22 for SSH), so one machine can run many services at once
 
 #### Structure at a Glance
@@ -46,6 +50,7 @@ Reading firewall logs, understanding a port scan, diagnosing why a service is un
 ```bash
 ping -c 4 example.com
 ```
+That is the Mac/Linux version (`-c 4` means send 4 packets). On Windows, use `ping -n 4 example.com` instead.
 2. **Trace the path** your packets take, hop by hop, to that host:
 ```bash
 traceroute example.com
@@ -56,6 +61,8 @@ traceroute example.com
 ```bash
 curl -v https://example.com
 ```
+(In Windows PowerShell, type `curl.exe -v https://example.com`. Plain `curl` in PowerShell is a shortcut for a different command and gives different output. This applies to every `curl` command in this module.)
+
 Look at the first lines of output, you'll see the connection being established before any data is exchanged.
 
 4. **List the listening ports** and active connections on your own machine:
@@ -76,11 +83,13 @@ You can send a packet to a remote host, trace the route it takes, open a real TC
 4. How does UDP differ from TCP, and name one thing UDP is used for?
 5. How does a SYN flood abuse the TCP handshake?
 
-*Answers: 1) IP handles addressing and routing, getting a packet from a source address to a destination address across the network; TCP sits on top and adds reliability, opening a connection, acknowledging received data, and retransmitting anything lost. 2) SYN, SYN-ACK, ACK. 3) A port is a number identifying a specific service on a host; a machine needs them so it can run many services (web, SSH, mail) at once and direct incoming traffic to the right one. 4) UDP is connectionless and gives no delivery guarantees, making it faster but unreliable; it's used for things like DNS lookups and video streaming. 5) It starts many TCP handshakes by sending SYN packets but never completes them with the final ACK, leaving half-open connections that exhaust the target's resources.*
+*Answers: 1) IP handles addressing and routing, getting a packet from a source address to a destination address across the network; TCP sits on top and adds reliability, opening a connection, acknowledging received data, and retransmitting anything lost. 2) SYN, SYN-ACK, ACK. 3) A port is a number identifying a specific service on a host; a machine needs them so it can run many services (web, SSH, mail) at once and direct incoming traffic to the right one. 4) UDP is connectionless and gives no delivery guarantees, making it faster but unreliable; it's used for things like DNS lookups, video calls and online games. 5) It starts many TCP handshakes by sending SYN packets but never completes them with the final ACK, leaving half-open connections that exhaust the target's resources.*
 
 ---
 
 ### Topic 1.2: DNS
+
+Time: about 1.5 hours
 
 #### Concept
 
@@ -129,6 +138,7 @@ dig example.com A
 dig example.com MX
 dig example.com TXT
 ```
+`dig` is not built into Windows. On Windows, use `nslookup -type=MX example.com`, or in PowerShell `Resolve-DnsName example.com -Type MX` (swap `MX` for `A` or `TXT`). For the next three steps, Windows users can install `dig` (it comes with the free BIND tools from ISC) or use a Linux environment such as WSL; if you can't, read the steps and compare with the `Resolve-DnsName` output, which also shows the TTL.
 3. **Watch the full resolution walk the hierarchy** from the root down:
 ```bash
 dig +trace example.com
@@ -156,6 +166,8 @@ You can resolve a name to an IP, query several different record types, watch a f
 ---
 
 ### Topic 1.3: HTTP
+
+Time: about 1.5 hours
 
 #### Concept
 
@@ -232,6 +244,8 @@ You can send GET and POST requests by hand, read a full request and response inc
 ---
 
 ### Topic 1.4: Firewalls
+
+Time: about 1.5 hours
 
 #### Concept
 

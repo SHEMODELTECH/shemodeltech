@@ -1,6 +1,8 @@
 <!-- order: 3 -->
 ## Module 3: Change Management, Financial Literacy, Sales & Partnerships, and Technology Awareness
 
+Time: about 8 hours
+
 **Purpose of this module:** Cover the remaining breadth a tech lead needs outside pure engineering: leading people through change, speaking the language of money, understanding how the business grows externally, and staying fluent enough in emerging technology to make informed calls without being a specialist in all of it.
 
 **Tools needed for this module:** No software installation required. A spreadsheet tool (Excel, Google Sheets) is useful for the Financial Literacy lab, and any note-taking tool works for the rest.
@@ -44,6 +46,8 @@ flowchart LR
 Rolling out a new development workflow and planning for the team members who'll quietly keep using the old one, migrating a platform and identifying a credible senior engineer to champion it instead of relying only on a leadership announcement, or recognizing that pushback on a new process is normal friction to work through rather than a sign the change was a mistake.
 
 #### Lab
+
+**If you don't manage anyone yet:** use your She Model Tech project team, or the short case in Module 1 (Amara, Jordan and Priya's volunteer team building a sign-up page for a community coding workshop). A good change to plan for in that case: requiring that every change Jordan ships is tested and reviewed by a second person before it goes live, after last week's bug reached users.
 
 1. **Pick a real or upcoming organizational change** on your team (a new tool, process, or structural shift).
 2. **List the likely sources of resistance** to it, 3-4 specific reasons people might push back, tied to uncertainty, control, or past experience, not just "people don't like change."
@@ -189,10 +193,14 @@ You have one business development opportunity mapped to a technical capability, 
 
 A tech lead doesn't need to be a hands-on expert in every emerging technology, but does need enough working literacy to ask good questions, spot real risk, and avoid being either dismissive of something genuinely useful or oversold on something that's mostly hype. This topic covers baseline awareness across four areas that come up constantly in leadership conversations: AI, cloud, data, and cybersecurity.
 
-- **AI** here means having a working sense of what modern AI/ML systems can and can't reliably do, enough to evaluate a proposed AI feature honestly rather than assuming it's either magic or a gimmick
-- **Cloud** refers to renting computing infrastructure (storage, servers, services) from a provider instead of owning physical hardware, with tradeoffs in cost, scalability, and control worth understanding even if you never configure it directly
-- **Data** covers the basics of how an organization collects, stores, and uses data, including why data quality and governance (who owns it, who can access it) matter as much as having the data at all
-- **Cybersecurity basics** means understanding common risk categories (phishing, weak access control, unpatched software, third-party risk) well enough to ask the right questions of a security team, not to perform security work yourself
+- **AI** here means having a working sense of what modern AI systems, especially large language models (LLMs) like ChatGPT, Claude, or Gemini, can and can't reliably do, enough to evaluate a proposed AI feature honestly rather than assuming it's either magic or a gimmick. Four practical rules for 2026:
+  - **AI can be confidently wrong.** LLMs sometimes produce answers that sound certain but are false, such as an invented statistic, a citation that doesn't exist, or code that calls a function that isn't real. This is called a **hallucination**. Treat AI output as a draft: check facts, test code, and have a person review anything that goes to users or decision-makers
+  - **Don't paste confidential or personal data into AI tools unless your organization has approved that tool for that data.** Customer records, passwords, unreleased plans, and other people's personal details can end up stored or seen outside your control. Ask "is this tool approved for this kind of data?" before pasting
+  - **Test an AI feature on real examples before launch.** Collect 20-50 real inputs (with any personal details removed), run them through the feature, and have someone check each output. Count how many were right, wrong, or harmful. A good demo on three hand-picked examples proves very little
+  - **AI features cost money every time they're used.** Most AI services charge per request (usually by the amount of text in and out), so a feature that's cheap in testing can become expensive with thousands of users. Estimate cost per use × expected uses per month before committing
+- **Cloud** means renting servers, storage, and services from a provider (such as AWS, Google Cloud, or Azure) instead of buying your own hardware. You gain fast setup and easy scaling; you give up some control and take on an ongoing monthly bill that grows with usage
+- **Data** covers how your organization collects, stores, and uses data. Two questions matter as much as having the data at all: is it accurate and up to date (**quality**), and who owns it and who is allowed to see it (**governance**)
+- **Cybersecurity basics** means knowing the common risks well enough to ask your security team good questions: phishing emails, weak access control (shared passwords, no two-factor sign-in, too many people with admin rights), unpatched software, and third-party risk (a vendor you depend on gets breached)
 
 #### Structure at a Glance
 
@@ -226,14 +234,14 @@ Pushing back constructively when a proposed AI feature is being oversold as a gu
 
 #### Lab
 
-1. **Pick one AI-related claim or proposal** you've encountered (real or hypothetical, "we'll use AI to automate X") and write an honest one-paragraph assessment: what's realistic about it, and what's likely overstated.
+1. **Pick one AI-related claim or proposal** you've encountered (real or hypothetical, for example "we'll add an AI chatbot to answer questions about our community workshops") and write an honest one-paragraph assessment that answers four questions: What happens when it gives a confident wrong answer, and who checks its output? What data would it see, and is the tool approved for that data? Which 20-50 real examples would you test it on before launch, and what share must it get right? Roughly what would it cost per use, and per month at your expected usage?
 2. **Describe one system your organization uses or could use** in terms of cloud tradeoffs: what you gain (scalability, lower upfront cost) and what you give up (control, ongoing cost, vendor dependency).
 3. **Pick one dataset you're aware of** and answer: who owns it, who can access it, and is there a known data-quality issue with it? If you don't know the answers, that's itself worth noting.
 4. **List three common cybersecurity risk categories** (e.g. phishing, weak access control, unpatched software, third-party risk) and, for one of them, write one question you'd ask your security team to check your organization's exposure.
 5. **Pick one place where two of these four areas intersect** in something your team actually works on (e.g. an AI feature that depends on cloud infrastructure and a specific dataset) and note the one cross-cutting risk that's easy to miss if you only look at one area at a time.
 
 #### Checkpoint
-You have one honest AI-claim assessment, one cloud tradeoff description, one data-ownership/quality check, three named cybersecurity risk categories with one real question for your security team, and one identified cross-area intersection with its associated risk.
+You have one honest AI-claim assessment covering wrong answers, data, pre-launch testing, and cost, one cloud tradeoff description, one data-ownership/quality check, three named cybersecurity risk categories with one real question for your security team, and one identified cross-area intersection with its associated risk.
 
 #### Quiz
 1. Why does a tech lead need technology awareness across AI, cloud, data, and cybersecurity without being a specialist in any of them?
@@ -242,7 +250,7 @@ You have one honest AI-claim assessment, one cloud tradeoff description, one dat
 4. Why do data quality and governance matter as much as simply having the data?
 5. What does "cybersecurity basics" mean for a tech lead, as opposed to a security specialist?
 
-*Answers: 1) So they can ask good questions, spot real risk, and avoid being either dismissive of something genuinely useful or oversold on something that's mostly hype, since these four areas come up constantly in leadership conversations. 2) Having a working sense of what modern AI/ML systems can and can't reliably do, enough to evaluate a proposed AI feature honestly rather than assuming it's magic or a gimmick. 3) Renting computing infrastructure instead of owning hardware trades cost and scalability benefits for less direct control. 4) Because having data alone isn't useful if it's poor quality or if ownership and access aren't clear; both matter for the data to be trustworthy and usable. 5) Understanding common risk categories like phishing, weak access control, unpatched software, and third-party risk well enough to ask the right questions of a security team, not to perform the security work directly.*
+*Answers: 1) So they can ask good questions, spot real risk, and avoid being either dismissive of something genuinely useful or oversold on something that's mostly hype, since these four areas come up constantly in leadership conversations. 2) Knowing what modern AI can and can't reliably do: it can give confident wrong answers, called hallucinations, so output must be checked, confidential or personal data shouldn't go into unapproved tools, features should be tested on real examples before launch, and each use costs money. 3) Renting computing infrastructure instead of owning hardware trades cost and scalability benefits for less direct control. 4) Because having data alone isn't useful if it's poor quality or if ownership and access aren't clear; both matter for the data to be trustworthy and usable. 5) Understanding common risk categories like phishing, weak access control, unpatched software, and third-party risk well enough to ask the right questions of a security team, not to perform the security work directly.*
 
 ---
 

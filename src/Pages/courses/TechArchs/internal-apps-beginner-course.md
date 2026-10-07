@@ -13,11 +13,17 @@
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
+**Time:** about 6 hours in total
+
 **Tools needed:** Free accounts on [Glide](https://glideapps.com), [Bubble](https://bubble.io), and [Softr](https://softr.io). A free [Google Sheets](https://sheets.google.com) or [Airtable](https://airtable.com) account is also needed for two of the modules. You won't need all three platforms at once — each module only needs its own tool.
+
+**Free plan note:** Free plans change often. Before you start, check the current free-plan limits on Glide's and Softr's pricing pages (for example, how many rows, users, apps, or user groups you get, and whether features like Row Owners are included). If a lab step needs a feature your free plan doesn't include, treat that step as "needs a paid plan or trial: follow along" and keep going with the rest of the lab.
 
 ---
 
 ## Module 0: What Internal App Builders Actually Do
+
+**Time:** about 30 minutes
 
 ### Concept
 
@@ -70,6 +76,8 @@ You can describe the data source, screen, and action concepts, and you have a wr
 
 ## Module 1: Glide - Spreadsheet Straight Into an App
 
+**Time:** about 1.5 hours
+
 ### Concept
 
 **Glide** turns a spreadsheet directly into a working, mobile-friendly app — connect a Google Sheet (or use Glide's own built-in Tables), and Glide automatically maps its columns into visual screens. It's built around speed: "sheet in, app out," with minimal setup between having data and having a usable app.
@@ -82,7 +90,7 @@ flowchart LR
     T["<b>Table</b><br/><br/>Google Sheet<br/>or Glide Table"]
     CO["<b>Collection</b><br/><br/>List/Cards screen<br/>showing all rows"]
     DT["<b>Detail Screen</b><br/><br/>Bound to<br/>one row"]
-    AB["<b>Action</b><br/><br/>Set Column Values<br/><br/><i>writes back to the row</i>"]
+    AB["<b>Action</b><br/><br/>Set column values<br/><br/><i>writes back to the row</i>"]
 
     T ==> CO ==> DT ==> AB ==> T
 
@@ -95,7 +103,7 @@ flowchart LR
 - A **Table** is Glide's term for a connected data source — a Google Sheet tab or a native Glide Table, made of rows and columns
 - A **Collection** (List, Cards, or Calendar) is a screen showing multiple rows from a Table at once
 - A **Detail screen** shows all the fields for one specific row, opened by tapping it in a Collection
-- An **Action** like "Set Column Values" lets a button write a new value into a specific column for that row — this is how a user's tap actually changes the underlying data
+- An **Action** like "Set column values" lets a button write a new value into a specific column for that row — this is how a user's tap actually changes the underlying data
 - **Row Owners** is Glide's built-in permission feature — restricting which rows a specific logged-in user can see, based on a column matching their email
 
 ### Where you'd actually use this
@@ -112,11 +120,11 @@ Fast internal tools built directly from data your team already keeps in a spread
 
 4. **Tap into the Detail screen** for a row (Glide generates this automatically) and confirm all its fields display.
 
-5. **Add an Action button** on the Detail screen labeled "Mark Complete," using the **Set Column Value** action to set `Status` to "Done" when tapped.
+5. **Add an Action button** on the Detail screen labeled "Mark Complete," using the **Set column values** action to set `Status` to "Done" when tapped.
 
 6. **Set up Row Owners** using the `Assignee` column, so each signed-in user only sees rows where they're listed as the assignee.
 
-7. **Publish the app**, sign in as a test user matching one of your `Assignee` emails, and confirm you only see that user's tasks — then tap "Mark Complete" and confirm the Google Sheet itself updates with the new status.
+7. **Publish the app** (check the current free-plan limits on Glide's pricing page; if Row Owners or sign-in for extra users isn't included on your plan, follow along with this step), sign in as a test user matching one of your `Assignee` emails, and confirm you only see that user's tasks — then tap "Mark Complete" and confirm the Google Sheet itself updates with the new status.
 
 ### Checkpoint
 You have a published Glide app connected to a real Google Sheet, showing only a signed-in user's own rows via Row Owners, with a working action that updates the sheet.
@@ -124,7 +132,7 @@ You have a published Glide app connected to a real Google Sheet, showing only a 
 ### Quiz
 1. What is a Table in Glide?
 2. What's the difference between a Collection and a Detail screen?
-3. What does the "Set Column Values" action actually do?
+3. What does the "Set column values" action actually do?
 4. What does Row Owners control?
 5. After tapping "Mark Complete" in the app, where did the actual change get saved?
 
@@ -133,6 +141,8 @@ You have a published Glide app connected to a real Google Sheet, showing only a 
 ---
 
 ## Module 2: Bubble - A Full Application Logic Engine
+
+**Time:** about 2 hours
 
 ### Concept
 
@@ -198,6 +208,8 @@ You have a working Bubble app with a custom Data Type, a Repeating Group display
 
 ## Module 3: Softr - No-Code Portals on Top of Airtable
 
+**Time:** about 2 hours
+
 ### Concept
 
 **Softr** builds client-facing and internal web apps directly on top of an existing **Airtable** base (or other supported data sources), using pre-built **Blocks** — lists, tables, forms, charts — that bind to your data with minimal configuration. It's built for **portals**: client portals, member directories, internal dashboards, where the data structure already exists in Airtable and you mainly need a clean, permissioned interface on top of it.
@@ -241,7 +253,7 @@ Client portals where each client should log in and see only their own project st
 
 6. **Publish the portal**, sign in as a test user matching one client's email, and confirm you only see that one client's record, not the full list.
 
-7. **Add a separate, admin-only page** with a Table Block showing all `Clients` records unfiltered by ownership, and restrict that page to a separate "Admin" User Group.
+7. **Add a separate, admin-only page** (check Softr's current free-plan limits on user groups; if a second group isn't included, follow along with this step) with a Table Block showing all `Clients` records unfiltered by ownership, and restrict that page to a separate "Admin" User Group.
 
 ### Checkpoint
 You have a published Softr portal connected to a real Airtable base, showing a logged-in client only their own record via record ownership, plus a separate admin-only page showing everything.

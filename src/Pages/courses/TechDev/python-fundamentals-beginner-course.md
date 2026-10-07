@@ -13,11 +13,13 @@
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
-**Tools needed:** Python 3.10+ installed, and a code editor (VS Code or similar).
+**Tools needed:** Python 3.12+ installed, and a code editor (VS Code or similar).
 
 ---
 
 ## Module 0: Variables & Data Types
+
+**Time: about 1 hour**
 
 ### Concept
 
@@ -135,6 +137,8 @@ You ran the code above, saw each type printed correctly, and understand why `pri
 
 ## Module 1: Operators
 
+**Time: about 1 hour**
+
 ### Concept
 
 **Operators** perform actions on values. The main categories:
@@ -192,6 +196,8 @@ You can predict the output of each print statement above before running it.
 
 ## Module 2: Control Flow
 
+**Time: about 1 hour**
+
 ### Concept
 
 **Control flow** lets your program make decisions and run different code depending on conditions, using `if`, `elif` (else if), and `else`.
@@ -214,7 +220,7 @@ def get_shipping_cost(cart_total, is_premium_member):
         return 9.99
 
 print(get_shipping_cost(cart_total=60, is_premium_member=False))   # 0
-print(get_shipping_cost(cart_total=30, is_premium_member=False))   # 5.00
+print(get_shipping_cost(cart_total=30, is_premium_member=False))   # 5.0
 print(get_shipping_cost(cart_total=10, is_premium_member=True))    # 0
 print(get_shipping_cost(cart_total=10, is_premium_member=False))   # 9.99
 ```
@@ -234,6 +240,8 @@ You can trace through `get_shipping_cost` by hand for a new set of inputs and pr
 ---
 
 ## Module 3: Loops
+
+**Time: about 1 hour**
 
 ### Concept
 
@@ -256,7 +264,11 @@ cart = [
 total = 0
 for item in cart:
     total += item["price"]
-print(f"Total: {total}")   # 18.49
+print(f"Total: {total}")   # Total: 18.490000000000002
+
+# Computers store most decimals as close approximations, so tiny errors appear.
+# For money, round to 2 decimal places before showing the result:
+print(f"Total: {round(total, 2)}")   # Total: 18.49
 
 # for loop with index, when you need position too
 for index, item in enumerate(cart):
@@ -281,15 +293,17 @@ You can explain why the `while` loop stops after exactly 3 attempts, tracing thr
 ### Quiz
 1. When would you reach for a `for` loop instead of a `while` loop?
 2. What does `enumerate()` give you that a plain `for item in cart` doesn't?
-3. What would happen if `max_attempts` were never incremented inside the `while` loop?
+3. What would happen if `attempts` were never incremented inside the `while` loop (and the success check stayed `success = attempts == 3`)?
 4. What does `total += item["price"]` accomplish across the whole loop?
 5. Why does the `while` loop check both `attempts < max_attempts` and `not success`?
 
-*Answers: 1) When you know you're iterating over a fixed collection or a known range, rather than an open-ended condition. 2) The index (position) of each item alongside the item itself. 3) An infinite loop, it would never stop since the condition would always stay true. 4) It accumulates the running sum of all item prices. 5) So it stops either when it runs out of attempts or as soon as it succeeds, whichever comes first.*
+*Answers: 1) When you know you're iterating over a fixed collection or a known range, rather than an open-ended condition. 2) The index (position) of each item alongside the item itself. 3) An infinite loop: `attempts` would stay 0, so `attempts < max_attempts` would always be true and `success` would never become true. 4) It accumulates the running sum of all item prices (which you then round with `round(total, 2)` for display, since float addition can leave tiny errors). 5) So it stops either when it runs out of attempts or as soon as it succeeds, whichever comes first.*
 
 ---
 
 ## Module 4: Functions
+
+**Time: about 2 hours**
 
 ### Concept
 
@@ -338,11 +352,13 @@ You can explain what a default parameter is and identify where `process_order` r
 4. Why does `process_order` call `validate_email` instead of rewriting that logic itself?
 5. What would happen if you called `calculate_discount("100")` with a string instead of a number?
 
-*Answers: 1) A single place to fix bugs or make changes, instead of updating every copy individually. 2) A default value used if the caller doesn't provide one. 3) `None`. 4) To reuse existing, already-tested logic rather than duplicating it, the core benefit of functions. 5) It would likely cause an error or unexpected behavior, since `"100" * (10 / 100)` doesn't behave like multiplying a number.*
+*Answers: 1) A single place to fix bugs or make changes, instead of updating every copy individually. 2) A default value used if the caller doesn't provide one. 3) `None`. 4) To reuse existing, already-tested logic rather than duplicating it, the core benefit of functions. 5) It raises `TypeError: can't multiply sequence by non-int of type 'float'`, because `"100" * 0.1` tries to repeat a string a fractional number of times.*
 
 ---
 
 ## Module 5: Error Handling
+
+**Time: about 2 hours**
 
 ### Concept
 
@@ -454,6 +470,8 @@ You can explain the difference between what happens with and without a matching 
 
 ## Module 6: Modules & Packages
 
+**Time: about 1 hour**
+
 ### Concept
 
 A **module** is a single Python file containing reusable code. A **package** is a folder of related modules. Python's standard library ships with many built-in modules; **pip** lets you install third-party packages others have published.
@@ -521,6 +539,8 @@ You created your own two-file project, where `main.py` successfully imports and 
 
 ## Module 7: Object-Oriented Programming
 
+**Time: about 2 hours**
+
 ### Concept
 
 **Object-Oriented Programming (OOP)** organizes code around **objects**, bundles of data (**attributes**) and behavior (**methods**) defined by a **class**, which acts as a blueprint. Two core ideas: **encapsulation** (bundling data and the logic that operates on it together) and **inheritance** (a class can build on another class, reusing and extending its behavior).
@@ -582,6 +602,8 @@ You can explain what `self` refers to, and why `RecurringTask` doesn't need to r
 ---
 
 ## Module 8: File Handling
+
+**Time: about 1 hour**
 
 ### Concept
 

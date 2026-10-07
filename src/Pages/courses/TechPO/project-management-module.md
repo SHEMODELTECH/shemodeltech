@@ -1,7 +1,9 @@
 <!-- order: 5 -->
 ## Module: Project Management (TechPO: Product & Project Management)
 
-**Purpose:** Plan, build, and deliver technology products.
+Time: about 8 hours
+
+**Purpose:** Learn to define a project's scope, build a realistic timeline, track risks by likelihood and impact, and keep spending on budget.
 
 **Tools needed for this module:** A web browser, a free account with a spreadsheet tool such as [Google Sheets](https://sheets.google.com), and a free account with a board or project tool like [Trello](https://trello.com) or [Asana](https://asana.com). No coding environment or installs are required.
 

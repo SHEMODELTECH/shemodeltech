@@ -13,11 +13,17 @@
 - **Checkpoint**
 - **Quiz** - five questions with answers
 
-**Tools needed:** Free accounts on [Zapier](https://zapier.com), [Make](https://www.make.com), [Power Automate](https://powerautomate.microsoft.com) (a Microsoft account), and [n8n](https://n8n.io) (either their cloud trial or a local install). You won't need all four at once, each module only needs its own tool.
+**Time:** about 7 hours in total
+
+**Tools needed:** Free accounts on [Zapier](https://zapier.com) and [Make](https://www.make.com), plus [n8n](https://n8n.io) installed locally (free; n8n's cloud version is paid, with a free trial). [Power Automate](https://powerautomate.microsoft.com) cloud flows generally need a work or school Microsoft account (for example, your university or employer account); a personal outlook.com account usually can't create them. If you don't have one, follow Module 3 along and build the same logic in Make. You won't need all four at once, each module only needs its own tool.
+
+**Free plan limits:** On the free plan at the time of writing (2026), Zapier allows only two-step Zaps (one trigger plus one action), without Filters, Paths, or Webhooks by Zapier, and polling triggers check for new data about every 15 minutes. Make's free plan includes multi-step scenarios, routers, filters, and webhooks, within a monthly credit allowance (credits were called operations before 2025). Check each tool's current plan page, because limits change.
 
 ---
 
 ## Module 0: What Automation Platforms Actually Do
+
+**Time:** about 30 minutes
 
 ### Concept
 
@@ -125,6 +131,8 @@ You can describe the trigger, action, and workflow structure, and you have one r
 
 ## Module 1: Zapier - Simple, Linear Automations
 
+**Time:** about 1 hour
+
 ### Concept
 
 **Zapier** is built around simplicity: one trigger, followed by a straight line of actions, called a **Zap**. It supports thousands of pre-built app connections, and is generally the easiest entry point for a first automation.
@@ -148,6 +156,7 @@ flowchart LR
 - Each step picks an **app** and an **event** within that app (the trigger event, or the action event)
 - Fields in a later step can be filled with a **dynamic value** from an earlier step, inserted by clicking it from a list rather than typing it manually
 - A **filter** step can stop the Zap from continuing unless a condition is met (for example, only continue if a field equals a specific value)
+- On the free plan, a Zap can have only one trigger and one action. The three-step Zap in the diagram above, and Filter steps, need a paid plan or a trial, which is why this module's lab uses two steps
 
 ### Where you'd actually use this
 
@@ -165,7 +174,7 @@ Fast, simple automations where the app you need is popular and well supported, n
 
 5. **Test the step,** using the sample row Zapier pulled earlier, and confirm the message actually arrives with the real data filled in.
 
-6. **Turn the Zap on.** Add a new row to the sheet, and confirm the automation runs on its own within a minute or two, with no manual step required.
+6. **Turn the Zap on.** Add a new row to the sheet, and confirm the automation runs on its own, with no manual step required. Be patient: Google Sheets is a polling trigger, and on the free plan Zapier checks for new rows about every 15 minutes. If nothing arrives after 20 minutes, open the Zap's history to see what happened.
 
 ### Checkpoint
 You have a working, turned-on Zap that reacts to a real new row in a spreadsheet and sends a message containing that row's actual data.
@@ -175,17 +184,19 @@ You have a working, turned-on Zap that reacts to a real new row in a spreadsheet
 2. What does a "dynamic value" let you do in an action step, compared to typing plain text?
 3. What is a filter step used for?
 4. Why does Zapier ask for a sample row of data before you finish building a Zap?
-5. What has to happen for an automation to actually start running on its own, after it's built?
+5. What has to happen for an automation to actually start running on its own, after it's built, and how quickly does a Google Sheets Zap react on the free plan?
 
-*Answers: 1) Zapier's term for a workflow, a trigger connected to one or more actions. 2) Insert real data from an earlier step directly into a later step's field, rather than hardcoding static text. 3) To stop the Zap from continuing past that point unless a specific condition is met. 4) So each step can be tested with realistic data while building, confirming the automation behaves correctly before turning it on for real events. 5) The Zap needs to be turned on (published), a Zap left off will never run automatically, even if it's fully built.*
+*Answers: 1) Zapier's term for a workflow, a trigger connected to one or more actions. 2) Insert real data from an earlier step directly into a later step's field, rather than hardcoding static text. 3) To stop the Zap from continuing past that point unless a specific condition is met. 4) So each step can be tested with realistic data while building, confirming the automation behaves correctly before turning it on for real events. 5) The Zap needs to be turned on (published); once on, a polling trigger like Google Sheets checks for new rows about every 15 minutes on the free plan, so it is not instant.*
 
 ---
 
 ## Module 2: Make - Visual, Branching Automations
 
+**Time:** about 1.5 hours
+
 ### Concept
 
-**Make** (formerly Integromat) uses a **visual canvas** where modules are connected with lines you can see and rearrange, and supports branching, running different paths depending on a condition, more directly than Zapier's mostly linear structure. This makes it well suited to automations with more than one possible outcome.
+**Make** (formerly Integromat) uses a **visual canvas** where modules are connected with lines you can see and rearrange, and supports branching, running different paths depending on a condition, more directly than Zapier's mostly linear structure. This makes it well suited to automations with more than one possible outcome. Routers and filters are included in Make's free plan, so everything in this lab is free (each module run uses credits from your monthly allowance).
 
 ### Structure at a Glance
 
@@ -250,6 +261,10 @@ You have a working Make scenario with a router splitting into two branches, and 
 
 ## Module 3: Power Automate - Automation Inside Microsoft 365
 
+**Time:** about 1.5 hours
+
+**Account note:** Power Automate cloud flows, and the Teams action in this lab, generally need a work or school Microsoft account with a Microsoft 365 license (many universities and employers provide one). A personal Microsoft account usually can't create cloud flows. If you don't have a work or school account, read the module and follow along, then build the same idea in Make: a Gmail "Watch Emails" trigger, a router with a filter on "Subject contains Urgent", and two different actions.
+
 ### Concept
 
 **Power Automate** is Microsoft's automation platform, deeply integrated with Microsoft 365 apps (Outlook, SharePoint, Teams, Excel) and Dynamics. It's commonly used inside organizations already using Microsoft's ecosystem, and includes both cloud based flows and **desktop flows** that can automate actions on a Windows desktop itself, not just cloud apps.
@@ -285,11 +300,11 @@ Automations tied closely to Microsoft 365, notifying a Teams channel when a Shar
 
 ### Lab
 
-1. **Create a flow:** In Power Automate, click "Create," then "Automated cloud flow." Choose a trigger, "When a new email arrives" (Outlook) works well for testing, and connect your account.
+1. **Create a flow:** Sign in to Power Automate with your work or school account, click "Create," then "Automated cloud flow." Choose a trigger, "When a new email arrives (V3)" (Office 365 Outlook) works well for testing, and connect your account.
 
 2. **Add a condition step.** Set it to check something about the incoming email, for example, whether the subject contains a specific word like "Urgent."
 
-3. **Add an action inside the "Yes" branch,** such as "Post a message in a chat or channel" (Teams), and use dynamic content to insert the email's actual subject and sender into the message.
+3. **Add an action inside the "Yes" branch,** such as "Post message in a chat or channel" (Teams), and use dynamic content to insert the email's actual subject and sender into the message. If your account has no Teams access, use Outlook's "Send an email (V2)" to yourself instead.
 
 4. **Add a different action inside the "No" branch,** such as marking the email as read, so both outcomes are handled explicitly, not just the urgent case.
 
@@ -313,6 +328,8 @@ You have a working flow with a condition branching into two different actions, a
 
 ## Module 4: n8n - Open Source and Self-Hostable
 
+**Time:** about 2 hours
+
 ### Concept
 
 **n8n** is an open source automation platform. It uses the same trigger and action structure as the others, arranged on a visual canvas similar to Make, but can be **self-hosted**, run on your own server rather than a vendor's cloud, giving more control over data and cost, and it also allows dropping into actual JavaScript code within a workflow when a built-in step isn't enough.
@@ -326,7 +343,7 @@ flowchart LR
     IF{"<b>IF node</b><br/><br/>status = 'approved'?"}
     S1["Set node<br/><br/>true branch"]
     S2["Set node<br/><br/>false branch"]
-    F["<b>Function node</b><br/><br/>custom JavaScript"]
+    F["<b>Code node</b><br/><br/>custom JavaScript"]
 
     W ==> IF
     IF ==>|true| S1 ==> F
@@ -342,7 +359,7 @@ flowchart LR
 - A **node** is n8n's term for a single step, trigger or action, matching "module" in Make and "action" in Zapier
 - A **workflow** is the connected chain of nodes
 - An **IF node** branches based on a condition, similar to Make's router or Power Automate's condition step
-- A **Function node** (or Code node) lets you write actual JavaScript when a built-in node can't do exactly what's needed, a capability the fully no-code tools in this course don't offer directly
+- A **Code node** (it replaced the older Function node) lets you write JavaScript or Python when a built-in node can't do exactly what's needed. Other tools have similar options, such as Code by Zapier and Power Automate's expressions, but in n8n code is a normal, everyday part of building
 
 ### Where you'd actually use this
 
@@ -350,42 +367,46 @@ Automations where cost matters at scale (self-hosting avoids per-task pricing), 
 
 ### Lab
 
-1. **Set up n8n.** Either sign up for n8n cloud's free trial, or run it locally:
+1. **Set up n8n.** Run it locally for free (you need [Node.js](https://nodejs.org) installed, an LTS version), or sign up for n8n cloud's free trial:
 ```bash
 npx n8n
 ```
 Open the URL shown in the terminal (typically `http://localhost:5678`).
 
-2. **Create a new workflow, and add a Webhook trigger node.** n8n generates a unique test URL for this webhook.
+2. **Create a new workflow, and add a Webhook trigger node.** Leave its name as "Webhook", set **HTTP Method** to `POST`, and copy the **Test URL** n8n shows (it looks like `http://localhost:5678/webhook-test/<some-id>`).
 
-3. **Send a test request to that URL** using curl, simulating an external system calling into your workflow:
+3. **Click "Listen for test event"** in the Webhook node. n8n only accepts a request on the test URL while it is listening, so do this before every test.
+
+4. **Send a test request to that URL** using curl, simulating an external system calling into your workflow (Template: replace the URL with your Test URL):
 ```bash
 curl -X POST http://localhost:5678/webhook-test/your-webhook-id -H "Content-Type: application/json" -d '{"status":"approved","name":"Alex"}'
 ```
-In the n8n editor, you'll see the webhook node capture this real data.
+In the n8n editor, you'll see the webhook node capture this real data. Notice that the JSON you sent appears under `body`, so the status is at `body.status`.
 
-4. **Add an IF node** after the webhook, checking whether `status` equals `"approved"`.
+5. **Add an IF node** after the webhook, checking whether `{{ $json.body.status }}` (drag it in from the input panel) is equal to `approved`.
 
-5. **Add a Set node on the true branch,** building a message using the incoming `name` field, and a different Set node on the false branch with a different message.
+6. **Add an Edit Fields (Set) node on the true branch,** adding a `message` field built from `{{ $json.body.name }}`, and a different Edit Fields (Set) node on the false branch with a different message.
 
-6. **Add a Function (Code) node** on one branch to see custom logic in action:
+7. **Add a Code node** after the true branch's Edit Fields node to see custom logic in action. Leave the mode as "Run Once for All Items", language JavaScript, and paste:
 ```javascript
-return items.map(item => {
-  item.json.greeting = `Hello, ${item.json.name}! Your status is ${item.json.status}.`;
+const body = $('Webhook').first().json.body;
+return $input.all().map(item => {
+  item.json.greeting = `Hello, ${body.name}! Your status is ${body.status}.`;
   return item;
 });
 ```
+`$input.all()` gives every item coming into this node, and `$('Webhook')` reads the output of the node named "Webhook".
 
-7. **Execute the workflow** using the built-in "Execute Workflow" test button, sending the same curl request again, and confirm the correct branch runs and the Function node's custom message appears in the output.
+8. **Run the whole workflow:** click the test/execute workflow button at the bottom of the canvas (the label varies by version), which puts the webhook in listening mode again, then send the same curl request. Confirm the true branch runs and the Code node's output shows `greeting`. Then send `"status":"rejected"` and confirm the false branch runs instead.
 
 ### Checkpoint
-You have a working n8n workflow triggered by a real webhook request, branching with an IF node, and including one Function node with custom JavaScript logic.
+You have a working n8n workflow triggered by a real webhook request, branching with an IF node, and including one Code node with custom JavaScript logic.
 
 ### Quiz
 1. What is a "node" in n8n?
 2. What does "self-hosted" mean, and what does it give you compared to a purely cloud based platform?
 3. What does an IF node do?
-4. What does a Function (Code) node let you do that the fully no-code tools in this course can't?
+4. What does a Code node let you do, and is n8n the only tool in this course that lets you add code?
 5. What kind of trigger did the lab use to receive real data from outside n8n?
 
-*Answers: 1) A single step in a workflow, either a trigger or an action, n8n's equivalent of Make's "module" or Power Automate's "connector-based action." 2) Running the platform on your own server rather than a vendor's cloud, giving more control over data location and cost, particularly at scale. 3) It branches the workflow into different paths depending on whether a condition is true or false. 4) Write actual JavaScript code directly inside a workflow step, for logic too specific or complex for a built-in visual node to express. 5) A Webhook trigger, which generates a URL that an external system (or a manual curl request) can call to start the workflow with real data.*
+*Answers: 1) A single step in a workflow, either a trigger or an action, n8n's equivalent of Make's "module" or Power Automate's "connector-based action." 2) Running the platform on your own server rather than a vendor's cloud, giving more control over data location and cost, particularly at scale. 3) It branches the workflow into different paths depending on whether a condition is true or false. 4) Write JavaScript (or Python) directly inside a workflow step, for logic too specific for a built-in node; no, Zapier has Code by Zapier and Power Automate has expressions, but n8n makes code an everyday part of building. 5) A Webhook trigger, which generates a URL that an external system (or a manual curl request) can call to start the workflow with real data.*

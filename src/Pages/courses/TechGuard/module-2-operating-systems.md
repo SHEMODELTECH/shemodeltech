@@ -1,9 +1,13 @@
 <!-- order: 2 -->
 ## Module 2: Operating Systems
 
-**Tools needed for this module:** for the Linux topic, access to a Linux command line, this can be a real Linux machine, a virtual machine, WSL (Windows Subsystem for Linux), or a free cloud shell. For the Windows topic, a Windows machine with **PowerShell** and the built-in Command Prompt, plus the Event Viewer app that ships with Windows. Everything here uses tools already present on each system, nothing needs to be installed.
+**Time: about 4 hours** (roughly 2 hours per topic).
+
+**Tools needed for this module:** for the Linux topic, access to a Linux command line, this can be a real Linux machine, a virtual machine, WSL (Windows Subsystem for Linux), or a free cloud shell. For the Windows topic, a Windows machine with **PowerShell** and the built-in Command Prompt, plus the Event Viewer app that ships with Windows. Everything here uses tools already present on each system, nothing needs to be installed. Run these labs only on your own computer or a virtual machine you control, never on a shared, school, or work machine without permission.
 
 ### Topic 2.1: Linux
+
+Time: about 2 hours
 
 #### Concept
 
@@ -88,15 +92,17 @@ You can identify your user and groups, read and change file permissions, search 
 
 ### Topic 2.2: Windows Security
 
+Time: about 2 hours
+
 #### Concept
 
-**Windows** is the dominant operating system on enterprise desktops and laptops, which makes it the single biggest endpoint attack target, so knowing how its security model works is essential for defending real organisations. Windows controls access through **security identifiers** and **access control lists** rather than the simpler owner/group/other model of Linux, and it layers on **User Account Control** to gate privilege, **Windows Defender** for built-in protection, and a rich **event log** for investigation. As on Linux, the safest posture is least privilege: standard users for everyday work, administrator rights only when a task truly needs them.
+**Windows** is the dominant operating system on enterprise desktops and laptops, which makes it the single biggest endpoint attack target, so knowing how its security model works is essential for defending real organisations. Windows controls access through **security identifiers** and **access control lists** rather than the simpler owner/group/other model of Linux, and it layers on **User Account Control** to gate privilege, **Microsoft Defender Antivirus** for built-in protection, and a rich **event log** for investigation. As on Linux, the safest posture is least privilege: standard users for everyday work, administrator rights only when a task truly needs them.
 
 - Every account and group has a **SID** (security identifier), a unique value Windows uses internally instead of the name, and a user's **access token** carries their SIDs and privileges
 - **Access Control Lists (ACLs)** are attached to objects like files and registry keys, listing exactly which accounts get which rights, inspected and edited with `icacls`
 - **User Account Control (UAC)** prompts for confirmation before an action uses administrator privileges, keeping users in a standard context until elevation is genuinely needed
 - The **Registry** is Windows' hierarchical configuration database, and its "Run" keys are a favourite place for malware to install **persistence** so it relaunches at every login
-- **Windows Defender** is the built-in antivirus and endpoint protection, and the **Security event log** (viewed in Event Viewer) records logons and other security events, for example event ID `4624` for a successful logon and `4625` for a failed one
+- **Microsoft Defender Antivirus** (older guides call it Windows Defender) is the built-in antivirus and endpoint protection, and the **Security event log** (viewed in Event Viewer) records logons and other security events, for example event ID `4624` for a successful logon and `4625` for a failed one
 
 #### Structure at a Glance
 
@@ -142,7 +148,7 @@ Get-LocalGroup Administrators | Get-LocalGroupMember
 ```powershell
 icacls C:\Windows\System32\drivers\etc\hosts
 ```
-4. **Check Windows Defender's status** to confirm real-time protection is on and definitions are current:
+4. **Check Microsoft Defender Antivirus status** to confirm real-time protection is on and definitions are current:
 ```powershell
 Get-MpComputerStatus
 ```
@@ -171,6 +177,6 @@ You can read your own token and privileges, list which accounts have administrat
 - [ ] Identified your user and groups on Linux, read and changed file permissions, and searched for SUID and world-writable files
 - [ ] Used `sudo` to run a command with elevated privilege and reviewed the resulting log entry
 - [ ] Inspected your Windows access token, listed administrator-group members, and read a file's ACL with `icacls`
-- [ ] Confirmed Windows Defender's status and viewed logon events plus a registry Run key
+- [ ] Confirmed Microsoft Defender Antivirus status and viewed logon events plus a registry Run key
 - [ ] Can explain the Linux permission model (owner/group/other, rwx) and the Windows model (SIDs, tokens, ACLs), and how they differ
 - [ ] Can explain what least privilege means on each system, and name one way an attacker abuses OS-level access and one way a defender limits it

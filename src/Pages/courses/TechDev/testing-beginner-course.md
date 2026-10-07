@@ -19,6 +19,8 @@
 
 ## Module 0: Why Tests Exist
 
+**Time: about 1 hour**
+
 ### Concept
 
 A **test** is code that checks whether other code behaves the way it's supposed to, automatically, instead of a person manually clicking around to check by hand. Tests exist on a spectrum, usually described as a **testing pyramid**:
@@ -56,6 +58,8 @@ You can explain the testing pyramid and why most tests should be unit tests rath
 ---
 
 ## Module 1: Unit Testing - Checking One Piece at a Time
+
+**Time: about 2 hours**
 
 ### Concept
 
@@ -167,6 +171,8 @@ You have a set of passing unit tests covering a normal case, an edge case (empty
 
 ## Module 2: Integration Testing - Checking Pieces Together
 
+**Time: about 2 hours**
+
 ### Concept
 
 An **integration test** checks that multiple pieces work correctly together, an API route talking to real routing and middleware, a function talking to a real (often temporary or test) database. Where a unit test isolates one function, an integration test intentionally includes more of the real system, trading some speed for more realistic confidence.
@@ -259,6 +265,8 @@ You have passing integration tests confirming your API's routing, middleware, an
 
 ## Module 3: End-to-End Testing - Checking the Whole System
 
+**Time: about 3 hours**
+
 ### Concept
 
 An **end-to-end (E2E) test** drives a real browser (or app) through an actual user flow, clicking buttons, filling forms, checking what appears on screen, exactly as a real person would. It's the slowest and most realistic layer of the pyramid, catching problems that only appear when frontend, backend, and everything in between are running together for real.
@@ -316,8 +324,9 @@ Serve it locally:
 ```bash
 npx serve . -p 3000
 ```
+This command keeps running and keeps the terminal busy, because it is serving your page. Leave it running, and open a second terminal window for the next steps. (Stop the server later with Ctrl+C.)
 
-2. **Install Playwright** in a separate test project:
+2. **Install Playwright** in a separate test project, using the second terminal:
 ```bash
 mkdir e2e-tests
 cd e2e-tests
