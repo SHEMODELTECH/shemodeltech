@@ -23,6 +23,7 @@ import { sendPush } from '../../utils/pushNotifications';
 import { TEACH_TRACKS, decideTeacherApplication, listTeacherApplications, setTeacher } from '../../utils/teachers';
 import { deleteTeacherCourse, listTeacherCourses, reviewStatus } from '../../utils/teacherCourses';
 import NoteDialog, { friendlyError } from '../../components/NoteDialog';
+import { deleteProjectActivity } from '../../utils/activityFeed';
 import { notifyMember } from '../../utils/staffAlerts';
 import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
@@ -290,6 +291,7 @@ const AdminPanel = ({ only = null }) => {
       return;
     try {
       await deleteDoc(doc(db, 'projects', req.projectId));
+      deleteProjectActivity(req.projectId); // its Proof Wall entries too
       await updateDoc(doc(db, 'deletionRequests', req.id), {
         status: 'approved',
         resolvedAt: new Date(),
@@ -662,6 +664,7 @@ const AdminPanel = ({ only = null }) => {
       return;
     try {
       await deleteDoc(doc(db, 'projects', p.id));
+      deleteProjectActivity(p.id); // its Proof Wall entries too
       setProjects((prev) => prev.filter((x) => x.id !== p.id));
       setStats((s) => ({ ...s, projects: s.projects - 1 }));
       toast.success('Project deleted.');

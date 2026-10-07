@@ -7,7 +7,7 @@
 // can be safely bulk-deleted once real activity flows in.
 
 import {
-  collection, addDoc, getDocs, query, where, orderBy, limit,
+  collection, addDoc, getDoc, getDocs, query, where, orderBy, limit,
   deleteDoc, doc, serverTimestamp, writeBatch,
   updateDoc, arrayUnion, arrayRemove, increment, deleteField,
 } from 'firebase/firestore';
@@ -166,4 +166,40 @@ export const editUpdate = async (activityId, newText, newProjectTitle) => {
 // --- Delete your own update post ---
 export const deleteActivityItem = async (activityId) => {
   await deleteDoc(doc(db, 'activity', activityId));
+};
+
+// --- Proof Wall entries for a deleted project ---
+// When a project is deleted, its Proof Wall entries go too (admins only).
+export const deleteProjectActivity = async (projectId) => {
+  if (!projectId) return 0;
+  try {
+    const snap = await getDocs(query(collection(db, 'activity'), where('projectId', '==', projectId)));
+    for (let i = 0; i < snap.docs.length; i += 450) {
+      const batch = writeBatch(db);
+      snap.docs.slice(i, i + 450).forEach((d) => batch.delete(d.ref));
+      // eslint-disable-next-line no-await-in-loop
+      await batch.commit();
+    }
+    return snap.size;
+  } catch (e) {
+    console.warn('Could not remove Proof Wall entries:', e?.message);
+    return 0;
+  }
+};
+
+// Drop entries whose project no longer exists (deleted earlier). Admins also
+// clean them out of the database while they look at the wall.
+export const withoutDeletedProjects = async (rows, { cleanUp = false } = {}) => {
+  const ids = [...new Set(rows.map((r) => r.projectId).filter(Boolean))];
+  const gone = new Set();
+  await Promise.all(ids.map(async (id) => {
+    try {
+      const s = await getDoc(doc(db, 'projects', id));
+      if (!s.exists()) gone.add(id);
+    } catch (_) { /* can't tell: keep it */ }
+  }));
+  if (cleanUp && gone.size) {
+    rows.filter((r) => gone.has(r.projectId)).forEach((r) => deleteDoc(doc(db, 'activity', r.id)).catch(() => {}));
+  }
+  return rows.filter((r) => !gone.has(r.projectId));
 };

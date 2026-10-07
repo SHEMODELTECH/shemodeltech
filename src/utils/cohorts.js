@@ -32,6 +32,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { fitBriefRoles } from './projectTemplates';
+import { deleteProjectActivity } from './activityFeed';
 
 // ---------------------------------------------------------------------
 // Shape
@@ -270,6 +271,7 @@ export const deleteCohort = async (cohortId) => {
   for (const p of projects) {
     // eslint-disable-next-line no-await-in-loop
     await deleteDoc(doc(db, 'projects', p.id));
+    deleteProjectActivity(p.id);
   }
   await deleteDoc(doc(db, 'cohorts', cohortId));
   return { deletedProjects: projects.length };
@@ -316,6 +318,7 @@ export const deleteCohortProject = async (project) => {
     throw new Error('This project has approved members. Removing it would destroy their work.');
   }
   await deleteDoc(doc(db, 'projects', project.id));
+  deleteProjectActivity(project.id); // its Proof Wall entries too
 };
 
 /** All projects belonging to a cohort. */

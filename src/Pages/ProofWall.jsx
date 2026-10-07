@@ -14,6 +14,7 @@ import {
   toggleCelebrate,
   editUpdate,
   deleteActivityItem,
+  withoutDeletedProjects,
 } from '../utils/activityFeed';
 import { doc, getDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -190,6 +191,8 @@ const ProofWall = () => {
   const [lightbox, setLightbox] = useState(null); // full-size image URL when an image is tapped
   const [filter, setFilter] = useState('all');
   const [myData, setMyData] = useState(null);
+  const isAdminRef = useRef(false);
+  isAdminRef.current = myData?.role === 'admin';
 
   // Share-update composer
   const [showCompose, setShowCompose] = useState(false);
@@ -284,11 +287,11 @@ const ProofWall = () => {
   };
 
   const handleDelete = async (a) => {
-    if (!window.confirm('Delete this update? This cannot be undone.')) return;
+    if (!window.confirm(a.type === 'update' ? 'Delete this update? This cannot be undone.' : 'Remove this from the Proof Wall? This cannot be undone.')) return;
     try {
       await deleteActivityItem(a.id);
       setItems((prev) => prev.filter((x) => x.id !== a.id));
-      toast.success('Update deleted.');
+      toast.success(a.type === 'update' ? 'Update deleted.' : 'Removed from the Proof Wall.');
     } catch (e) {
       console.error(e);
       toast.error('Could not delete.');
@@ -299,7 +302,8 @@ const ProofWall = () => {
     setLoading(true);
     // 'all' (and non-type tabs like 'open'/'talent') load the unfiltered feed.
     const typeFilter = ACTIVITY_TYPE_FILTERS.includes(f) ? f : null;
-    setItems(await getActivity(50, typeFilter));
+    // Hide entries for projects that were deleted (admins also clear them out).
+    setItems(await withoutDeletedProjects(await getActivity(50, typeFilter), { cleanUp: isAdminRef.current }));
     setLoading(false);
   }, []);
 
@@ -1221,6 +1225,11 @@ const ProofWall = () => {
                         {a.meta && a.type !== 'milestone' ? <> · {a.meta}</> : null}
                         {a.createdAt ? <> · {fmtAgo(a.createdAt)}</> : null}
                       </div>
+
+                      {/* Admins can remove any entry (for example, a past project). */}
+                      {myData?.role === 'admin' && !isMine && (
+                        <button onClick={() => handleDelete(a)} className="mt-1.5 text-xs font-semibold text-gray-500 hover:text-red-600">Remove</button>
+                      )}
 
                       {/* Updates only: React, Comment, Repost, Send (plus Edit/Delete on your own). */}
                       {!isEditing && a.type === 'update' && (
