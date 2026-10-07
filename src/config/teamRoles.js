@@ -10,13 +10,14 @@ export const TEAM_ROLES = [
   { id: 'program', title: 'Program Manager', desc: 'Run cohorts: choose leads, follow teams, and review finished projects.' },
   { id: 'designer', title: 'Designer', desc: 'Design flyers, posts, and pages that make people want to join.' },
   { id: 'content', title: 'Content Strategist', desc: 'Plan what we publish and when, from learning tips to member stories.' },
+  { id: 'developer', title: 'Developer', desc: 'Update the website, its content, and its design, and build new features for our members.' },
 ];
 export const roleTitle = (id) => TEAM_ROLES.find((r) => r.id === id)?.title || id;
 
 export const TEAM_BENEFITS = [
   ['A recommendation letter', 'Email us at shemodeltech@gmail.com to request a letter of recommendation for a job, school, or program you’re applying to.'],
   ['A volunteer service letter', 'Email us at shemodeltech@gmail.com to request a letter confirming your role and the dates you served with a registered 501(c)(3) nonprofit.'],
-  ['Get experience', 'See how a nonprofit really runs, from partnerships and fundraising to events and community.'],
+  ['Get experience', 'Get real-world experience in your own field, and see how a nonprofit runs, from partnerships and fundraising to events and community.'],
   ['Make an impact', 'Help members grow in tech and shape our programs. Team members who go above and beyond are recognized for their commitment.'],
   ['Lead paid cohorts', 'Apply to lead paid cohorts. When applicants are equally qualified, team members are considered first.'],
   ['Flexible hours', 'About 2 to 3 hours a week, around your studies or job. Roles last six months, and you can renew.'],

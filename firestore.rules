@@ -668,7 +668,7 @@ service cloud.firestore {
  && request.resource.data.linkedinOrPortfolio is string && request.resource.data.linkedinOrPortfolio.size() <= 300
  && request.resource.data.socialPlatform in ['Instagram', 'X', 'LinkedIn']
  && request.resource.data.socialHandle is string && request.resource.data.socialHandle.size() <= 100
- && request.resource.data.role in ['community', 'communication', 'social', 'brand', 'partnership', 'sponsorship', 'program', 'designer', 'content']
+ && request.resource.data.role in ['community', 'communication', 'social', 'brand', 'partnership', 'sponsorship', 'program', 'designer', 'content', 'developer']
  && request.resource.data.otherRoles is list && request.resource.data.otherRoles.size() <= 2
  && request.resource.data.why is string && request.resource.data.why.size() <= 3000
  && request.resource.data.get('hours', '').size() <= 60
