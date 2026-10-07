@@ -130,6 +130,18 @@ const ProjectWorkspace = () => {
 
   // Forum state
   const [posts, setPosts] = useState([]);
+  // Posts older than the latest 500, fetched one by one when a link points at them.
+  const olderRef = useRef({});
+  const liveRef = useRef(null); // latest live snapshot (null until the first one)
+  const fetchedTargetRef = useRef(null);
+  const mergePosts = () => {
+    const live = liveRef.current || [];
+    const liveIds = new Set(live.map((p) => p.id));
+    const ms = (t) => (t?.toMillis ? t.toMillis() : 0);
+    const older = Object.values(olderRef.current).filter((p) => !liveIds.has(p.id))
+      .sort((a, b) => ms(a.createdAt) - ms(b.createdAt));
+    setPosts([...older, ...live]);
+  };
   const [newPost, setNewPost] = useState('');
   const [newPostLink, setNewPostLink] = useState('');
   const [newPostImage, setNewPostImage] = useState(null); // {file, preview}
@@ -274,7 +286,8 @@ const ProjectWorkspace = () => {
     const unsub = onSnapshot(
       q,
       (snap) => {
-        setPosts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        liveRef.current = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        mergePosts();
       },
       (err) => console.error('Error listening to the forum:', err)
     );
@@ -299,7 +312,32 @@ const ProjectWorkspace = () => {
     const target = focusPostRef.current;
     if (target) {
       // Opened from a link to one post or reply: scroll to it once it has loaded.
-      if (!posts.some((p) => p.id === target)) return;
+      if (!posts.some((p) => p.id === target)) {
+        // Older than the latest 500: fetch that post (and its thread) directly, once.
+        if (liveRef.current && fetchedTargetRef.current !== target) {
+          fetchedTargetRef.current = target;
+          (async () => {
+            try {
+              const snap = await getDoc(doc(db, 'projects', projectId, 'forum', target));
+              if (!snap.exists()) { focusPostRef.current = null; return; }
+              const item = { id: snap.id, ...snap.data() };
+              const rootId = item.parentId || item.id;
+              const add = (p) => { olderRef.current[p.id] = p; };
+              add(item);
+              if (item.parentId) {
+                const parent = await getDoc(doc(db, 'projects', projectId, 'forum', item.parentId));
+                if (parent.exists()) add({ id: parent.id, ...parent.data() });
+              }
+              const replies = await getDocs(query(collection(db, 'projects', projectId, 'forum'), where('parentId', '==', rootId)));
+              replies.docs.forEach((d) => add({ id: d.id, ...d.data() }));
+              mergePosts();
+            } catch (e) {
+              focusPostRef.current = null;
+            }
+          })();
+        }
+        return;
+      }
       focusPostRef.current = null;
       setTimeout(() => {
         document.getElementById(`forum-${target}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });

@@ -307,8 +307,10 @@ const Reply = ({ r, base, threadId, threadLink, me, myName, isStaff, people, can
     try {
       await updateDoc(doc(db, path), { [`reactions.${me.uid}`]: mine === emoji ? deleteField() : emoji });
       // Bell only, only when adding a reaction, once per session.
-      if (!mine && r.uid !== me.uid && !notified.current) {
+      // Saved on the reply too, so a later visit doesn't notify again.
+      if (!mine && r.uid !== me.uid && !notified.current && !(r.reactionNotified || {})[me.uid]) {
         notified.current = true;
+        updateDoc(doc(db, path), { [`reactionNotified.${me.uid}`]: true }).catch(() => {});
         notifyMember(r.uid, {
           type: 'forum_reaction',
           title: `${myName} reacted ${emoji} to your reply`,

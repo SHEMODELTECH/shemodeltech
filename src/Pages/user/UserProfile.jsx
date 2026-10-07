@@ -420,9 +420,9 @@ const UserProfile = () => {
               {userBadges.map((badge, i) => {
                 const bd = badgeData.find(b => b.id === badge.id || b.title === badge.title || b.id === badge.id?.toLowerCase());
                 const contribStyle = {
-                  excellent: 'bg-green-100 text-green-700',
+                  excellent: 'bg-gray-900 text-white',
                   good: 'bg-pink-100 text-pink-700',
-                  fair: 'bg-amber-100 text-amber-700',
+                  fair: 'bg-white text-pink-700 border border-pink-200',
                 }[badge.contribution] || 'bg-gray-100 text-gray-600';
                 // Tier is derived from how many badges this user has in this track
                 // (live), so it matches the dashboard/certificate - not the frozen level.

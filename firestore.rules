@@ -788,6 +788,11 @@ service cloud.firestore {
  && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000
  // A nested reply points at the reply it answers (same post).
  && (request.resource.data.get('parentReplyId', null) == null || request.resource.data.parentReplyId is string);
+ // "Already told the author about my reaction" mark: each person sets only her own.
+ allow update: if isSignedIn()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactionNotified'])
+ && request.resource.data.get('reactionNotified', {}).diff(resource.data.get('reactionNotified', {})).affectedKeys().hasOnly([myUid()])
+ && request.resource.data.reactionNotified[myUid()] == true;
  // The author edits her own reply; enrolled members set only their own reaction.
  allow update: if isSignedIn() && (
  (resource.data.uid == myUid()
@@ -838,6 +843,11 @@ service cloud.firestore {
  && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 3000
  // A nested reply points at the reply it answers (same post).
  && (request.resource.data.get('parentReplyId', null) == null || request.resource.data.parentReplyId is string);
+ // "Already told the author about my reaction" mark: each person sets only her own.
+ allow update: if isSignedIn()
+ && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactionNotified'])
+ && request.resource.data.get('reactionNotified', {}).diff(resource.data.get('reactionNotified', {})).affectedKeys().hasOnly([myUid()])
+ && request.resource.data.reactionNotified[myUid()] == true;
  // The author edits her own reply; enrolled members set only their own reaction.
  allow update: if isSignedIn() && (
  (resource.data.uid == myUid()
