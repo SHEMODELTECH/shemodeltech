@@ -93,10 +93,10 @@ const Premium = () => {
           mission to empower women in tech. It funds:
         </p>
         <ul className="mt-3 space-y-2 text-sm text-gray-700 list-disc pl-5">
-          <li><strong>Paid opportunities for our members:</strong> paid projects, so women earn while they learn, and fair pay for members who lead paid projects.</li>
+          <li><strong>Paid opportunities for our members:</strong> paid projects, so members earn while they learn, and fair pay for members who lead paid projects.</li>
           <li><strong>Education:</strong> certifications for members, awarded on clear and fair criteria, plus support for women going to school and university.</li>
           <li><strong>Access:</strong> laptops and internet access for women who need them.</li>
-          <li><strong>Community:</strong> summits and events that connect women in tech.</li>
+          <li><strong>Community:</strong> events that connect our community.</li>
           <li><strong>Running the platform:</strong> hosting, security, tools, and the team that keeps She Model Tech free for every member.</li>
         </ul>
         <p className="text-sm text-gray-700 mt-3">

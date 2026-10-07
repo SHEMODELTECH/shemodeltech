@@ -71,7 +71,7 @@ const CompanyDetailsForm = ({ uid, profile, onSaved }) => {
         </span>
       </div>
       <p className="text-sm text-gray-600 mt-1">
-        We use these details to verify your company. Verified companies can post paid projects.
+        We use these details to verify your company. Verified companies can post jobs (job posting comes with a company tier).
       </p>
       <div className="grid sm:grid-cols-2 gap-4 mt-4">
         {FIELDS.map(([k, label, type, req]) => (

@@ -27,6 +27,7 @@
 // - Fail-soft: one bad project or one bad address never aborts the run.
 
 const { certificateCode } = require('../../lib/courseRequirements');
+const { jobTasks, tierTasks } = require('../../lib/companyTasks');
 const admin = require('../../lib/firebaseAdmin');
 const { sendMail } = require('../../lib/mailer');
 const { pushToUids } = require('../../lib/push');
@@ -315,6 +316,7 @@ module.exports = async (req, res) => {
  try {
  await eventTasks(db, evStats);
  evStats.certificatesTidied = await tidyCertificates(db).catch((e) => { console.error('certificate tidy failed:', e.message); return 0; });
+ await jobTasks(db, evStats).catch((e) => console.error('job notices failed:', e.message));
  return res.status(200).json({ ok: true, ...evStats });
  } catch (e) {
  console.error('event tasks failed:', e.message);
@@ -479,6 +481,9 @@ module.exports = async (req, res) => {
 
  // ── Events: reminders and waitlist moves (also runs every few minutes via ?task=events) ──
  try { await eventTasks(db, stats); } catch (e) { console.error('event tasks skipped:', e.message); }
+ // ── Jobs and company tiers: new-job notices, closing reminders, tier endings ──
+ try { await jobTasks(db, stats); } catch (e) { console.error('job notices skipped:', e.message); }
+ try { await tierTasks(db, stats); } catch (e) { console.error('tier notices skipped:', e.message); }
 
  return res.status(200).json({ ok: true, ...stats });
  } catch (err) {

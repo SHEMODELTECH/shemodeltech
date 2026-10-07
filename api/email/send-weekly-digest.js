@@ -71,8 +71,8 @@ module.exports = async function handler(req, res) {
  };
 
  // Fetch this week's platform content (only what She Model Tech actually has).
- // There is no job board. The second list is paid projects posted by
- // verified companies (company_cohorts) that are open for applications.
+ // New jobs reach members by bell and phone notification (lib/companyTasks.js),
+ // not this email. The second list (company paid projects) is retired and empty.
  const [cohortsNew, paidRaw, newCourses] = await Promise.all([
  // New She Model Tech cohorts published this week (free and paid).
  safeFetch('cohorts', 'publishedAt', sevenDaysAgo),

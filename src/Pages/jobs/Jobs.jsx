@@ -328,8 +328,10 @@ export const JobDetail = () => {
             <button
               onClick={async () => {
                 if (!window.confirm(`Delete "${job.title}"? This can’t be undone.`)) return;
+                // The company is told; a short reason helps (optional).
+                const reason = underReview ? '' : (window.prompt('Why is it being removed? (optional, the company sees this)') || '').trim().slice(0, 300);
                 try {
-                  await (underReview ? approveJobDeletion(job) : deleteJob(job.id));
+                  await (underReview ? approveJobDeletion(job) : deleteJob(job.id, job, reason));
                   toast.success('Job post deleted.');
                   navigate('/jobs');
                 } catch (e) {
@@ -451,14 +453,16 @@ export const JobForm = () => {
 
   if (!profile) return <p className="text-gray-500 text-sm">Loading...</p>;
   // Companies always see the form; until they can post, it's shown but locked.
-  const locked = !canPostJobs(profile, features) && !(id && profile.isCompany);
+  // (Editing follows the same rule: a company whose tier ended or whose
+  // verification was removed can still close a post or ask to delete it.)
+  const locked = !canPostJobs(profile, features);
   const lockedMessage = !profile.isCompany
     ? 'Only company accounts can post jobs.'
-    : !features.companyTiers
-    ? 'Job posting opens soon, as part of our company tiers.'
     : !profile.isVerified
-    ? 'First, get your company verified (it’s free). Then any tier lets you post jobs.'
-    : 'Job posting is included in every tier: Supporter, Partner, and Champion.';
+    ? 'First, get your company verified (it’s free). Then a company tier lets you post jobs.'
+    : !features.companyTiers && !features.jobPosting
+    ? 'Job posting opens soon, as part of our company tiers.'
+    : 'Job posting is included in both company tiers: Supporter and Champion.';
 
   const L = JOB_LIMITS;
   const submit = async (e) => {
@@ -477,7 +481,7 @@ export const JobForm = () => {
         navigate(`/jobs/${id}`);
       } else {
         const ref = await createJob(profile, form);
-        toast.success(`Job posted. It stays open for ${L.daysOpen} days.`);
+        toast.success(form.closesOn ? `Job posted. Applications close on ${new Date(`${form.closesOn}T12:00:00`).toLocaleDateString()}.` : `Job posted. It stays open for ${L.daysOpen} days.`);
         navigate(`/jobs/${ref.id}`);
       }
     } catch (err) {
@@ -550,7 +554,7 @@ export const JobForm = () => {
           <input id="job-email" type="email" className={input} value={form.applyEmail} onChange={(e) => setForm({ ...form, applyEmail: e.target.value })} />
         </div>
       </div>
-      <p className="text-xs text-gray-500">Jobs stay open for {L.daysOpen} days; you can close or reopen them in My job posts.</p>
+      <p className="text-xs text-gray-500">Without an application deadline, jobs stay open for {L.daysOpen} days. You can close or reopen them in My job posts.</p>
       <button type="submit" disabled={busy} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-60">
         {busy ? 'Saving...' : id ? 'Save changes' : 'Post job'}
       </button>

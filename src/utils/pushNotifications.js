@@ -155,14 +155,19 @@ export async function sendPush({ recipientUid, recipientUids, title, body, link,
     const user = auth.currentUser;
     if (!user) return;
     const idToken = await user.getIdToken();
-    await fetch('/api/send-push', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`,
-      },
-      body: JSON.stringify({ recipientUid, recipientUids, title, body, link, level }),
-    });
+    const all = Array.isArray(recipientUids) ? recipientUids.filter(Boolean) : recipientUid ? [recipientUid] : [];
+    // The server takes up to 50 people per request from members.
+    for (let i = 0; i < all.length; i += 50) {
+      // eslint-disable-next-line no-await-in-loop
+      await fetch('/api/send-push', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ recipientUids: all.slice(i, i + 50), title, body, link, level }),
+      });
+    }
   } catch (e) {
     // Non-blocking: push failures should never break the core action.
     console.warn('sendPush failed:', e?.message);

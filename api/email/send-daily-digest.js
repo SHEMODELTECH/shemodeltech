@@ -89,6 +89,22 @@ module.exports = async function handler(req, res) {
  newCohorts = cs.docs.map((d) => ({ id: d.id, ...d.data() }));
  } catch (_) { /* optional */ }
 
+ // Unread messages: how many people each account hasn't replied to / read yet.
+ const unreadPeople = {};
+ try {
+ const convs = await db.collection('conversations').get();
+ convs.docs.forEach((c) => {
+ Object.entries(c.data().unreadBy || {}).forEach(([uid, n]) => {
+ if (Number(n) > 0) unreadPeople[uid] = (unreadPeople[uid] || 0) + 1;
+ });
+ });
+ } catch (_) { /* optional */ }
+ const unreadItem = (n) => ({
+ headline: `You have unread messages from ${n} ${n === 1 ? 'person' : 'people'}`,
+ detail: 'Open Messages to read and reply.',
+ link: `${SITE}/messages`,
+ });
+
  // Batches: at 500+ members (Gmail's daily limit), email half the members
  // one weekday and the other half the next. Each member keeps her half.
  const BATCH_AT = 500;
@@ -107,12 +123,22 @@ module.exports = async function handler(req, res) {
  if (!user.email || !user.email.includes('@')) { skipped++; continue; }
  // Respect opt-out (default ON unless explicitly disabled).
  if (user.emailPreferences && user.emailPreferences.reminders === false) { skipped++; continue; }
- if (user.isCompany) { skipped++; continue; }
+ // Companies: no project or learning emails, only unread messages.
+ if (user.isCompany) {
+ const n = unreadPeople[user.uid] || 0;
+ if (!n) { skipped++; continue; }
+ try {
+ await sendMail({ to: user.email, subject: unreadItem(n).headline, html: renderEmail(user.displayName || user.email.split('@')[0], [unreadItem(n)], false) });
+ sent++;
+ } catch (e) { console.error(`${user.email}:`, e.message); failed++; }
+ continue;
+ }
  // "3 times a week" members: Monday, Wednesday and Friday only.
  if (user.emailPreferences?.dailyFrequency === '3x' && ![1, 3, 5].includes(new Date().getUTCDay())) { skipped++; continue; }
 
  const items = []; // each: { headline, detail, link }
  const firstName = (user.displayName || '').split(' ')[0] || 'there';
+ if (unreadPeople[user.uid]) items.push(unreadItem(unreadPeople[user.uid]));
 
  // Gather the projects this user is involved in.
  const involved = Object.values(projects).filter(p =>

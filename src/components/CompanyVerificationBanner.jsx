@@ -34,7 +34,7 @@ const CompanyVerificationBanner = ({ profile }) => {
       <p className="text-sm text-gray-700 mt-1 max-w-3xl">
         {asked
           ? 'Our team sent you a message. Reply there, and add any missing details (website, phone, registration) to your company profile.'
-          : 'Our team verifies every company before it can post paid projects. You can explore the platform in the meantime. Adding your website, phone number, and registration details helps us verify you faster.'}
+          : 'Our team verifies every company before it can post jobs. You can explore the platform in the meantime. Adding your website, phone number, and registration details helps us verify you faster.'}
       </p>
       <div className="flex flex-wrap gap-2 mt-4">
         {teamUid && (

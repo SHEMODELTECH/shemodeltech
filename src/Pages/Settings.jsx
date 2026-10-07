@@ -33,13 +33,11 @@ const skillTrackOpts = [
 const individualInterestOpts = [
   { id: 'projects', label: 'Projects', desc: 'Join real-world collaborative projects' },
   { id: 'paid', label: 'Paid projects', desc: 'Paid work from verified companies' },
-  { id: 'community', label: 'Community', desc: 'Connect with women in tech' },
+  { id: 'community', label: 'Community', desc: 'Connect with people in tech' },
   { id: 'badges', label: 'Badges', desc: 'Earn verified TechTalent credentials' },
 ];
 const companyInterestOpts = [
-  { id: 'paid_projects', label: 'Post paid projects', desc: 'Hire a team for paid project work' },
   { id: 'jobs', label: 'Post jobs', desc: 'Advertise full-time, part-time, contract, or internship roles' },
-  { id: 'sponsor', label: 'Sponsor a cohort', desc: 'Fund a team of women building real projects' },
   { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
   { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },
 ];
@@ -920,11 +918,7 @@ const IncludedTab = ({ profile }) => {
         <ul className="space-y-1">
           <FeatureItem
             label="Unlimited access to the Talent Board"
-            detail="Browse and search the directory of verified women, filter by badge track and level, and get listed yourself."
-          />
-          <FeatureItem
-            label="Posting paid projects"
-            detail="Companies post paid projects and hire real teams after free verification: you set the pay per person for every role, applicants see it before they join, and the project closes only when the work is verified done and every member confirms they were paid."
+            detail="Browse and search the directory of verified members, filter by badge track and level, and get listed yourself."
           />
           <FeatureItem
             label="Unlimited messaging"
@@ -942,10 +936,6 @@ const IncludedTab = ({ profile }) => {
             label="She Model Tech courses and mentor courses"
             detail="Self-paced courses with hands-on labs, quizzes, and course forums, plus courses created by our mentors."
           />
-          <FeatureItem
-            label="Unlimited freelance work"
-            detail="Take on paid projects that hire a single person, as often as you like."
-          />
         </ul>
       </div>
 
@@ -953,7 +943,7 @@ const IncludedTab = ({ profile }) => {
       <div className="bg-white border border-gray-200 rounded-xl p-6">
         <p className="text-gray-900 text-sm font-bold mb-3">Also included</p>
         <ul className="space-y-1">
-          <FeatureItem label="Lead a project" detail="Apply to lead, run a real team, and earn a leadership badge." />
+          <FeatureItem label="Lead a project" detail="Apply to lead, run a real team, and earn a TechPO badge." />
           <FeatureItem label="AI-powered project and job matches" detail="Personal recommendations for the projects and jobs that fit your skills and badges." />
           <FeatureItem label="Proof Wall and public profile" detail="Share progress, show your badges and certificates, and print your profile." />
           <FeatureItem label="Verifiable, LinkedIn-ready certificates" detail="Every certificate has a public verification link and an Add to LinkedIn button." />

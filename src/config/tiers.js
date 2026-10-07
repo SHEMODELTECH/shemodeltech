@@ -36,7 +36,7 @@ export const tierRank = (profile) => RANK[companyTier(profile)] || 0;
 export const PERKS = [
   ['postJobs', 'supporter', 'Post jobs'],
   ['talentBoard', 'supporter', 'Full Talent Board with unlimited messaging'],
-  ['verifiedBadge', 'supporter', 'Verified Partner badge'],
+  ['verifiedBadge', 'supporter', 'Verified company badge'],
   ['featuredJobs', 'champion', 'Featured jobs'],
   ['promotion', 'champion', 'In-app promotion (featured placement)'],
   ['prioritySupport', 'champion', 'Priority support'],

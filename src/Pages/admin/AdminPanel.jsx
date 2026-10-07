@@ -539,6 +539,14 @@ const AdminPanel = ({ only = null }) => {
         : { companyTier: null, companyTierUntil: null, companyTierSetBy: currentUser.email };
       await updateDoc(doc(db, 'users', u.id), data);
       setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, ...data } : x)));
+      if (!tierDraft.tier && u.companyTier) {
+        notifyMember(u.id, {
+          type: 'tier_removed',
+          title: 'Your company tier has ended',
+          body: 'Your company is now on the free plan: the Talent Board stays open, with up to 5 new conversations a month. Job posting needs a tier.',
+          link: '/premium',
+        });
+      }
       if (tierDraft.tier) {
         notifyMember(u.id, {
           type: 'tier_set',
@@ -564,11 +572,13 @@ const AdminPanel = ({ only = null }) => {
     if (
       !window.confirm(
         verify
-          ? `Verify ${name}? They will be able to post paid projects that members can apply to.`
-          : `Remove verification from ${name}? They will no longer be able to post new paid projects.`
+          ? `Verify ${name}? Verification is free; with a company tier they can post jobs.`
+          : `Remove verification from ${name}? They won't be able to post or edit job posts.`
       )
     )
       return;
+    // Removing verification: the company is told why (optional).
+    const removeReason = verify ? '' : (window.prompt('Why is verification being removed? (optional, the company sees this)') || '').trim().slice(0, 300);
     try {
       await updateDoc(doc(db, 'users', u.id), {
         isVerified: verify,
@@ -577,24 +587,24 @@ const AdminPanel = ({ only = null }) => {
         'companyProfile.verificationStatus': verify ? 'verified' : 'pending',
       });
       setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, isVerified: verify } : x)));
-      if (verify) {
-        try {
-          await addDoc(collection(db, 'notifications'), {
-            userId: u.id,
-            recipientId: u.id,
-            type: 'company_verified',
-            title: 'Your company is verified',
-            body: 'You can now post paid projects. Members will see them on the Projects page.',
-            message: 'Your company is verified. You can now post paid projects.',
-            link: '/projects/new-paid',
-            isRead: false,
-            read: false,
-            createdAt: new Date(),
-          });
-        } catch (e) {
-          console.error('verify notification failed:', e);
-        }
-      }
+      notifyMember(
+        u.id,
+        verify
+          ? {
+              type: 'company_verified',
+              title: 'Your company is verified',
+              body: 'Members now see your company as verified. With a company tier, you can post jobs from the Jobs page.',
+              link: '/jobs',
+              ctaLabel: 'Open Jobs',
+            }
+          : {
+              type: 'company_unverified',
+              title: 'Your company verification was removed',
+              body: `${removeReason ? `Reason: ${removeReason} ` : ''}Your job posts can't be edited until you're verified again. Reply to She Model Tech in Messages if you have questions.`,
+              link: '/settings',
+              ctaLabel: 'Update your details',
+            }
+      );
       toast.success(verify ? 'Company verified.' : 'Verification removed.');
     } catch (e) {
       console.error(e);

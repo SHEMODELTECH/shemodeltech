@@ -21,6 +21,7 @@ import {
   getDocs,
   limit,
   writeBatch,
+  increment,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { sendPush } from '../utils/pushNotifications';
@@ -252,7 +253,21 @@ const Messages = () => {
           const qSnap = await getDoc(qRef);
           const contacts = qSnap.exists() ? qSnap.data().contacts || [] : [];
           if (!contacts.includes(targetUid) && contacts.length >= FREE_MESSAGE_LIMIT) {
-            toast.error(`You’ve reached ${FREE_MESSAGE_LIMIT} new conversations this month. Choose a company tier for unlimited messaging.`);
+            const d = new Date();
+            const resets = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1)).toLocaleDateString(undefined, { month: 'long', day: 'numeric', timeZone: 'UTC' });
+            toast.error(`You’ve reached ${FREE_MESSAGE_LIMIT} new conversations this month. It resets on ${resets}. Choose a company tier for unlimited messaging.`);
+            setDoc(doc(db, 'notifications', `msglimit_${currentUser.uid}_${key}`), {
+              userId: currentUser.uid,
+              recipientId: currentUser.uid,
+              type: 'message_limit',
+              title: 'Monthly conversation limit reached',
+              body: `You've started ${FREE_MESSAGE_LIMIT} new conversations this month. You can start more on ${resets}, or choose a company tier for unlimited messaging. Existing conversations stay open.`,
+              message: 'Monthly conversation limit reached',
+              link: '/premium',
+              isRead: false,
+              read: false,
+              createdAt: serverTimestamp(),
+            }).catch(() => {});
             navigate('/premium');
             return;
           }
@@ -289,11 +304,31 @@ const Messages = () => {
         senderId: currentUser.uid,
         createdAt: serverTimestamp(),
       });
+      // Was the other person already caught up? Then this starts a new unread
+      // streak: put one notice in her bell (not one per message).
+      const conv = conversations.find((c) => c.id === activeConvId);
+      const otherWasCaughtUp = !(conv?.unreadBy?.[activeUser?.uid] > 0);
       await updateDoc(doc(db, 'conversations', activeConvId), {
         lastMessage:   text,
         lastMessageAt: serverTimestamp(),
-        [`unreadBy.${activeUser?.uid}`]: (unreadCounts[activeConvId] || 0) + 1,
+        [`unreadBy.${activeUser?.uid}`]: increment(1),
       });
+      if (activeUser?.uid && otherWasCaughtUp) {
+        const from = myData?.displayName || currentUser.displayName || 'Someone';
+        addDoc(collection(db, 'notifications'), {
+          userId: activeUser.uid,
+          recipientId: activeUser.uid,
+          type: 'message',
+          convId: activeConvId,
+          title: `New message from ${from}`,
+          body: text.length > 80 ? `${text.slice(0, 80)}…` : text,
+          message: `New message from ${from}`,
+          link: '/messages',
+          isRead: false,
+          read: false,
+          createdAt: serverTimestamp(),
+        }).catch(() => {});
+      }
       // Push to the recipient (non-blocking).
       if (activeUser?.uid) {
         sendPush({

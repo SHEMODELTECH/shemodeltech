@@ -41,7 +41,6 @@ const Premium = lazy(() => import('./Pages/Premium'));
 const Events = lazy(() => import('./Pages/Events'));
 const EventDetail = lazy(() => import('./Pages/Events').then((m) => ({ default: m.EventDetail })));
 const CohortManager = lazy(() => import('./Pages/admin/CohortManager'));
-const SponsorCohort = lazy(() => import('./Pages/projects/SponsorCohort'));
 const BadgesInfo = lazy(() => import('./Pages/Badges'));
 const EditCourse = lazy(() => import('./Pages/learning/ManageCourses'));
 const ManageCoursesPage = lazy(() => import('./Pages/learning/ManageCourses').then((m) => ({ default: m.ManageCourses })));
@@ -54,7 +53,6 @@ const ApplyToLead = lazy(() => import('./Pages/cohort/ApplyToLead'));
 const LeadApplicationReview = lazy(() => import('./Pages/admin/LeadApplicationReview'));
 const CompanyCohortList = lazy(() => import('./Pages/company/CompanyCohortList'));
 const CompanyCohortDetail = lazy(() => import('./Pages/company/CompanyCohortDetail'));
-const SponsorDashboard = lazy(() => import('./Pages/company/SponsorDashboard'));
 const VerifyCertificate = lazy(() => import('./Pages/VerifyCertificate'));
 const SubmitPost = lazy(() => import('./Pages/community/SubmitPost'));
 const SinglePost = lazy(() => import('./Pages/community/SinglePost'));
@@ -240,7 +238,8 @@ function App() {
                 {/* Project proposals are closed: projects come from She Model Tech cohorts. */}
                 <Route path="/projects/propose" element={<Navigate to="/projects" replace />} />
                 <Route path="/badges" element={<SidebarRoute><BadgesInfo /></SidebarRoute>} />
-                <Route path="/projects/sponsor-cohort" element={<SidebarRoute><SponsorCohort /></SidebarRoute>} />
+                {/* Retired: companies no longer sponsor cohorts (see /support-our-mission). */}
+                <Route path="/projects/sponsor-cohort" element={<Navigate to="/support-our-mission" replace />} />
                 <Route path="/admin/cohorts" element={<StaffRoute><CohortManager /></StaffRoute>} />
                 <Route path="/admin/reviews" element={<Navigate to="/admin/projects" replace />} />
                 <Route path="/admin/projects" element={<StaffRoute><AdminPanel key="admin-projects" only="projects" /></StaffRoute>} />
@@ -517,21 +516,14 @@ function App() {
                 />
                 {/* Company membership (Talent Access) is retired: companies use Premium. */}
                 <Route path="/partner" element={<Navigate to="/premium" replace />} />
-                <Route
-                  path="/sponsor/dashboard"
-                  element={
-                    <SidebarRoute>
-                      <SponsorDashboard />
-                    </SidebarRoute>
-                  }
-                />
+                <Route path="/sponsor/dashboard" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/partner/activate" element={<Navigate to="/premium" replace />} />
                 <Route path="/admin/activations" element={<Navigate to="/admin" replace />} />
                 {/* PUBLIC, no login. A recruiter must be able to check a
  certificate in one click or verification is pointless. */}
                 <Route path="/verify" element={<VerifyCertificate />} />
                 <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
-                <Route path="/sponsor" element={<Navigate to="/projects/sponsor-cohort" replace />} />
+                <Route path="/sponsor" element={<Navigate to="/support-our-mission" replace />} />
                 <Route path="/my-connections" element={<Navigate to="/proof-wall" replace />} />
                 <Route
                   path="/account"

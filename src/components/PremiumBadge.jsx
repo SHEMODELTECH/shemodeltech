@@ -1,5 +1,5 @@
 // src/components/PremiumBadge.jsx
-// Small labels for Premium status: "Premium", "Featured", "Verified Partner".
+// Small labels for Premium status: "Premium", "Featured", "Verified company".
 import React from 'react';
 
 const STYLES = {
@@ -7,7 +7,7 @@ const STYLES = {
   featured: 'bg-pink-50 text-pink-700 border-pink-200',
   partner: 'bg-gradient-to-r from-amber-100 to-yellow-50 text-amber-900 border-amber-300',
 };
-const LABELS = { premium: 'Premium', featured: 'Featured', partner: 'Verified Partner' };
+const LABELS = { premium: 'Premium', featured: 'Featured', partner: 'Verified company' };
 
 const PremiumBadge = ({ kind = 'premium', size = 'sm' }) => (
   <span

@@ -229,7 +229,7 @@ const ProjectDetail = () => {
     // by posting paid projects instead.
     if (memberProfile?.isCompany) {
       toast.error(
-        "Company accounts can't lead projects. Post a paid project to hire a team instead."
+        "Company accounts can't lead projects. Post a job to hire instead."
       );
       return;
     }
@@ -321,7 +321,7 @@ const ProjectDetail = () => {
     // earn badges - they hire teams by posting paid projects instead.
     if (memberProfile?.isCompany) {
       toast.error(
-        "Company accounts can't apply to projects. Post a paid project to hire a team instead."
+        "Company accounts can't apply to projects. Post a job to hire instead."
       );
       return;
     }

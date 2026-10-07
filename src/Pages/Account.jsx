@@ -102,7 +102,16 @@ const Account = () => {
       <p className="text-gray-500 text-sm mb-6">Your collaborative project activity, earnings, and credentials.</p>
 
       {/* Money view: company = payments out; talent = earnings in */}
-      {isCompany ? (
+      {isCompany ? (disbursements.rows.length === 0 ? (
+      <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
+        <h2 className="text-base font-bold text-gray-900 mb-1">Hiring on She Model Tech</h2>
+        <p className="text-gray-600 text-sm">Find talent on the Talent Board and post jobs (full-time, part-time, contract, or internship).</p>
+        <div className="flex flex-wrap gap-2 mt-3">
+          <a href="/talent-board" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Talent Board</a>
+          <a href="/jobs/mine" className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50">Your job posts</a>
+        </div>
+      </div>
+      ) : (
       <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
         <h2 className="text-base font-bold text-gray-900 mb-1">Project Payments</h2>
         <p className="text-gray-400 text-xs mb-4">Money across your paid projects. Disbursed is what members confirmed receiving (including dispute-adjusted amounts). Pending is the total still to be sent out - the amount owed to all persons on your ongoing projects.</p>
@@ -143,7 +152,7 @@ const Account = () => {
           </div>
         )}
       </div>
-      ) : (
+      )) : (
       <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
         <h2 className="text-base font-bold text-gray-900 mb-1">My Earnings</h2>
         <p className="text-gray-400 text-xs mb-4">From paid projects you were approved for. Amounts come from the project's application; if a payment is adjusted during a dispute, your total updates automatically once resolved.</p>

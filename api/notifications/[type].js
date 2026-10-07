@@ -5,6 +5,7 @@
 const { sendMail } = require('../../lib/mailer');
 const { requireUser } = require('../../lib/requireUser');
 const { issueCourseCertificate } = require('../../lib/courseCertificates');
+const { guardEmail } = require('../../lib/sendGuard');
 
 // Brand/config - override via Vercel env vars, never hardcode again.
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
@@ -706,10 +707,14 @@ module.exports = async function handler(req, res) {
       // decisions (assigned / interview / offered a role / not selected) so a
       // member is not left refreshing a page waiting for news.
       case 'send-generic': {
-        const { to, subject, heading, body, ctaLabel, ctaUrl } = req.body;
-        if (!to || !subject || !body) {
+        if (!req.body?.to || !req.body?.subject || !req.body?.body) {
           return res.status(400).json({ success: false, error: 'to, subject and body are required' });
         }
+        // Staff can email anyone; members only email members (companies only
+        // people they're talking to), plain text, with a daily cap.
+        const g = await guardEmail(user, req.body);
+        if (!g.ok) return res.status(g.status || 403).json({ success: false, error: g.error });
+        const { to, subject, heading, body, ctaLabel, ctaUrl } = g.email;
         emailConfig = {
           to,
           subject,

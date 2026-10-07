@@ -124,15 +124,13 @@ const Onboarding = () => {
 
   const individualInterests = [
     { id: 'projects', label: 'Projects', desc: 'Join real-world collaborative projects' },
-    { id: 'paid', label: 'Paid projects', desc: 'Paid work from verified companies' },
+    { id: 'paid', label: 'Paid projects', desc: 'Paid She Model Tech cohort projects (18+)' },
     { id: 'community', label: 'Community', desc: 'Connect with tech professionals' },
     { id: 'badges', label: 'Badges', desc: 'Earn verified TechTalent credentials' },
   ];
 
   const companyInterests = [
-    { id: 'paid_projects', label: 'Post paid projects', desc: 'Hire a team for paid project work' },
     { id: 'jobs', label: 'Post jobs', desc: 'Advertise full-time, part-time, contract, or internship roles' },
-    { id: 'sponsor', label: 'Sponsor a cohort', desc: 'Fund a team of women building real projects' },
     { id: 'community', label: 'Community', desc: 'Engage with the tech community' },
     { id: 'directory', label: 'Talent Board', desc: 'Discover and recruit verified talent' },
   ];
@@ -363,7 +361,7 @@ const Onboarding = () => {
       }
       await updateDoc(doc(db, 'users', currentUser.uid), updateData);
       if (isCompany) {
-        // A new company account needs verifying before it can post paid projects.
+        // A new company account needs verifying before it can post jobs.
         alertStaff({
           type: 'company_needs_verification',
           title: 'New company account to verify',

@@ -107,7 +107,8 @@ service cloud.firestore {
  && request.resource.data.get('role', 'member') != 'admin'
  && !('premium' in request.resource.data)
  && !('companyTier' in request.resource.data) && !('companyTierUntil' in request.resource.data)
- && request.resource.data.get('role', 'member') != 'editor';
+ && request.resource.data.get('role', 'member') != 'editor'
+ && request.resource.data.get('isVerified', false) == false;
 
  // Self-update: cannot change own role, cannot self-award badges.
  allow update: if isSignedIn() && userId == myUid()
@@ -118,6 +119,9 @@ service cloud.firestore {
  && (!('role' in request.resource.data)
  || request.resource.data.role == resource.data.role)
  && !touched('badges')
+ // Company or member is chosen at sign-up; after onboarding only staff change it.
+ && (!touched('isCompany') || resource.data.get('onboardingComplete', false) != true)
+ && (!touched('accountType') || resource.data.get('onboardingComplete', false) != true)
  && !touched('badgeCounts')
  && !touched('badgeCount')
  // Company verification is granted by an admin, never self-set:
@@ -286,15 +290,9 @@ service cloud.firestore {
 
  allow read: if isSignedIn();
 
- // Only She Model Tech creates free projects. Verified companies create paid
- // work (they own it, and it never awards badges).
- allow create: if isReviewer()
- || (isSignedIn() && request.resource.data.submitterId == myUid()
- && request.resource.data.get('isCompanyPost', false) == true
- && request.resource.data.get('isPaid', false) == true
- && request.resource.data.get('awardsBadges', true) == false
- && myUserDoc().get('isCompany', false) == true
- && myUserDoc().get('isVerified', false) == true);
+ // Only She Model Tech (admins and editors) creates projects, free or paid.
+ // Companies hire through job posts instead.
+ allow create: if isReviewer();
 
  // 1. Admin: full control.
  allow update: if isAdmin();
@@ -509,22 +507,36 @@ service cloud.firestore {
  // companies (and staff). Only the posting company or an admin can change a job;
  // featuring a job needs Premium.
  match /jobs/{jobId} {
+ // A verified company that can post jobs right now: with tiers on, any active
+ // tier; before that, the Job posting switch decides.
+ function canPostJobs() {
+ return myUserDoc().get('isCompany', false) == true
+ && myUserDoc().get('isVerified', false) == true
+ && ((featureOn('companyTiers') && tierRank() >= 1) || (!featureOn('companyTiers') && featureOn('jobPosting')));
+ }
  allow read: if isSignedIn();
  allow create: if isSignedIn()
  && request.resource.data.companyUid == myUid()
- && (isReviewer() || (myUserDoc().get('isCompany', false) == true
- && myUserDoc().get('isVerified', false) == true
- // With tiers on, any tier can post; before that, the Job posting switch decides.
- && ((featureOn('companyTiers') && tierRank() >= 1) || (!featureOn('companyTiers') && featureOn('jobPosting')))))
+ && (isReviewer() || canPostJobs())
  && request.resource.data.title is string && request.resource.data.title.size() <= 120
  && request.resource.data.description is string && request.resource.data.description.size() <= 8000
- && request.resource.data.featured == false;
- // Staff (admins and editors) manage any post. A company edits its own, but
- // can't republish a post it asked to delete (that's for staff to decide).
+ && request.resource.data.get('companyName', '') is string && request.resource.data.get('companyName', '').size() <= 120
+ && request.resource.data.featured == false
+ // Promoted to members: Champion only.
+ && (request.resource.data.get('promoted', false) == false || tierRank() >= 3 || isReviewer())
+ && !('announcedAt' in request.resource.data);
+ // Staff (admins and editors) manage any post. A company edits its own while
+ // it can post jobs; once it can't (tier ended, verification removed) it can
+ // only close a post or ask for it to be deleted. It can't republish a post it
+ // asked to delete (staff decide), and only Champions feature or promote.
  allow update: if isSignedIn() && (isReviewer() || (resource.data.companyUid == myUid()
  && request.resource.data.companyUid == myUid()
  && !(resource.data.get('status', '') == 'removal_requested' && request.resource.data.get('status', '') != 'removal_requested')
- && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured']) || isPremiumUser())));
+ && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['announcedAt', 'announcedTo', 'closingNoticeFor', 'closedNoticeFor'])
+ && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['featured', 'promoted']) || tierRank() >= 3)
+ && (canPostJobs()
+ || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'statusBeforeRemoval', 'removalRequest', 'updatedAt'])
+ && request.resource.data.status in ['closed', 'removal_requested']))));
  // Only She Model Tech staff delete job posts; companies request deletion.
  allow delete: if isReviewer();
  }
@@ -545,11 +557,8 @@ service cloud.firestore {
 
  // Companies asking to sponsor a She Model Tech cohort.
  match /sponsor_requests/{id} {
- allow create: if isSignedIn() && request.resource.data.companyUid == myUid()
- && request.resource.data.status == 'new'
- && myUserDoc().get('isCompany', false) == true
- && request.resource.data.get('focus', '').size() <= 3000
- && request.resource.data.get('message', '').size() <= 1500;
+ // Retired: companies no longer sponsor cohorts. Existing requests stay readable.
+ allow create: if false;
  allow read: if isReviewer() || (isSignedIn() && resource.data.companyUid == myUid());
  allow update: if isReviewer();
  allow delete: if isAdmin();
@@ -902,10 +911,8 @@ service cloud.firestore {
 
  // Only the company itself can create, and it cannot claim to award
  // badges or to have been reviewed by She Model Tech.
- allow create: if isSignedIn()
- && request.resource.data.companyId == myUid()
- && request.resource.data.awardsBadges == false
- && request.resource.data.reviewedBySMT == false;
+ // Retired: companies no longer host cohorts. Existing ones stay readable.
+ allow create: if isReviewer();
 
  allow update: if isReviewer();
  // The company runs its own project.
@@ -986,9 +993,8 @@ service cloud.firestore {
  // actually landed. A redirect URL is not proof of payment.
  match /activation_claims/{id} {
  allow read: if isSignedIn() && (ownsExisting('companyId') || isReviewer());
- allow create: if isSignedIn()
- && ownsNew('companyId')
- && request.resource.data.status == 'claimed';
+ // Retired (Talent Access activation).
+ allow create: if false;
  allow update: if isReviewer();
  allow delete: if isAdmin();
  }
@@ -998,7 +1004,8 @@ service cloud.firestore {
  // sponsorships, a company funds stipends for one team.
  match /sponsorships/{id} {
  allow read: if isSignedIn();
- allow create: if isSignedIn() && request.resource.data.companyId == myUid();
+ // Retired company sponsorships: only staff record them now.
+ allow create: if isReviewer();
  allow update: if isReviewer();
  allow delete: if isAdmin();
  }
@@ -1006,7 +1013,8 @@ service cloud.firestore {
  // outreach, company DM allowance. Members are never metered.
  match /outreach/{docId} {
  allow read: if isSignedIn() && ownsExisting('recruiterId');
- allow create: if isSignedIn() && ownsNew('recruiterId');
+ // Retired (old recruiter outreach counter).
+ allow create: if false;
  allow update: if isSignedIn() && ownsExisting('recruiterId') && ownsNew('recruiterId')
  && request.resource.data.count == resource.data.count + 1;
  allow delete: if isAdmin();
@@ -1040,7 +1048,9 @@ service cloud.firestore {
  || isStaffUid(otherParticipant(request.resource.data.participants))
  || (getAfter(/databases/$(database)/documents/message_quota/$(myUid() + '_' + monthKey())).data.contacts.hasAny([otherParticipant(request.resource.data.participants)])
  && getAfter(/databases/$(database)/documents/message_quota/$(myUid() + '_' + monthKey())).data.contacts.size() <= 5));
- allow update: if isSignedIn() && myUid() in resource.data.participants;
+ allow update: if isSignedIn() && myUid() in resource.data.participants
+ // Nobody can change who is in a conversation.
+ && request.resource.data.participants == resource.data.participants;
  allow delete: if isAdmin();
  match /messages/{msgId} {
  allow read: if isSignedIn()
@@ -1114,7 +1124,15 @@ service cloud.firestore {
  || resource.data.get('recipientId', '') == myUid());
  // Free companies can't use notifications to reach members (only staff).
  allow create: if isSignedIn()
- && (!limitedCompany() || isStaffUid(request.resource.data.get('userId', request.resource.data.get('recipientId', ''))));
+ // One recipient per notice (userId and recipientId, when both set, match).
+ && request.resource.data.get('recipientId', request.resource.data.get('userId', '')) == request.resource.data.get('userId', request.resource.data.get('recipientId', ''))
+ && (!limitedCompany() || request.resource.data.get('userId', '') == myUid()
+ || isStaffUid(request.resource.data.get('userId', request.resource.data.get('recipientId', '')))
+ // A new-message notice to someone she already has a conversation with.
+ || (request.resource.data.get('type', '') == 'message'
+ && exists(/databases/$(database)/documents/conversations/$(request.resource.data.get('convId', '-')))
+ && myUid() in get(/databases/$(database)/documents/conversations/$(request.resource.data.convId)).data.participants
+ && request.resource.data.get('userId', '') in get(/databases/$(database)/documents/conversations/$(request.resource.data.convId)).data.participants));
  allow update, delete: if isSignedIn()
  && (resource.data.get('userId', '') == myUid()
  || resource.data.get('recipientId', '') == myUid()

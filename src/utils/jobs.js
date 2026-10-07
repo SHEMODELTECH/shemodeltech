@@ -10,6 +10,7 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { alertStaff, notifyMember } from './staffAlerts';
+import { tierRank } from '../config/tiers';
 
 export const JOB_TYPES = {
   'full-time': 'Full-time',
@@ -83,7 +84,7 @@ export const createJob = async (company, form) =>
     status: 'open',
     featured: false,
     // Champion companies' jobs are promoted to members (checked again on display).
-    promoted: company.companyTier === 'champion',
+    promoted: tierRank(company) >= 3,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
     ...(form.closesOn ? {} : { expiresAt: new Date(Date.now() + JOB_LIMITS.daysOpen * 86400000).toISOString() }),
@@ -92,8 +93,18 @@ export const createJob = async (company, form) =>
 export const updateJob = (id, form) => updateDoc(doc(db, COL, id), { ...clean(form), updatedAt: serverTimestamp() });
 export const setJobStatus = (id, status) => updateDoc(doc(db, COL, id), { status, updatedAt: serverTimestamp() });
 export const setJobFeatured = (id, featured) => updateDoc(doc(db, COL, id), { featured });
-// Only She Model Tech staff delete job posts.
-export const deleteJob = (id) => deleteDoc(doc(db, COL, id));
+// Only She Model Tech staff delete job posts. The company is told.
+export const deleteJob = async (id, job = null, reason = '') => {
+  await deleteDoc(doc(db, COL, id));
+  if (job?.companyUid) {
+    notifyMember(job.companyUid, {
+      type: 'job_deleted',
+      title: 'Your job post was removed',
+      body: `She Model Tech removed "${job.title}".${reason ? ` Reason: ${reason}` : ''} Message us if you have questions.`,
+      link: '/jobs/mine',
+    });
+  }
+};
 
 // A company asks for its post to be deleted: the post is unpublished at once
 // (nobody can apply) and staff review the request.
