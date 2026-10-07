@@ -302,6 +302,27 @@ const tidyCertificates = async (db) => {
  return snap.size;
 };
 
+// Notifications older than 6 months are deleted, a few batches per daily run,
+// so the database stays lean. Members see their latest notifications anyway
+// (the Notifications page shows the newest first, 50 at a time).
+const NOTIFICATION_MAX_AGE_DAYS = 180;
+const cleanOldNotifications = async (db, deadline) => {
+ const cutoff = admin.firestore.Timestamp.fromMillis(Date.now() - NOTIFICATION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000);
+ let removed = 0;
+ for (let round = 0; round < 10 && Date.now() < deadline; round += 1) {
+ // eslint-disable-next-line no-await-in-loop
+ const snap = await db.collection('notifications').where('createdAt', '<', cutoff).limit(400).get();
+ if (snap.empty) break;
+ const batch = db.batch();
+ snap.docs.forEach((d) => batch.delete(d.ref));
+ // eslint-disable-next-line no-await-in-loop
+ await batch.commit();
+ removed += snap.size;
+ if (snap.size < 400) break;
+ }
+ return removed;
+};
+
 module.exports = async (req, res) => {
  // Vercel Cron sends a bearer token; reject anything else so this can't be
  // triggered by a stranger hitting the URL.
@@ -511,6 +532,10 @@ module.exports = async (req, res) => {
  // ── Jobs and company tiers: new-job notices, closing reminders, tier endings ──
  try { await jobTasks(db, stats); } catch (e) { console.error('job notices skipped:', e.message); }
  try { await tierTasks(db, stats); } catch (e) { console.error('tier notices skipped:', e.message); }
+ // ── Housekeeping: delete notifications older than 6 months (stops well before the time limit) ──
+ try {
+ stats.oldNotificationsDeleted = await cleanOldNotifications(db, startedAt + 52000);
+ } catch (e) { console.error('notification clean-up skipped:', e.message); }
 
  return res.status(200).json({ ok: true, ...stats });
  } catch (err) {

@@ -71,6 +71,15 @@
   "modules": 3,
   "quizParts": 3
  },
+ "TechArchs/ai-agents-module": {
+  "title": "AI Agents for No-Code Builders",
+  "level": "Beginner",
+  "minutes": 360,
+  "trackLabel": "Low/No-Code Developer",
+  "kind": "markdown",
+  "modules": 3,
+  "quizParts": 3
+ },
  "TechArchs/crm-platforms-module": {
   "title": "CRM Platforms",
   "level": "Beginner",
@@ -431,6 +440,15 @@
   "modules": 3,
   "quizParts": 3
  },
+ "TechGuard/module-10-ai-agent-security": {
+  "title": "AI Agent Security",
+  "level": "Beginner",
+  "minutes": 360,
+  "trackLabel": "Network & Cybersecurity",
+  "kind": "markdown",
+  "modules": 3,
+  "quizParts": 3
+ },
  "TechLeads/module-1-techleads-business-leadership": {
   "title": "Business & Leadership",
   "level": "Beginner",
@@ -614,6 +632,15 @@
  },
  "TechQA/module-8-cicd-testing": {
   "title": "CI/CD Testing",
+  "level": "Beginner",
+  "minutes": 360,
+  "trackLabel": "Quality Tester",
+  "kind": "markdown",
+  "modules": 3,
+  "quizParts": 3
+ },
+ "TechQA/module-9-testing-ai-agents": {
+  "title": "Testing AI Agents",
   "level": "Beginner",
   "minutes": 360,
   "trackLabel": "Quality Tester",

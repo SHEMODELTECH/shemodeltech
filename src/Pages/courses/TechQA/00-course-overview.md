@@ -18,6 +18,7 @@ The modules build on each other, so take them in this order:
 6. **Mobile Testing.** Testing Android apps with Android Studio, and iOS apps with Xcode on a Mac.
 7. **Security Testing.** Finding common weaknesses with ZAP (now ZAP by Checkmarx), against a practice app built for the purpose.
 8. **CI/CD Testing.** Running your tests automatically on every change with GitHub Actions.
+9. **Testing AI Agents.** Checking that AI agents complete tasks, call the right tools, and resist prompt injection, with an automated evaluation suite.
 
 ---
 
@@ -47,7 +48,7 @@ Only test software you own or have written permission to test. The performance a
 Courses build the skill; a badge proves it. When you've worked through the modules, join a project on She Model Tech as a tester. Your test cases, bug reports, and automated checks become the work that earns your Quality Tester badge.
 
 ### What You Learned
-- ✅ What QA is for, and how the eight modules build on each other
+- ✅ What QA is for, and how the nine modules build on each other
 - ✅ The pattern every topic follows
 - ✅ Which tools you'll need, and when
 - ✅ The permission rule that applies to every test you run
