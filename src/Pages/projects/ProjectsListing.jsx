@@ -188,63 +188,20 @@ const ProjectsListing = () => {
   const [filters, setFilters] = useState({ industryTrack: '', timeline: '', payType: '' });
   const [loading, setLoading] = useState(true);
 
-  // Paid projects posted by companies live in their own collection
-  // (company_cohorts), so they were never on this board. Pull the open ones
-  // in and shape them like a project card; clicking goes to their own page,
-  // where the company-specific apply flow lives.
+  // Company paid work now lives in the main projects collection (one system
+  // for all paid work); the old company_cohorts collection is no longer listed.
   const [smtProjects, setSmtProjects] = useState([]);
-  const [companyProjects, setCompanyProjects] = useState([]);
   const [smtLoaded, setSmtLoaded] = useState(false);
 
-  useEffect(() => {
-    // Company paid work now lives in the main projects collection (one system
-    // for all paid work). The old company_cohorts collection held only early
-    // test posts, so it's no longer listed.
-    const q = query(collection(db, 'company_cohorts'), where('status', '==', '__retired__'));
-    const unsub = onSnapshot(
-      q,
-      (snap) => {
-        setCompanyProjects(
-          snap.docs.map((d) => {
-            const c = d.data();
-            return {
-              id: d.id,
-              href: `/paid-projects/${d.id}`,
-              isCompanyProject: true,
-              isPaid: true,
-              status: 'active',
-              applicationsOpen: true,
-              projectTitle: c.title,
-              projectDescription: c.description,
-              companyName: c.companyName,
-              companyVerified: !!c.companyVerified,
-              companyKind: c.kind || 'project',
-              contactName: c.companyName,
-              endDate: c.endDate,
-              createdAt: c.createdAt,
-              teamRoles: (c.roles || []).map((r) => ({
-                role: r.title,
-                count: r.count,
-                payAmount: r.payAmount,
-              })),
-            };
-          })
-        );
-      },
-      (err) => console.error('Error fetching company projects:', err)
-    );
-    return unsub;
-  }, []);
-
-  // One board: SMT projects + company paid projects, newest first.
+  // One board: She Model Tech projects (including paid work), newest first.
   useEffect(() => {
     // Featured projects (a Premium feature) first, then newest.
-    const merged = [...smtProjects, ...companyProjects].sort(
+    const merged = [...smtProjects].sort(
       (a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
     );
     setProjects(merged);
     if (smtLoaded) setLoading(false);
-  }, [smtProjects, companyProjects, smtLoaded]);
+  }, [smtProjects, smtLoaded]);
 
   useEffect(() => {
     // Query without orderBy so it never depends on a composite index
@@ -435,7 +392,7 @@ const ProjectsListing = () => {
                             project.status === 'lead_recruitment'
                               ? myRankedIds.includes(project.id)
                                 ? 'bg-pink-100 text-pink-700'
-                                : 'bg-amber-100 text-gray-900'
+                                : 'bg-gray-100 text-gray-900'
                               : project.status === 'setup'
                                 ? 'bg-pink-100 text-gray-900'
                                 : project.applicationsOpen === false
@@ -457,7 +414,7 @@ const ProjectsListing = () => {
                     </div>
 
                     {project.isPaid && getPayRangeLabel(project.teamRoles) && (
-                      <p className="text-amber-700 text-xs font-black mb-2">
+                      <p className="text-pink-700 text-xs font-black mb-2">
                         {getPayRangeLabel(project.teamRoles)} · paid on completion
                       </p>
                     )}

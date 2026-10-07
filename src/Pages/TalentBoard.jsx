@@ -177,7 +177,7 @@ const TalentBoard = () => {
                   <button key={t.id} onClick={() => navigate(`/profile/${encodeURIComponent(t.email)}`)}
                     className="bg-white rounded-xl border border-pink-100 p-3 text-left hover:border-pink-300">
                     <p className="text-sm font-semibold text-gray-900 truncate">{t.displayName || 'Mentor'}</p>
-                    <p className="text-xs text-amber-600 font-semibold mt-0.5">
+                    <p className="text-xs text-pink-600 font-semibold mt-0.5">
                       ★ {st.avg.toFixed(1)} <span className="text-gray-500 font-normal">({st.ratingCount} rating{st.ratingCount === 1 ? '' : 's'})</span>
                     </p>
                     <p className="text-xs text-gray-500">{st.courses.length} course{st.courses.length === 1 ? '' : 's'} · {st.enrollments || 0} enrolled · {st.completions} completed</p>
@@ -247,7 +247,7 @@ const TalentBoard = () => {
                   <div className="mt-2 flex flex-col items-center gap-1">
                     <MentorBadge count={talent.mentorApprovedCourses || 0} isMentor size="sm" />
                     {statsOf(talent)?.ratingCount > 0 && (
-                      <p className="text-xs font-semibold text-amber-600">
+                      <p className="text-xs font-semibold text-pink-600">
                         ★ {statsOf(talent).avg.toFixed(1)} <span className="text-gray-400 font-normal">({statsOf(talent).ratingCount})</span>
                       </p>
                     )}

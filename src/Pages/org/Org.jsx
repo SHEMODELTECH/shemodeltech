@@ -90,7 +90,7 @@ export const JoinOrganization = () => {
         ) : !org || org.status !== 'active' ? (
           <p className="text-gray-700">This invite link isn’t active. Ask your organization for a new one.</p>
         ) : member ? (
-          <div className="rounded-2xl border border-green-200 bg-green-50 p-6">
+          <div className="rounded-2xl border border-pink-200 bg-pink-50 p-6">
             <h1 className="text-xl font-bold text-gray-900">You’re part of {org.name}</h1>
             <p className="text-gray-700 mt-2">Start with your organization’s courses:</p>
             <ul className="mt-2 space-y-1">
@@ -248,7 +248,7 @@ export const OrgDashboard = () => {
                     <p className="text-xs text-gray-500">{m.email}{m.minor ? ' · under 18' : ''}</p>
                   </td>
                   {courses.map((c) => (
-                    <td key={c.slug} className={`p-3 ${c.status === 'Completed' ? 'text-green-700 font-semibold' : c.status === 'In progress' ? 'text-amber-700' : 'text-gray-500'}`}>{c.status}</td>
+                    <td key={c.slug} className={`p-3 ${c.status === 'Completed' ? 'text-pink-700 font-semibold' : c.status === 'In progress' ? 'text-gray-800' : 'text-gray-500'}`}>{c.status}</td>
                   ))}
                   <td className="p-3">{certs.length}</td>
                   <td className="p-3">{badges}</td>

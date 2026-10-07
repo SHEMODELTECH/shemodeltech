@@ -205,7 +205,7 @@ const CompanyCohortDetail = () => {
       </div>
 
       {/* What this is and isn't */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8">
+      <div className="bg-gray-50 border border-gray-300 rounded-xl p-4 mb-8">
         <p className="text-gray-900 text-sm font-bold mb-1">
           This is paid work, not a badge project
         </p>
@@ -266,7 +266,7 @@ const CompanyCohortDetail = () => {
                     {r.count} {r.count === 1 ? 'position' : 'positions'}
                   </p>
                 </div>
-                <span className="shrink-0 font-bold text-green-700 text-sm">
+                <span className="shrink-0 font-bold text-pink-700 text-sm">
                   {formatMoney(r.payAmount)}
                 </span>
               </div>

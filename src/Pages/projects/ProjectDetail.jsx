@@ -562,7 +562,7 @@ const ProjectDetail = () => {
                   )}
                   <ProjectPayBadge isPaid={!!project.isPaid} size="md" />
                   <span
-                    className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-bold border ${project.status === 'lead_recruitment' ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-pink-600/20 text-pink-500 border-pink-600/30'}`}
+                    className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-bold border ${project.status === 'lead_recruitment' ? 'bg-gray-100 text-gray-800 border-gray-300' : 'bg-pink-600/20 text-pink-500 border-pink-600/30'}`}
                   >
                     {project.status === 'lead_recruitment'
                       ? 'Looking for a Lead'
@@ -575,9 +575,9 @@ const ProjectDetail = () => {
 
               {project.isPaid && <TeamStrength projectId={projectId} />}
               {project.isPaid && getPayRangeLabel(project.teamRoles) && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 flex items-center justify-between gap-3">
+                <div className="bg-gray-50 border border-gray-300 rounded-xl p-3 mb-4 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-amber-800 text-sm font-bold">
+                    <p className="text-gray-900 text-sm font-bold">
                       {getPayRangeLabel(project.teamRoles)}
                     </p>
                     <p className="text-gray-500 text-xs">
@@ -768,7 +768,7 @@ const ProjectDetail = () => {
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
                         {project.isPaid && (Number(role.payAmount) || 0) > 0 && (
-                          <span className="text-amber-700 text-xs font-black bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-full">
+                          <span className="text-white text-xs font-black bg-gray-900 border border-gray-900 px-2 py-0.5 rounded-full">
                             {formatMoney(role.payAmount)} / person
                           </span>
                         )}
@@ -781,7 +781,7 @@ const ProjectDetail = () => {
                           const isFull = cap > 0 && filled >= cap;
                           return (
                             <span
-                              className={`text-xs font-bold ${isFull ? 'text-green-600' : 'text-gray-400'}`}
+                              className={`text-xs font-bold ${isFull ? 'text-pink-600' : 'text-gray-400'}`}
                             >
                               {filled} of {cap} filled{isFull ? ' · Full' : ''}
                             </span>
@@ -796,7 +796,7 @@ const ProjectDetail = () => {
 
             {/* Lead Recruitment - only the lead opening is available */}
             {project.status === 'lead_recruitment' && (
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-8">
+              <div className="bg-gray-50 border border-gray-300 rounded-2xl p-5 sm:p-8">
                 <h2 className="text-lg font-bold text-gray-900 mb-1">This project needs a lead</h2>
                 <p className="text-gray-600 text-sm mb-3">
                   No one is leading this project yet. Apply to lead it. As the lead, you guide the
@@ -823,7 +823,7 @@ const ProjectDetail = () => {
                   </p>
                 ) : memberProfile && !checkProfileComplete(memberProfile).complete ? (
                   <div>
-                    <p className="text-amber-700 text-xs mb-2">
+                    <p className="text-gray-800 text-xs mb-2">
                       Complete your profile first:{' '}
                       {checkProfileComplete(memberProfile).missing.join(', ')}.
                     </p>
@@ -865,7 +865,7 @@ const ProjectDetail = () => {
                     >
                       Join
                     </button>
-                    {interested && <p className="w-full text-green-700 text-xs font-semibold">✓ You're on the list to join the team. We'll notify you when roles open.</p>}
+                    {interested && <p className="w-full text-pink-700 text-xs font-semibold">✓ You're on the list to join the team. We'll notify you when roles open.</p>}
                     {/* The person who created this cohort can lead it directly. */}
                     {currentUser && project.createdByUid === currentUser.uid && !project.leadConfirmed && (
                       <button
@@ -892,7 +892,7 @@ const ProjectDetail = () => {
                 </p>
                 {currentUser && !memberProfile?.isCompany && (
                   interested ? (
-                    <p className="text-green-700 text-sm font-semibold mt-3">✓ We'll notify you when roles open.</p>
+                    <p className="text-pink-700 text-sm font-semibold mt-3">✓ We'll notify you when roles open.</p>
                   ) : (
                     <button
                       onClick={joinTeam}
@@ -926,7 +926,7 @@ const ProjectDetail = () => {
                   </div>
                 ) : memberProfile && !checkProfileComplete(memberProfile).complete ? (
                   <div className="text-center py-4">
-                    <p className="text-amber-700 font-semibold text-sm mb-1">
+                    <p className="text-gray-800 font-semibold text-sm mb-1">
                       Complete your profile to apply
                     </p>
                     <p className="text-gray-500 text-xs mb-3">
@@ -942,7 +942,7 @@ const ProjectDetail = () => {
                   </div>
                 ) : isMember ? (
                   <div className="text-center py-4">
-                    <p className="text-green-600 font-bold text-base mb-1">
+                    <p className="text-pink-600 font-bold text-base mb-1">
                       You have been approved!
                     </p>
                     <p className="text-gray-500 text-xs mb-3">
@@ -1103,7 +1103,7 @@ const ProjectDetail = () => {
                           const pay = Number(sel?.payAmount) || 0;
                           if (pay <= 0) return null;
                           return (
-                            <p className="text-amber-700 text-xs mt-2 font-semibold bg-amber-50 border border-amber-200 rounded-lg p-2">
+                            <p className="text-gray-800 text-xs mt-2 font-semibold bg-gray-50 border border-gray-300 rounded-lg p-2">
                               You'll be paid {formatMoney(pay)} for this role on verified
                               completion. No badge is awarded on paid projects - you're compensated
                               instead. Leaving mid-project forfeits your pay.
@@ -1227,8 +1227,8 @@ const ProjectDetail = () => {
 
             {/* Lead setup in progress (owner) */}
             {isOwner && project.status === 'setup' && (
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
-                <p className="text-amber-800 font-semibold text-sm mb-1">
+              <div className="bg-gray-50 border border-gray-300 rounded-xl p-5">
+                <p className="text-gray-900 font-semibold text-sm mb-1">
                   Finish setting up your project
                 </p>
                 <p className="text-gray-600 text-xs mb-3">
@@ -1279,8 +1279,8 @@ const ProjectDetail = () => {
 
             {/* Member workspace access - only when the apply card above isn't already showing the approved state */}
             {isMember && !isOwner && project.status !== 'active' && (
-              <div className="bg-green-50 border border-green-200 rounded-xl p-5">
-                <p className="text-green-700 font-semibold text-sm mb-1">You have been approved!</p>
+              <div className="bg-pink-50 border border-pink-200 rounded-xl p-5">
+                <p className="text-pink-700 font-semibold text-sm mb-1">You have been approved!</p>
                 <p className="text-gray-500 text-xs mb-3">
                   You can click "Open Workspace" below to join your project team.
                 </p>

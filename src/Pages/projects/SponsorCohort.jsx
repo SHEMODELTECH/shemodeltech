@@ -11,7 +11,7 @@ import { SPONSOR_LIMITS as L, createSponsorRequest, listMySponsorRequests } from
 import { useFeatures } from '../../utils/features';
 
 const EMPTY = { problemTitle: '', projects: 1, people: 4, budget: '', payPerPerson: '', focus: '', timeline: '', message: '' };
-const STATUS = { new: ['Received · awaiting payment', 'bg-amber-50 text-amber-800'], paid: ['Payment received · setting up', 'bg-pink-50 text-pink-700'], scheduled: ['Cohort created', 'bg-green-50 text-green-700'], declined: ['Not scheduled', 'bg-gray-100 text-gray-600'] };
+const STATUS = { new: ['Received · awaiting payment', 'bg-gray-50 text-gray-900'], paid: ['Payment received · setting up', 'bg-pink-50 text-pink-700'], scheduled: ['Cohort created', 'bg-pink-600 text-white'], declined: ['Not scheduled', 'bg-gray-100 text-gray-600'] };
 
 const SponsorCohort = () => {
   const { currentUser } = useAuth();
@@ -63,7 +63,7 @@ const SponsorCohort = () => {
     <div className="max-w-3xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{interestOnly ? 'Partner with us' : 'Sponsor a cohort'}</h1>
       {interestOnly && (
-        <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800">
+        <div className="mt-3 rounded-xl border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800">
           <strong>We’re focused on our first training cohorts right now.</strong> Tell us what you’d like to support and
           we’ll contact you when sponsored cohorts open. Nothing is charged, and nothing is scheduled yet.
         </div>

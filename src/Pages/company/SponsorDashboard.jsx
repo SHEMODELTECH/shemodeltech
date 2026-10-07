@@ -25,8 +25,8 @@ import {
 import { formatMoney } from '../../utils/paidProjects';
 
 const STATUS_COPY = {
-  [SPONSORSHIP_STATUS.PLEDGED]: { label: 'Awaiting payment', style: 'bg-amber-100 text-amber-700' },
-  [SPONSORSHIP_STATUS.FUNDED]: { label: 'Funded', style: 'bg-green-100 text-green-700' },
+  [SPONSORSHIP_STATUS.PLEDGED]: { label: 'Awaiting payment', style: 'bg-gray-100 text-gray-800' },
+  [SPONSORSHIP_STATUS.FUNDED]: { label: 'Funded', style: 'bg-pink-100 text-pink-700' },
   [SPONSORSHIP_STATUS.DISTRIBUTED]: { label: 'Stipends paid', style: 'bg-pink-100 text-pink-700' },
   [SPONSORSHIP_STATUS.CANCELLED]: { label: 'Cancelled', style: 'bg-gray-100 text-gray-500' },
 };
@@ -153,7 +153,7 @@ const SponsorDashboard = () => {
               )}
 
               {report?.completed && (
-                <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="mt-4 bg-pink-50 border border-pink-200 rounded-lg p-4">
                   <p className="text-gray-900 text-sm font-bold mb-1">Impact</p>
                   <p className="text-gray-700 text-xs leading-relaxed">
                     {report.womenSupported} women completed &ldquo;{report.project}&rdquo; and

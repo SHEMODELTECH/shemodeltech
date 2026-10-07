@@ -10,7 +10,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, getDoc, limit } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -53,9 +53,18 @@ const ApplyToLead = () => {
 
     (async () => {
       try {
-        // Every active She Model Tech project still looking for a lead.
+        // Every active She Model Tech project still looking for a lead. Equality
+        // and 'in' filters only (no orderBy/range), so no composite index needed.
+        // Every project is created with a status, so the 'in' filter keeps the
+        // same results as the client-side status check below.
         const snap = await getDocs(
-          query(collection(db, 'projects'), where('leadConfirmed', '==', false), where('isActive', '==', true))
+          query(
+            collection(db, 'projects'),
+            where('leadConfirmed', '==', false),
+            where('isActive', '==', true),
+            where('status', 'in', ['lead_recruitment', 'setup', 'active']),
+            limit(300)
+          )
         );
         if (cancelled) return;
         const open = snap.docs
@@ -219,8 +228,8 @@ const ApplyToLead = () => {
           projects need a lead.
         </p>
         {onWaitlist ? (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-5">
-            <p className="text-green-800 font-semibold text-sm">You&rsquo;re on the waitlist</p>
+          <div className="bg-pink-50 border border-pink-200 rounded-xl p-5">
+            <p className="text-pink-800 font-semibold text-sm">You&rsquo;re on the waitlist</p>
             <p className="text-gray-600 text-xs mt-1">
               We&rsquo;ll email {currentUser?.email} when a project needs a lead.
             </p>
@@ -267,7 +276,7 @@ const ApplyToLead = () => {
         to apply. We&rsquo;ll have a short chat before assigning leads, because a team is depending
         on whoever takes this on.
       </p>
-      <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+      <div className="mb-8 rounded-xl border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900">
         <strong>Almost there:</strong> your application isn&rsquo;t sent until you fill this in and tap
         <strong> Submit</strong> at the bottom.
       </div>
@@ -335,7 +344,7 @@ const ApplyToLead = () => {
         className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:border-pink-500 text-sm outline-none resize-y mb-1"
       />
       <p
-        className={`text-xs mb-6 ${pitch.trim().length >= 40 ? 'text-green-700' : 'text-gray-500'}`}
+        className={`text-xs mb-6 ${pitch.trim().length >= 40 ? 'text-pink-700' : 'text-gray-500'}`}
         aria-live="polite"
       >
         {pitch.trim().length >= 40

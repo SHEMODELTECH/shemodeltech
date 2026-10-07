@@ -81,8 +81,8 @@ const About = () => {
             {[
               ['Mentorship', 'Experienced mentors create courses in the Mentor Hub.', 'bg-pink-50 text-pink-700 border-pink-100'],
               ['IT skills training', 'Hands-on, real-world projects built in teams, plus free courses in She Model Tech Learning with certificates of completion.', 'bg-pink-50 text-pink-700 border-pink-100'],
-              ['Leadership development', 'Lead a real project team, from planning to delivery, and earn a leadership badge.', 'bg-amber-50 text-amber-700 border-amber-100'],
-              ['Networking', 'Build connections on the Proof Wall and Talent Board, and through real teamwork.', 'bg-green-50 text-green-700 border-green-100'],
+              ['Leadership development', 'Lead a real project team, from planning to delivery, and earn a leadership badge.', 'bg-gray-50 text-gray-800 border-gray-200'],
+              ['Networking', 'Build connections on the Proof Wall and Talent Board, and through real teamwork.', 'bg-pink-50 text-pink-700 border-pink-100'],
             ].map(([t, d, c]) => (
               <div key={t} className="bg-white rounded-xl border border-gray-200 p-5">
                 <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border ${c}`}>{t}</span>

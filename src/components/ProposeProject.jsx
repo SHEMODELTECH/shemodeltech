@@ -40,7 +40,7 @@ const ProposeProject = ({ startOpen = false }) => {
   const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   const label = 'block text-sm font-semibold text-gray-800 mb-1';
   const hint = 'font-normal text-gray-500';
-  const statusTag = { new: ['Under review', 'bg-amber-50 text-amber-800'], approved: ['Approved', 'bg-green-50 text-green-700'], declined: ['Not taken forward', 'bg-gray-100 text-gray-600'] };
+  const statusTag = { new: ['Under review', 'bg-gray-100 text-gray-900'], approved: ['Approved', 'bg-pink-50 text-pink-700'], declined: ['Not taken forward', 'bg-gray-100 text-gray-600'] };
 
   return (
     <div className="rounded-2xl border border-pink-200 bg-white p-5 text-left">

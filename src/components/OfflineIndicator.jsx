@@ -7,7 +7,7 @@ const OfflineIndicator = () => {
   
   return (
     <div 
-      className={`fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-amber-500 to-red-500 text-white px-3 py-2 sm:px-4 sm:py-2.5 text-center transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-gray-900 to-red-500 text-white px-3 py-2 sm:px-4 sm:py-2.5 text-center transition-transform duration-300 ${
         isOnline ? '-translate-y-full' : 'translate-y-0'
       }`}
       role="status"

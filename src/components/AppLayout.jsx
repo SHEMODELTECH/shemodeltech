@@ -64,7 +64,9 @@ const AppLayout = ({ children }) => {
   // Unread messages
   useEffect(() => {
     if (!currentUser) return;
-    const q = query(collection(db, 'conversations'), where('participants', 'array-contains', currentUser.uid));
+    // Capped so a member with a huge inbox doesn't keep thousands of conversations
+    // live; 300 covers normal use and the badge shows "9+" at most.
+    const q = query(collection(db, 'conversations'), where('participants', 'array-contains', currentUser.uid), limit(300));
     const unsub = onSnapshot(q, (snap) => {
       let total = 0;
       snap.docs.forEach(d => { total += (d.data().unreadBy || {})[currentUser.uid] || 0; });

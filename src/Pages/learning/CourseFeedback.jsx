@@ -230,7 +230,7 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
                 <div key={i} className="flex items-center gap-2 text-xs text-gray-600">
                   <span className="w-3">{5 - i}</span>
                   <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-amber-400" style={{ width: `${ratings.length ? (n / ratings.length) * 100 : 0}%` }} />
+                    <div className="h-full bg-pink-500" style={{ width: `${ratings.length ? (n / ratings.length) * 100 : 0}%` }} />
                   </div>
                   <span className="w-5 text-right">{n}</span>
                 </div>
@@ -254,7 +254,7 @@ const CourseFeedback = ({ track, slug, courseTitle, authorUid = '', authorName =
                 onFocus={() => setHover(n)}
                 onBlur={() => setHover(0)}
                 onClick={() => rate(n)}
-                className="p-0.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                className="p-0.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
               >
                 <Star filled={n <= shown} className="w-7 h-7" />
               </button>

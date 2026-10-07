@@ -331,8 +331,9 @@ export const getCohortProjects = async (cohortId) => {
  * Completion stats - the number that actually matters. "22 of 30 completed"
  * is what you show a partner company; "400 members" is not.
  */
-export const getCohortStats = async (cohortId) => {
-  const projects = await getCohortProjects(cohortId);
+export const getCohortStats = async (cohortId, preloadedProjects = null) => {
+  // Callers that already loaded the cohort's projects pass them in to avoid a second read.
+  const projects = Array.isArray(preloadedProjects) ? preloadedProjects : await getCohortProjects(cohortId);
   const completed = projects.filter(
     (p) => p.status === 'completed' || p.status === 'awaiting_payment_confirmation'
   );

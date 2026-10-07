@@ -140,10 +140,10 @@ const CohortManager = () => {
       const rows = await Promise.all(
         snap.docs.map(async (d) => {
           const cohort = { id: d.id, ...d.data() };
-          const [projects, stats] = await Promise.all([
-            getCohortProjects(d.id).catch(() => []),
-            getCohortStats(d.id).catch(() => null),
-          ]);
+          // One projects read per cohort; the stats are worked out from it.
+          const loaded = await getCohortProjects(d.id).catch(() => null);
+          const projects = loaded || [];
+          const stats = loaded ? await getCohortStats(d.id, loaded).catch(() => null) : null;
           return { cohort, projects, stats };
         })
       );
@@ -859,7 +859,7 @@ const CohortManager = () => {
               )}
 
               {drafts > 0 && (
-                <p className="text-amber-700 text-xs mb-3">
+                <p className="text-gray-800 text-xs mb-3">
                   {drafts} project{drafts === 1 ? ' is' : 's are'} still hidden. Read the briefs
                   before publishing, a weak brief costs a team six weeks.
                 </p>

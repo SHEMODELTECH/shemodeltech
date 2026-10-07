@@ -74,7 +74,7 @@ const SubmissionForm = ({ project, onSubmit, submitting, disabled, disabledReaso
       />
       {repoUrl && !parsed.valid && <p className="text-red-600 text-xs mt-1.5">{parsed.error}</p>}
       {parsed.valid && (
-        <p className="text-green-700 text-xs mt-1.5">
+        <p className="text-pink-700 text-xs mt-1.5">
           Repository recognised: {parsed.owner}/{parsed.repo}
         </p>
       )}
@@ -162,7 +162,7 @@ const SubmissionForm = ({ project, onSubmit, submitting, disabled, disabledReaso
       )}
 
       {disabled && disabledReason && (
-        <p className="text-amber-700 text-xs mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3">
+        <p className="text-gray-900 text-xs mt-4 bg-gray-50 border border-gray-300 rounded-lg p-3">
           {disabledReason}
         </p>
       )}

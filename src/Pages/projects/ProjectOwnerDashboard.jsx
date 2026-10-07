@@ -563,9 +563,9 @@ const ProjectOwnerDashboard = () => {
                     const revealed = cohort && sponsored.some((p) => p.cohortId === cohort.id);
                     const [label, tone] =
                       r.status === 'declined' ? ['Not scheduled', 'bg-gray-100 text-gray-700']
-                      : r.status === 'new' ? ['Received · awaiting payment', 'bg-amber-50 text-amber-800']
+                      : r.status === 'new' ? ['Received · awaiting payment', 'bg-gray-50 text-gray-900']
                       : r.status === 'paid' ? ['Payment received · setting up', 'bg-pink-50 text-pink-700']
-                      : revealed ? ['Running', 'bg-green-50 text-green-700']
+                      : revealed ? ['Running', 'bg-pink-600 text-white']
                       : ['Cohort created · being prepared', 'bg-pink-50 text-pink-700'];
                     return (
                       <li key={r.id} className="bg-white border border-gray-200 rounded-xl p-4">
@@ -729,7 +729,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
             <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-600 text-[10px] font-medium">{getIndustryLabel(project.industryTrack)}</span>
             <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-600 text-[10px] font-medium">{formatTimeline(project.timeline)}</span>
             {project.isPaid ? (
-              <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+              <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-gray-900 text-white border border-gray-900">
                 Paid Project
               </span>
             ) : (
@@ -740,7 +740,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
           </div>
         </div>
         <div className="flex gap-2">
-          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${isRejected ? 'bg-red-50 text-red-600 border-red-200' : isAwaitingPayment ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-pink-600/20 text-pink-500 border-pink-600/30'}`}>
+          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${isRejected ? 'bg-red-50 text-red-600 border-red-200' : isAwaitingPayment ? 'bg-gray-50 text-gray-800 border-gray-300' : 'bg-pink-600/20 text-pink-500 border-pink-600/30'}`}>
             {isRejected ? 'Rejected' : isCompleted ? 'Completed' : isAwaitingPayment ? 'Awaiting Payment Confirmation' : isSetup ? 'Setting up' : 'Active'}
           </span>
         </div>
@@ -851,7 +851,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                       I've paid everyone
                     </button>
                   )}
-                  <Link to={`/disputes/${project.id}`} className="px-4 py-2 min-h-[40px] bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 font-semibold rounded-lg text-xs flex items-center">
+                  <Link to={`/disputes/${project.id}`} className="px-4 py-2 min-h-[40px] bg-gray-50 border border-gray-300 text-gray-800 hover:bg-gray-100 font-semibold rounded-lg text-xs flex items-center">
                     Payment status{Object.values(project.paymentConfirmations || {}).some(c => c?.status === 'disputed') ? ' · Dispute open' : ''}
                   </Link>
                 </>
@@ -869,15 +869,15 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                       </button>
                     )}
                     {canFeature ? (
-                      <button onClick={onToggleFeatured} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-amber-800">
+                      <button onClick={onToggleFeatured} className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-pink-700">
                         {project.featured ? 'Stop featuring' : '★ Feature this project'}
                       </button>
                     ) : (
-                      <a href="/premium" className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-amber-700">★ Feature with Premium</a>
+                      <a href="/premium" className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-pink-700">★ Feature with Premium</a>
                     )}
                     {(project.approvedMembers?.length || 0) === 0 && (
                       project.deletionRequested ? (
-                        <span className="block px-3 py-2 text-amber-600">Deletion requested</span>
+                        <span className="block px-3 py-2 text-gray-700">Deletion requested</span>
                       ) : (
                         <button onClick={onRequestDeletion} className="w-full text-left px-3 py-2 rounded-lg hover:bg-red-50 text-red-600 border-t border-gray-100 mt-1">
                           Request deletion
@@ -922,7 +922,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                       setRequestingFor(app.id);
                       setRequestText(app.feedbackRequest?.message || 'Send me your portfolio.');
                     }}
-                    className="px-3 py-1.5 min-h-[36px] bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold rounded-lg text-xs transition-all border border-amber-200"
+                    className="px-3 py-1.5 min-h-[36px] bg-gray-50 hover:bg-gray-100 text-gray-800 font-bold rounded-lg text-xs transition-all border border-gray-300"
                   >
                     Request Info
                   </button>
@@ -957,8 +957,8 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
 
               {/* Earlier request - the conversation continues in Messages */}
               {app.feedbackRequest?.message && requestingFor !== app.id && (
-                <div className="mt-3 bg-amber-50 border border-amber-100 rounded-lg p-3">
-                  <p className="text-amber-800 text-xs"><span className="font-semibold">You asked:</span> "{app.feedbackRequest.message}"</p>
+                <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-3">
+                  <p className="text-gray-900 text-xs"><span className="font-semibold">You asked:</span> "{app.feedbackRequest.message}"</p>
                   <Link to={`/messages?with=${app.applicantUid}`} className="inline-block mt-1.5 text-pink-600 text-xs font-semibold hover:underline">
                     Open conversation →
                   </Link>
@@ -967,7 +967,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
 
               {/* Composer for the request */}
               {requestingFor === app.id && (
-                <div className="mt-3 bg-white border border-amber-200 rounded-lg p-3 space-y-2">
+                <div className="mt-3 bg-white border border-gray-300 rounded-lg p-3 space-y-2">
                   <p className="text-gray-600 text-xs">Ask the applicant for something specific (e.g. their portfolio). This starts a conversation in <span className="font-semibold">Messages</span> - they reply from their inbox and you can chat from there.</p>
                   <textarea
                     value={requestText}
@@ -980,7 +980,7 @@ const ProjectCard = ({ project, currentUser, onApprove, onReject, onRequestInfo,
                     <button onClick={() => setRequestingFor(null)} className="text-gray-500 text-xs font-semibold px-3 py-1.5">Cancel</button>
                     <button
                       onClick={() => { onRequestInfo(app, requestText); setRequestingFor(null); }}
-                      className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-all"
+                      className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-all"
                     >
                       Send request
                     </button>

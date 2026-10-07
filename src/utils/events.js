@@ -17,7 +17,7 @@
 // waitlist run on the server: api/cron/project-reminders.js?task=events.
 
 import {
-  addDoc, collection, deleteDoc, deleteField, doc, getCountFromServer, getDoc, getDocs, query,
+  addDoc, collection, deleteDoc, deleteField, doc, getCountFromServer, getDoc, getDocs, limit, orderBy, query,
   serverTimestamp, setDoc, updateDoc, where,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -50,11 +50,39 @@ export const formatWhen = (e) => {
 // Published events are shared for one minute between the dashboard card and the
 // Events page, so moving between them doesn't download every event again.
 let publishedCache = { at: 0, promise: null };
+// Members only see upcoming events plus past/cancelled ones switched on with
+// showOnPage, so read just those instead of every published event ever:
+//  - upcoming: published == true && startAt >= (now - 2 days), ordered by startAt
+//    (needs the composite index events: published ASC, startAt ASC; until it is
+//    deployed the query fails and we fall back to the full read below)
+//  - shown on the page: published == true && showOnPage == true (equality only,
+//    no composite index), capped.
+// The pages still filter with isListed / isPast exactly as before.
+const PAST_SHOWN_CAP = 200;
+let narrowEventsQueryOk = true;
+const docsToEvents = (s) => s.docs.map((d) => ({ id: d.id, ...d.data() }));
+const readAllPublished = () =>
+  getDocs(query(collection(db, 'events'), where('published', '==', true))).then(docsToEvents);
+const readListedPublished = async () => {
+  if (!narrowEventsQueryOk) return readAllPublished();
+  const since = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
+  try {
+    const [up, shown] = await Promise.all([
+      getDocs(query(collection(db, 'events'), where('published', '==', true), where('startAt', '>=', since), orderBy('startAt', 'asc'))),
+      getDocs(query(collection(db, 'events'), where('published', '==', true), where('showOnPage', '==', true), limit(PAST_SHOWN_CAP))),
+    ]);
+    const byId = new Map();
+    [...docsToEvents(up), ...docsToEvents(shown)].forEach((e) => byId.set(e.id, e));
+    return [...byId.values()];
+  } catch (err) {
+    // Most likely the composite index isn't deployed yet: read everything as before.
+    if (err?.code === 'failed-precondition') narrowEventsQueryOk = false;
+    return readAllPublished();
+  }
+};
 export const listPublishedEvents = async () => {
   if (publishedCache.promise && Date.now() - publishedCache.at < 60 * 1000) return publishedCache.promise;
-  const promise = getDocs(query(collection(db, 'events'), where('published', '==', true))).then((s) =>
-    s.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => toMs(a.startAt) - toMs(b.startAt))
-  );
+  const promise = readListedPublished().then((list) => list.sort((a, b) => toMs(a.startAt) - toMs(b.startAt)));
   publishedCache = { at: Date.now(), promise };
   promise.catch(() => {
     if (publishedCache.promise === promise) publishedCache = { at: 0, promise: null };
@@ -78,7 +106,10 @@ export const saveRecording = async (eventId, url) => {
   await setDoc(doc(db, 'events', eventId, 'members', 'info'), { recordingUrl: url || '' }, { merge: true });
   await updateDoc(doc(db, 'events', eventId), { hasRecording: !!url, recordingUrl: deleteField() });
 };
-export const setShowOnPage = (eventId, on) => updateDoc(doc(db, 'events', eventId), { showOnPage: !!on });
+export const setShowOnPage = (eventId, on) => {
+  publishedCache = { at: 0, promise: null };
+  return updateDoc(doc(db, 'events', eventId), { showOnPage: !!on });
+};
 // Upcoming, not cancelled: always listed. Past or cancelled: only when switched on.
 export const isListed = (e) => (isPast(e) || e.status === 'cancelled' ? e.showOnPage === true : true);
 

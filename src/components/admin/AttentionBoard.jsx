@@ -85,7 +85,7 @@ const AttentionBoard = ({ isAdmin, onTab }) => {
     <div className="mb-8">
       <div className="flex items-baseline justify-between mb-3">
         <h2 className="text-lg font-bold text-gray-900">Needs your attention</h2>
-        <span className={`text-sm font-semibold ${total ? 'text-pink-700' : 'text-green-700'}`}>{total ? `${total} waiting` : 'All clear'}</span>
+        <span className={`text-sm font-semibold ${total ? 'text-pink-700' : 'text-pink-700'}`}>{total ? `${total} waiting` : 'All clear'}</span>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {cards.map(([label, n, sub, go]) => {

@@ -116,7 +116,7 @@ const MyWorkspaces = () => {
                   {project.isOwner && (
                     <span className="text-[10px] font-semibold bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full">Owner</span>
                   )}
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-md ${project.status === 'active' ? 'bg-pink-50 text-pink-700' : project.status === 'setup' ? 'bg-amber-50 text-amber-700' : 'bg-amber-50 text-amber-700'}`}>
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-md ${project.status === 'active' ? 'bg-pink-50 text-pink-700' : project.status === 'setup' ? 'bg-gray-50 text-gray-800' : 'bg-gray-50 text-gray-800'}`}>
                     {project.status === 'active' ? 'Active' : project.status === 'setup' ? 'Setting up' : 'Completing'}
                   </span>
                   <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

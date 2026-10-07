@@ -94,11 +94,11 @@ const DeadlineBanner = ({ project }) => {
   if (inGrace) {
     const left = graceWindow - graceUsed + 1;
     return (
-      <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-5">
-        <p className="text-amber-900 font-bold text-sm mb-1">
+      <div className="bg-gray-50 border-2 border-gray-300 rounded-xl p-4 mb-5">
+        <p className="text-gray-900 font-bold text-sm mb-1">
           Grace period, {left} day{left === 1 ? '' : 's'} left
         </p>
-        <p className="text-amber-800 text-xs leading-relaxed">
+        <p className="text-gray-800 text-xs leading-relaxed">
           The deadline has passed, but you still have time. Badges and certificates are awarded
           after review, so it&rsquo;s worth finishing.
         </p>

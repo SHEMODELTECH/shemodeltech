@@ -66,7 +66,7 @@ const CompanyDetailsForm = ({ uid, profile, onSaved }) => {
     <form onSubmit={save} className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6 mb-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-bold text-gray-900">Company details</h2>
-        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${profile?.isVerified ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'}`}>
+        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${profile?.isVerified ? 'bg-pink-50 text-pink-700' : 'bg-gray-100 text-gray-900'}`}>
           {profile?.isVerified ? 'VERIFIED' : 'NOT VERIFIED YET'}
         </span>
       </div>

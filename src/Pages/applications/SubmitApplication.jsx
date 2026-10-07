@@ -117,7 +117,7 @@ const SubmitApplication = () => {
                      ></div>
                 <span className="text-pink-500 uppercase tracking-wider xs:tracking-widest text-[10px] xs:text-xs sm:text-sm md:text-base lg:text-lg font-black" 
                       style={{
-                        textShadow: '0 0 20px rgba(34,197,94,0.7), 2px 2px 4px rgba(0,0,0,0.9)',
+                        textShadow: '0 0 20px rgba(212,20,112,0.7), 2px 2px 4px rgba(0,0,0,0.9)',
                         fontFamily: '"Inter", sans-serif',
                         letterSpacing: '0.1em'
                       }}>
@@ -134,14 +134,14 @@ const SubmitApplication = () => {
                     background: 'linear-gradient(135deg, #ffffff 0%, #f7fbff 50%, #ffffff 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    textShadow: '0 0 40px rgba(255,255,255,0.3), 0 0 80px rgba(34,197,94,0.18)',
+                    textShadow: '0 0 40px rgba(255,255,255,0.3), 0 0 80px rgba(212,20,112,0.18)',
                     filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.9))'
                   }}>
                 Submit Your{' '}
-                <span className="block mt-1 xs:mt-2 sm:mt-3 md:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-500 to-amber-400"
+                <span className="block mt-1 xs:mt-2 sm:mt-3 md:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-pink-500 to-pink-700"
                       style={{
                         textShadow: 'none',
-                        filter: 'drop-shadow(0 0 20px rgba(34,197,94,0.45))',
+                        filter: 'drop-shadow(0 0 20px rgba(212,20,112,0.45))',
                         
                       }}>
                   Application
@@ -157,7 +157,7 @@ const SubmitApplication = () => {
                 <span className="text-pink-500 font-semibold block sm:inline mt-1 sm:mt-0"> Get access to exclusive opportunities</span> and connect with industry leaders.
               </p>
               
-              <div className="h-0.5 xs:h-1 sm:h-1.5 md:h-2 w-12 xs:w-16 sm:w-20 md:w-24 lg:w-32 bg-gradient-to-r from-pink-500 to-amber-400 mx-auto rounded-full shadow-2xl mb-6 xs:mb-8 sm:mb-10 md:mb-12 lg:mb-16"
+              <div className="h-0.5 xs:h-1 sm:h-1.5 md:h-2 w-12 xs:w-16 sm:w-20 md:w-24 lg:w-32 bg-gradient-to-r from-pink-500 to-pink-700 mx-auto rounded-full shadow-2xl mb-6 xs:mb-8 sm:mb-10 md:mb-12 lg:mb-16"
                    ></div>
             </div>
           </section>
@@ -168,7 +168,7 @@ const SubmitApplication = () => {
               
               {/* Status Messages */}
               {submitStatus === 'success' && (
-                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-pink-500/12 to-amber-500/12 border border-pink-500/30 rounded-lg xs:rounded-xl">
+                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-pink-500/12 to-pink-700/12 border border-pink-500/30 rounded-lg xs:rounded-xl">
                   <div className="flex items-start xs:items-center">
                     <div className="text-pink-400 text-xl xs:text-2xl mr-3 xs:mr-4 flex-shrink-0">✓</div>
                     <div className="flex-1">
@@ -180,11 +180,11 @@ const SubmitApplication = () => {
               )}
 
               {submitStatus === 'error' && (
-                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gradient-to-r from-amber-500/12 to-amber-400/12 border border-amber-500/30 rounded-lg xs:rounded-xl">
+                <div className="mb-6 xs:mb-7 sm:mb-8 p-4 xs:p-5 sm:p-6 bg-gray-100 border border-gray-300 rounded-lg xs:rounded-xl">
                   <div className="flex items-start xs:items-center">
-                    <div className="text-amber-400 text-xl xs:text-2xl mr-3 xs:mr-4 flex-shrink-0">⚠</div>
+                    <div className="text-gray-900 text-xl xs:text-2xl mr-3 xs:mr-4 flex-shrink-0">⚠</div>
                     <div className="flex-1">
-                      <h3 className="text-amber-400 font-bold text-base xs:text-lg mb-1 xs:mb-2">Submission Failed</h3>
+                      <h3 className="text-gray-900 font-bold text-base xs:text-lg mb-1 xs:mb-2">Submission Failed</h3>
                       <p className="text-gray-700 text-xs xs:text-sm sm:text-base">There was an error submitting your application. Please try again or contact support.</p>
                     </div>
                   </div>
@@ -398,13 +398,13 @@ const SubmitApplication = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting || !formData.firstName.trim() || !formData.lastName.trim() || !formData.experience.trim() || !formData.motivation.trim()}
-                    className="group relative bg-gradient-to-r from-pink-500 to-amber-500 text-white px-6 xs:px-8 sm:px-10 md:px-12 py-3 xs:py-4 sm:py-5 md:py-6 rounded-full font-black text-sm xs:text-base sm:text-lg md:text-xl transition-all duration-500 shadow-2xl overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                    className="group relative bg-gradient-to-r from-pink-500 to-pink-700 text-white px-6 xs:px-8 sm:px-10 md:px-12 py-3 xs:py-4 sm:py-5 md:py-6 rounded-full font-black text-sm xs:text-base sm:text-lg md:text-xl transition-all duration-500 shadow-2xl overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                     style={{
-                      boxShadow: '0 0 40px rgba(34,197,94,0.18), 0 20px 40px rgba(0,0,0,0.3)',
+                      boxShadow: '0 0 40px rgba(212,20,112,0.18), 0 20px 40px rgba(0,0,0,0.3)',
                       fontFamily: '"Inter", sans-serif'
                     }}
                   >
-                    <span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
                     <span className="relative flex items-center justify-center">
                       {isSubmitting ? (
                         <>
@@ -446,7 +446,7 @@ const SubmitApplication = () => {
                 />
                 <span className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-black" 
                       style={{
-                        textShadow: '0 0 20px rgba(34,197,94,0.45), 2px 2px 4px rgba(0,0,0,0.8)',
+                        textShadow: '0 0 20px rgba(212,20,112,0.45), 2px 2px 4px rgba(0,0,0,0.8)',
                         fontFamily: '"Inter", sans-serif'
                       }}>
                   She Model Tech
@@ -464,7 +464,7 @@ const SubmitApplication = () => {
             <div className="text-center sm:text-left">
               <h4 className="text-base xs:text-lg sm:text-xl font-black text-pink-400 mb-3 xs:mb-4 sm:mb-5 md:mb-6"
                   style={{
-                    textShadow: '0 0 15px rgba(34,197,94,0.8), 2px 2px 4px rgba(0,0,0,0.8)',
+                    textShadow: '0 0 15px rgba(212,20,112,0.8), 2px 2px 4px rgba(0,0,0,0.8)',
                     fontFamily: '"Inter", sans-serif'
                   }}>
                 Quick Links
@@ -500,7 +500,7 @@ const SubmitApplication = () => {
             <div className="text-center sm:text-left sm:col-span-2 md:col-span-1">
               <h4 className="text-base xs:text-lg sm:text-xl font-black text-pink-400 mb-3 xs:mb-4 sm:mb-5 md:mb-6"
                   style={{
-                    textShadow: '0 0 15px rgba(34,197,94,0.8), 2px 2px 4px rgba(0,0,0,0.8)',
+                    textShadow: '0 0 15px rgba(212,20,112,0.8), 2px 2px 4px rgba(0,0,0,0.8)',
                     fontFamily: '"Inter", sans-serif'
                   }}>
                 Support & Legal
@@ -560,8 +560,8 @@ const SubmitApplication = () => {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
         
         @keyframes glow {
-          0%, 100% { filter: drop-shadow(0 0 20px rgba(34,197,94,0.45)); }
-          50% { filter: drop-shadow(0 0 40px rgba(34,197,94,0.7)); }
+          0%, 100% { filter: drop-shadow(0 0 20px rgba(212,20,112,0.45)); }
+          50% { filter: drop-shadow(0 0 40px rgba(212,20,112,0.7)); }
         }
         
         * {
@@ -584,12 +584,12 @@ const SubmitApplication = () => {
         }
         
         ::-webkit-scrollbar-thumb {
-          background: rgba(34, 197, 94, 0.5);
+          background: rgba(212, 20, 112, 0.5);
           border-radius: 4px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-          background: rgba(34, 197, 94, 0.7);
+          background: rgba(212, 20, 112, 0.7);
         }
 
         /* Touch targets for mobile */

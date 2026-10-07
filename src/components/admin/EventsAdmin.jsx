@@ -3,10 +3,11 @@
 // see who registered (and demo day presenters), tell people about changes or a
 // cancellation, and send the recording afterwards.
 import React, { useEffect, useState } from 'react';
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { notifyMember, notifyMembers } from '../../utils/staffAlerts';
+import { readUsersForSending } from '../../utils/readUsersPaged';
 import { uploadImageToBlob, validateImageFile } from '../../utils/blobStorage';
 import {
   CATEGORY_LABEL, EVENT_CATEGORIES, deleteEvent, formatWhen, getJoinUrl, getRecordingUrl, isPast, listAllEvents,
@@ -104,8 +105,7 @@ const EventsAdmin = () => {
       }
 
       if (announce && !(original && original.announcedAt)) {
-        const users = (await getDocs(collection(db, 'users'))).docs
-          .map((d) => ({ uid: d.id, ...d.data() }))
+        const users = (await readUsersForSending((n) => setProgress(`Reading members: ${n}…`)))
           .filter((u) => !u.isCompany && u.onboardingComplete);
         // A few at a time, with phone notifications sent in groups.
         const done = await notifyMembers(

@@ -95,7 +95,7 @@ const CompanyCohortList = () => {
                 <p className="font-bold text-gray-900 text-sm mt-0.5">{c.title}</p>
                 <p className="text-gray-500 text-xs mt-1 line-clamp-2">{c.description}</p>
                 <div className="flex flex-wrap gap-3 mt-2 text-xs">
-                  <span className="text-green-700 font-semibold">
+                  <span className="text-pink-700 font-semibold">
                     {formatMoney(c.totalBudget)} total
                   </span>
                   <span className="text-gray-400">

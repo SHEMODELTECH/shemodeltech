@@ -20,8 +20,8 @@ const STATUS = {
   pending: { label: 'Applied', cls: 'bg-pink-50 text-pink-700 border-pink-200' },
   interview: { label: 'Interview', cls: 'bg-pink-50 text-pink-700 border-pink-200' },
   interview_scheduled: { label: 'Interview', cls: 'bg-pink-50 text-pink-700 border-pink-200' },
-  approved: { label: 'On the team', cls: 'bg-green-50 text-green-700 border-green-200' },
-  offered_role: { label: 'Offered a role', cls: 'bg-green-50 text-green-700 border-green-200' },
+  approved: { label: 'On the team', cls: 'bg-pink-50 text-pink-700 border-pink-200' },
+  offered_role: { label: 'Offered a role', cls: 'bg-pink-50 text-pink-700 border-pink-200' },
   completed: { label: 'Completed', cls: 'bg-pink-50 text-pink-700 border-pink-200' },
   rejected: { label: 'Not selected', cls: 'bg-gray-100 text-gray-600 border-gray-200' },
   removed: { label: 'Removed', cls: 'bg-gray-100 text-gray-600 border-gray-200' },
@@ -209,7 +209,7 @@ const JoinedProjects = ({ currentUser }) => {
                 <span
                   className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${
                     r.isPaid
-                      ? 'bg-amber-100 text-amber-800 border-amber-200'
+                      ? 'bg-gray-900 text-white border-gray-900'
                       : 'bg-pink-50 text-pink-600 border-pink-100'
                   }`}
                 >

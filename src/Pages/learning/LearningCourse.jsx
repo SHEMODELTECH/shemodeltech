@@ -426,7 +426,7 @@ const LearningCourse = ({ reading = false }) => {
               <button onClick={start} className="fd-btn text-base px-6 py-3">{ctaLabel}</button>
               {done && (
                 <>
-                  <span className="flex items-center gap-1.5 text-sm font-semibold text-green-700">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-pink-700">
                     <CheckIcon className="w-4 h-4" /> You completed this course
                   </span>
                   {!noCert && (

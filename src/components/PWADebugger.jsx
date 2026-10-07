@@ -183,7 +183,7 @@ const PWADebugger = () => {
     return (
       <button
         onClick={() => setIsMinimized(false)}
-        className="fixed bottom-3 sm:bottom-4 right-3 sm:right-4 bg-black/95 text-amber-400 p-2 sm:p-3 rounded-lg z-50 border border-amber-400 hover:bg-amber-400/10 transition-colors"
+        className="fixed bottom-3 sm:bottom-4 right-3 sm:right-4 bg-black/95 text-pink-400 p-2 sm:p-3 rounded-lg z-50 border border-pink-400 hover:bg-pink-400/10 transition-colors"
         aria-label="Open PWA debugger"
       >
         <span className="text-sm sm:text-base">🔍</span>
@@ -192,9 +192,9 @@ const PWADebugger = () => {
   }
 
   return (
-    <div className="fixed bottom-3 sm:bottom-4 right-3 sm:right-4 left-3 sm:left-auto bg-black/95 text-white p-3 sm:p-4 rounded-lg w-auto sm:max-w-lg max-h-[60vh] sm:max-h-96 overflow-auto text-xs z-50 border border-amber-400 font-mono shadow-2xl">
+    <div className="fixed bottom-3 sm:bottom-4 right-3 sm:right-4 left-3 sm:left-auto bg-black/95 text-white p-3 sm:p-4 rounded-lg w-auto sm:max-w-lg max-h-[60vh] sm:max-h-96 overflow-auto text-xs z-50 border border-pink-400 font-mono shadow-2xl">
       <div className="flex justify-between items-start sm:items-center mb-3 gap-2">
-        <h3 className="text-amber-400 font-bold text-xs sm:text-sm flex-shrink-0">🔍 PWA Debug</h3>
+        <h3 className="text-pink-400 font-bold text-xs sm:text-sm flex-shrink-0">🔍 PWA Debug</h3>
         <div className="flex gap-1 sm:gap-2 flex-wrap justify-end">
           <button 
             onClick={handleForceInstallCheck}
@@ -220,7 +220,7 @@ const PWADebugger = () => {
 
       {/* PWA Status */}
       <div className="mb-2 sm:mb-3 p-2 bg-gray-800 rounded">
-        <h4 className="text-amber-500 font-semibold mb-1 text-[10px] sm:text-xs">📱 PWA Status</h4>
+        <h4 className="text-pink-400 font-semibold mb-1 text-[10px] sm:text-xs">📱 PWA Status</h4>
         <div className="grid grid-cols-2 gap-1 text-[10px] sm:text-xs">
           <span className={isInstallable ? 'text-pink-400' : 'text-red-400'}>
             Installable: {isInstallable ? '✅' : '❌'}
@@ -231,7 +231,7 @@ const PWADebugger = () => {
           <span className={isOnline ? 'text-pink-400' : 'text-red-400'}>
             Online: {isOnline ? '✅' : '❌'}
           </span>
-          <span className={installing ? 'text-amber-500' : 'text-gray-400'}>
+          <span className={installing ? 'text-pink-400' : 'text-gray-400'}>
             Installing: {installing ? '⏳' : '❌'}
           </span>
         </div>
@@ -262,7 +262,7 @@ const PWADebugger = () => {
 
       {/* Detailed Debug Info */}
       <details className="mb-2">
-        <summary className="cursor-pointer text-amber-400 font-semibold text-[10px] sm:text-xs hover:text-amber-400">
+        <summary className="cursor-pointer text-pink-400 font-semibold text-[10px] sm:text-xs hover:text-pink-400">
           🔍 Detailed Debug Info
         </summary>
         <pre className="mt-2 text-[9px] sm:text-xs bg-gray-900 p-2 rounded overflow-auto max-h-32 sm:max-h-40 whitespace-pre-wrap break-words">
@@ -273,7 +273,7 @@ const PWADebugger = () => {
       {/* Manifest Data */}
       {manifestData && (
         <details className="mb-2">
-          <summary className="cursor-pointer text-amber-400 font-semibold text-[10px] sm:text-xs hover:text-amber-400">
+          <summary className="cursor-pointer text-pink-400 font-semibold text-[10px] sm:text-xs hover:text-pink-400">
             📄 Manifest Data
           </summary>
           <pre className="mt-2 text-[9px] sm:text-xs bg-gray-900 p-2 rounded overflow-auto max-h-32 sm:max-h-40 whitespace-pre-wrap break-words">

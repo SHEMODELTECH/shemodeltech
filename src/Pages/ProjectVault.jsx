@@ -260,8 +260,8 @@ const ProjectVault = () => {
                 </div>
               </div>
               <div className="px-8 pb-6 space-y-3">
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                  <p className="text-amber-700 text-xs text-center">Please download and save your certificate. Do not rely on our server for long-term storage.</p>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg p-3">
+                  <p className="text-gray-800 text-xs text-center">Please download and save your certificate. Do not rely on our server for long-term storage.</p>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -364,7 +364,7 @@ const ProjectVault = () => {
             {awaitingProjects.length > 0 && (
               <div>
                 <h2 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                  <span className="w-2 h-2 rounded-full bg-gray-900"></span>
                   Payment Confirmations
                 </h2>
                 <p className="text-gray-400 text-xs mb-3">Work on these paid projects is done. They move to your completed wall once the payer (She Model Tech, or the company that posted the work) marks everyone paid and every member confirms receipt. Disputes are handled in the dispute room.</p>
@@ -375,11 +375,11 @@ const ProjectVault = () => {
                     const myEntry = (project.paymentConfirmations || {})[currentUser.email] || null;
                     const myAmount = myEntry ? (myEntry.amountPaid ?? myEntry.amountDue) : 0;
                     return (
-                      <div key={project.id} className={`bg-white border rounded-xl p-5 ${disputed ? 'border-red-200' : 'border-amber-200'}`}>
+                      <div key={project.id} className={`bg-white border rounded-xl p-5 ${disputed ? 'border-red-200' : 'border-gray-300'}`}>
                         <div className="flex items-center gap-2 mb-2 flex-wrap">
                           <h3 className="text-gray-900 font-semibold text-base truncate">{project.projectTitle || project.title || 'Untitled'}</h3>
-                          <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-100 text-amber-800 border border-amber-200 rounded-full flex-shrink-0">PAID</span>
-                          <span className={`text-xs font-medium px-2 py-0.5 rounded-md flex-shrink-0 ${disputed ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'}`}>
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-gray-900 text-white border border-gray-900 rounded-full flex-shrink-0">PAID</span>
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded-md flex-shrink-0 ${disputed ? 'bg-red-50 text-red-700' : 'bg-gray-50 text-gray-800'}`}>
                             {disputed ? 'Disputed' : 'Awaiting Confirmation'}
                           </span>
                         </div>
@@ -387,11 +387,11 @@ const ProjectVault = () => {
                         {/* Member statuses */}
                         <div className="space-y-2 mt-3">
                           {Object.entries(project.paymentConfirmations || {}).map(([email, data]) => (
-                            <div key={email} className={`flex items-center justify-between p-2 rounded-lg text-xs ${data.status === 'disputed' ? 'bg-red-50' : data.status === 'confirmed' ? 'bg-green-50' : 'bg-gray-50'}`}>
+                            <div key={email} className={`flex items-center justify-between p-2 rounded-lg text-xs ${data.status === 'disputed' ? 'bg-red-50' : data.status === 'confirmed' ? 'bg-pink-50' : 'bg-gray-50'}`}>
                               <span className="text-gray-900 font-medium">{data.memberName || data.name || email}{data.role ? ` (${data.role})` : ''}{email === currentUser.email ? ' - you' : ''}</span>
                               <span className="flex items-center gap-2">
                                 <span className="text-gray-900 font-black">{formatMoney(data.amountPaid ?? data.amountDue)}</span>
-                                <span className={`font-semibold ${data.status === 'disputed' ? 'text-red-600' : data.status === 'confirmed' ? 'text-green-600' : 'text-gray-500'}`}>
+                                <span className={`font-semibold ${data.status === 'disputed' ? 'text-red-600' : data.status === 'confirmed' ? 'text-pink-600' : 'text-gray-500'}`}>
                                   {data.status === 'disputed' ? 'Disputed' : data.status === 'confirmed' ? 'Confirmed' : 'Pending'}
                                 </span>
                               </span>
@@ -430,7 +430,7 @@ const ProjectVault = () => {
                                   setRefreshKey(k => k + 1);
                                 } catch (e) { toast.error(e.message || 'Action failed.'); }
                                 setBusy(false);
-                              }} className="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all disabled:opacity-50">
+                              }} className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all disabled:opacity-50">
                                 I Received {formatMoney(myAmount)}
                               </button>
                               <button onClick={() => navigate(`/disputes/${project.id}`)} className="text-red-600 border border-red-200 hover:bg-red-50 text-xs font-semibold px-4 py-2 rounded-lg transition-all">

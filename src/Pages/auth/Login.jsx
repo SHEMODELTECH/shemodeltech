@@ -184,7 +184,7 @@ const Login = () => {
 
             {/* Info / success */}
             {info && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-5 text-sm">
+              <div className="bg-pink-50 border border-pink-200 text-pink-700 px-4 py-3 rounded-xl mb-5 text-sm">
                 {info}
               </div>
             )}
@@ -286,7 +286,7 @@ const Login = () => {
                       ['A number', /[0-9]/.test(form.password)],
                       ['A symbol (! @ # $ ...)', /[^a-zA-Z0-9]/.test(form.password)],
                     ].map(([label, ok]) => (
-                      <li key={label} className={ok ? 'text-green-600' : 'text-gray-400'}>
+                      <li key={label} className={ok ? 'text-pink-600' : 'text-gray-400'}>
                         {ok ? '✓' : '○'} {label}
                       </li>
                     ))}

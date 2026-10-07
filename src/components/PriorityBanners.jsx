@@ -28,7 +28,7 @@ export const PrioritySupport = () => {
   }, [currentUser, features.companyTiers]);
   if (!premium) return null;
   return (
-    <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div className="rounded-xl border border-pink-200 bg-pink-50 p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
       <div>
         <p className="font-semibold text-gray-900">{isCompany ? 'Priority support' : 'A direct line to She Model Tech'}</p>
         <p className="text-sm text-gray-700 mt-1">{isCompany ? 'Message She Model Tech directly. Your requests are handled first.' : 'Message She Model Tech directly with any question about mentoring.'}</p>

@@ -3,6 +3,7 @@
 
 import {
   collection,
+  collectionGroup,
   query,
   where,
   getDocs,
@@ -85,11 +86,30 @@ export const deleteAllUserContent = async (userId, userEmail) => {
     // 2. DELETE USER'S REPLIES ON OTHER PEOPLE'S POSTS
     // ─────────────────────────────────────────────
     try {
-      // We need to search all posts for replies by this user
-      const allPostsQuery = query(collection(db, 'posts'));
-      const allPostsSnapshot = await getDocs(allPostsQuery);
-
       let otherRepliesDeleted = 0;
+      // Fast path: one collection-group query for her replies (needs the
+      // replies.authorId collection-group index and a
+      // `match /{path=**}/replies/{id}` read rule). If either is missing the
+      // query fails and we fall back to scanning every post as before.
+      let viaGroup = false;
+      try {
+        const mine = await getDocs(query(collectionGroup(db, 'replies'), where('authorId', '==', userId)));
+        // Only Community replies (posts/{postId}/replies/{id}).
+        const refs = mine.docs.map((r) => r.ref).filter((ref) => ref.parent.parent?.parent?.id === 'posts');
+        for (let i = 0; i < refs.length; i += 450) {
+          const batch = writeBatch(db);
+          refs.slice(i, i + 450).forEach((ref) => batch.delete(ref));
+          // eslint-disable-next-line no-await-in-loop
+          await batch.commit();
+          otherRepliesDeleted += Math.min(450, refs.length - i);
+        }
+        viaGroup = true;
+      } catch (groupErr) {
+        console.warn('Collection-group reply lookup unavailable, scanning posts instead:', groupErr?.code || groupErr?.message);
+      }
+      // We need to search all posts for replies by this user
+      const allPostsSnapshot = viaGroup ? { docs: [] } : await getDocs(query(collection(db, 'posts')));
+
       // Ten posts at a time instead of one by one.
       await inGroups(allPostsSnapshot.docs, 10, async (postDoc) => {
         const repliesQuery = query(

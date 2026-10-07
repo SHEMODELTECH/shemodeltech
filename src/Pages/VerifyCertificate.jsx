@@ -85,12 +85,12 @@ const VerifyCertificate = () => {
 
         {/* Valid */}
         {!loading && valid && (
-          <div className="bg-white border-2 border-green-500 rounded-2xl p-6 sm:p-8">
+          <div className="bg-white border-2 border-pink-600 rounded-2xl p-6 sm:p-8">
             <div className="flex items-center gap-2 mb-5">
-              <span className="w-6 h-6 rounded-full bg-green-600 text-white grid place-items-center text-sm font-bold">
+              <span className="w-6 h-6 rounded-full bg-pink-600 text-white grid place-items-center text-sm font-bold">
                 ✓
               </span>
-              <p className="text-green-700 font-bold">Verified certificate</p>
+              <p className="text-pink-700 font-bold">Verified certificate</p>
             </div>
 
             <Field label="Awarded to" value={result.data.memberName} big />

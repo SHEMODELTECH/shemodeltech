@@ -70,7 +70,7 @@ const DatabaseSetup = () => {
           </div>
         )}
 
-        <div className="bg-amber-900/30 border border-amber-600 rounded-lg p-6 mt-6">
+        <div className="bg-black/30 border border-gray-500 rounded-lg p-6 mt-6">
           <h3 className="text-xl font-semibold mb-2">Important Notes:</h3>
           <ul className="list-disc list-inside text-gray-600 space-y-2">
             <li>Run this only once when setting up a new database</li>

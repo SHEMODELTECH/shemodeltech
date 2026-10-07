@@ -38,8 +38,8 @@ import {
 const STATUS_STYLE = {
   [LEAD_APP_STATUS.SUBMITTED]: 'bg-gray-100 text-gray-700',
   [LEAD_APP_STATUS.INTERVIEW_SCHEDULED]: 'bg-pink-100 text-pink-700',
-  [LEAD_APP_STATUS.ASSIGNED]: 'bg-green-100 text-green-700',
-  [LEAD_APP_STATUS.OFFERED_ROLE]: 'bg-amber-100 text-amber-700',
+  [LEAD_APP_STATUS.ASSIGNED]: 'bg-pink-600 text-white',
+  [LEAD_APP_STATUS.OFFERED_ROLE]: 'bg-gray-100 text-gray-800',
   [LEAD_APP_STATUS.REJECTED]: 'bg-red-100 text-red-600',
 };
 
@@ -183,11 +183,11 @@ const LeadApplicationReview = () => {
 
       {/* Projects nobody wants - the thing most likely to be missed */}
       {unled.some((p) => !grouped.find((g) => g.project.id === p.id)?.applicants.length) && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8">
-          <p className="text-amber-900 text-sm font-semibold mb-1">
+        <div className="bg-gray-50 border border-gray-300 rounded-xl p-4 mb-8">
+          <p className="text-gray-900 text-sm font-semibold mb-1">
             Some projects have no applicants
           </p>
-          <p className="text-amber-800 text-xs">
+          <p className="text-gray-900 text-xs">
             Consider promoting them in the weekly email, or closing them, a
             project with no lead can&rsquo;t run, and fewer full teams beat more empty ones.
           </p>
@@ -260,7 +260,7 @@ const LeadApplicationReview = () => {
                         }
                         setPBusy(false);
                       }}
-                      className="text-xs font-semibold bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
+                      className="text-xs font-semibold bg-pink-600 hover:bg-pink-700 text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
                     >
                       Approve and make her lead
                     </button>
@@ -330,7 +330,7 @@ const LeadApplicationReview = () => {
                     </p>
                   </div>
                   {project.leadConfirmed ? (
-                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-700 uppercase">
+                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-pink-100 text-pink-700 uppercase">
                       Led by {project.submitterName}
                     </span>
                   ) : (
@@ -559,14 +559,14 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
                   `${app.applicantName} is now leading this project.`
                 )
               }
-              className="bg-green-600 hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold px-4 py-2 rounded-lg"
+              className="bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold px-4 py-2 rounded-lg"
             >
               {project.leadConfirmed ? 'Project already has a lead' : 'Accept as lead of this project'}
             </button>
           </div>
 
           {/* Lead a different project */}
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+          <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 mb-4">
             <p className="text-gray-900 text-xs font-bold mb-1">Lead a different project</p>
             <p className="text-gray-600 text-[11px] mb-2">Assign her straight away, or suggest a project she can consider (her application stays open).</p>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -593,7 +593,7 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
                     `${app.applicantName} is now leading that project.`
                   )
                 }
-                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold px-3 py-2 rounded-lg"
+                className="bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold px-3 py-2 rounded-lg"
               >
                 Assign as lead
               </button>
@@ -608,7 +608,7 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
                     'Suggested. Her application stays open and now shows under that project too.'
                   );
                 }}
-                className="bg-white border border-green-300 text-green-800 disabled:opacity-40 text-xs font-semibold px-3 py-2 rounded-lg"
+                className="bg-white border border-pink-300 text-pink-800 disabled:opacity-40 text-xs font-semibold px-3 py-2 rounded-lg"
               >
                 Suggest she applies
               </button>
@@ -616,7 +616,7 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
           </div>
 
           {/* Not lead, but wanted on a team */}
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
             <p className="text-gray-900 text-xs font-bold mb-1">
               Be a collaborator: invite her onto a team
             </p>
@@ -671,7 +671,7 @@ const ApplicantPanel = ({ app, project, projects, decided, busy, reviewer, onAct
                     'Invited her onto a team.'
                   )
                 }
-                className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-4 py-2 rounded-lg"
+                className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold px-4 py-2 rounded-lg"
               >
                 Offer a collaborator role
               </button>

@@ -78,7 +78,7 @@ const ComingSoonProjects = ({ projects }) => {
                   </Link>
                   {needsLead && (
                     <button type="button" disabled={!c.started} onClick={() => show(p, 'started')}
-                      className="font-semibold bg-amber-50 text-amber-800 px-3 py-1.5 rounded-lg hover:bg-amber-100 disabled:opacity-50">
+                      className="font-semibold bg-gray-100 text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-200 disabled:opacity-50">
                       {c.started ?? '…'} started, not submitted
                     </button>
                   )}
@@ -101,7 +101,7 @@ const ComingSoonProjects = ({ projects }) => {
                           <span className="text-gray-800">{x.name}</span>
                           {needsLead && (
                             <button type="button" disabled={sent} onClick={() => invite(p, x)}
-                              className="text-xs font-semibold bg-pink-600 text-white px-3 py-1 rounded-lg disabled:bg-green-600">
+                              className="text-xs font-semibold bg-pink-600 text-white px-3 py-1 rounded-lg disabled:bg-pink-800">
                               {sent ? '✓ Invited' : open.kind === 'started' ? 'Remind to finish' : 'Invite to lead'}
                             </button>
                           )}

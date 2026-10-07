@@ -34,9 +34,9 @@ import {
 
 const statusPill = (status) => {
   const map = {
-    confirmed: ['Confirmed', 'bg-green-100 text-green-700'],
+    confirmed: ['Confirmed', 'bg-pink-100 text-pink-700'],
     disputed: ['Disputed', 'bg-red-100 text-red-700'],
-    pending: ['Pending', 'bg-amber-100 text-amber-700'],
+    pending: ['Pending', 'bg-gray-100 text-gray-800'],
     forfeited: ['Forfeited', 'bg-gray-200 text-gray-500'],
     left: ['Left', 'bg-gray-200 text-gray-500'],
   };
@@ -301,13 +301,13 @@ const DisputePage = () => {
               const pendingCount = entries.filter(e => e?.status === 'pending').length;
               const hasDispute = disputedCount > 0;
               return (
-                <div key={p.id} onClick={() => navigate(`/disputes/${p.id}`)} className={`bg-white border rounded-xl p-5 cursor-pointer hover:shadow-sm transition-all ${hasDispute ? 'border-red-200 hover:border-red-400' : 'border-amber-200 hover:border-amber-400'}`}>
+                <div key={p.id} onClick={() => navigate(`/disputes/${p.id}`)} className={`bg-white border rounded-xl p-5 cursor-pointer hover:shadow-sm transition-all ${hasDispute ? 'border-red-200 hover:border-red-400' : 'border-gray-300 hover:border-gray-400'}`}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <h3 className="text-gray-900 font-bold text-sm sm:text-base truncate">{p.projectTitle}</h3>
                       <p className="text-gray-500 text-xs mt-1">{entries.length} members · {pendingCount} pending · {disputedCount} disputed · owner: {p.contactName || p.submitterEmail}</p>
                     </div>
-                    <span className={`flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full ${hasDispute ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>{hasDispute ? 'DISPUTE OPEN' : 'AWAITING CONFIRMATION'}</span>
+                    <span className={`flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full ${hasDispute ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-800'}`}>{hasDispute ? 'DISPUTE OPEN' : 'AWAITING CONFIRMATION'}</span>
                   </div>
                 </div>
               );
@@ -345,8 +345,8 @@ const DisputePage = () => {
             <p className="text-gray-500 text-xs mt-1">Owner: {project.contactName || project.submitterEmail} · {isAdmin ? 'You are viewing as ADMIN' : isOwner ? 'You are the project owner' : 'You are a team member'}</p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full">PAID PROJECT</span>
-            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${isResolvedOrComplete ? 'bg-pink-100 text-pink-700' : hasOpenDispute(project) ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
+            <span className="text-[10px] font-bold bg-gray-900 text-white border border-gray-900 px-2 py-0.5 rounded-full">PAID PROJECT</span>
+            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${isResolvedOrComplete ? 'bg-pink-100 text-pink-700' : hasOpenDispute(project) ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-800'}`}>
               {isResolvedOrComplete ? 'RESOLVED - IN VAULT' : hasOpenDispute(project) ? 'DISPUTE OPEN' : 'AWAITING CONFIRMATIONS'}
             </span>
           </div>
@@ -366,7 +366,7 @@ const DisputePage = () => {
                 const effective = e.amountPaid ?? e.amountDue;
                 const wasAdjusted = e.amountPaid != null && Number(e.amountPaid) !== Number(e.amountDue);
                 return (
-                  <div key={email} className={`rounded-lg border p-3 ${e.status === 'disputed' ? 'bg-red-50 border-red-200' : e.status === 'confirmed' ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-100'}`}>
+                  <div key={email} className={`rounded-lg border p-3 ${e.status === 'disputed' ? 'bg-red-50 border-red-200' : e.status === 'confirmed' ? 'bg-pink-50 border-pink-200' : 'bg-gray-50 border-gray-100'}`}>
                     <div className="flex items-center justify-between gap-2">
                       <div className="min-w-0">
                         <p className="text-gray-900 text-sm font-semibold truncate">{e.memberName || email}{isMe ? ' (you)' : ''}</p>
@@ -400,7 +400,7 @@ const DisputePage = () => {
                         {isMe && (e.status === 'pending' || e.status === 'disputed') && (
                           <>
                             <button onClick={handleConfirmReceived} disabled={busy}
-                              className="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all disabled:opacity-50">
+                              className="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all disabled:opacity-50">
                               I Received {formatMoney(effective)}
                             </button>
                             {e.status === 'pending' && (
@@ -470,7 +470,7 @@ const DisputePage = () => {
                     Check the total before you pay, then click the button below.
                   </p>
                   {files.manual.length > 0 && (
-                    <p className="text-[11px] text-amber-800 mt-1">
+                    <p className="text-[11px] text-gray-900 mt-1">
                       Pay separately: {files.manual.map((m) => `${m.name} ($${m.amount.toFixed(2)}, ${m.method})`).join('; ')}.
                     </p>
                   )}
@@ -516,7 +516,7 @@ const DisputePage = () => {
               <div className="space-y-1.5">
                 {project.disputeHistory.map((h, i) => (
                   <div key={i} className="flex items-start gap-2 text-xs">
-                    <span className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${h.action === 'disputed' ? 'bg-red-500' : h.action === 'confirmed' ? 'bg-green-500' : h.action === 'resolved' ? 'bg-pink-500' : 'bg-gray-300'}`} />
+                    <span className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${h.action === 'disputed' ? 'bg-red-500' : h.action === 'confirmed' ? 'bg-pink-600' : h.action === 'resolved' ? 'bg-pink-500' : 'bg-gray-300'}`} />
                     <p className="text-gray-600 leading-relaxed">
                       <span className="font-semibold text-gray-900">{h.memberName}</span> {h.action.replace(/_/g, ' ')}{h.reason ? ` - "${h.reason}"` : ''}{h.note ? ` - ${h.note}` : ''}
                       <span className="text-gray-400"> · {formatTime(h.at)}</span>
@@ -567,7 +567,7 @@ const DisputePage = () => {
                     <p className={`text-[10px] font-bold mb-0.5 ${mine ? 'text-pink-100' : 'text-gray-500'}`}>
                       {m.authorName}
                       {m.authorRole === 'admin' && <span className="ml-1 bg-pink-100 text-pink-700 px-1 py-0 rounded font-black">ADMIN</span>}
-                      {m.authorRole === 'owner' && <span className={`ml-1 px-1 py-0 rounded font-black ${mine ? 'bg-pink-500 text-white' : 'bg-amber-100 text-amber-700'}`}>OWNER</span>}
+                      {m.authorRole === 'owner' && <span className={`ml-1 px-1 py-0 rounded font-black ${mine ? 'bg-pink-500 text-white' : 'bg-gray-100 text-gray-800'}`}>OWNER</span>}
                     </p>
                     <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{m.text}</p>
                     <p className={`text-[9px] mt-1 ${mine ? 'text-pink-200' : 'text-gray-400'}`}>{formatTime(m.createdAt)}</p>

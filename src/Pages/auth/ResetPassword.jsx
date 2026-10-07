@@ -70,8 +70,8 @@ const ResetPassword = () => {
             </div>
           ) : done ? (
             <div className="text-center py-4">
-              <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+              <div className="w-14 h-14 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
               </div>
               <p className="text-gray-900 font-semibold mb-1">Password updated</p>
               <p className="text-gray-500 text-sm mb-6">Your password has been changed successfully.</p>
@@ -103,7 +103,7 @@ const ResetPassword = () => {
                     ['A number', /[0-9]/.test(password)],
                     ['A symbol (! @ # $ ...)', /[^a-zA-Z0-9]/.test(password)],
                   ].map(([label, ok]) => (
-                    <li key={label} className={ok ? 'text-green-600' : 'text-gray-400'}>
+                    <li key={label} className={ok ? 'text-pink-600' : 'text-gray-400'}>
                       {ok ? '✓' : '○'} {label}
                     </li>
                   ))}

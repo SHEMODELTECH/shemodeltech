@@ -47,7 +47,7 @@ const LeadWaitlist = () => {
                         try { await inviteToLead(w.userId); setInvited((m) => ({ ...m, [w.id]: true })); toast.success('Invitation sent.'); }
                         catch (e) { toast.error('Could not send the invitation.'); }
                       }}
-                      className="text-xs font-semibold bg-pink-600 text-white px-3 py-1 rounded-lg disabled:bg-green-600"
+                      className="text-xs font-semibold bg-pink-600 text-white px-3 py-1 rounded-lg disabled:bg-pink-800"
                     >
                       {invited[w.id] ? '✓ Invited' : 'Invite to lead'}
                     </button>

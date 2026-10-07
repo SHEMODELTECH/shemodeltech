@@ -866,7 +866,7 @@ export default Settings;
 // Membership Tab with toggle dropdowns
 const FeatureItem = ({ icon, label, detail, color = 'blue' }) => {
   const [open, setOpen] = useState(false);
-  const iconColor = color === 'orange' ? 'text-amber-500' : 'text-pink-500';
+  const iconColor = color === 'orange' ? 'text-gray-900' : 'text-pink-500';
   return (
     <li>
       <button

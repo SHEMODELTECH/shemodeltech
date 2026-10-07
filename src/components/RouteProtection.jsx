@@ -40,7 +40,7 @@ export const ProtectedRoute = ({ children }) => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black p-4">
         <div className="text-white text-center">
-          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-amber-400 mx-auto mb-3 sm:mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-pink-600 mx-auto mb-3 sm:mb-4"></div>
           <p className="text-sm sm:text-base text-gray-600">Verifying authentication...</p>
         </div>
       </div>
@@ -52,7 +52,7 @@ export const ProtectedRoute = ({ children }) => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black p-4">
         <div className="text-white text-center">
-          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-amber-400 mx-auto mb-3 sm:mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-pink-600 mx-auto mb-3 sm:mb-4"></div>
           <p className="text-sm sm:text-base text-gray-600">Redirecting...</p>
         </div>
       </div>
@@ -74,7 +74,7 @@ export const useActiveNavigation = () => {
     return pathname.startsWith(path);
   };
 
-  const getNavLinkClass = (path, baseClass = "", activeClass = "text-amber-400") => {
+  const getNavLinkClass = (path, baseClass = "", activeClass = "text-pink-600") => {
     return `${baseClass} ${isActive(path) ? activeClass : ''}`;
   };
 

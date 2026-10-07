@@ -20,7 +20,7 @@ const WordHint = ({ id, text, min }) => {
   const n = wordCount(text);
   const ok = n >= min;
   return (
-    <p id={id} className={`text-xs mt-1 ${ok ? 'text-green-700' : 'text-gray-500'}`} aria-live="polite">
+    <p id={id} className={`text-xs mt-1 ${ok ? 'text-pink-700' : 'text-gray-500'}`} aria-live="polite">
       {ok ? `${n} words. Minimum reached.` : `Minimum ${min} words. You have ${n} so far.`}
     </p>
   );
@@ -121,7 +121,7 @@ const TeachApply = () => {
               </p>
             </div>
           ) : isTeacher ? (
-            <div className="rounded-2xl border border-green-200 bg-green-50 p-6">
+            <div className="rounded-2xl border border-pink-200 bg-pink-50 p-6">
               <h2 className="text-xl font-bold text-gray-900">You're a mentor</h2>
               <p className="text-gray-700 mt-2">You can create and present courses in the Mentor Hub.</p>
               <Link to="/teacher" className="inline-block mt-4 bg-gray-900 text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
@@ -129,7 +129,7 @@ const TeachApply = () => {
               </Link>
             </div>
           ) : app && app.status === 'pending' ? (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+            <div className="rounded-2xl border border-gray-300 bg-gray-50 p-6">
               <h2 className="text-xl font-bold text-gray-900">Your application is being reviewed</h2>
               <p className="text-gray-700 mt-2">An admin will review it and you'll get a notification with the decision.</p>
             </div>

@@ -948,12 +948,12 @@ const ProjectWorkspace = () => {
             <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
               <h3 className="text-base font-bold text-gray-900">Edit Resources</h3>
               {resources.submissionUrl && resources.submissionUrl.trim() ? (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-1">
-                  <p className="text-green-800 text-xs font-medium">You are all set. It is advised you also add a meeting link and a project details link, if you haven't done so, to help your team collaborate.</p>
+                <div className="bg-pink-50 border border-pink-200 rounded-lg p-3 mb-1">
+                  <p className="text-pink-800 text-xs font-medium">You are all set. It is advised you also add a meeting link and a project details link, if you haven't done so, to help your team collaborate.</p>
                 </div>
               ) : (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-1">
-                  <p className="text-amber-800 text-xs font-medium">As project lead, a submission link is required. Use a GitHub repository (free and recommended) or another platform of your choice, so the team's work can be reviewed and badges can be verified on completion.</p>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg p-3 mb-1">
+                  <p className="text-gray-900 text-xs font-medium">As project lead, a submission link is required. Use a GitHub repository (free and recommended) or another platform of your choice, so the team's work can be reviewed and badges can be verified on completion.</p>
                 </div>
               )}
               <div>
@@ -985,17 +985,17 @@ const ProjectWorkspace = () => {
         <div className="space-y-3">
           {/* Paid project: compensation table - everyone's pay is visible by design */}
           {project?.isPaid && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+            <div className="bg-gray-50 border border-gray-300 rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-base font-bold text-gray-900">Compensation</h3>
-                <span className="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full">PAID PROJECT</span>
+                <span className="text-[10px] font-bold bg-gray-900 text-white border border-gray-900 px-2 py-0.5 rounded-full">PAID PROJECT</span>
               </div>
               <p className="text-gray-500 text-xs mb-3">Pay per person, per role, set by the project owner. Paid on verified completion. No badges are awarded on paid projects. Leaving mid-project forfeits your pay.</p>
               <div className="space-y-1.5">
                 {(project.teamRoles || []).map((r, i) => (
-                  <div key={i} className="flex items-center justify-between bg-white border border-amber-100 rounded-lg px-3 py-2">
+                  <div key={i} className="flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3 py-2">
                     <span className="text-gray-900 text-sm font-medium">{r.role} <span className="text-gray-400 text-xs">x{r.count || 1}</span></span>
-                    <span className="text-amber-700 text-sm font-black">{formatMoney(r.payAmount)} / person</span>
+                    <span className="text-pink-700 text-sm font-black">{formatMoney(r.payAmount)} / person</span>
                   </div>
                 ))}
               </div>
@@ -1045,7 +1045,7 @@ const ProjectWorkspace = () => {
                       <span className="text-[10px] font-semibold bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full flex-shrink-0">Owner</span>
                     )}
                     {project?.isPaid && !member.isOwner && (Number(member.payAmount) || 0) > 0 && (
-                      <span className="text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full flex-shrink-0">{formatMoney(member.payAmount)}</span>
+                      <span className="text-[10px] font-black bg-gray-900 text-white border border-gray-900 px-2 py-0.5 rounded-full flex-shrink-0">{formatMoney(member.payAmount)}</span>
                     )}
                   </div>
                 ))}

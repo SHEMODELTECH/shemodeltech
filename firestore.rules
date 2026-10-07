@@ -1115,6 +1115,12 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  // posts + replies (Community)
  // ---------------------------------------------------------------
+ // Lets account deletion find the member's own replies in one query
+ // (utils/deleteUserContent.js). Only her own replies are readable this way.
+ match /{path=**}/replies/{replyId} {
+ allow read: if isSignedIn() && resource.data.get('authorId', '') == myUid();
+ }
+
  match /posts/{postId} {
  allow read: if isSignedIn();
  allow create: if isSignedIn() && request.resource.data.authorId == myUid();

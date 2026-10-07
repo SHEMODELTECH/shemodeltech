@@ -3,11 +3,12 @@
 // bell (and phones with notifications on); email is optional. Emails stop at
 // 400 per send to stay under Gmail's daily limit.
 import React, { useState } from 'react';
-import { addDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, getDocs, serverTimestamp, query, where } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { notifyMember, notifyMembers, sendEmailNow } from '../../utils/staffAlerts';
+import { readUsersForSending } from '../../utils/readUsersPaged';
 
 // The address emails are sent from (Gmail hides messages you send to yourself).
 const SENDER = 'shemodeltech@gmail.com';
@@ -38,14 +39,16 @@ const AnnouncementsAdmin = () => {
   const [busy, setBusy] = useState(false);
   const [testTo, setTestTo] = useState('');
   const [testResult, setTestResult] = useState(null); // { ok, text }
+  const [progress, setProgress] = useState('');
 
   const recipients = async () => {
-    const users = (await getDocs(collection(db, 'users'))).docs.map((d) => ({ uid: d.id, ...d.data() }))
+    const users = (await readUsersForSending((n) => setProgress(`Reading members: ${n}…`)))
       .filter((u) => !u.isCompany && u.onboardingComplete);
+    setProgress('');
     if (f.audience === 'adults') return users.filter((u) => !u.isMinor);
     if (f.audience === 'leads') {
-      const ps = (await getDocs(collection(db, 'projects'))).docs.map((d) => d.data())
-        .filter((p) => ['setup', 'active', 'overdue'].includes(p.status));
+      // Only projects that are running (not every project ever made).
+      const ps = (await getDocs(query(collection(db, 'projects'), where('status', 'in', ['setup', 'active', 'overdue'])))).docs.map((d) => d.data());
       const leads = new Set(ps.map((p) => p.submitterId).filter(Boolean));
       return users.filter((u) => leads.has(u.uid));
     }
@@ -100,7 +103,8 @@ const AnnouncementsAdmin = () => {
         if (withEmail) emailed += 1;
         return { uid: u.uid, sendEmail: withEmail, emailTo: u.email };
       });
-      await notifyMembers(list, payload());
+      await notifyMembers(list, payload(), (d, total) => setProgress(`Sending: ${d} of ${total}…`));
+      setProgress('');
       await addDoc(collection(db, 'announcements'), {
         ...payload(), audience: f.audience, email: f.email, sentTo: people.length, emailed, sentBy: currentUser.email, createdAt: serverTimestamp(),
       }).catch(() => {});
@@ -110,6 +114,7 @@ const AnnouncementsAdmin = () => {
     } catch (e) {
       toast.error('Could not send the announcement.');
     }
+    setProgress('');
     setBusy(false);
   };
 
@@ -143,12 +148,13 @@ const AnnouncementsAdmin = () => {
         <input className={input} type="email" value={testTo} onChange={(e) => setTestTo(e.target.value)} placeholder={`${currentUser?.email || ''} (or your personal email)`} />
       </label>
       {testResult && (
-        <p className={`mt-2 text-sm rounded-lg px-3 py-2 ${testResult.ok ? 'bg-green-50 text-green-900' : 'bg-red-50 text-red-800'}`}>{testResult.text}</p>
+        <p className={`mt-2 text-sm rounded-lg px-3 py-2 ${testResult.ok ? 'bg-pink-50 text-pink-800' : 'bg-red-50 text-red-800'}`}>{testResult.text}</p>
       )}
       <div className="flex flex-wrap gap-2 mt-3">
         <button type="button" onClick={test} disabled={busy} className="text-sm font-semibold border border-gray-300 px-4 py-2 rounded-lg disabled:opacity-50">Send a test to me</button>
         <button type="button" onClick={send} disabled={busy} className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg disabled:opacity-50">{busy ? 'Sending…' : 'Send'}</button>
       </div>
+      {progress && <p className="mt-2 text-sm font-semibold text-gray-900">{progress}</p>}
     </div>
   );
 };

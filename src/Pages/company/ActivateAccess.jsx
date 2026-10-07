@@ -199,7 +199,7 @@ const ActivateAccess = () => {
         className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:border-pink-500 text-sm outline-none mb-1"
       />
       {autoRef && (
-        <p className="text-green-700 text-xs mb-4">Picked up automatically from your payment.</p>
+        <p className="text-pink-700 text-xs mb-4">Picked up automatically from your payment.</p>
       )}
       {!autoRef && <div className="mb-4" />}
 

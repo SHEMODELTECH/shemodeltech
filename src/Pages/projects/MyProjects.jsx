@@ -20,7 +20,7 @@ const formatTimeline = (t) =>
   })[t] || t;
 
 const statusColors = {
-  submitted: 'bg-amber-500/20 text-amber-500 border-amber-500/30',
+  submitted: 'bg-gray-100 text-gray-800 border-gray-300',
   approved: 'bg-pink-600/20 text-pink-500 border-pink-600/30',
   rejected: 'bg-red-500/20 text-red-300 border-red-500/30',
   removed: 'bg-red-500/20 text-red-300 border-red-500/30',
@@ -285,8 +285,8 @@ const MyProjects = () => {
                     {/* The project owner sent a message about this application -
                         the conversation lives in Messages. */}
                     {app.status === 'submitted' && app.feedbackRequest?.message && (
-                      <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
-                        <p className="text-amber-800 text-xs">
+                      <div className="mt-3 bg-gray-50 border border-gray-300 rounded-lg p-3">
+                        <p className="text-gray-900 text-xs">
                           <span className="font-semibold">Message from the project owner:</span> "
                           {app.feedbackRequest.message}"
                         </p>

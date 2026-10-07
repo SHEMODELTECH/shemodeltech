@@ -9,7 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 import { sendEmailNow } from '../../utils/staffAlerts';
 import { TEAM_ROLES, roleTitle } from '../../config/teamRoles';
 
-const STATUS = { new: ['New', 'bg-pink-50 text-pink-700'], approved: ['Approved', 'bg-green-50 text-green-800'], declined: ['Declined', 'bg-gray-100 text-gray-700'] };
+const STATUS = { new: ['New', 'bg-pink-50 text-pink-700'], approved: ['Approved', 'bg-pink-600 text-white'], declined: ['Declined', 'bg-gray-100 text-gray-700'] };
 const MIN_DECLINE_WORDS = 10;
 const words = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
 const href = (v) => (/^https?:\/\//i.test(v) ? v : `https://${v}`);
@@ -103,7 +103,7 @@ const TeamApplicationsAdmin = () => {
                     <textarea rows={2} maxLength={600} value={notes[a.id] || ''} onChange={(e) => setNotes((m) => ({ ...m, [a.id]: e.target.value }))} className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
                   </label>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    <button type="button" disabled={busy === a.id} onClick={() => decide(a, 'approved')} className="text-sm font-semibold bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg disabled:opacity-50">Approve</button>
+                    <button type="button" disabled={busy === a.id} onClick={() => decide(a, 'approved')} className="text-sm font-semibold bg-pink-700 hover:bg-pink-800 text-white px-4 py-2 rounded-lg disabled:opacity-50">Approve</button>
                     <button type="button" disabled={busy === a.id} onClick={() => decide(a, 'declined')} className="text-sm font-semibold bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg disabled:opacity-50">Decline</button>
                   </div>
                 </div>

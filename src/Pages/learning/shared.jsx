@@ -427,7 +427,7 @@ export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, on
       <p className="hidden md:block text-sm font-semibold text-gray-900 truncate">{course.title}</p>
       <div className="flex items-center gap-2">
         {isDone ? (
-          <span className="flex items-center gap-1.5 text-sm font-semibold text-green-700">
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-pink-700">
             <CheckIcon className="w-4 h-4" /> Completed
           </span>
         ) : (
@@ -661,7 +661,7 @@ export const ModuleSummary = ({ title, saved, onSave }) => {
           <textarea id="module-summary" rows={5} maxLength={SUMMARY_MAX_CHARS} value={text} onChange={(e) => setText(e.target.value)}
             className="mt-3 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500" />
           <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
-            <span className={`text-xs ${words >= SUMMARY_MIN_WORDS ? 'text-green-700' : 'text-gray-500'}`}>
+            <span className={`text-xs ${words >= SUMMARY_MIN_WORDS ? 'text-pink-700' : 'text-gray-500'}`}>
               {words >= SUMMARY_MIN_WORDS ? `${words} words. Minimum reached.` : `At least ${SUMMARY_MIN_WORDS} words. You have ${words} so far.`} · {text.length}/{SUMMARY_MAX_CHARS} characters
             </span>
             <button onClick={save} disabled={busy} className="fd-btn !py-2 !px-3 text-sm disabled:opacity-50">{busy ? 'Saving…' : 'Save summary'}</button>

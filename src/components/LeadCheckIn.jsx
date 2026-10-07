@@ -46,7 +46,7 @@ const LeadCheckIn = ({ project, currentUser, onDone }) => {
       <p className="text-gray-900 font-bold text-sm mb-1">
         Quick check-in
         {missed > 0 && (
-          <span className="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 uppercase">
+          <span className="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-900 uppercase">
             {missed} missed
           </span>
         )}

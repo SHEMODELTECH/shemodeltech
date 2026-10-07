@@ -63,13 +63,13 @@ export const CourseCard = ({ course, status, progress }) => {
           {(course.kind === 'interactive' || course.kind === 'published-html') && <span className="lr-inter">Interactive</span>}
           {course.format === 'video' && <span className="lr-inter">Video</span>}
           {course.rating?.count > 0 && (
-            <span className="font-semibold text-amber-600" aria-label={`Rated ${course.rating.avg.toFixed(1)} out of 5 by ${course.rating.count} learners`}>
+            <span className="font-semibold text-pink-600" aria-label={`Rated ${course.rating.avg.toFixed(1)} out of 5 by ${course.rating.count} learners`}>
               ★ {course.rating.avg.toFixed(1)} <span className="font-normal text-gray-400">({course.rating.count})</span>
             </span>
           )}
         </div>
         {status === 'done' && (
-          <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-green-700">
+          <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-pink-700">
             <CheckIcon className="w-3.5 h-3.5" /> Completed
           </p>
         )}
@@ -360,7 +360,7 @@ const LearningHome = ({ mine = false }) => {
                         <div className="mt-4 flex items-center gap-2 text-sm">
                           {a.ratingCount ? (
                             <>
-                              <span className="text-amber-500" aria-hidden="true">
+                              <span className="text-pink-500" aria-hidden="true">
                                 {'★'.repeat(Math.round(avg))}
                                 <span className="text-gray-300">{'★'.repeat(5 - Math.round(avg))}</span>
                               </span>

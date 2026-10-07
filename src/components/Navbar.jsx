@@ -30,7 +30,8 @@ const Navbar = ({ cta = null }) => {
     if (!currentUser || inAppShell) return;
     const q = query(
       collection(db, 'conversations'),
-      where('participants', 'array-contains', currentUser.uid)
+      where('participants', 'array-contains', currentUser.uid),
+      limit(300) // bounded; the badge shows "9+" at most
     );
     const unsub = onSnapshot(q, (snap) => {
       let total = 0;

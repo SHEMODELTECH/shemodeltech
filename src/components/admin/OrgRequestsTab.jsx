@@ -199,7 +199,7 @@ const OrgRequestsTab = ({ isAdmin }) => {
                   {u.displayName || u.email} <span className="text-gray-500">· {u.mentorApprovedCourses || 0} published course(s)</span>
                 </p>
                 <div className="flex gap-2">
-                  <button onClick={() => decideTrainer(u, true)} className="text-xs font-semibold bg-green-600 text-white px-3 py-1.5 rounded-lg">Approve</button>
+                  <button onClick={() => decideTrainer(u, true)} className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg">Approve</button>
                   <button onClick={() => decideTrainer(u, false)} className="text-xs font-semibold bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg">Decline</button>
                 </div>
               </div>
@@ -301,10 +301,10 @@ const OrgRequestsTab = ({ isAdmin }) => {
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {r.assistantProjectId ? (
                       <>
-                        <Link to={`/projects/${r.assistantProjectId}/workspace`} className="text-xs font-semibold bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700">
+                        <Link to={`/projects/${r.assistantProjectId}/workspace`} className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg hover:bg-pink-700">
                           Open training workspace
                         </Link>
-                        <Link to={`/projects/owner-dashboard#project-${r.assistantProjectId}`} className="text-xs font-semibold border border-green-300 text-green-700 px-3 py-1.5 rounded-lg hover:bg-green-50">
+                        <Link to={`/projects/owner-dashboard#project-${r.assistantProjectId}`} className="text-xs font-semibold border border-pink-300 text-pink-700 px-3 py-1.5 rounded-lg hover:bg-pink-50">
                           Manage (applicants, mark done)
                         </Link>
                       </>

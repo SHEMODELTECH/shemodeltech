@@ -373,7 +373,7 @@ const ProjectSetup = () => {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-gray-900">{form.projectTitle}</h1>
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800">
+        <div className="mt-4 rounded-xl border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800">
           <strong>Paid cohort project.</strong> She Model Tech has set the brief, roles, number of people, pay, and dates.
           You can choose the badge tracks you want for each role and add more details for your team.
           Need more time? Use <strong>Request extra time</strong> in your workspace.
@@ -537,11 +537,11 @@ const ProjectSetup = () => {
             {/* Any lead (free or paid) can ask for more people to add roles. */}
             {(
               sizeRequest?.status === 'pending' ? (
-                <p className="text-xs text-amber-800 mt-2">You asked for {sizeRequest.extra} more {Number(sizeRequest.extra) === 1 ? 'person' : 'people'}. She Model Tech will let you know.</p>
+                <p className="text-xs text-gray-900 mt-2">You asked for {sizeRequest.extra} more {Number(sizeRequest.extra) === 1 ? 'person' : 'people'}. She Model Tech will let you know.</p>
               ) : !askMore.open ? (
                 <>
                   {sizeRequest && sizeRequest.status !== 'pending' && (
-                    <p className={`text-xs mt-2 ${sizeRequest.status === 'approved' ? 'text-green-800' : 'text-gray-700'}`}>
+                    <p className={`text-xs mt-2 ${sizeRequest.status === 'approved' ? 'text-pink-800' : 'text-gray-700'}`}>
                       Your last request: {sizeRequest.status === 'approved' ? `approved (${sizeRequest.approved} more)` : 'not approved'}.
                       {sizeRequest.decisionNote ? ` She Model Tech: “${sizeRequest.decisionNote}”` : ''}
                     </p>
@@ -586,7 +586,7 @@ const ProjectSetup = () => {
         )}
 
         {isPaid ? (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+          <div className="bg-gray-50 border border-gray-300 rounded-lg p-3">
             <p className="text-gray-700 text-xs"><strong>Paid project:</strong> roles you've already posted are locked, including their pay - talent may have applied under those exact terms. You can still <strong>add new roles</strong> below, each with its own pay-per-person amount.</p>
           </div>
         ) : (
@@ -607,14 +607,14 @@ const ProjectSetup = () => {
               <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 opacity-90">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-gray-400 text-xs font-semibold">Role {i + 1}</span>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-100 border border-amber-200 rounded-full px-2 py-0.5">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gray-800 bg-gray-100 border border-gray-300 rounded-full px-2 py-0.5">
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                     Locked
                   </span>
                 </div>
                 <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                   <span className="text-gray-900 font-semibold text-sm">{roleName}</span>
-                  <span className="text-amber-700 font-bold text-sm">{formatMoney(Number(r.payAmount) || 0)} / person</span>
+                  <span className="text-pink-700 font-bold text-sm">{formatMoney(Number(r.payAmount) || 0)} / person</span>
                   <span className="text-gray-500 text-xs">{parseInt(r.count, 10) || 1} {(parseInt(r.count, 10) || 1) === 1 ? 'person' : 'people'}</span>
                   <span className="text-gray-500 text-xs capitalize">{(r.experienceLevel || 'any-level') === 'any-level' ? 'Any Level' : r.experienceLevel}</span>
                 </div>
@@ -690,7 +690,7 @@ const ProjectSetup = () => {
         {isPaid && roles.some(r => !isLocked(r) && resolveRoleName(r) && parseFloat(r.payAmount) > 0) && (
           <div className="flex items-center justify-between border-t border-gray-200 pt-3">
             <span className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Projected total budget</span>
-            <span className="text-amber-700 text-xl font-black">{formatMoney(computeTotalBudget(buildTeamRoles()))}</span>
+            <span className="text-pink-700 text-xl font-black">{formatMoney(computeTotalBudget(buildTeamRoles()))}</span>
           </div>
         )}
       </div>

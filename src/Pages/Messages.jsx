@@ -443,7 +443,7 @@ const Messages = () => {
                       className={`
                         w-full flex items-center gap-3 px-4 py-3.5 border-b border-gray-100
                         hover:bg-gray-50 active:bg-gray-100 transition-colors text-left
-                        ${activeConvId === conv.id ? 'bg-pink-50 border-l-[3px] border-l-amber-500' : ''}
+                        ${activeConvId === conv.id ? 'bg-pink-50 border-l-[3px] border-l-pink-600' : ''}
                       `}
                     >
                       <Avatar user={conv.otherUser} />
@@ -453,7 +453,7 @@ const Messages = () => {
                             <PresenceView info={presence[conv.otherUser?.uid]} compact className="mr-1.5 align-middle" />
                             {getDisplayName(conv.otherUser)}
                             {viewerStaff && features.companyTiers && companyTier(conv.otherUser) === 'champion' && (
-                              <span className="ml-1.5 align-middle text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">PRIORITY</span>
+                              <span className="ml-1.5 align-middle text-[10px] font-bold px-1.5 py-0.5 rounded bg-gray-900 text-white">PRIORITY</span>
                             )}
                           </p>
                           <span className="text-xs text-gray-400 flex-shrink-0">{formatTime(conv.lastMessageAt)}</span>
@@ -556,14 +556,14 @@ const Messages = () => {
                         className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent min-h-[44px] placeholder-gray-400"
                       />
                       {newMessage.length > 0 && (
-                        <span id="msg-count" className={`self-center text-[11px] whitespace-nowrap ${newMessage.length > 1800 ? 'text-amber-700' : 'text-gray-400'}`}>
+                        <span id="msg-count" className={`self-center text-[11px] whitespace-nowrap ${newMessage.length > 1800 ? 'text-gray-800' : 'text-gray-400'}`}>
                           {newMessage.length}/2000
                         </span>
                       )}
                       <button
                         onClick={sendMessage}
                         disabled={!newMessage.trim() || sending}
-                        className="w-11 h-11 rounded-xl bg-pink-600 hover:bg-pink-700 active:bg-amber-700 disabled:opacity-40 disabled:cursor-not-allowed text-gray-900 transition-colors flex-shrink-0 flex items-center justify-center"
+                        className="w-11 h-11 rounded-xl bg-pink-600 hover:bg-pink-700 active:bg-pink-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-900 transition-colors flex-shrink-0 flex items-center justify-center"
                         aria-label="Send"
                       >
                         {sending ? (

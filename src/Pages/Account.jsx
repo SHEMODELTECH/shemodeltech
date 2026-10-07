@@ -141,7 +141,7 @@ const Account = () => {
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <span className="text-gray-900 text-sm font-black">{formatMoney(r.amount)}</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    r.state === 'completed' ? 'bg-green-100 text-green-700'
+                    r.state === 'completed' ? 'bg-pink-600 text-white'
                     : r.state === 'disputed' ? 'bg-red-100 text-red-700'
                     : r.state === 'awaiting' ? 'bg-pink-100 text-pink-700'
                     : 'bg-pink-100 text-pink-700'}`}>
@@ -158,9 +158,9 @@ const Account = () => {
         <h2 className="text-base font-bold text-gray-900 mb-1">My Earnings</h2>
         <p className="text-gray-400 text-xs mb-4">From paid projects you were approved for. Amounts come from the project's application; if a payment is adjusted during a dispute, your total updates automatically once resolved.</p>
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-            <p className="text-green-700 text-xs uppercase tracking-wider font-semibold">Earned (Paid)</p>
-            <p className="text-2xl font-black text-green-700 mt-1">{formatMoney(earnings.earnedTotal)}</p>
+          <div className="bg-pink-50 border border-pink-200 rounded-xl p-4">
+            <p className="text-pink-700 text-xs uppercase tracking-wider font-semibold">Earned (Paid)</p>
+            <p className="text-2xl font-black text-pink-700 mt-1">{formatMoney(earnings.earnedTotal)}</p>
             <p className="text-gray-400 text-xs mt-0.5">payments confirmed received</p>
           </div>
           <div className="bg-pink-50 border border-pink-200 rounded-xl p-4">
@@ -182,7 +182,7 @@ const Account = () => {
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <span className="text-gray-900 text-sm font-black">{formatMoney(r.amount)}</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    r.state === 'paid' ? 'bg-green-100 text-green-700'
+                    r.state === 'paid' ? 'bg-pink-600 text-white'
                     : r.state === 'disputed' ? 'bg-red-100 text-red-700'
                     : r.state === 'forfeited' ? 'bg-gray-200 text-gray-500'
                     : r.state === 'awaiting' ? 'bg-pink-100 text-pink-700'

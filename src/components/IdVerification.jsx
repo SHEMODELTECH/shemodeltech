@@ -66,21 +66,21 @@ const MismatchBanner = ({ mismatches, onDismiss, dismissed }) => {
   if (warningsOnly && dismissed) return null;
 
   return (
-    <div className={`rounded-xl border p-4 ${hasBlocker ? 'bg-red-500/10 border-red-500/30' : 'bg-amber-500/10 border-amber-500/30'}`}>
+    <div className={`rounded-xl border p-4 ${hasBlocker ? 'bg-red-500/10 border-red-500/30' : 'bg-gray-100 border-gray-300'}`}>
       <div className="flex items-start gap-3">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${hasBlocker ? 'bg-red-500/20' : 'bg-amber-500/20'}`}>
-          <svg className={`w-5 h-5 ${hasBlocker ? 'text-red-400' : 'text-amber-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${hasBlocker ? 'bg-red-500/20' : 'bg-gray-200'}`}>
+          <svg className={`w-5 h-5 ${hasBlocker ? 'text-red-400' : 'text-gray-900'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
           </svg>
         </div>
         <div className="flex-1 min-w-0">
-          <p className={`font-semibold text-sm ${hasBlocker ? 'text-red-300' : 'text-amber-500'}`}>
+          <p className={`font-semibold text-sm ${hasBlocker ? 'text-red-300' : 'text-gray-900'}`}>
             {hasBlocker ? 'Profile Mismatch Detected' : 'Please Review'}
           </p>
           <div className="mt-2 space-y-1.5">
             {mismatches.map((m, i) => (
               <div key={i} className="flex items-start gap-2">
-                <span className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${m.severity === 'error' ? 'bg-red-400' : 'bg-amber-400'}`} />
+                <span className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${m.severity === 'error' ? 'bg-red-400' : 'bg-gray-900'}`} />
                 <p className="text-gray-600 text-xs leading-relaxed">{m.message}</p>
               </div>
             ))}
@@ -92,7 +92,7 @@ const MismatchBanner = ({ mismatches, onDismiss, dismissed }) => {
           )}
           {warningsOnly && onDismiss && (
             <button type="button" onClick={onDismiss}
-              className="mt-3 text-amber-500 text-xs font-semibold hover:text-amber-500 transition-colors underline underline-offset-2">
+              className="mt-3 text-gray-900 text-xs font-semibold hover:text-gray-700 transition-colors underline underline-offset-2">
               I've double-checked, continue anyway
             </button>
           )}
@@ -122,10 +122,10 @@ const NameMatchIndicator = ({ idName, profileName }) => {
   if (result.confidence === 'partial' && result.match) {
     return (
       <div className="flex items-center gap-1.5 mt-1.5">
-        <svg className="w-3.5 h-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <svg className="w-3.5 h-3.5 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0 3.75h.008v.008H12v-.008zM21.75 12a9.75 9.75 0 11-19.5 0 9.75 9.75 0 0119.5 0z" />
         </svg>
-        <span className="text-amber-500 text-xs font-medium">Partial match: {result.details}</span>
+        <span className="text-gray-800 text-xs font-medium">Partial match: {result.details}</span>
       </div>
     );
   }
@@ -153,8 +153,8 @@ const NameMatchIndicator = ({ idName, profileName }) => {
 //   When provided, the component cross-verifies the ID name against it.
 
 const IdVerification = ({ initialData, onSave, saving = false, inputClass, labelClass, profileData }) => {
-  const defaultInput = "w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 min-h-[44px] text-white placeholder-gray-400 focus:border-amber-400 focus:outline-none text-sm transition-all";
-  const defaultLabel = "block text-amber-400 font-semibold mb-2 text-sm";
+  const defaultInput = "w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 min-h-[44px] text-white placeholder-gray-400 focus:border-pink-500 focus:outline-none text-sm transition-all";
+  const defaultLabel = "block text-pink-500 font-semibold mb-2 text-sm";
   const iCls = inputClass || defaultInput;
   const lCls = labelClass || defaultLabel;
 
@@ -338,7 +338,7 @@ const IdVerification = ({ initialData, onSave, saving = false, inputClass, label
       {/* ── Profile context hint ── */}
       {profileData?.displayName && (
         <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-pink-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
             {profileData.displayName.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0">
@@ -355,7 +355,7 @@ const IdVerification = ({ initialData, onSave, saving = false, inputClass, label
           {idTypes.map(t => (
             <button key={t.value} type="button" onClick={() => handleChange('idType', t.value)}
               className={`p-3 rounded-xl border-2 text-center text-sm font-semibold transition-all active:scale-95 ${
-                idForm.idType === t.value ? 'border-amber-400 bg-amber-500/20 text-white' : 'border-white/15 bg-white/5 text-gray-600 hover:bg-white/10'
+                idForm.idType === t.value ? 'border-pink-500 bg-pink-500/20 text-white' : 'border-white/15 bg-white/5 text-gray-600 hover:bg-white/10'
               }`}>
               {t.label}
             </button>
@@ -368,7 +368,7 @@ const IdVerification = ({ initialData, onSave, saving = false, inputClass, label
         <label className={lCls}>Upload ID Document *</label>
         <p className="text-gray-500 text-xs mb-2">Upload a clear photo of your ID. The image will be compressed and securely stored.</p>
         <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileUpload}
-          className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-amber-500/20 file:text-amber-300 hover:file:bg-amber-500/30 file:cursor-pointer file:transition-all" />
+          className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-500/20 file:text-pink-600 hover:file:bg-pink-500/30 file:cursor-pointer file:transition-all" />
         {previewUrl && (
           <div className="mt-3 relative">
             <img src={previewUrl} alt="ID Preview" className="max-h-48 rounded-xl border border-white/20 object-contain" />
@@ -436,7 +436,7 @@ const IdVerification = ({ initialData, onSave, saving = false, inputClass, label
             </p>
           </div>
           <button type="button" onClick={() => handleChange('isPublic', !idForm.isPublic)}
-            className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${idForm.isPublic ? 'bg-amber-500' : 'bg-white/20'}`}>
+            className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${idForm.isPublic ? 'bg-pink-600' : 'bg-white/20'}`}>
             <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-200 ${idForm.isPublic ? 'translate-x-6' : 'translate-x-0'}`} />
           </button>
         </div>
@@ -448,7 +448,7 @@ const IdVerification = ({ initialData, onSave, saving = false, inputClass, label
         className={`w-full py-3 min-h-[44px] font-bold rounded-xl text-sm transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${
           hasBlockingMismatch
             ? 'bg-gray-600 text-gray-600 cursor-not-allowed'
-            : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+            : 'bg-pink-600 hover:bg-pink-700 text-white'
         }`}>
         {saving ? 'Saving...' : hasBlockingMismatch ? 'Fix Mismatches to Continue' : 'Save ID Information'}
       </button>
@@ -466,7 +466,7 @@ export const IdVerificationDisplay = ({ idData, onToggleVisibility, onEdit }) =>
 
   const statusConfig = {
     verified: { label: 'Verified', bg: 'bg-pink-500/20', text: 'text-pink-500', border: 'border-pink-500/30' },
-    pending_review: { label: 'Pending Review', bg: 'bg-amber-500/20', text: 'text-amber-500', border: 'border-amber-500/30' },
+    pending_review: { label: 'Pending Review', bg: 'bg-gray-100', text: 'text-gray-900', border: 'border-gray-300' },
   };
   const status = statusConfig[idData.verificationStatus] || statusConfig.verified;
 
@@ -476,7 +476,7 @@ export const IdVerificationDisplay = ({ idData, onToggleVisibility, onEdit }) =>
         <h3 className="text-lg font-bold text-white">ID Verification</h3>
         <div className="flex items-center gap-2">
           {onEdit && (
-            <button type="button" onClick={onEdit} className="px-3 py-1 bg-white/10 hover:bg-white/20 text-amber-400 font-semibold rounded-lg text-xs transition-all min-h-[32px]">
+            <button type="button" onClick={onEdit} className="px-3 py-1 bg-white/10 hover:bg-white/20 text-pink-500 font-semibold rounded-lg text-xs transition-all min-h-[32px]">
               Edit
             </button>
           )}
@@ -488,8 +488,8 @@ export const IdVerificationDisplay = ({ idData, onToggleVisibility, onEdit }) =>
 
       {/* Pending review notice */}
       {idData.verificationStatus === 'pending_review' && (
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-2">
-          <p className="text-amber-500 text-xs">Your ID name partially matched your profile. An admin will review and confirm your verification shortly.</p>
+        <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-2">
+          <p className="text-gray-900 text-xs">Your ID name partially matched your profile. An admin will review and confirm your verification shortly.</p>
         </div>
       )}
 
@@ -517,7 +517,7 @@ export const IdVerificationDisplay = ({ idData, onToggleVisibility, onEdit }) =>
         </div>
         {onToggleVisibility && (
           <button type="button" onClick={onToggleVisibility}
-            className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${idData.isPublic ? 'bg-amber-500' : 'bg-white/20'}`}>
+            className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${idData.isPublic ? 'bg-pink-600' : 'bg-white/20'}`}>
             <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-200 ${idData.isPublic ? 'translate-x-6' : 'translate-x-0'}`} />
           </button>
         )}

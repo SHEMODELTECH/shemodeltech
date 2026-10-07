@@ -44,12 +44,12 @@ const Premium = () => {
         our talent through two tiers.
       </p>
       {!features.companyTiers && (
-        <p className="mt-3 text-sm text-gray-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 max-w-2xl">
+        <p className="mt-3 text-sm text-gray-800 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 max-w-2xl">
           Company tiers open soon. Until then, companies have free access to the Talent Board.
         </p>
       )}
       {mine && (
-        <p className="mt-3 text-sm font-semibold text-green-800 bg-green-50 border border-green-200 rounded-lg px-3 py-2 max-w-2xl">
+        <p className="mt-3 text-sm font-semibold text-pink-800 bg-pink-50 border border-pink-200 rounded-lg px-3 py-2 max-w-2xl">
           Your company is on the {TIER_LABEL[mine]} tier.
         </p>
       )}
@@ -68,7 +68,7 @@ const Premium = () => {
                 ))}
               </ul>
               {current ? (
-                <p className="mt-5 text-sm font-semibold text-green-700">Your current tier</p>
+                <p className="mt-5 text-sm font-semibold text-pink-700">Your current tier</p>
               ) : features.premiumPayments && link ? (
                 <a href={link} target="_blank" rel="noopener noreferrer" className="mt-5 text-center bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
                   Choose {TIER_LABEL[t]}

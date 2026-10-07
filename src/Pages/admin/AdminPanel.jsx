@@ -35,6 +35,7 @@ import EventsAdmin from '../../components/admin/EventsAdmin';
 import AttentionBoard from '../../components/admin/AttentionBoard';
 import { unpublishFromLearning } from '../../utils/learningPublished';
 import LaunchSettings from '../../components/admin/LaunchSettings';
+import ProtectProjectLinks from '../../components/admin/ProtectProjectLinks';
 import SponsorsAdmin from '../../components/admin/SponsorsAdmin';
 import GiftsAdmin from '../../components/admin/GiftsAdmin';
 import { roleSlotsOf } from '../../utils/projectSlots';
@@ -55,10 +56,10 @@ const fmtDate = (ts) => {
 };
 
 const statusStyle = {
-  lead_recruitment: 'bg-amber-100 text-amber-700',
+  lead_recruitment: 'bg-gray-100 text-gray-800',
   setup: 'bg-pink-100 text-pink-700',
   active: 'bg-pink-100 text-pink-700',
-  completed: 'bg-green-100 text-green-700',
+  completed: 'bg-pink-600 text-white',
 };
 
 // `only`: show one section on its own page (Project reviews or Projects), opened
@@ -878,7 +879,7 @@ const AdminPanel = ({ only = null }) => {
                     <h3 className="font-bold text-gray-900">
                       {p.projectTitle || p.title || 'Untitled project'}
                       {p.isPaid && (
-                        <span className="ml-2 align-middle text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-50 text-green-700">
+                        <span className="ml-2 align-middle text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700">
                           PAID{p.payPerPerson ? ` · $${p.payPerPerson}/person` : ''}
                         </span>
                       )}
@@ -930,14 +931,14 @@ const AdminPanel = ({ only = null }) => {
                   <button
                     onClick={() => doApprove(p)}
                     disabled={actingId === p.id}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg disabled:opacity-50"
+                    className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold rounded-lg disabled:opacity-50"
                   >
                     {actingId === p.id ? '…' : 'Approve'}
                   </button>
                   <button
                     onClick={() => setReviewDialog({ project: p, mode: 'changes' })}
                     disabled={actingId === p.id}
-                    className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg disabled:opacity-50"
+                    className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-lg disabled:opacity-50"
                   >
                     Request changes
                   </button>
@@ -980,7 +981,12 @@ const AdminPanel = ({ only = null }) => {
         </div>
       )}
       {/* Launch settings tab (admins): switch paid features on and off. */}
-      {!loadingData && tab === 'launch' && isAdmin && <LaunchSettings currentUser={currentUser} />}
+      {!loadingData && tab === 'launch' && isAdmin && (
+        <div className="space-y-6">
+          <LaunchSettings currentUser={currentUser} />
+          <ProtectProjectLinks />
+        </div>
+      )}
       {/* Sponsors tab (admins): sponsor thank-yous and recorded gifts. */}
       {!loadingData && tab === 'sponsors' && isAdmin && (
         <div>
@@ -1078,7 +1084,7 @@ const AdminPanel = ({ only = null }) => {
                           toast.error(friendlyError(e, 'Could not approve it.'));
                         }
                       }}
-                      className="text-xs font-semibold bg-green-600 text-white px-3 py-1.5 rounded-lg"
+                      className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg"
                     >
                       Approve {give}
                     </button>
@@ -1143,7 +1149,7 @@ const AdminPanel = ({ only = null }) => {
                         toast.error(friendlyError(e, 'Could not approve it.'));
                       }
                     }}
-                    className="text-xs font-semibold bg-green-600 text-white px-3 py-1.5 rounded-lg"
+                    className="text-xs font-semibold bg-pink-600 text-white px-3 py-1.5 rounded-lg"
                   >
                     Approve
                   </button>
@@ -1318,7 +1324,7 @@ const AdminPanel = ({ only = null }) => {
                       </span>
                     )}
                     {u.role === 'editor' && (
-                      <span className="ml-2 text-[10px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                      <span className="ml-2 text-[10px] font-bold text-pink-600 bg-pink-50 px-1.5 py-0.5 rounded">
                         EDITOR
                       </span>
                     )}
@@ -1338,14 +1344,14 @@ const AdminPanel = ({ only = null }) => {
                       </span>
                     )}
                     {u.isCompany && u.isVerified && (
-                      <span className="ml-2 text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
+                      <span className="ml-2 text-[10px] font-bold text-pink-700 bg-pink-50 px-1.5 py-0.5 rounded">
                         VERIFIED
                       </span>
                     )}
                     {u.isCompany && !u.isVerified && (
                       <span className={`ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded ${
                         u.companyProfile?.verificationStatus === 'info_requested'
-                          ? 'text-amber-700 bg-amber-50'
+                          ? 'text-gray-800 bg-gray-50'
                           : u.companyProfile?.verificationStatus === 'details_updated'
                           ? 'text-pink-700 bg-pink-50'
                           : 'text-gray-600 bg-gray-100'
@@ -1386,7 +1392,7 @@ const AdminPanel = ({ only = null }) => {
                   {isAdmin && u.isCompany && !u.isVerified && (
                     <button
                       onClick={() => requestCompanyInfo(u)}
-                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200"
+                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-900 hover:bg-gray-200"
                     >
                       Request info
                     </button>
@@ -1410,7 +1416,7 @@ const AdminPanel = ({ only = null }) => {
                   {isAdmin && (
                   <button
                     onClick={() => toggleEditor(u)}
-                    className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${u.role === 'editor' ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                    className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${u.role === 'editor' ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-pink-600 text-white hover:bg-pink-700'}`}
                   >
                     {u.role === 'editor' ? 'Remove editor' : 'Make editor'}
                   </button>
@@ -1498,7 +1504,7 @@ const AdminPanel = ({ only = null }) => {
                           </p>
                         </div>
                         <div className="flex gap-2">
-                          <button onClick={() => setLetterDialog({ req: r, status: 'sent' })} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700">
+                          <button onClick={() => setLetterDialog({ req: r, status: 'sent' })} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-pink-600 text-white hover:bg-pink-700">
                             Mark as sent
                           </button>
                           <button onClick={() => setLetterDialog({ req: r, status: 'declined' })} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
@@ -1516,7 +1522,7 @@ const AdminPanel = ({ only = null }) => {
                           </a>
                         )}
                         {r.emailingDraft && (
-                          <span className="font-semibold text-amber-700 bg-amber-50 px-2 py-1 rounded">Mentor will email the draft</span>
+                          <span className="font-semibold text-gray-800 bg-gray-50 px-2 py-1 rounded">Mentor will email the draft</span>
                         )}
                         {!r.draftText && !r.attachment && !r.emailingDraft && <span className="text-gray-400">No draft provided</span>}
                       </div>
@@ -1550,14 +1556,14 @@ const AdminPanel = ({ only = null }) => {
             ) : (
               <div className="space-y-2">
                 {pendingCourses.map((c) => (
-                  <div key={c.id} className="bg-white border border-amber-200 rounded-lg p-3 flex items-center justify-between gap-3">
+                  <div key={c.id} className="bg-white border border-gray-300 rounded-lg p-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-gray-900 text-sm font-medium truncate">
                         {c.title}{' '}
                         {c.removalRequest?.status === 'pending' ? (
                           <span className="text-red-700 text-xs font-semibold">(removal requested)</span>
                         ) : (
-                          c.published && <span className="text-amber-700 text-xs font-semibold">(update to a published course)</span>
+                          c.published && <span className="text-gray-800 text-xs font-semibold">(update to a published course)</span>
                         )}
                       </p>
                       <p className="text-gray-400 text-xs truncate">
@@ -1654,7 +1660,7 @@ const AdminPanel = ({ only = null }) => {
                           </p>
                         </div>
                         <div className="flex gap-2">
-                          <button onClick={() => decideTeacher(a, true)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700">
+                          <button onClick={() => decideTeacher(a, true)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-pink-600 text-white hover:bg-pink-700">
                             Approve
                           </button>
                           <button onClick={() => setDeclineApp(a)} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">

@@ -48,7 +48,7 @@ const SERVICES = [
       subtext: "text-gray-600",
       checkBg: "bg-pink-900/50",
       checkColor: "text-pink-400",
-      btnBg: "bg-amber-500 hover:bg-amber-600",
+      btnBg: "bg-pink-600 hover:bg-pink-700",
       btnText: "text-white",
       iconBg: "bg-pink-900/50"
     }
@@ -94,7 +94,7 @@ const SERVICES = [
       subtext: "text-gray-600",
       checkBg: "bg-pink-100",
       checkColor: "text-pink-600",
-      btnBg: "bg-amber-500 hover:bg-amber-600",
+      btnBg: "bg-pink-600 hover:bg-pink-700",
       btnText: "text-white",
       iconBg: "bg-pink-100"
     }
@@ -115,11 +115,11 @@ const SERVICES = [
       bg: "bg-gray-950",
       text: "text-white",
       subtext: "text-gray-600",
-      checkBg: "bg-amber-900/50",
-      checkColor: "text-amber-400",
-      btnBg: "bg-amber-500 hover:bg-amber-600",
+      checkBg: "bg-pink-900/50",
+      checkColor: "text-pink-400",
+      btnBg: "bg-pink-600 hover:bg-pink-700",
       btnText: "text-white",
-      iconBg: "bg-amber-900/50"
+      iconBg: "bg-pink-900/50"
     }
   },
   {
@@ -140,7 +140,7 @@ const SERVICES = [
       subtext: "text-gray-600",
       checkBg: "bg-pink-100",
       checkColor: "text-pink-700",
-      btnBg: "bg-amber-500 hover:bg-amber-600",
+      btnBg: "bg-pink-600 hover:bg-pink-700",
       btnText: "text-white",
       iconBg: "bg-pink-100"
     }
@@ -271,7 +271,7 @@ const CareerHome = () => {
         rafId.current = requestAnimationFrame(() => {
           if (overlayRef.current) {
             overlayRef.current.style.background =
-              `radial-gradient(400px circle at ${e.clientX}px ${e.clientY}px, rgba(34, 197, 94, 0.15), transparent 40%)`;
+              `radial-gradient(400px circle at ${e.clientX}px ${e.clientY}px, rgba(212, 20, 112, 0.15), transparent 40%)`;
           }
           rafId.current = null;
         });
@@ -334,7 +334,7 @@ const CareerHome = () => {
                 color: 'transparent',
                 WebkitTextStroke: '2px #262626',
                 textStroke: '2px #262626',
-                textShadow: '0 0 20px rgba(34, 197, 94, 0.5), 2px 2px 8px rgba(0, 0, 0, 0.9)',
+                textShadow: '0 0 20px rgba(212, 20, 112, 0.5), 2px 2px 8px rgba(0, 0, 0, 0.9)',
                 letterSpacing: '-0.01em'
               }}>
                 AI-Powered Digital Solutions
@@ -343,15 +343,15 @@ const CareerHome = () => {
 
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-white/90 max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-12 md:mb-16"
                style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)', fontFamily: '"Inter", sans-serif', fontWeight: '300' }}>
-              We build and transform <span className="text-pink-400 font-semibold">web and mobile applications</span> into <span className="text-pink-400 font-semibold">intelligent systems</span> that automate operations, enhance customer experience, and drive <span className="text-amber-400 font-semibold">measurable growth</span>
+              We build and transform <span className="text-pink-400 font-semibold">web and mobile applications</span> into <span className="text-pink-400 font-semibold">intelligent systems</span> that automate operations, enhance customer experience, and drive <span className="text-pink-400 font-semibold">measurable growth</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center mb-6 sm:mb-8 md:mb-10">
               <button onClick={handleContactUs}
-                className="group relative bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-white px-8 sm:px-10 md:px-14 py-4 sm:py-5 md:py-6 rounded-full font-bold text-base sm:text-lg md:text-xl transition-all duration-300 shadow-2xl overflow-hidden w-full sm:w-auto max-w-sm hover:shadow-pink-500/50"
-                style={{ boxShadow: "0 10px 50px rgba(249, 115, 22, 0.4), 0 0 30px rgba(249, 115, 22, 0.2)", fontFamily: '"Inter", sans-serif' }}>
+                className="group relative bg-gradient-to-r from-pink-600 via-pink-700 to-pink-600 text-white px-8 sm:px-10 md:px-14 py-4 sm:py-5 md:py-6 rounded-full font-bold text-base sm:text-lg md:text-xl transition-all duration-300 shadow-2xl overflow-hidden w-full sm:w-auto max-w-sm hover:shadow-pink-500/50"
+                style={{ boxShadow: "0 10px 50px rgba(212, 20, 112, 0.4), 0 0 30px rgba(212, 20, 112, 0.2)", fontFamily: '"Inter", sans-serif' }}>
                 <span className="relative drop-shadow-lg">Start Your Transformation</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-600 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-700 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
               </button>
               <button onClick={handleExploreServices}
                 className="group relative border-2 border-white/80 text-white px-8 sm:px-10 md:px-14 py-4 sm:py-5 md:py-6 rounded-full font-bold text-base sm:text-lg md:text-xl transition-all duration-300 shadow-2xl overflow-hidden w-full sm:w-auto max-w-sm hover:shadow-white/50 hover:bg-white/10 hover:border-white"
@@ -403,9 +403,9 @@ const CareerHome = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 w-full max-w-6xl mx-auto">
             {CORE_VALUES.map((item, index) => (
               <div key={index} className="group transition-all duration-300">
-                <div className="bg-gradient-to-br from-pink-500/30 via-gray-900/40 to-black/60 rounded-xl p-4 sm:p-6 md:p-8 border border-pink-500/20 shadow-xl hover:border-amber-400/40 transition-all duration-300 text-center h-full flex flex-col">
+                <div className="bg-gradient-to-br from-pink-500/30 via-gray-900/40 to-black/60 rounded-xl p-4 sm:p-6 md:p-8 border border-pink-500/20 shadow-xl hover:border-pink-400/40 transition-all duration-300 text-center h-full flex flex-col">
                   <div className="text-3xl sm:text-4xl md:text-5xl mb-2 sm:mb-3 transform">{item.icon}</div>
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-black mb-1 sm:mb-2 text-white group-hover:text-amber-400 transition-colors"
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-black mb-1 sm:mb-2 text-white group-hover:text-pink-400 transition-colors"
                       style={{ fontFamily: '"Inter", sans-serif' }}>{item.value}</h3>
                   <p className="text-gray-700 text-sm sm:text-base leading-relaxed flex-grow"
                      style={{ fontFamily: '"Inter", sans-serif' }}>{item.description}</p>
@@ -488,8 +488,8 @@ const CareerHome = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full max-w-6xl mx-auto">
             {OUTCOMES.map((outcome, index) => (
-              <div key={index} className="bg-gradient-to-br from-pink-500/30 via-gray-900/40 to-black/60 rounded-xl p-3 sm:p-4 md:p-5 border border-pink-500/20 hover:border-amber-400/40 transition-all duration-300 text-center group">
-                <div className="text-amber-400 text-base sm:text-lg md:text-xl mb-1.5 sm:mb-2">✓</div>
+              <div key={index} className="bg-gradient-to-br from-pink-500/30 via-gray-900/40 to-black/60 rounded-xl p-3 sm:p-4 md:p-5 border border-pink-500/20 hover:border-pink-400/40 transition-all duration-300 text-center group">
+                <div className="text-pink-400 text-base sm:text-lg md:text-xl mb-1.5 sm:mb-2">✓</div>
                 <p className="text-white text-sm sm:text-base md:text-lg font-medium" style={{ fontFamily: '"Inter", sans-serif' }}>{outcome}</p>
               </div>
             ))}
@@ -578,12 +578,12 @@ const CareerHome = () => {
                   </p>
                 </div>
                 {/* Connector arrow */}
-                <div className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-6 h-6 items-center justify-center text-amber-400 text-xl font-bold">›</div>
+                <div className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-6 h-6 items-center justify-center text-pink-400 text-xl font-bold">›</div>
               </div>
 
               {/* Step 2 */}
               <div className="relative group">
-                <div className="bg-gradient-to-br from-pink-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-pink-500/20 hover:border-amber-400/50 transition-all duration-300 h-full flex flex-col">
+                <div className="bg-gradient-to-br from-pink-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-pink-500/20 hover:border-pink-400/50 transition-all duration-300 h-full flex flex-col">
                   <div className="text-pink-400 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>Step 02</div>
                   <h3 className="text-white text-lg sm:text-xl font-black mb-3" style={{ fontFamily: '"Inter", sans-serif' }}>
                     Custom Proposal Delivered
@@ -592,13 +592,13 @@ const CareerHome = () => {
                     After your consultation, we deliver a tailored proposal - covering our full services, how we operate, project timeline, and transparent pricing based on exactly what you want to build.
                   </p>
                 </div>
-                <div className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-6 h-6 items-center justify-center text-amber-400 text-xl font-bold">›</div>
+                <div className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-6 h-6 items-center justify-center text-pink-400 text-xl font-bold">›</div>
               </div>
 
               {/* Step 3 */}
               <div className="group">
-                <div className="bg-gradient-to-br from-pink-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-pink-500/20 hover:border-amber-400/50 transition-all duration-300 h-full flex flex-col">
-                  <div className="text-amber-400 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>Step 03</div>
+                <div className="bg-gradient-to-br from-pink-500/40 via-gray-900/50 to-black/70 rounded-2xl p-6 sm:p-8 border border-pink-500/20 hover:border-pink-400/50 transition-all duration-300 h-full flex flex-col">
+                  <div className="text-pink-400 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontFamily: '"Inter", sans-serif' }}>Step 03</div>
                   <h3 className="text-white text-lg sm:text-xl font-black mb-3" style={{ fontFamily: '"Inter", sans-serif' }}>
                     Build & Transform Together
                   </h3>
@@ -621,7 +621,7 @@ const CareerHome = () => {
                 </p>
               </div>
               <a href="/solutions/terms"
-                className="group flex-shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-7 sm:px-9 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-xl hover:shadow-amber-500/30 whitespace-nowrap"
+                className="group flex-shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white px-7 sm:px-9 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-xl hover:shadow-pink-500/30 whitespace-nowrap"
                 style={{ fontFamily: '"Inter", sans-serif' }}>
                 Read Full Terms
                 <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -652,7 +652,7 @@ const CareerHome = () => {
                   aria-expanded={expandedFAQ === index}>
                   <div className="flex justify-between items-center">
                     <h3 className="font-bold text-base sm:text-lg md:text-xl text-white pr-4" style={{ fontFamily: '"Inter", sans-serif' }}>{faq.question}</h3>
-                    <span className={`transform transition-transform text-xl text-amber-400 flex-shrink-0 ${expandedFAQ === index ? 'rotate-180' : ''}`}>⌄</span>
+                    <span className={`transform transition-transform text-xl text-pink-400 flex-shrink-0 ${expandedFAQ === index ? 'rotate-180' : ''}`}>⌄</span>
                   </div>
                   <div className={`overflow-hidden transition-all duration-300 ${expandedFAQ === index ? 'max-h-[600px] mt-3' : 'max-h-0'}`}>
                     <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-lg" style={{ fontFamily: '"Inter", sans-serif' }}>{faq.answer}</p>
@@ -662,7 +662,7 @@ const CareerHome = () => {
                         <span className="text-pink-400 text-lg flex-shrink-0">📋</span>
                         <p className="text-pink-400 text-sm" style={{ fontFamily: '"Inter", sans-serif' }}>
                           For complete details, please{' '}
-                          <a href="/solutions/terms" className="text-amber-400 hover:text-amber-300 font-semibold underline underline-offset-2 transition-colors">
+                          <a href="/solutions/terms" className="text-pink-400 hover:text-pink-300 font-semibold underline underline-offset-2 transition-colors">
                             review our full Terms of Service
                           </a>.
                         </p>
@@ -727,11 +727,11 @@ const CareerHome = () => {
         .animate-scroll:hover { animation-play-state: paused; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
-        ::-webkit-scrollbar-thumb { background: rgba(34, 197, 94, 0.5); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(249, 115, 22, 0.7); }
+        ::-webkit-scrollbar-thumb { background: rgba(212, 20, 112, 0.5); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(212, 20, 112, 0.7); }
         html { scroll-behavior: smooth; overflow-x: hidden; }
         body { overflow-x: hidden; }
-        button:focus, a:focus { outline: 2px solid rgba(22, 163, 74, 0.5); outline-offset: 2px; }
+        button:focus, a:focus { outline: 2px solid rgba(212, 20, 112, 0.5); outline-offset: 2px; }
       `}</style>
     </div>
   );

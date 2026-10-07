@@ -4,6 +4,7 @@
 
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { app, db, auth } from '../firebase/config';
+import { timeoutSignal } from './authFetch';
 import { toast } from 'react-toastify';
 
 // The messaging SDK is loaded only when push is actually used (it used to be
@@ -191,6 +192,7 @@ export async function sendPush({ recipientUid, recipientUids, title, body, link,
           Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify({ recipientUids: all.slice(i, i + 50), title, body, link, level }),
+        signal: timeoutSignal(15 * 1000), // never hang the caller on a slow push
       });
     }
   } catch (e) {

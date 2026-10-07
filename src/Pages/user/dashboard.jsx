@@ -234,10 +234,10 @@ const DashboardOverview = () => {
         setupProjects.map((p) => (
           <div
             key={p.id}
-            className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+            className="mb-6 bg-gray-50 border border-gray-300 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
           >
             <div className="min-w-0">
-              <p className="text-amber-800 font-semibold text-sm">
+              <p className="text-gray-900 font-semibold text-sm">
                 You're leading &ldquo;{p.projectTitle || p.title || 'your project'}&rdquo;
               </p>
               <p className="text-gray-600 text-xs mt-1">
@@ -472,30 +472,30 @@ const DashboardOverview = () => {
                       {formatMoney(disbursements.disbursedTotal)}
                     </p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                    <p className="text-amber-700 text-[10px] uppercase tracking-wider font-semibold">
+                  <div className="bg-gray-50 border border-gray-300 rounded-lg p-3">
+                    <p className="text-gray-800 text-[10px] uppercase tracking-wider font-semibold">
                       Pending
                     </p>
-                    <p className="text-lg font-black text-amber-700">
+                    <p className="text-lg font-black text-gray-800">
                       {formatMoney(disbursements.pendingTotal)}
                     </p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <p className="text-green-700 text-[10px] uppercase tracking-wider font-semibold">
+                  <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
+                    <p className="text-pink-700 text-[10px] uppercase tracking-wider font-semibold">
                       Earned
                     </p>
-                    <p className="text-lg font-black text-green-700">
+                    <p className="text-lg font-black text-pink-700">
                       {formatMoney(earnings.earnedTotal)}
                     </p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                    <p className="text-amber-700 text-[10px] uppercase tracking-wider font-semibold">
+                  <div className="bg-gray-50 border border-gray-300 rounded-lg p-3">
+                    <p className="text-gray-800 text-[10px] uppercase tracking-wider font-semibold">
                       Pending
                     </p>
-                    <p className="text-lg font-black text-amber-700">
+                    <p className="text-lg font-black text-gray-800">
                       {formatMoney(earnings.pendingTotal)}
                     </p>
                   </div>

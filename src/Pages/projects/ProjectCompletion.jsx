@@ -554,11 +554,11 @@ const ProjectCompletion = () => {
                     <p className="text-gray-400 text-xs mt-3">Submission link: <a href={project.reviewSubmissionUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:underline">{project.reviewSubmissionUrl}</a></p>
                   </div>
                 ) : (
-                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+                  <div className="bg-gray-50 border border-gray-300 rounded-2xl p-6">
                     <h2 className="text-lg font-bold text-gray-900 mb-1">{needsChanges ? 'Changes requested' : 'Submit for review'}</h2>
                     {needsChanges && (
-                      <div className="bg-white border border-amber-200 rounded-lg p-3 mb-3">
-                        <p className="text-amber-800 text-sm font-medium">Reviewer note:</p>
+                      <div className="bg-white border border-gray-300 rounded-lg p-3 mb-3">
+                        <p className="text-gray-900 text-sm font-medium">Reviewer note:</p>
                         <p className="text-gray-700 text-sm">{project.reviewFeedback || 'Please review your submission and re-submit.'}</p>
                       </div>
                     )}
@@ -599,8 +599,8 @@ const ProjectCompletion = () => {
                 happened (individual owners). Companies skip review, so no banner.
                 On PAID projects there are no badges - the wording reflects that. */}
             {wasReviewed && !ownerIsCompany && step !== 4 && (
-              <div className="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-                <p className="text-green-700 font-bold text-sm">
+              <div className="mb-6 bg-pink-50 border border-pink-200 rounded-xl p-4 text-center">
+                <p className="text-pink-700 font-bold text-sm">
                   {project?.isPaid
                     ? 'Approved by She Model Tech - you can now rate contributions and start payment confirmations.'
                     : 'Approved by She Model Tech - you can now assign badges to your team.'}
@@ -700,7 +700,7 @@ const ProjectCompletion = () => {
                 ) : (
                   <>
                     {project?.isPaid ? (
-                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                      <div className="bg-gray-50 border border-gray-300 rounded-xl p-4">
                         <p className="text-gray-900 text-sm font-bold mb-1">Paid project - no badges are awarded</p>
                         <p className="text-gray-600 text-xs">Rate each member's contribution for the record. On completion, the project moves to payment confirmation: you'll mark everyone paid, each member confirms they received their pay, and the project fully closes only when all confirmations match. Any mismatch opens a dispute.</p>
                       </div>
@@ -716,7 +716,7 @@ const ProjectCompletion = () => {
                             <p className="text-gray-500 text-xs">{ev.memberRole} - {ev.memberEmail}</p>
                           </div>
                           {project?.isPaid ? (
-                            <span className="text-amber-700 text-sm font-black bg-amber-100 border border-amber-200 px-3 py-1 rounded-full">${(ev.payAmount || 0).toLocaleString()} due</span>
+                            <span className="text-white text-sm font-black bg-gray-900 border border-gray-900 px-3 py-1 rounded-full">${(ev.payAmount || 0).toLocaleString()} due</span>
                           ) : (
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" checked={ev.awardBadge} onChange={e => updateEval(index, 'awardBadge', e.target.checked)}
@@ -778,8 +778,8 @@ const ProjectCompletion = () => {
                         )}
 
                         {!project?.isPaid && ev.contribution === 'poor' && ev.awardBadge && (
-                          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
-                            <p className="text-amber-500 text-xs">Poor contribution - badge will not be awarded even if selected.</p>
+                          <div className="bg-gray-100 border border-gray-300 rounded-xl p-3">
+                            <p className="text-gray-900 text-xs">Poor contribution - badge will not be awarded even if selected.</p>
                           </div>
                         )}
 

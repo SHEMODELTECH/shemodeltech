@@ -160,9 +160,9 @@ const ActivationQueue = () => {
       </p>
 
       {!MEMBERSHIP_ENFORCED && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8">
-          <p className="text-amber-900 text-sm font-bold mb-1">Membership is dormant</p>
-          <p className="text-amber-800 text-xs leading-relaxed">
+        <div className="bg-gray-50 border border-gray-300 rounded-xl p-4 mb-8">
+          <p className="text-gray-900 text-sm font-bold mb-1">Membership is dormant</p>
+          <p className="text-gray-900 text-xs leading-relaxed">
             Every company currently has full access for free. Nothing here is enforced yet. Set{' '}
             <code className="font-mono">MEMBERSHIP_ENFORCED = true</code> in{' '}
             <code className="font-mono">src/config/membership.js</code> when you&rsquo;re ready to
@@ -194,7 +194,7 @@ const ActivationQueue = () => {
               <button
                 onClick={() => activate(c.companyId, c.plan === 'annual' ? 12 : 1, c.id)}
                 disabled={busy === c.companyId}
-                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-200 text-white text-xs font-semibold px-4 py-2 rounded-lg"
+                className="bg-pink-600 hover:bg-pink-700 disabled:bg-gray-200 text-white text-xs font-semibold px-4 py-2 rounded-lg"
               >
                 Payment confirmed, activate
               </button>
@@ -257,7 +257,7 @@ const ActivationQueue = () => {
         {partners.map((c) => (
           <div
             key={c.uid}
-            className="flex items-center justify-between gap-3 bg-green-50 border border-green-200 rounded-lg p-3 flex-wrap"
+            className="flex items-center justify-between gap-3 bg-pink-50 border border-pink-200 rounded-lg p-3 flex-wrap"
           >
             <div className="min-w-0">
               <p className="font-semibold text-gray-900 text-sm">

@@ -116,7 +116,7 @@ const canEdit = (access, c) => access.isStaff || (c?.createdBy?.uid && c.created
 const StatusTag = ({ status }) => (
   <span
     className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-      status === 'ready' ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
+      status === 'ready' ? 'bg-pink-50 text-pink-700' : 'bg-gray-50 text-gray-800'
     }`}
   >
     {status === 'ready' ? 'Ready' : 'Draft'}
@@ -128,7 +128,7 @@ const ReviewTag = ({ course }) => {
     return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-700">Removal requested</span>;
   const st = reviewStatus(course);
   if (st === 'pending')
-    return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">{course.published ? 'Update pending review' : 'Pending review'}</span>;
+    return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-50 text-gray-800">{course.published ? 'Update pending review' : 'Pending review'}</span>;
   if (st === 'declined' && !course.published)
     return <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-700">Not approved</span>;
   if (st === 'withdrawn' && !course.published)
@@ -217,10 +217,10 @@ const MentorLetters = ({ access }) => {
   const input = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500';
   const statusTag = (st) =>
     st === 'sent'
-      ? 'bg-green-50 text-green-700'
+      ? 'bg-pink-50 text-pink-700'
       : st === 'declined'
       ? 'bg-gray-100 text-gray-600'
-      : 'bg-amber-50 text-amber-700';
+      : 'bg-gray-50 text-gray-800';
 
   return (
     <details className="group rounded-xl border border-gray-200 bg-white">
@@ -271,7 +271,7 @@ const MentorLetters = ({ access }) => {
             {(() => {
               const n = form.purpose.trim().split(/\s+/).filter(Boolean).length;
               return (
-                <p id="lt-purpose-hint" aria-live="polite" className={`text-xs mt-1 ${n >= 5 ? 'text-green-700' : 'text-gray-500'}`}>
+                <p id="lt-purpose-hint" aria-live="polite" className={`text-xs mt-1 ${n >= 5 ? 'text-pink-700' : 'text-gray-500'}`}>
                   {n >= 5 ? `${n} words. Minimum reached.` : `Minimum 5 words. You have ${n} so far.`}
                 </p>
               );
@@ -303,7 +303,7 @@ const MentorLetters = ({ access }) => {
               const n = form.draftText.trim().split(/\s+/).filter(Boolean).length;
               const other = !!file || form.emailingDraft;
               return (
-                <p aria-live="polite" className={`text-xs mt-1 ${n >= 50 ? 'text-green-700' : 'text-gray-500'}`}>
+                <p aria-live="polite" className={`text-xs mt-1 ${n >= 50 ? 'text-pink-700' : 'text-gray-500'}`}>
                   {n >= 50
                     ? `${n} words. Minimum reached.`
                     : other
@@ -351,7 +351,7 @@ const MentorLetters = ({ access }) => {
                 {r.adminNote && <span className="block text-xs text-gray-600 mt-0.5">Note: {r.adminNote}</span>}
                 {r.letterFile?.url && (
                   <a href={r.letterFile.url} target="_blank" rel="noopener noreferrer"
-                    className="inline-block mt-1.5 text-xs font-semibold text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-lg">
+                    className="inline-block mt-1.5 text-xs font-semibold text-white bg-pink-600 hover:bg-pink-700 px-3 py-1.5 rounded-lg">
                     Download your letter
                   </a>
                 )}
@@ -672,7 +672,7 @@ const VideoLessonsEditor = ({ content, onChange }) => {
                 <input className={input} placeholder="Video link, e.g. https://www.youtube.com/watch?v=..." aria-label={`Lesson ${i + 1} video link`}
                   value={l.url} onChange={(e) => set(i, 'url', e.target.value)} />
                 {(l.url || '').trim() && (
-                  <p className={`text-xs font-semibold ${v ? 'text-green-700' : 'text-amber-700'}`}>
+                  <p className={`text-xs font-semibold ${v ? 'text-pink-700' : 'text-gray-800'}`}>
                     {v ? `${v.provider} video: it will play inside the course.` : 'Not a recognised video link: learners will get a button that opens it in a new tab.'}
                   </p>
                 )}
@@ -898,7 +898,7 @@ const TeacherEditor = ({ access }) => {
             ))}
           </div>
           {existing?.published && audience === 'teachers' && (
-            <p className="text-sm text-amber-700 mt-2">
+            <p className="text-sm text-gray-800 mt-2">
               {access.isStaff
                 ? 'Saving will remove it from Learning. Learners who enrolled will lose access.'
                 : 'It is published in Learning; only an admin can remove it. Saving keeps your changes here without sending them to students.'}
@@ -1254,17 +1254,17 @@ const PublishPanel = ({ course, content, onChange, access }) => {
         <p className="text-sm text-gray-700">
           {pub && pending ? (
             <>
-              <strong className="text-amber-700">{submitter} submitted an update</strong> to this published course.{' '}
+              <strong className="text-gray-800">{submitter} submitted an update</strong> to this published course.{' '}
               {access?.isAdmin ? 'Approve it to update Learning, or decline with a note.' : 'Waiting for an admin to approve it.'}
             </>
           ) : pub ? (
             <>
-              <strong className="text-green-700">Published in Learning</strong> under {trackLabel(pub.track)}. Edits here
+              <strong className="text-pink-700">Published in Learning</strong> under {trackLabel(pub.track)}. Edits here
               reach students only when you update the published version.
             </>
           ) : req ? (
             <>
-              <strong className="text-amber-700">{submitter} submitted this for learners.</strong>{' '}
+              <strong className="text-gray-800">{submitter} submitted this for learners.</strong>{' '}
               {access?.isAdmin ? 'Review it, then approve and publish, or decline with a note.' : 'Waiting for an admin to approve it.'}
             </>
           ) : (
@@ -1438,10 +1438,10 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
   let tone = 'border-gray-200 bg-gray-50';
   let text;
   if (st === 'pending') {
-    tone = 'border-amber-200 bg-amber-50';
+    tone = 'border-gray-300 bg-gray-50';
     text = (
       <>
-        <strong className="text-amber-800">{course.published ? 'Your update is waiting for admin approval.' : 'Pending admin approval.'}</strong>{' '}
+        <strong className="text-gray-900">{course.published ? 'Your update is waiting for admin approval.' : 'Pending admin approval.'}</strong>{' '}
         Submitted {fmt(course.review?.submittedAt)}. You can still edit it, or withdraw it.
       </>
     );
@@ -1459,10 +1459,10 @@ const TeacherReviewBar = ({ course, access, onChange }) => {
       </>
     );
   } else if (course.published) {
-    tone = 'border-green-200 bg-green-50';
+    tone = 'border-pink-200 bg-pink-50';
     text = (
       <>
-        <strong className="text-green-800">Published in Learning</strong> for students. Edit it and submit an update when you want changes to go live.
+        <strong className="text-pink-800">Published in Learning</strong> for students. Edit it and submit an update when you want changes to go live.
       </>
     );
   } else {

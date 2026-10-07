@@ -108,7 +108,7 @@ const JobCard = ({ j }) => (
     <div className="flex flex-wrap items-center gap-2">
       {j.featured && <PremiumBadge kind="featured" />}
       <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{JOB_TYPES[j.type] || j.type}</span>
-      {j.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-green-50 text-green-700">Remote</span>}
+      {j.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700">Remote</span>}
     </div>
     <p className="font-semibold text-gray-900 mt-2">{j.title}</p>
     <p className="text-sm text-gray-600">
@@ -177,7 +177,7 @@ export const JobsBoard = () => {
   return (
     <div className="max-w-4xl mx-auto">
       {isStaff && deletionReqs.length > 0 && (
-        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <div className="mb-6 rounded-xl border border-gray-300 bg-gray-50 p-4">
           <p className="font-semibold text-gray-900 mb-2">Deletion requests ({deletionReqs.length})</p>
           <p className="text-xs text-gray-600 mb-3">These posts are unpublished while you decide.</p>
           <ul className="space-y-2">
@@ -285,9 +285,9 @@ export const JobDetail = () => {
         <div className="flex flex-wrap items-center gap-2">
           {job.featured && <PremiumBadge kind="featured" />}
           <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{JOB_TYPES[job.type] || job.type}</span>
-          {job.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-green-50 text-green-700">Remote</span>}
+          {job.remote && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-700">Remote</span>}
           {underReview ? (
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Under review · not accepting applications</span>
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-900">Under review · not accepting applications</span>
           ) : (job.status !== 'open' || win.state === 'closed') ? (
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">Closed</span>
           ) : win.state === 'upcoming' ? (
@@ -497,7 +497,7 @@ export const JobForm = () => {
     <form onSubmit={(e) => (locked ? e.preventDefault() : submit(e))} className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl p-6 space-y-4">
       <h1 className="text-2xl font-bold text-gray-900">{id ? 'Edit job' : 'Post a job'}</h1>
       {locked && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="rounded-xl border border-gray-300 bg-gray-50 p-4 flex flex-wrap items-center justify-between gap-3">
           <p className="m-0 text-sm text-gray-800"><strong>Coming soon.</strong> {lockedMessage}</p>
           {profile.isCompany && <Link to="/premium" className="text-sm font-semibold bg-pink-600 text-white px-4 py-2 rounded-lg">See the tiers</Link>}
         </div>
