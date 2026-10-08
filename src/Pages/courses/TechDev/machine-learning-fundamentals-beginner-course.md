@@ -204,6 +204,286 @@ You ran all three parts. You can point to the features, the label, the training 
 
 *Answers: 1) A feature is an input the model uses; the label is the answer it is trying to predict. 2) Regression, because the label is a number on a continuous scale, not a category. 3) During `fit` the model learns patterns from labeled training data; during `predict` it applies what it learned to new data. 4) The data has no labels, so the model finds structure on its own. 5) Any valid case, such as when a simple fixed rule already works, when there is too little data, or when the answer must be exactly correct every time like a tax calculation.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "bulb",
+   "kicker": "Module 1 · What ML is (and isn't)",
+   "title": "Learning rules from examples",
+   "beats": [
+    {
+     "say": "Welcome to Machine Learning Fundamentals."
+    },
+    {
+     "say": "In normal programming, you write the rules. In machine learning, you give the computer many examples, and it learns the rules from them."
+    },
+    {
+     "say": "The result is called a model: a function that takes inputs and produces a prediction."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Concept",
+   "title": "Words you'll see in every module",
+   "items": [
+    [
+     "Feature",
+     "An input, e.g. hours per week"
+    ],
+    [
+     "Label",
+     "The answer, e.g. finished?"
+    ],
+    [
+     "Training",
+     "model.fit(X, y)"
+    ],
+    [
+     "Inference",
+     "model.predict(new_X)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A few words come up in every module.",
+     "show": 0
+    },
+    {
+     "say": "A feature is an input the model looks at, like hours studied per week.",
+     "show": 1
+    },
+    {
+     "say": "The label is the answer you want to predict, like whether the student finished.",
+     "show": 2
+    },
+    {
+     "say": "Training is the model learning patterns from labeled examples.",
+     "show": 3
+    },
+    {
+     "say": "And inference is using the trained model on new data.",
+     "show": 4
+    },
+    {
+     "say": "By convention, capital X holds the features, and lowercase y holds the labels.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Concept",
+   "title": "Two kinds of machine learning",
+   "items": [
+    [
+     "Regression",
+     "Supervised · label is a number"
+    ],
+    [
+     "Classification",
+     "Supervised · label is a category"
+    ],
+    [
+     "Clustering",
+     "Unsupervised · no labels"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "This course covers two main kinds.",
+     "show": 0
+    },
+    {
+     "say": "Supervised learning: every example has a label. If the label is a number, it's regression.",
+     "show": 1
+    },
+    {
+     "say": "If the label is a category, like spam or not spam, it's classification.",
+     "show": 2
+    },
+    {
+     "say": "Unsupervised learning has no labels. The model finds structure on its own, like groups of similar customers. That's clustering.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "When not to use it",
+   "title": "Sometimes ordinary code wins",
+   "items": [
+    [
+     "A simple rule works",
+     "Write the if statement"
+    ],
+    [
+     "Little data or labels",
+     ""
+    ],
+    [
+     "Costly, unexplainable mistakes",
+     "Support people, don't replace them"
+    ],
+    [
+     "Must be exactly right",
+     "Tax, balances"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Machine learning isn't always the right tool.",
+     "show": 0
+    },
+    {
+     "say": "If a simple rule works, like orders over fifty dollars ship free, just write the if statement.",
+     "show": 1
+    },
+    {
+     "say": "If you have very little data, or no reliable labels, skip it.",
+     "show": 2
+    },
+    {
+     "say": "If mistakes are very costly and you can't check them, a model should support human judgment, not replace it.",
+     "show": 3
+    },
+    {
+     "say": "And if the answer must be exactly right every time, like tax, use ordinary code.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Part 1",
+   "title": "Your first model",
+   "file": "Colab cell",
+   "code": "X = data[[\"hours_per_week\", \"lessons_done_wk1\"]]   # features\ny = data[\"finished\"]                                # label\n\nmodel = DecisionTreeClassifier(max_depth=2, random_state=42)\nmodel.fit(X, y)          # TRAINING\n\nnew_students = pd.DataFrame({\n    \"hours_per_week\":   [2.5, 6.5],\n    \"lessons_done_wk1\": [1,   5],\n})\nprint(model.predict(new_students))   # [0 1]",
+   "beats": [
+    {
+     "say": "Part one trains your first model, on a tiny dataset of students.",
+     "show": 0
+    },
+    {
+     "say": "X holds two features, and y holds the label: did they finish.",
+     "show": 1
+    },
+    {
+     "say": "Fit is training. Predict is inference, on new students the model has never seen.",
+     "show": 1
+    },
+    {
+     "say": "It predicts zero for the first, and one for the second. Every scikit-learn model follows this pattern: create it, fit it, then predict.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "growth",
+   "kicker": "Lab · Parts 2 and 3",
+   "title": "A real dataset, then no labels",
+   "big": "569 × 30",
+   "sub": "breast cancer data · then 3 customer groups, no labels",
+   "beats": [
+    {
+     "say": "Part two loads a real dataset: five hundred and sixty nine tumor samples, each with thirty measured features.",
+     "show": 0
+    },
+    {
+     "say": "Part three uses k-means on customers with no labels at all. It finds three groups on its own: rare big spenders, frequent small spenders, and a middle group.",
+     "show": 1
+    },
+    {
+     "say": "The group numbers are just names. They carry no order or meaning.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Predicting tomorrow's temperature in degrees is which kind of problem?",
+   "options": [
+    "Regression, because the label is a number",
+    "Classification, because weather has categories",
+    "Clustering, because there are no labels"
+   ],
+   "answer": 0,
+   "good": "That's right. The label is a number on a continuous scale, not a category, so it's regression.",
+   "bad": "Not quite. The label is a number on a continuous scale, not a category, so it's regression.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Predicting tomorrow's temperature in degrees is which kind of problem?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You ran all three parts",
+     ""
+    ],
+    [
+     "You can point to features, label, fit and predict",
+     ""
+    ],
+    [
+     "You can explain why Part 3 is unsupervised",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you ran all three parts,",
+     "show": 1
+    },
+    {
+     "say": "you can point to the features, label, training line and inference line in Part 1,",
+     "show": 2
+    },
+    {
+     "say": "and you can explain why Part 3 is unsupervised.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 2, preparing data for machine learning.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: Preparing Data for Machine Learning
@@ -368,6 +648,219 @@ You can explain why the split happens before encoding and scaling, and you can n
 
 *Answers: 1) To measure how the model performs on data it has never seen, which is what real use looks like. 2) It invents a fake order and distance between categories that the model will treat as meaningful. 3) It rescales the column to have mean 0 and standard deviation 1, using statistics learned during `fit`. 4) Fitting on all data lets information from the test set influence training, which makes the test score less honest. 5) When information that would not be available at prediction time gets into training, making the model look better than it really is.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Module 2 · Preparing data",
+   "title": "Get the data ready, honestly",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Models only understand numbers, and they only learn well from data that's prepared carefully."
+    },
+    {
+     "say": "Four ideas here, used in every project."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "Four ideas for every project",
+   "items": [
+    [
+     "Train/test split",
+     "Hold back a final exam"
+    ],
+    [
+     "One-hot encoding",
+     "One 1/0 column per category"
+    ],
+    [
+     "Scaling",
+     "Mean 0, standard deviation 1"
+    ],
+    [
+     "Data leakage",
+     "Future info sneaks into training"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "First, the train test split. Set aside part of your data as a test set, like a final exam the model never studies from.",
+     "show": 1
+    },
+    {
+     "say": "Second, encoding categories. One-hot encoding makes one yes or no column per category, instead of a fake order like zero, one, two.",
+     "show": 2
+    },
+    {
+     "say": "Third, scaling numbers. Standard scaler rescales each column to mean zero and standard deviation one.",
+     "show": 3
+    },
+    {
+     "say": "Fourth, data leakage: information that wouldn't be available at prediction time, sneaking into training.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "lock",
+   "kicker": "The rule",
+   "title": "Split first",
+   "quote": "Split first, then fit every preprocessing step on the training set only, and only transform the test set.",
+   "beats": [
+    {
+     "say": "Here's the rule that prevents leaky preprocessing.",
+     "show": 0
+    },
+    {
+     "say": "Split first. Then fit every preprocessing step on the training set only, and only transform the test set.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Part 1",
+   "title": "Split, encode and scale",
+   "file": "Colab cell",
+   "code": "X_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.25, random_state=42\n)\n\nencoder = OneHotEncoder(sparse_output=False, handle_unknown=\"ignore\")\nencoder.fit(X_train[cat_cols])\ntrain_cats = encoder.transform(X_train[cat_cols])\ntest_cats = encoder.transform(X_test[cat_cols])\n\nscaler = StandardScaler()\nscaler.fit(X_train[num_cols])\ntrain_nums = scaler.transform(X_train[num_cols])\ntest_nums = scaler.transform(X_test[num_cols])",
+   "beats": [
+    {
+     "say": "In part one, you prepare apartment listings to predict rent.",
+     "show": 0
+    },
+    {
+     "say": "Split first: nine training rows, three test rows.",
+     "show": 1
+    },
+    {
+     "say": "The encoder and the scaler each learn from the training data only, then transform both sets.",
+     "show": 1
+    },
+    {
+     "say": "The learned mean, about nine hundred and twenty eight square feet, comes from the nine training rows alone.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Lab · Part 2",
+   "title": "Watch leakage inflate a score",
+   "items": [
+    [
+     "Honest features",
+     "0.728 ✓"
+    ],
+    [
+     "With filled_exit_survey",
+     "0.964 ✗ leaky"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Part two predicts whether a customer will cancel.",
+     "show": 0
+    },
+    {
+     "say": "With honest features, accuracy is about seventy three percent.",
+     "show": 1
+    },
+    {
+     "say": "Add a column for filling out the exit survey, and it jumps to ninety six percent.",
+     "show": 2
+    },
+    {
+     "say": "But only people who already left fill out exit surveys. On the day you need a prediction, that column is always empty.",
+     "show": 2
+    },
+    {
+     "say": "When a score looks too good, ask: would I really know this value when I need the prediction?",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why should the scaler be fit on the training set only?",
+   "options": [
+    "Because the test set is too small to scale",
+    "Because scaling only works on training data",
+    "Because fitting on all the data lets test information influence training"
+   ],
+   "answer": 2,
+   "good": "That's right. Fitting on all the data lets information from the test set influence training, which makes the test score less honest.",
+   "bad": "Not quite. Fitting on all the data lets information from the test set influence training, which makes the test score less honest.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why should the scaler be fit on the training set only?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why we split first",
+     ""
+    ],
+    [
+     "You can name the leaky column and why",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why the split happens before encoding and scaling,",
+     "show": 1
+    },
+    {
+     "say": "and you can name the leaky column in Part 2 and say why it leaks.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, regression.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3: Regression
@@ -494,6 +987,211 @@ You can state, in one sentence, how far off the linear model is on average and h
 5. Why can a large coefficient be misleading when features are correlated?
 
 *Answers: 1) One weight per feature plus an intercept, chosen to make predictions as close as possible to the training labels. 2) MAE averages the absolute errors; RMSE squares errors before averaging, so it punishes large misses more and is never smaller than MAE. 3) An error number alone has no meaning; the baseline shows whether the model learned anything beyond predicting the average. 4) The model does no better than always predicting the average label. 5) Correlated features can receive large opposite weights that cancel out, so the size or sign of one weight does not reliably show its real effect.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Module 3 · Regression",
+   "title": "Predict a number",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "Regression predicts a number. The simplest model is linear regression: a weighted sum of the features, plus a constant."
+    },
+    {
+     "say": "Training finds the weights that bring predictions as close as possible to the true labels."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "calc",
+   "kicker": "Concept",
+   "title": "How far off are we?",
+   "items": [
+    [
+     "MAE",
+     "Average miss, in label units"
+    ],
+    [
+     "RMSE",
+     "Punishes big misses more"
+    ],
+    [
+     "R²",
+     "1.0 perfect · 0.0 = the average"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "You measure a regression model on the test set.",
+     "show": 0
+    },
+    {
+     "say": "M A E, mean absolute error: on average, predictions are off by this much.",
+     "show": 1
+    },
+    {
+     "say": "R M S E, root mean squared error: also in label units, but it punishes big misses more.",
+     "show": 2
+    },
+    {
+     "say": "And R squared: the fraction of variation the model explains. One is perfect. Zero is no better than predicting the average.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "target",
+   "kicker": "Concept",
+   "title": "Always compare to a baseline",
+   "quote": "If your real model cannot clearly beat the baseline, it has not learned anything useful.",
+   "beats": [
+    {
+     "say": "A number like M A E equals forty three means nothing alone.",
+     "show": 0
+    },
+    {
+     "say": "A baseline is the dumbest reasonable model, like always predicting the average. If your model can't clearly beat it, it hasn't learned anything useful.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab",
+   "title": "Baseline versus linear regression",
+   "file": "Colab cell",
+   "code": "baseline = DummyRegressor(strategy=\"mean\")\nbaseline.fit(X_train, y_train)\nbase_pred = baseline.predict(X_test)\n\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)\npred = model.predict(X_test)\n\nprint(f\"Baseline MAE:  {mean_absolute_error(y_test, base_pred):.1f}\")\nprint(f\"Linear MAE:    {mean_absolute_error(y_test, pred):.1f}\")",
+   "beats": [
+    {
+     "say": "The lab uses the diabetes dataset: four hundred and forty two patients, ten features.",
+     "show": 0
+    },
+    {
+     "say": "First, a dummy regressor that always predicts the training average.",
+     "show": 1
+    },
+    {
+     "say": "Then a real linear regression, trained and scored on the same split.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Lab · How to read it",
+   "title": "A real improvement, and a warning",
+   "items": [
+    [
+     "Baseline MAE 64.0 → Linear MAE 42.8",
+     "About a third better"
+    ],
+    [
+     "R² 0.45",
+     "Explains under half"
+    ],
+    [
+     "s1 −931.5, s2 +518.1",
+     "Correlated · don't over-read"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The baseline is off by sixty four points on average. Linear regression, by about forty three. That's a real improvement of about a third.",
+     "show": 1
+    },
+    {
+     "say": "R squared is zero point four five: the model explains a bit under half the variation.",
+     "show": 2
+    },
+    {
+     "say": "But s1 and s2 get huge, opposite weights. They're strongly correlated, so they cancel each other out.",
+     "show": 3
+    },
+    {
+     "say": "Don't read that as a medical finding. Treat coefficients as hints, not proof.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between M A E and R M S E?",
+   "options": [
+    "M A E is in different units from the label",
+    "R M S E squares errors first, so it punishes big misses more",
+    "R M S E is always smaller than M A E"
+   ],
+   "answer": 1,
+   "good": "That's right. R M S E squares errors before averaging, so it punishes large misses more and is never smaller than M A E.",
+   "bad": "Not quite. R M S E squares errors before averaging, so it punishes large misses more and is never smaller than M A E.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between M A E and R M S E?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can compare the model to the baseline",
+     ""
+    ],
+    [
+     "You can explain why s1 isn't a finding",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can say in one sentence how far off the linear model is, compared to the baseline,",
+     "show": 1
+    },
+    {
+     "say": "and you can explain why the s1 coefficient isn't a medical finding.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, classification.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -669,6 +1367,225 @@ From the confusion matrix in Part 1 you can count the false negatives and false 
 5. Why do we pass `stratify=y` to `train_test_split` for classification?
 
 *Answers: 1) A model can always predict the majority class and still score 95% while never finding a single example of the class you care about. 2) Precision asks "when the model says positive, how often is it right?"; recall asks "of all real positives, how many did it find?". 3) A false negative (a missed malignant tumor) is usually worse, and recall for the malignant class tracks it. 4) It makes mistakes on the rare class count more during training; recall rose a lot but precision and accuracy fell because of more false alarms. 5) So the training and test sets keep the same class proportions as the full data, which matters especially when one class is rare.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "boxes",
+   "kicker": "Module 4 · Classification",
+   "title": "Predict a category",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "Classification predicts a category. You'll use two classic classifiers: logistic regression and a decision tree."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "tree",
+   "kicker": "Concept",
+   "title": "Two classic classifiers",
+   "items": [
+    [
+     "Logistic regression",
+     "Weighted sum → probability · likes scaling"
+    ],
+    [
+     "Decision tree",
+     "Yes/no questions · no scaling"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Logistic regression computes a weighted sum, then squeezes it into a probability between zero and one. Above zero point five, it predicts class one.",
+     "show": 1
+    },
+    {
+     "say": "It's fast, and it benefits from scaled features.",
+     "show": 1
+    },
+    {
+     "say": "A decision tree asks a series of yes or no questions about features. It needs no scaling, but deep trees easily memorize the training data.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Concept",
+   "title": "Accuracy is not enough",
+   "items": [
+    [
+     "Precision",
+     "TP / (TP + FP) · few false alarms"
+    ],
+    [
+     "Recall",
+     "TP / (TP + FN) · few misses"
+    ],
+    [
+     "F1",
+     "High only when both are high"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "If five percent of transactions are fraud, a model that always says normal is ninety five percent accurate, and catches nothing.",
+     "show": 0
+    },
+    {
+     "say": "So look at each kind of mistake. Precision: when the model says positive, how often is it right?",
+     "show": 1
+    },
+    {
+     "say": "Recall: of all the real positives, how many did it find?",
+     "show": 2
+    },
+    {
+     "say": "And F 1 balances the two. It's high only when both are high.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Part 1",
+   "title": "Two classifiers on real data",
+   "file": "Colab cell",
+   "code": "scaler = StandardScaler().fit(X_train)\nX_train_s = scaler.transform(X_train)\nX_test_s = scaler.transform(X_test)\n\nlogreg = LogisticRegression(max_iter=1000)\nlogreg.fit(X_train_s, y_train)\nlog_pred = logreg.predict(X_test_s)\n\ntree = DecisionTreeClassifier(max_depth=3, random_state=42)\ntree.fit(X_train, y_train)\ntree_pred = tree.predict(X_test)\n\nprint(confusion_matrix(y_test, log_pred))",
+   "beats": [
+    {
+     "say": "Part one trains both on the breast cancer data, with stratify, so both sets keep the same class mix.",
+     "show": 0
+    },
+    {
+     "say": "Logistic regression gets scaled features. The tree doesn't need them.",
+     "show": 1
+    },
+    {
+     "say": "Logistic regression scores about ninety nine percent. Its confusion matrix shows one miss and one false alarm. This dataset is unusually clean.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Lab · Part 2",
+   "title": "Why accuracy lies",
+   "items": [
+    [
+     "Always 'normal'",
+     "acc 0.947 · recall 0.000 ✗"
+    ],
+    [
+     "LogReg",
+     "acc 0.954 · recall 0.132"
+    ],
+    [
+     "LogReg balanced",
+     "acc 0.706 · recall 0.736 ✓"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Part two builds a fraud problem: about five percent positives.",
+     "show": 0
+    },
+    {
+     "say": "The always normal dummy gets ninety five percent accuracy, and catches nothing.",
+     "show": 1
+    },
+    {
+     "say": "Plain logistic regression has perfect precision, but finds only thirteen percent of the fraud.",
+     "show": 2
+    },
+    {
+     "say": "With class weight balanced, recall jumps to seventy four percent. The price: many false alarms, and accuracy drops to seventy one percent.",
+     "show": 3
+    },
+    {
+     "say": "Choose the metric from the real cost of each mistake, then choose the model.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "In cancer screening, with malignant as the positive class, which mistake is usually worse?",
+   "options": [
+    "A false positive, tracked by precision",
+    "Neither, so use accuracy",
+    "A false negative, tracked by recall"
+   ],
+   "answer": 2,
+   "good": "That's right. A missed malignant tumor, a false negative, is usually worse, and recall for the malignant class tracks it.",
+   "bad": "Not quite. A missed malignant tumor, a false negative, is usually worse, and recall for the malignant class tracks it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "In cancer screening, with malignant as the positive class, which mistake is usually worse?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can read the confusion matrix",
+     ""
+    ],
+    [
+     "You can explain why lower accuracy can win",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can count the false negatives and false positives from the confusion matrix yourself,",
+     "show": 1
+    },
+    {
+     "say": "and explain why the lowest-accuracy model in Part 2 might be the one you'd deploy.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, overfitting and honest evaluation.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -876,6 +1793,228 @@ You can spot overfitting from a train/test score table, explain why the leaky sc
 
 *Answers: 1) A high training score with a much lower test score; the gap shows the model memorized training data instead of learning general patterns. 2) The training data is split into 5 parts; the model trains on 4 and is scored on the remaining one, repeated so each part is the validation set once, and the scores are averaged. 3) Cross-validation re-fits the whole pipeline on each fold's training part, so preprocessing never learns from the validation rows. 4) A hyperparameter is chosen before training, like `max_depth` or `C`; a learned parameter is found during training, like a linear model's coefficients. 5) If you use the test set to make choices, you indirectly tune to it and its score stops being an honest estimate of performance on new data.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Module 5 · Honest evaluation",
+   "title": "Don't fool yourself",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "Overfitting is when a model memorizes the training data, noise and all, instead of learning patterns that generalize."
+    },
+    {
+     "say": "Underfitting is the opposite: too simple, so both scores are low."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Concept",
+   "title": "The honest workflow",
+   "steps": [
+    "Split off a test set",
+    "Cross-validate on training data",
+    "Retrain the chosen model",
+    "Score on the test set once"
+   ],
+   "beats": [
+    {
+     "say": "Here's the honest workflow.",
+     "show": 0
+    },
+    {
+     "say": "Split off a test set, and don't touch it.",
+     "show": 1
+    },
+    {
+     "say": "Use cross validation on the training set to compare models and choose hyperparameters.",
+     "show": 2
+    },
+    {
+     "say": "Retrain the chosen model on the full training set.",
+     "show": 3
+    },
+    {
+     "say": "Score it on the test set once, and report that number.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Lab · Part 1",
+   "title": "See overfitting happen",
+   "items": [
+    [
+     "depth 1",
+     "train 0.690 · test 0.683"
+    ],
+    [
+     "depth 8",
+     "train 0.943 · test 0.794"
+    ],
+    [
+     "no limit",
+     "train 1.000 · test 0.778 ✗"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Part one grows decision trees deeper and deeper, on data where ten percent of labels were flipped.",
+     "show": 0
+    },
+    {
+     "say": "At depth one, train and test are close, but both low. That's underfitting.",
+     "show": 1
+    },
+    {
+     "say": "At depth eight, training races to ninety four percent, while test barely moves.",
+     "show": 2
+    },
+    {
+     "say": "With no limit, training is one hundred percent. It memorized the noise. The gap is your warning light.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "layers",
+   "kicker": "Lab · Part 3",
+   "title": "Leakage turns noise into a great model",
+   "file": "Colab cell",
+   "code": "# WRONG: select features using ALL the data, then cross-validate\nX_selected = SelectKBest(f_classif, k=20).fit_transform(X, y)\nleaky = cross_val_score(LogisticRegression(max_iter=1000), X_selected, y, cv=5)\n\n# RIGHT: selection inside a Pipeline, re-fit on each training fold\npipe = Pipeline([\n    (\"select\", SelectKBest(f_classif, k=20)),\n    (\"model\", LogisticRegression(max_iter=1000)),\n])\nhonest = cross_val_score(pipe, X, y, cv=5)",
+   "beats": [
+    {
+     "say": "Part three is a famous trap: pure noise, random features and random labels. Honest scores should be about fifty percent.",
+     "show": 0
+    },
+    {
+     "say": "Pick the twenty best features using all the data, then cross validate, and you get eighty nine percent on noise.",
+     "show": 1
+    },
+    {
+     "say": "Put selection inside a pipeline, so it's re-fit on each training fold, and the honest score is fifty two percent.",
+     "show": 1
+    },
+    {
+     "say": "Any step that learns from data belongs inside the pipeline.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "search",
+   "kicker": "Lab · Part 4",
+   "title": "Tune with GridSearchCV",
+   "file": "Colab cell",
+   "code": "param_grid = {\"model__C\": [0.01, 0.1, 1, 10, 100]}\n\nsearch = GridSearchCV(pipe, param_grid, cv=5, scoring=\"f1\")\nsearch.fit(X_train, y_train)     # tuning uses ONLY the training data\n\nprint(\"Best settings:\", search.best_params_)\n\n# Only now, once, touch the test set\nprint(f\"Test F1: {search.score(X_test, y_test):.3f}\")",
+   "beats": [
+    {
+     "say": "Part four tunes C, which controls regularization, with grid search.",
+     "show": 0
+    },
+    {
+     "say": "model, two underscores, C, means the C setting of the pipeline step named model.",
+     "show": 1
+    },
+    {
+     "say": "Tuning uses only training data. The best C is zero point one.",
+     "show": 1
+    },
+    {
+     "say": "Only then, once, touch the test set. Test F 1 is close to the cross validation estimate, a good sign the evaluation was honest.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What pattern of train and test scores signals overfitting?",
+   "options": [
+    "A high training score with a much lower test score",
+    "Both scores low and close together",
+    "A test score higher than the training score"
+   ],
+   "answer": 0,
+   "good": "That's right. A high training score with a much lower test score shows the model memorized training data instead of learning general patterns.",
+   "bad": "Not quite. A high training score with a much lower test score shows the model memorized training data instead of learning general patterns.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What pattern of train and test scores signals overfitting?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can spot overfitting",
+     ""
+    ],
+    [
+     "You can explain the 89% on noise",
+     ""
+    ],
+    [
+     "You know the honest workflow",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can spot overfitting from a train and test score table,",
+     "show": 1
+    },
+    {
+     "say": "explain why the leaky score in Part 3 was eighty nine percent on random data,",
+     "show": 2
+    },
+    {
+     "say": "and describe the four-step honest workflow without looking.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 6, unsupervised learning with k-means clustering.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 6: Unsupervised Learning with k-Means Clustering
@@ -1020,6 +2159,220 @@ You can explain the elbow in the inertia column, why the features were scaled be
 5. Why should you be careful about over-interpreting clusters?
 
 *Answers: 1) Assigning every point to its nearest centroid, then moving each centroid to the average of its points, until assignments stop changing. 2) k-means uses distances, so features with large numeric ranges would dominate the grouping. 3) Inertia always decreases as k grows, so the lowest value just means the most clusters; you look for the elbow instead. 4) Points are clearly closer to their own cluster than to the nearest other cluster, meaning better-separated groups. 5) k-means always returns k groups even when the data has no real groups, so clusters need to be checked for meaning and usefulness.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "venn",
+   "kicker": "Module 6 · k-means clustering",
+   "title": "Find groups without labels",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "With no labels, there's no right answer to score against. The goal is to discover structure."
+    },
+    {
+     "say": "Clustering groups examples so similar items end up together."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "How k-means works",
+   "steps": [
+    "Place k centroids",
+    "Assign points to nearest",
+    "Move centroids to the average",
+    "Repeat until stable"
+   ],
+   "beats": [
+    {
+     "say": "You choose k, the number of clusters. Then:",
+     "show": 0
+    },
+    {
+     "say": "Place k centers, called centroids.",
+     "show": 1
+    },
+    {
+     "say": "Assign every point to its nearest centroid.",
+     "show": 2
+    },
+    {
+     "say": "Move each centroid to the average of its points.",
+     "show": 3
+    },
+    {
+     "say": "Repeat until the assignments stop changing.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "graph",
+   "kicker": "Concept",
+   "title": "Choosing k",
+   "items": [
+    [
+     "Inertia",
+     "Look for the elbow"
+    ],
+    [
+     "Silhouette",
+     "−1 to 1 · higher is clearer"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two tools help you choose k.",
+     "show": 0
+    },
+    {
+     "say": "Inertia always goes down as k grows, so look for the elbow, where more clusters stop helping much.",
+     "show": 1
+    },
+    {
+     "say": "The silhouette score runs from minus one to one. Higher means clearer, better separated clusters.",
+     "show": 2
+    },
+    {
+     "say": "And remember: k-means measures distance, so scale your features first.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "target",
+   "kicker": "Lab · Part 1",
+   "title": "Both tools agree",
+   "big": "k = 4",
+   "sub": "the elbow, and the best silhouette (0.792)",
+   "beats": [
+    {
+     "say": "Part one hides four groups in three hundred points.",
+     "show": 0
+    },
+    {
+     "say": "Inertia drops sharply up to k equals four, then only a little. And the silhouette score peaks at four too.",
+     "show": 1
+    },
+    {
+     "say": "Real data is rarely this clear. Then pick the k that gives groups people can understand and act on.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "people",
+   "kicker": "Lab · Part 2",
+   "title": "Cluster learners, then name them",
+   "file": "Colab cell",
+   "code": "# Scale first: otherwise \"minutes\" would dominate the distances\nX = StandardScaler().fit_transform(learners)\nkm = KMeans(n_clusters=3, n_init=10, random_state=42)\nlearners[\"cluster\"] = km.fit_predict(X)\n\n# Interpret: describe each cluster in the ORIGINAL units\nsummary = learners.groupby(\"cluster\").agg(\n    size=(\"minutes_per_week\", \"size\"),\n    minutes=(\"minutes_per_week\", \"mean\"),\n    lessons=(\"lessons_completed\", \"mean\"),\n    posts=(\"forum_posts\", \"mean\"),\n).round(1)",
+   "beats": [
+    {
+     "say": "Part two clusters simulated learners. Scale first, or minutes per week would dominate the distances.",
+     "show": 0
+    },
+    {
+     "say": "Then describe each cluster in the original units.",
+     "show": 1
+    },
+    {
+     "say": "You'll find dabblers, community driven learners who post a lot, and quiet finishers who study most but rarely post.",
+     "show": 1
+    },
+    {
+     "say": "k-means always returns k groups, so check them with people who understand the learners before acting.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why can't you simply pick the k with the lowest inertia?",
+   "options": [
+    "Because inertia goes up as k grows",
+    "Because inertia always decreases as k grows, so the lowest just means the most clusters",
+    "Because inertia only works with two clusters"
+   ],
+   "answer": 1,
+   "good": "That's right. Inertia always decreases as k grows, so the lowest value just means the most clusters. You look for the elbow instead.",
+   "bad": "Not quite. Inertia always decreases as k grows, so the lowest value just means the most clusters. You look for the elbow instead.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why can't you simply pick the k with the lowest inertia?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain the elbow",
+     ""
+    ],
+    [
+     "You know why we scale first",
+     ""
+    ],
+    [
+     "You can name each cluster",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain the elbow in the inertia column,",
+     "show": 1
+    },
+    {
+     "say": "why the features were scaled before clustering,",
+     "show": 2
+    },
+    {
+     "say": "and give each cluster from Part 2 a short, sensible description.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 7, neural networks in plain language.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1210,6 +2563,228 @@ You can compute one neuron's output by hand, explain what the learning rate cont
 5. What do a small `MLPClassifier` and a large language model have in common, and what is different?
 
 *Answers: 1) It computes a weighted sum of its inputs plus a bias, then passes the result through an activation function. 2) Without them, stacked layers collapse into one weighted sum, a straight-line model; activations let the network form curved, complex boundaries. 3) Measure the loss with the current weights, compute which direction each weight should move to reduce it, then move every weight a small step in that direction. 4) The steps overshoot the minimum, so the loss can bounce around or grow instead of shrinking. 5) Both use layers of weighted sums with activations trained by gradient descent to reduce a loss; LLMs use the transformer architecture, have billions of weights, and train on huge text datasets with specialized hardware.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "architecture",
+   "kicker": "Module 7 · Neural networks",
+   "title": "Weighted sums, with a bend",
+   "beats": [
+    {
+     "say": "Welcome to Module 7."
+    },
+    {
+     "say": "A neural network is built from simple units called neurons, arranged in layers: an input layer, hidden layers, and an output layer."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "calc",
+   "kicker": "Concept",
+   "title": "What one neuron does",
+   "steps": [
+    "Weighted sum + bias",
+    "Activation (ReLU)"
+   ],
+   "beats": [
+    {
+     "say": "One neuron does exactly two things.",
+     "show": 0
+    },
+    {
+     "say": "It computes a weighted sum of its inputs, plus a bias. The same calculation as linear regression.",
+     "show": 1
+    },
+    {
+     "say": "Then it passes that through an activation function, like ray-loo: negatives become zero.",
+     "show": 2
+    },
+    {
+     "say": "Without that bend, stacked neurons would still be a straight-line model.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "Gradient descent",
+   "steps": [
+    "Predict",
+    "Measure the loss",
+    "Compute the gradient",
+    "Step downhill",
+    "Repeat"
+   ],
+   "beats": [
+    {
+     "say": "Training works by gradient descent.",
+     "show": 0
+    },
+    {
+     "say": "Make predictions with the current weights.",
+     "show": 1
+    },
+    {
+     "say": "Measure how wrong they are, with a loss function.",
+     "show": 2
+    },
+    {
+     "say": "Compute the gradient: which way each weight should move to reduce the loss.",
+     "show": 3
+    },
+    {
+     "say": "Nudge every weight a small step downhill. The step size is the learning rate.",
+     "show": 4
+    },
+    {
+     "say": "Then repeat, many times.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Part 2",
+   "title": "Gradient descent, by hand",
+   "file": "Colab cell",
+   "code": "w = 0.0                 # start with a bad guess\nlearning_rate = 0.02\n\nfor step in range(1, 31):\n    pred = w * x\n    error = pred - y\n    loss = np.mean(error ** 2)            # mean squared error\n    gradient = np.mean(2 * error * x)     # slope of the loss\n    w = w - learning_rate * gradient      # small step downhill",
+   "beats": [
+    {
+     "say": "In part two, a one-weight model must find w equals three, starting from zero.",
+     "show": 0
+    },
+    {
+     "say": "Each step: predict, measure the loss, compute the gradient, and step downhill.",
+     "show": 1
+    },
+    {
+     "say": "The loss shrinks every step, and w climbs to three by step thirty.",
+     "show": 1
+    },
+    {
+     "say": "Try a learning rate of zero point two, and the steps overshoot further each time.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Lab · Part 3",
+   "title": "A network that beats a straight line",
+   "items": [
+    [
+     "Logistic regression",
+     "0.867 · straight line"
+    ],
+    [
+     "Neural network (16, 16)",
+     "0.987 · curved boundary ✓"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Part three uses two interleaving half moons. A straight line can't separate them.",
+     "show": 0
+    },
+    {
+     "say": "Logistic regression tops out around eighty seven percent.",
+     "show": 1
+    },
+    {
+     "say": "A small network with two hidden layers of sixteen neurons draws a curved boundary, and reaches about ninety nine percent.",
+     "show": 2
+    },
+    {
+     "say": "That's three hundred and thirty seven learned numbers. Large language models use the same ingredients, at a scale of billions, with the transformer design.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What goes wrong if the learning rate is too large?",
+   "options": [
+    "Training becomes very slow",
+    "The model can only draw straight lines",
+    "The steps overshoot, so the loss bounces around or grows"
+   ],
+   "answer": 2,
+   "good": "That's right. The steps overshoot the minimum, so the loss can bounce around or grow instead of shrinking.",
+   "bad": "Not quite. The steps overshoot the minimum, so the loss can bounce around or grow instead of shrinking.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What goes wrong if the learning rate is too large?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can compute a neuron by hand",
+     ""
+    ],
+    [
+     "You can explain the learning rate",
+     ""
+    ],
+    [
+     "You know why the network won",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can compute one neuron's output by hand,",
+     "show": 1
+    },
+    {
+     "say": "explain what the learning rate controls,",
+     "show": 2
+    },
+    {
+     "say": "and explain why the network beat logistic regression on the moons data.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 8, responsible M L and an end-to-end mini project.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1529,3 +3104,246 @@ You built a complete workflow: explored the data, split it, built a leak-proof p
 5. Why was `class_weight="balanced"` a reasonable choice for the no-show project?
 
 *Answers: 1) If that group is small, its poor results barely move the overall number, especially when the group follows a different pattern than the majority. 2) Other features can act as proxies that closely track the removed column, so its influence can remain. 3) The rural results come from only 51 test rows and are affected by a much higher base rate, so they are too unstable to support that claim. 4) Any three of: intended use, uses it must not be put to, training data description, evaluation method, overall and per-group results, and known limitations. 5) Missing a no-show is costlier than an unnecessary reminder call, so improving recall for the rarer no-show class was worth some extra false alarms.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "shield",
+   "kicker": "Module 8 · Responsible ML",
+   "title": "Good overall isn't good enough",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "A model can score well overall, and still fail badly for some people."
+    },
+    {
+     "say": "Three habits make your work trustworthy. Then you'll put the whole course together in one project."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Concept",
+   "title": "Where bias comes from",
+   "items": [
+    [
+     "Under-representation",
+     "Few examples for a group"
+    ],
+    [
+     "Different patterns",
+     "Per group"
+    ],
+    [
+     "Biased labels",
+     "Copies past unfairness"
+    ],
+    [
+     "Proxy features",
+     "Zip code tracks a group"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Models learn from historical data, and data reflects how it was collected.",
+     "show": 0
+    },
+    {
+     "say": "Under-representation: one group has far fewer examples.",
+     "show": 1
+    },
+    {
+     "say": "Different patterns per group: what predicts one group may not predict another.",
+     "show": 2
+    },
+    {
+     "say": "Biased labels: copy unfair past decisions, and you copy the unfairness.",
+     "show": 3
+    },
+    {
+     "say": "And proxy features: removing a sensitive column doesn't help if something like zip code tracks it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Lab · Part 1",
+   "title": "Fine overall, failing one group",
+   "items": [
+    [
+     "Overall",
+     "0.877"
+    ],
+    [
+     "Group A · 540 rows",
+     "0.917 ✓"
+    ],
+    [
+     "Group B · 60 rows",
+     "0.517 ✗"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In part one, group A is ninety percent of the data. Group B, ten percent, follows a different pattern.",
+     "show": 0
+    },
+    {
+     "say": "Overall accuracy is eighty eight percent. Sounds good.",
+     "show": 1
+    },
+    {
+     "say": "Group A gets ninety two percent.",
+     "show": 2
+    },
+    {
+     "say": "Group B gets fifty two percent, no better than flipping a coin. The overall number hid it completely.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Lab · Part 2",
+   "title": "The end-to-end mini project",
+   "steps": [
+    "Explore the data",
+    "Split + pipeline",
+    "Baseline, tune, test once",
+    "Check per site",
+    "Model card + write-up"
+   ],
+   "beats": [
+    {
+     "say": "Part two builds an appointment no-show predictor, start to finish.",
+     "show": 0
+    },
+    {
+     "say": "Create and explore the data. Only ten percent is rural.",
+     "show": 1
+    },
+    {
+     "say": "Split, and build a pipeline with scaling and one-hot encoding, using balanced class weights.",
+     "show": 2
+    },
+    {
+     "say": "Beat a baseline, and tune C with cross validation. Then evaluate once on the test set.",
+     "show": 3
+    },
+    {
+     "say": "Check results per site. Rural looks better, but it's only fifty one test rows, too few to be confident.",
+     "show": 4
+    },
+    {
+     "say": "Finally, write a model card, and a short write-up.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "doc",
+   "kicker": "Lab · Step 6",
+   "title": "Write a model card",
+   "file": "Model card",
+   "code": "MODEL CARD: Appointment no-show predictor (practice project)\nPurpose: flag appointments that may need an extra reminder call.\nNot for: denying, delaying, or deprioritizing anyone's care.\nData: 2000 SIMULATED appointments, 2 sites (10% rural).\nEvaluation: 5-fold CV on training data, then one held-out test set.\nOverall test F1 (no-show class): 0.60\nBy site: urban F1 0.55, rural F1 0.76\n         (rural has only 51 test rows, so its numbers are unstable)\nKnown limitations: simulated data; rural patients under-represented;\n       distance affects rural patients differently than the model assumes.",
+   "beats": [
+    {
+     "say": "A model card travels with the model.",
+     "show": 0
+    },
+    {
+     "say": "It says what it's for, and what it must not be used for, like denying or delaying anyone's care.",
+     "show": 1
+    },
+    {
+     "say": "It describes the data, how it was evaluated, results per group, and known limitations.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why doesn't removing a sensitive column guarantee a model is fair?",
+   "options": [
+    "Other features can act as proxies that closely track it",
+    "The model will add the column back",
+    "Removing columns always lowers accuracy"
+   ],
+   "answer": 0,
+   "good": "That's right. Other features can act as proxies that closely track the removed column, so its influence can remain.",
+   "bad": "Not quite. Other features can act as proxies that closely track the removed column, so its influence can remain.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why doesn't removing a sensitive column guarantee a model is fair?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You built the complete workflow",
+     ""
+    ],
+    [
+     "Per-group check and a model card",
+     ""
+    ],
+    [
+     "You know what the overall score hid",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you built a complete workflow, from exploring the data to a leak-proof pipeline, tuning and one test evaluation,",
+     "show": 1
+    },
+    {
+     "say": "you checked results per group and documented the model with a model card,",
+     "show": 2
+    },
+    {
+     "say": "and you can explain why the overall score in Part 1 hid a serious problem.",
+     "show": 3
+    },
+    {
+     "say": "You've finished Machine Learning Fundamentals. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```

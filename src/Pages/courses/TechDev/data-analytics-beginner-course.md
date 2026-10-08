@@ -183,6 +183,248 @@ You have a written brief where someone else could read the measurable question a
 
 *Answers: 1) It doesn't say what "working" means, so there's no specific number that would answer it. 2) A metric is a number you add up, count, or average; a dimension is a category you split that number by. 3) One order. 4) Missing data limits what you can conclude, and finding that out at the end wastes time and can lead to overclaiming. 5) The decision tells you which metric matters and keeps the analysis focused on something useful.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "ask",
+   "kicker": "Module 1 · Asking a good question",
+   "title": "Start with a measurable question",
+   "beats": [
+    {
+     "say": "Welcome to Data Analytics for Builders."
+    },
+    {
+     "say": "Across this course you'll follow one small online stationery shop, Ivy and Ink, from a vague question to a clear answer you can defend."
+    },
+    {
+     "say": "And it all starts before anyone opens a spreadsheet."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Concept",
+   "title": "Four words to know",
+   "items": [
+    [
+     "Metric",
+     "Revenue, orders, average order value"
+    ],
+    [
+     "Dimension",
+     "Channel, category, month, city"
+    ],
+    [
+     "Unit of analysis",
+     "One order"
+    ],
+    [
+     "Time window",
+     "Jan 1 to Mar 31, 2026"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A good analysis starts with a measurable question: one where you could say in advance what number would answer it.",
+     "show": 0
+    },
+    {
+     "say": "A metric is a number you measure, usually summed, counted or averaged, like revenue.",
+     "show": 1
+    },
+    {
+     "say": "A dimension is a category you split a metric by, like sales channel or month.",
+     "show": 2
+    },
+    {
+     "say": "The unit of analysis is what one row represents. Here, one order.",
+     "show": 3
+    },
+    {
+     "say": "And the time window is the period you look at: January to March, twenty twenty six.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Concept",
+   "title": "From vague to measurable",
+   "steps": [
+    "Who asks, what decision?",
+    "Pick the metric",
+    "Choose the dimension",
+    "Time window and scope",
+    "Data needed and missing"
+   ],
+   "beats": [
+    {
+     "say": "Here's a recipe for turning a vague request into a measurable question.",
+     "show": 0
+    },
+    {
+     "say": "Who is asking, and what decision will they make? A question with no decision attached is trivia.",
+     "show": 1
+    },
+    {
+     "say": "Which metric best reflects success for that decision?",
+     "show": 2
+    },
+    {
+     "say": "Split by which dimension, over what time window, and for whom?",
+     "show": 3
+    },
+    {
+     "say": "And what data do you need, and do you have it? If something is missing, say so now, not at the end.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "ask",
+   "kicker": "Example",
+   "title": "Is Instagram working?",
+   "quote": "From Jan to Mar 2026, how much revenue and how many orders came through Instagram vs Website and Email, and is it growing?",
+   "beats": [
+    {
+     "say": "Vague: is Instagram working for us?",
+     "show": 0
+    },
+    {
+     "say": "Measurable: from January to March, how much revenue and how many orders came through Instagram, compared with the Website and Email, for individual customers, and is it growing month over month?",
+     "show": 1
+    },
+    {
+     "say": "It also reveals what it can't answer. There's no data on time or money spent on Instagram, so we can't measure return on effort.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Write a question brief",
+   "items": [
+    [
+     "Requested by · Decision",
+     "Who asks, what changes"
+    ],
+    [
+     "Measurable question",
+     "Metric, dimension"
+    ],
+    [
+     "Time window · Scope",
+     "e.g. exclude test orders"
+    ],
+    [
+     "Data needed · Data we don't have",
+     "List the gaps now"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, first sort columns into metrics and dimensions.",
+     "show": 0
+    },
+    {
+     "say": "Then write a question brief from a template.",
+     "show": 0
+    },
+    {
+     "say": "Who is asking, and the decision it informs.",
+     "show": 1
+    },
+    {
+     "say": "The measurable question, with its main metric and dimensions.",
+     "show": 2
+    },
+    {
+     "say": "The time window, and what's in or out of scope.",
+     "show": 3
+    },
+    {
+     "say": "And the data you need, plus the data you don't have. Then write one for a question from your own life or project.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is \"Is Instagram working?\" a weak analysis question?",
+   "options": [
+    "It doesn't say what \"working\" means, so no specific number answers it",
+    "Instagram data is always unreliable",
+    "It mentions only one channel"
+   ],
+   "answer": 0,
+   "good": "That's right. It doesn't say what working means, so there's no specific number that would answer it.",
+   "bad": "Not quite. It doesn't say what working means, so there's no specific number that would answer it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is \"Is Instagram working?\" a weak analysis question?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your brief names the exact number to calculate",
+     ""
+    ],
+    [
+     "You've listed data you don't have",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a written brief where someone else could read the measurable question and know exactly which number to calculate,",
+     "show": 1
+    },
+    {
+     "say": "and you've listed at least one piece of data you don't have.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, spreadsheets for analysis.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: Spreadsheets for Analysis
@@ -312,6 +554,245 @@ Your summary cells match the table in Step 5, your channel pivot matches Step 6,
 5. Email has the most revenue but only 5 orders. What should you check before concluding Email is the best channel?
 
 *Answers: 1) A formula recalculates automatically, avoids typing mistakes, and shows exactly how each number was made. 2) Filtering hides non-matching rows temporarily while the data stays intact; deleting removes them for good. 3) `=COUNTIFS(H2:H31,"Website")` (or the equivalent `=COUNTIF(H2:H31,"Website")`). 4) It summarizes a metric for every value of one or more dimensions at once, with totals, in a few clicks. 5) Whether a few unusually large orders drive it; here one school customer placed two bulk orders worth 225 of Email's 291.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "table",
+   "kicker": "Module 2 · Spreadsheets for analysis",
+   "title": "Look at the data fast",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "A spreadsheet is often the fastest way to look at a small dataset. You'll load Ivy and Ink's thirty orders into Google Sheets."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Concept",
+   "title": "Four skills cover most of it",
+   "items": [
+    [
+     "Sort",
+     "Put rows in order"
+    ],
+    [
+     "Filter",
+     "Hide, don't delete"
+    ],
+    [
+     "COUNTIFS · SUMIFS · AVERAGEIFS",
+     "Metric for matching rows"
+    ],
+    [
+     "Pivot table",
+     "Metric by dimension"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Four skills cover most beginner analysis.",
+     "show": 0
+    },
+    {
+     "say": "Sorting puts rows in order, like biggest orders first.",
+     "show": 1
+    },
+    {
+     "say": "Filtering hides rows that don't match, without deleting them.",
+     "show": 2
+    },
+    {
+     "say": "Conditional functions, like count ifs, sum ifs and average ifs, calculate a metric only for matching rows.",
+     "show": 3
+    },
+    {
+     "say": "And pivot tables summarize a metric by one or more dimensions in a few clicks.",
+     "show": 4
+    },
+    {
+     "say": "One golden rule: never overwrite the raw data.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "calc",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "Load, calculate, sort, filter",
+   "steps": [
+    "Paste, then split to columns",
+    "revenue: =F2*G2",
+    "Sort: 1009 and 1028 on top",
+    "Filter Instagram: 16 rows, 209"
+   ],
+   "beats": [
+    {
+     "say": "Paste the orders into cell A1, then use Data, Split text to columns.",
+     "show": 1
+    },
+    {
+     "say": "Add a revenue column: quantity times unit price, filled down to row thirty one.",
+     "show": 2
+    },
+    {
+     "say": "Sort by revenue, largest first. The top two orders, a hundred and sixty and sixty five, are both from customer C seven.",
+     "show": 3
+    },
+    {
+     "say": "Filter to Instagram. Sixteen rows, and the sum of visible revenue is two hundred and nine.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Lab · Step 5",
+   "title": "Conditional formulas",
+   "file": "orders sheet",
+   "code": "=SUM(I2:I31)                               → 652\n=COUNTIFS(H2:H31,\"Instagram\")              → 16\n=SUMIFS(I2:I31,H2:H31,\"Instagram\")         → 209\n=COUNTIFS(H2:H31,\"Instagram\",F2:F31,\">=3\") → 5\n=SUMIFS(I2:I31,B2:B31,\">=\"&DATE(2026,3,1),\n        B2:B31,\"<\"&DATE(2026,4,1))          → 246\n=AVERAGE(I2:I31)                           → 21.73\n=MEDIAN(I2:I31)                            → 16",
+   "beats": [
+    {
+     "say": "Next, build a small summary with formulas.",
+     "show": 0
+    },
+    {
+     "say": "Each extra condition is another range and condition pair. Comparisons go in quotes, and you join a function's value with an ampersand.",
+     "show": 1
+    },
+    {
+     "say": "Notice the average order, twenty one seventy three, is bigger than the median, sixteen. Module 6 explains why.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "Pivot by channel",
+   "items": [
+    [
+     "Email",
+     "$291 · 5 orders"
+    ],
+    [
+     "Instagram",
+     "$209 · 16 orders"
+    ],
+    [
+     "Website",
+     "$152 · 9 orders"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now a pivot table: channel as rows, sum of revenue, and a count of orders.",
+     "show": 0
+    },
+    {
+     "say": "Email: two hundred and ninety one from just five orders.",
+     "show": 1
+    },
+    {
+     "say": "Instagram: two hundred and nine from sixteen orders.",
+     "show": 2
+    },
+    {
+     "say": "Website: a hundred and fifty two from nine orders.",
+     "show": 3
+    },
+    {
+     "say": "A second pivot by category and channel shows Email's paper revenue is almost entirely one order. One big order can dominate a small dataset.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Email has the most revenue but only 5 orders. What should you check first?",
+   "options": [
+    "Whether Email's prices are higher",
+    "Whether the orders were sorted correctly",
+    "Whether a few unusually large orders drive it"
+   ],
+   "answer": 2,
+   "good": "That's right. One school customer placed two bulk orders worth 225 of Email's 291.",
+   "bad": "Not quite. One school customer placed two bulk orders worth 225 of Email's 291.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Email has the most revenue but only 5 orders. What should you check first?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your summary cells match Step 5",
+     ""
+    ],
+    [
+     "Your channel pivot matches Step 6",
+     ""
+    ],
+    [
+     "You can explain Email's big revenue",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your summary cells match the table in Step 5,",
+     "show": 1
+    },
+    {
+     "say": "your channel pivot matches Step 6,",
+     "show": 2
+    },
+    {
+     "say": "and you can explain why Email has the most revenue but the fewest orders.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 3, S Q L basics.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -677,6 +1158,193 @@ Your outputs match the ones above, and you can explain why the repeat-customer q
 
 *Answers: 1) It produces one result row per channel, with aggregate functions like SUM or COUNT calculated within each channel. 2) When the condition is on an aggregated value of a group, like `COUNT(*) >= 3`; `WHERE` filters individual rows before grouping. 3) Customer type is stored in the customers table, not the orders table, so you match rows on the shared customer_id. 4) All columns for the 5 orders placed through Email. 5) Several orders share the same revenue, and the tie-breaker makes the order of the results predictable.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Module 3 · SQL basics",
+   "title": "Ask the database",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "S Q L, Structured Query Language, is how you ask questions of data stored in a database. A query describes what you want, and the database works out how to get it."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "database",
+   "kicker": "Concept",
+   "title": "The core pieces, in order",
+   "file": "query.sql",
+   "code": "SELECT columns or calculations     -- what to show\nFROM table                         -- where the data lives\nJOIN other_table ON matching_key   -- combine tables\nWHERE condition                    -- filter rows before grouping\nGROUP BY dimension                 -- one result row per group\nHAVING condition                   -- filter groups after grouping\nORDER BY column DESC               -- sort the result\nLIMIT n                            -- keep only the first n rows",
+   "beats": [
+    {
+     "say": "Here are the core pieces, in the order they're written.",
+     "show": 0
+    },
+    {
+     "say": "Aggregate functions like count, sum and average collapse many rows into one number. With group by, you get one number per group.",
+     "show": 1
+    },
+    {
+     "say": "Where filters rows before grouping. Having filters the groups after.",
+     "show": 1
+    },
+    {
+     "say": "You'll use SQLite, built into Python as the sequel lite three module.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "terminal",
+   "kicker": "Lab · Steps 1 to 5",
+   "title": "Load and look",
+   "steps": [
+    "Data cell at the top",
+    "COUNT(*): 30 and 12",
+    "SELECT * … LIMIT 5",
+    "WHERE, then ORDER BY revenue"
+   ],
+   "beats": [
+    {
+     "say": "Open a Colab notebook and paste the data cell: orders, plus a customers table. Keep it at the top.",
+     "show": 1
+    },
+    {
+     "say": "Create an in-memory database, load both tables, and check you get thirty and twelve.",
+     "show": 2
+    },
+    {
+     "say": "Always look at the first few rows first, with select star, limit five.",
+     "show": 3
+    },
+    {
+     "say": "Then filter with where, and sort by a calculated revenue column.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Lab · Step 6",
+   "title": "GROUP BY: the SQL pivot table",
+   "file": "notebook",
+   "code": "show(\"\"\"\nSELECT channel,\n       COUNT(*) AS orders,\n       SUM(quantity * unit_price) AS revenue,\n       ROUND(AVG(quantity * unit_price), 2) AS avg_order_value\nFROM orders\nGROUP BY channel\nORDER BY revenue DESC\n\"\"\")",
+   "beats": [
+    {
+     "say": "Group by is the S Q L version of the pivot table.",
+     "show": 0
+    },
+    {
+     "say": "One row per channel, with the count, the revenue, and the average order value.",
+     "show": 1
+    },
+    {
+     "say": "Email, two hundred and ninety one. Instagram, two hundred and nine. Website, a hundred and fifty two. The same as your spreadsheet.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "chain",
+   "kicker": "Lab · Steps 8 and 9",
+   "title": "JOIN, then HAVING",
+   "file": "notebook",
+   "code": "SELECT c.customer_name,\n       COUNT(*) AS orders,\n       SUM(o.quantity * o.unit_price) AS revenue\nFROM orders AS o\nJOIN customers AS c ON o.customer_id = c.customer_id\nGROUP BY c.customer_name\nHAVING COUNT(*) >= 3\nORDER BY revenue DESC",
+   "beats": [
+    {
+     "say": "Customer type lives in the customers table, so join it on the shared customer I D.",
+     "show": 0
+    },
+    {
+     "say": "Two orders from one business customer bring in two hundred and twenty five, about a third of all revenue.",
+     "show": 1
+    },
+    {
+     "say": "To find repeat customers, the condition is on the group's count, so it goes in having, not where. Six customers have three orders each.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "When do you use HAVING instead of WHERE?",
+   "options": [
+    "When filtering text values",
+    "When the condition is on an aggregated value of a group, like COUNT(*) >= 3",
+    "When joining two tables"
+   ],
+   "answer": 1,
+   "good": "That's right. Having filters groups after aggregation. Where filters individual rows before grouping.",
+   "bad": "Not quite. Having filters groups after aggregation. Where filters individual rows before grouping.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "When do you use HAVING instead of WHERE?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your outputs match the course",
+     ""
+    ],
+    [
+     "You can explain HAVING versus WHERE",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your outputs match the ones in the course,",
+     "show": 1
+    },
+    {
+     "say": "and you can explain why the repeat-customer query needs having rather than where.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, pandas essentials.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4: pandas Essentials
@@ -902,6 +1570,209 @@ You can load data from a string, add a calculated column, filter with two condit
 5. Why is it useful that March revenue came out as 246 in Sheets, SQL, and pandas?
 
 *Answers: 1) Read a text string as if it were a CSV file. 2) Single brackets return one column as a Series; double brackets return a DataFrame with that column. 3) Python's `&` binds more tightly than `==` and `>=`, so without parentheses the comparisons are evaluated in the wrong order and raise an error. 4) Every row from the left table (orders) is kept, even if no matching customer is found. 5) Matching results from independent methods is strong evidence that your calculation is right.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "table",
+   "kicker": "Module 4 · pandas essentials",
+   "title": "Tables you control with code",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "pandas is the most popular Python library for tables of data. Its main object is the DataFrame: a table with named columns, like a spreadsheet you control with code."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "Same tasks, third tool",
+   "items": [
+    [
+     "Filter rows",
+     "df[df[\"a\"] > 3]"
+    ],
+    [
+     "New column",
+     "df[\"revenue\"] = …"
+    ],
+    [
+     "Summarize by group",
+     "df.groupby(...)"
+    ],
+    [
+     "Combine tables",
+     "df.merge(...)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Everything you did in Sheets and S Q L has a pandas equivalent.",
+     "show": 0
+    },
+    {
+     "say": "Filter rows, like where.",
+     "show": 1
+    },
+    {
+     "say": "Add a new column, like your revenue formula.",
+     "show": 2
+    },
+    {
+     "say": "Summarize by group, like a pivot table or group by.",
+     "show": 3
+    },
+    {
+     "say": "And combine tables with merge, like a join.",
+     "show": 4
+    },
+    {
+     "say": "Why a third tool? Code is repeatable. Next quarter, you rerun the notebook instead of redoing every click.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Steps 1 and 3",
+   "title": "Load, calculate, filter",
+   "file": "notebook",
+   "code": "orders = pd.read_csv(io.StringIO(ORDERS_CSV), parse_dates=[\"order_date\"])\nprint(orders.shape)\n\norders[\"revenue\"] = orders[\"quantity\"] * orders[\"unit_price\"]\n\nbig_instagram = orders[(orders[\"channel\"] == \"Instagram\") & (orders[\"revenue\"] >= 15)]\n\nmarch = orders[orders[\"order_date\"] >= \"2026-03-01\"]\nprint(len(march), march[\"revenue\"].sum())",
+   "beats": [
+    {
+     "say": "Read the data from the string with read C S V, telling pandas the order date is a real date.",
+     "show": 0
+    },
+    {
+     "say": "Add a revenue column, and filter with two conditions. Wrap each condition in parentheses, and join them with an ampersand.",
+     "show": 1
+    },
+    {
+     "say": "March revenue comes out at two hundred and forty six, matching your spreadsheet. Same number from two tools is a great check.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "merge",
+   "kicker": "Lab · Step 4",
+   "title": "groupby and merge",
+   "file": "notebook",
+   "code": "by_channel = orders.groupby(\"channel\")[\"revenue\"].agg([\"count\", \"sum\", \"mean\"])\nprint(by_channel.round(2))\n\nfull = orders.merge(customers, on=\"customer_id\", how=\"left\")\nprint(full.groupby(\"customer_type\")[\"revenue\"].sum())",
+   "beats": [
+    {
+     "say": "Group by reads as: split the rows by channel, take the revenue column, and calculate these summaries for each group.",
+     "show": 0
+    },
+    {
+     "say": "Merge with how equals left keeps every order and attaches customer details where the I Ds match, just like a S Q L left join.",
+     "show": 1
+    },
+    {
+     "say": "Business customers: two hundred and twenty five. Individuals: four hundred and twenty seven.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "search",
+   "kicker": "Lab · Step 5",
+   "title": "Check every order matched",
+   "big": "0",
+   "sub": "orders with no matching customer",
+   "beats": [
+    {
+     "say": "Your turn: revenue by city, and a check that every order found a customer.",
+     "show": 0
+    },
+    {
+     "say": "Zero missing names means every customer I D matched. A non-zero number would mean some didn't.",
+     "show": 1
+    },
+    {
+     "say": "And Baltimore shows four hundred and twelve here, not one eighty seven, because this time the school, which is in Baltimore, is included.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does how=\"left\" in merge guarantee?",
+   "options": [
+    "Every row from the left table, orders, is kept, even with no matching customer",
+    "Only rows that match in both tables are kept",
+    "The result is sorted by the left table's index"
+   ],
+   "answer": 0,
+   "good": "That's right. A left merge keeps every order, even if no matching customer is found.",
+   "bad": "Not quite. A left merge keeps every order, even if no matching customer is found.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does how=\"left\" in merge guarantee?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Load, calculate, filter, group and merge",
+     ""
+    ],
+    [
+     "Your numbers match S Q L and Sheets",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can load data, add a calculated column, filter with two conditions, group and summarize, and merge two tables,",
+     "show": 1
+    },
+    {
+     "say": "and your numbers match the S Q L and Sheets results.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, cleaning data.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1182,6 +2053,220 @@ Your `clean.equals(reference)` prints `True`, and you can explain each line of y
 
 *Answers: 1) So you know what's actually wrong and how many rows each problem affects, instead of guessing and possibly damaging good data. 2) They're real bulk orders from a school; removing real data would make the analysis wrong. 3) `.map()` turns any value not in the dictionary into a missing value, so the count proves every spelling was handled. 4) It's reasonable when you have a trustworthy source for the true value, like a fixed price list; it's risky when you'd be guessing. 5) It records every change, how many rows it affected, and why, so others can understand, reproduce, and challenge your results.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "mess",
+   "kicker": "Module 5 · Cleaning data",
+   "title": "Real data arrives messy",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "Real data almost never arrives clean. The data you've used so far came from cleaning a raw export, and now you'll do that cleaning yourself."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Concept",
+   "title": "Common problems",
+   "items": [
+    [
+     "Duplicates · junk rows",
+     "Same order twice · test orders"
+    ],
+    [
+     "Inconsistent text",
+     "IG, instagram, \"Instagram \""
+    ],
+    [
+     "Wrong types · mixed formats",
+     "$6.50 · 2026/02/02"
+    ],
+    [
+     "Missing values",
+     "A blank price"
+    ],
+    [
+     "Outliers",
+     "Quantity 200"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are the common problems.",
+     "show": 0
+    },
+    {
+     "say": "Duplicates, like the same order exported twice. And junk rows, like test orders.",
+     "show": 1
+    },
+    {
+     "say": "Inconsistent text: I G, lowercase instagram, and Instagram with a trailing space.",
+     "show": 2
+    },
+    {
+     "say": "Wrong types, like prices stored as text with a dollar sign. And mixed date formats.",
+     "show": 3
+    },
+    {
+     "say": "Missing values, like a blank price.",
+     "show": 4
+    },
+    {
+     "say": "And outliers, like a quantity of two hundred. Investigate: is it an error, or real but unusual?",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Concept",
+   "title": "Two principles",
+   "quote": "Outliers are not automatically errors. Document every decision.",
+   "beats": [
+    {
+     "say": "Two principles matter more than any function.",
+     "show": 0
+    },
+    {
+     "say": "Outliers are not automatically errors. A school ordering twenty notebooks is unusual but real.",
+     "show": 1
+    },
+    {
+     "say": "And document every decision: what you changed, how many rows it affected, and why.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "search",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "Diagnose, then fix",
+   "file": "notebook",
+   "code": "clean = raw.copy()\nclean = clean.drop_duplicates()\nis_test = clean[\"customer_id\"] == \"TEST\"\nclean = clean[~is_test].copy()\n\nchannel_map = {\n    \"instagram\": \"Instagram\", \"ig\": \"Instagram\",\n    \"website\": \"Website\",\n    \"email\": \"Email\", \"e-mail\": \"Email\",\n}\nclean[\"channel\"] = clean[\"channel\"].str.strip()\nclean[\"channel\"] = clean[\"channel\"].str.lower().map(channel_map)\nprint(\"Unmapped channels:\", clean[\"channel\"].isna().sum())",
+   "beats": [
+    {
+     "say": "First, diagnose before you fix. The raw export has thirty two rows, one missing price, nine spellings of three channels, and one duplicate.",
+     "show": 0
+    },
+    {
+     "say": "Then work on a copy, logging each decision. Drop the duplicate and the test order.",
+     "show": 1
+    },
+    {
+     "say": "Strip spaces, lowercase, and map every spelling to one label. Then count unmapped channels. Zero proves every spelling was handled.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "shield",
+   "kicker": "Lab · Steps 4 to 6",
+   "title": "Missing price, outliers, verify",
+   "steps": [
+    "Fill price from product list",
+    "IQR rule flags 3 orders",
+    "Keep 1009, 1028 · fix 1029 to 2",
+    "clean.equals(reference) → True"
+   ],
+   "beats": [
+    {
+     "say": "The missing planner price is filled with eighteen, from the product price. Safe here, because prices didn't change during the quarter.",
+     "show": 1
+    },
+    {
+     "say": "The I Q R rule flags three large quantities. The rule only flags; a person decides.",
+     "show": 2
+    },
+    {
+     "say": "The owner confirmed two are real school orders, so they stay. The two hundred washi tapes was a typo for two.",
+     "show": 3
+    },
+    {
+     "say": "Finally, compare with the clean dataset. Clean dot equals reference prints True.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why print the count of unmapped channels after using .map()?",
+   "options": [
+    "It makes the code run faster",
+    "It sorts the channels alphabetically",
+    "Any spelling not in the dictionary becomes missing, so zero proves all were handled"
+   ],
+   "answer": 2,
+   "good": "That's right. Map turns any value not in the dictionary into a missing value, so the count proves every spelling was handled.",
+   "bad": "Not quite. Map turns any value not in the dictionary into a missing value, so the count proves every spelling was handled.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why print the count of unmapped channels after using .map()?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "clean.equals(reference) prints True",
+     ""
+    ],
+    [
+     "You can explain every line of your cleaning log",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your clean dot equals reference prints True,",
+     "show": 1
+    },
+    {
+     "say": "and you can explain each line of your cleaning log to someone who hasn't seen the data.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, descriptive statistics and honest comparisons.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 6: Descriptive Statistics and Honest Comparisons
@@ -1383,6 +2468,229 @@ You can explain why the median is a better "typical order" here than the mean, w
 5. Why show channel results both with and without the school?
 
 *Answers: 1) When the data is skewed by a few extreme values, like the school's bulk orders, since the median barely moves while the mean gets pulled. 2) An average from a few orders can change a lot with one more order, so the count tells readers how much to trust it. 3) No; it shows the two move together, but other factors, like the kind of product, could explain it. 4) Most of B's visitors were on desktop, where purchase rates are higher for both versions, so the combined number reflected the device mix rather than the page. 5) One very different customer changes the picture completely, and readers need to see which result answers their question.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "calc",
+   "kicker": "Module 6 · Descriptive statistics",
+   "title": "Know what each number hides",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "Descriptive statistics summarize data with a few numbers. You don't need advanced math, but you do need to know what each number hides."
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "calc",
+   "kicker": "Lab · Step 1",
+   "title": "Mean versus median",
+   "big": "$16 vs $21.73",
+   "sub": "median vs mean: skewed by two school orders",
+   "beats": [
+    {
+     "say": "The mean adds everything up and divides. One huge value pulls it a lot. The median is the middle value, and extreme values barely move it.",
+     "show": 0
+    },
+    {
+     "say": "Here the mean order is twenty one seventy three, but the median is sixteen. Three quarters of orders are eighteen dollars or less.",
+     "show": 1
+    },
+    {
+     "say": "The school's bulk orders pull the mean up. Our typical order is about sixteen dollars is the honest sentence.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Lab · Step 2",
+   "title": "Compare like with like",
+   "items": [
+    [
+     "All customers",
+     "Email on top · 45% of revenue"
+    ],
+    [
+     "Individuals only",
+     "Instagram on top · 49% · Email 16%"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now compare channels, with and without the business customer.",
+     "show": 0
+    },
+    {
+     "say": "With everyone, Email looks like the top channel, with forty five percent of revenue.",
+     "show": 1
+    },
+    {
+     "say": "For individual shoppers, Email is the smallest, at sixteen percent, and Instagram brings almost half.",
+     "show": 2
+    },
+    {
+     "say": "Both are correct. Show the one that answers the question, and mention the other. And Email for individuals has just three orders, too few to conclude much.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "graph",
+   "kicker": "Lab · Step 3",
+   "title": "Correlation is not causation",
+   "items": [
+    [
+     "Individuals",
+     "−0.65"
+    ],
+    [
+     "Everyone",
+     "−0.32"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A correlation runs from minus one to one.",
+     "show": 0
+    },
+    {
+     "say": "For individuals, quantity and unit price correlate at minus point six five: cheaper items sell in bigger quantities.",
+     "show": 1
+    },
+    {
+     "say": "Including the school weakens it to minus point three two. One or two points can change a small dataset a lot.",
+     "show": 2
+    },
+    {
+     "say": "But does a low price cause bigger orders? Maybe partly, or people just naturally buy several sticky notes, and nobody needs three planners. Correlation tells you where to look, not why.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "venn",
+   "kicker": "Lab · Step 4",
+   "title": "Simpson's paradox",
+   "items": [
+    [
+     "Mobile",
+     "A 7.5% ✓ · B 6.0%"
+    ],
+    [
+     "Desktop",
+     "A 25.0% ✓ · B 22.5%"
+    ],
+    [
+     "Overall",
+     "A 11.0% · B 19.2% ✓"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Finally, an invented page test.",
+     "show": 0
+    },
+    {
+     "say": "Version A wins on mobile, seven and a half percent versus six.",
+     "show": 1
+    },
+    {
+     "say": "And on desktop, twenty five versus twenty two and a half.",
+     "show": 2
+    },
+    {
+     "say": "Yet B wins overall, nineteen point two versus eleven. Most of B's visitors were on desktop, where everyone buys more. Compare within groups.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why should you report the number of orders next to an average?",
+   "options": [
+    "Averages are always wrong without it",
+    "An average from a few orders can change a lot with one more order",
+    "It makes the table look complete"
+   ],
+   "answer": 1,
+   "good": "That's right. The count tells readers how much to trust the average. One more order can change a small average a lot.",
+   "bad": "Not quite. The count tells readers how much to trust the average. One more order can change a small average a lot.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why should you report the number of orders next to an average?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain median versus mean",
+     ""
+    ],
+    [
+     "Why Email changes without the school",
+     ""
+    ],
+    [
+     "How A wins every group but loses",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why the median is a better typical order here than the mean,",
+     "show": 1
+    },
+    {
+     "say": "why Email looks different with and without the school,",
+     "show": 2
+    },
+    {
+     "say": "and how version A can win every group but lose overall.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 7, charts that tell the truth.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1598,6 +2906,233 @@ You've made a bar, line, histogram, and scatter chart, each with a title and lab
 
 *Answers: 1) Readers judge a bar by its length, so cutting the axis exaggerates differences. 2) A line chart. 3) That almost all orders are small, with two extreme orders far to the right that pull the mean up. 4) The school's bulk orders created a fake February dip in the total; individuals alone show steady growth. 5) You can rescale either axis to make any two lines look related or unrelated, so the visual impression can be manipulated.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Module 7 · Charts that tell the truth",
+   "title": "Make one point obvious",
+   "beats": [
+    {
+     "say": "Welcome to Module 7."
+    },
+    {
+     "say": "A chart's job is to make one point obvious. Start by asking what the point is, then pick the form that fits."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Concept",
+   "title": "Pick the form",
+   "items": [
+    [
+     "Bar chart",
+     "Compare categories"
+    ],
+    [
+     "Line chart",
+     "Change over time"
+    ],
+    [
+     "Histogram",
+     "Distribution"
+    ],
+    [
+     "Scatter plot",
+     "Two numbers"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Comparing amounts across categories? A bar chart.",
+     "show": 1
+    },
+    {
+     "say": "Change over time? A line chart.",
+     "show": 2
+    },
+    {
+     "say": "How values are distributed? A histogram.",
+     "show": 3
+    },
+    {
+     "say": "A relationship between two numbers? A scatter plot.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Concept",
+   "title": "Rules for honest charts",
+   "items": [
+    [
+     "Bars start at zero",
+     ""
+    ],
+    [
+     "Label everything",
+     ""
+    ],
+    [
+     "One y-axis · honest window",
+     ""
+    ],
+    [
+     "No clutter · not color alone",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A few rules keep charts honest.",
+     "show": 0
+    },
+    {
+     "say": "Bar charts start at zero, because a bar's length is the value.",
+     "show": 1
+    },
+    {
+     "say": "Label everything: a title, axis labels with units, and a legend.",
+     "show": 2
+    },
+    {
+     "say": "Use one y axis. Don't cherry-pick the time window.",
+     "show": 3
+    },
+    {
+     "say": "Remove clutter, and don't rely on color alone.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "graph",
+   "kicker": "Lab · Step 2",
+   "title": "A line chart that corrects a story",
+   "file": "notebook",
+   "code": "fig, ax = plt.subplots(figsize=(6, 4))\nax.plot(monthly.index, monthly.values, marker=\"o\", linewidth=2, label=\"All customers\")\nax.plot(monthly_ind.index, monthly_ind.values, marker=\"o\", linewidth=2, label=\"Individuals only\")\nax.set_title(\"Monthly revenue, Q1 2026\")\nax.set_ylabel(\"Revenue ($)\")\nax.set_ylim(bottom=0)\nax.legend()\nplt.show()",
+   "beats": [
+    {
+     "say": "Using matplotlib, plot monthly revenue for all customers, and for individuals only.",
+     "show": 0
+    },
+    {
+     "say": "All customers dips sharply in February and looks like a problem.",
+     "show": 1
+    },
+    {
+     "say": "Individuals only rises steadily: a hundred and fourteen, a hundred and thirty two, a hundred and eighty one. The dip is just a month without a school order.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Lab · Step 4",
+   "title": "Same data, two impressions",
+   "items": [
+    [
+     "✗ Axis starts at 12",
+     "Gap looks 4× bigger"
+    ],
+    [
+     "✓ Axis starts at 0",
+     "$16.89 vs $13.06, about 30%"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now the same average order values, drawn two ways.",
+     "show": 0
+    },
+    {
+     "say": "With the axis starting at twelve, the Website bar looks more than four times taller than Instagram's.",
+     "show": 1
+    },
+    {
+     "say": "With the axis at zero, you see the truth: Website orders are about thirty percent larger. Same numbers, very different impression.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why must bar charts start at zero?",
+   "options": [
+    "Readers judge a bar by its length, so cutting the axis exaggerates differences",
+    "Matplotlib requires it",
+    "It makes the bars easier to color"
+   ],
+   "answer": 0,
+   "good": "That's right. Readers judge a bar by its length, so a cut axis makes small differences look huge.",
+   "bad": "Not quite. Readers judge a bar by its length, so a cut axis makes small differences look huge.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why must bar charts start at zero?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Four charts, titled and labeled",
+     ""
+    ],
+    [
+     "You can explain the misleading chart",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've made a bar, line, histogram and scatter chart, each with a title and labeled axes,",
+     "show": 1
+    },
+    {
+     "say": "and you can explain exactly why the cut-axis chart is misleading.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 8, telling a story with data.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 8: Telling a Story with Data (Mini Project)
@@ -1798,3 +3333,201 @@ You have a notebook that runs top to bottom without errors and a one-page findin
 5. What makes a recommendation more useful than just a summary of findings?
 
 *Answers: 1) Busy readers may only read the start, and the decision is what they need most. 2) The question was about individual customers, and two bulk orders from one school would distort channel totals and the monthly trend. 3) It prevents copy mistakes and keeps the text correct if the data changes. 4) Any one of: only 3 months and 30 orders, so growth could be chance or seasonal; no spend or time data, so return on effort is unknown; channel shows where the order was placed, not how the customer found the shop. 5) It tells the reader what to do next, and saying what would change your mind makes it testable.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "doc",
+   "kicker": "Module 8 · Telling a story with data",
+   "title": "Make it something to act on",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "An analysis isn't finished until someone can act on it. You'll answer your Module 1 brief: which channel should Ivy and Ink focus April's marketing on?"
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Concept",
+   "title": "A one-page findings write-up",
+   "items": [
+    [
+     "Question · Answer first",
+     ""
+    ],
+    [
+     "Key findings · One chart",
+     ""
+    ],
+    [
+     "Recommendation",
+     "And what would change your mind"
+    ],
+    [
+     "Limitations · Method notes",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A good write-up is short and built around the decision.",
+     "show": 0
+    },
+    {
+     "say": "The question, then the answer first, in one or two sentences.",
+     "show": 1
+    },
+    {
+     "say": "Three or so key findings, each with a number and its context, and one chart.",
+     "show": 2
+    },
+    {
+     "say": "A recommendation: what to do, and what would change your mind.",
+     "show": 3
+    },
+    {
+     "say": "Then limitations, and method notes, including your cleaning log.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "test",
+   "kicker": "Lab · Step 2",
+   "title": "Check, then analyze",
+   "file": "notebook",
+   "code": "assert full[\"order_id\"].is_unique\nassert (full[\"quantity\"] > 0).all()\n\nind = full[full[\"customer_type\"] == \"Individual\"]\nby_channel = ind.groupby(\"channel\").agg(\n    orders=(\"order_id\", \"count\"),\n    customers=(\"customer_id\", \"nunique\"),\n    revenue=(\"revenue\", \"sum\"),\n    avg_order=(\"revenue\", \"mean\"),\n)",
+   "beats": [
+    {
+     "say": "Add quick automated checks. Assert stops the notebook if a condition is false.",
+     "show": 0
+    },
+    {
+     "say": "Then named aggregation: each new column gets a name, a source column, and a summary.",
+     "show": 1
+    },
+    {
+     "say": "Instagram: sixteen orders, eight customers, two hundred and nine dollars, forty nine percent of individual revenue.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "growth",
+   "kicker": "Lab · Step 3",
+   "title": "One chart that answers it",
+   "big": "$41 → $67 → $101",
+   "sub": "Instagram revenue from individuals, Jan to Mar",
+   "beats": [
+    {
+     "say": "Plot individual revenue by channel and month.",
+     "show": 0
+    },
+    {
+     "say": "Instagram climbs steeply: forty one, sixty seven, a hundred and one. The Website stays roughly flat, and Email stays low.",
+     "show": 1
+    },
+    {
+     "say": "By March, Instagram brought in nearly twice as much as the Website.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "target",
+   "kicker": "Lab · Step 5",
+   "title": "Lead with the answer",
+   "quote": "Focus on Instagram. It brings the most individual revenue and grew every month.",
+   "beats": [
+    {
+     "say": "Pull your numbers from code, not by retyping, then write the page.",
+     "show": 0
+    },
+    {
+     "say": "The answer: focus on Instagram. It brings the most orders and revenue from individuals, and is the only channel that grew every month.",
+     "show": 1
+    },
+    {
+     "say": "Be honest about limits: only three months, no data on time or money spent per channel. Then review your page before you share it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why should a findings write-up lead with the answer?",
+   "options": [
+    "It's shorter that way",
+    "The method is less important than the numbers",
+    "Busy readers may only read the start, and the decision is what they need"
+   ],
+   "answer": 2,
+   "good": "That's right. Busy readers may only read the start, and the decision is what they need most.",
+   "bad": "Not quite. Busy readers may only read the start, and the decision is what they need most.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why should a findings write-up lead with the answer?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your notebook runs top to bottom",
+     ""
+    ],
+    [
+     "A one-page write-up that leads with the answer",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a notebook that runs top to bottom without errors,",
+     "show": 1
+    },
+    {
+     "say": "and a one-page write-up that leads with an answer, backed by numbers and one honest chart, with a recommendation and its limitations.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Data Analytics for Builders. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
