@@ -533,10 +533,8 @@ const LearningCourse = ({ reading = false }) => {
             )}
           </ol>
         
-          {/* Ratings, reactions, comments: on mentor courses published to Learning */}
-          {isPublished && (
-            <CourseFeedback track={track} slug={slug} courseTitle={course.title} authorUid={course.authorUid} authorName={course.authorName} displayName={lr.profile?.displayName || ''} canParticipate={canParticipate} onEnroll={joinCourse} />
-          )}
+          {/* Ratings, reactions, comments: on every course (mentor courses tell the mentor) */}
+          <CourseFeedback track={track} slug={slug} courseTitle={course.title} authorUid={isPublished ? course.authorUid || '' : ''} authorName={isPublished ? course.authorName || '' : ''} displayName={lr.profile?.displayName || ''} canParticipate={canParticipate} onEnroll={joinCourse} />
 
 
           {/* Discussion forum for every course */}

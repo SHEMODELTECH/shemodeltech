@@ -4,6 +4,7 @@ export const ADMIN_SECTIONS = [
   ['overview', 'Overview', 'all'],
   ['users', 'Users', 'all'],
   ['learners', 'Learners', 'all'],
+  ['coursefeedback', 'Course feedback', 'all'],
   ['teachers', 'Mentors', 'reviewer'],
   ['events', 'Events', 'reviewer'],
   ['team', 'Team', 'admin'],

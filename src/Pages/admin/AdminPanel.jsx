@@ -27,6 +27,7 @@ import { deleteProjectActivity } from '../../utils/activityFeed';
 import ProofWallAdmin from '../../components/admin/ProofWallAdmin';
 import ReportsAdmin from '../../components/admin/ReportsAdmin';
 import LearnersAdmin from '../../components/admin/LearnersAdmin';
+import CourseFeedbackAdmin from '../../components/admin/CourseFeedbackAdmin';
 import { notifyMember } from '../../utils/staffAlerts';
 import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
@@ -1707,6 +1708,8 @@ const AdminPanel = ({ only = null }) => {
 
       {/* MODERATION: content members reported */}
       {!loadingData && tab === 'learners' && <LearnersAdmin users={users} />}
+
+      {!loadingData && tab === 'coursefeedback' && <CourseFeedbackAdmin isAdmin={isAdmin} />}
 
       {!loadingData && tab === 'moderation' && (
         <ReportsAdmin me={{ uid: currentUser?.uid, name: currentUser?.displayName || currentUser?.email || 'Staff' }} />
