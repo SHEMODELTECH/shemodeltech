@@ -26,6 +26,7 @@ import NoteDialog, { friendlyError } from '../../components/NoteDialog';
 import { deleteProjectActivity } from '../../utils/activityFeed';
 import ProofWallAdmin from '../../components/admin/ProofWallAdmin';
 import ReportsAdmin from '../../components/admin/ReportsAdmin';
+import LearnersAdmin from '../../components/admin/LearnersAdmin';
 import { notifyMember } from '../../utils/staffAlerts';
 import { TIERS, TIER_LABEL, companyTier } from '../../config/tiers';
 import { LETTER_TYPES, decideLetterRequest, listLetterRequests } from '../../utils/mentorLetters';
@@ -1705,6 +1706,8 @@ const AdminPanel = ({ only = null }) => {
       {!loadingData && (tab === 'events' || tab === 'summit') && isReviewer && <EventsAdmin />}
 
       {/* MODERATION: content members reported */}
+      {!loadingData && tab === 'learners' && <LearnersAdmin users={users} />}
+
       {!loadingData && tab === 'moderation' && (
         <ReportsAdmin me={{ uid: currentUser?.uid, name: currentUser?.displayName || currentUser?.email || 'Staff' }} />
       )}
