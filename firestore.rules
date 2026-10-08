@@ -1171,6 +1171,42 @@ service cloud.firestore {
  }
 
  // ---------------------------------------------------------------
+ // wall_stats: views, clicks, reposts and emoji reactions on Proof Wall cards
+ // (utils/wallStats.js). key = a_<post> | p_<project> | t_<member>.
+ // Counters only ever go up by one; each person changes only her own reaction.
+ // ---------------------------------------------------------------
+ match /wall_stats/{key} {
+ function onlyMine(field) {
+ return request.resource.data.get(field, {}).keys().hasOnly([myUid()]);
+ }
+ function myKeyOnly(field) {
+ return request.resource.data.get(field, {}).diff(resource.data.get(field, {})).affectedKeys().hasOnly([myUid()]);
+ }
+ function upByOne(field) {
+ return request.resource.data.get(field, 0) == resource.data.get(field, 0) + 1;
+ }
+ allow read: if isSignedIn();
+ allow create: if isSignedIn()
+ && key.matches('^[apt]_[A-Za-z0-9_-]{1,200}$')
+ && request.resource.data.keys().hasOnly(['views', 'clicks', 'repostCount', 'reactions', 'reactionNames', 'reactionPhotos', 'reactionNotified'])
+ && request.resource.data.get('views', 0) in [0, 1]
+ && request.resource.data.get('clicks', 0) in [0, 1]
+ && request.resource.data.get('repostCount', 0) in [0, 1]
+ && onlyMine('reactions') && onlyMine('reactionNames') && onlyMine('reactionPhotos') && onlyMine('reactionNotified');
+ allow update: if isSignedIn() && changed(['views']) && upByOne('views');
+ allow update: if isSignedIn() && changed(['clicks']) && upByOne('clicks');
+ allow update: if isSignedIn() && changed(['repostCount']) && upByOne('repostCount');
+ allow update: if isSignedIn()
+ && changed(['reactions', 'reactionNames', 'reactionPhotos'])
+ && myKeyOnly('reactions') && myKeyOnly('reactionNames') && myKeyOnly('reactionPhotos');
+ allow update: if isSignedIn()
+ && changed(['reactionNotified'])
+ && myKeyOnly('reactionNotified')
+ && request.resource.data.reactionNotified[myUid()] == true;
+ allow delete: if isAdmin();
+ }
+
+ // ---------------------------------------------------------------
  // activity (Proof Wall)
  // ---------------------------------------------------------------
  match /activity/{id} {

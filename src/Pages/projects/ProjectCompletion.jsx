@@ -267,7 +267,9 @@ const ProjectCompletion = () => {
           // Proof Wall: log a badge proof event (non-blocking).
           logProofEvent({
             type: 'badge',
+            actorId: memberUid || null,
             actorName: ev.memberName || ev.memberEmail,
+            projectId,
             badgeName: `${badgeCategories[ev.badgeCategory]?.name || ev.badgeCategory} · ${ev.badgeLevel}`,
             projectTitle: project.projectTitle || project.title || null,
             meta: `Earned on ${project.projectTitle || 'a project'}`,
@@ -338,6 +340,7 @@ const ProjectCompletion = () => {
       // Proof Wall: log a project-shipped proof event (non-blocking).
       logProofEvent({
         type: 'ship',
+        projectId,
         actorName: members.length > 0 ? `A team of ${members.length}` : (currentUser.displayName || 'A member'),
         projectTitle: project.projectTitle || project.title || 'a project',
         meta: 'Project completed and archived',

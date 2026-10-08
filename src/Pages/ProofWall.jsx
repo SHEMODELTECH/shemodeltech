@@ -3,7 +3,7 @@
 // Reads system-generated events + limited work updates from the `activity` collection.
 // Members can share a work-focused project update; everything else is auto-generated proof.
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { sendPush } from '../utils/pushNotifications';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -16,7 +16,7 @@ import {
   deleteActivityItem,
   withoutDeletedProjects,
 } from '../utils/activityFeed';
-import { doc, getDoc, getDocs, addDoc, collection, serverTimestamp, query, where, documentId } from 'firebase/firestore';
+import { doc, getDoc, getDocs, addDoc, collection, serverTimestamp, query, where, documentId, orderBy } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { toast } from 'react-toastify';
 import { uploadImageToBlob, validateImageFile } from '../utils/blobStorage';
@@ -24,6 +24,9 @@ import { MentionTextarea } from '../components/MentionTextarea';
 import UpdateActions from '../components/UpdateActions';
 import EmojiPicker from '../components/EmojiPicker';
 import ReportButton from '../components/ReportButton';
+import WallActions, { WallStats, useWallView } from '../components/WallActions';
+import { loadStats, recordClick, statKey } from '../utils/wallStats';
+import { formatTimeline, industryLabel, levelLabel, roleNames, skillTrackLabel } from '../utils/projectLabels';
 
 const fmtAgo = (ts) => {
   try {
@@ -129,6 +132,19 @@ const renderHeadline = (a, go = {}) => {
   }
 };
 
+// The same headline as plain text (for reposts and sharing).
+const headlineText = (a) => {
+  const who = a.actorName || 'A member';
+  const proj = a.projectTitle || 'a project';
+  switch (a.type) {
+    case 'badge': return `${who} earned the ${a.badgeName || ''} badge`.replace(/\s+/g, ' ');
+    case 'ship': return `${who} shipped ${proj}`;
+    case 'lead': return a.actorId ? `${who} stepped up to lead ${proj}` : `${proj} is looking for a lead`;
+    case 'milestone': return `${who} ${a.meta ? a.meta.replace(/^Completed /, 'completed ') : 'reached a milestone'}`;
+    default: return `${who} on She Model Tech`;
+  }
+};
+
 const FILTERS = [
   { id: 'all', label: 'All Activity' },
   { id: 'update', label: 'Updates' },
@@ -163,6 +179,43 @@ const fetchUsersByIds = async (ids) => {
     } catch (_) {}
   }
   return byId;
+};
+
+// A card that counts a view once it's at least half on screen.
+const ViewBox = ({ statKey: k, me, ownerUid, onView, ready, children, ...rest }) => {
+  const ref = useWallView(k, me, ownerUid, onView, ready);
+  return <div ref={ref} {...rest}>{children}</div>;
+};
+
+// A short summary of a project: what it is, and what it needs.
+const projectBriefText = (p) => String(p?.problemStatement || p?.projectDescription || p?.description || p?.summary || '').trim();
+const ProjectBrief = ({ p, showLead = false }) => {
+  if (!p) return null;
+  const text = projectBriefText(p);
+  const roles = roleNames(p);
+  const facts = [industryLabel(p.industryTrack), formatTimeline(p.timeline), levelLabel(p.experienceLevel)].filter(Boolean);
+  return (
+    <div className="mt-2">
+      {text && <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{text}</p>}
+      {(facts.length > 0 || p.isPaid) && (
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {p.isPaid && <span className="text-[11px] font-semibold px-2 py-0.5 bg-gray-900 text-white rounded-full">Paid</span>}
+          {facts.map((f) => (
+            <span key={f} className="text-[11px] font-medium px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full">{f}</span>
+          ))}
+        </div>
+      )}
+      {roles.length > 0 && (
+        <p className="text-xs text-gray-600 mt-2">
+          <span className="font-semibold text-gray-900">Roles: </span>
+          {roles.slice(0, 4).join(', ')}{roles.length > 4 ? ` and ${roles.length - 4} more` : ''}
+        </p>
+      )}
+      {showLead && p.submitterName && (
+        <p className="text-xs text-gray-600 mt-1"><span className="font-semibold text-gray-900">Led by </span>{p.submitterName}</p>
+      )}
+    </div>
+  );
 };
 
 const ProofWall = () => {
@@ -240,6 +293,21 @@ const ProofWall = () => {
   const editTextareaRef = useRef(null);
 
   const uid = currentUser?.uid;
+  const me = useMemo(
+    () => (uid ? { uid, name: myData?.displayName || currentUser?.displayName || 'A member', photoURL: myData?.photoURL || currentUser?.photoURL || null } : null),
+    [uid, myData?.displayName, myData?.photoURL, currentUser?.displayName, currentUser?.photoURL]
+  );
+
+  // Views, clicks and reactions for every card (wall_stats).
+  const [stats, setStats] = useState({});
+  const [statsReady, setStatsReady] = useState(() => new Set()); // cards whose numbers have loaded
+  const setStat = useCallback((key, next) => setStats((s) => ({ ...s, [key]: next })), []);
+  const addOne = useCallback((key, field) => setStats((s) => ({ ...s, [key]: { ...(s[key] || {}), [field]: ((s[key] || {})[field] || 0) + 1 } })), []);
+  // Count a click on a card, then go where it points.
+  const clickThen = (key, ownerUid, fn) => () => {
+    if (me && recordClick(key, me, ownerUid)) addOne(key, 'clicks');
+    if (fn) fn();
+  };
 
   // Optimistic celebrate toggle
   const handleCelebrate = async (a) => {
@@ -374,75 +442,48 @@ const ProofWall = () => {
     (async () => {
       setLoadingTalent(true);
       try {
-        const {
-          collection: col,
-          getDocs,
-          query: q,
-          where,
-          limit: lim,
-        } = await import('firebase/firestore');
+        const { collection: col, getDocs, query: q, limit: lim } = await import('firebase/firestore');
 
-        // 1) Recent badge earners from the activity feed.
-        const badgeSnap = await getDocs(
-          q(col(db, 'activity'), where('type', '==', 'badge'), lim(50))
-        );
-        const badgeByUser = new Map();
-        badgeSnap.docs.forEach((d) => {
-          const a = d.data();
-          if (a.actorId && !badgeByUser.has(a.actorId)) {
-            badgeByUser.set(a.actorId, {
-              uid: a.actorId,
-              name: a.actorName,
-              badgeName: a.badgeName,
-              reason: 'badge',
-              createdAt: a.createdAt,
-            });
-          }
+        // Recent badges, newest first, one card per member: the badge, and the
+        // project it was earned on. Members under 18 are never listed.
+        let badgeSnap;
+        try {
+          badgeSnap = await getDocs(q(col(db, 'member_badges'), orderBy('awardedAt', 'desc'), lim(120)));
+        } catch (_) {
+          badgeSnap = await getDocs(q(col(db, 'member_badges'), lim(120)));
+        }
+        const badgeRows = badgeSnap.docs.map((d) => d.data())
+          .sort((x, y) => (y.awardedAt?.seconds || 0) - (x.awardedAt?.seconds || 0));
+        const byUser = new Map();
+        badgeRows.forEach((b) => {
+          if (!b.memberUid) return;
+          const cur = byUser.get(b.memberUid);
+          if (!cur) byUser.set(b.memberUid, { latest: b, count: 1 });
+          else cur.count += 1;
         });
-
-        // 2) Highly-rated community teachers, hidden from the UI for now.
-        // Firestore query/logic left in place (commented) so this is easy to restore.
-        const teachByUser = new Map();
-        // contribSnap.docs.forEach(d => {
-        // const c = d.data();
-        // const avg = c.ratingCount ? c.ratingSum / c.ratingCount : 0;
-        // if (c.authorId && c.ratingCount > 0) {
-        // const prev = teachByUser.get(c.authorId);
-        // if (!prev || avg > prev.avg) {
-        // teachByUser.set(c.authorId, { uid: c.authorId, name: c.authorName, avg, ratingCount: c.ratingCount, reason: 'teaching' });
-        // }
-        // }
-        // });
-
-        // Merge unique users, resolve email + photo for profile links (in parallel).
-        const uids = [...new Set([...badgeByUser.keys(), ...teachByUser.keys()])];
+        const uids = [...byUser.keys()];
         const usersById = await fetchUsersByIds(uids);
-        const cards = await Promise.all(
-          uids.map(async (uid) => {
-            let email = null,
-              photoURL = null,
-              displayName = null;
-            const u = usersById[uid];
-            if (u) {
-              email = u.email;
-              photoURL = u.photoURL;
-              displayName = u.displayName;
-            }
-            const b = badgeByUser.get(uid);
-            const t = teachByUser.get(uid);
+        const cards = uids
+          .map((id) => {
+            const u = usersById[id];
+            if (!u || u.isMinor || u.isCompany) return null;
+            const { latest } = byUser.get(id);
             return {
-              uid,
-              email,
-              name: displayName || b?.name || t?.name || 'Member',
-              photoURL,
-              badgeName: b?.badgeName || null,
-              teachingAvg: t?.avg || null,
-              teachingCount: t?.ratingCount || null,
+              uid: id,
+              email: u.email || null,
+              name: u.displayName || latest.memberName || 'Member',
+              photoURL: u.photoURL || null,
+              specialization: u.specialization || '',
+              track: skillTrackLabel(u.primarySkillTrack),
+              level: levelLabel(u.experienceLevel),
+              badgeCount: Array.isArray(u.badges) ? u.badges.length : byUser.get(id).count,
+              badgeName: [latest.badgeName, latest.badgeLevel].filter(Boolean).join(' · '),
+              badgeProjectId: latest.projectId || null,
+              badgeProjectTitle: latest.projectTitle || '',
+              badgeAt: latest.awardedAt || null,
             };
           })
-        );
-        // Sort: teaching-rated first (by avg), then badge earners.
-        cards.sort((a, b) => (b.teachingAvg || 0) - (a.teachingAvg || 0));
+          .filter(Boolean);
         if (active) setTalent(cards.slice(0, 30));
       } catch (e) {
         console.error('load talent failed', e);
@@ -464,6 +505,46 @@ const ProofWall = () => {
   const visibleItems = myData?.isCompany && !isStaffViewer
     ? items.filter((a) => !companyHiddenTypes.includes(a.type))
     : items;
+
+  // "Needs a lead" posts show a short summary of the project, so people know
+  // what they'd lead before they click.
+  const [leadProjects, setLeadProjects] = useState({});
+  const leadIdsKey = [...new Set(items.filter((a) => a.type === 'lead' && a.projectId).map((a) => a.projectId))].sort().join(',');
+  useEffect(() => {
+    const ids = leadIdsKey ? leadIdsKey.split(',') : [];
+    if (!ids.length) return undefined;
+    let alive = true;
+    (async () => {
+      const found = {};
+      for (let i = 0; i < ids.length; i += 30) {
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const snap = await getDocs(query(collection(db, 'projects'), where(documentId(), 'in', ids.slice(i, i + 30))));
+          snap.docs.forEach((d) => { found[d.id] = { id: d.id, ...d.data() }; });
+        } catch (_) { /* no summary for these */ }
+      }
+      if (alive) setLeadProjects((prev) => ({ ...prev, ...found }));
+    })();
+    return () => { alive = false; };
+  }, [leadIdsKey]);
+
+  // Views, clicks and reactions for the cards on screen.
+  const statKeysKey = [
+    ...items.map((a) => statKey('a', a.id)),
+    ...openProjects.map((p) => statKey('p', p.id)),
+    ...talent.map((m) => statKey('t', m.uid)),
+  ].filter(Boolean).sort().join(',');
+  useEffect(() => {
+    const keys = statKeysKey ? statKeysKey.split(',') : [];
+    if (!uid || !keys.length) return undefined;
+    let alive = true;
+    loadStats(keys).then((found) => {
+      if (!alive) return;
+      setStats((prev) => ({ ...prev, ...found }));
+      setStatsReady((prev) => { const next = new Set(prev); keys.forEach((x) => next.add(x)); return next; });
+    });
+    return () => { alive = false; };
+  }, [statKeysKey, uid]);
 
   useEffect(() => {
     load(filter);
@@ -833,49 +914,67 @@ const ProofWall = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-2.5">
-            {talent.map((m) => (
-              <div
-                key={m.uid}
-                className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-3.5"
-              >
-                {m.photoURL ? (
-                  <img
-                    src={m.photoURL}
-                    alt={m.name}
-                    loading="lazy"
-                    className="w-12 h-12 rounded-full object-cover border border-gray-200 flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center font-bold flex-shrink-0">
-                    {(m.name || 'M').charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-bold text-gray-900 truncate">{m.name}</h3>
-                  <div className="flex flex-wrap gap-1.5 mt-1">
-                    {m.badgeName && (
-                      <span className="text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full">
-                        🏅 {m.badgeName}
-                      </span>
+            {talent.map((m) => {
+              const k = statKey('t', m.uid);
+              const profile = m.email ? `/profile/${encodeURIComponent(m.email)}` : null;
+              const facts = [m.track, m.level].filter(Boolean);
+              return (
+                <ViewBox key={m.uid} statKey={k} me={me} ownerUid={m.uid} onView={() => addOne(k, 'views')} ready={statsReady.has(k)}
+                  className="bg-white border border-gray-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3.5">
+                    {m.photoURL ? (
+                      <img src={m.photoURL} alt={m.name} loading="lazy"
+                        className="w-12 h-12 rounded-full object-cover border border-gray-200 flex-shrink-0" />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center font-bold flex-shrink-0">
+                        {(m.name || 'M').charAt(0).toUpperCase()}
+                      </div>
                     )}
-                    {m.teachingAvg ? (
-                      <span className="text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full">
-                        ★ {m.teachingAvg.toFixed(1)} teaching
-                        {m.teachingCount ? ` (${m.teachingCount})` : ''}
-                      </span>
-                    ) : null}
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-bold text-gray-900 truncate">
+                        {profile ? <button type="button" onClick={clickThen(k, m.uid, () => navigate(profile))} className="hover:text-pink-700 hover:underline">{m.name}</button> : m.name}
+                      </h3>
+                      {m.specialization && <p className="text-xs text-gray-600 truncate">{m.specialization}</p>}
+                      <div className="flex flex-wrap gap-1.5 mt-1.5">
+                        {m.badgeName && (
+                          <span className="text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full">🏅 {m.badgeName}</span>
+                        )}
+                        {facts.map((f) => (
+                          <span key={f} className="text-xs font-medium px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full">{f}</span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                {m.email && (
-                  <button
-                    onClick={() => navigate(`/profile/${m.email}`)}
-                    className="flex-shrink-0 bg-pink-600 hover:bg-pink-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
-                  >
-                    View profile →
-                  </button>
-                )}
-              </div>
-            ))}
+                  <p className="text-xs text-gray-600 mt-2.5">
+                    {m.badgeProjectTitle ? (
+                      <>
+                        Earned on{' '}
+                        {m.badgeProjectId ? (
+                          <button type="button" onClick={clickThen(k, m.uid, () => navigate(`/projects/${m.badgeProjectId}`))} className="font-semibold text-gray-900 hover:text-pink-700 hover:underline">{m.badgeProjectTitle}</button>
+                        ) : <span className="font-semibold text-gray-900">{m.badgeProjectTitle}</span>}
+                        {m.badgeAt ? ` · ${fmtAgo(m.badgeAt)}` : ''}
+                      </>
+                    ) : 'Badge earned on a She Model Tech project'}
+                    {m.badgeCount > 1 ? ` · ${m.badgeCount} badges in total` : ''}
+                  </p>
+                  {profile && (
+                    <button onClick={clickThen(k, m.uid, () => navigate(profile))}
+                      className="mt-3 inline-flex items-center gap-1 bg-pink-600 hover:bg-pink-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all">
+                      View profile →
+                    </button>
+                  )}
+                  <WallStats stats={stats[k]} className="mt-3" />
+                  {me && (
+                    <WallActions
+                      card={{ key: k, kind: 'talent', headline: `${m.name}${m.badgeName ? ` · ${m.badgeName}` : ''}`, text: [m.specialization, m.badgeProjectTitle && `Earned on ${m.badgeProjectTitle}`].filter(Boolean).join(' · '), link: profile || '/proof-wall', ownerUid: m.uid, what: 'your Top Talent card', actorId: m.uid, actorName: m.name }}
+                      stats={stats[k]}
+                      onStats={(next) => setStat(k, next)}
+                      me={me}
+                    />
+                  )}
+                </ViewBox>
+              );
+            })}
           </div>
         )
       ) : filter === 'open' ? (
@@ -907,36 +1006,38 @@ const ProofWall = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-2.5">
-            {openProjects.map((p) => (
-              <div key={p.id} className="bg-white border border-gray-200 rounded-xl p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-gray-900">
-                      {p.projectTitle || p.title || 'Untitled project'}
+            {openProjects.map((p) => {
+              const k = statKey('p', p.id);
+              const title = p.projectTitle || p.title || 'Untitled project';
+              const go = clickThen(k, p.submitterId, () => navigate(`/projects/${p.id}`));
+              return (
+                <ViewBox key={p.id} statKey={k} me={me} ownerUid={p.submitterId} onView={() => addOne(k, 'views')} ready={statsReady.has(k)}
+                  className="bg-white border border-gray-200 rounded-xl p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="min-w-0 text-sm font-bold text-gray-900">
+                      <button type="button" onClick={go} className="text-left hover:text-pink-700 hover:underline">{title}</button>
                     </h3>
-                    {p.track && (
-                      <span className="inline-block mt-1 text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-600 rounded-full">
-                        {p.track}
-                      </span>
-                    )}
+                    <span className="flex-shrink-0 text-xs font-semibold px-2.5 py-1 bg-pink-50 text-pink-700 rounded-full border border-pink-200">
+                      Accepting collaborators
+                    </span>
                   </div>
-                  <span className="flex-shrink-0 text-xs font-semibold px-2.5 py-1 bg-pink-50 text-pink-700 rounded-full border border-pink-200">
-                    Accepting collaborators
-                  </span>
-                </div>
-                {(p.description || p.summary) && (
-                  <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                    {p.description || p.summary}
-                  </p>
-                )}
-                <button
-                  onClick={() => navigate(`/projects/${p.id}`)}
-                  className="mt-3 inline-flex items-center gap-1 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
-                >
-                  View &amp; apply to join →
-                </button>
-              </div>
-            ))}
+                  <ProjectBrief p={p} showLead />
+                  <button onClick={go}
+                    className="mt-3 inline-flex items-center gap-1 bg-pink-600 hover:bg-pink-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all">
+                    View &amp; apply to join →
+                  </button>
+                  <WallStats stats={stats[k]} className="mt-3" />
+                  {me && (
+                    <WallActions
+                      card={{ key: k, kind: 'project', headline: `${title} is looking for collaborators`, text: projectBriefText(p).slice(0, 300), link: `/projects/${p.id}`, ownerUid: p.submitterId, what: `your project ${title}`, projectTitle: title }}
+                      stats={stats[k]}
+                      onStats={(next) => setStat(k, next)}
+                      me={me}
+                    />
+                  )}
+                </ViewBox>
+              );
+            })}
           </div>
         )
       ) : (
@@ -959,15 +1060,19 @@ const ProofWall = () => {
                 {openProjects.slice(0, 2).map((p) => (
                   <button
                     key={p.id}
-                    onClick={() => navigate(`/projects/${p.id}`)}
-                    className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-lg px-3 py-2 text-left hover:border-pink-300 transition-all"
+                    onClick={clickThen(statKey('p', p.id), p.submitterId, () => navigate(`/projects/${p.id}`))}
+                    className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-left hover:border-pink-300 transition-all"
                   >
-                    <span className="text-sm font-semibold text-gray-900 truncate">
-                      {p.projectTitle || p.title || 'Untitled project'}
+                    <span className="flex items-center justify-between gap-3">
+                      <span className="text-sm font-semibold text-gray-900 truncate">
+                        {p.projectTitle || p.title || 'Untitled project'}
+                      </span>
+                      <span className="flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full border border-pink-200">
+                        Accepting collaborators
+                      </span>
                     </span>
-                    <span className="flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full border border-pink-200">
-                      Accepting collaborators
-                    </span>
+                    {projectBriefText(p) && <span className="block text-xs text-gray-600 mt-0.5 line-clamp-1">{projectBriefText(p)}</span>}
+                    {roleNames(p).length > 0 && <span className="block text-[11px] text-gray-500 mt-0.5 truncate">Roles: {roleNames(p).slice(0, 3).join(', ')}</span>}
                   </button>
                 ))}
               </div>
@@ -1006,12 +1111,12 @@ const ProofWall = () => {
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-gray-900 truncate">{m.name}</p>
                       {m.badgeName && (
-                        <p className="text-[11px] text-pink-700 truncate">🏅 {m.badgeName}</p>
+                        <p className="text-[11px] text-pink-700 truncate">🏅 {m.badgeName}{m.badgeProjectTitle ? <span className="text-gray-500"> · on {m.badgeProjectTitle}</span> : null}</p>
                       )}
                     </div>
                     {m.email && (
                       <button
-                        onClick={() => navigate(`/profile/${m.email}`)}
+                        onClick={clickThen(statKey('t', m.uid), m.uid, () => navigate(`/profile/${encodeURIComponent(m.email)}`))}
                         className="flex-shrink-0 text-pink-600 text-xs font-semibold hover:underline"
                       >
                         Profile →
@@ -1058,8 +1163,13 @@ const ProofWall = () => {
                 const count = a.celebrateCount || 0;
                 const isMine = uid && a.actorId === uid && a.type === 'update';
                 const isEditing = editingId === a.id;
+                const k = statKey('a', a.id);
+                const owner = a.actorId || null;
+                const lp = a.type === 'lead' && a.projectId ? leadProjects[a.projectId] : null;
+                const ck = (fn) => clickThen(k, owner, fn);
                 return (
-                  <div key={a.id} id={`post-${a.id}`} className="bg-white border border-gray-200 rounded-xl p-4 overflow-hidden scroll-mt-20">
+                  <ViewBox key={a.id} id={`post-${a.id}`} statKey={k} me={me} ownerUid={owner} onView={() => addOne(k, 'views')} ready={statsReady.has(k)}
+                    className="bg-white border border-gray-200 rounded-xl p-4 overflow-hidden scroll-mt-20">
                     {/* Header: icon + headline, side by side */}
                     <div className="flex items-center gap-3">
                       {a.actorId ? (
@@ -1069,7 +1179,7 @@ const ProofWall = () => {
                           return (
                             <button
                               type="button"
-                              onClick={() => p.email && navigate(`/profile/${p.email}`)}
+                              onClick={() => p.email && ck(() => navigate(`/profile/${p.email}`))()}
                               className={`w-10 h-10 rounded-full flex-shrink-0 overflow-hidden ${p.email ? 'cursor-pointer hover:ring-2 hover:ring-pink-200 transition-all' : 'cursor-default'}`}
                               aria-label={
                                 p.email ? `View ${a.actorName || 'member'}'s profile` : undefined
@@ -1111,9 +1221,9 @@ const ProofWall = () => {
                       )}
                       <div className="min-w-0 flex-1 text-sm sm:text-[15px] text-gray-900 leading-snug">
                         {renderHeadline(a, {
-                          profile: a.actorId && posterInfo[a.actorId]?.email ? () => navigate(`/profile/${posterInfo[a.actorId].email}`) : undefined,
-                          project: a.projectId ? () => navigate(`/projects/${a.projectId}`) : undefined,
-                          badges: () => navigate('/badges'),
+                          profile: a.actorId && posterInfo[a.actorId]?.email ? ck(() => navigate(`/profile/${posterInfo[a.actorId].email}`)) : undefined,
+                          project: a.projectId ? ck(() => navigate(`/projects/${a.projectId}`)) : undefined,
+                          badges: ck(() => navigate('/badges')),
                         })}
                       </div>
                     </div>
@@ -1177,7 +1287,7 @@ const ProofWall = () => {
                               <img
                                 src={a.imageUrl}
                                 alt="update"
-                                onClick={() => setLightbox(a.imageUrl)}
+                                onClick={ck(() => setLightbox(a.imageUrl))}
                                 className="block -mx-4 mt-3 w-[calc(100%+2rem)] max-w-none h-auto max-h-[75vh] object-cover bg-gray-100 cursor-zoom-in hover:opacity-95 transition-opacity"
                                 loading="lazy"
                               />
@@ -1189,9 +1299,18 @@ const ProofWall = () => {
                                 <div className="p-3">
                                   <p className="text-xs font-semibold text-gray-900">{a.repostOf.actorName}</p>
                                   {a.repostOf.text && <p className="text-sm text-gray-600 mt-1 leading-relaxed">{a.repostOf.text}</p>}
+                                  {a.repostOf.link && (
+                                    String(a.repostOf.link).startsWith('/') ? (
+                                      <button type="button" onClick={ck(() => navigate(a.repostOf.link))} className="mt-1.5 text-xs font-semibold text-pink-700 hover:underline">
+                                        {a.repostOf.kind === 'talent' ? 'View profile →' : a.repostOf.kind === 'project' || a.repostOf.kind === 'lead' ? 'View project →' : 'Open →'}
+                                      </button>
+                                    ) : (
+                                      <a href={a.repostOf.link} target="_blank" rel="noopener noreferrer" onClick={ck()} className="block mt-1.5 text-xs font-medium text-pink-600 hover:text-pink-700 break-all">{a.repostOf.link}</a>
+                                    )
+                                  )}
                                 </div>
                                 {a.repostOf.imageUrl && (
-                                  <img src={a.repostOf.imageUrl} alt="update" onClick={() => setLightbox(a.repostOf.imageUrl)} className="block w-full h-auto max-h-[60vh] object-cover bg-gray-100 cursor-zoom-in" loading="lazy" />
+                                  <img src={a.repostOf.imageUrl} alt="update" onClick={ck(() => setLightbox(a.repostOf.imageUrl))} className="block w-full h-auto max-h-[60vh] object-cover bg-gray-100 cursor-zoom-in" loading="lazy" />
                                 )}
                               </div>
                             )}
@@ -1202,6 +1321,7 @@ const ProofWall = () => {
                                 href={a.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={ck()}
                                 className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-pink-600 hover:text-pink-700 break-all"
                               >
                                 {a.link}
@@ -1211,12 +1331,15 @@ const ProofWall = () => {
                         )
                       )}
 
+                      {/* Needs a lead: what the project is and what it needs. */}
+                      {a.type === 'lead' && lp && <ProjectBrief p={lp} showLead={!!a.actorId} />}
+
                       {/* Learn more: the project (or the member's profile for badges). */}
                       {a.type !== 'lead' && a.type !== 'update' && (a.projectId || (a.actorId && posterInfo[a.actorId]?.email)) && (
                         <button
-                          onClick={() => (a.type === 'badge' || !a.projectId)
+                          onClick={ck(() => ((a.type === 'badge' || !a.projectId)
                             ? navigate(`/profile/${posterInfo[a.actorId]?.email}`)
-                            : navigate(`/projects/${a.projectId}`)}
+                            : navigate(`/projects/${a.projectId}`)))}
                           className="inline-flex items-center gap-1 mt-2 text-pink-700 hover:text-pink-800 text-xs font-semibold"
                         >
                           {a.type === 'badge' || !a.projectId ? 'View profile →' : 'View project →'}
@@ -1224,7 +1347,7 @@ const ProofWall = () => {
                       )}
                       {a.type === 'lead' && myData?.isCompany && (
                         <button
-                          onClick={() => navigate(a.projectId ? `/projects/${a.projectId}` : '/proof-wall')}
+                          onClick={ck(() => navigate(a.projectId ? `/projects/${a.projectId}` : '/proof-wall'))}
                           className="inline-flex items-center gap-1 mt-2 text-pink-700 hover:text-pink-800 text-xs font-semibold"
                         >
                           View project →
@@ -1233,9 +1356,7 @@ const ProofWall = () => {
                       {/* Needs-a-lead items are clickable: go to the project to apply. */}
                       {a.type === 'lead' && !myData?.isCompany && (
                         <button
-                          onClick={() =>
-                            navigate(a.projectId ? `/projects/${a.projectId}` : '/projects')
-                          }
+                          onClick={ck(() => navigate(a.projectId ? `/projects/${a.projectId}` : '/projects'))}
                           className="inline-flex items-center gap-1 mt-2 bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all"
                         >
                           View &amp; apply to lead →
@@ -1249,6 +1370,30 @@ const ProofWall = () => {
                         {a.meta && a.type !== 'milestone' ? <> · {a.meta}</> : null}
                         {a.createdAt ? <> · {fmtAgo(a.createdAt)}</> : null}
                       </div>
+
+                      {!isEditing && <WallStats stats={stats[k]} className="mt-2" />}
+
+                      {/* Everything except updates: React, Repost, Send (no comments). */}
+                      {!isEditing && a.type !== 'update' && me && (
+                        <WallActions
+                          card={{
+                            key: k,
+                            kind: a.type,
+                            headline: headlineText(a),
+                            text: a.type === 'lead' && lp ? projectBriefText(lp).slice(0, 300) : (a.meta || ''),
+                            link: a.type === 'lead' && a.projectId ? `/projects/${a.projectId}` : `/proof-wall?post=${a.id}`,
+                            ownerUid: owner,
+                            what: { badge: 'your badge', ship: 'your shipped project', milestone: 'your milestone', lead: 'your post' }[a.type] || 'your post',
+                            actorId: owner,
+                            actorName: a.actorName,
+                            projectTitle: a.projectTitle,
+                          }}
+                          stats={stats[k]}
+                          onStats={(next) => setStat(k, next)}
+                          me={me}
+                          onReposted={() => load(filter)}
+                        />
+                      )}
 
                       {/* Updates only: React, Comment, Repost, Send (plus Edit/Delete on your own). */}
                       {!isEditing && a.type === 'update' && (
@@ -1287,7 +1432,7 @@ const ProofWall = () => {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </ViewBox>
                 );
               })}
             </div>
