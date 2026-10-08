@@ -68,7 +68,6 @@ const Navbar = ({ cta = null }) => {
 
   const navItems = currentUser
     ? [
-        { path: '/proof-wall', label: 'Proof Wall' },
         { path: '/projects', label: 'Projects' },
         { path: '/learning', label: 'Learning' },
         { path: '/dashboard', label: 'Dashboard' },

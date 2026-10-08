@@ -149,7 +149,8 @@ const AppLayout = ({ children }) => {
     // apply/lead and can only post 'paid' projects (limits live in the pages).
     { label: 'Projects', isGroup: true, icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10', children: projectChildren },
     { path: '/my-workspaces', label: 'Workspace', icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z' },
-    { path: '/proof-wall', label: 'Proof Wall', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+    // Learning (courses). Companies don't take courses, so it's hidden for them (staff still see it).
+    { path: '/learning', label: 'Learning', hidden: isCompany && !isStaffUser, icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.247m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.247' },
     { path: '/jobs', label: 'Jobs', icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
     { path: '/events', label: 'Events', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
     { path: '/__retired_organizations', hidden: true, label: 'Work with us', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
@@ -392,14 +393,14 @@ const AppLayout = ({ children }) => {
           <div className="hidden lg:block flex-1" />
 
           <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-6 flex-shrink-0 pr-1 lg:pr-2">
-            {/* Learning - opens She Model Tech Learning (/learning). Shown on every
-                screen size, since it isn't in the sidebar or the mobile bottom bar. */}
-            {!(isCompany && !isStaffUser) && <Link to="/learning" aria-label="Learning" className="relative flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors text-gray-500">
+            {/* Proof Wall - shown on every screen size and to everyone (companies use
+                it to find talent). The pulse icon: activity happening now. */}
+            <Link to="/proof-wall" aria-label="Proof Wall" className={`relative flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/proof-wall' ? 'text-pink-600' : 'text-gray-500'}`}>
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.247m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.247" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 12h-4l-3 9L9 3l-3 9H2" />
               </svg>
-              <span className="hidden lg:block text-[11px] font-semibold leading-none">Learning</span>
-            </Link>}
+              <span className="hidden lg:block text-[11px] font-semibold leading-none">Proof Wall</span>
+            </Link>
             {/* Messaging - desktop only; on mobile it lives in the bottom bar. */}
             <Link to="/messages" className={`relative hidden lg:flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/messages' ? 'text-pink-600' : 'text-gray-500'}`}>
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
