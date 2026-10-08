@@ -268,7 +268,7 @@ Your workflow saves a JUnit report as an artifact on every run, even when tests 
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "pipeline",
    "kicker": "Module 8 · CI/CD testing",
    "title": "Tests that run themselves",
    "beats": [
@@ -282,7 +282,7 @@ Your workflow saves a JUnit report as an artifact on every run, even when tests 
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "chain",
    "kicker": "Topic 8.1 · Automated pipelines",
    "title": "From commit to deploy",
    "steps": [
@@ -343,7 +343,7 @@ Your workflow saves a JUnit report as an artifact on every run, even when tests 
   },
   {
    "kind": "flow",
-   "art": "proof",
+   "art": "cross",
    "kicker": "Topic 8.1 · Lab",
    "title": "Break it, then fix it",
    "steps": [

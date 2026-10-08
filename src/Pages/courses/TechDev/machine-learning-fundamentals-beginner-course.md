@@ -209,7 +209,7 @@ You ran all three parts. You can point to the features, the label, the training 
  "scenes": [
   {
    "kind": "title",
-   "art": "bulb",
+   "art": "neural",
    "kicker": "Module 1 · What ML is (and isn't)",
    "title": "Learning rules from examples",
    "beats": [
@@ -386,7 +386,7 @@ You ran all three parts. You can point to the features, the label, the training 
   },
   {
    "kind": "big",
-   "art": "growth",
+   "art": "scatter",
    "kicker": "Lab · Parts 2 and 3",
    "title": "A real dataset, then no labels",
    "big": "569 × 30",
@@ -670,7 +670,7 @@ You can explain why the split happens before encoding and scaling, and you can n
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "Four ideas for every project",
    "items": [
@@ -712,7 +712,7 @@ You can explain why the split happens before encoding and scaling, and you can n
   },
   {
    "kind": "quote",
-   "art": "lock",
+   "art": "shield",
    "kicker": "The rule",
    "title": "Split first",
    "quote": "Split first, then fit every preprocessing step on the training set only, and only transform the test set.",
@@ -729,7 +729,7 @@ You can explain why the split happens before encoding and scaling, and you can n
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "pipeline",
    "kicker": "Lab · Part 1",
    "title": "Split, encode and scale",
    "file": "Colab cell",
@@ -993,7 +993,7 @@ You can state, in one sentence, how far off the linear model is on average and h
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "trend",
    "kicker": "Module 3 · Regression",
    "title": "Predict a number",
    "beats": [
@@ -1417,7 +1417,7 @@ From the confusion matrix in Part 1 you can count the false negatives and false 
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "pie",
    "kicker": "Concept",
    "title": "Accuracy is not enough",
    "items": [
@@ -1853,7 +1853,7 @@ You can spot overfitting from a train/test score table, explain why the leaky sc
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "tree",
    "kicker": "Lab · Part 1",
    "title": "See overfitting happen",
    "items": [
@@ -1891,7 +1891,7 @@ You can spot overfitting from a train/test score table, explain why the leaky sc
   },
   {
    "kind": "code",
-   "art": "layers",
+   "art": "warning",
    "kicker": "Lab · Part 3",
    "title": "Leakage turns noise into a great model",
    "file": "Colab cell",
@@ -1917,7 +1917,7 @@ You can spot overfitting from a train/test score table, explain why the leaky sc
   },
   {
    "kind": "code",
-   "art": "search",
+   "art": "gear",
    "kicker": "Lab · Part 4",
    "title": "Tune with GridSearchCV",
    "file": "Colab cell",
@@ -2169,7 +2169,7 @@ You can explain the elbow in the inertia column, why the features were scaled be
  "scenes": [
   {
    "kind": "title",
-   "art": "venn",
+   "art": "scatter",
    "kicker": "Module 6 · k-means clustering",
    "title": "Find groups without labels",
    "beats": [
@@ -2220,7 +2220,7 @@ You can explain the elbow in the inertia column, why the features were scaled be
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "trend",
    "kicker": "Concept",
    "title": "Choosing k",
    "items": [
@@ -2573,7 +2573,7 @@ You can compute one neuron's output by hand, explain what the learning rate cont
  "scenes": [
   {
    "kind": "title",
-   "art": "architecture",
+   "art": "neural",
    "kicker": "Module 7 · Neural networks",
    "title": "Weighted sums, with a bend",
    "beats": [
@@ -3114,7 +3114,7 @@ You built a complete workflow: explored the data, split it, built a leak-proof p
  "scenes": [
   {
    "kind": "title",
-   "art": "shield",
+   "art": "scales",
    "kicker": "Module 8 · Responsible ML",
    "title": "Good overall isn't good enough",
    "beats": [

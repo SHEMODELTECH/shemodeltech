@@ -248,7 +248,7 @@ You have created an identity, granted it least-privilege authorization, enabled 
  "scenes": [
   {
    "kind": "title",
-   "art": "people",
+   "art": "idcard",
    "kicker": "Module 5 · Identity and access management",
    "title": "Who you are, what you may do",
    "beats": [
@@ -265,7 +265,7 @@ You have created an identity, granted it least-privilege authorization, enabled 
   },
   {
    "kind": "list",
-   "art": "key",
+   "art": "fingerprint",
    "kicker": "Topic 5.1 · MFA",
    "title": "Factors from different kinds",
    "items": [
@@ -413,7 +413,7 @@ You have created an identity, granted it least-privilege authorization, enabled 
   },
   {
    "kind": "list",
-   "art": "blueprint",
+   "art": "table",
    "kicker": "Topic 5.2 · Lab",
    "title": "Design a blog's roles",
    "items": [
@@ -455,7 +455,7 @@ You have created an identity, granted it least-privilege authorization, enabled 
   },
   {
    "kind": "flow",
-   "art": "people",
+   "art": "key",
    "kicker": "Topic 5.3 · IAM",
    "title": "Two separate gates",
    "steps": [
@@ -527,7 +527,7 @@ You have created an identity, granted it least-privilege authorization, enabled 
   },
   {
    "kind": "code",
-   "art": "cloud",
+   "art": "cloudlock",
    "kicker": "Topic 5.3 · Lab",
    "title": "Spot the broad statement",
    "file": "policy.json",

@@ -710,7 +710,7 @@ You're done when `redteam.py` runs with your two extra attacks, `monitor.py` pri
  "scenes": [
   {
    "kind": "title",
-   "art": "shield",
+   "art": "robot",
    "kicker": "Module 10 · AI agent security",
    "title": "When the model can act",
    "beats": [
@@ -761,7 +761,7 @@ You're done when `redteam.py` runs with your two extra attacks, `monitor.py` pri
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "checklist",
    "kicker": "OWASP Top 10 for LLM Applications",
    "title": "The risks that matter most for agents",
    "items": [
@@ -823,7 +823,7 @@ You're done when `redteam.py` runs with your two extra attacks, `monitor.py` pri
   },
   {
    "kind": "list",
-   "art": "path",
+   "art": "venn",
    "kicker": "OWASP Top 10 for Agentic Applications",
    "title": "A second list, just for agents",
    "items": [
@@ -865,7 +865,7 @@ You're done when `redteam.py` runs with your two extra attacks, `monitor.py` pri
   },
   {
    "kind": "list",
-   "art": "api",
+   "art": "plug",
    "kicker": "MCP-specific risks",
    "title": "Vet every server",
    "items": [
@@ -945,7 +945,7 @@ You're done when `redteam.py` runs with your two extra attacks, `monitor.py` pri
   },
   {
    "kind": "flow",
-   "art": "mess",
+   "art": "mail",
    "kicker": "Lab · Topic 10.2",
    "title": "Watch a vulnerable agent leak",
    "steps": [
@@ -1041,7 +1041,7 @@ You're done when `redteam.py` runs with your two extra attacks, `monitor.py` pri
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "test",
    "kicker": "Lab · Attack again",
    "title": "Which gate stopped it?",
    "items": [

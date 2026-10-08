@@ -239,7 +239,7 @@ You have a tool recommendation with reasoning for a specific team, one working b
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "dashboard",
    "kicker": "Module · Analytics, Roadmapping & Collaboration",
    "title": "Measure, prioritise, coordinate",
    "beats": [
@@ -291,7 +291,7 @@ You have a tool recommendation with reasoning for a specific team, one working b
   },
   {
    "kind": "flow",
-   "art": "test",
+   "art": "flask",
    "kicker": "Topic 1 · Analytics",
    "title": "A/B test, then check significance",
    "steps": [
@@ -367,7 +367,7 @@ You have a tool recommendation with reasoning for a specific team, one working b
   },
   {
    "kind": "quote",
-   "art": "pyramid",
+   "art": "roadmap",
    "kicker": "Topic 2 · Roadmapping",
    "title": "The hard part is saying no",
    "quote": "Without a method, the roadmap becomes whoever asked last, or loudest.",
@@ -426,7 +426,7 @@ You have a tool recommendation with reasoning for a specific team, one working b
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "funnel",
    "kicker": "Topic 2 · Lab",
    "title": "Rank, scope, explain",
    "steps": [
@@ -461,7 +461,7 @@ You have a tool recommendation with reasoning for a specific team, one working b
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "kanban",
    "kicker": "Topic 3 · Collaboration",
    "title": "Four tools, different shapes",
    "items": [
@@ -507,7 +507,7 @@ You have a tool recommendation with reasoning for a specific team, one working b
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "scales",
    "kicker": "Topic 3 · Lab",
    "title": "Match the tool to the need",
    "quote": "Match the tool to the team's actual need, not the \"best\" tool in the abstract.",

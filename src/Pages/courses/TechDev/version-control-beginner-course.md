@@ -115,7 +115,7 @@ You can explain, in one sentence each, what Git does and what GitHub adds on top
   },
   {
    "kind": "quote",
-   "art": "git",
+   "art": "layers",
    "kicker": "Concept",
    "title": "What version control does",
    "quote": "Every change recorded. Any version recoverable. Nobody overwrites anybody.",
@@ -132,7 +132,7 @@ You can explain, in one sentence each, what Git does and what GitHub adds on top
   },
   {
    "kind": "list",
-   "art": "cloud",
+   "art": "venn",
    "kicker": "Concept",
    "title": "Git and GitHub are different",
    "items": [
@@ -369,7 +369,7 @@ You have a local Git repository with several commits (including one revert), and
   },
   {
    "kind": "flow",
-   "art": "git",
+   "art": "chain",
    "kicker": "Concept",
    "title": "Edit, stage, commit",
    "steps": [
@@ -424,7 +424,7 @@ You have a local Git repository with several commits (including one revert), and
   },
   {
    "kind": "big",
-   "art": "git",
+   "art": "doc",
    "kicker": "Lab · Steps 4 and 5",
    "title": "Read your history",
    "big": "2 commits",
@@ -446,7 +446,7 @@ You have a local Git repository with several commits (including one revert), and
   },
   {
    "kind": "code",
-   "art": "warning",
+   "art": "search",
    "kicker": "Lab · Step 6",
    "title": "Undo a change you haven't committed",
    "file": "Terminal",
@@ -645,7 +645,7 @@ You have pushed commits from your machine to a real GitHub repository, and clone
   },
   {
    "kind": "list",
-   "art": "cloud",
+   "art": "api",
    "kicker": "Concept",
    "title": "Remote, push, pull",
    "items": [
@@ -683,7 +683,7 @@ You have pushed commits from your machine to a real GitHub repository, and clone
   },
   {
    "kind": "code",
-   "art": "cloud",
+   "art": "terminal",
    "kicker": "Lab · Steps 1 and 2",
    "title": "Connect and push",
    "file": "Terminal",
@@ -709,7 +709,7 @@ You have pushed commits from your machine to a real GitHub repository, and clone
   },
   {
    "kind": "flow",
-   "art": "cloud",
+   "art": "loop",
    "kicker": "Lab · Step 3",
    "title": "The everyday loop",
    "steps": [
@@ -953,7 +953,7 @@ You created a branch, made commits only on it, and can show that `main` was unaf
   },
   {
    "kind": "code",
-   "art": "git",
+   "art": "fork",
    "kicker": "Lab · Steps 1 and 2",
    "title": "Make a branch and commit on it",
    "file": "Terminal",
@@ -975,7 +975,7 @@ You created a branch, made commits only on it, and can show that `main` was unaf
   },
   {
    "kind": "flow",
-   "art": "git",
+   "art": "shield",
    "kicker": "Lab · Step 3",
    "title": "Prove main is untouched",
    "steps": [
@@ -1209,7 +1209,7 @@ You opened and merged a real pull request on GitHub, then deliberately caused, a
   },
   {
    "kind": "list",
-   "art": "merge",
+   "art": "chat",
    "kicker": "Concept",
    "title": "Two ideas",
    "items": [
@@ -1307,7 +1307,7 @@ You opened and merged a real pull request on GitHub, then deliberately caused, a
   },
   {
    "kind": "code",
-   "art": "merge",
+   "art": "code",
    "kicker": "Lab · Reading the markers",
    "title": "What a conflict looks like",
    "file": "README.md",
@@ -1333,7 +1333,7 @@ You opened and merged a real pull request on GitHub, then deliberately caused, a
   },
   {
    "kind": "code",
-   "art": "proof",
+   "art": "terminal",
    "kicker": "Lab · Step 6",
    "title": "Finish the merge",
    "file": "Terminal",

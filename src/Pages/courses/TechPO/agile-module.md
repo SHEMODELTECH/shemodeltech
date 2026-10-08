@@ -315,7 +315,7 @@ You have a sprint's worth of backlog items estimated in story points, selected t
   },
   {
    "kind": "flow",
-   "art": "stopwatch",
+   "art": "calendar",
    "kicker": "Topic 1 · Scrum",
    "title": "Five events",
    "steps": [
@@ -425,7 +425,7 @@ You have a sprint's worth of backlog items estimated in story points, selected t
   },
   {
    "kind": "list",
-   "art": "boxes",
+   "art": "kanban",
    "kicker": "Topic 2 · Kanban",
    "title": "Continuous flow",
    "items": [
@@ -534,7 +534,7 @@ You have a sprint's worth of backlog items estimated in story points, selected t
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "target",
    "kicker": "Topic 3 · Sprint Planning",
    "title": "Goal and Definition of Done",
    "items": [

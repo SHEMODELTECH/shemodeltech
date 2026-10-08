@@ -115,7 +115,7 @@ You ran the timing comparison and can explain, in your own words, why the fast v
   },
   {
    "kind": "list",
-   "art": "growth",
+   "art": "trend",
    "kicker": "Concept",
    "title": "Big O describes growth",
    "items": [
@@ -367,7 +367,7 @@ You can explain why appending to a list is fast but inserting at position 0 is s
   },
   {
    "kind": "list",
-   "art": "array",
+   "art": "gauge",
    "kicker": "Concept",
    "title": "What's fast, what's slow",
    "items": [
@@ -556,7 +556,7 @@ You can explain why looking up a user in a dictionary is faster than looping thr
  "scenes": [
   {
    "kind": "title",
-   "art": "key",
+   "art": "hash",
    "kicker": "Module 2 · Hash maps",
    "title": "The secret behind fast lookups",
    "beats": [
@@ -641,7 +641,7 @@ You can explain why looking up a user in a dictionary is faster than looping thr
   },
   {
    "kind": "code",
-   "art": "key",
+   "art": "idcard",
    "kicker": "Lab",
    "title": "Find a user instantly",
    "file": "Python",
@@ -792,7 +792,7 @@ You can explain why `order_id in processed_order_ids` stays fast even as the set
  "scenes": [
   {
    "kind": "title",
-   "art": "venn",
+   "art": "funnel",
    "kicker": "Module 3 · Sets",
    "title": "Fast membership and uniqueness",
    "beats": [
@@ -806,7 +806,7 @@ You can explain why `order_id in processed_order_ids` stays fast even as the set
   },
   {
    "kind": "list",
-   "art": "venn",
+   "art": "search",
    "kicker": "Where you'd use this",
    "title": "Have I seen this before?",
    "items": [
@@ -844,7 +844,7 @@ You can explain why `order_id in processed_order_ids` stays fast even as the set
   },
   {
    "kind": "code",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Lab",
    "title": "Skip what's already done",
    "file": "Python",
@@ -1051,7 +1051,7 @@ You can explain why `add_front` is O(1) for a linked list but O(n) for a Python 
   },
   {
    "kind": "list",
-   "art": "chain",
+   "art": "scales",
    "kicker": "Concept",
    "title": "The trade-off",
    "items": [
@@ -1081,7 +1081,7 @@ You can explain why `add_front` is O(1) for a linked list but O(n) for a Python 
   },
   {
    "kind": "code",
-   "art": "chain",
+   "art": "code",
    "kicker": "Lab",
    "title": "Add to the front",
    "file": "Python",
@@ -1099,7 +1099,7 @@ You can explain why `add_front` is O(1) for a linked list but O(n) for a Python 
   },
   {
    "kind": "list",
-   "art": "loop",
+   "art": "browser",
    "kicker": "Where you'd use this",
    "title": "Chains in real products",
    "items": [
@@ -1289,7 +1289,7 @@ You can explain, without looking back, why undo uses a stack and background jobs
   },
   {
    "kind": "list",
-   "art": "stack",
+   "art": "venn",
    "kicker": "Concept",
    "title": "Last in, or first in?",
    "items": [
@@ -1319,7 +1319,7 @@ You can explain, without looking back, why undo uses a stack and background jobs
   },
   {
    "kind": "code",
-   "art": "loop",
+   "art": "pencil",
    "kicker": "Lab · Stack",
    "title": "Undo",
    "file": "Python",
@@ -1337,7 +1337,7 @@ You can explain, without looking back, why undo uses a stack and background jobs
   },
   {
    "kind": "code",
-   "art": "path",
+   "art": "pipeline",
    "kicker": "Lab · Queue",
    "title": "Background jobs",
    "file": "Python",
@@ -1489,7 +1489,7 @@ You can identify the base case and recursive step in both examples above without
  "scenes": [
   {
    "kind": "title",
-   "art": "tree",
+   "art": "loop",
    "kicker": "Module 6 · Recursion",
    "title": "Functions that call themselves",
    "beats": [
@@ -1503,7 +1503,7 @@ You can identify the base case and recursive step in both examples above without
   },
   {
    "kind": "list",
-   "art": "tree",
+   "art": "fork",
    "kicker": "Concept",
    "title": "Two parts, always",
    "items": [
@@ -1559,7 +1559,7 @@ You can identify the base case and recursive step in both examples above without
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "tree",
    "kicker": "Where you'd use this",
    "title": "Anything nested",
    "items": [
@@ -1756,7 +1756,7 @@ You can explain why searching a balanced BST is roughly O(log n) instead of O(n)
   },
   {
    "kind": "list",
-   "art": "tree",
+   "art": "fork",
    "kicker": "Concept",
    "title": "Binary search trees",
    "items": [
@@ -1790,7 +1790,7 @@ You can explain why searching a balanced BST is roughly O(log n) instead of O(n)
   },
   {
    "kind": "code",
-   "art": "tree",
+   "art": "search",
    "kicker": "Lab",
    "title": "Search a product catalogue",
    "file": "Python",
@@ -1971,7 +1971,7 @@ You can explain why BFS, not DFS, is the right choice when you specifically need
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "fork",
    "kicker": "Concept",
    "title": "Two ways to explore",
    "items": [
@@ -2001,7 +2001,7 @@ You can explain why BFS, not DFS, is the right choice when you specifically need
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "network",
    "kicker": "Where you'd use this",
    "title": "Graphs are everywhere",
    "items": [
@@ -2043,7 +2043,7 @@ You can explain why BFS, not DFS, is the right choice when you specifically need
   },
   {
    "kind": "code",
-   "art": "graph",
+   "art": "path",
    "kicker": "Lab",
    "title": "Shortest path with BFS",
    "file": "Python",
@@ -2210,7 +2210,7 @@ You can sort a list of dictionaries by one field, and by two fields with a tiebr
   },
   {
    "kind": "code",
-   "art": "bars",
+   "art": "code",
    "kicker": "Lab",
    "title": "Sort by a field",
    "file": "Python",
@@ -2232,7 +2232,7 @@ You can sort a list of dictionaries by one field, and by two fields with a tiebr
   },
   {
    "kind": "code",
-   "art": "bars",
+   "art": "table",
    "kicker": "Lab",
    "title": "Sort by two fields",
    "file": "Python",
@@ -2250,7 +2250,7 @@ You can sort a list of dictionaries by one field, and by two fields with a tiebr
   },
   {
    "kind": "code",
-   "art": "tree",
+   "art": "pyramid",
    "kicker": "Lab",
    "title": "When not to re-sort: a heap",
    "file": "Python",
@@ -2399,7 +2399,7 @@ You can explain why binary search requires sorted data and what happens if you r
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "array",
    "kicker": "Concept",
    "title": "Two ways to search",
    "items": [
@@ -2425,7 +2425,7 @@ You can explain why binary search requires sorted data and what happens if you r
   },
   {
    "kind": "code",
-   "art": "search",
+   "art": "code",
    "kicker": "Lab",
    "title": "Halve it every step",
    "file": "Python",
@@ -2610,7 +2610,7 @@ You can explain, in plain language, why `fib_fast` avoids the repeated work that
  "scenes": [
   {
    "kind": "title",
-   "art": "file",
+   "art": "puzzle",
    "kicker": "Module 11 · Dynamic programming",
    "title": "Never compute the same thing twice",
    "beats": [
@@ -2624,7 +2624,7 @@ You can explain, in plain language, why `fib_fast` avoids the repeated work that
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "loop",
    "kicker": "The problem",
    "title": "Repeated work",
    "items": [
@@ -2672,7 +2672,7 @@ You can explain, in plain language, why `fib_fast` avoids the repeated work that
   },
   {
    "kind": "quote",
-   "art": "database",
+   "art": "calc",
    "kicker": "Where you'd use this",
    "title": "It's caching, for calculations",
    "quote": "Dynamic programming = caching, applied to calculations.",

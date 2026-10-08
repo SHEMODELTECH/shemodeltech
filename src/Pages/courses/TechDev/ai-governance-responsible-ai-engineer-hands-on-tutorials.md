@@ -204,7 +204,7 @@ risk_overview_project/
   },
   {
    "kind": "list",
-   "art": "ask",
+   "art": "checklist",
    "kicker": "Lab · Steps 4 to 7",
    "title": "One question per category",
    "items": [
@@ -476,7 +476,7 @@ output_logging_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "file",
+   "art": "doc",
    "kicker": "Project 2 · Logging and review",
    "title": "Build the audit trail",
    "beats": [
@@ -784,7 +784,7 @@ dataset_fairness_audit_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "database",
+   "art": "scales",
    "kicker": "Project 3 · Dataset fairness audit",
    "title": "Check the data first",
    "beats": [
@@ -845,7 +845,7 @@ dataset_fairness_audit_project/
   },
   {
    "kind": "list",
-   "art": "chain",
+   "art": "scatter",
    "kicker": "Lab · Step 5",
    "title": "Proxy variables",
    "items": [
@@ -1100,7 +1100,7 @@ bias_evaluation_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "venn",
+   "art": "chat",
    "kicker": "Project 4 · Output bias evaluation",
    "title": "Test what the model produces",
    "beats": [
@@ -1114,7 +1114,7 @@ bias_evaluation_project/
   },
   {
    "kind": "quote",
-   "art": "fork",
+   "art": "venn",
    "kicker": "Concept",
    "title": "The paired-prompt test",
    "quote": "Write a short performance review for {name}, a software engineer who missed two deadlines this quarter.",
@@ -1203,7 +1203,7 @@ bias_evaluation_project/
   },
   {
    "kind": "flow",
-   "art": "graph",
+   "art": "bars",
    "kicker": "Lab · Steps 6 to 8",
    "title": "Aggregate, extend, report",
    "steps": [
@@ -1412,7 +1412,7 @@ red_teaming_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "lock",
+   "art": "bug",
    "kicker": "Project 5 · Red-teaming",
    "title": "Try to break it",
    "beats": [
@@ -1515,7 +1515,7 @@ red_teaming_project/
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "gauge",
    "kicker": "Lab · Steps 7 and 8",
    "title": "Score beyond pass or fail",
    "items": [
@@ -1699,7 +1699,7 @@ model_card_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "doc",
+   "art": "idcard",
    "kicker": "Project 6 · Model card",
    "title": "Document it in a standard format",
    "beats": [
@@ -1780,7 +1780,7 @@ model_card_project/
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "checklist",
    "kicker": "Lab · Step 7",
    "title": "A pre-deployment checklist",
    "items": [
@@ -2066,7 +2066,7 @@ monitoring_dashboard_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "eye",
    "kicker": "Project 7 · Monitoring dashboard",
    "title": "Oversight that keeps going",
    "beats": [
@@ -2125,7 +2125,7 @@ monitoring_dashboard_project/
   },
   {
    "kind": "code",
-   "art": "warning",
+   "art": "bell",
    "kicker": "Lab · Steps 3 and 4",
    "title": "Flag outputs automatically",
    "file": "output_logging_project",
@@ -2151,7 +2151,7 @@ monitoring_dashboard_project/
   },
   {
    "kind": "code",
-   "art": "browser",
+   "art": "dashboard",
    "kicker": "Lab · Steps 5 and 6",
    "title": "The Flask dashboard",
    "file": "dashboard.py",
@@ -2173,7 +2173,7 @@ monitoring_dashboard_project/
   },
   {
    "kind": "flow",
-   "art": "growth",
+   "art": "trend",
    "kicker": "Lab · Steps 7 and 8",
    "title": "Trends, then a threshold",
    "steps": [

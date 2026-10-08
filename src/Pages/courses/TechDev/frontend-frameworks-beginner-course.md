@@ -114,7 +114,7 @@ You can explain components and declarative UI, and you have a component sketch o
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "venn",
    "kicker": "Concept",
    "title": "Imperative versus declarative",
    "items": [
@@ -206,7 +206,7 @@ You can explain components and declarative UI, and you have a component sketch o
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "blueprint",
    "kicker": "Lab",
    "title": "Sketch the Reading List",
    "steps": [
@@ -448,7 +448,7 @@ Your page shows a header and four book cards rendered from components with props
  "scenes": [
   {
    "kind": "title",
-   "art": "code",
+   "art": "blocks",
    "kicker": "Module 1 · Components, JSX and props",
    "title": "Your first components",
    "beats": [
@@ -462,7 +462,7 @@ Your page shows a header and four book cards rendered from components with props
   },
   {
    "kind": "list",
-   "art": "code",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "JSX rules",
    "items": [
@@ -508,7 +508,7 @@ Your page shows a header and four book cards rendered from components with props
   },
   {
    "kind": "code",
-   "art": "blocks",
+   "art": "code",
    "kicker": "Lab · Step 3",
    "title": "A BookCard component",
    "file": "src/BookCard.jsx",
@@ -530,7 +530,7 @@ Your page shows a header and four book cards rendered from components with props
   },
   {
    "kind": "code",
-   "art": "layers",
+   "art": "boxes",
    "kicker": "Lab · Step 4",
    "title": "Reuse it with different props",
    "file": "src/App.jsx",
@@ -745,7 +745,7 @@ Each card tracks its own pages and read status.
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "The rules",
    "items": [
@@ -791,7 +791,7 @@ Each card tracks its own pages and read status.
   },
   {
    "kind": "list",
-   "art": "cursor",
+   "art": "bolt",
    "kicker": "Events",
    "title": "Pass a function, don't call it",
    "items": [
@@ -821,7 +821,7 @@ Each card tracks its own pages and read status.
   },
   {
    "kind": "code",
-   "art": "cursor",
+   "art": "calc",
    "kicker": "Lab · Step 1",
    "title": "Pages and read status",
    "file": "src/BookCard.jsx",
@@ -847,7 +847,7 @@ Each card tracks its own pages and read status.
   },
   {
    "kind": "big",
-   "art": "warning",
+   "art": "bug",
    "kicker": "Lab · Step 4",
    "title": "See a common bug",
    "big": "+10, not +20",
@@ -1069,7 +1069,7 @@ The list renders from an array with stable keys, notes show only when present, a
  "scenes": [
   {
    "kind": "title",
-   "art": "table",
+   "art": "array",
    "kicker": "Module 3 · Lists, keys and conditions",
    "title": "Render from real data",
    "beats": [
@@ -1083,7 +1083,7 @@ The list renders from an array with stable keys, notes show only when present, a
   },
   {
    "kind": "code",
-   "art": "key",
+   "art": "hash",
    "kicker": "Concept",
    "title": "Every item needs a key",
    "file": "BookList.jsx",
@@ -1151,7 +1151,7 @@ The list renders from an array with stable keys, notes show only when present, a
   },
   {
    "kind": "code",
-   "art": "table",
+   "art": "code",
    "kicker": "Lab · Steps 1 and 2",
    "title": "A BookList from an array",
    "file": "src/BookList.jsx",
@@ -1413,7 +1413,7 @@ Valid books are added; invalid input shows an error.
  "scenes": [
   {
    "kind": "title",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Module 4 · Forms",
    "title": "Controlled inputs",
    "beats": [
@@ -1427,7 +1427,7 @@ Valid books are added; invalid input shows an error.
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "What a React form needs",
    "items": [
@@ -1503,7 +1503,7 @@ Valid books are added; invalid input shows an error.
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "tree",
    "kicker": "Concept",
    "title": "Data down, events up",
    "steps": [
@@ -1533,7 +1533,7 @@ Valid books are added; invalid input shows an error.
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "array",
    "kicker": "Concept",
    "title": "A new array, not push",
    "items": [
@@ -1855,7 +1855,7 @@ Books load with a loading state, failures show an error, cleanup aborts the requ
   },
   {
    "kind": "code",
-   "art": "api",
+   "art": "code",
    "kicker": "Lab · Step 2",
    "title": "Load the books, with cleanup",
    "file": "src/App.jsx",
@@ -2289,7 +2289,7 @@ and in the two buttons, change `onToggleRead(id)` to `toggleRead(id)` and `onRem
   },
   {
    "kind": "flow",
-   "art": "tree",
+   "art": "pyramid",
    "kicker": "Concept",
    "title": "Lift it to the common parent",
    "steps": [
@@ -2566,7 +2566,7 @@ The app works by keyboard alone, focus is visible, errors are announced, and the
  "scenes": [
   {
    "kind": "title",
-   "art": "people",
+   "art": "access",
    "kicker": "Module 7 · Accessibility basics",
    "title": "Usable by everyone",
    "beats": [
@@ -2606,7 +2606,7 @@ The app works by keyboard alone, focus is visible, errors are announced, and the
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "The essentials",
    "items": [
@@ -2656,7 +2656,7 @@ The app works by keyboard alone, focus is visible, errors are announced, and the
   },
   {
    "kind": "code",
-   "art": "shield",
+   "art": "form",
    "kicker": "Lab · Step 5",
    "title": "Connect errors to inputs",
    "file": "src/AddBookForm.jsx",
@@ -3028,7 +3028,7 @@ A Next.js app with a shared layout, four kinds of page, a dynamic route and a 40
   },
   {
    "kind": "code",
-   "art": "browser",
+   "art": "code",
    "kicker": "Lab · Step 6",
    "title": "The dynamic route",
    "file": "app/books/[id]/page.js",
@@ -3054,7 +3054,7 @@ A Next.js app with a shared layout, four kinds of page, a dynamic route and a 40
   },
   {
    "kind": "list",
-   "art": "path",
+   "art": "layout",
    "kicker": "Concept",
    "title": "Link and layouts",
    "items": [
@@ -3222,7 +3222,7 @@ The detail page (server) renders an interactive counter (client).
  "scenes": [
   {
    "kind": "title",
-   "art": "cloud",
+   "art": "architecture",
    "kicker": "Module 9 · Server and Client Components",
    "title": "Where does this code run?",
    "beats": [
@@ -3236,7 +3236,7 @@ The detail page (server) renders an interactive counter (client).
   },
   {
    "kind": "list",
-   "art": "cloud",
+   "art": "server",
    "kicker": "Concept",
    "title": "Server Components",
    "items": [
@@ -3262,7 +3262,7 @@ The detail page (server) renders an interactive counter (client).
   },
   {
    "kind": "list",
-   "art": "cursor",
+   "art": "browser",
    "kicker": "Concept",
    "title": "Client Components",
    "items": [
@@ -3592,7 +3592,7 @@ Pages load data on the server, `/books` streams with a fallback, and `/api/books
   },
   {
    "kind": "code",
-   "art": "database",
+   "art": "server",
    "kicker": "Lab · Step 2",
    "title": "Stream the list with Suspense",
    "file": "app/books/page.js",
@@ -3657,7 +3657,7 @@ Pages load data on the server, `/books` streams with a fallback, and `/api/books
   },
   {
    "kind": "list",
-   "art": "api",
+   "art": "plug",
    "kicker": "When",
    "title": "When you need a Route Handler",
    "items": [
@@ -3894,7 +3894,7 @@ export default function NewBookPage() {
  "scenes": [
   {
    "kind": "title",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Module 11 · Server Actions",
    "title": "Forms that save on the server",
    "beats": [

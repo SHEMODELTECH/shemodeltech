@@ -107,7 +107,7 @@ data_pipeline_map_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "path",
+   "art": "pipeline",
    "kicker": "Project 1 · Map a pipeline",
    "title": "See data as a pipeline",
    "beats": [
@@ -142,7 +142,7 @@ data_pipeline_map_project/
   },
   {
    "kind": "flow",
-   "art": "architecture",
+   "art": "chain",
    "kicker": "Step 4",
    "title": "The five pipeline stages",
    "steps": [
@@ -524,7 +524,7 @@ data_cleaning_project/
   },
   {
    "kind": "code",
-   "art": "shield",
+   "art": "test",
    "kicker": "Steps 7 and 8",
    "title": "Prove it, then save it",
    "file": "data_cleaning_project",
@@ -766,7 +766,7 @@ schema_design_project/
   },
   {
    "kind": "list",
-   "art": "boxes",
+   "art": "table",
    "kicker": "Steps 2 to 5",
    "title": "Entities, fields, keys, versions",
    "items": [
@@ -834,7 +834,7 @@ schema_design_project/
   },
   {
    "kind": "code",
-   "art": "lock",
+   "art": "shield",
    "kicker": "Step 6 · Run it",
    "title": "The schema guards quality too",
    "file": "schema_design_project",
@@ -1071,7 +1071,7 @@ etl_pipeline_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "pipeline",
    "kicker": "Project 4 · Batch E T L",
    "title": "Automate raw to stored",
    "beats": [
@@ -1085,7 +1085,7 @@ etl_pipeline_project/
   },
   {
    "kind": "flow",
-   "art": "layers",
+   "art": "chain",
    "kicker": "Step 2",
    "title": "What E T L means",
    "steps": [
@@ -1364,7 +1364,7 @@ labeled_dataset_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "test",
+   "art": "neural",
    "kicker": "Project 5 · Labeled dataset",
    "title": "Ready to train on",
    "beats": [
@@ -1400,7 +1400,7 @@ labeled_dataset_project/
   },
   {
    "kind": "code",
-   "art": "fork",
+   "art": "pie",
    "kicker": "Steps 5 and 6",
    "title": "Stratified splits",
    "file": "labeled_dataset_project",
@@ -1422,7 +1422,7 @@ labeled_dataset_project/
   },
   {
    "kind": "code",
-   "art": "shield",
+   "art": "warning",
    "kicker": "Step 7",
    "title": "Check for data leakage",
    "file": "labeled_dataset_project",
@@ -1705,7 +1705,7 @@ vector_store_project/
   },
   {
    "kind": "code",
-   "art": "ask",
+   "art": "chat",
    "kicker": "Step 6",
    "title": "Ask it a question",
    "file": "vector_store_project",
@@ -1723,7 +1723,7 @@ vector_store_project/
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "checklist",
    "kicker": "Steps 7 and 8",
    "title": "Judge it, write it down",
    "items": [
@@ -1983,7 +1983,7 @@ data_validation_project/
   },
   {
    "kind": "list",
-   "art": "test",
+   "art": "checklist",
    "kicker": "Steps 2 to 4",
    "title": "Two kinds of checks",
    "items": [
@@ -2017,7 +2017,7 @@ data_validation_project/
   },
   {
    "kind": "code",
-   "art": "graph",
+   "art": "trend",
    "kicker": "Steps 5 and 6",
    "title": "A simple drift check",
    "file": "data_validation_project",
@@ -2039,7 +2039,7 @@ data_validation_project/
   },
   {
    "kind": "code",
-   "art": "lock",
+   "art": "funnel",
    "kicker": "Step 7",
    "title": "Validate before you load",
    "file": "data_validation_project",

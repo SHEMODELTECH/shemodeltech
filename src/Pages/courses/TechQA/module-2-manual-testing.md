@@ -247,7 +247,7 @@ You have a written charter, a session log of at least five explored actions with
  "scenes": [
   {
    "kind": "title",
-   "art": "pencil",
+   "art": "checklist",
    "kicker": "Module 2 · Manual Testing",
    "title": "Checks a person can repeat",
    "beats": [
@@ -264,7 +264,7 @@ You have a written charter, a session log of at least five explored actions with
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "test",
    "kicker": "Topic 2.1 · Concept",
    "title": "Anatomy of a test case",
    "items": [
@@ -347,7 +347,7 @@ You have a written charter, a session log of at least five explored actions with
   },
   {
    "kind": "flow",
-   "art": "browser",
+   "art": "form",
    "kicker": "Topic 2.1 · Lab",
    "title": "Test a practice login form",
    "steps": [
@@ -376,7 +376,7 @@ You have a written charter, a session log of at least five explored actions with
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "bug",
    "kicker": "Topic 2.2 · Concept",
    "title": "A bug report a developer can act on",
    "items": [
@@ -484,7 +484,7 @@ You have a written charter, a session log of at least five explored actions with
   },
   {
    "kind": "flow",
-   "art": "search",
+   "art": "pencil",
    "kicker": "Topic 2.2 · Lab",
    "title": "Report a real bug",
    "steps": [
@@ -509,7 +509,7 @@ You have a written charter, a session log of at least five explored actions with
   },
   {
    "kind": "list",
-   "art": "path",
+   "art": "compass",
    "kicker": "Topic 2.3 · Concept",
    "title": "Exploratory, not random",
    "items": [

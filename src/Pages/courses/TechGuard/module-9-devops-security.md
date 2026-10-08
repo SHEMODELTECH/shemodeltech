@@ -294,7 +294,7 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
  "scenes": [
   {
    "kind": "title",
-   "art": "rocket",
+   "art": "pipeline",
    "kicker": "Module 9 · DevOps security",
    "title": "Secure the pipeline",
    "beats": [
@@ -455,7 +455,7 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "virus",
    "kicker": "Topic 9.2 · A real supply-chain lesson",
    "title": "The Trivy compromise, March 2026",
    "items": [
@@ -557,7 +557,7 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Lab · Steps 4 and 5",
    "title": "Rules for your infrastructure",
    "items": [

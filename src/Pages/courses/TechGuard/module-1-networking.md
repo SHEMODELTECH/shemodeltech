@@ -336,7 +336,7 @@ You have configured a firewall with a default-deny baseline, explicitly allowed 
  "scenes": [
   {
    "kind": "title",
-   "art": "architecture",
+   "art": "router",
    "kicker": "Module 1 · Networking fundamentals",
    "title": "How machines talk",
    "beats": [
@@ -433,7 +433,7 @@ You have configured a firewall with a default-deny baseline, explicitly allowed 
   },
   {
    "kind": "flow",
-   "art": "search",
+   "art": "globe",
    "kicker": "Topic 1.2 · DNS",
    "title": "The network's address book",
    "steps": [
@@ -547,7 +547,7 @@ You have configured a firewall with a default-deny baseline, explicitly allowed 
   },
   {
    "kind": "code",
-   "art": "terminal",
+   "art": "search",
    "kicker": "Topic 1.3 · Lab",
    "title": "Read the raw exchange",
    "file": "terminal",
@@ -569,7 +569,7 @@ You have configured a firewall with a default-deny baseline, explicitly allowed 
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "firewall",
    "kicker": "Topic 1.4 · Firewalls",
    "title": "Default-deny",
    "items": [

@@ -83,7 +83,7 @@ portfolio-site (Webflow)
  "scenes": [
   {
    "kind": "title",
-   "art": "browser",
+   "art": "layout",
    "kicker": "Project 1 · Your first structured page",
    "title": "Boxes all the way down",
    "beats": [
@@ -340,7 +340,7 @@ Style system
  "scenes": [
   {
    "kind": "title",
-   "art": "palette",
+   "art": "blueprint",
    "kicker": "Project 2 · Style system",
    "title": "Style once, reuse everywhere",
    "beats": [
@@ -357,7 +357,7 @@ Style system
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "cursor",
    "kicker": "Lab · Steps 2 to 4",
    "title": "Text and buttons",
    "items": [
@@ -607,7 +607,7 @@ Optional (paid site plan): separate About and Work pages
  "scenes": [
   {
    "kind": "title",
-   "art": "path",
+   "art": "compass",
    "kicker": "Project 3 · Navigation",
    "title": "From one page to a real site",
    "beats": [
@@ -659,7 +659,7 @@ Optional (paid site plan): separate About and Work pages
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "layout",
    "kicker": "Lab · Steps 2 to 6",
    "title": "A shared navbar and footer",
    "items": [
@@ -1129,7 +1129,7 @@ Interactions + form
  "scenes": [
   {
    "kind": "title",
-   "art": "sparkle",
+   "art": "bolt",
    "kicker": "Project 5 · Interactions and forms",
    "title": "Bring it to life",
    "beats": [
@@ -1173,7 +1173,7 @@ Interactions + form
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Lab · Steps 4 to 6",
    "title": "The contact form",
    "items": [
@@ -1211,7 +1211,7 @@ Interactions + form
   },
   {
    "kind": "flow",
-   "art": "proof",
+   "art": "mail",
    "kicker": "Lab · Steps 7 and 8",
    "title": "Prove it delivers",
    "steps": [
@@ -1429,7 +1429,7 @@ Production
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "access",
    "kicker": "Lab · Steps 3 to 5",
    "title": "Accessible and fast",
    "items": [
@@ -1467,7 +1467,7 @@ Production
   },
   {
    "kind": "list",
-   "art": "cloud",
+   "art": "globe",
    "kicker": "Lab · Steps 6 and 7",
    "title": "Publish, and the optional domain",
    "items": [
@@ -1501,7 +1501,7 @@ Production
   },
   {
    "kind": "big",
-   "art": "doc",
+   "art": "checklist",
    "kicker": "Lab · Step 8",
    "title": "The launch checklist",
    "big": "launch_checklist.md",

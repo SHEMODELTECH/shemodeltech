@@ -219,7 +219,7 @@ You ran one LLM call, a two-step workflow with a gate, and the toy agent loop. Y
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "robot",
    "kicker": "Module 1 · What makes an agent",
    "title": "The model picks the next step",
    "beats": [
@@ -358,7 +358,7 @@ You ran one LLM call, a two-step workflow with a gate, and the toy agent loop. Y
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "chain",
    "kicker": "Lab · Step 2",
    "title": "A workflow with a gate",
    "file": "module1_agents",
@@ -813,7 +813,7 @@ Your agent answered the study-plan question using the tools, and you can read th
   },
   {
    "kind": "code",
-   "art": "loop",
+   "art": "code",
    "kicker": "Lab · Step 3",
    "title": "The agent loop",
    "file": "module2_tools",
@@ -1190,7 +1190,7 @@ Your client listed the server's tools, called one successfully, got an error res
  "scenes": [
   {
    "kind": "title",
-   "art": "chain",
+   "art": "plug",
    "kicker": "Module 3 · The Model Context Protocol",
    "title": "Wrap a tool once, use it anywhere",
    "beats": [
@@ -1287,7 +1287,7 @@ Your client listed the server's tools, called one successfully, got an error res
   },
   {
    "kind": "code",
-   "art": "terminal",
+   "art": "server",
    "kicker": "Lab · Step 1",
    "title": "Write the server",
    "file": "study_server.py",
@@ -1335,7 +1335,7 @@ Your client listed the server's tools, called one successfully, got an error res
   },
   {
    "kind": "quote",
-   "art": "rocket",
+   "art": "puzzle",
    "kicker": "Lab · Step 4",
    "title": "Add a tool, change nothing else",
    "quote": "New @mcp.tool() on the server → the agent can use it. No agent code changes.",
@@ -1709,7 +1709,7 @@ You showed that the model forgets without history, trimmed a conversation safely
   },
   {
    "kind": "code",
-   "art": "file",
+   "art": "chat",
    "kicker": "Lab · Step 2",
    "title": "Trim the conversation safely",
    "file": "module4_memory",
@@ -1768,7 +1768,7 @@ You showed that the model forgets without history, trimmed a conversation safely
   },
   {
    "kind": "code",
-   "art": "doc",
+   "art": "book",
    "kicker": "Lab · Step 5",
    "title": "Answer from the handbook",
    "file": "module4_memory",
@@ -1790,7 +1790,7 @@ You showed that the model forgets without history, trimmed a conversation safely
   },
   {
    "kind": "quote",
-   "art": "growth",
+   "art": "robot",
    "kicker": "Lab · Step 6",
    "title": "Make retrieval a tool",
    "quote": "Search as a tool: the agent decides when, what, and how many times.",
@@ -2061,7 +2061,7 @@ You built a router whose output is checked against a fixed set of labels, and a 
   },
   {
    "kind": "list",
-   "art": "fork",
+   "art": "graph",
    "kicker": "Concept",
    "title": "Common patterns",
    "items": [
@@ -2186,7 +2186,7 @@ You built a router whose output is checked against a fixed set of labels, and a 
   },
   {
    "kind": "big",
-   "art": "calc",
+   "art": "bars",
    "kicker": "Lab · Step 4",
    "title": "Is the second role worth it?",
    "big": "Loop vs. single call",
@@ -2665,7 +2665,7 @@ You planted an indirect injection and saw why relying on the model alone isn't e
   },
   {
    "kind": "code",
-   "art": "lock",
+   "art": "fork",
    "kicker": "Lab · Step 4",
    "title": "An approval gate",
    "file": "module6_safety",
@@ -2691,7 +2691,7 @@ You planted an indirect injection and saw why relying on the model alone isn't e
   },
   {
    "kind": "flow",
-   "art": "proof",
+   "art": "test",
    "kicker": "Lab · Steps 5 and 6",
    "title": "Gate the agent, check the answer",
    "steps": [
@@ -3219,7 +3219,7 @@ All six loop tests pass offline in your `module7_testing` notebook, and all five
   },
   {
    "kind": "list",
-   "art": "test",
+   "art": "venn",
    "kicker": "Concept",
    "title": "Two kinds of testing",
    "items": [
@@ -3261,7 +3261,7 @@ All six loop tests pass offline in your `module7_testing` notebook, and all five
   },
   {
    "kind": "code",
-   "art": "test",
+   "art": "code",
    "kicker": "Lab · Steps 1 and 2",
    "title": "A fake client and offline tests",
    "file": "module7_testing",
@@ -3305,7 +3305,7 @@ All six loop tests pass offline in your `module7_testing` notebook, and all five
   },
   {
    "kind": "list",
-   "art": "rocket",
+   "art": "robot",
    "kicker": "Final project",
    "title": "Campus Tech Hub support agent",
    "items": [

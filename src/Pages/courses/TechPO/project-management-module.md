@@ -355,7 +355,7 @@ You have a budget tracker with allocated, actual, and remaining columns, a conti
   },
   {
    "kind": "list",
-   "art": "stopwatch",
+   "art": "calendar",
    "kicker": "Topic 2 · Timeline",
    "title": "Dependencies and the critical path",
    "items": [
@@ -502,7 +502,7 @@ You have a budget tracker with allocated, actual, and remaining columns, a conti
   },
   {
    "kind": "list",
-   "art": "bars",
+   "art": "coin",
    "kicker": "Topic 4 · Budget",
    "title": "Watch the burn rate",
    "items": [

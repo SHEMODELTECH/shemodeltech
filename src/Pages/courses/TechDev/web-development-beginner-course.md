@@ -114,7 +114,7 @@ You can name the three layers of a web page and explain what each one is respons
   },
   {
    "kind": "list",
-   "art": "phone",
+   "art": "bulb",
    "kicker": "Concept",
    "title": "Two more ideas",
    "items": [
@@ -144,7 +144,7 @@ You can name the three layers of a web page and explain what each one is respons
   },
   {
    "kind": "flow",
-   "art": "browser",
+   "art": "search",
    "kicker": "Lab",
    "title": "Look inside a real page",
    "steps": [
@@ -325,7 +325,7 @@ You have a real HTML file, opened directly in a browser, containing headings, a 
  "scenes": [
   {
    "kind": "title",
-   "art": "code",
+   "art": "layout",
    "kicker": "Module 1 · HTML",
    "title": "Structure and content",
    "beats": [
@@ -365,7 +365,7 @@ You have a real HTML file, opened directly in a browser, containing headings, a 
   },
   {
    "kind": "list",
-   "art": "code",
+   "art": "doc",
    "kicker": "Common tags",
    "title": "The tags you'll use most",
    "items": [
@@ -449,7 +449,7 @@ You have a real HTML file, opened directly in a browser, containing headings, a 
   },
   {
    "kind": "flow",
-   "art": "code",
+   "art": "blocks",
    "kicker": "Lab · Steps 3 and 4",
    "title": "Add more structure",
    "steps": [
@@ -666,7 +666,7 @@ Your page is visibly styled, fonts, colors, spacing, and a hover effect on the b
   },
   {
    "kind": "code",
-   "art": "palette",
+   "art": "code",
    "kicker": "Syntax at a glance",
    "title": "How a CSS rule works",
    "file": "CSS",
@@ -692,7 +692,7 @@ Your page is visibly styled, fonts, colors, spacing, and a hover effect on the b
   },
   {
    "kind": "code",
-   "art": "palette",
+   "art": "file",
    "kicker": "Lab · Steps 1 and 2",
    "title": "A separate stylesheet",
    "file": "index.html",
@@ -714,7 +714,7 @@ Your page is visibly styled, fonts, colors, spacing, and a hover effect on the b
   },
   {
    "kind": "code",
-   "art": "palette",
+   "art": "cursor",
    "kicker": "Lab · Step 3",
    "title": "States, like hover",
    "file": "style.css",
@@ -736,7 +736,7 @@ Your page is visibly styled, fonts, colors, spacing, and a hover effect on the b
   },
   {
    "kind": "code",
-   "art": "layers",
+   "art": "array",
    "kicker": "Lab · Step 4",
    "title": "Your first layout",
    "file": "style.css",
@@ -981,7 +981,7 @@ Your page responds to at least two real user actions, a form submission and a bu
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "browser",
    "kicker": "Lab · Steps 1 and 2",
    "title": "Change the page with code",
    "file": "script.js",
@@ -1003,7 +1003,7 @@ Your page responds to at least two real user actions, a form submission and a bu
   },
   {
    "kind": "code",
-   "art": "cursor",
+   "art": "form",
    "kicker": "Lab · Step 3",
    "title": "Respond to the form",
    "file": "script.js",
@@ -1284,7 +1284,7 @@ You caught a real type error with TypeScript before it ran, you added the viewpo
   },
   {
    "kind": "flow",
-   "art": "warning",
+   "art": "bug",
    "kicker": "Lab · Part A",
    "title": "Catch a mistake before it runs",
    "steps": [
@@ -1313,7 +1313,7 @@ You caught a real type error with TypeScript before it ran, you added the viewpo
   },
   {
    "kind": "code",
-   "art": "phone",
+   "art": "layout",
    "kicker": "Concept · Responsive design",
    "title": "Media queries",
    "file": "style.css",
@@ -1335,7 +1335,7 @@ You caught a real type error with TypeScript before it ran, you added the viewpo
   },
   {
    "kind": "quote",
-   "art": "phone",
+   "art": "browser",
    "kicker": "Lab · Step 5",
    "title": "The viewport tag",
    "quote": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",

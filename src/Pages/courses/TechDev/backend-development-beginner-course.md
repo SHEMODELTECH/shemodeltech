@@ -80,7 +80,7 @@ You can explain, in plain language, what a request and a response are, name the 
  "scenes": [
   {
    "kind": "title",
-   "art": "api",
+   "art": "server",
    "kicker": "Module 0 · What a backend does",
    "title": "The part you don't see",
    "beats": [
@@ -132,7 +132,7 @@ You can explain, in plain language, what a request and a response are, name the 
   },
   {
    "kind": "list",
-   "art": "api",
+   "art": "doc",
    "kicker": "Concept",
    "title": "Methods say what you want",
    "items": [
@@ -186,7 +186,7 @@ You can explain, in plain language, what a request and a response are, name the 
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "hash",
    "kicker": "Concept",
    "title": "Status codes say how it went",
    "items": [
@@ -439,7 +439,7 @@ Your server runs with `uvicorn app.main:app --reload`, `/health` answers with JS
  "scenes": [
   {
    "kind": "title",
-   "art": "rocket",
+   "art": "package",
    "kicker": "Module 1 · Your first FastAPI project",
    "title": "Set it up properly from day one",
    "beats": [
@@ -450,7 +450,7 @@ Your server runs with `uvicorn app.main:app --reload`, `/health` answers with JS
   },
   {
    "kind": "list",
-   "art": "api",
+   "art": "puzzle",
    "kicker": "Concept",
    "title": "Two tools",
    "items": [
@@ -480,7 +480,7 @@ Your server runs with `uvicorn app.main:app --reload`, `/health` answers with JS
   },
   {
    "kind": "code",
-   "art": "blocks",
+   "art": "tree",
    "kicker": "Concept",
    "title": "A clear folder structure",
    "file": "tasks-api/",
@@ -757,7 +757,7 @@ You created, read, filtered, updated, and deleted tasks with curl, and triggered
  "scenes": [
   {
    "kind": "title",
-   "art": "shield",
+   "art": "form",
    "kicker": "Module 2 · Routes and validation",
    "title": "Accept data you can trust",
    "beats": [
@@ -870,7 +870,7 @@ You created, read, filtered, updated, and deleted tasks with curl, and triggered
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "cross",
    "kicker": "Lab · Step 4",
    "title": "Break it on purpose",
    "items": [
@@ -1070,7 +1070,7 @@ Your routes share one `get_task_or_404` helper, and you've seen a `404`, a `405`
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "hash",
    "kicker": "Concept",
    "title": "Three families",
    "items": [
@@ -1108,7 +1108,7 @@ Your routes share one `get_task_or_404` helper, and you've seen a `404`, a `405`
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "fork",
    "kicker": "Concept",
    "title": "Expected versus unexpected",
    "items": [
@@ -1160,7 +1160,7 @@ Your routes share one `get_task_or_404` helper, and you've seen a `404`, a `405`
   },
   {
    "kind": "flow",
-   "art": "warning",
+   "art": "bug",
    "kicker": "Lab · Steps 2 and 3",
    "title": "Test both kinds of error",
    "steps": [
@@ -1440,7 +1440,7 @@ Your tasks live in `tasks.db` and survive a server restart, and every route gets
   },
   {
    "kind": "list",
-   "art": "database",
+   "art": "layers",
    "kicker": "Concept",
    "title": "The pieces",
    "items": [
@@ -1482,7 +1482,7 @@ Your tasks live in `tasks.db` and survive a server restart, and every route gets
   },
   {
    "kind": "code",
-   "art": "database",
+   "art": "code",
    "kicker": "Lab · Step 1",
    "title": "A session per request",
    "file": "app/database.py",
@@ -1518,7 +1518,7 @@ Your tasks live in `tasks.db` and survive a server restart, and every route gets
   },
   {
    "kind": "flow",
-   "art": "database",
+   "art": "chain",
    "kicker": "Lab · Step 3",
    "title": "Creating a task now",
    "steps": [
@@ -1557,7 +1557,7 @@ Your tasks live in `tasks.db` and survive a server restart, and every route gets
   },
   {
    "kind": "big",
-   "art": "database",
+   "art": "server",
    "kicker": "Lab · Step 4",
    "title": "Prove it survives",
    "big": "Still there",
@@ -1737,7 +1737,7 @@ Your app reads its database location and log level from environment variables, l
  "scenes": [
   {
    "kind": "title",
-   "art": "file",
+   "art": "gear",
    "kicker": "Module 5 · Configuration and logging",
    "title": "Same code, different places",
    "beats": [
@@ -1748,7 +1748,7 @@ Your app reads its database location and log level from environment variables, l
   },
   {
    "kind": "list",
-   "art": "lock",
+   "art": "key",
    "kicker": "Concept",
    "title": "Configuration",
    "items": [
@@ -1797,7 +1797,7 @@ Your app reads its database location and log level from environment variables, l
   },
   {
    "kind": "code",
-   "art": "terminal",
+   "art": "pulse",
    "kicker": "Lab · Step 3",
    "title": "Log every request",
    "file": "app/main.py",
@@ -1819,7 +1819,7 @@ Your app reads its database location and log level from environment variables, l
   },
   {
    "kind": "flow",
-   "art": "lock",
+   "art": "terminal",
    "kicker": "Lab · Steps 4 and 5",
    "title": "Run with different settings",
    "steps": [
@@ -2058,7 +2058,7 @@ You should see `5 passed`. `python -m` makes pytest use your virtual environment
   },
   {
    "kind": "list",
-   "art": "test",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "The tools",
    "items": [
@@ -2118,7 +2118,7 @@ You should see `5 passed`. `python -m` makes pytest use your virtual environment
   },
   {
    "kind": "code",
-   "art": "test",
+   "art": "code",
    "kicker": "Lab · Step 2",
    "title": "Your first tests",
    "file": "tests/test_tasks.py",
@@ -2136,7 +2136,7 @@ You should see `5 passed`. `python -m` makes pytest use your virtual environment
   },
   {
    "kind": "big",
-   "art": "test",
+   "art": "terminal",
    "kicker": "Lab · Steps 3 and 4",
    "title": "Run them, then break something",
    "big": "5 passed",
@@ -2340,7 +2340,7 @@ You rebuilt three endpoints in Express, got the same responses as your FastAPI a
  "scenes": [
   {
    "kind": "title",
-   "art": "blocks",
+   "art": "server",
    "kicker": "Module 7 · Node.js and Express",
    "title": "Same ideas, another framework",
    "beats": [
@@ -2354,7 +2354,7 @@ You rebuilt three endpoints in Express, got the same responses as your FastAPI a
   },
   {
    "kind": "list",
-   "art": "code",
+   "art": "package",
    "kicker": "Concept",
    "title": "Node.js and Express",
    "items": [
@@ -2410,7 +2410,7 @@ You rebuilt three endpoints in Express, got the same responses as your FastAPI a
   },
   {
    "kind": "big",
-   "art": "api",
+   "art": "venn",
    "kicker": "Lab · Step 3",
    "title": "Same requests, same answers",
    "big": "Same 201 · 404 · 422",

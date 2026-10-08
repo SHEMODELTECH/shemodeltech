@@ -188,7 +188,7 @@ You have a written brief where someone else could read the measurable question a
  "scenes": [
   {
    "kind": "title",
-   "art": "ask",
+   "art": "target",
    "kicker": "Module 1 · Asking a good question",
    "title": "Start with a measurable question",
    "beats": [
@@ -205,7 +205,7 @@ You have a written brief where someone else could read the measurable question a
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "table",
    "kicker": "Concept",
    "title": "Four words to know",
    "items": [
@@ -251,7 +251,7 @@ You have a written brief where someone else could read the measurable question a
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "funnel",
    "kicker": "Concept",
    "title": "From vague to measurable",
    "steps": [
@@ -286,7 +286,7 @@ You have a written brief where someone else could read the measurable question a
   },
   {
    "kind": "quote",
-   "art": "ask",
+   "art": "megaphone",
    "kicker": "Example",
    "title": "Is Instagram working?",
    "quote": "From Jan to Mar 2026, how much revenue and how many orders came through Instagram vs Website and Email, and is it growing?",
@@ -307,7 +307,7 @@ You have a written brief where someone else could read the measurable question a
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "doc",
    "kicker": "Lab",
    "title": "Write a question brief",
    "items": [
@@ -574,7 +574,7 @@ Your summary cells match the table in Step 5, your channel pivot matches Step 6,
   },
   {
    "kind": "list",
-   "art": "table",
+   "art": "funnel",
    "kicker": "Concept",
    "title": "Four skills cover most of it",
    "items": [
@@ -654,7 +654,7 @@ Your summary cells match the table in Step 5, your channel pivot matches Step 6,
   },
   {
    "kind": "code",
-   "art": "calc",
+   "art": "fork",
    "kicker": "Lab · Step 5",
    "title": "Conditional formulas",
    "file": "orders sheet",
@@ -1177,7 +1177,7 @@ Your outputs match the ones above, and you can explain why the repeat-customer q
   },
   {
    "kind": "code",
-   "art": "database",
+   "art": "code",
    "kicker": "Concept",
    "title": "The core pieces, in order",
    "file": "query.sql",
@@ -1203,7 +1203,7 @@ Your outputs match the ones above, and you can explain why the repeat-customer q
   },
   {
    "kind": "flow",
-   "art": "terminal",
+   "art": "laptop",
    "kicker": "Lab · Steps 1 to 5",
    "title": "Load and look",
    "steps": [
@@ -1255,7 +1255,7 @@ Your outputs match the ones above, and you can explain why the repeat-customer q
   },
   {
    "kind": "code",
-   "art": "chain",
+   "art": "merge",
    "kicker": "Lab · Steps 8 and 9",
    "title": "JOIN, then HAVING",
    "file": "notebook",
@@ -1590,7 +1590,7 @@ You can load data from a string, add a calculated column, filter with two condit
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "venn",
    "kicker": "Concept",
    "title": "Same tasks, third tool",
    "items": [
@@ -2126,7 +2126,7 @@ Your `clean.equals(reference)` prints `True`, and you can explain each line of y
   },
   {
    "kind": "quote",
-   "art": "pencil",
+   "art": "bulb",
    "kicker": "Concept",
    "title": "Two principles",
    "quote": "Outliers are not automatically errors. Document every decision.",
@@ -2169,7 +2169,7 @@ Your `clean.equals(reference)` prints `True`, and you can explain each line of y
   },
   {
    "kind": "flow",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Lab · Steps 4 to 6",
    "title": "Missing price, outliers, verify",
    "steps": [
@@ -2488,7 +2488,7 @@ You can explain why the median is a better "typical order" here than the mean, w
   },
   {
    "kind": "big",
-   "art": "calc",
+   "art": "scales",
    "kicker": "Lab · Step 1",
    "title": "Mean versus median",
    "big": "$16 vs $21.73",
@@ -2510,7 +2510,7 @@ You can explain why the median is a better "typical order" here than the mean, w
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "bars",
    "kicker": "Lab · Step 2",
    "title": "Compare like with like",
    "items": [
@@ -2544,7 +2544,7 @@ You can explain why the median is a better "typical order" here than the mean, w
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "scatter",
    "kicker": "Lab · Step 3",
    "title": "Correlation is not causation",
    "items": [
@@ -2911,7 +2911,7 @@ You've made a bar, line, histogram, and scatter chart, each with a title and lab
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "bars",
    "kicker": "Module 7 · Charts that tell the truth",
    "title": "Make one point obvious",
    "beats": [
@@ -2925,7 +2925,7 @@ You've made a bar, line, histogram, and scatter chart, each with a title and lab
   },
   {
    "kind": "list",
-   "art": "bars",
+   "art": "pie",
    "kicker": "Concept",
    "title": "Pick the form",
    "items": [
@@ -2967,7 +2967,7 @@ You've made a bar, line, histogram, and scatter chart, each with a title and lab
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "Rules for honest charts",
    "items": [
@@ -3013,7 +3013,7 @@ You've made a bar, line, histogram, and scatter chart, each with a title and lab
   },
   {
    "kind": "code",
-   "art": "graph",
+   "art": "trend",
    "kicker": "Lab · Step 2",
    "title": "A line chart that corrects a story",
    "file": "notebook",
@@ -3339,7 +3339,7 @@ You have a notebook that runs top to bottom without errors and a one-page findin
  "scenes": [
   {
    "kind": "title",
-   "art": "doc",
+   "art": "presentation",
    "kicker": "Module 8 · Telling a story with data",
    "title": "Make it something to act on",
    "beats": [

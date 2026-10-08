@@ -211,7 +211,7 @@ You inspected a real API request, and your task API runs locally.
   },
   {
    "kind": "quote",
-   "art": "api",
+   "art": "plug",
    "kicker": "Concept",
    "title": "What an API is",
    "quote": "A defined way for two pieces of software to talk to each other.",
@@ -278,7 +278,7 @@ You inspected a real API request, and your task API runs locally.
   },
   {
    "kind": "flow",
-   "art": "laptop",
+   "art": "browser",
    "kicker": "Lab · Step 1",
    "title": "Watch a live API",
    "steps": [
@@ -553,7 +553,7 @@ Run `python -m pytest`.
  "scenes": [
   {
    "kind": "title",
-   "art": "api",
+   "art": "blueprint",
    "kicker": "Module 1 · REST design",
    "title": "Design an API people can guess",
    "beats": [
@@ -570,7 +570,7 @@ Run `python -m pytest`.
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "Four habits of good REST",
    "items": [
@@ -616,7 +616,7 @@ Run `python -m pytest`.
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "cross",
    "kicker": "Example",
    "title": "Mark a task done",
    "quote": "PATCH /tasks/5   {\"done\": true}",
@@ -637,7 +637,7 @@ Run `python -m pytest`.
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "table",
    "kicker": "Lab · Steps 1 and 2",
    "title": "A page of results",
    "file": "app/schemas.py",
@@ -921,7 +921,7 @@ Every error, including unknown URLs and validation failures, uses the same shape
   },
   {
    "kind": "code",
-   "art": "shield",
+   "art": "code",
    "kicker": "Concept",
    "title": "One error format everywhere",
    "file": "Every error",
@@ -947,7 +947,7 @@ Every error, including unknown URLs and validation failures, uses the same shape
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "table",
    "kicker": "Lab · Step 1",
    "title": "Map status codes to codes",
    "items": [
@@ -1023,7 +1023,7 @@ Every error, including unknown URLs and validation failures, uses the same shape
   },
   {
    "kind": "flow",
-   "art": "doc",
+   "art": "book",
    "kicker": "Lab · Step 4",
    "title": "Docs for free with OpenAPI",
    "steps": [
@@ -1260,7 +1260,7 @@ You can show, with the fake server, that your client retries a `503` and a `429`
  "scenes": [
   {
    "kind": "title",
-   "art": "cloud",
+   "art": "plug",
    "kicker": "Module 3 · Calling third-party APIs",
    "title": "Plan for other services failing",
    "beats": [
@@ -1277,7 +1277,7 @@ You can show, with the fake server, that your client retries a `503` and a `429`
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "Five rules for outbound calls",
    "items": [
@@ -1331,7 +1331,7 @@ You can show, with the fake server, that your client retries a `503` and a `429`
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "coin",
    "kicker": "Careful",
    "title": "Never retry a payment blindly",
    "quote": "Retrying a payment POST could charge the customer twice.",
@@ -1378,7 +1378,7 @@ You can show, with the fake server, that your client retries a `503` and a `429`
   },
   {
    "kind": "flow",
-   "art": "loop",
+   "art": "server",
    "kicker": "Lab · Step 2",
    "title": "Test with a fake server",
    "steps": [
@@ -1623,7 +1623,7 @@ You can explain authentication versus authorization and sessions versus tokens, 
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "fingerprint",
    "kicker": "Concept",
    "title": "Who, and what",
    "items": [
@@ -1713,7 +1713,7 @@ You can explain authentication versus authorization and sessions versus tokens, 
   },
   {
    "kind": "flow",
-   "art": "people",
+   "art": "form",
    "kicker": "Lab · Steps 2 to 6",
    "title": "Registration",
    "steps": [
@@ -2026,7 +2026,7 @@ Users log in for a JWT, every task endpoint requires it, and a test proves one u
   },
   {
    "kind": "list",
-   "art": "key",
+   "art": "idcard",
    "kicker": "Concept",
    "title": "What's in a JWT",
    "items": [
@@ -2098,7 +2098,7 @@ Users log in for a JWT, every task endpoint requires it, and a test proves one u
   },
   {
    "kind": "flow",
-   "art": "key",
+   "art": "password",
    "kicker": "Lab",
    "title": "The login flow",
    "steps": [
@@ -2460,7 +2460,7 @@ You fetched tasks with their owner's email in one GraphQL request, created a tas
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "funnel",
    "kicker": "Concept",
    "title": "Two problems it solves",
    "items": [
@@ -2490,7 +2490,7 @@ You fetched tasks with their owner's email in one GraphQL request, created a tas
   },
   {
    "kind": "code",
-   "art": "graph",
+   "art": "api",
    "kicker": "Example",
    "title": "One request instead of two",
    "file": "GraphQL query",
@@ -2558,7 +2558,7 @@ You fetched tasks with their owner's email in one GraphQL request, created a tas
   },
   {
    "kind": "flow",
-   "art": "graph",
+   "art": "code",
    "kicker": "Lab",
    "title": "Build it with Strawberry",
    "steps": [
@@ -2591,7 +2591,7 @@ You fetched tasks with their owner's email in one GraphQL request, created a tas
   },
   {
    "kind": "quote",
-   "art": "bulb",
+   "art": "scales",
    "kicker": "When to use it",
    "title": "GraphQL isn't always better",
    "quote": "Different clients, different data shapes? GraphQL. One simple client? REST.",
@@ -2912,7 +2912,7 @@ You watched a real "Sign in with Google" redirect, generated a login URL with `s
   },
   {
    "kind": "quote",
-   "art": "lock",
+   "art": "package",
    "kicker": "In production",
    "title": "Use a maintained library",
    "quote": "In production, use a maintained library such as Authlib.",

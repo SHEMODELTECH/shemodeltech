@@ -140,7 +140,7 @@ You can describe the trigger, action, and workflow structure, and you have one r
  "scenes": [
   {
    "kind": "title",
-   "art": "chain",
+   "art": "gear",
    "kicker": "Module 0 · What automation platforms do",
    "title": "When this happens, do that",
    "beats": [
@@ -200,7 +200,7 @@ You can describe the trigger, action, and workflow structure, and you have one r
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "pipeline",
    "kicker": "Structure at a glance",
    "title": "Data flows forward",
    "steps": [
@@ -384,7 +384,7 @@ You have a working, turned-on Zap that reacts to a real new row in a spreadsheet
  "scenes": [
   {
    "kind": "title",
-   "art": "path",
+   "art": "chain",
    "kicker": "Module 1 · Zapier",
    "title": "Simple, linear automations",
    "beats": [
@@ -401,7 +401,7 @@ You have a working, turned-on Zap that reacts to a real new row in a spreadsheet
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "boxes",
    "kicker": "Structure at a glance",
    "title": "Inside a Zap",
    "items": [
@@ -657,7 +657,7 @@ You have a working Make scenario with a router splitting into two branches, and 
  "scenes": [
   {
    "kind": "title",
-   "art": "fork",
+   "art": "graph",
    "kicker": "Module 2 · Make",
    "title": "Visual, branching automations",
    "beats": [
@@ -924,7 +924,7 @@ You have a working flow with a condition branching into two different actions, a
  "scenes": [
   {
    "kind": "title",
-   "art": "laptop",
+   "art": "cloud",
    "kicker": "Module 3 · Power Automate",
    "title": "Automation inside Microsoft 365",
    "beats": [
@@ -941,7 +941,7 @@ You have a working flow with a condition branching into two different actions, a
   },
   {
    "kind": "quote",
-   "art": "key",
+   "art": "idcard",
    "kicker": "Account note",
    "title": "You'll need a work or school account",
    "quote": "No work or school account? Follow along, then build it in Make.",
@@ -962,7 +962,7 @@ You have a working flow with a condition branching into two different actions, a
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "plug",
    "kicker": "Structure at a glance",
    "title": "Power Automate's vocabulary",
    "items": [
@@ -1038,7 +1038,7 @@ You have a working flow with a condition branching into two different actions, a
   },
   {
    "kind": "big",
-   "art": "search",
+   "art": "pulse",
    "kicker": "Lab · Steps 5 and 6",
    "title": "Test, then read the run history",
    "big": "Run history",
@@ -1216,7 +1216,7 @@ You have a working n8n workflow triggered by a real webhook request, branching w
  "scenes": [
   {
    "kind": "title",
-   "art": "terminal",
+   "art": "server",
    "kicker": "Module 4 · n8n",
    "title": "Open source and self-hostable",
    "beats": [
@@ -1233,7 +1233,7 @@ You have a working n8n workflow triggered by a real webhook request, branching w
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "graph",
    "kicker": "Structure at a glance",
    "title": "n8n's vocabulary",
    "items": [
@@ -1283,7 +1283,7 @@ You have a working n8n workflow triggered by a real webhook request, branching w
   },
   {
    "kind": "code",
-   "art": "api",
+   "art": "plug",
    "kicker": "Lab · Steps 1 to 4",
    "title": "Start n8n, then call its webhook",
    "file": "terminal",

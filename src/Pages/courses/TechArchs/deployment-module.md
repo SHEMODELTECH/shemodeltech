@@ -275,7 +275,7 @@ You have located and read an error log entry from a deliberate failure, fixed th
   },
   {
    "kind": "list",
-   "art": "cloud",
+   "art": "globe",
    "kicker": "Topic 2 · Domains",
    "title": "Your own address",
    "items": [
@@ -367,7 +367,7 @@ You have located and read an error log entry from a deliberate failure, fixed th
   },
   {
    "kind": "list",
-   "art": "stopwatch",
+   "art": "pulse",
    "kicker": "Topic 3 · Maintenance",
    "title": "Launch is the beginning",
    "items": [

@@ -84,7 +84,7 @@ You can describe the data source, screen, and action concepts, and you have a wr
  "scenes": [
   {
    "kind": "title",
-   "art": "boxes",
+   "art": "dashboard",
    "kicker": "Module 0 · What internal app builders do",
    "title": "Data in, working tool out",
    "beats": [
@@ -177,7 +177,7 @@ You can describe the data source, screen, and action concepts, and you have a wr
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "layout",
    "kicker": "Lab",
    "title": "Sketch a task tracker",
    "items": [
@@ -372,7 +372,7 @@ You have a published Glide app connected to a real Google Sheet, showing only a 
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "boxes",
    "kicker": "Structure at a glance",
    "title": "Glide's building blocks",
    "items": [
@@ -641,7 +641,7 @@ You have a working Bubble app with a custom Data Type, a Repeating Group display
  "scenes": [
   {
    "kind": "title",
-   "art": "database",
+   "art": "gear",
    "kicker": "Module 2 · Bubble",
    "title": "A full application logic engine",
    "beats": [
@@ -933,7 +933,7 @@ You have a published Softr portal connected to a real Airtable base, showing a l
  "scenes": [
   {
    "kind": "title",
-   "art": "people",
+   "art": "layout",
    "kicker": "Module 3 · Softr",
    "title": "No-code portals on Airtable",
    "beats": [

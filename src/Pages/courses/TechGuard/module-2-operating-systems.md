@@ -200,7 +200,7 @@ You can read your own token and privileges, list which accounts have administrat
   },
   {
    "kind": "list",
-   "art": "terminal",
+   "art": "server",
    "kicker": "Topic 2.1 · Linux",
    "title": "Users, permissions, privilege",
    "items": [
@@ -426,7 +426,7 @@ You can read your own token and privileges, list which accounts have administrat
   },
   {
    "kind": "quote",
-   "art": "shield",
+   "art": "idcard",
    "kicker": "Both systems",
    "title": "Least privilege, everywhere",
    "quote": "Give any user or process only the access it genuinely needs.",

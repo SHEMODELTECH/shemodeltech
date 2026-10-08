@@ -343,7 +343,7 @@ You can retrieve and read a site's certificate chain, identify its issuer and ex
   },
   {
    "kind": "quote",
-   "art": "lock",
+   "art": "merge",
    "kicker": "Topic 4.1 · Principles",
    "title": "The key is the secret",
    "quote": "Security rests on the secrecy of the key, not the secrecy of the algorithm.",
@@ -428,7 +428,7 @@ You can retrieve and read a site's certificate chain, identify its issuer and ex
   },
   {
    "kind": "code",
-   "art": "hash",
+   "art": "fingerprint",
    "kicker": "Topic 4.2 · Lab",
    "title": "Watch the avalanche",
    "file": "terminal",
@@ -450,7 +450,7 @@ You can retrieve and read a site's certificate chain, identify its issuer and ex
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "password",
    "kicker": "Topic 4.2 · Passwords",
    "title": "Salted and slow",
    "items": [
@@ -522,7 +522,7 @@ You can retrieve and read a site's certificate chain, identify its issuer and ex
   },
   {
    "kind": "code",
-   "art": "browser",
+   "art": "idcard",
    "kicker": "Topic 4.3 · Lab",
    "title": "Read a real certificate",
    "file": "terminal",

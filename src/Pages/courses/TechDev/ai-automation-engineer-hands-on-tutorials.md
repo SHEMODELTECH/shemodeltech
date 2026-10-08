@@ -147,7 +147,7 @@ automation_opportunity_project/
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "checklist",
    "kicker": "Step 4",
    "title": "Score it on automation fit",
    "items": [
@@ -474,7 +474,7 @@ scheduled_automation_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "stopwatch",
+   "art": "gear",
    "kicker": "Project 2 · Scheduled automation",
    "title": "A script that runs without you",
    "beats": [
@@ -539,7 +539,7 @@ scheduled_automation_project/
   },
   {
    "kind": "big",
-   "art": "calc",
+   "art": "calendar",
    "kicker": "Step 6",
    "title": "Schedule it with cron",
    "big": "0 8 * * *",
@@ -561,7 +561,7 @@ scheduled_automation_project/
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "checklist",
    "kicker": "Steps 6 to 8",
    "title": "Windows, verify, document",
    "items": [
@@ -851,7 +851,7 @@ multistep_workflow_project/
   },
   {
    "kind": "quote",
-   "art": "api",
+   "art": "plug",
    "kicker": "Step 3",
    "title": "What's a webhook?",
    "quote": "A webhook: one system notifies another by sending an HTTP request to a URL when something happens.",
@@ -1167,7 +1167,7 @@ ai_decision_step_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "bulb",
+   "art": "fork",
    "kicker": "Project 4 · AI decision step",
    "title": "Where rules fall short",
    "beats": [
@@ -1181,7 +1181,7 @@ ai_decision_step_project/
   },
   {
    "kind": "quote",
-   "art": "ask",
+   "art": "target",
    "kicker": "Steps 2 and 3",
    "title": "One narrow question",
    "quote": "Is this customer message urgent? Answer only 'yes' or 'no'.",
@@ -1246,7 +1246,7 @@ ai_decision_step_project/
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "merge",
    "kicker": "Steps 6 to 8",
    "title": "Wire it in and test it",
    "steps": [
@@ -1569,7 +1569,7 @@ task_agent_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "laptop",
+   "art": "robot",
    "kicker": "Project 5 · Task-automation agent",
    "title": "Let the AI choose the action",
    "beats": [
@@ -1583,7 +1583,7 @@ task_agent_project/
   },
   {
    "kind": "flow",
-   "art": "loop",
+   "art": "api",
    "kicker": "Step 2",
    "title": "How tool calling works",
    "steps": [
@@ -1976,7 +1976,7 @@ monitoring_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "pulse",
    "kicker": "Project 6 · Monitoring and error handling",
    "title": "Safe to run unattended",
    "beats": [
@@ -2046,7 +2046,7 @@ monitoring_project/
   },
   {
    "kind": "code",
-   "art": "warning",
+   "art": "bell",
    "kicker": "Step 6",
    "title": "Alert on repeated failures",
    "file": "alerting",
@@ -2068,7 +2068,7 @@ monitoring_project/
   },
   {
    "kind": "flow",
-   "art": "proof",
+   "art": "test",
    "kicker": "Steps 7 and 8",
    "title": "Break it on purpose",
    "steps": [

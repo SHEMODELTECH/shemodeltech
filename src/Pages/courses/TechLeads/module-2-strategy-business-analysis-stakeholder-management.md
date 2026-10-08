@@ -207,7 +207,7 @@ You have a power/interest grid with each stakeholder placed and an action noted 
  "scenes": [
   {
    "kind": "title",
-   "art": "target",
+   "art": "compass",
    "kicker": "Module 2 · Strategy and stakeholders",
    "title": "Beyond the current sprint",
    "beats": [
@@ -347,7 +347,7 @@ You have a power/interest grid with each stakeholder placed and an action noted 
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "checklist",
    "kicker": "Concept",
    "title": "What it does, and how well",
    "items": [
@@ -381,7 +381,7 @@ You have a power/interest grid with each stakeholder placed and an action noted 
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "network",
    "kicker": "Topic 2.3 · Stakeholder management",
    "title": "The power and interest grid",
    "items": [
@@ -431,7 +431,7 @@ You have a power/interest grid with each stakeholder placed and an action noted 
   },
   {
    "kind": "list",
-   "art": "chain",
+   "art": "scales",
    "kicker": "Concept",
    "title": "Present and negotiate",
    "items": [

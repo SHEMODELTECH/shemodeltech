@@ -244,7 +244,7 @@ You have a before-and-after version of a real page, edited in passes, and a five
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "book",
    "kicker": "Topic 4.1 · Documentation",
    "title": "Start from the reader's goal",
    "items": [
@@ -512,7 +512,7 @@ You have a before-and-after version of a real page, edited in passes, and a five
   },
   {
    "kind": "quote",
-   "art": "pencil",
+   "art": "doc",
    "kicker": "Concept",
    "title": "Edit in passes",
    "quote": "\"The report was reviewed\" → \"The manager reviewed the report.\"",

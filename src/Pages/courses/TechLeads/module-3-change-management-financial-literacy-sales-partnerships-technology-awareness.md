@@ -318,7 +318,7 @@ You have one honest AI-claim assessment covering wrong answers, data, pre-launch
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "roadmap",
    "kicker": "Lab",
    "title": "Plan a rollout that sticks",
    "items": [
@@ -390,7 +390,7 @@ You have one honest AI-claim assessment covering wrong answers, data, pre-launch
   },
   {
    "kind": "list",
-   "art": "bars",
+   "art": "coin",
    "kicker": "Concept",
    "title": "The real cost",
    "items": [
@@ -440,7 +440,7 @@ You have one honest AI-claim assessment covering wrong answers, data, pre-launch
   },
   {
    "kind": "list",
-   "art": "chain",
+   "art": "network",
    "kicker": "Topic 3.3 · Sales and partnerships",
    "title": "How the business grows",
    "items": [
@@ -486,7 +486,7 @@ You have one honest AI-claim assessment covering wrong answers, data, pre-launch
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "neural",
    "kicker": "Topic 3.4 · Technology awareness",
    "title": "Four rules for A I",
    "items": [

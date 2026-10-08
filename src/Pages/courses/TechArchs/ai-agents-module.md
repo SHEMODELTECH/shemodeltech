@@ -348,7 +348,7 @@ You have tightened your agent's instructions, set a step limit, run a set of tes
  "scenes": [
   {
    "kind": "title",
-   "art": "sparkle",
+   "art": "robot",
    "kicker": "Module · AI agents",
    "title": "Agents for no-code builders",
    "beats": [
@@ -503,7 +503,7 @@ You have tightened your agent's instructions, set a step limit, run a set of tes
   },
   {
    "kind": "flow",
-   "art": "architecture",
+   "art": "plug",
    "kicker": "Topic 2 · Lab Parts A and B",
    "title": "Start n8n, then wire the agent",
    "steps": [
@@ -564,7 +564,7 @@ You have tightened your agent's instructions, set a step limit, run a set of tes
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "api",
    "kicker": "Topic 2 · Lab Parts C and D",
    "title": "A lookup tool and an action tool",
    "items": [
@@ -602,7 +602,7 @@ You have tightened your agent's instructions, set a step limit, run a set of tes
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Topic 3 · Running agents well",
    "title": "Habits that matter",
    "items": [
@@ -681,7 +681,7 @@ You have tightened your agent's instructions, set a step limit, run a set of tes
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "shield",
    "kicker": "Topic 3 · Know your limits",
    "title": "Agentic risks, and what to hand off",
    "items": [

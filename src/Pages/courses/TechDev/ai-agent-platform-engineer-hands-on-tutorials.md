@@ -154,7 +154,7 @@ agent_platform_diagram_project/
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "robot",
    "kicker": "Concept",
    "title": "Agent versus agent platform",
    "items": [
@@ -649,7 +649,7 @@ tool_calling_project (Colab notebook)
   },
   {
    "kind": "big",
-   "art": "test",
+   "art": "chat",
    "kicker": "Step 8",
    "title": "A request that needs no tool",
    "big": "\"What's 2+2?\"",
@@ -936,7 +936,7 @@ single_agent_project (Colab notebook)
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "robot",
    "kicker": "Project 3 · A single-purpose agent",
    "title": "From one call to many steps",
    "beats": [
@@ -1362,7 +1362,7 @@ tool_registry_project (Colab notebook)
   },
   {
    "kind": "code",
-   "art": "boxes",
+   "art": "code",
    "kicker": "Step 3",
    "title": "The ToolRegistry class",
    "file": "tool_registry_project",
@@ -1434,7 +1434,7 @@ tool_registry_project (Colab notebook)
   },
   {
    "kind": "big",
-   "art": "growth",
+   "art": "blocks",
    "kicker": "Steps 6 and 7",
    "title": "A new tool, no agent changes",
    "big": "0 lines changed",
@@ -1456,7 +1456,7 @@ tool_registry_project (Colab notebook)
   },
   {
    "kind": "quote",
-   "art": "api",
+   "art": "plug",
    "kicker": "Looking ahead",
    "title": "Registries and M C P",
    "quote": "Your registry is the same idea as an MCP server, inside one Python program.",
@@ -1916,7 +1916,7 @@ queue_execution_project/
   },
   {
    "kind": "code",
-   "art": "rocket",
+   "art": "code",
    "kicker": "Steps 6 and 7",
    "title": "Enqueue a task",
    "file": "submit_task.py",
@@ -1938,7 +1938,7 @@ queue_execution_project/
   },
   {
    "kind": "flow",
-   "art": "stack",
+   "art": "server",
    "kicker": "Steps 8 to 10",
    "title": "Workers do the work",
    "steps": [
@@ -1967,7 +1967,7 @@ queue_execution_project/
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "container",
    "kicker": "Step 11",
    "title": "Shut it down",
    "quote": "docker stop agent-redis · docker rm agent-redis · deactivate",
@@ -2213,7 +2213,7 @@ agent_evaluation_project (Colab notebook)
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "checklist",
    "kicker": "Steps 2 and 3",
    "title": "A varied test set",
    "items": [
@@ -2263,7 +2263,7 @@ agent_evaluation_project (Colab notebook)
   },
   {
    "kind": "flow",
-   "art": "graph",
+   "art": "bars",
    "kicker": "Steps 4 and 5",
    "title": "Run and score",
    "steps": [
@@ -2709,7 +2709,7 @@ access_control_project (Colab notebook)
   },
   {
    "kind": "flow",
-   "art": "warning",
+   "art": "container",
    "kicker": "Steps 7 and 8",
    "title": "Sandbox the risky tools",
    "steps": [
@@ -3256,7 +3256,7 @@ mcp_platform_project (Colab notebook)
  "scenes": [
   {
    "kind": "title",
-   "art": "api",
+   "art": "server",
    "kicker": "Project 8 · MCP server",
    "title": "Publish your tools safely",
    "beats": [
@@ -3270,7 +3270,7 @@ mcp_platform_project (Colab notebook)
   },
   {
    "kind": "list",
-   "art": "key",
+   "art": "fingerprint",
    "kicker": "Step 2",
    "title": "Who is calling?",
    "items": [

@@ -294,7 +294,7 @@ You have themes built from your own research notes, three evidence-backed insigh
   },
   {
    "kind": "quote",
-   "art": "ask",
+   "art": "flask",
    "kicker": "Topic 5.1 · Framing questions",
    "title": "Start with a good question",
    "quote": "✗ \"What do users think?\"   ✓ \"Why do new users stop before finishing sign-up?\"",
@@ -361,7 +361,7 @@ You have themes built from your own research notes, three evidence-backed insigh
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Topic 5.2 · Desk research",
    "title": "The credibility check",
    "items": [
@@ -411,7 +411,7 @@ You have themes built from your own research notes, three evidence-backed insigh
   },
   {
    "kind": "list",
-   "art": "pyramid",
+   "art": "funnel",
    "kicker": "Worked example · Top-down",
    "title": "Narrow a big number",
    "items": [
@@ -549,7 +549,7 @@ You have themes built from your own research notes, three evidence-backed insigh
   },
   {
    "kind": "flow",
-   "art": "layers",
+   "art": "sticky",
    "kicker": "Topic 5.3 · Synthesis",
    "title": "From notes to a readout",
    "steps": [

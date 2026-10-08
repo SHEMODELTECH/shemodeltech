@@ -262,7 +262,7 @@ You have an audience analysis, a five-slide presentation with statement headline
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "calendar",
    "kicker": "Topic 6.1 · Meetings",
    "title": "Meetings that reach an outcome",
    "items": [
@@ -341,7 +341,7 @@ You have an audience analysis, a five-slide presentation with statement headline
   },
   {
    "kind": "list",
-   "art": "path",
+   "art": "roadmap",
    "kicker": "Topic 6.2 · Tracking delivery",
    "title": "From plan to done",
    "items": [
@@ -429,7 +429,7 @@ You have an audience analysis, a five-slide presentation with statement headline
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "people",
    "kicker": "Topic 6.3 · Presenting",
    "title": "Built around the audience",
    "items": [
@@ -487,7 +487,7 @@ You have an audience analysis, a five-slide presentation with statement headline
   },
   {
    "kind": "flow",
-   "art": "browser",
+   "art": "presentation",
    "kicker": "Lab",
    "title": "A five-slide presentation",
    "steps": [

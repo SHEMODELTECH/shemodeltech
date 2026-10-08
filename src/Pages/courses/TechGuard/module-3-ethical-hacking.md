@@ -250,7 +250,7 @@ You have gathered passive information on a domain you own or are authorized to r
  "scenes": [
   {
    "kind": "title",
-   "art": "shield",
+   "art": "bug",
    "kicker": "Module 3 · Ethical hacking",
    "title": "Authorized testing only",
    "beats": [
@@ -264,7 +264,7 @@ You have gathered passive information on a domain you own or are authorized to r
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "scales",
    "kicker": "Read this first",
    "title": "Authorization is the line",
    "quote": "The only thing separating a penetration tester from an attacker is authorization.",
@@ -430,7 +430,7 @@ You have gathered passive information on a domain you own or are authorized to r
   },
   {
    "kind": "flow",
-   "art": "blueprint",
+   "art": "target",
    "kicker": "Topic 3.2 · Lab",
    "title": "Your own lab target",
    "steps": [
@@ -464,7 +464,7 @@ You have gathered passive information on a domain you own or are authorized to r
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "radar",
    "kicker": "Topic 3.3 · Reconnaissance",
    "title": "Passive versus active",
    "items": [
@@ -502,7 +502,7 @@ You have gathered passive information on a domain you own or are authorized to r
   },
   {
    "kind": "code",
-   "art": "terminal",
+   "art": "globe",
    "kicker": "Topic 3.3 · Lab",
    "title": "Public records, then your own VM",
    "file": "terminal",

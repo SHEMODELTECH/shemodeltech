@@ -173,7 +173,7 @@ multimodal_survey_project/
   },
   {
    "kind": "list",
-   "art": "boxes",
+   "art": "neural",
    "kicker": "Concept",
    "title": "Model categories",
    "items": [
@@ -211,7 +211,7 @@ multimodal_survey_project/
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "table",
    "kicker": "Lab · Steps 4 to 7",
    "title": "Build your survey",
    "steps": [
@@ -475,7 +475,7 @@ image_text_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "api",
+   "art": "image",
    "kicker": "Project 2 · Image and text inputs",
    "title": "Two modalities at once",
    "beats": [
@@ -533,7 +533,7 @@ image_text_project/
   },
   {
    "kind": "list",
-   "art": "laptop",
+   "art": "test",
    "kicker": "Lab · Steps 5 and 6",
    "title": "Test it, then resize",
    "items": [
@@ -786,7 +786,7 @@ feature_extraction_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "pixels",
    "kicker": "Project 3 · Image and audio features",
    "title": "Look under the hood",
    "beats": [
@@ -826,7 +826,7 @@ feature_extraction_project/
   },
   {
    "kind": "code",
-   "art": "stopwatch",
+   "art": "wave",
    "kicker": "Lab · Step 4",
    "title": "Audio is numbers over time",
    "file": "extract_features.py",
@@ -878,7 +878,7 @@ feature_extraction_project/
   },
   {
    "kind": "quote",
-   "art": "bulb",
+   "art": "neural",
    "kicker": "Lab · Step 7",
    "title": "Connect it to real models",
    "quote": "Models learn their own features from the same raw numbers.",
@@ -1059,7 +1059,7 @@ image_captioning_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "doc",
+   "art": "sparkle",
    "kicker": "Project 4 · Image captioning",
    "title": "From picture to words",
    "beats": [
@@ -1103,7 +1103,7 @@ image_captioning_project/
   },
   {
    "kind": "code",
-   "art": "palette",
+   "art": "pencil",
    "kicker": "Lab · Step 5",
    "title": "Caption styles",
    "file": "caption.py",
@@ -1129,7 +1129,7 @@ image_captioning_project/
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "star",
    "kicker": "Lab · Steps 4 and 6",
    "title": "Test hard images, then rate them",
    "items": [
@@ -1472,7 +1472,7 @@ image_qa_app_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "phone",
+   "art": "chat",
    "kicker": "Project 5 · Image Q and A app",
    "title": "Ask a picture a question",
    "beats": [
@@ -1542,7 +1542,7 @@ image_qa_app_project/
   },
   {
    "kind": "flow",
-   "art": "chain",
+   "art": "pipeline",
    "kicker": "Lab · Steps 5 and 6",
    "title": "Three models in a chain",
    "steps": [
@@ -1571,7 +1571,7 @@ image_qa_app_project/
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "test",
    "kicker": "Lab · Steps 7 and 8",
    "title": "Test errors, then the full flow",
    "items": [
@@ -1878,7 +1878,7 @@ multimodal_search_project/
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "scatter",
    "kicker": "Lab · Step 7",
    "title": "Search both at once",
    "items": [
@@ -1912,7 +1912,7 @@ multimodal_search_project/
   },
   {
    "kind": "big",
-   "art": "proof",
+   "art": "checklist",
    "kicker": "Lab · Step 8",
    "title": "Judge the results",
    "big": "5 + 5 queries",
@@ -2087,7 +2087,7 @@ multimodal_evaluation_project/
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "checklist",
    "kicker": "Lab · Steps 2 and 3",
    "title": "Pick a system, build a test set",
    "items": [
@@ -2117,7 +2117,7 @@ multimodal_evaluation_project/
   },
   {
    "kind": "list",
-   "art": "calc",
+   "art": "star",
    "kicker": "Lab · Steps 4 and 5",
    "title": "Three metrics",
    "items": [

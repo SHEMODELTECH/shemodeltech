@@ -208,7 +208,7 @@ You have generated an API key, made a successful authenticated request with it, 
   },
   {
    "kind": "flow",
-   "art": "api",
+   "art": "globe",
    "kicker": "Topic 1 · Concept",
    "title": "Anatomy of a request",
    "steps": [
@@ -306,7 +306,7 @@ You have generated an API key, made a successful authenticated request with it, 
   },
   {
    "kind": "list",
-   "art": "loop",
+   "art": "bolt",
    "kicker": "Topic 2 · Concept",
    "title": "Webhooks: we'll call you",
    "items": [
@@ -352,7 +352,7 @@ You have generated an API key, made a successful authenticated request with it, 
   },
   {
    "kind": "flow",
-   "art": "merge",
+   "art": "plug",
    "kicker": "Topic 2 · Lab",
    "title": "Catch a webhook in Make",
    "steps": [

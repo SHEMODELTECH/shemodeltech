@@ -127,7 +127,7 @@ paper_reproduction_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "doc",
+   "art": "flask",
    "kicker": "Project 1 · Reproduce a paper",
    "title": "Read to rebuild",
    "beats": [
@@ -141,7 +141,7 @@ paper_reproduction_project/
   },
   {
    "kind": "flow",
-   "art": "doc",
+   "art": "book",
    "kicker": "Concept",
    "title": "Skim the structure first",
    "steps": [
@@ -219,7 +219,7 @@ paper_reproduction_project/
   },
   {
    "kind": "list",
-   "art": "calc",
+   "art": "scales",
    "kicker": "Step 8",
    "title": "Compare, honestly",
    "items": [
@@ -464,7 +464,7 @@ data_exploration_project/
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "checklist",
    "kicker": "Steps 3 to 5",
    "title": "Four first questions",
    "items": [
@@ -510,7 +510,7 @@ data_exploration_project/
   },
   {
    "kind": "big",
-   "art": "bars",
+   "art": "pie",
    "kicker": "Step 6",
    "title": "Check the class balance",
    "big": "63% / 37%",
@@ -532,7 +532,7 @@ data_exploration_project/
   },
   {
    "kind": "quote",
-   "art": "pencil",
+   "art": "doc",
    "kicker": "Step 7",
    "title": "Write it down",
    "quote": "Is the data clean, imbalanced, complete?",
@@ -738,7 +738,7 @@ gradient_descent_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "growth",
+   "art": "trend",
    "kicker": "Project 3 · Gradient descent",
    "title": "The algorithm under every model",
    "beats": [
@@ -834,7 +834,7 @@ gradient_descent_project/
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "flask",
    "kicker": "Step 7",
    "title": "Experiment with the learning rate",
    "items": [
@@ -864,7 +864,7 @@ gradient_descent_project/
   },
   {
    "kind": "big",
-   "art": "graph",
+   "art": "scatter",
    "kicker": "Step 8",
    "title": "Two parameters",
    "big": "y = 3x + 1",
@@ -1102,7 +1102,7 @@ baseline_model_project/
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "neural",
    "kicker": "Steps 4 and 5",
    "title": "Two baselines",
    "items": [
@@ -1158,7 +1158,7 @@ baseline_model_project/
   },
   {
    "kind": "quote",
-   "art": "pencil",
+   "art": "table",
    "kicker": "Step 7",
    "title": "Write the numbers down",
    "quote": "Record both models' scores.",
@@ -1384,7 +1384,7 @@ neural_network_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "layers",
+   "art": "neural",
    "kicker": "Project 5 · Neural network",
    "title": "A network with no framework",
    "beats": [
@@ -1427,7 +1427,7 @@ neural_network_project/
   },
   {
    "kind": "code",
-   "art": "warning",
+   "art": "calc",
    "kicker": "Step 3",
    "title": "Sigmoid and its shortcut",
    "file": "neural_network_project",
@@ -1734,7 +1734,7 @@ ablation_study_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "boxes",
+   "art": "flask",
    "kicker": "Project 6 · Ablation study",
    "title": "Find what actually matters",
    "beats": [
@@ -1833,7 +1833,7 @@ ablation_study_project/
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "bars",
    "kicker": "Steps 7 and 8",
    "title": "What the evidence says",
    "items": [

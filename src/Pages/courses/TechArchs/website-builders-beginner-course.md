@@ -82,7 +82,7 @@ You can describe the canvas, element, breakpoint, and publishing concepts, and y
  "scenes": [
   {
    "kind": "title",
-   "art": "browser",
+   "art": "layout",
    "kicker": "Module 0 · What website builders do",
    "title": "Build a real site, visually",
    "beats": [
@@ -174,7 +174,7 @@ You can describe the canvas, element, breakpoint, and publishing concepts, and y
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "blueprint",
    "kicker": "Lab",
    "title": "Plan a three-page site on paper",
    "items": [
@@ -650,7 +650,7 @@ You have a published Framer page using at least one Stack for layout, a Button C
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "stack",
    "kicker": "Structure at a glance",
    "title": "Framer's building blocks",
    "items": [
@@ -726,7 +726,7 @@ You have a published Framer page using at least one Stack for layout, a Button C
   },
   {
    "kind": "quote",
-   "art": "sparkle",
+   "art": "palette",
    "kicker": "Lab · Steps 5 and 6",
    "title": "Generate, then make it yours",
    "quote": "\"A pricing section for a SaaS product\"",
@@ -937,7 +937,7 @@ You have a published Wix site with at least one App Market app installed and pla
   },
   {
    "kind": "flow",
-   "art": "boxes",
+   "art": "puzzle",
    "kicker": "Structure at a glance",
    "title": "Editor, App Market, Dashboard",
    "steps": [
@@ -966,7 +966,7 @@ You have a published Wix site with at least one App Market app installed and pla
   },
   {
    "kind": "flow",
-   "art": "calc",
+   "art": "plug",
    "kicker": "Lab · Steps 1 to 5",
    "title": "Build it and add an app",
    "steps": [
@@ -1001,7 +1001,7 @@ You have a published Wix site with at least one App Market app installed and pla
   },
   {
    "kind": "quote",
-   "art": "proof",
+   "art": "dashboard",
    "kicker": "Lab · Steps 6 and 7",
    "title": "Prove it actually works",
    "quote": "Submit on the live site → see it in the Dashboard.",

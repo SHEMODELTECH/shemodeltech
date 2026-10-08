@@ -320,7 +320,7 @@ You can name and briefly explain all seven testing principles, and you've applie
   },
   {
    "kind": "list",
-   "art": "path",
+   "art": "loop",
    "kicker": "Topic 1.1 · Concept",
    "title": "The six SDLC phases",
    "items": [
@@ -469,7 +469,7 @@ You can name and briefly explain all seven testing principles, and you've applie
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "checklist",
    "kicker": "Topic 1.2 · Structure",
    "title": "Five parts of a test case",
    "items": [
@@ -523,7 +523,7 @@ You can name and briefly explain all seven testing principles, and you've applie
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "blueprint",
    "kicker": "Topic 1.2 · Lab",
    "title": "Plan one requirement",
    "steps": [
@@ -598,7 +598,7 @@ You can name and briefly explain all seven testing principles, and you've applie
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "bug",
    "kicker": "Topic 1.3 · Concept",
    "title": "Seven testing principles, part two",
    "items": [
@@ -636,7 +636,7 @@ You can name and briefly explain all seven testing principles, and you've applie
   },
   {
    "kind": "quote",
-   "art": "ask",
+   "art": "presentation",
    "kicker": "Topic 1.3 · Lab",
    "title": "Report a clean run honestly",
    "quote": "No defects found in this scope. Not: the software is bug-free.",

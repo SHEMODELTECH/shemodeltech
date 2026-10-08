@@ -212,7 +212,7 @@ You have reviewed your own wireframe or flow against all four principles, consis
   },
   {
    "kind": "list",
-   "art": "blueprint",
+   "art": "layout",
    "kicker": "Topic 1 · Wireframes",
    "title": "Structure, not polish",
    "items": [
@@ -271,7 +271,7 @@ You have reviewed your own wireframe or flow against all four principles, consis
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "blueprint",
    "kicker": "Topic 1 · Lab",
    "title": "Two wireframes, compared",
    "steps": [

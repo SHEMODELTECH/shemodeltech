@@ -253,7 +253,7 @@ You have a full multi-step automation in Make where a single form submission res
  "scenes": [
   {
    "kind": "title",
-   "art": "path",
+   "art": "pipeline",
    "kicker": "Module · Business workflows",
    "title": "From request to result",
    "beats": [
@@ -270,7 +270,7 @@ You have a full multi-step automation in Make where a single form submission res
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Topic 1 · Forms",
    "title": "Where the workflow starts",
    "items": [
@@ -316,7 +316,7 @@ You have a full multi-step automation in Make where a single form submission res
   },
   {
    "kind": "flow",
-   "art": "doc",
+   "art": "calendar",
    "kicker": "Topic 1 · Lab",
    "title": "A Time Off Request form",
    "steps": [
@@ -392,7 +392,7 @@ You have a full multi-step automation in Make where a single form submission res
   },
   {
    "kind": "flow",
-   "art": "fork",
+   "art": "table",
    "kicker": "Topic 2 · Lab",
    "title": "Two scenarios in Make",
    "steps": [
@@ -443,7 +443,7 @@ You have a full multi-step automation in Make where a single form submission res
   },
   {
    "kind": "list",
-   "art": "phone",
+   "art": "bell",
    "kicker": "Topic 3 · Notifications",
    "title": "Tell people what changed",
    "items": [
@@ -489,7 +489,7 @@ You have a full multi-step automation in Make where a single form submission res
   },
   {
    "kind": "flow",
-   "art": "merge",
+   "art": "plug",
    "kicker": "Topic 4 · Integrations",
    "title": "Connect to another system",
    "steps": [
@@ -523,7 +523,7 @@ You have a full multi-step automation in Make where a single form submission res
   },
   {
    "kind": "big",
-   "art": "calc",
+   "art": "coin",
    "kicker": "Topic 4 · Pricing",
    "title": "Every step has a cost",
    "big": "Tasks · Credits",

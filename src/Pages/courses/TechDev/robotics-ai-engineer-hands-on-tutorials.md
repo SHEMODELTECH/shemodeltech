@@ -112,7 +112,7 @@ robot_system_diagram_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "arm",
    "kicker": "Project 1 · The robot as a system",
    "title": "Sense, think, act",
    "beats": [
@@ -160,7 +160,7 @@ robot_system_diagram_project/
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "camera",
    "kicker": "Concept",
    "title": "Sensors and actuators",
    "items": [
@@ -206,7 +206,7 @@ robot_system_diagram_project/
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "blueprint",
    "kicker": "Lab",
    "title": "Diagram your own robot",
    "items": [
@@ -248,7 +248,7 @@ robot_system_diagram_project/
   },
   {
    "kind": "quote",
-   "art": "architecture",
+   "art": "graph",
    "kicker": "Where you'd use this",
    "title": "Each part becomes a node",
    "quote": "Learn each part in plain Python first, then run it on ROS 2 in Project 8.",
@@ -476,7 +476,7 @@ sensor_processing_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "pulse",
    "kicker": "Project 2 · Sensor data",
    "title": "Clean up noisy readings",
    "beats": [
@@ -512,7 +512,7 @@ sensor_processing_project/
   },
   {
    "kind": "code",
-   "art": "graph",
+   "art": "trend",
    "kicker": "Lab · Steps 4 and 5",
    "title": "A moving average filter",
    "file": "sensor_processing",
@@ -568,7 +568,7 @@ sensor_processing_project/
   },
   {
    "kind": "code",
-   "art": "pencil",
+   "art": "calc",
    "kicker": "Lab · Step 7",
    "title": "Fill the gaps first",
    "file": "sensor_processing",
@@ -779,7 +779,7 @@ coordinate_transform_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "calc",
+   "art": "compass",
    "kicker": "Project 3 · Coordinate frames",
    "title": "Translate between frames",
    "beats": [
@@ -863,7 +863,7 @@ coordinate_transform_project/
   },
   {
    "kind": "flow",
-   "art": "proof",
+   "art": "test",
    "kicker": "Lab · Step 6",
    "title": "Prove it with a round trip",
    "steps": [
@@ -1137,7 +1137,7 @@ object_detection_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "search",
+   "art": "camera",
    "kicker": "Project 4 · Object detection",
    "title": "Teach the robot to see",
    "beats": [
@@ -1217,7 +1217,7 @@ object_detection_project/
   },
   {
    "kind": "flow",
-   "art": "graph",
+   "art": "eye",
    "kicker": "Lab · Steps 6 to 8",
    "title": "Verify, test, smooth",
    "steps": [
@@ -1528,7 +1528,7 @@ path_planning_project/
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "stack",
    "kicker": "Lab · Step 5",
    "title": "The heart of A star",
    "file": "path_planning",
@@ -1550,7 +1550,7 @@ path_planning_project/
   },
   {
    "kind": "big",
-   "art": "path",
+   "art": "flag",
    "kicker": "Lab · Steps 6 and 7",
    "title": "18 moves, then a maze",
    "big": "18 moves",
@@ -1568,7 +1568,7 @@ path_planning_project/
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "cross",
    "kicker": "Lab · Step 8",
    "title": "When there's no way through",
    "quote": "Unreachable goal → astar returns None. Check before you move.",
@@ -1813,7 +1813,7 @@ rl_agent_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "growth",
+   "art": "robot",
    "kicker": "Project 6 · Reinforcement learning",
    "title": "Let the robot learn",
    "beats": [
@@ -1925,7 +1925,7 @@ rl_agent_project/
   },
   {
    "kind": "big",
-   "art": "bars",
+   "art": "growth",
    "kicker": "Lab · Steps 6 and 7",
    "title": "Evaluate, then plot",
    "big": "100%",
@@ -2227,7 +2227,7 @@ behavior_testing_project/
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "checklist",
    "kicker": "Lab · Steps 2 and 3",
    "title": "Measurable success criteria",
    "items": [
@@ -2313,7 +2313,7 @@ behavior_testing_project/
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "bug",
    "kicker": "Lab · Step 8",
    "title": "Prove the safeguard works",
    "items": [
@@ -3175,7 +3175,7 @@ ros2_lab/
   },
   {
    "kind": "list",
-   "art": "chain",
+   "art": "graph",
    "kicker": "Lab · Step 5",
    "title": "Nodes and topics",
    "items": [
@@ -3213,7 +3213,7 @@ ros2_lab/
   },
   {
    "kind": "code",
-   "art": "calc",
+   "art": "gauge",
    "kicker": "Lab · Step 7",
    "title": "A proportional controller",
    "file": "controller_math.py",
@@ -3261,7 +3261,7 @@ ros2_lab/
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "terminal",
    "kicker": "Lab · Steps 10 to 13",
    "title": "Build, run, follow, launch",
    "steps": [

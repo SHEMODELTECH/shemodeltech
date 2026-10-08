@@ -42,7 +42,7 @@ The modules build on each other, so take them in this order:
   },
   {
    "kind": "list",
-   "art": "path",
+   "art": "roadmap",
    "kicker": "The track",
    "title": "Modules 1 to 5",
    "items": [
@@ -96,7 +96,7 @@ The modules build on each other, so take them in this order:
   },
   {
    "kind": "list",
-   "art": "rocket",
+   "art": "path",
    "kicker": "The track",
    "title": "Modules 6 to 9",
    "items": [
@@ -305,7 +305,7 @@ Each module lists the tools it needs at the top. Every tool in this track is fre
  "scenes": [
   {
    "kind": "title",
-   "art": "path",
+   "art": "loop",
    "kicker": "Start here · How each module works",
    "title": "The same pattern, every topic",
    "beats": [
@@ -316,7 +316,7 @@ Each module lists the tools it needs at the top. Every tool in this track is fre
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "chain",
    "kicker": "The pattern",
    "title": "Six steps per topic",
    "items": [
@@ -466,7 +466,7 @@ Only test software you own or have written permission to test. The performance a
   },
   {
    "kind": "quote",
-   "art": "lock",
+   "art": "scales",
    "kicker": "The rule",
    "title": "Only test what you're allowed to",
    "quote": "Only test software you own or have written permission to test.",
@@ -536,7 +536,7 @@ Courses build the skill; a badge proves it. When you've worked through the modul
  "scenes": [
   {
    "kind": "title",
-   "art": "proof",
+   "art": "trophy",
    "kicker": "Start here · After the track",
    "title": "From skill to proof",
    "beats": [

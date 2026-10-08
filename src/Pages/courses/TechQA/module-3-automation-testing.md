@@ -438,7 +438,7 @@ You have a 5-test Playwright suite organised with page objects, shared settings 
  "scenes": [
   {
    "kind": "title",
-   "art": "code",
+   "art": "gear",
    "kicker": "Module 3 · Automation Testing",
    "title": "Turn repeatable checks into code",
    "beats": [
@@ -532,7 +532,7 @@ You have a 5-test Playwright suite organised with page objects, shared settings 
   },
   {
    "kind": "list",
-   "art": "sparkle",
+   "art": "bolt",
    "kicker": "Topic 3.2 · Concept",
    "title": "What Playwright adds",
    "items": [
@@ -586,7 +586,7 @@ You have a 5-test Playwright suite organised with page objects, shared settings 
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "test",
    "kicker": "Topic 3.2 · Lab",
    "title": "A Playwright login test",
    "file": "test_playwright_login.py",
@@ -660,7 +660,7 @@ You have a 5-test Playwright suite organised with page objects, shared settings 
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Topic 3.3 · Concept",
    "title": "Habits of a reliable suite",
    "items": [

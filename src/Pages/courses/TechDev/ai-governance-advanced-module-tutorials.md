@@ -150,7 +150,7 @@ eu_ai_act_classification_project/
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "coin",
    "kicker": "Why it matters",
    "title": "Getting it wrong is costly",
    "items": [
@@ -196,7 +196,7 @@ eu_ai_act_classification_project/
   },
   {
    "kind": "list",
-   "art": "pyramid",
+   "art": "layers",
    "kicker": "Concept",
    "title": "The four risk tiers",
    "items": [
@@ -480,7 +480,7 @@ obligation_mapping_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "blueprint",
+   "art": "checklist",
    "kicker": "Bonus Module 2 · Obligation mapping",
    "title": "From tier to to-do list",
    "beats": [
@@ -636,7 +636,7 @@ obligation_mapping_project/
   },
   {
    "kind": "flow",
-   "art": "proof",
+   "art": "roadmap",
    "kicker": "Lab · Steps 6 to 8",
    "title": "The path to market",
    "steps": [
@@ -825,7 +825,7 @@ technical_documentation_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "doc",
+   "art": "book",
    "kicker": "Bonus Module 3 · Technical documentation",
    "title": "Beyond the model card",
    "beats": [
@@ -1331,7 +1331,7 @@ human_oversight_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "shield",
+   "art": "eye",
    "kicker": "Bonus Module 4 · Human oversight",
    "title": "Build it, don't just describe it",
    "beats": [
@@ -1394,7 +1394,7 @@ human_oversight_project/
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "file",
    "kicker": "Lab · Step 4",
    "title": "An override that leaves a trail",
    "file": "oversight_controls.py",
@@ -1420,7 +1420,7 @@ human_oversight_project/
   },
   {
    "kind": "code",
-   "art": "stopwatch",
+   "art": "warning",
    "kicker": "Lab · Step 5",
    "title": "The emergency stop",
    "file": "oversight_controls.py",
@@ -1446,7 +1446,7 @@ human_oversight_project/
   },
   {
    "kind": "flow",
-   "art": "test",
+   "art": "dashboard",
    "kicker": "Lab · Steps 6 and 7",
    "title": "Test the full loop",
    "steps": [
@@ -1480,7 +1480,7 @@ human_oversight_project/
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "checklist",
    "kicker": "Lab · Step 8",
    "title": "Conformity readiness checklist",
    "items": [

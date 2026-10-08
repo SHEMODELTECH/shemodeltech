@@ -79,7 +79,7 @@ task-tracker (Bubble app)
  "scenes": [
   {
    "kind": "title",
-   "art": "blocks",
+   "art": "layout",
    "kicker": "Project 1 · Your first Bubble app",
    "title": "Give your app a home",
    "beats": [
@@ -135,7 +135,7 @@ task-tracker (Bubble app)
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "boxes",
    "kicker": "Concept",
    "title": "Pages, elements, containers",
    "items": [
@@ -173,7 +173,7 @@ task-tracker (Bubble app)
   },
   {
    "kind": "big",
-   "art": "rocket",
+   "art": "eye",
    "kicker": "Lab · Step 7",
    "title": "Preview it",
    "big": "version-test",
@@ -376,7 +376,7 @@ Data model
   },
   {
    "kind": "list",
-   "art": "table",
+   "art": "blueprint",
    "kicker": "Concept",
    "title": "Types, fields, records",
    "items": [
@@ -626,7 +626,7 @@ index (page)
   },
   {
    "kind": "list",
-   "art": "array",
+   "art": "loop",
    "kicker": "Concept",
    "title": "Repeating groups",
    "items": [
@@ -690,7 +690,7 @@ index (page)
   },
   {
    "kind": "flow",
-   "art": "proof",
+   "art": "test",
    "kicker": "Lab · Steps 7 and 8",
    "title": "Prove it's live",
    "steps": [
@@ -859,7 +859,7 @@ Workflows
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "cursor",
    "kicker": "Project 4 · Create and change data",
    "title": "Let users do things",
    "beats": [
@@ -876,7 +876,7 @@ Workflows
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Lab · Steps 2 to 4",
    "title": "Form, then create a Task",
    "items": [
@@ -1131,7 +1131,7 @@ Accounts + privacy
  "scenes": [
   {
    "kind": "title",
-   "art": "people",
+   "art": "fingerprint",
    "kicker": "Project 5 · Accounts and privacy",
    "title": "Only your own tasks",
    "beats": [
@@ -1148,7 +1148,7 @@ Accounts + privacy
   },
   {
    "kind": "list",
-   "art": "key",
+   "art": "password",
    "kicker": "Lab · Steps 2 to 4",
    "title": "The front door",
    "items": [
@@ -1186,7 +1186,7 @@ Accounts + privacy
   },
   {
    "kind": "flow",
-   "art": "people",
+   "art": "idcard",
    "kicker": "Lab · Steps 5 to 7",
    "title": "Link tasks to their owner",
    "steps": [
@@ -1510,7 +1510,7 @@ Shareable app
   },
   {
    "kind": "flow",
-   "art": "doc",
+   "art": "book",
    "kicker": "Lab · Steps 7 and 8",
    "title": "Document and get feedback",
    "steps": [

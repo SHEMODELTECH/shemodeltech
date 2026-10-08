@@ -81,7 +81,7 @@ You can name all four database types above and give one reason to choose each.
   },
   {
    "kind": "list",
-   "art": "database",
+   "art": "boxes",
    "kicker": "Concept",
    "title": "Four kinds",
    "items": [
@@ -316,7 +316,7 @@ You can read each query above and explain what it does without looking at the co
   },
   {
    "kind": "list",
-   "art": "table",
+   "art": "blocks",
    "kicker": "Concept",
    "title": "CRUD",
    "items": [
@@ -362,7 +362,7 @@ You can read each query above and explain what it does without looking at the co
   },
   {
    "kind": "code",
-   "art": "table",
+   "art": "code",
    "kicker": "Lab",
    "title": "Create and read",
    "file": "SQL",
@@ -427,7 +427,7 @@ You can read each query above and explain what it does without looking at the co
   },
   {
    "kind": "quote",
-   "art": "pencil",
+   "art": "book",
    "kicker": "Lab",
    "title": "Read SQL fluently",
    "quote": "Translate every query into a plain English sentence.",
@@ -867,7 +867,7 @@ You can list at least two syntax differences between Postgres and MySQL for the 
   },
   {
    "kind": "list",
-   "art": "merge",
+   "art": "venn",
    "kicker": "Lab · Step 3",
    "title": "Spot the differences",
    "items": [
@@ -1037,7 +1037,7 @@ You inserted two documents with different fields into the same collection withou
  "scenes": [
   {
    "kind": "title",
-   "art": "file",
+   "art": "doc",
    "kicker": "Module 4 · MongoDB",
    "title": "Think in documents, not tables",
    "beats": [
@@ -1114,7 +1114,7 @@ You inserted two documents with different fields into the same collection withou
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "search",
    "kicker": "Lab · Steps 2 and 4",
    "title": "Query them back",
    "file": "mongosh / Python",
@@ -1132,7 +1132,7 @@ You inserted two documents with different fields into the same collection withou
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "scales",
    "kicker": "The trade-off",
    "title": "Freedom needs discipline",
    "quote": "No enforced structure means it's on you to keep data consistent.",
@@ -1314,7 +1314,7 @@ You saw a task you added in the Firebase console appear in your page's console i
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "chat",
    "kicker": "Where you'd use this",
    "title": "Features that need to feel live",
    "items": [
@@ -1352,7 +1352,7 @@ You saw a task you added in the Firebase console appear in your page's console i
   },
   {
    "kind": "flow",
-   "art": "cloud",
+   "art": "gear",
    "kicker": "Lab · Steps 1 and 2",
    "title": "Set up a project",
    "steps": [
@@ -1400,7 +1400,7 @@ You saw a task you added in the Firebase console appear in your page's console i
   },
   {
    "kind": "big",
-   "art": "cloud",
+   "art": "bolt",
    "kicker": "Lab · Step 4",
    "title": "Watch it update live",
    "big": "Instant",
@@ -1596,7 +1596,7 @@ You can explain why Redis is fast (in-memory) and why it's usually paired with, 
  "scenes": [
   {
    "kind": "title",
-   "art": "stopwatch",
+   "art": "bolt",
    "kicker": "Module 6 · Redis",
    "title": "Extreme speed, for the right job",
    "beats": [
@@ -1613,7 +1613,7 @@ You can explain why Redis is fast (in-memory) and why it's usually paired with, 
   },
   {
    "kind": "list",
-   "art": "stopwatch",
+   "art": "checklist",
    "kicker": "Where you'd use this",
    "title": "Four classic jobs",
    "items": [
@@ -1659,7 +1659,7 @@ You can explain why Redis is fast (in-memory) and why it's usually paired with, 
   },
   {
    "kind": "code",
-   "art": "terminal",
+   "art": "stopwatch",
    "kicker": "Lab · Step 2",
    "title": "Keys that expire",
    "file": "redis-cli",
@@ -1706,7 +1706,7 @@ You can explain why Redis is fast (in-memory) and why it's usually paired with, 
   },
   {
    "kind": "code",
-   "art": "shield",
+   "art": "gauge",
    "kicker": "Lab · Step 4",
    "title": "Rate limiting",
    "file": "cache_demo.py",
@@ -1860,7 +1860,7 @@ You produced your own reasoning for all four scenarios above before checking the
   },
   {
    "kind": "list",
-   "art": "ask",
+   "art": "compass",
    "kicker": "Questions to ask",
    "title": "For any new feature",
    "items": [

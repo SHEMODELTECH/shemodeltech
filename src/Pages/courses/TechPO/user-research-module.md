@@ -211,7 +211,7 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "persona",
    "kicker": "Topic 1 · Personas",
    "title": "A research-based user",
    "items": [
@@ -249,7 +249,7 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "mess",
    "kicker": "Topic 1 · Personas",
    "title": "The elastic user",
    "quote": "The elastic user stretches to fit whatever each person wants to build.",
@@ -270,7 +270,7 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "sticky",
    "kicker": "Topic 1 · Lab",
    "title": "Draft proto-personas",
    "steps": [
@@ -304,7 +304,7 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
   },
   {
    "kind": "list",
-   "art": "ask",
+   "art": "mic",
    "kicker": "Topic 2 · Interviews",
    "title": "How you ask matters",
    "items": [
@@ -342,7 +342,7 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
   },
   {
    "kind": "flow",
-   "art": "search",
+   "art": "chat",
    "kicker": "Topic 2 · Lab",
    "title": "Guide, interview, synthesise",
    "steps": [
@@ -376,7 +376,7 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
   },
   {
    "kind": "list",
-   "art": "bars",
+   "art": "pie",
    "kicker": "Topic 3 · Surveys",
    "title": "Breadth, not depth",
    "items": [
@@ -432,7 +432,7 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
   },
   {
    "kind": "flow",
-   "art": "test",
+   "art": "form",
    "kicker": "Topic 3 · Lab",
    "title": "Build and pilot a survey",
    "steps": [

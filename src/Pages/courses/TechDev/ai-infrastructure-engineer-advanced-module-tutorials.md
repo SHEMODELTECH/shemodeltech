@@ -204,7 +204,7 @@ pulumi_iac_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "blueprint",
+   "art": "cloud",
    "kicker": "Bonus Module 1 · Pulumi",
    "title": "Infrastructure as real code",
    "beats": [
@@ -221,7 +221,7 @@ pulumi_iac_project/
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "blueprint",
    "kicker": "Concept",
    "title": "Infrastructure as code",
    "items": [
@@ -676,7 +676,7 @@ opentofu_project/
   },
   {
    "kind": "quote",
-   "art": "lock",
+   "art": "file",
    "kicker": "Lab · Step 6",
    "title": "The state file",
    "quote": "terraform.tfstate: what OpenTofu created and manages. Never commit it publicly.",
@@ -1352,7 +1352,7 @@ gpu_k8s_lab/
  "scenes": [
   {
    "kind": "title",
-   "art": "boxes",
+   "art": "chip",
    "kicker": "Bonus Module 3 · GPU scheduling",
    "title": "Share the GPUs fairly",
    "beats": [
@@ -1441,7 +1441,7 @@ gpu_k8s_lab/
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "gear",
    "kicker": "Lab · Step 7",
    "title": "Requests, taints and tolerations",
    "items": [
@@ -1505,7 +1505,7 @@ gpu_k8s_lab/
   },
   {
    "kind": "big",
-   "art": "shield",
+   "art": "gauge",
    "kicker": "Lab · Steps 11 to 13",
    "title": "The quota still wins",
    "big": "exceeded quota",
@@ -2200,7 +2200,7 @@ gpu_k8s_lab/
  "scenes": [
   {
    "kind": "title",
-   "art": "lock",
+   "art": "fingerprint",
    "kicker": "Bonus Module 4 · IAM",
    "title": "Who can do what",
    "beats": [
@@ -2284,7 +2284,7 @@ gpu_k8s_lab/
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "lock",
    "kicker": "Lab · Steps 5 and 6",
    "title": "Least privilege by role",
    "items": [
@@ -2344,7 +2344,7 @@ gpu_k8s_lab/
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "key",
    "kicker": "Lab · Steps 10 to 12",
    "title": "Secrets, audit log, cloud IAM",
    "items": [

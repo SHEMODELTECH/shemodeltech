@@ -217,7 +217,7 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
  "scenes": [
   {
    "kind": "title",
-   "art": "stopwatch",
+   "art": "gauge",
    "kicker": "Module 5 · Performance testing",
    "title": "Still fast with a crowd",
    "beats": [
@@ -256,7 +256,7 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
   },
   {
    "kind": "flow",
-   "art": "layers",
+   "art": "blocks",
    "kicker": "Topic 5.1 · JMeter",
    "title": "The parts of a test plan",
    "steps": [
@@ -294,7 +294,7 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
   },
   {
    "kind": "flow",
-   "art": "laptop",
+   "art": "people",
    "kicker": "Topic 5.1 · Lab",
    "title": "Ten users, then fifty",
    "steps": [
@@ -332,7 +332,7 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "server",
    "kicker": "Topic 5.2 · Load testing",
    "title": "Four kinds of load test",
    "items": [
@@ -433,7 +433,7 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "funnel",
    "kicker": "Topic 5.3 · Concept",
    "title": "Turning numbers into a finding",
    "items": [

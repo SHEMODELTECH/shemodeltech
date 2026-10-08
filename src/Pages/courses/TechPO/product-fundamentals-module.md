@@ -229,7 +229,7 @@ You have written a vision statement, a supporting strategy, a small consistent r
  "scenes": [
   {
    "kind": "title",
-   "art": "target",
+   "art": "compass",
    "kicker": "Module · Product Fundamentals",
    "title": "From idea to north star",
    "beats": [
@@ -280,7 +280,7 @@ You have written a vision statement, a supporting strategy, a small consistent r
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "dashboard",
    "kicker": "Topic 1 · Product lifecycle",
    "title": "The right metric for the stage",
    "items": [
@@ -414,7 +414,7 @@ You have written a vision statement, a supporting strategy, a small consistent r
   },
   {
    "kind": "list",
-   "art": "test",
+   "art": "flask",
    "kicker": "Topic 2 · Lab",
    "title": "A fake door test",
    "items": [
@@ -456,7 +456,7 @@ You have written a vision statement, a supporting strategy, a small consistent r
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "roadmap",
    "kicker": "Topic 3 · Product vision",
    "title": "Vision, strategy, roadmap",
    "items": [

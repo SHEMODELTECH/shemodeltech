@@ -81,7 +81,7 @@ Zap 1
  "scenes": [
   {
    "kind": "title",
-   "art": "chain",
+   "art": "bolt",
    "kicker": "Project 1 · Your first automation",
    "title": "This happens, so do that",
    "beats": [
@@ -98,7 +98,7 @@ Zap 1
   },
   {
    "kind": "list",
-   "art": "bulb",
+   "art": "gear",
    "kicker": "Concept",
    "title": "Triggers, actions and Zaps",
    "items": [
@@ -341,7 +341,7 @@ Make scenario: Request router
  "scenes": [
   {
    "kind": "title",
-   "art": "fork",
+   "art": "funnel",
    "kicker": "Project 2 · Filters and paths",
    "title": "Make it decide",
    "beats": [
@@ -358,7 +358,7 @@ Make scenario: Request router
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "boxes",
    "kicker": "Concept",
    "title": "Make's vocabulary",
    "items": [
@@ -632,7 +632,7 @@ Make scenario: Form intake
   },
   {
    "kind": "list",
-   "art": "boxes",
+   "art": "array",
    "kicker": "Concept",
    "title": "Bundles and credits",
    "items": [
@@ -666,7 +666,7 @@ Make scenario: Form intake
   },
   {
    "kind": "flow",
-   "art": "database",
+   "art": "form",
    "kicker": "Build · Steps 4 to 6",
    "title": "Form to contacts to email",
    "steps": [
@@ -886,7 +886,7 @@ Make scenario: Custom integration
   },
   {
    "kind": "list",
-   "art": "loop",
+   "art": "bolt",
    "kicker": "Concept",
    "title": "Webhook versus polling",
    "items": [
@@ -950,7 +950,7 @@ Make scenario: Custom integration
   },
   {
    "kind": "code",
-   "art": "rocket",
+   "art": "plug",
    "kicker": "Build · Steps 6 to 8",
    "title": "Store it, then send it out",
    "file": "HTTP · request content",
@@ -1162,7 +1162,7 @@ Business process automation (Make)
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "pipeline",
    "kicker": "Build · Steps 3 to 5",
    "title": "Intake, logic, actions",
    "items": [
@@ -1407,7 +1407,7 @@ Reliability + handoff
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "eye",
    "kicker": "Project 6 · Monitor and hand off",
    "title": "Keep it running, then pass it on",
    "beats": [
@@ -1424,7 +1424,7 @@ Reliability + handoff
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "bell",
    "kicker": "Build · Steps 1 to 3",
    "title": "Monitoring and alerts",
    "items": [
@@ -1462,7 +1462,7 @@ Reliability + handoff
   },
   {
    "kind": "list",
-   "art": "bars",
+   "art": "gauge",
    "kicker": "Build · Steps 4 and 5",
    "title": "Design within quotas",
    "items": [
@@ -1504,7 +1504,7 @@ Reliability + handoff
   },
   {
    "kind": "flow",
-   "art": "doc",
+   "art": "book",
    "kicker": "Build · Steps 6 to 8",
    "title": "Hand it off",
    "steps": [

@@ -76,7 +76,7 @@ You can name the four layers above in order and explain what each one solves.
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "laptop",
    "kicker": "The classic problem",
    "title": "\"It works on my machine\"",
    "quote": "\"It works on my machine.\"",
@@ -306,7 +306,7 @@ You built a Docker image and ran two separate containers from it successfully.
   },
   {
    "kind": "list",
-   "art": "container",
+   "art": "blueprint",
    "kicker": "Concept",
    "title": "Image and container",
    "items": [
@@ -336,7 +336,7 @@ You built a Docker image and ran two separate containers from it successfully.
   },
   {
    "kind": "code",
-   "art": "container",
+   "art": "file",
    "kicker": "Lab · Step 2",
    "title": "Write a Dockerfile",
    "file": "Dockerfile",
@@ -510,7 +510,7 @@ Your test passes locally, and you can describe, step by step, what should happen
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "pipeline",
    "kicker": "Module 2 · CI/CD",
    "title": "Automate trust",
    "beats": [
@@ -572,7 +572,7 @@ Your test passes locally, and you can describe, step by step, what should happen
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "chain",
    "kicker": "Lab · Step 2",
    "title": "Plan the pipeline",
    "steps": [
@@ -764,7 +764,7 @@ You have a real pull request on GitHub showing an automated check that passed (o
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "gear",
    "kicker": "Module 3 · GitHub Actions",
    "title": "Build the pipeline",
    "beats": [
@@ -778,7 +778,7 @@ You have a real pull request on GitHub showing an automated check that passed (o
   },
   {
    "kind": "code",
-   "art": "cloud",
+   "art": "git",
    "kicker": "Lab · Step 1",
    "title": "Put the code on GitHub",
    "file": "Terminal",
@@ -796,7 +796,7 @@ You have a real pull request on GitHub showing an automated check that passed (o
   },
   {
    "kind": "code",
-   "art": "loop",
+   "art": "code",
    "kicker": "Lab · Step 2",
    "title": "The workflow file",
    "file": ".github/workflows/ci.yml",
@@ -818,7 +818,7 @@ You have a real pull request on GitHub showing an automated check that passed (o
   },
   {
    "kind": "flow",
-   "art": "git",
+   "art": "checklist",
    "kicker": "Lab · Steps 3 and 4",
    "title": "Watch it work, and fail",
    "steps": [
@@ -989,7 +989,7 @@ You have a real, public URL serving your app, and merging a pull request into `m
  "scenes": [
   {
    "kind": "title",
-   "art": "rocket",
+   "art": "cloud",
    "kicker": "Module 4 · Cloud deployment",
    "title": "Go live",
    "beats": [
@@ -1006,7 +1006,7 @@ You have a real, public URL serving your app, and merging a pull request into `m
   },
   {
    "kind": "flow",
-   "art": "cloud",
+   "art": "rocket",
    "kicker": "Lab · Step 1",
    "title": "Deploy to Render",
    "steps": [
@@ -1044,7 +1044,7 @@ You have a real, public URL serving your app, and merging a pull request into `m
   },
   {
    "kind": "big",
-   "art": "cloud",
+   "art": "globe",
    "kicker": "Lab · Step 2",
    "title": "Prove it's really live",
    "big": "{\"status\": \"ok\"}",
@@ -1096,7 +1096,7 @@ You have a real, public URL serving your app, and merging a pull request into `m
   },
   {
    "kind": "flow",
-   "art": "git",
+   "art": "merge",
    "kicker": "Lab · Step 3",
    "title": "Ship through a pull request",
    "steps": [

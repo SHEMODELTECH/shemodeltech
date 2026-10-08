@@ -122,7 +122,7 @@ ai_product_brief_project/
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "fork",
    "kicker": "Concept",
    "title": "Is it an AI-suited problem?",
    "items": [
@@ -185,7 +185,7 @@ ai_product_brief_project/
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "target",
    "kicker": "Step 6",
    "title": "Success metric or vanity metric?",
    "items": [
@@ -215,7 +215,7 @@ ai_product_brief_project/
   },
   {
    "kind": "flow",
-   "art": "blueprint",
+   "art": "checklist",
    "kicker": "Steps 7 and 8",
    "title": "Assemble the one-page brief",
    "steps": [
@@ -689,7 +689,7 @@ chatbot_prototype_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "chat",
    "kicker": "Project 3 · Chatbot prototype",
    "title": "Make it conversational",
    "beats": [
@@ -781,7 +781,7 @@ chatbot_prototype_project/
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "test",
    "kicker": "Step 7",
    "title": "Test the edge cases",
    "items": [
@@ -956,7 +956,7 @@ discovery_doc_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "people",
+   "art": "persona",
    "kicker": "Project 4 · Discovery doc",
    "title": "Validate with real users",
    "beats": [
@@ -970,7 +970,7 @@ discovery_doc_project/
   },
   {
    "kind": "list",
-   "art": "ask",
+   "art": "pencil",
    "kicker": "Step 2",
    "title": "Ask about the past, not the hypothetical",
    "items": [
@@ -1000,7 +1000,7 @@ discovery_doc_project/
   },
   {
    "kind": "flow",
-   "art": "people",
+   "art": "mic",
    "kicker": "Steps 3 and 4",
    "title": "Interview and show the prototype",
    "steps": [
@@ -1025,7 +1025,7 @@ discovery_doc_project/
   },
   {
    "kind": "quote",
-   "art": "venn",
+   "art": "sticky",
    "kicker": "Step 5",
    "title": "What counts as an insight",
    "quote": "An insight is a pattern across several people, not one person's opinion.",
@@ -1277,7 +1277,7 @@ feature_flow_project/
   },
   {
    "kind": "quote",
-   "art": "ask",
+   "art": "warning",
    "kicker": "Step 6",
    "title": "The \"AI might be wrong\" state",
    "quote": "Was this helpful? [Yes / No]",
@@ -1298,7 +1298,7 @@ feature_flow_project/
   },
   {
    "kind": "big",
-   "art": "layers",
+   "art": "layout",
    "kicker": "Step 7",
    "title": "One complete walkthrough",
    "big": "Full flow",
@@ -1772,7 +1772,7 @@ launch_plan_project/
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "roadmap",
    "kicker": "Step 4",
    "title": "Roll out in stages",
    "steps": [
@@ -1801,7 +1801,7 @@ launch_plan_project/
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "network",
    "kicker": "Steps 5 and 6",
    "title": "People and monitoring",
    "items": [

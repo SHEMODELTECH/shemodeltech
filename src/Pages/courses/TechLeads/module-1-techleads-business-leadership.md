@@ -240,7 +240,7 @@ You have a delegation matrix with real ownership and context notes, a sprint pla
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "megaphone",
    "kicker": "Topic 1.1 · Communication",
    "title": "One set of facts, many audiences",
    "items": [
@@ -336,7 +336,7 @@ You have a delegation matrix with real ownership and context notes, a sprint pla
   },
   {
    "kind": "quote",
-   "art": "pencil",
+   "art": "chat",
    "kicker": "Topic 1.2 · Coaching",
    "title": "Feedback with S B I",
    "quote": "Situation → Behavior → Impact. Then ask: \"What would help you run the checklist under time pressure?\"",
@@ -399,7 +399,7 @@ You have a delegation matrix with real ownership and context notes, a sprint pla
   },
   {
    "kind": "list",
-   "art": "path",
+   "art": "kanban",
    "kicker": "Topic 1.3 · Team management",
    "title": "Planning, ownership and learning",
    "items": [
@@ -445,7 +445,7 @@ You have a delegation matrix with real ownership and context notes, a sprint pla
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "sticky",
    "kicker": "Watch out",
    "title": "Venting is not a retro",
    "quote": "A retro is only useful if it changes the next planning cycle.",
@@ -466,7 +466,7 @@ You have a delegation matrix with real ownership and context notes, a sprint pla
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "table",
    "kicker": "Lab",
    "title": "Run the team cycle",
    "steps": [

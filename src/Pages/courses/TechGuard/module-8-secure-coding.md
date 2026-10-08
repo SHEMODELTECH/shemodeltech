@@ -295,7 +295,7 @@ You can identify the security gates a request should pass (transport, authentica
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "bug",
    "kicker": "Topic 8.1 · OWASP Top 10:2025",
    "title": "The five you'll meet most",
    "items": [
@@ -462,7 +462,7 @@ You can identify the security gates a request should pass (transport, authentica
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "key",
    "kicker": "Lab · Steps 2 to 4",
    "title": "The gates in code",
    "file": "api.py",
@@ -488,7 +488,7 @@ You can identify the security gates a request should pass (transport, authentica
   },
   {
    "kind": "list",
-   "art": "terminal",
+   "art": "test",
    "kicker": "Lab · Steps 5 to 8",
    "title": "Test each gate with curl",
    "items": [
@@ -542,7 +542,7 @@ You can identify the security gates a request should pass (transport, authentica
   },
   {
    "kind": "quote",
-   "art": "lock",
+   "art": "warning",
    "kicker": "Lab · Step 9",
    "title": "The missing gate",
    "quote": "What would an eavesdropper see in the Authorization header?",

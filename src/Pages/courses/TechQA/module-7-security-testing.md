@@ -270,7 +270,7 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "bug",
    "kicker": "Topic 7.1 · Concept",
    "title": "Key terms",
    "items": [
@@ -304,7 +304,7 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
   },
   {
    "kind": "code",
-   "art": "terminal",
+   "art": "radar",
    "kicker": "Topic 7.1 · Lab",
    "title": "Scan your local Juice Shop",
    "file": "terminal",
@@ -326,7 +326,7 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
   },
   {
    "kind": "list",
-   "art": "key",
+   "art": "password",
    "kicker": "Topic 7.2 · Authentication testing",
    "title": "Does login hold up?",
    "items": [
@@ -406,7 +406,7 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "form",
    "kicker": "Topic 7.3 · Input validation",
    "title": "Never trust what a user typed",
    "items": [
@@ -452,7 +452,7 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
   },
   {
    "kind": "quote",
-   "art": "shield",
+   "art": "browser",
    "kicker": "Topic 7.3 · Concept",
    "title": "Browser checks prove nothing",
    "quote": "Anyone can skip the browser's checks. The server must validate too.",
@@ -473,7 +473,7 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "search",
    "kicker": "Topic 7.3 · Lab",
    "title": "Map, probe, report",
    "steps": [

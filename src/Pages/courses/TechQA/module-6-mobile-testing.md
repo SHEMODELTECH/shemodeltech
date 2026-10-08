@@ -232,7 +232,7 @@ You have a four-device matrix with reasons, you've completed a task using only a
   },
   {
    "kind": "list",
-   "art": "phone",
+   "art": "mess",
    "kicker": "Topic 6.1 · Android",
    "title": "Testing against fragmentation",
    "items": [
@@ -288,7 +288,7 @@ You have a four-device matrix with reasons, you've completed a task using only a
   },
   {
    "kind": "flow",
-   "art": "loop",
+   "art": "bell",
    "kicker": "Topic 6.1 · Lab",
    "title": "Interrupt it, then compare",
    "steps": [
@@ -317,7 +317,7 @@ You have a four-device matrix with reasons, you've completed a task using only a
   },
   {
    "kind": "list",
-   "art": "phone",
+   "art": "laptop",
    "kicker": "Topic 6.2 · iOS",
    "title": "Apple's tools",
    "items": [
@@ -448,7 +448,7 @@ You have a four-device matrix with reasons, you've completed a task using only a
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "access",
    "kicker": "Topic 6.3 · Accessibility",
    "title": "Usable by everyone",
    "items": [

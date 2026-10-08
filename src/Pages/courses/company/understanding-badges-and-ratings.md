@@ -22,7 +22,7 @@ A badge is not a certificate from a course, and it is not a test score. Someone 
  "scenes": [
   {
    "kind": "title",
-   "art": "proof",
+   "art": "trophy",
    "kicker": "Section 1 · Proof over pedigree",
    "title": "What badges solve",
    "beats": [
@@ -36,7 +36,7 @@ A badge is not a certificate from a course, and it is not a test score. Someone 
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "venn",
    "kicker": "The difference",
    "title": "Resume versus badge",
    "items": [
@@ -83,7 +83,7 @@ A badge is not a certificate from a course, and it is not a test score. Someone 
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "cross",
    "kicker": "What a badge isn't",
    "title": "Not a course, not a test",
    "items": [
@@ -195,7 +195,7 @@ A member can hold badges in more than one track. Someone with TechDev and TechLe
  "scenes": [
   {
    "kind": "title",
-   "art": "stack",
+   "art": "puzzle",
    "kicker": "Section 2 · The six tracks",
    "title": "Match a member to the work",
    "beats": [
@@ -386,7 +386,7 @@ Always pair the level with the track. An advanced TechQA member is a strong test
   },
   {
    "kind": "list",
-   "art": "bars",
+   "art": "pyramid",
    "kicker": "Levels",
    "title": "Four levels per track",
    "items": [
@@ -432,7 +432,7 @@ Always pair the level with the track. An advanced TechQA member is a strong test
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "scales",
    "kicker": "Using level",
    "title": "Match level to the stakes",
    "items": [
@@ -602,7 +602,7 @@ You may also see **paid projects** on member profiles. These are run and paid fo
   },
   {
    "kind": "list",
-   "art": "key",
+   "art": "megaphone",
    "kicker": "Job posts",
    "title": "What you need",
    "items": [
@@ -636,7 +636,7 @@ You may also see **paid projects** on member profiles. These are run and paid fo
   },
   {
    "kind": "big",
-   "art": "calc",
+   "art": "coin",
    "kicker": "On profiles",
    "title": "Paid projects",
    "big": "Paid projects",
@@ -742,7 +742,7 @@ In under a minute you can move from a name to a grounded, evidence-based read on
  "scenes": [
   {
    "kind": "title",
-   "art": "proof",
+   "art": "idcard",
    "kicker": "Section 5 · Putting it together",
    "title": "Hire with confidence",
    "beats": [

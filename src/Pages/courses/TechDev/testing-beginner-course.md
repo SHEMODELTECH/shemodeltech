@@ -123,7 +123,7 @@ You can explain the testing pyramid and why most tests should be unit tests rath
   },
   {
    "kind": "quote",
-   "art": "ask",
+   "art": "warning",
    "kicker": "Where you'd use this",
    "title": "The hidden question",
    "quote": "Did this change break something else?",
@@ -144,7 +144,7 @@ You can explain the testing pyramid and why most tests should be unit tests rath
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "checklist",
    "kicker": "Lab",
    "title": "Your first test cases, in plain English",
    "items": [
@@ -382,7 +382,7 @@ You have a set of passing unit tests covering a normal case, an edge case (empty
   },
   {
    "kind": "flow",
-   "art": "test",
+   "art": "chain",
    "kicker": "Concept",
    "title": "Arrange, Act, Assert",
    "steps": [
@@ -437,7 +437,7 @@ You have a set of passing unit tests covering a normal case, an edge case (empty
   },
   {
    "kind": "list",
-   "art": "test",
+   "art": "target",
    "kicker": "Matchers",
    "title": "Ways to check a result",
    "items": [
@@ -475,7 +475,7 @@ You have a set of passing unit tests covering a normal case, an edge case (empty
   },
   {
    "kind": "flow",
-   "art": "warning",
+   "art": "cross",
    "kicker": "Lab · Steps 1 to 3",
    "title": "Run it, then fail on purpose",
    "steps": [
@@ -752,7 +752,7 @@ You have passing integration tests confirming your API's routing, middleware, an
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "plug",
    "kicker": "Lab · Step 4",
    "title": "Break the wiring on purpose",
    "quote": "Remove express.json() → POST tests fail. A wiring bug, not a logic bug.",
@@ -1024,7 +1024,7 @@ You have a passing Playwright test that opens a real browser, performs a real us
   },
   {
    "kind": "big",
-   "art": "browser",
+   "art": "eye",
    "kicker": "Lab · Step 4",
    "title": "Watch it happen",
    "big": "--headed",
@@ -1042,7 +1042,7 @@ You have a passing Playwright test that opens a real browser, performs a real us
   },
   {
    "kind": "code",
-   "art": "shield",
+   "art": "form",
    "kicker": "Lab · Step 5",
    "title": "Test what shouldn't work",
    "file": "example.spec.js",

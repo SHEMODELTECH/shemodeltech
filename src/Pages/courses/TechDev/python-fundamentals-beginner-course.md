@@ -162,7 +162,7 @@ You ran the code above, saw each type printed correctly, and understand why `pri
   },
   {
    "kind": "quote",
-   "art": "boxes",
+   "art": "pencil",
    "kicker": "Concept",
    "title": "A variable is a name for a value",
    "quote": "username = \"opeyemi\"",
@@ -183,7 +183,7 @@ You ran the code above, saw each type printed correctly, and understand why `pri
   },
   {
    "kind": "list",
-   "art": "boxes",
+   "art": "blocks",
    "kicker": "Concept",
    "title": "The types you'll use most",
    "items": [
@@ -249,7 +249,7 @@ You ran the code above, saw each type printed correctly, and understand why `pri
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "search",
    "kicker": "Lab",
    "title": "Ask Python what type it is",
    "file": "Python",
@@ -271,7 +271,7 @@ You ran the code above, saw each type printed correctly, and understand why `pri
   },
   {
    "kind": "code",
-   "art": "warning",
+   "art": "bug",
    "kicker": "A common bug",
    "title": "Numbers stored as text",
    "file": "Python",
@@ -445,7 +445,7 @@ You can predict the output of each print statement above before running it.
   },
   {
    "kind": "list",
-   "art": "calc",
+   "art": "boxes",
    "kicker": "Concept",
    "title": "Four kinds of operators",
    "items": [
@@ -491,7 +491,7 @@ You can predict the output of each print statement above before running it.
   },
   {
    "kind": "code",
-   "art": "calc",
+   "art": "coin",
    "kicker": "Lab · Arithmetic",
    "title": "Work out a cart total",
    "file": "Python",
@@ -513,7 +513,7 @@ You can predict the output of each print statement above before running it.
   },
   {
    "kind": "code",
-   "art": "fork",
+   "art": "scales",
    "kicker": "Lab · Comparison and logic",
    "title": "Answer yes-or-no questions",
    "file": "Python",
@@ -535,7 +535,7 @@ You can predict the output of each print statement above before running it.
   },
   {
    "kind": "big",
-   "art": "calc",
+   "art": "growth",
    "kicker": "Lab · Assignment shorthand",
    "title": "+= adds and saves",
    "big": "login_count += 1",
@@ -683,7 +683,7 @@ You can trace through `get_shipping_cost` by hand for a new set of inputs and pr
   },
   {
    "kind": "list",
-   "art": "fork",
+   "art": "bulb",
    "kicker": "Where you'd use this",
    "title": "Nearly every feature decides something",
    "items": [
@@ -721,7 +721,7 @@ You can trace through `get_shipping_cost` by hand for a new set of inputs and pr
   },
   {
    "kind": "code",
-   "art": "fork",
+   "art": "code",
    "kicker": "Lab",
    "title": "Shipping cost rules",
    "file": "Python",
@@ -928,7 +928,7 @@ You can explain why the `while` loop stops after exactly 3 attempts, tracing thr
   },
   {
    "kind": "list",
-   "art": "loop",
+   "art": "array",
    "kicker": "Concept",
    "title": "Two kinds of loop",
    "items": [
@@ -958,7 +958,7 @@ You can explain why the `while` loop stops after exactly 3 attempts, tracing thr
   },
   {
    "kind": "code",
-   "art": "loop",
+   "art": "calc",
    "kicker": "Lab · for",
    "title": "Add up a shopping cart",
    "file": "Python",
@@ -984,7 +984,7 @@ You can explain why the `while` loop stops after exactly 3 attempts, tracing thr
   },
   {
    "kind": "code",
-   "art": "loop",
+   "art": "stopwatch",
    "kicker": "Lab · while",
    "title": "Retry until it works",
    "file": "Python",
@@ -1166,7 +1166,7 @@ You can explain what a default parameter is and identify where `process_order` r
   },
   {
    "kind": "list",
-   "art": "package",
+   "art": "target",
    "kicker": "Why functions",
    "title": "One place to fix things",
    "items": [
@@ -1230,7 +1230,7 @@ You can explain what a default parameter is and identify where `process_order` r
   },
   {
    "kind": "flow",
-   "art": "package",
+   "art": "chain",
    "kicker": "Lab",
    "title": "Functions that use functions",
    "steps": [
@@ -1490,7 +1490,7 @@ You can explain the difference between what happens with and without a matching 
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "cross",
    "kicker": "Know your errors",
    "title": "Common errors and what causes them",
    "items": [
@@ -1544,7 +1544,7 @@ You can explain the difference between what happens with and without a matching 
   },
   {
    "kind": "code",
-   "art": "shield",
+   "art": "code",
    "kicker": "Lab",
    "title": "finally always runs",
    "file": "Python",
@@ -1702,7 +1702,7 @@ You created your own two-file project, where `main.py` successfully imports and 
  "scenes": [
   {
    "kind": "title",
-   "art": "blocks",
+   "art": "boxes",
    "kicker": "Module 6 · Modules and packages",
    "title": "Organise and reuse code",
    "beats": [
@@ -1716,7 +1716,7 @@ You created your own two-file project, where `main.py` successfully imports and 
   },
   {
    "kind": "list",
-   "art": "blocks",
+   "art": "tree",
    "kicker": "Concept",
    "title": "Three words to know",
    "items": [
@@ -1798,7 +1798,7 @@ You created your own two-file project, where `main.py` successfully imports and 
   },
   {
    "kind": "flow",
-   "art": "blocks",
+   "art": "file",
    "kicker": "Lab · Your own module",
    "title": "Split your code into files",
    "steps": [
@@ -1972,7 +1972,7 @@ You can explain what `self` refers to, and why `RecurringTask` doesn't need to r
   },
   {
    "kind": "list",
-   "art": "blueprint",
+   "art": "boxes",
    "kicker": "Concept",
    "title": "The vocabulary",
    "items": [
@@ -2022,7 +2022,7 @@ You can explain what `self` refers to, and why `RecurringTask` doesn't need to r
   },
   {
    "kind": "code",
-   "art": "blueprint",
+   "art": "checklist",
    "kicker": "Lab",
    "title": "A Task class",
    "file": "Python",
@@ -2217,7 +2217,7 @@ You created a text file and a JSON file, then successfully read both back and pr
   },
   {
    "kind": "code",
-   "art": "file",
+   "art": "pencil",
    "kicker": "Lab · Write and read",
    "title": "Open files safely with with",
    "file": "Python",
@@ -2281,7 +2281,7 @@ You created a text file and a JSON file, then successfully read both back and pr
   },
   {
    "kind": "code",
-   "art": "file",
+   "art": "doc",
    "kicker": "Lab · JSON",
    "title": "Save structured data",
    "file": "Python",

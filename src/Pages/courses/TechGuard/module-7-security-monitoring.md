@@ -257,7 +257,7 @@ You have walked a confirmed incident through all six IR phases with a concrete a
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "eye",
    "kicker": "Module 7 · Security monitoring",
    "title": "Detect, triage, respond",
    "beats": [
@@ -274,7 +274,7 @@ You have walked a confirmed incident through all six IR phases with a concrete a
   },
   {
    "kind": "flow",
-   "art": "search",
+   "art": "pulse",
    "kicker": "Topic 7.1 · SIEM",
    "title": "From logs to alerts",
    "steps": [
@@ -308,7 +308,7 @@ You have walked a confirmed incident through all six IR phases with a concrete a
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "bell",
    "kicker": "Why correlation matters",
    "title": "One event versus a pattern",
    "quote": "Many failures, then a success, from the same source.",
@@ -427,7 +427,7 @@ You have walked a confirmed incident through all six IR phases with a concrete a
   },
   {
    "kind": "list",
-   "art": "pencil",
+   "art": "funnel",
    "kicker": "Lab · Triage",
    "title": "Triage, escalate, write a playbook",
    "items": [
@@ -473,7 +473,7 @@ You have walked a confirmed incident through all six IR phases with a concrete a
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "chain",
    "kicker": "Topic 7.3 · Incident response",
    "title": "The six phases",
    "items": [

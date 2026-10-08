@@ -34,7 +34,7 @@ At the top of the page you'll find **Learning** (all the free courses), your **m
  "scenes": [
   {
    "kind": "title",
-   "art": "path",
+   "art": "compass",
    "kicker": "Section 1 · Find your way around",
    "title": "Know where everything lives",
    "beats": [
@@ -48,7 +48,7 @@ At the top of the page you'll find **Learning** (all the free courses), your **m
   },
   {
    "kind": "list",
-   "art": "laptop",
+   "art": "dashboard",
    "kicker": "Home",
    "title": "Your dashboard",
    "items": [
@@ -86,7 +86,7 @@ At the top of the page you'll find **Learning** (all the free courses), your **m
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "layout",
    "kicker": "The menu",
    "title": "Everything else, on the left",
    "items": [
@@ -140,7 +140,7 @@ At the top of the page you'll find **Learning** (all the free courses), your **m
   },
   {
    "kind": "big",
-   "art": "browser",
+   "art": "bell",
    "kicker": "Top of the page",
    "title": "Learning, messages, notifications",
    "big": "Learning",
@@ -249,7 +249,7 @@ Two more settings are worth a minute:
  "scenes": [
   {
    "kind": "title",
-   "art": "people",
+   "art": "idcard",
    "kicker": "Section 2 · Set up your profile",
    "title": "Your first impression",
    "beats": [
@@ -263,7 +263,7 @@ Two more settings are worth a minute:
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Step by step",
    "title": "Complete your profile",
    "steps": [
@@ -293,7 +293,7 @@ Two more settings are worth a minute:
   },
   {
    "kind": "big",
-   "art": "proof",
+   "art": "checklist",
    "kicker": "Complete",
    "title": "When it counts as complete",
    "big": "Track + level + LinkedIn",
@@ -421,7 +421,7 @@ Courses build the skill. Badges come from doing the work on a real project, whic
  "scenes": [
   {
    "kind": "title",
-   "art": "bulb",
+   "art": "book",
    "kicker": "Section 3 · Learn with free courses",
    "title": "Build skills as you go",
    "beats": [
@@ -435,7 +435,7 @@ Courses build the skill. Badges come from doing the work on a real project, whic
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "laptop",
    "kicker": "How it works",
    "title": "Taking a course",
    "items": [
@@ -473,7 +473,7 @@ Courses build the skill. Badges come from doing the work on a real project, whic
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "trophy",
    "kicker": "Certificate",
    "title": "To finish a course",
    "items": [
@@ -655,7 +655,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
   },
   {
    "kind": "list",
-   "art": "tree",
+   "art": "kanban",
    "kicker": "Project labels",
    "title": "Where a project is",
    "items": [
@@ -701,7 +701,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Open to Join",
    "title": "Apply to this project",
    "steps": [
@@ -769,7 +769,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
   },
   {
    "kind": "list",
-   "art": "calc",
+   "art": "coin",
    "kicker": "Paid projects",
    "title": "Run and paid for by She Model Tech",
    "items": [
@@ -923,7 +923,7 @@ Leads earn a TechPO (Product / Project Owner) badge when the project is complete
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Applying",
    "title": "Lead this project",
    "steps": [
@@ -952,7 +952,7 @@ Leads earn a TechPO (Product / Project Owner) badge when the project is complete
   },
   {
    "kind": "quote",
-   "art": "people",
+   "art": "chat",
    "kicker": "Review",
    "title": "Every lead application is reviewed",
    "quote": "A team depends on its lead.",
@@ -969,7 +969,7 @@ Leads earn a TechPO (Product / Project Owner) badge when the project is complete
   },
   {
    "kind": "list",
-   "art": "blueprint",
+   "art": "checklist",
    "kicker": "The role",
    "title": "What a lead does",
    "items": [
@@ -1011,7 +1011,7 @@ Leads earn a TechPO (Product / Project Owner) badge when the project is complete
   },
   {
    "kind": "big",
-   "art": "proof",
+   "art": "trophy",
    "kicker": "What leads earn",
    "title": "A TechPO badge",
    "big": "TechPO",
@@ -1130,7 +1130,7 @@ Projects run in 6-week cohorts. Deliver your part, keep your team updated, and s
   },
   {
    "kind": "list",
-   "art": "boxes",
+   "art": "browser",
    "kicker": "Three tabs",
    "title": "Inside a workspace",
    "items": [
@@ -1164,7 +1164,7 @@ Projects run in 6-week cohorts. Deliver your part, keep your team updated, and s
   },
   {
    "kind": "big",
-   "art": "stopwatch",
+   "art": "calendar",
    "kicker": "Rhythm",
    "title": "6-week cohorts",
    "big": "6 weeks",
@@ -1276,7 +1276,7 @@ Your **level** in a track grows with the number of badges you hold in it:
  "scenes": [
   {
    "kind": "title",
-   "art": "proof",
+   "art": "trophy",
    "kicker": "Section 7 · Earn badges and level up",
    "title": "Verified proof of real work",
    "beats": [
@@ -1320,7 +1320,7 @@ Your **level** in a track grows with the number of badges you hold in it:
   },
   {
    "kind": "list",
-   "art": "stack",
+   "art": "boxes",
    "kicker": "Six tracks",
    "title": "The badge tracks",
    "items": [
@@ -1513,7 +1513,7 @@ Your profile, badges, and project history do the talking for you.
  "scenes": [
   {
    "kind": "title",
-   "art": "sparkle",
+   "art": "eye",
    "kicker": "Section 8 · Get seen",
    "title": "Make your work visible",
    "beats": [
@@ -1527,7 +1527,7 @@ Your profile, badges, and project history do the talking for you.
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "megaphone",
    "kicker": "Proof Wall",
    "title": "Show what you're building",
    "items": [
@@ -1684,7 +1684,7 @@ You're ready. Go to **Projects**, find a project that interests you, and tap **J
  "scenes": [
   {
    "kind": "title",
-   "art": "ask",
+   "art": "chat",
    "kicker": "Section 9 · Get help",
    "title": "Where to go with a question",
    "beats": [
@@ -1698,7 +1698,7 @@ You're ready. Go to **Projects**, find a project that interests you, and tap **J
   },
   {
    "kind": "list",
-   "art": "ask",
+   "art": "book",
    "kicker": "Help",
    "title": "Three places to turn",
    "items": [

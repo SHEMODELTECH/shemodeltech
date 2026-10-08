@@ -246,7 +246,7 @@ You have a saved collection with positive, negative, and response-time assertion
   },
   {
    "kind": "flow",
-   "art": "api",
+   "art": "server",
    "kicker": "Topic 4.1 · Concept",
    "title": "Request, response, test",
    "steps": [
@@ -280,7 +280,7 @@ You have a saved collection with positive, negative, and response-time assertion
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "test",
    "kicker": "Topic 4.1 · Lab",
    "title": "Your first Postman tests",
    "file": "Postman · Tests",
@@ -302,7 +302,7 @@ You have a saved collection with positive, negative, and response-time assertion
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "book",
    "kicker": "Topic 4.2 · Concept",
    "title": "OpenAPI and Swagger",
    "items": [
@@ -348,7 +348,7 @@ You have a saved collection with positive, negative, and response-time assertion
   },
   {
    "kind": "flow",
-   "art": "target",
+   "art": "venn",
    "kicker": "Topic 4.2 · Lab",
    "title": "Compare promise and reality",
    "steps": [
@@ -378,7 +378,7 @@ You have a saved collection with positive, negative, and response-time assertion
   },
   {
    "kind": "list",
-   "art": "test",
+   "art": "checklist",
    "kicker": "Topic 4.3 · Concept",
    "title": "From exploring to a suite",
    "items": [

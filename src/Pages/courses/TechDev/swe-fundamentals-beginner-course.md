@@ -120,7 +120,7 @@ You can open a terminal, navigate folders, run a Python file, and have made your
   },
   {
    "kind": "list",
-   "art": "terminal",
+   "art": "book",
    "kicker": "Five words you'll use every day",
    "title": "The basics",
    "items": [
@@ -200,7 +200,7 @@ You can open a terminal, navigate folders, run a Python file, and have made your
   },
   {
    "kind": "code",
-   "art": "terminal",
+   "art": "tree",
    "kicker": "Lab · Step 2",
    "title": "Move around with the terminal",
    "file": "Terminal",
@@ -447,7 +447,7 @@ A `SPEC.md` file exists in your project folder and you can explain the product i
  "scenes": [
   {
    "kind": "title",
-   "art": "bulb",
+   "art": "compass",
    "kicker": "Module 1 · Product Sense",
    "title": "Deciding what to build",
    "beats": [
@@ -589,7 +589,7 @@ A `SPEC.md` file exists in your project folder and you can explain the product i
   },
   {
    "kind": "quote",
-   "art": "people",
+   "art": "persona",
    "kicker": "Example: TrackIt · Users",
    "title": "Who has this problem?",
    "quote": "Individuals managing personal projects.",
@@ -722,7 +722,7 @@ A `SPEC.md` file exists in your project folder and you can explain the product i
   },
   {
    "kind": "code",
-   "art": "laptop",
+   "art": "pencil",
    "kicker": "Your turn · Lab",
    "title": "Write SPEC.md",
    "file": "SPEC.md",
@@ -895,7 +895,7 @@ Your API runs locally and responds to two different endpoints, one of which take
   },
   {
    "kind": "list",
-   "art": "api",
+   "art": "server",
    "kicker": "Concepts",
    "title": "Three words to know",
    "items": [
@@ -977,7 +977,7 @@ Your API runs locally and responds to two different endpoints, one of which take
   },
   {
    "kind": "flow",
-   "art": "api",
+   "art": "browser",
    "kicker": "Lab · Step 3",
    "title": "Run it and visit it",
    "steps": [
@@ -1010,7 +1010,7 @@ Your API runs locally and responds to two different endpoints, one of which take
   },
   {
    "kind": "code",
-   "art": "code",
+   "art": "globe",
    "kicker": "Lab · Step 4",
    "title": "An endpoint that takes input",
    "file": "main.py",
@@ -1226,7 +1226,7 @@ You can explain why the heap version scales better than re-sorting, and you have
  "scenes": [
   {
    "kind": "title",
-   "art": "growth",
+   "art": "gauge",
    "kicker": "Module 3 · Data structures and algorithms",
    "title": "Making it fast",
    "beats": [
@@ -1243,7 +1243,7 @@ You can explain why the heap version scales better than re-sorting, and you have
   },
   {
    "kind": "list",
-   "art": "tree",
+   "art": "stack",
    "kicker": "Concepts",
    "title": "Three ideas",
    "items": [
@@ -1371,7 +1371,7 @@ You can explain why the heap version scales better than re-sorting, and you have
   },
   {
    "kind": "big",
-   "art": "stopwatch",
+   "art": "calendar",
    "kicker": "Lab · Step 3",
    "title": "Try it",
    "big": "\"Urgent task\"",
@@ -1631,7 +1631,7 @@ You can explain what a table, row, column, and foreign key are, you have `models
   },
   {
    "kind": "code",
-   "art": "table",
+   "art": "blueprint",
    "kicker": "Lab · Step 2",
    "title": "Describe your tables",
    "file": "models.py",
@@ -1653,7 +1653,7 @@ You can explain what a table, row, column, and foreign key are, you have `models
   },
   {
    "kind": "code",
-   "art": "database",
+   "art": "code",
    "kicker": "Lab · Step 3",
    "title": "Read the SQL",
    "file": "SQL",
@@ -1675,7 +1675,7 @@ You can explain what a table, row, column, and foreign key are, you have `models
   },
   {
    "kind": "flow",
-   "art": "database",
+   "art": "file",
    "kicker": "Lab · Steps 4 and 5",
    "title": "Create it, then save real data",
    "steps": [
@@ -1862,7 +1862,7 @@ You have a written answer to all three questions above, in your own words, even 
   },
   {
    "kind": "flow",
-   "art": "architecture",
+   "art": "blueprint",
    "kicker": "Lab · Step 1",
    "title": "TrackIt today",
    "steps": [
@@ -1891,7 +1891,7 @@ You have a written answer to all three questions above, in your own words, even 
   },
   {
    "kind": "list",
-   "art": "ask",
+   "art": "gauge",
    "kicker": "Lab · Step 2",
    "title": "Three questions for any design",
    "items": [
@@ -2104,7 +2104,7 @@ You can hash a password, verify it correctly, and explain why plain-text passwor
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "fingerprint",
    "kicker": "Concepts",
    "title": "Three words to know",
    "items": [
@@ -2142,7 +2142,7 @@ You can hash a password, verify it correctly, and explain why plain-text passwor
   },
   {
    "kind": "code",
-   "art": "hash",
+   "art": "password",
    "kicker": "Lab · Step 2",
    "title": "Hash and check passwords",
    "file": "auth.py",
@@ -2186,7 +2186,7 @@ You can hash a password, verify it correctly, and explain why plain-text passwor
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "checklist",
    "kicker": "Lab · Step 4",
    "title": "Ask these on every endpoint",
    "items": [
@@ -2451,7 +2451,7 @@ You understand why `ParsedTask` and the try/except block exist, even before wiri
   },
   {
    "kind": "flow",
-   "art": "sparkle",
+   "art": "neural",
    "kicker": "Lab · Step 3",
    "title": "Call the model safely",
    "steps": [
@@ -2666,7 +2666,7 @@ Your tests pass locally, and you've created a branch and pull request on GitHub.
   },
   {
    "kind": "list",
-   "art": "test",
+   "art": "checklist",
    "kicker": "Concepts",
    "title": "Two ideas",
    "items": [
@@ -2696,7 +2696,7 @@ Your tests pass locally, and you've created a branch and pull request on GitHub.
   },
   {
    "kind": "code",
-   "art": "test",
+   "art": "code",
    "kicker": "Lab · Step 2",
    "title": "Your first tests",
    "file": "test_priority.py",
@@ -2722,7 +2722,7 @@ Your tests pass locally, and you've created a branch and pull request on GitHub.
   },
   {
    "kind": "big",
-   "art": "test",
+   "art": "terminal",
    "kicker": "Lab · Step 3",
    "title": "Run them",
    "big": "2 passed",
@@ -2766,7 +2766,7 @@ Your tests pass locally, and you've created a branch and pull request on GitHub.
   },
   {
    "kind": "flow",
-   "art": "git",
+   "art": "merge",
    "kicker": "Lab · Step 5",
    "title": "The team workflow",
    "steps": [
@@ -2996,7 +2996,7 @@ Your app runs inside a Docker container, and a pull request on GitHub automatica
   },
   {
    "kind": "code",
-   "art": "container",
+   "art": "file",
    "kicker": "Lab · Steps 1 and 2",
    "title": "A Dockerfile, and what to leave out",
    "file": "Dockerfile",
@@ -3018,7 +3018,7 @@ Your app runs inside a Docker container, and a pull request on GitHub automatica
   },
   {
    "kind": "flow",
-   "art": "container",
+   "art": "terminal",
    "kicker": "Lab · Steps 3 and 4",
    "title": "Build and run it",
    "steps": [
@@ -3051,7 +3051,7 @@ Your app runs inside a Docker container, and a pull request on GitHub automatica
   },
   {
    "kind": "code",
-   "art": "loop",
+   "art": "pipeline",
    "kicker": "Lab · Step 5",
    "title": "Tests that run themselves",
    "file": ".github/workflows/ci.yml",

@@ -128,7 +128,7 @@ solutions_brief_project/
   },
   {
    "kind": "list",
-   "art": "people",
+   "art": "network",
    "kicker": "Steps 3 and 4",
    "title": "Stakeholders and goals",
    "items": [
@@ -166,7 +166,7 @@ solutions_brief_project/
   },
   {
    "kind": "list",
-   "art": "lock",
+   "art": "scales",
    "kicker": "Steps 5 and 6",
    "title": "Constraints, then a direction",
    "items": [
@@ -212,7 +212,7 @@ solutions_brief_project/
   },
   {
    "kind": "flow",
-   "art": "doc",
+   "art": "checklist",
    "kicker": "Step 7",
    "title": "Assemble the brief",
    "steps": [
@@ -457,7 +457,7 @@ system_diagram_project/
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "chain",
    "kicker": "Step 4",
    "title": "The request flow",
    "steps": [
@@ -732,7 +732,7 @@ model_comparison_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "calc",
+   "art": "scales",
    "kicker": "Project 3 · Model options",
    "title": "Compare before you choose",
    "beats": [
@@ -746,7 +746,7 @@ model_comparison_project/
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "checklist",
    "kicker": "Steps 2 and 3",
    "title": "Criteria first, then candidates",
    "items": [
@@ -784,7 +784,7 @@ model_comparison_project/
   },
   {
    "kind": "list",
-   "art": "fork",
+   "art": "table",
    "kicker": "Steps 4 and 5",
    "title": "The matrix, and a key tradeoff",
    "items": [
@@ -822,7 +822,7 @@ model_comparison_project/
   },
   {
    "kind": "code",
-   "art": "calc",
+   "art": "coin",
    "kicker": "Step 6",
    "title": "Estimate the cost",
    "file": "model_comparison_project",
@@ -1006,7 +1006,7 @@ full_architecture_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "architecture",
+   "art": "blueprint",
    "kicker": "Project 4 · Full architecture",
    "title": "Design the whole system",
    "beats": [
@@ -1020,7 +1020,7 @@ full_architecture_project/
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "architecture",
    "kicker": "Step 2",
    "title": "Three reference architectures",
    "items": [
@@ -1062,7 +1062,7 @@ full_architecture_project/
   },
   {
    "kind": "list",
-   "art": "api",
+   "art": "plug",
    "kicker": "Steps 4 and 5",
    "title": "Make it specific, add integration",
    "items": [
@@ -1319,7 +1319,7 @@ data_infra_layer_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "database",
+   "art": "cloudlock",
    "kicker": "Project 5 · Data and infrastructure",
    "title": "Secure the layer underneath",
    "beats": [
@@ -1375,7 +1375,7 @@ data_infra_layer_project/
   },
   {
    "kind": "list",
-   "art": "shield",
+   "art": "firewall",
    "kicker": "Steps 4 and 5",
    "title": "Network security and access",
    "items": [
@@ -1447,7 +1447,7 @@ data_infra_layer_project/
   },
   {
    "kind": "quote",
-   "art": "proof",
+   "art": "checklist",
    "kicker": "Steps 6 and 8",
    "title": "Map it to compliance",
    "quote": "Data flow → Storage → Network security → Access control → Compliance mapping",
@@ -1602,7 +1602,7 @@ governance_risk_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "warning",
+   "art": "scales",
    "kicker": "Project 6 · Governance and risk",
    "title": "Protect the organization",
    "beats": [
@@ -1670,7 +1670,7 @@ governance_risk_project/
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "shield",
    "kicker": "Steps 3 and 4",
    "title": "Assess, then mitigate",
    "items": [
@@ -1704,7 +1704,7 @@ governance_risk_project/
   },
   {
    "kind": "list",
-   "art": "stopwatch",
+   "art": "bell",
    "kicker": "Steps 5 and 6",
    "title": "When it goes wrong",
    "items": [
@@ -1884,7 +1884,7 @@ architecture_proposal_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "people",
+   "art": "presentation",
    "kicker": "Project 7 · The proposal",
    "title": "Get it approved",
    "beats": [
@@ -1915,7 +1915,7 @@ architecture_proposal_project/
   },
   {
    "kind": "flow",
-   "art": "path",
+   "art": "chain",
    "kicker": "Steps 3 and 4",
    "title": "Structure the presentation",
    "steps": [
@@ -1949,7 +1949,7 @@ architecture_proposal_project/
   },
   {
    "kind": "list",
-   "art": "ask",
+   "art": "chat",
    "kicker": "Steps 5 and 6",
    "title": "Objections and the ask",
    "items": [
@@ -1979,7 +1979,7 @@ architecture_proposal_project/
   },
   {
    "kind": "flow",
-   "art": "rocket",
+   "art": "mic",
    "kicker": "Steps 7 and 8",
    "title": "Practice, then deliver",
    "steps": [

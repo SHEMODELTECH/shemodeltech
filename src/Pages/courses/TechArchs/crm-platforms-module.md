@@ -203,7 +203,7 @@ You have a Zoho workflow rule that fires on a status change and a working Bluepr
  "scenes": [
   {
    "kind": "title",
-   "art": "people",
+   "art": "idcard",
    "kicker": "Module · CRM platforms",
    "title": "Three CRMs, one afternoon each",
    "beats": [
@@ -270,7 +270,7 @@ You have a Zoho workflow rule that fires on a status change and a working Bluepr
   },
   {
    "kind": "flow",
-   "art": "growth",
+   "art": "funnel",
    "kicker": "Topic 1 · Lab",
    "title": "Build your HubSpot CRM",
    "steps": [
@@ -351,7 +351,7 @@ You have a Zoho workflow rule that fires on a status change and a working Bluepr
   },
   {
    "kind": "flow",
-   "art": "blueprint",
+   "art": "bolt",
    "kicker": "Topic 2 · Lab",
    "title": "A record-triggered flow",
    "steps": [

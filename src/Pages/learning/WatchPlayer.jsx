@@ -382,5 +382,7 @@ const WATCH_CSS = `
 .wp-art .fa { fill:var(--wp-accent); } .wp-art .fs { fill:var(--wp-soft); } .wp-art .fk { fill:var(--wp-ink); } .wp-art .fp { fill:#fff; } .wp-art .fl { fill:var(--wp-line); }
 .wp-art .sa { stroke:var(--wp-accent); fill:none; } .wp-art .sk { stroke:var(--wp-ink); fill:none; } .wp-art .sp { stroke:#fff; fill:none; }
 .wp-art .fp.sk, .wp-art .fp.sa { fill:#fff; }
+.wp-art .fa.sk, .wp-art .fa.sp { fill:var(--wp-accent); } .wp-art .fs.sk, .wp-art .fs.sa { fill:var(--wp-soft); }
+.wp-art .fk.sa, .wp-art .fk.sp { fill:var(--wp-ink); } .wp-art .fl.sk, .wp-art .fl.sa { fill:var(--wp-line); }
 @media (prefers-reduced-motion: reduce) { .wp *, .wp *::before, .wp *::after { animation:none !important; transition:none !important; } }
 `;

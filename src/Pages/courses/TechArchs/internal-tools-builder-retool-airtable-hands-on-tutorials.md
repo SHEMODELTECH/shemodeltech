@@ -182,7 +182,7 @@ operations (Airtable base)
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "funnel",
    "kicker": "Steps 6 and 7",
    "title": "Views: one table, many needs",
    "items": [
@@ -224,7 +224,7 @@ operations (Airtable base)
   },
   {
    "kind": "big",
-   "art": "growth",
+   "art": "pencil",
    "kicker": "Step 8",
    "title": "Add realistic sample data",
    "big": "~10 orders",
@@ -390,7 +390,7 @@ Automated base
  "scenes": [
   {
    "kind": "title",
-   "art": "calc",
+   "art": "gear",
    "kicker": "Project 2 · Automate and compute",
    "title": "Make the database do work",
    "beats": [
@@ -456,7 +456,7 @@ Automated base
   },
   {
    "kind": "flow",
-   "art": "loop",
+   "art": "mail",
    "kicker": "Steps 5 and 6",
    "title": "Email the customer when it ships",
    "steps": [
@@ -669,7 +669,7 @@ Retool app: operations-tool
  "scenes": [
   {
    "kind": "title",
-   "art": "laptop",
+   "art": "dashboard",
    "kicker": "Project 3 · First Retool app",
    "title": "A custom interface on your data",
    "beats": [
@@ -935,7 +935,7 @@ Write actions
   },
   {
    "kind": "flow",
-   "art": "pencil",
+   "art": "form",
    "kicker": "Steps 2 to 4",
    "title": "Edit a record",
    "steps": [
@@ -965,7 +965,7 @@ Write actions
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "bell",
    "kicker": "Step 5",
    "title": "Tell users what happened",
    "items": [
@@ -1204,7 +1204,7 @@ Access control
   },
   {
    "kind": "code",
-   "art": "people",
+   "art": "eye",
    "kicker": "Step 3",
    "title": "Hide admin controls",
    "file": "Delete button · Hidden",
@@ -1451,7 +1451,7 @@ Deployed tool
   },
   {
    "kind": "list",
-   "art": "palette",
+   "art": "layout",
    "kicker": "Steps 1 to 3",
    "title": "Make it easy to use",
    "items": [
@@ -1481,7 +1481,7 @@ Deployed tool
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "server",
    "kicker": "Step 4",
    "title": "Staging and production",
    "items": [

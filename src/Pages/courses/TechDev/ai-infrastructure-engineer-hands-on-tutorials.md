@@ -134,7 +134,7 @@ infra_stack_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "layers",
+   "art": "server",
    "kicker": "Project 1 · The infrastructure stack",
    "title": "See the system as layers",
    "beats": [
@@ -148,7 +148,7 @@ infra_stack_project/
   },
   {
    "kind": "list",
-   "art": "calc",
+   "art": "chip",
    "kicker": "Concept",
    "title": "Training versus inference",
    "items": [
@@ -654,7 +654,7 @@ monitoring_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "terminal",
+   "art": "pulse",
    "kicker": "Project 2 · Monitoring scripts",
    "title": "See what the machine is doing",
    "beats": [
@@ -731,7 +731,7 @@ monitoring_project/
   },
   {
    "kind": "list",
-   "art": "graph",
+   "art": "gauge",
    "kicker": "Steps 5 to 10",
    "title": "One monitor per resource",
    "items": [
@@ -785,7 +785,7 @@ monitoring_project/
   },
   {
    "kind": "code",
-   "art": "warning",
+   "art": "bell",
    "kicker": "Step 11",
    "title": "A threshold alert",
    "file": "monitor.sh",
@@ -1110,7 +1110,7 @@ cloud_deploy_project/
   },
   {
    "kind": "quote",
-   "art": "warning",
+   "art": "coin",
    "kicker": "Before you start",
    "title": "Real resources cost money",
    "quote": "Stay in the free tier. Set a budget alert. Always shut down.",
@@ -1131,7 +1131,7 @@ cloud_deploy_project/
   },
   {
    "kind": "flow",
-   "art": "cloud",
+   "art": "server",
    "kicker": "Steps 3 and 4",
    "title": "Create a VM, open one port",
    "steps": [
@@ -1448,7 +1448,7 @@ container_project/
   },
   {
    "kind": "list",
-   "art": "container",
+   "art": "venn",
    "kicker": "Concept",
    "title": "Container versus VM",
    "items": [
@@ -1769,7 +1769,7 @@ benchmark_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "stopwatch",
+   "art": "gauge",
    "kicker": "Project 5 · Benchmarking",
    "title": "Measure, don't guess",
    "beats": [
@@ -1783,7 +1783,7 @@ benchmark_project/
   },
   {
    "kind": "list",
-   "art": "bars",
+   "art": "stopwatch",
    "kicker": "Concept",
    "title": "What fast means",
    "items": [
@@ -1821,7 +1821,7 @@ benchmark_project/
   },
   {
    "kind": "big",
-   "art": "warning",
+   "art": "scales",
    "kicker": "Step 3",
    "title": "A fair comparison",
    "big": "Same image, two machines",
@@ -1861,7 +1861,7 @@ benchmark_project/
   },
   {
    "kind": "quote",
-   "art": "calc",
+   "art": "coin",
    "kicker": "Step 6",
    "title": "Cost per thousand requests",
    "quote": "cost per 1,000 requests = hourly cost ÷ (requests/sec × 3600) × 1000",
@@ -2302,7 +2302,7 @@ autoscaling_api_project/
   },
   {
    "kind": "flow",
-   "art": "boxes",
+   "art": "container",
    "kicker": "Steps 3 to 6",
    "title": "A practice cluster",
    "steps": [
@@ -2374,7 +2374,7 @@ autoscaling_api_project/
   },
   {
    "kind": "code",
-   "art": "growth",
+   "art": "gauge",
    "kicker": "Step 9",
    "title": "The HorizontalPodAutoscaler",
    "file": "hpa.yaml",
@@ -3171,7 +3171,7 @@ observability_project/
  "scenes": [
   {
    "kind": "title",
-   "art": "graph",
+   "art": "eye",
    "kicker": "Project 7 · Monitoring and alerting",
    "title": "Give your API eyes",
    "beats": [
@@ -3256,7 +3256,7 @@ observability_project/
   },
   {
    "kind": "code",
-   "art": "warning",
+   "art": "bell",
    "kicker": "Step 6",
    "title": "An alert rule",
    "file": "prometheus/rules.yml",
@@ -3278,7 +3278,7 @@ observability_project/
   },
   {
    "kind": "flow",
-   "art": "layers",
+   "art": "dashboard",
    "kicker": "Steps 7 to 11",
    "title": "Run the stack",
    "steps": [

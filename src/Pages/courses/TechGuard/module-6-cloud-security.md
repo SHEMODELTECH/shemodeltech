@@ -297,7 +297,7 @@ You can navigate GCP's resource hierarchy and IAM bindings, inspect a service ac
  "scenes": [
   {
    "kind": "title",
-   "art": "cloud",
+   "art": "cloudlock",
    "kicker": "Module 6 · Cloud security",
    "title": "Secure what you put in the cloud",
    "beats": [
@@ -352,7 +352,7 @@ You can navigate GCP's resource hierarchy and IAM bindings, inspect a service ac
   },
   {
    "kind": "list",
-   "art": "key",
+   "art": "blocks",
    "kicker": "Topic 6.1 · AWS",
    "title": "The pieces you configure",
    "items": [
@@ -538,7 +538,7 @@ You can navigate GCP's resource hierarchy and IAM bindings, inspect a service ac
   },
   {
    "kind": "list",
-   "art": "layers",
+   "art": "idcard",
    "kicker": "Topic 6.3 · GCP",
    "title": "Roles and service accounts",
    "items": [
@@ -584,7 +584,7 @@ You can navigate GCP's resource hierarchy and IAM bindings, inspect a service ac
   },
   {
    "kind": "list",
-   "art": "search",
+   "art": "checklist",
    "kicker": "Lab · GCP findings",
    "title": "Review the sample project",
    "items": [

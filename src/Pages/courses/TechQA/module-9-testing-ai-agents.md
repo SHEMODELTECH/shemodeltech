@@ -779,7 +779,7 @@ Done when `pytest -v` shows 14 or more tests passing offline (the 11 given, your
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "robot",
    "kicker": "Module 9 · Testing AI agents",
    "title": "When the output keeps changing",
    "beats": [
@@ -796,7 +796,7 @@ Done when `pytest -v` shows 14 or more tests passing offline (the 11 given, your
   },
   {
    "kind": "list",
-   "art": "warning",
+   "art": "chat",
    "kicker": "Topic 9.1 · Why it's hard",
    "title": "Three broken assumptions",
    "items": [
@@ -838,7 +838,7 @@ Done when `pytest -v` shows 14 or more tests passing offline (the 11 given, your
   },
   {
    "kind": "list",
-   "art": "target",
+   "art": "scales",
    "kicker": "Topic 9.1 · Test oracles",
    "title": "Strongest oracle first",
    "items": [
@@ -884,7 +884,7 @@ Done when `pytest -v` shows 14 or more tests passing offline (the 11 given, your
   },
   {
    "kind": "flow",
-   "art": "blocks",
+   "art": "flask",
    "kicker": "Topic 9.2 · The evaluation suite",
    "title": "One switch, two modes",
    "steps": [
@@ -944,7 +944,7 @@ Done when `pytest -v` shows 14 or more tests passing offline (the 11 given, your
   },
   {
    "kind": "list",
-   "art": "proof",
+   "art": "cross",
    "kicker": "Topic 9.2 · Lab",
    "title": "Fail on purpose, then go live",
    "items": [
@@ -986,7 +986,7 @@ Done when `pytest -v` shows 14 or more tests passing offline (the 11 given, your
   },
   {
    "kind": "list",
-   "art": "lock",
+   "art": "warning",
    "kicker": "Topic 9.3 · Adversarial testing",
    "title": "Try to make it misbehave",
    "items": [
@@ -1058,7 +1058,7 @@ Done when `pytest -v` shows 14 or more tests passing offline (the 11 given, your
   },
   {
    "kind": "list",
-   "art": "doc",
+   "art": "bug",
    "kicker": "Topic 9.3 · Bug reports",
    "title": "It answered wrong isn't reproducible",
    "items": [
@@ -1112,7 +1112,7 @@ Done when `pytest -v` shows 14 or more tests passing offline (the 11 given, your
   },
   {
    "kind": "flow",
-   "art": "git",
+   "art": "pipeline",
    "kicker": "Topic 9.3 · CI",
    "title": "Offline on every push, live by hand",
    "steps": [
