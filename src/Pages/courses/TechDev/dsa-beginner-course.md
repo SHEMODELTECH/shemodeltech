@@ -96,6 +96,194 @@ You ran the timing comparison and can explain, in your own words, why the fast v
 
 *Answers: 1) How an algorithm's cost grows as input size grows, not the exact runtime. 2) Not necessarily for small inputs - but as data grows, O(1) wins. 3) Test data is often small; the cost only becomes visible at real-world scale. 4) O(n) roughly doubles; O(n²) roughly quadruples. 5) It uses a set for instant membership checks instead of comparing every pair.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "growth",
+   "kicker": "Module 0 · Big O",
+   "title": "How to think about speed",
+   "beats": [
+    {
+     "say": "Welcome to Data Structures and Algorithms for Builders."
+    },
+    {
+     "say": "Every data structure is a trade-off. None is best. Each is fast at some things and slow at others."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "growth",
+   "kicker": "Concept",
+   "title": "Big O describes growth",
+   "items": [
+    [
+     "O(1)",
+     "Constant: dictionary lookup"
+    ],
+    [
+     "O(log n)",
+     "Slow growth: binary search"
+    ],
+    [
+     "O(n)",
+     "In step: scan a list"
+    ],
+    [
+     "O(n log n)",
+     "Efficient sorting"
+    ],
+    [
+     "O(n²)",
+     "Every pair: double data, 4× time"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Big O describes how an operation's cost grows as your data grows. Not the exact speed, the pattern.",
+     "show": 0
+    },
+    {
+     "say": "O of one: the same speed at any size.",
+     "show": 1
+    },
+    {
+     "say": "O of log n: grows slowly.",
+     "show": 2
+    },
+    {
+     "say": "O of n: grows in step with the data.",
+     "show": 3
+    },
+    {
+     "say": "O of n log n: a little worse, like efficient sorting.",
+     "show": 4
+    },
+    {
+     "say": "And O of n squared: double the data, four times the time.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Why it matters",
+   "title": "Fine in testing, broken in production",
+   "quote": "100 users: instant. 100,000 users: minutes.",
+   "beats": [
+    {
+     "say": "With a hundred users, an n squared operation feels instant.",
+     "show": 0
+    },
+    {
+     "say": "With a hundred thousand, the same code can take minutes.",
+     "show": 1
+    },
+    {
+     "say": "It's the most common reason apps that worked in testing fall over in production.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "stopwatch",
+   "kicker": "Lab",
+   "title": "Time it yourself",
+   "items": [
+    [
+     "Compare every pair",
+     "O(n²)"
+    ],
+    [
+     "Remember with a set",
+     "O(n)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, you time two ways to find a duplicate.",
+     "show": 0
+    },
+    {
+     "say": "The slow way compares every pair. That's n squared.",
+     "show": 1
+    },
+    {
+     "say": "The fast way remembers what it's seen in a set. That's n.",
+     "show": 2
+    },
+    {
+     "say": "Double the data, and the slow one takes about four times longer. The fast one, about twice.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "As data doubles, what happens to an O(n²) operation?",
+   "options": [
+    "It roughly doubles",
+    "It roughly quadruples",
+    "It stays the same"
+   ],
+   "answer": 1,
+   "good": "That's right. O of n squared roughly quadruples when the data doubles.",
+   "bad": "Not quite. O of n squared roughly quadruples when the data doubles.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "As data doubles, what happens to an O(n²) operation?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why the set version wins",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've run the timing comparison and can explain why the fast version wins.",
+     "show": 1
+    },
+    {
+     "say": "Next, arrays and strings.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Arrays & Strings - The Structures You Already Use
@@ -160,6 +348,153 @@ You can explain why appending to a list is fast but inserting at position 0 is s
 
 *Answers: 1) O(1) - instant, regardless of list size. 2) Every remaining item has to shift over by one position. 3) An ordered feed, list, or history (many valid answers). 4) Reverses the string. 5) To avoid an error if the item isn't in the cart at all.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "array",
+   "kicker": "Module 1 · Arrays and strings",
+   "title": "The structures you already use",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "An array, Python's list, keeps items in order, each reachable instantly by position."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "array",
+   "kicker": "Concept",
+   "title": "What's fast, what's slow",
+   "items": [
+    [
+     "By index",
+     "O(1)"
+    ],
+    [
+     "Search for a value",
+     "O(n)"
+    ],
+    [
+     "Add/remove at the end",
+     "O(1)"
+    ],
+    [
+     "At the start or middle",
+     "O(n): items shift"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are the costs.",
+     "show": 0
+    },
+    {
+     "say": "Getting an item by position: O of one.",
+     "show": 1
+    },
+    {
+     "say": "Searching for a value: O of n.",
+     "show": 2
+    },
+    {
+     "say": "Adding or removing at the end: O of one.",
+     "show": 3
+    },
+    {
+     "say": "At the start or middle: O of n, because everything after it has to shift.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab",
+   "title": "A shopping cart, and a palindrome",
+   "file": "Python",
+   "code": "def add_item(cart, item):\n    cart.append(item)          # O(1)\n\ndef remove_item(cart, item):\n    if item in cart:           # O(n) search\n        cart.remove(item)      # O(n) removal\n\ndef is_palindrome(s):\n    cleaned = s.lower().replace(\" \", \"\")\n    return cleaned == cleaned[::-1]",
+   "beats": [
+    {
+     "say": "Append adds to the cart instantly.",
+     "show": 0
+    },
+    {
+     "say": "Removing an item first searches for it, then shifts everything after it. Both are O of n.",
+     "show": 1
+    },
+    {
+     "say": "And a palindrome check: lower-case it, remove spaces, and compare with its reverse.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is removing from the front of a list slow?",
+   "options": [
+    "Python checks it twice",
+    "Every remaining item has to shift over",
+    "The front is stored on disk"
+   ],
+   "answer": 1,
+   "good": "That's right. Every remaining item has to shift over by one position.",
+   "bad": "Not quite. Every remaining item has to shift over by one position.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is removing from the front of a list slow?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain append vs insert at 0",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why appending is fast but inserting at position zero is slow.",
+     "show": 1
+    },
+    {
+     "say": "Next, hash maps.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: Hash Maps - The Structure Behind Fast Lookups
@@ -215,6 +550,174 @@ You can explain why looking up a user in a dictionary is faster than looping thr
 5. Is dictionary order guaranteed in modern Python?
 
 *Answers: 1) Speed - O(1) lookups at the cost of using more memory than a plain list. 2) The dictionary jumps directly to the value via the hashed key instead of checking every item one by one. 3) It would raise a `KeyError` because the key doesn't exist yet. 4) User lookup by email/username, caching, deduplication, counting/analytics (any two). 5) Yes. Since Python 3.7, the language guarantees that dictionaries keep keys in the order they were inserted.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "key",
+   "kicker": "Module 2 · Hash maps",
+   "title": "The secret behind fast lookups",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "A hash map, Python's dict, stores key and value pairs, and finds any key almost instantly, whatever its size."
+    },
+    {
+     "say": "It turns each key into a number, a hash, that says exactly where the value lives."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Where you'd use this",
+   "title": "Arguably the most-used structure",
+   "items": [
+    [
+     "User by email",
+     ""
+    ],
+    [
+     "Caching",
+     ""
+    ],
+    [
+     "Counting",
+     ""
+    ],
+    [
+     "Deduplicating",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "It's arguably the most used structure in real backends.",
+     "show": 0
+    },
+    {
+     "say": "Looking up a user by email,",
+     "show": 1
+    },
+    {
+     "say": "caching,",
+     "show": 2
+    },
+    {
+     "say": "counting things, like word frequency,",
+     "show": 3
+    },
+    {
+     "say": "and removing duplicates.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Lab",
+   "title": "Count words",
+   "file": "Python",
+   "code": "def word_frequency(text):\n    counts = {}\n    for word in text.lower().split():\n        counts[word] = counts.get(word, 0) + 1\n    return counts",
+   "beats": [
+    {
+     "say": "To count words, loop through them.",
+     "show": 0
+    },
+    {
+     "say": "Counts dot get, word, zero, returns the current count, or zero if the word is new. Then add one.",
+     "show": 1
+    },
+    {
+     "say": "In the sample sentence, the appears three times.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "key",
+   "kicker": "Lab",
+   "title": "Find a user instantly",
+   "file": "Python",
+   "code": "users_by_email = {\n    \"alice@example.com\": {\"id\": 1, \"name\": \"Alice\"},\n    \"bob@example.com\": {\"id\": 2, \"name\": \"Bob\"},\n}\n\nusers_by_email.get(\"bob@example.com\")   # O(1)",
+   "beats": [
+    {
+     "say": "And to find a user by email, look up the key.",
+     "show": 0
+    },
+    {
+     "say": "That's O of one. A list would have to check every user, one by one.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What happens with counts[word] += 1 on a word that isn't there yet?",
+   "options": [
+    "It starts at 1",
+    "It raises a KeyError",
+    "It's ignored"
+   ],
+   "answer": 1,
+   "good": "That's right. It raises a key error, because the key doesn't exist yet. That's why get with a default helps.",
+   "bad": "Not quite. It raises a key error, because the key doesn't exist yet. That's why get with a default helps.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What happens with counts[word] += 1 on a word that isn't there yet?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain dict lookup vs looping",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why a dictionary lookup beats looping through a list.",
+     "show": 1
+    },
+    {
+     "say": "Next, sets.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -284,6 +787,191 @@ You can explain why `order_id in processed_order_ids` stays fast even as the set
 
 *Answers: 1) A set stores only unique values with no guaranteed order; a list allows duplicates and preserves order. 2) It uses the same hashing approach as a dictionary, jumping directly to where a value would be rather than scanning everything. 3) Returns the intersection, the values present in both sets. 4) Because `set()` uses O(1) hashing internally instead of comparing every item against every other item. 5) Rate-limiting, "already voted" checks, deduplicating processed webhook or order IDs (any valid example).*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "venn",
+   "kicker": "Module 3 · Sets",
+   "title": "Fast membership and uniqueness",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "A set stores unique values, with no duplicates and no order. Checking whether something is in it is O of one."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "venn",
+   "kicker": "Where you'd use this",
+   "title": "Have I seen this before?",
+   "items": [
+    [
+     "Deduplicate emails",
+     ""
+    ],
+    [
+     "Already voted?",
+     ""
+    ],
+    [
+     "Skip processed orders",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Use a set whenever the question is, have I seen this before?",
+     "show": 0
+    },
+    {
+     "say": "Removing duplicate emails before a send,",
+     "show": 1
+    },
+    {
+     "say": "checking whether someone has already voted,",
+     "show": 2
+    },
+    {
+     "say": "or skipping orders you've already processed.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab",
+   "title": "Skip what's already done",
+   "file": "Python",
+   "code": "processed_order_ids = set()\n\ndef process_order(order_id):\n    if order_id in processed_order_ids:   # O(1)\n        print(f\"Order {order_id} already processed\")\n        return\n    processed_order_ids.add(order_id)",
+   "beats": [
+    {
+     "say": "Here, processed order I Ds live in a set.",
+     "show": 0
+    },
+    {
+     "say": "If an order is already in it, skip it. Otherwise, add it and process it.",
+     "show": 1
+    },
+    {
+     "say": "That check stays fast, even with a million orders.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "venn",
+   "kicker": "Lab",
+   "title": "Set operations",
+   "items": [
+    [
+     "a & b",
+     "Intersection: in both"
+    ],
+    [
+     "a - b",
+     "Difference: only in a"
+    ],
+    [
+     "a | b",
+     "Union: in either"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Sets also combine quickly.",
+     "show": 0
+    },
+    {
+     "say": "The ampersand gives the intersection: interests Alice and Bob share.",
+     "show": 1
+    },
+    {
+     "say": "Minus gives the difference: Alice's only.",
+     "show": 2
+    },
+    {
+     "say": "And the bar gives the union: everyone's.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does & do between two sets?",
+   "options": [
+    "Joins them into one",
+    "Returns values in both",
+    "Removes duplicates"
+   ],
+   "answer": 1,
+   "good": "That's right. It returns the intersection: the values present in both sets.",
+   "bad": "Not quite. It returns the intersection: the values present in both sets.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does & do between two sets?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why set lookups stay fast",
+     ""
+    ],
+    [
+     "You used a set operation",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why set membership stays fast at any size,",
+     "show": 1
+    },
+    {
+     "say": "and you've used at least one set operation.",
+     "show": 2
+    },
+    {
+     "say": "Next, linked lists.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4: Linked Lists - When Order Matters More Than Instant Access
@@ -343,6 +1031,175 @@ You can explain why `add_front` is O(1) for a linked list but O(n) for a Python 
 5. What does `current = current.next` do in `to_list`?
 
 *Answers: 1) You lose instant indexed access, but gain fast insert/delete at known positions. 2) You only update a couple of pointers, no shifting of other elements. 3) Undo/redo history, browser back/forward (either is valid). 4) No - you must walk from the head, node by node, which is O(n). 5) Moves to the next node in the chain, one step at a time.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "chain",
+   "kicker": "Module 4 · Linked lists",
+   "title": "When order matters more than instant access",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "A linked list stores items as a chain of nodes, each pointing to the next."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "chain",
+   "kicker": "Concept",
+   "title": "The trade-off",
+   "items": [
+    [
+     "Reach an item",
+     "O(n): walk the chain"
+    ],
+    [
+     "Insert or remove there",
+     "O(1): change pointers"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The trade-off.",
+     "show": 0
+    },
+    {
+     "say": "You can't jump to item five hundred. You have to walk the chain, which is O of n.",
+     "show": 1
+    },
+    {
+     "say": "But once you're there, inserting or removing is O of one. You just change pointers, nothing shifts.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "chain",
+   "kicker": "Lab",
+   "title": "Add to the front",
+   "file": "Python",
+   "code": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n\ndef add_front(self, value):\n    new_node = Node(value)\n    new_node.next = self.head\n    self.head = new_node        # O(1)",
+   "beats": [
+    {
+     "say": "Add front makes a new node, points it at the current head, and makes it the new head.",
+     "show": 0
+    },
+    {
+     "say": "That's O of one. A Python list would have to shift everything along.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Where you'd use this",
+   "title": "Chains in real products",
+   "items": [
+    [
+     "Undo / redo",
+     ""
+    ],
+    [
+     "Playlists",
+     ""
+    ],
+    [
+     "Back and forward",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Real examples look like chains.",
+     "show": 0
+    },
+    {
+     "say": "Undo and redo history.",
+     "show": 1
+    },
+    {
+     "say": "A playlist you reorder often.",
+     "show": 2
+    },
+    {
+     "say": "A browser's back and forward.",
+     "show": 3
+    },
+    {
+     "say": "In practice you'll mostly use built-ins, but this explains why they behave the way they do.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Can you reach the 100th item of a linked list in O(1)?",
+   "options": [
+    "Yes, by index",
+    "No, you walk from the head, so it's O(n)",
+    "Only if it's sorted"
+   ],
+   "answer": 1,
+   "good": "That's right. You have to walk from the head, node by node, which is O of n.",
+   "bad": "Not quite. You have to walk from the head, node by node, which is O of n.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Can you reach the 100th item of a linked list in O(1)?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain add_front: linked list vs list",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why adding to the front is O of one for a linked list, but O of n for a list.",
+     "show": 1
+    },
+    {
+     "say": "Next, stacks and queues.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -416,6 +1273,152 @@ You can explain, without looking back, why undo uses a stack and background jobs
 
 *Answers: 1) Last-In-First-Out; a stack of plates. 2) First-In-First-Out; a checkout line. 3) `deque.popleft()` is O(1); a plain list's `.pop(0)` is O(n) because everything shifts. 4) `.pop()` removes the last item added, which is exactly the most recent action. 5) Background job/task processing, email sending queues, print queues (any valid example).*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "stack",
+   "kicker": "Module 5 · Stacks and queues",
+   "title": "Order of operations",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "stack",
+   "kicker": "Concept",
+   "title": "Last in, or first in?",
+   "items": [
+    [
+     "Stack (LIFO)",
+     "Plates: take from the top"
+    ],
+    [
+     "Queue (FIFO)",
+     "A line: first come, first served"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A stack is last in, first out, like a stack of plates. You take from the top.",
+     "show": 1
+    },
+    {
+     "say": "A queue is first in, first out, like a checkout line.",
+     "show": 2
+    },
+    {
+     "say": "A Python list works well as a stack. For a queue, use deque, which is fast at both ends.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Lab · Stack",
+   "title": "Undo",
+   "file": "Python",
+   "code": "class UndoStack:\n    def __init__(self):\n        self._actions = []\n\n    def do(self, action):\n        self._actions.append(action)   # O(1)\n\n    def undo(self):\n        if self._actions:\n            return self._actions.pop()  # O(1), the most recent",
+   "beats": [
+    {
+     "say": "Undo is a stack.",
+     "show": 0
+    },
+    {
+     "say": "Do appends an action. Undo pops the last one, so the most recent action is undone first.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "path",
+   "kicker": "Lab · Queue",
+   "title": "Background jobs",
+   "file": "Python",
+   "code": "from collections import deque\n\njob_queue = deque()\njob_queue.append(\"send welcome email to Alice\")\njob_queue.append(\"send welcome email to Bob\")\n\njob_queue.popleft()   # Alice first: O(1)",
+   "beats": [
+    {
+     "say": "Background jobs are a queue.",
+     "show": 0
+    },
+    {
+     "say": "Append adds a job at the back. Pop left takes the next from the front, so Alice's email, queued first, goes first.",
+     "show": 1
+    },
+    {
+     "say": "Both are O of one with deque. A plain list's pop zero is O of n.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why use deque instead of a list for a queue?",
+   "options": [
+    "deque uses less memory",
+    "popleft is O(1), but a list's pop(0) is O(n)",
+    "Lists can't hold strings"
+   ],
+   "answer": 1,
+   "good": "That's right. Deque's pop left is O of one, while a list's pop zero shifts everything, which is O of n.",
+   "bad": "Not quite. Deque's pop left is O of one, while a list's pop zero shifts everything, which is O of n.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why use deque instead of a list for a queue?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain stack vs queue uses",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why undo uses a stack and background jobs use a queue.",
+     "show": 1
+    },
+    {
+     "say": "Next, recursion.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 6: Recursion - Functions That Call Themselves
@@ -480,6 +1483,179 @@ You can identify the base case and recursive step in both examples above without
 5. Could you solve `deep_sum` with loops alone? Why might recursion be cleaner here?
 
 *Answers: 1) A base case that stops the recursion, and a step that moves toward it. 2) It calls itself forever (or until it crashes with a stack overflow / max recursion depth error). 3) Folders can contain folders arbitrarily deep, and recursion naturally mirrors that nested structure. 4) Encountering a nested list triggers recursion; encountering a plain number is the base case. 5) Yes, with a manual stack - but recursion mirrors the nested structure directly, making the code shorter and easier to reason about.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "tree",
+   "kicker": "Module 6 · Recursion",
+   "title": "Functions that call themselves",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "Recursion solves a problem by calling itself on a smaller version of the same problem."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "tree",
+   "kicker": "Concept",
+   "title": "Two parts, always",
+   "items": [
+    [
+     "Base case",
+     "Answer directly, and stop"
+    ],
+    [
+     "Recursive step",
+     "Move toward the base case"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every recursive function needs two parts.",
+     "show": 0
+    },
+    {
+     "say": "A base case simple enough to answer directly, which stops it.",
+     "show": 1
+    },
+    {
+     "say": "And a step that moves toward that base case.",
+     "show": 2
+    },
+    {
+     "say": "Without a base case, it calls itself until it crashes.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab",
+   "title": "Add up nested lists",
+   "file": "Python",
+   "code": "def deep_sum(data):\n    total = 0\n    for item in data:\n        if isinstance(item, list):\n            total += deep_sum(item)   # recursive step\n        else:\n            total += item             # base case\n    return total\n\ndeep_sum([1, [2, 3, [4, 5]], 6, [7]])   # 28",
+   "beats": [
+    {
+     "say": "Deep sum adds every number in nested lists.",
+     "show": 0
+    },
+    {
+     "say": "If an item is a list, call deep sum on it. That's the recursive step.",
+     "show": 1
+    },
+    {
+     "say": "If it's a number, add it. That's the base case. The answer is twenty eight.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Where you'd use this",
+   "title": "Anything nested",
+   "items": [
+    [
+     "Folders in folders",
+     ""
+    ],
+    [
+     "Replies to replies",
+     ""
+    ],
+    [
+     "Category trees",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Recursion fits naturally nested things.",
+     "show": 0
+    },
+    {
+     "say": "Folders inside folders,",
+     "show": 1
+    },
+    {
+     "say": "replies to replies,",
+     "show": 2
+    },
+    {
+     "say": "and categories inside categories.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What happens if a recursive function has no base case?",
+   "options": [
+    "It returns zero",
+    "It calls itself until it crashes",
+    "Python adds one automatically"
+   ],
+   "answer": 1,
+   "good": "That's right. It keeps calling itself until it hits the maximum recursion depth and crashes.",
+   "bad": "Not quite. It keeps calling itself until it hits the maximum recursion depth and crashes.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What happens if a recursive function has no base case?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can find the base case and recursive step",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can spot the base case and the recursive step in both examples.",
+     "show": 1
+    },
+    {
+     "say": "Next, trees.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -561,6 +1737,158 @@ You can explain why searching a balanced BST is roughly O(log n) instead of O(n)
 
 *Answers: 1) Each node has at most two children. 2) To the left. 3) Each comparison eliminates roughly half the remaining nodes, similar to binary search. 4) A category menu, org chart, or nested comment thread (any valid example). 5) If the tree becomes unbalanced (e.g., values inserted in sorted order), it degrades into a structure closer to a linked list.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "tree",
+   "kicker": "Module 7 · Trees",
+   "title": "Hierarchies in code",
+   "beats": [
+    {
+     "say": "Welcome to Module 7."
+    },
+    {
+     "say": "A tree has one root, and each node points to its children, with no loops."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "tree",
+   "kicker": "Concept",
+   "title": "Binary search trees",
+   "items": [
+    [
+     "Binary tree",
+     "At most two children"
+    ],
+    [
+     "Binary search tree",
+     "Smaller left, larger right"
+    ],
+    [
+     "Search",
+     "About O(log n) when balanced"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A binary tree allows at most two children per node.",
+     "show": 1
+    },
+    {
+     "say": "A binary search tree keeps them ordered: smaller values go left, larger go right.",
+     "show": 2
+    },
+    {
+     "say": "So each comparison skips about half the tree. Searching a balanced one is roughly O of log n.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "tree",
+   "kicker": "Lab",
+   "title": "Search a product catalogue",
+   "file": "Python",
+   "code": "def _contains_recursive(self, node, value):\n    if node is None:\n        return False\n    if node.value == value:\n        return True\n    if value < node.value:\n        return self._contains_recursive(node.left, value)\n    return self._contains_recursive(node.right, value)",
+   "beats": [
+    {
+     "say": "Insert product I Ds: fifty, thirty, seventy, and so on.",
+     "show": 0
+    },
+    {
+     "say": "Contains compares with each node. Smaller? Go left. Larger? Go right. Hit an empty spot? It isn't there.",
+     "show": 1
+    },
+    {
+     "say": "Sixty is found. Ninety nine isn't.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Careful",
+   "title": "Unbalanced trees get slow",
+   "quote": "Sorted inserts → a lopsided tree → search slows to O(n).",
+   "beats": [
+    {
+     "say": "One catch.",
+     "show": 0
+    },
+    {
+     "say": "Insert values already in sorted order, and the tree becomes one long branch. Search slows down to O of n, like a linked list.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "In a binary search tree, where do smaller values go?",
+   "options": [
+    "To the right",
+    "To the left",
+    "At the root"
+   ],
+   "answer": 1,
+   "good": "That's right. Smaller values go to the left.",
+   "bad": "Not quite. Smaller values go to the left.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "In a binary search tree, where do smaller values go?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain O(log n) tree search",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why searching a balanced tree is about O of log n.",
+     "show": 1
+    },
+    {
+     "say": "Next, graphs.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 8: Graphs - Modeling Real Relationships
@@ -623,6 +1951,179 @@ You can explain why BFS, not DFS, is the right choice when you specifically need
 5. In the social graph example, why might "Carol" not appear in the returned path even though she's connected to Dave?
 
 *Answers: 1) A graph allows arbitrary connections between any nodes; a tree has a strict single-parent hierarchy with no cycles. 2) A queue processes nodes level by level (FIFO), which is what produces the shortest path first. 3) That the first path found to the target is the shortest one, in terms of number of connections. 4) "Shortest path" navigation, "degrees of connection" on social networks, dependency resolution (any valid example). 5) Both paths (through Bob or through Carol) have the same length. Bob comes before Carol in Alice's list, so BFS reaches Dave through Bob first, marks Dave as visited, and returns that first shortest path.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Module 8 · Graphs",
+   "title": "Model real relationships",
+   "beats": [
+    {
+     "say": "Welcome to Module 8."
+    },
+    {
+     "say": "A graph is nodes connected by edges. Unlike a tree, any node can connect to any other."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "graph",
+   "kicker": "Concept",
+   "title": "Two ways to explore",
+   "items": [
+    [
+     "BFS",
+     "Level by level: shortest path"
+    ],
+    [
+     "DFS",
+     "Deep first: explore everything"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two ways to explore a graph.",
+     "show": 0
+    },
+    {
+     "say": "Breadth first search, B F S, goes level by level, using a queue. It finds the shortest path.",
+     "show": 1
+    },
+    {
+     "say": "Depth first search, D F S, goes as deep as it can before backtracking. Good for exploring every possibility.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Where you'd use this",
+   "title": "Graphs are everywhere",
+   "items": [
+    [
+     "Social networks",
+     ""
+    ],
+    [
+     "Recommendations",
+     ""
+    ],
+    [
+     "Routes",
+     ""
+    ],
+    [
+     "Dependencies",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Social networks: who's connected to whom.",
+     "show": 1
+    },
+    {
+     "say": "Recommendations: people who bought this also bought that.",
+     "show": 2
+    },
+    {
+     "say": "Route navigation.",
+     "show": 3
+    },
+    {
+     "say": "And package managers like pip and npm, working out what to install.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "graph",
+   "kicker": "Lab",
+   "title": "Shortest path with BFS",
+   "file": "Python",
+   "code": "def bfs_shortest_path(graph, start, target):\n    visited = {start}\n    queue = deque([[start]])\n    while queue:\n        path = queue.popleft()\n        if path[-1] == target:\n            return path\n        for neighbor in graph.get(path[-1], []):\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append(path + [neighbor])",
+   "beats": [
+    {
+     "say": "The queue holds paths, not just nodes.",
+     "show": 0
+    },
+    {
+     "say": "Take the next path. If it reaches the target, done. Otherwise, add each unvisited neighbour as a longer path.",
+     "show": 1
+    },
+    {
+     "say": "The visited set stops it going round in circles. From Alice to Dave, the answer is Alice, Bob, Dave.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does BFS guarantee that DFS doesn't?",
+   "options": [
+    "It uses less memory",
+    "The first path it finds is the shortest",
+    "It visits nodes alphabetically"
+   ],
+   "answer": 1,
+   "good": "That's right. B F S guarantees the first path it finds to the target is the shortest.",
+   "bad": "Not quite. B F S guarantees the first path it finds to the target is the shortest.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does BFS guarantee that DFS doesn't?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why BFS finds the shortest path",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 8.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why B F S is the right choice for the shortest path.",
+     "show": 1
+    },
+    {
+     "say": "Next, sorting.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -690,6 +2191,143 @@ You can sort a list of dictionaries by one field, and by two fields with a tiebr
 
 *Answers: 1) Use each item's price as the value to compare when ordering. 2) Sorting by a tuple sorts by the first value, then breaks ties with the second, in one pass. 3) O(n log n). 4) Because re-sorting the whole list every time repeats work; a heap keeps the most urgent item at the front, and each add or remove costs only O(log n). 5) No - `sorted()` returns a new list; `.sort()` would modify the original in place.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "bars",
+   "kicker": "Module 9 · Sorting",
+   "title": "Order matters, and so does cost",
+   "beats": [
+    {
+     "say": "Welcome to Module 9."
+    },
+    {
+     "say": "Python's sorted uses an efficient O of n log n algorithm. You'll use it constantly."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "bars",
+   "kicker": "Lab",
+   "title": "Sort by a field",
+   "file": "Python",
+   "code": "by_price = sorted(products, key=lambda p: p[\"price\"])\n# Mouse, Monitor, Laptop\n\nby_price_desc = sorted(products, key=lambda p: p[\"price\"], reverse=True)\n# Laptop, Monitor, Mouse",
+   "beats": [
+    {
+     "say": "Key tells sorted what to compare. Here, each product's price.",
+     "show": 0
+    },
+    {
+     "say": "Add reverse equals true for highest first.",
+     "show": 1
+    },
+    {
+     "say": "Sorted returns a new list. Your original isn't changed.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "bars",
+   "kicker": "Lab",
+   "title": "Sort by two fields",
+   "file": "Python",
+   "code": "sorted(products, key=lambda p: (p[\"category\"], p[\"price\"]))\n# Mouse, Laptop (Electronics), then Desk (Furniture)",
+   "beats": [
+    {
+     "say": "To sort by category, then price, use a tuple as the key.",
+     "show": 0
+    },
+    {
+     "say": "It sorts by the first value, and breaks ties with the second, in one pass.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "tree",
+   "kicker": "Lab",
+   "title": "When not to re-sort: a heap",
+   "file": "Python",
+   "code": "import heapq\ntasks = []\nheapq.heappush(tasks, (3, \"Reply to email\"))\nheapq.heappush(tasks, (1, \"Fix login bug\"))\nheapq.heappush(tasks, (2, \"Review pull request\"))\n\nheapq.heappop(tasks)   # (1, \"Fix login bug\")",
+   "beats": [
+    {
+     "say": "If you keep needing the most urgent item, don't re-sort everything each time.",
+     "show": 0
+    },
+    {
+     "say": "A heap always keeps the smallest at the front. Adding or removing one is O of log n.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Does sorted() change the original list?",
+   "options": [
+    "Yes, always",
+    "No, it returns a new list",
+    "Only for numbers"
+   ],
+   "answer": 1,
+   "good": "That's right. Sorted returns a new list. The sort method is the one that changes the original.",
+   "bad": "Not quite. Sorted returns a new list. The sort method is the one that changes the original.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Does sorted() change the original list?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can sort by one field, and by two",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 9.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can sort by one field, and by two with a tiebreaker.",
+     "show": 1
+    },
+    {
+     "say": "Next, searching.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 10: Searching & Binary Search
@@ -744,6 +2382,152 @@ You can explain why binary search requires sorted data and what happens if you r
 5. Name a real feature where fast lookup on sorted data matters.
 
 *Answers: 1) The data must already be sorted. 2) Each step eliminates half the remaining search space. 3) It can give incorrect or missing results, since it relies on the sorted order to decide which half to search. 4) Not always - maintaining sorted order on every insert has its own cost, so the right choice depends on how often you search vs. insert. 5) Database index lookups, searching a sorted product catalog by ID (any valid example).*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "search",
+   "kicker": "Module 10 · Searching",
+   "title": "Binary search",
+   "beats": [
+    {
+     "say": "Welcome to Module 10."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Concept",
+   "title": "Two ways to search",
+   "items": [
+    [
+     "Linear search",
+     "One by one: O(n)"
+    ],
+    [
+     "Binary search",
+     "Halve each step: O(log n). Needs sorted data."
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Linear search checks each item, one by one. O of n.",
+     "show": 1
+    },
+    {
+     "say": "Binary search only works on sorted data. It keeps cutting the search space in half. O of log n.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "search",
+   "kicker": "Lab",
+   "title": "Halve it every step",
+   "file": "Python",
+   "code": "def binary_search(sorted_items, target):\n    low, high = 0, len(sorted_items) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if sorted_items[mid] == target:\n            return mid\n        elif sorted_items[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1",
+   "beats": [
+    {
+     "say": "Look at the middle item.",
+     "show": 0
+    },
+    {
+     "say": "If it's the target, done. If it's too small, search the top half. Too big, the bottom half.",
+     "show": 1
+    },
+    {
+     "say": "Repeat until found, or nothing's left.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "stopwatch",
+   "kicker": "Lab",
+   "title": "Half a million items",
+   "big": "~20 steps",
+   "sub": "to search 500,000 sorted items",
+   "beats": [
+    {
+     "say": "In a list of five hundred thousand sorted numbers,",
+     "show": 0
+    },
+    {
+     "say": "binary search finds any item in about twenty steps.",
+     "show": 1
+    },
+    {
+     "say": "Linear search could take tens of thousands.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What happens if you binary search unsorted data?",
+   "options": [
+    "It still works, just slower",
+    "It can give wrong or missing results",
+    "Python sorts it first"
+   ],
+   "answer": 1,
+   "good": "That's right. It relies on the sorted order to choose a half, so it can give wrong or missing results.",
+   "bad": "Not quite. It relies on the sorted order to choose a half, so it can give wrong or missing results.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What happens if you binary search unsorted data?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why binary search needs sorted data",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 10.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why binary search needs sorted data.",
+     "show": 1
+    },
+    {
+     "say": "Next, the last module: dynamic programming.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -820,3 +2604,147 @@ You can explain, in plain language, why `fib_fast` avoids the repeated work that
 5. Is DP useful for every problem? Why or why not?
 
 *Answers: 1) Repeated recomputation of the same subproblem. 2) It recalculates the same smaller values exponentially many times without remembering past results. 3) Stores the result so future calls with the same `n` return instantly instead of recomputing. 4) It stores already-computed results (keyed by input) to skip redundant work on repeat calls, the same core idea as memoization. 5) No - it only helps when a problem has overlapping subproblems; if every subproblem is unique, there's nothing to cache.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "file",
+   "kicker": "Module 11 · Dynamic programming",
+   "title": "Never compute the same thing twice",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "Dynamic programming breaks a problem into overlapping pieces, and stores each answer, so you never recompute it. That's called memoization."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "The problem",
+   "title": "Repeated work",
+   "items": [
+    [
+     "fib_slow(30)",
+     "Recomputes the same values many times"
+    ],
+    [
+     "Result",
+     "Dramatically slower as n grows"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here's the problem it solves.",
+     "show": 0
+    },
+    {
+     "say": "A plain recursive Fibonacci recalculates the same smaller values again and again.",
+     "show": 1
+    },
+    {
+     "say": "So it gets dramatically slower as n grows.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab",
+   "title": "Remember the answers",
+   "file": "Python",
+   "code": "def fib_fast(n, memo=None):\n    if memo is None:\n        memo = {}\n    if n in memo:\n        return memo[n]\n    if n <= 1:\n        return n\n    memo[n] = fib_fast(n - 1, memo) + fib_fast(n - 2, memo)\n    return memo[n]",
+   "beats": [
+    {
+     "say": "Fib fast keeps a memo, a dictionary of answers.",
+     "show": 0
+    },
+    {
+     "say": "If the answer for n is already there, return it instantly. Otherwise, compute it once, store it, and return it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "database",
+   "kicker": "Where you'd use this",
+   "title": "It's caching, for calculations",
+   "quote": "Dynamic programming = caching, applied to calculations.",
+   "beats": [
+    {
+     "say": "The same idea works anywhere you recalculate the same thing, like a shipping cost for the same weight and distance.",
+     "show": 0
+    },
+    {
+     "say": "Dynamic programming is really caching, applied to computation. Python even has it built in, with the cache decorator.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Is dynamic programming useful for every problem?",
+   "options": [
+    "Yes, always",
+    "No, only when the same subproblems repeat",
+    "Only for Fibonacci"
+   ],
+   "answer": 1,
+   "good": "That's right. It only helps when subproblems overlap. If every piece is unique, there's nothing to cache.",
+   "bad": "Not quite. It only helps when subproblems overlap. If every piece is unique, there's nothing to cache.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Is dynamic programming useful for every problem?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why memoization is faster",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why fib fast avoids the repeated work that slows fib slow.",
+     "show": 1
+    },
+    {
+     "say": "You've finished Data Structures and Algorithms for Builders. Well done.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```

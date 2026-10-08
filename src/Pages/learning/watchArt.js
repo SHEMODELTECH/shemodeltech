@@ -128,4 +128,28 @@ export const WATCH_ART = {
     <path class="sa" stroke-width="5" stroke-linecap="round" d="M128 66l-8-14M150 70l10-12M162 92h14"/></g></svg>`,
   rocket: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="fp sk" stroke-width="5" d="M120 26c26 18 36 48 30 90h-60c-6-42 4-72 30-90z"/><circle class="fa" cx="120" cy="74" r="12"/>
     <path class="fa" d="M90 100l-20 30h24zM150 100l20 30h-24z"/><path class="fa" d="M106 120h28l-14 40z"/></g></svg>`,
+  pyramid: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2">
+    <path class="fa" d="M120 30l26 40H94z"/><path class="fk" d="M90 76h60l22 34H68z"/><path class="fp sk" stroke-width="4" d="M64 116h112l24 42H40z"/>
+    <g class="fl"><rect x="86" y="132" width="68" height="8" rx="4"/></g></g></svg>`,
+  array: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2">
+    <g class="fp sk" stroke-width="4"><rect x="30" y="74" width="44" height="44" rx="6"/><rect x="74" y="74" width="44" height="44" rx="6"/><rect x="162" y="74" width="44" height="44" rx="6"/></g>
+    <rect class="fa" x="118" y="74" width="44" height="44" rx="6"/>
+    <g class="fk"><rect x="46" y="130" width="12" height="8" rx="3"/><rect x="90" y="130" width="12" height="8" rx="3"/><rect x="178" y="130" width="12" height="8" rx="3"/></g><rect class="fa" x="134" y="130" width="12" height="8" rx="3"/>
+    <path class="sa" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M140 40v22M132 54l8 8 8-8"/></g></svg>`,
+  venn: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2">
+    <circle class="fp sk" stroke-width="5" cx="92" cy="100" r="50"/><circle class="fp sk" stroke-width="5" cx="148" cy="100" r="50"/>
+    <path class="fa" d="M120 59a50 50 0 0 1 0 82a50 50 0 0 1 0-82z"/></g></svg>`,
+  chain: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2">
+    <rect class="fp sk" stroke-width="4" x="18" y="80" width="50" height="40" rx="8"/><rect class="fa" x="94" y="80" width="50" height="40" rx="8"/><rect class="fp sk" stroke-width="4" x="170" y="80" width="50" height="40" rx="8"/>
+    <g class="sk" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M70 100h20M84 93l7 7-7 7M146 100h20M160 93l7 7-7 7"/></g></g></svg>`,
+  stack: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2">
+    <rect class="fa" x="70" y="46" width="100" height="26" rx="6"/><rect class="fp sk" stroke-width="4" x="70" y="80" width="100" height="26" rx="6"/>
+    <rect class="fp sk" stroke-width="4" x="70" y="114" width="100" height="26" rx="6"/><rect class="fk" x="70" y="148" width="100" height="26" rx="6"/>
+    <path class="sa" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M196 30v30M188 38l8-8 8 8"/></g></svg>`,
+  bars: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2">
+    <rect class="fl" x="44" y="128" width="26" height="36" rx="4"/><rect class="fk" x="78" y="104" width="26" height="60" rx="4"/><rect class="fp sk" stroke-width="4" x="112" y="80" width="26" height="84" rx="4"/>
+    <rect class="fa" x="146" y="50" width="26" height="114" rx="4"/><path class="sk" stroke-width="5" stroke-linecap="round" d="M36 168h168"/></g></svg>`,
+  search: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2">
+    <circle class="fp sk" stroke-width="8" cx="104" cy="90" r="44"/><path class="sk" stroke-width="16" stroke-linecap="round" d="M138 124l40 40"/>
+    <g class="fl"><rect x="80" y="76" width="48" height="8" rx="4"/><rect x="80" y="96" width="34" height="8" rx="4"/></g><circle class="fa" cx="124" cy="100" r="7"/></g></svg>`,
 };

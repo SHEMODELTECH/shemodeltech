@@ -78,6 +78,231 @@ You can explain components and declarative UI, and you have a component sketch o
 
 *Answers: 1) Keeping the page in sync with changing data; manual DOM updates become repetitive and error prone, while a framework updates the page for you. 2) A self-contained, reusable piece of UI that combines structure, behavior and often styling. 3) React is a library for building UI from components; Next.js is a framework built on React that adds routing, server rendering, data fetching and deployment features. 4) Declarative means describing what the UI should look like for the current data and letting the framework handle the updates; imperative means writing each update step yourself. 5) It is an opinionated, complete platform with built-in routing, forms and HTTP tools, so a big team follows one consistent way of building.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "blocks",
+   "kicker": "Module 0 · Why frameworks exist",
+   "title": "Build pages from pieces",
+   "beats": [
+    {
+     "say": "Welcome to Frontend Frameworks for Builders."
+    },
+    {
+     "say": "Across this course you'll build one app, a Reading List: first in React, then as a multi-page Next.js app with a server."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "mess",
+   "kicker": "The problem",
+   "title": "Every change, by hand",
+   "quote": "Whenever data changes, you must update every place that shows it.",
+   "beats": [
+    {
+     "say": "As an app grows, finding and changing page elements by hand gets repetitive and error prone.",
+     "show": 0
+    },
+    {
+     "say": "Whenever data changes, you must update every place that shows it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "Imperative versus declarative",
+   "items": [
+    [
+     "Imperative",
+     "\"Find it, change its text\""
+    ],
+    [
+     "Declarative",
+     "\"The counter shows {count}\""
+    ],
+    [
+     "Components",
+     "Reusable pieces of UI"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A framework changes how you think.",
+     "show": 0
+    },
+    {
+     "say": "Imperative code says how: find the counter element, change its text to five.",
+     "show": 1
+    },
+    {
+     "say": "Declarative code says what: the counter shows count. Change count, and the page follows.",
+     "show": 2
+    },
+    {
+     "say": "And you build the page from components, reusable pieces of UI.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "The landscape",
+   "title": "Frameworks you'll hear about",
+   "items": [
+    [
+     "React",
+     "UI from components"
+    ],
+    [
+     "Next.js",
+     "React + routing + server"
+    ],
+    [
+     "Vue",
+     "HTML-like templates"
+    ],
+    [
+     "Angular",
+     "Complete, opinionated platform"
+    ],
+    [
+     "Svelte",
+     "Compiles to small JS"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "React is a library for building UI from components.",
+     "show": 1
+    },
+    {
+     "say": "Next dot js is built on React, adding routing, server rendering and data fetching.",
+     "show": 2
+    },
+    {
+     "say": "Vue uses HTML-like templates, with a gentle learning curve.",
+     "show": 3
+    },
+    {
+     "say": "Angular is a complete, opinionated platform, popular with large enterprise teams.",
+     "show": 4
+    },
+    {
+     "say": "And Svelte is a compiler that produces small, plain JavaScript.",
+     "show": 5
+    },
+    {
+     "say": "Once you know components, props, state and routing, any of them is mostly new syntax.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Sketch the Reading List",
+   "steps": [
+    "Spot 5 reusable pieces",
+    "Note their data",
+    "Sketch the Reading List"
+   ],
+   "beats": [
+    {
+     "say": "Your lab is on paper.",
+     "show": 0
+    },
+    {
+     "say": "Pick a site you use daily, and spot five reusable pieces, like a message row or a product card.",
+     "show": 1
+    },
+    {
+     "say": "For each, note the data it needs, and what changes as you use it.",
+     "show": 2
+    },
+    {
+     "say": "Then sketch the Reading List: a header, an add-a-book form, a filter bar, a list and a book card. Each box becomes a component.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does \"declarative\" mean?",
+   "options": [
+    "Writing each DOM update step yourself",
+    "Describing what the UI should look like for the data, and letting the framework update it",
+    "Declaring every variable at the top"
+   ],
+   "answer": 1,
+   "good": "That's right. You describe what the page should look like for the current data, and the framework works out how to update it.",
+   "bad": "Not quite. You describe what the page should look like for the current data, and the framework works out how to update it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does \"declarative\" mean?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain components and declarative UI",
+     ""
+    ],
+    [
+     "You have a component sketch",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain components and declarative UI,",
+     "show": 1
+    },
+    {
+     "say": "and you have a component sketch of the Reading List.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 1, your first React components.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: React Components, JSX and Props
@@ -218,6 +443,192 @@ Your page shows a header and four book cards rendered from components with props
 
 *Answers: 1) A JavaScript function that returns JSX describing a piece of UI. 2) React treats lowercase tags as built-in HTML elements, so a capitalized name tells React it is your own component. 3) A value passed from a parent component to a child, like an attribute; props flow down from parent to child. 4) JSX is JavaScript, and `class` is a reserved word in JavaScript, so React uses the DOM property name `className`. 5) When a component needs to return several sibling elements without adding an extra wrapper element to the page.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "code",
+   "kicker": "Module 1 · Components, JSX and props",
+   "title": "Your first components",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "A React component is a function whose name starts with a capital letter, and which returns J S X: HTML-like markup inside JavaScript."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "code",
+   "kicker": "Concept",
+   "title": "JSX rules",
+   "items": [
+    [
+     "One parent",
+     "Or a fragment <>…</>"
+    ],
+    [
+     "className",
+     "Not class"
+    ],
+    [
+     "Close every tag",
+     "<img />, <input />"
+    ],
+    [
+     "{ }",
+     "JavaScript inside JSX"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "J S X has a few rules.",
+     "show": 0
+    },
+    {
+     "say": "Return one parent element, or wrap siblings in an empty fragment.",
+     "show": 1
+    },
+    {
+     "say": "Use class name instead of class, and html for instead of for.",
+     "show": 2
+    },
+    {
+     "say": "Close every tag, including image and input.",
+     "show": 3
+    },
+    {
+     "say": "And put any JavaScript expression inside curly braces.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "blocks",
+   "kicker": "Lab · Step 3",
+   "title": "A BookCard component",
+   "file": "src/BookCard.jsx",
+   "code": "function BookCard({ title, author, genre }) {\n  return (\n    <article className=\"book-card\">\n      <h2>{title}</h2>\n      <p>by {author} · {genre}</p>\n    </article>\n  );\n}\n\nexport default BookCard;",
+   "beats": [
+    {
+     "say": "Create the project with Vite, then your first component: Book Card.",
+     "show": 0
+    },
+    {
+     "say": "Props are a component's inputs. Book Card receives title, author and genre, destructured from one object.",
+     "show": 1
+    },
+    {
+     "say": "It returns an article showing them in curly braces.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "layers",
+   "kicker": "Lab · Step 4",
+   "title": "Reuse it with different props",
+   "file": "src/App.jsx",
+   "code": "function App() {\n  return (\n    <main>\n      <Header owner=\"Ope\" />\n      <BookCard title=\"Kindred\" author=\"Octavia E. Butler\" genre=\"Science fiction\" />\n      <BookCard title=\"Hidden Figures\" author=\"Margot Lee Shetterly\" genre=\"History\" />\n      <BookCard title=\"Things Fall Apart\" author=\"Chinua Achebe\" genre=\"Fiction\" />\n    </main>\n  );\n}",
+   "beats": [
+    {
+     "say": "Now use it in App.",
+     "show": 0
+    },
+    {
+     "say": "Three cards, from one component, each with different props.",
+     "show": 1
+    },
+    {
+     "say": "App is the parent; Header and Book Card are children. Props flow down, and a component never changes its own props.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Your turn",
+   "title": "Make it yours",
+   "quote": "Your name in the header. A fourth book on the list.",
+   "beats": [
+    {
+     "say": "Your turn.",
+     "show": 0
+    },
+    {
+     "say": "Change the owner to your own name, and add a fourth book you want to read.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why must a component's name start with a capital letter?",
+   "options": [
+    "It's just a style convention",
+    "React treats lowercase tags as built-in HTML elements",
+    "Capital letters render faster"
+   ],
+   "answer": 1,
+   "good": "That's right. React treats lowercase tags as HTML elements, so a capital letter tells React it's your own component.",
+   "bad": "Not quite. React treats lowercase tags as HTML elements, so a capital letter tells React it's your own component.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why must a component's name start with a capital letter?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A header and four cards from components",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your page shows a header and four book cards, rendered from components with props.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 2, state and events.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: React State and Events
@@ -292,6 +703,231 @@ Each card tracks its own pages and read status.
 5. If you render three `BookCard` components, how many `pagesRead` values exist?
 
 *Answers: 1) A pair: the current value and a setter function to update it. 2) React stores the new value and re-renders the component so the page shows it. 3) The second form calls the setter immediately while rendering; the first passes a function that React calls only when the button is clicked. 4) When the new value depends on the previous value, so React gives you the latest value even if several updates happen together. 5) Three, because every copy of a component has its own separate state.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "cursor",
+   "kicker": "Module 2 · State and events",
+   "title": "Make it interactive",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "State is data a component remembers, which changes while the page is used."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Concept",
+   "title": "useState",
+   "file": "BookCard.jsx",
+   "code": "const [isRead, setIsRead] = useState(false);",
+   "beats": [
+    {
+     "say": "You create state with the use state hook.",
+     "show": 0
+    },
+    {
+     "say": "It returns the current value, and a setter.",
+     "show": 1
+    },
+    {
+     "say": "Calling the setter stores the new value, and re-renders the component, so the page updates.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Concept",
+   "title": "The rules",
+   "items": [
+    [
+     "Always use the setter",
+     "Never assign directly"
+    ],
+    [
+     "Depends on old value?",
+     "setX((old) => old + 10)"
+    ],
+    [
+     "Each copy",
+     "Has its own state"
+    ],
+    [
+     "Hooks at the top level",
+     "Not in ifs or loops"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A few rules.",
+     "show": 0
+    },
+    {
+     "say": "Never assign state directly. Always call the setter.",
+     "show": 1
+    },
+    {
+     "say": "When the new value depends on the old one, pass a function, so React supplies the latest value.",
+     "show": 2
+    },
+    {
+     "say": "Each copy of a component has its own state.",
+     "show": 3
+    },
+    {
+     "say": "And call hooks only at the top level, never inside ifs or loops.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cursor",
+   "kicker": "Events",
+   "title": "Pass a function, don't call it",
+   "items": [
+    [
+     "onClick={() => setIsRead(true)}",
+     "Runs on click ✓"
+    ],
+    [
+     "onClick={setIsRead(true)}",
+     "Runs while rendering ✗"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Events use camel case props, like on click.",
+     "show": 0
+    },
+    {
+     "say": "Write an arrow function, so React calls it when the button is clicked.",
+     "show": 1
+    },
+    {
+     "say": "If you write set is read of true directly, it runs immediately, during rendering.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "cursor",
+   "kicker": "Lab · Step 1",
+   "title": "Pages and read status",
+   "file": "src/BookCard.jsx",
+   "code": "const [isRead, setIsRead] = useState(false);\nconst [pagesRead, setPagesRead] = useState(0);\n\n<button onClick={() => setPagesRead((pages) => pages + 10)}>\n  +10 pages\n</button>\n<button onClick={() => setIsRead(!isRead)}>\n  {isRead ? \"Mark as unread\" : \"Mark as read\"}\n</button>",
+   "beats": [
+    {
+     "say": "Give Book Card two pieces of state: is read, and pages read.",
+     "show": 0
+    },
+    {
+     "say": "Plus ten pages uses the function form of the setter.",
+     "show": 1
+    },
+    {
+     "say": "The read button flips is read, and a ternary switches its label.",
+     "show": 1
+    },
+    {
+     "say": "Click one card, and only that card changes. Each has its own state.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "warning",
+   "kicker": "Lab · Step 4",
+   "title": "See a common bug",
+   "big": "+10, not +20",
+   "sub": "both calls read the same old value",
+   "beats": [
+    {
+     "say": "Now see a common bug.",
+     "show": 0
+    },
+    {
+     "say": "Call set pages read with pages read plus ten, twice in one click. It only adds ten, because both calls read the same old value.",
+     "show": 1
+    },
+    {
+     "say": "With the function form, twice adds twenty.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "You render three BookCards. How many pagesRead values exist?",
+   "options": [
+    "One, shared by all",
+    "Three, one per card",
+    "None until clicked"
+   ],
+   "answer": 1,
+   "good": "That's right. Three. Every copy of a component has its own separate state.",
+   "bad": "Not quite. Three. Every copy of a component has its own separate state.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "You render three BookCards. How many pagesRead values exist?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Each card tracks its own pages and status",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "each card tracks its own pages and read status.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 3, lists, keys and conditional rendering.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -427,6 +1063,208 @@ The list renders from an array with stable keys, notes show only when present, a
 5. Why can `{count && <p>You have items</p>}` show a stray "0" on the page?
 
 *Answers: 1) Call `.map()` on the array and return a JSX element for each item. 2) A value that is unique among the siblings and stays the same for that item over time, such as an ID from the data. 3) When items are added, removed or reordered, indexes shift, so React may match state to the wrong item. 4) It renders the paragraph only when `note` has a truthy value, and renders nothing otherwise. 5) When `count` is zero, the expression evaluates to the number zero, and React renders numbers; use a real boolean such as `count > 0`.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "table",
+   "kicker": "Module 3 · Lists, keys and conditions",
+   "title": "Render from real data",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "Real data arrives as arrays, and you turn an array into elements with dot map."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "key",
+   "kicker": "Concept",
+   "title": "Every item needs a key",
+   "file": "BookList.jsx",
+   "code": "{books.map((book) => (\n  <li key={book.id}>{book.title}</li>\n))}",
+   "beats": [
+    {
+     "say": "Each item needs a key.",
+     "show": 0
+    },
+    {
+     "say": "Unique among its siblings, and stable for that item, like a database I D.",
+     "show": 1
+    },
+    {
+     "say": "React uses keys to match items between renders. Array indexes are risky for changing lists, because state can attach to the wrong item.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Concept",
+   "title": "Conditional rendering",
+   "items": [
+    [
+     "if + early return",
+     "Empty-list message"
+    ],
+    [
+     "cond && <A />",
+     "Only when true"
+    ],
+    [
+     "cond ? <A /> : <B />",
+     "Choose between two"
+    ],
+    [
+     "{count && …}",
+     "Shows a stray 0 ✗"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three ways to show things conditionally.",
+     "show": 0
+    },
+    {
+     "say": "An if, with an early return, for example an empty-list message.",
+     "show": 1
+    },
+    {
+     "say": "Condition and-and element, to show something only when true.",
+     "show": 2
+    },
+    {
+     "say": "And a ternary, to choose between two things.",
+     "show": 3
+    },
+    {
+     "say": "Watch out: count and-and paragraph shows a literal zero when count is zero. Use count greater than zero.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "A BookList from an array",
+   "file": "src/BookList.jsx",
+   "code": "function BookList({ books }) {\n  if (books.length === 0) {\n    return <p>Your list is empty. Add a book to get started.</p>;\n  }\n  return (\n    <ul className=\"book-list\">\n      {books.map((book) => (\n        <li key={book.id}><BookCard {...} /></li>\n      ))}\n    </ul>\n  );\n}",
+   "beats": [
+    {
+     "say": "Move the books into an array in books dot j s, then create Book List.",
+     "show": 0
+    },
+    {
+     "say": "If the list is empty, return a friendly message.",
+     "show": 1
+    },
+    {
+     "say": "Otherwise, map each book to a list item, keyed by its I D.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Lab · Steps 3 to 6",
+   "title": "Try every case",
+   "steps": [
+    "Note & badge only when present",
+    "Empty array → message",
+    "No key → console warning"
+   ],
+   "beats": [
+    {
+     "say": "Book Card now shows a note only when one exists, and a Finished badge when read.",
+     "show": 1
+    },
+    {
+     "say": "Pass an empty array, and you see the empty message.",
+     "show": 2
+    },
+    {
+     "say": "Delete the key, and React warns in the console. Put it back.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why can {count && <p>…</p>} show a stray \"0\"?",
+   "options": [
+    "React has a bug with numbers",
+    "When count is zero, the expression is the number 0, and React renders numbers",
+    "Paragraphs can't be conditional"
+   ],
+   "answer": 1,
+   "good": "That's right. When count is zero, the expression evaluates to zero, and React renders numbers. Use a real boolean like count greater than zero.",
+   "bad": "Not quite. When count is zero, the expression evaluates to zero, and React renders numbers. Use a real boolean like count greater than zero.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why can {count && <p>…</p>} show a stray \"0\"?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Rendered from an array with stable keys",
+     ""
+    ],
+    [
+     "Notes and empty state work",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "the list renders from an array with stable keys,",
+     "show": 1
+    },
+    {
+     "say": "notes show only when present, and the empty state works.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, forms.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -570,6 +1408,229 @@ Valid books are added; invalid input shows an error.
 
 *Answers: 1) Its value comes from React state through `value`, and every change goes through `onChange` to update that state. 2) Submitting a form makes the browser reload the page by default, which would wipe the app's state. 3) `onSubmit` also runs when the user presses Enter in a field, and it is the natural place to handle the whole form. 4) `App` passes its `addBook` function down as the `onAdd` prop, and the form calls it with the new book. 5) React detects changes by getting a new value; `.push()` changes the existing array in place, so React may not re-render.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "pencil",
+   "kicker": "Module 4 · Forms",
+   "title": "Controlled inputs",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "A controlled input gets its value from state, and updates that state on every change. State is the single source of truth."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Concept",
+   "title": "What a React form needs",
+   "items": [
+    [
+     "State per field",
+     "value + onChange"
+    ],
+    [
+     "onSubmit on the form",
+     "Enter works too"
+    ],
+    [
+     "preventDefault()",
+     "No page reload"
+    ],
+    [
+     "Validate after .trim()",
+     "Clear error message"
+    ],
+    [
+     "<label htmlFor>",
+     "Matches the input id"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A React form usually has five things.",
+     "show": 0
+    },
+    {
+     "say": "State for each field.",
+     "show": 1
+    },
+    {
+     "say": "An on submit handler on the form, so pressing Enter works too.",
+     "show": 2
+    },
+    {
+     "say": "Event dot prevent default, because browsers reload the page on submit.",
+     "show": 3
+    },
+    {
+     "say": "Validation after trimming, with a clear error.",
+     "show": 4
+    },
+    {
+     "say": "And a label for each input, linked by matching I Ds.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab · Step 1",
+   "title": "The submit handler",
+   "file": "src/AddBookForm.jsx",
+   "code": "function handleSubmit(event) {\n  event.preventDefault();\n  const cleanTitle = title.trim();\n  const cleanAuthor = author.trim();\n  if (cleanTitle === \"\" || cleanAuthor === \"\") {\n    setError(\"Please enter both a title and an author.\");\n    return;\n  }\n  onAdd({ id: crypto.randomUUID(), title: cleanTitle, author: cleanAuthor, genre });\n  setTitle(\"\"); setAuthor(\"\"); setError(\"\");\n}",
+   "beats": [
+    {
+     "say": "Here's the heart of Add Book Form.",
+     "show": 0
+    },
+    {
+     "say": "Stop the reload. Trim the values. If either is empty, set an error and stop.",
+     "show": 1
+    },
+    {
+     "say": "Otherwise, call on add with a new book, using crypto random U U I D for its I D, then clear the form.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Concept",
+   "title": "Data down, events up",
+   "steps": [
+    "App owns the books",
+    "Passes onAdd down",
+    "Form calls onAdd(book)",
+    "List re-renders"
+   ],
+   "beats": [
+    {
+     "say": "The list lives in App, so App holds it in state.",
+     "show": 0
+    },
+    {
+     "say": "App passes its add book function down, as the on add prop.",
+     "show": 1
+    },
+    {
+     "say": "The form calls on add with the new book.",
+     "show": 2
+    },
+    {
+     "say": "App updates its state, and the list re-renders.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Concept",
+   "title": "A new array, not push",
+   "items": [
+    [
+     "[...currentBooks, newBook]",
+     "New array ✓"
+    ],
+    [
+     "currentBooks.push(newBook)",
+     "Same array ✗"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "One more rule.",
+     "show": 0
+    },
+    {
+     "say": "Update arrays by making a new array, with the spread operator.",
+     "show": 1
+    },
+    {
+     "say": "Don't use push. It changes the old array in place, and React only notices new values.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does the submit handler call event.preventDefault()?",
+   "options": [
+    "To validate the inputs",
+    "Submitting a form reloads the page by default, wiping the app's state",
+    "To clear the form"
+   ],
+   "answer": 1,
+   "good": "That's right. By default the browser reloads the page on submit, which would wipe the app's state.",
+   "bad": "Not quite. By default the browser reloads the page on submit, which would wipe the app's state.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does the submit handler call event.preventDefault()?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Valid books are added",
+     ""
+    ],
+    [
+     "Invalid input shows an error",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "valid books are added,",
+     "show": 1
+    },
+    {
+     "say": "and invalid input shows an error.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, effects and fetching data.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 5: Effects and Fetching Data
@@ -698,6 +1759,220 @@ Books load with a loading state, failures show an error, cleanup aborts the requ
 5. How does Next.js often avoid fetching in `useEffect`?
 
 *Answers: 1) Side effects: work that reaches outside React's rendering, such as fetching data, timers, subscriptions or changing the document title. 2) Run the effect once after the component first appears, and not again on later re-renders. 3) It undoes or cancels the effect's work; here it aborts the fetch if the component is removed before the response arrives. 4) A request takes time and can fail, so the user needs feedback while waiting and a clear message if it fails, instead of a blank page or a crash. 5) It fetches data on the server, so the HTML arrives with the data already in it.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Module 5 · Effects and fetching",
+   "title": "Reaching outside React",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "Rendering should only calculate J S X. Work that reaches outside React, like fetching, timers or the tab title, is a side effect, and goes in use effect."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "The dependency array",
+   "items": [
+    [
+     "[]",
+     "Once, after first render"
+    ],
+    [
+     "[books.length]",
+     "When that value changes"
+    ],
+    [
+     "(none)",
+     "After every render"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The dependency array controls when the effect runs.",
+     "show": 0
+    },
+    {
+     "say": "An empty array: once, after the first render.",
+     "show": 1
+    },
+    {
+     "say": "With values: after the first render, and whenever those values change.",
+     "show": 2
+    },
+    {
+     "say": "No array at all: after every render. Rarely what you want.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "stopwatch",
+   "kicker": "Concept",
+   "title": "Three states for every fetch",
+   "items": [
+    [
+     "loading",
+     "Loading your books..."
+    ],
+    [
+     "error",
+     "Could not load your books"
+    ],
+    [
+     "ready",
+     "Show the list"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Fetching takes time, and can fail, so the UI needs three states.",
+     "show": 0
+    },
+    {
+     "say": "Loading.",
+     "show": 1
+    },
+    {
+     "say": "Error.",
+     "show": 2
+    },
+    {
+     "say": "And ready.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "api",
+   "kicker": "Lab · Step 2",
+   "title": "Load the books, with cleanup",
+   "file": "src/App.jsx",
+   "code": "useEffect(() => {\n  const controller = new AbortController();\n  async function loadBooks() {\n    try {\n      const response = await fetch(\"/starter-books.json\", { signal: controller.signal });\n      if (!response.ok) throw new Error(`Status ${response.status}`);\n      setBooks(await response.json());\n      setStatus(\"ready\");\n    } catch (error) {\n      if (error.name === \"AbortError\") return;\n      setStatus(\"error\");\n    }\n  }\n  loadBooks();\n  return () => controller.abort();\n}, []);",
+   "beats": [
+    {
+     "say": "Here's the loading effect.",
+     "show": 0
+    },
+    {
+     "say": "Fetch the J S O N file. If the response isn't ok, throw. Otherwise, store the books and set status to ready.",
+     "show": 1
+    },
+    {
+     "say": "The cleanup function aborts the request if App disappears before it finishes.",
+     "show": 1
+    },
+    {
+     "say": "In development, Strict Mode runs effects twice, so a cancelled first request means your cleanup works.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Lab · Steps 3 to 5",
+   "title": "Test each state",
+   "steps": [
+    "Slow network → Loading",
+    "Missing file → Error",
+    "Add a book → tab title updates"
+   ],
+   "beats": [
+    {
+     "say": "Throttle the network, and you see Loading first.",
+     "show": 1
+    },
+    {
+     "say": "Point fetch at a missing file, and you get the error message, not a crash.",
+     "show": 2
+    },
+    {
+     "say": "Add a book, and a second effect updates the tab title.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does an empty dependency array [] mean?",
+   "options": [
+    "Run after every render",
+    "Run once, after the component first appears",
+    "Never run"
+   ],
+   "answer": 1,
+   "good": "That's right. Run the effect once, after the component first appears, and not on later re-renders.",
+   "bad": "Not quite. Run the effect once, after the component first appears, and not on later re-renders.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does an empty dependency array [] mean?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Loading and error states work",
+     ""
+    ],
+    [
+     "Cleanup aborts; the title stays in sync",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "books load with a loading state, and failures show an error,",
+     "show": 1
+    },
+    {
+     "say": "cleanup aborts the request, and the tab title stays in sync.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, sharing state.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -992,6 +2267,208 @@ and in the two buttons, change `onToggleRead(id)` to `toggleRead(id)` and `onRem
 
 *Answers: 1) Moving state to the closest common parent of all components that need it, then passing the value and update functions down as props. 2) Only that one card uses it, and state should stay as low in the tree as possible. 3) They can always be computed from `books` and `filter`; storing them separately could let them get out of sync. 4) Prop drilling is passing props through components that don't use them just to reach a deeper child; context lets a parent provide a value any descendant reads with `useContext`. 5) It uses `.map()` to create a new array, replacing only the matching book with a copy that has `read` flipped.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "tree",
+   "kicker": "Module 6 · Lifting state up",
+   "title": "Share state between components",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "Each card keeps its own is read, so App can't show how many are finished, or filter by status."
+    },
+    {
+     "say": "The fix is lifting state up."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "tree",
+   "kicker": "Concept",
+   "title": "Lift it to the common parent",
+   "steps": [
+    "Find the common parent",
+    "App owns read",
+    "Pass value + function down",
+    "Card calls onToggleRead(id)"
+   ],
+   "beats": [
+    {
+     "say": "Move the state to the closest common parent of everything that needs it.",
+     "show": 0
+    },
+    {
+     "say": "App now owns each book's read field.",
+     "show": 1
+    },
+    {
+     "say": "It passes the value down, with a function to change it.",
+     "show": 2
+    },
+    {
+     "say": "The card calls on toggle read, with its I D.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bulb",
+   "kicker": "Guidelines",
+   "title": "Two guidelines",
+   "items": [
+    [
+     "Keep state low",
+     "pagesRead stays in the card"
+    ],
+    [
+     "Derive, don't store",
+     "readCount, visibleBooks"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Keep state as low as possible. Pages read is used by one card, so it stays there.",
+     "show": 1
+    },
+    {
+     "say": "And don't store what you can calculate. Counts and filtered lists are derived values. Compute them while rendering, so they can't get out of sync.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Lab · Step 1",
+   "title": "Update immutably, derive the rest",
+   "file": "src/App.jsx",
+   "code": "function toggleRead(id) {\n  setBooks((current) =>\n    current.map((b) => (b.id === id ? { ...b, read: !b.read } : b))\n  );\n}\nfunction removeBook(id) {\n  setBooks((current) => current.filter((b) => b.id !== id));\n}\n\n// Derived values\nconst readCount = books.filter((b) => b.read).length;\nconst visibleBooks = books.filter((b) =>\n  filter === \"read\" ? b.read : filter === \"unread\" ? !b.read : true\n);",
+   "beats": [
+    {
+     "say": "Toggle read builds a new array with map, replacing only the matching book with an updated copy.",
+     "show": 0
+    },
+    {
+     "say": "Remove book builds one with filter.",
+     "show": 1
+    },
+    {
+     "say": "Read count and visible books are calculated on every render, not stored.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Step 2",
+   "title": "From prop drilling to context",
+   "items": [
+    [
+     "Prop drilling",
+     "Passing props through just to reach a child"
+    ],
+    [
+     "createContext",
+     "BooksContext"
+    ],
+    [
+     "useContext",
+     "Any descendant reads it"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Book List only passes the actions along. That's prop drilling.",
+     "show": 1
+    },
+    {
+     "say": "Context lets a parent provide a value that any descendant reads, with use context.",
+     "show": 2
+    },
+    {
+     "say": "App wraps everything in Books Context, and Book Card reads toggle read and remove book directly. Use it sparingly; props are easier to follow.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why are readCount and visibleBooks calculated, not stored in state?",
+   "options": [
+    "State is too slow",
+    "They can always be computed from books and filter, so storing them could let them drift out of sync",
+    "Context can't hold them"
+   ],
+   "answer": 1,
+   "good": "That's right. They can always be computed from books and filter. Storing them separately could let them get out of sync.",
+   "bad": "Not quite. They can always be computed from books and filter. Storing them separately could let them get out of sync.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why are readCount and visibleBooks calculated, not stored in state?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "App owns books, read status and filter",
+     ""
+    ],
+    [
+     "Stats, filters and context work",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "App owns the books, read status and filter,",
+     "show": 1
+    },
+    {
+     "say": "stats and filters work, and Book Card gets its actions from context.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 7, accessibility.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 7: Accessibility Basics
@@ -1083,6 +2560,212 @@ The app works by keyboard alone, focus is visible, errors are announced, and the
 5. Why use `aria-pressed` on the active filter button instead of `disabled`?
 
 *Answers: 1) A div can't be reached with Tab, doesn't respond to Enter or Space, and isn't announced as a button, so keyboard and screen reader users can't use it. 2) The placeholder disappears when the user types and is often hard to read, and it isn't reliably announced as the field's name. 3) When the image is purely decorative and adds no information, so screen readers skip it. 4) `role="alert"` makes screen readers announce the error as soon as it appears, and `aria-describedby` links the input to the error text so it is read when the input is focused. 5) `aria-pressed` announces which filter is active while keeping the button focusable; disabled buttons are skipped by the keyboard.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "people",
+   "kicker": "Module 7 · Accessibility basics",
+   "title": "Usable by everyone",
+   "beats": [
+    {
+     "say": "Welcome to Module 7."
+    },
+    {
+     "say": "Accessibility means people can use your app with a keyboard, a screen reader, zoom or other assistive technology. Most fixes are just the right HTML."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cursor",
+   "kicker": "Concept",
+   "title": "Buttons, not divs",
+   "items": [
+    [
+     "<button>",
+     "Tab, Enter, Space, announced ✓"
+    ],
+    [
+     "<div onClick>",
+     "Unreachable by keyboard ✗"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A real button can be reached with Tab, works with Enter and Space, and is announced as a button.",
+     "show": 1
+    },
+    {
+     "say": "A div with on click does none of those.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Concept",
+   "title": "The essentials",
+   "items": [
+    [
+     "Labels",
+     "Not placeholders"
+    ],
+    [
+     "Clear names",
+     "aria-label=\"Remove Kindred\""
+    ],
+    [
+     "aria-pressed",
+     "Not disabled"
+    ],
+    [
+     "role=\"alert\" / \"status\"",
+     "Announce changes"
+    ],
+    [
+     "alt text",
+     "alt=\"\" if decorative"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every input needs a real label. A placeholder vanishes as you type.",
+     "show": 1
+    },
+    {
+     "say": "Give repeated buttons clear names, like aria label: Remove Kindred.",
+     "show": 2
+    },
+    {
+     "say": "Mark the active toggle with aria pressed, not disabled, because disabled buttons are skipped by the keyboard.",
+     "show": 3
+    },
+    {
+     "say": "Announce errors with role alert, and updates like Loading with role status.",
+     "show": 4
+    },
+    {
+     "say": "And alt text: describe informative images, and give decorative ones an empty alt.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab · Step 5",
+   "title": "Connect errors to inputs",
+   "file": "src/AddBookForm.jsx",
+   "code": "<input\n  id=\"title\"\n  aria-invalid={error !== \"\"}\n  aria-describedby={error ? \"form-error\" : undefined}\n/>\n\n{error && (\n  <p id=\"form-error\" className=\"error\" role=\"alert\">{error}</p>\n)}",
+   "beats": [
+    {
+     "say": "In the form, mark the inputs invalid when there's an error, and point them at the error text.",
+     "show": 0
+    },
+    {
+     "say": "Role alert makes the screen reader announce the error the moment it appears.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "Test it for real",
+   "steps": [
+    "Keyboard-only test",
+    "Lighthouse audit",
+    "Fix what it finds"
+   ],
+   "beats": [
+    {
+     "say": "Put the mouse away. Using only Tab, Shift Tab, Enter and Space, add a book, mark it read, filter, and remove it. Focus should always be visible.",
+     "show": 1
+    },
+    {
+     "say": "Then run a Lighthouse accessibility audit, and fix what it reports.",
+     "show": 2
+    },
+    {
+     "say": "Automated tools catch only some problems, so the keyboard test still matters.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "When should an image have alt=\"\"?",
+   "options": [
+    "Never; every image needs a description",
+    "When it's purely decorative, so screen readers skip it",
+    "When it's a button"
+   ],
+   "answer": 1,
+   "good": "That's right. An empty alt is for purely decorative images, so screen readers skip them. Never leave alt out entirely.",
+   "bad": "Not quite. An empty alt is for purely decorative images, so screen readers skip them. Never leave alt out entirely.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "When should an image have alt=\"\"?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Works by keyboard, focus visible",
+     ""
+    ],
+    [
+     "Errors announced; Lighthouse passes",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "the app works by keyboard alone, with visible focus,",
+     "show": 1
+    },
+    {
+     "say": "errors are announced, and the Lighthouse accessibility audit passes.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 8, Next dot js.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1300,6 +2983,171 @@ A Next.js app with a shared layout, four kinds of page, a dynamic route and a 40
 
 *Answers: 1) From the folder path inside `app/`; a folder becomes a URL segment and its `page.js` file is the page shown there. 2) It wraps all pages below it with shared UI such as a header, and stays on screen without re-rendering when navigating between those pages. 3) A dynamic route matching any value in that position; the page awaits its `params` prop and reads `id` from it. 4) `Link` navigates without a full page reload and prefetches pages, so navigation feels instant. 5) The page depends on the requested URL value, which only exists at request time, so Next.js needs a loading boundary to show while it renders.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "browser",
+   "kicker": "Module 8 · Next.js routing",
+   "title": "Pages, layouts and links",
+   "beats": [
+    {
+     "say": "Welcome to Module 8."
+    },
+    {
+     "say": "Real products have many pages. Next dot js adds pages and a server on top of React."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "tree",
+   "kicker": "Concept",
+   "title": "Folders become URLs",
+   "file": "app/",
+   "code": "app/\n  layout.js            -> wraps every page\n  page.js              -> /\n  about/page.js        -> /about\n  books/page.js        -> /books\n  books/[id]/page.js   -> /books/1, /books/2, ...\n  books/[id]/loading.js -> shown while it loads",
+   "beats": [
+    {
+     "say": "In the App Router, folders inside app define the URLs.",
+     "show": 0
+    },
+    {
+     "say": "Only a page dot js file makes a folder visitable.",
+     "show": 1
+    },
+    {
+     "say": "A layout wraps every page below it, and stays on screen as you navigate.",
+     "show": 1
+    },
+    {
+     "say": "A folder in square brackets is a dynamic segment: one file handles every I D.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "browser",
+   "kicker": "Lab · Step 6",
+   "title": "The dynamic route",
+   "file": "app/books/[id]/page.js",
+   "code": "export default async function BookPage({ params }) {\n  const { id } = await params;\n  const book = books.find((b) => b.id === id);\n  if (!book) notFound();\n  return (\n    <>\n      <h1>{book.title}</h1>\n      <p>Status: {book.read ? \"Finished\" : \"To read\"}</p>\n      <Link href=\"/books\">Back to all books</Link>\n    </>\n  );\n}",
+   "beats": [
+    {
+     "say": "Here's the book page.",
+     "show": 0
+    },
+    {
+     "say": "Params is a promise, so the page is async, and awaits it.",
+     "show": 1
+    },
+    {
+     "say": "Find the book. If there isn't one, not found shows the four oh four page.",
+     "show": 1
+    },
+    {
+     "say": "Because this page needs the request, it sits behind a loading dot js file.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "Concept",
+   "title": "Link and layouts",
+   "items": [
+    [
+     "<Link>",
+     "No full reload, prefetches"
+    ],
+    [
+     "layout.js",
+     "Stays on screen"
+    ],
+    [
+     "notFound()",
+     "/books/999 → 404"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Link navigates without a full reload, and prefetches pages, so navigation feels instant.",
+     "show": 1
+    },
+    {
+     "say": "Click around, and the header never flickers, because the layout stays.",
+     "show": 2
+    },
+    {
+     "say": "Visit books slash nine nine nine, and you get the four oh four page.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a folder named [id] create?",
+   "options": [
+    "A private folder",
+    "A dynamic route that matches any value in that position",
+    "A folder only admins can see"
+   ],
+   "answer": 1,
+   "good": "That's right. A dynamic route. One file handles every value, and the page awaits its params to read the I D.",
+   "bad": "Not quite. A dynamic route. One file handles every value, and the page awaits its params to read the I D.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a folder named [id] create?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Layout, pages, dynamic route and 404",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 8.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a Next dot js app with a shared layout, several pages, a dynamic route and a four oh four.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 9, Server and Client Components.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 9: Server and Client Components
@@ -1368,6 +3216,192 @@ The detail page (server) renders an interactive counter (client).
 5. Why keep Client Components small and push them down to the "leaves" of the page?
 
 *Answers: 1) On the server (or at build time), and yes, every component in the App Router is a Server Component unless marked otherwise. 2) Put the `"use client"` directive at the very top of its file. 3) Use hooks such as `useState` or `useEffect`, attach event handlers like `onClick`, or use browser APIs such as `localStorage` (any two). 4) They are sent from the server to the browser over the network, so they must be plain data such as strings, numbers, arrays and plain objects. 5) Only Client Component code is sent to the browser, so small client pieces mean less JavaScript to download while the rest renders on the server.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "cloud",
+   "kicker": "Module 9 · Server and Client Components",
+   "title": "Where does this code run?",
+   "beats": [
+    {
+     "say": "Welcome to Module 9."
+    },
+    {
+     "say": "In the App Router, components are Server Components by default. They run on the server, and their code is never sent to the browser."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cloud",
+   "kicker": "Concept",
+   "title": "Server Components",
+   "items": [
+    [
+     "Can",
+     "async, databases, secrets"
+    ],
+    [
+     "Can't",
+     "useState, onClick, localStorage"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Server Components can be async, read databases and secrets safely, and keep big libraries out of the download.",
+     "show": 1
+    },
+    {
+     "say": "But they can't use state, effects, event handlers or browser A P Is.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cursor",
+   "kicker": "Concept",
+   "title": "Client Components",
+   "items": [
+    [
+     "\"use client\";",
+     "First line of the file"
+    ],
+    [
+     "Hydration",
+     "JS takes over in the browser"
+    ],
+    [
+     "Keep them small",
+     "At the leaves of the page"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A Client Component has use client at the top of its file.",
+     "show": 1
+    },
+    {
+     "say": "It's rendered to HTML on the server, then its JavaScript runs in the browser, so it can hold state and respond to clicks. That's hydration.",
+     "show": 2
+    },
+    {
+     "say": "Keep pages on the server, and make small interactive pieces client components.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "cursor",
+   "kicker": "Lab · Step 3",
+   "title": "A small Client Component",
+   "file": "app/ui/PagesCounter.js",
+   "code": "\"use client\";\n\nimport { useState } from \"react\";\n\nexport default function PagesCounter({ title }) {\n  const [pagesRead, setPagesRead] = useState(0);\n  return (\n    <button onClick={() => setPagesRead((p) => p + 10)}>\n      {title}: {pagesRead} pages · +10\n    </button>\n  );\n}",
+   "beats": [
+    {
+     "say": "Bring back your pages counter as a client component.",
+     "show": 0
+    },
+    {
+     "say": "Use client at the top, then the same use state code as before.",
+     "show": 1
+    },
+    {
+     "say": "Drop it into the server-rendered book page. Only the counter's code goes to the browser.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "terminal",
+   "kicker": "Lab · Steps 1, 2 and 5",
+   "title": "Prove where code runs",
+   "steps": [
+    "console.log → terminal",
+    "useState on server → error",
+    "Only client code in the browser"
+   ],
+   "beats": [
+    {
+     "say": "Log from the books page, and it appears in your terminal, not the browser.",
+     "show": 1
+    },
+    {
+     "say": "Add use state to a server page, and Next dot js errors.",
+     "show": 2
+    },
+    {
+     "say": "Search the browser's loaded files: the counter's there, but the book page and its data aren't.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why must props from a Server to a Client Component be serializable?",
+   "options": [
+    "To make them faster",
+    "They travel over the network, so they must be plain data",
+    "Client Components can't read objects"
+   ],
+   "answer": 1,
+   "good": "That's right. They're sent from the server to the browser over the network, so they must be plain data like strings, numbers, arrays and plain objects.",
+   "bad": "Not quite. They're sent from the server to the browser over the network, so they must be plain data like strings, numbers, arrays and plain objects.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why must props from a Server to a Client Component be serializable?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A server page with a client counter",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 9.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "the detail page, on the server, renders an interactive counter, on the client.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 10, fetching data on the server.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1539,6 +3573,184 @@ Pages load data on the server, `/books` streams with a fallback, and `/api/books
 
 *Answers: 1) It is an `async` function that awaits the data directly on the server, so the HTML arrives with the data and no loading state variables or effects are needed in the browser. 2) It shows the fallback immediately and streams the list into the page once its data is ready, while the rest of the page is sent right away. 3) The in-memory list is instant, so without it Next.js would bake the list into the page at build time; `connection()` marks it as request-time data like a real database query. 4) In `app/api/books/route.js`, exporting functions named after HTTP methods such as `GET` and `POST`. 5) When something other than your own pages needs the data or needs to send data, such as a mobile app, another service or a webhook.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Module 10 · Server data and Route Handlers",
+   "title": "Fetch on the server",
+   "beats": [
+    {
+     "say": "Welcome to Module 10."
+    },
+    {
+     "say": "Instead of use effect in the browser, a Server Component can be async, and await its data. Secrets stay on the server, and the HTML arrives with the data."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "database",
+   "kicker": "Lab · Step 2",
+   "title": "Stream the list with Suspense",
+   "file": "app/books/page.js",
+   "code": "async function BookList() {\n  const books = await getBooks(); // runs on the server\n  return <ul>{books.map((b) => <li key={b.id}>{b.title}</li>)}</ul>;\n}\n\nexport default function BooksPage() {\n  return (\n    <>\n      <h1>Books</h1>\n      <Suspense fallback={<p>Loading books...</p>}>\n        <BookList />\n      </Suspense>\n    </>\n  );\n}",
+   "beats": [
+    {
+     "say": "Book List is now an async server component that awaits get books.",
+     "show": 0
+    },
+    {
+     "say": "Wrap it in Suspense, with a fallback. The rest of the page is sent at once, and the list streams in.",
+     "show": 1
+    },
+    {
+     "say": "No use effect, and no loading variables. It's the server version of your React loading state.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "stopwatch",
+   "kicker": "Concept",
+   "title": "Mark request-time data",
+   "quote": "await connection() — run this per request, not at build time.",
+   "beats": [
+    {
+     "say": "One detail.",
+     "show": 0
+    },
+    {
+     "say": "Our fake database is instant, so Next dot js would bake the list into the page at build time.",
+     "show": 1
+    },
+    {
+     "say": "Await connection says: wait for a real request, as a real database call would.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "api",
+   "kicker": "Lab · Step 4",
+   "title": "A Route Handler",
+   "file": "app/api/books/route.js",
+   "code": "export async function GET() {\n  return Response.json(await getBooks());\n}\n\nexport async function POST(request) {\n  const body = await request.json();\n  const error = validateBook(body);\n  if (error) return Response.json({ error }, { status: 400 });\n  const book = await createBook(body);\n  return Response.json(book, { status: 201 });\n}",
+   "beats": [
+    {
+     "say": "A Route Handler is an A P I endpoint that returns data, not a page.",
+     "show": 0
+    },
+    {
+     "say": "Export functions named after H T T P methods. Get returns the whole list as J S O N.",
+     "show": 1
+    },
+    {
+     "say": "Post reads the body, validates it, and returns four hundred for bad input, or two oh one with the new book.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "api",
+   "kicker": "When",
+   "title": "When you need a Route Handler",
+   "items": [
+    [
+     "Your pages",
+     "Fetch in the Server Component"
+    ],
+    [
+     "Others",
+     "Mobile app, service, webhook → Route Handler"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Your own pages can fetch directly on the server.",
+     "show": 1
+    },
+    {
+     "say": "You need a Route Handler when something else needs the data: a mobile app, another service, or a webhook.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does <Suspense fallback={…}> do around BookList?",
+   "options": [
+    "Hides the list forever",
+    "Shows the fallback at once, then streams the list in when ready",
+    "Caches the list in the browser"
+   ],
+   "answer": 1,
+   "good": "That's right. The fallback shows immediately, and the list streams into the page once its data is ready.",
+   "bad": "Not quite. The fallback shows immediately, and the list streams into the page once its data is ready.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does <Suspense fallback={…}> do around BookList?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Server data with a streaming fallback",
+     ""
+    ],
+    [
+     "/api/books handles GET and POST",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 10.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "pages load data on the server, and books streams with a fallback,",
+     "show": 1
+    },
+    {
+     "say": "and the A P I handles get, and a validated post.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 11, Server Actions.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 11: Forms with Server Actions
@@ -1677,6 +3889,191 @@ export default function NewBookPage() {
 
 *Answers: 1) An async function that runs on the server but can be passed to a form's `action`; you mark it with the `"use server"` directive, here at the top of `app/actions.js`. 2) From the FormData object using `formData.get("fieldName")`, so each input needs a `name` attribute. 3) The current state, a form action to pass to the form, and an `isPending` flag; `state` is whatever the action last returned, starting with the initial state. 4) Anyone can send a request to a Server Action directly, skipping the browser checks, so the server must enforce the rules. 5) `revalidatePath` makes sure no stale cached copy of the list is shown, and `redirect` sends the user to the books page after a successful save.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "pencil",
+   "kicker": "Module 11 · Server Actions",
+   "title": "Forms that save on the server",
+   "beats": [
+    {
+     "say": "Welcome to Module 11."
+    },
+    {
+     "say": "A Server Action is an async function marked use server. It runs on the server, but you can pass it straight to a form's action."
+    },
+    {
+     "say": "No A P I route, and no fetch code."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab · Step 1",
+   "title": "The Server Action",
+   "file": "app/actions.js",
+   "code": "\"use server\";\n\nexport async function addBookAction(previousState, formData) {\n  const title = String(formData.get(\"title\") ?? \"\").trim();\n  const author = String(formData.get(\"author\") ?? \"\").trim();\n  const error = validateBook({ title, author });\n  if (error) return { error, title, author };\n\n  await createBook({ title, author });\n  revalidatePath(\"/books\");\n  redirect(\"/books\");\n}",
+   "beats": [
+    {
+     "say": "Here's the action.",
+     "show": 0
+    },
+    {
+     "say": "It reads each field from form data, so every input needs a name.",
+     "show": 1
+    },
+    {
+     "say": "Always validate on the server. Anyone can call an action directly. If it fails, return the error and the typed values.",
+     "show": 1
+    },
+    {
+     "say": "Otherwise, create the book, revalidate the books page, and redirect there.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "cursor",
+   "kicker": "Lab · Step 2",
+   "title": "useActionState",
+   "file": "app/ui/AddBookForm.js",
+   "code": "const [state, formAction, isPending] =\n  useActionState(addBookAction, initialState);\n\n<form action={formAction}>\n  <input name=\"title\" defaultValue={state.title} />\n  {state.error && <p role=\"alert\">{state.error}</p>}\n  <button disabled={isPending}>\n    {isPending ? \"Adding...\" : \"Add book\"}\n  </button>\n</form>",
+   "beats": [
+    {
+     "say": "The form is a client component.",
+     "show": 0
+    },
+    {
+     "say": "Use action state returns three things: the state, a form action, and is pending.",
+     "show": 1
+    },
+    {
+     "say": "Whatever the action returns becomes the new state, so errors and typed values come back.",
+     "show": 1
+    },
+    {
+     "say": "The button shows Adding, and is disabled while pending.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bulb",
+   "kicker": "Concept",
+   "title": "Worth knowing",
+   "items": [
+    [
+     "Uncontrolled inputs",
+     "defaultValue; read on submit"
+    ],
+    [
+     "Progressive enhancement",
+     "Works before JS loads"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "These inputs are uncontrolled. The browser holds the value, and the action reads it once, on submit.",
+     "show": 1
+    },
+    {
+     "say": "And a real form works even before JavaScript loads. That's progressive enhancement.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Try it",
+   "steps": [
+    "Bad input → error, typing kept",
+    "Good input → redirect to /books",
+    "Slow save → \"Adding...\""
+   ],
+   "beats": [
+    {
+     "say": "Submit with only an author: the error shows, and your typing is kept.",
+     "show": 1
+    },
+    {
+     "say": "Add a real book: you land on books, with it listed. The A P I sees it too.",
+     "show": 2
+    },
+    {
+     "say": "Add a fake delay, and the button shows Adding, and disables itself.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why validate inside the Server Action if the browser also checks?",
+   "options": [
+    "It's faster",
+    "Anyone can call a Server Action directly, skipping browser checks",
+    "Browsers can't validate"
+   ],
+   "answer": 1,
+   "good": "That's right. Anyone can send a request straight to a Server Action, so the server must enforce the rules.",
+   "bad": "Not quite. Anyone can send a request straight to a Server Action, so the server must enforce the rules.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why validate inside the Server Action if the browser also checks?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Server Action form with validation, pending and redirect",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 11.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "books new adds books through a Server Action, with server-side validation, a pending state and a redirect.",
+     "show": 1
+    },
+    {
+     "say": "Next, in the last module, build and deploy.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 12: Building and Deploying
@@ -1740,3 +4137,235 @@ Both apps build cleanly and your Reading List is live, redeploying on every push
 5. Why will added books not reliably persist in the deployed app, and what's the fix?
 
 *Answers: 1) `npm run dev` runs a development server with fast refresh and detailed errors; `npm run build` creates an optimized production build and `npm start` serves it like a real host would. 2) ○ means the route is fully prerendered as static content; ◐ means it is prerendered as a static shell with dynamic content streamed in from the server per request. 3) The build produces only static HTML, CSS and JavaScript files, which need no Node.js server to run. 4) Only variables whose names start with `NEXT_PUBLIC_`; secrets must never use that prefix and should only be read in server code. 5) The list lives in server memory, and hosted apps can run on several servers and restart at any time; the fix is storing the data in a real database.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Module 12 · Building and deploying",
+   "title": "Go live",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "N P M run dev is for development. For users, you make a production build."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "terminal",
+   "kicker": "Concept",
+   "title": "Build, then start",
+   "items": [
+    [
+     "npm run build",
+     "Optimised build; fails on errors"
+    ],
+    [
+     "npm start",
+     "Serve it like a host"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "N P M run build compiles, minifies, and prerenders what it can. It fails on errors, so run it before every deploy.",
+     "show": 1
+    },
+    {
+     "say": "N P M start serves that build, like a host would.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "Reading the build output",
+   "items": [
+    [
+     "○ Static",
+     "/ and /about"
+    ],
+    [
+     "◐ Partial Prerender",
+     "/books, /books/[id]"
+    ],
+    [
+     "ƒ Dynamic",
+     "/api/books"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The build output marks each route.",
+     "show": 0
+    },
+    {
+     "say": "A circle means static: prerendered.",
+     "show": 1
+    },
+    {
+     "say": "A half circle means partial prerender: a static shell, with dynamic content streamed in.",
+     "show": 2
+    },
+    {
+     "say": "And f means dynamic: rendered on demand.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "cloud",
+   "kicker": "Lab · Steps 3 to 5",
+   "title": "Deploy to Vercel",
+   "steps": [
+    "Push to GitHub",
+    "Import into Vercel",
+    "Test the public URL",
+    "Push → auto-deploy"
+   ],
+   "beats": [
+    {
+     "say": "Push the app to a GitHub repository.",
+     "show": 1
+    },
+    {
+     "say": "Sign in to Vercel with GitHub, import the repository, keep the detected settings, and deploy.",
+     "show": 2
+    },
+    {
+     "say": "Test every page at the public address.",
+     "show": 3
+    },
+    {
+     "say": "Change the About text and push. A new deployment starts automatically.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Concept",
+   "title": "Environment variables",
+   "items": [
+    [
+     "NEXT_PUBLIC_…",
+     "Reaches the browser"
+    ],
+    [
+     "Everything else",
+     "Server only: secrets live here"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Settings and secrets go in environment variables: dot env dot local on your machine, and project settings on the host.",
+     "show": 0
+    },
+    {
+     "say": "Only names starting with next public reach the browser.",
+     "show": 1
+    },
+    {
+     "say": "So never give a secret that prefix.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Limitation",
+   "title": "Memory isn't a database",
+   "quote": "For real data, replace lib/books.js with database calls.",
+   "beats": [
+    {
+     "say": "One limitation.",
+     "show": 0
+    },
+    {
+     "say": "The book list lives in server memory. Hosts run several copies and restart them, so added books can vanish.",
+     "show": 1
+    },
+    {
+     "say": "For real data, swap the functions in lib slash books for database calls. The rest of the app stays the same.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Which environment variables reach the browser in Next.js?",
+   "options": [
+    "All of them",
+    "Only names starting with NEXT_PUBLIC_",
+    "None of them"
+   ],
+   "answer": 1,
+   "good": "That's right. Only names starting with next public. Secrets must never use that prefix.",
+   "bad": "Not quite. Only names starting with next public. Secrets must never use that prefix.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Which environment variables reach the browser in Next.js?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Both apps build cleanly",
+     ""
+    ],
+    [
+     "Your Reading List is live",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "both apps build cleanly,",
+     "show": 1
+    },
+    {
+     "say": "and your Reading List is live, redeploying on every push.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Frontend Frameworks for Builders. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

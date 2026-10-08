@@ -57,6 +57,165 @@ You can name the four layers above in order and explain what each one solves.
 
 *Answers: 1) The code behaves differently outside the original machine, due to environment differences like package versions or missing configuration. 2) Docker solves environment consistency (same setup everywhere); CI solves catching bugs automatically before they reach users. 3) CI tests every change automatically; CD automatically ships changes that pass those tests. 4) More people making changes increases the chance of manual mistakes or conflicting environments without a consistent, automated process. 5) Ongoing - every new code change needs to go through this process again.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Module 0 · Why deployment is its own skill",
+   "title": "From your laptop to the world",
+   "beats": [
+    {
+     "say": "Welcome to Deployment for Builders."
+    },
+    {
+     "say": "Deployment is getting your code running reliably somewhere the public can reach, and keeping it working as your code and team grow."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "The classic problem",
+   "title": "\"It works on my machine\"",
+   "quote": "\"It works on my machine.\"",
+   "beats": [
+    {
+     "say": "The classic failure is: it works on my machine.",
+     "show": 0
+    },
+    {
+     "say": "Code behaves differently once it leaves your laptop, because of different versions, missing settings, or other quirks.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "Four layers that solve it",
+   "items": [
+    [
+     "Docker",
+     "Same environment everywhere"
+    ],
+    [
+     "CI",
+     "Tests every change"
+    ],
+    [
+     "CD",
+     "Ships what passes"
+    ],
+    [
+     "Cloud",
+     "Where users reach it"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Four things solve it, layered on top of each other.",
+     "show": 0
+    },
+    {
+     "say": "Docker packages your app so it runs the same everywhere.",
+     "show": 1
+    },
+    {
+     "say": "C I, continuous integration, tests every change automatically.",
+     "show": 2
+    },
+    {
+     "say": "C D, continuous deployment, ships the changes that pass.",
+     "show": 3
+    },
+    {
+     "say": "And cloud deployment is where it all runs, for real users.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Recognise the problem",
+   "quote": "When did something work locally but break in production?",
+   "beats": [
+    {
+     "say": "Your lab is a reflection.",
+     "show": 0
+    },
+    {
+     "say": "Write down one time something worked locally, but broke in production.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between CI and CD?",
+   "options": [
+    "They're the same thing",
+    "CI tests every change; CD ships the changes that pass",
+    "CI is for Python, CD is for JavaScript"
+   ],
+   "answer": 1,
+   "good": "That's right. C I automatically tests every change, and C D automatically ships the changes that pass.",
+   "bad": "Not quite. C I automatically tests every change, and C D automatically ships the changes that pass.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between CI and CD?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can name the four layers and what each solves",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can name the four layers in order, and what each solves.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 1, Docker.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Docker - Same Environment, Everywhere
@@ -128,6 +287,166 @@ You built a Docker image and ran two separate containers from it successfully.
 
 *Answers: 1) An image is the packaged blueprint; a container is a running instance of that image. 2) Sets the working directory inside the container where subsequent commands run. 3) Docker caches layers, so if only your app code changes (not dependencies), rebuilding skips reinstalling everything, making builds faster. 4) Maps port 8000 on your machine to port 8000 inside the container, so you can access it. 5) No - the image already contains everything needed to run, that's the entire point.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "container",
+   "kicker": "Module 1 · Docker",
+   "title": "The same environment, everywhere",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "A container packages your app with everything it needs to run: dependencies, system libraries and settings."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "container",
+   "kicker": "Concept",
+   "title": "Image and container",
+   "items": [
+    [
+     "Image",
+     "The packaged blueprint"
+    ],
+    [
+     "Container",
+     "A running copy of it"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two words to keep straight.",
+     "show": 0
+    },
+    {
+     "say": "An image is the packaged blueprint.",
+     "show": 1
+    },
+    {
+     "say": "A container is a running copy of that image.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "container",
+   "kicker": "Lab · Step 2",
+   "title": "Write a Dockerfile",
+   "file": "Dockerfile",
+   "code": "FROM python:3.12-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nEXPOSE 8000\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
+   "beats": [
+    {
+     "say": "A Dockerfile is the recipe.",
+     "show": 0
+    },
+    {
+     "say": "Start from Python three point twelve, and set the working folder.",
+     "show": 1
+    },
+    {
+     "say": "Copy requirements dot t x t and install them first. Docker caches that step, so later builds are fast when only your code changes.",
+     "show": 1
+    },
+    {
+     "say": "Then copy your code, and start uvicorn.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "terminal",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Build it, run it, run it again",
+   "steps": [
+    "docker build -t trackit-api .",
+    "docker run -p 8000:8000",
+    "docker run -p 9000:8000"
+   ],
+   "beats": [
+    {
+     "say": "Docker build makes the image.",
+     "show": 1
+    },
+    {
+     "say": "Docker run starts a container. Dash p eight thousand colon eight thousand connects your machine's port to the container's.",
+     "show": 2
+    },
+    {
+     "say": "Stop it, and run it again on port nine thousand. Same image, same behaviour. That's the promise of containers.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "If a teammate runs your image, do they need to install Python first?",
+   "options": [
+    "Yes, always",
+    "No, the image already contains everything it needs",
+    "Only on Windows"
+   ],
+   "answer": 1,
+   "good": "That's right. The image already contains everything needed to run. That's the whole point.",
+   "bad": "Not quite. The image already contains everything needed to run. That's the whole point.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "If a teammate runs your image, do they need to install Python first?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You built an image and ran two containers",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've built a Docker image and run two containers from it.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 2, CI and CD.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: CI/CD - Automating Trust
@@ -185,6 +504,175 @@ Your test passes locally, and you can describe, step by step, what should happen
 5. Why does CI/CD matter more as a team grows, rather than less?
 
 *Answers: 1) CI automatically checks code (tests, builds) on every change; CD automatically ships code that passes those checks. 2) Manual steps get skipped under deadline pressure or simply forgotten; automation runs the same way every time. 3) The change should be blocked from merging or deploying until it's fixed. 4) No - it means passing all automated checks first; failing changes don't get deployed. 5) More people means more changes and more chances for a manual mistake to slip through; automation scales in a way manual review doesn't.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Module 2 · CI/CD",
+   "title": "Automate trust",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "CI and CD are what let a team ship many times a day with confidence, instead of dreading every release."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "Two halves",
+   "items": [
+    [
+     "Continuous integration",
+     "Check every change automatically"
+    ],
+    [
+     "Continuous deployment",
+     "Ship what passes, automatically"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Continuous integration runs checks, like tests and builds, every time code changes. Problems are caught right away.",
+     "show": 1
+    },
+    {
+     "say": "Continuous deployment ships the code that passes, automatically. Nobody copies files by hand.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "test",
+   "kicker": "Lab · Step 1",
+   "title": "A test to automate",
+   "file": "test_main.py",
+   "code": "client = TestClient(app)\n\ndef test_health_check():\n    response = client.get(\"/health\")\n    assert response.status_code == 200\n    assert response.json() == {\"status\": \"ok\"}",
+   "beats": [
+    {
+     "say": "First, a test for your app.",
+     "show": 0
+    },
+    {
+     "say": "It calls slash health and checks for two hundred, and status: ok.",
+     "show": 1
+    },
+    {
+     "say": "Run it with pytest. This is what CI will run for you.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Lab · Step 2",
+   "title": "Plan the pipeline",
+   "steps": [
+    "Push or open a PR",
+    "CI runs tests",
+    "Pass → merge",
+    "CD deploys"
+   ],
+   "beats": [
+    {
+     "say": "Then plan the pipeline before building it.",
+     "show": 0
+    },
+    {
+     "say": "Someone pushes code or opens a pull request.",
+     "show": 1
+    },
+    {
+     "say": "CI installs everything and runs the tests.",
+     "show": 2
+    },
+    {
+     "say": "If they pass, the change can be merged.",
+     "show": 3
+    },
+    {
+     "say": "Once merged, CD builds and deploys it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Does CD mean every push goes live with zero checks?",
+   "options": [
+    "Yes, instantly",
+    "No, only changes that pass the automated checks",
+    "Only on Fridays"
+   ],
+   "answer": 1,
+   "good": "That's right. Only changes that pass all the automated checks are deployed.",
+   "bad": "Not quite. Only changes that pass all the automated checks are deployed.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Does CD mean every push goes live with zero checks?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your test passes locally",
+     ""
+    ],
+    [
+     "You can describe push to production, step by step",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your test passes locally,",
+     "show": 1
+    },
+    {
+     "say": "and you can describe every step from push to live.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, you build the pipeline with GitHub Actions.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -271,6 +759,155 @@ You have a real pull request on GitHub showing an automated check that passed (o
 
 *Answers: 1) Opening a pull request against `main`, or pushing directly to `main`. 2) The workflow runs on a fresh Ubuntu virtual machine provided by GitHub. 3) The workflow starts on a blank machine with no files, it needs your repository's code copied in before it can do anything. 4) A red "failed" status directly on the pull request, blocking confidence in merging until it's fixed. 5) To see the failure feedback loop firsthand, so you trust and recognize what CI catching a real problem looks like.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Module 3 · GitHub Actions",
+   "title": "Build the pipeline",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "GitHub Actions runs workflows, written in YAML files next to your code. An event, like a pull request, starts a series of steps on a fresh machine."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "cloud",
+   "kicker": "Lab · Step 1",
+   "title": "Put the code on GitHub",
+   "file": "Terminal",
+   "code": "git init\ngit add .\ngit commit -m \"Initial app with tests\"\ngit branch -M main\ngit remote add origin https://github.com/yourusername/trackit-api.git\ngit push -u origin main",
+   "beats": [
+    {
+     "say": "First, push your code to a new GitHub repository.",
+     "show": 0
+    },
+    {
+     "say": "Add a dot gitignore first, so generated files like pycache and your venv stay out.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Lab · Step 2",
+   "title": "The workflow file",
+   "file": ".github/workflows/ci.yml",
+   "code": "on:\n  pull_request:\n    branches: [main]\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - uses: actions/setup-python@v6\n        with:\n          python-version: \"3.12\"\n      - run: pip install -r requirements.txt pytest httpx\n      - run: pytest test_main.py -v",
+   "beats": [
+    {
+     "say": "Now the workflow.",
+     "show": 0
+    },
+    {
+     "say": "It runs on pull requests and pushes to main, on a fresh Ubuntu machine.",
+     "show": 1
+    },
+    {
+     "say": "The steps check out your code first, because the machine starts empty. Then set up Python, install, and run the tests.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "git",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Watch it work, and fail",
+   "steps": [
+    "Open a pull request",
+    "Tests run automatically",
+    "Break it: red",
+    "Fix it: green"
+   ],
+   "beats": [
+    {
+     "say": "Push the workflow on a branch, and open a pull request.",
+     "show": 1
+    },
+    {
+     "say": "Your tests run automatically, and the pull request shows a pass or fail check.",
+     "show": 2
+    },
+    {
+     "say": "Then break the test on purpose. The check turns red.",
+     "show": 3
+    },
+    {
+     "say": "Fix it, and it turns green. That's the feedback loop.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is checking out the code the first step?",
+   "options": [
+    "To make it run faster",
+    "The machine starts empty, so it needs your code first",
+    "GitHub requires it for billing"
+   ],
+   "answer": 1,
+   "good": "That's right. The workflow starts on a blank machine, so your code has to be copied in first.",
+   "bad": "Not quite. The workflow starts on a blank machine, so your code has to be copied in first.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is checking out the code the first step?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A real pull request with an automated check",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a real pull request showing an automated check that passed.",
+     "show": 1
+    },
+    {
+     "say": "Next, in the last module, you go live.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4: Cloud Deployment - Going Live
@@ -346,3 +983,217 @@ You have a real, public URL serving your app, and merging a pull request into `m
 5. What's the risk of auto-deploying straight to production without CI tests running first?
 
 *Answers: 1) Servers, networking, and scaling infrastructure, letting you focus on your app instead of managing machines. 2) The exact same packaged environment that worked locally is what runs in the cloud, removing a major source of "works here, not there" bugs. 3) Actually reaching the public URL yourself and getting a real response, e.g., via `curl` or a browser. 4) The manual step of logging in and triggering a deploy yourself; every merge to `main` that passes CI deploys automatically. 5) Untested or broken code could go live immediately, reaching real users before anyone catches the problem.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Module 4 · Cloud deployment",
+   "title": "Go live",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "Cloud deployment runs your app on a provider's infrastructure, instead of your laptop."
+    },
+    {
+     "say": "Beginners usually start with a platform as a service, which handles servers, networking and scaling for you."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "cloud",
+   "kicker": "Lab · Step 1",
+   "title": "Deploy to Render",
+   "steps": [
+    "Push to GitHub",
+    "New Web Service",
+    "Render builds the Dockerfile",
+    "Public URL"
+   ],
+   "beats": [
+    {
+     "say": "Here's the flow, using Render. Railway and Fly dot io work much the same.",
+     "show": 0
+    },
+    {
+     "say": "Push your code, including the Dockerfile, to GitHub.",
+     "show": 1
+    },
+    {
+     "say": "In Render, create a new web service and connect your repository.",
+     "show": 2
+    },
+    {
+     "say": "Render finds your Dockerfile, builds it, and deploys it.",
+     "show": 3
+    },
+    {
+     "say": "You get a public address.",
+     "show": 4
+    },
+    {
+     "say": "On the free plan, it sleeps after about fifteen minutes without visitors, so the first request after a pause can take up to a minute. That's normal.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "cloud",
+   "kicker": "Lab · Step 2",
+   "title": "Prove it's really live",
+   "big": "{\"status\": \"ok\"}",
+   "sub": "from your public URL",
+   "beats": [
+    {
+     "say": "Don't just trust the dashboard.",
+     "show": 0
+    },
+    {
+     "say": "Curl your public address, slash health.",
+     "show": 1
+    },
+    {
+     "say": "You get status: ok, now reachable from anywhere in the world.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Lab · Step 3",
+   "title": "Only deploy what passes",
+   "items": [
+    [
+     "Option A",
+     "Auto-deploy after CI checks pass"
+    ],
+    [
+     "Option B",
+     "Workflow triggers the deploy hook after tests"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "By default, Render redeploys on every push, even if tests fail. You want the opposite.",
+     "show": 0
+    },
+    {
+     "say": "Option A, the simplest: set auto-deploy to wait until CI checks pass.",
+     "show": 1
+    },
+    {
+     "say": "Option B: turn auto-deploy off, and have your workflow call Render's deploy hook, kept as a GitHub secret, only after the tests pass on main.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "git",
+   "kicker": "Lab · Step 3",
+   "title": "Ship through a pull request",
+   "steps": [
+    "New branch + test update",
+    "Pull request: CI passes",
+    "Merge",
+    "Live automatically"
+   ],
+   "beats": [
+    {
+     "say": "Now ship a change the right way.",
+     "show": 0
+    },
+    {
+     "say": "On a new branch, change slash health to include a version, and update the test to match.",
+     "show": 1
+    },
+    {
+     "say": "Open a pull request, and wait for CI to pass.",
+     "show": 2
+    },
+    {
+     "say": "Merge it.",
+     "show": 3
+    },
+    {
+     "say": "CI runs again on main, and only then does the new version go live. You never touched the server.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the risk of auto-deploying without CI tests first?",
+   "options": [
+    "Deploys become slower",
+    "Broken code could reach real users before anyone notices",
+    "GitHub stops working"
+   ],
+   "answer": 1,
+   "good": "That's right. Untested or broken code could go live straight away, reaching users before anyone catches it.",
+   "bad": "Not quite. Untested or broken code could go live straight away, reaching users before anyone catches it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the risk of auto-deploying without CI tests first?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A public URL serves your app",
+     ""
+    ],
+    [
+     "Merges deploy only after CI passes",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a public address serving your app,",
+     "show": 1
+    },
+    {
+     "say": "and merging a pull request updates it, only after CI passes.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Deployment for Builders. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

@@ -62,6 +62,194 @@ You can explain the testing pyramid and why most tests should be unit tests rath
 
 *Answers: 1) Code that automatically checks whether other code behaves as expected, replacing manual, by hand verification. 2) Unit tests, integration tests, then end-to-end tests. 3) Unit tests are fast and cheap to run, letting you check many small pieces frequently; end-to-end tests are slower and more expensive, so fewer of them cover the full system realistically. 4) "Did this change break something else?" 5) No, tests reduce the chance of undetected bugs and catch regressions, but they can't guarantee perfection, especially for cases no test was written for.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Module 0 · Why tests exist",
+   "title": "Prove it still works",
+   "beats": [
+    {
+     "say": "Welcome to Testing for Builders."
+    },
+    {
+     "say": "A test is code that checks your other code behaves the way it should, automatically, instead of someone clicking around by hand."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pyramid",
+   "kicker": "Concept",
+   "title": "The testing pyramid",
+   "items": [
+    [
+     "Unit",
+     "Many · fast · one piece"
+    ],
+    [
+     "Integration",
+     "Some · pieces together"
+    ],
+    [
+     "End-to-end",
+     "Few · slow · whole system"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Tests are usually described as a pyramid.",
+     "show": 0
+    },
+    {
+     "say": "At the bottom, unit tests. Many of them, fast, each checking one small piece.",
+     "show": 1
+    },
+    {
+     "say": "In the middle, integration tests. Some of them, checking pieces work together.",
+     "show": 2
+    },
+    {
+     "say": "At the top, end-to-end tests. A few of them, slow but realistic, driving the whole system.",
+     "show": 3
+    },
+    {
+     "say": "Lower layers are faster and cheaper, so most tests should live there.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "ask",
+   "kicker": "Where you'd use this",
+   "title": "The hidden question",
+   "quote": "Did this change break something else?",
+   "beats": [
+    {
+     "say": "Without tests, every change carries a hidden question.",
+     "show": 0
+    },
+    {
+     "say": "Did this break something else?",
+     "show": 1
+    },
+    {
+     "say": "Tests answer it in seconds, every time, instead of users finding out first.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Your first test cases, in plain English",
+   "items": [
+    [
+     "The total is never negative",
+     ""
+    ],
+    [
+     "An empty cart totals zero",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Your lab has no code yet.",
+     "show": 0
+    },
+    {
+     "say": "Think of a function, like one that totals a shopping cart, and write three things that should always be true.",
+     "show": 0
+    },
+    {
+     "say": "For example: the total is never negative.",
+     "show": 1
+    },
+    {
+     "say": "An empty cart totals zero.",
+     "show": 2
+    },
+    {
+     "say": "Those sentences are your first test cases.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why should most tests be unit tests, not end-to-end tests?",
+   "options": [
+    "Unit tests are more realistic",
+    "Unit tests are fast and cheap, so you can run many often",
+    "End-to-end tests can't fail"
+   ],
+   "answer": 1,
+   "good": "That's right. Unit tests are fast and cheap, so you can check many small pieces often. End-to-end tests are slower and more expensive.",
+   "bad": "Not quite. Unit tests are fast and cheap, so you can check many small pieces often. End-to-end tests are slower and more expensive.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why should most tests be unit tests, not end-to-end tests?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain the testing pyramid",
+     ""
+    ],
+    [
+     "And why most tests are unit tests",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain the testing pyramid,",
+     "show": 1
+    },
+    {
+     "say": "and why most tests should be unit tests.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 1, unit tests with Jest.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Unit Testing - Checking One Piece at a Time
@@ -175,6 +363,233 @@ You have a set of passing unit tests covering a normal case, an edge case (empty
 
 *Answers: 1) A pattern for structuring a test, setting up the input, running the code being tested, then checking the result. 2) That the actual value produced exactly equals the expected value. 3) External dependencies make tests slower, less reliable (they can fail for unrelated reasons like a network issue), and harder to run in isolation. 4) That calling a given function throws an error, optionally checking the error's message. 5) It shows what a real failure looks like in the test output, so a genuine failure is recognized and understood immediately when it happens for real.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Module 1 · Unit testing",
+   "title": "Check one piece at a time",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "A unit test checks one small piece of code, usually one function, on its own. No database, no network, no files."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Concept",
+   "title": "Arrange, Act, Assert",
+   "steps": [
+    "Arrange: set up input",
+    "Act: run the code",
+    "Assert: check the result"
+   ],
+   "beats": [
+    {
+     "say": "Unit tests follow a simple pattern.",
+     "show": 0
+    },
+    {
+     "say": "Arrange: set up the input.",
+     "show": 1
+    },
+    {
+     "say": "Act: run the code.",
+     "show": 2
+    },
+    {
+     "say": "Assert: check the result.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Syntax at a glance",
+   "title": "Your first Jest test",
+   "file": "cart.test.js",
+   "code": "test(\"calculates the total for multiple items\", () => {\n  const items = [\n    { price: 10, quantity: 2 },\n    { price: 5, quantity: 1 }\n  ];\n  expect(calculateTotal(items)).toBe(25);\n});\n\ntest(\"returns zero for an empty cart\", () => {\n  expect(calculateTotal([])).toBe(0);\n});",
+   "beats": [
+    {
+     "say": "Here's a test in Jest.",
+     "show": 0
+    },
+    {
+     "say": "The description reads like a sentence about the expected behaviour.",
+     "show": 1
+    },
+    {
+     "say": "Arrange the items, act by calling calculate total, and assert with expect, to be twenty five.",
+     "show": 1
+    },
+    {
+     "say": "A second test checks the edge case: an empty cart totals zero.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Matchers",
+   "title": "Ways to check a result",
+   "items": [
+    [
+     ".toBe(x)",
+     "Exact value"
+    ],
+    [
+     ".toEqual(x)",
+     "Same object contents"
+    ],
+    [
+     ".toThrow()",
+     "Expected error"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Expect wraps the result, then a matcher says what it should be.",
+     "show": 0
+    },
+    {
+     "say": "To be, for an exact value.",
+     "show": 1
+    },
+    {
+     "say": "To equal, for objects with the same contents.",
+     "show": 2
+    },
+    {
+     "say": "And to throw, when an error is expected.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "warning",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "Run it, then fail on purpose",
+   "steps": [
+    "npm test: 2 passed",
+    "Add a wrong test",
+    "Read the failure, then remove it"
+   ],
+   "beats": [
+    {
+     "say": "Set up a project, install Jest, and run npm test. Both tests pass.",
+     "show": 1
+    },
+    {
+     "say": "Then add a test that's wrong on purpose, expecting nine hundred and ninety nine.",
+     "show": 2
+    },
+    {
+     "say": "Jest shows exactly which test failed, what it expected, and what it got. Then remove it.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab · Step 4",
+   "title": "Test the error case too",
+   "file": "cart.test.js",
+   "code": "test(\"applies a discount correctly\", () => {\n  expect(applyDiscount(100, 10)).toBe(90);\n});\n\ntest(\"throws for an invalid discount percent\", () => {\n  expect(() => applyDiscount(100, 150)).toThrow(\"Invalid discount percent\");\n});",
+   "beats": [
+    {
+     "say": "Next, apply discount, which throws an error for a percent below zero or above a hundred.",
+     "show": 0
+    },
+    {
+     "say": "Test the normal case: ten percent off a hundred is ninety.",
+     "show": 1
+    },
+    {
+     "say": "And the error case: wrap the call in a function, and expect it to throw.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why should a unit test avoid a real database or network?",
+   "options": [
+    "They're too expensive",
+    "They make tests slower and able to fail for unrelated reasons",
+    "Jest can't connect to them"
+   ],
+   "answer": 1,
+   "good": "That's right. External dependencies make tests slower and less reliable, failing for reasons unrelated to your code.",
+   "bad": "Not quite. External dependencies make tests slower and less reliable, failing for reasons unrelated to your code.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why should a unit test avoid a real database or network?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Normal, edge and error cases pass",
+     ""
+    ],
+    [
+     "You've read a real failure",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have passing tests for a normal case, an edge case and an error case,",
+     "show": 1
+    },
+    {
+     "say": "and you've seen what a failing test looks like.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, integration tests.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: Integration Testing - Checking Pieces Together
@@ -270,6 +685,161 @@ You have passing integration tests confirming your API's routing, middleware, an
 5. What's the tradeoff of writing more integration tests instead of unit tests?
 
 *Answers: 1) A unit test isolates and checks one small piece of code alone; an integration test checks that multiple real pieces, like routing and middleware, work correctly together. 2) Send real, full HTTP requests directly into the app and inspect the actual response, simulating a real client. 3) Because sending a request and awaiting its response takes time, matching how real HTTP requests behave, even inside a test. 4) A missing piece of middleware, meaning the pieces weren't wired together correctly; a unit test of an isolated function never touches routing or middleware, so it couldn't have caught a wiring problem between them. 5) Integration tests are slower and slightly more complex to set up than unit tests, so relying on them exclusively would make the whole test suite slower to run.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "merge",
+   "kicker": "Module 2 · Integration testing",
+   "title": "Check pieces together",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "An integration test checks that several real pieces work together, like an API route with its routing and middleware."
+    },
+    {
+     "say": "It trades a little speed for more realistic confidence."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "api",
+   "kicker": "Syntax at a glance",
+   "title": "Real HTTP requests, no server",
+   "file": "app.test.js",
+   "code": "test(\"POST /tasks creates a new task\", async () => {\n  const response = await request(app)\n    .post(\"/tasks\")\n    .send({ title: \"Write tests\" });\n  expect(response.status).toBe(201);\n  expect(response.body.title).toBe(\"Write tests\");\n});",
+   "beats": [
+    {
+     "say": "Supertest sends real HTTP requests into your Express app, without starting a server.",
+     "show": 0
+    },
+    {
+     "say": "The test is async, because a request takes time.",
+     "show": 1
+    },
+    {
+     "say": "Then check the status and the body, exactly what a real client would get.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "test",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "Three passing tests",
+   "big": "3 passed",
+   "sub": "GET, POST, and POST without a title → 400",
+   "beats": [
+    {
+     "say": "Install Express, and Supertest as a dev dependency.",
+     "show": 0
+    },
+    {
+     "say": "Test listing tasks, creating one, and a bad request with no title, which returns four hundred.",
+     "show": 1
+    },
+    {
+     "say": "All three pass, through real routing and middleware.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Lab · Step 4",
+   "title": "Break the wiring on purpose",
+   "quote": "Remove express.json() → POST tests fail. A wiring bug, not a logic bug.",
+   "beats": [
+    {
+     "say": "Now remove the line app dot use, express dot json, and rerun.",
+     "show": 0
+    },
+    {
+     "say": "The post tests fail. Without that middleware, the request body is undefined.",
+     "show": 1
+    },
+    {
+     "say": "A unit test of one function could never catch this. It only shows when the pieces run together. Put the line back.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the trade-off of writing more integration tests than unit tests?",
+   "options": [
+    "They catch fewer bugs",
+    "They're slower and more complex, so the suite gets slower",
+    "They can't test APIs"
+   ],
+   "answer": 1,
+   "good": "That's right. Integration tests are slower and more complex to set up, so relying on them alone makes the suite slow.",
+   "bad": "Not quite. Integration tests are slower and more complex to set up, so relying on them alone makes the suite slow.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the trade-off of writing more integration tests than unit tests?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Integration tests pass",
+     ""
+    ],
+    [
+     "You've seen a wiring failure",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have passing integration tests for routing, middleware and logic together,",
+     "show": 1
+    },
+    {
+     "say": "and you've seen a test fail because of a missing piece of wiring.",
+     "show": 2
+    },
+    {
+     "say": "Next, in the last module, end-to-end tests in a real browser.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -380,3 +950,180 @@ You have a passing Playwright test that opens a real browser, performs a real us
 5. What kind of problem can an E2E test catch that unit and integration tests, run separately, might miss?
 
 *Answers: 1) An E2E test drives a real browser through an actual user flow, involving the frontend, backend, and everything between them together; an integration test checks fewer pieces, typically without a real browser or full user interaction. 2) It navigates a real, automated browser to the given URL, exactly like a person typing it in and pressing enter. 3) Because the actual goal is confirming what a real user would see and experience, not just what a function internally returns. 4) E2E tests are slower to run and more expensive to maintain, since they depend on a real browser and a fully running system, so they're reserved for the most critical user flows. 5) A problem that only appears when the full system runs together, like a frontend and backend that each work fine alone but don't actually connect or communicate correctly in practice.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "browser",
+   "kicker": "Module 3 · End-to-end testing",
+   "title": "Test it like a real person",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "An end-to-end test drives a real browser through a real user flow: clicking, typing, and checking what appears on screen."
+    },
+    {
+     "say": "It's the slowest layer, and the most realistic."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "cursor",
+   "kicker": "Syntax at a glance",
+   "title": "A Playwright test",
+   "file": "example.spec.js",
+   "code": "test(\"user can add a task and see it in the list\", async ({ page }) => {\n  await page.goto(\"http://localhost:3000\");\n  await page.locator(\"#task-input\").fill(\"Write end-to-end tests\");\n  await page.locator(\"#add-task-button\").click();\n  await expect(page.locator(\"li\")).toContainText(\"Write end-to-end tests\");\n});",
+   "beats": [
+    {
+     "say": "Here's a test in Playwright.",
+     "show": 0
+    },
+    {
+     "say": "Go to the page. Fill in the task box. Click add.",
+     "show": 1
+    },
+    {
+     "say": "Then check the list actually contains the new task, on the rendered page.",
+     "show": 1
+    },
+    {
+     "say": "Playwright waits for each element automatically. In bigger projects, find elements the way a user would, like by role and name.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "terminal",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "Set it up",
+   "steps": [
+    "npx serve . -l 3000",
+    "Install @playwright/test + chromium",
+    "npx playwright test"
+   ],
+   "beats": [
+    {
+     "say": "Create a tiny task list page, and serve it on port three thousand. Leave that running.",
+     "show": 1
+    },
+    {
+     "say": "In a second terminal, install Playwright and its Chromium browser.",
+     "show": 2
+    },
+    {
+     "say": "Run npx playwright test. It opens a browser, types, clicks, and checks the result.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "browser",
+   "kicker": "Lab · Step 4",
+   "title": "Watch it happen",
+   "big": "--headed",
+   "sub": "see the browser drive itself",
+   "beats": [
+    {
+     "say": "Add dash dash headed to watch.",
+     "show": 0
+    },
+    {
+     "say": "A browser window opens, types and clicks entirely on its own.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab · Step 5",
+   "title": "Test what shouldn't work",
+   "file": "example.spec.js",
+   "code": "test(\"clicking add with an empty input adds nothing\", async ({ page }) => {\n  await page.goto(\"http://localhost:3000\");\n  await page.locator(\"#add-task-button\").click();\n  await expect(page.locator(\"li\")).toHaveCount(0);\n});",
+   "beats": [
+    {
+     "say": "Finally, test a case that shouldn't work.",
+     "show": 0
+    },
+    {
+     "say": "Click add with an empty box, and expect the list to have zero items.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why are there usually far fewer end-to-end tests than unit tests?",
+   "options": [
+    "They're less useful",
+    "They're slower and costlier to maintain, so they're kept for critical flows",
+    "Browsers limit how many you can run"
+   ],
+   "answer": 1,
+   "good": "That's right. End-to-end tests are slower and costlier to maintain, so they're kept for the most critical user flows.",
+   "bad": "Not quite. End-to-end tests are slower and costlier to maintain, so they're kept for the most critical user flows.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why are there usually far fewer end-to-end tests than unit tests?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A real browser test of a user flow passes",
+     ""
+    ],
+    [
+     "Empty input is tested too",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a passing Playwright test of a real user flow in a real browser,",
+     "show": 1
+    },
+    {
+     "say": "and a second test proving empty input is handled.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Testing for Builders. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
