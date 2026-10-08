@@ -300,11 +300,224 @@ Every topic follows the same pattern, so you always know what comes next:
 
 Each module lists the tools it needs at the top. Every tool in this track is free or has a free tier that covers the labs, and you only install a module's tools when you reach it. Module 6's iOS topic needs a Mac; if you don't have one, the Android topic covers the same skills.
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "path",
+   "kicker": "Start here · How each module works",
+   "title": "The same pattern, every topic",
+   "beats": [
+    {
+     "say": "Every topic in this track follows the same pattern, so you always know what comes next."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "The pattern",
+   "title": "Six steps per topic",
+   "items": [
+    [
+     "Concept",
+     "Plain language"
+    ],
+    [
+     "Structure at a glance",
+     "Often a diagram"
+    ],
+    [
+     "Where you'd use this",
+     "A real scenario"
+    ],
+    [
+     "Lab",
+     "Hands-on"
+    ],
+    [
+     "Checkpoint",
+     "Before moving on"
+    ],
+    [
+     "Quiz",
+     "Five questions"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "First, the concept: what it is, in plain language.",
+     "show": 1
+    },
+    {
+     "say": "Then the structure at a glance: the building blocks, often as a diagram.",
+     "show": 2
+    },
+    {
+     "say": "Where you'd actually use this: a real workplace scenario.",
+     "show": 3
+    },
+    {
+     "say": "A lab: a hands-on exercise you complete yourself.",
+     "show": 4
+    },
+    {
+     "say": "A checkpoint: what you should be able to do before moving on.",
+     "show": 5
+    },
+    {
+     "say": "And a quiz: five questions, with answers.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "package",
+   "kicker": "Tools",
+   "title": "Only what you need, when you need it",
+   "items": [
+    [
+     "Free tools",
+     "Or free tiers that cover the labs"
+    ],
+    [
+     "Install as you go",
+     "Only when you reach the module"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Each module lists the tools it needs at the top.",
+     "show": 0
+    },
+    {
+     "say": "Every tool is free, or has a free tier that covers the labs, and you only install a module's tools when you reach it.",
+     "show": 1
+    },
+    {
+     "say": "Module six's i O S topic needs a Mac. If you don't have one, the Android topic covers the same skills.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You know the pattern every topic follows",
+     ""
+    ],
+    [
+     "And which tools you'll need, and when",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's this part.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you know the pattern every topic follows,",
+     "show": 1
+    },
+    {
+     "say": "and which tools you'll need, and when.",
+     "show": 2
+    },
+    {
+     "say": "Next, the one rule for the whole track.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## One rule for the whole track
 
 Only test software you own or have written permission to test. The performance and security labs use a deliberately vulnerable practice app running only on your own computer; never point those tools at a real site or app.
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "shield",
+   "kicker": "Start here · One rule",
+   "title": "One rule for the whole track",
+   "beats": [
+    {
+     "say": "There's one rule that applies to every test you run in this track."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "lock",
+   "kicker": "The rule",
+   "title": "Only test what you're allowed to",
+   "quote": "Only test software you own or have written permission to test.",
+   "beats": [
+    {
+     "say": "Only test software you own, or have written permission to test.",
+     "show": 1
+    },
+    {
+     "say": "The performance and security labs use a deliberately vulnerable practice app, running only on your own computer.",
+     "show": 1
+    },
+    {
+     "say": "Never point those tools at a real site or app.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You know the permission rule",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's this part.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you know the permission rule that applies to every test you run.",
+     "show": 1
+    },
+    {
+     "say": "Next, what comes after the track.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -317,3 +530,92 @@ Courses build the skill; a badge proves it. When you've worked through the modul
 - ✅ The pattern every topic follows
 - ✅ Which tools you'll need, and when
 - ✅ The permission rule that applies to every test you run
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "proof",
+   "kicker": "Start here · After the track",
+   "title": "From skill to proof",
+   "beats": [
+    {
+     "say": "Courses build the skill. A badge proves it."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "people",
+   "kicker": "What's next",
+   "title": "Earn your Quality Tester badge",
+   "steps": [
+    "Work through the modules",
+    "Join a project as a tester",
+    "Earn your Quality Tester badge"
+   ],
+   "beats": [
+    {
+     "say": "Work through the modules.",
+     "show": 1
+    },
+    {
+     "say": "Then join a project on She Model Tech as a tester.",
+     "show": 2
+    },
+    {
+     "say": "Your test cases, bug reports and automated checks become the work that earns your Quality Tester badge.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "How the nine modules build on each other",
+     ""
+    ],
+    [
+     "The pattern and the tools",
+     ""
+    ],
+    [
+     "The permission rule",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the track overview.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you know what Q A is for, and how the nine modules build on each other,",
+     "show": 1
+    },
+    {
+     "say": "the pattern every topic follows, and the tools you'll need,",
+     "show": 2
+    },
+    {
+     "say": "and the permission rule for every test you run.",
+     "show": 3
+    },
+    {
+     "say": "Next, Module 1: Q A Fundamentals.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
