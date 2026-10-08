@@ -82,6 +82,36 @@ export const WATCH_ART = {
     <path class="sk" stroke-width="5" stroke-linecap="round" d="M28 160h184"/></g></svg>`,
   loop: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="sa" stroke-width="10" stroke-linecap="round" d="M70 100a50 50 0 0 1 90-30"/><path class="fa" d="M168 46l4 34-32-8z"/>
     <path class="sk" stroke-width="10" stroke-linecap="round" d="M170 100a50 50 0 0 1-90 30"/><path class="fk" d="M72 154l-4-34 32 8z"/></g></svg>`,
+  boxes: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2">
+    <rect class="fa" x="40" y="76" width="70" height="62" rx="10"/><rect class="fp sk" stroke-width="4" x="130" y="76" width="70" height="62" rx="10"/>
+    <rect class="fk" x="48" y="58" width="54" height="16" rx="5"/><rect class="fk" x="138" y="58" width="54" height="16" rx="5"/>
+    <text x="75" y="115" text-anchor="middle" font-size="22" font-weight="800" class="fp">25</text><text x="165" y="115" text-anchor="middle" font-size="18" font-weight="800" class="fa">"Ada"</text></g></svg>`,
+  calc: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><rect class="fk" x="70" y="30" width="100" height="140" rx="14"/><rect class="fp" x="82" y="42" width="76" height="30" rx="6"/>
+    <g class="fa"><rect x="82" y="84" width="20" height="20" rx="5"/><rect x="110" y="84" width="20" height="20" rx="5"/><rect x="138" y="84" width="20" height="20" rx="5"/>
+    <rect x="82" y="112" width="20" height="20" rx="5"/><rect x="110" y="112" width="20" height="20" rx="5"/><rect x="138" y="112" width="20" height="48" rx="5"/>
+    <rect x="82" y="140" width="48" height="20" rx="5"/></g><text x="150" y="64" text-anchor="end" font-size="16" font-weight="800" class="fk">51.75</text></g></svg>`,
+  fork: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="sk" stroke-width="8" stroke-linecap="round" d="M120 172v-62"/>
+    <path class="sa" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" d="M120 110L70 56M120 110l50-54"/>
+    <path class="fa" d="M58 44l26 4-18 18zM182 44l-26 4 18 18z"/><circle class="fk" cx="120" cy="110" r="12"/></g></svg>`,
+  blueprint: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><rect class="fk" x="34" y="44" width="96" height="112" rx="10"/>
+    <g class="sp" stroke-width="3" stroke-dasharray="5 5"><rect x="48" y="60" width="68" height="28" rx="4"/><path d="M48 104h68M48 120h50M48 136h58"/></g>
+    <path class="sa" stroke-width="5" stroke-linecap="round" d="M134 100h18"/>
+    <rect class="fa" x="156" y="64" width="54" height="40" rx="8"/><rect class="fp sa" stroke-width="4" x="156" y="112" width="54" height="40" rx="8"/></g></svg>`,
+  file: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="fp sk" stroke-width="5" stroke-linejoin="round" d="M70 28h70l30 30v114H70z"/><path class="fa" d="M140 28v30h30z"/>
+    <g class="fl"><rect x="86" y="80" width="68" height="8" rx="4"/><rect x="86" y="98" width="56" height="8" rx="4"/><rect x="86" y="116" width="64" height="8" rx="4"/><rect x="86" y="134" width="44" height="8" rx="4"/></g></g></svg>`,
+  blocks: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><rect class="fa" x="56" y="98" width="58" height="58" rx="10"/><rect class="fk" x="122" y="98" width="58" height="58" rx="10"/>
+    <rect class="fp sk" stroke-width="4" x="89" y="34" width="58" height="58" rx="10"/><circle class="fa" cx="118" cy="63" r="10"/></g></svg>`,
+  cloud: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="fa" d="M78 136a30 30 0 0 1 2-60 40 40 0 0 1 76-6 32 32 0 0 1 6 66z"/>
+    <path class="sp" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M120 124V88M106 102l14-14 14 14"/></g></svg>`,
+  merge: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="sk" stroke-width="7" stroke-linecap="round" d="M80 40v120"/><path class="sa" stroke-width="7" stroke-linecap="round" d="M160 40c0 40-80 50-80 90"/>
+    <circle class="fk" cx="80" cy="40" r="13"/><circle class="fa" cx="160" cy="40" r="13"/><circle class="fk" cx="80" cy="160" r="15"/><circle class="fp" cx="80" cy="160" r="6"/></g></svg>`,
+  pencil: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><rect class="fp sk" stroke-width="4" x="46" y="40" width="110" height="130" rx="10"/>
+    <g class="fl"><rect x="62" y="64" width="76" height="8" rx="4"/><rect x="62" y="84" width="62" height="8" rx="4"/><rect x="62" y="104" width="70" height="8" rx="4"/></g>
+    <path class="fa" d="M196 52l14 14-62 62-20 6 6-20z"/><path class="fk" d="M128 134l6-20 14 14z"/></g></svg>`,
+  key: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><circle class="fa" cx="86" cy="100" r="34"/><circle class="fp" cx="76" cy="100" r="12"/>
+    <path class="fk" d="M116 92h92v16h-14v18h-16v-18h-12v12h-16v-12h-34z"/></g></svg>`,
+  graph: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="sk" stroke-width="5" d="M120 54L64 132M120 54l56 78M64 132h112M120 54v38"/>
+    <circle class="fa" cx="120" cy="54" r="20"/><circle class="fk" cx="64" cy="132" r="16"/><circle class="fk" cx="176" cy="132" r="16"/><circle class="fa" cx="120" cy="104" r="12"/></g></svg>`,
   rocket: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="fp sk" stroke-width="5" d="M120 26c26 18 36 48 30 90h-60c-6-42 4-72 30-90z"/><circle class="fa" cx="120" cy="74" r="12"/>
     <path class="fa" d="M90 100l-20 30h24zM150 100l20 30h-24z"/><path class="fa" d="M106 120h28l-14 40z"/></g></svg>`,
 };

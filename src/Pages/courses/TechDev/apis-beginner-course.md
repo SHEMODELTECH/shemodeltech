@@ -192,6 +192,211 @@ You inspected a real API request, and your task API runs locally.
 
 *Answers: 1) A defined way for two pieces of software to communicate. 2) It asks a specialized weather service's API instead of building its own forecasting. 3) Clients depend on its URLs, data shapes, and errors staying as documented, so careless changes break their apps. 4) No, it's just as often your own frontend talking to your own backend.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Module 0 · Why APIs exist",
+   "title": "Software talking to software",
+   "beats": [
+    {
+     "say": "Welcome to APIs for Builders."
+    },
+    {
+     "say": "In this course you grow one task API into something other people can rely on."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "api",
+   "kicker": "Concept",
+   "title": "What an API is",
+   "quote": "A defined way for two pieces of software to talk to each other.",
+   "beats": [
+    {
+     "say": "An API is a defined way for two pieces of software to talk to each other.",
+     "show": 0
+    },
+    {
+     "say": "Your phone's weather app doesn't calculate the weather. It asks a weather company's API, and shows you the answer.",
+     "show": 1
+    },
+    {
+     "say": "Almost every app is a frontend talking to a backend through an API, and that backend often calls other APIs too.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Concept",
+   "title": "An API is a contract",
+   "items": [
+    [
+     "URLs",
+     ""
+    ],
+    [
+     "Data shapes",
+     ""
+    ],
+    [
+     "Errors",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Once people depend on your API, it becomes a contract.",
+     "show": 0
+    },
+    {
+     "say": "Its addresses,",
+     "show": 1
+    },
+    {
+     "say": "the shape of its data,",
+     "show": 2
+    },
+    {
+     "say": "and its errors.",
+     "show": 3
+    },
+    {
+     "say": "Change any of them carelessly, and their apps break.",
+     "show": 3
+    },
+    {
+     "say": "This course makes that contract clear, extends it, and protects it.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "laptop",
+   "kicker": "Lab · Step 1",
+   "title": "Watch a live API",
+   "steps": [
+    "Inspect",
+    "Network tab",
+    "Click a Fetch / XHR request"
+   ],
+   "beats": [
+    {
+     "say": "First, watch a real API at work.",
+     "show": 0
+    },
+    {
+     "say": "Open your browser's developer tools.",
+     "show": 1
+    },
+    {
+     "say": "Go to the Network tab.",
+     "show": 2
+    },
+    {
+     "say": "Load any website, and click a fetch request to see what it sent and what came back.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Your starting app",
+   "file": "Terminal",
+   "code": "uvicorn app.main:app --reload\ncurl http://localhost:8000/health\n# {\"status\":\"ok\"}",
+   "beats": [
+    {
+     "say": "Then get the starting app.",
+     "show": 0
+    },
+    {
+     "say": "If you finished the Backend course, open your tasks API. If not, the module has starter files to paste.",
+     "show": 1
+    },
+    {
+     "say": "Run it, and the health check should answer status: ok.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Is an API always between two different companies' software?",
+   "options": [
+    "Yes, always",
+    "No, it's just as often your own frontend talking to your own backend",
+    "Only on mobile apps"
+   ],
+   "answer": 1,
+   "good": "That's right. It's just as often your own frontend talking to your own backend.",
+   "bad": "Not quite. It's just as often your own frontend talking to your own backend.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Is an API always between two different companies' software?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You inspected a real API request",
+     ""
+    ],
+    [
+     "Your task API runs locally",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've inspected a real API request,",
+     "show": 1
+    },
+    {
+     "say": "and your task API runs on your computer.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 1, you design it well.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: REST Design Done Well
@@ -343,6 +548,228 @@ Run `python -m pytest`.
 
 *Answers: 1) It puts a verb in the URL; REST uses the resource URL plus a method, and changing `done` is a partial update, so `PATCH`. 2) Lists grow without limit, so responses would become slow and huge. 3) The items plus `total`, `limit`, and `offset` (or a cursor). 4) When you must make a breaking change, such as renaming or removing a field; additions can stay in `/v1`.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Module 1 · REST design",
+   "title": "Design an API people can guess",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "REST organises an API around resources, like tasks and users, each with its own address."
+    },
+    {
+     "say": "Good REST design is mostly about being consistent."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Concept",
+   "title": "Four habits of good REST",
+   "items": [
+    [
+     "Plural nouns, not verbs",
+     "GET /tasks · PATCH /tasks/5"
+    ],
+    [
+     "Query parameters for options",
+     "?done=false · ?q=milk · ?sort=-title"
+    ],
+    [
+     "Paginate every list",
+     "items, total, limit, offset"
+    ],
+    [
+     "Version in the path",
+     "/v1/tasks"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Four habits.",
+     "show": 0
+    },
+    {
+     "say": "Use plural nouns, not verbs. Get slash tasks. Patch slash tasks slash five. Not get tasks, and not slash complete.",
+     "show": 1
+    },
+    {
+     "say": "Use query parameters for options, like filtering, searching and sorting.",
+     "show": 2
+    },
+    {
+     "say": "Paginate lists. Never return everything, because a table that grows to a hundred thousand rows will time out.",
+     "show": 3
+    },
+    {
+     "say": "And version the API in the path, like slash v one.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Example",
+   "title": "Mark a task done",
+   "quote": "PATCH /tasks/5   {\"done\": true}",
+   "beats": [
+    {
+     "say": "Here's a common mistake.",
+     "show": 0
+    },
+    {
+     "say": "To mark task five done, it's tempting to add slash tasks slash five slash complete.",
+     "show": 1
+    },
+    {
+     "say": "But that puts a verb in the address. In REST, you send patch to slash tasks slash five, with done set to true.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "A page of results",
+   "file": "app/schemas.py",
+   "code": "class TaskPage(BaseModel):\n    items: list[TaskOut]\n    total: int\n    limit: int\n    offset: int",
+   "beats": [
+    {
+     "say": "In the lab, you add a page schema: the items, plus total, limit and offset.",
+     "show": 0
+    },
+    {
+     "say": "That's everything a client needs to build next page buttons.",
+     "show": 1
+    },
+    {
+     "say": "The list endpoint caps the page size at a hundred, and only allows four sort options.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Try it under /v1",
+   "file": "Terminal",
+   "code": "curl \"http://localhost:8000/v1/tasks?limit=2\"\ncurl \"http://localhost:8000/v1/tasks?limit=2&offset=2\"\ncurl \"http://localhost:8000/v1/tasks?q=buy&sort=-title\"",
+   "beats": [
+    {
+     "say": "You mount the routes under slash v one, then try them.",
+     "show": 0
+    },
+    {
+     "say": "Limit two gives you the first page. Offset two gives the next.",
+     "show": 1
+    },
+    {
+     "say": "And q equals buy, sorted by title descending, finds Buy stamps, then Buy milk.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "rocket",
+   "kicker": "Versioning",
+   "title": "When to release /v2",
+   "quote": "Breaking change? Ship /v2 and keep /v1 running.",
+   "beats": [
+    {
+     "say": "When do you release version two?",
+     "show": 0
+    },
+    {
+     "say": "Only for a breaking change, like renaming or removing a field. Then keep version one running until clients move.",
+     "show": 1
+    },
+    {
+     "say": "Adding new things can stay in version one.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why should a list endpoint never return every row?",
+   "options": [
+    "It's against the law",
+    "Lists grow without limit, so responses become slow and huge",
+    "Browsers can only show 20 items"
+   ],
+   "answer": 1,
+   "good": "That's right. Lists grow without limit, so responses would become slow and huge.",
+   "bad": "Not quite. Lists grow without limit, so responses would become slow and huge.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why should a list endpoint never return every row?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "/v1/tasks returns pages with a total",
+     ""
+    ],
+    [
+     "Filtering, search and sorting, with a passing test",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "slash v one slash tasks returns pages with a total,",
+     "show": 1
+    },
+    {
+     "say": "and supports filtering, search and sorting, with a passing test.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, you make errors consistent and document everything.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: Consistent Errors and OpenAPI Docs
@@ -475,6 +902,228 @@ Every error, including unknown URLs and validation failures, uses the same shape
 
 *Answers: 1) Clients handle every error with one piece of code instead of special-casing each endpoint. 2) Programs branch on the stable `code`; people read the `message`, which you can reword without breaking clients. 3) The machine-readable OpenAPI description of the API, used to render docs and generate client libraries, mock servers, and tests. 4) FastAPI raises Starlette's version for unknown routes and wrong methods, so this also covers those `404` and `405` responses.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "warning",
+   "kicker": "Module 2 · Errors and docs",
+   "title": "One error shape, clear docs",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Right now, different errors come back in different shapes, so every client has to special-case each one."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Concept",
+   "title": "One error format everywhere",
+   "file": "Every error",
+   "code": "{\"error\": {\n  \"code\": \"not_found\",\n  \"message\": \"Task 5 not found\",\n  \"fields\": null\n}}",
+   "beats": [
+    {
+     "say": "A good API uses one error format everywhere.",
+     "show": 0
+    },
+    {
+     "say": "A code, like not found, that programs can rely on.",
+     "show": 1
+    },
+    {
+     "say": "A message for humans, which you can reword without breaking anyone.",
+     "show": 1
+    },
+    {
+     "say": "And fields, listing exactly which inputs were wrong.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Lab · Step 1",
+   "title": "Map status codes to codes",
+   "items": [
+    [
+     "401",
+     "unauthorized"
+    ],
+    [
+     "404",
+     "not_found"
+    ],
+    [
+     "422",
+     "validation_error"
+    ],
+    [
+     "429",
+     "rate_limited"
+    ],
+    [
+     "5xx",
+     "server_error"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, you map each status code to a stable code.",
+     "show": 0
+    },
+    {
+     "say": "Four oh one, unauthorized.",
+     "show": 1
+    },
+    {
+     "say": "Four oh four, not found.",
+     "show": 2
+    },
+    {
+     "say": "Four twenty two, validation error.",
+     "show": 3
+    },
+    {
+     "say": "Four twenty nine, rate limited.",
+     "show": 4
+    },
+    {
+     "say": "And anything in the five hundreds is a server error, logged in full for you, with a polite message for the user.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Lab · Step 3",
+   "title": "Check every error",
+   "file": "Terminal",
+   "code": "curl http://localhost:8000/v1/tasks/999\ncurl -X POST http://localhost:8000/v1/tasks \\\n  -H \"Content-Type: application/json\" -d '{\"title\": \"\"}'\ncurl \"http://localhost:8000/v1/tasks?limit=0\"\ncurl -X DELETE http://localhost:8000/v1/tasks",
+   "beats": [
+    {
+     "say": "Then try four different mistakes.",
+     "show": 0
+    },
+    {
+     "say": "A missing task, an empty title, a page size of zero, and a method that isn't allowed.",
+     "show": 1
+    },
+    {
+     "say": "All four now come back in the same shape.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "doc",
+   "kicker": "Lab · Step 4",
+   "title": "Docs for free with OpenAPI",
+   "steps": [
+    "/openapi.json",
+    "/docs",
+    "Client libraries, mocks, tests"
+   ],
+   "beats": [
+    {
+     "say": "FastAPI also publishes an OpenAPI description of your API.",
+     "show": 0
+    },
+    {
+     "say": "Slash openapi dot json is the raw contract.",
+     "show": 1
+    },
+    {
+     "say": "It powers the readable docs at slash docs.",
+     "show": 2
+    },
+    {
+     "say": "And other tools use it to generate client libraries, mock servers and tests.",
+     "show": 3
+    },
+    {
+     "say": "The more you describe, the more useful it is.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why include both a code and a message?",
+   "options": [
+    "To make errors longer",
+    "Programs branch on the stable code; people read the message",
+    "One is for errors, one for warnings"
+   ],
+   "answer": 1,
+   "good": "That's right. Programs rely on the stable code, and people read the message, which you can reword freely.",
+   "bad": "Not quite. Programs rely on the stable code, and people read the message, which you can reword freely.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why include both a code and a message?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Every error uses the same shape",
+     ""
+    ],
+    [
+     "/docs documents it",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "every error, even unknown addresses, uses the same shape,",
+     "show": 1
+    },
+    {
+     "say": "and slash docs documents it.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, you call other people's APIs safely.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3: Calling Third-Party APIs Safely
@@ -606,6 +1255,231 @@ You can show, with the fake server, that your client retries a `503` and a `429`
 
 *Answers: 1) Otherwise a slow or stuck service can hang your request, and your users' requests, indefinitely. 2) A `503` is temporary and may recover; a `404` will fail the same way every time. 3) If the first attempt succeeded but the response was lost, a retry could charge the customer twice. 4) How long the server wants you to wait before trying again, usually in seconds. 5) Many clients retrying at the same moments and overloading the recovering service again.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "cloud",
+   "kicker": "Module 3 · Calling third-party APIs",
+   "title": "Plan for other services failing",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "Sooner or later your backend calls someone else's API: payments, email, maps, an AI model."
+    },
+    {
+     "say": "Those services are sometimes slow, down, or busy. Your app has to survive that."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Concept",
+   "title": "Five rules for outbound calls",
+   "items": [
+    [
+     "Timeouts",
+     "Never wait forever"
+    ],
+    [
+     "Retry carefully",
+     "Timeouts, 429, 5xx. Never 400 or 404"
+    ],
+    [
+     "Backoff with jitter",
+     "0.5s, 1s, 2s, plus randomness"
+    ],
+    [
+     "Respect rate limits",
+     "Honour Retry-After"
+    ],
+    [
+     "Keys in env variables",
+     "Never in code"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Five rules.",
+     "show": 0
+    },
+    {
+     "say": "Always set a timeout. Without one, a slow service can hang your request forever.",
+     "show": 1
+    },
+    {
+     "say": "Retry carefully. Only failures that might work next time, like timeouts, four twenty nine, and five hundreds. Never a four oh four.",
+     "show": 2
+    },
+    {
+     "say": "Back off. Wait longer after each failure, plus a little randomness, so everyone doesn't retry at the same moment.",
+     "show": 3
+    },
+    {
+     "say": "Respect rate limits, and the retry after header that tells you how long to wait.",
+     "show": 4
+    },
+    {
+     "say": "And keep API keys in environment variables, never in code.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Careful",
+   "title": "Never retry a payment blindly",
+   "quote": "Retrying a payment POST could charge the customer twice.",
+   "beats": [
+    {
+     "say": "One important warning.",
+     "show": 0
+    },
+    {
+     "say": "Only retry requests that are safe to repeat, like get.",
+     "show": 1
+    },
+    {
+     "say": "If you retry a payment post, and the first one actually went through, you could charge the customer twice.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 1",
+   "title": "A careful client with httpx",
+   "file": "app/external.py",
+   "code": "RETRY_STATUSES = {429, 500, 502, 503, 504}\n\ndef make_client():\n    return httpx.Client(timeout=httpx.Timeout(5.0, connect=2.0))\n\n# wait: Retry-After if given, else 0.5s, 1s, 2s... + jitter",
+   "beats": [
+    {
+     "say": "In the lab you build get json, using a library called httpx.",
+     "show": 0
+    },
+    {
+     "say": "It sets a five second timeout.",
+     "show": 1
+    },
+    {
+     "say": "It retries four twenty nine and five hundreds, waiting longer each time, and honours retry after.",
+     "show": 1
+    },
+    {
+     "say": "Any other four hundred error is your own mistake, so it fails straight away.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Lab · Step 2",
+   "title": "Test with a fake server",
+   "steps": [
+    "503: retry",
+    "429, Retry-After 1: wait, retry",
+    "200: success",
+    "404: no retry"
+   ],
+   "beats": [
+    {
+     "say": "Then you test it with a fake server, no internet needed.",
+     "show": 0
+    },
+    {
+     "say": "It fails with five oh three.",
+     "show": 1
+    },
+    {
+     "say": "Then asks you to slow down, with four twenty nine and retry after one second.",
+     "show": 2
+    },
+    {
+     "say": "Then succeeds.",
+     "show": 3
+    },
+    {
+     "say": "Your client tries three times, and waits the second it was asked to. A four oh four is tried only once.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why retry a 503 but not a 404?",
+   "options": [
+    "503 is a smaller number",
+    "A 503 is temporary and may recover; a 404 fails the same way every time",
+    "404s are retried by the browser"
+   ],
+   "answer": 1,
+   "good": "That's right. A five oh three is temporary and may recover. A four oh four will fail the same way every time.",
+   "bad": "Not quite. A five oh three is temporary and may recover. A four oh four will fail the same way every time.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why retry a 503 but not a 404?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Retries a 503 and a 429 (honouring Retry-After)",
+     ""
+    ],
+    [
+     "Refuses to retry a 404",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can show, with the fake server, that your client retries a five oh three and a four twenty nine,",
+     "show": 1
+    },
+    {
+     "say": "and refuses to retry a four oh four.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, you add user accounts safely.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4: Authentication Fundamentals and Password Hashing
@@ -729,6 +1603,217 @@ You can explain authentication versus authorization and sessions versus tokens, 
 5. Hashing the same password twice gives different results. How can `verify` still work?
 
 *Answers: 1) Authentication: who are you. Authorization: what are you allowed to do. 2) Every server needs the same shared session store, adding infrastructure and a lookup on every request. 3) If the database leaks, attackers get hashes they can't reverse instead of working passwords. 4) Slowness limits how many guesses per second an attacker can test against stolen hashes. 5) The salt and settings are stored inside the hash string, so `verify` re-hashes the attempt with the same salt and compares.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "lock",
+   "kicker": "Module 4 · Authentication basics",
+   "title": "Accounts, done safely",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "Today your API gets user accounts, with passwords stored the right way."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Concept",
+   "title": "Who, and what",
+   "items": [
+    [
+     "Authentication",
+     "Who is this?"
+    ],
+    [
+     "Authorization",
+     "What can they do?"
+    ],
+    [
+     "401 vs 403",
+     "Unknown user vs not allowed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two questions.",
+     "show": 0
+    },
+    {
+     "say": "Authentication asks: who is this?",
+     "show": 1
+    },
+    {
+     "say": "Authorization asks: what are they allowed to do? A logged-in user still mustn't read someone else's tasks.",
+     "show": 2
+    },
+    {
+     "say": "Four oh one means we don't know who you are. Four oh three means we know, but you can't do this.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Concept",
+   "title": "Sessions or tokens",
+   "items": [
+    [
+     "Sessions",
+     "Server stores a record per user"
+    ],
+    [
+     "Tokens (JWT)",
+     "Server just checks a signature"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "There are two common ways to keep someone logged in.",
+     "show": 0
+    },
+    {
+     "say": "Sessions. The browser holds a random ID, and the server stores a record for each logged-in user. Logging out takes effect at once.",
+     "show": 1
+    },
+    {
+     "say": "Tokens, like JWTs. The client holds a signed token, and the server stores nothing per user. It just checks the signature. Good for APIs, mobile apps, and many servers.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "hash",
+   "kicker": "Concept · Lab step 1",
+   "title": "Never store passwords",
+   "file": "Python",
+   "code": "password_hash = PasswordHash.recommended()   # Argon2\nstored = password_hash.hash(\"correct horse battery staple\")\n\npassword_hash.verify(\"correct horse battery staple\", stored)  # True\npassword_hash.verify(\"wrong guess\", stored)                  # False",
+   "beats": [
+    {
+     "say": "Either way, never store passwords. Store a hash.",
+     "show": 0
+    },
+    {
+     "say": "Use Argon2, through a library called pwdlib. It's slow on purpose, so attackers can't test billions of guesses.",
+     "show": 1
+    },
+    {
+     "say": "It adds a random salt each time, so hashing the same password twice gives different results, and verify still works.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "people",
+   "kicker": "Lab · Steps 2 to 6",
+   "title": "Registration",
+   "steps": [
+    "User model",
+    "UserOut (no password)",
+    "POST /v1/users",
+    "201, then 409"
+   ],
+   "beats": [
+    {
+     "say": "Then you build registration.",
+     "show": 0
+    },
+    {
+     "say": "A user table, with an email and a password hash.",
+     "show": 1
+    },
+    {
+     "say": "A user out schema with no password field, so a hash can never leak in a response.",
+     "show": 2
+    },
+    {
+     "say": "A post slash users endpoint.",
+     "show": 3
+    },
+    {
+     "say": "Register once, and you get two oh one. Register again with the same email, and you get four oh nine.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is a slow hash like Argon2 better than a fast one for passwords?",
+   "options": [
+    "It saves database space",
+    "Slowness limits how many guesses an attacker can test per second",
+    "Fast hashes can't be verified"
+   ],
+   "answer": 1,
+   "good": "That's right. Slowness limits how many guesses per second an attacker can try against stolen hashes.",
+   "bad": "Not quite. Slowness limits how many guesses per second an attacker can try against stolen hashes.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is a slow hash like Argon2 better than a fast one for passwords?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain authN vs authZ, sessions vs tokens",
+     ""
+    ],
+    [
+     "Your API stores Argon2-hashed passwords",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain authentication versus authorization, and sessions versus tokens,",
+     "show": 1
+    },
+    {
+     "say": "and your API stores Argon2 hashed passwords.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, users log in and get a token.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -922,6 +2007,260 @@ Users log in for a JWT, every task endpoint requires it, and a test proves one u
 
 *Answers: 1) Header, payload, and signature. 2) Just encoded, so anyone can read it; never put secrets in it. 3) Any server with the secret key can verify the signature on its own, without a lookup. 4) A `403` would confirm the task exists; `404` reveals nothing about other users' data. 5) `jwt.decode` raises `ExpiredSignatureError` (a kind of `InvalidTokenError`), so the API answers `401`.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "key",
+   "kicker": "Module 5 · JWT login",
+   "title": "Log in once, prove it every time",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "Users log in once, get a token, and send it with every request."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Concept",
+   "title": "What's in a JWT",
+   "items": [
+    [
+     "Header",
+     ""
+    ],
+    [
+     "Payload",
+     "Claims: sub (user ID), exp (expiry)"
+    ],
+    [
+     "Signature",
+     "Made with your server's secret key"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A JWT, or JSON web token, is a compact, signed piece of text.",
+     "show": 0
+    },
+    {
+     "say": "It has three parts, separated by dots.",
+     "show": 0
+    },
+    {
+     "say": "A header,",
+     "show": 1
+    },
+    {
+     "say": "a payload with claims, like the user's ID and when it expires,",
+     "show": 2
+    },
+    {
+     "say": "and a signature, made with a key only your server knows. So the server can trust it without looking anything up.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Two rules",
+   "title": "Before you use JWTs",
+   "items": [
+    [
+     "Readable by anyone",
+     "No secrets in the payload"
+    ],
+    [
+     "Short lifetimes",
+     "A stolen token works until it expires"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two rules.",
+     "show": 0
+    },
+    {
+     "say": "The payload is encoded, not encrypted. Anyone holding the token can read it, so never put secrets in it.",
+     "show": 1
+    },
+    {
+     "say": "And keep lifetimes short, because a stolen token works until it expires.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "key",
+   "kicker": "Lab",
+   "title": "The login flow",
+   "steps": [
+    "POST /v1/auth/token",
+    "Get access_token",
+    "Authorization: Bearer …",
+    "Verified, or 401"
+   ],
+   "beats": [
+    {
+     "say": "Here's the flow you build.",
+     "show": 0
+    },
+    {
+     "say": "Post your email and password to slash auth slash token.",
+     "show": 1
+    },
+    {
+     "say": "Get back an access token.",
+     "show": 2
+    },
+    {
+     "say": "Send it on every request as authorization, bearer, then the token.",
+     "show": 3
+    },
+    {
+     "say": "Get current user checks the signature and the expiry. Bad or missing? Four oh one.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "shield",
+   "kicker": "Security detail",
+   "title": "Don't reveal which part was wrong",
+   "quote": "\"Wrong email or password\"",
+   "beats": [
+    {
+     "say": "A wrong login says wrong email or password, never which one.",
+     "show": 0
+    },
+    {
+     "say": "Otherwise, attackers could use it to discover which emails are registered.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Lab · Step 5",
+   "title": "Each user sees only their own tasks",
+   "file": "app/routers/tasks.py",
+   "code": "def get_task_or_404(db, task_id, user):\n    task = db.get(Task, task_id)\n    if task is None or task.owner_id != user.id:\n        raise HTTPException(404, f\"Task {task_id} not found\")\n    return task",
+   "beats": [
+    {
+     "say": "Now authorization. Every task gets an owner.",
+     "show": 0
+    },
+    {
+     "say": "Lists only show your own tasks.",
+     "show": 1
+    },
+    {
+     "say": "And someone else's task returns four oh four, the same as a missing one. A four oh three would confirm it exists.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "test",
+   "kicker": "Lab · Step 7",
+   "title": "Prove it with a test",
+   "big": "404",
+   "sub": "Bob asking for Ada's task",
+   "beats": [
+    {
+     "say": "Finally, a test proves it.",
+     "show": 0
+    },
+    {
+     "say": "Bob logs in, asks for Ada's task, and gets four oh four.",
+     "show": 1
+    },
+    {
+     "say": "And his task list is empty.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Is a JWT's payload encrypted?",
+   "options": [
+    "Yes, nobody can read it",
+    "No, it's only encoded, so never put secrets in it",
+    "Only the user ID is encrypted"
+   ],
+   "answer": 1,
+   "good": "That's right. It's only encoded, so anyone can read it. Never put secrets in it.",
+   "bad": "Not quite. It's only encoded, so anyone can read it. Never put secrets in it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Is a JWT's payload encrypted?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Login returns a JWT; task endpoints require it",
+     ""
+    ],
+    [
+     "A test proves users only see their own tasks",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "users log in for a JWT and every task endpoint requires it,",
+     "show": 1
+    },
+    {
+     "say": "and a test proves one user can't see another's tasks.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, you try GraphQL.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 6: GraphQL - Asking for Exactly What You Need
@@ -1102,6 +2441,245 @@ You fetched tasks with their owner's email in one GraphQL request, created a tas
 
 *Answers: 1) Getting more data than the client needs. 2) Needing several requests to assemble one screen's data. 3) Typically one; the client decides through its query. 4) A function that produces one field's value; `owner`'s runs only when a query asks for `owner`. 5) Not much: GraphQL shines when different clients need different shapes of data.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Module 6 · GraphQL",
+   "title": "Ask for exactly what you need",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "GraphQL has one endpoint. The client sends a query naming exactly the fields it wants."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "graph",
+   "kicker": "Concept",
+   "title": "Two problems it solves",
+   "items": [
+    [
+     "Over-fetching",
+     "More data than you need"
+    ],
+    [
+     "Under-fetching",
+     "Several requests for one screen"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "It solves two problems.",
+     "show": 0
+    },
+    {
+     "say": "Over-fetching. Getting more data than you need.",
+     "show": 1
+    },
+    {
+     "say": "And under-fetching. Needing several requests for one screen.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "graph",
+   "kicker": "Example",
+   "title": "One request instead of two",
+   "file": "GraphQL query",
+   "code": "query {\n  task(id: 5) {\n    title\n    owner {\n      email\n    }\n  }\n}",
+   "beats": [
+    {
+     "say": "To show a task with its owner's email, REST needs two calls: the task, then the user.",
+     "show": 0
+    },
+    {
+     "say": "GraphQL gets exactly that, in one request.",
+     "show": 1
+    },
+    {
+     "say": "Ask for the task's title, and inside it, the owner's email.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "The vocabulary",
+   "items": [
+    [
+     "Schema",
+     "Typed description of the API"
+    ],
+    [
+     "Query",
+     "Reads data"
+    ],
+    [
+     "Mutation",
+     "Changes data"
+    ],
+    [
+     "Resolver",
+     "Fills one field, only when asked"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A few words.",
+     "show": 0
+    },
+    {
+     "say": "A schema describes every type.",
+     "show": 1
+    },
+    {
+     "say": "Queries read data.",
+     "show": 2
+    },
+    {
+     "say": "Mutations change it.",
+     "show": 3
+    },
+    {
+     "say": "And a resolver is a function that fills one field. It only runs if the query asks for that field.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "graph",
+   "kicker": "Lab",
+   "title": "Build it with Strawberry",
+   "steps": [
+    "Strawberry + your JWT",
+    "/graphql explorer",
+    "createTask, then tasks { owner }"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, you add GraphQL with a library called Strawberry.",
+     "show": 0
+    },
+    {
+     "say": "It reuses your database and your JWT check.",
+     "show": 1
+    },
+    {
+     "say": "Open the explorer at slash graphql, and add your token.",
+     "show": 2
+    },
+    {
+     "say": "Create a task with a mutation, then query your tasks with their owners.",
+     "show": 3
+    },
+    {
+     "say": "Remove owner from the query, and the owner resolver doesn't run at all.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "bulb",
+   "kicker": "When to use it",
+   "title": "GraphQL isn't always better",
+   "quote": "Different clients, different data shapes? GraphQL. One simple client? REST.",
+   "beats": [
+    {
+     "say": "When should you use it?",
+     "show": 0
+    },
+    {
+     "say": "When you have nested data, and several apps that each want different slices. That's why GitHub and Shopify offer it.",
+     "show": 1
+    },
+    {
+     "say": "For a simple app with one client, REST is usually simpler.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "When does the owner resolver run?",
+   "options": [
+    "On every request",
+    "Only when the query asks for owner",
+    "Once when the server starts"
+   ],
+   "answer": 1,
+   "good": "That's right. A resolver only runs when the query asks for that field.",
+   "bad": "Not quite. A resolver only runs when the query asks for that field.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "When does the owner resolver run?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Tasks with owner emails in one request",
+     ""
+    ],
+    [
+     "You created a task with a mutation",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've fetched tasks with their owner's email in one GraphQL request,",
+     "show": 1
+    },
+    {
+     "say": "created a task with a mutation, and can say how many REST calls that would take.",
+     "show": 2
+    },
+    {
+     "say": "Next, in the last module, you add Sign in with Google.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 7: OAuth 2.0 and OpenID Connect: "Sign in with Google"
@@ -1216,3 +2794,217 @@ You watched a real "Sign in with Google" redirect, generated a login URL with `s
 5. What is the `state` parameter checked for?
 
 *Answers: 1) Your app would hold the user's real password, a major risk if it's compromised, with no way to limit or revoke access. 2) An authorization code, which your server exchanges for tokens. 3) A standard way to learn who the user is, through a signed ID token and a userinfo endpoint. 4) Use of a stolen authorization code: exchanging it requires the verifier only the original app holds, which Google checks against the earlier challenge. 5) That the callback belongs to a login this app started, blocking an attacker from injecting their own code.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "key",
+   "kicker": "Module 7 · OAuth 2.0 and OpenID Connect",
+   "title": "How \"Sign in with Google\" works",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "OAuth lets a user give your app limited access to their data on another service, without ever sharing their password with you."
+    },
+    {
+     "say": "OpenID Connect adds a signed ID token that says who the user is. Together, they power Sign in with Google."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Concept",
+   "title": "The five steps",
+   "steps": [
+    "Redirect to Google",
+    "User approves scopes",
+    "Back with a code",
+    "Code → tokens",
+    "Log in to your app"
+   ],
+   "beats": [
+    {
+     "say": "Here's the authorization code flow, in five steps.",
+     "show": 0
+    },
+    {
+     "say": "Your app sends the user to Google's login page.",
+     "show": 1
+    },
+    {
+     "say": "They log in, and approve the access you asked for, called scopes.",
+     "show": 2
+    },
+    {
+     "say": "Google sends them back to your app with an authorization code.",
+     "show": 3
+    },
+    {
+     "say": "Your server swaps that code for tokens: an access token, and an ID token.",
+     "show": 4
+    },
+    {
+     "say": "And your app logs them in, for example by issuing your own JWT from Module 5.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Two safety details",
+   "title": "state and PKCE",
+   "items": [
+    [
+     "state",
+     "Proves the callback is from a login you started"
+    ],
+    [
+     "PKCE",
+     "A stolen code is useless without your secret"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two safety details matter.",
+     "show": 0
+    },
+    {
+     "say": "State is a random value you create in step one and check in step three, so an attacker can't slip their own code into your callback.",
+     "show": 1
+    },
+    {
+     "say": "PKCE. Your app makes a one-time secret, and sends Google only its hash. When swapping the code, it sends the secret itself.",
+     "show": 2
+    },
+    {
+     "say": "Google checks they match, so a stolen code is useless on its own.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 2",
+   "title": "Build the login link",
+   "file": "pkce_demo.py",
+   "code": "state = secrets.token_urlsafe(32)\nverifier, challenge = make_pkce_pair()\n\nlogin_url = AUTHORIZE_URL + \"?\" + urlencode({\n    \"response_type\": \"code\",\n    \"scope\": \"openid email profile\",\n    \"state\": state,\n    \"code_challenge\": challenge,\n    \"code_challenge_method\": \"S256\",\n})",
+   "beats": [
+    {
+     "say": "In the lab, you build step one, offline.",
+     "show": 0
+    },
+    {
+     "say": "Make a random state, and a PKCE pair: a verifier you keep, and a challenge Google sees first.",
+     "show": 1
+    },
+    {
+     "say": "Put them in the login link, with your client ID, redirect address and scopes. Keep the state and verifier until the user comes back.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "lock",
+   "kicker": "In production",
+   "title": "Use a maintained library",
+   "quote": "In production, use a maintained library such as Authlib.",
+   "beats": [
+    {
+     "say": "For a real app, use a maintained library such as Authlib.",
+     "show": 0
+    },
+    {
+     "say": "It also verifies the ID token's signature for you.",
+     "show": 1
+    },
+    {
+     "say": "Then step five is code you already know: find or create the user, and return your own token.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What attack does PKCE stop?",
+   "options": [
+    "Guessing passwords",
+    "Using a stolen authorization code",
+    "Reading the ID token"
+   ],
+   "answer": 1,
+   "good": "That's right. PKCE makes a stolen authorization code useless, because swapping it needs the secret only your app holds.",
+   "bad": "Not quite. PKCE makes a stolen authorization code useless, because swapping it needs the secret only your app holds.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What attack does PKCE stop?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You watched a real Sign in with Google redirect",
+     ""
+    ],
+    [
+     "You built a login link with state and PKCE",
+     ""
+    ],
+    [
+     "You can explain all five steps",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've watched a real Sign in with Google redirect,",
+     "show": 1
+    },
+    {
+     "say": "built a login link with state and PKCE,",
+     "show": 2
+    },
+    {
+     "say": "and can explain all five steps.",
+     "show": 3
+    },
+    {
+     "say": "You've finished APIs for Builders. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```

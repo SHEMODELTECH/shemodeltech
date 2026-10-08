@@ -143,6 +143,228 @@ You ran the code above, saw each type printed correctly, and understand why `pri
 
 *Answers: 1) The value assigned to it. 2) `int` is a whole number; `float` allows decimal points. 3) You can't directly combine text and a number with `+`, they're different types. 4) The explicit absence of a value, as opposed to a zero or empty value that still exists. 5) A user's "is logged in" or "is premium member" status (any valid example).*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "boxes",
+   "kicker": "Module 0 · Variables and data types",
+   "title": "Name your data",
+   "beats": [
+    {
+     "say": "Welcome to Python Programming Fundamentals."
+    },
+    {
+     "say": "Every program you'll ever write stores information. Let's start with how."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "boxes",
+   "kicker": "Concept",
+   "title": "A variable is a name for a value",
+   "quote": "username = \"opeyemi\"",
+   "beats": [
+    {
+     "say": "A variable is a name that points to a value stored in memory.",
+     "show": 0
+    },
+    {
+     "say": "Write username equals opeyemi, and Python remembers that value under the name username.",
+     "show": 1
+    },
+    {
+     "say": "You don't declare a type. Python works it out from the value you assign.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "boxes",
+   "kicker": "Concept",
+   "title": "The types you'll use most",
+   "items": [
+    [
+     "int",
+     "Whole numbers: 25"
+    ],
+    [
+     "float",
+     "Decimals: 19.99"
+    ],
+    [
+     "str",
+     "Text: \"Alice\""
+    ],
+    [
+     "bool",
+     "True or False"
+    ],
+    [
+     "list",
+     "[\"a\", \"b\"]"
+    ],
+    [
+     "dict",
+     "{\"name\": \"Alice\"}"
+    ],
+    [
+     "None",
+     "Explicitly no value"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are the types you'll use most.",
+     "show": 0
+    },
+    {
+     "say": "An int is a whole number, like twenty five.",
+     "show": 1
+    },
+    {
+     "say": "A float has a decimal point, like nineteen ninety nine.",
+     "show": 2
+    },
+    {
+     "say": "A string, s t r, is text, always in quotes.",
+     "show": 3
+    },
+    {
+     "say": "A bool is True or False.",
+     "show": 4
+    },
+    {
+     "say": "A list is an ordered collection in square brackets, and a dict holds key and value pairs in curly brackets.",
+     "show": 6
+    },
+    {
+     "say": "And None means, on purpose, no value at all.",
+     "show": 7
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab",
+   "title": "Ask Python what type it is",
+   "file": "Python",
+   "code": "username = \"opeyemi\"\nlogin_count = 12\naccount_balance = 245.50\nis_premium_member = True\nrecent_searches = [\"python\", \"docker\"]\n\nprint(type(login_count))   # <class 'int'>",
+   "beats": [
+    {
+     "say": "In the lab, you create a few variables for a user.",
+     "show": 0
+    },
+    {
+     "say": "Then type of each one tells you what Python decided.",
+     "show": 1
+    },
+    {
+     "say": "String for the username, int for the login count, float for the balance, bool for premium, and list for recent searches.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "warning",
+   "kicker": "A common bug",
+   "title": "Numbers stored as text",
+   "file": "Python",
+   "code": "price_as_text = \"19.99\"\n# price_as_text + 5   -> crashes: text + number\nprice_as_number = float(price_as_text)\nprint(price_as_number + 5)   # 24.99",
+   "beats": [
+    {
+     "say": "Here's a bug you'll meet in real apps.",
+     "show": 0
+    },
+    {
+     "say": "A price arrives as the text nineteen ninety nine, in quotes.",
+     "show": 1
+    },
+    {
+     "say": "Adding five to it crashes, because you can't add text and a number.",
+     "show": 1
+    },
+    {
+     "say": "Convert it with float first, and the math works: twenty four ninety nine.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why would \"19.99\" + 5 cause an error?",
+   "options": [
+    "19.99 is too big a number",
+    "The quotes make it text, and you can't add text and a number with +",
+    "Python can't handle decimals"
+   ],
+   "answer": 1,
+   "good": "That's right. The quotes make it a string, and you can't add a string and a number with plus.",
+   "bad": "Not quite. The quotes make it a string, and you can't add a string and a number with plus.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why would \"19.99\" + 5 cause an error?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You ran the code and saw each type",
+     ""
+    ],
+    [
+     "You can explain why \"19.99\" + 5 fails",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've run the code and seen each type printed,",
+     "show": 1
+    },
+    {
+     "say": "and you can explain why price as text plus five fails.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 1, you put values to work with operators.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Operators
@@ -204,6 +426,197 @@ You can predict the output of each print statement above before running it.
 
 *Answers: 1) `//` performs integer (floor) division, dropping any remainder; `/` gives a full decimal result. 2) `==` checks if two values are equal (returns `bool`); `=` assigns a value to a variable. 3) `and` requires both conditions to be true; `or` requires only one. 4) 10% of the cart total. 5) `login_count = login_count + 1`.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "calc",
+   "kicker": "Module 1 · Operators",
+   "title": "Make values do things",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "Operators perform actions on values: math, comparisons, and decisions."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "calc",
+   "kicker": "Concept",
+   "title": "Four kinds of operators",
+   "items": [
+    [
+     "Arithmetic",
+     "+  -  *  /  //  %  **"
+    ],
+    [
+     "Comparison",
+     "==  !=  >  <  >=  <="
+    ],
+    [
+     "Logical",
+     "and  or  not"
+    ],
+    [
+     "Assignment",
+     "=  +=  -=  *="
+    ]
+   ],
+   "beats": [
+    {
+     "say": "There are four main kinds.",
+     "show": 0
+    },
+    {
+     "say": "Arithmetic does math: plus, minus, times, divide, and more.",
+     "show": 1
+    },
+    {
+     "say": "Comparison compares two values and always gives back True or False.",
+     "show": 2
+    },
+    {
+     "say": "Logical operators, and, or, and not, combine true or false conditions.",
+     "show": 3
+    },
+    {
+     "say": "And assignment sets or updates a variable, like plus equals.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Lab · Arithmetic",
+   "title": "Work out a cart total",
+   "file": "Python",
+   "code": "cart_total = 45.00 + 12.50\ndiscount = cart_total * 0.10   # 10% off\nfinal_price = cart_total - discount\nprint(final_price)             # 51.75",
+   "beats": [
+    {
+     "say": "A shopping cart. Forty five plus twelve fifty.",
+     "show": 0
+    },
+    {
+     "say": "Take ten percent off by multiplying by zero point one,",
+     "show": 1
+    },
+    {
+     "say": "then subtract the discount. The final price is fifty one seventy five.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "fork",
+   "kicker": "Lab · Comparison and logic",
+   "title": "Answer yes-or-no questions",
+   "file": "Python",
+   "code": "user_age = 16\ncan_signup = user_age >= 18          # False\n\nis_logged_in = True\nis_premium = False\ncan_access = is_logged_in and is_premium   # False",
+   "beats": [
+    {
+     "say": "Comparison. Is a sixteen year old at least eighteen? False.",
+     "show": 0
+    },
+    {
+     "say": "Logic. Can someone use a premium feature? Only if they're logged in and premium.",
+     "show": 1
+    },
+    {
+     "say": "And needs both to be true. They're not premium, so the answer is False.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "calc",
+   "kicker": "Lab · Assignment shorthand",
+   "title": "+= adds and saves",
+   "big": "login_count += 1",
+   "sub": "same as login_count = login_count + 1",
+   "beats": [
+    {
+     "say": "Finally, a handy shortcut.",
+     "show": 0
+    },
+    {
+     "say": "Login count plus equals one means the same as login count equals login count plus one.",
+     "show": 1
+    },
+    {
+     "say": "Start at zero, add one, and you get one.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between == and =?",
+   "options": [
+    "They mean the same thing",
+    "== checks if two values are equal; = assigns a value to a variable",
+    "== is for numbers and = is for text"
+   ],
+   "answer": 1,
+   "good": "That's right. Double equals checks whether two values are equal. A single equals assigns a value.",
+   "bad": "Not quite. Double equals checks whether two values are equal. A single equals assigns a value.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between == and =?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can predict every output before running it",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can predict the output of each print statement before running it.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 2, your programs start making decisions.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: Control Flow
@@ -250,6 +663,187 @@ You can trace through `get_shipping_cost` by hand for a new set of inputs and pr
 5. What would `get_shipping_cost(cart_total=50, is_premium_member=False)` return, and why?
 
 *Answers: 1) Once one condition matches, the rest are skipped, avoiding unnecessary checks and clearer intent than multiple independent `if` statements. 2) Because it should override the cart-total-based rules entirely, checking order matters when conditions overlap. 3) The `else` block runs, as a fallback. 4) Not always safely, since conditions are checked in order and the first match wins, reordering could change which branch executes for the same input. 5) `0`, because `cart_total >= 50` is true.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "fork",
+   "kicker": "Module 2 · Control flow",
+   "title": "Make decisions in code",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Control flow lets your program choose what to do, using if, elif, and else."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Where you'd use this",
+   "title": "Nearly every feature decides something",
+   "items": [
+    [
+     "Different messages by account status",
+     ""
+    ],
+    [
+     "Discounts above a threshold",
+     ""
+    ],
+    [
+     "Pages only for logged-in users",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Nearly every feature involves a decision.",
+     "show": 0
+    },
+    {
+     "say": "Show a different message depending on account status,",
+     "show": 1
+    },
+    {
+     "say": "give a discount only above a certain cart total,",
+     "show": 2
+    },
+    {
+     "say": "or block a page unless the user is logged in.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "fork",
+   "kicker": "Lab",
+   "title": "Shipping cost rules",
+   "file": "Python",
+   "code": "def get_shipping_cost(cart_total, is_premium_member):\n    if is_premium_member:\n        return 0\n    elif cart_total >= 50:\n        return 0\n    elif cart_total >= 20:\n        return 5.00\n    else:\n        return 9.99",
+   "beats": [
+    {
+     "say": "Here's a shipping cost function.",
+     "show": 0
+    },
+    {
+     "say": "If you're a premium member, shipping is free.",
+     "show": 1
+    },
+    {
+     "say": "Elif, short for else if, the cart is fifty or more, it's also free.",
+     "show": 1
+    },
+    {
+     "say": "Elif it's twenty or more, five dollars. Else, nine ninety nine.",
+     "show": 1
+    },
+    {
+     "say": "Python checks from the top, and the first rule that matches wins.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Trace it",
+   "title": "A $30 cart, not premium",
+   "steps": [
+    "Premium? No",
+    "≥ 50? No",
+    "≥ 20? Yes",
+    "$5.00"
+   ],
+   "beats": [
+    {
+     "say": "Let's trace a thirty dollar cart for someone who isn't premium.",
+     "show": 0
+    },
+    {
+     "say": "Premium? No.",
+     "show": 1
+    },
+    {
+     "say": "Fifty or more? No.",
+     "show": 2
+    },
+    {
+     "say": "Twenty or more? Yes.",
+     "show": 3
+    },
+    {
+     "say": "So shipping is five dollars, and the rest is skipped.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is is_premium_member checked first?",
+   "options": [
+    "Python requires booleans to come first",
+    "It should override the cart-total rules, and the first match wins",
+    "It runs faster that way"
+   ],
+   "answer": 1,
+   "good": "That's right. Premium should override every cart rule, and since the first matching rule wins, it has to come first.",
+   "bad": "Not quite. Premium should override every cart rule, and since the first matching rule wins, it has to come first.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is is_premium_member checked first?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can trace get_shipping_cost by hand",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can trace get shipping cost by hand for new inputs and predict the result.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 3, you make code repeat itself with loops.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -315,6 +909,184 @@ You can explain why the `while` loop stops after exactly 3 attempts, tracing thr
 
 *Answers: 1) When you know you're iterating over a fixed collection or a known range, rather than an open-ended condition. 2) The index (position) of each item alongside the item itself. 3) An infinite loop: `attempts` would stay 0, so `attempts < max_attempts` would always be true and `success` would never become true. 4) It accumulates the running sum of all item prices (which you then round with `round(total, 2)` for display, since float addition can leave tiny errors). 5) So it stops either when it runs out of attempts or as soon as it succeeds, whichever comes first.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Module 3 · Loops",
+   "title": "Repeat work without copying code",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "Loops repeat a block of code, so you never copy and paste the same lines."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "Two kinds of loop",
+   "items": [
+    [
+     "for",
+     "Once per item in a collection"
+    ],
+    [
+     "while",
+     "As long as a condition is true"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "There are two kinds.",
+     "show": 0
+    },
+    {
+     "say": "A for loop runs once for each item in a collection, or a known number of times.",
+     "show": 1
+    },
+    {
+     "say": "A while loop keeps going as long as a condition stays true.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Lab · for",
+   "title": "Add up a shopping cart",
+   "file": "Python",
+   "code": "total = 0\nfor item in cart:\n    total += item[\"price\"]\n\nprint(round(total, 2))   # 18.49",
+   "beats": [
+    {
+     "say": "A cart with a book, a pen, and a notebook.",
+     "show": 0
+    },
+    {
+     "say": "For each item in the cart, add its price to the total.",
+     "show": 1
+    },
+    {
+     "say": "You might see eighteen point four nine, followed by a long tail of digits.",
+     "show": 1
+    },
+    {
+     "say": "Computers store most decimals as close approximations. For money, round to two places.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Lab · while",
+   "title": "Retry until it works",
+   "file": "Python",
+   "code": "attempts = 0\nsuccess = False\nwhile attempts < 3 and not success:\n    attempts += 1\n    success = attempts == 3   # pretend the 3rd try works",
+   "beats": [
+    {
+     "say": "Now a while loop, used for retrying.",
+     "show": 0
+    },
+    {
+     "say": "It keeps trying while there are attempts left, and it hasn't succeeded yet.",
+     "show": 1
+    },
+    {
+     "say": "Each pass adds one attempt. In this example, it succeeds on the third try and stops.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Watch out",
+   "title": "The infinite loop",
+   "quote": "If the condition never changes, a while loop never stops.",
+   "beats": [
+    {
+     "say": "One warning.",
+     "show": 0
+    },
+    {
+     "say": "If nothing inside a while loop ever changes the condition, it runs forever.",
+     "show": 1
+    },
+    {
+     "say": "Forget attempts plus equals one, and attempts stays zero, so the loop never ends.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does enumerate() give you that a plain for loop doesn't?",
+   "options": [
+    "A sorted copy of the list",
+    "The position of each item, alongside the item",
+    "Only the last item"
+   ],
+   "answer": 1,
+   "good": "That's right. Enumerate gives you each item's position as well as the item itself.",
+   "bad": "Not quite. Enumerate gives you each item's position as well as the item itself.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does enumerate() give you that a plain for loop doesn't?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why the while loop stops after 3 attempts",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why the while loop stops after exactly three attempts.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 4, you write your own functions.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4: Functions
@@ -371,6 +1143,194 @@ You can explain what a default parameter is and identify where `process_order` r
 5. What would happen if you called `calculate_discount("100")` with a string instead of a number?
 
 *Answers: 1) A single place to fix bugs or make changes, instead of updating every copy individually. 2) A default value used if the caller doesn't provide one. 3) `None`. 4) To reuse existing, already-tested logic rather than duplicating it, the core benefit of functions. 5) It raises `TypeError: can't multiply sequence by non-int of type 'float'`, because `"100" * 0.1` tries to repeat a string a fractional number of times.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "package",
+   "kicker": "Module 4 · Functions",
+   "title": "Write it once, use it everywhere",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "A function is a named, reusable block of code."
+    },
+    {
+     "say": "It takes inputs called parameters, and can return an output."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "package",
+   "kicker": "Why functions",
+   "title": "One place to fix things",
+   "items": [
+    [
+     "Calculate a discount",
+     ""
+    ],
+    [
+     "Validate an email",
+     ""
+    ],
+    [
+     "Send a welcome email",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Any repeated job belongs in a function,",
+     "show": 0
+    },
+    {
+     "say": "like calculating a discount,",
+     "show": 1
+    },
+    {
+     "say": "checking an email address,",
+     "show": 2
+    },
+    {
+     "say": "or sending a welcome email.",
+     "show": 3
+    },
+    {
+     "say": "Then when something needs fixing, you fix it in one place, not in every copy.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab",
+   "title": "Default values",
+   "file": "Python",
+   "code": "def calculate_discount(price, discount_percent=10):\n    discount_amount = price * (discount_percent / 100)\n    return price - discount_amount\n\nprint(calculate_discount(100))       # 90.0\nprint(calculate_discount(100, 25))   # 75.0",
+   "beats": [
+    {
+     "say": "Here's calculate discount.",
+     "show": 0
+    },
+    {
+     "say": "Discount percent equals ten is a default. If you don't pass a discount, it uses ten percent.",
+     "show": 1
+    },
+    {
+     "say": "Calculate discount of a hundred gives ninety. Pass twenty five, and you get seventy five.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "package",
+   "kicker": "Lab",
+   "title": "Functions that use functions",
+   "steps": [
+    "process_order",
+    "validate_email",
+    "calculate_discount",
+    "Order confirmed"
+   ],
+   "beats": [
+    {
+     "say": "Real code combines small functions.",
+     "show": 0
+    },
+    {
+     "say": "Process order first calls validate email.",
+     "show": 1
+    },
+    {
+     "say": "If the email is valid, it calls calculate discount,",
+     "show": 2
+    },
+    {
+     "say": "and returns a confirmation message.",
+     "show": 3
+    },
+    {
+     "say": "Each piece is written and tested once, then reused.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a function return if it has no return statement?",
+   "options": [
+    "0",
+    "None",
+    "An error"
+   ],
+   "answer": 1,
+   "good": "That's right. Without a return statement, a function returns None.",
+   "bad": "Not quite. Without a return statement, a function returns None.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a function return if it has no return statement?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain default parameters",
+     ""
+    ],
+    [
+     "You can see where process_order reuses other functions",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain what a default parameter is,",
+     "show": 1
+    },
+    {
+     "say": "and point to where process order reuses the other two functions.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, you handle errors gracefully.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -486,6 +1446,186 @@ You can explain the difference between what happens with and without a matching 
 
 *Answers: 1) The whole program crashing and stopping immediately. 2) Different errors often need different handling, catching everything the same way can hide bugs you actually needed to notice. 3) That block of code runs regardless of whether an error occurred or not. 4) Manually triggers an error with a custom message, useful for enforcing your own rules. 5) The program would crash with an unhandled `ValueError`, since `int("twenty")` isn't a valid conversion.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "warning",
+   "kicker": "Module 5 · Error handling",
+   "title": "Don't let one error crash everything",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "Things go wrong in real programs. A file is missing, a network call fails, someone types the wrong thing."
+    },
+    {
+     "say": "Try and except let you catch these errors and carry on, instead of crashing."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab",
+   "title": "Catch a specific error",
+   "file": "Python",
+   "code": "def get_price_per_item(total_price, quantity):\n    try:\n        return total_price / quantity\n    except ZeroDivisionError:\n        print(\"Quantity cannot be zero\")\n        return None",
+   "beats": [
+    {
+     "say": "Here's a function that divides a total price by a quantity.",
+     "show": 0
+    },
+    {
+     "say": "If the quantity is zero, Python raises a zero division error.",
+     "show": 1
+    },
+    {
+     "say": "The except block catches it, prints a friendly message, and returns None, instead of crashing.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Know your errors",
+   "title": "Common errors and what causes them",
+   "items": [
+    [
+     "ValueError",
+     "int(\"abc\")"
+    ],
+    [
+     "TypeError",
+     "\"total: \" + 5"
+    ],
+    [
+     "KeyError",
+     "user[\"email\"] with no email"
+    ],
+    [
+     "IndexError",
+     "[10, 20, 30][5]"
+    ],
+    [
+     "ZeroDivisionError",
+     "100 / 0"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "It helps to know the common errors by name.",
+     "show": 0
+    },
+    {
+     "say": "A value error. The right type, but a value that can't work, like turning the word abc into a number.",
+     "show": 1
+    },
+    {
+     "say": "A type error. Mixing types that don't go together, like text plus a number.",
+     "show": 2
+    },
+    {
+     "say": "A key error. Asking a dictionary for a key it doesn't have.",
+     "show": 3
+    },
+    {
+     "say": "An index error. Asking a list for a position that doesn't exist.",
+     "show": 4
+    },
+    {
+     "say": "And a zero division error. Dividing by zero.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab",
+   "title": "finally always runs",
+   "file": "Python",
+   "code": "def process_payment(amount):\n    try:\n        if amount <= 0:\n            raise ValueError(\"Amount must be positive\")\n        print(f\"Processing ${amount}\")\n    except ValueError as e:\n        print(f\"Payment failed: {e}\")\n    finally:\n        print(\"Payment attempt logged\")",
+   "beats": [
+    {
+     "say": "You can also raise your own errors, to enforce your rules.",
+     "show": 0
+    },
+    {
+     "say": "Process payment raises a value error if the amount isn't positive.",
+     "show": 1
+    },
+    {
+     "say": "And the finally block runs every time, success or failure. Perfect for logging or cleaning up.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why catch ZeroDivisionError specifically, not every error the same way?",
+   "options": [
+    "Python only allows one kind of except",
+    "Different errors need different handling, and catching everything can hide real bugs",
+    "It makes the code shorter"
+   ],
+   "answer": 1,
+   "good": "That's right. Different errors need different handling, and catching everything the same way can hide bugs you needed to notice.",
+   "bad": "Not quite. Different errors need different handling, and catching everything the same way can hide bugs you needed to notice.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why catch ZeroDivisionError specifically, not every error the same way?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain what a matching except block changes",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain what happens with, and without, a matching except block.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 6, you organise your code into modules.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 6: Modules & Packages
@@ -557,6 +1697,196 @@ You created your own two-file project, where `main.py` successfully imports and 
 
 *Answers: 1) A module is a single file; a package is a folder of related modules. 2) Install third-party code other people have published, extending what's available beyond the built-in standard library. 3) Easier to find, maintain, and reuse code as a project grows, rather than scrolling through one massive file. 4) Makes that one function available by its own name in `main.py`, so you can call `calculate_discount(...)` without writing `pricing.` in front. 5) No, not without adjusting the import path, Python needs to know where to find the module.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "blocks",
+   "kicker": "Module 6 · Modules and packages",
+   "title": "Organise and reuse code",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "As programs grow, one giant file becomes hard to manage. Modules fix that."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "Three words to know",
+   "items": [
+    [
+     "Module",
+     "One Python file"
+    ],
+    [
+     "Package",
+     "A folder of related modules"
+    ],
+    [
+     "pip",
+     "Installs packages others published"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three words.",
+     "show": 0
+    },
+    {
+     "say": "A module is a single Python file of reusable code.",
+     "show": 1
+    },
+    {
+     "say": "A package is a folder of related modules.",
+     "show": 2
+    },
+    {
+     "say": "And pip installs packages other people have published, so you don't reinvent solved problems.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "blocks",
+   "kicker": "Lab · Built-in modules",
+   "title": "Python comes with tools",
+   "file": "Python",
+   "code": "import math\nimport random\nfrom datetime import date\n\nprint(math.sqrt(16))                  # 4.0\nprint(random.choice([\"a\", \"b\", \"c\"]))\nprint(date.today())",
+   "beats": [
+    {
+     "say": "Python ships with many modules built in.",
+     "show": 0
+    },
+    {
+     "say": "Math gives you square root. Random picks a random item. Date tells you today's date.",
+     "show": 1
+    },
+    {
+     "say": "You just import them and use them.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "package",
+   "kicker": "Lab · Third-party packages",
+   "title": "Install with pip",
+   "file": "Terminal + Python",
+   "code": "pip install requests\n\nimport requests\nresponse = requests.get(\"https://api.github.com\")\nprint(response.status_code)   # 200",
+   "beats": [
+    {
+     "say": "For anything else, use pip.",
+     "show": 0
+    },
+    {
+     "say": "Pip install requests adds a popular package for talking to websites.",
+     "show": 1
+    },
+    {
+     "say": "Then three lines fetch GitHub's API and print two hundred, which means success.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "blocks",
+   "kicker": "Lab · Your own module",
+   "title": "Split your code into files",
+   "steps": [
+    "pricing.py",
+    "from pricing import calculate_discount",
+    "main.py uses it"
+   ],
+   "beats": [
+    {
+     "say": "Now make your own module.",
+     "show": 0
+    },
+    {
+     "say": "Put your pricing functions in a file called pricing dot p y.",
+     "show": 1
+    },
+    {
+     "say": "In main dot p y, write from pricing import calculate discount.",
+     "show": 2
+    },
+    {
+     "say": "Now main can use it, as long as both files are in the same folder.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between a module and a package?",
+   "options": [
+    "A module is a folder; a package is a file",
+    "A module is one file; a package is a folder of related modules",
+    "There is no difference"
+   ],
+   "answer": 1,
+   "good": "That's right. A module is a single file, and a package is a folder of related modules.",
+   "bad": "Not quite. A module is a single file, and a package is a folder of related modules.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between a module and a package?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "main.py imports and uses pricing.py",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've built a two-file project where main dot p y imports from pricing dot p y.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 7, you model real things with classes.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 7: Object-Oriented Programming
@@ -623,6 +1953,191 @@ You can explain what `self` refers to, and why `RecurringTask` doesn't need to r
 
 *Answers: 1) A class is the blueprint/definition; an object is a specific instance created from that blueprint. 2) The specific object the method is being called on. 3) Calls the parent class's `__init__`, reusing its setup logic instead of duplicating it. 4) To add extra behavior specific to recurring tasks, while still reusing the base behavior via `super()`. 5) A default, unhelpful representation like `<__main__.Task object at 0x...>` instead of the readable custom string.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "blueprint",
+   "kicker": "Module 7 · Object-oriented programming",
+   "title": "Model real things with classes",
+   "beats": [
+    {
+     "say": "Welcome to Module 7."
+    },
+    {
+     "say": "Object-oriented programming organises code around objects: bundles of data and behaviour."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blueprint",
+   "kicker": "Concept",
+   "title": "The vocabulary",
+   "items": [
+    [
+     "Class",
+     "The blueprint"
+    ],
+    [
+     "Object",
+     "One thing made from it"
+    ],
+    [
+     "Attributes and methods",
+     "Its data, and what it can do"
+    ],
+    [
+     "Encapsulation",
+     "Data and logic together"
+    ],
+    [
+     "Inheritance",
+     "Build on another class"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A class is a blueprint.",
+     "show": 1
+    },
+    {
+     "say": "An object is one thing made from that blueprint.",
+     "show": 2
+    },
+    {
+     "say": "Attributes are an object's data, and methods are what it can do.",
+     "show": 3
+    },
+    {
+     "say": "Encapsulation means keeping the data and the logic that uses it together.",
+     "show": 4
+    },
+    {
+     "say": "And inheritance means one class can build on another, reusing and extending it.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "blueprint",
+   "kicker": "Lab",
+   "title": "A Task class",
+   "file": "Python",
+   "code": "class Task:\n    def __init__(self, title, priority=3):\n        self.title = title\n        self.priority = priority\n        self.done = False\n\n    def mark_complete(self):\n        self.done = True",
+   "beats": [
+    {
+     "say": "Here's a task class.",
+     "show": 0
+    },
+    {
+     "say": "Init runs when you create a task. It stores the title and priority, and starts with done set to false.",
+     "show": 1
+    },
+    {
+     "say": "Self means this particular task.",
+     "show": 1
+    },
+    {
+     "say": "Mark complete sets done to true, and the str method controls how a task looks when you print it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "tree",
+   "kicker": "Lab · Inheritance",
+   "title": "A more specific kind of task",
+   "file": "Python",
+   "code": "class RecurringTask(Task):\n    def __init__(self, title, priority=3, repeat_every_days=7):\n        super().__init__(title, priority)\n        self.repeat_every_days = repeat_every_days",
+   "beats": [
+    {
+     "say": "Now inheritance. A recurring task is a task that comes back.",
+     "show": 0
+    },
+    {
+     "say": "It inherits everything from task. Super dot init reuses task's setup instead of rewriting it.",
+     "show": 1
+    },
+    {
+     "say": "It also changes mark complete to say when the task will reappear, while still using the original.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does self represent inside a method?",
+   "options": [
+    "The class itself",
+    "The specific object the method is called on",
+    "The first parameter you pass in"
+   ],
+   "answer": 1,
+   "good": "That's right. Self is the specific object the method is being called on.",
+   "bad": "Not quite. Self is the specific object the method is being called on.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does self represent inside a method?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain self",
+     ""
+    ],
+    [
+     "You can explain why RecurringTask reuses __init__",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain what self refers to,",
+     "show": 1
+    },
+    {
+     "say": "and why recurring task doesn't rewrite init from scratch.",
+     "show": 2
+    },
+    {
+     "say": "Next, in the last module, you save data to files.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 8: File Handling
@@ -682,3 +2197,176 @@ You created a text file and a JSON file, then successfully read both back and pr
 5. What would happen if you opened a file in `"w"` mode that already had content in it?
 
 *Answers: 1) The file is automatically closed properly, even if an error happens partway through, reducing the risk of corrupted or locked files. 2) `"w"` overwrites the file's existing contents; `"a"` adds new content to the end without erasing what's there. 3) Each line read from a file includes a trailing newline character, `.strip()` removes it for cleaner output. 4) It automatically converts a Python object (like a dictionary) into properly formatted JSON text, rather than you manually formatting it as a string. 5) The existing contents would be erased and replaced with the new content.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "file",
+   "kicker": "Module 8 · File handling",
+   "title": "Make data last",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "Until now, everything disappears when your program stops. Files fix that."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "file",
+   "kicker": "Lab · Write and read",
+   "title": "Open files safely with with",
+   "file": "Python",
+   "code": "with open(\"tasks.txt\", \"w\") as f:\n    for task in tasks:\n        f.write(task + \"\\n\")\n\nwith open(\"tasks.txt\", \"r\") as f:\n    for line in f:\n        print(line.strip())",
+   "beats": [
+    {
+     "say": "Use open together with with.",
+     "show": 0
+    },
+    {
+     "say": "With closes the file properly, even if something goes wrong halfway through.",
+     "show": 1
+    },
+    {
+     "say": "Write mode, w, writes each task on its own line. Read mode, r, reads them back.",
+     "show": 1
+    },
+    {
+     "say": "Strip removes the line break at the end of each line.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Careful",
+   "title": "w erases, a adds",
+   "items": [
+    [
+     "\"w\"",
+     "Overwrite: erases existing content"
+    ],
+    [
+     "\"a\"",
+     "Append: adds to the end"
+    ],
+    [
+     "\"r\"",
+     "Read only"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Be careful with modes.",
+     "show": 0
+    },
+    {
+     "say": "W, write, erases everything already in the file and starts fresh.",
+     "show": 1
+    },
+    {
+     "say": "A, append, adds to the end and keeps what's there.",
+     "show": 2
+    },
+    {
+     "say": "And r, read, only reads.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "file",
+   "kicker": "Lab · JSON",
+   "title": "Save structured data",
+   "file": "Python",
+   "code": "import json\n\nuser_data = {\"name\": \"Alice\", \"tasks_completed\": 12}\nwith open(\"user.json\", \"w\") as f:\n    json.dump(user_data, f)\n\nwith open(\"user.json\", \"r\") as f:\n    print(json.load(f)[\"name\"])   # Alice",
+   "beats": [
+    {
+     "say": "For structured data, use JSON.",
+     "show": 0
+    },
+    {
+     "say": "Json dump turns a Python dictionary into JSON text and saves it.",
+     "show": 1
+    },
+    {
+     "say": "Json load reads it back into a dictionary, so you can use it again. Here, it prints Alice.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What happens if you open a file that already has content in \"w\" mode?",
+   "options": [
+    "The new content is added to the end",
+    "The existing content is erased and replaced",
+    "Python refuses to open it"
+   ],
+   "answer": 1,
+   "good": "That's right. Write mode erases what was there and replaces it.",
+   "bad": "Not quite. Write mode erases what was there and replaces it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What happens if you open a file that already has content in \"w\" mode?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You created a text file and a JSON file",
+     ""
+    ],
+    [
+     "You read both back",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've created a text file and a JSON file,",
+     "show": 1
+    },
+    {
+     "say": "and read both back successfully.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Python Programming Fundamentals. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
