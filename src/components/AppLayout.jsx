@@ -8,6 +8,7 @@ import { db } from '../firebase/config';
 import { useFeatures } from '../utils/features';
 import { isBlockedForCompany } from '../utils/companyPaths';
 import AgeCheck from './AgeCheck';
+import TopBarIcons from './TopBarIcons';
 import { ADMIN_SECTIONS } from '../config/adminSections';
 
 const AppLayout = ({ children }) => {
@@ -354,7 +355,7 @@ const AppLayout = ({ children }) => {
       {/* Main content */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Top bar - sticky, responsive */}
-        <header className="print:hidden sticky top-0 z-30 h-16 sm:h-[72px] flex items-center gap-2 sm:gap-4 px-2 sm:px-4 border-b border-gray-200 bg-white lg:px-6">
+        <header className="print:hidden sticky top-0 z-30 h-16 sm:h-[72px] flex items-center gap-2 sm:gap-4 px-2 sm:px-4 border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 lg:px-6">
           <div className="flex items-center gap-2 flex-shrink-0">
             {!hideSidebar && (
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-gray-100 min-h-[60px] min-w-[44px] flex items-center justify-center flex-shrink-0">
@@ -392,53 +393,9 @@ const AppLayout = ({ children }) => {
               floating in the middle. On mobile there's no spare width, so it's off. */}
           <div className="hidden lg:block flex-1" />
 
-          <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-6 flex-shrink-0 pr-1 lg:pr-2">
-            {/* Proof Wall - shown on every screen size and to everyone (companies use
-                it to find talent). The pulse icon: activity happening now. */}
-            <Link to="/proof-wall" aria-label="Proof Wall" className={`relative flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/proof-wall' ? 'text-pink-600' : 'text-gray-500'}`}>
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-              <span className="hidden lg:block text-[11px] font-semibold leading-none">Proof Wall</span>
-            </Link>
-            {/* Messaging - desktop only; on mobile it lives in the bottom bar. */}
-            <Link to="/messages" className={`relative hidden lg:flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/messages' ? 'text-pink-600' : 'text-gray-500'}`}>
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-              <span className="hidden lg:block text-[11px] font-semibold leading-none">Messaging</span>
-              {unreadMessages > 0 && (
-                <span className="absolute top-1.5 right-[20%] bg-red-500 text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center font-bold leading-none">
-                  {unreadMessages > 9 ? '9+' : unreadMessages}
-                </span>
-              )}
-            </Link>
-            {/* Notifications */}
-            <Link to="/notifications" className={`relative flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname === '/notifications' ? 'text-pink-600' : 'text-gray-500'}`}>
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span className="hidden lg:block text-[11px] font-semibold leading-none">Notifications</span>
-              {unreadNotifications > 0 && (
-                <span className="absolute top-1.5 right-[20%] bg-red-500 text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center font-bold leading-none">
-                  {unreadNotifications > 9 ? '9+' : unreadNotifications}
-                </span>
-              )}
-            </Link>
-            {/* Me */}
-            {currentUser && (
-              <Link to={`/profile/${currentUser.email}`} className={`flex flex-col items-center justify-center gap-1 px-2 lg:px-3 py-2.5 min-h-[60px] rounded-lg hover:bg-gray-100 transition-colors ${location.pathname.startsWith('/profile') ? 'text-pink-600' : 'text-gray-500'}`}>
-                {currentUser.photoURL ? (
-                  <img src={currentUser.photoURL} alt="" className="w-7 h-7 rounded-full object-cover" />
-                ) : (
-                  <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center text-white text-[10px] font-bold">
-                    {currentUser.displayName?.[0] || 'U'}
-                  </div>
-                )}
-                <span className="hidden lg:block text-[11px] font-semibold leading-none">Me</span>
-              </Link>
-            )}
-          </div>
+          {/* Proof Wall, Messaging, Notifications, Me: the same on every page.
+              On phones Messaging lives in the bottom bar instead. */}
+          <TopBarIcons unreadMessages={unreadMessages} unreadNotifications={unreadNotifications} messagesOnMobile={false} className="flex-shrink-0 pr-1 lg:pr-0" />
         </header>
 
         {/* Page content */}
