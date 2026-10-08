@@ -325,10 +325,6 @@ export const JobDetail = () => {
           {canApply && job.applyEmail && !profile?.isMinor && (
             <a href={`mailto:${job.applyEmail}?subject=${encodeURIComponent(`Application: ${job.title}`)}`} onClick={() => recordApplyClick(job, profile, 'email')} className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Apply by email</a>
           )}
-          {profile && profile.uid !== job.companyUid && !profile.isMinor && (
-            <button onClick={() => navigate(`/messages?to=${job.companyUid}&text=${encodeURIComponent(`Hi, I'm interested in the ${job.title} role.`)}`)}
-              className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Message the company</button>
-          )}
           {mine && <Link to={`/jobs/${job.id}/edit`} className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Edit</Link>}
           {isStaff && (
             <button
