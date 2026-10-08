@@ -20,6 +20,7 @@ import { issueCertificate } from '../../utils/learningCertificates';
 import { courseKey } from '../../utils/mentorStats';
 import { LABS_CSS, enhanceHtml, enhancePython, mountLabs, stopPython } from './labs';
 import { VIDEO_CSS, isVideoUrl, makeVideoElement } from '../../utils/videoEmbed';
+import WatchPlayer, { parseWatchScript } from './WatchPlayer';
 import TechDevImg from '../../Images/TechDev.png';
 import TechArchsImg from '../../Images/TechArchs.png';
 import TechQAImg from '../../Images/TechQA.png';
@@ -699,6 +700,27 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
   const [scrollPct, setScrollPct] = useState(0);
   const [listOpen, setListOpen] = useState(false);
 
+  // Watch mode: modules with a script (```watch block) can be watched or read.
+  // The learner's choice is remembered on this device.
+  const watchScript = useMemo(() => (parts[current] ? parseWatchScript(parts[current].html) : null), [parts, current]);
+  const [mode, setMode] = useState(() => {
+    try { return localStorage.getItem('smt-learn-mode') === 'watch' ? 'watch' : 'read'; } catch (_) { return 'read'; }
+  });
+  const chooseMode = (m) => {
+    setMode(m);
+    try { localStorage.setItem('smt-learn-mode', m); } catch (_) { /* storage off */ }
+  };
+  const watching = !!watchScript && mode === 'watch';
+  // After watching: switch to Read and jump to this module's quiz.
+  const goToQuiz = () => {
+    chooseMode('read');
+    setTimeout(() => {
+      const heads = Array.from((proseRef.current || document).querySelectorAll('h2, h3, h4'));
+      const quiz = heads.find((h) => /^quiz\b/i.test(h.textContent.trim())) || heads.find((h) => /checkpoint/i.test(h.textContent));
+      if (quiz) quiz.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
+
   // Free the in-browser Python runtime when the reader closes.
   useEffect(() => () => stopPython(), []);
 
@@ -888,12 +910,38 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
             </div>
 
             <article>
+              {watchScript && (
+                <div className="wp-switch" role="group" aria-label="How do you want to learn this module?">
+                  {[['read', 'Read'], ['watch', 'Watch']].map(([k, label]) => (
+                    <button
+                      key={k}
+                      type="button"
+                      aria-pressed={mode === k}
+                      onClick={() => chooseMode(k)}
+                      className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${mode === k ? 'bg-gray-900 text-white' : 'text-gray-600 hover:text-gray-900'}`}
+                    >
+                      {k === 'read' ? (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.247m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.247" /></svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>
+                      )}
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {watching && (
+                <WatchPlayer key={parts[current].id} script={watchScript} title={parts[current].title} onFinished={goToQuiz} />
+              )}
+              {/* The written module stays loaded while watching (quizzes and progress live here). */}
+              <div hidden={watching}>
               <div
                 ref={proseRef}
                 key={`${parts[current].id}-${hydrated}`}
                 className="course-prose"
                 dangerouslySetInnerHTML={{ __html: parts[current].html }}
               />
+              </div>
 
               {onSummary && needsSummary(parts[current]) && (
                 <ModuleSummary
@@ -1010,6 +1058,9 @@ export const CourseReader = ({ course, index, total, trackLabel, backLabel, isDo
 // Page styles. Accent colours come from the active track's medal ribbon via
 // the --acc / --tint custom properties set on .fd-root.
 export const FD_CSS = LABS_CSS + VIDEO_CSS + `
+.wp-switch { display:inline-flex; background:#fff; border:1px solid #E5E7EB; border-radius:999px; padding:4px; gap:4px; margin:0 0 14px; }
+.wp-switch button:focus-visible { outline:3px solid #D41470; outline-offset:2px; }
+.course-watch { display:none !important; }
 .fd-root { --acc:#D41470; --tint:#FDF2F7; }
 .fd-display { font-family:inherit; font-weight:800; letter-spacing:-.02em; line-height:1.1; }
 

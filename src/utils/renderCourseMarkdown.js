@@ -36,6 +36,12 @@ export const renderCourse = (markdown) => {
       const attr = (v) => v.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       return `<div class="course-video" data-video="${attr(url)}" data-title="${attr(title)}"></div>`;
     }
+    // ```watch blocks hold a module's Watch-mode script (JSON); the reader
+    // shows a Read / Watch switch and plays it. Hidden in the Read view.
+    if ((lang || '').toLowerCase() === 'watch') {
+      const attr = (code || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return `<div class="course-watch" data-watch="${attr}" hidden></div>`;
+    }
     // ```lab blocks hold a JSON activity config; the reader mounts the activity.
     if ((lang || '').toLowerCase() === 'lab') {
       const attr = (code || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

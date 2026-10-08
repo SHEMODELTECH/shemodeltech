@@ -98,6 +98,266 @@ You can open a terminal, navigate folders, run a Python file, and have made your
 
 *Answers: 1) Give precise text commands directly to the computer. 2) A variable stores a value; a function stores reusable instructions. 3) `pwd`. 4) Git tracks every change with history and messages, and lets you undo or collaborate safely. 5) It tells Python to read and execute the instructions in that file.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "laptop",
+   "kicker": "Module 0 · Setup and basics",
+   "title": "Get ready to build",
+   "beats": [
+    {
+     "say": "Welcome to Build Your First Product."
+    },
+    {
+     "say": "Over ten modules you'll build TrackIt, a real task app with an AI quick add feature."
+    },
+    {
+     "say": "Before building anything, you need three things: a way to write code, a way to run it, and a way to save your work."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "terminal",
+   "kicker": "Five words you'll use every day",
+   "title": "The basics",
+   "items": [
+    [
+     "Terminal",
+     "Type commands instead of clicking"
+    ],
+    [
+     "Python",
+     "The language we'll use"
+    ],
+    [
+     "Variable",
+     "A named piece of information"
+    ],
+    [
+     "Function",
+     "Reusable instructions you call by name"
+    ],
+    [
+     "Git",
+     "Tracks every change to your code"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are five ideas you'll use in every module.",
+     "show": 0
+    },
+    {
+     "say": "The terminal. A text-based way to talk to your computer. Instead of clicking icons, you type commands.",
+     "show": 1
+    },
+    {
+     "say": "Python. The programming language we'll use. A precise way of giving instructions to a computer.",
+     "show": 2
+    },
+    {
+     "say": "A variable. It stores a piece of information with a name, like age equals twenty five.",
+     "show": 3
+    },
+    {
+     "say": "A function. A reusable block of instructions you call by name, so you don't retype the same logic.",
+     "show": 4
+    },
+    {
+     "say": "And Git. It tracks changes to your code over time, like track changes in a document, built for code and teams.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Lab · Step 1",
+   "title": "Check Python is installed",
+   "file": "Terminal",
+   "code": "python --version\n# Python 3.12.x",
+   "beats": [
+    {
+     "say": "First, open your terminal and check that Python is installed.",
+     "show": 0
+    },
+    {
+     "say": "Type python, space, dash dash version.",
+     "show": 1
+    },
+    {
+     "say": "You should see something like Python three point twelve.",
+     "show": 1
+    },
+    {
+     "say": "On a Mac or Linux, if that doesn't work, try python three instead.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Lab · Step 2",
+   "title": "Move around with the terminal",
+   "file": "Terminal",
+   "code": "pwd           # where am I?\nls            # what's in this folder? (dir on Windows)\nmkdir trackit # make a folder\ncd trackit    # go into it",
+   "beats": [
+    {
+     "say": "Next, a few commands to move around.",
+     "show": 0
+    },
+    {
+     "say": "P W D prints which folder you're in. L S lists the files in it.",
+     "show": 1
+    },
+    {
+     "say": "M K D I R trackit makes a new folder called trackit, and C D trackit moves you into it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 3",
+   "title": "Your first Python file",
+   "file": "hello.py",
+   "code": "def greet(name):\n    return f\"Hello, {name}! Welcome to TrackIt.\"\n\nmessage = greet(\"Engineer\")\nprint(message)",
+   "beats": [
+    {
+     "say": "Now your first program. Create a file called hello dot p y.",
+     "show": 0
+    },
+    {
+     "say": "It defines a function called greet, which takes a name and returns a welcome message.",
+     "show": 1
+    },
+    {
+     "say": "Then it calls greet with the word Engineer and prints the result.",
+     "show": 1
+    },
+    {
+     "say": "Run it with python hello dot p y, and you'll see: Hello, Engineer! Welcome to TrackIt.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "git",
+   "kicker": "Lab · Step 4",
+   "title": "Save your work with Git",
+   "file": "Terminal",
+   "code": "git init\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"you@example.com\"\ngit add hello.py\ngit commit -m \"First commit: hello world\"",
+   "beats": [
+    {
+     "say": "Last step. Save your work with Git.",
+     "show": 0
+    },
+    {
+     "say": "Git init starts tracking this folder. The two config lines tell Git your name and email.",
+     "show": 1
+    },
+    {
+     "say": "Git add picks the file to save, and git commit saves it with a message describing the change.",
+     "show": 1
+    },
+    {
+     "say": "That's your first commit. Every change from now on can be tracked and undone.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why use Git instead of saving files like hello_v2.py?",
+   "options": [
+    "Git makes your code run faster",
+    "Git keeps every change with history and messages, so you can undo and collaborate",
+    "Git stores your files online automatically"
+   ],
+   "answer": 1,
+   "good": "That's right. Git tracks every change with history and messages, and lets you undo or work with others safely.",
+   "bad": "Not quite. Git tracks every change with history and messages, and lets you undo or work with others safely.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why use Git instead of saving files like hello_v2.py?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Open a terminal",
+     ""
+    ],
+    [
+     "Move between folders",
+     ""
+    ],
+    [
+     "Run a Python file",
+     ""
+    ],
+    [
+     "Make your first Git commit",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when you can do four things.",
+     "show": 0
+    },
+    {
+     "say": "Open a terminal,",
+     "show": 1
+    },
+    {
+     "say": "move between folders,",
+     "show": 2
+    },
+    {
+     "say": "run a Python file,",
+     "show": 3
+    },
+    {
+     "say": "and you've made your first Git commit.",
+     "show": 4
+    },
+    {
+     "say": "Next, in Module 1, you decide what TrackIt should do.",
+     "show": 4
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Product Sense - Deciding What to Build
@@ -182,6 +442,380 @@ A `SPEC.md` file exists in your project folder and you can explain the product i
 
 *Answers: 1) It forces clarity on what you're actually solving and prevents wasted work. 2) A non-goal is a deliberate, stated exclusion; forgetting something is an oversight. 3) One metric forces focus; five metrics let you claim success no matter what happens. 4) Teams, not individuals. 5) They tend to build unfocused features and struggle to know if the product is working.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "bulb",
+   "kicker": "Module 1 · Product Sense",
+   "title": "Deciding what to build",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "Before we write more code, we'll answer the question real engineers always ask first."
+    },
+    {
+     "say": "What are we building, and who is it for?"
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Why start here",
+   "title": "A clear target gets projects finished",
+   "items": [
+    [
+     "Know exactly what to build",
+     ""
+    ],
+    [
+     "Waste less time on unneeded features",
+     ""
+    ],
+    [
+     "Actually finish",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Many side projects never get finished.",
+     "show": 0
+    },
+    {
+     "say": "Usually the code isn't the problem. There's no clear target to build toward.",
+     "show": 0
+    },
+    {
+     "say": "A clear target means you know exactly what to build,",
+     "show": 1
+    },
+    {
+     "say": "you waste less time on features nobody needs,",
+     "show": 2
+    },
+    {
+     "say": "and you actually finish.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "The tool",
+   "title": "A spec answers five questions",
+   "items": [
+    [
+     "Problem",
+     "What pain point exists?"
+    ],
+    [
+     "Users",
+     "Who exactly has this problem?"
+    ],
+    [
+     "Core flow",
+     "The handful of steps a user takes to get value"
+    ],
+    [
+     "Non-goals",
+     "What you're deliberately not building yet"
+    ],
+    [
+     "Success metric",
+     "One number that tells you it's working"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The tool for this is called a spec.",
+     "show": 0
+    },
+    {
+     "say": "It's a short document, often less than a page, that answers five questions.",
+     "show": 0
+    },
+    {
+     "say": "The problem. What pain point exists?",
+     "show": 1
+    },
+    {
+     "say": "The users. Who exactly has this problem?",
+     "show": 2
+    },
+    {
+     "say": "The core flow. The handful of steps a user takes to get value.",
+     "show": 3
+    },
+    {
+     "say": "The non-goals. What you're deliberately not building yet.",
+     "show": 4
+    },
+    {
+     "say": "And the success metric. One number that tells you it's working.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "mess",
+   "kicker": "Example: TrackIt · Problem",
+   "title": "What hurts?",
+   "quote": "People abandon task apps because logging tasks feels like admin work.",
+   "beats": [
+    {
+     "say": "Let's write one together, for TrackIt.",
+     "show": 0
+    },
+    {
+     "say": "First, the problem.",
+     "show": 0
+    },
+    {
+     "say": "People abandon task apps because logging tasks feels like admin work.",
+     "show": 1
+    },
+    {
+     "say": "It describes something painful for real people. It doesn't mention a single feature yet.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "people",
+   "kicker": "Example: TrackIt · Users",
+   "title": "Who has this problem?",
+   "quote": "Individuals managing personal projects.",
+   "beats": [
+    {
+     "say": "Next, the users.",
+     "show": 0
+    },
+    {
+     "say": "TrackIt is for individuals managing personal projects.",
+     "show": 1
+    },
+    {
+     "say": "Be specific. A product for everyone is really for no one in particular.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Example: TrackIt · Core flow",
+   "title": "The shortest path to value",
+   "steps": [
+    "Sign up",
+    "Type a task in plain English",
+    "AI structures it",
+    "See it on a list",
+    "Mark done"
+   ],
+   "beats": [
+    {
+     "say": "The core flow is the shortest path from opening the app to getting value.",
+     "show": 0
+    },
+    {
+     "say": "Sign up.",
+     "show": 1
+    },
+    {
+     "say": "Type a task in plain English.",
+     "show": 2
+    },
+    {
+     "say": "The AI turns it into a structured task.",
+     "show": 3
+    },
+    {
+     "say": "See it on your list.",
+     "show": 4
+    },
+    {
+     "say": "And mark it done.",
+     "show": 5
+    },
+    {
+     "say": "Five steps. If your flow needs twenty, it's too big for version one.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cross",
+   "kicker": "Example: TrackIt · Non-goals",
+   "title": "Not in version 1",
+   "items": [
+    [
+     "Team collaboration",
+     ""
+    ],
+    [
+     "A mobile app",
+     ""
+    ],
+    [
+     "Recurring tasks",
+     ""
+    ]
+   ],
+   "crossed": true,
+   "beats": [
+    {
+     "say": "Now the part most beginners skip. Non-goals.",
+     "show": 0
+    },
+    {
+     "say": "In version one, TrackIt has no team collaboration,",
+     "show": 1
+    },
+    {
+     "say": "no mobile app,",
+     "show": 2
+    },
+    {
+     "say": "and no recurring tasks.",
+     "show": 3
+    },
+    {
+     "say": "A non-goal is a decision you made on purpose. That's different from something you forgot.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "stopwatch",
+   "kicker": "Example: TrackIt · Success metric",
+   "title": "One number",
+   "big": "Under 10 s",
+   "sub": "from opening the app to logging a task",
+   "beats": [
+    {
+     "say": "Finally, one success metric.",
+     "show": 0
+    },
+    {
+     "say": "For TrackIt, it's the time from opening the app to logging a task.",
+     "show": 1
+    },
+    {
+     "say": "The goal is under ten seconds.",
+     "show": 2
+    },
+    {
+     "say": "Why only one number? With five, you can always claim success. With one, you have to focus.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "laptop",
+   "kicker": "Your turn · Lab",
+   "title": "Write SPEC.md",
+   "file": "SPEC.md",
+   "code": "Problem: People abandon task apps because logging tasks feels like admin work\nUsers: Individuals managing personal projects\nCore flow: sign up -> type a task -> AI structures it -> see it on a list -> mark done\nNon-goals: no team collaboration, no mobile app, no recurring tasks (v1)\nSuccess metric: time from \"open app\" to \"task logged\" under 10 seconds",
+   "beats": [
+    {
+     "say": "Your turn.",
+     "show": 0
+    },
+    {
+     "say": "In your project folder, create a file called SPEC dot M D.",
+     "show": 1
+    },
+    {
+     "say": "Fill in the five parts for TrackIt, using this template.",
+     "show": 1
+    },
+    {
+     "say": "Then rewrite one part in your own words, as if you're explaining TrackIt to a friend.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why exactly one success metric instead of five?",
+   "options": [
+    "More metrics take longer to measure",
+    "One forces focus; five let you claim success whatever happens",
+    "Investors only read one number"
+   ],
+   "answer": 1,
+   "good": "That's right. One metric forces focus. With five, you could claim success whatever happens.",
+   "bad": "Not quite. One metric forces focus. With five, you could claim success whatever happens.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why exactly one success metric instead of five?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "SPEC.md is in your project folder",
+     ""
+    ],
+    [
+     "You can explain TrackIt in three sentences, without notes",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when two things are true.",
+     "show": 0
+    },
+    {
+     "say": "SPEC dot M D is in your project folder,",
+     "show": 1
+    },
+    {
+     "say": "and you can explain TrackIt in three sentences, without notes.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, you build your first API.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2: Your First API (Programming Fundamentals in Practice)
@@ -241,6 +875,226 @@ Your API runs locally and responds to two different endpoints, one of which take
 5. What command starts your server?
 
 *Answers: 1) A way for software to communicate with other software over defined rules. 2) To keep each project's dependencies isolated and avoid version conflicts. 3) Respond to GET requests at the `/health` URL by running the function below it. 4) `/health` takes no input; `/greet/{name}` accepts a variable value in the URL. 5) `uvicorn main:app --reload`.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Module 2 · Your first API",
+   "title": "Make your code answer requests",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Today TrackIt gets a backend that answers requests from a browser."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "api",
+   "kicker": "Concepts",
+   "title": "Three words to know",
+   "items": [
+    [
+     "API",
+     "How one program talks to another"
+    ],
+    [
+     "Web framework",
+     "Handles requests and responses for you (FastAPI)"
+    ],
+    [
+     "Endpoint",
+     "A specific URL your API answers, like /health"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three words first.",
+     "show": 0
+    },
+    {
+     "say": "An API, or application programming interface, is how one piece of software talks to another. Here, how a browser talks to your backend.",
+     "show": 1
+    },
+    {
+     "say": "A web framework handles the repetitive plumbing of receiving requests and sending responses. We'll use one called FastAPI.",
+     "show": 2
+    },
+    {
+     "say": "And an endpoint is a specific address your API answers, like slash health, or slash tasks.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "package",
+   "kicker": "Lab · Step 1",
+   "title": "A clean space for this project",
+   "file": "Terminal",
+   "code": "python -m venv venv\nsource venv/bin/activate   # Windows: venv\\Scripts\\activate\npip install fastapi uvicorn",
+   "beats": [
+    {
+     "say": "Step one. Set up a virtual environment.",
+     "show": 0
+    },
+    {
+     "say": "A virtual environment keeps this project's installed packages separate from your other projects, so they don't clash.",
+     "show": 1
+    },
+    {
+     "say": "Create it, switch it on, then install FastAPI and uvicorn, the program that runs your app.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 2",
+   "title": "Your first endpoint",
+   "file": "main.py",
+   "code": "from fastapi import FastAPI\n\napp = FastAPI(title=\"TrackIt API\")\n\n@app.get(\"/health\")\ndef health_check():\n    return {\"status\": \"ok\"}",
+   "beats": [
+    {
+     "say": "Step two. Your first endpoint, in a file called main dot p y.",
+     "show": 0
+    },
+    {
+     "say": "You create the app, then the line app dot get slash health tells FastAPI: when someone asks for slash health, run the function below.",
+     "show": 1
+    },
+    {
+     "say": "That function returns status: ok. A simple way to check your server is alive.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "api",
+   "kicker": "Lab · Step 3",
+   "title": "Run it and visit it",
+   "steps": [
+    "uvicorn main:app --reload",
+    "Open localhost:8000/health",
+    "{\"status\": \"ok\"}"
+   ],
+   "beats": [
+    {
+     "say": "Step three. Start the server.",
+     "show": 0
+    },
+    {
+     "say": "Run uvicorn main colon app, dash dash reload.",
+     "show": 1
+    },
+    {
+     "say": "Open your browser at localhost, port eight thousand, slash health.",
+     "show": 2
+    },
+    {
+     "say": "And you'll see status: ok.",
+     "show": 3
+    },
+    {
+     "say": "The reload flag restarts the server whenever you save a change.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 4",
+   "title": "An endpoint that takes input",
+   "file": "main.py",
+   "code": "@app.get(\"/greet/{name}\")\ndef greet(name: str):\n    return {\"message\": f\"Hello, {name}!\"}",
+   "beats": [
+    {
+     "say": "Step four. An endpoint that takes input.",
+     "show": 0
+    },
+    {
+     "say": "The curly brackets around name in the address mean: this part can change.",
+     "show": 1
+    },
+    {
+     "say": "Visit slash greet slash your name, and the API answers with a message that uses it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does @app.get(\"/health\") tell FastAPI to do?",
+   "options": [
+    "Download the health page from the internet",
+    "Answer requests to /health by running the function below it",
+    "Check whether your computer is healthy"
+   ],
+   "answer": 1,
+   "good": "That's right. It tells FastAPI to answer requests at slash health by running the function underneath.",
+   "bad": "Not quite. It tells FastAPI to answer requests at slash health by running the function underneath.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does @app.get(\"/health\") tell FastAPI to do?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your API runs locally",
+     ""
+    ],
+    [
+     "It answers two endpoints, one taking input from the URL",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when your API runs on your computer,",
+     "show": 1
+    },
+    {
+     "say": "and answers two endpoints, one of which takes input from the address.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, you make TrackIt fast.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -367,6 +1221,242 @@ You can explain why the heap version scales better than re-sorting, and you have
 
 *Answers: 1) It repeats work - you only need the top item, not a fully ordered list. 2) The smallest/most urgent item, without scanning everything. 3) O(1) stays roughly the same speed regardless of data size; O(n log n) gets slower as data grows. 4) So Python knows how to compare two Task objects when sorting or heap-ordering them. 5) It would get noticeably slower on every single call, since it re-sorts everything each time.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "growth",
+   "kicker": "Module 3 · Data structures and algorithms",
+   "title": "Making it fast",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "An app that feels fine with ten tasks can crawl with ten thousand."
+    },
+    {
+     "say": "This module is about choosing the right tool so that doesn't happen."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "tree",
+   "kicker": "Concepts",
+   "title": "Three ideas",
+   "items": [
+    [
+     "Data structure",
+     "Organizes data so some operations are fast"
+    ],
+    [
+     "Heap",
+     "Keeps the most urgent item on top"
+    ],
+    [
+     "Big O",
+     "How speed changes as data grows"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three ideas.",
+     "show": 0
+    },
+    {
+     "say": "A data structure is a way of organizing information so certain operations are fast.",
+     "show": 1
+    },
+    {
+     "say": "A heap is a data structure that always keeps the most urgent item easy to grab, without sorting the whole list.",
+     "show": 2
+    },
+    {
+     "say": "And Big O notation describes how an operation's speed changes as your data grows.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "growth",
+   "kicker": "Big O in plain words",
+   "title": "How speed changes as data grows",
+   "items": [
+    [
+     "O(1)",
+     "Constant: dictionary lookup"
+    ],
+    [
+     "O(log n)",
+     "Gentle: binary search"
+    ],
+    [
+     "O(n)",
+     "Grows with the data: scan a list"
+    ],
+    [
+     "O(n log n)",
+     "Sorting a list"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A few Big O values you'll see often.",
+     "show": 0
+    },
+    {
+     "say": "O of one. The same speed however big the data is, like looking up a key in a dictionary.",
+     "show": 1
+    },
+    {
+     "say": "O of log n. Slows down very gently, like binary search, which halves what's left each step.",
+     "show": 2
+    },
+    {
+     "say": "O of n. Grows with the data, like checking every item in a list.",
+     "show": 3
+    },
+    {
+     "say": "And O of n log n. Slower, but still fine. Good general sorting grows like this.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "warning",
+   "kicker": "Lab · Step 1",
+   "title": "The naive way",
+   "file": "next_task_naive",
+   "code": "def next_task_naive(tasks):\n    sorted_tasks = sorted(tasks, key=lambda t: (t.due_date, t.priority))\n    return sorted_tasks[0]",
+   "beats": [
+    {
+     "say": "Here's the naive way to find TrackIt's next task.",
+     "show": 0
+    },
+    {
+     "say": "It sorts the entire list by due date and priority, then takes the first one.",
+     "show": 1
+    },
+    {
+     "say": "It works, but it re-sorts everything every single time you want just one item. That gets wasteful as the list grows.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "tree",
+   "kicker": "Lab · Step 2",
+   "title": "The better way: a heap",
+   "file": "priority.py",
+   "code": "class TaskQueue:\n    def __init__(self):\n        self._heap: list[Task] = []\n\n    def add(self, task):\n        heapq.heappush(self._heap, task)   # O(log n)\n\n    def next_up(self):\n        return self._heap[0]               # O(1)",
+   "beats": [
+    {
+     "say": "The better way uses a heap, with Python's heap q module.",
+     "show": 0
+    },
+    {
+     "say": "The less-than method tells Python how to compare two tasks: earlier due date first, then higher priority.",
+     "show": 1
+    },
+    {
+     "say": "Adding a task is O of log n. Peeking at the most urgent one is O of one, because it always sits on top.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "stopwatch",
+   "kicker": "Lab · Step 3",
+   "title": "Try it",
+   "big": "\"Urgent task\"",
+   "sub": "q.next_up().title",
+   "beats": [
+    {
+     "say": "Now try it. Add a task due in five days, and an urgent task due today.",
+     "show": 0
+    },
+    {
+     "say": "Ask the queue what's next.",
+     "show": 1
+    },
+    {
+     "say": "It answers: Urgent task. The earliest due date wins.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is re-sorting the whole list every time wasteful?",
+   "options": [
+    "Sorting changes the order of your tasks",
+    "You only need the top item, so sorting everything repeats work",
+    "Python can't sort dates"
+   ],
+   "answer": 1,
+   "good": "That's right. You only need the top item, not a fully ordered list, so re-sorting repeats work every time.",
+   "bad": "Not quite. You only need the top item, not a fully ordered list, so re-sorting repeats work every time.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is re-sorting the whole list every time wasteful?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why a heap beats re-sorting",
+     ""
+    ],
+    [
+     "priority.py works and your manual test passes",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when you can explain why the heap scales better than re-sorting,",
+     "show": 1
+    },
+    {
+     "say": "and priority dot p y works, with a passing manual test.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, TrackIt starts remembering things.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4: Databases - Storing Data for Real
@@ -473,6 +1563,245 @@ You can explain what a table, row, column, and foreign key are, you have `models
 
 *Answers: 1) A database can contain many tables; a table is one organized set of rows/columns within it. 2) Links a Task to the User who owns it. 3) So two users can't register with the same email. 4) Makes searches on that column faster, at the cost of slightly slower writes. 5) "Get every column for every task that has been marked done."*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Module 4 · Databases",
+   "title": "Storing data for real",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "So far, your tasks disappear when the program stops."
+    },
+    {
+     "say": "Today, TrackIt gets a database, so data stays."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Concepts",
+   "title": "How a database is organized",
+   "items": [
+    [
+     "Table",
+     "One kind of thing, like tasks"
+    ],
+    [
+     "Rows and columns",
+     "One row per record, one column per detail"
+    ],
+    [
+     "Foreign key",
+     "Links a row to a row in another table"
+    ],
+    [
+     "ORM",
+     "Use Python objects instead of raw SQL"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A database stores data permanently.",
+     "show": 0
+    },
+    {
+     "say": "A relational database organizes it into tables,",
+     "show": 1
+    },
+    {
+     "say": "each with rows, one per record, and columns, one per detail.",
+     "show": 2
+    },
+    {
+     "say": "Tables can link to each other. A foreign key says which row in another table this one belongs to.",
+     "show": 3
+    },
+    {
+     "say": "And an ORM lets you work with tables using normal Python objects instead of writing raw SQL for everything.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Lab · Step 2",
+   "title": "Describe your tables",
+   "file": "models.py",
+   "code": "class User(Base):\n    __tablename__ = \"users\"\n    email = Column(String, unique=True, nullable=False, index=True)\n\nclass Task(Base):\n    __tablename__ = \"tasks\"\n    title = Column(String, nullable=False)\n    done = Column(Boolean, default=False)\n    owner_id = Column(Integer, ForeignKey(\"users.id\"), index=True)",
+   "beats": [
+    {
+     "say": "We describe two tables with SQLAlchemy: users and tasks.",
+     "show": 0
+    },
+    {
+     "say": "Each user has an email, marked unique, so two people can't sign up with the same one.",
+     "show": 1
+    },
+    {
+     "say": "Each task has a title, due date, priority, and done flag, plus owner I D, a foreign key that links it to its user.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "database",
+   "kicker": "Lab · Step 3",
+   "title": "Read the SQL",
+   "file": "SQL",
+   "code": "SELECT title, due_date, priority\nFROM tasks\nWHERE owner_id = 1\n  AND done = false\nORDER BY due_date ASC, priority ASC;",
+   "beats": [
+    {
+     "say": "You should still be able to read the SQL an ORM writes for you.",
+     "show": 0
+    },
+    {
+     "say": "This reads as: get the title, due date and priority of every unfinished task belonging to user one,",
+     "show": 1
+    },
+    {
+     "say": "ordered by the soonest due date.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "database",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Create it, then save real data",
+   "steps": [
+    "database.py",
+    "init_db()",
+    "try_db.py saves a task",
+    "trackit.db exists"
+   ],
+   "beats": [
+    {
+     "say": "Models only describe the tables. Nothing exists on disk yet.",
+     "show": 0
+    },
+    {
+     "say": "Database dot p y connects to SQLite, a database stored in a single file,",
+     "show": 1
+    },
+    {
+     "say": "and init D B creates any tables that don't exist yet.",
+     "show": 2
+    },
+    {
+     "say": "Then try D B dot p y saves a user with one task, and reads it back.",
+     "show": 3
+    },
+    {
+     "say": "A file called trackit dot d b now exists. Your data survives.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "shield",
+   "kicker": "Lab · A useful error",
+   "title": "The database protects your data",
+   "quote": "Same email twice? The database refuses. That's a feature.",
+   "beats": [
+    {
+     "say": "Run try D B a second time, and you'll get an error.",
+     "show": 0
+    },
+    {
+     "say": "That's because email is unique, and that email is already saved.",
+     "show": 1
+    },
+    {
+     "say": "That's the database protecting your data. Delete trackit dot d b to start fresh.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does ForeignKey(\"users.id\") do?",
+   "options": [
+    "Encrypts the user's ID",
+    "Links each task to the user who owns it",
+    "Makes the users table load faster"
+   ],
+   "answer": 1,
+   "good": "That's right. It links each task to the user who owns it.",
+   "bad": "Not quite. It links each task to the user who owns it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does ForeignKey(\"users.id\") do?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain table, row, column and foreign key",
+     ""
+    ],
+    [
+     "models.py defines two linked tables",
+     ""
+    ],
+    [
+     "trackit.db exists with a saved task",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when you can explain a table, a row, a column and a foreign key,",
+     "show": 1
+    },
+    {
+     "say": "models dot p y defines two linked tables,",
+     "show": 2
+    },
+    {
+     "say": "and running try D B created trackit dot d b with a saved task.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 5, you think like an architect.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 5: System Design - Thinking Like an Architect
@@ -510,6 +1839,193 @@ You have a written answer to all three questions above, in your own words, even 
 5. TrackIt's "tasks completed this month" count is slow to calculate. Based on your answer to question 2, what could you do with it?
 
 *Answers: 1) A single component whose failure takes down the whole system. 2) It determines which parts need strict consistency and which can be optimized differently (e.g., cached, computed later). 3) The database, since it's usually the first bottleneck. 4) No - first find the actual bottleneck; adding servers doesn't help if the database itself is the limit. 5) Because it can lag a little without harming users, you could cache it or recalculate it every few minutes instead of on every request.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "architecture",
+   "kicker": "Module 5 · System design",
+   "title": "Thinking like an architect",
+   "beats": [
+    {
+     "say": "Welcome to Module 5. This one is mostly thinking and writing, not coding."
+    },
+    {
+     "say": "System design is deciding how the parts of your app connect and share the work,"
+    },
+    {
+     "say": "and predicting where that will strain as more people use it."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "architecture",
+   "kicker": "Lab · Step 1",
+   "title": "TrackIt today",
+   "steps": [
+    "Browser",
+    "FastAPI app",
+    "Database"
+   ],
+   "beats": [
+    {
+     "say": "Start by drawing TrackIt's current architecture. Pen and paper is fine.",
+     "show": 0
+    },
+    {
+     "say": "The browser,",
+     "show": 1
+    },
+    {
+     "say": "talks to your FastAPI app,",
+     "show": 2
+    },
+    {
+     "say": "which talks to the database. SQLite now, PostgreSQL later.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "ask",
+   "kicker": "Lab · Step 2",
+   "title": "Three questions for any design",
+   "items": [
+    [
+     "What breaks first under load?",
+     ""
+    ],
+    [
+     "Where is the single point of failure?",
+     ""
+    ],
+    [
+     "Which data must be instantly correct, and which can lag?",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now ask three questions. You'll ask these of every design you ever build.",
+     "show": 0
+    },
+    {
+     "say": "What breaks first if a thousand people use it at once?",
+     "show": 1
+    },
+    {
+     "say": "What's the single point of failure, the one part that takes everything down if it fails?",
+     "show": 2
+    },
+    {
+     "say": "And which data must always be correct right away, and which can lag a little?",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Sample answers",
+   "title": "Compare with your own",
+   "items": [
+    [
+     "Database is the first bottleneck",
+     ""
+    ],
+    [
+     "One app server is the single point of failure",
+     ""
+    ],
+    [
+     "Saved tasks: instant. Monthly counts: can lag",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here's some sample reasoning to compare with yours.",
+     "show": 0
+    },
+    {
+     "say": "The database connection would likely break first, with many requests hitting one database.",
+     "show": 1
+    },
+    {
+     "say": "There's one app server. If it goes down, everything goes down.",
+     "show": 2
+    },
+    {
+     "say": "A saved task must be correct immediately. A tasks completed this month count could lag a few seconds and nobody would notice.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Is \"add more servers\" always the right first fix?",
+   "options": [
+    "Yes, more servers always means more speed",
+    "No. Find the real bottleneck first; more servers won't help if the database is the limit",
+    "Only on weekends"
+   ],
+   "answer": 1,
+   "good": "That's right. First find the real bottleneck. Adding servers doesn't help if the database itself is the limit.",
+   "bad": "Not quite. First find the real bottleneck. Adding servers doesn't help if the database itself is the limit.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Is \"add more servers\" always the right first fix?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Written answers to all three questions, in your own words",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when you've written an answer to all three questions, in your own words,",
+     "show": 1
+    },
+    {
+     "say": "even if it's a rough draft.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 6, you protect your users' data.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -568,6 +2084,217 @@ You can hash a password, verify it correctly, and explain why plain-text passwor
 5. Why hash passwords instead of encrypting them (reversibly)?
 
 *Answers: 1) Hashing is one-way - there's no way to reverse it back to the original password. 2) Authentication is "who are you"; authorization is "what are you allowed to do." 3) It avoids telling an attacker which part (username or password) was wrong. 4) A massive privacy/security breach - anyone could see anyone else's data. 5) Even if the database is ever stolen, hashed passwords can't be directly reversed into the originals.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "lock",
+   "kicker": "Module 6 · Security",
+   "title": "Protecting user data",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "People will trust TrackIt with their accounts. This module is about deserving that trust."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Concepts",
+   "title": "Three words to know",
+   "items": [
+    [
+     "Authentication",
+     "Who are you? (log in)"
+    ],
+    [
+     "Authorization",
+     "What are you allowed to do?"
+    ],
+    [
+     "Hash",
+     "One-way scramble of a password"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three ideas.",
+     "show": 0
+    },
+    {
+     "say": "Authentication confirms who a user is. That's logging in.",
+     "show": 1
+    },
+    {
+     "say": "Authorization confirms what they're allowed to do, like only seeing their own tasks.",
+     "show": 2
+    },
+    {
+     "say": "And a hash is a one-way scramble of a password, so even you, the developer, never see or store the real one.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "hash",
+   "kicker": "Lab · Step 2",
+   "title": "Hash and check passwords",
+   "file": "auth.py",
+   "code": "import bcrypt\n\ndef hash_password(plain: str) -> str:\n    return bcrypt.hashpw(plain.encode(\"utf-8\"), bcrypt.gensalt()).decode(\"utf-8\")\n\ndef verify_password(plain: str, hashed: str) -> bool:\n    return bcrypt.checkpw(plain.encode(\"utf-8\"), hashed.encode(\"utf-8\"))",
+   "beats": [
+    {
+     "say": "We use a library called bcrypt.",
+     "show": 0
+    },
+    {
+     "say": "Hash password scrambles a password. Gen salt adds random data, so the same password gives a different hash each time.",
+     "show": 1
+    },
+    {
+     "say": "Verify password checks a login attempt against the saved hash, without ever unscrambling it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "hash",
+   "kicker": "Lab · Step 3",
+   "title": "Try it",
+   "big": "True / False",
+   "sub": "An unreadable hash, then the right password, then the wrong one",
+   "beats": [
+    {
+     "say": "Try it. Hash my password one two three and print it.",
+     "show": 0
+    },
+    {
+     "say": "You get an unreadable hash, not the real password.",
+     "show": 1
+    },
+    {
+     "say": "Verifying the right password returns true. The wrong one returns false.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Lab · Step 4",
+   "title": "Ask these on every endpoint",
+   "items": [
+    [
+     "Must they be logged in?",
+     ""
+    ],
+    [
+     "Only their own data?",
+     ""
+    ],
+    [
+     "Input checked first?",
+     ""
+    ],
+    [
+     "Errors give nothing away?",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "From now on, ask four questions about every endpoint you build.",
+     "show": 0
+    },
+    {
+     "say": "Does this need the user to be logged in?",
+     "show": 1
+    },
+    {
+     "say": "Does it only return data that belongs to them?",
+     "show": 2
+    },
+    {
+     "say": "Is their input checked before it touches the database?",
+     "show": 3
+    },
+    {
+     "say": "And do error messages avoid giving details away? Say invalid credentials, not wrong password.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why say \"invalid credentials\" instead of \"wrong password\"?",
+   "options": [
+    "It sounds more professional",
+    "It doesn't tell an attacker which part was wrong",
+    "It's shorter to type"
+   ],
+   "answer": 1,
+   "good": "That's right. It avoids telling an attacker whether the username or the password was the wrong part.",
+   "bad": "Not quite. It avoids telling an attacker whether the username or the password was the wrong part.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why say \"invalid credentials\" instead of \"wrong password\"?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can hash and verify a password",
+     ""
+    ],
+    [
+     "You can explain why plain-text passwords are never OK",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when you can hash a password and verify it correctly,",
+     "show": 1
+    },
+    {
+     "say": "and explain why plain-text passwords are never acceptable.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 7, you build with AI.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -658,6 +2385,196 @@ You understand why `ParsedTask` and the try/except block exist, even before wiri
 
 *Answers: 1) Models can produce malformed or unexpected output; blind trust risks bugs or bad data reaching your database. 2) Getting fields in the wrong type or format, or missing fields entirely. 3) Catch the error and ask the user to retry, rather than crashing or saving bad data. 4) A user could see or manipulate it, changing how the AI behaves in ways you didn't intend. 5) Using AI is calling an API; engineering with AI means building reliability and validation around a fundamentally probabilistic tool.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "sparkle",
+   "kicker": "Module 7 · AI features",
+   "title": "Building with AI, not just using it",
+   "beats": [
+    {
+     "say": "Welcome to Module 7."
+    },
+    {
+     "say": "Today you build TrackIt's quick add, where you type a task in plain English and AI structures it."
+    },
+    {
+     "say": "The skill here isn't calling the AI. It's making sure you don't blindly trust what comes back."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "doc",
+   "kicker": "Lab · Step 1",
+   "title": "Decide what a good answer looks like",
+   "file": "ai_parse.py",
+   "code": "class ParsedTask(BaseModel):\n    title: str\n    due_date: date | None\n    priority: int = Field(ge=1, le=5)  # must be 1 to 5",
+   "beats": [
+    {
+     "say": "First, define exactly what a parsed task must look like, with a library called pydantic.",
+     "show": 0
+    },
+    {
+     "say": "A title, a due date or nothing, and a priority that must be between one and five.",
+     "show": 1
+    },
+    {
+     "say": "This is called a schema. Anything that doesn't fit gets rejected.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Lab · Step 2",
+   "title": "Write the instruction, keep it on the server",
+   "file": "SYSTEM_PROMPT",
+   "code": "Extract a task from the user's text. Respond ONLY with JSON matching:\n{\"title\": string, \"due_date\": \"YYYY-MM-DD\" or null, \"priority\": integer 1-5}\nNo preamble, no markdown formatting.",
+   "beats": [
+    {
+     "say": "Next, the instruction you send to the model.",
+     "show": 0
+    },
+    {
+     "say": "It asks for JSON only, in exactly the shape your schema expects.",
+     "show": 1
+    },
+    {
+     "say": "This prompt lives in your server code, never in the browser. Anything in the browser can be read and changed by the user.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "sparkle",
+   "kicker": "Lab · Step 3",
+   "title": "Call the model safely",
+   "steps": [
+    "Add today's date",
+    "Call the model",
+    "Parse JSON",
+    "Check the schema",
+    "Retry if it fails"
+   ],
+   "beats": [
+    {
+     "say": "Here's the flow when someone uses quick add.",
+     "show": 0
+    },
+    {
+     "say": "Tell the model today's date, so by Friday can become a real date.",
+     "show": 1
+    },
+    {
+     "say": "Send the prompt and the user's text to the model.",
+     "show": 2
+    },
+    {
+     "say": "Read the answer as JSON.",
+     "show": 3
+    },
+    {
+     "say": "Check it against your schema.",
+     "show": 4
+    },
+    {
+     "say": "If anything fails, catch it and ask the user to try again. Never crash, and never save bad data.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "shield",
+   "kicker": "The key lesson",
+   "title": "Never assume the AI's output is valid",
+   "quote": "Never assume the AI's output is valid. Validate it, and have a fallback.",
+   "beats": [
+    {
+     "say": "Here's the key lesson of this module.",
+     "show": 0
+    },
+    {
+     "say": "Never assume the AI's output is valid. Always check it against a schema, and always have a plan for when it isn't.",
+     "show": 1
+    },
+    {
+     "say": "Also, keep your API key in an environment variable. Never paste it into your code.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What should happen if the AI's answer isn't valid JSON?",
+   "options": [
+    "Save it anyway and fix it later",
+    "Catch the error and ask the user to retry",
+    "Show the raw answer to the user"
+   ],
+   "answer": 1,
+   "good": "That's right. Catch the error and ask the user to retry, instead of crashing or saving bad data.",
+   "bad": "Not quite. Catch the error and ask the user to retry, instead of crashing or saving bad data.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What should happen if the AI's answer isn't valid JSON?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain why ParsedTask exists",
+     ""
+    ],
+    [
+     "You can explain the try/except fallback",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when you understand why the parsed task schema exists,",
+     "show": 1
+    },
+    {
+     "say": "and why the try and except block is there, even before wiring up a real API key.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 8, you work like a team.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 8: Testing & Git Workflow - Working Like a Team
@@ -729,6 +2646,223 @@ Your tests pass locally, and you've created a branch and pull request on GitHub.
 5. What would happen to a team's codebase over time without any tests?
 
 *Answers: 1) Manual checking doesn't scale and is easy to skip; automated tests run consistently every time. 2) It checks that a condition is true, and fails the test loudly if it isn't. 3) A branch is an isolated copy of the code to work on safely; editing `main` directly risks breaking the working version for everyone. 4) It lets someone review a change before it becomes part of the shared codebase. 5) Bugs would accumulate silently, and every change would become riskier and slower to make.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Module 8 · Testing and Git workflow",
+   "title": "Working like a team",
+   "beats": [
+    {
+     "say": "Welcome to Module 8."
+    },
+    {
+     "say": "Today you write tests, and learn how real teams change code safely."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Concepts",
+   "title": "Two ideas",
+   "items": [
+    [
+     "Test",
+     "Code that checks your code, automatically"
+    ],
+    [
+     "Pull request",
+     "A proposed change, reviewed before it's merged"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two ideas.",
+     "show": 0
+    },
+    {
+     "say": "A test is code that checks your other code works, automatically, so you don't re-check everything by hand after each change.",
+     "show": 1
+    },
+    {
+     "say": "A pull request is a proposed change, reviewed before it's merged in. It's how teams work together safely.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "test",
+   "kicker": "Lab · Step 2",
+   "title": "Your first tests",
+   "file": "test_priority.py",
+   "code": "def test_next_up_returns_earliest_due_date():\n    q = TaskQueue()\n    q.add(Task(1, \"Later task\", date.today() + timedelta(days=5), 1))\n    q.add(Task(2, \"Urgent task\", date.today(), 3))\n    assert q.next_up().title == \"Urgent task\"",
+   "beats": [
+    {
+     "say": "Install pytest, then write your first test.",
+     "show": 0
+    },
+    {
+     "say": "It adds a task due in five days and an urgent one due today.",
+     "show": 1
+    },
+    {
+     "say": "Then assert says: the next task must be the urgent one. If it isn't, the test fails loudly.",
+     "show": 1
+    },
+    {
+     "say": "A second test checks that on the same due date, higher priority wins.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "test",
+   "kicker": "Lab · Step 3",
+   "title": "Run them",
+   "big": "2 passed",
+   "sub": "pytest test_priority.py -v",
+   "beats": [
+    {
+     "say": "Run pytest test priority dot p y, dash v.",
+     "show": 0
+    },
+    {
+     "say": "You should see both tests pass.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "git",
+   "kicker": "Lab · Step 4",
+   "title": "Put your project on GitHub",
+   "file": "Terminal",
+   "code": "git branch -M main\ngit remote add origin https://github.com/YOUR-USERNAME/trackit.git\ngit push -u origin main",
+   "beats": [
+    {
+     "say": "Next, put your project on GitHub.",
+     "show": 0
+    },
+    {
+     "say": "Create an empty repository called trackit on github dot com.",
+     "show": 1
+    },
+    {
+     "say": "Then connect your folder to it, and push your main branch.",
+     "show": 1
+    },
+    {
+     "say": "GitHub won't take your account password here. Sign in through the browser window, the GitHub CLI, or a personal access token.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "git",
+   "kicker": "Lab · Step 5",
+   "title": "The team workflow",
+   "steps": [
+    "git checkout -b feature/task-queue",
+    "git commit",
+    "git push",
+    "Open a pull request"
+   ],
+   "beats": [
+    {
+     "say": "Now the workflow real teams use.",
+     "show": 0
+    },
+    {
+     "say": "Make a branch, a safe copy to work on.",
+     "show": 1
+    },
+    {
+     "say": "Commit your changes there.",
+     "show": 2
+    },
+    {
+     "say": "Push the branch to GitHub.",
+     "show": 3
+    },
+    {
+     "say": "And open a pull request, even when you work alone. It builds the habit.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why work on a branch instead of editing main directly?",
+   "options": [
+    "Branches make code run faster",
+    "A branch is a safe copy, so you don't break the working version for everyone",
+    "GitHub doesn't allow edits to main"
+   ],
+   "answer": 1,
+   "good": "That's right. A branch is an isolated copy, so you don't risk breaking the working version everyone relies on.",
+   "bad": "Not quite. A branch is an isolated copy, so you don't risk breaking the working version everyone relies on.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why work on a branch instead of editing main directly?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your tests pass locally",
+     ""
+    ],
+    [
+     "You've made a branch and a pull request on GitHub",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 8.",
+     "show": 0
+    },
+    {
+     "say": "You're done when your tests pass on your computer,",
+     "show": 1
+    },
+    {
+     "say": "and you've made a branch and a pull request on GitHub.",
+     "show": 2
+    },
+    {
+     "say": "Next, in the last module, you ship TrackIt.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -812,3 +2946,228 @@ Your app runs inside a Docker container, and a pull request on GitHub automatica
 5. What's the real-world consequence of skipping containerization for a team of five engineers?
 
 *Answers: 1) Environment inconsistency - "works on my machine" bugs caused by different installed versions or missing dependencies. 2) Every Python package your project depends on, and its version. 3) Opening a pull request. 4) Humans forget or skip steps under deadline pressure; automation runs every time without fail. 5) Each engineer's machine could behave slightly differently, causing bugs that only show up for some people and are hard to reproduce.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Module 9 · Deployment and CI",
+   "title": "Shipping to real users",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "Today you package TrackIt so it runs the same everywhere, and set up tests that run on their own."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "container",
+   "kicker": "Concepts",
+   "title": "Two ideas",
+   "items": [
+    [
+     "Docker",
+     "Your app and everything it needs, in one package"
+    ],
+    [
+     "CI",
+     "Tests run automatically on every change"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two ideas.",
+     "show": 0
+    },
+    {
+     "say": "Docker packages your app with everything it needs, so it behaves the same on your laptop, a teammate's, and a real server. No more it works on my machine.",
+     "show": 1
+    },
+    {
+     "say": "C I, continuous integration, runs your tests automatically every time you propose a change.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "container",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "A Dockerfile, and what to leave out",
+   "file": "Dockerfile",
+   "code": "FROM python:3.12-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
+   "beats": [
+    {
+     "say": "A Dockerfile is the recipe for your container.",
+     "show": 0
+    },
+    {
+     "say": "Start from Python three point twelve, install your requirements, copy your code, and start uvicorn.",
+     "show": 1
+    },
+    {
+     "say": "A dot docker ignore file leaves out things that only work on your computer, like your venv and your local database.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "container",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Build and run it",
+   "steps": [
+    "pip freeze > requirements.txt",
+    "docker build -t trackit-api .",
+    "docker run -p 8000:8000 trackit-api"
+   ],
+   "beats": [
+    {
+     "say": "Then three commands.",
+     "show": 0
+    },
+    {
+     "say": "Pip freeze writes requirements dot t x t, the list of everything you installed.",
+     "show": 1
+    },
+    {
+     "say": "Docker build makes the container.",
+     "show": 2
+    },
+    {
+     "say": "Docker run starts it.",
+     "show": 3
+    },
+    {
+     "say": "Visit slash health again. It works exactly as before, now inside Docker.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Lab · Step 5",
+   "title": "Tests that run themselves",
+   "file": ".github/workflows/ci.yml",
+   "code": "name: CI\non: [pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - uses: actions/setup-python@v6\n        with:\n          python-version: \"3.12\"\n      - run: pip install -r requirements.txt\n      - run: pytest",
+   "beats": [
+    {
+     "say": "Now continuous integration, with GitHub Actions.",
+     "show": 0
+    },
+    {
+     "say": "This file says: on every pull request, set up Python, install the requirements, and run pytest.",
+     "show": 1
+    },
+    {
+     "say": "From now on, a problem gets caught before a person even looks at the code.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "git",
+   "kicker": "Lab · Step 6",
+   "title": "Ship it",
+   "steps": [
+    "Merge Module 8 PR",
+    "git checkout -b feature/docker-ci",
+    "git commit",
+    "git push",
+    "Open a pull request"
+   ],
+   "beats": [
+    {
+     "say": "Last step. Merge your Module 8 pull request first.",
+     "show": 0
+    },
+    {
+     "say": "Then make a new branch,",
+     "show": 1
+    },
+    {
+     "say": "commit your Dockerfile and C I file,",
+     "show": 2
+    },
+    {
+     "say": "push,",
+     "show": 3
+    },
+    {
+     "say": "and open a pull request. Watch GitHub run your tests automatically.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What triggers the CI workflow you wrote?",
+   "options": [
+    "Saving a file on your computer",
+    "Opening a pull request",
+    "Running python main.py"
+   ],
+   "answer": 1,
+   "good": "That's right. The workflow runs on every pull request.",
+   "bad": "Not quite. The workflow runs on every pull request.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What triggers the CI workflow you wrote?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your app runs in a Docker container",
+     ""
+    ],
+    [
+     "A pull request runs your tests automatically",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when your app runs inside a Docker container,",
+     "show": 1
+    },
+    {
+     "say": "and a pull request on GitHub runs your tests automatically.",
+     "show": 2
+    },
+    {
+     "say": "You've built and shipped a real product. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
