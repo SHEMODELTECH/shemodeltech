@@ -42,6 +42,36 @@ const firstHeading = (md) => {
   return null;
 };
 
+// A search-engine description for a course: its "By the end... you'll be able
+// to" outcomes when it has them (the clearest summary), else its purpose line,
+// else the card summary. Used for link previews and the sitemap pages.
+const seoDescription = (md, summary) => {
+  const strip = (t) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*`]/g, '').replace(/\s+/g, ' ').trim();
+  const lines = String(md || '').split('\n');
+  const at = lines.findIndex((l) => /by the end of this (course|module|guide)[^:]*:/i.test(l));
+  let text = '';
+  if (at >= 0) {
+    const items = [];
+    for (let i = at + 1; i < lines.length && items.length < 3; i++) {
+      const l = lines[i].trim();
+      if (!l) { if (items.length) break; continue; }
+      const m = l.match(/^[-*+]\s+(.*)$/);
+      if (!m) break;
+      const item = strip(m[1]).replace(/[.;]$/, '');
+      items.push(item.charAt(0).toLowerCase() + item.slice(1));
+    }
+    if (items.length) text = `Free course. You'll learn to ${items.join('; ')}.`;
+  }
+  if (!text) {
+    const purpose = lines.find((l) => /^\*\*Purpose[^*]*:\*\*/i.test(l.trim()));
+    if (purpose) text = `Free course. ${strip(purpose.replace(/^\s*\*\*Purpose[^*]*:\*\*\s*/i, ''))}`;
+  }
+  if (!text && summary && !/^(time:|by the end)/i.test(summary)) text = summary;
+  if (!text) return '';
+  if (text.length <= 300) return text;
+  return text.slice(0, 297).replace(/\s+\S*$/, '') + '…';
+};
+
 const firstParagraph = (md) => {
   const lines = md.split('\n');
   let seenTitle = false;
@@ -284,6 +314,7 @@ const build = () => {
         // courses that say neither are introductory, so they count as Beginner.
         level: ((md.match(/<!--\s*level:\s*([^>]+?)\s*-->/i) || [])[1]) || courseLevel(firstHeading(md) || '') || 'Beginner',
         summary: firstParagraph(md),
+        seo: seoDescription(md, firstParagraph(md)),
         projects: countProjects(md),
         minutes: estimateMinutes(md),
         order: readOrder(md),
@@ -333,12 +364,19 @@ const build = () => {
     company: 'Understanding Badges', start: 'Start here',
   };
   const manifest = {};
+  // Guides whose text has no outcomes list get a hand-written description.
+  const GUIDE_DESCRIPTIONS = {
+    start: 'A 15-minute guide to She Model Tech: find your way around, set up your profile, learn with free courses, join real projects, earn badges and get seen.',
+    company: 'A short guide for companies: what She Model Tech badges prove, how to read badge levels, and how to hire with confidence.',
+  };
   Object.entries(result).forEach(([track, list]) => list.forEach((c) => {
     const req = c.kind === 'interactive' ? { modules: 0, quizParts: 0 } : courseRequirements(c.markdown);
     manifest[`${track}/${c.slug}`] = {
       title: c.title, level: c.level || '', minutes: c.minutes || 0, trackLabel: TRACK_LABELS[track] || track,
       kind: c.kind || 'markdown', modules: req.modules, quizParts: req.quizParts,
       ...(c.noCertificate ? { noCertificate: true } : {}),
+      // For search engines and link previews (scripts/build.js).
+      summary: GUIDE_DESCRIPTIONS[track] || (c.kind === 'interactive' ? String(c.summary || '').slice(0, 300) : c.seo) || `Free ${TRACK_LABELS[track] || ''} course on She Model Tech Learning.`,
     };
   }));
   fs.writeFileSync(path.join(__dirname, '..', 'lib', 'courseManifest.json'), JSON.stringify(manifest, null, 1) + '\n');

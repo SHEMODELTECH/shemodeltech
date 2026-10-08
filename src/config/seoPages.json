@@ -1,0 +1,18 @@
+{
+  "site": "https://shemodeltech.com",
+  "default": {
+    "title": "She Model Tech | Ascend. Achieve. Advance.",
+    "description": "Build real experience on real-world tech projects, earn verified skill badges, and get discovered. Free and open to everyone."
+  },
+  "pages": {
+    "/": { "title": "She Model Tech | Ascend. Achieve. Advance.", "description": "Build real experience on real-world tech projects, earn verified skill badges, and get discovered. Free and open to everyone." },
+    "/about": { "title": "About | She Model Tech", "description": "Why She Model Tech exists: real-world projects, verified skill badges and free learning, so anyone can prove what they can do in tech." },
+    "/team": { "title": "Our team | She Model Tech", "description": "The people behind She Model Tech." },
+    "/events": { "title": "Events | She Model Tech", "description": "Free virtual events from She Model Tech: workshops, tech talks, podcasts and cohort project demo days." },
+    "/support-our-mission": { "title": "Fund a cohort | She Model Tech", "description": "Support She Model Tech by funding a cohort of real-world tech projects for members, free for everyone who joins." },
+    "/learning": { "title": "Free tech courses | She Model Tech Learning", "description": "Free, hands-on courses across six tech tracks, from your first program to AI engineering, product, security and leadership. Read or watch every module." },
+    "/verify": { "title": "Verify a certificate | She Model Tech", "description": "Check that a She Model Tech certificate is genuine." },
+    "/terms": { "title": "Terms of Service | She Model Tech", "description": "The terms for using She Model Tech." },
+    "/privacy": { "title": "Privacy Policy | She Model Tech", "description": "How She Model Tech collects, uses and protects your information." }
+  }
+}

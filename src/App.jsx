@@ -4,6 +4,7 @@ import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import AppUpdateNotice from './components/AppUpdateNotice';
+import { RouteMeta } from './utils/pageMeta';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -228,6 +229,7 @@ function App() {
         <PresenceTracker />
         <Router>
           <AppUpdateNotice />
+          <RouteMeta />
           <div className="w-full min-h-screen overflow-x-clip">
             <RouteErrorBoundary>
             <Suspense fallback={<PageLoader />}>

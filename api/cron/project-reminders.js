@@ -32,6 +32,7 @@ const { refreshCourseStats } = require('../../lib/courseStatsSummary');
 const admin = require('../../lib/firebaseAdmin');
 const { sendMail } = require('../../lib/mailer');
 const { pushToUids } = require('../../lib/push');
+const { runBackup } = require('../../lib/backupJob');
 
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
@@ -334,6 +335,9 @@ module.exports = async (req, res) => {
  return res.status(401).json({ error: 'unauthorized' });
  }
  }
+
+ // Nightly database backup (its own cron entry: ?task=backup).
+ if (req.query && req.query.task === 'backup') return runBackup(req, res);
 
  const db = admin.firestore();
  // Frequent runs (an outside timer every few minutes) only handle events.

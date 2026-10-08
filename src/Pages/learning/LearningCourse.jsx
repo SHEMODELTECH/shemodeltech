@@ -10,6 +10,7 @@ import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } 
 import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, CourseReader, certificateErrorToast, CourseReferences, InteractivePlayer, ModuleSummary, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack, loadCourseMarkdown } from '../../utils/foundationsCourses';
+import { setPageMeta } from '../../utils/pageMeta';
 import { PUBLISHED_PREFIX, getPublished, getPublishedContent, listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { CourseCard, LR_CSS, trackName } from './LearningHome';
 import { toast } from 'react-toastify';
@@ -155,6 +156,16 @@ const LearningCourse = ({ reading = false }) => {
       : { ...baseCourse, markdown: pubContent };
   }, [baseCourse, isPublished, pubContent, editedText, builtInText]);
   const parts = useMemo(() => (course ? coursePartTitles(course) : []), [course]);
+  // Tab title, search result and link preview for this course.
+  const metaTitle = course ? course.title : '';
+  const metaSummary = course
+    ? (track === 'start' ? 'A 15-minute guide to She Model Tech: find your way around, set up your profile, learn with free courses, join real projects, earn badges and get seen.'
+      : track === 'company' ? 'A short guide for companies: what She Model Tech badges prove, how to read badge levels, and how to hire with confidence.'
+        : course.seo || course.summary || '')
+    : '';
+  useEffect(() => {
+    if (metaTitle) setPageMeta({ title: `${metaTitle} | She Model Tech Learning`, description: metaSummary, path: `/learning/${track}/${slug}` });
+  }, [metaTitle, metaSummary, track, slug]);
   // Only enrolled learners (and mentors and staff) can rate, comment, and post in
   // the forum. Enrolment is read from the learner's account, and the database
   // rules check the same thing, so this can't be bypassed in the browser.

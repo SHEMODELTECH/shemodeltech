@@ -42,6 +42,10 @@
       }
     },
     {
+      "src": "/api/cron/backup",
+      "dest": "/api/cron/project-reminders?task=backup"
+    },
+    {
       "src": "/api/notifications/([^/]+)",
       "dest": "/api/notifications/[type]?type=$1"
     },

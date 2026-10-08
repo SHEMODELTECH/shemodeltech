@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // scripts/restoreBackup.js
-// Open a She Model Tech database backup (made nightly by api/cron/backup.js),
+// Open a She Model Tech database backup (made nightly by lib/backupJob.js),
 // look inside it, save it as readable JSON, or put documents back in Firestore.
 //
 //   Look inside (safe, changes nothing):

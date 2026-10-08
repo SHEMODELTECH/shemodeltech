@@ -6,7 +6,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to explain canvases, elements, breakpoints, and publishing, and plan a simple site; build a Webflow page with flexbox, a combo class, and a CMS collection list, then publish it; build a Framer page with stacks, a button component with a hover variant, and an edited…"
  },
  "TechArchs/no-code-website-cms-developer-webflow-hands-on-tutorials": {
   "title": "No-Code Website and CMS Developer (Webflow)",
@@ -15,7 +16,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 6
+  "quizParts": 6,
+  "summary": "Free course. You'll learn to build a responsive page with sections, containers, and flexbox that stacks on mobile; create a reusable style system with classes, combo classes, color swatches, and components; build site navigation with shared navbar and footer components and a mobile menu."
  },
  "TechArchs/internal-apps-beginner-course": {
   "title": "Internal Apps",
@@ -24,7 +26,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to describe any internal app as a data source, screens, actions, and permissions; build a Glide app on a Google Sheet with a list, a detail screen, and a button that writes back to the sheet; build a Bubble app with a custom data type, a repeating group, a create…"
  },
  "TechArchs/no-code-web-app-builder-bubble-hands-on-tutorials": {
   "title": "No-Code Web App Builder (Bubble)",
@@ -33,7 +36,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 6
+  "quizParts": 6,
+  "summary": "Free course. You'll learn to build a responsive Bubble page using containers with row and column layouts; design a data type with correctly typed fields and add sample records; display records in a sorted repeating group bound to a data source."
  },
  "TechArchs/automation-beginner-course": {
   "title": "Automation for Builders",
@@ -42,7 +46,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 5,
-  "quizParts": 5
+  "quizParts": 5,
+  "summary": "Free course. You'll learn to describe any automation as a trigger, actions, and data mapping; build and turn on a two-step Zap that maps spreadsheet data into a message; build a Make scenario with a router and filters, and test each branch."
  },
  "TechArchs/workflow-automation-specialist-zapier-make-hands-on-tutorials": {
   "title": "Workflow Automation Specialist (Zapier and Make)",
@@ -51,7 +56,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 6
+  "quizParts": 6,
+  "summary": "Free course. You'll learn to build and test a two-step Zap that maps spreadsheet data into an email; build Make scenarios with routers, filters, and date formatting functions; chain several modules in Make and add an error handler that logs failures."
  },
  "TechArchs/business-workflows-module": {
   "title": "Business Workflows",
@@ -60,7 +66,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to build a form with conditional logic and required fields that sends submissions to a spreadsheet; build a sheet-based approval process in Make with separate Approved and Rejected routes; add notifications that use dynamic content from the original submission."
  },
  "TechArchs/apis-module": {
   "title": "APIs",
@@ -69,7 +76,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to send GET and POST requests with Postman and read the JSON response and status code; explain what endpoints, methods, request bodies, and status codes are; build a Make scenario that receives a webhook payload and uses its data in an action."
  },
  "TechArchs/ai-agents-module": {
   "title": "AI Agents for No-Code Builders",
@@ -78,7 +86,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to explain the difference between an AI agent and a fixed automation, and decide which one a task needs; name the parts of an agent (model, instructions, tools, memory, human approval) and what each one does; get an AI provider API key, keep it secret, and set a…"
  },
  "TechArchs/crm-platforms-module": {
   "title": "CRM Platforms",
@@ -87,7 +96,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to set up HubSpot contacts, a company, a deal in a pipeline, tasks, and a dashboard; create a custom field in Salesforce and build a record-triggered flow that reacts to it; build a Zoho CRM workflow rule and a Blueprint that enforces an ordered process."
  },
  "TechArchs/internal-tools-builder-retool-airtable-hands-on-tutorials": {
   "title": "Internal Tools Builder (Retool and Airtable)",
@@ -96,7 +106,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 6
+  "quizParts": 6,
+  "summary": "Free course. You'll learn to design a relational Airtable base with linked tables, typed fields, and filtered views; add formulas, rollups, lookups, and an email automation in Airtable; connect Retool to Airtable with a scoped Personal Access Token and build a master-detail app."
  },
  "TechArchs/deployment-module": {
   "title": "Deployment",
@@ -105,7 +116,8 @@
   "trackLabel": "Low/No-Code Developer",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to make a change in draft mode, preview it, publish it, and find version history; explain drafts, staging environments (such as Salesforce sandboxes), and rollbacks; look up A and CNAME records and find the DNS record your platform needs for a custom domain."
  },
  "TechDev/swe-fundamentals-beginner-course": {
   "title": "Build Your First Product: A Beginner's Course in Software Engineering Fundamentals",
@@ -114,7 +126,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 10,
-  "quizParts": 10
+  "quizParts": 10,
+  "summary": "Free course. You'll learn to write a one-page spec that defines the problem, users, core flow, non-goals, and one success metric; build and run a small FastAPI backend with endpoints that save data to a database through an ORM; choose a data structure (such as a heap) by reasoning about Big O,…"
  },
  "TechDev/python-fundamentals-beginner-course": {
   "title": "Python Programming Fundamentals",
@@ -123,7 +136,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 9,
-  "quizParts": 9
+  "quizParts": 9,
+  "summary": "Free course. You'll learn to store data in variables of the right type and convert between types (such as text to number); write programs that make decisions with if/elif/else and repeat work with for and while loops; write reusable functions with parameters, default values, and return values."
  },
  "TechDev/version-control-beginner-course": {
   "title": "Version Control for Builders",
@@ -132,7 +146,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 5,
-  "quizParts": 5
+  "quizParts": 5,
+  "summary": "Free course. You'll learn to explain what Git does and what GitHub adds on top of it; create a repository, stage and commit changes, read the history, and undo mistakes with git restore and git revert; push a local repository to GitHub and clone it onto another machine."
  },
  "TechDev/web-development-beginner-course": {
   "title": "Web Development for Builders",
@@ -141,7 +156,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 5,
-  "quizParts": 5
+  "quizParts": 5,
+  "summary": "Free course. You'll learn to explain the separate jobs of HTML, CSS, and JavaScript on a web page; build a page in HTML with headings, lists, images, and an accessible form; style a page from a separate CSS file using selectors, a hover state, and a flexbox layout."
  },
  "TechDev/frontend-frameworks-beginner-course": {
   "title": "Frontend Frameworks for Builders",
@@ -150,7 +166,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 13,
-  "quizParts": 13
+  "quizParts": 13,
+  "summary": "Free course. You'll learn to explain why frameworks exist and where React, Next.js, Vue, Angular and Svelte fit; build React components with JSX and props, and make them interactive with state and event handlers; render lists with keys, show content conditionally, and build validated forms with…"
  },
  "TechDev/backend-development-beginner-course": {
   "title": "Backend Development for Builders",
@@ -159,7 +176,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 8
+  "quizParts": 8,
+  "summary": "Free course. You'll learn to explain the request and response cycle, HTTP methods, and status codes; set up a FastAPI project with a clear folder structure and run it with Uvicorn; build create, read, update, and delete (CRUD) endpoints with request validation using Pydantic."
  },
  "TechDev/databases-beginner-course": {
   "title": "Databases for Builders",
@@ -168,7 +186,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 8
+  "quizParts": 8,
+  "summary": "Free course. You'll learn to compare relational, document, realtime, and in-memory databases and say what each is best at; read and write core SQL: create a table, insert, select with a filter and a join, update, and delete; create and query tables in PostgreSQL and MySQL, and connect to…"
  },
  "TechDev/apis-beginner-course": {
   "title": "APIs for Builders",
@@ -177,7 +196,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 8
+  "quizParts": 8,
+  "summary": "Free course. You'll learn to design a clean REST API: resource naming, versioning, pagination, filtering, and sorting; return one consistent error format and publish accurate OpenAPI documentation at /docs; call third-party APIs safely, with timeouts, retries, backoff, and respect for rate limits."
  },
  "TechDev/testing-beginner-course": {
   "title": "Testing for Builders",
@@ -186,7 +206,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to explain the testing pyramid and decide which kind of test a check belongs in; write unit tests in Jest using Arrange, Act, Assert, including tests for edge cases and expected errors; write integration tests that send real HTTP requests into an Express API with Supertest."
  },
  "TechDev/deployment-beginner-course": {
   "title": "Deployment for Builders",
@@ -195,7 +216,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 5,
-  "quizParts": 5
+  "quizParts": 5,
+  "summary": "Free course. You'll learn to explain the \"works on my machine\" problem and how Docker, CI, CD, and cloud hosting each help solve it; write a Dockerfile, build an image, and run your app in a container; write an automated test and run it on every pull request with a GitHub Actions workflow."
  },
  "TechDev/dsa-beginner-course": {
   "title": "Data Structures & Algorithms for Builders",
@@ -204,7 +226,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 12,
-  "quizParts": 12
+  "quizParts": 12,
+  "summary": "Free course. You'll learn to describe how an operation's cost grows using Big O, and measure the difference with a timing test; choose between lists, dictionaries, sets, stacks, queues, and heaps based on the operations your feature needs; build a linked list and a binary search tree, and…"
  },
  "TechDev/data-analytics-beginner-course": {
   "title": "Data Analytics for Builders",
@@ -213,7 +236,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 8
+  "quizParts": 8,
+  "summary": "Free course. You'll learn to turn a vague question into a measurable one with a clear metric, dimension, and time window tied to a decision; summarize data in Google Sheets with formulas, filters, and pivot tables; query data with SQL using WHERE, GROUP BY, JOIN, and HAVING."
  },
  "TechDev/machine-learning-fundamentals-beginner-course": {
   "title": "Machine Learning Fundamentals",
@@ -222,7 +246,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 8
+  "quizParts": 8,
+  "summary": "Free course. You'll learn to explain what supervised and unsupervised learning are, and when machine learning is (and isn't) the right tool; prepare data for a model by splitting it first, encoding categories, and scaling numbers without leaking test data; train and evaluate regression and…"
  },
  "TechDev/agentic-ai-fundamentals-course": {
   "title": "Agentic AI Fundamentals: Build, Connect and Safeguard AI Agents",
@@ -231,7 +256,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 7
+  "quizParts": 7,
+  "summary": "Free course. You'll learn to explain the difference between a fixed workflow and an agent, and when each is the better choice; build an agent loop with the Claude API that calls your own tools, handles tool errors, and stops at a step limit; write an MCP server and connect an agent to its tools."
  },
  "TechDev/computer-vision": {
   "title": "Computer Vision",
@@ -240,7 +266,8 @@
   "trackLabel": "Coding Developer",
   "kind": "interactive",
   "modules": 0,
-  "quizParts": 0
+  "quizParts": 0,
+  "summary": "Learn how computers see — one pixel at a time. Each module explains one idea in plain language, with worked examples, a hands-on lab you can play with, and a short quiz to check yourself."
  },
  "TechDev/advanced-models": {
   "title": "Advanced Models",
@@ -249,7 +276,8 @@
   "trackLabel": "Coding Developer",
   "kind": "interactive",
   "modules": 0,
-  "quizParts": 0
+  "quizParts": 0,
+  "summary": "See how modern AI models work — then try them yourself. Each module explains one family of models in plain language, with worked examples, a hands-on lab you can play with, and a short quiz to check yourself."
  },
  "TechDev/ai-product-engineer-hands-on-tutorials": {
   "title": "AI Product Engineer",
@@ -258,7 +286,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 7
+  "quizParts": 7,
+  "summary": "Free course. You'll learn to write a one-page AI product brief with a clear problem statement, target user, and success metric; build a working feature prototype and a multi-turn chatbot that call the Claude API; run lightweight user discovery and use the evidence to revise a feature's direction."
  },
  "TechDev/ai-automation-engineer-hands-on-tutorials": {
   "title": "AI Automation Engineer",
@@ -267,7 +296,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 6,
-  "quizParts": 6
+  "quizParts": 6,
+  "summary": "Free course. You'll learn to map a real workflow and judge which parts are worth automating; build a Python script that runs on a schedule with cron or Task Scheduler and logs its own errors; chain steps into a multi-step workflow with per-step error handling."
  },
  "TechDev/ai-data-engineer-hands-on-tutorials": {
   "title": "AI Data Engineer",
@@ -276,7 +306,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 7
+  "quizParts": 7,
+  "summary": "Free course. You'll learn to map the five stages of a data pipeline for an AI use case; clean a messy dataset with pandas and check the result with assertions; design a versioned SQL schema and build a batch ETL pipeline that loads into it."
  },
  "TechDev/ai-agent-platform-engineer-hands-on-tutorials": {
   "title": "AI Agent Platform Engineer",
@@ -285,7 +316,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 8
+  "quizParts": 8,
+  "summary": "Free course. You'll learn to diagram the core components of a multi-tenant agent platform; build the full tool-calling round trip and a bounded agent loop with the Claude Messages API; build a tool registry that lets several agents share tools without code changes."
  },
  "TechDev/ai-solutions-architect-hands-on-tutorials": {
   "title": "AI Solutions Architect",
@@ -294,7 +326,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 7
+  "quizParts": 7,
+  "summary": "Free course. You'll learn to turn a business problem into a solutions brief with measurable goals and constraints; draw a labeled system diagram showing request flow, data, and integrations; compare model options against set criteria and estimate their monthly cost."
  },
  "TechDev/multimodal-ai-engineer-hands-on-tutorials": {
   "title": "Multimodal AI Engineer",
@@ -303,7 +336,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 7
+  "quizParts": 7,
+  "summary": "Free course. You'll learn to compare vision-language, speech, and image-generation models by format, limits, and cost; send images and text together to the Claude API and reuse that call in later projects; extract basic image and audio features, including a histogram and a spectrogram."
  },
  "TechDev/ai-research-engineer-hands-on-tutorials": {
   "title": "AI Research Engineer",
@@ -312,7 +346,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 7
+  "quizParts": 7,
+  "summary": "Free course. You'll learn to read a short paper for its core claim and write a minimal script that tries to reproduce it; explore a dataset for missing values, distributions, and class imbalance before modeling; implement gradient descent and a small neural network with backpropagation using…"
  },
  "TechDev/robotics-ai-engineer-hands-on-tutorials": {
   "title": "Robotics AI Engineer",
@@ -321,7 +356,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 8,
-  "quizParts": 8
+  "quizParts": 8,
+  "summary": "Free course. You'll learn to diagram a robot as a sense-think-act system of sensors, decision-making, and actuators; filter noisy, gappy sensor data with a moving average and interpolation; convert points between robot and world coordinate frames and verify the result."
  },
  "TechDev/ai-infrastructure-engineer-hands-on-tutorials": {
   "title": "AI Infrastructure Engineer",
@@ -330,7 +366,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 7
+  "quizParts": 7,
+  "summary": "Free course. You'll learn to map the layers of an AI infrastructure stack and choose compute, storage, networking, and orchestration options; write Bash scripts that monitor CPU, memory, disk, and network, with alerts, logs, and a cron schedule; create a cloud VM, open a port safely, deploy a…"
  },
  "TechDev/ai-infrastructure-engineer-advanced-module-tutorials": {
   "title": "AI Infrastructure Engineer — Advanced Module: Modern IaC, GPU Scheduling & Multi-Tenant IAM",
@@ -339,7 +376,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to provision, change, and tear down a cloud VM as code with Pulumi in Python; define the same VM in OpenTofu (HCL) and compare the two tools' workflows and state handling; run a local multi-node Kubernetes cluster with kind and share (simulated) GPUs between teams using…"
  },
  "TechDev/ai-governance-responsible-ai-engineer-hands-on-tutorials": {
   "title": "AI Governance and Responsible AI Engineer",
@@ -348,7 +386,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 7,
-  "quizParts": 7
+  "quizParts": 7,
+  "summary": "Free course. You'll learn to write a risk overview that rates an AI system's risks by likelihood and severity; build logging and review tools that create an audit trail of model calls; audit a dataset for representation gaps, unequal outcome rates, and proxy variables."
  },
  "TechDev/ai-governance-advanced-module-tutorials": {
   "title": "AI Governance and Responsible AI Engineer — Advanced Module: EU AI Act Compliance",
@@ -357,7 +396,8 @@
   "trackLabel": "Coding Developer",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to classify an AI system into the EU AI Act's risk tiers and decide whether you are its provider or deployer; turn a high-risk classification into a list of obligations mapped to your existing governance work, with gaps named; write technical documentation that covers…"
  },
  "TechGuard/module-1-networking": {
   "title": "Networking Fundamentals",
@@ -366,7 +406,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to explain what IP, TCP, and UDP each guarantee, and trace a real connection with ping, traceroute, and curl; query DNS records with dig or nslookup, read a TTL, and explain how cache poisoning works; read a raw HTTP request and response, including methods, status…"
  },
  "TechGuard/module-2-operating-systems": {
   "title": "Operating Systems",
@@ -375,7 +416,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 2,
-  "quizParts": 2
+  "quizParts": 2,
+  "summary": "Free course. You'll learn to read and change Linux file permissions with ls -l and chmod, and explain owner, group, and other; search a Linux system for SUID and world-writable files, and explain why they enable privilege escalation; inspect a Windows access token, administrator group members,…"
  },
  "TechGuard/module-3-ethical-hacking": {
   "title": "Ethical Hacking",
@@ -384,7 +426,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to set up an isolated, updated Kali Linux VM with a clean snapshot and run a first scan against yourself; write a scope (rules of engagement) document before any testing starts; run recon and enumeration with nmap against your own local, intentionally vulnerable lab target."
  },
  "TechGuard/module-4-cryptography": {
   "title": "Cryptography",
@@ -393,7 +436,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to encrypt and decrypt a file with AES, and an RSA key pair, using OpenSSL; compare symmetric, asymmetric, and hybrid encryption, and explain how TLS 1.3 combines them; hash strings and files with SHA-256, show the avalanche effect, and explain why passwords need…"
  },
  "TechGuard/module-5-identity-access-management": {
   "title": "Identity and Access Management",
@@ -402,7 +446,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to set up TOTP-based MFA on an account you own, and compare SMS, TOTP, and phishing-resistant passkeys or security keys; design a role-based access model that applies least privilege and separation of duties; read a cloud IAM policy, spot the statement that breaks least…"
  },
  "TechGuard/module-6-cloud-security": {
   "title": "Cloud Security",
@@ -411,7 +456,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to explain the shared responsibility model and sort security tasks into provider versus customer; review AWS IAM, S3 public-access settings, security groups, and CloudTrail for common misconfigurations; review Azure RBAC role assignments, scopes, and NSG rules, and…"
  },
  "TechGuard/module-7-security-monitoring": {
   "title": "Security Monitoring",
@@ -420,7 +466,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to search and count events in an authentication log with grep, awk, sort, and uniq, as a hand-built SIEM correlation; write a correlation rule in words and spot a brute-force attack that ended in a successful login; triage alerts by severity, decide when to escalate,…"
  },
  "TechGuard/module-8-secure-coding": {
   "title": "Secure Coding",
@@ -429,7 +476,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 2,
-  "quizParts": 2
+  "quizParts": 2,
+  "summary": "Free course. You'll learn to name the OWASP Top 10:2025 categories and explain the new Software Supply Chain Failures item; fix an injection flaw with a parameterised query and a broken-access-control flaw with a server-side check; scan dependencies, verify registry signatures, and generate an…"
  },
  "TechGuard/module-9-devops-security": {
   "title": "DevOps Security",
@@ -438,7 +486,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to catch a committed secret with Gitleaks, and use a GitHub Actions secret with least-privilege permissions:; install security tools from official sources, verify their checksums, and explain what the March 2026 Trivy compromise teaches about the supply chain; compare…"
  },
  "TechGuard/module-10-ai-agent-security": {
   "title": "AI Agent Security",
@@ -447,7 +496,8 @@
   "trackLabel": "Network & Cybersecurity",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to explain why an AI agent that can use tools is a new attack surface, and name the risks in the OWASP Top 10 for LLM Applications (2025), and explain how the OWASP Top 10 for Agentic Applications (December 2025) adds to it; describe direct and indirect prompt…"
  },
  "TechLeads/module-1-techleads-business-leadership": {
   "title": "Business & Leadership",
@@ -456,7 +506,8 @@
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to write the same status update for a team and for stakeholders, answering what happened, what's at risk, and what's needed; give feedback using the Situation-Behavior-Impact (SBI) framework, followed by an open coaching question; draft a growth plan with measurable…"
  },
  "TechLeads/module-2-strategy-business-analysis-stakeholder-management": {
   "title": "Strategy, Business Analysis & Stakeholder Management",
@@ -465,7 +516,8 @@
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to trace a piece of technical work to the business goal it serves; compare build, buy, and partner options on cost, control, and speed, and make a reasoned choice; turn a vague request into functional and non-functional requirements."
  },
  "TechLeads/module-3-change-management-financial-literacy-sales-partnerships-technology-awareness": {
   "title": "Change Management, Financial Literacy, Sales & Partnerships, and Technology Awareness",
@@ -474,7 +526,8 @@
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to plan a change rollout: likely resistance, an adoption strategy, a change champion, and a follow-up check; run a cost analysis (upfront, ongoing, opportunity cost) and calculate ROI as (gain − cost) ÷ cost; classify a cost as CapEx or OpEx and set up a monthly check…"
  },
  "TechLeads/module-4-technical-writing": {
   "title": "Technical Writing",
@@ -483,7 +536,8 @@
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to choose the right page type (tutorial, how-to, reference, explanation) for a reader's goal; write a how-to guide and a GitHub README, and revise them after watching someone follow them; write a decision document with fairly described options and a clear ask, plus a…"
  },
  "TechLeads/module-5-research-for-tech-teams": {
   "title": "Research for Tech Teams",
@@ -492,7 +546,8 @@
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to write a research question that is specific, answerable, and tied to a decision; write a one-page research plan; find sources and judge their credibility (who, when, evidence, bias), and cite them properly."
  },
  "TechLeads/module-6-communication-and-delivery": {
   "title": "Communication and Delivery",
@@ -501,7 +556,8 @@
   "trackLabel": "Non-Technical Roles",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to write an outcome-based meeting purpose and a timed agenda, and close a meeting with owned, dated actions; break a project into tasks and milestones with owners and dependencies; build a RAID log and tell risks, assumptions, issues, and dependencies apart."
  },
  "TechPO/product-fundamentals-module": {
   "title": "Product Fundamentals",
@@ -510,7 +566,8 @@
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to place a real product in its lifecycle stage using observable evidence, and name the metric that stage's team should watch; write a specific, testable MVP hypothesis and design a fake door test for it; explain the build-measure-learn loop and what makes an MVP…"
  },
  "TechPO/user-research-module": {
   "title": "User Research",
@@ -519,7 +576,8 @@
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to draft primary and secondary proto-personas from clearly labeled assumptions; write an interview guide of open, non-leading questions about past behavior, and run a practice interview; synthesize interview notes and compare them against your persona assumptions."
  },
  "TechPO/product-design-module": {
   "title": "Product Design",
@@ -528,7 +586,8 @@
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to build a low-fidelity wireframe in Figma with annotations, and compare two layout options; map a user flow with a start, end, decision point, error path, and likely drop-off point; review a design against consistency, feedback, affordances and signifiers, and…"
  },
  "TechPO/agile-module": {
   "title": "Agile",
@@ -537,7 +596,8 @@
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to name the Scrum accountabilities, events, and artifacts from the 2020 Scrum Guide and explain what each is for; run a mock Sprint: build a Product and Sprint Backlog, write a Sprint Goal, and hold a review and retrospective; set up a Kanban board with WIP limits and…"
  },
  "TechPO/project-management-module": {
   "title": "Project Management",
@@ -546,7 +606,8 @@
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
   "modules": 4,
-  "quizParts": 4
+  "quizParts": 4,
+  "summary": "Free course. You'll learn to write a scope document with in-scope and out-of-scope items, and a change request for a scope creep scenario; build a timeline with durations and dependencies, find the critical path, and add a justified buffer; build a risk register that rates likelihood and impact,…"
  },
  "TechPO/product-project-management": {
   "title": "Analytics, Roadmapping & Collaboration",
@@ -555,7 +616,8 @@
   "trackLabel": "Product / Project Owner",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to choose and justify 2 to 3 KPIs for a feature, and spot a metric that misleads without context; design an A/B test with a clear win condition, and explain why statistical significance matters; calculate RICE scores to rank a backlog, and scope the top idea into an MVP…"
  },
  "TechQA/00-course-overview": {
   "title": "Start Here: How the Quality Tester Track Works",
@@ -565,7 +627,8 @@
   "kind": "markdown",
   "modules": 4,
   "quizParts": 0,
-  "noCertificate": true
+  "noCertificate": true,
+  "summary": "Quality assurance (QA) is the work of making sure software does what it should, for the people who use it, before they find the problems themselves. This track takes you from what testing is for, through writing test cases and reporting..."
  },
  "TechQA/module-1-qa-fundamentals": {
   "title": "QA Fundamentals",
@@ -574,7 +637,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to name the six SDLC phases in order and identify QA work that happens before the Testing phase; write a short test plan, two structured test cases with test data, and exit criteria for one requirement; explain the seven testing principles and apply them to real…"
  },
  "TechQA/module-2-manual-testing": {
   "title": "Manual Testing",
@@ -583,7 +647,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to write test cases with an ID, preconditions, numbered steps, test data, and an expected result, and run them against a real practice site; write a bug report a developer can act on, with steps, expected vs. actual result, severity, priority, environment, and evidence;…"
  },
  "TechQA/module-3-automation-testing": {
   "title": "Automation Testing",
@@ -592,7 +657,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to write and run a Selenium test in Python that logs in to a practice site, using explicit waits instead of fixed sleeps; write and run Playwright tests with pytest, using role and label locators and web-first assertions, in headed and headless mode; record a Playwright…"
  },
  "TechQA/module-4-api-testing": {
   "title": "API Testing",
@@ -601,7 +667,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to send API requests in Postman and write test scripts that check status codes, fields, and response time; read an OpenAPI (Swagger) schema and compare a live response against it; build a collection with positive and negative tests and chain requests with a collection…"
  },
  "TechQA/module-5-performance-testing": {
   "title": "Performance Testing",
@@ -610,7 +677,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to build a JMeter test plan with a Thread Group, an HTTP sampler, and a Listener against a local practice app; compare load, stress, spike, and soak tests, and pick the right one for a business question; run JMeter in non-GUI mode and read p95, throughput, and error…"
  },
  "TechQA/module-6-mobile-testing": {
   "title": "Mobile Testing",
@@ -619,7 +687,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to create Android emulators, connect to them with ADB, and test how an app handles interruptions; run an app and a basic XCUITest on two iOS Simulator device and OS combinations; build a device matrix from real usage reasoning."
  },
  "TechQA/module-7-security-testing": {
   "title": "Security Testing",
@@ -628,7 +697,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to run OWASP Juice Shop on your own computer and scan it with ZAP; map scan findings to OWASP Top 10:2025 categories and assign justified severities; test login error messages, rate limiting, logout, and password rules against current guidance (NIST SP 800-63B-4)."
  },
  "TechQA/module-8-cicd-testing": {
   "title": "CI/CD Testing",
@@ -637,7 +707,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to build a GitHub Actions workflow that runs your tests on every push and pull request; trace a failing pipeline run to the exact commit and step that broke it; set up a smoke-test subset with pytest markers that runs before the full regression suite."
  },
  "TechQA/module-9-testing-ai-agents": {
   "title": "Testing AI Agents",
@@ -646,7 +717,8 @@
   "trackLabel": "Quality Tester",
   "kind": "markdown",
   "modules": 3,
-  "quizParts": 3
+  "quizParts": 3,
+  "summary": "Free course. You'll learn to explain why AI agents are harder to test than ordinary software, and list what to test: task success, tool calls and arguments, refusals, cost, and latency; choose a test oracle for fuzzy output: an exact check, a rubric, or an LLM-as-judge, and explain the limits of…"
  },
  "company/understanding-badges-and-ratings": {
   "title": "Understanding Badges: A Guide for Companies",
@@ -655,7 +727,8 @@
   "trackLabel": "Understanding Badges",
   "kind": "markdown",
   "modules": 5,
-  "quizParts": 0
+  "quizParts": 0,
+  "summary": "A short guide for companies: what She Model Tech badges prove, how to read badge levels, and how to hire with confidence."
  },
  "start/how-she-model-tech-works": {
   "title": "Start Here: How She Model Tech Works",
@@ -664,6 +737,7 @@
   "trackLabel": "Start here",
   "kind": "markdown",
   "modules": 9,
-  "quizParts": 2
+  "quizParts": 2,
+  "summary": "A 15-minute guide to She Model Tech: find your way around, set up your profile, learn with free courses, join real projects, earn badges and get seen."
  }
 }
