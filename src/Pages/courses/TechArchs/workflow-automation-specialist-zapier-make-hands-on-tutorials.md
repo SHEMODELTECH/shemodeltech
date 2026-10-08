@@ -76,6 +76,198 @@ Zap 1
 
 *Answers: 1) A trigger is the event that starts the automation; an action is the work done after it fires. 2) So each run uses that row's specific details, like the person's name and email, instead of fixed text. 3) Google Sheets is a polling trigger, and on the free plan Zapier checks for new rows only every several minutes. 4) It uses only one trigger and one action, which fits within the free plan's limits.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "chain",
+   "kicker": "Project 1 · Your first automation",
+   "title": "This happens, so do that",
+   "beats": [
+    {
+     "say": "Welcome to Workflow Automation with Zapier and Make."
+    },
+    {
+     "say": "In this first project, you connect two apps, so an action in one automatically triggers an action in the other."
+    },
+    {
+     "say": "Every lab works on free plans. Plans change, so check each tool's current pricing page before you start."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bulb",
+   "kicker": "Concept",
+   "title": "Triggers, actions and Zaps",
+   "items": [
+    [
+     "Trigger",
+     "The event that starts it"
+    ],
+    [
+     "Action",
+     "The work done when it fires"
+    ],
+    [
+     "Zap",
+     "Trigger + action(s)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three ideas sit behind every automation.",
+     "show": 0
+    },
+    {
+     "say": "A trigger is the event that starts it, like a new row added to a spreadsheet.",
+     "show": 1
+    },
+    {
+     "say": "An action is the work it does when the trigger fires, like sending an email.",
+     "show": 2
+    },
+    {
+     "say": "And a Zap is one automated workflow in Zapier: a trigger plus one or more actions.",
+     "show": 3
+    },
+    {
+     "say": "On Zapier's free plan, a Zap may be limited to one action. That's all this project needs.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "table",
+   "kicker": "Build · Steps 4 to 6",
+   "title": "Sheet in, email out",
+   "steps": [
+    "Sheet: name, email",
+    "Trigger: New Spreadsheet Row",
+    "Action: Gmail · Send Email"
+   ],
+   "beats": [
+    {
+     "say": "Create a Google Sheet with the headers name and email, and one sample row.",
+     "show": 1
+    },
+    {
+     "say": "In Zapier, create a Zap. The trigger is Google Sheets, New Spreadsheet Row, on your sheet.",
+     "show": 2
+    },
+    {
+     "say": "Then add an action: Gmail, Send Email, to your own address while testing.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "merge",
+   "kicker": "Build · Step 7",
+   "title": "Map data between steps",
+   "quote": "New sign-up: {name} ({email})",
+   "beats": [
+    {
+     "say": "Mapping passes data from the trigger into the action.",
+     "show": 0
+    },
+    {
+     "say": "Insert the name and email fields from the trigger into the email body.",
+     "show": 1
+    },
+    {
+     "say": "That's what makes each email carry the details of that specific row.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "stopwatch",
+   "kicker": "Build · Step 8",
+   "title": "Test, publish, then wait",
+   "big": "Polling",
+   "sub": "Zapier checks for new rows on a timer, so it's not instant",
+   "beats": [
+    {
+     "say": "Use the built-in test, and check the email arrives. Then publish the Zap and add a real row.",
+     "show": 0
+    },
+    {
+     "say": "Google Sheets is a polling trigger. Zapier checks for new rows on a timer, which is slow on the free plan.",
+     "show": 1
+    },
+    {
+     "say": "So the email won't arrive instantly. Wait, then check the Zap's history if nothing arrives.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "You add a row and no email arrives after one minute. What's the most likely reason?",
+   "options": [
+    "Google Sheets is a polling trigger, checked only every several minutes on the free plan",
+    "The Zap needs a second action",
+    "Gmail blocks automated emails"
+   ],
+   "answer": 0,
+   "good": "That's right. Google Sheets is a polling trigger, and on the free plan Zapier checks for new rows only every several minutes.",
+   "bad": "Not quite. Google Sheets is a polling trigger, and on the free plan Zapier checks for new rows only every several minutes.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "You add a row and no email arrives after one minute. What's the most likely reason?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A live Zap emails on each new row",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a live Zap that emails a notification whenever a new spreadsheet row is added.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 2, logic with filters and paths.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Add Logic with Filters and Paths
@@ -144,6 +336,216 @@ Make scenario: Request router
 
 *Answers: 1) It lets data continue only when a condition is met, so the automation ignores items it should not act on. 2) A router splits a scenario into branches that run different modules; Zapier calls this Paths. 3) Zapier's free plan has not included Filters or Paths, while Make's free plan has included filters and routers. 4) A branch can work for one condition and silently fail for another, so each one needs its own test data.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "fork",
+   "kicker": "Project 2 · Filters and paths",
+   "title": "Make it decide",
+   "beats": [
+    {
+     "say": "Welcome to Project 2."
+    },
+    {
+     "say": "Now your automation gets smart enough to decide: to act only when it should, and differently in different cases."
+    },
+    {
+     "say": "Zapier's Filters and Paths may need a paid plan, so you build this one in Make, whose free plan has included filters and routers."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "Make's vocabulary",
+   "items": [
+    [
+     "Scenario",
+     "Make's version of a Zap"
+    ],
+    [
+     "Module",
+     "One step"
+    ],
+    [
+     "Filter",
+     "Sits on the link between modules"
+    ],
+    [
+     "Router",
+     "Branches · Zapier's Paths"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In Make, an automation is called a scenario. A scenario is to Make what a Zap is to Zapier.",
+     "show": 1
+    },
+    {
+     "say": "Each step in it is a module.",
+     "show": 2
+    },
+    {
+     "say": "A filter lets data continue only when a condition is met. It sits on the link between two modules.",
+     "show": 3
+    },
+    {
+     "say": "And a router splits a scenario into branches, each with its own filter. Zapier calls this Paths.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "fork",
+   "kicker": "Build · Steps 2 to 6",
+   "title": "A two-branch router",
+   "steps": [
+    "Requests + Log sheets",
+    "Watch New Rows",
+    "A: new + high → Slack",
+    "B: new + low → Log row"
+   ],
+   "beats": [
+    {
+     "say": "Make a Requests sheet with title, status, priority and date, plus a Log tab.",
+     "show": 1
+    },
+    {
+     "say": "Trigger the scenario with Google Sheets, Watch New Rows.",
+     "show": 2
+    },
+    {
+     "say": "Add a router. Branch A filters status new and priority high, and posts an urgent Slack message.",
+     "show": 3
+    },
+    {
+     "say": "Branch B filters status new and priority low, and adds a row to the Log tab. Rows that aren't new stop at the filters.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Build · Step 7",
+   "title": "Format data between steps",
+   "file": "Slack message · mapping",
+   "code": "formatDate(parseDate(date; \"YYYY-MM-DD\"); \"D MMMM YYYY\")\n\n2026-10-07  →  7 October 2026",
+   "beats": [
+    {
+     "say": "Data rarely arrives in the exact shape the next app needs.",
+     "show": 0
+    },
+    {
+     "say": "In the Slack message, instead of mapping date directly, use Make's format date and parse date functions.",
+     "show": 1
+    },
+    {
+     "say": "A date like twenty twenty six, ten, oh seven becomes seven October twenty twenty six.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Build · Step 8",
+   "title": "Test each branch, then write it down",
+   "items": [
+    [
+     "Run once",
+     "One high, one low test row"
+    ],
+    [
+     "Output bubbles",
+     "See the data at each module"
+    ],
+    [
+     "Document",
+     "What each branch does"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Add one high priority and one low priority row, both with status new, and click Run once.",
+     "show": 1
+    },
+    {
+     "say": "Click the small bubble above each module to see what data passed through.",
+     "show": 2
+    },
+    {
+     "say": "Then write, in plain language, what each filter and branch does. Logic you understood while building is easy to forget.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is a router in Make?",
+   "options": [
+    "A module that formats dates",
+    "A filter on the link between two modules",
+    "A split into branches that run different modules, which Zapier calls Paths"
+   ],
+   "answer": 2,
+   "good": "That's right. A router splits a scenario into branches that run different modules. Zapier calls this Paths.",
+   "bad": "Not quite. A router splits a scenario into branches that run different modules. Zapier calls this Paths.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is a router in Make?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A branching automation routes items by their properties",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a branching automation that routes items differently based on their properties.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 3, a multi-step process in Make.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 3 (Module 3): Build a Multi-Step Process in Make
@@ -207,6 +609,181 @@ Make scenario: Form intake
 4. If the trigger outputs three new rows, how many times does the rest of the chain run?
 
 *Answers: 1) Open the form's Responses tab and click Link to Sheets. 2) Credits, which were called operations before 2025; roughly one is used for each module run. 3) It decides what happens when a module fails, for example logging the error and then ignoring or resuming, instead of the scenario silently breaking. 4) Three times, once for each bundle.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "chain",
+   "kicker": "Project 3 · Multi-step in Make",
+   "title": "Chain several steps",
+   "beats": [
+    {
+     "say": "Welcome to Project 3."
+    },
+    {
+     "say": "You'll build a longer automation in Make, with several chained steps and error handling."
+    },
+    {
+     "say": "First, free up a slot: Make's free plan limits how many scenarios can be active at once, so switch off the Project 2 scenario if you're not using it."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "boxes",
+   "kicker": "Concept",
+   "title": "Bundles and credits",
+   "items": [
+    [
+     "Bundle",
+     "3 new rows → 3 runs of the chain"
+    ],
+    [
+     "Credits",
+     "≈ 1 per module run"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Each module runs once for every bundle, or item, the previous module outputs.",
+     "show": 1
+    },
+    {
+     "say": "So three new form responses become three runs through the chain.",
+     "show": 1
+    },
+    {
+     "say": "Make counts usage in credits, called operations before twenty twenty five. Roughly one per module run.",
+     "show": 2
+    },
+    {
+     "say": "Fewer, smarter modules use less of your free monthly allowance.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "database",
+   "kicker": "Build · Steps 4 to 6",
+   "title": "Form to contacts to email",
+   "steps": [
+    "Form → Link to Sheets",
+    "Watch New Rows",
+    "Add a Row: Contacts",
+    "Gmail: confirmation"
+   ],
+   "beats": [
+    {
+     "say": "Create a Google Form with Name and Email. On its Responses tab, click Link to Sheets.",
+     "show": 1
+    },
+    {
+     "say": "In Make, watch new rows on that responses sheet.",
+     "show": 2
+    },
+    {
+     "say": "Add a row that copies Name and Email into a clean Contacts sheet.",
+     "show": 3
+    },
+    {
+     "say": "Then send a confirmation with Gmail, mapping the person's name. When you click into a field, the mapping panel shows every earlier module's output.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "shield",
+   "kicker": "Build · Steps 7 and 8",
+   "title": "Add an error handler",
+   "steps": [
+    "Right-click → Add error handler",
+    "Log to \"Errors\" sheet",
+    "Ignore (or Resume)"
+   ],
+   "beats": [
+    {
+     "say": "Real automations hit failures, when an app is down or data is missing. Error handling decides what happens then.",
+     "show": 0
+    },
+    {
+     "say": "Right-click the Add a Row module, and choose Add error handler.",
+     "show": 1
+    },
+    {
+     "say": "On that route, add a row to an Errors sheet, with the error message and time.",
+     "show": 2
+    },
+    {
+     "say": "Finish with the Ignore directive, or Resume if you want the chain to continue. Then submit the form, Run once, and check every bubble.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "If the trigger outputs three new rows, how many times does the rest of the chain run?",
+   "options": [
+    "Once, for all three together",
+    "Three times, once for each bundle",
+    "It depends on the error handler"
+   ],
+   "answer": 1,
+   "good": "That's right. Each module runs once for every bundle, so the chain runs three times.",
+   "bad": "Not quite. Each module runs once for every bundle, so the chain runs three times.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "If the trigger outputs three new rows, how many times does the rest of the chain run?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Form data captured, stored, confirmed, errors handled",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working Make scenario that captures form data, stores it, confirms it, and handles failures.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 4, webhooks and A P Is.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -287,6 +864,186 @@ Make scenario: Custom integration
 
 *Answers: 1) A webhook receives data the moment the other app sends it, while a polling trigger checks for new data on a schedule. 2) Postman, or curl in a terminal. 3) Anyone who has the URL can send data into your automation. 4) It returns a realistic response (status 201 with an id) but does not actually save anything, so it is safe for practice.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Project 4 · Webhooks and APIs",
+   "title": "Connect apps with no connector",
+   "beats": [
+    {
+     "say": "Welcome to Project 4."
+    },
+    {
+     "say": "An A P I lets one app talk to another over the internet using structured requests. Almost every modern app has one."
+    },
+    {
+     "say": "You'll build in Make, whose Webhooks and H T T P modules have been on its free plan."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "Webhook versus polling",
+   "items": [
+    [
+     "Webhook ✓",
+     "Runs immediately when data is sent"
+    ],
+    [
+     "Polling",
+     "Checks on a schedule"
+    ],
+    [
+     "Webhook URL",
+     "Treat it like a password"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A webhook is a U R L that an app calls to send data the instant something happens.",
+     "show": 1
+    },
+    {
+     "say": "A polling trigger, like Google Sheets, checks for new data on a schedule instead.",
+     "show": 2
+    },
+    {
+     "say": "In Make, add Webhooks, Custom webhook, and copy the unique U R L it shows.",
+     "show": 3
+    },
+    {
+     "say": "Treat that U R L like a password. Anyone who has it can send data into your automation.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Build · Step 4",
+   "title": "Send test data",
+   "file": "terminal",
+   "code": "curl -X POST \"https://hook.eu1.make.com/REPLACE_WITH_YOUR_WEBHOOK_ID\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\": \"Ada Lovelace\", \"email\": \"ada@example.com\", \"plan\": \"pro\"}'",
+   "beats": [
+    {
+     "say": "With the webhook listening, send a sample request.",
+     "show": 0
+    },
+    {
+     "say": "Use Postman, or curl in a terminal, posting J S O N to your own webhook U R L.",
+     "show": 1
+    },
+    {
+     "say": "J S O N is made of key and value pairs, like plan, pro.",
+     "show": 1
+    },
+    {
+     "say": "Make should show Successfully determined. It now knows the shape of the incoming data.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "rocket",
+   "kicker": "Build · Steps 6 to 8",
+   "title": "Store it, then send it out",
+   "file": "HTTP · request content",
+   "code": "POST https://jsonplaceholder.typicode.com/posts\n\n{\"title\": \"New sign-up\", \"body\": \"{{name}} chose {{plan}}\", \"userId\": 1}",
+   "beats": [
+    {
+     "say": "Add Google Sheets, Add a Row, and map name, email and plan into columns.",
+     "show": 0
+    },
+    {
+     "say": "Then add H T T P, Make a request, posting to JSON Placeholder, a free fake A P I for practice.",
+     "show": 1
+    },
+    {
+     "say": "Map name and plan from the webhook fields, and turn on Parse response.",
+     "show": 1
+    },
+    {
+     "say": "It replies with status two oh one and an I D, but doesn't really save anything.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "How is a webhook trigger different from a polling trigger?",
+   "options": [
+    "A webhook receives data the moment it's sent; polling checks on a schedule",
+    "A webhook only works in Zapier",
+    "Polling is faster than a webhook"
+   ],
+   "answer": 0,
+   "good": "That's right. A webhook receives data the moment the other app sends it, while a polling trigger checks for new data on a schedule.",
+   "bad": "Not quite. A webhook receives data the moment the other app sends it, while a polling trigger checks for new data on a schedule.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "How is a webhook trigger different from a polling trigger?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Receives data via webhook",
+     ""
+    ],
+    [
+     "Pushes data out via an API call",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have an automation that receives data via webhook,",
+     "show": 1
+    },
+    {
+     "say": "and pushes data out via an A P I call.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, a real business process end to end.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 5 (Module 5): Automate a Real Business Process End to End
@@ -357,6 +1114,228 @@ Business process automation (Make)
 
 *Answers: 1) A clear plan of trigger, decisions, and actions keeps a complex automation coherent and shows gaps before you build. 2) They change the Status column in the Google Sheet to Approved or Rejected, and the scheduled second scenario picks that up. 3) So the same row is not processed again on the next scheduled run. 4) Real data is messy, and edge cases show where the automation breaks before it handles live work.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "architecture",
+   "kicker": "Project 5 · End to end",
+   "title": "Automate a real business process",
+   "beats": [
+    {
+     "say": "Welcome to Project 5."
+    },
+    {
+     "say": "Now you combine your skills into one automation that runs a complete, realistic business process."
+    },
+    {
+     "say": "You'll build it in Make, because it needs several steps, branching and logging."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "blueprint",
+   "kicker": "Build · Steps 1 and 2",
+   "title": "Choose it, then map it on paper",
+   "steps": [
+    "Pick a real process",
+    "Trigger",
+    "Decisions",
+    "Actions"
+   ],
+   "beats": [
+    {
+     "say": "Pick one real process: new lead handling, order fulfilment, content publishing, or onboarding.",
+     "show": 1
+    },
+    {
+     "say": "Then write each step on paper first, as a trigger, decisions and actions.",
+     "show": 4
+    },
+    {
+     "say": "A clear plan keeps a complex automation coherent.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Build · Steps 3 to 5",
+   "title": "Intake, logic, actions",
+   "items": [
+    [
+     "Intake",
+     "Clean capture · Status = Pending"
+    ],
+    [
+     "Decision logic",
+     "Router + filters"
+    ],
+    [
+     "Core actions",
+     "Records, notifications"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Build the trigger, and capture incoming data cleanly in a main sheet, with a Status column starting as Pending, and a Processed column.",
+     "show": 1
+    },
+    {
+     "say": "If data enters wrong, every later step inherits the problem.",
+     "show": 1
+    },
+    {
+     "say": "Add a router with filters to route each item, as in Project 2.",
+     "show": 2
+    },
+    {
+     "say": "Then the core actions: create records, send notifications, update systems. That's the actual work being automated.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "people",
+   "kicker": "Build · Step 6",
+   "title": "A human in the loop, with a sheet",
+   "steps": [
+    "A: ask approver",
+    "Approver sets Status",
+    "B: Search Rows (scheduled)",
+    "Follow-up · Processed = yes"
+   ],
+   "beats": [
+    {
+     "say": "Make has no built-in approval button, so a sheet is the approval point.",
+     "show": 0
+    },
+    {
+     "say": "Scenario A messages the approver, asking them to set Status to Approved or Rejected.",
+     "show": 1
+    },
+    {
+     "say": "Scenario B runs on a schedule, and searches for rows with that status where Processed is empty.",
+     "show": 2
+    },
+    {
+     "say": "It runs the follow-up actions, then sets Processed to yes, so the row isn't handled twice.",
+     "show": 3
+    },
+    {
+     "say": "That's two active scenarios, so switch off older ones.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Build · Steps 7 and 8",
+   "title": "Log it, then test real cases",
+   "items": [
+    [
+     "Log sheet",
+     "Time, item, outcome"
+    ],
+    [
+     "Error handlers",
+     "On outside-app modules"
+    ],
+    [
+     "Edge cases",
+     "Missing email, unknown priority, rejected"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Log each run, with the time, item and outcome, to a Log sheet.",
+     "show": 1
+    },
+    {
+     "say": "Add error handlers on modules that call outside apps.",
+     "show": 2
+    },
+    {
+     "say": "Then run realistic cases, including edge cases: a missing email, an unknown priority, and an item that gets rejected.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does Scenario B set the Processed column after handling a row?",
+   "options": [
+    "To trigger Scenario A again",
+    "To notify the approver",
+    "So the same row isn't processed again on the next scheduled run"
+   ],
+   "answer": 2,
+   "good": "That's right. Scenario B runs on a schedule, so marking a row as processed stops it being handled twice.",
+   "bad": "Not quite. Scenario B runs on a schedule, so marking a row as processed stops it being handled twice.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does Scenario B set the Processed column after handling a row?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Two scenarios run the full process",
+     ""
+    ],
+    [
+     "Tested on real cases",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a pair of scenarios that run a full business process from intake to completion,",
+     "show": 1
+    },
+    {
+     "say": "tested on real cases.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, monitoring, maintenance and handoff.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 6 (Module 6): Monitor, Maintain, and Hand Off
@@ -422,3 +1401,202 @@ Reliability + handoff
 4. What should a handoff document include?
 
 *Answers: 1) The run history (Make's History tab or Zapier's Zap history), which shows what happened and what data each step received. 2) Zapier counts tasks; Make counts credits, which were called operations before 2025. 3) Items that do not qualify stop before later steps, saving tasks or credits. 4) What the process does, each Zap or scenario with its triggers and logic, the connected accounts, and how to fix common issues.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Project 6 · Monitor and hand off",
+   "title": "Keep it running, then pass it on",
+   "beats": [
+    {
+     "say": "Welcome to the last project."
+    },
+    {
+     "say": "You'll make your automations reliable over time, and document them so others can trust and maintain them."
+    },
+    {
+     "say": "An automation you never check can fail for weeks unnoticed."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Build · Steps 1 to 3",
+   "title": "Monitoring and alerts",
+   "items": [
+    [
+     "Run history",
+     "What happened, step by step"
+    ],
+    [
+     "Email on error",
+     "Check notification settings"
+    ],
+    [
+     "Error handler alert",
+     "Slack or email"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Open the History tab of your Make scenario, and the Zap history in Zapier.",
+     "show": 1
+    },
+    {
+     "say": "Run history shows what happened on each run, including the data each step received. It's your main tool for diagnosing issues.",
+     "show": 1
+    },
+    {
+     "say": "Check your notification settings, so both tools email you when a run errors.",
+     "show": 2
+    },
+    {
+     "say": "For faster alerts, add an error handler route in Make that sends a Slack message or email.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Build · Steps 4 and 5",
+   "title": "Design within quotas",
+   "items": [
+    [
+     "Rate limit",
+     "Calls per period"
+    ],
+    [
+     "Quota",
+     "Zapier tasks · Make credits"
+    ],
+    [
+     "Filters early",
+     "Stop items before costly steps"
+    ],
+    [
+     "Trim + schedule",
+     "Fewer modules, less polling"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A rate limit caps how many times you can call an app in a period.",
+     "show": 1
+    },
+    {
+     "say": "A quota caps monthly usage. Zapier counts tasks, and Make counts credits.",
+     "show": 2
+    },
+    {
+     "say": "To save them, put filters early, so unneeded items stop before expensive steps.",
+     "show": 3
+    },
+    {
+     "say": "Remove unnecessary modules, and schedule polling no more often than needed.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "doc",
+   "kicker": "Build · Steps 6 to 8",
+   "title": "Hand it off",
+   "steps": [
+    "Handoff document",
+    "Troubleshooting section",
+    "Walkthrough for the owner"
+   ],
+   "beats": [
+    {
+     "say": "Without documentation, an automation is a black box only you can maintain.",
+     "show": 0
+    },
+    {
+     "say": "Write a handoff document: the process, each Zap or scenario, triggers, logic, connected accounts, and troubleshooting.",
+     "show": 1
+    },
+    {
+     "say": "It's often the actual deliverable a client keeps.",
+     "show": 2
+    },
+    {
+     "say": "Then record or write a short walkthrough for the owner. It transfers understanding, not just files.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why place filters early in a scenario?",
+   "options": [
+    "Filters only work at the start",
+    "Items that don't qualify stop before later steps, saving tasks or credits",
+    "It makes the run history easier to read"
+   ],
+   "answer": 1,
+   "good": "That's right. Items that don't qualify stop before the later steps, which saves tasks or credits.",
+   "bad": "Not quite. Items that don't qualify stop before the later steps, which saves tasks or credits.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why place filters early in a scenario?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Monitored, with failure alerts",
+     ""
+    ],
+    [
+     "Handoff document and walkthrough",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a monitored, alert-enabled automation,",
+     "show": 1
+    },
+    {
+     "say": "with a complete handoff document and walkthrough.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Workflow Automation with Zapier and Make. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

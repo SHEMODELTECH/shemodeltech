@@ -292,6 +292,444 @@ You can navigate GCP's resource hierarchy and IAM bindings, inspect a service ac
 
 *Answers: 1) Organisation, Folders, Projects, and Resources. 2) Basic (broad legacy roles: Owner/Editor/Viewer), predefined (curated per service), and custom (you define exact permissions); predefined and custom roles support least privilege far better than basic roles. 3) A service account is an identity for an application or workload rather than a human user; it lets software authenticate and act with its own permissions. 4) A policy applied at a higher level of the hierarchy applies to everything beneath it; the practical advice is to grant access at the lowest level that meets the need so it doesn't spread further than intended. 5) Service accounts are powerful non-human identities, so a leaked key can give an attacker whatever access that account holds, potentially as damaging as a leaked administrator password.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "cloud",
+   "kicker": "Module 6 · Cloud security",
+   "title": "Secure what you put in the cloud",
+   "beats": [
+    {
+     "say": "Welcome to Module 6, cloud security."
+    },
+    {
+     "say": "You'll review three providers, A W S, Azure and Google Cloud, looking for the misconfigurations that cause most real breaches."
+    },
+    {
+     "say": "Everything here is observe and inspect, in an account you own, or with the sample configurations if you have no account."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "The shared responsibility model",
+   "items": [
+    [
+     "Provider secures",
+     "Hardware, network, virtualisation"
+    ],
+    [
+     "You secure",
+     "IAM, network rules, storage config, data"
+    ],
+    [
+     "Most breaches",
+     "Customer-side misconfiguration"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "One idea runs through all three providers: the shared responsibility model.",
+     "show": 0
+    },
+    {
+     "say": "The provider secures the cloud itself: data centres, hardware, the network and the virtualisation layer.",
+     "show": 1
+    },
+    {
+     "say": "You secure what you put in it: your identities and permissions, your network rules, your storage settings and your data.",
+     "show": 2
+    },
+    {
+     "say": "Most real breaches come not from the provider failing, but from customers misconfiguring their side.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Topic 6.1 · AWS",
+   "title": "The pieces you configure",
+   "items": [
+    [
+     "IAM",
+     "Least privilege · roles over keys"
+    ],
+    [
+     "Security groups",
+     "Stateful firewall by port and source"
+    ],
+    [
+     "S3",
+     "Block public access"
+    ],
+    [
+     "CloudTrail",
+     "90-day history · a trail for long-term"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "On A W S, there are four building blocks to review.",
+     "show": 0
+    },
+    {
+     "say": "I A M controls identities and permissions. Follow least privilege, and prefer roles, which hand out short-lived credentials, over long-lived access keys.",
+     "show": 1
+    },
+    {
+     "say": "Security groups are stateful virtual firewalls, controlling traffic by port and source.",
+     "show": 2
+    },
+    {
+     "say": "S 3 buckets: one accidentally set to public has caused many well-known data leaks, so block public access matters.",
+     "show": 3
+    },
+    {
+     "say": "And CloudTrail records A P I activity. Its event history keeps ninety days, but for a long-term log you need to create a trail.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "warning",
+   "kicker": "Lab · No-account version",
+   "title": "Read the bucket policy",
+   "file": "bucket-policy.json",
+   "code": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Principal\": \"*\",\n      \"Action\": \"s3:GetObject\",\n      \"Resource\": \"arn:aws:s3:::example-customer-uploads/*\"\n    }\n  ]\n}",
+   "beats": [
+    {
+     "say": "In the lab, you inspect I A M, an S 3 bucket, a security group and CloudTrail, then write one finding with its risk and its fix.",
+     "show": 0
+    },
+    {
+     "say": "The sample includes this bucket policy, on a bucket of customer uploads.",
+     "show": 1
+    },
+    {
+     "say": "Principal star means anyone. Every customer upload is readable by anyone on the internet.",
+     "show": 1
+    },
+    {
+     "say": "The fix: remove the statement, and turn on Block Public Access.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Lab · AWS findings",
+   "title": "The other two samples",
+   "items": [
+    [
+     "✗ Action \"*\" on \"*\"",
+     "Full admin → only needed services"
+    ],
+    [
+     "✗ SSH, MySQL from 0.0.0.0/0",
+     "Your IP · app server only"
+    ],
+    [
+     "✓ HTTPS from anywhere",
+     "Normal for a public site"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two more samples to review.",
+     "show": 0
+    },
+    {
+     "say": "A developer's I A M policy allows every action on every resource. That's full admin. Grant only the services they need.",
+     "show": 1
+    },
+    {
+     "say": "S S H and the My S Q L database are open to the whole internet. Limit S S H to your own I P, and allow the database only from the app server.",
+     "show": 2
+    },
+    {
+     "say": "But H T T P S open to everyone is normal for a public website.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "tree",
+   "kicker": "Topic 6.2 · Azure",
+   "title": "Roles inherit downward",
+   "steps": [
+    "Management group",
+    "Subscription",
+    "Resource group",
+    "Resource"
+   ],
+   "beats": [
+    {
+     "say": "On Azure, identity sits at the centre, through Microsoft Entra I D, where users, groups, M F A and sign-in live.",
+     "show": 0
+    },
+    {
+     "say": "Azure R B A C assigns roles at four scopes, from management group,",
+     "show": 1
+    },
+    {
+     "say": "to subscription,",
+     "show": 2
+    },
+    {
+     "say": "to resource group,",
+     "show": 3
+    },
+    {
+     "say": "to a single resource.",
+     "show": 4
+    },
+    {
+     "say": "Assignments inherit downward, so a broad assignment has broad reach. Assign at the narrowest scope that works.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Lab · Azure findings",
+   "title": "Review the sample subscription",
+   "items": [
+    [
+     "✗ Intern: Owner on production",
+     "Narrow role, one resource group"
+    ],
+    [
+     "✓ Reporting app: Blob Data Reader",
+     "Least privilege, narrow scope"
+    ],
+    [
+     "✗ RDP 3389 from Any",
+     "Restrict source or Azure Bastion"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Azure also gives you Network Security Groups to filter traffic, Defender for Cloud with a secure score, and Key Vault for secrets.",
+     "show": 0
+    },
+    {
+     "say": "In the sample, an intern holds Owner on the whole production subscription. Fix: a narrow role on just the resource group they work in.",
+     "show": 1
+    },
+    {
+     "say": "A reporting app reads one storage account. That's least privilege at a narrow scope.",
+     "show": 2
+    },
+    {
+     "say": "And Remote Desktop, port thirty three eighty nine, is open to any source, a top target for password guessing. Restrict the source, or use Azure Bastion.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Topic 6.3 · GCP",
+   "title": "Roles and service accounts",
+   "items": [
+    [
+     "✗ Basic",
+     "Owner / Editor / Viewer, broad"
+    ],
+    [
+     "✓ Predefined",
+     "Curated per service"
+    ],
+    [
+     "✓ Custom",
+     "Exactly the permissions you set"
+    ],
+    [
+     "Service accounts",
+     "Guard their keys like any credential"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Google Cloud has its own hierarchy: organisation, folders, projects, resources. I A M policies inherit down it too.",
+     "show": 0
+    },
+    {
+     "say": "Roles come in three kinds. Basic roles, Owner, Editor and Viewer, are broad and legacy.",
+     "show": 1
+    },
+    {
+     "say": "Predefined roles are curated for specific services.",
+     "show": 2
+    },
+    {
+     "say": "Custom roles contain exactly the permissions you choose. Predefined and custom support least privilege far better.",
+     "show": 3
+    },
+    {
+     "say": "Service accounts are identities for workloads, not people. A leaked service account key can be as damaging as a leaked admin password.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Lab · GCP findings",
+   "title": "Review the sample project",
+   "items": [
+    [
+     "✗ web-app: roles/editor",
+     "Predefined role instead"
+    ],
+    [
+     "✓ report-job: objectViewer",
+     "Least privilege"
+    ],
+    [
+     "✗ Former contractor: Owner",
+     "Remove now"
+    ],
+    [
+     "✗ SSH from 0.0.0.0/0",
+     "Known ranges or IAP"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now the G C P sample.",
+     "show": 0
+    },
+    {
+     "say": "The web app's service account has the basic Editor role, so a bug could change almost anything. Give it a predefined role for just what it uses.",
+     "show": 1
+    },
+    {
+     "say": "The report job's narrow viewer role is a good least-privilege example.",
+     "show": 2
+    },
+    {
+     "say": "A former contractor still holds Owner. That's a failed leaver step. Remove them now.",
+     "show": 3
+    },
+    {
+     "say": "And S S H open to the whole internet should be limited to known I P ranges, or Identity-Aware Proxy.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why are I A M roles generally preferred over long-lived access keys?",
+   "options": [
+    "Roles hand out short-lived, automatically rotated credentials, so there's no static key to leak",
+    "Roles are cheaper than access keys",
+    "Access keys only work in the web console"
+   ],
+   "answer": 0,
+   "good": "That's right. Roles provide short-lived credentials automatically, so there's no static key sitting around to be leaked or stolen.",
+   "bad": "Not quite. Roles provide short-lived credentials automatically, so there's no static key sitting around to be leaked or stolen.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why are I A M roles generally preferred over long-lived access keys?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain shared responsibility",
+     ""
+    ],
+    [
+     "AWS reviewed, finding written",
+     ""
+    ],
+    [
+     "Azure reviewed",
+     ""
+    ],
+    [
+     "GCP reviewed",
+     ""
+    ],
+    [
+     "You can explain inheritance",
+     ""
+    ],
+    [
+     "One misconfiguration per provider",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain the shared responsibility model,",
+     "show": 1
+    },
+    {
+     "say": "you've reviewed A W S I A M, S 3, security groups and CloudTrail, and written a finding,",
+     "show": 2
+    },
+    {
+     "say": "you've reviewed Entra I D, an R B A C assignment, an N S G and the secure score,",
+     "show": 3
+    },
+    {
+     "say": "you've reviewed G C P I A M, a service account, firewall rules and Security Command Center,",
+     "show": 4
+    },
+    {
+     "say": "you can explain inheritance, and why you assign at the narrowest scope,",
+     "show": 5
+    },
+    {
+     "say": "and you can name one common misconfiguration per provider, and its fix.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 7, security monitoring.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 6 Completion Checklist

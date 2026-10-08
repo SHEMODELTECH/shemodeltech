@@ -159,7 +159,9 @@ const authoredMinutes = (md) => {
   return Math.max(10, Math.round(total / 15) * 15);
 };
 
-const estimateMinutes = (md) => {
+const estimateMinutes = (text) => {
+  // Watch-mode scripts are narration of the same lesson, not extra reading.
+  const md = text.replace(/^```watch\n[\s\S]*?^```[ \t]*$/gm, '');
   const authored = authoredMinutes(md);
   if (authored) return authored;
   const words = md.split(/\s+/).filter(Boolean).length;

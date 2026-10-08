@@ -198,6 +198,395 @@ You have a Zoho workflow rule that fires on a status change and a working Bluepr
 
 *Answers: 1) Zoho's term for a record type, such as Leads, Contacts, Deals, or a custom module you create yourself. 2) A Workflow Rule triggers actions based on a condition (like HubSpot's workflows), while a Blueprint enforces a required, ordered sequence of stages that a record cannot skip. 3) Compliance-sensitive or strictly sequential processes, like approval chains or refund sign-offs, because Blueprint physically blocks skipping a required stage. 4) Books (accounting), Forms (data capture), and Desk (support) are all valid answers. 5) Zoho is generally the most budget-friendly option of the three at comparable feature levels.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "people",
+   "kicker": "Module · CRM platforms",
+   "title": "Three CRMs, one afternoon each",
+   "beats": [
+    {
+     "say": "Welcome to C R M Platforms."
+    },
+    {
+     "say": "You'll try three platforms in the browser, about two hours each: HubSpot, Salesforce and Zoho C R M."
+    },
+    {
+     "say": "Each has its own low-code building blocks, and its own best fit."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Topic 1 · HubSpot",
+   "title": "Records and pipelines",
+   "items": [
+    [
+     "Contact",
+     "A person, plus associations"
+    ],
+    [
+     "Property",
+     "A field on a record"
+    ],
+    [
+     "Pipeline",
+     "Deal stages"
+    ],
+    [
+     "Tasks + dashboards",
+     "To-dos and reports"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "HubSpot started as marketing software, so it's approachable, and joins marketing, sales and service data in one place.",
+     "show": 0
+    },
+    {
+     "say": "A contact is the core record: a person. You associate it with companies, deals and tickets.",
+     "show": 1
+    },
+    {
+     "say": "A property is a field on a record, like email or lifecycle stage.",
+     "show": 2
+    },
+    {
+     "say": "A pipeline puts deals into stages, from Appointment Scheduled through to Closed Won or Closed Lost.",
+     "show": 3
+    },
+    {
+     "say": "Tasks are to-dos with an owner and due date, and dashboards group reports.",
+     "show": 4
+    },
+    {
+     "say": "One thing to remember: a website form creates a contact, not a deal. On the free plan, deals are created by hand.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "growth",
+   "kicker": "Topic 1 · Lab",
+   "title": "Build your HubSpot CRM",
+   "steps": [
+    "Company + 3 contacts",
+    "Deal through stages",
+    "Two tasks",
+    "Dashboard",
+    "Workflow (paid)"
+   ],
+   "beats": [
+    {
+     "say": "Create one company and three contacts, and associate each contact with the company.",
+     "show": 1
+    },
+    {
+     "say": "Create a deal, set yourself as owner, and drag it across the board from Appointment Scheduled to Presentation Scheduled.",
+     "show": 2
+    },
+    {
+     "say": "Add two tasks on the deal: call customer, due today, and send proposal, due tomorrow.",
+     "show": 3
+    },
+    {
+     "say": "Build a simple dashboard with reports like deals by stage.",
+     "show": 4
+    },
+    {
+     "say": "Workflows need a paid plan. With a trial, build one triggered when lifecycle stage is set to Lead, that emails you. Otherwise, read along.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "database",
+   "kicker": "Topic 2 · Salesforce",
+   "title": "The enterprise toolkit",
+   "items": [
+    [
+     "Object",
+     "Standard or custom table"
+    ],
+    [
+     "Field",
+     "A column on an object"
+    ],
+    [
+     "Flow Builder",
+     "Screen, record-triggered, scheduled"
+    ],
+    [
+     "Page Layout",
+     "Drag-and-drop screens"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Salesforce is the most established enterprise C R M. Its low-code layer is the most powerful, and the steepest to learn.",
+     "show": 0
+    },
+    {
+     "say": "An object is a data table. Standard objects like Contact, Account and Opportunity are built in; custom objects you create yourself.",
+     "show": 1
+    },
+    {
+     "say": "A field is a column on an object: text, number, date, dropdown or lookup.",
+     "show": 2
+    },
+    {
+     "say": "Flow Builder builds automation visually: screen flows, record-triggered flows and scheduled flows.",
+     "show": 3
+    },
+    {
+     "say": "And Page Layouts design how records look on screen. All this flexibility is why big orgs often have a dedicated Salesforce admin.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "blueprint",
+   "kicker": "Topic 2 · Lab",
+   "title": "A record-triggered flow",
+   "steps": [
+    "Custom checkbox field",
+    "Record-triggered flow",
+    "Actions and Related Records",
+    "Send Email, activate, test"
+   ],
+   "beats": [
+    {
+     "say": "In a free Trailhead Playground, add a custom checkbox field to Opportunity: Requires Manager Approval.",
+     "show": 1
+    },
+    {
+     "say": "Create a record-triggered flow on Opportunity, when a record is updated and the box equals true.",
+     "show": 2
+    },
+    {
+     "say": "Optimize it for Actions and Related Records, because sending email isn't possible in the fast field-update mode.",
+     "show": 3
+    },
+    {
+     "say": "Add a Send Email action to yourself, activate the flow, tick the box on an Opportunity, and check your inbox.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "chain",
+   "kicker": "Topic 3 · Zoho CRM",
+   "title": "Rules versus enforced process",
+   "items": [
+    [
+     "Module",
+     "A record type"
+    ],
+    [
+     "Workflow rule",
+     "If this, then that"
+    ],
+    [
+     "Blueprint",
+     "Ordered stages, no skipping"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Zoho C R M sits between the other two in complexity, inside a big suite of Zoho apps like Books, Forms and Desk.",
+     "show": 0
+    },
+    {
+     "say": "A module is Zoho's word for a record type, like Leads, Contacts or Deals.",
+     "show": 1
+    },
+    {
+     "say": "A workflow rule triggers actions when a condition is met, like HubSpot's workflows.",
+     "show": 2
+    },
+    {
+     "say": "A Blueprint enforces stages in order. A record literally cannot skip one, which matters for things like loan approvals or refund sign-offs.",
+     "show": 3
+    },
+    {
+     "say": "And Zoho is generally the most budget-friendly of the three.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Topic 3 · Lab",
+   "title": "Walk a Lead through a Blueprint",
+   "steps": [
+    "Workflow rule on Pre-Qualified",
+    "Blueprint: 3 stages",
+    "Required note on last step",
+    "Skip is blocked"
+   ],
+   "beats": [
+    {
+     "say": "Create a Lead by hand. Workflow rules and Blueprint may need a trial of a paid edition.",
+     "show": 0
+    },
+    {
+     "say": "Add a workflow rule that emails you when Lead Status is updated to Pre-Qualified.",
+     "show": 1
+    },
+    {
+     "say": "Build a Blueprint on Leads with three stages: Not Contacted, Contacted, Pre-Qualified.",
+     "show": 2
+    },
+    {
+     "say": "Make the move into the last stage require a short note.",
+     "show": 3
+    },
+    {
+     "say": "Try to skip a stage and watch it get blocked. Then fill in the note, and it moves on.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "venn",
+   "kicker": "Compare",
+   "title": "A good fit for each",
+   "items": [
+    [
+     "HubSpot",
+     "Approachable, inbound marketing + sales"
+    ],
+    [
+     "Salesforce",
+     "Enterprise, deepest customization"
+    ],
+    [
+     "Zoho",
+     "Budget-friendly suite, enforced processes"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "So which one fits?",
+     "show": 0
+    },
+    {
+     "say": "HubSpot suits small to mid-sized teams that want marketing and sales in one system, with lots of inbound leads.",
+     "show": 1
+    },
+    {
+     "say": "Salesforce suits larger organizations with complex processes and deep customization needs.",
+     "show": 2
+    },
+    {
+     "say": "Zoho suits smaller, budget-conscious businesses that want C R M bundled with other affordable apps, or a strictly enforced process.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the key difference between a Zoho workflow rule and a Blueprint?",
+   "options": [
+    "A Blueprint only sends emails",
+    "A workflow rule can't use conditions",
+    "A Blueprint enforces ordered stages a record can't skip"
+   ],
+   "answer": 2,
+   "good": "That's right. A workflow rule triggers actions on a condition, while a Blueprint enforces a required, ordered sequence of stages that a record cannot skip.",
+   "bad": "Not quite. A workflow rule triggers actions on a condition, while a Blueprint enforces a required, ordered sequence of stages that a record cannot skip.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the key difference between a Zoho workflow rule and a Blueprint?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "HubSpot records, deal, tasks, dashboard",
+     ""
+    ],
+    [
+     "Salesforce field + record-triggered flow",
+     ""
+    ],
+    [
+     "Zoho workflow rule + Blueprint",
+     ""
+    ],
+    [
+     "You can explain each platform's building blocks",
+     ""
+    ],
+    [
+     "You can name a fit for each",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have HubSpot contacts, a company, a deal in the pipeline, tasks and a dashboard,",
+     "show": 1
+    },
+    {
+     "say": "a Salesforce custom field with a working record-triggered flow,",
+     "show": 2
+    },
+    {
+     "say": "a Zoho workflow rule and a Blueprint that enforces an order,",
+     "show": 3
+    },
+    {
+     "say": "you can explain each platform's low-code building blocks,",
+     "show": 4
+    },
+    {
+     "say": "and name a reason to choose each one.",
+     "show": 5
+    },
+    {
+     "say": "You've finished C R M Platforms. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

@@ -249,6 +249,411 @@ You have a budget tracker with allocated, actual, and remaining columns, a conti
 
 *Answers: 1) Allocated budget is the total amount approved for the project, actual spend is what's really been spent so far, tracked and compared against that allocation. 2) How quickly the budget is being spent over time, it matters more than the raw remaining amount because a project can still have money left on paper while spending it far faster than its remaining work justifies. 3) A portion of the budget deliberately set aside (often 10-20%) to absorb the unexpected, similar in purpose to a timeline's buffer. 4) Because spending and progress both change as a project moves forward, a budget checked only once at the start can't catch overspending early, only after it's already happened. 5) A project having spent 50% of its budget while only 30% of its tasks are complete is a valid example, spending is outpacing actual progress even though funds remain.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "blueprint",
+   "kicker": "Module · Project Management",
+   "title": "Scope, time, risk, money",
+   "beats": [
+    {
+     "say": "Welcome to the Project Management module."
+    },
+    {
+     "say": "You'll define a project's scope, build a realistic timeline, track risks, and keep spending on budget."
+    },
+    {
+     "say": "All four constrain each other."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Topic 1 · Scope",
+   "title": "Draw the boundary",
+   "items": [
+    [
+     "In scope",
+     "Concrete deliverables"
+    ],
+    [
+     "Out of scope",
+     "Explicitly excluded"
+    ],
+    [
+     "Scope creep",
+     "Small additions that add up"
+    ],
+    [
+     "Change request",
+     "A formal, costed decision"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Scope defines exactly what a project will, and won't, deliver. Everything else is measured against it.",
+     "show": 0
+    },
+    {
+     "say": "In scope items are the committed deliverables, written concretely enough that done is unambiguous.",
+     "show": 1
+    },
+    {
+     "say": "Out of scope items are explicitly excluded. Writing them down prevents the most painful disputes later.",
+     "show": 2
+    },
+    {
+     "say": "Scope creep is the gradual, unapproved growth of a project, through small additions that add up.",
+     "show": 3
+    },
+    {
+     "say": "And a change request is the formal way to change scope, with a real decision about time and money.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Topic 1 · Lab",
+   "title": "Vague versus concrete",
+   "items": [
+    [
+     "✗ Vague",
+     "Improve the user interface"
+    ],
+    [
+     "✓ Concrete",
+     "Redesign login with a password-reset link"
+    ],
+    [
+     "Change request",
+     "\"Can we also add social login?\""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, write a scope document with four to six in scope deliverables, and three or four out of scope.",
+     "show": 0
+    },
+    {
+     "say": "Write one deliverable vaguely on purpose, like: improve the user interface.",
+     "show": 1
+    },
+    {
+     "say": "Then rewrite it concretely: redesign the login screen to include a password reset link.",
+     "show": 2
+    },
+    {
+     "say": "Then answer a creeping request, like: can we also just add social login, with a change request to approve, defer or reject.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "stopwatch",
+   "kicker": "Topic 2 · Timeline",
+   "title": "Dependencies and the critical path",
+   "items": [
+    [
+     "Milestone",
+     "\"Design approved\" · \"Beta launch\""
+    ],
+    [
+     "Dependency",
+     "B waits for A"
+    ],
+    [
+     "Critical path",
+     "Longest chain sets the deadline"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A timeline is more than dates. It reflects how tasks depend on each other.",
+     "show": 0
+    },
+    {
+     "say": "A milestone is a significant checkpoint, like design approved, or beta launch.",
+     "show": 1
+    },
+    {
+     "say": "A dependency is when one task can't start or finish until another does.",
+     "show": 2
+    },
+    {
+     "say": "The critical path is the longest chain of dependent tasks. It sets the earliest finish date.",
+     "show": 3
+    },
+    {
+     "say": "Delay a task on it, and the whole project slips. Delay one off it, and it often doesn't.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "calc",
+   "kicker": "Topic 2 · Lab",
+   "title": "Build a realistic estimate",
+   "steps": [
+    "6 to 8 tasks",
+    "Durations + dependencies",
+    "Find the critical path",
+    "Add a 15 to 20% buffer"
+   ],
+   "beats": [
+    {
+     "say": "Beginners add up every task in sequence. But independent tasks run in parallel.",
+     "show": 0
+    },
+    {
+     "say": "In the lab, break your scope into six to eight tasks.",
+     "show": 1
+    },
+    {
+     "say": "Estimate each in days, and note dependencies.",
+     "show": 2
+    },
+    {
+     "say": "Trace the critical path, and name one task off it.",
+     "show": 3
+    },
+    {
+     "say": "Then add a buffer, say fifteen to twenty percent. A plan with zero buffer is a best case, not a realistic one.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 3 · Risk",
+   "title": "Decide before it happens",
+   "items": [
+    [
+     "Risk register",
+     "Likelihood · impact · response"
+    ],
+    [
+     "Mitigation",
+     "Reduce it in advance"
+    ],
+    [
+     "Contingency plan",
+     "If it happens anyway"
+    ],
+    [
+     "Risk owner",
+     "One named person"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Risk management means deciding how to respond before something goes wrong, not in the middle of a crisis.",
+     "show": 0
+    },
+    {
+     "say": "A risk register lists each risk with its likelihood, impact and planned response.",
+     "show": 1
+    },
+    {
+     "say": "A mitigation acts in advance to reduce likelihood or impact.",
+     "show": 2
+    },
+    {
+     "say": "A contingency plan is the response if it happens anyway.",
+     "show": 3
+    },
+    {
+     "say": "And every risk needs an owner. Otherwise it's everyone's problem in theory, and no one's in practice.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "table",
+   "kicker": "Topic 3 · Lab",
+   "title": "Your risk register",
+   "quote": "Risk · Likelihood · Impact · Mitigation · Owner",
+   "beats": [
+    {
+     "say": "In the lab, brainstorm five or six realistic risks, like a key team member becoming unavailable.",
+     "show": 0
+    },
+    {
+     "say": "Rate likelihood and impact as low, medium or high, and highlight the top two or three.",
+     "show": 1
+    },
+    {
+     "say": "Write mitigations for those, and a full contingency plan, with a named owner, for the single biggest one.",
+     "show": 1
+    },
+    {
+     "say": "And revisit the register as the project moves. One written once quickly becomes useless.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Topic 4 · Budget",
+   "title": "Watch the burn rate",
+   "items": [
+    [
+     "Allocated vs actual",
+     "Approved vs really spent"
+    ],
+    [
+     "Burn rate",
+     "Spend over time"
+    ],
+    [
+     "Contingency reserve",
+     "Often 10 to 20%"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A budget turns scope and timeline into a financial commitment.",
+     "show": 0
+    },
+    {
+     "say": "Allocated budget is the total approved. Actual spend is what's really gone so far.",
+     "show": 1
+    },
+    {
+     "say": "Burn rate is how fast it's being spent. It matters more than the money left on paper.",
+     "show": 2
+    },
+    {
+     "say": "And a contingency reserve, often ten to twenty percent, is set aside for the unexpected, like a timeline's buffer.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "warning",
+   "kicker": "Topic 4 · Lab",
+   "title": "Spending outpaces progress",
+   "big": "50% spent · 30% done",
+   "sub": "A warning sign, even with budget left",
+   "beats": [
+    {
+     "say": "In the lab, build a tracker with allocated, actual spend and remaining, plus a fifteen percent contingency line.",
+     "show": 0
+    },
+    {
+     "say": "Simulate two checkpoints, and compare burn rate with progress.",
+     "show": 1
+    },
+    {
+     "say": "Fifty percent of the budget spent, but only thirty percent of tasks done, is a warning sign, even with money left.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is the difference between a mitigation and a contingency plan?",
+   "options": [
+    "They're two names for the same thing",
+    "A mitigation reduces a risk in advance; a contingency plan is the response if it happens anyway",
+    "A mitigation is for budget risks; a contingency plan is for timeline risks"
+   ],
+   "answer": 1,
+   "good": "That's right. A mitigation is taken in advance to reduce likelihood or impact. A contingency plan is the prepared response if the risk happens anyway.",
+   "bad": "Not quite. A mitigation is taken in advance to reduce likelihood or impact. A contingency plan is the prepared response if the risk happens anyway.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is the difference between a mitigation and a contingency plan?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Scope document + change request",
+     ""
+    ],
+    [
+     "Timeline with critical path and buffer",
+     ""
+    ],
+    [
+     "Risk register with an owner",
+     ""
+    ],
+    [
+     "Budget tracker with burn rate",
+     ""
+    ],
+    [
+     "How all four connect",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the Project Management module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've written a scope document with in and out of scope items, and a mock change request,",
+     "show": 1
+    },
+    {
+     "say": "you've built a task list with dependencies, a critical path and a justified buffer,",
+     "show": 2
+    },
+    {
+     "say": "you've built a risk register with mitigations, and a contingency plan with an owner,",
+     "show": 3
+    },
+    {
+     "say": "you've built a budget tracker with a contingency reserve and a burn rate check,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain how scope, timeline, risk and budget constrain each other.",
+     "show": 5
+    },
+    {
+     "say": "You've finished Project Management. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

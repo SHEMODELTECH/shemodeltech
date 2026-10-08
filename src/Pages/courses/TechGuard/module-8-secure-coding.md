@@ -273,6 +273,400 @@ You can identify the security gates a request should pass (transport, authentica
 
 *Answers: 1) Because APIs expose application functionality and data directly to callers, so flaws in them give attackers direct access; they receive input from clients the provider doesn't control. 2) Authentication verifies who the caller is (a valid token), while authorization decides whether that authenticated caller is allowed to perform this specific action on this specific object. 3) It's when an API authenticates a user but fails to check they're entitled to the specific object requested (for example returning record 124 to a user only entitled to 123); it's common because developers often check identity but forget the per-object permission check. 4) Brute-force attempts, credential stuffing, and general abuse, by capping how many requests a caller can make. 5) For example: object-level and function-level authorization, input validation, rate limiting, and transport security (HTTPS/TLS), any two.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "code",
+   "kicker": "Module 8 · Secure coding",
+   "title": "Never trust input",
+   "beats": [
+    {
+     "say": "Welcome to Module 8, secure coding."
+    },
+    {
+     "say": "You'll learn the OWASP Top 10, fix two classic flaws, check your software supply chain, and run a small A P I with every security gate in place."
+    },
+    {
+     "say": "As always, only test applications you own, or that are built for training."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Topic 8.1 · OWASP Top 10:2025",
+   "title": "The five you'll meet most",
+   "items": [
+    [
+     "A01",
+     "Broken Access Control"
+    ],
+    [
+     "A02",
+     "Security Misconfiguration"
+    ],
+    [
+     "A03 · new",
+     "Software Supply Chain Failures"
+    ],
+    [
+     "A04",
+     "Cryptographic Failures"
+    ],
+    [
+     "A05",
+     "Injection"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The OWASP Top 10 is the industry-standard awareness list of the most critical web application risks. The current edition is twenty twenty five.",
+     "show": 0
+    },
+    {
+     "say": "A zero one, broken access control, is still number one: users acting outside their permissions.",
+     "show": 1
+    },
+    {
+     "say": "A zero two, security misconfiguration: insecure defaults and error messages that leak internals.",
+     "show": 2
+    },
+    {
+     "say": "A zero three, software supply chain failures, is new. A compromised or vulnerable package becomes your vulnerability.",
+     "show": 3
+    },
+    {
+     "say": "A zero four, cryptographic failures: weak or missing protection of sensitive data.",
+     "show": 4
+    },
+    {
+     "say": "And A zero five, injection, when untrusted input is treated as a command or query. The goal is to know how to prevent each one.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "database",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "Fix the injection",
+   "file": "users.js",
+   "code": "// Vulnerable: user input concatenated straight into the query\nconst q = \"SELECT * FROM users WHERE name = '\" + userInput + \"'\";\n\n// Safe: input is passed as a parameter, not part of the query text\nconst q = \"SELECT * FROM users WHERE name = ?\";\ndb.query(q, [userInput]);",
+   "beats": [
+    {
+     "say": "The lab is review and fix. No attacking required.",
+     "show": 0
+    },
+    {
+     "say": "Here, user input is glued straight into the S Q L text, so input could be read as part of the query.",
+     "show": 1
+    },
+    {
+     "say": "The fix is a parameterised query. Input is passed separately, as a parameter, and can never be treated as S Q L.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Fix the access check",
+   "file": "admin.js",
+   "code": "// Vulnerable: trusts a client-supplied role\nif (request.body.role === \"admin\") { deleteUser(); }\n\n// Safe: authorization decided server-side from the authenticated session\nif (session.user.isAdmin) { deleteUser(); }",
+   "beats": [
+    {
+     "say": "Next, broken access control.",
+     "show": 0
+    },
+    {
+     "say": "This code trusts a role the client sends. But the client can be manipulated.",
+     "show": 1
+    },
+    {
+     "say": "The fix decides authorization on the server, from the authenticated session.",
+     "show": 1
+    },
+    {
+     "say": "That's the principle running through the whole list: never trust input, and enforce authorization server-side.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "package",
+   "kicker": "Lab · Step 5",
+   "title": "Check your supply chain",
+   "file": "terminal",
+   "code": "npm audit\nnpm audit signatures\nnpm sbom --sbom-format cyclonedx > sbom.json",
+   "beats": [
+    {
+     "say": "Now check the supply chain of a Node project you own.",
+     "show": 0
+    },
+    {
+     "say": "N P M audit scans for components with known flaws.",
+     "show": 1
+    },
+    {
+     "say": "Audit signatures verifies the registry signatures of what you installed.",
+     "show": 1
+    },
+    {
+     "say": "And N P M S bom writes a Software Bill of Materials, a list of every component and version. The lockfile pins those versions, and the S bom records them.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "api",
+   "kicker": "Topic 8.2 · Secure APIs",
+   "title": "Every request passes every gate",
+   "steps": [
+    "Request over HTTPS",
+    "Authenticate",
+    "Authorize this object",
+    "Validate, rate limit",
+    "Handler runs"
+   ],
+   "beats": [
+    {
+     "say": "A P Is expose functionality and data directly, so they're one of the biggest attack surfaces.",
+     "show": 0
+    },
+    {
+     "say": "A secure A P I treats every request as untrusted. It travels over H T T P S.",
+     "show": 1
+    },
+    {
+     "say": "It must authenticate: is this a valid token?",
+     "show": 2
+    },
+    {
+     "say": "It must be authorized for this specific object.",
+     "show": 3
+    },
+    {
+     "say": "Its input is validated, and its rate is limited.",
+     "show": 4
+    },
+    {
+     "say": "Only then does the handler run.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Steps 2 to 4",
+   "title": "The gates in code",
+   "file": "api.py",
+   "code": "    # Gate 2: authentication (who are you?)\n    user = current_user()\n    if user is None:\n        return jsonify(error=\"Authentication required\"), 401\n\n    # ...\n\n    # Gate 4: object-level authorization (is THIS record yours?)\n    if record[\"owner\"] != user:\n        return jsonify(error=\"Forbidden\"), 403",
+   "beats": [
+    {
+     "say": "In the lab, you run a tiny Flask A P I on your own computer. Two demo users get random tokens each time it starts.",
+     "show": 0
+    },
+    {
+     "say": "Here are two of its gates.",
+     "show": 1
+    },
+    {
+     "say": "If there's no valid token, it returns four oh one.",
+     "show": 1
+    },
+    {
+     "say": "And if the record isn't yours, four oh three. That object-level check is the one most often missing in real A P Is.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "terminal",
+   "kicker": "Lab · Steps 5 to 8",
+   "title": "Test each gate with curl",
+   "items": [
+    [
+     "No token",
+     "401"
+    ],
+    [
+     "✓ Alice → record 123",
+     "200"
+    ],
+    [
+     "✗ Alice → record 124",
+     "403"
+    ],
+    [
+     "ID \"abc\"",
+     "400"
+    ],
+    [
+     "6th call in 10 s",
+     "429"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Then test every gate with curl.",
+     "show": 0
+    },
+    {
+     "say": "No token: four oh one.",
+     "show": 1
+    },
+    {
+     "say": "Alice asks for her own record, one two three: two hundred, and the note.",
+     "show": 2
+    },
+    {
+     "say": "Alice asks for Bob's record, one two four: four oh three.",
+     "show": 3
+    },
+    {
+     "say": "An I D of A B C: four hundred, invalid input.",
+     "show": 4
+    },
+    {
+     "say": "And six quick calls in a row: the sixth gets four twenty nine, too many requests.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "lock",
+   "kicker": "Lab · Step 9",
+   "title": "The missing gate",
+   "quote": "What would an eavesdropper see in the Authorization header?",
+   "beats": [
+    {
+     "say": "One gate is missing on purpose. The practice server uses plain H T T P, because it only listens on your own computer.",
+     "show": 0
+    },
+    {
+     "say": "Write one sentence on why a real deployment must use H T T P S. Hint: what would an eavesdropper see in the Authorization header?",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is broken object-level authorization?",
+   "options": [
+    "An A P I with no login at all",
+    "An A P I that checks who you are, but not whether you're entitled to the specific object you asked for",
+    "A token that has expired"
+   ],
+   "answer": 1,
+   "good": "That's right. The caller is authenticated, but the A P I never checks they're entitled to that specific record, like returning record one two four to someone only entitled to one two three.",
+   "bad": "Not quite. The caller is authenticated, but the A P I never checks they're entitled to that specific record, like returning record one two four to someone only entitled to one two three.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is broken object-level authorization?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Injection fixed",
+     ""
+    ],
+    [
+     "Access control fixed",
+     ""
+    ],
+    [
+     "You can name the Top 10:2025",
+     ""
+    ],
+    [
+     "Dependencies scanned, SBOM generated",
+     ""
+    ],
+    [
+     "Local API with every gate",
+     ""
+    ],
+    [
+     "401, 403, 400 and 429 seen",
+     ""
+    ],
+    [
+     "Never trust input",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 8.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've fixed an injection flaw with a parameterised query,",
+     "show": 1
+    },
+    {
+     "say": "you've fixed broken access control with a server-side check,",
+     "show": 2
+    },
+    {
+     "say": "you can name the OWASP Top 10 twenty twenty five, and explain supply chain failures,",
+     "show": 3
+    },
+    {
+     "say": "you've scanned dependencies, verified signatures and generated an S bom,",
+     "show": 4
+    },
+    {
+     "say": "you've run a local A P I with every gate explained,",
+     "show": 5
+    },
+    {
+     "say": "you've seen unauthenticated, unauthorized, invalid and too-frequent requests each rejected,",
+     "show": 6
+    },
+    {
+     "say": "and you can explain the principle: never trust input, and enforce authorization server-side, per object.",
+     "show": 7
+    },
+    {
+     "say": "Next, in Module 9, DevOps security.",
+     "show": 7
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 8 Completion Checklist

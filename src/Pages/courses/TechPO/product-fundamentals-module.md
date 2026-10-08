@@ -224,6 +224,394 @@ You have written a vision statement, a supporting strategy, a small consistent r
 
 *Answers: 1) A vision is meant to stay stable for years, a roadmap is concrete and updated much more frequently. 2) Strategy, its role is to be the chosen approach for moving toward the vision, more specific than the vision but broader than a roadmap. 3) A single, chosen metric used as the clearest proxy for whether a team is making real progress toward the vision, as opposed to smaller, feature-level metrics that measure narrower activity. 4) Because it lets day-to-day decisions and roadmap changes stay aligned with a bigger purpose, without needing to be rewritten every time tactics shift. 5) Treating a specific roadmap item as if it were the unchangeable vision itself, which can cause a team to resist reasonable roadmap changes or lose sight of the bigger goal the roadmap is supposed to serve (any reasonable example of this confusion is valid).*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "target",
+   "kicker": "Module · Product Fundamentals",
+   "title": "From idea to north star",
+   "beats": [
+    {
+     "say": "Welcome to Product Fundamentals."
+    },
+    {
+     "say": "You'll learn how products move through their lifecycle, how to scope an M V P that tests one idea, and how to write a product vision with a north star metric."
+    },
+    {
+     "say": "No coding needed: just a doc tool and a simple Trello board."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "growth",
+   "kicker": "Topic 1 · Product lifecycle",
+   "title": "Four stages",
+   "steps": [
+    "Introduction",
+    "Growth",
+    "Maturity",
+    "Decline"
+   ],
+   "beats": [
+    {
+     "say": "Most products move through four stages, and the stage shapes what success even means.",
+     "show": 0
+    },
+    {
+     "say": "Introduction: few users, focused on proving the product solves a real problem.",
+     "show": 1
+    },
+    {
+     "say": "Growth: adoption speeds up, so you scale what works and fix issues that only appear at volume.",
+     "show": 2
+    },
+    {
+     "say": "Maturity: growth levels off, and the focus is retention, efficiency and defending your position.",
+     "show": 3
+    },
+    {
+     "say": "Decline: usage drops, and the team decides whether to revive, maintain minimally, or sunset.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "graph",
+   "kicker": "Topic 1 · Product lifecycle",
+   "title": "The right metric for the stage",
+   "items": [
+    [
+     "Introduction",
+     "Problem-solution fit"
+    ],
+    [
+     "Growth",
+     "Adoption · retention"
+    ],
+    [
+     "Maturity",
+     "Efficiency · churn"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The metric that matters changes by stage.",
+     "show": 0
+    },
+    {
+     "say": "In introduction, you watch for problem solution fit.",
+     "show": 1
+    },
+    {
+     "say": "In growth, adoption and retention, like weekly active users.",
+     "show": 2
+    },
+    {
+     "say": "In maturity, efficiency and churn.",
+     "show": 3
+    },
+    {
+     "say": "Use the wrong stage's metric, and you'll draw the wrong conclusions. And a mature product can find a second growth curve through a new market or feature.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Topic 1 · Lab",
+   "title": "Place two real products",
+   "items": [
+    [
+     "Product you use",
+     "Stage + evidence"
+    ],
+    [
+     "One metric",
+     "For that stage"
+    ],
+    [
+     "A declining product",
+     "Signals noticed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, pick a real product you use, and place it in a stage using observable evidence, like how often it updates and whether new features still ship.",
+     "show": 1
+    },
+    {
+     "say": "Name one metric that stage's team would watch.",
+     "show": 2
+    },
+    {
+     "say": "Then find a product in decline or already sunset, noting the signals, like stopped updates or migration prompts.",
+     "show": 3
+    },
+    {
+     "say": "And compare what doing well means for each.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "bulb",
+   "kicker": "Topic 2 · MVP",
+   "title": "A question, not a small product",
+   "quote": "An MVP answers a question. It isn't the full product, but smaller.",
+   "beats": [
+    {
+     "say": "An M V P, a minimum viable product, is the smallest version that still lets you learn from real users.",
+     "show": 0
+    },
+    {
+     "say": "It's not low quality. It's deliberately scoped to test one hypothesis, as cheaply and quickly as possible.",
+     "show": 1
+    },
+    {
+     "say": "A common mistake is building the full product, just smaller.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Topic 2 · MVP",
+   "title": "Build, measure, learn",
+   "steps": [
+    "Build",
+    "Measure",
+    "Learn"
+   ],
+   "beats": [
+    {
+     "say": "An M V P feeds a loop.",
+     "show": 0
+    },
+    {
+     "say": "Build the smallest version.",
+     "show": 1
+    },
+    {
+     "say": "Measure how real users respond.",
+     "show": 2
+    },
+    {
+     "say": "Learn, and decide what to build next. Usually a new hypothesis and a new small test.",
+     "show": 3
+    },
+    {
+     "say": "Two common variations: a fake door test, a button or page that doesn't yet do anything real, and a concierge M V P, delivered by hand before it's automated.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Topic 2 · Lab",
+   "title": "A fake door test",
+   "items": [
+    [
+     "Hypothesis",
+     "1 in 10 visitors sign up"
+    ],
+    [
+     "Fake door",
+     "\"Get notified when we launch\""
+    ],
+    [
+     "Board",
+     "Build → Measure → Learn"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, write one specific hypothesis.",
+     "show": 0
+    },
+    {
+     "say": "For example: at least one in ten houseplant owners who visit a landing page will sign up to hear when it launches.",
+     "show": 1
+    },
+    {
+     "say": "A fake door can only measure interest, so keep the hypothesis about demand.",
+     "show": 1
+    },
+    {
+     "say": "Sketch a landing page with one button: get notified when we launch.",
+     "show": 2
+    },
+    {
+     "say": "Then move its card across a Build, Measure, Learn board, writing what a strong or weak result would teach you.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Topic 3 · Product vision",
+   "title": "Vision, strategy, roadmap",
+   "items": [
+    [
+     "Vision",
+     "Stable for years"
+    ],
+    [
+     "Strategy",
+     "The chosen approach"
+    ],
+    [
+     "Roadmap",
+     "Updated often"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "These three change at very different speeds.",
+     "show": 0
+    },
+    {
+     "say": "A vision is a short, memorable statement of the future you're working toward. It stays stable for years.",
+     "show": 1
+    },
+    {
+     "say": "A strategy is the chosen approach to get there, like: win small businesses first, then expand to enterprise.",
+     "show": 2
+    },
+    {
+     "say": "A roadmap is the concrete plan of what gets built and when. It changes often.",
+     "show": 3
+    },
+    {
+     "say": "Confusing a roadmap item with the vision is a common source of misalignment.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "target",
+   "kicker": "Topic 3 · Product vision",
+   "title": "One north star metric",
+   "big": "North star",
+   "sub": "Real user value, hard to game",
+   "beats": [
+    {
+     "say": "A north star metric is the single clearest sign of real progress toward the vision.",
+     "show": 0
+    },
+    {
+     "say": "A good one reflects genuine value to users, not an activity count that's easy to inflate.",
+     "show": 1
+    },
+    {
+     "say": "In the lab, write a vision, a strategy, three roadmap items, one feature you'd say no to, and a north star metric with your reasoning.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is the actual goal of building an M V P?",
+   "options": [
+    "To ship a small version of the final product",
+    "To launch with every planned feature, but less polished",
+    "To answer one specific question about an idea, as cheaply and quickly as possible"
+   ],
+   "answer": 2,
+   "good": "That's right. An MVP tests a specific assumption, as cheaply and quickly as possible, before you invest further. It isn't a small version of the final product.",
+   "bad": "Not quite. An MVP tests a specific assumption, as cheaply and quickly as possible, before you invest further. It isn't a small version of the final product.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is the actual goal of building an M V P?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Two products placed, with evidence",
+     ""
+    ],
+    [
+     "Fake door test through the loop",
+     ""
+    ],
+    [
+     "Vision, strategy and roadmap",
+     ""
+    ],
+    [
+     "How often each one changes",
+     ""
+    ],
+    [
+     "Why an MVP tests one hypothesis",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Product Fundamentals.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've placed two real products in lifecycle stages, with evidence and a metric for each,",
+     "show": 1
+    },
+    {
+     "say": "you've written a testable M V P hypothesis, and tracked a fake door test through a build measure learn board,",
+     "show": 2
+    },
+    {
+     "say": "you've written a vision, a strategy and a small roadmap,",
+     "show": 3
+    },
+    {
+     "say": "you can explain how often vision, strategy and roadmap each change,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain why an M V P is scoped around a hypothesis.",
+     "show": 5
+    },
+    {
+     "say": "You've finished Product Fundamentals. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

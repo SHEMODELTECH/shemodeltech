@@ -239,6 +239,441 @@ You have a written charter, a session log of at least five explored actions with
 
 *Answers: 1) A short, written goal for the session; it needs one so the exploration stays focused on a specific area or question rather than turning into unfocused wandering. 2) It's guided by an intentional charter and produces recorded notes and a debrief, it's structured investigation with a reportable outcome, not aimless clicking. 3) Running exploratory testing in timeboxed sessions, each with its own charter, so the work stays focused and its results stay reportable. 4) Notes capture exactly what was tried and observed in the moment; relying on memory afterward risks losing details needed to reproduce anything unusual that was found. 5) Unexpected bugs in areas or interaction patterns that no one anticipated when writing test cases in advance, since exploratory testing reacts to what the software actually does rather than what it was expected to do.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "pencil",
+   "kicker": "Module 2 · Manual Testing",
+   "title": "Checks a person can repeat",
+   "beats": [
+    {
+     "say": "Welcome to Module 2, Manual Testing."
+    },
+    {
+     "say": "You'll write test cases, report bugs a developer can act on, and run exploratory sessions."
+    },
+    {
+     "say": "All you need is a browser, and two free practice sites built for testers: The Internet, and Sauce Demo. Use them only through their normal pages."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Topic 2.1 · Concept",
+   "title": "Anatomy of a test case",
+   "items": [
+    [
+     "ID and title",
+     "What it checks"
+    ],
+    [
+     "Preconditions",
+     "State before starting"
+    ],
+    [
+     "Steps",
+     "Numbered, specific"
+    ],
+    [
+     "Test data",
+     "Actual values"
+    ],
+    [
+     "Expected result",
+     "Precise enough to compare"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A test case is a specific, repeatable procedure that checks one piece of behaviour.",
+     "show": 0
+    },
+    {
+     "say": "An I D and title say what it checks.",
+     "show": 1
+    },
+    {
+     "say": "Preconditions describe the state before you start, like being logged in.",
+     "show": 2
+    },
+    {
+     "say": "Steps are exact and numbered, so someone else could follow them without guessing.",
+     "show": 3
+    },
+    {
+     "say": "Test data gives the actual values.",
+     "show": 4
+    },
+    {
+     "say": "And the expected result is precise enough to compare with what actually happens. A group of related cases is a test suite.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "target",
+   "kicker": "Topic 2.1 · Structure",
+   "title": "Expected versus actual",
+   "steps": [
+    "Expected: decided in advance",
+    "Actual: what happened",
+    "Match? Pass. Otherwise, fail"
+   ],
+   "beats": [
+    {
+     "say": "Run the steps, then compare.",
+     "show": 0
+    },
+    {
+     "say": "The expected result is decided in advance.",
+     "show": 1
+    },
+    {
+     "say": "The actual result is what really happened.",
+     "show": 2
+    },
+    {
+     "say": "If they match, the test passes. If not, it fails. Two people running the same case should get the same actual result.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "browser",
+   "kicker": "Topic 2.1 · Lab",
+   "title": "Test a practice login form",
+   "steps": [
+    "Write 3 test cases first",
+    "Run them as written",
+    "Pass or fail, fix vague steps"
+   ],
+   "beats": [
+    {
+     "say": "Open the practice login page on The Internet. It shows the valid test username and password.",
+     "show": 0
+    },
+    {
+     "say": "Before touching the form, write three test cases: a valid login, an invalid password, and an empty username.",
+     "show": 1
+    },
+    {
+     "say": "Run each exactly as written, and copy any message word for word.",
+     "show": 2
+    },
+    {
+     "say": "Mark each pass or fail. If a step was too vague to follow, rewrite it. That's the most common weakness.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Topic 2.2 · Concept",
+   "title": "A bug report a developer can act on",
+   "items": [
+    [
+     "Title",
+     "Short, specific"
+    ],
+    [
+     "Steps to reproduce",
+     "Exact, numbered"
+    ],
+    [
+     "Expected vs. actual",
+     ""
+    ],
+    [
+     "Severity + priority",
+     ""
+    ],
+    [
+     "Environment",
+     "Browser, OS, device, version"
+    ],
+    [
+     "Evidence",
+     "Screenshots, logs"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A good bug report lets a developer reproduce, understand and fix the problem without asking what you meant.",
+     "show": 0
+    },
+    {
+     "say": "A short, specific title.",
+     "show": 1
+    },
+    {
+     "say": "Exact steps to reproduce.",
+     "show": 2
+    },
+    {
+     "say": "Expected versus actual result.",
+     "show": 3
+    },
+    {
+     "say": "Severity and priority.",
+     "show": 4
+    },
+    {
+     "say": "The environment: browser, operating system, device, app version.",
+     "show": 5
+    },
+    {
+     "say": "And evidence, like screenshots or logs. Reproduce a bug at least twice before you report it.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Topic 2.2 · Structure",
+   "title": "Severity is not priority",
+   "items": [
+    [
+     "Checkout fails for everyone",
+     "High sev · high pri"
+    ],
+    [
+     "Crash on an obsolete browser",
+     "High sev · low pri"
+    ],
+    [
+     "Homepage typo in company name",
+     "Low sev · high pri"
+    ],
+    [
+     "Admin tooltip punctuation",
+     "Low sev · low pri"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Severity is how bad the impact is. Priority is how soon it needs fixing. They're independent.",
+     "show": 0
+    },
+    {
+     "say": "Checkout fails for every user: high severity, high priority.",
+     "show": 1
+    },
+    {
+     "say": "A crash on an obsolete browser almost nobody uses: high severity, low priority.",
+     "show": 2
+    },
+    {
+     "say": "The company name misspelled on the homepage: low severity, but high priority, because everyone sees it.",
+     "show": 3
+    },
+    {
+     "say": "A wrong punctuation mark on a rarely used admin tooltip: low and low.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "search",
+   "kicker": "Topic 2.2 · Lab",
+   "title": "Report a real bug",
+   "steps": [
+    "Full report: cart total bug",
+    "Vague version to compare",
+    "Real bug on Sauce Demo"
+   ],
+   "beats": [
+    {
+     "say": "Imagine removing a cart item doesn't update the total. Write a full report, and justify its severity and priority.",
+     "show": 1
+    },
+    {
+     "say": "Then rewrite it as a vague report, cart is broken, and compare what the good version adds.",
+     "show": 2
+    },
+    {
+     "say": "Finally, log in to Sauce Demo as problem user, shop like a customer, and report one real bug with a screenshot.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "Topic 2.3 · Concept",
+   "title": "Exploratory, not random",
+   "items": [
+    [
+     "Charter",
+     "A focused goal"
+    ],
+    [
+     "Timeboxed session",
+     "One charter each"
+    ],
+    [
+     "Notes",
+     "As you go"
+    ],
+    [
+     "Debrief",
+     "Covered, found, not reached"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Exploratory testing is learning the software and testing it at the same time, guided by what you discover.",
+     "show": 0
+    },
+    {
+     "say": "A test charter is a short written goal, like explore the checkout's handling of invalid coupons for thirty minutes.",
+     "show": 1
+    },
+    {
+     "say": "Session-based testing runs it in timeboxed sessions, each with its own charter.",
+     "show": 2
+    },
+    {
+     "say": "Notes taken during the session record what you tried and noticed.",
+     "show": 3
+    },
+    {
+     "say": "And a debrief summarises what was covered, what was found, and what wasn't reached.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "stopwatch",
+   "kicker": "Topic 2.3 · Lab",
+   "title": "Run a session",
+   "steps": [
+    "Charter",
+    "Timed session, 5+ tries",
+    "Notes as you go",
+    "Debrief"
+   ],
+   "beats": [
+    {
+     "say": "Write a charter for one area of Sauce Demo, like checkout as problem user for twenty five minutes. Compare with standard user, which should behave correctly.",
+     "show": 1
+    },
+    {
+     "say": "Run it with a timer, trying at least five things a script wouldn't: rapid actions, going back midway, empty or very long values.",
+     "show": 2
+    },
+    {
+     "say": "Write one line of notes per thing you tried.",
+     "show": 3
+    },
+    {
+     "say": "Then a short debrief: what you covered, what looked odd, and what you'd explore next.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Which bug is high severity but low priority?",
+   "options": [
+    "Checkout fails for every user",
+    "The company name is misspelled on the homepage",
+    "A crash on an obsolete browser version almost nobody uses"
+   ],
+   "answer": 2,
+   "good": "That's right. A crash is severe when it happens, but it affects very few users, so it can wait.",
+   "bad": "Not quite. A crash is severe when it happens, but it affects very few users, so it can wait.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Which bug is high severity but low priority?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Three test cases with verdicts",
+     ""
+    ],
+    [
+     "A complete bug report",
+     ""
+    ],
+    [
+     "Good report vs. vague report",
+     ""
+    ],
+    [
+     "An exploratory session, debriefed",
+     ""
+    ],
+    [
+     "Exploratory + scripted together",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've written three structured test cases with recorded pass or fail verdicts,",
+     "show": 1
+    },
+    {
+     "say": "you've written a complete bug report with every field,",
+     "show": 2
+    },
+    {
+     "say": "you can explain why its details beat a vague report,",
+     "show": 3
+    },
+    {
+     "say": "you've run a timeboxed exploratory session with a charter, notes and a debrief,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain how exploratory and scripted testing complement each other.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 3, automation testing.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2 Completion Checklist

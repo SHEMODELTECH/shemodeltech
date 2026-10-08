@@ -135,6 +135,189 @@ You can describe the trigger, action, and workflow structure, and you have one r
 
 *Answers: 1) The event that starts an automation, such as a new form response or a new email. 2) A step that runs after the trigger, such as sending a message or creating a record. 3) The trigger plus its connected actions, chained together into one automated process. 4) Passing specific pieces of data from an earlier step into a later step, so the later step can use them. 5) No, that's the core purpose of these platforms, connecting apps through a visual interface instead of custom code.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "chain",
+   "kicker": "Module 0 · What automation platforms do",
+   "title": "When this happens, do that",
+   "beats": [
+    {
+     "say": "Welcome to Automation for Builders."
+    },
+    {
+     "say": "An automation platform connects your apps, so an event in one app automatically causes an action in another, without writing custom backend code."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "The four building blocks",
+   "items": [
+    [
+     "Trigger",
+     "The event that starts it"
+    ],
+    [
+     "Actions",
+     "Steps that run afterward"
+    ],
+    [
+     "Workflow",
+     "Zap · scenario · flow · workflow"
+    ],
+    [
+     "Data mapping",
+     "Earlier data → later step"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every platform in this course is built from the same idea.",
+     "show": 0
+    },
+    {
+     "say": "A trigger is the event that starts it, like a new form response.",
+     "show": 1
+    },
+    {
+     "say": "Actions are the steps that run afterward, like sending a message.",
+     "show": 2
+    },
+    {
+     "say": "A workflow is the trigger plus its actions, chained together. Each tool has its own name for it.",
+     "show": 3
+    },
+    {
+     "say": "And data mapping passes information from an earlier step into a later one, like the sender's name into a personal message.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Structure at a glance",
+   "title": "Data flows forward",
+   "steps": [
+    "Trigger: new form response",
+    "Action: add row to sheet",
+    "Action: send Slack message"
+   ],
+   "beats": [
+    {
+     "say": "Here's the shape you'll see in every tool.",
+     "show": 0
+    },
+    {
+     "say": "A new form response arrives, providing a name and an email.",
+     "show": 1
+    },
+    {
+     "say": "Action one adds a row to a sheet, using data from the trigger.",
+     "show": 2
+    },
+    {
+     "say": "Action two sends a Slack message, using data from both earlier steps.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Write your own sentence",
+   "quote": "When [trigger], then [action].",
+   "beats": [
+    {
+     "say": "Your lab is one sentence.",
+     "show": 0
+    },
+    {
+     "say": "Pick a repetitive task you do by hand, like copying data between two tools, or sending the same reminder.",
+     "show": 1
+    },
+    {
+     "say": "Write it as: when this trigger happens, then do this action. That's the exact shape of every automation in this course.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does \"data mapping\" mean?",
+   "options": [
+    "Passing data from an earlier step into a later step",
+    "Drawing a diagram of your apps",
+    "Copying a spreadsheet into a database"
+   ],
+   "answer": 0,
+   "good": "That's right. Data mapping passes specific pieces of data from an earlier step into a later step, so the later step can use them.",
+   "bad": "Not quite. Data mapping passes specific pieces of data from an earlier step into a later step, so the later step can use them.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does \"data mapping\" mean?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can describe trigger, action and workflow",
+     ""
+    ],
+    [
+     "One \"when X, then Y\" idea written down",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can describe triggers, actions and workflows,",
+     "show": 1
+    },
+    {
+     "say": "and you have one real when X, then Y idea written down.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 1, your first Zap in Zapier.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Zapier - Simple, Linear Automations
@@ -195,6 +378,210 @@ You have a working, turned-on Zap that reacts to a real new row in a spreadsheet
 5. What has to happen for an automation to actually start running on its own, after it's built, and how quickly does a Google Sheets Zap react on the free plan?
 
 *Answers: 1) Zapier's term for a workflow, a trigger connected to one or more actions. 2) Insert real data from an earlier step directly into a later step's field, rather than hardcoding static text. 3) To stop the Zap from continuing past that point unless a specific condition is met. 4) So each step can be tested with realistic data while building, confirming the automation behaves correctly before turning it on for real events. 5) The Zap needs to be turned on (published); once on, a polling trigger like Google Sheets checks for new rows on a timer, which is slow on the free plan, so it is not instant.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "path",
+   "kicker": "Module 1 · Zapier",
+   "title": "Simple, linear automations",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "Zapier is built around simplicity: one trigger, then a straight line of actions, called a Zap."
+    },
+    {
+     "say": "With thousands of pre-built app connections, it's generally the easiest place to start."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Structure at a glance",
+   "title": "Inside a Zap",
+   "items": [
+    [
+     "App + event",
+     "Chosen for every step"
+    ],
+    [
+     "Dynamic value",
+     "Real data from an earlier step"
+    ],
+    [
+     "Filter",
+     "Continue only if a condition is met"
+    ],
+    [
+     "Free plan",
+     "Trigger + one action"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A Zap has a few parts.",
+     "show": 0
+    },
+    {
+     "say": "Each step picks an app, and an event within that app.",
+     "show": 1
+    },
+    {
+     "say": "Fields in a later step can be filled with a dynamic value from an earlier step, clicked from a list instead of typed.",
+     "show": 2
+    },
+    {
+     "say": "A filter step stops the Zap unless a condition is met.",
+     "show": 3
+    },
+    {
+     "say": "The free plan may allow only one trigger and one action, so this lab uses two steps. Check the current plan.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "table",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "Build the Zap",
+   "steps": [
+    "Create Zap: New Spreadsheet Row",
+    "Pick sheet · sample row",
+    "Action: Slack or Gmail"
+   ],
+   "beats": [
+    {
+     "say": "Click create Zap, and choose Google Sheets, new spreadsheet row, as the trigger.",
+     "show": 1
+    },
+    {
+     "say": "Connect your account, and pick the sheet and worksheet to watch. Zapier pulls in a sample row for testing.",
+     "show": 2
+    },
+    {
+     "say": "Then add an action, like Slack, send channel message, or Gmail, send email.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "merge",
+   "kicker": "Lab · Step 4",
+   "title": "Map the row into the message",
+   "file": "Slack message",
+   "code": "New entry from {{Name}}, email: {{Email}}",
+   "beats": [
+    {
+     "say": "Now map the data.",
+     "show": 0
+    },
+    {
+     "say": "Instead of typing plain text, click into the message field and insert the trigger's column values, like name and email.",
+     "show": 1
+    },
+    {
+     "say": "Then test the step with the sample row, and confirm the message arrives with real data filled in.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "stopwatch",
+   "kicker": "Lab · Step 6",
+   "title": "Turn it on, and be patient",
+   "quote": "Polling isn't instant. Check the Zap's history if nothing arrives.",
+   "beats": [
+    {
+     "say": "Finally, turn the Zap on and add a new row to the sheet.",
+     "show": 0
+    },
+    {
+     "say": "Google Sheets is a polling trigger, so Zapier checks for new rows on a timer, and on the free plan that timer is slow.",
+     "show": 1
+    },
+    {
+     "say": "If nothing arrives after that interval plus a few minutes, open the Zap's history to see what happened.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does Zapier ask for a sample row before you finish building a Zap?",
+   "options": [
+    "To charge you for the first run",
+    "To back up your spreadsheet",
+    "So each step can be tested with realistic data before turning it on"
+   ],
+   "answer": 2,
+   "good": "That's right. The sample row lets you test each step with realistic data, confirming the Zap behaves correctly before real events arrive.",
+   "bad": "Not quite. The sample row lets you test each step with realistic data, confirming the Zap behaves correctly before real events arrive.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does Zapier ask for a sample row before you finish building a Zap?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A turned-on Zap reacts to a new row",
+     ""
+    ],
+    [
+     "The message carries the row's real data",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a turned-on Zap that reacts to a real new spreadsheet row,",
+     "show": 1
+    },
+    {
+     "say": "and sends a message containing that row's actual data.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, branching automations in Make.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -265,6 +652,206 @@ You have a working Make scenario with a router splitting into two branches, and 
 
 *Answers: 1) A single step in a scenario, either a trigger or an action. 2) The full connected workflow, the chain of modules from trigger through to every action. 3) Split the workflow into multiple branches, so different data can trigger different actions based on a condition, rather than every run following the exact same single path. 4) To confirm each branch's filter is working correctly, that it fires only for the data it's meant to handle, and correctly ignores data meant for the other branch. 5) How often the trigger checks for new data and potentially starts a new run of the scenario.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "fork",
+   "kicker": "Module 2 · Make",
+   "title": "Visual, branching automations",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Make, formerly Integromat, uses a visual canvas where you can see and rearrange the connections between steps."
+    },
+    {
+     "say": "It supports branching, different paths for different conditions, more directly than Zapier."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Structure at a glance",
+   "title": "Make's vocabulary",
+   "items": [
+    [
+     "Module",
+     "One step"
+    ],
+    [
+     "Scenario",
+     "The full workflow"
+    ],
+    [
+     "Router",
+     "Splits into branches"
+    ],
+    [
+     "Mapping",
+     "Clickable field tags"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Make has its own words.",
+     "show": 0
+    },
+    {
+     "say": "A module is a single step, a trigger or an action.",
+     "show": 1
+    },
+    {
+     "say": "A scenario is the full workflow, the connected chain of modules.",
+     "show": 2
+    },
+    {
+     "say": "A router splits the scenario into branches, each with its own filter.",
+     "show": 3
+    },
+    {
+     "say": "And data from any earlier module can be mapped in, shown as clickable tags.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "fork",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "A router with two branches",
+   "steps": [
+    "Trigger: Watch New Rows",
+    "Router",
+    "Filters: Approved · Rejected",
+    "An email on each branch"
+   ],
+   "beats": [
+    {
+     "say": "Create a new scenario, with Google Sheets, watch new rows, as the trigger.",
+     "show": 1
+    },
+    {
+     "say": "Add a router right after it, creating two branches.",
+     "show": 2
+    },
+    {
+     "say": "Filter branch A on status equals approved, and branch B on status equals rejected.",
+     "show": 3
+    },
+    {
+     "say": "Add an email action to each branch, with a different message, mapping in real data from the trigger.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Test every branch",
+   "items": [
+    [
+     "Run once: Approved",
+     "✓ Only branch A fires"
+    ],
+    [
+     "Run once: Rejected",
+     "✓ Only branch B fires"
+    ],
+    [
+     "Scheduling on",
+     "Runs on its own"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Click run once with a test row matching branch A, and confirm only branch A fires.",
+     "show": 1
+    },
+    {
+     "say": "Change the data to match branch B, and run again. Now only the other path fires.",
+     "show": 2
+    },
+    {
+     "say": "Then turn on scheduling, which sets how often the trigger checks for new data.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a router let you do that a purely linear workflow can't?",
+   "options": [
+    "Run faster",
+    "Split into branches, so different data triggers different actions",
+    "Connect to more apps"
+   ],
+   "answer": 1,
+   "good": "That's right. A router splits the workflow into branches, each with its own filter, so not every run follows the same single path.",
+   "bad": "Not quite. A router splits the workflow into branches, each with its own filter, so not every run follows the same single path.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a router let you do that a purely linear workflow can't?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A router splits into two branches",
+     ""
+    ],
+    [
+     "Both branches tested",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a Make scenario with a router splitting into two branches,",
+     "show": 1
+    },
+    {
+     "say": "and you've tested both conditions, confirming each branch fires only for its own data.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, Power Automate inside Microsoft three sixty five.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3: Power Automate - Automation Inside Microsoft 365
@@ -331,6 +918,211 @@ You have a working flow with a condition branching into two different actions, a
 5. What does the run history let you do after a flow has executed?
 
 *Answers: 1) A supported app or service a flow can trigger from or take action on, Power Automate's equivalent of Zapier's "apps" or Make's "modules." 2) A flow that automates actions directly on a Windows desktop, such as clicking through a legacy application; a cloud flow instead triggers from and acts on cloud based apps and services. 3) It branches the flow into different paths (commonly "Yes" and "No") depending on whether a condition is true or false. 4) Power Automate's term for inserting a real value from an earlier step directly into a later step's field, rather than typing static text. 5) Review exactly what happened during a specific run, including which branch fired and what data passed through each step, useful for confirming correct behavior or troubleshooting.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "laptop",
+   "kicker": "Module 3 · Power Automate",
+   "title": "Automation inside Microsoft 365",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "Power Automate is Microsoft's automation platform, deeply integrated with Outlook, SharePoint, Teams, Excel and Dynamics."
+    },
+    {
+     "say": "It has cloud flows, and desktop flows that automate actions on a Windows desktop itself."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "key",
+   "kicker": "Account note",
+   "title": "You'll need a work or school account",
+   "quote": "No work or school account? Follow along, then build it in Make.",
+   "beats": [
+    {
+     "say": "A quick note before you start.",
+     "show": 0
+    },
+    {
+     "say": "Cloud flows generally need a work or school Microsoft account, like one from a university or employer. A personal account usually can't create them.",
+     "show": 1
+    },
+    {
+     "say": "If you don't have one, follow along, then build the same idea in Make: a Gmail trigger, a router filtering on urgent, and two actions.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Structure at a glance",
+   "title": "Power Automate's vocabulary",
+   "items": [
+    [
+     "Flow",
+     "The workflow"
+    ],
+    [
+     "Connectors",
+     "Apps and services"
+    ],
+    [
+     "Condition",
+     "If / else: Yes or No"
+    ],
+    [
+     "Dynamic content",
+     "Values from earlier steps"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here's how the same ideas are named.",
+     "show": 0
+    },
+    {
+     "say": "A flow is the workflow.",
+     "show": 1
+    },
+    {
+     "say": "Connectors are the apps and services a flow can trigger from or act on.",
+     "show": 2
+    },
+    {
+     "say": "A condition branches on true or false, as an if else block.",
+     "show": 3
+    },
+    {
+     "say": "And dynamic content inserts a value from an earlier step.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "fork",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "Urgent email, two outcomes",
+   "steps": [
+    "Trigger: new email arrives",
+    "Condition: subject has \"Urgent\"",
+    "Yes: post in Teams",
+    "No: mark as read"
+   ],
+   "beats": [
+    {
+     "say": "Create an automated cloud flow, triggered when a new email arrives in Outlook.",
+     "show": 1
+    },
+    {
+     "say": "Add a condition: does the subject contain the word urgent?",
+     "show": 2
+    },
+    {
+     "say": "On yes, post a message in Teams with the email's subject and sender. Or send yourself an email if you don't have Teams.",
+     "show": 3
+    },
+    {
+     "say": "On no, mark the email as read, so both outcomes are handled.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "search",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Test, then read the run history",
+   "big": "Run history",
+   "sub": "Which branch fired, and what data flowed through",
+   "beats": [
+    {
+     "say": "Save and test the flow, with sample data or a real test email.",
+     "show": 0
+    },
+    {
+     "say": "Then check the run history. It logs every run, which branch fired, and what data passed through each step.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a condition step do in Power Automate?",
+   "options": [
+    "Branches the flow into Yes and No paths, depending on whether a condition is true",
+    "Checks your account license",
+    "Repeats the flow until it succeeds"
+   ],
+   "answer": 0,
+   "good": "That's right. A condition branches the flow into different paths, commonly Yes and No, depending on whether it's true or false.",
+   "bad": "Not quite. A condition branches the flow into different paths, commonly Yes and No, depending on whether it's true or false.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a condition step do in Power Automate?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A condition branches into two actions",
+     ""
+    ],
+    [
+     "You've read the run history",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a flow with a condition branching into two different actions,",
+     "show": 1
+    },
+    {
+     "say": "and you've checked its run history to see which branch fired.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, open source automation with n eight n.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -418,3 +1210,237 @@ You have a working n8n workflow triggered by a real webhook request, branching w
 5. What kind of trigger did the lab use to receive real data from outside n8n?
 
 *Answers: 1) A single step in a workflow, either a trigger or an action, n8n's equivalent of Make's "module" or Power Automate's "connector-based action." 2) Running the platform on your own server rather than a vendor's cloud, giving more control over data location and cost, particularly at scale. 3) It branches the workflow into different paths depending on whether a condition is true or false. 4) Write JavaScript (or Python) directly inside a workflow step, for logic too specific for a built-in node; no, Zapier has Code by Zapier and Power Automate has expressions, but n8n makes code an everyday part of building. 5) A Webhook trigger, which generates a URL that an external system (or a manual curl request) can call to start the workflow with real data.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "terminal",
+   "kicker": "Module 4 · n8n",
+   "title": "Open source and self-hostable",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "n eight n is an open source automation platform, with a visual canvas like Make."
+    },
+    {
+     "say": "But you can self-host it, on your own server, and drop into real code when a built-in step isn't enough."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Structure at a glance",
+   "title": "n8n's vocabulary",
+   "items": [
+    [
+     "Node",
+     "One step"
+    ],
+    [
+     "Workflow",
+     "Chain of nodes"
+    ],
+    [
+     "IF node",
+     "Branches true / false"
+    ],
+    [
+     "Code node",
+     "JavaScript or Python"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "n eight n has its own terms.",
+     "show": 0
+    },
+    {
+     "say": "A node is a single step, a trigger or an action.",
+     "show": 1
+    },
+    {
+     "say": "A workflow is the connected chain of nodes.",
+     "show": 2
+    },
+    {
+     "say": "An IF node branches on a condition.",
+     "show": 3
+    },
+    {
+     "say": "And a Code node lets you write JavaScript or Python. Other tools have similar options, but here code is an everyday part of building.",
+     "show": 4
+    },
+    {
+     "say": "Self-hosting avoids per-task pricing, and keeps data on infrastructure you control.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "api",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "Start n8n, then call its webhook",
+   "file": "terminal",
+   "code": "npx n8n\n\ncurl -X POST http://localhost:5678/webhook-test/your-webhook-id \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"status\":\"approved\",\"name\":\"Alex\"}'",
+   "beats": [
+    {
+     "say": "Run n eight n locally with npx, and open the address it shows, usually port five six seven eight.",
+     "show": 0
+    },
+    {
+     "say": "Add a Webhook trigger node, set the method to POST, and copy its test URL.",
+     "show": 1
+    },
+    {
+     "say": "Click listen for test event, then send a request with curl. n eight n only accepts it while listening.",
+     "show": 1
+    },
+    {
+     "say": "The J S O N you sent appears under body, so the status is at body dot status.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Steps 5 to 7",
+   "title": "Branch, then add a Code node",
+   "file": "Code node",
+   "code": "const body = $('Webhook').first().json.body;\nreturn $input.all().map(item => {\n  item.json.greeting = `Hello, ${body.name}! Your status is ${body.status}.`;\n  return item;\n});",
+   "beats": [
+    {
+     "say": "Next, add an IF node checking whether body dot status equals approved.",
+     "show": 0
+    },
+    {
+     "say": "Put an Edit Fields node on each branch, each with a different message built from the name.",
+     "show": 0
+    },
+    {
+     "say": "Then add a Code node after the true branch, in JavaScript.",
+     "show": 1
+    },
+    {
+     "say": "Dollar input dot all gives every item coming into the node.",
+     "show": 1
+    },
+    {
+     "say": "And dollar, Webhook, reads the output of the node named Webhook, to build a greeting.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Lab · Step 8",
+   "title": "Run the whole workflow",
+   "items": [
+    [
+     "\"approved\"",
+     "✓ True branch · greeting appears"
+    ],
+    [
+     "\"rejected\"",
+     "✓ False branch runs"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Click the execute workflow button, which puts the webhook back in listening mode, and send the same request.",
+     "show": 0
+    },
+    {
+     "say": "Status approved: the true branch runs, and the Code node's output shows greeting.",
+     "show": 1
+    },
+    {
+     "say": "Status rejected: the false branch runs instead.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What kind of trigger did the lab use to receive real data from outside n8n?",
+   "options": [
+    "A schedule trigger",
+    "A Google Sheets trigger",
+    "A Webhook trigger, a URL an outside system can call"
+   ],
+   "answer": 2,
+   "good": "That's right. A Webhook trigger generates a URL that an external system, or a curl request, can call to start the workflow with real data.",
+   "bad": "Not quite. A Webhook trigger generates a URL that an external system, or a curl request, can call to start the workflow with real data.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What kind of trigger did the lab use to receive real data from outside n8n?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A real webhook triggers the workflow",
+     ""
+    ],
+    [
+     "An IF node branches it",
+     ""
+    ],
+    [
+     "A Code node runs custom JavaScript",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have an n eight n workflow triggered by a real webhook request,",
+     "show": 1
+    },
+    {
+     "say": "branching with an IF node,",
+     "show": 2
+    },
+    {
+     "say": "and including a Code node with custom JavaScript.",
+     "show": 3
+    },
+    {
+     "say": "You've finished Automation for Builders. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```

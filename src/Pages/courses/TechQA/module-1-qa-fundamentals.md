@@ -298,6 +298,457 @@ You can name and briefly explain all seven testing principles, and you've applie
 
 *Answers: 1) A passing test run means the tests that were run found no defects, it doesn't prove the software has no defects at all, so results should be reported as "no defects found in this scope," not "the software is bug-free." 2) The number of possible inputs and paths through most software is effectively infinite, so testing every combination isn't feasible; testers must choose a representative, risk-based subset instead. 3) The pesticide paradox (ISTQB CTFL v4.0 calls it "tests wear out") is the pattern where running the same tests repeatedly stops catching new bugs, because those tests keep checking the same paths while new defects sit elsewhere; the fix is to periodically review and update test cases. 4) It suggests focusing testing effort on the modules or areas historically most prone to defects, rather than spreading effort evenly across all areas regardless of risk. 5) An app that has zero crashes or logged bugs but is so confusing that users can't complete their intended task, it's technically defect-free but still fails to meet the user's actual need.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Module 1 · QA Fundamentals",
+   "title": "When, what, and how much to test",
+   "beats": [
+    {
+     "say": "Welcome to Module 1, Q A Fundamentals."
+    },
+    {
+     "say": "You'll learn how software gets built, how testing is planned alongside it, and the principles that decide what to test."
+    },
+    {
+     "say": "No tools needed. It follows the I S T Q B foundation syllabus topics, but it doesn't give certification."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "Topic 1.1 · Concept",
+   "title": "The six SDLC phases",
+   "items": [
+    [
+     "Requirements",
+     "What should it do?"
+    ],
+    [
+     "Design",
+     "How will it work?"
+    ],
+    [
+     "Development",
+     "Build the code"
+    ],
+    [
+     "Testing",
+     "Verify against requirements"
+    ],
+    [
+     "Deployment",
+     "Release to users"
+    ],
+    [
+     "Maintenance",
+     "Fix and improve"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The Software Development Life Cycle, or S D L C, is the sequence of phases software moves through, from idea to retirement.",
+     "show": 0
+    },
+    {
+     "say": "Requirements: deciding what the software should do.",
+     "show": 1
+    },
+    {
+     "say": "Design: deciding how it will do it.",
+     "show": 2
+    },
+    {
+     "say": "Development: writing the code.",
+     "show": 3
+    },
+    {
+     "say": "Testing: verifying the code does what the requirements said.",
+     "show": 4
+    },
+    {
+     "say": "Deployment: releasing it to real users.",
+     "show": 5
+    },
+    {
+     "say": "And Maintenance: fixing issues and adding small improvements after release.",
+     "show": 6
+    },
+    {
+     "say": "Each phase hands something to the next. Requirements produce a spec, design produces an architecture.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "search",
+   "kicker": "Topic 1.1 · Structure",
+   "title": "QA lives in every phase",
+   "quote": "Reviewing a requirement for ambiguity is QA work, before any code exists.",
+   "beats": [
+    {
+     "say": "A model, like Waterfall, Agile or the V Model, is just a way of arranging and repeating these same phases.",
+     "show": 0
+    },
+    {
+     "say": "And Q A isn't only the Testing box.",
+     "show": 1
+    },
+    {
+     "say": "Reviewing requirements for testability, or designs for edge cases, is Q A work too. In the lab, you walk one requirement, like users can mark a task as complete, through all six phases, and find one Q A activity before testing starts.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Topic 1.2 · Concept",
+   "title": "The STLC runs alongside",
+   "items": [
+    [
+     "Requirement Analysis",
+     "What needs testing?"
+    ],
+    [
+     "Test Planning",
+     "Scope, approach, schedule"
+    ],
+    [
+     "Test Case Development",
+     "Cases and test data"
+    ],
+    [
+     "Environment Setup",
+     "Systems and data"
+    ],
+    [
+     "Test Execution",
+     "Run, log, re-run"
+    ],
+    [
+     "Test Closure",
+     "Report and document"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The Software Testing Life Cycle, or S T L C, is testing's own sequence of activities. It runs alongside the S D L C, not after it.",
+     "show": 0
+    },
+    {
+     "say": "Requirement analysis: what needs testing?",
+     "show": 1
+    },
+    {
+     "say": "Test planning: scope, approach, resources and schedule.",
+     "show": 2
+    },
+    {
+     "say": "Test case development: writing test cases and test data.",
+     "show": 3
+    },
+    {
+     "say": "Environment setup: preparing systems and data.",
+     "show": 4
+    },
+    {
+     "say": "Test execution: running tests, logging results, and re-running failed cases after fixes.",
+     "show": 5
+    },
+    {
+     "say": "And test closure: reporting and lessons learned. Each phase has entry criteria to start, and exit criteria to finish.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Topic 1.2 · Structure",
+   "title": "Five parts of a test case",
+   "items": [
+    [
+     "ID / title",
+     ""
+    ],
+    [
+     "Preconditions",
+     ""
+    ],
+    [
+     "Numbered steps",
+     ""
+    ],
+    [
+     "Test data",
+     "Real values, not ideas"
+    ],
+    [
+     "Expected result",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A test case is a specific, repeatable check of one behaviour. It has five parts.",
+     "show": 0
+    },
+    {
+     "say": "An I D and title.",
+     "show": 1
+    },
+    {
+     "say": "Preconditions.",
+     "show": 2
+    },
+    {
+     "say": "Numbered steps.",
+     "show": 3
+    },
+    {
+     "say": "Test data: the actual values you feed in, like a valid email or an empty field, so it's concrete, not theoretical.",
+     "show": 4
+    },
+    {
+     "say": "And an expected result.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Topic 1.2 · Lab",
+   "title": "Plan one requirement",
+   "steps": [
+    "One-paragraph test plan",
+    "Two full test cases",
+    "Exit criteria"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, take the mark a task as complete requirement.",
+     "show": 0
+    },
+    {
+     "say": "Write a one paragraph test plan: what you'll test, what's out of scope, and in what order.",
+     "show": 1
+    },
+    {
+     "say": "Write two full test cases, each with all five parts.",
+     "show": 2
+    },
+    {
+     "say": "Then define exit criteria, like all test cases executed at least once, and no open critical defects.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bulb",
+   "kicker": "Topic 1.3 · Concept",
+   "title": "Seven testing principles, part one",
+   "items": [
+    [
+     "Shows presence, not absence",
+     "Passing ≠ perfect"
+    ],
+    [
+     "Exhaustive testing is impossible",
+     "Choose by risk"
+    ],
+    [
+     "Early testing saves cost",
+     "Fix it in requirements"
+    ],
+    [
+     "Defects cluster",
+     "Focus effort there"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Testing principles are hard-won truths that hold whatever you test, and whatever tool you use.",
+     "show": 0
+    },
+    {
+     "say": "Testing shows the presence of defects, not their absence.",
+     "show": 1
+    },
+    {
+     "say": "Exhaustive testing is impossible, so you choose based on risk.",
+     "show": 2
+    },
+    {
+     "say": "Early testing saves time and cost. A defect found in requirements is cheapest to fix.",
+     "show": 3
+    },
+    {
+     "say": "And defects cluster. A few modules usually hold most of the bugs, so focus there.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Topic 1.3 · Concept",
+   "title": "Seven testing principles, part two",
+   "items": [
+    [
+     "Tests wear out",
+     "Pesticide paradox · refresh them"
+    ],
+    [
+     "Context-dependent",
+     "Bank ≠ game"
+    ],
+    [
+     "Absence-of-defects fallacy",
+     "Bug-free can still fail users"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three more.",
+     "show": 0
+    },
+    {
+     "say": "Tests wear out, often called the pesticide paradox. The same tests stop finding new bugs, so review and update them.",
+     "show": 1
+    },
+    {
+     "say": "Testing is context dependent. A banking app and a game are tested differently.",
+     "show": 2
+    },
+    {
+     "say": "And the absence of defects fallacy. A bug-free system can still fail if it doesn't meet users' real needs.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "ask",
+   "kicker": "Topic 1.3 · Lab",
+   "title": "Report a clean run honestly",
+   "quote": "No defects found in this scope. Not: the software is bug-free.",
+   "beats": [
+    {
+     "say": "In the lab, pick five realistic inputs instead of fifty, and say where bugs are most likely to cluster.",
+     "show": 0
+    },
+    {
+     "say": "Then write one honest sentence for a product manager after a clean test run.",
+     "show": 1
+    },
+    {
+     "say": "Not, the software is bug-free. Instead: no defects found in this scope.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is the pesticide paradox, and what should you do about it?",
+   "options": [
+    "Running the same tests stops finding new bugs, so review and update them",
+    "Testing too early wastes money, so wait for a build",
+    "Bugs spread between modules, so test everything equally"
+   ],
+   "answer": 0,
+   "good": "That's right. Running the same tests repeatedly keeps checking the same paths, so they stop finding new bugs. Periodically review and update your test cases.",
+   "bad": "Not quite. Running the same tests repeatedly keeps checking the same paths, so they stop finding new bugs. Periodically review and update your test cases.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is the pesticide paradox, and what should you do about it?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "SDLC phases and QA outside Testing",
+     ""
+    ],
+    [
+     "Test plan and two test cases",
+     ""
+    ],
+    [
+     "Exit criteria defined",
+     ""
+    ],
+    [
+     "Two principles applied",
+     ""
+    ],
+    [
+     "SDLC, STLC and principles connected",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've named the six S D L C phases in order, and a Q A activity outside the Testing phase,",
+     "show": 1
+    },
+    {
+     "say": "you've written a short test plan and two structured test cases mapped to S T L C phases,",
+     "show": 2
+    },
+    {
+     "say": "you've defined exit criteria for a test cycle,",
+     "show": 3
+    },
+    {
+     "say": "you've applied at least two testing principles to a real scenario,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain how the S D L C, the S T L C and the principles relate.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 2, manual testing.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1 Completion Checklist

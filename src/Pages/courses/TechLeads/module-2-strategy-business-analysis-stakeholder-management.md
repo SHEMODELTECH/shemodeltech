@@ -202,6 +202,373 @@ You have a power/interest grid with each stakeholder placed and an action noted 
 
 *Answers: 1) Because the people who can approve, fund, or block the work still need to agree to move forward; solid analysis alone doesn't guarantee buy-in. 2) Identifying who has influence or interest in a decision, and how much of each, so you know who needs deep involvement versus just a heads-up. 3) It should lead with the takeaway or ask, not the methodology; this avoids losing a busy audience that tunes out before the process-heavy setup reaches the point. 4) Focusing on each side's underlying interest rather than their stated opening position, since the stated position isn't always what they actually need. 5) Your best alternative if no agreement is reached; knowing it clearly keeps you from accepting a worse deal than simply walking away would give you.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "target",
+   "kicker": "Module 2 · Strategy and stakeholders",
+   "title": "Beyond the current sprint",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "This module covers the business side of tech leadership: strategy, business analysis, and getting buy-in from people who aren't in the room every day."
+    },
+    {
+     "say": "The sign-up page case from Module 1 works well here, especially the sponsor's request to take payments."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Topic 2.1 · Strategy",
+   "title": "Whether and why, not just how",
+   "items": [
+    [
+     "Digital transformation",
+     "Rethink the process, don't just digitise it"
+    ],
+    [
+     "Innovation",
+     "Make real time for new ideas"
+    ],
+    [
+     "Strategic alignment",
+     "Trace work to a business goal"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Strategy is the layer above the backlog: deciding whether, and why, something should be built at all.",
+     "show": 0
+    },
+    {
+     "say": "Digital transformation rethinks a process around what technology now makes possible, not just digitising a paper form.",
+     "show": 1
+    },
+    {
+     "say": "Innovation means deliberately making time for new ideas to be tested.",
+     "show": 2
+    },
+    {
+     "say": "Strategic alignment means work traces back to a real business goal. If it can't, it's a candidate for cutting.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Concept",
+   "title": "Build, buy or partner",
+   "items": [
+    [
+     "Build",
+     "In-house"
+    ],
+    [
+     "Buy",
+     "An existing product"
+    ],
+    [
+     "Partner",
+     "Through a partnership"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A recurring strategic decision is whether to build, buy or partner.",
+     "show": 0
+    },
+    {
+     "say": "Build the capability in-house.",
+     "show": 1
+    },
+    {
+     "say": "Buy an existing product.",
+     "show": 2
+    },
+    {
+     "say": "Or access it through a partnership.",
+     "show": 3
+    },
+    {
+     "say": "Each has different cost, control and speed trade-offs. In the lab, write one sentence on each, then pick one with your reasoning.",
+     "show": 3
+    },
+    {
+     "say": "And close the loop on innovation: a tested idea needs a route back into planned work, or it stays a side project forever.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "blueprint",
+   "kicker": "Topic 2.2 · Business analysis",
+   "title": "From vague request to real scope",
+   "steps": [
+    "Vague request",
+    "Requirements gathering",
+    "As-is map",
+    "To-be map",
+    "Real scope = the gap"
+   ],
+   "beats": [
+    {
+     "say": "Business analysis turns what the business needs into something a team can build.",
+     "show": 0
+    },
+    {
+     "say": "Start with a vague request, like make onboarding faster.",
+     "show": 1
+    },
+    {
+     "say": "Gather requirements by asking the right people the right questions.",
+     "show": 2
+    },
+    {
+     "say": "Draw the as-is map: how the process really works today, including the informal steps.",
+     "show": 3
+    },
+    {
+     "say": "Then the to-be map: the improved version.",
+     "show": 4
+    },
+    {
+     "say": "The gap between them is the real scope of the work.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Concept",
+   "title": "What it does, and how well",
+   "items": [
+    [
+     "Functional",
+     "\"The system must…\""
+    ],
+    [
+     "Non-functional",
+     "Speed, reliability, security"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Requirements come in two kinds.",
+     "show": 0
+    },
+    {
+     "say": "Functional requirements say what the system must do.",
+     "show": 1
+    },
+    {
+     "say": "Non-functional requirements say how well: speed, reliability, security.",
+     "show": 2
+    },
+    {
+     "say": "Non-functional ones are skipped most often, and cause the most painful surprises, like a feature that falls over under real load.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 2.3 · Stakeholder management",
+   "title": "The power and interest grid",
+   "items": [
+    [
+     "Manage closely",
+     "High power · high interest"
+    ],
+    [
+     "Keep satisfied",
+     "High power · low interest"
+    ],
+    [
+     "Keep informed",
+     "Low power · high interest"
+    ],
+    [
+     "Monitor",
+     "Low power · low interest"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Stakeholder mapping places each person by their power over a decision and their interest in it.",
+     "show": 0
+    },
+    {
+     "say": "High power, high interest: manage closely. Involve them early and often.",
+     "show": 1
+    },
+    {
+     "say": "High power, low interest: keep satisfied, with brief, occasional updates.",
+     "show": 2
+    },
+    {
+     "say": "Low power, high interest: keep informed, and use them for feedback and early warnings.",
+     "show": 3
+    },
+    {
+     "say": "Low power, low interest: monitor, with a light touch.",
+     "show": 4
+    },
+    {
+     "say": "A V P who funds the project but rarely asks about it is keep satisfied. The support lead who'll live with the tool is keep informed.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "chain",
+   "kicker": "Concept",
+   "title": "Present and negotiate",
+   "items": [
+    [
+     "Lead with the ask",
+     "✗ \"First we looked at X…\""
+    ],
+    [
+     "Interests, not positions",
+     "What they actually need"
+    ],
+    [
+     "Know your BATNA",
+     "Your fallback if there's no deal"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Then make the case.",
+     "show": 0
+    },
+    {
+     "say": "Lead with the ask, not your methodology. It's a common slip to bury it in the third sentence.",
+     "show": 1
+    },
+    {
+     "say": "Negotiate around interests, not positions: what each side actually needs, not their opening ask.",
+     "show": 2
+    },
+    {
+     "say": "And know your Batna, your best alternative to a negotiated agreement, before you start. Without it, you can't tell whether a deal is good.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is a BATNA, and why know it before negotiating?",
+   "options": [
+    "Your opening position, so you can anchor the deal",
+    "Your best alternative if no agreement is reached, so you don't accept a worse deal",
+    "The other side's underlying interest, so you can frame the ask"
+   ],
+   "answer": 1,
+   "good": "That's right. It's your fallback if no agreement is reached. Knowing it keeps you from accepting a deal worse than walking away.",
+   "bad": "Not quite. It's your fallback if no agreement is reached. Knowing it keeps you from accepting a deal worse than walking away.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is a BATNA, and why know it before negotiating?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Work traced to a goal + build/buy/partner",
+     ""
+    ],
+    [
+     "Transformation idea + prototyping time",
+     ""
+    ],
+    [
+     "Functional vs. non-functional requirements",
+     ""
+    ],
+    [
+     "As-is and to-be maps, gap named",
+     ""
+    ],
+    [
+     "Stakeholder grid + ask-first case",
+     ""
+    ],
+    [
+     "BATNA + their underlying interest",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've traced work to a business goal and made a build, buy or partner decision,",
+     "show": 1
+    },
+    {
+     "say": "you've named a process to transform and scheduled prototyping time with a path back to the backlog,",
+     "show": 2
+    },
+    {
+     "say": "you've split functional and non-functional requirements from your questions,",
+     "show": 3
+    },
+    {
+     "say": "you've drawn as-is and to-be maps and named the gap,",
+     "show": 4
+    },
+    {
+     "say": "you've mapped stakeholders and delivered an ask-first case,",
+     "show": 5
+    },
+    {
+     "say": "and you've written your Batna and tied your ask to the other side's interest.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 3, change management, financial literacy, sales and partnerships, and technology awareness.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2 Completion Checklist

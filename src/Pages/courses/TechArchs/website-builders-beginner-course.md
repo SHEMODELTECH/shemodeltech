@@ -77,6 +77,213 @@ You can describe the canvas, element, breakpoint, and publishing concepts, and y
 
 *Answers: 1) The visual workspace where you place and arrange elements to build a page. 2) Any individual piece on a page, such as a heading, image, button, or container. 3) A screen-size setting (desktop, tablet, mobile) that lets you adjust layout per device, since designs often need to change across screen sizes. 4) It takes your visual design and turns it into a real, live website hosted at an actual URL. 5) No, that's the core purpose of these platforms — building real websites through a visual interface instead of hand-written code.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "browser",
+   "kicker": "Module 0 · What website builders do",
+   "title": "Build a real site, visually",
+   "beats": [
+    {
+     "say": "Welcome to Website Builders."
+    },
+    {
+     "say": "A website builder lets you build a real, live website by arranging elements on a canvas, instead of writing markup and styling code by hand."
+    },
+    {
+     "say": "Across this course you'll use three of them: Webflow, Framer and Wix."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "Four ideas every builder shares",
+   "items": [
+    [
+     "Canvas",
+     "The visual workspace"
+    ],
+    [
+     "Element",
+     "Heading, image, button, container"
+    ],
+    [
+     "Breakpoint",
+     "Desktop · tablet · mobile"
+    ],
+    [
+     "Publishing",
+     "Live, hosted, real URL"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every platform in this course is built on the same four ideas.",
+     "show": 0
+    },
+    {
+     "say": "The canvas is the visual workspace where you place and arrange things.",
+     "show": 1
+    },
+    {
+     "say": "An element is any single piece on the page: a heading, an image, a button, or a container holding other elements.",
+     "show": 2
+    },
+    {
+     "say": "A breakpoint is a screen size setting, like desktop, tablet or mobile, because a layout that works on a laptop often needs to change on a phone.",
+     "show": 3
+    },
+    {
+     "say": "And publishing turns your design into a live website, hosted by the platform, at a real U R L.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Structure at a glance",
+   "title": "Design, respond, publish",
+   "steps": [
+    "Design on the canvas",
+    "Respond per breakpoint",
+    "Publish: go live"
+   ],
+   "beats": [
+    {
+     "say": "The same shape appears in every tool.",
+     "show": 0
+    },
+    {
+     "say": "Design: arrange text, images and buttons on the canvas.",
+     "show": 1
+    },
+    {
+     "say": "Respond: adjust the layout for each breakpoint.",
+     "show": 2
+    },
+    {
+     "say": "Publish: go live at a real address.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Plan a three-page site on paper",
+   "items": [
+    [
+     "Home",
+     "Headline, hero image, 3 feature blocks, CTA button"
+    ],
+    [
+     "About",
+     "Its elements, listed"
+    ],
+    [
+     "Contact",
+     "Its elements, listed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Your lab is on paper.",
+     "show": 0
+    },
+    {
+     "say": "Sketch three pages: Home, About and Contact.",
+     "show": 0
+    },
+    {
+     "say": "For each page, list the elements it needs. For Home, maybe a headline, a hero image, three feature blocks and a call to action button.",
+     "show": 1
+    },
+    {
+     "say": "Do the same for About and Contact.",
+     "show": 3
+    },
+    {
+     "say": "That element list is exactly what you'll place on a canvas in every module that follows.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is a breakpoint, and why does it matter?",
+   "options": [
+    "A screen size setting that lets you adjust the layout per device",
+    "The point where a site stops loading",
+    "A pause in publishing while the site is reviewed"
+   ],
+   "answer": 0,
+   "good": "That's right. A breakpoint is a screen size setting, like desktop, tablet or mobile, so you can adjust the layout when a design needs to change across screen sizes.",
+   "bad": "Not quite. A breakpoint is a screen size setting, like desktop, tablet or mobile, so you can adjust the layout when a design needs to change across screen sizes.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is a breakpoint, and why does it matter?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain the four concepts",
+     ""
+    ],
+    [
+     "You have a three-page site plan",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can describe canvas, element, breakpoint and publishing,",
+     "show": 1
+    },
+    {
+     "say": "and you have a written three-page site plan, with elements listed per page.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 1, Webflow.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Webflow - Visual Control with Real CSS Underneath
@@ -142,6 +349,218 @@ You have a published Webflow page with a styled Div Block using a combo class, a
 5. What happens when you add a new item to a Collection after a Collection List is already built and published?
 
 *Answers: 1) Webflow's basic container element, used to hold and arrange other elements on the page. 2) Layer an additional, more specific style on top of a reusable base class, without duplicating or overriding the base style everywhere it's used. 3) A structured content type with defined fields (like title, image, body) used for content that repeats, such as blog posts or team members. 4) An element that automatically displays items from a CMS Collection on the page — useful because new items appear automatically without redesigning the page manually. 5) The new item automatically appears in the Collection List on the live site, without any manual page editing required.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "palette",
+   "kicker": "Module 1 · Webflow",
+   "title": "Visual control, real CSS underneath",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "Webflow is a visual builder that generates real, clean H T M L and C S S behind the scenes."
+    },
+    {
+     "say": "It's built around the same ideas professional developers use, like boxes, flexbox and grid, plus a built-in C M S for content that repeats."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "boxes",
+   "kicker": "Structure at a glance",
+   "title": "Webflow's building blocks",
+   "items": [
+    [
+     "Div Block",
+     "The basic container"
+    ],
+    [
+     "Combo class",
+     "Base style + a specific layer"
+    ],
+    [
+     "CMS Collection",
+     "Content type with fields"
+    ],
+    [
+     "Collection List",
+     "Shows items automatically"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Four building blocks.",
+     "show": 0
+    },
+    {
+     "say": "A Div Block is the basic container. Nearly everything on a page starts as a Div Block holding other elements.",
+     "show": 1
+    },
+    {
+     "say": "A class applies a reusable style. A combo class layers a more specific style on top, without duplicating the base.",
+     "show": 2
+    },
+    {
+     "say": "A C M S Collection is a structured content type, like Blog Posts, with defined fields.",
+     "show": 3
+    },
+    {
+     "say": "And a Collection List shows a Collection's items on the page automatically.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "layers",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "A flex card with a combo class",
+   "steps": [
+    "Add a Div Block",
+    "Display: Flex + heading and image",
+    "Class card → combo card featured"
+   ],
+   "beats": [
+    {
+     "say": "Create a Webflow project, open the Designer, and add a Div Block.",
+     "show": 1
+    },
+    {
+     "say": "In the Style panel, set its display to flex, and put a heading and an image inside. Flex direction and alignment control how they arrange.",
+     "show": 2
+    },
+    {
+     "say": "Give it a base class, card, then add a combo class, card featured, and change only the background colour.",
+     "show": 3
+    },
+    {
+     "say": "Check that the base styling stays intact everywhere else card is used.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "database",
+   "kicker": "Lab · Steps 4 to 6",
+   "title": "Content that fills itself in",
+   "steps": [
+    "Collection: Blog Posts",
+    "Add two sample items",
+    "Collection List, bound to fields"
+   ],
+   "beats": [
+    {
+     "say": "Now the C M S.",
+     "show": 0
+    },
+    {
+     "say": "Create a Collection called Blog Posts, with fields for title, cover image and summary.",
+     "show": 1
+    },
+    {
+     "say": "Add two sample items with real placeholder content.",
+     "show": 2
+    },
+    {
+     "say": "Then add a Collection List to your page, bind it to Blog Posts, and bind a heading and image in its template to the title and cover image fields.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "rocket",
+   "kicker": "Lab · Step 7",
+   "title": "Publish and check",
+   "big": ".webflow.io",
+   "sub": "both blog posts appear automatically",
+   "beats": [
+    {
+     "say": "Finally, publish to your free webflow dot io subdomain.",
+     "show": 0
+    },
+    {
+     "say": "Both blog posts should appear on the live page automatically. Add a new item later, and it appears too, with no page editing.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a combo class let you do that a single class doesn't?",
+   "options": [
+    "Apply styles only on mobile",
+    "Link a page to a CMS Collection",
+    "Layer a more specific style on a base class without duplicating or overriding it"
+   ],
+   "answer": 2,
+   "good": "That's right. A combo class layers an extra, more specific style on top of a reusable base class, without changing the base everywhere else it's used.",
+   "bad": "Not quite. A combo class layers an extra, more specific style on top of a reusable base class, without changing the base everywhere else it's used.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a combo class let you do that a single class doesn't?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Published page with a combo class",
+     ""
+    ],
+    [
+     "A working Collection List",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a published Webflow page with a styled Div Block using a combo class,",
+     "show": 1
+    },
+    {
+     "say": "and a working Collection List showing real content items.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, Framer.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -209,6 +628,223 @@ You have a published Framer page using at least one Stack for layout, a Button C
 
 *Answers: 1) Automatically arranges and re-flows the elements placed inside it (in a row, column, or grid), instead of requiring manual positioning of each one. 2) A reusable element, like a button or nav bar; editing the original Component updates every place it's used across the site. 3) An alternate visual state of a Component, such as how it looks on hover compared to its default appearance. 4) A trigger (like hover, click, or scroll) to a resulting animation or Variant change. 5) That AI-generated sections are built from the same real, editable Stacks and elements as anything built manually — not a locked image or a separate special format — so they can be adjusted like any other part of the page.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "sparkle",
+   "kicker": "Module 2 · Framer",
+   "title": "Design first, with motion and A I",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Framer grew out of a design and prototyping tool, and it builds real, live websites with that heritage."
+    },
+    {
+     "say": "Polished animation, interactive components and A I site generation are first-class features, not add-ons."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Structure at a glance",
+   "title": "Framer's building blocks",
+   "items": [
+    [
+     "Stack",
+     "Auto-arranges its children"
+    ],
+    [
+     "Component",
+     "Reusable; edit once, updates everywhere"
+    ],
+    [
+     "Variant",
+     "Default vs. Hover"
+    ],
+    [
+     "Interaction",
+     "Trigger → animation"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Four building blocks.",
+     "show": 0
+    },
+    {
+     "say": "A Stack is a frame set to the Stack layout. It arranges what's inside in a row, column or grid, and re-flows it as content changes.",
+     "show": 1
+    },
+    {
+     "say": "A Component is a reusable element, like a button. Edit the original, and every copy updates.",
+     "show": 2
+    },
+    {
+     "say": "A Variant is an alternate state of a Component, like how a button looks on hover.",
+     "show": 3
+    },
+    {
+     "say": "And an Interaction connects a trigger, like hover, click or scroll, to an animation or Variant change. The exact labels change between versions.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "cursor",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "A button that reacts",
+   "steps": [
+    "Frame → Stack, vertical",
+    "Heading + text auto-space",
+    "Button + Hover Variant",
+    "Hover interaction, previewed"
+   ],
+   "beats": [
+    {
+     "say": "Create a Framer project. Add a frame, set its layout to Stack, and its direction to vertical.",
+     "show": 1
+    },
+    {
+     "say": "Add a heading and text inside, and watch them space themselves, with no manual positioning.",
+     "show": 2
+    },
+    {
+     "say": "Create a Button Component, style its default look, and add a Hover Variant with a different background colour.",
+     "show": 3
+    },
+    {
+     "say": "Then add a hover interaction that switches to the Hover Variant with a smooth transition, and preview it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "sparkle",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Generate, then make it yours",
+   "quote": "\"A pricing section for a SaaS product\"",
+   "beats": [
+    {
+     "say": "Now try Framer's A I page or section generator. Its name changes between versions.",
+     "show": 0
+    },
+    {
+     "say": "Give it a short prompt, like a pricing section for a SaaS product, and review the layout.",
+     "show": 1
+    },
+    {
+     "say": "Then edit its text directly, and switch one Stack from row to column. The children reflow automatically.",
+     "show": 1
+    },
+    {
+     "say": "Because the A I output is built from the same real, editable Stacks and elements as anything you build by hand.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "rocket",
+   "kicker": "Lab · Step 7",
+   "title": "Test it live",
+   "big": "Hover it live",
+   "sub": "on the published page, not just the editor",
+   "beats": [
+    {
+     "say": "Publish to your free Framer subdomain.",
+     "show": 0
+    },
+    {
+     "say": "Then test the hover animation on the live published page, not just in the editor.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What did editing the AI-generated section show?",
+   "options": [
+    "AI sections are locked images you can only replace",
+    "AI sections are built from the same real, editable Stacks and elements as anything else",
+    "AI sections must be exported before you can edit them"
+   ],
+   "answer": 1,
+   "good": "That's right. A I generated sections are built from real, editable Stacks and elements, not a locked image or a special format, so you can adjust them like any other part of the page.",
+   "bad": "Not quite. A I generated sections are built from real, editable Stacks and elements, not a locked image or a special format, so you can adjust them like any other part of the page.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What did editing the AI-generated section show?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Published page with a Stack",
+     ""
+    ],
+    [
+     "A button with a hover animation",
+     ""
+    ],
+    [
+     "One customised A I section",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a published Framer page using at least one Stack for layout,",
+     "show": 1
+    },
+    {
+     "say": "a Button Component with a working hover animation,",
+     "show": 2
+    },
+    {
+     "say": "and one A I generated section you customised.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 3, Wix.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3: Wix - All-in-One Business Website Builder
@@ -270,3 +906,178 @@ You have a published Wix site with at least one App Market app installed and pla
 5. After publishing, how did you confirm the app was actually working, not just visually placed on the page?
 
 *Answers: 1) Wix's visual, drag-and-drop page builder, where elements are placed and resized directly on the canvas. 2) Real business functionality — such as appointment scheduling or e-commerce — that plugs directly into the site's pages, beyond what's possible with basic page elements alone. 3) Wix Bookings (appointment scheduling) or Wix Stores (e-commerce) or Wix Forms (custom forms), among others. 4) Managing what the installed apps power — viewing bookings, processing orders, or checking form submissions — separate from visually editing pages. 5) By submitting a real test booking or form entry on the live site and confirming it actually appeared in the Dashboard afterward.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "package",
+   "kicker": "Module 3 · Wix",
+   "title": "An all-in-one business site",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "Wix is built for ease and speed, especially for non-designers and small business owners."
+    },
+    {
+     "say": "It has a drag and drop editor, an App Market of ready-made business features, and an A I assisted setup that builds a starting site from a few questions."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "boxes",
+   "kicker": "Structure at a glance",
+   "title": "Editor, App Market, Dashboard",
+   "steps": [
+    "Editor: place elements",
+    "App Market: Bookings, Stores, Forms",
+    "Dashboard: manage it all"
+   ],
+   "beats": [
+    {
+     "say": "Three parts work together.",
+     "show": 0
+    },
+    {
+     "say": "The Editor is the visual page builder, where you place and resize elements on the canvas.",
+     "show": 1
+    },
+    {
+     "say": "An App from the App Market adds real business functionality, like Wix Bookings for appointments, or Wix Stores for e-commerce.",
+     "show": 2
+    },
+    {
+     "say": "And the Dashboard is where you manage what those apps power: bookings, orders and form submissions, separate from the page editor.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "calc",
+   "kicker": "Lab · Steps 1 to 5",
+   "title": "Build it and add an app",
+   "steps": [
+    "Create the site",
+    "Section: heading, text, button",
+    "Add Bookings or a form",
+    "One service or one field",
+    "Place it on the page"
+   ],
+   "beats": [
+    {
+     "say": "Create a Wix site, blank or with the A I assisted setup.",
+     "show": 1
+    },
+    {
+     "say": "In the Editor, add a section with a heading, a paragraph and a button.",
+     "show": 2
+    },
+    {
+     "say": "Add the Wix Bookings app from the App Market, or a form if Bookings doesn't fit your business. In some editors, forms live in the Add Elements panel.",
+     "show": 3
+    },
+    {
+     "say": "Configure one setting: a single service with a name and duration, or one custom form field.",
+     "show": 4
+    },
+    {
+     "say": "Then place the booking widget or form on your page, if the app didn't add it for you.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "proof",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "Prove it actually works",
+   "quote": "Submit on the live site → see it in the Dashboard.",
+   "beats": [
+    {
+     "say": "Publish the site, then submit a real test booking or form entry on the live page.",
+     "show": 0
+    },
+    {
+     "say": "Open the Dashboard, and confirm your test submission actually appears there.",
+     "show": 1
+    },
+    {
+     "say": "That's how you know the app works, not just that it's placed on the page.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "How did you confirm the app was really working, not just placed on the page?",
+   "options": [
+    "It looked right in the Editor preview",
+    "By submitting a real test on the live site and seeing it in the Dashboard",
+    "Wix showed a green check next to the app"
+   ],
+   "answer": 1,
+   "good": "That's right. You submitted a real test booking or form entry on the live site, and confirmed it appeared in the Dashboard.",
+   "bad": "Not quite. You submitted a real test booking or form entry on the live site, and confirmed it appeared in the Dashboard.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "How did you confirm the app was really working, not just placed on the page?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Published site with an app placed",
+     ""
+    ],
+    [
+     "A test submission in the Dashboard",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a published Wix site with at least one App Market app installed and placed on a page,",
+     "show": 1
+    },
+    {
+     "say": "and you've confirmed a real test submission appears in the Dashboard.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Website Builders. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

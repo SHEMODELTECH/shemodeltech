@@ -234,6 +234,404 @@ You have a tool recommendation with reasoning for a specific team, one working b
 
 *Answers: 1) Structured, engineering-heavy workflows with tickets, sprints, backlogs, and detailed workflow states; this suits software teams that need that level of structure. 2) Trello is a lightweight, visual, card-based Kanban board, well suited to simpler workflows or smaller teams that don't need Jira's depth of configuration. 3) Between the two, more structure than Trello but less engineering-specific overhead than Jira, often used by cross-functional or less purely-technical teams. 4) Documentation, planning docs, and knowledge management; it has built-in Projects with sprints that some small teams use, but many teams pair it with Jira, Trello, or Asana for day-to-day tracking. 5) It tends to create overhead, extra configuration and process, that outweighs the benefit, since the team didn't need that level of structure in the first place.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Module · Analytics, Roadmapping & Collaboration",
+   "title": "Measure, prioritise, coordinate",
+   "beats": [
+    {
+     "say": "Welcome to Analytics, Roadmapping and Collaboration."
+    },
+    {
+     "say": "You'll choose the metrics that show whether a product is working, prioritise a roadmap with a framework like RICE, and pick the right collaboration tool for a team."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Topic 1 · Analytics",
+   "title": "Pick the numbers that matter",
+   "items": [
+    [
+     "KPIs",
+     "2 to 3, chosen deliberately"
+    ],
+    [
+     "Product metrics",
+     "Activation · retention · engagement · churn"
+    ],
+    [
+     "Context",
+     "WAU up, retention down?"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "You can't tell whether a decision worked by opinion alone.",
+     "show": 0
+    },
+    {
+     "say": "K P Is, key performance indicators, are the small set of metrics that matter most for one goal. Pick too many, and it's the same as picking none.",
+     "show": 1
+    },
+    {
+     "say": "Product metrics are the broader set: activation, retention, engagement and churn.",
+     "show": 2
+    },
+    {
+     "say": "And watch for metrics that mislead alone. Weekly active users can look great while retention quietly declines.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Topic 1 · Analytics",
+   "title": "A/B test, then check significance",
+   "steps": [
+    "Two versions",
+    "What you'll measure",
+    "Win condition",
+    "Check significance"
+   ],
+   "beats": [
+    {
+     "say": "An A B test runs two versions at the same time, with different users, so a result comes from the change, not something like seasonality.",
+     "show": 0
+    },
+    {
+     "say": "Describe the two versions.",
+     "show": 1
+    },
+    {
+     "say": "Decide what you'll measure.",
+     "show": 2
+    },
+    {
+     "say": "Define what counts as a win.",
+     "show": 3
+    },
+    {
+     "say": "Then check statistical significance. A small sample can look meaningful but be a coin flip.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Topic 1 · Lab",
+   "title": "Your analytics lab",
+   "items": [
+    [
+     "2 to 3 KPIs",
+     "Each justified"
+    ],
+    [
+     "Product metrics",
+     "One flagged"
+    ],
+    [
+     "A/B test",
+     "With a win condition"
+    ],
+    [
+     "Misleading metric",
+     "Needs context"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, pick a feature and justify two or three K P Is.",
+     "show": 1
+    },
+    {
+     "say": "List the relevant product metrics, and flag the one you'd worry about most if it fell.",
+     "show": 2
+    },
+    {
+     "say": "Design an A B test with a clear win condition.",
+     "show": 3
+    },
+    {
+     "say": "And find a real dashboard metric that's misleading without a second metric beside it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pyramid",
+   "kicker": "Topic 2 · Roadmapping",
+   "title": "The hard part is saying no",
+   "quote": "Without a method, the roadmap becomes whoever asked last, or loudest.",
+   "beats": [
+    {
+     "say": "A roadmap is a plan for what gets built, in what order, and why.",
+     "show": 0
+    },
+    {
+     "say": "The hardest part isn't listing ideas. It's saying no to good ideas because something else matters more right now.",
+     "show": 1
+    },
+    {
+     "say": "Without a stated method, a roadmap quietly becomes: whoever asked most recently, or loudest.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "calc",
+   "kicker": "Topic 2 · Roadmapping",
+   "title": "Scoring with RICE",
+   "items": [
+    [
+     "Fix slow sign-up",
+     "6,000 × 1 × 0.9 ÷ 1 = 5,400 ✓"
+    ],
+    [
+     "Dark mode",
+     "4,000 × 0.5 × 0.8 ÷ 2 = 800"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "RICE stands for reach, impact, confidence and effort.",
+     "show": 0
+    },
+    {
+     "say": "The score is reach, times impact, times confidence, divided by effort. Confidence becomes a decimal, so eighty percent is zero point eight.",
+     "show": 0
+    },
+    {
+     "say": "Fixing slow sign up reaches six thousand users, impact one, ninety percent confidence, one person month. That's five thousand four hundred.",
+     "show": 1
+    },
+    {
+     "say": "Dark mode reaches four thousand, impact a half, eighty percent, two person months. Just eight hundred.",
+     "show": 2
+    },
+    {
+     "say": "So the fix ranks higher.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Topic 2 · Lab",
+   "title": "Rank, scope, explain",
+   "steps": [
+    "List 5 to 6 ideas",
+    "Score and rank",
+    "Scope the MVP",
+    "Explain to a stakeholder",
+    "Re-rank on a new signal"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, list five or six ideas.",
+     "show": 1
+    },
+    {
+     "say": "Score and rank them with RICE, or a value versus effort grid.",
+     "show": 2
+    },
+    {
+     "say": "Scope the top idea into an M V P, with explicit out of scope items and two or three follow-ons.",
+     "show": 3
+    },
+    {
+     "say": "Write the one sentence why for a stakeholder whose idea didn't make it.",
+     "show": 4
+    },
+    {
+     "say": "Then ask how a new signal, like a competitor launch, would change the order.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 3 · Collaboration",
+   "title": "Four tools, different shapes",
+   "items": [
+    [
+     "Jira",
+     "Structured, engineering-heavy"
+    ],
+    [
+     "Trello",
+     "Lightweight visual Kanban"
+    ],
+    [
+     "Asana",
+     "In between · cross-functional"
+    ],
+    [
+     "Notion",
+     "Docs and knowledge"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Plans only matter if the team can see and act on them.",
+     "show": 0
+    },
+    {
+     "say": "Jira is built for structured, engineering heavy work: tickets, sprints, backlogs, detailed workflow states.",
+     "show": 1
+    },
+    {
+     "say": "Trello is a lightweight, visual Kanban board, for simpler workflows and smaller teams.",
+     "show": 2
+    },
+    {
+     "say": "Asana sits between them, often used by cross functional teams.",
+     "show": 3
+    },
+    {
+     "say": "And Notion is strongest for docs, planning and knowledge. Many teams pair it with one of the others.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Topic 3 · Lab",
+   "title": "Match the tool to the need",
+   "quote": "Match the tool to the team's actual need, not the \"best\" tool in the abstract.",
+   "beats": [
+    {
+     "say": "More structure than a team needs, like full Jira for a five person team, creates overhead that outweighs the benefit.",
+     "show": 0
+    },
+    {
+     "say": "In the lab, recommend a tool for a specific team, build a board with three or four tasks, move one through a status change, and note where Notion would fit alongside it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does statistical significance matter in an A/B test?",
+   "options": [
+    "A small sample can produce a result that looks real but is just noise",
+    "It makes the test run faster",
+    "It decides which version users see"
+   ],
+   "answer": 0,
+   "good": "That's right. Significance checks whether a difference is real or could plausibly be random noise, because a small sample can look meaningful but isn't.",
+   "bad": "Not quite. Significance checks whether a difference is real or could plausibly be random noise, because a small sample can look meaningful but isn't.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does statistical significance matter in an A/B test?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "KPIs and product metrics justified",
+     ""
+    ],
+    [
+     "A/B test with a win condition",
+     ""
+    ],
+    [
+     "5 to 6 ideas ranked",
+     ""
+    ],
+    [
+     "MVP scoped",
+     ""
+    ],
+    [
+     "Tool chosen for a team",
+     ""
+    ],
+    [
+     "Working board in use",
+     ""
+    ],
+    [
+     "Where Notion fits",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's this module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've chosen and justified two or three K P Is and the relevant product metrics,",
+     "show": 1
+    },
+    {
+     "say": "you've designed an A B test with a win condition, and considered significance,",
+     "show": 2
+    },
+    {
+     "say": "you've scored and ranked five or six ideas with a framework,",
+     "show": 3
+    },
+    {
+     "say": "you've scoped an M V P with out of scope items and follow-ons,",
+     "show": 4
+    },
+    {
+     "say": "you've chosen and justified a collaboration tool for a team,",
+     "show": 5
+    },
+    {
+     "say": "you've built a working board, with a task moved through a status change,",
+     "show": 6
+    },
+    {
+     "say": "and you've noted where a documentation tool like Notion fits alongside it.",
+     "show": 7
+    },
+    {
+     "say": "You've finished Analytics, Roadmapping and Collaboration. Well done.",
+     "show": 7
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

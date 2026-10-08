@@ -178,6 +178,363 @@ You can read your own token and privileges, list which accounts have administrat
 
 *Answers: 1) A SID (security identifier) is a unique value Windows uses to represent an account or group internally instead of its name; an access token carries the user's SIDs and their privileges. 2) It checks the object's ACL (access control list) to see whether any SID in the user's access token matches an entry that permits the requested access. 3) User Account Control prompts for confirmation before an action uses administrator privileges, keeping users in a standard, limited context until elevation is genuinely needed, which limits the damage a careless click or malware can do. 4) The Run keys are autostart locations that make a program launch at login, so malware commonly writes there for persistence; checking them helps you spot and remove that persistence. 5) Event ID 4624 is a successful logon and 4625 is a failed one; reviewing them helps detect unauthorised access attempts, such as a burst of 4625 failures indicating a brute-force attempt.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "laptop",
+   "kicker": "Module 2 · Operating systems",
+   "title": "Who can touch what",
+   "beats": [
+    {
+     "say": "Welcome to Operating Systems."
+    },
+    {
+     "say": "You'll look at how Linux and Windows decide who can touch what, and where to find the evidence when something goes wrong."
+    },
+    {
+     "say": "Run these labs only on your own computer or a virtual machine you control."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "terminal",
+   "kicker": "Topic 2.1 · Linux",
+   "title": "Users, permissions, privilege",
+   "items": [
+    [
+     "Users and groups",
+     "root is the superuser"
+    ],
+    [
+     "rwx",
+     "Owner · group · others"
+    ],
+    [
+     "sudo",
+     "One command, elevated"
+    ],
+    [
+     "/var/log/auth.log",
+     "Logins and sudo use"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Linux runs most of the world's servers. Every process runs as a user, and file permissions decide what that user can touch.",
+     "show": 0
+    },
+    {
+     "say": "Every file and process has an owning user and group. Root is the all-powerful superuser.",
+     "show": 1
+    },
+    {
+     "say": "Each file has read, write and execute permissions, set separately for owner, group, and everyone else.",
+     "show": 2
+    },
+    {
+     "say": "Sudo lets a normal user run one command as root, which is safer than being root all the time.",
+     "show": 3
+    },
+    {
+     "say": "And logs in slash var slash log, especially auth dot log, record logins and sudo use.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Topic 2.1 · Lab",
+   "title": "Read and change permissions",
+   "file": "terminal",
+   "code": "whoami\nid\nls -l\ntouch testfile\nchmod 600 testfile\nls -l testfile",
+   "beats": [
+    {
+     "say": "Start with who am I and I D, to see your user and groups.",
+     "show": 0
+    },
+    {
+     "say": "Ls dash l shows the r w x triads. Then create a file and set it to six hundred.",
+     "show": 1
+    },
+    {
+     "say": "Six hundred means the owner can read and write, and group and others get nothing.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Topic 2.1 · Risk",
+   "title": "Where privilege escalates",
+   "items": [
+    [
+     "SUID binaries",
+     "Run as their owner, often root"
+    ],
+    [
+     "World-writable files",
+     "Anyone can change them"
+    ],
+    [
+     "Services as root",
+     "✗ Run as a limited user ✓"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Permission mistakes are one of the largest attack surfaces on Linux.",
+     "show": 0
+    },
+    {
+     "say": "A SUID binary runs with its owner's privileges, often root. A stray or exploitable one lets an ordinary user escalate to root.",
+     "show": 1
+    },
+    {
+     "say": "World-writable files and over-permissive directories are classic weak spots too.",
+     "show": 2
+    },
+    {
+     "say": "And a service running as root hands root to anyone who compromises it. Least privilege means each service runs as its own limited user.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "search",
+   "kicker": "Topic 2.1 · Lab",
+   "title": "Audit, then check the log",
+   "file": "terminal",
+   "code": "find / -perm -4000 -type f 2>/dev/null\nfind / -perm -0002 -type f 2>/dev/null\nsudo id\nsudo tail /var/log/auth.log",
+   "beats": [
+    {
+     "say": "Now hunt for risky files, the way an auditor would: SUID binaries, then world-writable files.",
+     "show": 0
+    },
+    {
+     "say": "Then run one command with sudo, and read the log entry it leaves in auth dot log. Without that file, use journal c t l dash e.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "key",
+   "kicker": "Topic 2.2 · Windows",
+   "title": "Tokens meet ACLs",
+   "steps": [
+    "Token: SIDs + privileges",
+    "Object with an ACL",
+    "Does a SID match a permit?",
+    "Granted or denied"
+   ],
+   "beats": [
+    {
+     "say": "Windows is the biggest endpoint target, and its model is different.",
+     "show": 0
+    },
+    {
+     "say": "Every account and group has a S I D, a security identifier, and your access token carries your S I Ds and privileges.",
+     "show": 1
+    },
+    {
+     "say": "Files and registry keys carry an access control list, or A C L, listing exactly who gets which rights.",
+     "show": 2
+    },
+    {
+     "say": "Windows checks whether any S I D in your token matches an entry that permits the access.",
+     "show": 3
+    },
+    {
+     "say": "Then access is granted or denied.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 2.2 · Defences",
+   "title": "UAC, Defender, Registry, logs",
+   "items": [
+    [
+     "UAC",
+     "Confirm before admin rights"
+    ],
+    [
+     "Defender",
+     "Built-in antivirus"
+    ],
+    [
+     "Run keys",
+     "Autostart, malware persistence"
+    ],
+    [
+     "4624 / 4625",
+     "Logon success / failure"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Four more pieces to know.",
+     "show": 0
+    },
+    {
+     "say": "User Account Control prompts before anything uses administrator rights, keeping you in a standard context until elevation is truly needed.",
+     "show": 1
+    },
+    {
+     "say": "Microsoft Defender Antivirus is the built-in protection.",
+     "show": 2
+    },
+    {
+     "say": "The Registry's Run keys relaunch a program at every login, a favourite place for malware persistence.",
+     "show": 3
+    },
+    {
+     "say": "And the Security event log records logons: event forty six twenty four for success, forty six twenty five for failure. A burst of failures can mean a brute force attempt.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 2.2 · Lab",
+   "title": "Inspect a Windows machine",
+   "file": "PowerShell",
+   "code": "whoami /all\nGet-LocalGroup Administrators | Get-LocalGroupMember\nicacls C:\\Windows\\System32\\drivers\\etc\\hosts\nGet-MpComputerStatus\nGet-WinEvent -LogName Security -MaxEvents 20\nreg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\"",
+   "beats": [
+    {
+     "say": "In PowerShell, who am I slash all shows your S I D, groups and privileges.",
+     "show": 0
+    },
+    {
+     "say": "List the administrators group, read the hosts file's A C L with i c a c l s, and confirm Defender's real-time protection is on.",
+     "show": 1
+    },
+    {
+     "say": "Then read recent Security events, and check the Run key for autostart entries.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "shield",
+   "kicker": "Both systems",
+   "title": "Least privilege, everywhere",
+   "quote": "Give any user or process only the access it genuinely needs.",
+   "beats": [
+    {
+     "say": "The same rule runs through both systems.",
+     "show": 0
+    },
+    {
+     "say": "Standard users for everyday work. Admin or root only when a task truly needs it. Reducing admin rights is one of the highest-impact defensive changes you can make.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Which event ID marks a failed logon in the Windows Security log?",
+   "options": [
+    "4624",
+    "None, failures are not logged",
+    "4625"
+   ],
+   "answer": 2,
+   "good": "That's right. Event 4625 is a failed logon, and 4624 is a successful one. A burst of 4625s can point to a brute force attempt.",
+   "bad": "Not quite. Event 4625 is a failed logon, and 4624 is a successful one. A burst of 4625s can point to a brute force attempt.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Which event ID marks a failed logon in the Windows Security log?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Linux permissions read, changed and audited",
+     ""
+    ],
+    [
+     "sudo used and logged",
+     ""
+    ],
+    [
+     "Token, admins and ACL inspected",
+     ""
+    ],
+    [
+     "Defender, logon events, Run key",
+     ""
+    ],
+    [
+     "Both models and least privilege explained",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've read and changed Linux permissions, and searched for SUID and world-writable files,",
+     "show": 1
+    },
+    {
+     "say": "you've used sudo and reviewed the log entry it left,",
+     "show": 2
+    },
+    {
+     "say": "you've inspected your Windows token, the admin group, and a file's A C L,",
+     "show": 3
+    },
+    {
+     "say": "you've confirmed Defender and viewed logon events and a Run key,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain both permission models, and least privilege on each.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 3, ethical hacking.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 2 Completion Checklist

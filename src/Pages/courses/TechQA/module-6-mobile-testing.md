@@ -210,6 +210,390 @@ You have a four-device matrix with reasons, you've completed a task using only a
 
 *Answers: 1) A short, deliberate list of devices and OS versions to test on, chosen from real usage data such as common screen sizes and the oldest supported OS. 2) The built-in screen readers on Android and iOS, which read the interface aloud for people who can't see the screen. 3) At least 48 × 48 dp on Android and 44 × 44 points on iOS. 4) Emulators miss real-world behaviour such as touch accuracy, camera, sensors, and true performance. 5) A screen reader user can't tell what it does, which can block them from completing a task, the same impact as a broken button.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "phone",
+   "kicker": "Module 6 · Mobile testing",
+   "title": "Phones you'll never own",
+   "beats": [
+    {
+     "say": "Welcome to Module 6, mobile testing."
+    },
+    {
+     "say": "You'll test on Android and i O S, choose which devices to cover, and check the app works for people using screen readers and large text."
+    },
+    {
+     "say": "No Mac? Do the Android topics, read the i O S one, and do just its App Store guideline step."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "phone",
+   "kicker": "Topic 6.1 · Android",
+   "title": "Testing against fragmentation",
+   "items": [
+    [
+     "Emulator",
+     "Virtual device, any version or size"
+    ],
+    [
+     "ADB",
+     "Install, logs, simulate events"
+    ],
+    [
+     "Espresso",
+     "Automated UI tests"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Android means device fragmentation: many manufacturers, screen sizes and O S versions, all in use at once.",
+     "show": 0
+    },
+    {
+     "say": "The Android Emulator runs a virtual device on your computer, so you can test versions and screen sizes you don't own.",
+     "show": 1
+    },
+    {
+     "say": "A D B, the Android Debug Bridge, talks to a device from the command line: installing apps, pulling logs, simulating events.",
+     "show": 2
+    },
+    {
+     "say": "And Espresso is Google's own U I testing framework for automated tests on a device or emulator.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 6.1 · Lab",
+   "title": "Talk to the emulator",
+   "file": "terminal",
+   "code": "adb devices\nadb shell getprop ro.build.version.release",
+   "beats": [
+    {
+     "say": "In the lab, create an emulator in Android Studio's virtual device manager, and run a simple app on it.",
+     "show": 0
+    },
+    {
+     "say": "Then use A D B to confirm the device is connected, and read its Android version.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Topic 6.1 · Lab",
+   "title": "Interrupt it, then compare",
+   "steps": [
+    "Simulate a call or press home",
+    "Resume: was state kept?",
+    "Second emulator, compare"
+   ],
+   "beats": [
+    {
+     "say": "Next, a mobile-only check, with no clean equivalent on the web.",
+     "show": 0
+    },
+    {
+     "say": "While the app runs, simulate an incoming call, or press home to background it.",
+     "show": 1
+    },
+    {
+     "say": "Bring it back, and note whether its state was preserved.",
+     "show": 2
+    },
+    {
+     "say": "Then create a second emulator, with a different screen size or O S version, and compare the app side by side.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "phone",
+   "kicker": "Topic 6.2 · iOS",
+   "title": "Apple's tools",
+   "items": [
+    [
+     "iOS Simulator",
+     "Simulates software, not hardware"
+    ],
+    [
+     "XCUITest",
+     "Automated UI tests in Xcode"
+    ],
+    [
+     "TestFlight",
+     "Real testers, real devices"
+    ],
+    [
+     "App Store Review",
+     "Guideline compliance"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "i O S is a more controlled world, with fewer devices, but its own strict rules and tools.",
+     "show": 0
+    },
+    {
+     "say": "The i O S Simulator runs on a Mac. It simulates i O S software behaviour, rather than emulating real hardware.",
+     "show": 1
+    },
+    {
+     "say": "X C U I Test is Apple's U I testing framework, built into Xcode.",
+     "show": 2
+    },
+    {
+     "say": "TestFlight sends pre-release builds to real testers, on real devices.",
+     "show": 3
+    },
+    {
+     "say": "And every app must pass the App Store Review Guidelines. Google Play's rules differ, so each platform needs its own compliance checks.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "test",
+   "kicker": "Topic 6.2 · Lab",
+   "title": "A basic XCUITest",
+   "file": "BasicUITests.swift",
+   "code": "import XCTest\n\nfinal class BasicUITests: XCTestCase {\n    @MainActor\n    func testAppLaunches() throws {\n        let app = XCUIApplication()\n        app.launch()\n        XCTAssertTrue(app.staticTexts.firstMatch.exists)\n    }\n}",
+   "beats": [
+    {
+     "say": "In the lab, create an app in Xcode, and run it on a chosen simulated device and i O S version.",
+     "show": 0
+    },
+    {
+     "say": "Then write a basic U I test: launch the app, and check a text label exists.",
+     "show": 1
+    },
+    {
+     "say": "The main actor line runs the test on the main thread, which U I tests need under Swift 6.",
+     "show": 1
+    },
+    {
+     "say": "Run it, then switch the Simulator's device and version, and run the same test again.",
+     "show": 1
+    },
+    {
+     "say": "Finally, look up one App Store guideline, like a camera permission rule, and write how you'd test it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Topic 6.2 · Limits",
+   "title": "The Simulator isn't a phone",
+   "quote": "Some checks genuinely need a real device.",
+   "beats": [
+    {
+     "say": "The Simulator is fast and convenient.",
+     "show": 0
+    },
+    {
+     "say": "But it can't fully replicate real hardware performance, sensors, or the camera. Some checks need a real device.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Topic 6.3 · Coverage",
+   "title": "A device matrix",
+   "items": [
+    [
+     "Usage data",
+     "Common sizes, oldest supported OS"
+    ],
+    [
+     "Emulators",
+     "Cheap layout checks"
+    ],
+    [
+     "One real device",
+     "Touch, camera, performance"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "You can't test every phone, so you choose a device matrix: a short, deliberate list, chosen from real usage data.",
+     "show": 0
+    },
+    {
+     "say": "For example, the most common screen sizes, and the oldest O S version you support.",
+     "show": 1
+    },
+    {
+     "say": "Emulators and simulators cover most layout checks cheaply.",
+     "show": 2
+    },
+    {
+     "say": "But keep at least one real device, for touch, camera and performance.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 6.3 · Accessibility",
+   "title": "Usable by everyone",
+   "items": [
+    [
+     "Screen readers",
+     "TalkBack · VoiceOver"
+    ],
+    [
+     "Dynamic text",
+     "No cut-off or overlap"
+    ],
+    [
+     "Touch targets",
+     "48 × 48 dp · 44 × 44 pt"
+    ],
+    [
+     "Lab",
+     "Screen reader task + 2 bug reports"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Accessibility is part of coverage.",
+     "show": 0
+    },
+    {
+     "say": "Screen readers read the interface aloud: TalkBack on Android, VoiceOver on i O S. Every button needs a meaningful label, not button three.",
+     "show": 1
+    },
+    {
+     "say": "Dynamic text size enlarges text system wide. Layouts must still fit, without cut-off or overlapping words.",
+     "show": 2
+    },
+    {
+     "say": "Touch targets: at least forty eight by forty eight d p on Android, and forty four by forty four points on i O S.",
+     "show": 3
+    },
+    {
+     "say": "In the lab, finish a task using only a screen reader, test the largest text size, run Accessibility Scanner or Accessibility Inspector, and file two bug reports with the device and setting.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is an unlabelled button a real bug?",
+   "options": [
+    "It looks untidy in the design",
+    "It makes the app load more slowly",
+    "A screen reader user can't tell what it does, which can block a task"
+   ],
+   "answer": 2,
+   "good": "That's right. A screen reader user can't tell what the button does, which can block them from finishing a task, the same impact as a broken button.",
+   "bad": "Not quite. A screen reader user can't tell what the button does, which can block them from finishing a task, the same impact as a broken button.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is an unlabelled button a real bug?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Two emulators + ADB",
+     ""
+    ],
+    [
+     "Interruption documented",
+     ""
+    ],
+    [
+     "XCUITest on two Simulators",
+     ""
+    ],
+    [
+     "One App Store guideline check",
+     ""
+    ],
+    [
+     "Device matrix + screen reader task",
+     ""
+    ],
+    [
+     "Two accessibility bug reports",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've run an app on two Android emulators and confirmed A D B works,",
+     "show": 1
+    },
+    {
+     "say": "documented app state after an interruption,",
+     "show": 2
+    },
+    {
+     "say": "passed an X C U I Test on two Simulator device and O S combinations,",
+     "show": 3
+    },
+    {
+     "say": "found one App Store guideline and a way to test it,",
+     "show": 4
+    },
+    {
+     "say": "built a four device matrix and completed a task with a screen reader,",
+     "show": 5
+    },
+    {
+     "say": "and filed two device specific bug reports at the largest text size.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 7, security testing.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 6 Completion Checklist

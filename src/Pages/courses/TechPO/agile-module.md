@@ -251,6 +251,411 @@ You have a sprint's worth of backlog items estimated in story points, selected t
 
 *Answers: 1) They measure relative effort or complexity, they deliberately don't measure estimated time or hours. 2) How many story points a team has historically completed per sprint, it's used to estimate how much new work is realistic to commit to in an upcoming sprint. 3) A single, short sentence describing the sprint's overall purpose, it matters because it gives the team's individual tasks a shared "why" beyond just a checklist of unrelated items. 4) The team's agreed checklist for when work is actually finished, it prevents disputes and ambiguity about whether something is truly ready versus just looking complete. 5) Because velocity is based on historical performance, it can shift as the team's size, skill, or the nature of the work itself changes over time.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Module · Agile",
+   "title": "Short, predictable cycles",
+   "beats": [
+    {
+     "say": "Welcome to the Agile module."
+    },
+    {
+     "say": "You'll run product work in short, predictable cycles, using Scrum, Kanban and Sprint Planning."
+    },
+    {
+     "say": "All you need is a browser and a free board tool, like Trello or Jira."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 1 · Scrum",
+   "title": "Three accountabilities",
+   "items": [
+    [
+     "Product Owner",
+     "Maximises value · orders the backlog"
+    ],
+    [
+     "Scrum Master",
+     "Facilitates · removes blockers"
+    ],
+    [
+     "Developers",
+     "Build each Increment"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Scrum is a lightweight Agile framework built around fixed-length iterations called Sprints. One month or less, commonly one or two weeks.",
+     "show": 0
+    },
+    {
+     "say": "This module follows the official twenty twenty Scrum Guide, which has three accountabilities.",
+     "show": 0
+    },
+    {
+     "say": "The Product Owner maximises the value of the product, and orders the Product Backlog.",
+     "show": 1
+    },
+    {
+     "say": "The Scrum Master helps the team use Scrum well, and removes blockers. A facilitator, not a manager who assigns tasks.",
+     "show": 2
+    },
+    {
+     "say": "And the Developers build each Increment.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "stopwatch",
+   "kicker": "Topic 1 · Scrum",
+   "title": "Five events",
+   "steps": [
+    "Sprint Planning",
+    "Daily Scrum (15 min)",
+    "Sprint Review",
+    "Sprint Retrospective"
+   ],
+   "beats": [
+    {
+     "say": "There are five events. The Sprint itself contains the other four.",
+     "show": 0
+    },
+    {
+     "say": "Sprint Planning decides why, what and how for this Sprint.",
+     "show": 1
+    },
+    {
+     "say": "The Daily Scrum is a fifteen minute daily check on progress toward the Sprint Goal.",
+     "show": 2
+    },
+    {
+     "say": "The Sprint Review is a working session, not just a demo. The team and stakeholders inspect what was done, and agree what to do next.",
+     "show": 3
+    },
+    {
+     "say": "And the Retrospective improves how the team works.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Topic 1 · Scrum",
+   "title": "Three artifacts, three commitments",
+   "items": [
+    [
+     "Product Backlog",
+     "→ Product Goal"
+    ],
+    [
+     "Sprint Backlog",
+     "→ Sprint Goal"
+    ],
+    [
+     "Increment",
+     "→ Definition of Done"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "There are three artifacts, each with a commitment.",
+     "show": 0
+    },
+    {
+     "say": "The Product Backlog, the ordered list of everything that could be built, is committed to the Product Goal.",
+     "show": 1
+    },
+    {
+     "say": "The Sprint Backlog, the goal, chosen items and plan for this Sprint, is committed to the Sprint Goal.",
+     "show": 2
+    },
+    {
+     "say": "And the Increment, a usable finished piece of work, is committed to the Definition of Done.",
+     "show": 3
+    },
+    {
+     "say": "The team commits to the Sprint Goal, not a fixed list. Scope can be renegotiated, as long as the goal isn't endangered.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Topic 1 · Lab",
+   "title": "Run a mock Sprint",
+   "steps": [
+    "Backlog: 8 to 10 items",
+    "Plan: 3 to 4 items + Sprint Goal",
+    "3 Daily Scrum notes",
+    "Review + retrospective"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, you run a mock Sprint on a Trello or Jira board.",
+     "show": 0
+    },
+    {
+     "say": "Write eight to ten small backlog items, for the plant care app or your own idea.",
+     "show": 1
+    },
+    {
+     "say": "Plan the Sprint: move three or four items you could finish in a week, and write a one sentence Sprint Goal.",
+     "show": 2
+    },
+    {
+     "say": "Write three days of Daily Scrum notes.",
+     "show": 3
+    },
+    {
+     "say": "Then a mock review and retrospective.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "boxes",
+   "kicker": "Topic 2 · Kanban",
+   "title": "Continuous flow",
+   "items": [
+    [
+     "Kanban board",
+     "Cards flow through columns"
+    ],
+    [
+     "WIP limits",
+     "Cap cards per column"
+    ],
+    [
+     "Pull-based flow",
+     "Pull only when there's room"
+    ],
+    [
+     "Cycle time",
+     "Start to finish, per card"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Kanban is more flexible. No fixed sprints: work flows continuously across a board.",
+     "show": 0
+    },
+    {
+     "say": "Cards move through columns, like To Do, In Progress and Done.",
+     "show": 1
+    },
+    {
+     "say": "Work in progress limits, or W I P limits, cap how many cards a column can hold.",
+     "show": 2
+    },
+    {
+     "say": "New work is pulled in only when there's room under the limit, not pushed in on a schedule.",
+     "show": 3
+    },
+    {
+     "say": "And cycle time measures how long a card takes from start to finish.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Topic 2 · Kanban",
+   "title": "Start less, finish more",
+   "quote": "Without a WIP limit, everything is half-finished and nothing ships.",
+   "beats": [
+    {
+     "say": "W I P limits feel backwards at first. Surely starting more means finishing more?",
+     "show": 0
+    },
+    {
+     "say": "But without a limit, everything ends up half finished, and nothing ships. That's Kanban's central insight.",
+     "show": 1
+    },
+    {
+     "say": "In the lab, set a limit of two on In Progress and Review, move cards through respecting it, and time two or three cards.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "calc",
+   "kicker": "Topic 3 · Sprint Planning",
+   "title": "Estimate, then commit",
+   "items": [
+    [
+     "Story points",
+     "Relative effort, not hours"
+    ],
+    [
+     "Velocity",
+     "Points finished per Sprint"
+    ],
+    [
+     "Lab",
+     "Pick ~10 points of work"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Sprint Planning turns a long backlog into a small, realistic commitment.",
+     "show": 0
+    },
+    {
+     "say": "Story points are relative effort, not time. A five is roughly five times harder than a one, not five hours.",
+     "show": 1
+    },
+    {
+     "say": "Velocity is how many points the team has historically finished per Sprint.",
+     "show": 2
+    },
+    {
+     "say": "Both are common add-ons, but not part of the Scrum Guide. Scrum only asks the team to forecast.",
+     "show": 2
+    },
+    {
+     "say": "In the lab, point your backlog on a one, two, three, five, eight scale, and assume a velocity of ten points.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Topic 3 · Sprint Planning",
+   "title": "Goal and Definition of Done",
+   "items": [
+    [
+     "Sprint Goal",
+     "The shared why"
+    ],
+    [
+     "Definition of Done",
+     "✓ tested · ✓ reviewed · ✓ deployed to staging"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Tie the chosen items together with a one sentence Sprint Goal, like: get new users through onboarding without confusion.",
+     "show": 1
+    },
+    {
+     "say": "Then write a Definition of Done: three to five checks, like tested, reviewed by another team member, deployed to staging.",
+     "show": 2
+    },
+    {
+     "say": "Arguments about whether something is really finished almost always trace back to that checklist never being agreed up front.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why might Kanban suit ongoing support work better than Scrum?",
+   "options": [
+    "Support work arrives unpredictably, and continuous flow adapts to that",
+    "Kanban requires a Scrum Master",
+    "Support work always fits into two-week batches"
+   ],
+   "answer": 0,
+   "good": "That's right. Incoming support work is unpredictable and doesn't fit neatly into fixed sprint batches, so Kanban's continuous flow adapts better.",
+   "bad": "Not quite. Incoming support work is unpredictable and doesn't fit neatly into fixed sprint batches, so Kanban's continuous flow adapts better.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why might Kanban suit ongoing support work better than Scrum?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Mock Sprint run end to end",
+     ""
+    ],
+    [
+     "Kanban board with WIP limits and cycle times",
+     ""
+    ],
+    [
+     "Sprint planned with goal and Definition of Done",
+     ""
+    ],
+    [
+     "Scrum vs Kanban explained",
+     ""
+    ],
+    [
+     "Why WIP limits and DoD matter",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the Agile module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've built a Product and Sprint Backlog, three Daily Scrums, and a review and retrospective,",
+     "show": 1
+    },
+    {
+     "say": "you've built a Kanban board with W I P limits, and timed at least two cards,",
+     "show": 2
+    },
+    {
+     "say": "you've pointed a backlog, matched it to a velocity, and written a Sprint Goal and Definition of Done,",
+     "show": 3
+    },
+    {
+     "say": "you can explain fixed Sprints versus continuous flow,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain the problem W I P limits and a Definition of Done each prevent.",
+     "show": 5
+    },
+    {
+     "say": "You've finished Agile. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

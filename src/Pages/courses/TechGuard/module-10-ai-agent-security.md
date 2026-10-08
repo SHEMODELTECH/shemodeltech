@@ -705,6 +705,566 @@ You're done when `redteam.py` runs with your two extra attacks, `monitor.py` pri
 
 *Answers: 1) Reading untrusted content, seeing private data, and communicating outward; remove one if you can, and otherwise put an allowlist and human approval on the outward path. 2) Keep them in environment variables or a secret manager, never in code or prompts, with one narrowly scoped key per agent or server, rotated regularly and revoked at once if leaked. 3) Unbounded Consumption, where loops or abuse burn through money, rate limits, or compute. 4) What triggers it, who is alerted, a kill switch to turn off risky tools or the agent, which keys to revoke, and how to use the audit log to find the poisoned input and what data left. 5) Govern, Map, Measure, and Manage.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "shield",
+   "kicker": "Module 10 · AI agent security",
+   "title": "When the model can act",
+   "beats": [
+    {
+     "say": "Welcome to Module 10, A I agent security."
+    },
+    {
+     "say": "A chatbot only talks. An A I agent is a language model connected to tools: it can read files, send email, run code, and decide which tool to call next."
+    },
+    {
+     "say": "That's what makes agents useful, and it's also what makes them a security problem."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "warning",
+   "kicker": "Topic 10.1 · The core problem",
+   "title": "One stream of text",
+   "steps": [
+    "User task (trusted)",
+    "Untrusted content",
+    "Model reads it all",
+    "Tools act in the world"
+   ],
+   "beats": [
+    {
+     "say": "Here's the core problem.",
+     "show": 0
+    },
+    {
+     "say": "Trusted instructions come from the user's task.",
+     "show": 1
+    },
+    {
+     "say": "Untrusted content comes from documents, web pages and tool descriptions.",
+     "show": 2
+    },
+    {
+     "say": "The model reads it all as one stream of text, with no reliable way to tell them apart.",
+     "show": 3
+    },
+    {
+     "say": "And it calls tools that change the real world. So a better prompt alone can't fix this. Most defences limit the tools, not the model.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "OWASP Top 10 for LLM Applications",
+   "title": "The risks that matter most for agents",
+   "items": [
+    [
+     "LLM01",
+     "Prompt injection: direct, indirect"
+    ],
+    [
+     "LLM02 · LLM07",
+     "Disclosure, prompt leakage"
+    ],
+    [
+     "LLM03",
+     "Supply chain"
+    ],
+    [
+     "LLM05",
+     "Improper output handling"
+    ],
+    [
+     "LLM06",
+     "Excessive agency"
+    ],
+    [
+     "LLM10",
+     "Unbounded consumption"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "OWASP publishes a separate Top 10 for L L M applications. These matter most for agents.",
+     "show": 0
+    },
+    {
+     "say": "Prompt injection. Direct is the user typing the attack. Indirect is hidden in content the agent reads, so the user never sees it.",
+     "show": 1
+    },
+    {
+     "say": "Sensitive information disclosure, and system prompt leakage: anything in the context can come back out, so never put secrets in a prompt.",
+     "show": 2
+    },
+    {
+     "say": "Supply chain: models, plugins and M C P servers are dependencies. Pin and verify them.",
+     "show": 3
+    },
+    {
+     "say": "Improper output handling: treat model output as untrusted input.",
+     "show": 4
+    },
+    {
+     "say": "Excessive agency: more tools, permissions or autonomy than the job needs. That's what turns an injection harmful.",
+     "show": 5
+    },
+    {
+     "say": "And unbounded consumption: without step limits and spending caps, a loop can run up a large bill.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "OWASP Top 10 for Agentic Applications",
+   "title": "A second list, just for agents",
+   "items": [
+    [
+     "Agent Behavior Hijacking",
+     "Task redirected"
+    ],
+    [
+     "Tool Misuse and Exploitation",
+     "Real tool, harmful use"
+    ],
+    [
+     "Identity and Privilege Abuse",
+     "Over-broad keys and permissions"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In December twenty twenty five, OWASP published a second list just for agents. It complements the L L M list, rather than replacing it.",
+     "show": 0
+    },
+    {
+     "say": "Agent behaviour hijacking: an attacker redirects what the agent is trying to do.",
+     "show": 1
+    },
+    {
+     "say": "Tool misuse and exploitation: a legitimate tool, steered into harmful use.",
+     "show": 2
+    },
+    {
+     "say": "Identity and privilege abuse: the agent's keys or permissions used beyond what the task needs.",
+     "show": 3
+    },
+    {
+     "say": "You'll see all three in this module's lab.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "api",
+   "kicker": "MCP-specific risks",
+   "title": "Vet every server",
+   "items": [
+    [
+     "Untrusted servers",
+     "Supply-chain risk"
+    ],
+    [
+     "Tool poisoning",
+     "Hidden text in descriptions"
+    ],
+    [
+     "Over-broad permissions",
+     "More for an injection to use"
+    ],
+    [
+     "Token handling",
+     "Own narrow token, no passthrough"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The Model Context Protocol, M C P, plugs tools into A I apps. A server offers tools, and the model sees each tool's name, description and parameters.",
+     "show": 0
+    },
+    {
+     "say": "Untrusted servers: a server is code you run, often with access to your files or accounts.",
+     "show": 1
+    },
+    {
+     "say": "Tool poisoning: a malicious server hides instructions in a tool description. The model reads everything, while the user usually sees only the short name.",
+     "show": 2
+    },
+    {
+     "say": "Over-broad permissions give an injected instruction a lot to work with.",
+     "show": 3
+    },
+    {
+     "say": "And tokens: keep them out of committed config, give each server its own narrow token, and never pass your token through. The M C P Security Best Practices page covers attacks like the confused deputy, token passthrough, and server-side request forgery.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "search",
+   "kicker": "Lab · Topic 10.1",
+   "title": "Read what a server tells the model",
+   "steps": [
+    "List the tools",
+    "get_forecast: no red flags",
+    "get_weather: SUSPICIOUS",
+    "Reworded: slips past"
+   ],
+   "beats": [
+    {
+     "say": "In the first lab, you install the official M C P Python S D K, and run a tiny local server with two tools.",
+     "show": 0
+    },
+    {
+     "say": "It lists every tool the way an A I app would, and flags suspicious wording.",
+     "show": 1
+    },
+    {
+     "say": "Get forecast shows no red flags. Get weather is flagged: its full description hides an instruction, and it has an extra notes parameter a weather tool has no reason to need.",
+     "show": 2
+    },
+    {
+     "say": "Then reword the hidden text, and run again. It slips past the keyword scanner, even though the meaning is the same.",
+     "show": 3
+    },
+    {
+     "say": "Keyword scanning helps, but it can't be your only defence.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "mess",
+   "kicker": "Lab · Topic 10.2",
+   "title": "Watch a vulnerable agent leak",
+   "steps": [
+    "Task: summarise the report",
+    "Hidden instruction in the doc",
+    "Agent calls send_email",
+    "outbox.log: data leaked"
+   ],
+   "beats": [
+    {
+     "say": "Next you build an office assistant that reads documents and sends email. The emails only go to a local file, outbox dot log.",
+     "show": 0
+    },
+    {
+     "say": "It uses a fake model client that's gullible on purpose, so the attack is the same every time, and works offline.",
+     "show": 1
+    },
+    {
+     "say": "You ask it to summarise a report with a hidden comment telling it to email the internal notes to an attacker.",
+     "show": 2
+    },
+    {
+     "say": "It reads the report, then calls send email on its own. The reply looks like a normal summary.",
+     "show": 3
+    },
+    {
+     "say": "But outbox dot log shows the V I P customer list and staff discount code, sent to the attacker.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Lab · The fix",
+   "title": "Six layered defences, in code",
+   "items": [
+    [
+     "Least-privilege tools",
+     "Chosen by code"
+    ],
+    [
+     "Allowlist",
+     "Approved domains only"
+    ],
+    [
+     "Human approval",
+     "Default: no"
+    ],
+    [
+     "Instructions vs data",
+     "No secrets in prompt"
+    ],
+    [
+     "Output validation",
+     "Schema + canary check"
+    ],
+    [
+     "Audit log",
+     "Plus a step limit"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Then you add six defences, each enforced in ordinary code outside the model.",
+     "show": 0
+    },
+    {
+     "say": "Least-privilege tools: your code, not the model, picks which tools each task gets.",
+     "show": 1
+    },
+    {
+     "say": "An allowlist of email domains.",
+     "show": 2
+    },
+    {
+     "say": "Human approval for risky actions, where the default answer is no.",
+     "show": 3
+    },
+    {
+     "say": "Separating instructions from data: no secrets in the prompt, and documents wrapped in untrusted document tags. That helps, but it isn't a boundary on its own.",
+     "show": 4
+    },
+    {
+     "say": "Output validation, including a canary word that should never appear in anything sent out.",
+     "show": 5
+    },
+    {
+     "say": "And audit logging of every tool request and decision, plus a step limit.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Lab · Attack again",
+   "title": "Which gate stopped it?",
+   "items": [
+    [
+     "summarise profile",
+     "Blocked: tool not allowed"
+    ],
+    [
+     "attacker@evil.example",
+     "Blocked: allowlist"
+    ],
+    [
+     "Allowed address, leaked text",
+     "Blocked: data-leak check"
+    ],
+    [
+     "You type n",
+     "Blocked: human declined"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now replay the attack, and see which gate stops each attempt.",
+     "show": 0
+    },
+    {
+     "say": "With the summarise profile, send email isn't offered at all. Blocked by least privilege.",
+     "show": 1
+    },
+    {
+     "say": "With email allowed, the attacker's address is blocked by the allowlist, while your boss's email waits for your approval.",
+     "show": 2
+    },
+    {
+     "say": "With the attacker using an internal address, the data-leak check catches the canary word.",
+     "show": 3
+    },
+    {
+     "say": "And when you type no, a human declines it. The audit log records every one.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blueprint",
+   "kicker": "Topic 10.3 · In production",
+   "title": "Defend the agent for real",
+   "items": [
+    [
+     "Threat model",
+     "Trust boundaries"
+    ],
+    [
+     "Keys",
+     "One narrow key each"
+    ],
+    [
+     "Limits + monitoring",
+     "Caps, alerts, kill switch"
+    ],
+    [
+     "Red-team",
+     "Every attack becomes a test"
+    ],
+    [
+     "NIST AI RMF",
+     "Govern · Map · Measure · Manage"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Running an agent for real users needs the rest of this track.",
+     "show": 0
+    },
+    {
+     "say": "Threat model it. The dangerous combination is reading untrusted content, seeing private data, and communicating outward. If you can't remove one, gate the outward path.",
+     "show": 1
+    },
+    {
+     "say": "Keep keys in environment variables or a secret manager, one narrow key per agent or server.",
+     "show": 2
+    },
+    {
+     "say": "Cap steps, rate and spending. Send the audit log to your monitoring, and plan a kill switch.",
+     "show": 3
+    },
+    {
+     "say": "Red-team your own guard. In the lab, a script throws tricky tool calls at it, and you add two of your own.",
+     "show": 4
+    },
+    {
+     "say": "And map it all to the NIST A I Risk Management Framework: Govern, Map, Measure, and Manage.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why are the tools for each task chosen by your code, rather than by the model?",
+   "options": [
+    "A prompt injection can change what the model asks for, but it can't change your code",
+    "Models can't read a list of tools",
+    "It makes the agent respond faster"
+   ],
+   "answer": 0,
+   "good": "That's right. An injection can change what the model asks for, but not your code, so the model can never widen its own permissions.",
+   "bad": "Not quite. An injection can change what the model asks for, but not your code, so the model can never widen its own permissions.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why are the tools for each task chosen by your code, rather than by the model?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "OWASP LLM risks for agents",
+     ""
+    ],
+    [
+     "How the Agentic list fits",
+     ""
+    ],
+    [
+     "Direct and indirect injection",
+     ""
+    ],
+    [
+     "Poisoned MCP tool inspected",
+     ""
+    ],
+    [
+     "Leak found in outbox.log",
+     ""
+    ],
+    [
+     "Blocked with six defences",
+     ""
+    ],
+    [
+     "Agent threat modelled",
+     ""
+    ],
+    [
+     "Red-teamed, alerted, step limit tripped",
+     ""
+    ],
+    [
+     "Incident plan, NIST AI RMF",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can name the OWASP L L M risks that matter most for agents,",
+     "show": 1
+    },
+    {
+     "say": "and explain how the Agentic list complements it,",
+     "show": 2
+    },
+    {
+     "say": "you can explain direct and indirect prompt injection,",
+     "show": 3
+    },
+    {
+     "say": "you've inspected a poisoned M C P tool description,",
+     "show": 4
+    },
+    {
+     "say": "you've run an injection against a vulnerable agent, and found the leak,",
+     "show": 5
+    },
+    {
+     "say": "you've blocked it with six layered defences,",
+     "show": 6
+    },
+    {
+     "say": "you've threat modelled the agent,",
+     "show": 7
+    },
+    {
+     "say": "you've red-teamed the guard, raised alerts and tripped the step limit,",
+     "show": 8
+    },
+    {
+     "say": "and you've written an incident plan with a kill switch, mapped to the NIST A I R M F.",
+     "show": 9
+    },
+    {
+     "say": "You've finished A I Agent Security. Well done.",
+     "show": 9
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 10 Completion Checklist

@@ -263,6 +263,356 @@ Your workflow saves a JUnit report as an artifact on every run, even when tests 
 
 *Answers: 1) A test that passes and fails on the same code without any change, often because of timing, test order, shared data, or an unreliable external service. 2) People learn to ignore red builds, so real failures get missed. 3) A file saved from a pipeline run, such as a test report, that you can download after the run finishes. 4) So the report is saved even when tests fail, which is exactly when you need it. 5) The test's coverage isn't lost: it's tracked with a ticket, fixed, and returned to the blocking suite.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Module 8 · CI/CD testing",
+   "title": "Tests that run themselves",
+   "beats": [
+    {
+     "say": "Welcome to Module 8, C I, C D testing."
+    },
+    {
+     "say": "A pipeline turns your test suite from something a person runs occasionally into something that runs automatically, every time, without being forgotten."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Topic 8.1 · Automated pipelines",
+   "title": "From commit to deploy",
+   "steps": [
+    "Commit / PR",
+    "Build",
+    "Test stage",
+    "Quality gate",
+    "Deploy"
+   ],
+   "beats": [
+    {
+     "say": "C I, continuous integration, builds and tests automatically on every change. C D extends that to preparing or releasing the change.",
+     "show": 0
+    },
+    {
+     "say": "A trigger, like a commit or pull request, starts the pipeline.",
+     "show": 1
+    },
+    {
+     "say": "It builds, installing dependencies.",
+     "show": 2
+    },
+    {
+     "say": "A test stage runs the suite. Separate stages make a failure easy to pinpoint.",
+     "show": 3
+    },
+    {
+     "say": "A quality gate blocks merging or deploying unless the tests pass.",
+     "show": 4
+    },
+    {
+     "say": "Only then does it deploy. And keep it fast, because a slow pipeline gets skipped.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "git",
+   "kicker": "Topic 8.1 · Lab",
+   "title": "A GitHub Actions workflow",
+   "file": ".github/workflows/test.yml",
+   "code": "on: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - name: Set up Python\n        uses: actions/setup-python@v6\n        with:\n          python-version: '3.12'\n      - name: Install dependencies\n        run: pip install pytest\n      - name: Run tests\n        run: pytest",
+   "beats": [
+    {
+     "say": "In the lab, start with a tiny Python project: an add function, and a pytest test.",
+     "show": 0
+    },
+    {
+     "say": "Add this file at dot github, workflows, test dot y m l.",
+     "show": 1
+    },
+    {
+     "say": "On every push and pull request, it checks out the code, sets up Python, installs pytest, and runs it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "proof",
+   "kicker": "Topic 8.1 · Lab",
+   "title": "Break it, then fix it",
+   "steps": [
+    "Push: green",
+    "Break a test: red",
+    "Trace commit + stage",
+    "Fix: green again"
+   ],
+   "beats": [
+    {
+     "say": "Push it, and watch it run under the Actions tab.",
+     "show": 1
+    },
+    {
+     "say": "Then break a test on purpose, and push. The pipeline fails.",
+     "show": 2
+    },
+    {
+     "say": "Pinpoint exactly which commit and which stage caused it.",
+     "show": 3
+    },
+    {
+     "say": "Fix the test, push again, and it goes back to passing.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Topic 8.2 · Regression testing",
+   "title": "Did anything old break?",
+   "items": [
+    [
+     "Regression suite",
+     "Existing tests, re-run"
+    ],
+    [
+     "Maintenance",
+     "Keep tests accurate"
+    ],
+    [
+     "Smoke tests",
+     "Fast critical subset, first"
+    ],
+    [
+     "New feature?",
+     "Still needs new tests"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Regression testing re-runs existing tests after a change, to confirm nothing that used to work broke.",
+     "show": 0
+    },
+    {
+     "say": "Test suite maintenance keeps those tests accurate as the app changes.",
+     "show": 1
+    },
+    {
+     "say": "Smoke tests are a small, fast subset of the most critical checks, run first.",
+     "show": 2
+    },
+    {
+     "say": "And a passing regression suite only means nothing old broke. A new feature still needs its own new tests.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "test",
+   "kicker": "Topic 8.2 · Lab",
+   "title": "Smoke tests first",
+   "file": "test_calculator.py · test.yml",
+   "code": "import pytest\n\n@pytest.mark.smoke\ndef test_addition():\n    assert 1 + 1 == 2\n\n# in the workflow:\n      - name: Run smoke tests\n        run: pytest -m smoke\n      - name: Run full test suite\n        run: pytest",
+   "beats": [
+    {
+     "say": "In the lab, add a test for a small new feature, then slip in an unrelated bug elsewhere. An existing test catches it. That's regression testing doing its job.",
+     "show": 0
+    },
+    {
+     "say": "Then tag your fastest, most critical tests with a pytest marker called smoke, and register it in pytest dot i n i.",
+     "show": 1
+    },
+    {
+     "say": "In the workflow, run pytest dash m smoke first. If smoke tests fail, the full suite is skipped.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "file",
+   "kicker": "Topic 8.3 · Test reports",
+   "title": "More than just failed",
+   "items": [
+    [
+     "Test report",
+     "JUnit XML, every test"
+    ],
+    [
+     "Artifact",
+     "Saved with the run"
+    ],
+    [
+     "if: always()",
+     "Upload even on failure"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A pipeline that only says failed slows everyone down.",
+     "show": 0
+    },
+    {
+     "say": "A test report records every test's result, commonly as J Unit X M L, which most C I tools can read.",
+     "show": 1
+    },
+    {
+     "say": "An artifact is a file the pipeline saves from a run, so you can download it later.",
+     "show": 2
+    },
+    {
+     "say": "In the lab, run pytest with junit x m l equals report dot x m l, and upload it with if always, so it's saved even when tests fail, which is exactly when you need it.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Topic 8.3 · Flaky tests",
+   "title": "Pass and fail, same code",
+   "items": [
+    [
+     "Causes",
+     "Timing, order, shared data, services"
+    ],
+    [
+     "Harm",
+     "Red builds get ignored"
+    ],
+    [
+     "Quarantine",
+     "Out of the gate, with a ticket"
+    ],
+    [
+     "Don't",
+     "Hide it with retries or sleeps"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A flaky test passes and fails with no code change, usually from timing, test order, shared data, or an unreliable external service.",
+     "show": 0
+    },
+    {
+     "say": "It teaches people to ignore red builds, so real failures get missed.",
+     "show": 1
+    },
+    {
+     "say": "Quarantine it: move it out of the blocking suite while it's fixed, with a tracking ticket.",
+     "show": 2
+    },
+    {
+     "say": "Use retries sparingly, and fix the cause rather than adding sleeps.",
+     "show": 3
+    },
+    {
+     "say": "In the lab, make a test that fails when a random number is below zero point three, rerun it several times, write a triage note, then remove it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a passing regression suite tell you?",
+   "options": [
+    "That nothing that used to work has broken",
+    "That the new feature works correctly",
+    "That there are no flaky tests"
+   ],
+   "answer": 0,
+   "good": "That's right. A passing regression suite only confirms nothing old broke. A new feature still needs its own new tests.",
+   "bad": "Not quite. A passing regression suite only confirms nothing old broke. A new feature still needs its own new tests.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a passing regression suite tell you?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Pipeline on push, failure traced",
+     ""
+    ],
+    [
+     "Regression test caught a bug",
+     ""
+    ],
+    [
+     "Smoke tests run first",
+     ""
+    ],
+    [
+     "JUnit report saved as an artifact",
+     ""
+    ],
+    [
+     "Flaky test triaged",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 8.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've built a GitHub Actions pipeline that runs on push, and traced a failure to a specific commit,",
+     "show": 1
+    },
+    {
+     "say": "caught an unrelated bug with an existing regression test,",
+     "show": 2
+    },
+    {
+     "say": "set up a smoke test subset that runs before the full suite,",
+     "show": 3
+    },
+    {
+     "say": "saved a J Unit report as an artifact on every run,",
+     "show": 4
+    },
+    {
+     "say": "and written a triage note for a flaky test you watched pass and fail.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 9, testing A I agents.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 8 Completion Checklist

@@ -186,6 +186,392 @@ You have generated an API key, made a successful authenticated request with it, 
 
 *Answers: 1) It identifies who or what application is making a request, so the API can decide whether to allow it. 2) Authentication answers who is making the request, authorization answers what that requester is allowed to do, they're related but separate checks. 3) A cap on how many requests a key can make in a given time window, exceeding it commonly returns a 429 status code. 4) Because exposed keys can be found and misused by anyone who sees them, a public file or script is visible to far more people than intended. 5) Periodically replacing an old key with a new one, it limits the damage if a key is ever exposed or leaked, since the old key becomes useless once rotated.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Module · APIs",
+   "title": "How software talks",
+   "beats": [
+    {
+     "say": "Welcome to the A P Is module."
+    },
+    {
+     "say": "An A P I is how two separate pieces of software talk to each other: a defined set of rules for asking one system to do something, or hand over data."
+    },
+    {
+     "say": "Whenever a no-code tool connects to another app, an A P I is doing the work underneath."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "api",
+   "kicker": "Topic 1 · Concept",
+   "title": "Anatomy of a request",
+   "steps": [
+    "Endpoint: a specific URL",
+    "Method: GET / POST / PUT / DELETE",
+    "Request body: JSON you send",
+    "Response: data + status code"
+   ],
+   "beats": [
+    {
+     "say": "Most modern business A P Is use a style called REST: a web address, plus a method describing the action.",
+     "show": 0
+    },
+    {
+     "say": "The endpoint is a specific U R L for a specific purpose, like slash customers.",
+     "show": 1
+    },
+    {
+     "say": "The method says what kind of action. GET retrieves, POST creates, PUT or PATCH updates, DELETE removes.",
+     "show": 2
+    },
+    {
+     "say": "The request body is the data you send, usually as J S O N.",
+     "show": 3
+    },
+    {
+     "say": "And the response is what comes back: data, plus a status code.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Topic 1 · Status codes",
+   "title": "Where to start debugging",
+   "items": [
+    [
+     "200s",
+     "Success"
+    ],
+    [
+     "400s",
+     "Problem with your request"
+    ],
+    [
+     "500s",
+     "Problem on their server"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The status code alone often tells you where to look.",
+     "show": 0
+    },
+    {
+     "say": "The two hundreds mean success.",
+     "show": 1
+    },
+    {
+     "say": "The four hundreds usually mean something was wrong with your request, like four oh four, not found.",
+     "show": 2
+    },
+    {
+     "say": "The five hundreds mean something broke on the A P I's own server.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "laptop",
+   "kicker": "Topic 1 · Lab",
+   "title": "GET and POST in Postman",
+   "file": "POST https://jsonplaceholder.typicode.com/posts",
+   "code": "{\"title\": \"test\", \"body\": \"hello\", \"userId\": 1}",
+   "beats": [
+    {
+     "say": "In Postman, send a GET to J S O N Placeholder's users list. You should see status two hundred and a list of users.",
+     "show": 0
+    },
+    {
+     "say": "Then GET a single user, slash users slash one, and compare the smaller response.",
+     "show": 1
+    },
+    {
+     "say": "Finally, POST this small J S O N body to slash posts. You get two oh one, Created, and your data back with a new I D.",
+     "show": 1
+    },
+    {
+     "say": "It's a practice A P I, so nothing is really saved.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Topic 2 · Concept",
+   "title": "Webhooks: we'll call you",
+   "items": [
+    [
+     "Polling",
+     "Asks on a timer"
+    ],
+    [
+     "Webhook URL",
+     "Where to send notifications"
+    ],
+    [
+     "Payload",
+     "JSON: what happened"
+    ],
+    [
+     "Signature / secret",
+     "Proves who sent it"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A webhook flips the usual pattern around. Don't call us, we'll call you.",
+     "show": 0
+    },
+    {
+     "say": "Polling is the older way: repeatedly asking anything new, on a timer. Less instant, and less efficient.",
+     "show": 1
+    },
+    {
+     "say": "With a webhook, the other system sends you a message the instant something happens, to a webhook U R L you gave it.",
+     "show": 2
+    },
+    {
+     "say": "The data it sends is the payload, almost always J S O N, describing exactly what happened.",
+     "show": 3
+    },
+    {
+     "say": "Because anyone with the U R L could call it, most systems add a signature or secret token so you can check where it came from.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "merge",
+   "kicker": "Topic 2 · Lab",
+   "title": "Catch a webhook in Make",
+   "steps": [
+    "Custom webhook → copy URL",
+    "POST a test payload",
+    "\"Successfully determined\"",
+    "Email uses the name field"
+   ],
+   "beats": [
+    {
+     "say": "In Make, create a scenario with a Custom webhook trigger, and copy the U R L it generates.",
+     "show": 1
+    },
+    {
+     "say": "From Postman, POST a raw J S O N body with a name, Test User, and an event, signup.",
+     "show": 2
+    },
+    {
+     "say": "Make shows, successfully determined, and the name and event fields are ready to map.",
+     "show": 3
+    },
+    {
+     "say": "Add a Gmail send an email action using the name field. Run once, resend, and check the email arrives with the name filled in.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Topic 3 · Concept",
+   "title": "API keys",
+   "items": [
+    [
+     "Authentication",
+     "Who is asking"
+    ],
+    [
+     "Authorization",
+     "What they may do"
+    ],
+    [
+     "Rate limit",
+     "Too many → 429"
+    ],
+    [
+     "Key rotation",
+     "Replace old keys"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "An A P I key is a credential: a long string identifying who, or what app, is making a request.",
+     "show": 0
+    },
+    {
+     "say": "Authentication answers, who is making this request.",
+     "show": 1
+    },
+    {
+     "say": "Authorization answers, what is this requester allowed to do.",
+     "show": 2
+    },
+    {
+     "say": "A rate limit caps how many requests a key can make in a time window. Going over commonly returns four two nine.",
+     "show": 3
+    },
+    {
+     "say": "And key rotation means replacing an old key with a new one, limiting the damage if it ever leaks.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Topic 3 · Lab",
+   "title": "Keep the key out of the URL",
+   "file": "GET",
+   "code": "https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid={{owm_key}}",
+   "beats": [
+    {
+     "say": "Sign up for OpenWeatherMap. A new key can take up to about two hours to activate, so start early.",
+     "show": 0
+    },
+    {
+     "say": "In Postman, store it in an environment variable called O W M underscore key, marked secret if offered.",
+     "show": 1
+    },
+    {
+     "say": "Then request London's weather, and Postman fills in the key from the variable. You should get two hundred.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "warning",
+   "kicker": "Topic 3 · Lab",
+   "title": "Break it, then rotate it",
+   "steps": [
+    "Use a fake key",
+    "See 401 Invalid API key",
+    "Generate new key, update variable",
+    "Delete the old key"
+   ],
+   "beats": [
+    {
+     "say": "Now swap the variable for a made-up value, like a b c one two three.",
+     "show": 1
+    },
+    {
+     "say": "You get a four oh one error. That's what an invalid key looks like.",
+     "show": 2
+    },
+    {
+     "say": "Then rotate: generate a new key, update the variable, and delete the old one.",
+     "show": 3
+    },
+    {
+     "say": "Confirm the new key works, allowing for activation, and the old one no longer does.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between authentication and authorization?",
+   "options": [
+    "Authentication is who is asking; authorization is what they're allowed to do",
+    "They're two names for the same check",
+    "Authentication limits requests; authorization rotates keys"
+   ],
+   "answer": 0,
+   "good": "That's right. Authentication answers who is making the request. Authorization answers what that requester is allowed to do. They're related but separate checks.",
+   "bad": "Not quite. Authentication answers who is making the request. Authorization answers what that requester is allowed to do. They're related but separate checks.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between authentication and authorization?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "GET and POST sent, responses read",
+     ""
+    ],
+    [
+     "A webhook payload was received and used",
+     ""
+    ],
+    [
+     "Authenticated request, invalid key tested",
+     ""
+    ],
+    [
+     "You can explain authentication vs authorization",
+     ""
+    ],
+    [
+     "And why webhooks beat polling",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've sent a GET and a POST in Postman and read the J S O N and status code,",
+     "show": 1
+    },
+    {
+     "say": "you've caught a test webhook payload and used its data in an automation,",
+     "show": 2
+    },
+    {
+     "say": "you've made an authenticated request, and seen what an invalid key's error looks like,",
+     "show": 3
+    },
+    {
+     "say": "you can explain authentication versus authorization,",
+     "show": 4
+    },
+    {
+     "say": "and why webhooks usually beat polling for real-time automations.",
+     "show": 5
+    },
+    {
+     "say": "You've finished A P Is. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

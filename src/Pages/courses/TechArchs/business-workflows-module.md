@@ -248,6 +248,391 @@ You have a full multi-step automation in Make where a single form submission res
 
 *Answers: 1) A pre-built bridge to a specific service (like Google Sheets, Slack, or a CRM) that handles authentication and API calls behind the scenes. 2) A trigger is the event in one app that starts the integration, an action is what happens next in another app as a result. 3) Connecting a field from the trigger app to a field in the action app, so the right data lands in the right place, it's necessary because apps don't automatically know which of their fields correspond to which of another app's fields. 4) A chain of several actions triggered by a single event, for example a form submission triggering an approval email, then a CRM update, then a Slack notification; Make's free plan has allowed this, while multi-step Zaps may need a paid Zapier plan. 5) Platforms charge by monthly usage, tasks in Zapier and credits (formerly operations) in Make, which matters because a workflow with many chained steps or high volume can add up quickly.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "path",
+   "kicker": "Module · Business workflows",
+   "title": "From request to result",
+   "beats": [
+    {
+     "say": "Welcome to Business Workflows."
+    },
+    {
+     "say": "Across four topics you'll build one time off request workflow, without code: a form, an approval, notifications, and an integration."
+    },
+    {
+     "say": "The labs use Make, because its free plan has included multi-step scenarios, routers and filters. Limits change, so check the current plan."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Topic 1 · Forms",
+   "title": "Where the workflow starts",
+   "items": [
+    [
+     "Field",
+     "Text, dropdown, date, file"
+    ],
+    [
+     "Conditional logic",
+     "Show or skip questions"
+    ],
+    [
+     "Validation",
+     "Required, valid format"
+    ],
+    [
+     "Submission",
+     "One row in a sheet"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Forms are the entry point, where a person's request becomes structured data.",
+     "show": 0
+    },
+    {
+     "say": "A field is a single input: short text, dropdown, checkbox, date or file upload.",
+     "show": 1
+    },
+    {
+     "say": "Conditional logic shows or skips questions based on an earlier answer.",
+     "show": 2
+    },
+    {
+     "say": "Validation enforces a format before submission, like a required field that can't be blank.",
+     "show": 3
+    },
+    {
+     "say": "And each submission typically lands as a row in a spreadsheet. Messy data here causes problems everywhere downstream.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "doc",
+   "kicker": "Topic 1 · Lab",
+   "title": "A Time Off Request form",
+   "steps": [
+    "Fields + reason dropdown",
+    "\"Other\" → please specify",
+    "Required fields",
+    "Link to Sheets, test"
+   ],
+   "beats": [
+    {
+     "say": "Build a form with name, email, start date, end date, and a reason dropdown: Vacation, Sick or Other.",
+     "show": 1
+    },
+    {
+     "say": "Ask please specify only when the reason is Other. In Google Forms, use, go to section based on answer. In Jotform, use a show or hide condition.",
+     "show": 2
+    },
+    {
+     "say": "Make name and both dates required. Google Forms can't check the end date is after the start, so flag that later in your automation, or use Jotform.",
+     "show": 3
+    },
+    {
+     "say": "Link it to a sheet from the Responses tab, submit a test, and check the row.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 2 · Approvals",
+   "title": "Turn a request into a decision",
+   "items": [
+    [
+     "Approver",
+     "Fixed or dynamic"
+    ],
+    [
+     "Sequential / parallel",
+     "In order, or all at once"
+    ],
+    [
+     "Decision branch",
+     "Approved or rejected path"
+    ],
+    [
+     "Escalation",
+     "Remind if no response"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Approvals route a submission to the right person, and pause until they respond.",
+     "show": 0
+    },
+    {
+     "say": "An approver can be fixed, always the same manager, or dynamic, based on a field like department or amount.",
+     "show": 1
+    },
+    {
+     "say": "Sequential approval goes one after another. Parallel goes to several approvers at once.",
+     "show": 2
+    },
+    {
+     "say": "A decision branch is what happens next: approved moves forward, rejected stops or loops back.",
+     "show": 3
+    },
+    {
+     "say": "An escalation reminds or reroutes when nobody responds. Skipping it is a common beginner mistake.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "fork",
+   "kicker": "Topic 2 · Lab",
+   "title": "Two scenarios in Make",
+   "steps": [
+    "Add Status + Processed",
+    "A: Watch New Rows → email",
+    "B: Search Rows → Router",
+    "Update Row: Processed = yes"
+   ],
+   "beats": [
+    {
+     "say": "Make has no built-in approval button, so add Status and Processed columns. The approver types Approved or Rejected in Status.",
+     "show": 1
+    },
+    {
+     "say": "Scenario A watches for new rows and emails the approver the details and the sheet link.",
+     "show": 2
+    },
+    {
+     "say": "Scenario B searches rows where Status is filled and Processed is empty, and a Router splits them into an Approved route and a Rejected route.",
+     "show": 3
+    },
+    {
+     "say": "Both routes end by setting Processed to yes, so the same row is never handled twice.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "stopwatch",
+   "kicker": "Topic 2 · Optional",
+   "title": "An escalation reminder",
+   "quote": "Status still blank after two days → remind the approver.",
+   "beats": [
+    {
+     "say": "Optionally, add a third scenario that runs once a day.",
+     "show": 0
+    },
+    {
+     "say": "It finds rows where Status is still empty and the timestamp is more than two days old, and emails the approver a reminder.",
+     "show": 1
+    },
+    {
+     "say": "If your plan has no free scenario slot, write the design down instead.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "phone",
+   "kicker": "Topic 3 · Notifications",
+   "title": "Tell people what changed",
+   "items": [
+    [
+     "Trigger event",
+     "What fires it"
+    ],
+    [
+     "Channel",
+     "Email, Slack, SMS, push"
+    ],
+    [
+     "Dynamic content",
+     "Real names and dates"
+    ],
+    [
+     "Don't over-notify",
+     "People stop reading"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Notifications keep people informed, so nobody has to check a system by hand.",
+     "show": 0
+    },
+    {
+     "say": "A trigger event fires it: a submission, a status change, an approval, or a schedule.",
+     "show": 1
+    },
+    {
+     "say": "A channel delivers it: email, Slack, S M S, or push.",
+     "show": 2
+    },
+    {
+     "say": "Dynamic content inserts real data, so it reads, your request for March third to fifth was approved.",
+     "show": 3
+    },
+    {
+     "say": "And too many notifications for minor events trains people to ignore the channel.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "merge",
+   "kicker": "Topic 4 · Integrations",
+   "title": "Connect to another system",
+   "steps": [
+    "Trigger in App A",
+    "Connector",
+    "Data mapping",
+    "Action in App B"
+   ],
+   "beats": [
+    {
+     "say": "Integrations connect your workflow to other systems, so nobody copies data by hand.",
+     "show": 0
+    },
+    {
+     "say": "A trigger in one app starts it.",
+     "show": 1
+    },
+    {
+     "say": "A connector, a pre-built bridge, handles the sign-in and A P I calls.",
+     "show": 2
+    },
+    {
+     "say": "A data mapping sends each field to the right place, like the form's email to the C R M's email.",
+     "show": 3
+    },
+    {
+     "say": "And an action happens in the other app. In the lab, the Approved route also creates a record in a C R M or a second sheet.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "calc",
+   "kicker": "Topic 4 · Pricing",
+   "title": "Every step has a cost",
+   "big": "Tasks · Credits",
+   "sub": "Zapier counts tasks; Make counts credits",
+   "beats": [
+    {
+     "say": "Most platforms charge by monthly usage.",
+     "show": 0
+    },
+    {
+     "say": "Zapier counts tasks. Make counts credits, called operations until twenty twenty five, roughly one per module run. A busy multi-step workflow adds up.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does Scenario B set Processed to yes on every route?",
+   "options": [
+    "To send the notification",
+    "So the same row is never handled twice",
+    "Because Make requires it to run"
+   ],
+   "answer": 1,
+   "good": "That's right. Marking each row as processed means the next scheduled run skips it, so the same request is never handled twice.",
+   "bad": "Not quite. Marking each row as processed means the next scheduled run skips it, so the same request is never handled twice.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does Scenario B set Processed to yes on every route?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Form with logic and validation",
+     ""
+    ],
+    [
+     "Approved and Rejected routes work",
+     ""
+    ],
+    [
+     "Notifications with dynamic content",
+     ""
+    ],
+    [
+     "Integration with correct mapping",
+     ""
+    ],
+    [
+     "You can trace a submission end to end",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your form has conditional logic and validation, and submissions land in a sheet,",
+     "show": 1
+    },
+    {
+     "say": "your approval step handles Approved and Rejected differently,",
+     "show": 2
+    },
+    {
+     "say": "both paths send notifications with dynamic content,",
+     "show": 3
+    },
+    {
+     "say": "the workflow creates a record in another system with correct data mapping,",
+     "show": 4
+    },
+    {
+     "say": "and you can trace one submission end to end.",
+     "show": 5
+    },
+    {
+     "say": "You've finished Business Workflows. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

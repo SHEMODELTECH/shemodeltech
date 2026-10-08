@@ -192,6 +192,366 @@ You have located and read an error log entry from a deliberate failure, fixed th
 
 *Answers: 1) Checking that a published solution is still working as expected, it's needed even for no-code solutions because connected accounts can expire and automations can silently fail without anyone noticing. 2) What went wrong and when, it's useful because it lets you troubleshoot the specific failure without needing to guess what happened. 3) When a connected service changes or retires a feature your solution depends on, it can break a workflow with no clear warning because the failure originates outside the tool you built. 4) A planned, communicated time for making updates or fixes, it solves the problem of surprising the people relying on the solution day to day with unexpected disruption. 5) Because a published solution needs ongoing monitoring, error handling, and updates to keep working reliably, the work doesn't stop once something goes live.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Module · Deployment",
+   "title": "Go live, and stay live",
+   "beats": [
+    {
+     "say": "Welcome to Deployment."
+    },
+    {
+     "say": "You'll take something you built earlier in this track and publish it, give it an address, and keep it working after launch."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "layers",
+   "kicker": "Topic 1 · Publishing",
+   "title": "Draft, staging, publish",
+   "steps": [
+    "Draft: private",
+    "Staging: test copy",
+    "Publish: live",
+    "Version history: roll back"
+   ],
+   "beats": [
+    {
+     "say": "Publishing makes something you built privately live for real users.",
+     "show": 0
+    },
+    {
+     "say": "A draft, or preview, is private and editable. Changes there don't affect real users.",
+     "show": 1
+    },
+    {
+     "say": "A staging environment is a separate test copy. Salesforce uses private sandboxes; Webflow offers a free webflow dot io staging address.",
+     "show": 2
+    },
+    {
+     "say": "Publishing makes the current draft the version real users see.",
+     "show": 3
+    },
+    {
+     "say": "And version history lets you roll back, usually in a single click.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "browser",
+   "kicker": "Topic 1 · Lab",
+   "title": "Change, preview, publish",
+   "steps": [
+    "Small change in draft",
+    "Preview privately",
+    "Publish, check in incognito",
+    "Find version history"
+   ],
+   "beats": [
+    {
+     "say": "Open a project from an earlier module, and make a small visible change in draft mode.",
+     "show": 1
+    },
+    {
+     "say": "Preview it. You see the change; people using the live version don't, yet.",
+     "show": 2
+    },
+    {
+     "say": "Publish, then open the live link in a fresh private browser window to see the update.",
+     "show": 3
+    },
+    {
+     "say": "Finally, find the version history, and check you could roll back.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cloud",
+   "kicker": "Topic 2 · Domains",
+   "title": "Your own address",
+   "items": [
+    [
+     "Registrar",
+     "Where you bought it"
+    ],
+    [
+     "CNAME / A record",
+     "Where it points"
+    ],
+    [
+     "Propagation",
+     "Minutes to 48 hours"
+    ],
+    [
+     "HTTPS",
+     "The padlock"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A domain is the human-readable address, like your business dot com.",
+     "show": 0
+    },
+    {
+     "say": "You buy it from a registrar, like Cloudflare Registrar or Porkbun. That's almost always a different company from your host.",
+     "show": 1
+    },
+    {
+     "say": "D N S records tell the internet where it points. A C NAME points a subdomain to another address; an A record points to a numeric I P address.",
+     "show": 2
+    },
+    {
+     "say": "Propagation is the delay before a change works everywhere: minutes, or rarely up to forty eight hours.",
+     "show": 3
+    },
+    {
+     "say": "And most no-code hosts set up H T T P S for free, shown by the padlock.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Topic 2 · Lab",
+   "title": "A free part, and a paid part",
+   "items": [
+    [
+     "Look up A + CNAME",
+     "Free DNS lookup tool"
+    ],
+    [
+     "Find the record you'd need",
+     "Custom domain settings"
+    ],
+    [
+     "Check the padlock",
+     "On your free address"
+    ],
+    [
+     "Optional: connect a domain",
+     "Paid plan + purchase"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "There's no free trial domain, so the lab has two parts.",
+     "show": 0
+    },
+    {
+     "say": "Everyone looks up real records with a free D N S lookup tool: the A record of a site like wikipedia dot org, and the C NAME of a few w w w addresses.",
+     "show": 1
+    },
+    {
+     "say": "Then find your platform's custom domain page, and write down which record type and value it would ask for.",
+     "show": 2
+    },
+    {
+     "say": "And check your free address shows the padlock.",
+     "show": 3
+    },
+    {
+     "say": "The optional paid part: buy a domain, add the record exactly, wait for propagation, and confirm it loads over H T T P S.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "stopwatch",
+   "kicker": "Topic 3 · Maintenance",
+   "title": "Launch is the beginning",
+   "items": [
+    [
+     "Monitoring",
+     "Is it still working?"
+    ],
+    [
+     "Error log",
+     "What failed, and when"
+    ],
+    [
+     "Deprecation",
+     "A dependency changes"
+    ],
+    [
+     "Maintenance window",
+     "Planned updates"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Publishing is the beginning of the lifecycle, not the end. Accounts expire and automations fail silently.",
+     "show": 0
+    },
+    {
+     "say": "Monitoring checks it's still working as expected.",
+     "show": 1
+    },
+    {
+     "say": "An error log records what went wrong, and when.",
+     "show": 2
+    },
+    {
+     "say": "Deprecation is when a connected service changes or retires something you depend on, which can quietly break a workflow.",
+     "show": 3
+    },
+    {
+     "say": "And a maintenance window is a planned, communicated time for updates.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Topic 3 · Tip",
+   "title": "Check the logs first",
+   "quote": "Check the error log first, before assuming the whole platform is broken.",
+   "beats": [
+    {
+     "say": "Most outages people hit aren't the platform failing.",
+     "show": 0
+    },
+    {
+     "say": "They're an upstream connected service changing something. So check the error log first, before assuming the whole platform is broken.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Topic 3 · Lab",
+   "title": "Break it, read it, fix it",
+   "steps": [
+    "Find run history",
+    "Break it on purpose",
+    "Read the error, fix it",
+    "Recurring check-in reminder"
+   ],
+   "beats": [
+    {
+     "say": "Return to an automation from the Business Workflows or A P Is module, and find its run history.",
+     "show": 1
+    },
+    {
+     "say": "Break something on purpose, like disconnecting an account or renaming a field it uses, and trigger it again.",
+     "show": 2
+    },
+    {
+     "say": "Read the error entry: exactly what failed, and why. Then fix it, and confirm it succeeds on a rerun.",
+     "show": 3
+    },
+    {
+     "say": "Finally, set a weekly or monthly calendar reminder to check its run history.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "A D N S change isn't working right after you saved it. What's the most likely reason?",
+   "options": [
+    "Propagation: the change hasn't spread across the internet yet",
+    "The registrar deleted your domain",
+    "H T T P S blocks new records"
+   ],
+   "answer": 0,
+   "good": "That's right. Propagation can take minutes, or rarely up to forty eight hours. The change often just needs more time to spread.",
+   "bad": "Not quite. Propagation can take minutes, or rarely up to forty eight hours. The change often just needs more time to spread.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "A D N S change isn't working right after you saved it. What's the most likely reason?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Draft, preview, publish, version history",
+     ""
+    ],
+    [
+     "DNS records looked up",
+     ""
+    ],
+    [
+     "Error log read and fixed",
+     ""
+    ],
+    [
+     "Monitoring habit set",
+     ""
+    ],
+    [
+     "You can explain deprecation",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've changed a draft, previewed it, published it, and found version history,",
+     "show": 1
+    },
+    {
+     "say": "you've looked up real D N S records and found the one your platform needs,",
+     "show": 2
+    },
+    {
+     "say": "you've read an error log from a deliberate failure, and fixed the cause,",
+     "show": 3
+    },
+    {
+     "say": "you've set a recurring habit to monitor it,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain how deprecation breaks things without warning.",
+     "show": 5
+    },
+    {
+     "say": "You've finished Deployment. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

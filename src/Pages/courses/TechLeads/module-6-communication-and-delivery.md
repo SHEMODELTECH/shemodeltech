@@ -243,6 +243,381 @@ You have an audience analysis, a five-slide presentation with statement headline
 
 *Answers: 1) Who will be there, what they already know, what they care about, and what they can decide. 2) The one sentence you want the audience to remember. 3) State the ask up front; then support it with situation (where things stand), complication (the problem or change), and resolution (what you propose). 4) The audience gets the point even if they only read the headlines. 5) A backup such as screenshots or a recording.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Module 6 · Communication and delivery",
+   "title": "Keep projects moving",
+   "beats": [
+    {
+     "say": "Welcome to Module 6, the last module in the TechLeads track."
+    },
+    {
+     "say": "It covers the everyday skills of anyone who helps a tech team ship: running useful meetings, tracking work and risk, and presenting clearly."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 6.1 · Meetings",
+   "title": "Meetings that reach an outcome",
+   "items": [
+    [
+     "Purpose",
+     "An outcome, not a topic"
+    ],
+    [
+     "Agenda",
+     "Timed, shared in advance"
+    ],
+    [
+     "Facilitator",
+     "Time, voices, focus"
+    ],
+    [
+     "Parking lot",
+     "Off-topic, for later"
+    ],
+    [
+     "Action items",
+     "Owner + due date"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "An hour with eight people costs a full working day, so meetings need a clear purpose.",
+     "show": 0
+    },
+    {
+     "say": "State the purpose as an outcome.",
+     "show": 1
+    },
+    {
+     "say": "Share a timed agenda in advance, so people arrive prepared.",
+     "show": 2
+    },
+    {
+     "say": "A facilitator keeps time, makes sure every voice is heard, and steers back to the purpose.",
+     "show": 3
+    },
+    {
+     "say": "A parking lot holds important but off-topic points for later.",
+     "show": 4
+    },
+    {
+     "say": "And every meeting ends with action items, each with an owner and a due date.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "target",
+   "kicker": "Concept",
+   "title": "Purpose as an outcome",
+   "quote": "✗ \"Discuss the launch\"   ✓ \"Decide on the launch date\"",
+   "beats": [
+    {
+     "say": "Here's the difference.",
+     "show": 0
+    },
+    {
+     "say": "Discuss the launch, becomes: decide on the launch date.",
+     "show": 1
+    },
+    {
+     "say": "If a written update could meet the purpose, cancel the meeting and send the update.",
+     "show": 1
+    },
+    {
+     "say": "And ending five minutes early to confirm actions is worth more than five more minutes of discussion.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "Topic 6.2 · Tracking delivery",
+   "title": "From plan to done",
+   "items": [
+    [
+     "Work breakdown",
+     "Tasks small enough to assign"
+    ],
+    [
+     "Dependency",
+     "Where delays spread"
+    ],
+    [
+     "Milestone",
+     "e.g. \"beta ready\""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Most failed projects don't fail suddenly. They fail through small delays and risks nobody tracked.",
+     "show": 0
+    },
+    {
+     "say": "A work breakdown splits a project into tasks small enough to estimate and assign.",
+     "show": 1
+    },
+    {
+     "say": "A dependency is a task that can't start or finish until another does. That's where delays spread.",
+     "show": 2
+    },
+    {
+     "say": "A milestone, like beta ready, checks progress against the plan.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Concept",
+   "title": "The RAID log",
+   "items": [
+    [
+     "Risk",
+     "Might go wrong"
+    ],
+    [
+     "Assumption",
+     "Believed, not confirmed"
+    ],
+    [
+     "Issue",
+     "Already happened"
+    ],
+    [
+     "Dependency",
+     "Waits on another task"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A raid log tracks four things in one place, each with an owner.",
+     "show": 0
+    },
+    {
+     "say": "A risk might go wrong: the payment partner might not finish their A P I before launch.",
+     "show": 1
+    },
+    {
+     "say": "An assumption is believed but not confirmed: about five hundred users in the first month.",
+     "show": 2
+    },
+    {
+     "say": "An issue has already happened: the test server has been down since Tuesday.",
+     "show": 3
+    },
+    {
+     "say": "And a dependency: design must finish checkout screens before development can start.",
+     "show": 4
+    },
+    {
+     "say": "Rate every risk's likelihood and impact, give it a plan, raise it early, and review the log weekly.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "graph",
+   "kicker": "Topic 6.3 · Presenting",
+   "title": "Built around the audience",
+   "items": [
+    [
+     "Audience analysis",
+     "Know, care, can decide"
+    ],
+    [
+     "Key message",
+     "One sentence"
+    ],
+    [
+     "Lead with the ask",
+     "Never save it for the end"
+    ],
+    [
+     "Supporting case",
+     "Situation, complication, resolution"
+    ],
+    [
+     "One idea per slide",
+     "Statement headlines"
+    ],
+    [
+     "Demo backup",
+     "Screenshots or a recording"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Audience analysis asks who'll be there, what they know, what they care about, and what they can decide.",
+     "show": 1
+    },
+    {
+     "say": "The key message is the one sentence you want them to remember.",
+     "show": 2
+    },
+    {
+     "say": "Lead with the ask, the same rule as in a decision document.",
+     "show": 3
+    },
+    {
+     "say": "Then support it with situation, complication, resolution.",
+     "show": 4
+    },
+    {
+     "say": "Use one idea per slide, with headlines that state the point, like checkout errors fell forty percent.",
+     "show": 5
+    },
+    {
+     "say": "And for a demo, rehearse it and keep a backup, like screenshots or a recording.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "browser",
+   "kicker": "Lab",
+   "title": "A five-slide presentation",
+   "steps": [
+    "Ask: approve the checkout fix",
+    "2,000 orders a day",
+    "Slow pages lose ~8% of carts",
+    "Cache data, shrink images",
+    "Cost: 2 engineers, 3 weeks"
+   ],
+   "beats": [
+    {
+     "say": "Here's a five-slide case for a checkout fix.",
+     "show": 0
+    },
+    {
+     "say": "Slide one, the ask: decision needed today, approve the fix.",
+     "show": 1
+    },
+    {
+     "say": "Situation: checkout handles two thousand orders a day.",
+     "show": 2
+    },
+    {
+     "say": "Complication: slow pages now lose about eight percent of carts.",
+     "show": 3
+    },
+    {
+     "say": "Resolution: cache product data and shrink images.",
+     "show": 4
+    },
+    {
+     "say": "At a cost of two engineers for three weeks. Rehearse it aloud, timed, until a listener can repeat your key message.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Where should the ask go in a stakeholder presentation?",
+   "options": [
+    "On the last slide, after the evidence",
+    "After the technical detail",
+    "Up front, then situation, complication and resolution"
+   ],
+   "answer": 2,
+   "good": "That's right. State the ask up front so busy listeners know why they're there, then support it with situation, complication and resolution.",
+   "bad": "Not quite. State the ask up front so busy listeners know why they're there, then support it with situation, complication and resolution.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Where should the ask go in a stakeholder presentation?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Outcome purpose + timed agenda",
+     ""
+    ],
+    [
+     "Follow-up with owned, dated actions",
+     ""
+    ],
+    [
+     "Task plan with dependencies",
+     ""
+    ],
+    [
+     "RAID log + status update",
+     ""
+    ],
+    [
+     "Rehearsed five-slide presentation",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've written an outcome-based purpose and a timed agenda, and run or observed the meeting,",
+     "show": 1
+    },
+    {
+     "say": "you've sent a follow-up with owned, dated actions,",
+     "show": 2
+    },
+    {
+     "say": "you've built a task plan with milestones, owners and dependencies,",
+     "show": 3
+    },
+    {
+     "say": "you've created a raid log with rated risks, and a status update from it,",
+     "show": 4
+    },
+    {
+     "say": "and you've built and rehearsed a five-slide presentation with a clear ask.",
+     "show": 5
+    },
+    {
+     "say": "You've finished Communication and Delivery, and the TechLeads track. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 6 Completion Checklist

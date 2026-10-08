@@ -243,6 +243,404 @@ You have created an identity, granted it least-privilege authorization, enabled 
 
 *Answers: 1) Authentication proves who you are (verifying identity, for example with a password plus MFA); authorization decides what you're allowed to do once authenticated (for example via roles and policies). 2) An identity is the digital representation of an entity that can request access, it can belong to a user, a service, or a device. 3) Single sign-on lets one authenticated identity access many services without logging in separately to each; benefits include convenience and centralised control over access. 4) Provisioning (joiner), modifying access (mover), and deprovisioning (leaver); the leaver stage matters because accounts left active after someone no longer needs them are a common way attackers gain a foothold. 5) Because in the cloud every action is an identity requesting to do something, and IAM decides whether to allow it, so it governs access to essentially everything you run.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "people",
+   "kicker": "Module 5 · Identity and access management",
+   "title": "Who you are, what you may do",
+   "beats": [
+    {
+     "say": "Welcome to Identity and Access Management."
+    },
+    {
+     "say": "Three topics: M F A proves who you are, R B A C decides what you may do, and I A M manages identities from creation to removal."
+    },
+    {
+     "say": "Only ever practise on accounts you own."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Topic 5.1 · MFA",
+   "title": "Factors from different kinds",
+   "items": [
+    [
+     "Know",
+     "Password or PIN"
+    ],
+    [
+     "Have",
+     "Phone or security key"
+    ],
+    [
+     "Are",
+     "Fingerprint or face"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Multi-factor authentication asks for two or more factors, from different categories, so stealing one isn't enough.",
+     "show": 0
+    },
+    {
+     "say": "Something you know, like a password or PIN.",
+     "show": 1
+    },
+    {
+     "say": "Something you have, like a phone or a hardware token.",
+     "show": 2
+    },
+    {
+     "say": "Something you are, like a fingerprint or face.",
+     "show": 3
+    },
+    {
+     "say": "Two passwords isn't M F A. Both are things you know, so one phishing page could capture both.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 5.1 · Not all MFA is equal",
+   "title": "From weakest to strongest",
+   "items": [
+    [
+     "SMS codes",
+     "Weakest · SIM-swapping"
+    ],
+    [
+     "TOTP app",
+     "Much stronger"
+    ],
+    [
+     "Passkey / security key",
+     "Phishing-resistant"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The second factor you choose matters.",
+     "show": 0
+    },
+    {
+     "say": "S M S codes are better than nothing, but the weakest. They can be intercepted, or stolen by SIM swapping.",
+     "show": 1
+    },
+    {
+     "say": "T O T P apps generate a rotating six digit code. Far stronger than S M S.",
+     "show": 2
+    },
+    {
+     "say": "Hardware security keys and passkeys, built on FIDO two and Web Authn, are phishing resistant. They cryptographically verify the real site, so a fake one can't reuse the login.",
+     "show": 3
+    },
+    {
+     "say": "N I S T's 2025 guidance reflects this. S M S is a restricted option, and services that need M F A must offer at least one phishing resistant option.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "phone",
+   "kicker": "Topic 5.1 · Lab",
+   "title": "Turn on TOTP",
+   "steps": [
+    "Enable TOTP",
+    "Scan the QR code",
+    "Confirm + save recovery codes",
+    "Compare passkeys"
+   ],
+   "beats": [
+    {
+     "say": "On a test account you own, open the security settings and enable T O T P.",
+     "show": 1
+    },
+    {
+     "say": "Scan the Q R code with an authenticator app. It starts generating six digit codes.",
+     "show": 2
+    },
+    {
+     "say": "Enter the current code to confirm, and save your recovery codes somewhere safe.",
+     "show": 3
+    },
+    {
+     "say": "Then check whether the account supports a passkey or security key, and why that's stronger. Try the password widget too, but never type a password you really use.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "layers",
+   "kicker": "Topic 5.2 · RBAC",
+   "title": "Permissions belong to roles",
+   "steps": [
+    "Users",
+    "Roles",
+    "Permissions",
+    "Resources"
+   ],
+   "beats": [
+    {
+     "say": "Role-based access control attaches permissions to roles, not to people one by one.",
+     "show": 0
+    },
+    {
+     "say": "Users are assigned roles.",
+     "show": 1
+    },
+    {
+     "say": "Roles, like Editor or Viewer, carry permissions.",
+     "show": 2
+    },
+    {
+     "say": "Permissions are specific allowed actions on resources.",
+     "show": 3
+    },
+    {
+     "say": "So audits and offboarding become one question: which role? To remove someone's access, you remove their roles.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blueprint",
+   "kicker": "Topic 5.2 · Lab",
+   "title": "Design a blog's roles",
+   "items": [
+    [
+     "Three roles",
+     "Author · Editor · Viewer"
+    ],
+    [
+     "Least privilege",
+     "Only what the role needs"
+    ],
+    [
+     "Separation of duties",
+     "Writing ≠ publishing your own post"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, design roles for a blog where some people write, some publish, and some only read.",
+     "show": 0
+    },
+    {
+     "say": "Author, Editor and Viewer, each with a table of exact permissions.",
+     "show": 1
+    },
+    {
+     "say": "Apply least privilege: remove any permission the role doesn't truly need.",
+     "show": 2
+    },
+    {
+     "say": "Add separation of duties: no single role can both write and publish its own post.",
+     "show": 3
+    },
+    {
+     "say": "Watch for an over-broad does everything role. It quietly defeats the whole point.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "people",
+   "kicker": "Topic 5.3 · IAM",
+   "title": "Two separate gates",
+   "steps": [
+    "Identity",
+    "Authentication",
+    "Authorization",
+    "Access"
+   ],
+   "beats": [
+    {
+     "say": "I A M brings it all together.",
+     "show": 0
+    },
+    {
+     "say": "An identity is the digital representation of a user, a service or a device.",
+     "show": 1
+    },
+    {
+     "say": "Authentication proves who you are. That's where M F A lives.",
+     "show": 2
+    },
+    {
+     "say": "Authorization decides what you may do. That's where roles and policies live.",
+     "show": 3
+    },
+    {
+     "say": "Only then is access granted. In the cloud, every action is an identity asking to do something, which is why I A M is called the control plane.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Topic 5.3 · Lifecycle",
+   "title": "Joiner, mover, leaver",
+   "items": [
+    [
+     "Joiner",
+     "Provision"
+    ],
+    [
+     "Mover",
+     "Change access"
+    ],
+    [
+     "Leaver",
+     "Remove promptly"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Identities have a lifecycle.",
+     "show": 0
+    },
+    {
+     "say": "Joiner: provision the account.",
+     "show": 1
+    },
+    {
+     "say": "Mover: change its access when the job changes.",
+     "show": 2
+    },
+    {
+     "say": "Leaver: remove it. Accounts left active after someone leaves are a common foothold for attackers, so prompt deprovisioning is a security control, not housekeeping.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "cloud",
+   "kicker": "Topic 5.3 · Lab",
+   "title": "Spot the broad statement",
+   "file": "policy.json",
+   "code": "{\n  \"Sid\": \"ReadReports\",\n  \"Effect\": \"Allow\",\n  \"Action\": [\"s3:GetObject\"],\n  \"Resource\": \"arn:aws:s3:::example-reports-bucket/monthly/*\"\n},\n{\n  \"Sid\": \"TooBroad\",\n  \"Effect\": \"Allow\",\n  \"Action\": [\"s3:*\"],\n  \"Resource\": \"*\"\n}",
+   "beats": [
+    {
+     "say": "No cloud account? Read this sample A W S policy for a report analyst who should only read monthly reports from one bucket.",
+     "show": 0
+    },
+    {
+     "say": "The first two statements allow reading and listing the monthly folder. But too broad allows every storage action, including deleting, on every bucket.",
+     "show": 1
+    },
+    {
+     "say": "Remove it, and a delete is denied, because anything not explicitly allowed is denied by default. Require M F A at sign in, and remove access when the analyst leaves.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between authentication and authorization?",
+   "options": [
+    "They're two names for the same check",
+    "Authorization proves who you are, authentication decides what you may do",
+    "Authentication proves who you are, authorization decides what you may do"
+   ],
+   "answer": 2,
+   "good": "That's right. Authentication proves who you are, for example a password plus M F A. Authorization then decides what that identity may do, through roles and policies.",
+   "bad": "Not quite. Authentication proves who you are, for example a password plus M F A. Authorization then decides what that identity may do, through roles and policies.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between authentication and authorization?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "TOTP enabled and verified",
+     ""
+    ],
+    [
+     "Factors, and why passkeys beat SMS",
+     ""
+    ],
+    [
+     "Roles with least privilege and separation",
+     ""
+    ],
+    [
+     "Scoped access, then deprovisioned",
+     ""
+    ],
+    [
+     "AuthN vs AuthZ, and the lifecycle",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've enabled T O T P on an account you own and verified it,",
+     "show": 1
+    },
+    {
+     "say": "you can explain the three factor categories, and why phishing resistant M F A beats S M S,",
+     "show": 2
+    },
+    {
+     "say": "you've designed roles with least privilege and separation of duties,",
+     "show": 3
+    },
+    {
+     "say": "you've granted an identity scoped access, and deprovisioned it,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain authentication versus authorization, and why the identity lifecycle is a security control.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 6, cloud security.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 5 Completion Checklist

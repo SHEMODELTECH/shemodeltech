@@ -343,6 +343,490 @@ You have tightened your agent's instructions, set a step limit, run a set of tes
 
 *Answers: 1) Instructions hidden in text the agent reads, such as an email or web page, that try to make the agent do something its builder didn't intend. 2) Because the model can't always tell real instructions from hidden ones, so you also need limited tools and permissions and human approval on actions that change data or send things. 3) For example, Agent Behavior Hijacking (reduce it by treating outside text as data and keeping human approval on actions), Tool Misuse and Exploitation (give only needed tools and set Max Iterations), or Identity and Privilege Abuse (connect tools with least-privilege accounts). 4) Because a small change can change how the agent behaves, and rerunning the same tests shows whether something that used to work is now broken. 5) Any two of: building a custom tool for an internal system, building an MCP server, sign-in and permissions for many users, handling sensitive data, or production hosting of a self-hosted n8n.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "sparkle",
+   "kicker": "Module · AI agents",
+   "title": "Agents for no-code builders",
+   "beats": [
+    {
+     "say": "Welcome to A I Agents for No-Code Builders."
+    },
+    {
+     "say": "So far in this track you've built fixed automations: the same steps, in the same order, every time."
+    },
+    {
+     "say": "An A I agent is different. You give it a goal, instructions and tools, and an A I model decides, step by step, which tool to use next."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Topic 1 · Concept",
+   "title": "The five parts of an agent",
+   "items": [
+    [
+     "Model",
+     "Reads and decides"
+    ],
+    [
+     "Instructions",
+     "Job, tone, limits"
+    ],
+    [
+     "Tools",
+     "What it's allowed to do"
+    ],
+    [
+     "Memory",
+     "Earlier messages"
+    ],
+    [
+     "Human approval",
+     "Approve or deny risky actions"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every agent has the same five parts.",
+     "show": 0
+    },
+    {
+     "say": "The model is the brain that reads the conversation and decides what to do. You pay for each request it handles.",
+     "show": 1
+    },
+    {
+     "say": "The instructions, often called the system prompt, are like an onboarding document: its job, its tone, and what it must never do.",
+     "show": 2
+    },
+    {
+     "say": "The tools are the actions it's allowed to take. An agent can only do what its tools allow, so most safety decisions live here.",
+     "show": 3
+    },
+    {
+     "say": "Memory lets it remember earlier messages in the same conversation.",
+     "show": 4
+    },
+    {
+     "say": "And human approval pauses it before a chosen action, so a person can approve or deny.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Topic 1 · When to use one",
+   "title": "Can you write down every step?",
+   "items": [
+    [
+     "Fixed automation",
+     "Same steps, structured input"
+    ],
+    [
+     "Agent",
+     "Path changes per request"
+    ],
+    [
+     "Middle ground",
+     "Fixed flow + one AI step"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "To choose, ask one question. Can I write down every step in advance?",
+     "show": 0
+    },
+    {
+     "say": "If yes, and the input is structured, like a form or a spreadsheet row, use a fixed automation. It's predictable, with no A I cost per run.",
+     "show": 1
+    },
+    {
+     "say": "If the steps depend on what the person asks, and the input is messy free text, consider an agent.",
+     "show": 2
+    },
+    {
+     "say": "Often the best choice is in the middle: a fixed automation with one A I step, like summarizing or sorting a message, while normal filters do the routing.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Topic 2 · Before you build",
+   "title": "Get your A P I key safely",
+   "items": [
+    [
+     "Add credit",
+     "A few dollars is plenty"
+    ],
+    [
+     "Set a spending limit",
+     "Before creating the key"
+    ],
+    [
+     "Create the key",
+     "Copy it once"
+    ],
+    [
+     "Keep it secret",
+     "Only in n8n credentials"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Your agent needs an A P I key from a provider such as Anthropic or OpenAI. It's a separate account from a chat subscription.",
+     "show": 0
+    },
+    {
+     "say": "Add a small amount of credit. A few dollars is far more than this lab needs.",
+     "show": 1
+    },
+    {
+     "say": "Set a low spending limit before you create the key, so a mistake, like an agent stuck in a loop, can only cost that much.",
+     "show": 2
+    },
+    {
+     "say": "Create the key and copy it straight away. Many providers show it only once.",
+     "show": 3
+    },
+    {
+     "say": "Paste it only into n eight n's credential screen. Never into instructions, chats, screenshots or public repositories.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "architecture",
+   "kicker": "Topic 2 · Lab Parts A and B",
+   "title": "Start n8n, then wire the agent",
+   "steps": [
+    "Start n8n (localhost:5678)",
+    "Chat Trigger",
+    "AI Agent node",
+    "Chat model + credential",
+    "Simple Memory + system message"
+   ],
+   "beats": [
+    {
+     "say": "The lab uses n eight n, a workflow tool with strong A I features. Its free Community Edition runs on your own computer.",
+     "show": 0
+    },
+    {
+     "say": "Start it with Docker, or with n p x, open localhost port five six seven eight, and create a workflow called Order Helper Agent.",
+     "show": 1
+    },
+    {
+     "say": "Add a Chat Trigger. It appears as, when chat message received, and gives you a chat box.",
+     "show": 2
+    },
+    {
+     "say": "Add an A I Agent node after it. Underneath are slots for Chat Model, Memory and Tool.",
+     "show": 3
+    },
+    {
+     "say": "In the Chat Model slot, add the Anthropic or OpenAI chat model, and create a credential with your key.",
+     "show": 4
+    },
+    {
+     "say": "Add Simple Memory, then open the agent and write its System Message.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "doc",
+   "kicker": "Topic 2 · Lab Part B",
+   "title": "The system message",
+   "file": "System Message",
+   "code": "You are Order Helper, an assistant for a small online shop's staff.\nYou can look up customers with the \"Look up customers\" tool.\nYou can create a follow-up note with the \"Create follow-up note\" tool. This tool needs human approval.\nIf the request is denied, tell the user it was not approved and ask if they want to change anything. Never try again without being asked.\nOnly use information from your tools. If you can't find something, say so. Don't guess.",
+   "beats": [
+    {
+     "say": "Here's the start of Order Helper's instructions.",
+     "show": 0
+    },
+    {
+     "say": "It names its two tools, says the note tool needs human approval, and says what to do if a request is denied.",
+     "show": 1
+    },
+    {
+     "say": "And it says: only use information from your tools. Don't guess.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Topic 2 · Lab Parts C and D",
+   "title": "A lookup tool and an action tool",
+   "items": [
+    [
+     "Look up customers",
+     "GET · read only · no approval"
+    ],
+    [
+     "Create follow-up note",
+     "POST · behind human review"
+    ],
+    [
+     "Approve one, deny one",
+     "userId 3 · no retry after deny"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Part C adds a read-only tool: an H T T P Request Tool named Look up customers, doing a GET to the J S O N Placeholder users list.",
+     "show": 1
+    },
+    {
+     "say": "Ask for Clementine's email. The answer should be Nathan at yesenia dot net. Then ask what company she works for, to test memory.",
+     "show": 1
+    },
+    {
+     "say": "Part D adds Human review, with Chat as the approval channel, and connects a second tool to it: Create follow-up note, which does a POST.",
+     "show": 2
+    },
+    {
+     "say": "Ask for a note for Clementine. Check the user I D is three, and approve. Then ask for another, and deny it. The agent shouldn't try again.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 3 · Running agents well",
+   "title": "Habits that matter",
+   "items": [
+    [
+     "Clear instructions",
+     "Job, limits, when unsure"
+    ],
+    [
+     "Least permission",
+     "Only needed tools"
+    ],
+    [
+     "Human approval",
+     "Before any change or send"
+    ],
+    [
+     "Test + log",
+     "Sample chats, Executions"
+    ],
+    [
+     "Cost control",
+     "Spend limit, Max Iterations"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Getting an agent to work once is the easy part. These habits keep it behaving every day.",
+     "show": 0
+    },
+    {
+     "say": "Clear instructions: its job, what it must never do, and what to do when unsure.",
+     "show": 1
+    },
+    {
+     "say": "Least permission: only the tools the job needs, connected with the least access possible.",
+     "show": 2
+    },
+    {
+     "say": "Human approval on anything that creates, changes, deletes, sends or pays.",
+     "show": 3
+    },
+    {
+     "say": "Test with sample conversations, and read the logs in n eight n's Executions list.",
+     "show": 4
+    },
+    {
+     "say": "And cost control: a spending limit, a smaller model where it works, and Max Iterations, which defaults to ten. In the lab you set it to five.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Topic 3 · The biggest risk",
+   "title": "Prompt injection",
+   "quote": "Treat outside text as data, never as instructions. Instructions guide; permissions and approval protect.",
+   "beats": [
+    {
+     "say": "Prompt injection is the most important risk to understand.",
+     "show": 0
+    },
+    {
+     "say": "An agent reads text from emails, web pages, files and tool results, and can't always tell your instructions from instructions hidden in that text.",
+     "show": 1
+    },
+    {
+     "say": "In the lab, you paste a pretend customer email with a hidden line telling the assistant to create a note for every customer. On your own agent only.",
+     "show": 1
+    },
+    {
+     "say": "If the agent tries, the human review step stops it, and you click Deny. Only the approval step guarantees nothing changes.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 3 · Know your limits",
+   "title": "Agentic risks, and what to hand off",
+   "items": [
+    [
+     "Behavior Hijacking",
+     "Data, not instructions"
+    ],
+    [
+     "Tool Misuse",
+     "Fewer tools, Max Iterations"
+    ],
+    [
+     "Privilege Abuse",
+     "Least-privilege accounts"
+    ],
+    [
+     "Hand off",
+     "Custom tools, MCP, sign-in, hosting"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The O W A S P Top Ten for Agentic Applications adds risks that map onto what you built.",
+     "show": 0
+    },
+    {
+     "say": "Agent Behavior Hijacking: defend with outside text as data, and human approval.",
+     "show": 1
+    },
+    {
+     "say": "Tool Misuse and Exploitation: give only needed tools, and set Max Iterations.",
+     "show": 2
+    },
+    {
+     "say": "Identity and Privilege Abuse: connect tools with least-privilege accounts, never your admin login.",
+     "show": 3
+    },
+    {
+     "say": "And hand off to a developer things like custom tools, M C P servers, sign-in for many users, sensitive data, and production hosting.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why isn't a line in the system message enough to stop prompt injection?",
+   "options": [
+    "System messages are ignored by n8n",
+    "Prompt injection only happens in chat",
+    "The model can't always tell real instructions from hidden ones"
+   ],
+   "answer": 2,
+   "good": "That's right. The model can't always tell real instructions from hidden ones, so you also need limited tools and permissions, and human approval on actions that change data or send things.",
+   "bad": "Not quite. The model can't always tell real instructions from hidden ones, so you also need limited tools and permissions, and human approval on actions that change data or send things.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why isn't a line in the system message enough to stop prompt injection?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Tasks sorted, one agent planned",
+     ""
+    ],
+    [
+     "Key in credentials, spend limit set",
+     ""
+    ],
+    [
+     "Agent built with human review",
+     ""
+    ],
+    [
+     "One approved, one denied",
+     ""
+    ],
+    [
+     "Tests run, Executions checked",
+     ""
+    ],
+    [
+     "You can explain the risks and handoffs",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've sorted real tasks into fixed automation or agent, and planned one agent,",
+     "show": 1
+    },
+    {
+     "say": "your A P I key lives only in n eight n's credentials, with a spending limit set,",
+     "show": 2
+    },
+    {
+     "say": "your agent has a chat trigger, memory, a lookup tool, and an action tool behind human review,",
+     "show": 3
+    },
+    {
+     "say": "you approved one action and denied another,",
+     "show": 4
+    },
+    {
+     "say": "you ran your test conversations, including a safe prompt injection test, and found the run in Executions,",
+     "show": 5
+    },
+    {
+     "say": "and you can explain prompt injection, the agentic risks, and what to hand to a developer.",
+     "show": 6
+    },
+    {
+     "say": "You've finished A I Agents for No-Code Builders. Well done.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

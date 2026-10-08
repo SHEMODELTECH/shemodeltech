@@ -78,6 +78,199 @@ portfolio-site (Webflow)
 
 *Answers: 1) Padding is space inside an element's border; margin is space outside it, between the element and its neighbours. 2) The Section gives a full-width band (for backgrounds) while the Container keeps the content centred and at a readable width. 3) How its child elements are arranged in a row or column, plus their spacing and alignment. 4) A screen width where the design can change; the most common fix is making side-by-side columns stack vertically.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "browser",
+   "kicker": "Project 1 · Your first structured page",
+   "title": "Boxes all the way down",
+   "beats": [
+    {
+     "say": "Welcome to No-Code Website and C M S Developer, with Webflow."
+    },
+    {
+     "say": "Across six projects you'll build a live, content-managed website. First, one clean, responsive page."
+    },
+    {
+     "say": "Sign up at webflow dot com, and create a blank site called portfolio site, on the free Starter plan."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "boxes",
+   "kicker": "Concept",
+   "title": "The box model",
+   "items": [
+    [
+     "Content",
+     "The element itself"
+    ],
+    [
+     "Padding",
+     "Space inside"
+    ],
+    [
+     "Border",
+     "The edge"
+    ],
+    [
+     "Margin",
+     "Space outside"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every element on a page is a box with four layers.",
+     "show": 0
+    },
+    {
+     "say": "The content itself.",
+     "show": 1
+    },
+    {
+     "say": "Padding, the space inside.",
+     "show": 2
+    },
+    {
+     "say": "A border.",
+     "show": 3
+    },
+    {
+     "say": "And margin, the space outside, between it and its neighbours. Almost every spacing problem comes down to padding or margin.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "layers",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Section, then container",
+   "file": "Project structure",
+   "code": "portfolio-site (Webflow)\n│\n└── Home (page)\n    └── Section\n        └── Container (flex)\n            ├── Column div (heading + paragraph)\n            └── Column div (image or text)",
+   "beats": [
+    {
+     "say": "A div block is an empty box for grouping and arranging. Divs are the skeleton everything hangs on.",
+     "show": 0
+    },
+    {
+     "say": "Drag in a Section, then a Container inside it, with a heading and a paragraph.",
+     "show": 1
+    },
+    {
+     "say": "The Section gives a full-width band for backgrounds. The Container keeps content centred and readable.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "phone",
+   "kicker": "Lab · Steps 5 to 8",
+   "title": "Flexbox, then stack on mobile",
+   "steps": [
+    "Display: Flex",
+    "Two child divs",
+    "Gap + alignment",
+    "Check tablet + mobile",
+    "Stack columns on mobile"
+   ],
+   "beats": [
+    {
+     "say": "Flexbox arranges children in a row or column, and controls their spacing and alignment.",
+     "show": 0
+    },
+    {
+     "say": "Set a div to Display Flex, and add two child divs.",
+     "show": 1
+    },
+    {
+     "say": "Use gap and alignment to space them evenly.",
+     "show": 2
+    },
+    {
+     "say": "A breakpoint is a screen width where the design changes. Webflow has desktop, tablet and mobile views, edited separately.",
+     "show": 3
+    },
+    {
+     "say": "In the mobile view, make the columns stack. It's the single most common responsive fix.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between padding and margin?",
+   "options": [
+    "Padding is outside the border; margin is inside",
+    "They're the same thing",
+    "Padding is space inside the border; margin is space outside it"
+   ],
+   "answer": 2,
+   "good": "That's right. Padding is space inside an element's border. Margin is space outside it, between the element and its neighbours.",
+   "bad": "Not quite. Padding is space inside an element's border. Margin is space outside it, between the element and its neighbours.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between padding and margin?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A responsive page built from scratch",
+     ""
+    ],
+    [
+     "Columns stack on mobile",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a responsive page built from scratch,",
+     "show": 1
+    },
+    {
+     "say": "that stacks correctly on mobile.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, a reusable style system.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Design a Reusable Style System
@@ -141,6 +334,205 @@ Style system
 4. What is the benefit of saving the card as a Component?
 
 *Answers: 1) Every element with the class shares its styles, so one change updates them all and the site stays consistent. 2) A variation, such as a different colour, while reusing all the base button styles without duplicating them. 3) Every element that uses that swatch updates to the new colour. 4) You can reuse the whole card block and editing the component updates every copy at once.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "palette",
+   "kicker": "Project 2 · Style system",
+   "title": "Style once, reuse everywhere",
+   "beats": [
+    {
+     "say": "Welcome to Project 2."
+    },
+    {
+     "say": "A class is a named bundle of styles. Every element with that class shares them, so one change updates them all."
+    },
+    {
+     "say": "Classes are the difference between a site you can maintain and one you can't."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Lab · Steps 2 to 4",
+   "title": "Text and buttons",
+   "items": [
+    [
+     "body-text",
+     "Base text style"
+    ],
+    [
+     "Combo class",
+     "A variation on a base class"
+    ],
+    [
+     "button",
+     "+ button-primary / button-secondary"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Style a paragraph's font, size, colour and line height, and give it the class body text.",
+     "show": 1
+    },
+    {
+     "say": "A combo class adds a variation on top of a base class, without duplicating styles.",
+     "show": 2
+    },
+    {
+     "say": "Create a button class, then combo classes button primary and button secondary for colour variants.",
+     "show": 3
+    },
+    {
+     "say": "Now every button matches, and updates together.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "palette",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Color swatches",
+   "items": [
+    [
+     "primary",
+     ""
+    ],
+    [
+     "secondary",
+     ""
+    ],
+    [
+     "text",
+     ""
+    ],
+    [
+     "background",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A color swatch is a saved, named colour. Change the swatch, and every element using it updates.",
+     "show": 0
+    },
+    {
+     "say": "That's how you rebrand a whole site in minutes.",
+     "show": 0
+    },
+    {
+     "say": "Save your brand colours as four swatches, and apply them through your classes.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "blocks",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "A card component",
+   "steps": [
+    "Card: image, heading, text, button",
+    "Save as a Component",
+    "style_system.md"
+   ],
+   "beats": [
+    {
+     "say": "Build a card: image, heading, text and button, styled with your classes.",
+     "show": 1
+    },
+    {
+     "say": "Save it as a Component. Edit it once, and every copy updates.",
+     "show": 2
+    },
+    {
+     "say": "Then list your classes, swatches and components in a notes doc, so you or a teammate can extend the site without breaking it.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What happens when you change the value of a color swatch?",
+   "options": [
+    "Every element that uses that swatch updates to the new colour",
+    "Only new elements get the colour",
+    "Webflow creates a second swatch"
+   ],
+   "answer": 0,
+   "good": "That's right. Every element that uses that swatch updates to the new colour.",
+   "bad": "Not quite. Every element that uses that swatch updates to the new colour.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What happens when you change the value of a color swatch?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Reusable, documented classes",
+     ""
+    ],
+    [
+     "A swatch palette",
+     ""
+    ],
+    [
+     "At least one component",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a documented style system with reusable classes,",
+     "show": 1
+    },
+    {
+     "say": "a colour palette,",
+     "show": 2
+    },
+    {
+     "say": "and at least one component.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 3, a multi-page site with navigation.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -210,6 +602,206 @@ Optional (paid site plan): separate About and Work pages
 
 *Answers: 1) About and Work become sections on the Home page with IDs, and the navbar links to those sections. 2) So they are identical on every page and one edit updates them everywhere. 3) It styles the link for the page you are currently on, so visitors know where they are. 4) Desktop navbars do not fit phones, so the mobile menu must be checked separately, and most visits are on phones.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "path",
+   "kicker": "Project 3 · Navigation",
+   "title": "From one page to a real site",
+   "beats": [
+    {
+     "say": "Welcome to Project 3."
+    },
+    {
+     "say": "Now your single page becomes a navigable website, within the free plan's page limit."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blueprint",
+   "kicker": "Lab · Step 1",
+   "title": "Plan pages within the free limit",
+   "items": [
+    [
+     "Home",
+     "With #about and #work sections"
+    ],
+    [
+     "Contact",
+     "Second static page"
+    ],
+    [
+     "Optional",
+     "Separate About + Work pages (paid plan)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The free Starter plan allows very few static pages, so check the current plan.",
+     "show": 0
+    },
+    {
+     "say": "The free path uses just two static pages, Home and Contact.",
+     "show": 1
+    },
+    {
+     "say": "About and Work become sections on Home, with the I Ds about and work.",
+     "show": 2
+    },
+    {
+     "say": "On a paid site plan, About and Work can be separate pages instead. That's optional.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Lab · Steps 2 to 6",
+   "title": "A shared navbar and footer",
+   "items": [
+    [
+     "Navbar links",
+     "Home · About · Work · Contact"
+    ],
+    [
+     "Components",
+     "Navbar + footer, edited once"
+    ],
+    [
+     "Current state",
+     "Shows where you are"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Add the Navbar element, with four links.",
+     "show": 0
+    },
+    {
+     "say": "Home and Contact link to their pages. About and Work use the link type Section.",
+     "show": 1
+    },
+    {
+     "say": "Convert the navbar and a footer into components, so one edit updates every page.",
+     "show": 2
+    },
+    {
+     "say": "And style the Current state, so visitors always know which page they're on.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "phone",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "Mobile menu, then click everything",
+   "steps": [
+    "Configure the hamburger menu",
+    "Test at mobile width",
+    "Click every link, every page"
+   ],
+   "beats": [
+    {
+     "say": "Desktop navbars don't fit phones, and most visits are on phones.",
+     "show": 0
+    },
+    {
+     "say": "Configure the navbar's mobile menu, the hamburger.",
+     "show": 1
+    },
+    {
+     "say": "Test it at mobile width.",
+     "show": 2
+    },
+    {
+     "say": "Then click every link on every page, on desktop and mobile, including the section links from the Contact page.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why make the navbar and footer components?",
+   "options": [
+    "Components load faster",
+    "So they're identical everywhere and one edit updates every page",
+    "Webflow requires it for links"
+   ],
+   "answer": 1,
+   "good": "That's right. Components keep them identical on every page, and one edit updates them everywhere.",
+   "bad": "Not quite. Components keep them identical on every page, and one edit updates them everywhere.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why make the navbar and footer components?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Home with sections, plus Contact",
+     ""
+    ],
+    [
+     "Shared navbar and footer",
+     ""
+    ],
+    [
+     "Working mobile navigation",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a Home page with About and Work sections, and a Contact page,",
+     "show": 1
+    },
+    {
+     "say": "a consistent navbar and footer,",
+     "show": 2
+    },
+    {
+     "say": "and working mobile navigation.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 4, a C M S for dynamic content.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 4 (Module 4): Add a CMS for Dynamic Content
@@ -273,6 +865,199 @@ CMS
 4. Why is the CMS template page useful on the free plan?
 
 *Answers: 1) It separates content from design, so you design once and add content without touching the layout. 2) A collection list shows many items on one page as repeated cards; a collection page template generates one separate page per item. 3) A new card appears in the collection list and a new detail page with its own URL is generated. 4) It gives every project its own page without using up the limited static pages.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Project 4 · The CMS",
+   "title": "Design once, add content forever",
+   "beats": [
+    {
+     "say": "Welcome to Project 4."
+    },
+    {
+     "say": "A C M S, a content management system, stores content as structured records, and generates pages from a template."
+    },
+    {
+     "say": "It separates content from design, so you design once and add content without touching the layout."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Lab · Steps 2 to 4",
+   "title": "A Projects collection",
+   "file": "CMS",
+   "code": "Collection: Projects (name, summary, image, slug)\n└── 3 sample items",
+   "beats": [
+    {
+     "say": "A collection is a set of similar items, each with defined fields.",
+     "show": 0
+    },
+    {
+     "say": "Create a collection called Projects, with a name, summary, image and slug.",
+     "show": 1
+    },
+    {
+     "say": "Creating it also creates its template page automatically.",
+     "show": 1
+    },
+    {
+     "say": "Then add three sample projects with real content. That's well within the free plan's item cap.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "array",
+   "kicker": "Concept",
+   "title": "List versus template",
+   "items": [
+    [
+     "Collection list",
+     "Many items, one page"
+    ],
+    [
+     "Collection page",
+     "One page per item"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two ways to show a collection.",
+     "show": 0
+    },
+    {
+     "say": "A collection list shows many items on one page, one block per item. Add one to the work section on Home, and design one card.",
+     "show": 1
+    },
+    {
+     "say": "A collection page is a single template that generates one live page per item, each with its own U R L.",
+     "show": 2
+    },
+    {
+     "say": "On the free plan, the template page hasn't counted toward the static page limit.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "chain",
+   "kicker": "Lab · Step 8",
+   "title": "Design the detail page and link it",
+   "steps": [
+    "Open the template page",
+    "Add navbar + footer",
+    "Bind fields",
+    "Link cards to pages",
+    "New item → new page"
+   ],
+   "beats": [
+    {
+     "say": "Open the Projects template page.",
+     "show": 0
+    },
+    {
+     "say": "Add your navbar and footer components.",
+     "show": 1
+    },
+    {
+     "say": "Bind the name, image and summary to the item's fields.",
+     "show": 2
+    },
+    {
+     "say": "Link each card in the collection list to its collection page.",
+     "show": 3
+    },
+    {
+     "say": "Add a fourth project, and a new card and a new page appear, with no design work.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a C M S separate, and why does it help?",
+   "options": [
+    "Mobile from desktop, so pages load faster",
+    "Text from images, so files are smaller",
+    "Content from design, so you add content without touching the layout"
+   ],
+   "answer": 2,
+   "good": "That's right. A C M S separates content from design, so you design once and add content without touching the layout.",
+   "bad": "Not quite. A C M S separates content from design, so you design once and add content without touching the layout.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a C M S separate, and why does it help?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A Projects collection",
+     ""
+    ],
+    [
+     "An auto-updating list",
+     ""
+    ],
+    [
+     "Template-generated detail pages",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a C M S collection,",
+     "show": 1
+    },
+    {
+     "say": "an auto-updating collection list,",
+     "show": 2
+    },
+    {
+     "say": "and template-generated detail pages.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 5, interactions and a working form.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -338,6 +1123,191 @@ Interactions + form
 4. Why must you publish and send a real test submission instead of just previewing the form?
 
 *Answers: 1) Subtle motion guides attention, but too much animation distracts and makes the site feel less polished. 2) That the element is clickable. 3) Marking fields as required and setting the email field type to Email. 4) Only a real submission on the published site proves the message is delivered and the success state shows.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "sparkle",
+   "kicker": "Project 5 · Interactions and forms",
+   "title": "Bring it to life",
+   "beats": [
+    {
+     "say": "Welcome to Project 5."
+    },
+    {
+     "say": "An interaction is an animation triggered by an event. Well-judged motion guides attention, but too much distracts, so restraint is part of the skill."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cursor",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Two tasteful interactions",
+   "items": [
+    [
+     "Scroll into view",
+     "Fade in, move up slightly"
+    ],
+    [
+     "Hover",
+     "Slight lift or colour change"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Select your cards, and add a while scrolling into view interaction that fades them in and moves them up slightly. It's the most common tasteful interaction.",
+     "show": 1
+    },
+    {
+     "say": "Then add a hover state to buttons and cards, like a slight lift or colour change.",
+     "show": 2
+    },
+    {
+     "say": "Hover feedback tells users what's clickable.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab · Steps 4 to 6",
+   "title": "The contact form",
+   "items": [
+    [
+     "Fields",
+     "Name · email · message"
+    ],
+    [
+     "Notifications",
+     "Site settings → Forms"
+    ],
+    [
+     "Validation",
+     "Required + Email type"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "On many business sites, the form is the whole point.",
+     "show": 0
+    },
+    {
+     "say": "On the Contact page, add a Form with name, email and message, and a submit button. Short forms get completed far more often.",
+     "show": 1
+    },
+    {
+     "say": "In Site settings, under Forms, check which email receives notifications.",
+     "show": 2
+    },
+    {
+     "say": "Mark email and message as required, and set the email field type to Email. Validation stops junk submissions.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "proof",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "Prove it delivers",
+   "steps": [
+    "Success + error states",
+    "Publish to webflow.io",
+    "Submit a real test",
+    "Message arrives"
+   ],
+   "beats": [
+    {
+     "say": "Edit the text of the success and error states that come with the Form. Without feedback, users resubmit, or assume it's broken.",
+     "show": 1
+    },
+    {
+     "say": "Publish to your free webflow dot i o address.",
+     "show": 2
+    },
+    {
+     "say": "Submit the form yourself.",
+     "show": 3
+    },
+    {
+     "say": "Confirm the message arrives and the success state shows. Submissions are capped on the free plan, so don't spam it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why publish and send a real test instead of just previewing the form?",
+   "options": [
+    "Only a real submission on the published site proves the message is delivered",
+    "Preview mode hides the form",
+    "Webflow charges for previews"
+   ],
+   "answer": 0,
+   "good": "That's right. Only a real submission on the published site proves the message is delivered and the success state shows.",
+   "bad": "Not quite. Only a real submission on the published site proves the message is delivered and the success state shows.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why publish and send a real test instead of just previewing the form?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Tasteful interactions",
+     ""
+    ],
+    [
+     "A tested, working contact form",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your site has tasteful interactions,",
+     "show": 1
+    },
+    {
+     "say": "and a tested contact form that delivers messages.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, you optimize, publish and connect a domain.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -405,3 +1375,214 @@ Production
 4. Where can a free Webflow site be published, and what needs a paid site plan?
 
 *Answers: 1) In search results and link previews; they affect whether people find and click your page. 2) Adding alt text to meaningful images and checking text contrast. 3) Large, uncompressed images. 4) To a free webflow.io subdomain; connecting a custom domain needs a paid site plan.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Project 6 · Optimize and publish",
+   "title": "Fast, findable, live",
+   "beats": [
+    {
+     "say": "Welcome to the last project."
+    },
+    {
+     "say": "You make the site fast, findable and live on the web."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "S E O titles and descriptions",
+   "items": [
+    [
+     "Every page",
+     "Title + meta description"
+    ],
+    [
+     "CMS template",
+     "Insert collection fields"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "S E O settings tell search engines what each page is about. If people can't find a site, its design doesn't matter.",
+     "show": 0
+    },
+    {
+     "say": "In page settings, write a clear title and meta description for each page.",
+     "show": 1
+    },
+    {
+     "say": "On the C M S template, insert collection fields, so each project page gets its own title.",
+     "show": 2
+    },
+    {
+     "say": "These show up in search results and link previews, so they affect whether people click.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Lab · Steps 3 to 5",
+   "title": "Accessible and fast",
+   "items": [
+    [
+     "Alt text",
+     "Every meaningful image"
+    ],
+    [
+     "Contrast",
+     "Text vs background"
+    ],
+    [
+     "Compress images",
+     "Top cause of slow sites"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Accessibility means the site works for everyone.",
+     "show": 0
+    },
+    {
+     "say": "Add alt text to every meaningful image. It describes the image for screen readers and search engines.",
+     "show": 1
+    },
+    {
+     "say": "Check that text has enough contrast against its background.",
+     "show": 2
+    },
+    {
+     "say": "And compress large images before uploading. They're the top cause of slow sites.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cloud",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "Publish, and the optional domain",
+   "items": [
+    [
+     "webflow.io",
+     "Free · portfolio-site.webflow.io"
+    ],
+    [
+     "Custom domain",
+     "Optional · paid site plan"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every Webflow site can publish for free to a webflow dot i o subdomain.",
+     "show": 1
+    },
+    {
+     "say": "Publish, and check every page on desktop and phone. This is your live site.",
+     "show": 1
+    },
+    {
+     "say": "Connecting a custom domain needs a paid site plan, under Site settings, Publishing, Custom domains, following Webflow's D N S instructions.",
+     "show": 2
+    },
+    {
+     "say": "If you don't have one, just write the steps in your checklist.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "doc",
+   "kicker": "Lab · Step 8",
+   "title": "The launch checklist",
+   "big": "launch_checklist.md",
+   "sub": "Pages · CMS · SEO · live URL",
+   "beats": [
+    {
+     "say": "Finally, write a launch checklist and README.",
+     "show": 0
+    },
+    {
+     "say": "Document the pages, C M S collections, S E O settings and the live U R L. It's what you hand a client.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Where can a free Webflow site be published?",
+   "options": [
+    "Only on a custom domain",
+    "To a free webflow dot i o subdomain",
+    "Nowhere until you upgrade"
+   ],
+   "answer": 1,
+   "good": "That's right. A free site publishes to a webflow dot i o subdomain. Connecting a custom domain needs a paid site plan.",
+   "bad": "Not quite. A free site publishes to a webflow dot i o subdomain. Connecting a custom domain needs a paid site plan.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Where can a free Webflow site be published?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A live, optimized site",
+     ""
+    ],
+    [
+     "A launch checklist",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your site is live, optimized and search-ready on its webflow dot i o address, or a custom domain on a paid plan,",
+     "show": 1
+    },
+    {
+     "say": "with a launch checklist.",
+     "show": 2
+    },
+    {
+     "say": "You've finished No-Code Website and C M S Developer with Webflow. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

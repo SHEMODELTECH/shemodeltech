@@ -84,6 +84,236 @@ operations (Airtable base)
 
 *Answers: 1) Linking keeps each customer's details in one place, so they are never duplicated or out of sync. 2) No, a view only changes how the table is displayed, not the data. 3) A fixed list of options prevents typos and makes filtering by status reliable. 4) The order_date date field.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Project 1 · Airtable database",
+   "title": "A database for your tools",
+   "beats": [
+    {
+     "say": "Welcome to Internal Tools Builder, with Retool and Airtable."
+    },
+    {
+     "say": "Each project hands its result to the next, ending in a real internal tool a team could use."
+    },
+    {
+     "say": "First, you'll build the relational database that will power everything you build later."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Steps 1 to 3",
+   "title": "Bases, tables and fields",
+   "items": [
+    [
+     "Base",
+     "operations: one database per project"
+    ],
+    [
+     "Table: Customers",
+     "name · email · status · created"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Sign up at airtable dot com, and create a base named operations. A base is a single database for a project.",
+     "show": 0
+    },
+    {
+     "say": "A table holds one kind of record, like Customers or Orders.",
+     "show": 1
+    },
+    {
+     "say": "Create a Customers table, with name, email, status and created.",
+     "show": 2
+    },
+    {
+     "say": "Each gets the right field type: single line text, email, single select, and date. Correct types let Airtable check and filter your data later.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "chain",
+   "kicker": "Steps 4 and 5",
+   "title": "Link Orders to Customers",
+   "items": [
+    [
+     "order_number",
+     "First column"
+    ],
+    [
+     "amount · status",
+     "Currency · open / shipped / cancelled"
+    ],
+    [
+     "order_date · notes · customer",
+     "Date · long text · link → Customers"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A linked record connects a row in one table to a row in another, so you never copy a customer's details into every order.",
+     "show": 0
+    },
+    {
+     "say": "Create an Orders table. Order number is the first column.",
+     "show": 1
+    },
+    {
+     "say": "Amount is currency. Status is a single select: open, shipped or cancelled.",
+     "show": 2
+    },
+    {
+     "say": "Order date and notes, then customer, a link to the Customers table.",
+     "show": 3
+    },
+    {
+     "say": "Order date is what later steps use to find recent and overdue orders.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Steps 6 and 7",
+   "title": "Views: one table, many needs",
+   "items": [
+    [
+     "Open orders",
+     "status is open"
+    ],
+    [
+     "This month",
+     "order_date within current month"
+    ],
+    [
+     "By customer",
+     "Grouped by customer"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A view is a saved way of looking at a table, filtered, sorted or grouped, without changing the data.",
+     "show": 0
+    },
+    {
+     "say": "In Orders, create three grid views.",
+     "show": 0
+    },
+    {
+     "say": "Open orders, filtered to status is open.",
+     "show": 1
+    },
+    {
+     "say": "This month, where order date is within the current month.",
+     "show": 2
+    },
+    {
+     "say": "And By customer, grouped by customer.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "growth",
+   "kicker": "Step 8",
+   "title": "Add realistic sample data",
+   "big": "~10 orders",
+   "sub": "varied, with a few old open ones",
+   "beats": [
+    {
+     "say": "Finally, add several customers and about ten orders.",
+     "show": 0
+    },
+    {
+     "say": "Vary the statuses, amounts and dates, and include a few open orders dated more than two weeks ago.",
+     "show": 1
+    },
+    {
+     "say": "Then you can build and test against something that behaves like real data.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why link Orders to Customers instead of typing customer details into each order?",
+   "options": [
+    "Linking keeps each customer's details in one place, so they're never duplicated or out of sync",
+    "Airtable doesn't allow text fields in Orders",
+    "Linked fields load faster in views"
+   ],
+   "answer": 0,
+   "good": "That's right. Linking keeps each customer's details in one place, so they're never duplicated or out of sync.",
+   "bad": "Not quite. Linking keeps each customer's details in one place, so they're never duplicated or out of sync.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why link Orders to Customers instead of typing customer details into each order?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A relational base with linked tables and views",
+     ""
+    ],
+    [
+     "Realistic sample data",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a relational Airtable base with linked tables, correct field types, and purpose-built views,",
+     "show": 1
+    },
+    {
+     "say": "filled with a realistic sample dataset.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, formulas, rollups and automations.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Automate and Compute Inside Airtable
@@ -155,6 +385,221 @@ Automated base
 
 *Answers: 1) That the order's status is open and its order_date is more than 14 days before today. 2) A lookup pulls a field's values from linked records; a rollup summarises them, for example with a sum. 3) The email address lives in Customers, so the automation needs it on the Order record to use as the To address. 4) In a form view's field settings, not in the grid itself.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "calc",
+   "kicker": "Project 2 · Automate and compute",
+   "title": "Make the database do work",
+   "beats": [
+    {
+     "say": "Welcome to Project 2."
+    },
+    {
+     "say": "You'll make your base calculate values, summarise linked data, and react to changes on its own."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Steps 1 and 2",
+   "title": "Flag overdue orders",
+   "file": "Orders.is_overdue",
+   "code": "AND({status} = \"open\", DATETIME_DIFF(TODAY(), {order_date}, 'days') > 14)",
+   "beats": [
+    {
+     "say": "A formula field calculates its value from other fields, so derived values are always correct.",
+     "show": 0
+    },
+    {
+     "say": "In Orders, add a formula field called is overdue.",
+     "show": 1
+    },
+    {
+     "say": "It shows one for open orders placed more than fourteen days ago, and zero otherwise.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "graph",
+   "kicker": "Steps 3 and 4",
+   "title": "Rollups and lookups",
+   "items": [
+    [
+     "Rollup: total_spent",
+     "SUM(values) of linked amounts"
+    ],
+    [
+     "Lookup",
+     "Pulls values from linked records"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A rollup summarises linked records.",
+     "show": 0
+    },
+    {
+     "say": "In Customers, add total spent: a rollup over the linked Orders' amount, using sum of values.",
+     "show": 1
+    },
+    {
+     "say": "A lookup is different. It pulls a field's values from linked records, without summarising them.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Steps 5 and 6",
+   "title": "Email the customer when it ships",
+   "steps": [
+    "Lookup: customer_email",
+    "Trigger: status is shipped",
+    "Send email to customer_email",
+    "Test, then turn on"
+   ],
+   "beats": [
+    {
+     "say": "An automation runs actions when something happens in the base. The free plan limits runs per month.",
+     "show": 0
+    },
+    {
+     "say": "First, add a lookup field, customer email, through the customer link.",
+     "show": 1
+    },
+    {
+     "say": "Trigger: when a record matches conditions, in Orders, where status is shipped.",
+     "show": 2
+    },
+    {
+     "say": "Action: send an email to the trigger record's customer email, mentioning the order number.",
+     "show": 3
+    },
+    {
+     "say": "Use your own email on a test customer, test it, and turn it on.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Steps 7 and 8",
+   "title": "Protect data integrity",
+   "items": [
+    [
+     "Single-select options",
+     "No typos"
+    ],
+    [
+     "Required fields",
+     "Set in a Form view, not the grid"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Data integrity means keeping data accurate and consistent. Tools built on inconsistent data give wrong answers.",
+     "show": 0
+    },
+    {
+     "say": "Single select options, like status, prevent typos.",
+     "show": 1
+    },
+    {
+     "say": "Airtable can't make a field required in the grid. Instead, create a form view on Orders and mark order number, amount and customer as required.",
+     "show": 2
+    },
+    {
+     "say": "In Project 4, you'll mark the matching inputs required in Retool too.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why add the customer_email lookup before building the email automation?",
+   "options": [
+    "Lookups are required before any automation can run",
+    "Rollups can't hold email addresses",
+    "The email lives in Customers, so the automation needs it on the Order record as the To address"
+   ],
+   "answer": 2,
+   "good": "That's right. The email address lives in Customers, so the automation needs it on the Order record to use as the To address.",
+   "bad": "Not quite. The email address lives in Customers, so the automation needs it on the Order record to use as the To address.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why add the customer_email lookup before building the email automation?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Formulas and rollups compute metrics",
+     ""
+    ],
+    [
+     "An automation reacts to changes",
+     ""
+    ],
+    [
+     "Integrity safeguards in place",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your Airtable base computes metrics with formulas and rollups,",
+     "show": 1
+    },
+    {
+     "say": "reacts to changes with an email automation,",
+     "show": 2
+    },
+    {
+     "say": "and protects its own data quality.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 3, your first Retool app.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 3 (Module 3): Build Your First Retool App
@@ -219,6 +664,194 @@ Retool app: operations-tool
 
 *Answers: 1) Airtable retired API keys in February 2024; Personal Access Tokens are the supported way to connect. 2) If the token leaks, it can only do the few things you allowed on that one base, limiting the damage. 3) A resource is the saved connection to a data source; a query uses that connection to fetch or change specific data. 4) The amount field of whichever row is currently selected in the table.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "laptop",
+   "kicker": "Project 3 · First Retool app",
+   "title": "A custom interface on your data",
+   "beats": [
+    {
+     "say": "Welcome to Project 3."
+    },
+    {
+     "say": "Retool builds internal apps by dragging components onto a canvas and connecting them to your data."
+    },
+    {
+     "say": "Sign up for the free plan, and create an app named operations tool."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Steps 2 and 3",
+   "title": "Connect with a scoped token",
+   "items": [
+    [
+     "Personal Access Token",
+     "API keys retired Feb 2024"
+    ],
+    [
+     "Scopes",
+     "data.records:read · write · schema.bases:read"
+    ],
+    [
+     "Access",
+     "operations base only"
+    ],
+    [
+     "Keep it private ✓",
+     "Never in a query or shared doc ✗"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A resource is a saved connection to a data source. It holds the credentials, so they never appear in your app.",
+     "show": 0
+    },
+    {
+     "say": "Airtable retired its old A P I keys in February twenty twenty four, so you use a Personal Access Token.",
+     "show": 1
+    },
+    {
+     "say": "Give it only three scopes: read records, write records, and read the base schema.",
+     "show": 2
+    },
+    {
+     "say": "Under Access, add only your operations base.",
+     "show": 3
+    },
+    {
+     "say": "Keep it private. Never paste it into a query, a component or a shared doc. Paste it only into a new Airtable resource in Retool.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Steps 4 and 5",
+   "title": "A query and a live table",
+   "file": "table1 · data",
+   "code": "{{ getOrders.data.records.map(r => ({ id: r.id, ...r.fields })) }}",
+   "beats": [
+    {
+     "say": "A query fetches or changes data through a resource.",
+     "show": 0
+    },
+    {
+     "say": "Create a query called get orders: List records, on the Orders table, and run it.",
+     "show": 1
+    },
+    {
+     "say": "Drag a Table onto the canvas, and set its data to this.",
+     "show": 1
+    },
+    {
+     "say": "It turns each Airtable record into one row, with its I D plus its fields.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "layers",
+   "kicker": "Steps 6 to 8",
+   "title": "Master and detail",
+   "file": "Detail panel",
+   "code": "{{ table1.selectedRow.order_number }}\n{{ table1.selectedRow.amount }}",
+   "beats": [
+    {
+     "say": "A component is a U I element, like a table, button, form or text.",
+     "show": 0
+    },
+    {
+     "say": "Add a Container beside the table, with Text components for the selected order's number, amount, status, date and notes.",
+     "show": 1
+    },
+    {
+     "say": "Bind each one with a reference in double curly braces, like table one, selected row, amount.",
+     "show": 1
+    },
+    {
+     "say": "A list plus the selected item's details is the most common internal tool pattern.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why limit the token's scopes and give it access to only the operations base?",
+   "options": [
+    "Retool rejects tokens with more scopes",
+    "If it leaks, it can only do the few things you allowed on that one base",
+    "Scoped tokens make queries run faster"
+   ],
+   "answer": 1,
+   "good": "That's right. If the token leaks, it can only do the few things you allowed, on that one base, which limits the damage.",
+   "bad": "Not quite. If the token leaks, it can only do the few things you allowed, on that one base, which limits the damage.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why limit the token's scopes and give it access to only the operations base?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Connected with a scoped token",
+     ""
+    ],
+    [
+     "Live table with a detail panel",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your Retool app is connected securely to Airtable with a scoped token,",
+     "show": 1
+    },
+    {
+     "say": "and displays live records with a working detail panel.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, actions that write data.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 4 (Module 4): Add Actions That Write Data
@@ -282,6 +915,200 @@ Write actions
 4. How do you make Retool ask for confirmation before deleting?
 
 *Answers: 1) It changes data by creating, updating, or deleting records, instead of only reading. 2) The record ID tells Airtable exactly which record to change. 3) So the table shows the current data, including the change just made. 4) Turn on the query's confirmation-modal setting so it asks before running the delete.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "pencil",
+   "kicker": "Project 4 · Write actions",
+   "title": "Create, edit and delete, safely",
+   "beats": [
+    {
+     "say": "Welcome to Project 4."
+    },
+    {
+     "say": "A mutating query changes data: it creates, updates or deletes. Because it changes real records, it needs more care than a read."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Steps 2 to 4",
+   "title": "Edit a record",
+   "steps": [
+    "Form: status, amount, notes",
+    "Defaults + Required",
+    "updateOrder: Update record",
+    "Run on Submit"
+   ],
+   "beats": [
+    {
+     "say": "Add a Form with a Select for status, a Number input for amount, and a Text area for notes.",
+     "show": 1
+    },
+    {
+     "say": "Default each input from the selected row, and turn on Required for the important ones.",
+     "show": 2
+    },
+    {
+     "say": "Create update order: Update record on Orders, with the record I D from the selected row, and fields from the form.",
+     "show": 3
+    },
+    {
+     "say": "Run it from the form's Submit event, or a Save button's click.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Step 5",
+   "title": "Tell users what happened",
+   "items": [
+    [
+     "On success ✓",
+     "\"Order saved\" + refresh getOrders"
+    ],
+    [
+     "On failure ✗",
+     "Error notification"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Then add feedback.",
+     "show": 0
+    },
+    {
+     "say": "On success, show a notification saying Order saved, and trigger get orders to refresh the table.",
+     "show": 1
+    },
+    {
+     "say": "On failure, show an error notification.",
+     "show": 2
+    },
+    {
+     "say": "So users know their change worked, and the tool always shows current data.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "chain",
+   "kicker": "Step 6",
+   "title": "Create a record with its customer",
+   "file": "createOrder · customer",
+   "code": "// customerSelect option values\n{{ getCustomers.data.records.map(r => r.id) }}\n\n// customer field in createOrder\n{{ [customerSelect.value] }}",
+   "beats": [
+    {
+     "say": "Next, a create form, and a create order query that sets order number, amount, status, date and the linked customer.",
+     "show": 0
+    },
+    {
+     "say": "For the customer, a get customers query feeds a Select: values are record I Ds, labels are names.",
+     "show": 1
+    },
+    {
+     "say": "Airtable expects a linked record field as a list of record I Ds, so wrap the Select's value in square brackets.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Steps 7 and 8",
+   "title": "Guard the delete",
+   "quote": "Delete this order? This cannot be undone.",
+   "beats": [
+    {
+     "say": "Deletes are irreversible, so confirm first.",
+     "show": 0
+    },
+    {
+     "say": "Create delete order, Delete record, with the selected row's I D.",
+     "show": 1
+    },
+    {
+     "say": "In its settings, turn on the confirmation modal. Add a Delete button, and refresh get orders on success.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does the update query need table1.selectedRow.id?",
+   "options": [
+    "The record I D tells Airtable exactly which record to change",
+    "It refreshes the table after saving",
+    "It checks the user is an admin"
+   ],
+   "answer": 0,
+   "good": "That's right. The record I D tells Airtable exactly which record to change.",
+   "bad": "Not quite. The record I D tells Airtable exactly which record to change.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does the update query need table1.selectedRow.id?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Create and edit with feedback",
+     ""
+    ],
+    [
+     "Confirmed delete",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "users can create and edit real records, with required inputs and clear feedback,",
+     "show": 1
+    },
+    {
+     "say": "and safely delete them behind a confirmation.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, access control and roles.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -355,6 +1182,190 @@ Access control
 
 *Answers: 1) It checks whether current_user.email is in the adminEmails list. 2) It only changes what is shown in the browser; the action could still be run another way unless it is blocked where the data is accessed. 3) Restricting the delete at the data layer, such as permission groups on resources or queries (a paid Retool feature) or a read-only token for non-admins. 4) Who made a change, what changed, and when.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "lock",
+   "kicker": "Project 5 · Access control",
+   "title": "Who can see and do what",
+   "beats": [
+    {
+     "say": "Welcome to Project 5."
+    },
+    {
+     "say": "A role is a group of users, like admin or viewer, and permissions decide what each role can do."
+    },
+    {
+     "say": "Retool knows who's using the app through current user, for example, current user dot email."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "people",
+   "kicker": "Step 3",
+   "title": "Hide admin controls",
+   "file": "Delete button · Hidden",
+   "code": "{{ !adminEmails.value.includes(current_user.email) }}",
+   "beats": [
+    {
+     "say": "On the free path, create a Variable in the Code panel called admin emails, holding a list of admin emails. Use your own.",
+     "show": 0
+    },
+    {
+     "say": "Then set the Delete button's Hidden property to this check.",
+     "show": 1
+    },
+    {
+     "say": "Anyone whose email isn't on the list doesn't see the button. Do the same for sensitive fields.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Steps 4 and 5",
+   "title": "Hiding is not enforcing",
+   "items": [
+    [
+     "Hidden button",
+     "Convenience, not security ✗"
+    ],
+    [
+     "Data-layer restriction",
+     "Permission groups · read-only token ✓"
+    ],
+    [
+     "Disable query on free",
+     "Extra safeguard, still in the browser"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "But hiding a control in the browser is a convenience, not a security control.",
+     "show": 0
+    },
+    {
+     "say": "The action could still be run another way, unless it's blocked where the data is accessed.",
+     "show": 1
+    },
+    {
+     "say": "Real enforcement restricts each role at the source: an admin-only permission group for the resource that can delete, and a read-only token for everyone else.",
+     "show": 2
+    },
+    {
+     "say": "Permission groups on resources and queries need a paid Retool plan, so on free this step is concept only.",
+     "show": 2
+    },
+    {
+     "say": "On free, you can also set delete order's Disable query option with the same check. That's a second safeguard, but it still runs in the browser.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "doc",
+   "kicker": "Steps 6 to 8",
+   "title": "Role-aware views and a change log",
+   "steps": [
+    "Admin summary vs. task list",
+    "Audit trail: who, what, when",
+    "Change log table",
+    "logChange on update + delete"
+   ],
+   "beats": [
+    {
+     "say": "Show admins a manager summary, like total open orders and overdue count, and everyone else a simpler task list, using the same admin check.",
+     "show": 1
+    },
+    {
+     "say": "Then add an audit trail, which records who changed what, and when.",
+     "show": 2
+    },
+    {
+     "say": "In Airtable, create a Change log table: action, order number, user email, and logged at.",
+     "show": 3
+    },
+    {
+     "say": "In Retool, a log change query creates a record with current user's email, run from the success handlers of update order and delete order.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is hiding the Delete button not real security?",
+   "options": [
+    "Admins can't see hidden buttons either",
+    "Hidden buttons still appear on mobile",
+    "It only changes what's shown in the browser; the action must be blocked where the data is accessed"
+   ],
+   "answer": 2,
+   "good": "That's right. Hiding only changes what's shown in the browser. The action could still be run another way unless it's blocked where the data is accessed.",
+   "bad": "Not quite. Hiding only changes what's shown in the browser. The action could still be run another way unless it's blocked where the data is accessed.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is hiding the Delete button not real security?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Role-aware views and hidden admin controls",
+     ""
+    ],
+    [
+     "A working change log",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your tool has role-aware views and hidden admin controls,",
+     "show": 1
+    },
+    {
+     "say": "and a change log recording who changed what, and when.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, polish, deploy and onboard the team.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 6 (Module 6): Polish, Deploy, and Onboard the Team
@@ -420,3 +1431,180 @@ Deployed tool
 4. Why onboard people with a real task instead of a feature tour?
 
 *Answers: 1) It matches how people think about their work and keeps a growing tool easy to navigate. 2) You can test changes safely without risking the real data the team depends on. 3) Test risky changes against a copy of the Airtable base before touching the real one. 4) People adopt a tool much faster once they have completed a real task in it with guidance.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Project 6 · Polish and deploy",
+   "title": "From working tool to adopted tool",
+   "beats": [
+    {
+     "say": "Welcome to the last project."
+    },
+    {
+     "say": "You'll turn a working tool into a polished, shared product the team actually adopts."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "palette",
+   "kicker": "Steps 1 to 3",
+   "title": "Make it easy to use",
+   "items": [
+    [
+     "Sections or tabs",
+     "Orders · Customers · Reports"
+    ],
+    [
+     "Helpful states",
+     "Empty · loading · clear labels"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A cluttered tool slows people down and gets abandoned.",
+     "show": 0
+    },
+    {
+     "say": "Group the app into clear sections or tabs, like Orders, Customers and Reports.",
+     "show": 1
+    },
+    {
+     "say": "Add empty states, loading indicators, and clear labels throughout.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Step 4",
+   "title": "Staging and production",
+   "items": [
+    [
+     "Staging vs. production",
+     "Paid Retool plan · concept only"
+    ],
+    [
+     "Free habit",
+     "Copy the base as operations-test"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Many teams keep a staging environment for testing, and production for real use.",
+     "show": 0
+    },
+    {
+     "say": "That way you can improve the tool without risking the data the team depends on.",
+     "show": 1
+    },
+    {
+     "say": "Retool's multiple environments need a paid plan, so on free, make a copy of your base called operations test, and try risky changes there first.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "people",
+   "kicker": "Steps 5 to 8",
+   "title": "Release, document, onboard",
+   "steps": [
+    "Release + invite test users",
+    "Write the user guide",
+    "Onboard with a real task",
+    "Feedback, iterate once"
+   ],
+   "beats": [
+    {
+     "say": "Release the app so users see a stable version, and invite a few test users. Check admin emails matches who should see admin controls.",
+     "show": 1
+    },
+    {
+     "say": "Write a short user guide: what it does, how to do each common task, and who to ask for help.",
+     "show": 2
+    },
+    {
+     "say": "Walk each test user through a real task they'll actually do.",
+     "show": 3
+    },
+    {
+     "say": "Then gather first reactions, and make one round of improvements.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why onboard people with a real task instead of a feature tour?",
+   "options": [
+    "Feature tours aren't allowed on the free plan",
+    "People adopt a tool much faster once they've completed a real task in it with guidance",
+    "Real tasks test the staging environment"
+   ],
+   "answer": 1,
+   "good": "That's right. People adopt a tool much faster once they've done a real task in it, with guidance.",
+   "bad": "Not quite. People adopt a tool much faster once they've done a real task in it, with guidance.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why onboard people with a real task instead of a feature tour?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A polished, released tool",
+     ""
+    ],
+    [
+     "User guide and onboarding done",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a polished internal tool, released and shared with test users,",
+     "show": 1
+    },
+    {
+     "say": "with user documentation and a completed onboarding.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Internal Tools Builder. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

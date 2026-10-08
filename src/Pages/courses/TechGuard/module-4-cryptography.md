@@ -283,6 +283,359 @@ You can retrieve and read a site's certificate chain, identify its issuer and ex
 
 *Answers: 1) It binds a public key to an identity (such as a domain name); this is needed so a client can trust that a public key really belongs to the party it claims to, rather than an imposter. 2) A trusted third party that verifies an identity and signs its certificate, so others can trust the binding. 3) A root CA (trusted by the device) signs an intermediate CA, which signs the site's leaf certificate; the browser validates each link back to the trusted root. 4) Public key infrastructure, the overall system of CAs, keys, policies, and procedures that manages certificates and trust at scale. 5) For example: the certificate has expired, it's been revoked, the chain doesn't lead to a trusted root, or the name doesn't match the site (any two).*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "lock",
+   "kicker": "Module 4 · Cryptography",
+   "title": "Secrets, fingerprints, trust",
+   "beats": [
+    {
+     "say": "Welcome to Cryptography."
+    },
+    {
+     "say": "Three topics: encryption keeps data secret, hashing proves it hasn't changed, and certificates prove who you're talking to."
+    },
+    {
+     "say": "All you need is a terminal and Open S S L, working on files you create yourself."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Topic 4.1 · Encryption",
+   "title": "Two families of keys",
+   "items": [
+    [
+     "Symmetric · AES",
+     "One key · fast · hard to share"
+    ],
+    [
+     "Asymmetric · RSA",
+     "Public + private · solves sharing · slow"
+    ],
+    [
+     "Hybrid · TLS",
+     "Agree a key, then go symmetric"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Encryption turns readable plaintext into scrambled ciphertext, using an algorithm and a key.",
+     "show": 0
+    },
+    {
+     "say": "Symmetric encryption, like A E S, uses one shared key. It's fast and ideal for bulk data, but sharing that key safely is the hard part.",
+     "show": 1
+    },
+    {
+     "say": "Asymmetric encryption, like R S A, uses a key pair. The public key can be shared, the private key stays secret. It solves key distribution, but it's slow.",
+     "show": 2
+    },
+    {
+     "say": "Hybrid systems, like T L S, use public-key cryptography to agree a session key, then switch to fast symmetric encryption for the data.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "lock",
+   "kicker": "Topic 4.1 · Principles",
+   "title": "The key is the secret",
+   "quote": "Security rests on the secrecy of the key, not the secrecy of the algorithm.",
+   "beats": [
+    {
+     "say": "In T L S one point three, both sides compute the same session key through an ephemeral Diffie-Hellman key agreement, without it ever being sent. The server's certificate key signs the exchange, so you know who you're talking to.",
+     "show": 0
+    },
+    {
+     "say": "And Kerckhoffs's principle: security should rest on the secrecy of the key, not the algorithm. That's why A E S and R S A are public and heavily reviewed.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 4.1 · Lab",
+   "title": "Both kinds, by hand",
+   "file": "terminal",
+   "code": "openssl enc -aes-256-cbc -pbkdf2 -salt -in secret.txt -out secret.enc\nopenssl enc -d -aes-256-cbc -pbkdf2 -in secret.enc -out decrypted.txt\n\nopenssl genrsa -out private.pem 2048\nopenssl rsa -in private.pem -pubout -out public.pem\nopenssl pkeyutl -encrypt -pubin -inkey public.pem -in secret.txt -out rsa.enc\nopenssl pkeyutl -decrypt -inkey private.pem -in rsa.enc -out rsa.dec",
+   "beats": [
+    {
+     "say": "In the lab, encrypt a file with A E S two fifty six, then decrypt it with the same password.",
+     "show": 0
+    },
+    {
+     "say": "Next, generate an R S A key pair. Encrypt with the public key, and only the private key can decrypt.",
+     "show": 1
+    },
+    {
+     "say": "Then ask yourself which you'd use for a five gigabyte backup, and why. Think about speed.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "hash",
+   "kicker": "Topic 4.2 · Hashing",
+   "title": "A one-way fingerprint",
+   "items": [
+    [
+     "One-way",
+     "No way back to the input"
+    ],
+    [
+     "Deterministic",
+     "Same input, same digest"
+    ],
+    [
+     "Avalanche",
+     "Tiny change, new digest"
+    ],
+    [
+     "Collision-resistant",
+     "MD5, SHA-1 are broken"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Hashing runs any input through a one-way function, producing a fixed-length digest. You can't reverse it.",
+     "show": 0
+    },
+    {
+     "say": "It's deterministic: the same input always gives the same hash.",
+     "show": 1
+    },
+    {
+     "say": "The avalanche effect: change one character, and the digest is completely different.",
+     "show": 2
+    },
+    {
+     "say": "Collision resistance means two inputs with the same hash are hard to find. Practical collisions have been found for M D five and S H A one, so they're broken for security use.",
+     "show": 3
+    },
+    {
+     "say": "Remember: encryption is two-way, for data you need to read back. Hashing is one-way, for data you only need to verify.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "hash",
+   "kicker": "Topic 4.2 · Lab",
+   "title": "Watch the avalanche",
+   "file": "terminal",
+   "code": "echo -n \"hello\" | sha256sum\necho -n \"Hello\" | sha256sum\n\necho \"my original text\" > somefile.txt\nsha256sum somefile.txt",
+   "beats": [
+    {
+     "say": "Hash hello with S H A two fifty six. Then hash it again with a capital H.",
+     "show": 0
+    },
+    {
+     "say": "The two digests look completely unrelated.",
+     "show": 1
+    },
+    {
+     "say": "Then hash a file, change it slightly, and hash it again. A changed digest is how integrity checks catch tampering.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 4.2 · Passwords",
+   "title": "Salted and slow",
+   "items": [
+    [
+     "sha256(password)",
+     "Fast, unsalted ✗"
+    ],
+    [
+     "Salt",
+     "Unique random value per password ✓"
+    ],
+    [
+     "bcrypt / Argon2",
+     "Slow on purpose ✓"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "For passwords, a plain fast hash isn't enough.",
+     "show": 0
+    },
+    {
+     "say": "S H A two fifty six of the password alone is fast and unsalted. Identical passwords hash identically, so rainbow tables and fast brute force work.",
+     "show": 1
+    },
+    {
+     "say": "Instead add a salt, a unique random value per password, so identical passwords hash differently.",
+     "show": 2
+    },
+    {
+     "say": "And use a deliberately slow hash, like bcrypt or Argon2, to make brute forcing expensive.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "chain",
+   "kicker": "Topic 4.3 · Certificates",
+   "title": "The chain of trust",
+   "steps": [
+    "Root CA, trusted by your device",
+    "Intermediate CA",
+    "Site certificate",
+    "Browser validates the chain"
+   ],
+   "beats": [
+    {
+     "say": "A certificate binds a public key to an identity, like a domain name, so you know the key isn't an imposter's.",
+     "show": 0
+    },
+    {
+     "say": "Your device already trusts a set of root certificate authorities.",
+     "show": 1
+    },
+    {
+     "say": "A root signs an intermediate.",
+     "show": 2
+    },
+    {
+     "say": "The intermediate signs the site's leaf certificate.",
+     "show": 3
+    },
+    {
+     "say": "And your browser validates the whole chain. If any link is untrusted, expired or revoked, you get a certificate warning.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "browser",
+   "kicker": "Topic 4.3 · Lab",
+   "title": "Read a real certificate",
+   "file": "terminal",
+   "code": "openssl s_client -connect example.com:443 -showcerts\n\necho | openssl s_client -connect example.com:443 2>/dev/null \\\n  | openssl x509 -text -noout",
+   "beats": [
+    {
+     "say": "Fetch a real site's certificate chain with Open S S L s client.",
+     "show": 0
+    },
+    {
+     "say": "Then print the leaf certificate in readable form, and find who issued it and when it expires.",
+     "show": 1
+    },
+    {
+     "say": "Check the same chain from your browser's padlock. And remember: certificates prove identity. T L S session keys do the actual encrypting.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why isn't a plain SHA-256 hash good enough for storing passwords?",
+   "options": [
+    "It's fast and unsalted, so identical passwords match and brute force is quick",
+    "It can be decrypted with the right key",
+    "Its digest length changes with the password"
+   ],
+   "answer": 0,
+   "good": "That's right. S H A two fifty six is fast and unsalted, so rainbow tables and brute force work. Passwords need a salt and a slow hash like bcrypt or Argon2.",
+   "bad": "Not quite. S H A two fifty six is fast and unsalted, so rainbow tables and brute force work. Passwords need a salt and a slow hash like bcrypt or Argon2.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why isn't a plain SHA-256 hash good enough for storing passwords?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "AES encrypt and decrypt",
+     ""
+    ],
+    [
+     "RSA key pair in action",
+     ""
+    ],
+    [
+     "Hashes and the avalanche effect",
+     ""
+    ],
+    [
+     "A real certificate chain read",
+     ""
+    ],
+    [
+     "Encryption vs hashing, and trust",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've encrypted and decrypted a file with A E S,",
+     "show": 1
+    },
+    {
+     "say": "you've used an R S A key pair to encrypt and decrypt a message,",
+     "show": 2
+    },
+    {
+     "say": "you've hashed strings and files and seen the avalanche effect,",
+     "show": 3
+    },
+    {
+     "say": "you've read a real certificate chain, its issuer and expiry,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain two-way encryption, one-way hashing, and how certificates build trust.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 5, identity and access management.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4 Completion Checklist

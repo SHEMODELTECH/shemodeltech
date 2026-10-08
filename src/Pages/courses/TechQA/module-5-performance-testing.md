@@ -212,6 +212,395 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
 
 *Answers: 1) A small number of very slow requests can hide behind a healthy-looking average, even though real users are experiencing them. 2) 95% of requests completed in 1.2 seconds or less. 3) A run under normal conditions that later runs are compared against, so you can say precisely how much slower or less stable a new run is. 4) The load at which throughput stops increasing while response times and errors keep rising. 5) The GUI uses a lot of memory and can distort the results; non-GUI mode is lighter and designed for real test runs.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "stopwatch",
+   "kicker": "Module 5 · Performance testing",
+   "title": "Still fast with a crowd",
+   "beats": [
+    {
+     "say": "Welcome to Module 5, performance testing."
+    },
+    {
+     "say": "Functional testing asks, does this work? Performance testing asks, does it still work, and fast enough, when a hundred or a thousand people hit it at once?"
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "The rule for this module",
+   "title": "Only test what you own",
+   "quote": "Never load-test a system you don't own or have written permission to test.",
+   "beats": [
+    {
+     "say": "First, the rule for this whole module.",
+     "show": 0
+    },
+    {
+     "say": "Never load-test a system you don't own or have written permission to test.",
+     "show": 1
+    },
+    {
+     "say": "A load test sends the same kind of traffic as a denial of service attack. It can crash a service other people rely on, and break the law.",
+     "show": 1
+    },
+    {
+     "say": "It's a public endpoint, is not permission. So every lab here targets O WASP Juice Shop, a practice app running on your own computer, on port three thousand.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "layers",
+   "kicker": "Topic 5.1 · JMeter",
+   "title": "The parts of a test plan",
+   "steps": [
+    "Thread Group: N users",
+    "Sampler: HTTP request",
+    "Target system",
+    "Listener: results"
+   ],
+   "beats": [
+    {
+     "say": "Apache J Meter sends many requests at a system, simulating many users.",
+     "show": 0
+    },
+    {
+     "say": "A Thread Group is a group of simulated users. Each thread is one virtual user.",
+     "show": 1
+    },
+    {
+     "say": "A Sampler is a single request each thread sends, like an H T T P request.",
+     "show": 2
+    },
+    {
+     "say": "The target system is the server under test.",
+     "show": 3
+    },
+    {
+     "say": "And a Listener collects the results: response times, errors and throughput.",
+     "show": 4
+    },
+    {
+     "say": "J Meter sends the raw H T T P requests without a browser, which is how one machine can simulate so many users.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "laptop",
+   "kicker": "Topic 5.1 · Lab",
+   "title": "Ten users, then fifty",
+   "steps": [
+    "10 users, 5 s ramp-up",
+    "GET /rest/products/search?q=apple",
+    "Add a Listener, run",
+    "50 users, compare"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, create a test plan with a Thread Group of ten users, and a ramp-up of five seconds.",
+     "show": 1
+    },
+    {
+     "say": "The ramp-up period controls how gradually those users start.",
+     "show": 1
+    },
+    {
+     "say": "Add an H T T P request to localhost, port three thousand, path rest, products, search, q equals apple. That's Juice Shop's product search.",
+     "show": 2
+    },
+    {
+     "say": "Add a Listener, like Summary Report, and run it.",
+     "show": 3
+    },
+    {
+     "say": "Then raise it to fifty users, and compare. Does response time climb? Do errors appear?",
+     "show": 4
+    },
+    {
+     "say": "Your numbers describe your laptop, not a production server. Just say so when you report them.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "graph",
+   "kicker": "Topic 5.2 · Load testing",
+   "title": "Four kinds of load test",
+   "items": [
+    [
+     "Load",
+     "Expected traffic"
+    ],
+    [
+     "Stress",
+     "Beyond capacity · find the breaking point"
+    ],
+    [
+     "Spike",
+     "Sudden sharp jump"
+    ],
+    [
+     "Soak",
+     "Sustained load · long duration"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Load testing is a family of tests, and each answers a different question.",
+     "show": 0
+    },
+    {
+     "say": "A load test checks behaviour under expected, realistic traffic.",
+     "show": 1
+    },
+    {
+     "say": "A stress test pushes beyond capacity, to find the breaking point, and see whether it fails gracefully or catastrophically.",
+     "show": 2
+    },
+    {
+     "say": "A spike test simulates a sudden, sharp jump, like a flash sale or a viral post.",
+     "show": 3
+    },
+    {
+     "say": "And a soak test runs a moderate load for a long time, to catch memory leaks and slow resource exhaustion.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "growth",
+   "kicker": "Topic 5.2 · Lab",
+   "title": "Same plan, new patterns",
+   "steps": [
+    "Stress: 200+ users",
+    "Spike: 1 to 2 s ramp-up",
+    "Write what each tells you"
+   ],
+   "beats": [
+    {
+     "say": "Reuse your plan, still pointed only at your local Juice Shop.",
+     "show": 0
+    },
+    {
+     "say": "Make it a stress test: two hundred or more users, with a short ramp-up. Watch for where errors start, or response times spike.",
+     "show": 1
+    },
+    {
+     "say": "Make it a spike test: all users start within one or two seconds. Compare that with a longer ramp-up.",
+     "show": 2
+    },
+    {
+     "say": "Then write a paragraph on what each run tested, and what it would and wouldn't tell a team deciding on a launch.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "bars",
+   "kicker": "Topic 5.3 · Reading results",
+   "title": "Report percentiles, not averages",
+   "big": "p95",
+   "sub": "95% of requests were faster than this",
+   "beats": [
+    {
+     "say": "Averages hide the problem.",
+     "show": 0
+    },
+    {
+     "say": "If most requests take two hundred milliseconds, but one in twenty takes six seconds, the average still looks fine while real users wait.",
+     "show": 0
+    },
+    {
+     "say": "So report percentiles. P ninety five is the response time that ninety five percent of requests were faster than.",
+     "show": 1
+    },
+    {
+     "say": "Alongside throughput, requests per second, and error rate, the share that failed.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Topic 5.3 · Concept",
+   "title": "Turning numbers into a finding",
+   "items": [
+    [
+     "Baseline",
+     "Normal run to compare against"
+    ],
+    [
+     "Bottleneck",
+     "The one limiting resource"
+    ],
+    [
+     "Saturation point",
+     "Throughput flat, latency climbing"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A few more terms.",
+     "show": 0
+    },
+    {
+     "say": "A baseline is a run under normal conditions, so slower has a precise meaning.",
+     "show": 1
+    },
+    {
+     "say": "A bottleneck is the one resource that limits everything else, like database connections, C P U or memory.",
+     "show": 2
+    },
+    {
+     "say": "The saturation point is where throughput stops rising, while response times and errors keep climbing.",
+     "show": 3
+    },
+    {
+     "say": "A good finding names the load level, the metric that crossed the line, and the likely cause.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 5.3 · Lab",
+   "title": "Non-GUI runs with an HTML report",
+   "file": "terminal",
+   "code": "jmeter -n -t plan.jmx -l baseline.jtl -e -o baseline-report\n\n# higher load, new names\njmeter -n -t plan.jmx -l run2.jtl -e -o run2-report",
+   "beats": [
+    {
+     "say": "For real tests, always run J Meter in non GUI mode. The GUI uses enough memory to distort results.",
+     "show": 0
+    },
+    {
+     "say": "Save your plan as plan dot j m x, and run a small baseline, writing an H T M L report.",
+     "show": 1
+    },
+    {
+     "say": "Record p ninety five, throughput and error rate. Then run at double the users, into new file and folder names, because J Meter won't write a report into a folder that already has files.",
+     "show": 1
+    },
+    {
+     "say": "Finish with a one paragraph finding, using percentiles, not averages.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Which test is designed to find where a system breaks, and how it fails?",
+   "options": [
+    "A stress test",
+    "A soak test",
+    "A load test at expected traffic"
+   ],
+   "answer": 0,
+   "good": "That's right. A stress test pushes beyond expected capacity to find the breaking point, and whether the system fails gracefully or catastrophically.",
+   "bad": "Not quite. A stress test pushes beyond expected capacity to find the breaking point, and whether the system fails gracefully or catastrophically.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Which test is designed to find where a system breaks, and how it fails?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You know the permission rule",
+     ""
+    ],
+    [
+     "JMeter plan: 10 vs. 50 users",
+     ""
+    ],
+    [
+     "Stress and spike runs done",
+     ""
+    ],
+    [
+     "You can name all four types",
+     ""
+    ],
+    [
+     "Two non-GUI HTML reports compared",
+     ""
+    ],
+    [
+     "A percentile-based finding",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why you only load-test systems you own or have permission to test,",
+     "show": 1
+    },
+    {
+     "say": "you've built a J Meter plan and compared ten and fifty users against your local Juice Shop,",
+     "show": 2
+    },
+    {
+     "say": "run the same plan as a stress test and a spike test,",
+     "show": 3
+    },
+    {
+     "say": "can name load, stress, spike and soak, and the question each answers,",
+     "show": 4
+    },
+    {
+     "say": "compared p ninety five, throughput and error rate across two non GUI runs,",
+     "show": 5
+    },
+    {
+     "say": "and written a finding using percentiles, not averages.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 6, mobile testing.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 5 Completion Checklist

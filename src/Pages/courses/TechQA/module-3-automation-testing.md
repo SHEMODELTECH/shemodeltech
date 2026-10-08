@@ -433,6 +433,421 @@ You have a 5-test Playwright suite organised with page objects, shared settings 
 
 *Answers: 1) It keeps each page's locators and actions in one class, so a change to the page is fixed in one place instead of in every test; assertions stay in the tests so each test shows clearly what it checks. 2) Each test sets up what it needs and doesn't rely on another test running first; you can check by running a single test on its own or running the suite in a different order and getting the same results. 3) Fixed sleeps, avoided by waiting for a condition with `expect` or an explicit wait; and brittle locators such as long CSS or XPath paths, avoided by using role, label, or test ID locators (shared test data and unreliable outside services are other common causes). 4) Automate a stable check that runs often, like valid login in the regression suite, because a machine repeats it quickly and the same way every time; keep judging usability or look and feel manual, because it needs human judgement a script can't give. 5) When it's a front-end team already working in JavaScript or TypeScript that values Cypress's in-browser visual runner for debugging, and doesn't need Python, Java, or strong WebKit coverage.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "code",
+   "kicker": "Module 3 · Automation Testing",
+   "title": "Turn repeatable checks into code",
+   "beats": [
+    {
+     "say": "Welcome to Module 3, Automation Testing."
+    },
+    {
+     "say": "You'll drive a real browser from Python with Selenium and Playwright, and learn the habits that keep a test suite reliable."
+    },
+    {
+     "say": "You need Python, a terminal, a code editor, and one project folder with a virtual environment, Selenium, pie test and Playwright installed."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "browser",
+   "kicker": "Topic 3.1 · Concept",
+   "title": "How Selenium drives a browser",
+   "steps": [
+    "Test code: Python + pytest",
+    "WebDriver (Selenium Manager)",
+    "Explicit wait",
+    "pytest assert"
+   ],
+   "beats": [
+    {
+     "say": "Selenium is the oldest and most widely used browser automation tool.",
+     "show": 0
+    },
+    {
+     "say": "Your test code, in Python with pie test, sends commands.",
+     "show": 1
+    },
+    {
+     "say": "A WebDriver, matched to each browser, turns them into real clicks and typing. Selenium Manager finds or downloads the right driver for you.",
+     "show": 2
+    },
+    {
+     "say": "Explicit waits pause until a condition is true, like an element being visible.",
+     "show": 3
+    },
+    {
+     "say": "And pie test asserts the result, because Selenium has no assertions of its own.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Topic 3.1 · Lab",
+   "title": "Log in, then wait for the result",
+   "file": "test_selenium_login.py",
+   "code": "def test_valid_login_shows_secure_area(driver):\n    driver.get(f\"{BASE_URL}/login\")\n    driver.find_element(By.ID, \"username\").send_keys(\"tomsmith\")\n    driver.find_element(By.ID, \"password\").send_keys(\"SuperSecretPassword!\")\n    driver.find_element(By.CSS_SELECTOR, \"button[type='submit']\").click()\n\n    flash = WebDriverWait(driver, 10).until(\n        EC.visibility_of_element_located((By.ID, \"flash\"))\n    )\n    assert \"You logged into a secure area!\" in flash.text",
+   "beats": [
+    {
+     "say": "In the lab, a login test fills in the username and password by I D, and clicks submit.",
+     "show": 0
+    },
+    {
+     "say": "Then, instead of sleeping, it waits up to ten seconds for the flash message to be visible.",
+     "show": 1
+    },
+    {
+     "say": "And checks it says you logged into a secure area.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "stopwatch",
+   "kicker": "Topic 3.1 · Lab",
+   "title": "Never fix timing with sleep",
+   "quote": "time.sleep(5) is too long on a fast day and too short on a slow one.",
+   "beats": [
+    {
+     "say": "Now remove the wait from the dynamic content test, where Hello World appears after about five seconds.",
+     "show": 0
+    },
+    {
+     "say": "It fails with no such element, because the element doesn't exist yet when Selenium looks. Put the wait back.",
+     "show": 1
+    },
+    {
+     "say": "A fixed sleep is too long on a fast day, and too short on a slow one. Wait for the condition you actually need. Then try headless mode, with no window, the way C I runs it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "sparkle",
+   "kicker": "Topic 3.2 · Concept",
+   "title": "What Playwright adds",
+   "items": [
+    [
+     "User-facing locators",
+     "get_by_role, get_by_label"
+    ],
+    [
+     "Auto-waiting",
+     "click() and fill() wait"
+    ],
+    [
+     "Web-first assertions",
+     "expect() retries"
+    ],
+    [
+     "Tracing",
+     "trace.zip"
+    ],
+    [
+     "Fresh context per test",
+     "Headless by default"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Playwright, from Microsoft, drives Chromium, Firefox and WebKit, the engine behind Safari.",
+     "show": 0
+    },
+    {
+     "say": "User-facing locators find elements the way a person sees them, by role and name, or by label.",
+     "show": 1
+    },
+    {
+     "say": "Auto-waiting: click and fill wait until an element is ready.",
+     "show": 2
+    },
+    {
+     "say": "Web-first assertions with expect keep re-checking until they pass, or time out after five seconds.",
+     "show": 3
+    },
+    {
+     "say": "Tracing records every step into a trace file you can replay.",
+     "show": 4
+    },
+    {
+     "say": "And each test gets a fresh, isolated browser context. Tests run headless by default; add dash dash headed to watch.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Topic 3.2 · Lab",
+   "title": "A Playwright login test",
+   "file": "test_playwright_login.py",
+   "code": "def test_valid_login_shows_secure_area(page: Page):\n    page.goto(f\"{BASE_URL}/login\")\n    page.get_by_label(\"Username\").fill(\"tomsmith\")\n    page.get_by_label(\"Password\").fill(\"SuperSecretPassword!\")\n    page.get_by_role(\"button\", name=\"Login\").click()\n\n    expect(page).to_have_url(re.compile(r\".*/secure$\"))\n    expect(page.locator(\"#flash\")).to_contain_text(\"You logged into a secure area!\")",
+   "beats": [
+    {
+     "say": "Here's the same login in Playwright, with pie test's page fixture.",
+     "show": 0
+    },
+    {
+     "say": "Fill the fields by label, and click the button by its role and name.",
+     "show": 1
+    },
+    {
+     "say": "Then expect the U R L to end in secure, and the flash message to contain the success text. No manual waits.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "search",
+   "kicker": "Topic 3.2 · Lab",
+   "title": "Break it, then read the trace",
+   "steps": [
+    "Headless, then --headed --slowmo 500",
+    "Expect the wrong text",
+    "--tracing retain-on-failure",
+    "playwright show-trace"
+   ],
+   "beats": [
+    {
+     "say": "Run the tests headless, then headed and slowed down, to follow each step.",
+     "show": 1
+    },
+    {
+     "say": "Then break one on purpose: expect the wrong error text, and run with tracing kept for failed tests.",
+     "show": 2
+    },
+    {
+     "say": "It fails after about five seconds of retrying.",
+     "show": 3
+    },
+    {
+     "say": "Open the trace, step through the screenshots, and find the real message the page showed. Then fix the test.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "blueprint",
+   "kicker": "Topic 3.3 · Concept",
+   "title": "The Page Object pattern",
+   "file": "pages/login_page.py",
+   "code": "class LoginPage:\n    PATH = \"/login\"\n\n    def __init__(self, page: Page):\n        self.page = page\n        self.username_input = page.get_by_label(\"Username\")\n        self.password_input = page.get_by_label(\"Password\")\n        self.login_button = page.get_by_role(\"button\", name=\"Login\")\n\n    def login(self, username: str, password: str):\n        self.username_input.fill(username)\n        self.password_input.fill(password)\n        self.login_button.click()",
+   "beats": [
+    {
+     "say": "Writing one passing test is easy. Keeping hundreds reliable is the hard part.",
+     "show": 0
+    },
+    {
+     "say": "A page object keeps each page's locators and actions in one class, like a login page with a login method.",
+     "show": 1
+    },
+    {
+     "say": "Tests call the method, and keep the assertions. In the lab, renaming the button breaks every test, and the fix is one line in one file.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 3.3 · Concept",
+   "title": "Habits of a reliable suite",
+   "items": [
+    [
+     "Independent tests",
+     "Run any one alone"
+    ],
+    [
+     "Controlled test data",
+     "Env vars, parametrize"
+    ],
+    [
+     "No fixed sleeps, stable locators",
+     "Role, label, data-testid"
+    ],
+    [
+     "Automate vs. manual",
+     "Repeated checks ✓ · look and feel ✗"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A few more habits.",
+     "show": 0
+    },
+    {
+     "say": "Independent tests: each sets up what it needs, so any single test passes on its own, in any order.",
+     "show": 1
+    },
+    {
+     "say": "Controlled test data, with credentials read from environment variables, and parametrize to run one test with several data rows. The lab suite has five passing tests.",
+     "show": 2
+    },
+    {
+     "say": "Wait for conditions, never fixed sleeps, and use stable locators, like role, label, or a test I D.",
+     "show": 3
+    },
+    {
+     "say": "Automate stable, repeated, high value checks, like login. Keep exploratory testing and judging look and feel manual.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Topic 3.3 · Choosing a tool",
+   "title": "Selenium, Playwright or Cypress",
+   "items": [
+    [
+     "Selenium",
+     "Existing suites, Java/C#, Grid"
+    ],
+    [
+     "Playwright",
+     "Most new projects"
+    ],
+    [
+     "Cypress",
+     "Front-end JS/TS teams"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Which tool?",
+     "show": 0
+    },
+    {
+     "say": "Selenium, when the team already has a Selenium suite, writes tests in Java or C sharp, or needs a very wide range of browsers through Selenium Grid.",
+     "show": 1
+    },
+    {
+     "say": "Playwright, for most new projects.",
+     "show": 2
+    },
+    {
+     "say": "Cypress runs inside the browser with a very good visual runner, but only in JavaScript or TypeScript, and its WebKit support is still experimental. It suits front-end JavaScript teams.",
+     "show": 3
+    },
+    {
+     "say": "The habits are the same for all three.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is an explicit wait better than time.sleep(5)?",
+   "options": [
+    "It makes the browser load pages faster",
+    "It continues as soon as the condition is true, and only fails after a time limit",
+    "Selenium can't run sleep commands"
+   ],
+   "answer": 1,
+   "good": "That's right. A wait moves on as soon as the condition is true. A fixed sleep wastes time on a fast page and still fails on a slow one.",
+   "bad": "Not quite. A wait moves on as soon as the condition is true. A fixed sleep wastes time on a fast page and still fails on a slow one.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is an explicit wait better than time.sleep(5)?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Selenium test with an explicit wait",
+     ""
+    ],
+    [
+     "Playwright tests, headless and headed",
+     ""
+    ],
+    [
+     "Debugged with a trace",
+     ""
+    ],
+    [
+     "Page object suite, independent tests",
+     ""
+    ],
+    [
+     "Automate vs. manual list",
+     ""
+    ],
+    [
+     "Choosing a tool",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've run a Selenium login test with an explicit wait, not a fixed sleep,",
+     "show": 1
+    },
+    {
+     "say": "you've run Playwright tests with role and label locators, headless and headed,",
+     "show": 2
+    },
+    {
+     "say": "you've used a trace to find why a test failed,",
+     "show": 3
+    },
+    {
+     "say": "you've built a page object suite where every test passes on its own,",
+     "show": 4
+    },
+    {
+     "say": "you've listed which login checks to automate and which to keep manual,",
+     "show": 5
+    },
+    {
+     "say": "and you can explain when to pick Selenium, Playwright or Cypress.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 4, A P I testing.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3 Completion Checklist

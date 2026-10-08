@@ -331,6 +331,404 @@ You have configured a firewall with a default-deny baseline, explicitly allowed 
 
 *Answers: 1) Criteria such as source and destination IP address, port, and protocol (TCP or UDP). 2) Default-deny blocks all traffic that isn't explicitly permitted by a rule; it's safer because it limits the attack surface to only what you've deliberately chosen to open, rather than trying to block threats one by one. 3) Stateful inspection tracks the state of active connections, so it can automatically allow the return traffic for a connection you initiated without needing a separate rule; packet-filtering examines each packet in isolation without that context. 4) Ingress filtering controls inbound traffic while egress filtering controls outbound traffic; egress matters because it can stop a compromised machine from sending data out or phoning home to an attacker's server. 5) Most firewalls evaluate rules top to bottom and act on the first match, so a broad allow rule placed above a specific deny rule can unintentionally override it.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "architecture",
+   "kicker": "Module 1 · Networking fundamentals",
+   "title": "How machines talk",
+   "beats": [
+    {
+     "say": "Welcome to Networking Fundamentals."
+    },
+    {
+     "say": "Across four topics, T C P slash I P, D N S, H T T P and firewalls, you'll learn the ground that almost every other security topic builds on."
+    },
+    {
+     "say": "Every lab works on your own machine, or sends ordinary requests to public test sites. Never scan or probe networks you don't own."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Topic 1.1 · TCP/IP",
+   "title": "Two layers, two jobs",
+   "items": [
+    [
+     "IP",
+     "Addressing + routing"
+    ],
+    [
+     "TCP",
+     "Reliable, ordered delivery"
+    ],
+    [
+     "UDP",
+     "Fast, no guarantees"
+    ],
+    [
+     "Port",
+     "80 HTTP · 443 HTTPS · 22 SSH"
+    ],
+    [
+     "Handshake",
+     "SYN → SYN-ACK → ACK"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "T C P slash I P is the set of protocols that lets any two devices talk, organised in layers.",
+     "show": 0
+    },
+    {
+     "say": "I P handles addressing and routing, getting a packet from source to destination, hop by hop.",
+     "show": 1
+    },
+    {
+     "say": "T C P sits on top and adds reliability. It opens a connection, numbers the data, confirms what arrived, and re-sends anything lost.",
+     "show": 2
+    },
+    {
+     "say": "U D P is the connectionless alternative. Faster, but with no delivery guarantees. It's used for D N S lookups, video calls and online games.",
+     "show": 3
+    },
+    {
+     "say": "And a port is a number for one service on a host, like four four three for H T T P S, or twenty two for S S H.",
+     "show": 4
+    },
+    {
+     "say": "T C P opens every connection with a three-way handshake: syn, syn ack, ack.",
+     "show": 5
+    },
+    {
+     "say": "A SYN flood abuses it, starting thousands of handshakes and never finishing them, until half-open connections exhaust the target.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 1.1 · Lab",
+   "title": "Trace a real connection",
+   "file": "terminal",
+   "code": "ping -c 4 example.com\ntraceroute example.com\ncurl -v https://example.com\nss -tuln",
+   "beats": [
+    {
+     "say": "In the lab, ping a host to test reachability, then traceroute to see each hop.",
+     "show": 0
+    },
+    {
+     "say": "Curl dash v opens a real T C P connection on port four four three. You see it established before any data moves.",
+     "show": 1
+    },
+    {
+     "say": "Then ss dash t u l n lists the ports your own machine is listening on. Pick one service, and say whether it uses T C P or U D P, and why.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "search",
+   "kicker": "Topic 1.2 · DNS",
+   "title": "The network's address book",
+   "steps": [
+    "Your device asks",
+    "Resolver",
+    "Root → TLD → authoritative",
+    "Answer, cached for its TTL"
+   ],
+   "beats": [
+    {
+     "say": "D N S translates names like example dot com into the I P addresses T C P slash I P needs.",
+     "show": 0
+    },
+    {
+     "say": "Your device asks a resolver, which does the lookup for you.",
+     "show": 1
+    },
+    {
+     "say": "The resolver walks the hierarchy: root servers, then T L D servers, then the authoritative server for the domain.",
+     "show": 2
+    },
+    {
+     "say": "The answer comes back, and is cached for as many seconds as its T T L, its time to live.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Topic 1.2 · Why it matters",
+   "title": "Target and evidence",
+   "items": [
+    [
+     "Attack target",
+     "Cache poisoning → DNSSEC"
+    ],
+    [
+     "Evidence",
+     "Query logs show what a device reached for"
+    ],
+    [
+     "Lab",
+     "dig A / MX / TXT · dig +trace · read the TTL"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "D N S matters to security twice over.",
+     "show": 0
+    },
+    {
+     "say": "Cache poisoning tries to inject a false record, so a real name points to a malicious I P. D N S SEC signs records so forged answers can be detected.",
+     "show": 1
+    },
+    {
+     "say": "And D N S logs can reveal malware phoning home to a command and control domain, long before anything else does.",
+     "show": 2
+    },
+    {
+     "say": "In the lab, use dig for A, M X and T X T records, run dig plus trace to watch the hierarchy, and read the T T L.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "browser",
+   "kicker": "Topic 1.3 · HTTP",
+   "title": "Request and response",
+   "items": [
+    [
+     "Method",
+     "GET · POST · PUT · DELETE"
+    ],
+    [
+     "Status",
+     "2xx · 3xx · 4xx · 5xx"
+    ],
+    [
+     "Headers",
+     "Set-Cookie, Authorization, CSP, HSTS"
+    ],
+    [
+     "HTTPS",
+     "HTTP inside TLS"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "H T T P is the protocol the web runs on: a client sends a request, the server sends a response. It's stateless, so the server doesn't inherently remember you.",
+     "show": 0
+    },
+    {
+     "say": "The method states the intent: get retrieves, post submits, put updates, delete removes.",
+     "show": 1
+    },
+    {
+     "say": "The status code reports the outcome: two hundreds success, three hundreds redirect, four hundreds client error, five hundreds server error.",
+     "show": 2
+    },
+    {
+     "say": "Headers carry metadata, like cookies, auth tokens and security headers such as Content Security Policy and Strict Transport Security.",
+     "show": 3
+    },
+    {
+     "say": "Plain H T T P is readable text, open to a man in the middle. H T T P S wraps it in T L S encryption.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 1.3 · Lab",
+   "title": "Read the raw exchange",
+   "file": "terminal",
+   "code": "curl -v https://example.com\ncurl -I https://example.com\ncurl -I https://example.com/thispagedoesnotexist\ncurl -X POST -d \"name=test\" https://httpbin.org/post",
+   "beats": [
+    {
+     "say": "With curl dash v, lines starting with a greater than sign are your request, and a less than sign marks the response.",
+     "show": 0
+    },
+    {
+     "say": "Curl dash capital I fetches only the headers. Ask for a page that doesn't exist, and note the four hundreds code.",
+     "show": 1
+    },
+    {
+     "say": "Then send a post with data, and compare it to a get. Finally, inspect a real request in your browser's Network tab.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 1.4 · Firewalls",
+   "title": "Default-deny",
+   "items": [
+    [
+     "Default-deny",
+     "Block unless allowed"
+    ],
+    [
+     "Stateful",
+     "Tracks whole connections"
+    ],
+    [
+     "Ingress / egress",
+     "In and out"
+    ],
+    [
+     "Rule order",
+     "First match wins"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A firewall decides which traffic passes, by rules written in the terms you've just learned: addresses, ports and protocols.",
+     "show": 0
+    },
+    {
+     "say": "Default deny blocks everything not explicitly allowed, so a service is only reachable by deliberate choice.",
+     "show": 1
+    },
+    {
+     "say": "Stateful inspection tracks connections, so return traffic for a connection you started is allowed without a separate rule.",
+     "show": 2
+    },
+    {
+     "say": "Ingress filters what comes in. Egress filters what goes out, which can stop a compromised machine phoning home.",
+     "show": 3
+    },
+    {
+     "say": "And order matters. Rules are checked top to bottom, first match wins, so a broad allow above a specific deny can undo it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Topic 1.4 · Lab",
+   "title": "Lock it down with ufw",
+   "file": "terminal",
+   "code": "sudo ufw default deny incoming\nsudo ufw default allow outgoing\nsudo ufw allow 22/tcp\nsudo ufw enable\nsudo ufw status numbered\nsudo ufw allow 80/tcp\nsudo ufw delete allow 80/tcp",
+   "beats": [
+    {
+     "say": "On Linux, set a default deny baseline for incoming traffic, and allow your own outgoing traffic.",
+     "show": 0
+    },
+    {
+     "say": "Allow only what you need, like S S H on port twenty two. If you're on a remote server, allow S S H before enabling, so you don't lock yourself out.",
+     "show": 1
+    },
+    {
+     "say": "Enable it, list the numbered rules, then add and delete a rule for port eighty to practise.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "How does a SYN flood abuse the TCP handshake?",
+   "options": [
+    "It sends SYN packets but never completes the handshake, leaving half-open connections",
+    "It forges D N S records for the target",
+    "It reads plain H T T P traffic in transit"
+   ],
+   "answer": 0,
+   "good": "That's right. It starts many handshakes with SYN packets but never sends the final ACK, and the half-open connections exhaust the target's resources.",
+   "bad": "Not quite. It starts many handshakes with SYN packets but never sends the final ACK, and the half-open connections exhaust the target's resources.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "How does a SYN flood abuse the TCP handshake?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Ping, trace, connect, list ports",
+     ""
+    ],
+    [
+     "DNS records and a full lookup",
+     ""
+    ],
+    [
+     "Raw HTTP requests read",
+     ""
+    ],
+    [
+     "Default-deny firewall configured",
+     ""
+    ],
+    [
+     "One attack, one defence per topic",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've sent a packet, traced its route, opened a T C P connection and listed your listening ports,",
+     "show": 1
+    },
+    {
+     "say": "you've resolved names, queried several record types and watched a full lookup,",
+     "show": 2
+    },
+    {
+     "say": "you've sent get and post requests by hand and read the headers and status codes,",
+     "show": 3
+    },
+    {
+     "say": "you've set up a default deny firewall, and added and removed a rule,",
+     "show": 4
+    },
+    {
+     "say": "and for each topic, you can name one way an attacker abuses it and one way a defender protects it.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 2, operating systems.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1 Completion Checklist

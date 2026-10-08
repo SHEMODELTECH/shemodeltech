@@ -224,6 +224,366 @@ You have a saved collection with positive, negative, and response-time assertion
 
 *Answers: 1) Exploring sends requests one at a time and relies on you to read the results; a suite runs a fixed set of requests with built-in checks, the same way every time, and reports pass or fail. 2) A test that confirms the API fails safely on bad input, such as requesting a user that doesn't exist and expecting a 404. 3) Passing a value from one response, like a user's ID, into a later request, usually by saving it to a collection or environment variable and using it in the next request's URL. 4) To catch the API getting slower than an agreed limit, not just returning wrong data. 5) It runs a collection from the command line without the Postman app, so a pipeline can run the suite automatically on every change.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Module 4 · API Testing",
+   "title": "Test the contract behind the app",
+   "beats": [
+    {
+     "say": "Welcome to Module 4, A P I Testing."
+    },
+    {
+     "say": "U I testing checks what a user sees. A P I testing checks the contract between systems directly: the request, the response, the status code and the data shape."
+    },
+    {
+     "say": "You'll use Postman, Swagger, and Newman, which needs Node J S."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "api",
+   "kicker": "Topic 4.1 · Concept",
+   "title": "Request, response, test",
+   "steps": [
+    "Request: method, URL, headers, body",
+    "API processes it",
+    "Response: status, headers, body",
+    "Test script checks it"
+   ],
+   "beats": [
+    {
+     "say": "Postman sends requests straight to an A P I, with no front end in between.",
+     "show": 0
+    },
+    {
+     "say": "A request has a method, like get or post, a U R L, headers, and sometimes a body.",
+     "show": 1
+    },
+    {
+     "say": "The server processes it.",
+     "show": 2
+    },
+    {
+     "say": "The response comes back with a status code, headers, and a body, usually J S O N.",
+     "show": 3
+    },
+    {
+     "say": "Then a test script, written in JavaScript, checks it automatically. Save requests into a collection, and swap values like the base U R L with environment variables.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Topic 4.1 · Lab",
+   "title": "Your first Postman tests",
+   "file": "Postman · Tests",
+   "code": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response has an email field\", function () {\n    const body = pm.response.json();\n    pm.expect(body).to.have.property(\"email\");\n});",
+   "beats": [
+    {
+     "say": "In the lab, send a get request to user one on the free JSONPlaceholder test A P I.",
+     "show": 0
+    },
+    {
+     "say": "Then add two tests: the status code is two hundred, and the body has an email field.",
+     "show": 1
+    },
+    {
+     "say": "Send again, check both pass, save it to a collection, and try user nine nine nine to see how the results change.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Topic 4.2 · Concept",
+   "title": "OpenAPI and Swagger",
+   "items": [
+    [
+     "OpenAPI document",
+     "Endpoints, methods, responses"
+    ],
+    [
+     "Swagger UI",
+     "Interactive, try it out"
+    ],
+    [
+     "Schema",
+     "Fields, types, required"
+    ],
+    [
+     "Machine-readable",
+     "Tools import it"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Swagger, now largely known as the Open A P I Specification, is a standard way to describe an A P I in Yaml or J S O N.",
+     "show": 0
+    },
+    {
+     "say": "The document lists every endpoint: its path, method, parameters, and possible responses.",
+     "show": 1
+    },
+    {
+     "say": "Swagger U I turns it into an interactive page where you can send real requests.",
+     "show": 2
+    },
+    {
+     "say": "A schema defines the exact shape of the data: which fields, their types, and which are required.",
+     "show": 3
+    },
+    {
+     "say": "And because it's structured data, tools like Postman can import it and generate requests.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "target",
+   "kicker": "Topic 4.2 · Lab",
+   "title": "Compare promise and reality",
+   "steps": [
+    "Open Petstore Swagger UI",
+    "Read the schema",
+    "Try it out",
+    "Compare field by field"
+   ],
+   "beats": [
+    {
+     "say": "Open the public Petstore Swagger U I.",
+     "show": 1
+    },
+    {
+     "say": "Read one endpoint's documented response schema, like get pet by I D.",
+     "show": 2
+    },
+    {
+     "say": "Use try it out with an I D from one to ten. The demo data is shared and reset, so if you get a four oh four, try another.",
+     "show": 3
+    },
+    {
+     "say": "Compare the real response with the schema, field by field, and write down your conclusion. A mismatch is a bug, in the A P I or the docs.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Topic 4.3 · Concept",
+   "title": "From exploring to a suite",
+   "items": [
+    [
+     "Assertions",
+     "Status, fields"
+    ],
+    [
+     "Positive + negative",
+     "Valid input ✓ · fails safely ✓"
+    ],
+    [
+     "Chaining",
+     "Pass a value forward"
+    ],
+    [
+     "Response time",
+     "Below an agreed limit"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Clicking send one request at a time is exploration. A suite runs every request with its own checks, in a fixed order, with one command.",
+     "show": 0
+    },
+    {
+     "say": "An assertion is one check, like the status code is two hundred.",
+     "show": 1
+    },
+    {
+     "say": "Positive tests confirm the right result for valid input. Negative tests confirm it fails safely, like a four oh four for a missing user.",
+     "show": 2
+    },
+    {
+     "say": "Chaining passes a value from one response into a later request.",
+     "show": 3
+    },
+    {
+     "say": "And a response time assertion fails when the A P I is slower than an agreed limit.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "chain",
+   "kicker": "Topic 4.3 · Lab",
+   "title": "Chain two requests",
+   "file": "Postman · Post-response",
+   "code": "// GET {{baseUrl}}/users\npm.collectionVariables.set(\"userId\", pm.response.json()[0].id);\n\n// GET {{baseUrl}}/users/{{userId}}\npm.test(\"Returns the chained user\", () => {\n    pm.expect(pm.response.json().id)\n      .to.eql(Number(pm.collectionVariables.get(\"userId\")));\n});",
+   "beats": [
+    {
+     "say": "In the lab's Users A P I collection, the list request saves the first user's I D into a collection variable.",
+     "show": 0
+    },
+    {
+     "say": "The next request uses user I D in curly braces in its U R L, and checks it got the same user back.",
+     "show": 1
+    },
+    {
+     "say": "Variables are only filled in fields like the U R L, headers and body, not a request's name.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 4.3 · Lab",
+   "title": "Run it from the terminal",
+   "file": "Terminal",
+   "code": "npm install -g newman\nnewman run users-api.postman_collection.json -e test.postman_environment.json",
+   "beats": [
+    {
+     "say": "Run the whole collection with Postman's Collection Runner, and read the summary.",
+     "show": 0
+    },
+    {
+     "say": "Then export the collection and environment, install Newman with N P M, and run the same suite from a terminal.",
+     "show": 1
+    },
+    {
+     "say": "That's what lets a C I C D pipeline run it on every change. The Postman C L I is an alternative that does the same job.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does Newman matter for C I C D?",
+   "options": [
+    "It runs a collection from the command line, so a pipeline can run the suite on every change",
+    "It makes the A P I respond faster",
+    "It writes test scripts for you"
+   ],
+   "answer": 0,
+   "good": "That's right. Newman runs a collection without the Postman app, so a pipeline can run the suite automatically on every change.",
+   "bad": "Not quite. Newman runs a collection without the Postman app, so a pipeline can run the suite automatically on every change.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does Newman matter for C I C D?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A real request inspected",
+     ""
+    ],
+    [
+     "Two passing test scripts",
+     ""
+    ],
+    [
+     "Collection saved, invalid input tried",
+     ""
+    ],
+    [
+     "Schema read, live request run",
+     ""
+    ],
+    [
+     "Response compared to schema",
+     ""
+    ],
+    [
+     "Positive, negative, response-time tests",
+     ""
+    ],
+    [
+     "Two requests chained",
+     ""
+    ],
+    [
+     "Runs in the Runner and Newman",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've sent a real request in Postman and inspected the status and body,",
+     "show": 1
+    },
+    {
+     "say": "you've passed two automated test scripts on one request,",
+     "show": 2
+    },
+    {
+     "say": "you've saved it to a collection and tried an invalid input,",
+     "show": 3
+    },
+    {
+     "say": "you've read a documented schema and run a live try it out request,",
+     "show": 4
+    },
+    {
+     "say": "you've compared the response against the schema in writing,",
+     "show": 5
+    },
+    {
+     "say": "you've built positive, negative and response time assertions,",
+     "show": 6
+    },
+    {
+     "say": "you've chained two requests with a collection variable,",
+     "show": 7
+    },
+    {
+     "say": "and the collection runs in the Collection Runner and in Newman.",
+     "show": 8
+    },
+    {
+     "say": "Next, in Module 5, performance testing.",
+     "show": 8
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4 Completion Checklist

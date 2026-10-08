@@ -252,6 +252,423 @@ You have walked a confirmed incident through all six IR phases with a concrete a
 
 *Answers: 1) Preparation, Identification, Containment, Eradication, Recovery, and Lessons Learned. 2) Because containment stops the threat from spreading and doing more damage first; eradicating the root cause takes longer, so you limit the bleeding before removing the cause. 3) Short-term containment is quick action to isolate affected systems and stop immediate spread; long-term containment applies temporary fixes that let the business keep operating safely while a full fix is prepared. 4) Because restoring a system that is still compromised would simply reintroduce the threat, undoing the response and potentially reinfecting the environment. 5) It reviews the incident to improve defences, detection, and the response plan itself; it loops back to the Preparation phase so the organisation is better prepared for the next incident.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Module 7 · Security monitoring",
+   "title": "Detect, triage, respond",
+   "beats": [
+    {
+     "say": "Welcome to Module 7, security monitoring."
+    },
+    {
+     "say": "Three topics that build on each other: a S I E M produces the alerts, a S O C triages them, and incident response handles the ones that turn out to be real."
+    },
+    {
+     "say": "Only ever analyse logs from systems you own, or are authorized to monitor."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "search",
+   "kicker": "Topic 7.1 · SIEM",
+   "title": "From logs to alerts",
+   "steps": [
+    "Log sources",
+    "Collect & normalise",
+    "Correlate",
+    "Alert"
+   ],
+   "beats": [
+    {
+     "say": "S I E M stands for Security Information and Event Management.",
+     "show": 0
+    },
+    {
+     "say": "It aggregates logs from servers, network gear, apps and cloud.",
+     "show": 1
+    },
+    {
+     "say": "It normalises their different formats into one structure, so a login looks the same wherever it came from.",
+     "show": 2
+    },
+    {
+     "say": "Correlation rules link events into a meaningful signal.",
+     "show": 3
+    },
+    {
+     "say": "And when a rule matches, it raises an alert for a person to investigate.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Why correlation matters",
+   "title": "One event versus a pattern",
+   "quote": "Many failures, then a success, from the same source.",
+   "beats": [
+    {
+     "say": "One failed login is ignorable.",
+     "show": 0
+    },
+    {
+     "say": "Five hundred failed logins from one address, followed by a success, is an alert worth acting on.",
+     "show": 1
+    },
+    {
+     "say": "But a S I E M is only as good as its rules. Too many noisy ones, and analysts drown in false positives and start ignoring alerts. That's alert fatigue, so tuning is continuous work.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Lab · Steps 1 to 5",
+   "title": "A mini S I E M by hand",
+   "file": "terminal",
+   "code": "grep \"Failed password\" auth.log\n\ngrep \"Failed password\" auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -rn\n\ngrep \"Accepted\" auth.log",
+   "beats": [
+    {
+     "say": "In the lab, you save a sample auth dot log from a fictional server, and build a S I E M by hand.",
+     "show": 0
+    },
+    {
+     "say": "Grep finds every failed password.",
+     "show": 1
+    },
+    {
+     "say": "Awk pulls out the source address, then sort and unique count failures per address. That's a correlation by hand.",
+     "show": 1
+    },
+    {
+     "say": "Then define a rule in words, like more than ten failures from one address is an alert, and look for any successful login that followed.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Lab · What you find",
+   "title": "Three sources, three stories",
+   "items": [
+    [
+     "✗ 203.0.113.45",
+     "14 failures → login → sudo cat /etc/shadow"
+    ],
+    [
+     "198.51.100.23",
+     "5 invalid usernames, gave up"
+    ],
+    [
+     "✓ 192.0.2.10",
+     "alex mistyped once"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The sample tells three stories.",
+     "show": 0
+    },
+    {
+     "say": "One address failed fourteen times, then logged in as deploy. About thirty seconds later, deploy used sudo to read the file of password hashes.",
+     "show": 1
+    },
+    {
+     "say": "Another tried five usernames that don't exist, and gave up.",
+     "show": 2
+    },
+    {
+     "say": "And the third is the normal user, Alex, mistyping a password once.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "people",
+   "kicker": "Topic 7.2 · SOC",
+   "title": "Who answers the alarm",
+   "steps": [
+    "Alert from the SIEM",
+    "Tier 1: triage",
+    "Tier 2: investigate",
+    "Tier 3: hunt"
+   ],
+   "beats": [
+    {
+     "say": "If the S I E M is the alarm system, the Security Operations Center, the S O C, is the people who answer it.",
+     "show": 0
+    },
+    {
+     "say": "Alerts arrive from the S I E M.",
+     "show": 1
+    },
+    {
+     "say": "Tier 1 triages them: real threat, false positive, or needs escalation?",
+     "show": 2
+    },
+    {
+     "say": "Tier 2 investigates the ones that look real.",
+     "show": 3
+    },
+    {
+     "say": "Tier 3 handles advanced analysis and proactive threat hunting, so expensive expertise isn't spent on routine noise.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab · Triage",
+   "title": "Triage, escalate, write a playbook",
+   "items": [
+    [
+     "Triage",
+     "TP / FP / needs info + severity"
+    ],
+    [
+     "Escalate",
+     "Tier 1 or Tier 2, and why"
+    ],
+    [
+     "Playbook",
+     "Three steps, in order"
+    ],
+    [
+     "Metrics",
+     "MTTD · MTTR, lower is better"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now triage your findings from the mini S I E M.",
+     "show": 0
+    },
+    {
+     "say": "Label each one true positive, false positive, or needs more info, with a severity and a one-line reason.",
+     "show": 1
+    },
+    {
+     "say": "Decide whether Tier 1 handles the most severe one, or escalates it to Tier 2.",
+     "show": 2
+    },
+    {
+     "say": "Write a playbook: three ordered steps for many failed logins followed by a success. Playbooks make response consistent, whoever is on shift.",
+     "show": 3
+    },
+    {
+     "say": "And think about M T T D and M T T R, mean time to detect, and mean time to respond. Lower is better.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 7.3 · Incident response",
+   "title": "The six phases",
+   "items": [
+    [
+     "Preparation",
+     "Plan, tools, contacts"
+    ],
+    [
+     "Identification",
+     "Confirm and scope"
+    ],
+    [
+     "Containment",
+     "Stop the spread"
+    ],
+    [
+     "Eradication",
+     "Remove the root cause"
+    ],
+    [
+     "Recovery",
+     "Restore, verify clean"
+    ],
+    [
+     "Lessons Learned",
+     "Loops back to Preparation"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Once an incident is confirmed, incident response takes over, with a process instead of improvisation.",
+     "show": 0
+    },
+    {
+     "say": "The SANS model has six phases. Preparation: the plan, tools and contacts, ready in advance.",
+     "show": 1
+    },
+    {
+     "say": "Identification: confirm it's real, and scope it.",
+     "show": 2
+    },
+    {
+     "say": "Containment: stop the spread.",
+     "show": 3
+    },
+    {
+     "say": "Eradication: remove the root cause.",
+     "show": 4
+    },
+    {
+     "say": "Recovery: restore, and confirm clean.",
+     "show": 5
+    },
+    {
+     "say": "And Lessons Learned, which loops back to Preparation. NIST S P eight hundred sixty one, revision three, teaches the same ideas through the six functions of the NIST Cybersecurity Framework two point oh.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Lab · Tabletop",
+   "title": "Walk the brute-force incident",
+   "steps": [
+    "Scenario in one line",
+    "One action per phase",
+    "Contain, preserve evidence",
+    "Lesson → Preparation"
+   ],
+   "beats": [
+    {
+     "say": "The lab is a tabletop exercise. No real systems are touched.",
+     "show": 0
+    },
+    {
+     "say": "Write the scenario in one line: the brute-force attack that ended in a successful login.",
+     "show": 1
+    },
+    {
+     "say": "Write one concrete action for each of the six phases.",
+     "show": 2
+    },
+    {
+     "say": "For containment, pick a short-term action, and note how you'd preserve evidence while doing it.",
+     "show": 3
+    },
+    {
+     "say": "For lessons learned, write one change, like a new detection rule or an M F A requirement, and show how it feeds back into preparation.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does containment come before eradication?",
+   "options": [
+    "Eradication is optional for small incidents",
+    "Containment is cheaper, so it's done first",
+    "It stops the threat spreading first, since removing the root cause takes longer"
+   ],
+   "answer": 2,
+   "good": "That's right. Containment limits the damage first. Eradicating the root cause takes longer, so you stop the bleeding before removing the cause.",
+   "bad": "Not quite. Containment limits the damage first. Eradicating the root cause takes longer, so you stop the bleeding before removing the cause.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does containment come before eradication?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Mini-SIEM done",
+     ""
+    ],
+    [
+     "Alerts triaged, escalation decided",
+     ""
+    ],
+    [
+     "Playbook written",
+     ""
+    ],
+    [
+     "Six phases walked",
+     ""
+    ],
+    [
+     "SIEM, SOC and IR fit together",
+     ""
+    ],
+    [
+     "Phase order and the feedback loop",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've searched a log, counted failures by source and defined a correlation rule,",
+     "show": 1
+    },
+    {
+     "say": "you've triaged alerts with severity and made an escalation decision,",
+     "show": 2
+    },
+    {
+     "say": "you've written a short playbook,",
+     "show": 3
+    },
+    {
+     "say": "you've walked a confirmed incident through all six phases,",
+     "show": 4
+    },
+    {
+     "say": "you can explain how S I E M, S O C and incident response fit together,",
+     "show": 5
+    },
+    {
+     "say": "and you can explain why phase order matters, and how lessons feed back into preparation.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 8, secure coding.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 7 Completion Checklist

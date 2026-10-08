@@ -218,6 +218,384 @@ You have a delegation matrix with real ownership and context notes, a sprint pla
 
 *Answers: 1) Assigning ownership of a piece of work to someone else; it's different from just assigning steps because it comes with enough context and authority for the person to actually own the work and make their own decisions on it. 2) The recurring process of deciding what the team will work on next, sized and sequenced against priority and real capacity. 3) It produces at least one concrete process change that actually shows up in the next planning cycle, rather than surfacing the same complaints repeatedly with no resulting change. 4) Signals like workload balance, morale, and turnover risk rarely show up as a ticket in the backlog, so a tech lead has to actively watch for them rather than waiting for them to be reported. 5) Whether the person has enough context and authority to make their own decisions on the work, not just a list of steps to follow.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "people",
+   "kicker": "Module 1 · Business and leadership",
+   "title": "Lead the team, not the code",
+   "beats": [
+    {
+     "say": "Welcome to Module 1 of the TechLeads track."
+    },
+    {
+     "say": "This module is about the human side of leading a technology team: communication, coaching, and team management, rather than writing code."
+    },
+    {
+     "say": "If you don't manage anyone yet, use your She Model Tech project team, or the course's case: a three-person volunteer team building a sign-up page."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 1.1 · Communication",
+   "title": "One set of facts, many audiences",
+   "items": [
+    [
+     "Stakeholder translation",
+     "Technical detail → something to act on"
+    ],
+    [
+     "Status reporting",
+     "Progress, blockers, risk"
+    ],
+    [
+     "Active listening",
+     "Confirm before you respond"
+    ],
+    [
+     "Upward communication",
+     "Raise risk early"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A tech lead's words have to work for the team, their manager, product, and sometimes customers or executives.",
+     "show": 0
+    },
+    {
+     "say": "Stakeholder translation turns technical detail into something a non-technical person can act on.",
+     "show": 1
+    },
+    {
+     "say": "Status reporting is a regular, concise summary of progress, blockers and risk.",
+     "show": 2
+    },
+    {
+     "say": "Active listening means confirming you understood before you respond.",
+     "show": 3
+    },
+    {
+     "say": "And upward communication means surfacing risk or bad news to your own manager early, not letting them discover it later.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Worked example",
+   "title": "A stakeholder status update",
+   "items": [
+    [
+     "Decision needed by Friday",
+     "On time without payments, or two weeks later with them"
+    ],
+    [
+     "What happened",
+     "Design done, form works, bug fixed"
+    ],
+    [
+     "What's at risk",
+     "Payments need ~2 extra weeks"
+    ],
+    [
+     "Recommendation",
+     "Launch on time, payments in release two"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every good status update answers three questions: what happened, what's at risk, and what's needed.",
+     "show": 0
+    },
+    {
+     "say": "Here's the sign-up page update. It opens with the ask: a decision needed by Friday.",
+     "show": 1
+    },
+    {
+     "say": "What happened: the design is finished, the form works, and a duplicate email bug was fixed.",
+     "show": 2
+    },
+    {
+     "say": "What's at risk: adding payments needs about two extra weeks.",
+     "show": 3
+    },
+    {
+     "say": "And the recommendation: launch on time, and add payments in a second release.",
+     "show": 4
+    },
+    {
+     "say": "In the lab, write a detailed team version and a short stakeholder version of the same update.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Topic 1.2 · Coaching",
+   "title": "Feedback with S B I",
+   "quote": "Situation → Behavior → Impact. Then ask: \"What would help you run the checklist under time pressure?\"",
+   "beats": [
+    {
+     "say": "Coaching is about growing people over time, not just getting today's work done.",
+     "show": 0
+    },
+    {
+     "say": "The S B I framework keeps feedback concrete: situation, behaviour, impact.",
+     "show": 1
+    },
+    {
+     "say": "In Thursday's release, you merged the form change without running the test checklist. A bug sent duplicate emails to about forty people.",
+     "show": 1
+    },
+    {
+     "say": "Notice there's no label like careless. Then follow with an open question: what would help you run the checklist under time pressure?",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "The coaching cycle",
+   "steps": [
+    "Observe",
+    "S B I feedback",
+    "Growth plan",
+    "Follow-up"
+   ],
+   "beats": [
+    {
+     "say": "Coaching is a repeating cycle.",
+     "show": 0
+    },
+    {
+     "say": "Observe the work and the conversation.",
+     "show": 1
+    },
+    {
+     "say": "Give S B I feedback.",
+     "show": 2
+    },
+    {
+     "say": "Agree a growth plan: two or three skills, and how you'll know progress is happening.",
+     "show": 3
+    },
+    {
+     "say": "Then follow up. That step is what stops a growth plan being written once and forgotten.",
+     "show": 4
+    },
+    {
+     "say": "Coaching draws answers out through questions; mentoring shares your own answer. Lean on coaching to build their judgement.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "Topic 1.3 · Team management",
+   "title": "Planning, ownership and learning",
+   "items": [
+    [
+     "Delegation",
+     "Ownership + context + authority"
+    ],
+    [
+     "Sprint planning",
+     "Priority vs. real capacity"
+    ],
+    [
+     "Retrospectives",
+     "Process, not blame"
+    ],
+    [
+     "Team health",
+     "Workload, morale, turnover risk"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Team management works at the group level.",
+     "show": 0
+    },
+    {
+     "say": "Delegation hands over ownership, with enough context and authority to really own it.",
+     "show": 1
+    },
+    {
+     "say": "Sprint planning decides what's next, sized against priority and real capacity.",
+     "show": 2
+    },
+    {
+     "say": "Retros ask what worked, what didn't, and what to change, without blaming individuals.",
+     "show": 3
+    },
+    {
+     "say": "And team health, like workload and morale, has to be watched for, because it rarely shows up as a ticket.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Watch out",
+   "title": "Venting is not a retro",
+   "quote": "A retro is only useful if it changes the next planning cycle.",
+   "beats": [
+    {
+     "say": "A retro only matters if it changes the next plan.",
+     "show": 0
+    },
+    {
+     "say": "A team that names the same issue retro after retro, with no change in how work is planned, is just venting.",
+     "show": 1
+    },
+    {
+     "say": "And the real test of delegation versus micromanagement: can the person make their own decisions, or do they only have steps to follow?",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Run the team cycle",
+   "steps": [
+    "Delegation matrix",
+    "Sprint plan vs. capacity",
+    "Retro → one change",
+    "Change shows up in the plan"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, build a delegation matrix: three to five pieces of work, an owner, and the context each owner needs.",
+     "show": 1
+    },
+    {
+     "say": "Plan a sprint: five to eight tasks, rough-sized, cutting anything that doesn't fit.",
+     "show": 2
+    },
+    {
+     "say": "Run a retro that narrows to exactly one concrete change.",
+     "show": 3
+    },
+    {
+     "say": "Then check that change actually shows up in your plan.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the real test of delegation versus micromanagement?",
+   "options": [
+    "Whether the person has enough context and authority to make their own decisions",
+    "Whether you check in on the work every day",
+    "Whether the task finishes on time"
+   ],
+   "answer": 0,
+   "good": "That's right. Delegation means the person has enough context and authority to make their own decisions, not just a list of steps to follow.",
+   "bad": "Not quite. Delegation means the person has enough context and authority to make their own decisions, not just a list of steps to follow.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the real test of delegation versus micromanagement?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Two versions of one update, three-question test",
+     ""
+    ],
+    [
+     "Active listening + one upward message",
+     ""
+    ],
+    [
+     "S B I feedback + a coaching question",
+     ""
+    ],
+    [
+     "A growth plan with a follow-up date",
+     ""
+    ],
+    [
+     "Delegation matrix + sprint plan",
+     ""
+    ],
+    [
+     "One retro change in the next plan",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've written a team and a stakeholder version of one update, and checked it against the three-question test,",
+     "show": 1
+    },
+    {
+     "say": "you've practised active listening and drafted one piece of upward communication,",
+     "show": 2
+    },
+    {
+     "say": "you've given S B I feedback with an open coaching question,",
+     "show": 3
+    },
+    {
+     "say": "you've drafted a growth plan with a scheduled follow-up,",
+     "show": 4
+    },
+    {
+     "say": "you've built a delegation matrix and a sprint plan against real capacity,",
+     "show": 5
+    },
+    {
+     "say": "and your retro produced one concrete change that shows up in the next plan.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 2, strategy, business analysis and stakeholder management.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1 Completion Checklist

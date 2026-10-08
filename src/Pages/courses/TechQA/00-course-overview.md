@@ -20,6 +20,271 @@ The modules build on each other, so take them in this order:
 8. **CI/CD Testing.** Running your tests automatically on every change with GitHub Actions.
 9. **Testing AI Agents.** Checking that AI agents complete tasks, call the right tools, and resist prompt injection, with an automated evaluation suite.
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Start here · The Quality Tester track",
+   "title": "Find the problems before users do",
+   "beats": [
+    {
+     "say": "Welcome to the Quality Tester track."
+    },
+    {
+     "say": "Quality assurance, or Q A, is the work of making sure software does what it should, for the people who use it, before they find the problems themselves."
+    },
+    {
+     "say": "Here's how the track works. It takes about ten minutes."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "The track",
+   "title": "Modules 1 to 5",
+   "items": [
+    [
+     "1 · QA Fundamentals",
+     "SDLC, STLC, testing principles"
+    ],
+    [
+     "2 · Manual Testing",
+     "Test cases, bug reports, exploratory"
+    ],
+    [
+     "3 · Automation Testing",
+     "Selenium and Playwright"
+    ],
+    [
+     "4 · API Testing",
+     "Postman, Swagger, Newman"
+    ],
+    [
+     "5 · Performance Testing",
+     "Apache JMeter"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The modules build on each other, so take them in order.",
+     "show": 0
+    },
+    {
+     "say": "Module 1, Q A Fundamentals: how software gets built, how testing is planned alongside it, and the principles that decide what to test.",
+     "show": 1
+    },
+    {
+     "say": "Module 2, Manual Testing: clear test cases, useful bug reports, and exploratory testing. No tools needed for either.",
+     "show": 2
+    },
+    {
+     "say": "Module 3, Automation Testing: turning repeatable checks into code with Selenium and Playwright.",
+     "show": 3
+    },
+    {
+     "say": "Module 4, A P I Testing: testing the services behind an app with Postman and Swagger, and running suites from the terminal with Newman.",
+     "show": 4
+    },
+    {
+     "say": "Module 5, Performance Testing: measuring how software behaves under load with Apache J Meter.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "rocket",
+   "kicker": "The track",
+   "title": "Modules 6 to 9",
+   "items": [
+    [
+     "6 · Mobile Testing",
+     "Android Studio, Xcode"
+    ],
+    [
+     "7 · Security Testing",
+     "ZAP by Checkmarx"
+    ],
+    [
+     "8 · CI/CD Testing",
+     "GitHub Actions"
+    ],
+    [
+     "9 · Testing AI Agents",
+     "Automated evaluation suite"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Module 6, Mobile Testing: Android apps with Android Studio, and i O S apps with Xcode on a Mac. No Mac? The Android topic covers the same skills.",
+     "show": 1
+    },
+    {
+     "say": "Module 7, Security Testing: finding common weaknesses with ZAP, against a practice app built for the purpose.",
+     "show": 2
+    },
+    {
+     "say": "Module 8, C I C D Testing: running your tests automatically on every change with GitHub Actions.",
+     "show": 3
+    },
+    {
+     "say": "And Module 9, Testing A I Agents: checking agents complete tasks, call the right tools, and resist prompt injection.",
+     "show": 4
+    },
+    {
+     "say": "Every tool is free or has a free tier, and you only install a module's tools when you reach it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "How each module works",
+   "title": "The same pattern every time",
+   "items": [
+    [
+     "Concept",
+     "Plain language"
+    ],
+    [
+     "Structure at a glance",
+     "Building blocks"
+    ],
+    [
+     "Where you'd use this",
+     "Real scenario"
+    ],
+    [
+     "Lab",
+     "Hands-on"
+    ],
+    [
+     "Checkpoint",
+     "Before moving on"
+    ],
+    [
+     "Quiz",
+     "Five questions"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every topic follows the same pattern, so you always know what comes next.",
+     "show": 0
+    },
+    {
+     "say": "Concept: what it is, in plain language.",
+     "show": 1
+    },
+    {
+     "say": "Structure at a glance: the building blocks, often as a diagram.",
+     "show": 2
+    },
+    {
+     "say": "Where you'd actually use this: a real workplace scenario.",
+     "show": 3
+    },
+    {
+     "say": "Lab: a hands-on exercise you complete yourself.",
+     "show": 4
+    },
+    {
+     "say": "Checkpoint: what you should be able to do before moving on.",
+     "show": 5
+    },
+    {
+     "say": "And a quiz: five questions, with answers.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "shield",
+   "kicker": "One rule for the whole track",
+   "title": "Only test what you may test",
+   "quote": "Only test software you own or have written permission to test.",
+   "beats": [
+    {
+     "say": "One rule applies to the whole track.",
+     "show": 0
+    },
+    {
+     "say": "Only test software you own, or have written permission to test.",
+     "show": 1
+    },
+    {
+     "say": "The performance and security labs use a deliberately vulnerable practice app, running only on your own computer. Never point those tools at a real site or app.",
+     "show": 1
+    },
+    {
+     "say": "When you've worked through the modules, join a project on She Model Tech as a tester. That work earns your Quality Tester badge.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "What QA is for, and how the modules build",
+     ""
+    ],
+    [
+     "The pattern every topic follows",
+     ""
+    ],
+    [
+     "Which tools you'll need, and when",
+     ""
+    ],
+    [
+     "The permission rule",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the overview.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you know what Q A is for, and how the nine modules build on each other,",
+     "show": 1
+    },
+    {
+     "say": "you know the pattern every topic follows,",
+     "show": 2
+    },
+    {
+     "say": "you know which tools you'll need, and when,",
+     "show": 3
+    },
+    {
+     "say": "and you know the permission rule for every test you run.",
+     "show": 4
+    },
+    {
+     "say": "Next, Module 1: Q A Fundamentals.",
+     "show": 4
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## How each module works

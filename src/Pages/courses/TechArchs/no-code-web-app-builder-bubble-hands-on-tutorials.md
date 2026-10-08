@@ -74,6 +74,221 @@ task-tracker (Bubble app)
 
 *Answers: 1) Design controls how a page looks, Workflow controls what it does, and Data controls what it stores. 2) Containers make the layout responsive, so elements rearrange to fit any screen instead of breaking at fixed positions. 3) At its development version URL, the bubbleapps.io address ending in version-test.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "blocks",
+   "kicker": "Project 1 · Your first Bubble app",
+   "title": "Give your app a home",
+   "beats": [
+    {
+     "say": "Welcome to No-Code Web App Builder, with Bubble."
+    },
+    {
+     "say": "Across six projects you'll build one working task tracker app, and in this first one you get it running with a page you designed."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "browser",
+   "kicker": "Concept",
+   "title": "The editor's three tabs",
+   "items": [
+    [
+     "Design",
+     "How a page looks"
+    ],
+    [
+     "Workflow",
+     "What it does"
+    ],
+    [
+     "Data",
+     "What it stores"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Sign up at bubble dot i o, click Create an app, and name it task tracker.",
+     "show": 0
+    },
+    {
+     "say": "The editor has a visual canvas in the middle, an elements panel on the left, and tabs across the top.",
+     "show": 0
+    },
+    {
+     "say": "Design controls how a page looks.",
+     "show": 1
+    },
+    {
+     "say": "Workflow controls what it does.",
+     "show": 2
+    },
+    {
+     "say": "And Data controls what it stores.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "Pages, elements, containers",
+   "items": [
+    [
+     "Page",
+     "One screen, its own URL"
+    ],
+    [
+     "Elements",
+     "Text + Button"
+    ],
+    [
+     "Container",
+     "Column layout · responsive"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A page is one screen of your app, reached by its own U R L. Your app starts with an index page, the home screen.",
+     "show": 1
+    },
+    {
+     "say": "Elements are the visible building blocks. Drag in a Text and a Button, and change the text to My Task Tracker.",
+     "show": 2
+    },
+    {
+     "say": "Then group them in a container set to Column layout.",
+     "show": 3
+    },
+    {
+     "say": "Containers with row or column layouts make the page responsive, so it rearranges to fit any screen instead of pinning things to fixed positions.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "rocket",
+   "kicker": "Lab · Step 7",
+   "title": "Preview it",
+   "big": "version-test",
+   "sub": "task-tracker.bubbleapps.io/version-test",
+   "beats": [
+    {
+     "say": "Click Preview in the top right.",
+     "show": 0
+    },
+    {
+     "say": "Your page opens at an address ending in version test. That development version works on the free plan, and you can share the link.",
+     "show": 1
+    },
+    {
+     "say": "Build and preview in a tight loop, so layout problems are caught while they're small.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "doc",
+   "kicker": "Lab · Step 8",
+   "title": "Map your app",
+   "file": "Project structure",
+   "code": "task-tracker (Bubble app)\n│\n├── index (page)  ->  Text + Button in a Column container\n└── app_notes.md  ->  app name, preview URL, planned pages",
+   "beats": [
+    {
+     "say": "Finally, start a notes doc.",
+     "show": 0
+    },
+    {
+     "say": "Write the app name, its preview U R L, and the pages you plan to build. Keep it updated as you go.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why place elements inside containers with a row or column layout?",
+   "options": [
+    "It's the only way to add a button",
+    "It makes the layout responsive, so elements rearrange to fit any screen",
+    "It makes the page load faster"
+   ],
+   "answer": 1,
+   "good": "That's right. Containers make the layout responsive, so elements rearrange to fit any screen instead of breaking at fixed positions.",
+   "bad": "Not quite. Containers make the layout responsive, so elements rearrange to fit any screen instead of breaking at fixed positions.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why place elements inside containers with a row or column layout?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "App previews at its version-test URL",
+     ""
+    ],
+    [
+     "A designed home page in a container",
+     ""
+    ],
+    [
+     "A written structure map",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can preview your Bubble app at its development U R L,",
+     "show": 1
+    },
+    {
+     "say": "with a designed, container-based home page,",
+     "show": 2
+    },
+    {
+     "say": "and a written structure map.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 2, you design a real data structure.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Design a Real Data Structure
@@ -142,6 +357,191 @@ Data model
 
 *Answers: 1) A data type is the template for a kind of thing, like Task; a record is one actual entry of that type, like a specific task. 2) A date field can be sorted and filtered by date correctly, which text cannot. 3) Yes/no, because a task is either done or not. 4) So you can build and test screens against real-looking data without waiting for users.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Project 2 · Data structure",
+   "title": "Decide what your app remembers",
+   "beats": [
+    {
+     "say": "Welcome to Project 2."
+    },
+    {
+     "say": "Defining the data your app stores is the single most important decision in any app. It lives in the Data tab, separate from how any screen looks."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Concept",
+   "title": "Types, fields, records",
+   "items": [
+    [
+     "Data type",
+     "The template · Task"
+    ],
+    [
+     "Field",
+     "One piece of info, with its own type"
+    ],
+    [
+     "Record (Thing)",
+     "One real entry"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three ideas.",
+     "show": 0
+    },
+    {
+     "say": "A data type is a kind of thing your app stores, like a Task or a User. It's the template for every record of that kind.",
+     "show": 1
+    },
+    {
+     "say": "A field is one piece of information on a type, like a title or due date, and each field has its own type.",
+     "show": 2
+    },
+    {
+     "say": "A record, called a Thing in Bubble, is one actual entry, like the task, Email the client.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Lab · Steps 3 to 5",
+   "title": "The Task type",
+   "file": "Data model",
+   "code": "Task (data type)\n├── title       : text\n├── is_done     : yes/no\n├── due_date    : date\n└── priority    : text",
+   "beats": [
+    {
+     "say": "Under Data types, click New type, and name it Task.",
+     "show": 0
+    },
+    {
+     "say": "Give it four fields: title, a text. Is done, a yes or no. Due date, a date. And priority, a text.",
+     "show": 1
+    },
+    {
+     "say": "Choosing the right field type is what lets you sort, filter and validate later. A date field sorts by date correctly, which text can't.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "Sample data, then document it",
+   "steps": [
+    "App data → New entry",
+    "3 sample tasks",
+    "Build against real-looking data",
+    "Document types + fields"
+   ],
+   "beats": [
+    {
+     "say": "Next, in the Data tab under App data, click New entry.",
+     "show": 0
+    },
+    {
+     "say": "Add three sample tasks with different priorities and due dates.",
+     "show": 1
+    },
+    {
+     "say": "Real-looking sample data lets you build and test screens without waiting for users.",
+     "show": 2
+    },
+    {
+     "say": "Then list each type and its fields in your notes. You'll check it constantly.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Which field type fits is done?",
+   "options": [
+    "Yes or no, because a task is either done or not",
+    "Text, so you can write done",
+    "Number, counting how done it is"
+   ],
+   "answer": 0,
+   "good": "That's right. Yes or no fits, because a task is either done or not.",
+   "bad": "Not quite. Yes or no fits, because a task is either done or not.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Which field type fits is done?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A documented Task data type",
+     ""
+    ],
+    [
+     "Correctly typed fields",
+     ""
+    ],
+    [
+     "Three sample records",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a documented data model with a Task type,",
+     "show": 1
+    },
+    {
+     "say": "correctly typed fields,",
+     "show": 2
+    },
+    {
+     "say": "and sample records to build against.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 3, you display that data on the page.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 3 (Module 3): Display Data on the Page
@@ -206,6 +606,186 @@ index (page)
 4. How do you prove the list is data-driven rather than hardcoded?
 
 *Answers: 1) Type of content sets what kind of record each row is; Data source sets which records are pulled. 2) The repeating group applies that one design to every record automatically. 3) The specific Task record shown in that row. 4) Add a new record in the Data tab, refresh the preview, and see it appear without changing the page.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "array",
+   "kicker": "Project 3 · Display data",
+   "title": "A list that updates itself",
+   "beats": [
+    {
+     "say": "Welcome to Project 3."
+    },
+    {
+     "say": "Now you show your stored records on screen, in a list that updates itself."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "array",
+   "kicker": "Concept",
+   "title": "Repeating groups",
+   "items": [
+    [
+     "Type of content",
+     "Task · what each row is"
+    ],
+    [
+     "Data source",
+     "Search for Tasks · which records"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A repeating group shows one row per record, automatically, however many records there are. It's how every list in a no-code app is built.",
+     "show": 0
+    },
+    {
+     "say": "Drag one onto the index page.",
+     "show": 0
+    },
+    {
+     "say": "Set Type of content to Task. That decides what kind of record each row is.",
+     "show": 1
+    },
+    {
+     "say": "Set Data source to Search for Tasks. That decides which records are pulled.",
+     "show": 2
+    },
+    {
+     "say": "Much of an app's behaviour is really just choosing the right data source for each list.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "blocks",
+   "kicker": "Lab · Steps 4 to 6",
+   "title": "Design one cell",
+   "file": "index (page)",
+   "code": "Repeating Group (Type: Task, Source: Search for Tasks sorted by due_date)\n└── Cell\n    ├── Text -> current cell's Task's title\n    ├── Text -> current cell's Task's due_date\n    └── Text -> current cell's Task's priority",
+   "beats": [
+    {
+     "say": "Inside the first cell, add a Text, and set it dynamically to the current cell's Task's title.",
+     "show": 0
+    },
+    {
+     "say": "Current cell's Task means the specific Task shown in that row.",
+     "show": 1
+    },
+    {
+     "say": "Add Texts for due date and priority too. You design one cell, and the group applies it to every record.",
+     "show": 1
+    },
+    {
+     "say": "Then sort the data source by due date, ascending.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "proof",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "Prove it's live",
+   "steps": [
+    "Preview: 3 tasks, sorted",
+    "Add a record, refresh",
+    "It appears on its own"
+   ],
+   "beats": [
+    {
+     "say": "Preview the app. Your three sample tasks appear in due date order.",
+     "show": 1
+    },
+    {
+     "say": "Add a record in the Data tab and refresh.",
+     "show": 2
+    },
+    {
+     "say": "It appears without changing the page. That proves the list is data-driven, not hardcoded.",
+     "show": 3
+    },
+    {
+     "say": "Note which page shows which type, its data source and its sort order. When a list shows the wrong items, look there first.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why do you only design the first cell of a repeating group?",
+   "options": [
+    "Bubble only allows one cell",
+    "Other cells are hidden on mobile",
+    "The repeating group applies that one design to every record automatically"
+   ],
+   "answer": 2,
+   "good": "That's right. You design one cell, and the repeating group applies that design to every record automatically.",
+   "bad": "Not quite. You design one cell, and the repeating group applies that design to every record automatically.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why do you only design the first cell of a repeating group?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Live, sorted records on the page",
+     ""
+    ],
+    [
+     "Several fields in each row",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "a page displays live, sorted records from your Task type,",
+     "show": 1
+    },
+    {
+     "say": "in a repeating group, with title, due date and priority in each row.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, you let users create and change data.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -274,6 +854,214 @@ Workflows
 
 *Answers: 1) An event (something that happens, like a click) followed by one or more actions. 2) The Input's value was not mapped to the title field in the Create a new thing action. 3) Make changes to a thing. 4) Show a Popup with Confirm and Cancel buttons, and put the Delete thing action only in the Confirm button's workflow.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Project 4 · Create and change data",
+   "title": "Let users do things",
+   "beats": [
+    {
+     "say": "Welcome to Project 4."
+    },
+    {
+     "say": "Now you add the form and actions that let users create, complete and delete tasks."
+    },
+    {
+     "say": "Every interactive feature is a workflow: an event, like a button click, followed by one or more actions."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab · Steps 2 to 4",
+   "title": "Form, then create a Task",
+   "items": [
+    [
+     "Form",
+     "Input · Date picker · Dropdown · Add task"
+    ],
+    [
+     "Workflow",
+     "Create a new thing: Task"
+    ],
+    [
+     "Map inputs",
+     "title, due_date, priority, is_done = no"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Build a form: an Input for the title, a date and time picker for the due date, a dropdown for priority with Low, Medium and High, and an Add task button.",
+     "show": 1
+    },
+    {
+     "say": "On the button, start a workflow with the action Create a new thing, type Task.",
+     "show": 2
+    },
+    {
+     "say": "Map each input to its field, and set is done to no.",
+     "show": 3
+    },
+    {
+     "say": "A missed mapping is why an app saves a blank task.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Lab · Steps 5, 6 and 8",
+   "title": "Validate, complete, reset",
+   "items": [
+    [
+     "Validation",
+     "Not clickable when title is empty"
+    ],
+    [
+     "Complete",
+     "Checkbox → Make changes to Task"
+    ],
+    [
+     "Reset",
+     "Reset relevant inputs"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Validation means checking input before you save it.",
+     "show": 0
+    },
+    {
+     "say": "Add a condition: when the title input is empty, this element isn't clickable.",
+     "show": 1
+    },
+    {
+     "say": "To complete a task, add a Checkbox in the cell, preset to the Task's is done. When it changes, Make changes to the current cell's Task.",
+     "show": 2
+    },
+    {
+     "say": "And end the Add task workflow with Reset relevant inputs, so nobody submits duplicates.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "warning",
+   "kicker": "Lab · Step 7",
+   "title": "Delete, only after confirming",
+   "steps": [
+    "Popup: Confirm delete",
+    "Delete icon → show popup",
+    "Confirm → Delete thing",
+    "Cancel → Hide popup"
+   ],
+   "beats": [
+    {
+     "say": "Bubble has no built-in are you sure step, so you build one.",
+     "show": 0
+    },
+    {
+     "say": "Add a popup called Confirm delete, with Confirm and Cancel buttons. Set its Type of content to Task.",
+     "show": 1
+    },
+    {
+     "say": "The cell's delete icon sends the current cell's Task to the popup, then shows it.",
+     "show": 2
+    },
+    {
+     "say": "Confirm deletes the popup's Task and hides the popup.",
+     "show": 3
+    },
+    {
+     "say": "Cancel just hides it. Delete is irreversible, so it only runs after the user confirms.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why might an app save a blank task even though the user typed a title?",
+   "options": [
+    "The title field is the wrong colour",
+    "The page wasn't previewed first",
+    "The input's value wasn't mapped to the title field"
+   ],
+   "answer": 2,
+   "good": "That's right. The input's value wasn't mapped to the title field in the Create a new thing action.",
+   "bad": "Not quite. The input's value wasn't mapped to the title field in the Create a new thing action.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why might an app save a blank task even though the user typed a title?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Users create tasks, with validation",
+     ""
+    ],
+    [
+     "Users mark tasks done",
+     ""
+    ],
+    [
+     "Delete asks for confirmation",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "users can create tasks themselves, with validation,",
+     "show": 1
+    },
+    {
+     "say": "mark them done,",
+     "show": 2
+    },
+    {
+     "say": "and delete them after a confirmation popup.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 5, user accounts and private data.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 5 (Module 5): Add User Accounts and Private Data
@@ -337,6 +1125,197 @@ Accounts + privacy
 4. What does a privacy rule on Task do?
 
 *Answers: 1) It also logs the new user in. 2) So each task records who made it, which lets you filter and protect tasks by owner. 3) It only changes what one list shows; the data could still be loaded another way unless the database blocks it. 4) It makes the database only let a user find and view Tasks whose creator is that user.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "people",
+   "kicker": "Project 5 · Accounts and privacy",
+   "title": "Only your own tasks",
+   "beats": [
+    {
+     "say": "Welcome to Project 5."
+    },
+    {
+     "say": "Now people sign up, log in, and see only their own data."
+    },
+    {
+     "say": "Bubble gives every app a built-in User type, so you don't build login from scratch."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Lab · Steps 2 to 4",
+   "title": "The front door",
+   "items": [
+    [
+     "Sign up",
+     "Creates the account + logs in"
+    ],
+    [
+     "Log in",
+     "Log the user in"
+    ],
+    [
+     "Log out",
+     "Log the user out"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Add email and password inputs, with the password's content format set to Password.",
+     "show": 0
+    },
+    {
+     "say": "Sign up runs Sign the user up. That creates the account, and also logs them in.",
+     "show": 1
+    },
+    {
+     "say": "Log in runs Log the user in.",
+     "show": 2
+    },
+    {
+     "say": "And a Log out button runs Log the user out.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "people",
+   "kicker": "Lab · Steps 5 to 7",
+   "title": "Link tasks to their owner",
+   "steps": [
+    "Task.creator : User",
+    "On create: creator = Current User",
+    "Search for Tasks: creator = Current User"
+   ],
+   "beats": [
+    {
+     "say": "Current User is whoever is logged in right now.",
+     "show": 0
+    },
+    {
+     "say": "Add a creator field, of type User, to Task.",
+     "show": 1
+    },
+    {
+     "say": "In Create a new Task, set creator to Current User.",
+     "show": 2
+    },
+    {
+     "say": "Then change the list's data source to Search for Tasks where creator equals Current User.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "lock",
+   "kicker": "Lab · Step 8",
+   "title": "Privacy rules do the real protecting",
+   "items": [
+    [
+     "Creator is Current User",
+     "✓ Find in searches · ✓ View all fields"
+    ],
+    [
+     "Everyone else",
+     "✗ Uncheck both (on by default)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Filtering the list only changes what one list shows. The data could still be loaded another way.",
+     "show": 0
+    },
+    {
+     "say": "Privacy rules are enforced by the database. In the Data tab, under Privacy, add a rule on Task.",
+     "show": 0
+    },
+    {
+     "say": "When this Task's creator is Current User, allow finding it in searches and viewing all fields.",
+     "show": 1
+    },
+    {
+     "say": "Then, in the Everyone else row, uncheck those same permissions. They're on by default.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is filtering the list by creator not enough on its own to protect data?",
+   "options": [
+    "It only changes what one list shows; the database must block other access",
+    "Filters don't work for logged-in users",
+    "It hides tasks from their own creator"
+   ],
+   "answer": 0,
+   "good": "That's right. Filtering only changes what one list shows. The data could still be loaded another way unless the database blocks it with a privacy rule.",
+   "bad": "Not quite. Filtering only changes what one list shows. The data could still be loaded another way unless the database blocks it with a privacy rule.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is filtering the list by creator not enough on its own to protect data?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Users sign up and log in",
+     ""
+    ],
+    [
+     "Each user sees only their own tasks",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "users can sign up and log in,",
+     "show": 1
+    },
+    {
+     "say": "and can only see and change their own tasks, enforced by privacy rules.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, you polish, test and publish.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -404,3 +1383,230 @@ Shareable app
 4. On the free plan, how do you share your app with testers?
 
 *Answers: 1) An empty screen looks like a bug, while an empty state tells the user what to do next. 2) Running through as a real user catches gaps between features, like data not persisting after log out and log in. 3) Development is where you build and test; Live is the version real users see, and deploying copies development to Live. 4) Send them the development version URL, the bubbleapps.io address ending in version-test.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Project 6 · Polish, test, publish",
+   "title": "From my screen to anyone's",
+   "beats": [
+    {
+     "say": "Welcome to the last project."
+    },
+    {
+     "say": "You take the app from works on my screen, to a shareable, tested product."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "phone",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "Every screen size, every state",
+   "items": [
+    [
+     "Responsive viewer",
+     "Phone · tablet · desktop"
+    ],
+    [
+     "Fix per width",
+     "Widths, min-widths, hidden elements"
+    ],
+    [
+     "Empty state",
+     "Shown when the count is 0"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Use Bubble's responsive viewer at phone, tablet and desktop widths. Most users will be on phones.",
+     "show": 1
+    },
+    {
+     "say": "Adjust container widths, min widths and hidden elements so each width looks intentional.",
+     "show": 2
+    },
+    {
+     "say": "And add an empty state. An empty screen looks like a bug.",
+     "show": 3
+    },
+    {
+     "say": "Add a Text saying No tasks yet, add your first one, visible only when the list's count is zero.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Lab · Step 4",
+   "title": "Test the whole journey, in order",
+   "steps": [
+    "Sign up",
+    "Create tasks",
+    "Complete + delete",
+    "Log out, log in",
+    "Data persists, stays private"
+   ],
+   "beats": [
+    {
+     "say": "Click through as a real user, in order.",
+     "show": 0
+    },
+    {
+     "say": "Sign up as a new user, and create tasks.",
+     "show": 1
+    },
+    {
+     "say": "Complete them, and delete one.",
+     "show": 2
+    },
+    {
+     "say": "Log out, and log back in.",
+     "show": 3
+    },
+    {
+     "say": "Confirm your data persists and stays private. This catches gaps you miss testing pieces alone.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cloud",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Development versus Live",
+   "items": [
+    [
+     "Development",
+     "version-test · build + share · free"
+    ],
+    [
+     "Live",
+     "Real users · paid plan · optional"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Bubble has two versions.",
+     "show": 0
+    },
+    {
+     "say": "Development, the version test U R L, is where you build and test. It works on the free plan.",
+     "show": 1
+    },
+    {
+     "say": "Live is what real users see. Deploying copies development to Live, and that needs a paid plan, so it's optional.",
+     "show": 2
+    },
+    {
+     "say": "Free path: open your version test link in a private window, and run through it once more as a new user.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "doc",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "Document and get feedback",
+   "steps": [
+    "product_readme.md",
+    "Two people, one task each",
+    "feedback_notes.md"
+   ],
+   "beats": [
+    {
+     "say": "Write a short product README: what the app does, who it's for, how to use it, and its U R L.",
+     "show": 1
+    },
+    {
+     "say": "Send the link to two people, and ask them to complete one task.",
+     "show": 2
+    },
+    {
+     "say": "Note what confused them. Real users find issues you can't see because you built it.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "On the free plan, how do you share your app with testers?",
+   "options": [
+    "Deploy it to Live",
+    "Send them the development U R L ending in version test",
+    "Export it as a file"
+   ],
+   "answer": 1,
+   "good": "That's right. On the free plan you share the development version, the bubbleapps dot i o address ending in version test.",
+   "bad": "Not quite. On the free plan you share the development version, the bubbleapps dot i o address ending in version test.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "On the free plan, how do you share your app with testers?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A responsive, shareable app",
+     ""
+    ],
+    [
+     "A product README",
+     ""
+    ],
+    [
+     "One round of user feedback",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your app is responsive and shareable on its version test U R L, or Live on a paid plan,",
+     "show": 1
+    },
+    {
+     "say": "with a product README,",
+     "show": 2
+    },
+    {
+     "say": "and one round of user feedback.",
+     "show": 3
+    },
+    {
+     "say": "You've finished No-Code Web App Builder with Bubble. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```

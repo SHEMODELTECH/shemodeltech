@@ -225,6 +225,410 @@ You have a before-and-after version of a real page, edited in passes, and a five
 
 *Answers: 1) Using the simplest accurate words, and explaining technical terms when they first appear. 2) For example, "The manager reviewed the report": the sentence names who did it. 3) Putting the main point first in each section, paragraph, and sentence. 4) Structure problems affect the whole page, so fixing sentences first can waste effort on text that later moves or disappears. 5) Recording a team's writing choices so every document reads consistently.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "pencil",
+   "kicker": "Module 4 · Technical writing",
+   "title": "Writing people can use",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "Tech leads and coordinators spend much of their week writing, and clear writing is often the fastest way a non-coder makes a technical team faster."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Topic 4.1 · Documentation",
+   "title": "Start from the reader's goal",
+   "items": [
+    [
+     "Tutorial",
+     "Learn through a full example"
+    ],
+    [
+     "How-to guide",
+     "Do one specific task"
+    ],
+    [
+     "Reference",
+     "Look up a fact"
+    ],
+    [
+     "Explanation",
+     "Understand the why"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Good documentation starts from the reader's task, not the writer's knowledge. Different goals need different pages.",
+     "show": 0
+    },
+    {
+     "say": "A tutorial walks a beginner through a complete, working example.",
+     "show": 1
+    },
+    {
+     "say": "A how-to guide gives the steps for one task, for someone who knows the basics.",
+     "show": 2
+    },
+    {
+     "say": "A reference page lists facts to look up, organised for scanning.",
+     "show": 3
+    },
+    {
+     "say": "And an explanation covers the why: background, design choices and trade-offs.",
+     "show": 4
+    },
+    {
+     "say": "Mixing them is the most common reason documentation feels hard to use.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Concept",
+   "title": "Write it, then test it",
+   "steps": [
+    "Name the reader's goal",
+    "Pick the page type",
+    "Draft task-first",
+    "Someone new follows it"
+   ],
+   "beats": [
+    {
+     "say": "Before writing, name the reader and their goal in one sentence.",
+     "show": 1
+    },
+    {
+     "say": "Choose the page type that serves that goal.",
+     "show": 2
+    },
+    {
+     "say": "Draft it task first. For a how-to: a title stating the task, one line of prerequisites, and numbered steps that each start with a verb.",
+     "show": 3
+    },
+    {
+     "say": "Then have someone who didn't write it follow it exactly, and revise every step where they paused or went wrong.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "git",
+   "kicker": "Lab · Step 4",
+   "title": "Your README on GitHub",
+   "items": [
+    [
+     "What this is",
+     ""
+    ],
+    [
+     "Who it's for",
+     ""
+    ],
+    [
+     "How to get started",
+     ""
+    ],
+    [
+     "Where to get help",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A read me is a project's front door.",
+     "show": 0
+    },
+    {
+     "say": "On GitHub, create a new repository and tick Add a README file. Edit read me dot m d in the browser with the pencil icon.",
+     "show": 0
+    },
+    {
+     "say": "Write four sections, each under its own heading: what this is.",
+     "show": 1
+    },
+    {
+     "say": "Who it's for.",
+     "show": 2
+    },
+    {
+     "say": "How to get started.",
+     "show": 3
+    },
+    {
+     "say": "And where to get help. Commit, and check how it renders.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Topic 4.2 · Writing for decisions",
+   "title": "The decision document",
+   "items": [
+    [
+     "Problem",
+     "Why decide now"
+    ],
+    [
+     "Options",
+     "Two or more, written fairly"
+    ],
+    [
+     "Criteria",
+     "How you'll compare"
+    ],
+    [
+     "Recommendation",
+     "With trade-offs"
+    ],
+    [
+     "The ask",
+     "What you need, by when"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Written decision documents mean everyone reviews the same options, instead of following whoever spoke last.",
+     "show": 0
+    },
+    {
+     "say": "State the problem.",
+     "show": 1
+    },
+    {
+     "say": "The options, at least two, each described fairly, including a real advantage of the ones you don't recommend.",
+     "show": 2
+    },
+    {
+     "say": "The criteria you'll compare them on.",
+     "show": 3
+    },
+    {
+     "say": "Your recommendation, with its trade-offs.",
+     "show": 4
+    },
+    {
+     "say": "And the ask: approval, feedback, or awareness, and by when. Put the recommendation and the ask near the top.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "file",
+   "kicker": "Concept",
+   "title": "Records and notes",
+   "items": [
+    [
+     "Decision record",
+     "What, who, why, when · under 150 words"
+    ],
+    [
+     "Meeting notes",
+     "Decisions + actions with owner and date"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Then keep a record.",
+     "show": 0
+    },
+    {
+     "say": "A decision record is a short, dated note: what was decided, by whom, and why. Without one, decisions tend to be re-argued within months.",
+     "show": 1
+    },
+    {
+     "say": "And useful meeting notes aren't a transcript. They capture decisions and action items, each with an owner and a date.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Topic 4.3 · Editing for clarity",
+   "title": "Where writing becomes useful",
+   "items": [
+    [
+     "Plain language",
+     "Simplest accurate word"
+    ],
+    [
+     "Active voice",
+     "Who does what"
+    ],
+    [
+     "Front-loading",
+     "Main point first"
+    ],
+    [
+     "Scannable structure",
+     "Headings, short paragraphs, lists"
+    ],
+    [
+     "Style guide",
+     "Consistent team choices"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "First drafts get ideas down. Editing makes them useful.",
+     "show": 0
+    },
+    {
+     "say": "Plain language: the simplest accurate word, with technical terms explained the first time.",
+     "show": 1
+    },
+    {
+     "say": "Active voice: name who does what.",
+     "show": 2
+    },
+    {
+     "say": "Front-loading: the main point first, in every section, paragraph and sentence.",
+     "show": 3
+    },
+    {
+     "say": "Scannable structure: descriptive headings, short paragraphs, numbered steps.",
+     "show": 4
+    },
+    {
+     "say": "And a style guide records your team's choices, so documents read consistently.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Concept",
+   "title": "Edit in passes",
+   "quote": "\"The report was reviewed\" → \"The manager reviewed the report.\"",
+   "beats": [
+    {
+     "say": "Here's active voice in action.",
+     "show": 0
+    },
+    {
+     "say": "The report was reviewed becomes: the manager reviewed the report. Now it names who did it.",
+     "show": 1
+    },
+    {
+     "say": "Edit in passes: structure first, then sentences. Fixing commas on a page that needs reorganising wastes time.",
+     "show": 1
+    },
+    {
+     "say": "Then read it aloud, and split any sentence over twenty five words.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why edit in passes, starting with structure?",
+   "options": [
+    "Headings matter more than sentences",
+    "Fixing sentences first can waste effort on text that later moves or disappears",
+    "A style guide requires it"
+   ],
+   "answer": 1,
+   "good": "That's right. Structure problems affect the whole page, so polishing sentences first can waste effort on text that later moves or disappears.",
+   "bad": "Not quite. Structure problems affect the whole page, so polishing sentences first can waste effort on text that later moves or disappears.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why edit in passes, starting with structure?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A tested, revised how-to guide",
+     ""
+    ],
+    [
+     "A README with four sections",
+     ""
+    ],
+    [
+     "A decision document with a clear ask",
+     ""
+    ],
+    [
+     "A decision record + meeting notes",
+     ""
+    ],
+    [
+     "A page edited in passes + style guide",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've written a how-to guide and revised it after watching someone follow it,",
+     "show": 1
+    },
+    {
+     "say": "you've written a read me with all four sections,",
+     "show": 2
+    },
+    {
+     "say": "you've written a decision document with fair options and a clear ask,",
+     "show": 3
+    },
+    {
+     "say": "you've written a decision record and decision-focused meeting notes,",
+     "show": 4
+    },
+    {
+     "say": "and you've edited a real page in passes and written a five-rule style guide.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 5, research for tech teams.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 4 Completion Checklist

@@ -245,6 +245,377 @@ You have gathered passive information on a domain you own or are authorized to r
 
 *Answers: 1) To gather information and build a picture of the target's attack surface before any deeper testing, so later phases are focused and efficient. 2) Passive recon gathers information without directly interacting with the target (public records, DNS, OSINT), while active recon directly probes the target (port scanning, banner grabbing). 3) The total set of exposed points, hosts, open ports, services, subdomains, that an attacker could attempt to use. 4) Open-source intelligence; examples include WHOIS registration records, DNS data, certificate transparency logs, public code repositories, and social media (any two). 5) Passive recon leaves little or no trace on the target, so it avoids tipping off defenders or generating logs, whereas active scanning can be detected.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "shield",
+   "kicker": "Module 3 · Ethical hacking",
+   "title": "Authorized testing only",
+   "beats": [
+    {
+     "say": "Welcome to Ethical Hacking."
+    },
+    {
+     "say": "Ethical hacking means authorized testing: finding weaknesses on purpose, with permission, so they can be fixed."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Read this first",
+   "title": "Authorization is the line",
+   "quote": "The only thing separating a penetration tester from an attacker is authorization.",
+   "beats": [
+    {
+     "say": "Before anything else.",
+     "show": 0
+    },
+    {
+     "say": "Running these tools against a system you don't own, without explicit written permission, is illegal in most countries.",
+     "show": 1
+    },
+    {
+     "say": "Every active lab here targets only your own Kali virtual machine, or your own local, intentionally vulnerable lab app. Never point these tools anywhere else, including public practice hosts.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "laptop",
+   "kicker": "Topic 3.1 · Kali Linux",
+   "title": "A tester's workbench",
+   "items": [
+    [
+     "Virtual machine",
+     "Isolated, with a clean snapshot"
+    ],
+    [
+     "Tool categories",
+     "Info gathering, exploitation, forensics…"
+    ],
+    [
+     "Non-root user",
+     "sudo when needed"
+    ],
+    [
+     "Dual-use",
+     "Authorization makes it legitimate"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Kali Linux is a Debian-based operating system from OffSec, built for penetration testing, auditing and forensics.",
+     "show": 0
+    },
+    {
+     "say": "Run it as a virtual machine. That keeps testing contained, and lets you snapshot a clean state.",
+     "show": 1
+    },
+    {
+     "say": "Its tools are grouped by category, like information gathering, vulnerability analysis, exploitation, password attacks and forensics.",
+     "show": 2
+    },
+    {
+     "say": "Modern Kali uses a non-root default user, and sudo when needed. Least privilege again.",
+     "show": 3
+    },
+    {
+     "say": "And the tools are dual use. The same scanner serves an auditor or an attacker, so authorization and scope make the work legitimate.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 3.1 · Lab",
+   "title": "Update, then scan yourself",
+   "file": "terminal",
+   "code": "sudo apt update && sudo apt full-upgrade -y\nsudo nmap 127.0.0.1",
+   "beats": [
+    {
+     "say": "Install Kali from the official image, take a clean snapshot, and update the toolset.",
+     "show": 0
+    },
+    {
+     "say": "Then run one information gathering scan against your own virtual machine. One two seven dot zero dot zero dot one means this machine, so you're scanning nothing but yourself.",
+     "show": 1
+    },
+    {
+     "say": "A fresh Kali often shows no open ports. That's a result too. Write one sentence on what it tells you.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Topic 3.2 · Pen testing",
+   "title": "A defined methodology",
+   "steps": [
+    "Scope",
+    "Recon",
+    "Enumerate",
+    "Exploit (carefully)",
+    "Report"
+   ],
+   "beats": [
+    {
+     "say": "A penetration test is an authorized, simulated attack, to find and safely demonstrate weaknesses before a real attacker does.",
+     "show": 0
+    },
+    {
+     "say": "It starts with scope: the rules of engagement, agreed in writing before any testing.",
+     "show": 1
+    },
+    {
+     "say": "Then recon, to gather information.",
+     "show": 2
+    },
+    {
+     "say": "Enumeration, to scan and map the surface.",
+     "show": 3
+    },
+    {
+     "say": "Exploitation, to carefully demonstrate impact, stopping short of damage.",
+     "show": 4
+    },
+    {
+     "say": "And the report, with findings and remediation. That's the true deliverable.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Topic 3.2 · Key ideas",
+   "title": "Vulnerability, exploit, report",
+   "items": [
+    [
+     "Vulnerability vs exploit",
+     "The flaw vs using it"
+    ],
+    [
+     "Black · grey · white box",
+     "None · partial · full knowledge"
+    ],
+    [
+     "A good finding",
+     "Reproducible + actionable"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A few distinctions.",
+     "show": 0
+    },
+    {
+     "say": "A vulnerability is a weakness. An exploit is the act of actually using it.",
+     "show": 1
+    },
+    {
+     "say": "Black box testers start with no knowledge, grey box with partial knowledge like a normal user, white box with full knowledge and source.",
+     "show": 2
+    },
+    {
+     "say": "And a finding only has value if it's reproducible and actionable. Not I got in, but this misconfiguration allowed this access, and here's how to close it.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "blueprint",
+   "kicker": "Topic 3.2 · Lab",
+   "title": "Your own lab target",
+   "steps": [
+    "Write the scope",
+    "nmap -sV your lab VM",
+    "Confirm one known issue",
+    "What · impact · fix"
+   ],
+   "beats": [
+    {
+     "say": "Set up a target you own: Juice Shop inside Kali, bound to one two seven dot zero dot zero dot one, or Metasploitable on a host-only network, never bridged to your home network.",
+     "show": 0
+    },
+    {
+     "say": "First, write a one-page scope document: which host, what's in and out of scope, and the time window.",
+     "show": 1
+    },
+    {
+     "say": "Map open ports and services on your own lab target with nmap dash s capital V.",
+     "show": 2
+    },
+    {
+     "say": "Identify one documented vulnerability, confirming it exists without weaponising anything.",
+     "show": 3
+    },
+    {
+     "say": "Then write a mini report: what it is, why it matters, and how to fix it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Topic 3.3 · Reconnaissance",
+   "title": "Passive versus active",
+   "items": [
+    [
+     "Passive",
+     "WHOIS, DNS, OSINT · little trace"
+    ],
+    [
+     "Active",
+     "Scans, banners · detectable"
+    ],
+    [
+     "Defensive use",
+     "See what you're leaking"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Reconnaissance builds a picture of the target's attack surface: the hosts, open ports, services and subdomains an attacker could try to use.",
+     "show": 0
+    },
+    {
+     "say": "Passive recon uses public sources, like WHOIS, D N S data and other open source intelligence, or OSINT. It leaves little or no trace.",
+     "show": 1
+    },
+    {
+     "say": "Active recon probes the target directly, like port scanning or banner grabbing. More informative, but it can be logged and detected.",
+     "show": 2
+    },
+    {
+     "say": "It's a defensive skill too. Seeing what's easy to learn about your organisation tells you what to lock down.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 3.3 · Lab",
+   "title": "Public records, then your own VM",
+   "file": "terminal",
+   "code": "whois yourdomain.com\ndig yourdomain.com NS\ndig yourdomain.com MX\n\n# your own lab VM only\nnmap -p- <your-lab-VM-ip>\nnmap -sV --script=banner <your-lab-VM-ip>",
+   "beats": [
+    {
+     "say": "For passive recon, use a domain you own or are authorized to research, or only the public records of a domain like example dot com.",
+     "show": 0
+    },
+    {
+     "say": "Query each record type you need, rather than relying on dig any.",
+     "show": 1
+    },
+    {
+     "say": "Active scans go only to your own lab virtual machine. Then assemble a short attack surface profile, marking what came from passive versus active recon.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is the true deliverable of a penetration test?",
+   "options": [
+    "Getting into the system",
+    "The report, with findings and how to fix them",
+    "A list of every tool used"
+   ],
+   "answer": 1,
+   "good": "That's right. The report. The point is to tell the organisation what's wrong and how to fix it. The break-in only matters as evidence of real risk.",
+   "bad": "Not quite. The report. The point is to tell the organisation what's wrong and how to fix it. The break-in only matters as evidence of real risk.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is the true deliverable of a penetration test?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Isolated Kali VM, scanned yourself",
+     ""
+    ],
+    [
+     "Scope document written",
+     ""
+    ],
+    [
+     "One finding with impact and fix",
+     ""
+    ],
+    [
+     "Attack-surface profile built",
+     ""
+    ],
+    [
+     "Authorization is the line",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have an isolated, updated Kali virtual machine with a clean snapshot, and you've scanned only yourself,",
+     "show": 1
+    },
+    {
+     "say": "you've written a scope document for a target you own,",
+     "show": 2
+    },
+    {
+     "say": "you've enumerated your own vulnerable lab and written a finding with impact and remediation,",
+     "show": 3
+    },
+    {
+     "say": "you've done passive and active recon and built an attack surface profile,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain why authorization is the line between ethical testing and crime.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 4, cryptography.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3 Completion Checklist

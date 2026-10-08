@@ -260,6 +260,420 @@ You have one honest AI-claim assessment covering wrong answers, data, pre-launch
 
 *Answers: 1) So they can ask good questions, spot real risk, and avoid being either dismissive of something genuinely useful or oversold on something that's mostly hype, since these four areas come up constantly in leadership conversations. 2) Knowing what modern AI can and can't reliably do: it can give confident wrong answers, called hallucinations, so output must be checked, confidential or personal data shouldn't go into unapproved tools, features should be tested on real examples before launch, and each use costs money. 3) You gain fast setup and easy scaling with no hardware to buy, but give up some control and take on an ongoing bill that grows with usage. 4) Because having data alone isn't useful if it's poor quality or if ownership and access aren't clear; both matter for the data to be trustworthy and usable. 5) Understanding common risk categories like phishing, weak access control, unpatched software, and third-party risk well enough to ask the right questions of a security team, not to perform the security work directly.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "growth",
+   "kicker": "Module 3 · The breadth of a tech lead",
+   "title": "Change, money, growth and tech",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "It covers the breadth a tech lead needs outside pure engineering: leading people through change, speaking the language of money, understanding how the business grows, and staying fluent in emerging technology."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "people",
+   "kicker": "Topic 3.1 · Change management",
+   "title": "A good solution isn't enough",
+   "steps": [
+    "The change",
+    "Expect resistance",
+    "Adoption strategy",
+    "Change champions",
+    "Real adoption"
+   ],
+   "beats": [
+    {
+     "say": "A change succeeds or fails on how people adopt it, not just on whether it was built correctly.",
+     "show": 0
+    },
+    {
+     "say": "Start with the change: a new tool, process, or structure.",
+     "show": 1
+    },
+    {
+     "say": "Expect resistance. It's normal, usually driven by uncertainty, loss of control, or past changes handled badly.",
+     "show": 2
+    },
+    {
+     "say": "Plan an adoption strategy: communication, training and incentives.",
+     "show": 3
+    },
+    {
+     "say": "Recruit change champions, credible early adopters who answer their peers' questions.",
+     "show": 4
+    },
+    {
+     "say": "That's how you reach real adoption.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Plan a rollout that sticks",
+   "items": [
+    [
+     "Resistance",
+     "3–4 specific reasons"
+    ],
+    [
+     "Adoption strategy",
+     "Communication · training · incentive"
+    ],
+    [
+     "Champion",
+     "One credible early adopter"
+    ],
+    [
+     "Check-in",
+     "Is adoption holding?"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Try it on the Module 1 case: every change Jordan ships must be tested and reviewed by a second person first.",
+     "show": 0
+    },
+    {
+     "say": "List three or four specific sources of resistance.",
+     "show": 1
+    },
+    {
+     "say": "Write one sentence each for communication, training and incentive.",
+     "show": 2
+    },
+    {
+     "say": "Name one change champion, and why they'd be credible.",
+     "show": 3
+    },
+    {
+     "say": "And schedule a check-in, because a change announced once tends to quietly fade back to the old way.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "calc",
+   "kicker": "Topic 3.2 · Financial literacy",
+   "title": "Return on investment",
+   "big": "ROI = 50%",
+   "sub": "($15,000 − $10,000) ÷ $10,000",
+   "beats": [
+    {
+     "say": "R O I says whether a cost is worth it: gain minus cost, divided by cost.",
+     "show": 0
+    },
+    {
+     "say": "A tool costs ten thousand dollars a year, and saves two hundred hours, valued at seventy five dollars an hour. That's a gain of fifteen thousand.",
+     "show": 1
+    },
+    {
+     "say": "Fifteen thousand minus ten thousand, divided by ten thousand, is a return of fifty percent.",
+     "show": 2
+    },
+    {
+     "say": "An honest, labelled rough estimate beats a precise-looking number built on shaky assumptions.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Concept",
+   "title": "The real cost",
+   "items": [
+    [
+     "Upfront",
+     "The sticker price"
+    ],
+    [
+     "Ongoing",
+     "Maintenance, support, subscription"
+    ],
+    [
+     "Opportunity cost",
+     "What you give up"
+    ],
+    [
+     "CapEx vs. OpEx",
+     "Upfront vs. recurring"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A cost analysis goes beyond the sticker price.",
+     "show": 0
+    },
+    {
+     "say": "Count the upfront cost.",
+     "show": 1
+    },
+    {
+     "say": "The ongoing costs, like maintenance and support.",
+     "show": 2
+    },
+    {
+     "say": "And the opportunity cost: what you can't do because you chose this.",
+     "show": 3
+    },
+    {
+     "say": "Then classify it. Cap ex is a large upfront cost, like hardware. Op ex is a recurring cost, like a subscription.",
+     "show": 4
+    },
+    {
+     "say": "Finally, set a monthly budget check, so an overage is caught early, not at year end.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "chain",
+   "kicker": "Topic 3.3 · Sales and partnerships",
+   "title": "How the business grows",
+   "items": [
+    [
+     "Business development",
+     "New markets, partners, revenue"
+    ],
+    [
+     "Client relations",
+     "Satisfied, informed, retained"
+    ],
+    [
+     "Technical pre-sales",
+     "Honest answers, no over-promising"
+    ],
+    [
+     "Dependency risk",
+     "Name it early, plan a mitigation"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "You don't need to become a salesperson, but understanding sales makes you a better partner to the people who are.",
+     "show": 0
+    },
+    {
+     "say": "Business development finds new opportunities. Sales closes specific deals.",
+     "show": 1
+    },
+    {
+     "say": "Client relations keeps customers satisfied and retained after the deal.",
+     "show": 2
+    },
+    {
+     "say": "In technical pre-sales, an unrealistic promise becomes engineering's problem the moment it's signed. Give the honest answer.",
+     "show": 3
+    },
+    {
+     "say": "And name partnership dependency risk, like relying on one vendor or A P I, before it becomes a crisis, with a mitigation.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Topic 3.4 · Technology awareness",
+   "title": "Four rules for A I",
+   "items": [
+    [
+     "Confidently wrong",
+     "Check facts, test code, review"
+    ],
+    [
+     "Approved tools only",
+     "For confidential or personal data"
+    ],
+    [
+     "Test before launch",
+     "20–50 real examples"
+    ],
+    [
+     "Cost per use",
+     "× expected uses per month"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A tech lead needs enough A I literacy to judge a proposal honestly. Four practical rules.",
+     "show": 0
+    },
+    {
+     "say": "A I can be confidently wrong. That's called a hallucination, so treat output as a draft and have a person review it.",
+     "show": 1
+    },
+    {
+     "say": "Don't paste confidential or personal data into a tool unless it's approved for that data.",
+     "show": 2
+    },
+    {
+     "say": "Test a feature on twenty to fifty real examples before launch. A good demo on three hand-picked ones proves very little.",
+     "show": 3
+    },
+    {
+     "say": "And A I costs money every time it's used. Estimate cost per use times expected uses per month.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cloud",
+   "kicker": "Concept",
+   "title": "Cloud, data and security",
+   "items": [
+    [
+     "Cloud",
+     "Fast and scalable vs. control and ongoing cost"
+    ],
+    [
+     "Data",
+     "Quality and governance"
+    ],
+    [
+     "Cybersecurity",
+     "Phishing, weak access, unpatched software, third parties"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three more areas.",
+     "show": 0
+    },
+    {
+     "say": "Cloud means renting servers and services. You gain fast setup and easy scaling, and give up some control, for a bill that grows with usage.",
+     "show": 1
+    },
+    {
+     "say": "For data, ask about quality, is it accurate, and governance, who owns it and who can see it.",
+     "show": 2
+    },
+    {
+     "say": "For cybersecurity, know the common risks well enough to ask your security team good questions.",
+     "show": 3
+    },
+    {
+     "say": "These areas overlap. An A I feature depends on cloud, data and security at once. The goal is calibrated confidence, not becoming a specialist.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "How do you calculate R O I?",
+   "options": [
+    "Gain divided by cost",
+    "Cost minus gain",
+    "Gain minus cost, divided by cost"
+   ],
+   "answer": 2,
+   "good": "That's right. R O I is gain minus cost, divided by cost, usually shown as a percentage. It's used to compare investments.",
+   "bad": "Not quite. R O I is gain minus cost, divided by cost, usually shown as a percentage. It's used to compare investments.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "How do you calculate R O I?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Resistance, adoption plan, champion, check-in",
+     ""
+    ],
+    [
+     "Cost analysis + labelled ROI",
+     ""
+    ],
+    [
+     "CapEx/OpEx + monthly check",
+     ""
+    ],
+    [
+     "Honest pre-sales answer + risk mitigation",
+     ""
+    ],
+    [
+     "AI, cloud and data assessments",
+     ""
+    ],
+    [
+     "Three security risks + one intersection",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've planned for resistance, with an adoption strategy, a change champion and a follow-up check-in,",
+     "show": 1
+    },
+    {
+     "say": "you've run a cost analysis and a rough, labelled R O I estimate,",
+     "show": 2
+    },
+    {
+     "say": "you've classified it as cap ex or op ex, with a monthly budget check,",
+     "show": 3
+    },
+    {
+     "say": "you've drafted an honest pre-sales answer and a partnership risk with a mitigation,",
+     "show": 4
+    },
+    {
+     "say": "you've assessed an A I claim, a cloud trade-off, and a dataset's ownership and quality,",
+     "show": 5
+    },
+    {
+     "say": "and you've named three security risks and one cross-area risk.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 4, technical writing.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3 Completion Checklist

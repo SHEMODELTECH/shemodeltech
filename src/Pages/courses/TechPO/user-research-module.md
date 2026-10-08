@@ -189,6 +189,375 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
 
 *Answers: 1) Quantitative data is numeric or categorical (ratings, multiple choice), easy to analyze at scale, qualitative data is open-text or descriptive, richer but harder to analyze in bulk. 2) A sample that doesn't represent the group you actually care about, a larger number of responses doesn't fix it because all those extra responses are still coming from the wrong group of people. 3) Leading question wording, too few or unbalanced answer options, or question order (any two are valid). 4) The percentage of invited people who actually completed the survey, a low response rate matters because it raises doubt about how representative the results really are of the broader group. 5) Because respondents can only answer the specific questions asked, a survey can measure how common something already known is, but it can't surface something completely unexpected the way an open-ended interview conversation can.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "people",
+   "kicker": "Module · User Research",
+   "title": "Learn who you're building for",
+   "beats": [
+    {
+     "say": "Welcome to the User Research module."
+    },
+    {
+     "say": "You'll learn who your users are and what they need, by building personas, running interviews, and designing surveys."
+    },
+    {
+     "say": "All you need is a doc tool, and a survey tool like Google Forms or Typeform."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Topic 1 · Personas",
+   "title": "A research-based user",
+   "items": [
+    [
+     "Persona",
+     "Name · role · goals · pain points"
+    ],
+    [
+     "Primary vs secondary",
+     "Main segment vs smaller one"
+    ],
+    [
+     "Pain points",
+     "What the product must solve"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A persona is a fictional but research based picture of a type of user.",
+     "show": 0
+    },
+    {
+     "say": "It has a name, role, goals, pain points and behaviours. Enough to make decisions concrete.",
+     "show": 1
+    },
+    {
+     "say": "A primary persona is the most important segment. A secondary persona is smaller, but still relevant.",
+     "show": 2
+    },
+    {
+     "say": "Pain points are the specific frustrations. They often point straight at what the product must solve.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Topic 1 · Personas",
+   "title": "The elastic user",
+   "quote": "The elastic user stretches to fit whatever each person wants to build.",
+   "beats": [
+    {
+     "say": "Without a persona, teams talk about a vague: the user.",
+     "show": 0
+    },
+    {
+     "say": "Alan Cooper called this the elastic user. A fuzzy figure that stretches to fit whatever each person wants to build.",
+     "show": 1
+    },
+    {
+     "say": "A clear persona stops the stretching. But it's only as good as the research behind it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Topic 1 · Lab",
+   "title": "Draft proto-personas",
+   "steps": [
+    "3 to 5 labelled assumptions",
+    "Primary proto-persona",
+    "Secondary proto-persona",
+    "Research needed"
+   ],
+   "beats": [
+    {
+     "say": "A proto-persona is a draft built from the team's assumptions, before research. Useful, as long as it's labelled that way.",
+     "show": 0
+    },
+    {
+     "say": "In the lab, write three to five assumptions about who'd use your product, labelled as assumptions.",
+     "show": 1
+    },
+    {
+     "say": "Draft a primary proto-persona, with a name, role, goals and pain points.",
+     "show": 2
+    },
+    {
+     "say": "Draft a secondary one, and note how their needs differ.",
+     "show": 3
+    },
+    {
+     "say": "Then write what real research would confirm or correct each.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "ask",
+   "kicker": "Topic 2 · Interviews",
+   "title": "How you ask matters",
+   "items": [
+    [
+     "✓ Open",
+     "\"Walk me through the last time…\""
+    ],
+    [
+     "✗ Leading",
+     "\"Don't you think this would help?\""
+    ],
+    [
+     "✓ Past behaviour",
+     "Not \"Would you use this?\""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A user interview is a one on one conversation about real behaviour, in the person's own words.",
+     "show": 0
+    },
+    {
+     "say": "Ask open questions, like: walk me through the last time you tried to do this. Not: do you like it?",
+     "show": 1
+    },
+    {
+     "say": "Avoid leading questions, like: don't you think this would be helpful? They bias the answer, even from an honest person.",
+     "show": 2
+    },
+    {
+     "say": "And ask about the past, not the future. People are often wrong about what they'd do.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "search",
+   "kicker": "Topic 2 · Lab",
+   "title": "Guide, interview, synthesise",
+   "steps": [
+    "6 to 8 open questions",
+    "Fix closed or leading ones",
+    "5 to 10 min practice interview",
+    "Synthesise + compare"
+   ],
+   "beats": [
+    {
+     "say": "An interview guide is a loose list of questions, not a rigid script, so you can follow interesting threads.",
+     "show": 0
+    },
+    {
+     "say": "Write six to eight open questions, like: tell me about the last time you forgot to water a plant.",
+     "show": 1
+    },
+    {
+     "say": "Rewrite any that are closed or leading.",
+     "show": 2
+    },
+    {
+     "say": "Run a five to ten minute practice interview with a friend or classmate.",
+     "show": 3
+    },
+    {
+     "say": "Then write a synthesis note, and compare it to your persona. One anecdote is a data point. A pattern across interviews is a finding.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Topic 3 · Surveys",
+   "title": "Breadth, not depth",
+   "items": [
+    [
+     "Quantitative + qualitative",
+     "Ratings and open text"
+    ],
+    [
+     "Response bias",
+     "Wording · options · order"
+    ],
+    [
+     "Response rate",
+     "Low = less representative"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A survey trades an interview's depth for breadth. It's best at measuring how common a pattern interviews already found.",
+     "show": 0
+    },
+    {
+     "say": "Quantitative data is ratings and multiple choice. Qualitative is open text. Most surveys mix both.",
+     "show": 1
+    },
+    {
+     "say": "Response bias is when the survey itself skews answers: leading wording, too few options, even question order.",
+     "show": 2
+    },
+    {
+     "say": "And a low response rate is a warning about how representative the results are.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "warning",
+   "kicker": "Topic 3 · Surveys",
+   "title": "More responses won't fix a biased sample",
+   "big": "1,000 wrong < 100 right",
+   "sub": "Sample quality beats sample size",
+   "beats": [
+    {
+     "say": "A biased sample, like surveying only power users about a beginner feature, misleads no matter how many answer.",
+     "show": 0
+    },
+    {
+     "say": "One thousand responses from the wrong group are still less useful than one hundred from the right group.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Topic 3 · Lab",
+   "title": "Build and pilot a survey",
+   "steps": [
+    "5 to 7 questions",
+    "Check for bias",
+    "Define the sample",
+    "Pilot with 3 to 5 people"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, pick one pattern from your interview.",
+     "show": 0
+    },
+    {
+     "say": "Build a five to seven question survey, with one open question at the end.",
+     "show": 1
+    },
+    {
+     "say": "Review it for response bias.",
+     "show": 2
+    },
+    {
+     "say": "Define who you'd actually invite.",
+     "show": 3
+    },
+    {
+     "say": "Then pilot it with three to five people. That's a clarity check, not results. Far too few to measure anything.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is asking about past behaviour more reliable than asking someone to predict the future?",
+   "options": [
+    "Past questions are shorter",
+    "People enjoy talking about the past more",
+    "People are often wrong about what they'll do, but describing what they did is concrete"
+   ],
+   "answer": 2,
+   "good": "That's right. People are often wrong about their own future actions, while describing something they've already done is a much stronger signal.",
+   "bad": "Not quite. People are often wrong about their own future actions, while describing something they've already done is a much stronger signal.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is asking about past behaviour more reliable than asking someone to predict the future?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Proto-personas from labelled assumptions",
+     ""
+    ],
+    [
+     "Practice interview synthesised",
+     ""
+    ],
+    [
+     "Survey piloted, sample defined",
+     ""
+    ],
+    [
+     "Why past behaviour beats predictions",
+     ""
+    ],
+    [
+     "Depth versus breadth",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the User Research module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've drafted primary and secondary proto-personas from labelled assumptions,",
+     "show": 1
+    },
+    {
+     "say": "you've written a non leading guide, run a practice interview, and synthesised it against your personas,",
+     "show": 2
+    },
+    {
+     "say": "you've built and piloted a short survey, with a defined sample for the real launch,",
+     "show": 3
+    },
+    {
+     "say": "you can explain why past behaviour questions beat predictions,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain why interviews give depth and surveys give breadth.",
+     "show": 5
+    },
+    {
+     "say": "You've finished User Research. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

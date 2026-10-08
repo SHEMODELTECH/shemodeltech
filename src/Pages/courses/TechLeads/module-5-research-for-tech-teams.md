@@ -275,6 +275,414 @@ You have themes built from your own research notes, three evidence-backed insigh
 
 *Answers: 1) Grouping individual observations into themes so patterns emerge from the data. 2) A finding is what you observed; an insight adds what it means for the team. 3) It shows how widespread the finding is, which is more honest than generalising to all users. 4) The question, the method, three to five insights, and recommendations, in that order. 5) Short readouts get read and acted on; full notes can be linked for detail.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "search",
+   "kicker": "Module 5 · Research for tech teams",
+   "title": "Find answers you can trust",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "This module is about desk research for business decisions: what users need, what competitors do, and whether a change worked. No code required."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "ask",
+   "kicker": "Topic 5.1 · Framing questions",
+   "title": "Start with a good question",
+   "quote": "✗ \"What do users think?\"   ✓ \"Why do new users stop before finishing sign-up?\"",
+   "beats": [
+    {
+     "say": "Good research starts with a good question.",
+     "show": 0
+    },
+    {
+     "say": "What do users think, produces a pile of opinions.",
+     "show": 1
+    },
+    {
+     "say": "Why do new users stop before finishing sign-up, produces answers a team can act on.",
+     "show": 1
+    },
+    {
+     "say": "A research question is specific, answerable, and tied to a decision. If no decision depends on the answer, it's probably not worth doing yet.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Concept",
+   "title": "Kinds of research, and a plan",
+   "items": [
+    [
+     "Desk research",
+     "What's already known · do it first"
+    ],
+    [
+     "Primary research",
+     "Interviews, surveys, observation"
+    ],
+    [
+     "Qualitative vs. quantitative",
+     "Why and how vs. how many"
+    ],
+    [
+     "Research plan",
+     "Question, decision, method, people, timeline"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Desk, or secondary, research reviews what already exists: reports, analytics, support tickets, competitor sites. Do it first.",
+     "show": 1
+    },
+    {
+     "say": "Primary research collects new information through interviews, surveys or observation.",
+     "show": 2
+    },
+    {
+     "say": "Qualitative research explores why and how. Quantitative research measures how many and how much.",
+     "show": 3
+    },
+    {
+     "say": "And a one-page research plan records the question, the decision, the method, who you'll learn from, and the timeline.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Topic 5.2 · Desk research",
+   "title": "The credibility check",
+   "items": [
+    [
+     "Who",
+     "In a position to know?"
+    ],
+    [
+     "When",
+     "Still current?"
+    ],
+    [
+     "Evidence",
+     "Where do the numbers come from?"
+    ],
+    [
+     "Bias",
+     "Selling something?"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Ask four questions of every source.",
+     "show": 0
+    },
+    {
+     "say": "Who wrote it, and are they in a position to know?",
+     "show": 1
+    },
+    {
+     "say": "When was it published, and is it still current?",
+     "show": 2
+    },
+    {
+     "say": "Evidence: does it show where its numbers come from?",
+     "show": 3
+    },
+    {
+     "say": "Bias: is the author selling something?",
+     "show": 4
+    },
+    {
+     "say": "Cite every fact with author, title, year, link and date accessed. A number without a source and a date is an opinion.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pyramid",
+   "kicker": "Worked example · Top-down",
+   "title": "Narrow a big number",
+   "items": [
+    [
+     "City population",
+     "600,000"
+    ],
+    [
+     "Aged 18 to 34 (25%)",
+     "150,000"
+    ],
+    [
+     "Interested in tech (10%, guess)",
+     "15,000"
+    ],
+    [
+     "Join in year one (2%, guess)",
+     "about 300"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Market sizing estimates how many people a decision involves. These numbers are illustrative, not real data.",
+     "show": 0
+    },
+    {
+     "say": "A nonprofit is sizing a free mentoring program. Top-down starts with a city of six hundred thousand.",
+     "show": 1
+    },
+    {
+     "say": "Twenty five percent are aged eighteen to thirty four: a hundred and fifty thousand.",
+     "show": 2
+    },
+    {
+     "say": "Ten percent interested in a tech career: fifteen thousand. That's a guess to check.",
+     "show": 3
+    },
+    {
+     "say": "Two percent join in year one: about three hundred.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "calc",
+   "kicker": "Worked example · Bottom-up",
+   "title": "Multiply up from what you control",
+   "items": [
+    [
+     "Sessions",
+     "4 partners × 4 = 16"
+    ],
+    [
+     "People reached",
+     "16 × 40 = 640"
+    ],
+    [
+     "Sign-ups (25%)",
+     "160"
+    ],
+    [
+     "Mentor places",
+     "30 × 3 = 90 ← the real limit"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Bottom-up starts from things you can count.",
+     "show": 0
+    },
+    {
+     "say": "Four partners, four info sessions each: sixteen sessions.",
+     "show": 1
+    },
+    {
+     "say": "Forty people a session reaches six hundred and forty.",
+     "show": 2
+    },
+    {
+     "say": "Twenty five percent sign up: a hundred and sixty.",
+     "show": 3
+    },
+    {
+     "say": "But thirty mentors with three mentees each gives only ninety places.",
+     "show": 4
+    },
+    {
+     "say": "Both estimates are in the same rough range, and the real limit is mentor recruitment, not demand. Write every assumption down, and label the guesses.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Concept",
+   "title": "The competitor grid",
+   "items": [
+    [
+     "Local meetup group",
+     "✗ Little support for beginners"
+    ],
+    [
+     "Online mentoring platform",
+     "✗ Cost, no in-person community"
+    ],
+    [
+     "University career centre",
+     "✗ Not open to non-students"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A competitor grid puts options in rows, and the same questions in columns: features, pricing, audience, strengths, weaknesses.",
+     "show": 0
+    },
+    {
+     "say": "The example uses a local meetup group, which offers little structure for beginners.",
+     "show": 1
+    },
+    {
+     "say": "An online mentoring platform, which costs money and has no in-person community.",
+     "show": 2
+    },
+    {
+     "say": "And a university career centre, which isn't open to non-students.",
+     "show": 3
+    },
+    {
+     "say": "Include indirect alternatives too, like doing nothing. The gap here: nobody offers free, structured, in-person mentoring open to non-students.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "layers",
+   "kicker": "Topic 5.3 · Synthesis",
+   "title": "From notes to a readout",
+   "steps": [
+    "One observation per card",
+    "Group into themes",
+    "Insights + evidence",
+    "Readout + recommendations"
+   ],
+   "beats": [
+    {
+     "say": "Raw notes aren't findings.",
+     "show": 0
+    },
+    {
+     "say": "Write one observation per card.",
+     "show": 1
+    },
+    {
+     "say": "Group them into themes, without deciding the themes in advance. That's affinity mapping.",
+     "show": 2
+    },
+    {
+     "say": "Write insights: a finding, plus what it means, backed by evidence. Say four of six participants, not users.",
+     "show": 3
+    },
+    {
+     "say": "Then a short readout: the question, the method, your insights, and recommendations, in that order.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between a top-down and a bottom-up market sizing estimate?",
+   "options": [
+    "Top-down narrows a big published number with percentages; bottom-up multiplies up from things you can count",
+    "Top-down uses guesses; bottom-up uses only facts",
+    "They're two names for the same method"
+   ],
+   "answer": 0,
+   "good": "That's right. Top-down starts from a large published number and narrows it; bottom-up starts from things you can count or control and multiplies up.",
+   "bad": "Not quite. Top-down starts from a large published number and narrows it; bottom-up starts from things you can count or control and multiplies up.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between a top-down and a bottom-up market sizing estimate?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A research plan tied to a decision",
+     ""
+    ],
+    [
+     "Desk research from three or more sources",
+     ""
+    ],
+    [
+     "Sources checked and cited",
+     ""
+    ],
+    [
+     "Top-down + bottom-up sizing",
+     ""
+    ],
+    [
+     "Competitor grid + one-page brief",
+     ""
+    ],
+    [
+     "Three insights in a readout",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've written a research plan with a question tied to a real decision,",
+     "show": 1
+    },
+    {
+     "say": "you've done desk research with at least three sources,",
+     "show": 2
+    },
+    {
+     "say": "you've credibility-checked and properly cited your sources,",
+     "show": 3
+    },
+    {
+     "say": "you've made top-down and bottom-up estimates with stated assumptions,",
+     "show": 4
+    },
+    {
+     "say": "you've built a competitor grid and a one-page desk research brief,",
+     "show": 5
+    },
+    {
+     "say": "and you've shared three evidence-backed insights in a one-page readout.",
+     "show": 6
+    },
+    {
+     "say": "Next, in Module 6, communication and delivery.",
+     "show": 6
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 5 Completion Checklist

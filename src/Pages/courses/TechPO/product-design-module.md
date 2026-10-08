@@ -190,6 +190,406 @@ You have reviewed your own wireframe or flow against all four principles, consis
 
 *Answers: 1) Similar elements looking and behaving the same way throughout a product, inconsistency creates extra work because it forces users to relearn things that should already feel familiar from elsewhere in the product. 2) A clear response to a user's action, like a visible button press or a confirmation message, without it users are left unsure whether their action actually registered. 3) An affordance is what an element lets you do, for example a button can be pressed; a signifier is the visual cue that shows that action is possible, for example the button's raised look. 4) The mental effort required to use an interface, one reliable way to reduce it is cutting unnecessary choices, steps, or information presented at any one moment. 5) No, they're defaults that require a deliberate reason to break, not rigid rules, breaking one should be a considered choice made for a specific reason rather than an accident.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "palette",
+   "kicker": "Module · Product Design",
+   "title": "Sketch it before you build it",
+   "beats": [
+    {
+     "say": "Welcome to the Product Design module."
+    },
+    {
+     "say": "You'll sketch screens as wireframes, map the paths users take, and check a design against core U X principles, before anything is built."
+    },
+    {
+     "say": "All you need is a browser and a free Figma account."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blueprint",
+   "kicker": "Topic 1 · Wireframes",
+   "title": "Structure, not polish",
+   "items": [
+    [
+     "Low fidelity",
+     "Boxes, lines, placeholder text"
+    ],
+    [
+     "Placeholder content",
+     "Gray boxes · Lorem ipsum"
+    ],
+    [
+     "Annotations",
+     "\"This button opens a modal\""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A wireframe is a low detail sketch of a screen: what's on it, and roughly where. No colours, fonts or finished visuals.",
+     "show": 0
+    },
+    {
+     "say": "Low fidelity uses boxes, lines and placeholder text. High fidelity, sometimes called a mockup, looks close to finished.",
+     "show": 1
+    },
+    {
+     "say": "Placeholder content, like gray boxes or lorem ipsum, keeps the focus on structure.",
+     "show": 2
+    },
+    {
+     "say": "And annotations explain behaviour you can't see, like: this button opens a modal.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Topic 1 · Wireframes",
+   "title": "Stay low-fidelity longer",
+   "quote": "Low-fidelity gets structural feedback. High-fidelity gets \"I don't like this colour.\"",
+   "beats": [
+    {
+     "say": "Beginners often jump straight to colourful, high fidelity designs.",
+     "show": 0
+    },
+    {
+     "say": "But feedback on a polished mockup tends to be about visuals, like, I don't like this colour, even when structural feedback is what you need.",
+     "show": 1
+    },
+    {
+     "say": "And a confusing layout found late means redoing all that polish.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Topic 1 · Lab",
+   "title": "Two wireframes, compared",
+   "steps": [
+    "Pick one screen",
+    "Gray boxes only",
+    "Add 3 to 4 annotations",
+    "Second layout + trade-offs"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, start a new Figma file.",
+     "show": 0
+    },
+    {
+     "say": "Pick one screen, like the plant care app's reminder screen.",
+     "show": 1
+    },
+    {
+     "say": "Sketch it with only gray boxes, simple lines and placeholder text.",
+     "show": 2
+    },
+    {
+     "say": "Add three or four annotations.",
+     "show": 3
+    },
+    {
+     "say": "Then make a second, meaningfully different layout, and write two sentences on the trade-offs.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "Topic 2 · User flows",
+   "title": "From here to the goal",
+   "items": [
+    [
+     "Start and end",
+     "One complete task"
+    ],
+    [
+     "Decision point",
+     "\"Is the user logged in?\""
+    ],
+    [
+     "Happy path vs error path",
+     "Ideal route vs things going wrong"
+    ],
+    [
+     "Drop-off point",
+     "Where users give up"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A wireframe answers what's on this screen. A user flow answers how someone gets to their goal, and what could go wrong.",
+     "show": 0
+    },
+    {
+     "say": "One flow is one complete task, with a clear start and end point.",
+     "show": 1
+    },
+    {
+     "say": "A decision point is a branch, like: is the user logged in?",
+     "show": 2
+    },
+    {
+     "say": "The happy path is the ideal route. An error path covers things going wrong, like a failed login.",
+     "show": 3
+    },
+    {
+     "say": "And a drop-off point is where users commonly give up.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "fork",
+   "kicker": "Topic 2 · Lab",
+   "title": "Map more than the happy path",
+   "steps": [
+    "Pick a multi-screen task",
+    "Draw the happy path",
+    "Add a decision + error path",
+    "Spot a drop-off, suggest a fix"
+   ],
+   "beats": [
+    {
+     "say": "Mapping only the happy path is a common mistake. Real users hit errors and change their minds.",
+     "show": 0
+    },
+    {
+     "say": "In the lab, pick a multi-screen task, like setting a watering reminder for a new plant.",
+     "show": 1
+    },
+    {
+     "say": "Draw the happy path as boxes and arrows.",
+     "show": 2
+    },
+    {
+     "say": "Add a decision point and an error path, like: plant name already exists.",
+     "show": 3
+    },
+    {
+     "say": "Then mark one likely drop-off point, and suggest a design change to reduce it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "cursor",
+   "kicker": "Topic 3 · UX principles",
+   "title": "Four principles",
+   "items": [
+    [
+     "Consistency",
+     "Same look, same behaviour"
+    ],
+    [
+     "Feedback",
+     "A visible response to every action"
+    ],
+    [
+     "Affordance + signifier",
+     "What it does + the cue it can"
+    ],
+    [
+     "Cognitive load",
+     "Fewer choices at once"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "U X principles are defaults. Break one only with a deliberate reason.",
+     "show": 0
+    },
+    {
+     "say": "Consistency: similar elements look and behave the same everywhere.",
+     "show": 1
+    },
+    {
+     "say": "Feedback: the product clearly responds, like a pressed button, a loading spinner, or a confirmation.",
+     "show": 2
+    },
+    {
+     "say": "Affordance and signifier: what an element lets you do, and the visible cue that says you can.",
+     "show": 3
+    },
+    {
+     "say": "And cognitive load: the mental effort an interface takes. Cut unnecessary choices, steps and information.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "bulb",
+   "kicker": "Topic 3 · UX principles",
+   "title": "Affordance versus signifier",
+   "quote": "A button affords pressing. Its raised look is the signifier.",
+   "beats": [
+    {
+     "say": "These two ideas come from designer Don Norman.",
+     "show": 0
+    },
+    {
+     "say": "A button affords pressing. Its raised look or shadow is the signifier.",
+     "show": 1
+    },
+    {
+     "say": "Strip the signifiers into flat, ambiguous elements, and users can't tell what's interactive, even though the affordance is still there.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Topic 3 · Lab",
+   "title": "Review your own design",
+   "items": [
+    [
+     "Consistency",
+     "One fix"
+    ],
+    [
+     "Feedback",
+     "One action's response"
+    ],
+    [
+     "Signifier",
+     "One element checked"
+    ],
+    [
+     "Cognitive load",
+     "Busiest screen trimmed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab, return to your wireframe or flow, and review it against all four.",
+     "show": 0
+    },
+    {
+     "say": "Note one inconsistency to fix.",
+     "show": 1
+    },
+    {
+     "say": "Describe the visible feedback for one action.",
+     "show": 2
+    },
+    {
+     "say": "Check one interactive element has a clear signifier.",
+     "show": 3
+    },
+    {
+     "say": "And count the choices on your busiest screen, then suggest one way to reduce them.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between what a wireframe shows and what a user flow shows?",
+   "options": [
+    "A wireframe shows colours; a user flow shows fonts",
+    "A wireframe shows one screen; a user flow shows the steps to complete a task",
+    "They show the same thing at different sizes"
+   ],
+   "answer": 1,
+   "good": "That's right. A wireframe shows what's on a single screen. A user flow shows the sequence of steps and screens a user takes to complete a task.",
+   "bad": "Not quite. A wireframe shows what's on a single screen. A user flow shows the sequence of steps and screens a user takes to complete a task.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between what a wireframe shows and what a user flow shows?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Annotated wireframe + second layout",
+     ""
+    ],
+    [
+     "User flow with error path and drop-off",
+     ""
+    ],
+    [
+     "Reviewed against four UX principles",
+     ""
+    ],
+    [
+     "Wireframe vs flow vs principle",
+     ""
+    ],
+    [
+     "Why error paths matter",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the Product Design module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've built an annotated low fidelity wireframe, and a second layout with trade-offs compared,",
+     "show": 1
+    },
+    {
+     "say": "you've mapped a user flow with a start, end, decision point, error path and drop-off point,",
+     "show": 2
+    },
+    {
+     "say": "you've reviewed a design against all four U X principles, with an improvement for each,",
+     "show": 3
+    },
+    {
+     "say": "you can explain what a wireframe, a user flow and a U X principle each address,",
+     "show": 4
+    },
+    {
+     "say": "and you can explain why error paths matter as much as the happy path.",
+     "show": 5
+    },
+    {
+     "say": "You've finished Product Design. Well done.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module Completion Checklist

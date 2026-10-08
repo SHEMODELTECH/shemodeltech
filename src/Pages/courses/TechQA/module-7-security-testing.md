@@ -209,6 +209,396 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
 
 *Answers: 1) Validation checks input is what's expected and rejects the rest; output encoding makes sure user text displayed on a page is shown as text, never run as code. 2) A page displaying user input without encoding it, so the input runs as script in other users' browsers. 3) Parameterised queries, which keep user input separate from the query itself. 4) Anyone can send requests directly to the server and skip the browser's checks, so the server must validate too. 5) Only test systems you own or have written permission to test.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "shield",
+   "kicker": "Module 7 · Security testing",
+   "title": "Find weaknesses first",
+   "beats": [
+    {
+     "say": "Welcome to Module 7, security testing."
+    },
+    {
+     "say": "You'll check an app for weaknesses before someone with bad intent finds them, always against a system you're authorized to test."
+    },
+    {
+     "say": "Every lab uses O WASP Juice Shop, a deliberately vulnerable training app, running only on your own computer."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Topic 7.1 · Vulnerability testing",
+   "title": "From scope to report",
+   "steps": [
+    "Scope",
+    "Automated scan",
+    "Findings",
+    "Verify & prioritize",
+    "Report"
+   ],
+   "beats": [
+    {
+     "say": "Vulnerability testing is systematic, not open-ended hacking.",
+     "show": 0
+    },
+    {
+     "say": "Start with scope: exactly what you're authorized to test. Testing outside it, even by accident, can have serious legal consequences.",
+     "show": 1
+    },
+    {
+     "say": "Run an automated scan, which checks for known categories of weakness.",
+     "show": 2
+    },
+    {
+     "say": "The scanner flags findings for review.",
+     "show": 3
+    },
+    {
+     "say": "A human verifies each one, because scanners produce false positives, and assigns a severity.",
+     "show": 4
+    },
+    {
+     "say": "Then it's reported for fixing.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Topic 7.1 · Concept",
+   "title": "Key terms",
+   "items": [
+    [
+     "OWASP Top 10",
+     "The standard reference"
+    ],
+    [
+     "Scanner (ZAP)",
+     "Flags potential issues"
+    ],
+    [
+     "Severity",
+     "Critical · high · medium · low"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The O WASP Top Ten is a regularly updated list of the most critical web application risks, like injection and broken access control.",
+     "show": 1
+    },
+    {
+     "say": "A vulnerability scanner, like ZAP, probes for known weaknesses, and flags them for a human.",
+     "show": 2
+    },
+    {
+     "say": "Severity, critical, high, medium or low, reflects the potential harm, and drives how urgently it's fixed.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Topic 7.1 · Lab",
+   "title": "Scan your local Juice Shop",
+   "file": "terminal",
+   "code": "docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop",
+   "beats": [
+    {
+     "say": "Start Juice Shop with Docker. The one two seven part keeps it reachable only from your own computer, which matters because it's deliberately insecure.",
+     "show": 0
+    },
+    {
+     "say": "Open ZAP, choose Automated Scan, enter localhost port three thousand, and click Attack.",
+     "show": 1
+    },
+    {
+     "say": "Pick three findings from the Alerts tab. Map each to the O WASP Top Ten twenty twenty five, explain it in a sentence, and assign a justified severity.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Topic 7.2 · Authentication testing",
+   "title": "Does login hold up?",
+   "items": [
+    [
+     "Credentials",
+     "Do errors leak which accounts exist?"
+    ],
+    [
+     "Sessions",
+     "Invalidated on logout?"
+    ],
+    [
+     "Rate limiting",
+     "Repeated failures blocked?"
+    ],
+    [
+     "Password policy",
+     "NIST SP 800-63B-4"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Authentication is one of the highest value targets for attackers, so it gets its own tests.",
+     "show": 0
+    },
+    {
+     "say": "Credential testing: how it handles wrong passwords, and whether error messages reveal too much.",
+     "show": 1
+    },
+    {
+     "say": "Session management: are sessions really invalidated on logout?",
+     "show": 2
+    },
+    {
+     "say": "Rate limiting: are repeated failed logins throttled or blocked?",
+     "show": 3
+    },
+    {
+     "say": "Password policy: are weak passwords really rejected? A useful yardstick is N I S T S P eight hundred sixty three B four.",
+     "show": 4
+    },
+    {
+     "say": "It asks for at least fifteen characters when the password is the only factor, eight with M F A, checks against breached passwords, and no forced complexity or routine expiry.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Topic 7.2 · Lab",
+   "title": "Does logout end the session?",
+   "file": "terminal",
+   "code": "curl -H \"Authorization: Bearer PASTE_TOKEN_HERE\" \\\n  http://localhost:3000/rest/user/whoami",
+   "beats": [
+    {
+     "say": "In the lab, register a test account on your local Juice Shop.",
+     "show": 0
+    },
+    {
+     "say": "Compare the error for a wrong password with the error for an account that doesn't exist. Different wording reveals which emails are registered.",
+     "show": 1
+    },
+    {
+     "say": "Try five or so rapid failed logins, and watch for lockout or delay.",
+     "show": 1
+    },
+    {
+     "say": "Then copy your token from DevTools, log out, and re-send it with curl. If it still shows your email, the token wasn't invalidated. That's a finding.",
+     "show": 1
+    },
+    {
+     "say": "Finally, try weak passwords like one two three, and compare with the N I S T yardstick.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Topic 7.3 · Input validation",
+   "title": "Never trust what a user typed",
+   "items": [
+    [
+     "Validation",
+     "Server checks type and range"
+    ],
+    [
+     "Output encoding",
+     "Shown as text, never run"
+    ],
+    [
+     "XSS",
+     "Unencoded input runs as script"
+    ],
+    [
+     "Injection",
+     "Fix: parameterised queries"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Almost every serious web vulnerability starts with an app trusting what a user typed.",
+     "show": 0
+    },
+    {
+     "say": "Validation checks input is what's expected, on the server as well as in the browser.",
+     "show": 1
+    },
+    {
+     "say": "Output encoding shows user text as text, never run as part of the page.",
+     "show": 2
+    },
+    {
+     "say": "Cross-site scripting, or X S S, happens when a page displays input without encoding, so it runs as script in other users' browsers.",
+     "show": 3
+    },
+    {
+     "say": "Injection happens when input is pasted straight into a query. The fix is parameterised queries.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "shield",
+   "kicker": "Topic 7.3 · Concept",
+   "title": "Browser checks prove nothing",
+   "quote": "Anyone can skip the browser's checks. The server must validate too.",
+   "beats": [
+    {
+     "say": "Browser-side checks improve the user experience, but prove nothing about security.",
+     "show": 0
+    },
+    {
+     "say": "Anyone can send a request that skips them, so the server must check too.",
+     "show": 1
+    },
+    {
+     "say": "And a tester's job is to show the flaw exists and report it clearly, not to exploit it further.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Topic 7.3 · Lab",
+   "title": "Map, probe, report",
+   "steps": [
+    "Map every input",
+    "Empty, long, wrong type, HTML",
+    "ZAP on localhost only",
+    "Bug report + fix"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, still only on your local Juice Shop.",
+     "show": 0
+    },
+    {
+     "say": "Map every input: search, login, feedback, account fields.",
+     "show": 1
+    },
+    {
+     "say": "In three of them, try an empty value, a very long one, the wrong type, and a short piece of H T M L, like bold test.",
+     "show": 2
+    },
+    {
+     "say": "Run ZAP against localhost only, and read the input alerts.",
+     "show": 3
+    },
+    {
+     "say": "Write one security bug report: the input, steps, result, risk, and a recommended fix.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What causes cross-site scripting?",
+   "options": [
+    "A password that is too short",
+    "A page displaying user input without encoding it",
+    "A server that rate limits logins"
+   ],
+   "answer": 1,
+   "good": "That's right. When a page shows user input without encoding it, that input can run as script in other users' browsers.",
+   "bad": "Not quite. When a page shows user input without encoding it, that input can run as script in other users' browsers.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What causes cross-site scripting?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "ZAP scan + 3 mapped findings",
+     ""
+    ],
+    [
+     "Login errors compared",
+     ""
+    ],
+    [
+     "Rate limiting + logout checked",
+     ""
+    ],
+    [
+     "Three inputs probed",
+     ""
+    ],
+    [
+     "Security bug report with a fix",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've run a ZAP scan on your local Juice Shop and mapped three findings to the O WASP Top Ten with severities,",
+     "show": 1
+    },
+    {
+     "say": "compared wrong password and unknown account error messages,",
+     "show": 2
+    },
+    {
+     "say": "checked rate limiting, and whether logout invalidated the session,",
+     "show": 3
+    },
+    {
+     "say": "tested three inputs with boundary, type and H T M L values,",
+     "show": 4
+    },
+    {
+     "say": "and written a security bug report with a recommended fix.",
+     "show": 5
+    },
+    {
+     "say": "Next, in Module 8, C I, C D testing.",
+     "show": 5
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 7 Completion Checklist

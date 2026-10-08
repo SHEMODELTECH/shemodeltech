@@ -79,6 +79,214 @@ You can describe the data source, screen, and action concepts, and you have a wr
 
 *Answers: 1) Where the app's information actually lives — a spreadsheet, database, or the platform's own built-in storage. 2) A list screen shows many records at once; a detail screen shows the full information for one specific record. 3) Lets a user change data — creating, editing, or completing a record — with that change writing back to the data source. 4) Which users can see or edit which specific records, since an internal app usually shouldn't show every user everything. 5) A website builder mainly displays content publicly; an internal app builder builds functional tools with data, actions, and permissions for a team or specific users.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "boxes",
+   "kicker": "Module 0 · What internal app builders do",
+   "title": "Data in, working tool out",
+   "beats": [
+    {
+     "say": "Welcome to Internal Apps."
+    },
+    {
+     "say": "An internal app builder turns a set of data into a working application, with screens, actions and permissions."
+    },
+    {
+     "say": "That's different from a website builder, which mainly displays content publicly."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "The four building blocks",
+   "items": [
+    [
+     "Data source",
+     "Where the data lives"
+    ],
+    [
+     "Screen",
+     "List or detail view"
+    ],
+    [
+     "Action",
+     "Writes back to the source"
+    ],
+    [
+     "Permissions",
+     "Who sees or edits what"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every platform in this course shares the same idea.",
+     "show": 0
+    },
+    {
+     "say": "A data source is where the information lives: a spreadsheet, a database, or the platform's own storage.",
+     "show": 1
+    },
+    {
+     "say": "A screen displays that data, as a list of many records, or the detail of one.",
+     "show": 2
+    },
+    {
+     "say": "An action lets a user change the data, and the change writes back to the source.",
+     "show": 3
+    },
+    {
+     "say": "And permissions control which users can see or edit which records.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Structure at a glance",
+   "title": "A loop back to the data",
+   "steps": [
+    "Data source",
+    "Screen",
+    "Action",
+    "Back to the data source"
+   ],
+   "beats": [
+    {
+     "say": "Here's the shape you'll see in every tool.",
+     "show": 0
+    },
+    {
+     "say": "The data source holds rows and columns.",
+     "show": 1
+    },
+    {
+     "say": "A screen displays the records.",
+     "show": 2
+    },
+    {
+     "say": "An action edits or creates a record, and that writes back to the data source.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Sketch a task tracker",
+   "items": [
+    [
+     "List screen",
+     "All tasks"
+    ],
+    [
+     "Detail screen",
+     "One task"
+    ],
+    [
+     "Action",
+     "Change its Status"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Your lab is a sketch.",
+     "show": 0
+    },
+    {
+     "say": "Take a task list with three columns: task, assignee and status.",
+     "show": 0
+    },
+    {
+     "say": "Sketch a list screen showing all tasks.",
+     "show": 1
+    },
+    {
+     "say": "A detail screen for one task.",
+     "show": 2
+    },
+    {
+     "say": "And an action that changes its status. You'll build exactly this in every module.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between a list screen and a detail screen?",
+   "options": [
+    "A list screen shows many records; a detail screen shows one record in full",
+    "A list screen is for admins only",
+    "A detail screen can't be edited"
+   ],
+   "answer": 0,
+   "good": "That's right. A list screen shows many records at once; a detail screen shows the full information for one specific record.",
+   "bad": "Not quite. A list screen shows many records at once; a detail screen shows the full information for one specific record.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between a list screen and a detail screen?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can describe source, screen and action",
+     ""
+    ],
+    [
+     "Your app sketch is written down",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can describe data sources, screens and actions,",
+     "show": 1
+    },
+    {
+     "say": "and you have a sketch of a list screen, a detail screen and one action.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 1, turning a spreadsheet into an app with Glide.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Glide - Spreadsheet Straight Into an App
@@ -144,6 +352,223 @@ You have a published Glide app connected to a real Google Sheet, showing only a 
 5. After tapping "Mark Complete" in the app, where did the actual change get saved?
 
 *Answers: 1) Glide's term for a connected data source — a Google Sheet tab or native Glide Table made of rows and columns. 2) A Collection shows multiple rows at once as a list; a Detail screen shows all the fields for one specific row. 3) Writes a new value into a specific column for a specific row, which is how a button tap actually changes the underlying data. 4) Which rows a specific signed-in user is allowed to see, based on a column (like an email address) matching their login. 5) The original Google Sheet itself — Glide writes changes directly back to the connected spreadsheet.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "phone",
+   "kicker": "Module 1 · Glide",
+   "title": "Spreadsheet straight into an app",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "Glide turns a spreadsheet directly into a working, mobile-friendly app. Sheet in, app out."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Structure at a glance",
+   "title": "Glide's building blocks",
+   "items": [
+    [
+     "Table",
+     "Google Sheet or Glide Table"
+    ],
+    [
+     "Collection",
+     "Many rows"
+    ],
+    [
+     "Detail screen",
+     "One row"
+    ],
+    [
+     "Set column values",
+     "A button writes to the row"
+    ],
+    [
+     "Row Owners",
+     "Rows matched to the user's email"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Glide has its own words.",
+     "show": 0
+    },
+    {
+     "say": "A Table is the connected data source, a Google Sheet tab or a Glide Table.",
+     "show": 1
+    },
+    {
+     "say": "A Collection is a screen showing many rows, as a list, cards, or a calendar.",
+     "show": 2
+    },
+    {
+     "say": "A Detail screen shows every field of one row.",
+     "show": 3
+    },
+    {
+     "say": "An action, like set column values, lets a button write a new value into the row.",
+     "show": 4
+    },
+    {
+     "say": "And Row Owners limits which rows a signed-in user can see, by matching a column to their email.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "table",
+   "kicker": "Lab · Steps 1 to 5",
+   "title": "Build the task app",
+   "steps": [
+    "Sheet: Task · Assignee · Status",
+    "Connect a Glide app",
+    "Collection + Detail screen",
+    "\"Mark Complete\" button"
+   ],
+   "beats": [
+    {
+     "say": "Create a Google Sheet with task, assignee as an email address, and status columns.",
+     "show": 1
+    },
+    {
+     "say": "Create a Glide app connected to that sheet.",
+     "show": 2
+    },
+    {
+     "say": "Add a Collection showing task and status, and tap into the Detail screen Glide generates.",
+     "show": 3
+    },
+    {
+     "say": "Then add a Mark Complete button that sets status to done.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "lock",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "Row Owners, then prove it",
+   "items": [
+    [
+     "Publish + sign in",
+     "As a test assignee"
+    ],
+    [
+     "✓ Only your tasks",
+     "Row Owners at work"
+    ],
+    [
+     "✓ Sheet updates",
+     "Mark Complete writes back"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Set up Row Owners on the assignee column.",
+     "show": 0
+    },
+    {
+     "say": "Publish, and sign in as a test user matching one assignee's email.",
+     "show": 1
+    },
+    {
+     "say": "You should only see that user's tasks.",
+     "show": 2
+    },
+    {
+     "say": "Tap Mark Complete, and the Google Sheet itself updates. If your free plan lacks Row Owners, follow along.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "After tapping Mark Complete in the app, where did the change actually get saved?",
+   "options": [
+    "Only on the phone",
+    "In a separate Glide backup",
+    "In the original Google Sheet"
+   ],
+   "answer": 2,
+   "good": "That's right. Glide writes changes directly back to the connected Google Sheet.",
+   "bad": "Not quite. Glide writes changes directly back to the connected Google Sheet.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "After tapping Mark Complete in the app, where did the change actually get saved?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A published Glide app on a real sheet",
+     ""
+    ],
+    [
+     "Row Owners shows only your rows",
+     ""
+    ],
+    [
+     "Mark Complete updates the sheet",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a published Glide app connected to a real Google Sheet,",
+     "show": 1
+    },
+    {
+     "say": "showing a signed-in user only their own rows,",
+     "show": 2
+    },
+    {
+     "say": "with an action that updates the sheet.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 2, a full logic engine with Bubble.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -211,6 +636,235 @@ You have a working Bubble app with a custom Data Type, a Repeating Group display
 
 *Answers: 1) A custom data structure you define specifically for your app, with its own fields — unlike a spreadsheet, it's built inside Bubble's own database rather than borrowed from an external sheet. 2) One actual record of a Data Type, with real values filled into its fields. 3) An Event (like a button click or form submission) to one or more Actions (like creating or modifying a Thing). 4) Changes an element's appearance or visibility based on a rule, such as highlighting a row when a field matches a specific value. 5) It's enforced by Bubble itself at the data level, so a user genuinely cannot access the restricted data even by inspecting the page — unlike simply hiding an element visually, which wouldn't actually protect the underlying data.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Module 2 · Bubble",
+   "title": "A full application logic engine",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Bubble builds complete web apps, with its own built-in database, custom logic, and a visual workflow editor."
+    },
+    {
+     "say": "It's for tools that need more than a spreadsheet mapping."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Structure at a glance",
+   "title": "Bubble's building blocks",
+   "items": [
+    [
+     "Data Type · Thing",
+     "Your structure · one record"
+    ],
+    [
+     "Repeating Group",
+     "A list of Things"
+    ],
+    [
+     "Workflow",
+     "Event → actions"
+    ],
+    [
+     "Conditional",
+     "Style by rule"
+    ],
+    [
+     "Privacy Rule",
+     "Enforced at the data level"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Bubble has six key ideas.",
+     "show": 0
+    },
+    {
+     "say": "A Data Type is a structure you define, with its own fields. A Thing is one record of it.",
+     "show": 1
+    },
+    {
+     "say": "A Repeating Group displays a list of Things on a page.",
+     "show": 2
+    },
+    {
+     "say": "A Workflow connects an event, like a button click, to actions, like create a Thing.",
+     "show": 3
+    },
+    {
+     "say": "A Conditional changes how an element looks, based on a rule.",
+     "show": 4
+    },
+    {
+     "say": "And a Privacy Rule restricts who can view or edit Things, enforced by Bubble itself.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "database",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "Requests, end to end",
+   "steps": [
+    "Data Type: Request",
+    "Repeating Group",
+    "Workflow: create a Request",
+    "Preview: it appears"
+   ],
+   "beats": [
+    {
+     "say": "Create a Data Type called Request, with title, status and requester fields.",
+     "show": 1
+    },
+    {
+     "say": "Add a Repeating Group that searches for Requests, showing each one's title.",
+     "show": 2
+    },
+    {
+     "say": "Add a form and a button, with a workflow: when the button is clicked, create a new Request.",
+     "show": 3
+    },
+    {
+     "say": "Preview, submit, and the new Thing appears without refreshing the page.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "palette",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Highlight urgent requests",
+   "big": "Status is Urgent",
+   "sub": "→ the row turns red",
+   "beats": [
+    {
+     "say": "Next, add a Conditional to the text in each cell: when the current cell's Request's status is urgent, make it red.",
+     "show": 0
+    },
+    {
+     "say": "Set one Thing's status to urgent in the Data tab, and that row turns red.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "shield",
+   "kicker": "Lab · Step 7",
+   "title": "Protect the data, not just the page",
+   "quote": "Hidden on the page ≠ protected. Privacy Rules guard the data itself.",
+   "beats": [
+    {
+     "say": "Finally, a Privacy Rule on Request: logged-in users can view all fields and find it in searches.",
+     "show": 0
+    },
+    {
+     "say": "Uncheck those same permissions for everyone else, then preview logged out. The list is empty.",
+     "show": 1
+    },
+    {
+     "say": "Hiding something on screen doesn't protect it. A privacy rule does, even if someone inspects the page.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a Privacy Rule enforce that simply hiding an element doesn't?",
+   "options": [
+    "A faster page load",
+    "Data-level protection, so restricted data can't be reached even by inspecting the page",
+    "A nicer layout for logged-out users"
+   ],
+   "answer": 1,
+   "good": "That's right. A Privacy Rule is enforced by Bubble at the data level. Hiding an element visually doesn't actually protect the data underneath.",
+   "bad": "Not quite. A Privacy Rule is enforced by Bubble at the data level. Hiding an element visually doesn't actually protect the data underneath.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a Privacy Rule enforce that simply hiding an element doesn't?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Data Type and Repeating Group work",
+     ""
+    ],
+    [
+     "A Workflow creates Things",
+     ""
+    ],
+    [
+     "A Conditional highlights urgent rows",
+     ""
+    ],
+    [
+     "A Privacy Rule protects the data",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a Bubble app with a custom Data Type and a Repeating Group of real Things,",
+     "show": 1
+    },
+    {
+     "say": "a Workflow that creates Things from a form,",
+     "show": 2
+    },
+    {
+     "say": "a working Conditional,",
+     "show": 3
+    },
+    {
+     "say": "and a Privacy Rule limiting visibility to logged-in users.",
+     "show": 4
+    },
+    {
+     "say": "Next, in Module 3, client portals with Softr on Airtable.",
+     "show": 4
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3: Softr - No-Code Portals on Top of Airtable
@@ -273,3 +927,211 @@ You have a published Softr portal connected to a real Airtable base, showing a l
 5. How did the lab keep the admin page separate from what regular client users can see?
 
 *Answers: 1) A pre-built page component — like a List, Table, Chart, or Form — that binds directly to data from a connected source such as Airtable. 2) Because a View is a specific, filtered/sorted way of looking at the data, letting you control what's shown from within Airtable itself rather than rebuilding that filtering logic in Softr. 3) A defined set of logged-in users and what pages or data they're allowed to access. 4) Matching a record's field, like an email address, to the logged-in user, so that user only sees their own record instead of every record in the table. 5) By restricting the admin page to a separate "Admin" User Group, distinct from the client-facing User Group used for record-owned data.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "people",
+   "kicker": "Module 3 · Softr",
+   "title": "No-code portals on Airtable",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "Softr builds client-facing and internal web apps on top of an existing Airtable base, using pre-built Blocks."
+    },
+    {
+     "say": "It's made for portals, where the data already exists and you need a clean, permissioned front end."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Structure at a glance",
+   "title": "Softr's building blocks",
+   "items": [
+    [
+     "Block",
+     "List · Table · Chart · Form"
+    ],
+    [
+     "Airtable View",
+     "Filtered, sorted data"
+    ],
+    [
+     "User Group + ownership",
+     "Each client sees their own"
+    ],
+    [
+     "Action button",
+     "Triggers an Airtable automation"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Softr has four key ideas.",
+     "show": 0
+    },
+    {
+     "say": "A Block is a pre-built page component, like a list, table, chart or form, bound to your data.",
+     "show": 1
+    },
+    {
+     "say": "A Block usually binds to an Airtable View, a filtered, sorted look at a table, so filtering is controlled in Airtable.",
+     "show": 2
+    },
+    {
+     "say": "A User Group defines logged-in users and what they can access. With record ownership, each client sees only their own data.",
+     "show": 3
+    },
+    {
+     "say": "And an action button can trigger an Airtable automation.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "database",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "From base to portal",
+   "steps": [
+    "Airtable: Clients table",
+    "View: Active Clients",
+    "Connect a Softr app",
+    "List Block on the View"
+   ],
+   "beats": [
+    {
+     "say": "Create an Airtable base with a Clients table: name, email and project status.",
+     "show": 1
+    },
+    {
+     "say": "Create an Active Clients view, showing only clients with a project status.",
+     "show": 2
+    },
+    {
+     "say": "Create a Softr app, connected to your base.",
+     "show": 3
+    },
+    {
+     "say": "Add a List Block bound to the Active Clients view, showing name and project status.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "lock",
+   "kicker": "Lab · Steps 5 to 7",
+   "title": "Each client sees only their own",
+   "items": [
+    [
+     "Client User Group",
+     "Login email = Email field"
+    ],
+    [
+     "✓ One record only",
+     "Signed in as a client"
+    ],
+    [
+     "Admin User Group",
+     "Separate page, every client"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Set up a User Group for clients, with record ownership matching their login email to the email field.",
+     "show": 1
+    },
+    {
+     "say": "Publish, sign in as one client, and confirm you see only that one record.",
+     "show": 2
+    },
+    {
+     "say": "Then add an admin-only page with a Table Block of every client, restricted to a separate Admin group. If your free plan lacks a second group, follow along.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does a Softr Block typically bind to an Airtable View instead of the raw table?",
+   "options": [
+    "Raw tables can't be connected",
+    "Views load faster on phones",
+    "A View is already filtered and sorted, so you control what's shown from Airtable itself"
+   ],
+   "answer": 2,
+   "good": "That's right. A View lets you control filtering from within Airtable, instead of rebuilding that logic in Softr.",
+   "bad": "Not quite. A View lets you control filtering from within Airtable, instead of rebuilding that logic in Softr.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does a Softr Block typically bind to an Airtable View instead of the raw table?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A published portal on Airtable",
+     ""
+    ],
+    [
+     "Each client sees only their record",
+     ""
+    ],
+    [
+     "An admin-only page shows everything",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a published Softr portal on a real Airtable base,",
+     "show": 1
+    },
+    {
+     "say": "showing each signed-in client only their own record,",
+     "show": 2
+    },
+    {
+     "say": "plus a separate admin-only page showing everything.",
+     "show": 3
+    },
+    {
+     "say": "You've finished Internal Apps. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
