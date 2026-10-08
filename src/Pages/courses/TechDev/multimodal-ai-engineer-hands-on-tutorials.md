@@ -71,6 +71,9 @@ Add a **text cell** headed `comparison_summary` and write your notes in it.
 For each modality combination (text+image, speech+text, text+image-generation), note your top pick and why.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 multimodal_survey_project/
 │
@@ -434,6 +437,9 @@ print(describe_image("resized_image.jpg", "Describe what's in this image in two 
 The `"system"` field is a top-level instruction that applies to the whole conversation; it is not one of the messages. The `media_type` must match the real file type, which is why the function looks at the file extension.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 image_text_project/
 │
@@ -738,6 +744,9 @@ Add a **text cell** headed `feature_notes` and write your notes in it.
 Write 3–4 sentences connecting these hand-extracted features to what a real multimodal model does automatically and at much greater scale.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 feature_extraction_project/
 │
@@ -1011,6 +1020,9 @@ for filename in sorted(os.listdir("images")):
 ```
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 image_captioning_project/
 │
@@ -1756,6 +1768,9 @@ A smaller **distance** means a closer match. Image results show the actual pictu
 Try 5 queries designed to match text content and 5 designed to match image content, and manually judge relevance. Add a **text cell** headed `retrieval_evaluation` and note, for each query, whether the right item came first and any surprises.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 multimodal_search_project/
 │
@@ -2019,6 +2034,9 @@ Add a **text cell** headed `evaluation_report` and write your notes in it.
 Structure: Test set description → Metrics → Scores → Failure mode analysis → Bias check findings → Recommendations for improvement.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 multimodal_evaluation_project/
 │

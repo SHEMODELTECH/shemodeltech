@@ -662,3 +662,5 @@ You have a budget tracker with allocated, actual, and remaining columns, a conti
 - [ ] Built a risk register with prioritized risks, mitigations, and a full contingency plan with an owner
 - [ ] Built a budget tracker with a contingency reserve and a burn-rate comparison against progress
 - [ ] Can explain how scope, timeline, risk, and budget all depend on and constrain each other
+
+**Next:** Analytics, Roadmapping & Collaboration

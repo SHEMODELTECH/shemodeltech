@@ -90,6 +90,9 @@ Structure: System description → Prohibited practice check (cleared) → Annex 
 *Why:* This memo is the foundational document every other artifact in this module (and in a real compliance program) references — it needs to stand on its own as a defensible, written determination.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 eu_ai_act_classification_project/
 │
@@ -438,6 +441,9 @@ Structure: Classification recap (from Project 8) → Applicable obligations → 
 *Why:* This document is your actual project plan for becoming compliant — it's what Projects 10 and 11 execute against.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 obligation_mapping_project/
 │
@@ -780,6 +786,9 @@ Note the current version, what changed from any prior version, and your process 
 *Why:* The Act treats technical documentation as a living artifact tied to a specific system version — undocumented changes to a "compliant" system can invalidate that compliance.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 technical_documentation_project/
 │

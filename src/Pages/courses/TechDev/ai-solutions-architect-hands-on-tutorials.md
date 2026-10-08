@@ -60,6 +60,9 @@ Write 2–3 sentences: broadly, is this a good fit for AI, and roughly what kind
 Combine Steps 3–6 into one page: Business Problem → Stakeholders → Goals → Constraints → Proposed Direction.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 solutions_brief_project/
 │
@@ -364,6 +367,9 @@ Add labels to every arrow (what data/request is flowing) and every box (what the
 Show the diagram to someone unfamiliar with the project and ask them to explain back what they think it shows.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 system_diagram_project/
 │
@@ -686,6 +692,9 @@ Add a **text cell** headed `recommendation` and write your notes in it.
 State which option you'd recommend and why, referencing your matrix directly.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 model_comparison_project/
 │
@@ -959,6 +968,9 @@ Add a **text cell** headed `architecture` and write your notes in it.
 Structure: Pattern chosen and why → Full diagram → Components and their roles → Scalability notes → Rough cost estimate.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 full_architecture_project/
 │
@@ -1269,6 +1281,9 @@ Add a **text cell** headed `data_infra_design` and write your notes in it.
 Structure: Data flow → Storage choices → Network security → Access control → Compliance mapping.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 data_infra_layer_project/
 │
@@ -1549,6 +1564,9 @@ Add a **text cell** headed `governance_risk_plan` and write your notes in it.
 Structure: Risk categories and assessment → Mitigations for top risks → Incident response plan → Responsible AI considerations.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 governance_risk_project/
 │
@@ -1828,6 +1846,9 @@ Run through the full presentation once, timed, ideally to another person.
 Present live or record yourself presenting the full proposal, including handling at least one of your anticipated tough questions.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 architecture_proposal_project/
 │

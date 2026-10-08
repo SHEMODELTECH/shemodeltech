@@ -566,3 +566,5 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
 - [ ] Built, reviewed, and pilot-tested a short survey to measure a pattern from the interview, with a defined sample for the real launch
 - [ ] Can explain why past-behavior questions are more reliable than asking someone to predict future behavior
 - [ ] Can explain why interviews and surveys serve different purposes (depth versus breadth) rather than being interchangeable
+
+**Next:** Product Design

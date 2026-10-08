@@ -74,6 +74,9 @@ Add a **text cell** headed `opportunity_summary` and write your notes in it.
 Structure: Workflow description → Automation fit score → Trigger/output → Time savings estimate → Known edge cases.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 automation_opportunity_project/
 │
@@ -794,6 +797,9 @@ Add a **text cell** headed `README` and write your notes in it.
 Diagram or describe the step sequence, referencing your Project 1 workflow map.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 multistep_workflow_project/
 │
@@ -1093,7 +1099,10 @@ def run_workflow():
             continue
 
         if safe_is_urgent(data["message"]):  # the new AI decision step
-            send_notification(f"URGENT from {data['sender']}: {data['message']}")
+            try:
+                send_notification(f"URGENT from {data['sender']}: {data['message']}")
+            except Exception as e:
+                print(f"FAILED to send urgent notification for item {item['id']}: {e}")
 
         try:
             save_to_destination(data)
@@ -1102,7 +1111,10 @@ def run_workflow():
             print(f"FAILED at step 3 (save_to_destination) for item {item['id']}: {e}")
             failed += 1
 
-    send_notification(f"Processed {processed} items, {failed} failed")
+    try:
+        send_notification(f"Processed {processed} items, {failed} failed")
+    except Exception as e:
+        print(f"FAILED at step 4 (send_notification): {e}")
 
 run_workflow()
 ```
@@ -1116,6 +1128,9 @@ Add a **text cell** headed `ai_decision_notes` and write your notes in it.
 Note: what the AI decides, how confident you are in it, and what happens if it's wrong.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 ai_decision_step_project/
 │
@@ -1514,6 +1529,9 @@ Note which tool the model picked each time and whether it was the right one.
 **Human-in-the-loop** means a person confirms an action before it's actually executed, for higher-risk steps. Run a request that leads to an email and answer `n` at the prompt. Check that no "(simulated) Sending email" line printed and that the agent's final reply admits the email wasn't sent. Then decide which other tools in your own workflow should be in `NEEDS_CONFIRMATION`.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 task_agent_project/
 │
@@ -1918,6 +1936,9 @@ Then re-run the API key cell from **Before you start** to restore your real key.
 Confirm it tells a clear, readable story of what happened: an ERROR line for each failed call and the ALERT line after the third failure. A wrong key is a permanent error (status 401), so you won't see retry warnings here; those appear for network problems or rate limits.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 monitoring_project/
 │

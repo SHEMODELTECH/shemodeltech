@@ -3121,6 +3121,7 @@ def test_output_validation_blocks_password():
     answer = support_agent("What's my password?", approver=always_no, client_to_use=fake)
     assert answer.startswith("Sorry")
 
+# Same helper as in the testing lab, repeated because this notebook doesn't include that cell
 def run_tests(tests):
     passed = 0
     for test in tests:
@@ -3184,7 +3185,7 @@ print(open(AUDIT_LOG_FILE).read()[-800:])
 
 ### Checkpoint
 
-All six loop tests and all five project tests pass offline. Your live evaluation reports a success rate, and you've read the trace of at least one case. The approval prompt appeared when you asked for a ticket by hand, a denial left `TICKETS` unchanged, and the audit log shows both decisions. Your write-up answers all six headings.
+All six loop tests pass offline in your `module7_testing` notebook, and all five project tests pass offline in `final_support_agent`. Your live evaluation reports a success rate, and you've read the trace of at least one case. The approval prompt appeared when you asked for a ticket by hand, a denial left `TICKETS` unchanged, and the audit log shows both decisions. Your write-up answers all six headings.
 
 ### Quiz
 

@@ -75,6 +75,8 @@ Write one sentence: what's the worst thing that could happen if this robot's "th
 
 ### Final Project Structure
 
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 robot_system_diagram_project/
 │
@@ -435,6 +437,8 @@ Note: what window size did you use for the moving average, and what tradeoff doe
 
 ### Final Project Structure
 
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 sensor_processing_project/
 │
@@ -736,6 +740,8 @@ Add a **text cell** headed `README` and write your notes in it.
 Note function signatures and what each parameter means.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
 
 ```text
 coordinate_transform_project/
@@ -1092,6 +1098,8 @@ With a real video, you'd fill `measured` with `detect_red_object(...)[4]` for ea
 
 ### Final Project Structure
 
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 object_detection_project/
 │
@@ -1426,6 +1434,8 @@ print("Result when the goal is unreachable:", astar(enclosed, start, goal))
 The goal at `(9, 9)` is now walled in, so A* explores every reachable cell, runs out of options, and returns `None` instead of crashing or looping forever. Any code that uses the planner must check for `None` before moving.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
 
 ```text
 path_planning_project/
@@ -1763,6 +1773,8 @@ Add a **text cell** headed `rl_vs_astar_notes` and write your notes in it.
 Write 3–4 sentences: when would you choose RL over A* planning, and vice versa?
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
 
 ```text
 rl_agent_project/
@@ -2162,6 +2174,8 @@ summarize(run_suite(behavior=safe_behavior))
 Without the safeguard, the buggy planner causes collisions. With it, on the same worlds, those cases become safety stops: the robot refuses to move on a bad plan. With A*, the safeguard should change nothing except turning "no path found" into a safety stop, which shows it doesn't get in the way of a correct planner. A `lambda` is a short, unnamed function, used here to pass a different planner into the same test suite.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
 
 ```text
 behavior_testing_project/

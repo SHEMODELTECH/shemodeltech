@@ -11,7 +11,7 @@ Quality assurance (QA) is the work of making sure software does what it should, 
 The modules build on each other, so take them in this order:
 
 1. **QA Fundamentals.** How software gets built (the SDLC), how testing is planned alongside it (the STLC), and the principles that decide what to test. No tools needed.
-2. **Manual Testing.** Writing clear test cases, reporting bugs a developer can act on, and exploratory testing. No tools needed.
+2. **Manual Testing.** Writing clear test cases, reporting bugs a developer can act on, and exploratory testing. All you need is a web browser and two free practice sites.
 3. **Automation Testing.** Turning repeatable checks into code with Selenium and Playwright, and how to write tests that stay reliable.
 4. **API Testing.** Testing the services behind an app with Postman and Swagger, and running test suites from the terminal with Newman (or the Postman CLI).
 5. **Performance Testing.** Measuring how software behaves under load with Apache JMeter.
@@ -77,7 +77,7 @@ The modules build on each other, so take them in this order:
      "show": 1
     },
     {
-     "say": "Module 2, Manual Testing: clear test cases, useful bug reports, and exploratory testing. No tools needed for either.",
+     "say": "Module 2, Manual Testing: clear test cases, useful bug reports, and exploratory testing. All you need is a web browser.",
      "show": 2
     },
     {

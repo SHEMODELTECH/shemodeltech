@@ -74,6 +74,9 @@ Ask: if this system's flaws became public, what would the story be?
 For each category, rate likelihood and severity (Low/Medium/High), and write a short summary of the top concerns.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 risk_overview_project/
 │
@@ -433,6 +436,9 @@ Add a **text cell** headed `README` and write your notes in it.
 Note the fields in each log entry and how to add new ones later (e.g., a `flagged` field for review status).
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 output_logging_project/
 │
@@ -737,6 +743,9 @@ For each finding, note what you found, how large the disparity is, and how conce
 Suggest at least one mitigation (e.g., rebalancing the dataset, removing a proxy variable, adjusting labels).
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 dataset_fairness_audit_project/
 │
@@ -1051,6 +1060,9 @@ Add a **text cell** headed `bias_evaluation_report` and write your notes in it.
 Structure: Method → Dimensions tested → Aggregate findings → Severity assessment → Recommendations.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 bias_evaluation_project/
 │
@@ -1360,6 +1372,9 @@ Add a **text cell** headed `red_team_report` and write your notes in it.
 Structure: Boundaries tested → Techniques used → Results per technique → Overall system resilience assessment → Recommendations.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 red_teaming_project/
 │
@@ -1646,6 +1661,9 @@ Create a checklist an organization would run through before deploying this syste
 Walk through your own checklist as if reviewing someone else's system, and note anything incomplete or unconvincing.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 model_card_project/
 │

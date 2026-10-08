@@ -1141,8 +1141,8 @@ You have a working flow with a condition branching into two different actions, a
 flowchart LR
     W["<b>Webhook</b><br/><br/>Trigger node"]
     IF{"<b>IF node</b><br/><br/>status = 'approved'?"}
-    S1["Set node<br/><br/>true branch"]
-    S2["Set node<br/><br/>false branch"]
+    S1["Edit Fields (Set)<br/><br/>true branch"]
+    S2["Edit Fields (Set)<br/><br/>false branch"]
     F["<b>Code node</b><br/><br/>custom JavaScript"]
 
     W ==> IF
@@ -1156,7 +1156,7 @@ flowchart LR
     style F fill:#EBEBEB,color:#1a202c,stroke:#000000,stroke-width:4px
     linkStyle default stroke-width:4px,stroke:#333333
 ```
-- A **node** is n8n's term for a single step, trigger or action, matching "module" in Make and "action" in Zapier
+- A **node** is n8n's term for a single step, trigger or action, matching "module" in Make and "action" in Zapier and Power Automate
 - A **workflow** is the connected chain of nodes
 - An **IF node** branches based on a condition, similar to Make's router or Power Automate's condition step
 - A **Code node** (it replaced the older Function node) lets you write JavaScript or Python when a built-in node can't do exactly what's needed. Other tools have similar options, such as Code by Zapier and Power Automate's expressions, but in n8n code is a normal, everyday part of building
@@ -1209,7 +1209,7 @@ You have a working n8n workflow triggered by a real webhook request, branching w
 4. What does a Code node let you do, and is n8n the only tool in this course that lets you add code?
 5. What kind of trigger did the lab use to receive real data from outside n8n?
 
-*Answers: 1) A single step in a workflow, either a trigger or an action, n8n's equivalent of Make's "module" or Power Automate's "connector-based action." 2) Running the platform on your own server rather than a vendor's cloud, giving more control over data location and cost, particularly at scale. 3) It branches the workflow into different paths depending on whether a condition is true or false. 4) Write JavaScript (or Python) directly inside a workflow step, for logic too specific for a built-in node; no, Zapier has Code by Zapier and Power Automate has expressions, but n8n makes code an everyday part of building. 5) A Webhook trigger, which generates a URL that an external system (or a manual curl request) can call to start the workflow with real data.*
+*Answers: 1) A single step in a workflow, either a trigger or an action, n8n's equivalent of a "module" in Make or an "action" in Zapier and Power Automate. 2) Running the platform on your own server rather than a vendor's cloud, giving more control over data location and cost, particularly at scale. 3) It branches the workflow into different paths depending on whether a condition is true or false. 4) Write JavaScript (or Python) directly inside a workflow step, for logic too specific for a built-in node; no, Zapier has Code by Zapier and Power Automate has expressions, but n8n makes code an everyday part of building. 5) A Webhook trigger, which generates a URL that an external system (or a manual curl request) can call to start the workflow with real data.*
 
 ```watch
 {

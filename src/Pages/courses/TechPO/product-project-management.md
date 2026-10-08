@@ -642,3 +642,5 @@ You have a tool recommendation with reasoning for a specific team, one working b
 - [ ] Chosen and justified a collaboration tool (Jira, Trello, Asana, or Notion) for a specific team
 - [ ] Created a working board/project with real tasks moved through at least one status change
 - [ ] Noted where a documentation tool like Notion would fit alongside the chosen tracking tool
+
+**Next:** you've finished the TechPO track.

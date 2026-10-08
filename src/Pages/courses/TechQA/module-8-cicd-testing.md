@@ -147,7 +147,7 @@ flowchart LR
 
 #### Where you'd actually use this
 
-Every single pipeline run in Module 8.1 is regression testing in practice, but it's also directly relevant any time a fix is made to one part of an app and you need a defensible answer to "are you sure this didn't break anything else," rather than just a gut feeling.
+Every single pipeline run in Topic 8.1 is regression testing in practice, but it's also directly relevant any time a fix is made to one part of an app and you need a defensible answer to "are you sure this didn't break anything else," rather than just a gut feeling.
 
 #### Lab
 
@@ -233,9 +233,9 @@ Merges keep failing on a login test that passes when re-run. The saved reports s
 
 #### Lab
 
-1. **Reuse the repository and workflow from Topics 8.1 and 8.2.** If your tests use pytest, change the full test suite step to write a JUnit report:
-   ```bash
-   pytest --junitxml=report.xml
+1. **Reuse the repository and workflow from Topics 8.1 and 8.2.** If your tests use pytest, open the workflow file and edit the `run:` line of the full test suite step (not a terminal command) so it writes a JUnit report:
+   ```yaml
+   run: pytest --junitxml=report.xml
    ```
    (Most test runners can write JUnit XML too: Playwright has a built-in `junit` reporter, and Jest does it with the `jest-junit` package.)
 2. **Save the report as an artifact** by adding this step after your tests in the workflow file, indented to line up with your other `- name:` steps:

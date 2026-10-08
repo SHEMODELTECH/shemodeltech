@@ -71,6 +71,9 @@ List: cost limits, data availability, privacy concerns, and what happens if the 
 Combine Steps 3–7 into one page: Problem → User → Solution → Success Metric → Constraints/Risks.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 ai_product_brief_project/
 │
@@ -385,6 +388,9 @@ Add a **text cell** headed `prototype_notes` and write your notes in it.
 Write down cases where the output was wrong, confusing, or unhelpful.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 ai_feature_prototype_project/
 │
@@ -644,6 +650,9 @@ A **guardrail** is a rule that keeps the AI within intended bounds (e.g., "refus
 Try: an off-topic question, an ambiguous question, and an empty message. The API rejects an empty message with an error, so add a check at the top of `chat()` (for example, `if not user_message.strip(): return "Please type a message."`) instead of letting it crash.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 chatbot_prototype_project/
 │
@@ -910,6 +919,9 @@ Add a **text cell** headed `discovery_doc` and write your notes in it.
 Structure: Who you talked to → What you asked → Key insights → What changes for the feature.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 discovery_doc_project/
 │
@@ -1150,6 +1162,9 @@ Sketch what the user sees when the API fails, times out, or returns something un
 Combine Steps 2–6 into one sequence, either as simple mockup screens or a written step-by-step description.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 feature_flow_project/
 │
@@ -1421,6 +1436,9 @@ Add a **text cell** headed `evaluation_plan` and write your notes in it.
 Structure: Test set → Rubric → Baseline scores → Quality vs. business metrics → Feedback loop plan.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 evaluation_plan_project/
 │
@@ -1686,6 +1704,9 @@ Add a **text cell** headed `launch_plan` and write your notes in it.
 Structure: Launch scope → Criteria to launch → Rollout stages → Stakeholders → Post-launch monitoring plan.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 launch_plan_project/
 │

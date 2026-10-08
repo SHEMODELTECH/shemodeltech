@@ -103,6 +103,8 @@ flowchart TB
 
 ### Final Project Structure
 
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 agent_platform_diagram_project/
 │
@@ -2432,6 +2434,8 @@ class SecureToolRegistry(ToolRegistry):
         return LEVEL_RANK[user_level] >= LEVEL_RANK[required_level]
 
     def execute(self, name, agent_id, user_permission_level, **kwargs):
+        if name not in self.tools:
+            return f"Error: unknown tool '{name}'."
         required_level = PERMISSION_LEVELS.get(name, "restricted")
         if not self._has_access(user_permission_level, required_level):
             raise PermissionError(f"Access denied to tool: {name}")
@@ -2453,7 +2457,7 @@ def build_secure_registry():
 registry = build_secure_registry()
 ```
 
-Every call now says which agent is calling (`agent_id`) and at what level (`user_permission_level`). A tool missing from `PERMISSION_LEVELS` defaults to "restricted". This is **least privilege**: access must be explicitly granted rather than assumed.
+Every call now says which agent is calling (`agent_id`) and at what level (`user_permission_level`). A name that was never registered gets the same "unknown tool" error as in Project 4. A registered tool missing from `PERMISSION_LEVELS` defaults to "restricted". This is **least privilege**: access must be explicitly granted rather than assumed.
 
 **Step 4: Test permission enforcement.**
 
@@ -2499,6 +2503,8 @@ class SecureToolRegistry(ToolRegistry):
         return LEVEL_RANK[user_level] >= LEVEL_RANK[required_level]
 
     def execute(self, name, agent_id, user_permission_level, **kwargs):
+        if name not in self.tools:
+            return f"Error: unknown tool '{name}'."
         required_level = PERMISSION_LEVELS.get(name, "restricted")
         allowed = self._has_access(user_permission_level, required_level)
         if not allowed:
@@ -2931,6 +2937,8 @@ class SecureToolRegistry(ToolRegistry):
         return LEVEL_RANK[user_level] >= LEVEL_RANK[required_level]
 
     def execute(self, name, agent_id, user_permission_level, **kwargs):
+        if name not in self.tools:
+            return f"Error: unknown tool '{name}'."
         required_level = PERMISSION_LEVELS.get(name, "restricted")
         allowed = self._has_access(user_permission_level, required_level)
         if not allowed:
@@ -3064,7 +3072,7 @@ async with platform_session("intern-bot", "public") as session:
 print("Permission test passed.")
 ```
 
-Expected output: both restricted calls come back with `Error executing tool send_email: Access denied to tool: send_email` (and the same for `search_notes`) and `error? True`, the public `get_weather` call works, and the last line says the test passed. If an `assert` fails, the check isn't in front of that tool: look at `expose` in Step 3.
+Expected output: both restricted calls come back with `error? True` and the readable `ToolError` message from Step 3, `Access denied to tool: send_email` (and the same for `search_notes`). The public `get_weather` call works, and the last line says the test passed. If an `assert` fails, the check isn't in front of that tool: look at `expose` in Step 3.
 
 Now check the audit log. The server wrote it, not the notebook, so this also proves the log works across the MCP boundary:
 

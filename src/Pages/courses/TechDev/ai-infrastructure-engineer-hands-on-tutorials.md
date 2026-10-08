@@ -2520,14 +2520,14 @@ You don't need the Kubernetes cluster from Project 6. This project runs the same
 **Step 1: Set up the project folders.**
 
 ```bash
-mkdir -p monitoring_project/app monitoring_project/prometheus
-mkdir -p monitoring_project/grafana/provisioning/datasources
-mkdir -p monitoring_project/grafana/provisioning/dashboards
-mkdir -p monitoring_project/grafana/dashboards
-cd monitoring_project
+mkdir -p observability_project/app observability_project/prometheus
+mkdir -p observability_project/grafana/provisioning/datasources
+mkdir -p observability_project/grafana/provisioning/dashboards
+mkdir -p observability_project/grafana/dashboards
+cd observability_project
 ```
 
-`mkdir -p` creates a folder and any missing parent folders in one go. Run every later command from inside `monitoring_project`.
+`mkdir -p` creates a folder and any missing parent folders in one go. Run every later command from inside `observability_project`.
 
 **Step 2: Decide what's worth measuring.**
 For a model API, four signals tell you most of what you need: **traffic** (how many requests per second?), **errors** (what share are failing?), **latency** (how long do they take?), and **saturation** (how busy is it, such as how many requests are in progress right now?). You'll record one metric type for each idea:
@@ -2681,7 +2681,7 @@ cd app
 uvicorn main:app --port 8000
 ```
 
-In a second terminal (also in `monitoring_project`), send one good and one bad request, then read the metrics:
+In a second terminal (also in `observability_project`), send one good and one bad request, then read the metrics:
 
 ```bash
 curl -s -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d '{"text": "I love this"}'
@@ -2703,7 +2703,7 @@ http_requests_in_progress{endpoint="/predict"} 0.0
 This is the Prometheus **text format**: metric name, labels in braces, current value. Each histogram `_bucket` line counts requests that took *at most* `le` ("less than or equal") seconds. You'll also see `_created` lines; they're timestamps the library adds, and you can ignore them. Keep the API running for the next step.
 
 **Step 5: Write a load script.**
-Metrics are only interesting with traffic. Create `load.py` in `monitoring_project`:
+Metrics are only interesting with traffic. Create `load.py` in `observability_project`:
 
 ```python
 """Send steady traffic to the sentiment API, with some bad requests mixed in.
@@ -2786,7 +2786,7 @@ Done: 270 requests
   400: 27
 ```
 
-Run `curl -s http://localhost:8000/metrics | grep "^http_requests_total"` again: the counters jumped. Now stop the API in the first terminal with **Ctrl + C** and run `cd ..` to go back to `monitoring_project`. From here on, Docker runs the API.
+Run `curl -s http://localhost:8000/metrics | grep "^http_requests_total"` again: the counters jumped. Now stop the API in the first terminal with **Ctrl + C** and run `cd ..` to go back to `observability_project`. From here on, Docker runs the API.
 
 **Step 6: Configure Prometheus.**
 **Prometheus** is an open-source monitoring system. Every few seconds it **scrapes** (pulls) each target's `/metrics` page and stores the numbers as time series. Create `prometheus/prometheus.yml`:
@@ -2979,7 +2979,7 @@ python -c "import json; json.load(open('grafana/dashboards/sentiment-api.json'))
 ```
 
 **Step 8: Write the Compose file.**
-Create `docker-compose.yml` in `monitoring_project`:
+Create `docker-compose.yml` in `observability_project`:
 
 ```yaml
 services:
@@ -3121,7 +3121,7 @@ deactivate
 ### Final Project Structure
 
 ```text
-monitoring_project/
+observability_project/
 │
 ├── app/
 │   ├── main.py
@@ -3154,7 +3154,7 @@ monitoring_project/
 **Model API Monitoring & Alerting Stack**: Instrumented a model-serving API with Prometheus metrics (request counts by status, latency histogram, in-progress gauge), ran it with Prometheus and a provisioned Grafana dashboard in Docker Compose, and verified error-rate and p95-latency alerts by simulating bad releases.
 **Skills:** Observability, Prometheus, PromQL, Grafana, Docker Compose, Alerting, Site Reliability Fundamentals, AI Infrastructure.
 
-**Deliverable:** The `monitoring_project` folder (instrumented API, Compose file, Prometheus rules, Grafana dashboard JSON, load script), a screenshot of the dashboard and of a firing alert, and your threshold notes.
+**Deliverable:** The `observability_project` folder (instrumented API, Compose file, Prometheus rules, Grafana dashboard JSON, load script), a screenshot of the dashboard and of a firing alert, and your threshold notes.
 
 ### Quiz
 
@@ -3392,7 +3392,7 @@ monitoring_project/
      "show": 0
     },
     {
-     "say": "your monitoring project folder has the instrumented A P I, Compose file, Prometheus rules, Grafana dashboard and load script,",
+     "say": "your observability project folder has the instrumented A P I, Compose file, Prometheus rules, Grafana dashboard and load script,",
      "show": 1
     },
     {

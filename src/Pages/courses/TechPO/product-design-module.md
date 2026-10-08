@@ -598,3 +598,5 @@ You have reviewed your own wireframe or flow against all four principles, consis
 - [ ] Reviewed a wireframe or flow against all four UX principles with a specific improvement identified for each
 - [ ] Can explain the difference between what a wireframe, a user flow, and a UX principle each address
 - [ ] Can explain why mapping error paths and edge cases matters as much as mapping the happy path
+
+**Next:** Agile

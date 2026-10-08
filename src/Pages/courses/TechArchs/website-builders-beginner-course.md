@@ -879,6 +879,14 @@ flowchart LR
 
 A small business owner who needs a working website fast, along with real functionality — appointment booking, an online store, a contact form that emails submissions — without hiring a developer or configuring separate third-party tools.
 
+**Choosing between them.** Now that you've seen all three, here's how they compare:
+
+| Tool | Its strength | Pick it for |
+|---|---|---|
+| **Webflow** | Near-code-level control that generates real HTML and CSS, plus a built-in CMS | Sites that must match a brand exactly, and content-heavy sites like blogs or large portfolios |
+| **Framer** | Design-first layout with stacks, polished animations, interactive components, and AI-assisted generation | High-design landing pages and portfolios where motion and polish matter |
+| **Wix** | Ease and speed, with App Market apps (bookings, stores, forms) managed from the Dashboard | Small businesses that need a working site with real functionality fast |
+
 ### Lab
 
 1. **Create a new Wix site** (either starting blank or using the AI-assisted setup with a few prompts about your business type).

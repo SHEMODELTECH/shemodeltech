@@ -664,3 +664,5 @@ You have a sprint's worth of backlog items estimated in story points, selected t
 - [ ] Estimated a backlog in story points, selected work to match an assumed velocity, and written a sprint goal and Definition of Done
 - [ ] Can explain the key structural difference between Scrum's fixed sprints and Kanban's continuous flow
 - [ ] Can explain why WIP limits and a clear Definition of Done each prevent a specific, common team problem
+
+**Next:** Project Management

@@ -609,9 +609,9 @@ Go to **Projects**, then **All Projects**. Each project card shows a label that 
 - **Open to Join**: the team is open, and you can apply for a role now.
 - **Closed**: the team is full.
 
-Members 13 and older can join free projects. Tap **Join the Project** on any project you like.
+Members 13 and older can join free projects. Tap **Join the Project** on a project card (or anywhere on the card) to open the project's page. What you can do there depends on its label.
 
-**On a project that is open to join**, open it and tap **Apply to this project**. You will:
+**On a project that is open to join**, tap **Apply to This Project** on its page. A short application form opens, where you:
 
 1. Choose the **role** you want on the team.
 2. Choose the **badge track** this project should count toward.
@@ -619,17 +619,19 @@ Members 13 and older can join free projects. Tap **Join the Project** on any pro
 
 The project lead reviews applications. When you're approved, you'll get a notification and the project appears in your **Workspace**. Every role is open to every level. Roles marked **Good for beginners** are a great start; roles marked **Stretch role** are best with some experience, but you can still apply and challenge yourself.
 
-**On a project that needs a lead or is being set up**, you choose how to join:
+**On a project that needs a lead**, tap **Join** on its page, then choose how to join:
 
 - **Lead this project**: apply to lead it (see Section 5).
-- **Be a collaborator**: we'll notify you as soon as the lead opens roles, so you can apply first.
+- **Join the team**: be a collaborator. We'll notify you as soon as the lead opens roles, so you can apply first.
+
+**On a project that is being set up**, the card shows **Ongoing application** instead of Join the Project. Open it and tap **Join** to go on the list, and we'll notify you as soon as the lead opens roles.
 
 **Paid projects** are run and paid for by She Model Tech, for members 18 and older who have earned at least one badge. The pay for each role is shown before you apply, and you're paid by PayPal or Wise after the work is reviewed. Add your payout email in **Settings**, **Account**. Paid projects don't award badges, so free projects are where you earn them.
 
 #### Quiz
 1. What does the "Open to Join" label mean?
 2. What two things do you choose when you apply to a project that is open to join?
-3. On a project that needs a lead, what happens if you choose "Be a collaborator"?
+3. On a project that needs a lead, what happens if you choose "Join the team"?
 4. Who can apply to paid projects, and do they award badges?
 
 *Answers: 1) The team is open, and you can apply for a role now. 2) The role you want on the team and the badge track the project should count toward. 3) You're notified as soon as the lead opens roles, so you can apply first. 4) Members 18 and older who have earned at least one badge can apply; paid projects pay you instead of awarding a badge.*
@@ -734,7 +736,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
   {
    "kind": "list",
    "art": "fork",
-   "kicker": "Needs a lead, or being set up",
+   "kicker": "Needs a lead",
    "title": "Choose how to join",
    "items": [
     [
@@ -742,7 +744,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
      "Apply to lead it"
     ],
     [
-     "Be a collaborator",
+     "Join the team",
      "Notified first when roles open"
     ]
    ],
@@ -752,7 +754,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
      "show": 0
     },
     {
-     "say": "On a project that needs a lead or is being set up, you choose how to join.",
+     "say": "On a project that needs a lead, tap Join, and choose how to join.",
      "show": 0
     },
     {
@@ -760,7 +762,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
      "show": 1
     },
     {
-     "say": "Or be a collaborator. You're notified as soon as the lead opens roles, so you can apply first.",
+     "say": "Or join the team as a collaborator. You're notified as soon as the lead opens roles, so you can apply first.",
      "show": 2
     }
    ]
@@ -811,7 +813,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
    "kind": "quiz",
    "art": "ask",
    "kicker": "Quick check",
-   "title": "On a project that needs a lead, what happens if you choose Be a collaborator?",
+   "title": "On a project that needs a lead, what happens if you choose Join the team?",
    "options": [
     "You become the lead",
     "You're notified as soon as the lead opens roles, so you can apply first",
@@ -826,7 +828,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
      "show": 0
     },
     {
-     "say": "On a project that needs a lead, what happens if you choose Be a collaborator?",
+     "say": "On a project that needs a lead, what happens if you choose Join the team?",
      "show": 0
     },
     {
@@ -885,7 +887,7 @@ The project lead reviews applications. When you're approved, you'll get a notifi
 
 You don't need badges or past experience to lead. Leading is a skill-building path of its own.
 
-**To apply**, open a project labelled **Needs a Lead**, tap **Join the Project**, and choose **Lead this project**. You'll:
+**To apply**, find a project labelled **Needs a Lead**, tap **Join the Project** to open it, tap **Join**, and choose **Lead this project**. You'll:
 
 1. **Rank up to three projects** in order. If someone else leads your first choice, we look at your second and third.
 2. Say in a couple of sentences **why you want to lead**.
@@ -931,7 +933,7 @@ Leads earn a TechPO (Product / Project Owner) badge when the project is complete
    ],
    "beats": [
     {
-     "say": "Open a project labelled Needs a Lead, tap Join the Project, and choose Lead this project.",
+     "say": "Find a project labelled Needs a Lead, tap Join the Project to open it, tap Join, and choose Lead this project.",
      "show": 0
     },
     {

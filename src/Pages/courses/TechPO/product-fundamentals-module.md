@@ -620,3 +620,5 @@ You have written a vision statement, a supporting strategy, a small consistent r
 - [ ] Written a vision statement, a supporting strategy, and a small consistent roadmap for a product idea
 - [ ] Can explain the difference between vision, strategy, and roadmap, and how often each is expected to change
 - [ ] Can explain why an MVP is scoped around a hypothesis rather than being a smaller version of the full product
+
+**Next:** User Research

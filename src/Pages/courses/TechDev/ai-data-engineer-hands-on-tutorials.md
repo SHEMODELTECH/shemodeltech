@@ -69,6 +69,9 @@ flowchart LR
 ```
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 data_pipeline_map_project/
 │
@@ -382,6 +385,9 @@ df.to_csv("cleaned_data.csv", index=False)
 Download `raw_data.csv` and `cleaned_data.csv` from the **Files** panel (right-click → **Download**). Projects 4, 5, and 7 use them.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 data_cleaning_project/
 │
@@ -707,6 +713,9 @@ erDiagram
 ```
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 schema_design_project/
 │
@@ -1021,6 +1030,9 @@ def run_pipeline(path, table_name, engine):
 Run it on a file once more (for example `new_data.csv`), then open `pipeline.log` from the **Files** panel. A log is a lasting record of every run, so you can see what happened even after the notebook output is gone. `force=True` replaces any logging setup Colab already has.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 etl_pipeline_project/
 │
@@ -1311,6 +1323,9 @@ test.to_csv("test.csv", index=False)
 ```
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 labeled_dataset_project/
 │
@@ -1589,6 +1604,9 @@ Add a **text cell** headed `vector_store_notes` and write your notes in it.
 Record chunk size, overlap, embedding model used, and your retrieval evaluation results.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 vector_store_project/
 │
@@ -1912,6 +1930,9 @@ except AssertionError as error:
 It stops too, naming the invalid date and the unexpected `feature request` category from Project 2. Decide what the right fix is (update `ALLOWED_CATEGORIES`, or drop or relabel those rows in `transform`) and write your decision in the `validation_rules` cell.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 data_validation_project/
 │

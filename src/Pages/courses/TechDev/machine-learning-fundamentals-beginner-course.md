@@ -1660,19 +1660,23 @@ At depth 1 to 3 the tree underfits: train and test scores are close but both low
 ```python
 from sklearn.datasets import load_breast_cancer
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 X, y = load_breast_cancer(return_X_y=True)
+# Step 1 of the honest workflow: set the test set aside first
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
 
 pipe = Pipeline([
     ("scale", StandardScaler()),
     ("model", LogisticRegression(max_iter=1000)),
 ])
 
-# 5-fold cross-validation: 5 different train/validation splits
-scores = cross_val_score(pipe, X, y, cv=5)
+# 5-fold cross-validation on the training set only: 5 different train/validation splits
+scores = cross_val_score(pipe, X_train, y_train, cv=5)
 print("Fold scores:", scores.round(3))
 print(f"Mean: {scores.mean():.3f}  (+/- {scores.std():.3f})")
 ```
@@ -1680,11 +1684,11 @@ print(f"Mean: {scores.mean():.3f}  (+/- {scores.std():.3f})")
 Expected output:
 
 ```
-Fold scores: [0.982 0.982 0.974 0.974 0.991]
-Mean: 0.981  (+/- 0.007)
+Fold scores: [0.977 0.976 0.953 0.965 0.976]
+Mean: 0.969  (+/- 0.009)
 ```
 
-The pipeline behaves like a single model: `pipe.fit(...)` scales then trains, and `pipe.predict(...)` scales new data with the training statistics, then predicts. `cross_val_score` re-fits the whole pipeline (scaler included) on each fold. (This part demonstrates CV on the full dataset for simplicity. In a real project you would run it on the training set only, as in Part 4.)
+The pipeline behaves like a single model: `pipe.fit(...)` scales then trains, and `pipe.predict(...)` scales new data with the training statistics, then predicts. `cross_val_score` re-fits the whole pipeline (scaler included) on each fold. The test set (`X_test`, `y_test`) stays untouched here; we'll use the same split again in Part 4.
 
 **Part 3: leakage that turns random noise into a "great" model.**
 

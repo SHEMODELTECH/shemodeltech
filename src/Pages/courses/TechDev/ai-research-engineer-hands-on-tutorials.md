@@ -88,6 +88,9 @@ You should see a mean accuracy of about 0.98. **Cross-validation** splits the da
 Run your script and record the metric. Note how close (or far) you are from the paper's reported number, and list possible reasons for any gap (different data split, missing preprocessing, settings the paper didn't report).
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 paper_reproduction_project/
 │
@@ -697,6 +700,9 @@ print(f"Final: w={w:.3f}, b={b:.3f}")
 `w` should end close to 3 and `b` close to 1.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 gradient_descent_project/
 │
@@ -960,6 +966,7 @@ Create a new notebook for this project (**File → New notebook**) and name it `
 
 **Step 2: Load your Project 2 dataset and separate features from labels.**
 ```python
+import pandas as pd
 from sklearn.datasets import load_breast_cancer
 
 df = load_breast_cancer(as_frame=True).frame
@@ -1021,6 +1028,9 @@ Add a **text cell** headed `baseline_results` and write your notes in it.
 Record both models' scores.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 baseline_model_project/
 │
@@ -1335,6 +1345,9 @@ The loss falls toward zero and the outputs end up near 0, 1, 1, 0, matching the 
 If time allows, implement the same tiny network in PyTorch or TensorFlow and confirm it also solves XOR.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 neural_network_project/
 │
@@ -1681,6 +1694,9 @@ For each variant: what you predicted, what happened, and by how much.
 State which components matter most, based on the evidence, and note any surprises. For example: removing the hidden layer breaks the model completely, while ReLU usually works but failed on one seed out of five.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 ablation_study_project/
 │
@@ -1983,6 +1999,9 @@ Explain what the results mean, note limitations (small dataset, few repetitions,
 Now that the rest is written, distill it into your 3–5 sentence summary.
 
 ### Final Project Structure
+
+*If you worked in a notebook, these are the sections of your notebook (text and code cells), not separate files. Save or export them as files when you put the project in your portfolio.*
+
 ```text
 research_report_project/
 │

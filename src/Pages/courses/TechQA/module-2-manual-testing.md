@@ -22,6 +22,7 @@ A **test case** is a specific, repeatable procedure, one set of preconditions, s
 - A **test case ID** and **title** identify the case and what it checks
 - **Preconditions** describe the state the system must be in before the case starts (logged in, a specific record already exists, and so on)
 - **Steps** are the exact, numbered actions to perform, written specifically enough that someone else could follow them without guessing
+- **Test data** is the exact input values the steps use (a specific username, password, or search term), so every run uses the same inputs
 - **Expected result** is what should happen if the behavior is correct, stated precisely enough to compare against the **actual result** after running it
 - A **test suite** is a group of related test cases, usually covering one feature or module
 
@@ -85,11 +86,13 @@ You have three properly structured test cases with real test data, "executed" wi
 
 - **Title** - a short, specific summary of the problem
 - **Steps to reproduce** - the exact numbered actions that trigger the bug
-- **Expected vs. actual result** - what should have happened, versus what actually did
+- **Expected result** - what should have happened
+- **Actual result** - what actually happened instead
 - **Severity** - how bad the impact is (crashes the app vs. a typo)
 - **Priority** - how soon it needs fixing (urgent for the next release vs. can wait)
 - **Environment** - browser, OS, device, app version, anything that could affect reproducibility
-- **Evidence** - screenshots, screen recordings, or logs that back up the report
+
+Plus, wherever possible, **evidence**: screenshots, screen recordings, or logs that back up the report.
 
 #### Structure at a Glance
 

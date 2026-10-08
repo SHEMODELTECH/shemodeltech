@@ -2022,7 +2022,7 @@ Channel labels     6                                      Merged spelling varian
       Outliers     1 1029: 200 -> 2 (owner confirmed typo); kept 1009, 1028 (real school orders)
 ```
 
-That table is your **cleaning log**. Paste it into any report you write from this data.
+That table is your **cleaning log**. Paste it into any report you write from this data. (Why 6 channel rows when there were nine spellings? The count only includes rows whose text actually changed; rows already spelled `Website`, `Instagram` or `Email`, including `Instagram ` once its stray space was stripped, weren't counted.)
 
 **Step 6: Verify.** Compare your cleaned table to the clean dataset you've been using since Module 2.
 
