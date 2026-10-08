@@ -416,10 +416,26 @@ export const CourseReferences = ({ refs, compact = false, inline = false }) => {
 // ---- Interactive course player ----
 // Self-contained HTML courses bring their own navigation, labs, and quizzes, so
 // they run full-width in a frame under a slim bar with the course controls.
-// Built-in interactive courses can also have narrated Watch videos, one per
-// module, stored in ./interactiveWatch/<slug>.json (loaded only when needed).
+// Interactive courses can also have narrated Watch videos, one per module,
+// stored in ./interactiveWatch/<slug>.json (loaded only when needed). Mentor
+// copies of the same course published from Teacher get them too: they're
+// recognised by the course title inside their HTML and matched module by
+// module on title (extra.json holds modules only an older version has).
 const loadInteractiveWatch = (slug) =>
   import(`./interactiveWatch/${slug}.json`).then((m) => (Array.isArray(m.default) ? m.default : null)).catch(() => null);
+const loadExtraWatch = () => import('./interactiveWatch/extra.json').then((m) => m.default || {}).catch(() => ({}));
+const WATCH_BY_TITLE = { 'computer vision': 'computer-vision', 'advanced models': 'advanced-models' };
+const htmlCourseInfo = (html) => {
+  const t = /const\s+COURSE\s*=\s*\{\s*title\s*:\s*"([^"]+)"/.exec(html || '');
+  const slug = t ? WATCH_BY_TITLE[t[1].trim().toLowerCase()] : null;
+  if (!slug) return null;
+  const titles = [...String(html).matchAll(/\{\s*n\s*:\s*\d+\s*,\s*part\s*:\s*\d+\s*,\s*title\s*:\s*"([^"]+)"/g)].map((m) => m[1]);
+  return titles.length ? { slug, titles } : null;
+};
+const builtInModuleTitles = (slug) => {
+  const c = coursesForTrack('TechDev').find((x) => x.slug === slug);
+  return c ? (c.modules || []).map((m) => m.title) : [];
+};
 
 const ModeSwitch = ({ mode, onChange }) => (
   <div className="wp-switch !m-0" role="group" aria-label="How do you want to learn this course?">
@@ -441,32 +457,48 @@ const ModeSwitch = ({ mode, onChange }) => (
 );
 
 export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, onOpen, onCertificate }) => {
+  // Videos available for this course: [{ num, title, script }] in course order.
   const [scripts, setScripts] = useState(null);
   const [mode, setMode] = useState('read');
   const [mi, setMi] = useState(0);
-  const titles = useMemo(() => (course.modules || []).map((m) => m.title), [course.modules]);
 
   useEffect(() => {
     let alive = true;
     setScripts(null);
-    if (course.kind === 'interactive' && course.html == null && course.slug) {
-      loadInteractiveWatch(course.slug).then((list) => {
-        if (!alive) return;
-        setScripts(list && list.length ? list : null);
+    setMi(0);
+    const builtIn = course.kind === 'interactive' && course.html == null && course.slug
+      ? { slug: course.slug, titles: (course.modules || []).map((m) => m.title) }
+      : null;
+    const mentor = !builtIn && course.kind === 'published-html' && course.html ? htmlCourseInfo(course.html) : null;
+    const info = builtIn || mentor;
+    if (info) {
+      Promise.all([loadInteractiveWatch(info.slug), mentor ? loadExtraWatch() : Promise.resolve({})]).then(([list, extra]) => {
+        if (!alive || !list) return;
+        let entries;
+        if (builtIn) {
+          entries = list.map((script, i) => ({ num: i + 1, title: info.titles[i] || '', script }));
+        } else {
+          // Match each module of the mentor copy to a video by its title.
+          const byTitle = {};
+          builtInModuleTitles(info.slug).forEach((t, i) => { if (list[i]) byTitle[t] = list[i]; });
+          Object.assign(byTitle, (extra && extra[info.slug]) || {});
+          entries = info.titles.map((title, i) => ({ num: i + 1, title, script: byTitle[title] })).filter((e) => e.script);
+        }
+        setScripts(entries.length ? entries : null);
         try {
-          if (list && list.length && localStorage.getItem('smt-learn-mode') === 'watch') setMode('watch');
+          if (entries.length && localStorage.getItem('smt-learn-mode') === 'watch') setMode('watch');
         } catch (_) { /* storage off */ }
       });
     }
     return () => { alive = false; };
-  }, [course.kind, course.html, course.slug]);
+  }, [course.kind, course.html, course.slug, course.modules]);
 
   const choose = (m) => {
     setMode(m);
     try { localStorage.setItem('smt-learn-mode', m); } catch (_) { /* storage off */ }
   };
   const watching = mode === 'watch' && scripts && scripts[mi];
-  const nameOf = (i) => `Module ${i + 1}${titles[i] ? `: ${titles[i]}` : ''}`;
+  const nameOf = (i) => (scripts && scripts[i] ? `Module ${scripts[i].num}${scripts[i].title ? `: ${scripts[i].title}` : ''}` : '');
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
@@ -522,7 +554,7 @@ export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, on
             </div>
             <WatchPlayer
               key={mi}
-              script={scripts[mi]}
+              script={scripts[mi].script}
               title={nameOf(mi)}
               nextText="Next: open the course, try this module's hands-on lab and take its quiz."
               finishLabel="Go to the course"
@@ -534,7 +566,7 @@ export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, on
       {course.html != null ? (
         // Published from Teacher: shown from its stored copy in a sandboxed frame,
         // so its scripts can't reach the app or the learner's account.
-        <iframe title={course.title} srcDoc={course.html} sandbox="allow-scripts allow-popups" className="flex-1 w-full border-0 bg-white" />
+        <iframe title={course.title} srcDoc={course.html} sandbox="allow-scripts allow-popups" className={`flex-1 w-full border-0 bg-white ${watching ? 'hidden' : ''}`} />
       ) : (
         // Stays loaded while watching, so the learner's place in the course is kept.
         <iframe title={course.title} src={course.src} className={`flex-1 w-full border-0 bg-white ${watching ? 'hidden' : ''}`} />
