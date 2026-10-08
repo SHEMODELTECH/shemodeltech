@@ -1,8 +1,10 @@
 // src/components/admin/TeamApplicationsAdmin.jsx
 // Admin → Team: applications to join the She Model Tech team. Approve or
 // decline (a reason is required to decline); the applicant is emailed.
+// Delete is only for spam or test entries, or when someone asks for their
+// details to be removed. Approved and declined applications are the record.
 import React, { useEffect, useState } from 'react';
-import { collection, doc, getDocs, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
@@ -53,6 +55,20 @@ const TeamApplicationsAdmin = () => {
       toast.success(`${status === 'approved' ? 'Approved' : 'Declined'}.${r.ok ? ` ${a.name} was emailed.` : ' The email could not be sent; please contact them directly.'}`);
     } catch (e) {
       toast.error('Could not save the decision.');
+    }
+    setBusy(null);
+  };
+
+  // Permanently remove an application (no email is sent).
+  const remove = async (a) => {
+    if (!window.confirm(`Delete ${a.name || 'this'}'s application for good?\n\nUse this only for spam or test entries, or when the person asked for their details to be removed. It can't be undone, and no email is sent.`)) return;
+    setBusy(a.id);
+    try {
+      await deleteDoc(doc(db, 'team_applications', a.id));
+      setRows((xs) => xs.filter((x) => x.id !== a.id));
+      toast.success('Application deleted.');
+    } catch (e) {
+      toast.error('Could not delete it. Only admins can delete applications.');
     }
     setBusy(null);
   };
@@ -110,6 +126,13 @@ const TeamApplicationsAdmin = () => {
               ) : a.decisionNote ? (
                 <p className="mt-3 text-xs text-gray-600">Note sent: “{a.decisionNote}” · by {a.decidedBy}</p>
               ) : null}
+              <div className="mt-3 pt-3 border-t border-gray-100 flex justify-end">
+                <button type="button" disabled={busy === a.id} onClick={() => remove(a)}
+                  title="For spam or test entries, or when someone asks for their details to be removed"
+                  className="text-xs font-semibold text-gray-500 hover:text-red-600 disabled:opacity-50">
+                  Delete application
+                </button>
+              </div>
             </div>
           );
         })}
