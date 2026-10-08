@@ -864,6 +864,24 @@ service cloud.firestore {
  }
  }
 
+ // Public course numbers for the catalog (rating, enrolled, completed), one
+ // document written by the daily job and by staff (utils/courseStats.js).
+ match /public_stats/{id} {
+ allow read: if true;
+ allow write: if isReviewer();
+ }
+
+ // Course page views, for staff only. Anyone viewing a course adds one.
+ match /course_views/{key} {
+ allow read: if isReviewer();
+ allow create: if key.matches('^[A-Za-z0-9_-]{1,300}$')
+ && request.resource.data.keys().hasOnly(['views'])
+ && request.resource.data.views == 1;
+ allow update: if request.resource.data.keys().hasOnly(['views'])
+ && request.resource.data.views == resource.data.get('views', 0) + 1;
+ allow delete: if isAdmin();
+ }
+
  // Ratings, reactions, and comments on mentor courses in Learning.
  match /course_feedback/{courseKey} {
  match /ratings/{uid} {

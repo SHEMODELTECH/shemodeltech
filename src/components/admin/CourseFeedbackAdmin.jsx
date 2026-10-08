@@ -1,6 +1,8 @@
 // src/components/admin/CourseFeedbackAdmin.jsx
-// Admin → Course feedback: star ratings, reactions and comments learners left
-// on each Learning course (built-in and mentor courses).
+// Admin → Course feedback: how each Learning course is doing (built-in and
+// mentor courses): views, enrolled, completed, and the star ratings, reactions
+// and comments learners left. Opening this also refreshes the public numbers
+// the catalog shows (public_stats/courses).
 //
 //   course_feedback/{courseKey}/ratings/{uid}    { stars 1-5, name, at }
 //   course_feedback/{courseKey}/reactions/{uid}  { type }
@@ -12,8 +14,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
-  collection, count, deleteDoc, doc, getAggregateFromServer, getCountFromServer, getDocs, limit, orderBy, query, sum,
+  collection, count, deleteDoc, doc, getAggregateFromServer, getCountFromServer, getDocs, limit, orderBy, query, sum, where,
 } from 'firebase/firestore';
+import { courseKey } from '../../utils/mentorStats';
+import { PUBLIC_MIN, savePublicCourseStats, short } from '../../utils/courseStats';
 import { db } from '../../firebase/config';
 import { COURSES_BY_TRACK } from '../../utils/foundationsCoursesData';
 import { trackMeta } from '../../utils/foundationsCourses';
@@ -150,16 +154,44 @@ const CourseFeedbackAdmin = ({ isAdmin = false }) => {
     Object.entries(COURSES_BY_TRACK).forEach(([t, list]) => (list || []).forEach((c) => courses.push({ track: t, slug: c.slug, title: c.title, mentor: '' })));
     published.forEach((p) => courses.push({ track: p.track, slug: `${PUBLISHED_PREFIX}${p.id}`, title: p.title, mentor: p.authorName || 'a mentor' }));
 
+    // Views (staff only), counted on each course page once per visitor per day.
+    const views = {};
+    try {
+      const vs = await getDocs(collection(db, 'course_views'));
+      vs.docs.forEach((d) => { views[d.id] = d.data().views || 0; });
+    } catch (_) { /* no views yet */ }
+
     const results = await runLimited(courses.map((c) => async () => {
-      const [agg, cm] = await Promise.all([
+      const [agg, cm, en, done] = await Promise.all([
         getAggregateFromServer(collection(db, base(c), 'ratings'), { n: count(), total: sum('stars') }).catch(() => null),
         getCountFromServer(collection(db, base(c), 'comments')).catch(() => null),
+        getCountFromServer(collection(db, 'course_enrollments', courseKey(c.track, c.slug), 'learners')).catch(() => null),
+        getCountFromServer(query(collection(db, 'learning_certificates'), where('slug', '==', c.slug))).catch(() => null),
       ]);
       const n = agg ? agg.data().n || 0 : 0;
-      return { ...c, ratings: n, avg: n ? (agg.data().total || 0) / n : 0, comments: cm ? cm.data().count : 0 };
+      return {
+        ...c,
+        ratings: n,
+        avg: n ? (agg.data().total || 0) / n : 0,
+        comments: cm ? cm.data().count : 0,
+        enrolled: en ? en.data().count : 0,
+        completed: done ? done.data().count : 0,
+        views: views[courseKey(c.track, c.slug)] || 0,
+      };
     }));
     const list = results.filter(Boolean);
     setRows(list);
+
+    // Refresh the numbers the public catalog shows (only courses with learners).
+    const summary = {};
+    list.forEach((c) => {
+      if (c.enrolled > 0 || c.ratings > 0) {
+        summary[courseKey(c.track, c.slug)] = {
+          enrolled: c.enrolled, completed: c.completed, ratingCount: c.ratings, ratingAvg: Math.round(c.avg * 100) / 100,
+        };
+      }
+    });
+    savePublicCourseStats(summary).catch(() => {});
 
     // The newest comments across courses (a few from each course that has any).
     const withComments = list.filter((c) => c.comments > 0);
@@ -176,10 +208,13 @@ const CourseFeedbackAdmin = ({ isAdmin = false }) => {
     const q = search.trim().toLowerCase();
     const list = rows
       .filter((c) => !track || c.track === track)
-      .filter((c) => showEmpty || c.ratings > 0 || c.comments > 0)
+      .filter((c) => showEmpty || c.ratings > 0 || c.comments > 0 || c.views > 0 || c.enrolled > 0)
       .filter((c) => !q || c.title.toLowerCase().includes(q));
     const by = {
       most: (a, b) => (b.ratings + b.comments) - (a.ratings + a.comments) || a.title.localeCompare(b.title),
+      views: (a, b) => b.views - a.views,
+      enrolled: (a, b) => b.enrolled - a.enrolled,
+      completed: (a, b) => b.completed - a.completed,
       low: (a, b) => (a.ratings ? a.avg : 9) - (b.ratings ? b.avg : 9),
       high: (a, b) => b.avg - a.avg || b.ratings - a.ratings,
       name: (a, b) => a.title.localeCompare(b.title),
@@ -192,22 +227,32 @@ const CourseFeedbackAdmin = ({ isAdmin = false }) => {
     const rated = rows.filter((c) => c.ratings > 0);
     const n = rated.reduce((a, c) => a + c.ratings, 0);
     const s = rated.reduce((a, c) => a + c.avg * c.ratings, 0);
-    return { ratings: n, avg: n ? s / n : 0, comments: rows.reduce((a, c) => a + c.comments, 0), courses: rated.length, all: rows.length };
+    const add = (f) => rows.reduce((a, c) => a + (c[f] || 0), 0);
+    return {
+      ratings: n, avg: n ? s / n : 0, comments: add('comments'), courses: rated.length, all: rows.length,
+      views: add('views'), enrolled: add('enrolled'), completed: add('completed'),
+    };
   }, [rows]);
 
   const courseLink = (c) => `/learning/${c.track}/${c.slug}`;
 
   return (
     <div className="space-y-4">
-      <p className="text-gray-500 text-sm">Star ratings, reactions and comments learners left on each course. Open a course to see all of it.</p>
+      <p className="text-gray-500 text-sm">
+        How each course is doing: views (only you see these), learners enrolled and finished, and the ratings and comments
+        learners left. Ratings, enrolled and completed show publicly on a course once it has {PUBLIC_MIN} learners.
+      </p>
 
       {totals && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[
+            [short(totals.views), 'Course views'],
+            [short(totals.enrolled), 'Enrolments'],
+            [short(totals.completed), 'Completions'],
+            [totals.enrolled ? `${Math.round((totals.completed / totals.enrolled) * 100)}%` : '–', 'Finish rate'],
             [totals.ratings ? `${totals.avg.toFixed(1)} ★` : '–', 'Average rating'],
             [totals.ratings, 'Ratings'],
             [totals.comments, 'Comments'],
-            [`${totals.courses} of ${totals.all}`, 'Courses rated'],
           ].map(([v, l]) => (
             <div key={l} className="bg-white border border-gray-200 rounded-xl p-3">
               <p className="text-2xl font-bold text-gray-900">{v}</p>
@@ -243,6 +288,9 @@ const CourseFeedbackAdmin = ({ isAdmin = false }) => {
         </select>
         <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Sort" className="sm:w-48 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm">
           <option value="most">Most feedback</option>
+          <option value="views">Most viewed</option>
+          <option value="enrolled">Most enrolled</option>
+          <option value="completed">Most completed</option>
           <option value="low">Lowest rated first</option>
           <option value="high">Highest rated first</option>
           <option value="name">Name A–Z</option>
@@ -250,7 +298,7 @@ const CourseFeedbackAdmin = ({ isAdmin = false }) => {
       </div>
       <label className="flex items-center gap-2 text-sm text-gray-700">
         <input type="checkbox" checked={showEmpty} onChange={(e) => setShowEmpty(e.target.checked)} className="accent-pink-600" />
-        Also show courses with no feedback yet
+        Also show courses with no views, learners or feedback yet
       </label>
 
       {rows === null ? (
@@ -277,6 +325,23 @@ const CourseFeedbackAdmin = ({ isAdmin = false }) => {
                     <p className="text-xs text-gray-500">{c.ratings} rating{c.ratings === 1 ? '' : 's'} · {c.comments} comment{c.comments === 1 ? '' : 's'}</p>
                   </div>
                 </div>
+                <div className="mt-2 grid grid-cols-3 sm:grid-cols-5 gap-2 text-center">
+                  {[
+                    [short(c.views), 'views'],
+                    [short(c.enrolled), 'enrolled'],
+                    [short(c.completed), 'completed'],
+                    [c.views ? `${Math.round((c.enrolled / c.views) * 100)}%` : '–', 'viewers enrolled'],
+                    [c.enrolled ? `${Math.round((c.completed / c.enrolled) * 100)}%` : '–', 'enrolled finished'],
+                  ].map(([v, l]) => (
+                    <div key={l} className="bg-gray-50 rounded-lg py-1.5">
+                      <p className="text-sm font-bold text-gray-900">{v}</p>
+                      <p className="text-[10px] text-gray-500">{l}</p>
+                    </div>
+                  ))}
+                </div>
+                {c.enrolled < PUBLIC_MIN && (
+                  <p className="text-[11px] text-gray-400 mt-1">Public numbers show on this course once it has {PUBLIC_MIN} learners ({PUBLIC_MIN - c.enrolled} to go).</p>
+                )}
                 <button onClick={() => setOpen(open === id ? null : id)} className="mt-2 text-xs font-semibold text-pink-700 hover:underline">
                   {open === id ? 'Hide details' : 'See ratings and comments'}
                 </button>

@@ -9,7 +9,7 @@ import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, TRACK_ORDER, certificateErrorToast, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack, loadCourseMarkdown, trackMeta, tracksWithCourses } from '../../utils/foundationsCourses';
 import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
-import { courseRating } from '../../utils/mentorStats';
+import { getPublicCourseStats, showPublicStats, short, statsFor } from '../../utils/courseStats';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import MentorCourseStaffTools from '../../components/MentorCourseStaffTools';
@@ -62,12 +62,19 @@ export const CourseCard = ({ course, status, progress }) => {
           {course.minutes > 0 && <span>{formatTime(course.minutes)}</span>}
           {(course.kind === 'interactive' || course.kind === 'published-html') && <span className="lr-inter">Interactive</span>}
           {course.format === 'video' && <span className="lr-inter">Video</span>}
-          {course.rating?.count > 0 && (
-            <span className="font-semibold text-pink-600" aria-label={`Rated ${course.rating.avg.toFixed(1)} out of 5 by ${course.rating.count} learners`}>
-              ★ {course.rating.avg.toFixed(1)} <span className="font-normal text-gray-400">({course.rating.count})</span>
-            </span>
-          )}
         </div>
+        {/* Rating, enrolled, completed: only once the course has enough learners. */}
+        {showPublicStats(course.stats) && (
+          <div className="pt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+            {course.stats.ratingCount > 0 && (
+              <span className="font-semibold text-pink-600" aria-label={`Rated ${course.stats.ratingAvg.toFixed(1)} out of 5 by ${course.stats.ratingCount} learners`}>
+                ★ {course.stats.ratingAvg.toFixed(1)} <span className="font-normal text-gray-400">({short(course.stats.ratingCount)})</span>
+              </span>
+            )}
+            <span><strong className="font-semibold text-gray-700">{short(course.stats.enrolled)}</strong> enrolled</span>
+            <span><strong className="font-semibold text-gray-700">{short(course.stats.completed)}</strong> completed</span>
+          </div>
+        )}
         {status === 'done' && (
           <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-pink-700">
             <CheckIcon className="w-3.5 h-3.5" /> Completed
@@ -104,10 +111,7 @@ const LearningHome = ({ mine = false }) => {
       .then(async (list) => {
         const courses = list.map(toCatalogCourse);
         setPublished(courses);
-        // Learner ratings for mentor courses, shown on their cards.
-        const rated = await Promise.all(courses.map(async (c) => ({ ...c, rating: await courseRating(c.track, c.slug) })));
-        setPublished(rated);
-        const missing = [...new Set(rated.filter((c) => c.authorUid && !c.authorPhotoURL).map((c) => c.authorUid))];
+        const missing = [...new Set(courses.filter((c) => c.authorUid && !c.authorPhotoURL).map((c) => c.authorUid))];
         if (missing.length) {
           const found = {};
           await Promise.all(
@@ -128,6 +132,12 @@ const LearningHome = ({ mine = false }) => {
 
   // Every course, tagged with its track: built-in courses in authored order,
   // then that track's published courses.
+  // Rating, enrolled and completed for every card (one small read).
+  const [publicStats, setPublicStats] = useState({});
+  useEffect(() => {
+    getPublicCourseStats().then(setPublicStats);
+  }, []);
+
   const all = useMemo(() => {
     const tracks = ['start', ...TRACK_ORDER, 'company'].filter(
       (t) => tracksWithCourses().includes(t) || published.some((p) => p.track === t)
@@ -135,9 +145,9 @@ const LearningHome = ({ mine = false }) => {
     return tracks.flatMap((t) => [
       ...coursesForTrack(t).map((c) => ({ ...c, track: t })),
       ...published.filter((p) => p.track === t),
-    ]);
+    ]).map((c) => ({ ...c, stats: statsFor(publicStats, c.track, c.slug) }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [published, overridesVersion]);
+  }, [published, overridesVersion, publicStats]);
 
   const statusOf = (c) => (lr.isDone(c.track, c.slug) ? 'done' : lr.isEnrolled(c.track, c.slug) ? 'enrolled' : null);
   const progressOf = (c) => {
@@ -326,9 +336,10 @@ const LearningHome = ({ mine = false }) => {
             const a = byAuthor[key] || (byAuthor[key] = { key, uid: c.authorUid, name: c.authorName, photo: c.authorPhotoURL || null, courses: [], ratingSum: 0, ratingCount: 0 });
             a.courses.push(c);
             if (!a.photo && c.authorPhotoURL) a.photo = c.authorPhotoURL;
-            if (c.rating?.count) {
-              a.ratingSum += c.rating.avg * c.rating.count;
-              a.ratingCount += c.rating.count;
+            const st = statsFor(publicStats, c.track, c.slug);
+            if (st?.ratingCount) {
+              a.ratingSum += st.ratingAvg * st.ratingCount;
+              a.ratingCount += st.ratingCount;
             }
           });
           const authors = Object.values(byAuthor).sort((x, y) => y.ratingCount - x.ratingCount || y.courses.length - x.courses.length);

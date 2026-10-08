@@ -22,6 +22,7 @@ import CourseForum from './CourseForum';
 import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 import { courseKey } from '../../utils/mentorStats';
 import { courseStats } from '../../utils/mentorStats';
+import { PUBLIC_MIN, getPublicCourseStats, recordCourseView, short, statsFor } from '../../utils/courseStats';
 import MentorCourseStaffTools from '../../components/MentorCourseStaffTools';
 import { getOverrideContent } from '../../utils/courseOverrides';
 import BuiltInCourseStaffTools, { useCourseOverridesVersion } from '../../components/BuiltInCourseStaffTools';
@@ -126,10 +127,21 @@ const LearningCourse = ({ reading = false }) => {
       .catch(() => {});
   }, [authorUid, lr.signedIn]);
 
+  // Enrolled, completed and rating: shown under the title once the course has
+  // PUBLIC_MIN learners (and in the mentor box on mentor courses).
   useEffect(() => {
-    if (!isPublished || !authorUid) return;
+    setStats(null);
     courseStats(track, slug).then(setStats).catch(() => {});
-  }, [isPublished, authorUid, track, slug]);
+  }, [track, slug]);
+
+  // Numbers for the "Next in this track" cards.
+  const [publicStats, setPublicStats] = useState({});
+  useEffect(() => { getPublicCourseStats().then(setPublicStats); }, []);
+
+  // A view of this course (staff see views in Admin → Course feedback).
+  useEffect(() => {
+    if (track && slug) recordCourseView(track, slug);
+  }, [track, slug]);
 
   const course = useMemo(() => {
     if (baseCourse && !isPublished) {
@@ -416,6 +428,18 @@ const LearningCourse = ({ reading = false }) => {
               </p>
             )}
             {course.summary && <p className="text-gray-700 text-lg mt-4 max-w-2xl">{course.summary}</p>}
+            {stats && stats.enrollments >= PUBLIC_MIN && (
+              <p className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 text-sm text-gray-700">
+                {stats.ratingCount > 0 && (
+                  <span className="font-semibold text-gray-900" aria-label={`Rated ${(stats.ratingSum / stats.ratingCount).toFixed(1)} out of 5 by ${stats.ratingCount} learners`}>
+                    <span className="text-pink-600" aria-hidden="true">★</span> {(stats.ratingSum / stats.ratingCount).toFixed(1)}
+                    <span className="font-normal text-gray-500"> ({short(stats.ratingCount)} rating{stats.ratingCount === 1 ? '' : 's'})</span>
+                  </span>
+                )}
+                <span><strong className="font-semibold text-gray-900">{short(stats.enrollments)}</strong> learners enrolled</span>
+                <span><strong className="font-semibold text-gray-900">{short(stats.completions)}</strong> completed</span>
+              </p>
+            )}
             <div className="flex flex-wrap gap-x-5 gap-y-2 mt-5 text-sm text-gray-700">
               {course.level && <span><strong className="font-semibold">Level:</strong> {course.level}</span>}
               {course.minutes > 0 && <span>{formatTime(course.minutes)}</span>}
@@ -624,7 +648,7 @@ const LearningCourse = ({ reading = false }) => {
               {more.map((c) => (
                 <CourseCard
                   key={c.slug}
-                  course={c}
+                  course={{ ...c, stats: statsFor(publicStats, c.track || track, c.slug) }}
                   status={lr.isDone(track, c.slug) ? 'done' : lr.isEnrolled(track, c.slug) ? 'enrolled' : null}
                   progress={0}
                 />

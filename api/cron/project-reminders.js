@@ -28,6 +28,7 @@
 
 const { certificateCode } = require('../../lib/courseRequirements');
 const { jobTasks, tierTasks } = require('../../lib/companyTasks');
+const { refreshCourseStats } = require('../../lib/courseStatsSummary');
 const admin = require('../../lib/firebaseAdmin');
 const { sendMail } = require('../../lib/mailer');
 const { pushToUids } = require('../../lib/push');
@@ -533,6 +534,10 @@ module.exports = async (req, res) => {
  try { await jobTasks(db, stats); } catch (e) { console.error('job notices skipped:', e.message); }
  try { await tierTasks(db, stats); } catch (e) { console.error('tier notices skipped:', e.message); }
  // ── Housekeeping: delete notifications older than 6 months (stops well before the time limit) ──
+ // ── Learning: public course numbers for the catalog (enrolled, completed, ratings) ──
+ try {
+ stats.courseStats = await refreshCourseStats(db, admin, startedAt + 48000);
+ } catch (e) { console.error('course stats skipped:', e.message); }
  try {
  stats.oldNotificationsDeleted = await cleanOldNotifications(db, startedAt + 52000);
  } catch (e) { console.error('notification clean-up skipped:', e.message); }
