@@ -105,6 +105,244 @@ robot_system_diagram_project/
 
 *Answers: 1) Sense gathers data from sensors, think processes that data and decides what to do, and act commands the actuators to move. 2) A LiDAR measures distance using laser pulses; an IMU measures orientation and acceleration. 3) A part that lets the robot physically act, such as a wheel motor, an arm joint, or a gripper. 4) Acting changes the environment, so the robot must sense again to see the new situation before its next decision.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Project 1 · The robot as a system",
+   "title": "Sense, think, act",
+   "beats": [
+    {
+     "say": "Welcome to Robotics A I Engineer."
+    },
+    {
+     "say": "Before writing any code, you'll learn to see a robot as a system of interacting parts, so every later project has a place to plug into."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "The sense-think-act loop",
+   "steps": [
+    "Sense: cameras, LiDAR, encoders",
+    "Think: process and decide",
+    "Act: motors, arm, gripper",
+    "Environment changes → sense again"
+   ],
+   "beats": [
+    {
+     "say": "Robots run on a repeating cycle.",
+     "show": 0
+    },
+    {
+     "say": "Sense: gather data from sensors.",
+     "show": 1
+    },
+    {
+     "say": "Think: process that data and decide what to do.",
+     "show": 2
+    },
+    {
+     "say": "Act: command the actuators to move.",
+     "show": 3
+    },
+    {
+     "say": "Acting changes the environment, so the robot senses again, and the loop repeats.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Concept",
+   "title": "Sensors and actuators",
+   "items": [
+    [
+     "Camera",
+     "Captures images"
+    ],
+    [
+     "LiDAR",
+     "Distance, from laser pulses"
+    ],
+    [
+     "IMU",
+     "Orientation and acceleration"
+    ],
+    [
+     "Actuators",
+     "Motors, arm joints, gripper"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A sensor measures something about the environment.",
+     "show": 0
+    },
+    {
+     "say": "A camera captures images.",
+     "show": 1
+    },
+    {
+     "say": "A lidar measures distance using laser pulses.",
+     "show": 2
+    },
+    {
+     "say": "An I M U, an inertial measurement unit, measures orientation and acceleration.",
+     "show": 3
+    },
+    {
+     "say": "An actuator is anything that lets the robot physically act, like wheel motors, arm joints, or a gripper.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "pencil",
+   "kicker": "Lab",
+   "title": "Diagram your own robot",
+   "items": [
+    [
+     "Task",
+     "One sentence"
+    ],
+    [
+     "Sensors + actuators",
+     "What it senses, how it moves"
+    ],
+    [
+     "Think",
+     "Onboard or remote?"
+    ],
+    [
+     "Safety",
+     "Worst case, and what prevents it"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In your notebook, write one sentence for your robot's task. For example, a small wheeled robot that navigates a room and avoids obstacles.",
+     "show": 1
+    },
+    {
+     "say": "List its sensors, and its actuators.",
+     "show": 2
+    },
+    {
+     "say": "Note where the thinking happens: an onboard computer, or a more powerful remote system.",
+     "show": 3
+    },
+    {
+     "say": "And write one safety sentence: the worst a bad decision could cause, and what would prevent it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "architecture",
+   "kicker": "Where you'd use this",
+   "title": "Each part becomes a node",
+   "quote": "Learn each part in plain Python first, then run it on ROS 2 in Project 8.",
+   "beats": [
+    {
+     "say": "On real robots, each part of this loop usually runs as a separate program, called a node.",
+     "show": 0
+    },
+    {
+     "say": "Nodes pass messages through R O S 2, the standard open source robotics framework.",
+     "show": 1
+    },
+    {
+     "say": "This course writes each part as plain Python first. In Project 8, you turn them into real R O S 2 nodes.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does the sense-think-act loop repeat instead of running once?",
+   "options": [
+    "Acting changes the environment, so the robot must sense the new situation",
+    "Sensors need warming up before they're accurate",
+    "The actuators can only move a little at a time"
+   ],
+   "answer": 0,
+   "good": "That's right. Acting changes the environment, so the robot must sense again to see the new situation before its next decision.",
+   "bad": "Not quite. Acting changes the environment, so the robot must sense again to see the new situation before its next decision.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does the sense-think-act loop repeat instead of running once?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A sense-think-act diagram",
+     ""
+    ],
+    [
+     "Sensors and actuators listed",
+     ""
+    ],
+    [
+     "One safety consideration",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a sense-think-act diagram for your example robot,",
+     "show": 1
+    },
+    {
+     "say": "with its sensors and actuators,",
+     "show": 2
+    },
+    {
+     "say": "and one documented safety consideration.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 2, you'll process noisy sensor data.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Build a Simple Sensor-Data Processing Script
@@ -229,6 +467,193 @@ sensor_processing_project/
 
 *Answers: 1) Sensors have noise, small random variation around the true value. 2) It replaces each point with the average of its neighbors; a larger window gives a smoother signal but reacts more slowly to real changes. 3) It is when a sensor occasionally fails to give a valid reading; the project marks those readings as `NaN`. 4) A single `NaN` makes the average of every window it touches `NaN`, so gaps must be filled first, here by interpolation.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Project 2 · Sensor data",
+   "title": "Clean up noisy readings",
+   "beats": [
+    {
+     "say": "Welcome to Project 2."
+    },
+    {
+     "say": "Now you get sensor data flowing through code: your first hands-on contact with the sense part of the loop."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 2",
+   "title": "Simulate a noisy sensor",
+   "file": "sensor_processing",
+   "code": "import numpy as np\n\ndef simulate_distance_sensor(num_readings=100):\n    true_distance = 2.0  # meters\n    noise = np.random.normal(0, 0.05, num_readings)\n    return true_distance + noise",
+   "beats": [
+    {
+     "say": "Start by simulating a distance sensor.",
+     "show": 0
+    },
+    {
+     "say": "The true distance is two meters, but each reading adds a little random noise.",
+     "show": 1
+    },
+    {
+     "say": "Real sensors always have noise: small random variation around the true value, even when nothing is changing.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "graph",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "A moving average filter",
+   "file": "sensor_processing",
+   "code": "def moving_average(data, window=5):\n    return np.convolve(data, np.ones(window)/window, mode=\"valid\")\n\nfiltered = moving_average(readings)\nplt.plot(readings, label=\"raw\", alpha=0.5)\nplt.plot(filtered, label=\"filtered\")",
+   "beats": [
+    {
+     "say": "A moving average filter smooths noisy data by averaging each point with its nearby neighbors.",
+     "show": 0
+    },
+    {
+     "say": "Plot the raw and filtered readings together to compare them.",
+     "show": 1
+    },
+    {
+     "say": "A larger window gives a smoother signal, but reacts more slowly to real changes.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Lab · Step 6",
+   "title": "When the sensor drops out",
+   "items": [
+    [
+     "Dropout",
+     "No valid reading → NaN"
+    ],
+    [
+     "The problem",
+     "One NaN spoils every window it touches"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Sensors also fail now and then. That's called sensor dropout.",
+     "show": 0
+    },
+    {
+     "say": "Here, a failed reading is stored as N a N, which means not a number.",
+     "show": 1
+    },
+    {
+     "say": "One N a N makes the average of every window it touches N a N too.",
+     "show": 2
+    },
+    {
+     "say": "So gaps must be handled before filtering.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "pencil",
+   "kicker": "Lab · Step 7",
+   "title": "Fill the gaps first",
+   "file": "sensor_processing",
+   "code": "def handle_dropout(data):\n    valid_indices = ~np.isnan(data)\n    return np.interp(np.arange(len(data)), np.arange(len(data))[valid_indices], data[valid_indices])\n\nrepaired = handle_dropout(readings_with_gaps)\nprint(\"Missing after repair:\", np.isnan(repaired).sum())\nsmoothed = moving_average(repaired)",
+   "beats": [
+    {
+     "say": "Interpolation estimates a missing value from the values around it.",
+     "show": 0
+    },
+    {
+     "say": "The tilde means not, so valid indices marks the readings that aren't N a N.",
+     "show": 1
+    },
+    {
+     "say": "Repair the gaps, check none are left, then smooth.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why repair missing readings before applying the moving average?",
+   "options": [
+    "Interpolation only works on smoothed data",
+    "The moving average deletes missing readings",
+    "One NaN makes every window it touches NaN"
+   ],
+   "answer": 2,
+   "good": "That's right. A single NaN makes the average of every window it touches NaN, so gaps must be filled first, here by interpolation.",
+   "bad": "Not quite. A single NaN makes the average of every window it touches NaN, so gaps must be filled first, here by interpolation.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why repair missing readings before applying the moving average?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Raw vs. filtered data plotted",
+     ""
+    ],
+    [
+     "Dropout handling documented",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a sensor processing script with raw versus filtered data plotted,",
+     "show": 1
+    },
+    {
+     "say": "and documented dropout handling.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, coordinate transformations.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 3 (Module 3): Implement a Coordinate Transformation Calculator
@@ -342,6 +767,192 @@ coordinate_transform_project/
 4. How do you check that the two transform functions are correct?
 
 *Answers: 1) A reference point and set of axes that positions are measured from; this project uses the world frame and the robot frame. 2) A rotation by the robot's heading (the rotation matrix) and a translation by the robot's position. 3) It subtracts the robot's position, then multiplies by the transpose of the rotation matrix, which reverses the rotation. 4) Do a round trip: convert a point to the world frame and back, and confirm you get the original point.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "calc",
+   "kicker": "Project 3 · Coordinate frames",
+   "title": "Translate between frames",
+   "beats": [
+    {
+     "say": "Welcome to Project 3."
+    },
+    {
+     "say": "You'll build the math layer that perception and control both depend on: translating between different frames of reference."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Concept",
+   "title": "Two frames",
+   "items": [
+    [
+     "World frame",
+     "Fixed to the room"
+    ],
+    [
+     "Robot frame",
+     "Fixed to, and moving with, the robot"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A coordinate frame is a reference point and a set of axes that positions are measured from.",
+     "show": 0
+    },
+    {
+     "say": "The world frame is fixed to the room.",
+     "show": 1
+    },
+    {
+     "say": "The robot frame is fixed to the robot, and moves with it.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Robot frame to world frame",
+   "file": "transforms",
+   "code": "def rotation_matrix(theta):\n    return np.array([\n        [np.cos(theta), -np.sin(theta)],\n        [np.sin(theta),  np.cos(theta)]\n    ])\n\ndef robot_to_world(point_robot_frame, robot_position, robot_theta):\n    R = rotation_matrix(robot_theta)\n    return R @ point_robot_frame + robot_position",
+   "beats": [
+    {
+     "say": "A rotation matrix rotates a point by an angle, theta, using basic trigonometry.",
+     "show": 0
+    },
+    {
+     "say": "To go from robot frame to world frame, rotate by the robot's heading, then add the robot's position.",
+     "show": 1
+    },
+    {
+     "say": "The at sign performs matrix multiplication, combining rotation and translation in one step.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Lab · Step 5",
+   "title": "And back again",
+   "file": "transforms",
+   "code": "def world_to_robot(point_world_frame, robot_position, robot_theta):\n    R = rotation_matrix(robot_theta)\n    return R.T @ (point_world_frame - robot_position)",
+   "beats": [
+    {
+     "say": "Going back, subtract the robot's position first.",
+     "show": 0
+    },
+    {
+     "say": "Then multiply by R dot T, the transpose, which reverses the rotation.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "proof",
+   "kicker": "Lab · Step 6",
+   "title": "Prove it with a round trip",
+   "steps": [
+    "Robot at (5, 3), facing 90°",
+    "Point 2 m ahead → world frame",
+    "Back to robot frame = original"
+   ],
+   "beats": [
+    {
+     "say": "Test with a concrete example.",
+     "show": 0
+    },
+    {
+     "say": "The robot sits at five, three, facing ninety degrees, and sees a point two meters ahead.",
+     "show": 1
+    },
+    {
+     "say": "Convert that point to the world frame.",
+     "show": 2
+    },
+    {
+     "say": "Then convert it back. It should match the original.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "How do you check that the two transform functions are correct?",
+   "options": [
+    "Plot the robot's position on a chart",
+    "Convert a point to the world frame and back, and get the original",
+    "Check the rotation matrix has four numbers"
+   ],
+   "answer": 1,
+   "good": "That's right. Do a round trip: convert a point to the world frame and back, and confirm you get the original point.",
+   "bad": "Not quite. Do a round trip: convert a point to the world frame and back, and confirm you get the original point.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "How do you check that the two transform functions are correct?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A tested transform module",
+     ""
+    ],
+    [
+     "Visualized and round-trip verified",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a tested coordinate transformation module,",
+     "show": 1
+    },
+    {
+     "say": "with a visualized example and round-trip verification.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, object detection for a robot camera.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -513,6 +1124,184 @@ object_detection_project/
 
 *Answers: 1) Hue separates color from brightness, so one hue range finds red objects in both bright and dim light more reliably than RGB values. 2) A contour is the outline of a connected region in the mask; a bounding box is the smallest rectangle that contains it. 3) It uses the object's known real width, the camera's focal length, and the object's width in pixels; the focal length is a guess until you calibrate it. 4) Each frame's estimate is noisy, and a moving average gives a steadier distance for the robot to act on.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "search",
+   "kicker": "Project 4 · Object detection",
+   "title": "Teach the robot to see",
+   "beats": [
+    {
+     "say": "Welcome to Project 4."
+    },
+    {
+     "say": "You'll give the robot the ability to see: the sense part of your loop, now actually working, with Open C V."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "palette",
+   "kicker": "Lab · Step 3",
+   "title": "Find red with HSV",
+   "file": "object_detection",
+   "code": "hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)\nlower_red = np.array([0, 120, 70])\nupper_red = np.array([10, 255, 255])\nmask = cv2.inRange(hsv, lower_red, upper_red)",
+   "beats": [
+    {
+     "say": "Open C V stores images as B G R, blue green red, not R G B.",
+     "show": 0
+    },
+    {
+     "say": "Convert the frame to H S V: hue, saturation, value. Hue separates color from brightness.",
+     "show": 1
+    },
+    {
+     "say": "Then in range builds a mask of the pixels inside a red range.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "target",
+   "kicker": "Lab · Step 4",
+   "title": "Contours and a bounding box",
+   "file": "object_detection",
+   "code": "contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)\nif contours:\n    largest = max(contours, key=cv2.contourArea)\n    x, y, w, h = cv2.boundingRect(largest)\n    print(f\"Object detected at ({x}, {y}), size {w}x{h}\")\nelse:\n    print(\"No red object found. Check the color range in Step 3.\")",
+   "beats": [
+    {
+     "say": "A contour is the outline of a connected region in the mask.",
+     "show": 0
+    },
+    {
+     "say": "Take the largest one, and find its bounding box: the smallest rectangle that contains it.",
+     "show": 1
+    },
+    {
+     "say": "If nothing is found, check the color range.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Lab · Step 5",
+   "title": "Distance from apparent size",
+   "file": "object_detection",
+   "code": "def estimate_distance(pixel_width, known_object_width=0.1, focal_length=500):\n    return (known_object_width * focal_length) / pixel_width",
+   "beats": [
+    {
+     "say": "Objects look smaller the farther away they are.",
+     "show": 0
+    },
+    {
+     "say": "Given the object's real width, ten centimeters here, and the camera's focal length in pixels, you can estimate distance.",
+     "show": 1
+    },
+    {
+     "say": "Five hundred is a rough guess, so treat the result as an estimate until you calibrate it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "graph",
+   "kicker": "Lab · Steps 6 to 8",
+   "title": "Verify, test, smooth",
+   "steps": [
+    "Draw the box to verify",
+    "Test varied photos",
+    "Smooth across frames"
+   ],
+   "beats": [
+    {
+     "say": "Draw a green box on the frame. It should sit tightly around the object.",
+     "show": 1
+    },
+    {
+     "say": "Wrap the steps into one function, and test it on photos: close, far, partly hidden, and in different lighting.",
+     "show": 2
+    },
+    {
+     "say": "Each frame's distance is a little noisy, so smooth estimates over time with your Project 2 moving average.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why convert the image to HSV before looking for a red object?",
+   "options": [
+    "Hue separates color from brightness, so red is found in bright and dim light",
+    "OpenCV can only read HSV images",
+    "HSV images are smaller and faster to save"
+   ],
+   "answer": 0,
+   "good": "That's right. Hue separates color from brightness, so one hue range finds red objects in both bright and dim light more reliably than R G B values.",
+   "bad": "Not quite. Hue separates color from brightness, so one hue range finds red objects in both bright and dim light more reliably than R G B values.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why convert the image to HSV before looking for a red object?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Locates a target and estimates distance",
+     ""
+    ],
+    [
+     "Tested across multiple frames",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have an object detection pipeline that locates a target and estimates its distance,",
+     "show": 1
+    },
+    {
+     "say": "tested across multiple frames.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, path planning with A star.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 5 (Module 5): Simulate a Path-Planning Algorithm
@@ -668,6 +1457,196 @@ path_planning_project/
 
 *Answers: 1) It picks the cell with the lowest score, which is the distance traveled so far plus the heuristic's estimate of the distance left. 2) The robot moves only up, down, left, or right, so the sum of row and column differences never overestimates the remaining distance. 3) It always hands back the entry with the smallest score first, so the most promising cell is explored next. 4) It returns `None`; code using the planner must check for `None` and not move.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "path",
+   "kicker": "Project 5 · Path planning",
+   "title": "Decide where to go",
+   "beats": [
+    {
+     "say": "Welcome to Project 5."
+    },
+    {
+     "say": "Now the robot decides where to go: the think part of your loop."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Concept",
+   "title": "A grid and A star",
+   "items": [
+    [
+     "Grid map",
+     "0 = free, 1 = obstacle"
+    ],
+    [
+     "A*",
+     "Most promising cells first"
+    ],
+    [
+     "Heuristic",
+     "Estimate of distance left"
+    ],
+    [
+     "Manhattan distance",
+     "|rows| + |columns|"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A grid map represents the environment as cells: zero is free space, one is an obstacle.",
+     "show": 1
+    },
+    {
+     "say": "A star finds the shortest path by exploring the most promising cells first.",
+     "show": 2
+    },
+    {
+     "say": "It's guided by a heuristic, an estimate of the distance left to the goal.",
+     "show": 3
+    },
+    {
+     "say": "Here that's Manhattan distance: the rows plus the columns between two cells, right for grid moves without diagonals.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 5",
+   "title": "The heart of A star",
+   "file": "path_planning",
+   "code": "for dx, dy in [(-1,0),(1,0),(0,-1),(0,1)]:\n    neighbor = (current[0]+dx, current[1]+dy)\n    if 0 <= neighbor[0] < grid.shape[0] and 0 <= neighbor[1] < grid.shape[1] and grid[neighbor] == 0:\n        tentative_g = g_score[current] + 1\n        if neighbor not in g_score or tentative_g < g_score[neighbor]:\n            g_score[neighbor] = tentative_g\n            f_score = tentative_g + heuristic(neighbor, goal)\n            heapq.heappush(open_set, (f_score, neighbor))\n            came_from[neighbor] = current",
+   "beats": [
+    {
+     "say": "A priority queue, from heap q, always hands back the most promising cell next.",
+     "show": 0
+    },
+    {
+     "say": "Its score is the distance traveled so far, plus the heuristic's estimate of what's left.",
+     "show": 1
+    },
+    {
+     "say": "For each free neighbor, if this route is shorter, record it and push it onto the queue.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "path",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "18 moves, then a maze",
+   "big": "18 moves",
+   "sub": "then zigzag through a maze, checked by assert",
+   "beats": [
+    {
+     "say": "On the first grid, the shortest path is eighteen moves, corner to corner, because the wall doesn't block every shortest route.",
+     "show": 0
+    },
+    {
+     "say": "Then try a maze. The path zigzags through the gaps, and an assert confirms no step is inside an obstacle.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Lab · Step 8",
+   "title": "When there's no way through",
+   "quote": "Unreachable goal → astar returns None. Check before you move.",
+   "beats": [
+    {
+     "say": "Finally, wall in the goal.",
+     "show": 0
+    },
+    {
+     "say": "A star explores every reachable cell, runs out of options, and returns None, instead of crashing or looping forever.",
+     "show": 1
+    },
+    {
+     "say": "Any code that uses the planner must check for None before moving.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does astar return when the goal is unreachable?",
+   "options": [
+    "An empty grid",
+    "The shortest path to the nearest wall",
+    "None, so calling code must check before moving"
+   ],
+   "answer": 2,
+   "good": "That's right. It returns None, and code using the planner must check for None and not move.",
+   "bad": "Not quite. It returns None, and code using the planner must check for None and not move.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does astar return when the goal is unreachable?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A* shown on two layouts",
+     ""
+    ],
+    [
+     "An unreachable-goal test",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working A star planner, shown on at least two obstacle layouts,",
+     "show": 1
+    },
+    {
+     "say": "including an unreachable-goal test.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, a robot that learns with reinforcement learning.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 6 (Module 6): Train a Simple RL Agent in a Simulated Environment
@@ -816,6 +1795,213 @@ rl_agent_project/
 5. Why plot a moving average of episode rewards instead of the raw rewards?
 
 *Answers: 1) The agent is the player choosing moves, the environment is the frozen lake grid, the reward is 1 for reaching the goal and 0 otherwise, and the policy is the agent's rule for choosing a move in each state. 2) The expected future reward for each state and action pair. 3) With probability epsilon the agent takes a random action, otherwise the best-known one; epsilon shrinks so the agent explores a lot when it knows nothing and relies more on what it has learned later. 4) So the result measures what the agent actually learned, not lucky or unlucky random moves. 5) Each raw reward is just 0 or 1, so the raw plot is jagged; the moving average shows the success-rate trend.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "growth",
+   "kicker": "Project 6 · Reinforcement learning",
+   "title": "Let the robot learn",
+   "beats": [
+    {
+     "say": "Welcome to Project 6."
+    },
+    {
+     "say": "Instead of following fixed rules, the robot learns its behavior: an alternative to Project 5's hand-coded planning."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Concept",
+   "title": "The R L framing",
+   "items": [
+    [
+     "Agent",
+     "Takes actions"
+    ],
+    [
+     "Reward",
+     "1 for the goal, 0 otherwise"
+    ],
+    [
+     "Policy",
+     "Strategy for choosing actions"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "An agent takes actions in an environment.",
+     "show": 1
+    },
+    {
+     "say": "After each action, it gets a reward.",
+     "show": 2
+    },
+    {
+     "say": "The goal is to learn a policy, a strategy for choosing actions, that maximizes total reward over time.",
+     "show": 3
+    },
+    {
+     "say": "You'll use Frozen Lake from Gymnasium: reach the goal and avoid the holes. Reaching the goal scores one, anything else zero.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Lab · Step 4",
+   "title": "Q-learning",
+   "file": "rl_agent",
+   "code": "q_table = np.zeros((env.observation_space.n, env.action_space.n))\n\n# inside the training loop, after each action:\nfuture = 0 if terminated else discount_factor * np.max(q_table[next_state])\nq_table[state, action] += learning_rate * (reward + future - q_table[state, action])",
+   "beats": [
+    {
+     "say": "Q-learning keeps a table of expected future reward for every state and action pair.",
+     "show": 0
+    },
+    {
+     "say": "After every action, it nudges that entry toward the reward received, plus the best future value.",
+     "show": 1
+    },
+    {
+     "say": "At a terminal state, there's no future reward to add.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Lab · Step 5",
+   "title": "Explore or exploit",
+   "items": [
+    [
+     "Explore",
+     "Random action, chance = epsilon"
+    ],
+    [
+     "Exploit",
+     "Best-known action"
+    ],
+    [
+     "Epsilon",
+     "Starts at 1.0, shrinks to 0.05"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Choosing an action is an epsilon greedy policy.",
+     "show": 0
+    },
+    {
+     "say": "With probability epsilon, try a random action. That's exploration.",
+     "show": 1
+    },
+    {
+     "say": "Otherwise, pick the best known action. That's exploitation.",
+     "show": 2
+    },
+    {
+     "say": "Epsilon starts at one, because the agent knows nothing, and shrinks after every episode, down to five percent.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "bars",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "Evaluate, then plot",
+   "big": "100%",
+   "sub": "success rate, with no random moves",
+   "beats": [
+    {
+     "say": "Evaluate a hundred runs with no random moves, so you measure what the agent actually learned.",
+     "show": 0
+    },
+    {
+     "say": "On the non-slippery lake, a well-trained agent should reach a hundred percent.",
+     "show": 1
+    },
+    {
+     "say": "Then plot a moving average of rewards, your Project 2 idea again. The curve starts near zero and rises.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is the trained agent evaluated without random actions?",
+   "options": [
+    "Random actions are illegal in FrozenLake",
+    "So the result measures what it learned, not lucky or unlucky moves",
+    "Evaluation is faster without them"
+   ],
+   "answer": 1,
+   "good": "That's right. Without random actions, the result measures what the agent actually learned, not lucky or unlucky random moves.",
+   "bad": "Not quite. Without random actions, the result measures what the agent actually learned, not lucky or unlucky random moves.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is the trained agent evaluated without random actions?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A trained Q-learning agent",
+     ""
+    ],
+    [
+     "Learning curve and success rate",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a trained Q-learning agent,",
+     "show": 1
+    },
+    {
+     "say": "with a plotted learning curve and an evaluated success rate.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 7, testing a robot behavior in simulation.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1007,6 +2193,225 @@ behavior_testing_project/
 4. What does the safety check do, and how did the test show it works?
 
 *Answers: 1) One run can succeed by luck; many varied trials reveal how often the behavior fails and under which conditions. 2) Reaching the goal within 200 steps, and never entering an obstacle cell. 3) It builds the same worlds every time, so different behaviors can be compared on identical tests. 4) It checks the whole planned path before moving and stops safely if any step is invalid; with the buggy planner, every collision became a safety stop on the same worlds.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Project 7 · Behavior testing",
+   "title": "From worked once to ready",
+   "beats": [
+    {
+     "say": "Welcome to Project 7."
+    },
+    {
+     "say": "Here you validate a robot behavior for safety and reliability. That's what separates it worked once, from ready to test on real hardware."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Measurable success criteria",
+   "items": [
+    [
+     "Reaches the goal",
+     "Within 200 steps"
+    ],
+    [
+     "Never collides",
+     "No obstacle cells, ever"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The behavior: plan a path with your Project 5 A star planner, then move along it one cell at a time.",
+     "show": 0
+    },
+    {
+     "say": "Write specific pass or fail conditions.",
+     "show": 0
+    },
+    {
+     "say": "It reaches the goal within two hundred steps.",
+     "show": 1
+    },
+    {
+     "say": "And it never enters an obstacle cell.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Many randomized trials",
+   "steps": [
+    "Random world",
+    "Run the behavior",
+    "Record outcome + reason",
+    "Repeat at 3 densities"
+   ],
+   "beats": [
+    {
+     "say": "One run can succeed by luck. So run many.",
+     "show": 0
+    },
+    {
+     "say": "Each trial builds a random world, with a free start and goal.",
+     "show": 1
+    },
+    {
+     "say": "Run the behavior, and record success, steps, and why it ended.",
+     "show": 2
+    },
+    {
+     "say": "Repeat at three obstacle densities. A fixed seed rebuilds the same worlds, so you can compare behaviors on identical tests.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab · Step 8",
+   "title": "A safety check before moving",
+   "file": "run_tests",
+   "code": "def path_is_safe(grid, path, start, goal):\n    if path is None or path[0] != start or path[-1] != goal:\n        return False\n    if len(path) - 1 > MAX_STEPS:\n        return False\n    for a, b in zip(path, path[1:]):\n        if abs(a[0] - b[0]) + abs(a[1] - b[1]) != 1 or grid[b] == 1:\n            return False\n    return True",
+   "beats": [
+    {
+     "say": "A planner can have bugs. So check the whole plan before the robot moves.",
+     "show": 0
+    },
+    {
+     "say": "It must start and end in the right place, fit the step limit, and make only single, obstacle-free moves.",
+     "show": 1
+    },
+    {
+     "say": "If anything is wrong, stop safely.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Lab · Step 8",
+   "title": "Prove the safeguard works",
+   "items": [
+    [
+     "Buggy planner, no safeguard",
+     "Collisions ✗"
+    ],
+    [
+     "Buggy planner, safeguard",
+     "Safety stops ✓"
+    ],
+    [
+     "A*, safeguard",
+     "Doesn't get in the way ✓"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Then test it with a deliberately buggy planner that walks straight to the goal, ignoring obstacles.",
+     "show": 0
+    },
+    {
+     "say": "Without the safeguard, it collides.",
+     "show": 1
+    },
+    {
+     "say": "With it, on the same worlds, those cases become safety stops.",
+     "show": 2
+    },
+    {
+     "say": "And with A star, it changes nothing except turning no path found into a safety stop.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why run many randomized trials instead of one demo run?",
+   "options": [
+    "One run can succeed by luck; many varied trials show how often it fails",
+    "Randomness makes the robot faster",
+    "One run can't use the A* planner"
+   ],
+   "answer": 0,
+   "good": "That's right. One run can succeed by luck. Many varied trials reveal how often the behavior fails, and under which conditions.",
+   "bad": "Not quite. One run can succeed by luck. Many varied trials reveal how often the behavior fails, and under which conditions.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why run many randomized trials instead of one demo run?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Success rates across randomized trials",
+     ""
+    ],
+    [
+     "A failure analysis",
+     ""
+    ],
+    [
+     "A verified safety safeguard",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a test suite with success-rate metrics across randomized trials,",
+     "show": 1
+    },
+    {
+     "say": "a failure analysis,",
+     "show": 2
+    },
+    {
+     "say": "and a verified safety safeguard.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 8, controlling a simulated robot with R O S 2.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1703,3 +3108,239 @@ ros2_lab/
 5. How does the waypoint follower use the output of the Project 5 planner?
 
 *Answers: 1) It subscribes to `/turtle1/pose` to get the turtle's position and heading, and it publishes `geometry_msgs/msg/Twist` velocity commands on `/turtle1/cmd_vel`. 2) Each command is proportional to its error: forward speed is a gain times the distance to the goal, and turn rate is a gain times the heading error, both capped at a maximum. 3) So the turtle always turns the short way; without wrapping, an error just past a half turn would make it spin almost all the way around. 4) Sourcing tells that terminal where the newly built package and its nodes are installed; without it, ROS 2 can't find them. 5) It reduces the A* grid path to its corner cells, converts each cell to an x and y position in meters, and drives to each point in order, moving on when the turtle is within the tolerance.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Project 8 · ROS 2",
+   "title": "The whole loop, on a real stack",
+   "beats": [
+    {
+     "say": "Welcome to the final project."
+    },
+    {
+     "say": "You'll run R O S 2, write a Python node that reads a simulated robot's position and sends it velocity commands, then drive it along your Project 5 path."
+    },
+    {
+     "say": "This one runs in Docker on your own computer, not in Colab. If you can't run it, read along."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "container",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "R O S 2 in Docker",
+   "steps": [
+    "Install Docker",
+    "Build ros2-jazzy-lab",
+    "docker run, open the browser screen",
+    "ros2 run turtlesim"
+   ],
+   "beats": [
+    {
+     "say": "Docker runs software in a container, a sealed-off mini Linux system, so R O S 2 runs the same on Windows, mac O S and Linux.",
+     "show": 0
+    },
+    {
+     "say": "Build an image from the official R O S 2 Jazzy image, plus turtlesim, a tiny 2 D robot simulator.",
+     "show": 1
+    },
+    {
+     "say": "Start the container. Its screen appears in your browser, only on your own computer.",
+     "show": 2
+    },
+    {
+     "say": "Open a terminal inside it, and run turtlesim. A turtle appears in the browser tab.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "chain",
+   "kicker": "Lab · Step 5",
+   "title": "Nodes and topics",
+   "items": [
+    [
+     "/turtle1/pose",
+     "Turtlesim publishes position"
+    ],
+    [
+     "/turtle1/cmd_vel",
+     "Turtlesim listens for commands"
+    ],
+    [
+     "Twist",
+     "linear.x and angular.z"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "R O S 2 programs are nodes. They publish messages on named topics, and any node can subscribe.",
+     "show": 0
+    },
+    {
+     "say": "Turtlesim publishes the turtle's position on the pose topic.",
+     "show": 1
+    },
+    {
+     "say": "And it subscribes to velocity commands on the cmd vel topic.",
+     "show": 2
+    },
+    {
+     "say": "A Twist message holds the velocities. For a ground robot, only forward speed and turn rate matter.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Lab · Step 7",
+   "title": "A proportional controller",
+   "file": "controller_math.py",
+   "code": "heading_error = wrap_angle(math.atan2(dy, dx) - theta)\nangular = clamp(k_angular * heading_error, max_angular)\nlinear = clamp(k_linear * distance, max_linear)\nif abs(heading_error) > turn_first_angle:\n    linear = 0.0  # facing the wrong way: turn in place first\nreturn linear, angular, False",
+   "beats": [
+    {
+     "say": "The controller math has no R O S imports, so you can test it with plain Python, and pytest.",
+     "show": 0
+    },
+    {
+     "say": "Turn rate is a gain times the heading error. Wrapping keeps the error between minus pi and pi, so the turtle always turns the short way.",
+     "show": 1
+    },
+    {
+     "say": "Forward speed is a gain times the distance, capped. If the goal is far off to the side, turn in place first.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Lab · Step 9",
+   "title": "The go-to-goal node",
+   "file": "go_to_goal.py",
+   "code": "self.cmd_pub = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)\nself.create_subscription(Pose, '/turtle1/pose', self.on_pose, 10)\nself.create_timer(0.05, self.control_step)  # 20 times a second",
+   "beats": [
+    {
+     "say": "The node puts the loop together.",
+     "show": 0
+    },
+    {
+     "say": "The subscription remembers each new pose. That's sense.",
+     "show": 1
+    },
+    {
+     "say": "A timer runs the controller twenty times a second. That's think.",
+     "show": 1
+    },
+    {
+     "say": "And the publisher sends a Twist command. That's act.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Lab · Steps 10 to 13",
+   "title": "Build, run, follow, launch",
+   "steps": [
+    "Entry points in setup.py",
+    "colcon build + source",
+    "Follow the Project 5 path",
+    "ros2 launch"
+   ],
+   "beats": [
+    {
+     "say": "Register the nodes in setup dot py.",
+     "show": 1
+    },
+    {
+     "say": "Build with colcon, then source the install setup file in every new terminal and after every build.",
+     "show": 2
+    },
+    {
+     "say": "The waypoint follower reduces your Project 5 maze path to its corners, and the turtle draws the zigzag.",
+     "show": 3
+    },
+    {
+     "say": "And one launch file starts turtlesim and the follower together.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why must you run source install/setup.bash after colcon build?",
+   "options": [
+    "It deletes the old build files",
+    "It starts the turtlesim window",
+    "It tells that terminal where the newly built nodes are installed"
+   ],
+   "answer": 2,
+   "good": "That's right. Sourcing tells that terminal where the newly built package and its nodes are installed. Without it, R O S 2 can't find them.",
+   "bad": "Not quite. Sourcing tells that terminal where the newly built package and its nodes are installed. Without it, R O S 2 can't find them.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why must you run source install/setup.bash after colcon build?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "One launch command drives the Project 5 path",
+     ""
+    ],
+    [
+     "Controller tests pass",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "a turtle controller package drives the turtle along your Project 5 path from a single launch command,",
+     "show": 1
+    },
+    {
+     "say": "and your controller tests pass.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Robotics A I Engineer. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

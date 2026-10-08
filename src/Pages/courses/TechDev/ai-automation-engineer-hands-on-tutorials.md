@@ -104,6 +104,217 @@ automation_opportunity_project/
 
 *Answers: 1) It is repetitive, rule-based or pattern-based, and time-costly. 2) Small hidden steps, like checking for duplicates by eye, are real work the automation must also do, or it will produce wrong results. 3) The event that starts the workflow, such as a new email arriving, a scheduled time, or a form submission. 4) Edge cases are where people use judgment; knowing them up front tells you where the automation needs special handling or a human check.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "search",
+   "kicker": "Project 1 · Find the opportunity",
+   "title": "Map before you automate",
+   "beats": [
+    {
+     "say": "Welcome to A I Automation Engineer: Hands-On Project Tutorials."
+    },
+    {
+     "say": "In this first project, you'll work out what's actually worth automating, before writing a single line of automation code."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "mess",
+   "kicker": "Step 2",
+   "title": "Pick a real, repetitive workflow",
+   "quote": "Check the inbox → copy new leads into a spreadsheet → email a summary to sales.",
+   "beats": [
+    {
+     "say": "Start with a real workflow that people repeat.",
+     "show": 0
+    },
+    {
+     "say": "For example: every morning, someone checks a shared inbox, copies new leads into a spreadsheet, and emails a summary to the sales team.",
+     "show": 1
+    },
+    {
+     "say": "Then, in a text cell called workflow map, write out every step, including the small ones people skip mentioning, like checking for duplicates by eye.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Step 4",
+   "title": "Score it on automation fit",
+   "items": [
+    [
+     "Repetitive",
+     "Done often"
+    ],
+    [
+     "Rule- or pattern-based",
+     "No deep judgment every time"
+    ],
+    [
+     "Time-costly",
+     "Worth the effort"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Good automation candidates share three qualities.",
+     "show": 0
+    },
+    {
+     "say": "Repetitive: the work is done often.",
+     "show": 1
+    },
+    {
+     "say": "Rule-based or pattern-based: it doesn't need deep human judgment every time.",
+     "show": 2
+    },
+    {
+     "say": "And time-costly: it's worth the effort to automate.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "stopwatch",
+   "kicker": "Steps 5 and 6",
+   "title": "Triggers, outputs and time saved",
+   "big": "~65 hours/year",
+   "sub": "15 minutes × 5 days a week",
+   "beats": [
+    {
+     "say": "Note what starts the workflow, like a new email, a scheduled time, or a form submission, and what it produces at the end.",
+     "show": 0
+    },
+    {
+     "say": "Then estimate the time it costs. Fifteen minutes, five days a week, is about sixty five hours a year.",
+     "show": 1
+    },
+    {
+     "say": "That number makes the case for automating.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "doc",
+   "kicker": "Steps 7 and 8",
+   "title": "Edge cases, then the summary",
+   "steps": [
+    "Workflow description",
+    "Automation fit score",
+    "Trigger → output",
+    "Time savings",
+    "Known edge cases"
+   ],
+   "beats": [
+    {
+     "say": "Next, list the edge cases, where someone uses judgment. For example: if the email looks spammy, they don't add it.",
+     "show": 0
+    },
+    {
+     "say": "Then write the opportunity summary in this order.",
+     "show": 0
+    },
+    {
+     "say": "The workflow description.",
+     "show": 1
+    },
+    {
+     "say": "Its automation fit score.",
+     "show": 2
+    },
+    {
+     "say": "The trigger and output.",
+     "show": 3
+    },
+    {
+     "say": "The time savings estimate.",
+     "show": 4
+    },
+    {
+     "say": "And the known edge cases.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why list edge cases before you build anything?",
+   "options": [
+    "Edge cases are where people use judgment, so they show where the automation needs special handling or a human check",
+    "So you can delete them from the workflow",
+    "Because cron needs them to schedule the script"
+   ],
+   "answer": 0,
+   "good": "That's right. Edge cases are where people use judgment. Knowing them up front tells you where the automation needs special handling or a human check.",
+   "bad": "Not quite. Edge cases are where people use judgment. Knowing them up front tells you where the automation needs special handling or a human check.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why list edge cases before you build anything?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Workflow mapped and scored",
+     ""
+    ],
+    [
+     "Opportunity summary written",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've mapped a real workflow step by step and scored it for automation fit,",
+     "show": 1
+    },
+    {
+     "say": "and written an opportunity summary with a time-savings estimate and known edge cases.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, a script that runs on a schedule.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Build a Scheduled Automation Script
@@ -254,6 +465,200 @@ scheduled_automation_project/
 5. What do Windows users use instead of cron?
 
 *Answers: 1) Schedulers start the script from another folder, such as your home folder, so a plain file name would put the log in the wrong place. 2) If it fails by hand, it will fail on schedule too, and it is much easier to fix while you are watching. 3) Run at minute 0 of hour 8, every day of every month: daily at 8:00 AM. 4) Nobody is watching when it runs, so logging the error is the only way you will learn something broke. 5) Task Scheduler.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "stopwatch",
+   "kicker": "Project 2 · Scheduled automation",
+   "title": "A script that runs without you",
+   "beats": [
+    {
+     "say": "Welcome to Project 2."
+    },
+    {
+     "say": "You'll build the smallest possible working automation: a script that runs on its own, on a schedule."
+    },
+    {
+     "say": "This one runs on your computer, in VS Code and your terminal, not in a notebook."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "file",
+   "kicker": "Step 2",
+   "title": "The smallest useful script",
+   "file": "check_task.py",
+   "code": "LOG_FILE = Path(__file__).resolve().parent / \"log.txt\"\n\ndef log(message):\n    with open(LOG_FILE, \"a\") as f:\n        f.write(f\"{datetime.datetime.now()} {message}\\n\")\n\ndef main():\n    log(\"Ran\")\n\nif __name__ == \"__main__\":\n    main()",
+   "beats": [
+    {
+     "say": "Create check underscore task dot py.",
+     "show": 0
+    },
+    {
+     "say": "It writes a timestamped line to log dot txt every time it runs.",
+     "show": 1
+    },
+    {
+     "say": "The log path is built from the script's own location, using double underscore file. Schedulers start your script from a different folder, so a plain log dot txt would land in the wrong place.",
+     "show": 1
+    },
+    {
+     "say": "Run it by hand first, and check the log shows one line ending in Ran.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Steps 4 and 5",
+   "title": "Real logic, wrapped in try and except",
+   "file": "check_task.py",
+   "code": "def main():\n    INBOX.mkdir(exist_ok=True)\n    files = sorted(p.name for p in INBOX.iterdir() if p.is_file())\n    log(f\"Found {len(files)} file(s) in inbox: {files}\")\n\nif __name__ == \"__main__\":\n    try:\n        main()\n    except Exception as e:\n        log(f\"ERROR: {e}\")",
+   "beats": [
+    {
+     "say": "Now give main real work. This example counts the files in an inbox folder and logs them.",
+     "show": 0
+    },
+    {
+     "say": "Then wrap the call to main in try and except, so a failure is logged instead of lost.",
+     "show": 1
+    },
+    {
+     "say": "Nobody is watching a scheduled script, so the log is the only way you'll find out something went wrong.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "calc",
+   "kicker": "Step 6",
+   "title": "Schedule it with cron",
+   "big": "0 8 * * *",
+   "sub": "minute · hour · day of month · month · day of week",
+   "beats": [
+    {
+     "say": "On Mac, Linux or W S L, add one line to your cron table with crontab dash e, using the full paths to Python and your script.",
+     "show": 0
+    },
+    {
+     "say": "Zero, eight, star, star, star runs it every day at eight A M.",
+     "show": 1
+    },
+    {
+     "say": "The five fields are minute, hour, day of month, month, and day of week.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Steps 6 to 8",
+   "title": "Windows, verify, document",
+   "items": [
+    [
+     "Task Scheduler",
+     "Windows: Create Basic Task, daily 8:00 AM"
+    ],
+    [
+     "Verify",
+     "Check log.txt, or */5 * * * * to test"
+    ],
+    [
+     "README.md",
+     "The schedule and how to change it"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "On Windows, there's no cron. Use Task Scheduler: create a basic task, daily at eight A M, that starts Python with the full path to your script.",
+     "show": 1
+    },
+    {
+     "say": "Then verify it ran without you. Check log dot txt the next day, or test faster: every five minutes in cron, or right-click and Run in Task Scheduler.",
+     "show": 2
+    },
+    {
+     "say": "Finally, write a README that explains the schedule and how someone else could change it.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why build the log file's path from double underscore file, instead of just using log dot txt?",
+   "options": [
+    "It makes the file smaller",
+    "Schedulers start the script from another folder, so a plain file name would put the log in the wrong place",
+    "Cron can't write text files"
+   ],
+   "answer": 1,
+   "good": "That's right. Schedulers start the script from another folder, such as your home folder, so a plain file name would put the log in the wrong place.",
+   "bad": "Not quite. Schedulers start the script from another folder, such as your home folder, so a plain file name would put the log in the wrong place.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why build the log file's path from double underscore file, instead of just using log dot txt?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Scheduled and verified",
+     ""
+    ],
+    [
+     "Logging and error handling in place",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a scheduled script, verified to run automatically,",
+     "show": 1
+    },
+    {
+     "say": "with logging and error handling.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, a multi-step workflow.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -421,6 +826,192 @@ multistep_workflow_project/
 
 *Answers: 1) A way for one system to notify another automatically by sending an HTTP request to a URL when something happens, so the receiver doesn't have to keep checking. 2) Each step can be tested, fixed, and replaced on its own, and errors point to exactly one step. 3) The first version crashes and stops the whole run; with per-step handling, the failure is logged with the step name and the other items are still processed. 4) `check_for_new_items` skips any item whose id is already saved in leads.csv, which prevents duplicates.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "chain",
+   "kicker": "Project 3 · Multi-step workflow",
+   "title": "From one script to a workflow",
+   "beats": [
+    {
+     "say": "Welcome to Project 3."
+    },
+    {
+     "say": "You'll chain several steps together, moving from a single script to a real workflow, using the new leads example from Project 1."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "api",
+   "kicker": "Step 3",
+   "title": "What's a webhook?",
+   "quote": "A webhook: one system notifies another by sending an HTTP request to a URL when something happens.",
+   "beats": [
+    {
+     "say": "First, a term you'll meet everywhere in automation.",
+     "show": 0
+    },
+    {
+     "say": "A webhook is a way for one system to notify another automatically when something happens, by sending an H T T P request to a U R L.",
+     "show": 1
+    },
+    {
+     "say": "The receiver doesn't have to keep checking. This project checks a source on demand, but in a live system, a webhook could start the workflow.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "blocks",
+   "kicker": "Step 4",
+   "title": "Each step is a function",
+   "steps": [
+    "check_for_new_items",
+    "extract_data",
+    "save_to_destination",
+    "send_notification"
+   ],
+   "beats": [
+    {
+     "say": "Write each step as its own function, working on a list of five sample messages that stands in for a real inbox.",
+     "show": 0
+    },
+    {
+     "say": "Check for new items, skipping any id already saved in leads dot C S V.",
+     "show": 1
+    },
+    {
+     "say": "Extract data, and reject any item with no sender.",
+     "show": 2
+    },
+    {
+     "say": "Save to destination, appending a row to leads dot C S V.",
+     "show": 3
+    },
+    {
+     "say": "And send notification, which just prints for now.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Steps 5 and 6",
+   "title": "Per-step error handling",
+   "file": "run_workflow",
+   "code": "for item in items:\n    try:\n        data = extract_data(item)\n    except Exception as e:\n        print(f\"FAILED at step 2 (extract_data) for item {item.get('id')}: {e}\")\n        failed += 1\n        continue\n    try:\n        save_to_destination(data)\n        processed += 1\n    except Exception as e:\n        print(f\"FAILED at step 3 (save_to_destination) for item {item['id']}: {e}\")\n        failed += 1",
+   "beats": [
+    {
+     "say": "Chaining the steps with no error handling means one bad item stops the whole run.",
+     "show": 0
+    },
+    {
+     "say": "So give each step its own try and except.",
+     "show": 1
+    },
+    {
+     "say": "A failure is printed with the step name, counted, and skipped, and the rest of the items carry on.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "test",
+   "kicker": "Step 7",
+   "title": "Test with realistic input",
+   "big": "4 processed · 1 failed",
+   "sub": "Second run: 0 processed, 1 failed",
+   "beats": [
+    {
+     "say": "Run the workflow. Item five has no sender, so step two fails for it, and the other four are saved.",
+     "show": 0
+    },
+    {
+     "say": "You'll see: processed four items, one failed.",
+     "show": 1
+    },
+    {
+     "say": "Run it again, and it processes zero, because the first four are already saved. Then add an edge case of your own and test again.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does running the workflow a second time process zero new items?",
+   "options": [
+    "The source list is emptied after the first run",
+    "send_notification blocks repeat runs",
+    "check_for_new_items skips any item whose id is already saved in leads.csv"
+   ],
+   "answer": 2,
+   "good": "That's right. Check for new items skips any item whose id is already saved in leads dot C S V, which prevents duplicates.",
+   "bad": "Not quite. Check for new items skips any item whose id is already saved in leads dot C S V, which prevents duplicates.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does running the workflow a second time process zero new items?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A working multi-step workflow",
+     ""
+    ],
+    [
+     "Tested with edge cases",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working multi-step workflow script,",
+     "show": 1
+    },
+    {
+     "say": "tested against realistic input, including edge cases.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, an A I decision step.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 4 (Module 4): Add an AI Decision Step to an Existing Workflow
@@ -555,6 +1146,188 @@ ai_decision_step_project/
 4. Why test with genuinely ambiguous messages, not just clear ones?
 
 *Answers: 1) A narrow question gives a short, predictable answer that code can parse reliably. 2) It raises an exception when the API returns an error status, such as a bad key or rate limit, instead of continuing with a bad response. 3) A safe default used when a step fails; it returns False (not urgent) so the workflow keeps running. 4) Ambiguous cases are where the AI is most likely to be wrong, so they show you its real limits.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "bulb",
+   "kicker": "Project 4 · AI decision step",
+   "title": "Where rules fall short",
+   "beats": [
+    {
+     "say": "Welcome to Project 4."
+    },
+    {
+     "say": "You'll add an L L M driven decision into your Project 3 workflow. This is the point where automation stops being purely rule-based."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "ask",
+   "kicker": "Steps 2 and 3",
+   "title": "One narrow question",
+   "quote": "Is this customer message urgent? Answer only 'yes' or 'no'.",
+   "beats": [
+    {
+     "say": "Look back at your edge cases. Which need judgment a simple rule can't capture, like whether a message sounds urgent?",
+     "show": 0
+    },
+    {
+     "say": "Design the A I decision as one narrow question, with an answer code can parse.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "api",
+   "kicker": "Step 4",
+   "title": "Ask Claude",
+   "file": "is_urgent",
+   "code": "\"max_tokens\": 5,\n\"messages\": [\n    {\"role\": \"user\", \"content\": f\"Is this message urgent? Answer only yes or no.\\n\\n{message_text}\"}\n],\n...\nresponse.raise_for_status()\nanswer = response.json()[\"content\"][0][\"text\"].strip().lower()\nreturn answer.startswith(\"yes\")",
+   "beats": [
+    {
+     "say": "Is urgent posts the message to the Claude A P I.",
+     "show": 0
+    },
+    {
+     "say": "Max tokens is just five, which forces a short, structured answer.",
+     "show": 1
+    },
+    {
+     "say": "Raise for status turns H T T P errors, like a bad key or a rate limit, into exceptions.",
+     "show": 1
+    },
+    {
+     "say": "And starts with yes also accepts answers like Yes with a period. The dashboard message returns True, the thank-you returns False.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Step 5",
+   "title": "A safe fallback",
+   "file": "safe_is_urgent",
+   "code": "def safe_is_urgent(message_text):\n    try:\n        return is_urgent(message_text)\n    except Exception as e:\n        print(f\"AI decision failed ({e}); treating message as not urgent\")\n        return False  # safe default",
+   "beats": [
+    {
+     "say": "A fallback is a safe default used when a step can't be completed normally.",
+     "show": 0
+    },
+    {
+     "say": "If the A I call fails, safe is urgent logs it and treats the message as not urgent, so the workflow doesn't crash.",
+     "show": 1
+    },
+    {
+     "say": "Think about which default is safer for your own workflow. Sometimes urgent is the safer guess.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Steps 6 to 8",
+   "title": "Wire it in and test it",
+   "steps": [
+    "extract → is it urgent? → save",
+    "1 URGENT notification",
+    "Test ambiguous cases",
+    "Document limits"
+   ],
+   "beats": [
+    {
+     "say": "Wire the decision into run workflow, between extracting and saving.",
+     "show": 1
+    },
+    {
+     "say": "If a message is urgent, send an urgent notification. With the sample data, you'll see one, for the dashboard down message.",
+     "show": 2
+    },
+    {
+     "say": "Then test ambiguous messages, like: the invoice seems wrong, could you look when you get a chance?",
+     "show": 3
+    },
+    {
+     "say": "And document what the A I decides, how confident you are, and what happens if it's wrong.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why ask the A I one narrow yes or no question, instead of an open-ended one?",
+   "options": [
+    "Open-ended questions cost nothing",
+    "A narrow question gives a short, predictable answer that code can parse reliably",
+    "The A P I only accepts yes or no questions"
+   ],
+   "answer": 1,
+   "good": "That's right. A narrow question gives a short, predictable answer that code can parse reliably.",
+   "bad": "Not quite. A narrow question gives a short, predictable answer that code can parse reliably.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why ask the A I one narrow yes or no question, instead of an open-ended one?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "AI decision step integrated",
+     ""
+    ],
+    [
+     "Tested and limits documented",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your workflow has an integrated A I decision step,",
+     "show": 1
+    },
+    {
+     "say": "tested against ambiguous cases and documented with its limitations.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, a task-automation agent.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -773,6 +1546,240 @@ task_agent_project/
 
 *Answers: 1) No. The model returns a `tool_use` block naming the tool and its input; your code decides whether to run it and sends back the result. 2) `name`, `description`, and `input_schema` (a JSON Schema for the arguments). 3) So the model can only trigger the functions you chose, never any other function in your code. 4) Before the action runs, because once an email is sent it can't be taken back. 5) In a user message containing a `tool_result` block whose `tool_use_id` matches the `tool_use` block's `id`.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "laptop",
+   "kicker": "Project 5 · Task-automation agent",
+   "title": "Let the AI choose the action",
+   "beats": [
+    {
+     "say": "Welcome to Project 5."
+    },
+    {
+     "say": "Instead of answering one narrow question, the A I now decides which action to take, using tool calling."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Step 2",
+   "title": "How tool calling works",
+   "steps": [
+    "Model requests a tool",
+    "Your code decides and runs it",
+    "You send the result back"
+   ],
+   "beats": [
+    {
+     "say": "Tool calling lets an L L M ask to run a function you've defined, with arguments it chooses.",
+     "show": 0
+    },
+    {
+     "say": "The model never runs anything itself.",
+     "show": 0
+    },
+    {
+     "say": "It sends back a request.",
+     "show": 1
+    },
+    {
+     "say": "Your code decides whether to run it.",
+     "show": 2
+    },
+    {
+     "say": "And you send the result back.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "lock",
+   "kicker": "Steps 3 and 4",
+   "title": "Tools, an allow-list, and descriptions",
+   "items": [
+    [
+     "send_email · create_task · log_note",
+     "Simulated tools"
+    ],
+    [
+     "ALLOWED_TOOLS",
+     "The only functions the agent may run"
+    ],
+    [
+     "NEEDS_CONFIRMATION",
+     "{\"send_email\"}"
+    ],
+    [
+     "name · description · input_schema",
+     "How the model sees each tool"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Define three simulated tools that print instead of acting, so you can test safely.",
+     "show": 0
+    },
+    {
+     "say": "Send email, create task, and log note.",
+     "show": 1
+    },
+    {
+     "say": "Put them in an allowed tools dictionary. The model can only trigger those, never any other function in your notebook.",
+     "show": 2
+    },
+    {
+     "say": "Mark send email as needing confirmation, because it has side effects.",
+     "show": 3
+    },
+    {
+     "say": "Then describe each tool with a name, a description, and an input schema in J S O N Schema. The model uses the description to choose.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Step 6",
+   "title": "Run tools safely",
+   "file": "run_tool",
+   "code": "def run_tool(name, args):\n    if name not in ALLOWED_TOOLS:\n        return f\"Unknown tool '{name}'. Not run.\", True\n    if name in NEEDS_CONFIRMATION:\n        confirm = input(\"Allow this? (y/n): \")\n        if confirm.strip().lower() != \"y\":\n            return \"A human declined this action. It was not done.\", True\n    try:\n        return str(ALLOWED_TOOLS[name](**args)), False\n    except Exception as e:\n        return f\"Tool failed: {e}\", True",
+   "beats": [
+    {
+     "say": "Run tool is the safety gate.",
+     "show": 0
+    },
+    {
+     "say": "An unknown tool is refused.",
+     "show": 1
+    },
+    {
+     "say": "For a risky tool, it shows the arguments and asks a human first. If they decline, it's not done.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Steps 6 to 8",
+   "title": "The agent loop, then test it",
+   "items": [
+    [
+     "tool_use → tool_result",
+     "Matching tool_use_id, always"
+    ],
+    [
+     "max_turns",
+     "Stops endless loops"
+    ],
+    [
+     "5 test situations",
+     "Including one with no tool"
+    ],
+    [
+     "Answer n",
+     "No email sent, and the agent says so"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Run agent asks the model, runs the tools it picks, sends the results back, and repeats until it's done.",
+     "show": 0
+    },
+    {
+     "say": "Every tool use block gets a matching tool result with the same id, even when the action was declined.",
+     "show": 1
+    },
+    {
+     "say": "Max turns stops a confused agent from looping forever.",
+     "show": 2
+    },
+    {
+     "say": "Test five different situations, including one that needs no tool, like what's two plus two.",
+     "show": 3
+    },
+    {
+     "say": "Then answer n at the email prompt, and check no email was sent, and the agent admits it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "When must the human confirmation happen, and why?",
+   "options": [
+    "Before the action runs, because once an email is sent it can't be taken back",
+    "After the action runs, so the human can review it",
+    "Only when the model asks for it"
+   ],
+   "answer": 0,
+   "good": "That's right. Confirm before the action runs, because once an email is sent it can't be taken back.",
+   "bad": "Not quite. Confirm before the action runs, because once an email is sent it can't be taken back.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "When must the human confirmation happen, and why?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A tool-calling agent, tested",
+     ""
+    ],
+    [
+     "Human confirmation for risky actions",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working tool-calling agent, tested across varied scenarios,",
+     "show": 1
+    },
+    {
+     "say": "with human confirmation for risky actions.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, monitoring and error handling.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 6 (Module 6): Add Monitoring and Error Handling
@@ -942,3 +1949,198 @@ monitoring_project/
 5. Why break things on purpose during testing?
 
 *Answers: 1) Each entry has a timestamp and a severity level and is saved to a file, so you can reconstruct what happened later. 2) A lightweight test that a dependency like an API is reachable and working; you run it before the real workflow. 3) A network blip, because it is temporary and often succeeds on a retry; bad input will fail every time. 4) So the alert fires only for failures in a row, which signal a real problem, not for occasional isolated ones. 5) To prove your logging, retries, and alerts actually work before a real failure happens while nobody is watching.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Project 6 · Monitoring and error handling",
+   "title": "Safe to run unattended",
+   "beats": [
+    {
+     "say": "Welcome to the last project."
+    },
+    {
+     "say": "You'll make your agent and earlier workflows production-safe: reliable enough to trust running while nobody is watching."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "doc",
+   "kicker": "Steps 2 and 3",
+   "title": "Structured logging",
+   "file": "logging",
+   "code": "import logging\nlogging.basicConfig(filename=\"automation.log\", level=logging.INFO,\n                    format=\"%(asctime)s %(levelname)s %(message)s\", force=True)\n\nlogging.info(f\"AI decided: urgent={urgent} for item {data['id']}\")\nlogging.info(f\"Agent selected tool: {name} with input {args}\")",
+   "beats": [
+    {
+     "say": "Structured logging records what happened, when, and at what severity level, instead of scattered print statements.",
+     "show": 0
+    },
+    {
+     "say": "Every entry is timestamped and saved to automation dot log.",
+     "show": 1
+    },
+    {
+     "say": "Then log every key decision: what the A I decided for each item, and which tool the agent selected.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Steps 4 and 5",
+   "title": "Health checks and retries",
+   "items": [
+    [
+     "Health check",
+     "max_tokens: 1, before the real run"
+    ],
+    [
+     "Retry ✓",
+     "Network errors, timeouts, 429, 500+"
+    ],
+    [
+     "Don't retry ✗",
+     "Bad input, wrong key (401)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A health check is a lightweight test that a dependency is reachable before the real workflow runs. This one asks for just one token, so it costs almost nothing.",
+     "show": 1
+    },
+    {
+     "say": "A transient failure is temporary, like a network blip or a rate limit, and often succeeds if retried.",
+     "show": 2
+    },
+    {
+     "say": "A permanent failure, like bad input or a wrong A P I key, won't. So call with retry raises those straight away.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "warning",
+   "kicker": "Step 6",
+   "title": "Alert on repeated failures",
+   "file": "alerting",
+   "code": "def record_failure():\n    global consecutive_failures\n    consecutive_failures += 1\n    if consecutive_failures >= 3:\n        logging.error(f\"ALERT: {consecutive_failures} consecutive failures, needs attention\")\n\ndef record_success():\n    global consecutive_failures\n    consecutive_failures = 0",
+   "beats": [
+    {
+     "say": "Count failures in a row.",
+     "show": 0
+    },
+    {
+     "say": "After three, log an alert. Record success resets the counter, so the alert only fires for failures in a row.",
+     "show": 1
+    },
+    {
+     "say": "Monitored is urgent combines it all: retries, failure tracking, and the same safe default as Project 4.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "proof",
+   "kicker": "Steps 7 and 8",
+   "title": "Break it on purpose",
+   "steps": [
+    "Set a wrong key",
+    "Call 3 times",
+    "3 ERRORs + ALERT",
+    "Restore the key"
+   ],
+   "beats": [
+    {
+     "say": "Now test your failure handling deliberately.",
+     "show": 0
+    },
+    {
+     "say": "Set a wrong key, and call the monitored function three times.",
+     "show": 1
+    },
+    {
+     "say": "Read automation dot log. You should see an error line for each call, and the alert after the third.",
+     "show": 2
+    },
+    {
+     "say": "A wrong key is a permanent error, so no retry warnings appear. Then restore your real key.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Which kind of failure is worth retrying?",
+   "options": [
+    "Bad input, because it might work next time",
+    "A wrong A P I key",
+    "A network blip, because it's temporary and often succeeds on a retry"
+   ],
+   "answer": 2,
+   "good": "That's right. A network blip is temporary and often succeeds on a retry. Bad input will fail every time.",
+   "bad": "Not quite. A network blip is temporary and often succeeds on a retry. Bad input will fail every time.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Which kind of failure is worth retrying?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Monitored and retry-capable",
+     ""
+    ],
+    [
+     "Tested errors, readable logs",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a monitored, retry-capable automation,",
+     "show": 1
+    },
+    {
+     "say": "with tested error handling and a readable log trail.",
+     "show": 2
+    },
+    {
+     "say": "You've finished A I Automation Engineer. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

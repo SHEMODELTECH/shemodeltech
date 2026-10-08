@@ -101,6 +101,216 @@ multimodal_survey_project/
 
 *Answers: 1) It processes and/or generates more than one modality, such as text, image, audio, or video. 2) A vision-language model understands images and text together; a speech-to-text model converts spoken audio into text. 3) Your code must send data in exactly the format the model expects (for example a base64 image or an audio file) and handle what it returns. 4) Limits on image resolution or file size, audio length, or total tokens across the combined input.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "search",
+   "kicker": "Project 1 · Survey multimodal models",
+   "title": "Know your tools first",
+   "beats": [
+    {
+     "say": "Welcome to Multimodal A I Engineer."
+    },
+    {
+     "say": "Before you build anything, you'll survey the models you'll be pulling from in every later project."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "Four modalities",
+   "items": [
+    [
+     "Text",
+     "Words"
+    ],
+    [
+     "Image",
+     "Still pictures"
+    ],
+    [
+     "Audio",
+     "Speech and sound"
+    ],
+    [
+     "Video",
+     "Moving images, often with audio"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "This course covers four modalities.",
+     "show": 0
+    },
+    {
+     "say": "Text: words.",
+     "show": 1
+    },
+    {
+     "say": "Image: still pictures.",
+     "show": 2
+    },
+    {
+     "say": "Audio: speech and sound.",
+     "show": 3
+    },
+    {
+     "say": "And video: moving images, often with audio.",
+     "show": 4
+    },
+    {
+     "say": "A multimodal model processes or generates more than one of these.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "boxes",
+   "kicker": "Concept",
+   "title": "Model categories",
+   "items": [
+    [
+     "Vision-language (VLM)",
+     "Images + text together"
+    ],
+    [
+     "STT and TTS",
+     "Audio ↔ text"
+    ],
+    [
+     "Image generation",
+     "Images from text prompts"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Models fall into categories by what they can do.",
+     "show": 0
+    },
+    {
+     "say": "Vision-language models, or V L Ms, understand images and text together.",
+     "show": 1
+    },
+    {
+     "say": "Speech-to-text and text-to-speech models convert between audio and text.",
+     "show": 2
+    },
+    {
+     "say": "And image generation models create images from text prompts.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "pencil",
+   "kicker": "Lab · Steps 4 to 7",
+   "title": "Build your survey",
+   "steps": [
+    "2 to 3 models per category",
+    "One differentiator each",
+    "Input and output formats",
+    "Size limits",
+    "Comparison summary"
+   ],
+   "beats": [
+    {
+     "say": "In a text cell called model survey, research two or three models per category.",
+     "show": 1
+    },
+    {
+     "say": "For each, note one key differentiator: cost, quality, latency, or licensing.",
+     "show": 2
+    },
+    {
+     "say": "Write down the input format it expects, like a base64 image or a raw audio file, and what it returns.",
+     "show": 3
+    },
+    {
+     "say": "Note size limits, like image resolution, audio length, or combined token count.",
+     "show": 4
+    },
+    {
+     "say": "Then, in a comparison summary, pick your top model for each combination, and say why.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why write down each model's input and output formats before building?",
+   "options": [
+    "So you can pick the cheapest model",
+    "Formats only matter for audio",
+    "Your code must send data in exactly the format the model expects"
+   ],
+   "answer": 2,
+   "good": "That's right. Your code must send data in exactly the format the model expects, like a base64 image or an audio file, and handle what it returns.",
+   "bad": "Not quite. Your code must send data in exactly the format the model expects, like a base64 image or an audio file, and handle what it returns.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why write down each model's input and output formats before building?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A model survey",
+     ""
+    ],
+    [
+     "A comparison summary across three categories",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a model survey,",
+     "show": 1
+    },
+    {
+     "say": "and a comparison summary covering at least three multimodal model categories.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, sending an image and text together.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Build a Script That Processes Image and Text Inputs
@@ -254,6 +464,205 @@ image_text_project/
 
 *Answers: 1) JSON requests carry text, and base64 turns the image's binary bytes into a text string that fits safely inside the JSON. 2) The message's `content` is a list holding an image block and a text block. 3) In a top-level `"system"` field, separate from the `messages` list. 4) The `media_type` in the image block must match the real file type (for example `image/jpeg` or `image/png`), and unsupported types should fail early with a clear error.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Project 2 · Image and text inputs",
+   "title": "Two modalities at once",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "For the first time, you'll send an image and a question together, the core mechanic behind every later project."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Load and encode an image",
+   "file": "process.py",
+   "code": "from PIL import Image\nimg = Image.open(\"test_image.jpg\")\nprint(img.size, img.format)\n\nimport base64\nwith open(\"test_image.jpg\", \"rb\") as f:\n    image_data = base64.b64encode(f.read()).decode(\"utf-8\")",
+   "beats": [
+    {
+     "say": "Open your photo with Pillow and print its size and format.",
+     "show": 0
+    },
+    {
+     "say": "Then base64 encode it.",
+     "show": 1
+    },
+    {
+     "say": "Base64 turns the image's binary data into a text string that fits safely inside a J S O N request.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "api",
+   "kicker": "Lab · Step 4",
+   "title": "The content array",
+   "file": "process.py",
+   "code": "\"messages\": [{\n    \"role\": \"user\",\n    \"content\": [\n        {\"type\": \"image\", \"source\": {\"type\": \"base64\",\n            \"media_type\": \"image/jpeg\", \"data\": image_data}},\n        {\"type\": \"text\", \"text\": \"Describe what's in this image.\"}\n    ]\n}]",
+   "beats": [
+    {
+     "say": "Now post to the Claude messages A P I.",
+     "show": 0
+    },
+    {
+     "say": "The message content is a list. It holds an image block and a text block, side by side.",
+     "show": 1
+    },
+    {
+     "say": "The reply comes back as a list of blocks too. The text is in the blocks whose type is text.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "laptop",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Test it, then resize",
+   "items": [
+    [
+     "Varied questions",
+     "Describe · count · read text"
+    ],
+    [
+     "img.thumbnail((1024, 1024))",
+     "Smaller, same aspect ratio"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Run it on three or four images, asking different things: describe it, count objects, read the text in it.",
+     "show": 1
+    },
+    {
+     "say": "Then shrink large images with thumbnail, to at most ten twenty four pixels. It keeps the aspect ratio.",
+     "show": 2
+    },
+    {
+     "say": "Large images cost more and can hit the size limit, so resizing first is a good habit.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "package",
+   "kicker": "Lab · Step 7",
+   "title": "One reusable function",
+   "items": [
+    [
+     "ask_claude_about_image",
+     "Bytes + media type + question → text"
+    ],
+    [
+     "\"system\" field",
+     "Top level, not a message"
+    ],
+    [
+     "describe_image",
+     "Media type from the extension"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Finally, wrap it all in a function. Later projects reuse it, so keep it handy.",
+     "show": 0
+    },
+    {
+     "say": "Ask Claude about image takes raw bytes, a media type and a question, and returns the answer text.",
+     "show": 1
+    },
+    {
+     "say": "A top-level system field tells Claude to say so when it can't tell, instead of guessing.",
+     "show": 2
+    },
+    {
+     "say": "And describe image looks up the media type from the file extension, failing early on unsupported types.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why do you base64-encode an image before sending it?",
+   "options": [
+    "J S O N carries text, and base64 turns binary bytes into a text string",
+    "It makes the image smaller",
+    "Claude only reads base64 text"
+   ],
+   "answer": 0,
+   "good": "That's right. J S O N requests carry text, and base64 turns the image's binary bytes into a string that fits safely inside them.",
+   "bad": "Not quite. J S O N requests carry text, and base64 turns the image's binary bytes into a string that fits safely inside them.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why do you base64-encode an image before sending it?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Image + text in, answer out",
+     ""
+    ],
+    [
+     "Tested on multiple images",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your script processes image and text input and returns model responses,",
+     "show": 1
+    },
+    {
+     "say": "tested on multiple images.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, what images and audio look like as numbers.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 3 (Module 3): Extract Features from an Image and an Audio Clip
@@ -363,6 +772,188 @@ feature_extraction_project/
 
 *Answers: 1) Its height, width, and number of color channels (3 for red, green, blue). 2) How many times per second the audio signal was measured. 3) Which frequencies are present and how strong they are over time. 4) A model learns its own features from the same raw numbers automatically and at much larger scale, instead of using a few hand-picked ones.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "graph",
+   "kicker": "Project 3 · Image and audio features",
+   "title": "Look under the hood",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "Before combining modalities, you'll see what an image and an audio clip really are: numbers."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "array",
+   "kicker": "Lab · Step 2",
+   "title": "An image is an array",
+   "file": "extract_features.py",
+   "code": "img = Image.open(\"test_image.jpg\").convert(\"RGB\")\nimg_array = np.array(img)\nprint(\"Shape:\", img_array.shape)\nprint(\"Mean color:\", img_array.mean(axis=(0,1)))",
+   "beats": [
+    {
+     "say": "Turn the image into a numpy array.",
+     "show": 0
+    },
+    {
+     "say": "Its shape gives height, width, and color channels.",
+     "show": 1
+    },
+    {
+     "say": "And the mean color gives the average red, green and blue intensity.",
+     "show": 1
+    },
+    {
+     "say": "Next, a histogram of those values shows how brightness is spread across the image.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "stopwatch",
+   "kicker": "Lab · Step 4",
+   "title": "Audio is numbers over time",
+   "file": "extract_features.py",
+   "code": "import librosa\naudio, sample_rate = librosa.load(\"test_audio.wav\")\nprint(\"Duration:\", len(audio) / sample_rate, \"seconds\")\nprint(\"Sample rate:\", sample_rate)",
+   "beats": [
+    {
+     "say": "Load the audio clip with librosa.",
+     "show": 0
+    },
+    {
+     "say": "The sample rate is how many times per second the signal was measured.",
+     "show": 1
+    },
+    {
+     "say": "Audio is a sequence of numbers over time, just as an image is a grid of numbers over space.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bars",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Spectrogram and tempo",
+   "items": [
+    [
+     "Spectrogram",
+     "Frequencies over time"
+    ],
+    [
+     "Tempo",
+     "Beats per minute · rough on speech"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A spectrogram turns the waveform into a picture of frequency content over time.",
+     "show": 1
+    },
+    {
+     "say": "You make a mel spectrogram, and save it as spectrogram dot P N G.",
+     "show": 1
+    },
+    {
+     "say": "Then estimate the tempo in beats per minute. It means most for music. On speech, it's rough.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "bulb",
+   "kicker": "Lab · Step 7",
+   "title": "Connect it to real models",
+   "quote": "Models learn their own features from the same raw numbers.",
+   "beats": [
+    {
+     "say": "Finish with a few sentences of notes.",
+     "show": 0
+    },
+    {
+     "say": "A real multimodal model learns its own features from the same raw numbers, automatically, and at much greater scale.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does a spectrogram show that a waveform doesn't show directly?",
+   "options": [
+    "The file's sample rate",
+    "Which frequencies are present, and how strong, over time",
+    "The audio's length in seconds"
+   ],
+   "answer": 1,
+   "good": "That's right. A spectrogram shows which frequencies are present and how strong they are over time.",
+   "bad": "Not quite. A spectrogram shows which frequencies are present and how strong they are over time.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does a spectrogram show that a waveform doesn't show directly?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A histogram and a spectrogram",
+     ""
+    ],
+    [
+     "Notes on both modalities",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a feature extraction script with a histogram and a spectrogram,",
+     "show": 1
+    },
+    {
+     "say": "and written notes on both modalities.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, an image captioning demo.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 4 (Module 4): Build a Simple Image Captioning Demo
@@ -450,6 +1041,205 @@ image_captioning_project/
 4. What is a hallucinated detail in a caption, and how do you catch one?
 
 *Answers: 1) Input means sending more than one modality to the model; here the model also generates new language from an image, which is the caption. 2) It passes a different prompt to the same `describe_image` function, picked from a dictionary by style. 3) Alt-text is written for people using screen readers, so it describes what someone who can't see the image needs to know. 4) It is something the caption says is in the image but isn't; you catch it by comparing each caption to the actual image during manual review.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "doc",
+   "kicker": "Project 4 · Image captioning",
+   "title": "From picture to words",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "This is your first multimodal generation task: the model creates new language from an image."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "architecture",
+   "kicker": "Concept",
+   "title": "How vision meets language",
+   "steps": [
+    "Image",
+    "Vision transformer → numbers",
+    "Aligned with words",
+    "Caption"
+   ],
+   "beats": [
+    {
+     "say": "How does a model connect the two?",
+     "show": 0
+    },
+    {
+     "say": "A vision transformer encodes the image into a numeric representation.",
+     "show": 1
+    },
+    {
+     "say": "Text-image embedding alignment means the model has learned to relate that representation to relevant words and concepts.",
+     "show": 2
+    },
+    {
+     "say": "That's what lets it write a caption.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "palette",
+   "kicker": "Lab · Step 5",
+   "title": "Caption styles",
+   "file": "caption.py",
+   "code": "def generate_caption(image_path, style=\"concise\"):\n    prompts = {\n        \"concise\": \"Write a single, concise caption for this image.\",\n        \"detailed\": \"Write a detailed, descriptive caption for this image.\",\n        \"alt_text\": \"Write accessible alt-text for this image, suitable for a screen reader.\",\n    }\n    return describe_image(image_path, prompts[style])",
+   "beats": [
+    {
+     "say": "Generate caption reuses describe image from Project 2.",
+     "show": 0
+    },
+    {
+     "say": "A dictionary picks the prompt by style: concise, detailed, or alt text.",
+     "show": 1
+    },
+    {
+     "say": "Alt text is written for screen reader users, describing an image for someone who can't see it.",
+     "show": 1
+    },
+    {
+     "say": "No A P I code changes. Only the prompt does.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Lab · Steps 4 and 6",
+   "title": "Test hard images, then rate them",
+   "items": [
+    [
+     "5 varied images",
+     "Simple · complex · text · abstract · people"
+    ],
+    [
+     "Rate 1 to 5",
+     "Accuracy and usefulness"
+    ],
+    [
+     "Note errors",
+     "Misidentified or hallucinated"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Upload five varied images into an images folder.",
+     "show": 0
+    },
+    {
+     "say": "A simple object, a complex scene, a photo with text, an abstract image, and one with people.",
+     "show": 1
+    },
+    {
+     "say": "Rate each caption from one to five on accuracy and usefulness.",
+     "show": 2
+    },
+    {
+     "say": "And note errors, like misidentified objects or hallucinated details: things the caption says that aren't really there.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "loop",
+   "kicker": "Lab · Step 7",
+   "title": "Caption a whole folder",
+   "big": "filename: caption",
+   "sub": "one line per image in the folder",
+   "beats": [
+    {
+     "say": "Finally, loop over the images folder, skipping non-image files.",
+     "show": 0
+    },
+    {
+     "say": "And print a caption for every image.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "How does the captioning function change its output style without changing any A P I code?",
+   "options": [
+    "It switches to a different model",
+    "It resizes the image",
+    "It passes a different prompt to the same describe image function"
+   ],
+   "answer": 2,
+   "good": "That's right. It picks a different prompt from a dictionary by style, and passes it to the same describe image function.",
+   "bad": "Not quite. It picks a different prompt from a dictionary by style, and passes it to the same describe image function.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "How does the captioning function change its output style without changing any A P I code?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Batch captions in several styles",
+     ""
+    ],
+    [
+     "Captions rated for quality",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a batch captioning script supporting multiple caption styles,",
+     "show": 1
+    },
+    {
+     "say": "and an evaluation of caption quality.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, an app that answers questions about an image.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -665,6 +1455,208 @@ image_qa_app_project/
 
 *Answers: 1) Claude takes text and images in and gives text out; it doesn't hear or speak audio, so Whisper turns speech into text and gTTS turns the answer text into speech. 2) `UploadFile` receives the uploaded file's bytes, and `Form()` receives a text field (the question) sent in the same request. 3) In an environment variable set in your terminal, which the code reads with `os.environ`; never in a file. 4) `read_checked_image` raises an `HTTPException` with status 400 and a clear message, so the caller learns what went wrong and the app keeps running instead of sending a bad request to the API.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "phone",
+   "kicker": "Project 5 · Image Q and A app",
+   "title": "Ask a picture a question",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "You'll move from a script to an app a real user could use. This one runs on your computer, not in a notebook."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "terminal",
+   "kicker": "Lab · Step 1",
+   "title": "Set up the project",
+   "steps": [
+    "mkdir image_qa_app_project",
+    "Create and activate .venv",
+    "pip install fastapi …",
+    "export ANTHROPIC_API_KEY"
+   ],
+   "beats": [
+    {
+     "say": "Make a project folder.",
+     "show": 1
+    },
+    {
+     "say": "Create a virtual environment, a private set of packages for this project, and turn it on.",
+     "show": 2
+    },
+    {
+     "say": "Install Fast A P I, uvicorn, python multipart, and requests.",
+     "show": 3
+    },
+    {
+     "say": "Set your A P I key as an environment variable in the terminal, never in a file.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "api",
+   "kicker": "Lab · Step 2",
+   "title": "The ask endpoint",
+   "file": "app.py",
+   "code": "@app.post(\"/ask\")\ndef ask_about_image(image: UploadFile, question: str = Form()):\n    image_bytes = read_checked_image(image)\n    answer = ask_claude_about_image(image_bytes, image.content_type, question)\n    return {\"answer\": answer}",
+   "beats": [
+    {
+     "say": "In app dot py, the ask endpoint takes an uploaded image and a question.",
+     "show": 0
+    },
+    {
+     "say": "Upload file receives the file's bytes. Form receives the question, sent in the same request.",
+     "show": 1
+    },
+    {
+     "say": "Read checked image rejects anything that isn't a J P E G or P N G, with a four hundred error.",
+     "show": 1
+    },
+    {
+     "say": "It's a plain def, because the A P I call blocks while it waits.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "chain",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Three models in a chain",
+   "steps": [
+    "Whisper: audio → text",
+    "Claude: image + text → text",
+    "gTTS: text → audio"
+   ],
+   "beats": [
+    {
+     "say": "Claude reads text and images, not audio. So the voice endpoint chains three models.",
+     "show": 0
+    },
+    {
+     "say": "Faster whisper, a free speech-to-text model, turns the spoken question into text.",
+     "show": 1
+    },
+    {
+     "say": "Claude answers it about the image.",
+     "show": 2
+    },
+    {
+     "say": "And g T T S, text-to-speech, saves the answer as an M P 3.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "Test errors, then the full flow",
+   "items": [
+    [
+     "notes.txt as image",
+     "400 · app keeps running ✓"
+    ],
+    [
+     "/ask_voice",
+     "Hear the spoken answer"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Send a text file instead of an image.",
+     "show": 0
+    },
+    {
+     "say": "You get a clear four hundred error, and the app keeps running.",
+     "show": 1
+    },
+    {
+     "say": "Then record a voice question about your photo, send it to ask voice, and play answer dot M P 3.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does the voice endpoint need Whisper and g T T S as well as Claude?",
+   "options": [
+    "Claude takes text and images in and gives text out, it doesn't hear or speak audio",
+    "They make Claude's answers more accurate",
+    "Fast A P I requires them for uploads"
+   ],
+   "answer": 0,
+   "good": "That's right. Claude doesn't hear or speak audio. Whisper turns speech into text, and g T T S turns the answer into speech.",
+   "bad": "Not quite. Claude doesn't hear or speak audio. Whisper turns speech into text, and g T T S turns the answer into speech.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does the voice endpoint need Whisper and g T T S as well as Claude?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Text and voice, in and out",
+     ""
+    ],
+    [
+     "Tested end to end",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your image Q and A app supports text and voice input and output,",
+     "show": 1
+    },
+    {
+     "say": "tested end to end.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, a search tool across text and images.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 6 (Module 6): Build a Multimodal Document Search Tool
@@ -796,6 +1788,201 @@ multimodal_search_project/
 
 *Answers: 1) It has Claude describe each image in words, then embeds that description with the text model, so images and text end up as comparable numbers in one space. 2) Embeddings from different models live in different number spaces, so only vectors from the same model can be compared meaningfully. 3) It records whether each item is text or an image and which file it came from, so results can be shown correctly, such as displaying the actual image. 4) A smaller distance means the item is closer in meaning to the query.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "search",
+   "kicker": "Project 6 · Multimodal document search",
+   "title": "One query, text and images",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "You'll build a search tool that finds content by meaning, whether it's stored as text or images."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "merge",
+   "kicker": "Concept",
+   "title": "Caption, then embed",
+   "steps": [
+    "Image",
+    "Claude: detailed caption",
+    "Embed the caption",
+    "Same space as text"
+   ],
+   "beats": [
+    {
+     "say": "A multimodal embedding model maps text and images into the same number space.",
+     "show": 0
+    },
+    {
+     "say": "This project uses a simpler bridge, caption then embed.",
+     "show": 0
+    },
+    {
+     "say": "Claude writes a detailed caption for each image.",
+     "show": 1
+    },
+    {
+     "say": "The same text embedding model embeds that caption.",
+     "show": 2
+    },
+    {
+     "say": "Now images and text are comparable numbers, so one text query can find both.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "database",
+   "kicker": "Lab · Step 6",
+   "title": "One collection, two types",
+   "file": "build_search.py",
+   "code": "collection.add(\n    documents=text_documents + image_captions,\n    embeddings=text_embeddings.tolist() + image_embeddings.tolist(),\n    ids=[f\"item_{i}\" for i in range(len(text_documents) + len(image_captions))],\n    metadatas=[{\"type\": \"text\", \"source\": name} for name in text_sources]\n              + [{\"type\": \"image\", \"source\": name} for name in image_sources],\n)",
+   "beats": [
+    {
+     "say": "Store everything in one Chroma collection.",
+     "show": 0
+    },
+    {
+     "say": "Documents and captions together, with their embeddings.",
+     "show": 1
+    },
+    {
+     "say": "Metadata records whether each item is text or an image, and which file it came from.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Lab · Step 7",
+   "title": "Search both at once",
+   "items": [
+    [
+     "Same model for the query",
+     "Comparable numbers"
+    ],
+    [
+     "Smaller distance",
+     "Closer match ✓"
+    ],
+    [
+     "Image result",
+     "Show the real picture"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "To search, embed the query with the same model, and query the collection.",
+     "show": 1
+    },
+    {
+     "say": "A smaller distance means a closer match.",
+     "show": 2
+    },
+    {
+     "say": "Image results show the actual picture, using the source stored in the metadata.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "proof",
+   "kicker": "Lab · Step 8",
+   "title": "Judge the results",
+   "big": "5 + 5 queries",
+   "sub": "did the right item come first?",
+   "beats": [
+    {
+     "say": "Try five queries aimed at text, and five aimed at images.",
+     "show": 0
+    },
+    {
+     "say": "For each, note whether the right item came first, and any surprises.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why must one embedding model embed the documents, the captions and the query?",
+   "options": [
+    "It's cheaper to load one model",
+    "Embeddings from different models live in different number spaces",
+    "Chroma only accepts one model"
+   ],
+   "answer": 1,
+   "good": "That's right. Embeddings from different models live in different number spaces, so only vectors from the same model compare meaningfully.",
+   "bad": "Not quite. Embeddings from different models live in different number spaces, so only vectors from the same model compare meaningfully.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why must one embedding model embed the documents, the captions and the query?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A working multimodal search",
+     ""
+    ],
+    [
+     "Tested on text and image queries",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your multimodal search tool works,",
+     "show": 1
+    },
+    {
+     "say": "tested with queries targeting both text and image content.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 7, evaluating a multimodal system.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 7 (Module 7): Evaluate a Multimodal System on a Test Set
@@ -862,3 +2049,239 @@ multimodal_evaluation_project/
 4. How do you check a multimodal system for bias?
 
 *Answers: 1) Those are the cases where multimodal systems commonly fail, and a test set of easy images would hide those weaknesses. 2) How often the output describes things that are not actually in the image. 3) Accuracy asks whether the answer is factually correct; relevance asks whether it addresses the question that was actually asked. 4) Test it on images showing a range of people, settings, and contexts, and look for systematic differences in quality, tone, or accuracy between groups.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Project 7 · Evaluate a multimodal system",
+   "title": "Demo or trustworthy?",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "Testing for quality and bias is what separates a demo from something you'd trust in production."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Pick a system, build a test set",
+   "items": [
+    [
+     "One system",
+     "Project 4, 5 or 6"
+    ],
+    [
+     "15 to 20 test cases",
+     "Simple · complex · text · low quality"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Pick your captioning tool, your Q and A app, or your search tool.",
+     "show": 1
+    },
+    {
+     "say": "Then collect fifteen to twenty diverse test cases.",
+     "show": 2
+    },
+    {
+     "say": "Varied images: simple, complex, text-containing, and low quality. And varied questions.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "calc",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Three metrics",
+   "items": [
+    [
+     "Accuracy",
+     "Factually correct?"
+    ],
+    [
+     "Relevance",
+     "Answers the actual question?"
+    ],
+    [
+     "Hallucination rate",
+     "Describes what isn't there?"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Score each case from one to five on three metrics.",
+     "show": 0
+    },
+    {
+     "say": "Accuracy: is the answer factually correct?",
+     "show": 1
+    },
+    {
+     "say": "Relevance: does it address the actual question?",
+     "show": 2
+    },
+    {
+     "say": "Hallucination rate: does it describe things that aren't actually there?",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "Failure modes and bias",
+   "items": [
+    [
+     "Low quality",
+     "Low resolution"
+    ],
+    [
+     "Dense text",
+     "OCR-like tasks"
+    ],
+    [
+     "Unusual content",
+     "Out of distribution"
+    ],
+    [
+     "Bias check",
+     "Range of people and settings"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Check the common failure modes.",
+     "show": 0
+    },
+    {
+     "say": "Low-quality or low-resolution images.",
+     "show": 1
+    },
+    {
+     "say": "Dense text within images.",
+     "show": 2
+    },
+    {
+     "say": "Unusual, out-of-distribution content.",
+     "show": 3
+    },
+    {
+     "say": "Then test images showing a range of people, settings and contexts, and note systematic differences in quality, tone, or accuracy.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "doc",
+   "kicker": "Lab · Step 8",
+   "title": "The evaluation report",
+   "steps": [
+    "Test set",
+    "Metrics",
+    "Scores",
+    "Failures and bias",
+    "Recommendations"
+   ],
+   "beats": [
+    {
+     "say": "Write it up in a set order.",
+     "show": 0
+    },
+    {
+     "say": "The test set, the metrics, and the scores.",
+     "show": 3
+    },
+    {
+     "say": "Failure modes, bias findings, and recommendations for improvement.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between accuracy and relevance?",
+   "options": [
+    "They mean the same thing",
+    "Relevance measures hallucinations",
+    "Accuracy asks if it's correct, relevance asks if it answers the actual question"
+   ],
+   "answer": 2,
+   "good": "That's right. Accuracy asks whether the answer is factually correct. Relevance asks whether it addresses the question that was actually asked.",
+   "bad": "Not quite. Accuracy asks whether the answer is factually correct. Relevance asks whether it addresses the question that was actually asked.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between accuracy and relevance?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A report with scores",
+     ""
+    ],
+    [
+     "Failure mode analysis",
+     ""
+    ],
+    [
+     "Bias findings",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a structured evaluation report with scores,",
+     "show": 1
+    },
+    {
+     "say": "failure mode analysis,",
+     "show": 2
+    },
+    {
+     "say": "and bias findings for a multimodal system.",
+     "show": 3
+    },
+    {
+     "say": "You've finished Multimodal A I Engineer. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```

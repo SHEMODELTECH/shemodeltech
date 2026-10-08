@@ -99,6 +99,187 @@ data_pipeline_map_project/
 
 *Answers: 1) Ingestion, Cleaning, Storage, Transformation, Serving. 2) Cleaning fixes or removes bad data; Transformation turns clean data into a form a model can use, such as labels or embeddings. 3) They decide how the pipeline must be built, for example a one-time script versus a daily or continuous job. 4) Any two of: duplicate tickets, missing fields, inconsistent formats, or mislabeled examples.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "path",
+   "kicker": "Project 1 · Map a pipeline",
+   "title": "See data as a pipeline",
+   "beats": [
+    {
+     "say": "Welcome to A I Data Engineer: Hands-On Project Tutorials."
+    },
+    {
+     "say": "Before writing any code, you'll learn to see data movement as a pipeline of stages, so every later project has a place to plug into."
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "target",
+   "kicker": "Steps 2 and 3",
+   "title": "Start with the use case",
+   "quote": "A customer support chatbot needs cleaned, labeled support tickets to fine-tune on.",
+   "beats": [
+    {
+     "say": "In a text cell headed use case, write one sentence.",
+     "show": 0
+    },
+    {
+     "say": "What A I application will consume this data, and what does it need to work?",
+     "show": 1
+    },
+    {
+     "say": "Then name the data source: where raw data originates. A database, an A P I, uploaded files, or a stream of events.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "architecture",
+   "kicker": "Step 4",
+   "title": "The five pipeline stages",
+   "steps": [
+    "Ingestion",
+    "Cleaning",
+    "Storage",
+    "Transformation",
+    "Serving"
+   ],
+   "beats": [
+    {
+     "say": "Data flows through five stages, left to right.",
+     "show": 0
+    },
+    {
+     "say": "Ingestion: pulling raw data from the source.",
+     "show": 1
+    },
+    {
+     "say": "Cleaning: fixing or removing bad data.",
+     "show": 2
+    },
+    {
+     "say": "Storage: where cleaned data lives.",
+     "show": 3
+    },
+    {
+     "say": "Transformation: turning it into a form a model can use, like labels or embeddings.",
+     "show": 4
+    },
+    {
+     "say": "And serving: how the A I application actually accesses the final data.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Steps 5 and 6",
+   "title": "Volume, frequency and risks",
+   "items": [
+    [
+     "Volume",
+     "How much data?"
+    ],
+    [
+     "Frequency",
+     "Once, daily, or continuous?"
+    ],
+    [
+     "Quality risks",
+     "Duplicates, missing fields, formats, bad labels"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Next, sketch the volume: how much data is there?",
+     "show": 1
+    },
+    {
+     "say": "And the frequency: does new data arrive once, daily, or continuously?",
+     "show": 2
+    },
+    {
+     "say": "Then note the quality risks: duplicates, missing fields, inconsistent formats, and mislabeled examples.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the difference between the Cleaning stage and the Transformation stage?",
+   "options": [
+    "Cleaning fixes or removes bad data; Transformation turns it into a form a model can use",
+    "Cleaning happens after storage; Transformation happens before it",
+    "They're two names for the same stage"
+   ],
+   "answer": 0,
+   "good": "That's right. Cleaning fixes or removes bad data. Transformation turns clean data into something a model can use, such as labels or embeddings.",
+   "bad": "Not quite. Cleaning fixes or removes bad data. Transformation turns clean data into something a model can use, such as labels or embeddings.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the difference between the Cleaning stage and the Transformation stage?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A one-page pipeline map",
+     ""
+    ],
+    [
+     "Source, stages, volume and risks",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a one-page pipeline map for your A I use case,",
+     "show": 1
+    },
+    {
+     "say": "covering source, stages, volume, and quality risks.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, a data cleaning script.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Build a Data Cleaning Script
@@ -233,6 +414,200 @@ data_cleaning_project/
 
 *Answers: 1) Drop rows when a column you can't work without is missing (like the ticket text); fill when a placeholder such as "unknown" is acceptable (like the category). 2) They make some examples count more than once, which biases any model or statistic toward them. 3) So the same value written different ways is treated as one value instead of several. 4) It turns values that can't be read as dates into `NaT` (a missing date) instead of stopping with an error. 5) It stops the script with an error if a condition isn't true, an automatic check that cleaning worked.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "mess",
+   "kicker": "Project 2 · Clean the data",
+   "title": "Real, messy data",
+   "beats": [
+    {
+     "say": "Welcome to Project 2."
+    },
+    {
+     "say": "Cleaning messy data is the unavoidable first technical task in almost every A I data role."
+    },
+    {
+     "say": "You'll build a practice file of sixty made-up support tickets with missing values, inconsistent casing, stray spaces, a bad date, and duplicate rows."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "search",
+   "kicker": "Step 3",
+   "title": "Load and inspect",
+   "file": "data_cleaning_project",
+   "code": "import pandas as pd\ndf = pd.read_csv(\"raw_data.csv\")\nprint(df.shape)\nprint(df.isnull().sum())\nprint(df.duplicated().sum())",
+   "beats": [
+    {
+     "say": "First, load the file with pandas and inspect it.",
+     "show": 0
+    },
+    {
+     "say": "Is null, sum, counts the missing values in each column.",
+     "show": 1
+    },
+    {
+     "say": "Duplicated, sum, counts exact duplicate rows.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "table",
+   "kicker": "Steps 4 and 5",
+   "title": "Drop, fill, deduplicate",
+   "items": [
+    [
+     "Drop",
+     "Missing text: can't work without it"
+    ],
+    [
+     "Fill",
+     "Missing category → \"unknown\""
+    ],
+    [
+     "Deduplicate",
+     "Duplicates bias the model"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now handle the gaps.",
+     "show": 0
+    },
+    {
+     "say": "Drop rows missing a column you can't work without, like the ticket text.",
+     "show": 1
+    },
+    {
+     "say": "Fill gaps where a placeholder is fine, like a category of unknown.",
+     "show": 2
+    },
+    {
+     "say": "Then remove duplicates. Duplicate rows silently bias any model or statistic toward whatever's overrepresented.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "pencil",
+   "kicker": "Step 6",
+   "title": "Standardize formats",
+   "file": "data_cleaning_project",
+   "code": "df[\"text\"] = df[\"text\"].str.strip()\ndf[\"customer_email\"] = df[\"customer_email\"].str.lower().str.strip()\ndf[\"category\"] = df[\"category\"].str.lower().str.strip()\ndf[\"created_at\"] = pd.to_datetime(df[\"created_at\"], errors=\"coerce\")\nprint(df[\"category\"].value_counts())",
+   "beats": [
+    {
+     "say": "Standardizing forces values into one consistent format.",
+     "show": 0
+    },
+    {
+     "say": "Strip spaces and lowercase, so Billing, billing, and capital BILLING aren't three different values.",
+     "show": 1
+    },
+    {
+     "say": "Errors equals coerce turns a date that can't be read, like not a date, into a missing date, instead of crashing.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Steps 7 and 8",
+   "title": "Prove it, then save it",
+   "file": "data_cleaning_project",
+   "code": "assert df.isnull().sum()[\"text\"] == 0\nassert df.duplicated().sum() == 0\nprint(\"Cleaning validated.\")\n\ndf.to_csv(\"cleaned_data.csv\", index=False)",
+   "beats": [
+    {
+     "say": "An assertion halts the script if a condition isn't met. A cheap, automatic sanity check.",
+     "show": 0
+    },
+    {
+     "say": "Check there's no missing text and no duplicates left.",
+     "show": 1
+    },
+    {
+     "say": "Then save cleaned data dot C S V, and download both files. Projects 4, 5 and 7 use them.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "When should you fill a missing value instead of dropping the row?",
+   "options": [
+    "Whenever the column has text in it",
+    "Never, always drop rows with gaps",
+    "When a placeholder such as unknown is acceptable, like the category"
+   ],
+   "answer": 2,
+   "good": "That's right. Drop rows when a column you can't work without is missing, like the ticket text. Fill when a placeholder is acceptable, like the category.",
+   "bad": "Not quite. Drop rows when a column you can't work without is missing, like the ticket text. Fill when a placeholder is acceptable, like the category.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "When should you fill a missing value instead of dropping the row?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A data cleaning script",
+     ""
+    ],
+    [
+     "A validated, cleaned CSV",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a data cleaning script,",
+     "show": 1
+    },
+    {
+     "say": "and a validated, cleaned C S V file.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, a schema for a training dataset store.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 3 (Module 3): Design a Schema for a Training Dataset Store
@@ -362,6 +737,191 @@ schema_design_project/
 4. Why add a `dataset_version` field to a training data table?
 
 *Answers: 1) A distinct thing the data describes, such as tickets or customers, which usually becomes its own table. 2) It stores the id of a row in another table, linking each ticket to the customer it belongs to. 3) `PRIMARY KEY` makes each row's identifier unique; `NOT NULL` stops a field from being left empty. 4) So every row can be traced to when and how it was produced, which lets you reproduce or compare training runs.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Project 3 · Design a schema",
+   "title": "Structure before storage",
+   "beats": [
+    {
+     "say": "Welcome to Project 3."
+    },
+    {
+     "say": "Now decide how cleaned data should be structured and stored. It's the step between I have clean data, and a model can reliably use this data."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "boxes",
+   "kicker": "Steps 2 to 5",
+   "title": "Entities, fields, keys, versions",
+   "items": [
+    [
+     "Entities",
+     "tickets, customers, labels"
+    ],
+    [
+     "Fields + types",
+     "ticket_id (string), created_at (datetime)"
+    ],
+    [
+     "Foreign key",
+     "tickets.customer_id → customers.id"
+    ],
+    [
+     "Versioning",
+     "dataset_version, created_at"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "An entity is a distinct thing your data describes, like tickets, customers, and labels.",
+     "show": 1
+    },
+    {
+     "say": "For each entity, list its fields and their types.",
+     "show": 2
+    },
+    {
+     "say": "A foreign key is a field that references another table's identifier, like tickets dot customer I D pointing to customers dot I D.",
+     "show": 3
+    },
+    {
+     "say": "And versioning fields mean every row can be traced to exactly when and how it was produced.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Step 6",
+   "title": "The schema as S Q L",
+   "file": "schema.sql",
+   "code": "CREATE TABLE customers (\n    id TEXT PRIMARY KEY,\n    name TEXT\n);\n\nCREATE TABLE tickets (\n    ticket_id TEXT PRIMARY KEY,\n    text TEXT NOT NULL,\n    created_at TIMESTAMP,\n    label TEXT,\n    customer_id TEXT REFERENCES customers(id),\n    dataset_version TEXT\n);",
+   "beats": [
+    {
+     "say": "Write the schema as S Q L.",
+     "show": 0
+    },
+    {
+     "say": "Primary key uniquely identifies each row.",
+     "show": 1
+    },
+    {
+     "say": "Not null means the text can't be left empty.",
+     "show": 1
+    },
+    {
+     "say": "References makes customer I D a foreign key pointing at customers.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Step 6 · Run it",
+   "title": "The schema guards quality too",
+   "file": "schema_design_project",
+   "code": "conn = sqlite3.connect(\"schema_test.db\")\nconn.executescript(schema)\n\ntry:\n    conn.execute(\"INSERT INTO tickets (ticket_id, text) VALUES ('T002', NULL)\")\nexcept sqlite3.IntegrityError as error:\n    print(\"Rejected as expected:\", error)",
+   "beats": [
+    {
+     "say": "Run it with Python's built-in S Q Lite module. Nothing to install.",
+     "show": 0
+    },
+    {
+     "say": "Insert a valid ticket, then try one with empty text.",
+     "show": 1
+    },
+    {
+     "say": "It's rejected: not null constraint failed. The schema itself guards data quality, not just your cleaning code.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why add a dataset version field to a training data table?",
+   "options": [
+    "So every row can be traced to when and how it was produced",
+    "So the database runs queries faster",
+    "Because S Q L requires it on every table"
+   ],
+   "answer": 0,
+   "good": "That's right. Versioning lets you trace every row to when and how it was produced, so you can reproduce or compare training runs.",
+   "bad": "Not quite. Versioning lets you trace every row to when and how it was produced, so you can reproduce or compare training runs.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why add a dataset version field to a training data table?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A schema document",
+     ""
+    ],
+    [
+     "SQL table definitions",
+     ""
+    ],
+    [
+     "A schema diagram",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a schema document,",
+     "show": 1
+    },
+    {
+     "say": "S Q L table definitions,",
+     "show": 2
+    },
+    {
+     "say": "and a diagram for your training dataset store.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 4, a batch E T L pipeline.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -494,6 +1054,188 @@ etl_pipeline_project/
 
 *Answers: 1) Extract pulls raw data from a source, Transform cleans and reshapes it, and Load writes it into storage. 2) ELT loads the raw data first and transforms it afterward, inside the storage system. 3) It adds new rows without erasing existing ones; loading the same file twice adds every row again as duplicates. 4) Each stage can be tested, reused, and changed on its own, and the same steps run the same way on every new file. 5) A log keeps a lasting record of each run that you can check later, even after the notebook output is gone.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Project 4 · Batch E T L",
+   "title": "Automate raw to stored",
+   "beats": [
+    {
+     "say": "Welcome to Project 4."
+    },
+    {
+     "say": "You'll connect Project 2's cleaning and Project 3's schema into one repeatable process."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "layers",
+   "kicker": "Step 2",
+   "title": "What E T L means",
+   "steps": [
+    "Extract: pull raw data",
+    "Transform: clean and reshape",
+    "Load: write to storage"
+   ],
+   "beats": [
+    {
+     "say": "E T L stands for three stages.",
+     "show": 0
+    },
+    {
+     "say": "Extract: pull raw data from a source.",
+     "show": 1
+    },
+    {
+     "say": "Transform: clean and reshape it.",
+     "show": 2
+    },
+    {
+     "say": "Load: write it into storage.",
+     "show": 3
+    },
+    {
+     "say": "E L T does the same steps in a different order, transforming after loading.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Steps 3 to 6",
+   "title": "Three functions, one pipeline",
+   "file": "etl_pipeline_project",
+   "code": "def load(df, table_name, engine):\n    df.to_sql(table_name, engine, if_exists=\"append\", index=False)\n\ndef run_pipeline(path, table_name, engine):\n    df = extract(path)\n    df = transform(df)\n    load(df, table_name, engine)\n    print(f\"Loaded {len(df)} rows into {table_name}\")\n\nengine = create_engine(\"sqlite:///data_store.db\")\nrun_pipeline(\"raw_data.csv\", \"tickets\", engine)",
+   "beats": [
+    {
+     "say": "Each stage is its own function. Transform holds the same cleaning rules as Project 2.",
+     "show": 0
+    },
+    {
+     "say": "Load uses if exists equals append, so new rows are added without erasing existing ones.",
+     "show": 1
+    },
+    {
+     "say": "Run pipeline wires them together, into a S Q Lite file called data store dot D B. No server to set up.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "warning",
+   "kicker": "Step 7",
+   "title": "Tomorrow's data",
+   "big": "+3 rows",
+   "sub": "Loading the same file twice duplicates every row",
+   "beats": [
+    {
+     "say": "Now make a small file of tomorrow's data, and run the pipeline on it. The row count grows by three.",
+     "show": 0
+    },
+    {
+     "say": "But careful. Run raw data dot C S V a second time, and append mode adds every row again as duplicates. Real pipelines guard against this, for example by tracking which files were already loaded.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "doc",
+   "kicker": "Step 8",
+   "title": "Keep a log",
+   "file": "etl_pipeline_project",
+   "code": "import logging\n\nlogging.basicConfig(filename=\"pipeline.log\", level=logging.INFO,\n                    format=\"%(asctime)s %(levelname)s %(message)s\", force=True)\n\n# inside run_pipeline, after load(...):\nlogging.info(f\"Pipeline run completed: {len(df)} rows from {path} loaded into {table_name}.\")",
+   "beats": [
+    {
+     "say": "Finally, add logging.",
+     "show": 0
+    },
+    {
+     "say": "Every run writes a line to pipeline dot log.",
+     "show": 1
+    },
+    {
+     "say": "A log is a lasting record of every run, so you can see what happened even after the notebook output is gone.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What's the risk of if exists equals append when you load the same file twice?",
+   "options": [
+    "The table is erased and rebuilt",
+    "Every row is added again as duplicates",
+    "The pipeline refuses to run"
+   ],
+   "answer": 1,
+   "good": "That's right. Append adds new rows without erasing existing ones, so loading the same file twice adds every row again as duplicates.",
+   "bad": "Not quite. Append adds new rows without erasing existing ones, so loading the same file twice adds every row again as duplicates.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What's the risk of if exists equals append when you load the same file twice?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A working ETL pipeline",
+     ""
+    ],
+    [
+     "New data loads repeatably",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working E T L pipeline,",
+     "show": 1
+    },
+    {
+     "say": "that repeatably processes new data into a structured store.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, a labeled dataset for training.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 5 (Module 5): Prepare a Labeled Dataset for Training
@@ -601,6 +1343,159 @@ labeled_dataset_project/
 4. What is data leakage? Give one example.
 
 *Answers: 1) It becomes NaN (no label); drop those rows with `dropna(subset=["label"])` or label them by hand before splitting. 2) It keeps the label proportions in each split roughly the same as in the full dataset. 3) The validation set is used while developing the model; the test set is held back and used only for the final evaluation. 4) It is when information from the test set or the future influences training, for example the same ticket appearing in both train and test.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Project 5 · Labeled dataset",
+   "title": "Ready to train on",
+   "beats": [
+    {
+     "say": "Welcome to Project 5."
+    },
+    {
+     "say": "You'll take cleaned, stored data and turn it into something a model can actually be trained on."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "pencil",
+   "kicker": "Steps 3 and 4",
+   "title": "Write the rules, apply the labels",
+   "file": "labeled_dataset_project",
+   "code": "df[\"label\"] = df[\"category\"].map({\"billing\": \"billing_issue\", \"bug\": \"technical_issue\"})\n\nunlabeled = df[\"label\"].isna().sum()\nprint(f\"Dropping {unlabeled} rows with no label\")\ndf = df.dropna(subset=[\"label\"])",
+   "beats": [
+    {
+     "say": "First write a labeling guide: clear rules for each label, with two or three examples each.",
+     "show": 0
+    },
+    {
+     "say": "Then apply labels. Here, a simple rule maps billing to billing issue, and bug to technical issue.",
+     "show": 1
+    },
+    {
+     "say": "Any category not in the map, like unknown or feature request, becomes empty. Drop those rows before splitting.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "fork",
+   "kicker": "Steps 5 and 6",
+   "title": "Stratified splits",
+   "file": "labeled_dataset_project",
+   "code": "from sklearn.model_selection import train_test_split\ntrain, temp = train_test_split(df, test_size=0.3, random_state=42, stratify=df[\"label\"])\nval, test = train_test_split(temp, test_size=0.5, random_state=42, stratify=temp[\"label\"])\nprint(len(train), len(val), len(test))",
+   "beats": [
+    {
+     "say": "Check the label counts for class imbalance. Each label needs at least about ten examples for the split to work.",
+     "show": 0
+    },
+    {
+     "say": "Then split: about seventy percent train, fifteen validation, fifteen test.",
+     "show": 1
+    },
+    {
+     "say": "Stratify keeps each split's label mix close to the full dataset. Validation is for development; test is held back for the final evaluation.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Step 7",
+   "title": "Check for data leakage",
+   "file": "labeled_dataset_project",
+   "code": "id_overlap = set(train[\"ticket_id\"]) & set(test[\"ticket_id\"])\ntext_overlap = set(train[\"text\"]) & set(test[\"text\"])\nassert len(id_overlap) == 0, \"Leakage: the same ticket_id is in train and test!\"\nassert len(text_overlap) == 0, \"Leakage: the same ticket text is in train and test!\"\nprint(\"No leakage found between train and test.\")",
+   "beats": [
+    {
+     "say": "Data leakage is when information from the test set, or the future, accidentally influences training.",
+     "show": 0
+    },
+    {
+     "say": "Check that no ticket I D appears in both train and test.",
+     "show": 1
+    },
+    {
+     "say": "And check the text too. That catches the same ticket saved twice under different I Ds.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does stratify do when splitting data?",
+   "options": [
+    "It shuffles the rows into random order",
+    "It removes duplicate rows from each split",
+    "It keeps the label proportions in each split close to the full dataset"
+   ],
+   "answer": 2,
+   "good": "That's right. Stratify keeps the label proportions in each split roughly the same as in the full dataset.",
+   "bad": "Not quite. Stratify keeps the label proportions in each split roughly the same as in the full dataset.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does stratify do when splitting data?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A labeling guide",
+     ""
+    ],
+    [
+     "Stratified, leakage-checked splits",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a labeling guide,",
+     "show": 1
+    },
+    {
+     "say": "plus stratified, leakage-checked train, validation and test files.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, a vector store from a document set.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -725,6 +1620,184 @@ vector_store_project/
 5. Why store the source file name as metadata with each chunk?
 
 *Answers: 1) Smaller pieces can be matched to a question more precisely, and embedding models only read a limited amount of text at once. 2) It keeps an idea that falls on a chunk boundary from being cut in half and losing its context. 3) A list of numbers that represents a text's meaning, so texts with similar meaning get similar numbers. 4) Embeddings from different models live in different number spaces and can't be compared meaningfully. 5) So each search result can point back to the document it came from, for checking or citing.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "search",
+   "kicker": "Project 6 · Vector store",
+   "title": "Search by meaning",
+   "beats": [
+    {
+     "say": "Welcome to Project 6."
+    },
+    {
+     "say": "Now you'll work with unstructured text, and the retrieval systems behind modern A I applications like R A G chatbots."
+    },
+    {
+     "say": "Start by gathering ten to twenty text documents into a folder called documents."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "blocks",
+   "kicker": "Step 3",
+   "title": "Chunk with overlap",
+   "file": "vector_store_project",
+   "code": "def chunk_text(text, chunk_size=200, overlap=50):\n    words = text.split()\n    chunks = []\n    for i in range(0, len(words), chunk_size - overlap):\n        chunks.append(\" \".join(words[i:i + chunk_size]))\n        if i + chunk_size >= len(words):  # this chunk reached the end of the text\n            break\n    return chunks",
+   "beats": [
+    {
+     "say": "Chunking splits long documents into smaller pieces.",
+     "show": 0
+    },
+    {
+     "say": "Overlap repeats a few words between chunks, so context isn't lost at the boundary.",
+     "show": 1
+    },
+    {
+     "say": "With these settings, each new chunk starts a hundred and fifty words after the last.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "database",
+   "kicker": "Steps 4 and 5",
+   "title": "Embed and store",
+   "file": "vector_store_project",
+   "code": "model = SentenceTransformer(\"all-MiniLM-L6-v2\")\nembeddings = model.encode(chunks)\n\ncollection = client.get_or_create_collection(\"documents\")\ncollection.add(\n    documents=chunks,\n    embeddings=embeddings.tolist(),\n    ids=[f\"chunk_{i}\" for i in range(len(chunks))],\n    metadatas=[{\"source\": name} for name in chunk_sources],\n)",
+   "beats": [
+    {
+     "say": "An embedding is a list of numbers representing a chunk's meaning. Similar meanings get similar numbers.",
+     "show": 0
+    },
+    {
+     "say": "Encode every chunk with a sentence transformers model.",
+     "show": 1
+    },
+    {
+     "say": "Then store them in a Chroma collection. A vector database finds the closest matches to a new query fast. The source metadata records which file each chunk came from.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "ask",
+   "kicker": "Step 6",
+   "title": "Ask it a question",
+   "file": "vector_store_project",
+   "code": "query = \"How do I reset my password?\"  # change this to fit your documents\nquery_embedding = model.encode([query])\nresults = collection.query(query_embeddings=query_embedding.tolist(), n_results=3)",
+   "beats": [
+    {
+     "say": "Embed the query with the same model, and ask for the three closest chunks.",
+     "show": 0
+    },
+    {
+     "say": "Each result shows its source file, and a distance. A smaller distance means a closer match in meaning.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Steps 7 and 8",
+   "title": "Judge it, write it down",
+   "items": [
+    [
+     "Evaluate",
+     "5 queries, judged by hand"
+    ],
+    [
+     "Document",
+     "Chunk size, overlap, model, results"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Try five different queries, and judge by hand whether the top results are actually relevant.",
+     "show": 1
+    },
+    {
+     "say": "Then record your choices in a text cell: chunk size, overlap, the embedding model, and how retrieval went.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why must the query be embedded with the same model as the chunks?",
+   "options": [
+    "Embeddings from different models live in different number spaces and can't be compared",
+    "Chroma only accepts one model per notebook",
+    "A different model would be too slow"
+   ],
+   "answer": 0,
+   "good": "That's right. Embeddings from different models live in different number spaces, so they can't be compared meaningfully.",
+   "bad": "Not quite. Embeddings from different models live in different number spaces, so they can't be compared meaningfully.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why must the query be embedded with the same model as the chunks?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A working vector store",
+     ""
+    ],
+    [
+     "A retrieval evaluation",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working vector store built from a real document set,",
+     "show": 1
+    },
+    {
+     "say": "with a retrieval evaluation.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 7, data validation and monitoring.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -869,3 +1942,202 @@ data_validation_project/
 4. Why does validation run before the load step?
 
 *Answers: 1) The schema check confirms the raw file has the columns the transform needs; the range checks test the cleaned values the database will actually receive. 2) Drift is a change in the data's statistics over time, such as average text length doubling, while the columns and types still pass; a schema violation is a missing column or wrong structure. 3) It measures how many baseline standard deviations today's average is from the baseline average, and warns when that z-score is above the threshold of 3. 4) So bad data is stopped before it ever reaches the database and the models trained from it.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "shield",
+   "kicker": "Project 7 · Validate and monitor",
+   "title": "Stop bad data at the door",
+   "beats": [
+    {
+     "say": "Welcome to the last project."
+    },
+    {
+     "say": "You'll add quality control on top of your pipeline, so bad data gets caught automatically instead of silently poisoning downstream models."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Steps 2 to 4",
+   "title": "Two kinds of checks",
+   "items": [
+    [
+     "Schema check",
+     "Before transform · required columns"
+    ],
+    [
+     "Value checks",
+     "After transform · dates, text, categories"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Start by writing rules from your Project 3 schema and Project 2 cleaning checks.",
+     "show": 0
+    },
+    {
+     "say": "The schema check runs on the raw file, before cleaning. Any missing required column, and the file is rejected right away.",
+     "show": 1
+    },
+    {
+     "say": "The value checks run on the cleaned data: invalid dates, empty text, and unexpected categories.",
+     "show": 2
+    },
+    {
+     "say": "They collect every problem first, so one run tells you everything that's wrong.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "graph",
+   "kicker": "Steps 5 and 6",
+   "title": "A simple drift check",
+   "file": "data_validation_project",
+   "code": "def check_drift(df, baseline_mean, baseline_std, column, threshold=3):\n    current_mean = df[column].mean()\n    z_score = abs(current_mean - baseline_mean) / baseline_std\n    if z_score > threshold:\n        print(f\"WARNING: Possible drift detected in {column} (z-score {z_score:.1f})\")\n    else:\n        print(f\"No drift detected in {column} (z-score {z_score:.1f})\")",
+   "beats": [
+    {
+     "say": "Data drift is when incoming data's statistics change over time, even though the schema still validates. Like average text length doubling.",
+     "show": 0
+    },
+    {
+     "say": "This check compares today's average to a trusted baseline, in standard deviations.",
+     "show": 1
+    },
+    {
+     "say": "Above a z score of three, it warns. A simple rule of thumb, not a full statistical test, but it catches big changes cheaply.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Step 7",
+   "title": "Validate before you load",
+   "file": "data_validation_project",
+   "code": "def run_pipeline_with_validation(path, table_name, engine):\n    df = extract(path)\n    validate_schema(df, REQUIRED_COLUMNS)\n    df = transform(df)\n    validate_ranges(df)\n    load(df, table_name, engine)\n    print(f\"Validated and loaded {len(df)} rows from {path}\")",
+   "beats": [
+    {
+     "say": "Now wire validation into your Project 4 pipeline.",
+     "show": 0
+    },
+    {
+     "say": "Schema check after extract. Value checks after transform.",
+     "show": 1
+    },
+    {
+     "say": "Both run before load, so bad data never reaches the database.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Step 8",
+   "title": "Break it on purpose",
+   "items": [
+    [
+     "✗ Missing column",
+     "Pipeline stopped: Missing columns"
+    ],
+    [
+     "✗ raw_data.csv",
+     "Invalid date + \"feature request\""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Finally, test it against bad data.",
+     "show": 0
+    },
+    {
+     "say": "A file missing the created at column stops with: missing columns.",
+     "show": 1
+    },
+    {
+     "say": "The original messy raw data stops too, naming the invalid date and the unexpected feature request category.",
+     "show": 2
+    },
+    {
+     "say": "Decide the right fix, and write your decision in your validation rules.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does validation run before the load step?",
+   "options": [
+    "Because loading is the slowest step",
+    "So bad data is stopped before it reaches the database and the models trained from it",
+    "Because S Q L can't store invalid dates"
+   ],
+   "answer": 1,
+   "good": "That's right. Validating before load stops bad data before it ever reaches the database and the models trained from it.",
+   "bad": "Not quite. Validating before load stops bad data before it ever reaches the database and the models trained from it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does validation run before the load step?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Validation wired into the pipeline",
+     ""
+    ],
+    [
+     "Tested against broken data",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a validation module wired into your pipeline,",
+     "show": 1
+    },
+    {
+     "say": "tested against intentionally broken data.",
+     "show": 2
+    },
+    {
+     "say": "You've finished A I Data Engineer. Well done.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

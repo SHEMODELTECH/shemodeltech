@@ -133,6 +133,250 @@ agent_platform_diagram_project/
 
 *Answers: 1) An agent is one AI system that plans and acts toward a goal; a platform is the shared infrastructure that lets many agents run, use tools, and be managed centrally. 2) It is a catalog of the tools agents can call, so tools are looked up by name instead of hardcoded into each agent. 3) The platform serves several separate users or teams, and each one's agents and data must stay isolated from the others. 4) Problems can happen at any stage (orchestration, the runtime, or tool calls), so monitoring has to observe all of them.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "architecture",
+   "kicker": "Project 1 · Platform architecture",
+   "title": "Plan the platform first",
+   "beats": [
+    {
+     "say": "Welcome to A I Agent Platform Engineer."
+    },
+    {
+     "say": "In this first project, you plan the platform before writing any platform code, so every later project has a place to plug into."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "people",
+   "kicker": "Concept",
+   "title": "Agent versus agent platform",
+   "items": [
+    [
+     "Agent",
+     "One AI system acting toward a goal"
+    ],
+    [
+     "Agent platform",
+     "Shared infrastructure for many agents"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Start with one distinction.",
+     "show": 0
+    },
+    {
+     "say": "An agent is a single A I system that plans and takes actions toward a goal.",
+     "show": 1
+    },
+    {
+     "say": "An agent platform is the infrastructure that lets many agents, possibly built by different people, run, access tools, and be managed centrally.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "The core components",
+   "items": [
+    [
+     "Agent runtime",
+     "Where agent logic runs"
+    ],
+    [
+     "Tool registry",
+     "Catalog of callable tools"
+    ],
+    [
+     "Orchestration",
+     "Manages agents and tasks"
+    ],
+    [
+     "Permissions / sandboxing",
+     "Controls access"
+    ],
+    [
+     "Monitoring",
+     "Tracks what agents do"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A platform has five core components.",
+     "show": 0
+    },
+    {
+     "say": "The agent runtime, where agent logic actually executes.",
+     "show": 1
+    },
+    {
+     "say": "The tool registry, a catalog of tools agents can call.",
+     "show": 2
+    },
+    {
+     "say": "The orchestration layer, which manages multiple agents and tasks.",
+     "show": 3
+    },
+    {
+     "say": "Permissions and sandboxing, which control what agents can access.",
+     "show": 4
+    },
+    {
+     "say": "And monitoring, which tracks what agents are doing.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "path",
+   "kicker": "Concept",
+   "title": "How a request flows",
+   "steps": [
+    "Tenant submits a task",
+    "Orchestration layer",
+    "Agent runtime",
+    "Permissions → tool registry",
+    "Results to the user"
+   ],
+   "beats": [
+    {
+     "say": "Here's how a task moves through the platform.",
+     "show": 0
+    },
+    {
+     "say": "A user, or tenant, submits a task to the orchestration layer.",
+     "show": 1
+    },
+    {
+     "say": "It hands the task to the agent runtime.",
+     "show": 2
+    },
+    {
+     "say": "Tool calls pass through permissions, then the tool registry, and back to the runtime.",
+     "show": 3
+    },
+    {
+     "say": "Results return to the user. And monitoring observes every stage, because problems can happen anywhere.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "lock",
+   "kicker": "Lab",
+   "title": "Multi-tenancy and security",
+   "items": [
+    [
+     "Multi-tenant",
+     "Each team's agents and data isolated"
+    ],
+    [
+     "Security sentence",
+     "Worst case, and how to prevent it"
+    ],
+    [
+     "Architecture diagram",
+     "Every component, one picture"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two more ideas go into your notes.",
+     "show": 0
+    },
+    {
+     "say": "Multi-tenant means the platform serves several separate users or teams, and each one's agents and data must stay isolated from the others.",
+     "show": 1
+    },
+    {
+     "say": "Then write one sentence: the worst thing an agent could do with too much unchecked access, and how you'd prevent it.",
+     "show": 2
+    },
+    {
+     "say": "Finish with a full architecture diagram of every component.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does \"multi-tenant\" mean for an agent platform?",
+   "options": [
+    "It serves several separate users or teams, each kept isolated",
+    "It runs several copies of one agent for speed",
+    "It stores every team's data in one shared pool"
+   ],
+   "answer": 0,
+   "good": "That's right. The platform serves several separate users or teams, and each one's agents and data must stay isolated from the others.",
+   "bad": "Not quite. The platform serves several separate users or teams, and each one's agents and data must stay isolated from the others.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does \"multi-tenant\" mean for an agent platform?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A diagram with every core component",
+     ""
+    ],
+    [
+     "A documented security consideration",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have an architecture diagram with all the core components,",
+     "show": 1
+    },
+    {
+     "say": "and a documented security consideration.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, a basic tool-calling script.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Build a Basic Tool-Calling Script
@@ -305,6 +549,189 @@ tool_calling_project (Colab notebook)
 5. What should happen when you ask "What's 2+2?" with the weather tool available?
 
 *Answers: 1) Which arguments the tool expects, their types, and which ones are required. 2) A block of type `tool_use` containing an `id`, the tool `name`, and its `input` arguments. 3) Your code runs it; the model only asks for the call, and you send the result back. 4) The `tool_result` block's `tool_use_id` matches the `id` of the `tool_use` block. 5) The model answers directly with text and makes no `tool_use` call, because the tool isn't relevant.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Project 2 · Tool calling",
+   "title": "One agent, one tool",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "You'll build the smallest working unit, one model calling one tool, before scaling to anything more complex."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "blueprint",
+   "kicker": "Steps 2 and 3",
+   "title": "A tool and its definition",
+   "file": "tool_calling_project",
+   "code": "def get_weather(city):\n    return f\"The weather in {city} is 72°F and sunny.\"\n\ntool_definition = {\n    \"name\": \"get_weather\",\n    \"description\": \"Get the current weather for a given city.\",\n    \"input_schema\": {\n        \"type\": \"object\",\n        \"properties\": {\"city\": {\"type\": \"string\", \"description\": \"The city name\"}},\n        \"required\": [\"city\"]\n    }\n}",
+   "beats": [
+    {
+     "say": "First, a simple tool function, get weather, that takes a city.",
+     "show": 0
+    },
+    {
+     "say": "Then describe it for the model, with a name, a description and an input schema.",
+     "show": 1
+    },
+    {
+     "say": "The input schema tells the model exactly what arguments the tool expects, and their types.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Steps 4 to 7",
+   "title": "The full round trip",
+   "steps": [
+    "Request with tools",
+    "Parse the tool_use block",
+    "Your code runs the tool",
+    "Send the tool_result back"
+   ],
+   "beats": [
+    {
+     "say": "The round trip has four parts.",
+     "show": 0
+    },
+    {
+     "say": "Send a request to the Messages A P I, with the tool available.",
+     "show": 1
+    },
+    {
+     "say": "Parse the response. A tool use block holds an I D, the tool name, and its input.",
+     "show": 2
+    },
+    {
+     "say": "Your code runs the tool. The model only asks for the call.",
+     "show": 3
+    },
+    {
+     "say": "Then send a tool result back, so the model can write its final answer.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "chain",
+   "kicker": "Step 7",
+   "title": "Match the result to the call",
+   "file": "tool_calling_project",
+   "code": "\"messages\": [\n    {\"role\": \"user\", \"content\": \"What's the weather like in Tokyo?\"},\n    {\"role\": \"assistant\", \"content\": response.json()[\"content\"]},\n    {\"role\": \"user\", \"content\": [{\"type\": \"tool_result\",\n        \"tool_use_id\": tool_block[\"id\"], \"content\": result}]}\n]",
+   "beats": [
+    {
+     "say": "The follow-up request replays the conversation.",
+     "show": 0
+    },
+    {
+     "say": "The user's question, the model's reply, then a tool result.",
+     "show": 1
+    },
+    {
+     "say": "Its tool use I D must match the I D of the tool use block it answers.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "test",
+   "kicker": "Step 8",
+   "title": "A request that needs no tool",
+   "big": "\"What's 2+2?\"",
+   "sub": "only text blocks, no tool_use",
+   "beats": [
+    {
+     "say": "Last, ask something the tool can't help with: what's two plus two.",
+     "show": 0
+    },
+    {
+     "say": "Confirm you get only text blocks, and no tool use block. The model answered directly.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Who actually runs the get_weather function?",
+   "options": [
+    "The model, on Anthropic's servers",
+    "The API runs it automatically",
+    "Your code; the model only asks for the call"
+   ],
+   "answer": 2,
+   "good": "That's right. Your code runs it. The model only asks for the call, and you send the result back.",
+   "bad": "Not quite. Your code runs it. The model only asks for the call, and you send the result back.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Who actually runs the get_weather function?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "The full round trip works",
+     ""
+    ],
+    [
+     "A no-tool question gets plain text",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your script runs the full request, parse, execute and respond cycle,",
+     "show": 1
+    },
+    {
+     "say": "and a no-tool question gets a direct text answer.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, a single-purpose agent.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -501,6 +928,211 @@ single_agent_project (Colab notebook)
 4. If the model asks for two tools in one turn, how are their results sent back?
 
 *Answers: 1) When the model's reply contains no `tool_use` blocks, it has given its final answer, so the loop returns the text. 2) It is a safety limit that stops an agent from looping forever or taking too many actions, even if it never says it's done. 3) The `messages` list keeps the goal, every model reply, and every tool result, and the whole list is sent on each call. 4) Both `tool_result` blocks go together in one user message, each with the `tool_use_id` of the call it answers.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "loop",
+   "kicker": "Project 3 · A single-purpose agent",
+   "title": "From one call to many steps",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "You'll turn the tool-calling script into a full notes agent, with planning and memory, able to take several steps toward a goal."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "doc",
+   "kicker": "Steps 2 and 3",
+   "title": "Three notes tools",
+   "items": [
+    [
+     "search_notes",
+     "Find notes by keyword"
+    ],
+    [
+     "create_note",
+     "Title and content"
+    ],
+    [
+     "list_notes",
+     "All note titles"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The notes live in a Python dictionary, so the agent can really search and add to them.",
+     "show": 0
+    },
+    {
+     "say": "Search notes, by keyword.",
+     "show": 1
+    },
+    {
+     "say": "Create note, with a title and content.",
+     "show": 2
+    },
+    {
+     "say": "And list notes.",
+     "show": 3
+    },
+    {
+     "say": "A small execute tool function looks up the Python function by the name the model asked for, and calls it with the model's arguments.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Step 5",
+   "title": "The agent loop",
+   "file": "single_agent_project",
+   "code": "def run_agent(user_goal, max_steps=5):\n    messages = [{\"role\": \"user\", \"content\": user_goal}]\n    for step in range(max_steps):\n        response = call_model_with_tools(messages, tool_definitions)\n        content = response[\"content\"]\n        messages.append({\"role\": \"assistant\", \"content\": content})\n        tool_calls = [b for b in content if b[\"type\"] == \"tool_use\"]\n        if not tool_calls:\n            return \"\".join(b[\"text\"] for b in content if b[\"type\"] == \"text\")\n        tool_results = []\n        for call in tool_calls:\n            result = execute_tool(call[\"name\"], call[\"input\"])\n            tool_results.append({\"type\": \"tool_result\", \"tool_use_id\": call[\"id\"], \"content\": result})\n        messages.append({\"role\": \"user\", \"content\": tool_results})\n    return \"Max steps reached without completion.\"",
+   "beats": [
+    {
+     "say": "An agent loop keeps asking the model: given everything so far, what's the next step?",
+     "show": 0
+    },
+    {
+     "say": "If the reply has no tool calls, that's the final answer.",
+     "show": 1
+    },
+    {
+     "say": "Otherwise, run every tool, and send all the results back in one user message.",
+     "show": 1
+    },
+    {
+     "say": "Max steps is a safety limit. It caps how many actions the agent can take, whether or not it's done.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Steps 6 and 7",
+   "title": "Single step, then multi-step",
+   "steps": [
+    "\"Search my notes for 'meeting'\"",
+    "\"Check for groceries; if not, create one\"",
+    "Search first, then decide"
+   ],
+   "beats": [
+    {
+     "say": "Test it twice.",
+     "show": 0
+    },
+    {
+     "say": "First, search my notes for meeting. One logged step calls search notes, then the answer.",
+     "show": 1
+    },
+    {
+     "say": "Then: check for a groceries note, and if there isn't one, create it.",
+     "show": 2
+    },
+    {
+     "say": "Watch the log. The agent searches first, then decides what to do based on the result.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "database",
+   "kicker": "Step 8",
+   "title": "The agent's memory",
+   "quote": "The messages list is the agent's short-term memory.",
+   "beats": [
+    {
+     "say": "Where does the memory come from?",
+     "show": 0
+    },
+    {
+     "say": "The messages list grows every step: the goal, each model reply, and each tool result. The whole list is sent on every call.",
+     "show": 1
+    },
+    {
+     "say": "That list is the agent's short-term memory.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "How does the agent loop know the task is finished?",
+   "options": [
+    "The model sends a special done tool",
+    "The reply contains no tool_use blocks",
+    "max_steps is reached"
+   ],
+   "answer": 1,
+   "good": "That's right. When the model's reply has no tool use blocks, it has given its final answer, so the loop returns the text.",
+   "bad": "Not quite. When the model's reply has no tool use blocks, it has given its final answer, so the loop returns the text.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "How does the agent loop know the task is finished?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Single-step and multi-step goals work",
+     ""
+    ],
+    [
+     "Bounded by max_steps, with a step log",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your agent completes both a single-step and a multi-step goal,",
+     "show": 1
+    },
+    {
+     "say": "with a step limit and a log of each step.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, a tool registry.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -708,6 +1340,204 @@ tool_registry_project (Colab notebook)
 4. In Step 6, why could the agent use `create_note` without any change to `run_agent`?
 
 *Answers: 1) Tools are stored in one catalog and looked up by name, so agents and tools are decoupled and tools can be added or removed without editing agent code. 2) A list of tool definitions with `name`, `description`, and `input_schema`, which `run_agent` sends to the API as the `tools` field. 3) Python decides what belongs to a class by indentation, so an indented method in a separate cell is an error and isn't part of the class. 4) The agent asks the registry for its tool list on every run, so a newly registered tool is included automatically.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "boxes",
+   "kicker": "Project 4 · Tool registry",
+   "title": "Many tools, many agents",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "You'll scale from one agent to a registry of tools that several agents can use. It's the first real platform component."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "boxes",
+   "kicker": "Step 3",
+   "title": "The ToolRegistry class",
+   "file": "tool_registry_project",
+   "code": "class ToolRegistry:\n    def __init__(self):\n        self.tools = {}\n    def register(self, name, function, description, input_schema):\n        self.tools[name] = {\"function\": function, \"description\": description,\n                            \"input_schema\": input_schema}\n\n    def get_tool_definitions(self):\n        return [{\"name\": name, \"description\": t[\"description\"], \"input_schema\": t[\"input_schema\"]}\n                for name, t in self.tools.items()]\n\n    def execute(self, name, **kwargs):\n        if name not in self.tools:\n            return f\"Error: unknown tool '{name}'.\"\n        return self.tools[name][\"function\"](**kwargs)",
+   "beats": [
+    {
+     "say": "A registry is a central catalog that stores tools, so they're looked up by name instead of hardcoded.",
+     "show": 0
+    },
+    {
+     "say": "Register adds a tool.",
+     "show": 1
+    },
+    {
+     "say": "Get tool definitions builds the tools list the A P I expects.",
+     "show": 1
+    },
+    {
+     "say": "And execute runs a tool by name. Keep the whole class in one cell, because the methods belong inside it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "loop",
+   "kicker": "Step 5",
+   "title": "The loop, changed in three places",
+   "items": [
+    [
+     "Takes a registry",
+     "run_agent(goal, registry)"
+    ],
+    [
+     "Tools from the registry",
+     "get_tool_definitions()"
+    ],
+    [
+     "Runs via the registry",
+     "registry.execute(...)"
+    ],
+    [
+     "Catches errors",
+     "\"is_error\": True"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The Project 3 loop changes in three places.",
+     "show": 0
+    },
+    {
+     "say": "It takes a registry.",
+     "show": 1
+    },
+    {
+     "say": "It gets its tool list from the registry.",
+     "show": 2
+    },
+    {
+     "say": "It runs tools with registry dot execute.",
+     "show": 3
+    },
+    {
+     "say": "It also catches tool errors, and sends them back marked as an error. You'll test that in Project 6.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "growth",
+   "kicker": "Steps 6 and 7",
+   "title": "A new tool, no agent changes",
+   "big": "0 lines changed",
+   "sub": "in run_agent, to add create_note",
+   "beats": [
+    {
+     "say": "Now register create note, and ask the agent to create a note.",
+     "show": 0
+    },
+    {
+     "say": "You didn't touch run agent, yet it can use the new tool. That's the point of a registry.",
+     "show": 1
+    },
+    {
+     "say": "Then run a weather goal and a notes goal through the same registry.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "api",
+   "kicker": "Looking ahead",
+   "title": "Registries and M C P",
+   "quote": "Your registry is the same idea as an MCP server, inside one Python program.",
+   "beats": [
+    {
+     "say": "In production, tools are often served by M C P servers, Model Context Protocol.",
+     "show": 0
+    },
+    {
+     "say": "They list tools with the same name, description and input schema, so a platform can discover them at run time. In Project 8, you'll publish your registry as one.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why could the agent use create_note without any change to run_agent?",
+   "options": [
+    "It asks the registry for its tool list on every run",
+    "Claude already knows about create_note",
+    "run_agent was restarted"
+   ],
+   "answer": 0,
+   "good": "That's right. The agent asks the registry for its tool list on every run, so a newly registered tool is included automatically.",
+   "bad": "Not quite. The agent asks the registry for its tool list on every run, so a newly registered tool is included automatically.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why could the agent use create_note without any change to run_agent?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Two agent goals share one registry",
+     ""
+    ],
+    [
+     "A README documents the interface",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your registry has several tools, used by at least two agent goals without code changes,",
+     "show": 1
+    },
+    {
+     "say": "and a README note documents its interface.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, a queue for running agents in the background.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1032,6 +1862,194 @@ queue_execution_project/
 
 *Answers: 1) It returns a job with an ID straight away; the task runs later when a worker picks it up. 2) The worker is a separate Python process that imports your functions by module name, and it can only import `.py` files. 3) Keys written into files get shared, copied, or committed by accident; an environment variable keeps the secret out of the code and lasts only for that terminal session. 4) Jobs are split between the workers, so several run at the same time instead of waiting in line. 5) The `rq` worker relies on Unix `fork`, which native Windows lacks, so Windows users run it inside WSL.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "stack",
+   "kicker": "Project 5 · Queue-based execution",
+   "title": "Run agents at scale",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "This project runs on your computer, not in Colab. You need mac O S, Linux, or Windows with W S L, plus Docker Desktop to run Redis."
+    },
+    {
+     "say": "A task queue holds pending jobs until a worker is free, decoupling submitting a task from executing it."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "terminal",
+   "kicker": "Steps 1 to 5",
+   "title": "Set up the project",
+   "steps": [
+    "venv + pip install redis rq requests",
+    "docker run … redis",
+    "tools.py · registry.py · agent.py",
+    "export ANTHROPIC_API_KEY"
+   ],
+   "beats": [
+    {
+     "say": "Create a project folder and a virtual environment, and install redis, r q and requests.",
+     "show": 1
+    },
+    {
+     "say": "Start Redis with Docker. It's an in-memory data store, commonly used behind task queues because of its speed.",
+     "show": 2
+    },
+    {
+     "say": "Move your Project 4 code into tools dot py, registry dot py and agent dot py. A worker can only import code from dot py files.",
+     "show": 3
+    },
+    {
+     "say": "Set your A P I key with export in the terminal. Never write it into a file.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "rocket",
+   "kicker": "Steps 6 and 7",
+   "title": "Enqueue a task",
+   "file": "submit_task.py",
+   "code": "from redis import Redis\nfrom rq import Queue\nfrom tasks import run_agent_task\n\nq = Queue(connection=Redis())\njob = q.enqueue(run_agent_task, \"What's the weather in Berlin?\")\nprint(f\"Job queued: {job.id}\")",
+   "beats": [
+    {
+     "say": "Tasks dot py wraps run agent in a queueable function.",
+     "show": 0
+    },
+    {
+     "say": "Then submit task dot py enqueues a goal.",
+     "show": 1
+    },
+    {
+     "say": "Enqueue returns straight away with a job I D. It doesn't wait for the agent to finish.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "stack",
+   "kicker": "Steps 8 to 10",
+   "title": "Workers do the work",
+   "steps": [
+    "rq worker",
+    "python check_job.py <job-id>",
+    "Two workers, three jobs"
+   ],
+   "beats": [
+    {
+     "say": "The job just waits in Redis until you start a worker with r q worker.",
+     "show": 1
+    },
+    {
+     "say": "A worker is a separate process that pulls jobs off the queue and runs them.",
+     "show": 1
+    },
+    {
+     "say": "Check job dot py shows the status, finished, and the agent's answer.",
+     "show": 2
+    },
+    {
+     "say": "Then start a second worker and submit three goals. The jobs are split between them and run at the same time.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Step 11",
+   "title": "Shut it down",
+   "quote": "docker stop agent-redis · docker rm agent-redis · deactivate",
+   "beats": [
+    {
+     "say": "When you're done, stop each worker with control C.",
+     "show": 0
+    },
+    {
+     "say": "Then stop and remove the Redis container, and deactivate the virtual environment.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What changes when you run two workers instead of one?",
+   "options": [
+    "Each job runs twice",
+    "Jobs wait in line until the first worker stops",
+    "Jobs are split between them and run at the same time"
+   ],
+   "answer": 2,
+   "good": "That's right. Jobs are split between the workers, so several run at the same time instead of waiting in line.",
+   "bad": "Not quite. Jobs are split between the workers, so several run at the same time instead of waiting in line.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What changes when you run two workers instead of one?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Queued tasks run in the background",
+     ""
+    ],
+    [
+     "Two workers run jobs concurrently",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your queue runs agent tasks in the background with job status tracking,",
+     "show": 1
+    },
+    {
+     "say": "and two workers process several tasks at the same time.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, an evaluation suite.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 6 (Module 6): Build an Evaluation Suite for Agent Reliability
@@ -1173,6 +2191,207 @@ agent_evaluation_project (Colab notebook)
 4. What stops a crashing tool from crashing the whole agent loop?
 
 *Answers: 1) To check the agent admits it can't do something instead of pretending or misusing an unrelated tool. 2) So you judge results against a fixed standard rather than adjusting expectations to whatever the agent produced. 3) The agent inventing a summary of a note that doesn't exist, instead of saying no such note was found. 4) The `try`/`except` in `run_agent` catches the error and returns it to the model as a `tool_result` marked `is_error`, so the model can report the failure.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Project 6 · Evaluation suite",
+   "title": "Test before you trust",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "You'll test agent behaviour before trusting it in production. That's the discipline that separates a working demo from a dependable platform."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "target",
+   "kicker": "Steps 2 and 3",
+   "title": "A varied test set",
+   "items": [
+    [
+     "Single tool",
+     "\"What's the weather in Lagos?\""
+    ],
+    [
+     "Multi-step",
+     "\"Paris and Tokyo?\""
+    ],
+    [
+     "Ambiguous",
+     "\"Help me with my notes.\""
+    ],
+    [
+     "No relevant tool",
+     "\"Book me a flight to Accra.\""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Build a list of ten to fifteen goals, covering four kinds.",
+     "show": 0
+    },
+    {
+     "say": "Simple single-tool tasks, like the weather in Lagos.",
+     "show": 1
+    },
+    {
+     "say": "Multi-step tasks, like the weather in Paris and in Tokyo.",
+     "show": 2
+    },
+    {
+     "say": "Ambiguous goals, like help me with my notes.",
+     "show": 3
+    },
+    {
+     "say": "And goals with no relevant tool, like book me a flight to Accra.",
+     "show": 4
+    },
+    {
+     "say": "Write success criteria for each before you run anything. For the flight, the agent should say it can't book flights.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "graph",
+   "kicker": "Steps 4 and 5",
+   "title": "Run and score",
+   "steps": [
+    "Run every goal",
+    "Compare to criteria",
+    "pass · fail · partial"
+   ],
+   "beats": [
+    {
+     "say": "Run every goal through the agent and save the answers.",
+     "show": 1
+    },
+    {
+     "say": "Compare each answer with your criteria.",
+     "show": 2
+    },
+    {
+     "say": "Mark each one pass, fail or partial, then count them.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "search",
+   "kicker": "Step 6",
+   "title": "Test for hallucination",
+   "quote": "\"Summarise my note about quarterly tax filing.\" There is no such note.",
+   "beats": [
+    {
+     "say": "Ask the agent to summarise a note about quarterly tax filing.",
+     "show": 0
+    },
+    {
+     "say": "No such note exists. A made-up summary is a hallucination, and it's a fail. The agent should say so honestly.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Step 7",
+   "title": "Test failure recovery",
+   "file": "agent_evaluation_project",
+   "code": "def get_stock_price(symbol):\n    raise ConnectionError(\"stock service is down\")\n\nregistry.register(\n    \"get_stock_price\", get_stock_price, \"Get the latest stock price for a ticker symbol.\",\n    {\"type\": \"object\", \"properties\": {\"symbol\": {\"type\": \"string\"}}, \"required\": [\"symbol\"]},\n)\nprint(run_agent(\"What's the stock price of ACME?\", registry))",
+   "beats": [
+    {
+     "say": "Now register a tool that always crashes.",
+     "show": 0
+    },
+    {
+     "say": "The try and except in run agent catches the error, and sends it back as a tool result marked is error.",
+     "show": 1
+    },
+    {
+     "say": "Confirm the loop doesn't crash, and the agent says the tool failed instead of inventing a price.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why write success criteria before running the tests?",
+   "options": [
+    "So the tests run faster",
+    "So you judge against a fixed standard, not whatever the agent produced",
+    "Because the API requires them"
+   ],
+   "answer": 1,
+   "good": "That's right. Writing them first means you judge results against a fixed standard, rather than adjusting expectations to whatever the agent produced.",
+   "bad": "Not quite. Writing them first means you judge results against a fixed standard, rather than adjusting expectations to whatever the agent produced.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why write success criteria before running the tests?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Scored results across varied goals",
+     ""
+    ],
+    [
+     "A written reliability report",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your suite has pass and fail scoring across varied goals,",
+     "show": 1
+    },
+    {
+     "say": "and a written report covers hallucination, failure recovery and recommendations.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 7, access control and audit logging.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1362,6 +2581,224 @@ access_control_project (Colab notebook)
 4. What does `sandboxed_execute` do with a restricted tool?
 
 *Answers: 1) A subclass keeps `self.tools`, `register`, and `get_tool_definitions` from the parent and only replaces `execute`; a new class with just `execute` would have no way to register or store tools. 2) It defaults to "restricted", following least privilege: access must be granted explicitly, never assumed. 3) Denials show who tried to do something they weren't allowed to, which is often the most important evidence in a security review. 4) It logs the attempt and returns a message describing what would have happened, without actually running the tool.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "shield",
+   "kicker": "Project 7 · Access control and audit",
+   "title": "Govern what agents can do",
+   "beats": [
+    {
+     "say": "Welcome to Module 7."
+    },
+    {
+     "say": "You'll secure and govern what agents are allowed to do, closing the loop on the security note from Project 1."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Step 2",
+   "title": "Permission levels",
+   "items": [
+    [
+     "get_weather",
+     "public"
+    ],
+    [
+     "search_notes",
+     "user"
+    ],
+    [
+     "send_email",
+     "restricted"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Add a risky tool, a fake send email, then tag each tool with a permission level.",
+     "show": 0
+    },
+    {
+     "say": "Get weather is public.",
+     "show": 1
+    },
+    {
+     "say": "Search notes needs the user level.",
+     "show": 2
+    },
+    {
+     "say": "Send email is restricted.",
+     "show": 3
+    },
+    {
+     "say": "Levels are ranked, so a user caller can use public and user tools, but not restricted ones.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "lock",
+   "kicker": "Steps 3 and 6",
+   "title": "A secure registry",
+   "file": "access_control_project",
+   "code": "class SecureToolRegistry(ToolRegistry):\n    def _has_access(self, user_level, required_level):\n        return LEVEL_RANK[user_level] >= LEVEL_RANK[required_level]\n\n    def execute(self, name, agent_id, user_permission_level, **kwargs):\n        required_level = PERMISSION_LEVELS.get(name, \"restricted\")\n        allowed = self._has_access(user_permission_level, required_level)\n        if not allowed:\n            log_tool_call(agent_id, name, kwargs, allowed=False)\n            raise PermissionError(f\"Access denied to tool: {name}\")\n        result = self.tools[name][\"function\"](**kwargs)\n        log_tool_call(agent_id, name, kwargs, allowed=True, result=result)\n        return result",
+   "beats": [
+    {
+     "say": "Make a subclass of the registry. It keeps everything, and replaces only execute.",
+     "show": 0
+    },
+    {
+     "say": "Every call says which agent is calling, and at what level.",
+     "show": 1
+    },
+    {
+     "say": "A tool missing from the levels defaults to restricted. That's least privilege: access is granted, never assumed.",
+     "show": 1
+    },
+    {
+     "say": "And every call is written to an audit log, including denied ones.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "file",
+   "kicker": "Step 5",
+   "title": "The audit log",
+   "items": [
+    [
+     "audit_log.jsonl",
+     "One JSON entry per line"
+    ],
+    [
+     "Fields",
+     "timestamp · agent_id · tool · arguments · allowed · result"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "An audit log is a permanent record of who did what, and when.",
+     "show": 0
+    },
+    {
+     "say": "Each line of audit log dot J S O N L is one J S O N entry.",
+     "show": 1
+    },
+    {
+     "say": "It records the time, the agent, the tool, its arguments, and whether it was allowed.",
+     "show": 2
+    },
+    {
+     "say": "Denials are often the most important entries in a security review.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "warning",
+   "kicker": "Steps 7 and 8",
+   "title": "Sandbox the risky tools",
+   "steps": [
+    "Permission check first",
+    "Restricted? Log it, don't run it",
+    "Review audit_log.jsonl"
+   ],
+   "beats": [
+    {
+     "say": "A sandbox simulates an action's effects without performing it.",
+     "show": 0
+    },
+    {
+     "say": "The permission check still runs first.",
+     "show": 1
+    },
+    {
+     "say": "If the tool is restricted, it's logged, and a message describes what would have happened.",
+     "show": 2
+    },
+    {
+     "say": "Then review the audit log: allowed calls, denied calls, and which agent made each.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What permission level does a tool get if it's missing from PERMISSION_LEVELS?",
+   "options": [
+    "Restricted, because access must be granted, never assumed",
+    "Public, so nothing breaks",
+    "User, as a middle ground"
+   ],
+   "answer": 0,
+   "good": "That's right. It defaults to restricted, following least privilege: access must be granted explicitly, never assumed.",
+   "bad": "Not quite. It defaults to restricted, following least privilege: access must be granted explicitly, never assumed.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What permission level does a tool get if it's missing from PERMISSION_LEVELS?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Permissions enforced on every call",
+     ""
+    ],
+    [
+     "A reviewed audit log of allowed and denied calls",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 7.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your registry enforces permissions on every tool call,",
+     "show": 1
+    },
+    {
+     "say": "and a reviewed audit log shows allowed and denied calls.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 8, you'll expose the platform's tools through M C P.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -1805,3 +3242,213 @@ mcp_platform_project (Colab notebook)
 5. What happens in the agent loop when Claude asks for a tool the caller isn't allowed to use?
 
 *Answers: 1) The client that launches the server sets the `AGENT_ID` and `PERMISSION_LEVEL` environment variables, and the server reads them once at startup, falling back to "public" if the level is missing or unknown. 2) Tool arguments are written by the model, so a confused or manipulated model could simply claim a higher level. 3) Any client can send a `call_tool` request by name without listing first, so only a check at call time actually stops it. 4) The SDK sends a `ToolError` message back as a readable error result, while other exceptions are reduced to a generic error so internal details don't leak. 5) The server refuses and logs the call, the loop sends the refusal to Claude as a `tool_result` marked `is_error`, and Claude reports that it wasn't allowed.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Project 8 · MCP server",
+   "title": "Publish your tools safely",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "You'll turn the tool registry into an M C P server, so any M C P capable app can use your tools, while the Project 7 permission checks and audit log still guard every call."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "key",
+   "kicker": "Step 2",
+   "title": "Who is calling?",
+   "items": [
+    [
+     "Launcher sets identity",
+     "AGENT_ID · PERMISSION_LEVEL"
+    ],
+    [
+     "✗ Never a tool argument",
+     "The model writes arguments"
+    ],
+    [
+     "Unknown level → public",
+     "Least privilege"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "An M C P tool call only carries the tool's name and its arguments. So how does the server know who's calling?",
+     "show": 0
+    },
+    {
+     "say": "With the standard I O transport, the client launches the server. It sets two environment variables, agent I D and permission level.",
+     "show": 1
+    },
+    {
+     "say": "Rule one: the permission level is never a tool argument. The model writes those, and could simply ask for restricted.",
+     "show": 2
+    },
+    {
+     "say": "Rule two: if the level is missing or unknown, fall back to public. Least privilege again.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Step 3",
+   "title": "Guard every tool",
+   "file": "platform_server.py",
+   "code": "def expose(name):\n    original = registry.tools[name][\"function\"]\n\n    @wraps(original)\n    def guarded(**kwargs):\n        try:\n            return registry.execute(name, agent_id=CALLER_ID,\n                                    user_permission_level=CALLER_LEVEL, **kwargs)\n        except PermissionError as error:\n            raise ToolError(str(error)) from error\n\n    mcp.add_tool(guarded, name=name, description=registry.tools[name][\"description\"])",
+   "beats": [
+    {
+     "say": "At the bottom of platform server dot py, expose wraps each registry tool in a guarded function.",
+     "show": 0
+    },
+    {
+     "say": "M C P only sees guarded, and guarded only runs tools through registry dot execute. So no call can skip the permission check or the audit log.",
+     "show": 1
+    },
+    {
+     "say": "Wraps copies the name and type hints, so M C P builds the right schema.",
+     "show": 1
+    },
+    {
+     "say": "A refusal becomes a tool error, a readable error result, without leaking internal details.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "test",
+   "kicker": "Steps 4 to 6",
+   "title": "Test it as different callers",
+   "steps": [
+    "platform_session(agent_id, level)",
+    "notes-agent: allowed calls",
+    "intern-bot: refused",
+    "Denials in audit_log.jsonl"
+   ],
+   "beats": [
+    {
+     "say": "A helper starts one server process per caller, with its own identity.",
+     "show": 1
+    },
+    {
+     "say": "As notes agent, at the user level, list all five tools and make two allowed calls.",
+     "show": 2
+    },
+    {
+     "say": "As intern bot, at the public level, call search notes and send email directly. Both come back as access denied errors.",
+     "show": 3
+    },
+    {
+     "say": "The audit log, written by the server, shows the denied calls for intern bot.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "warning",
+   "kicker": "Key idea",
+   "title": "Hiding is not protection",
+   "quote": "A caller can always call a tool by name. Only the check on every call protects you.",
+   "beats": [
+    {
+     "say": "Intern bot could still see send email in the tool list.",
+     "show": 0
+    },
+    {
+     "say": "Hiding tools is a nice extra, but any caller can send a call by name. The check on every call is what keeps you safe.",
+     "show": 1
+    },
+    {
+     "say": "Then let Claude use the tools. When intern bot's agent tries send email, it gets the refusal, and says it couldn't send it.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why must the permission level never be a tool argument?",
+   "options": [
+    "Tool arguments can't hold strings",
+    "MCP strips unknown arguments",
+    "The model writes the arguments, so it could claim a higher level"
+   ],
+   "answer": 2,
+   "good": "That's right. Tool arguments are written by the model, so a confused or manipulated model could simply claim a higher level.",
+   "bad": "Not quite. Tool arguments are written by the model, so a confused or manipulated model could simply claim a higher level.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why must the permission level never be a tool argument?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A working platform_server.py",
+     ""
+    ],
+    [
+     "A passing permission test",
+     ""
+    ],
+    [
+     "An audit log of allowed and denied calls",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working platform server dot py,",
+     "show": 1
+    },
+    {
+     "say": "a passing permission test,",
+     "show": 2
+    },
+    {
+     "say": "and an audit log showing allowed and denied calls from different callers.",
+     "show": 3
+    },
+    {
+     "say": "You've finished A I Agent Platform Engineer. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```

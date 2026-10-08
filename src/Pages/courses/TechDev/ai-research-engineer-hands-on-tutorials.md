@@ -119,6 +119,213 @@ paper_reproduction_project/
 
 *Answers: 1) A first skim shows you the paper's overall structure and main claim, so you know which details matter when you reread. 2) Data (the paper's dataset or a substitute), method (the simplest version of the approach), and evaluation (the paper's metric). 3) It tests on five different parts of the data and averages them, so the score doesn't depend on one lucky or unlucky split. 4) Record the gap honestly and list likely causes, such as a different data split, missing preprocessing, or settings the paper didn't report.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "doc",
+   "kicker": "Project 1 · Reproduce a paper",
+   "title": "Read to rebuild",
+   "beats": [
+    {
+     "say": "Welcome to the A I Research Engineer tutorials."
+    },
+    {
+     "say": "In this first project, you read a research paper the way a researcher does: for what to rebuild, not just what to remember."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "doc",
+   "kicker": "Concept",
+   "title": "Skim the structure first",
+   "steps": [
+    "Abstract",
+    "Introduction",
+    "Method",
+    "Results",
+    "Discussion"
+   ],
+   "beats": [
+    {
+     "say": "Choose a short, well-known paper with a simple result, one you can reproduce with a small dataset and a few hours of compute.",
+     "show": 0
+    },
+    {
+     "say": "Most papers follow the same five sections.",
+     "show": 1
+    },
+    {
+     "say": "Abstract, introduction, method, results, and discussion.",
+     "show": 5
+    },
+    {
+     "say": "Skim all five once, before rereading anything closely.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "target",
+   "kicker": "Steps 4 to 6",
+   "title": "One core claim",
+   "quote": "This paper claims that [method] achieves [result] on [dataset/task].",
+   "beats": [
+    {
+     "say": "In a text cell called paper summary, write one sentence.",
+     "show": 0
+    },
+    {
+     "say": "This paper claims that a method achieves a result on a dataset or task.",
+     "show": 1
+    },
+    {
+     "say": "Then paraphrase the method in your own words, without quoting the paper, and note its dataset and evaluation metric.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Step 7",
+   "title": "Data, method, evaluation",
+   "file": "paper_reproduction_project",
+   "code": "# 1. Data\nX, y = load_breast_cancer(return_X_y=True)\n\n# 2. Method\nmodel = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))\n\n# 3. Evaluation\nscores = cross_val_score(model, X, y, cv=5, scoring=\"accuracy\")\nprint(f\"Mean accuracy: {scores.mean():.3f} (+/- {scores.std():.3f})\")\n\nPAPER_REPORTED = 0.97  # replace with your paper's number",
+   "beats": [
+    {
+     "say": "Every reproduction script has the same three parts: data, method, and evaluation.",
+     "show": 0
+    },
+    {
+     "say": "Here the claim is that logistic regression reaches about ninety seven percent accuracy on the Wisconsin breast cancer dataset.",
+     "show": 1
+    },
+    {
+     "say": "Five-fold cross-validation tests on each of five parts in turn, so your number doesn't depend on one lucky split.",
+     "show": 1
+    },
+    {
+     "say": "You should see a mean accuracy of about zero point nine eight.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "calc",
+   "kicker": "Step 8",
+   "title": "Compare, honestly",
+   "items": [
+    [
+     "Different data split",
+     ""
+    ],
+    [
+     "Missing preprocessing",
+     ""
+    ],
+    [
+     "Unreported settings",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Finally, record your metric and compare it with the paper's number.",
+     "show": 0
+    },
+    {
+     "say": "If there's a gap, list the likely reasons.",
+     "show": 0
+    },
+    {
+     "say": "A different data split.",
+     "show": 1
+    },
+    {
+     "say": "Missing preprocessing.",
+     "show": 2
+    },
+    {
+     "say": "Or settings the paper didn't report.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What are the three parts every minimal reproduction script needs?",
+   "options": [
+    "Data, method, and evaluation",
+    "Abstract, method, and results",
+    "Training, tuning, and deployment"
+   ],
+   "answer": 0,
+   "good": "That's right. Data is the paper's dataset or a substitute, method is the simplest version of the approach, and evaluation is the paper's metric.",
+   "bad": "Not quite. Data is the paper's dataset or a substitute, method is the simplest version of the approach, and evaluation is the paper's metric.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What are the three parts every minimal reproduction script needs?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "One core claim, written down",
+     ""
+    ],
+    [
+     "A working reproduction script",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've written down the paper's one core claim,",
+     "show": 1
+    },
+    {
+     "say": "and you have a working script that reproduces, or attempts to reproduce, its central result.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, you'll explore a dataset before modeling it.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 2 (Module 2): Build a Data Exploration Notebook
@@ -212,6 +419,208 @@ data_exploration_project/
 4. What does a histogram of one column show you?
 
 *Answers: 1) So you find problems like missing values, odd distributions, or imbalance early, before they quietly distort your results. 2) How many missing values each column has. 3) It is when one class far outnumbers another; it matters because a model can score high accuracy just by always guessing the common class. 4) The distribution of that column's values: whether they are spread evenly, skewed, or clustered.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "search",
+   "kicker": "Project 2 · Data exploration",
+   "title": "Understand the data first",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Here you build the habit of understanding data before modeling it: the step most beginners skip, and most experienced researchers insist on."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Step 2",
+   "title": "Load it into a DataFrame",
+   "file": "data_exploration_project",
+   "code": "import pandas as pd\nfrom sklearn.datasets import load_breast_cancer\n\nload_breast_cancer(as_frame=True).frame.to_csv(\"breast_cancer.csv\", index=False)\n\ndf = pd.read_csv(\"breast_cancer.csv\")\ndf.head()",
+   "beats": [
+    {
+     "say": "This course uses the Wisconsin breast cancer dataset, which comes with scikit-learn.",
+     "show": 0
+    },
+    {
+     "say": "The code saves it as a C S V file, then loads that file, the way you'd load any data.",
+     "show": 1
+    },
+    {
+     "say": "A DataFrame is a table of rows and columns, like a spreadsheet. Each row is one tumor sample, and the target column is the label.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "search",
+   "kicker": "Steps 3 to 5",
+   "title": "Four first questions",
+   "items": [
+    [
+     "df.shape",
+     "Rows × columns"
+    ],
+    [
+     "df.dtypes",
+     "Column types"
+    ],
+    [
+     "df.isnull().sum()",
+     "Missing values per column"
+    ],
+    [
+     ".hist(bins=30)",
+     "A column's distribution"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Then ask the data a few questions.",
+     "show": 0
+    },
+    {
+     "say": "Shape gives rows by columns: here, five hundred and sixty nine by thirty one.",
+     "show": 1
+    },
+    {
+     "say": "D types tells you whether each column is numeric, text, or something else.",
+     "show": 2
+    },
+    {
+     "say": "Is null, dot sum, counts the missing values in each column. This dataset has none, which is rare for real data.",
+     "show": 3
+    },
+    {
+     "say": "And a histogram shows a column's distribution: spread evenly, skewed, or clustered.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "bars",
+   "kicker": "Step 6",
+   "title": "Check the class balance",
+   "big": "63% / 37%",
+   "sub": "benign / malignant: mildly imbalanced",
+   "beats": [
+    {
+     "say": "Class imbalance is when one category vastly outnumbers another.",
+     "show": 0
+    },
+    {
+     "say": "Value counts shows about sixty three percent benign, and thirty seven percent malignant.",
+     "show": 1
+    },
+    {
+     "say": "Mildly imbalanced. Keep that in mind for the next project.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Step 7",
+   "title": "Write it down",
+   "quote": "Is the data clean, imbalanced, complete?",
+   "beats": [
+    {
+     "say": "Finish with a text cell.",
+     "show": 0
+    },
+    {
+     "say": "In three to five sentences, say what you found.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is class imbalance, and why does it matter?",
+   "options": [
+    "Columns on different scales; it slows training",
+    "Missing values in one class; they crash the model",
+    "One class far outnumbers another; a model can score high accuracy by always guessing the common class"
+   ],
+   "answer": 2,
+   "good": "That's right. When one class far outnumbers another, a model can score high accuracy just by always guessing the common one.",
+   "bad": "Not quite. When one class far outnumbers another, a model can score high accuracy just by always guessing the common one.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is class imbalance, and why does it matter?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Shape and missing values documented",
+     ""
+    ],
+    [
+     "Distributions plotted",
+     ""
+    ],
+    [
+     "Key observations written",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your notebook documents the dataset's shape and missing values,",
+     "show": 1
+    },
+    {
+     "say": "its distributions,",
+     "show": 2
+    },
+    {
+     "say": "and your key observations.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 3, gradient descent from scratch.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -317,6 +726,223 @@ gradient_descent_project/
 4. In the loop, what does the line `w = w - learning_rate * g` do?
 
 *Answers: 1) How wrong the model's predictions are; lower loss means better predictions. 2) The gradient points toward steepest increase in loss, so moving the opposite way decreases loss. 3) Too large and the updates overshoot and may never settle; too small and training takes a very long time to get close. 4) It moves the parameter a small step in the direction that reduces the loss.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "growth",
+   "kicker": "Project 3 · Gradient descent",
+   "title": "The algorithm under every model",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "You'll build the optimization algorithm underneath nearly every model you'll ever train, by hand, once, so it's never a mystery again."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "bulb",
+   "kicker": "Concept",
+   "title": "Loss and gradient",
+   "items": [
+    [
+     "Loss",
+     "How wrong the predictions are"
+    ],
+    [
+     "Gradient",
+     "Direction of steepest increase"
+    ],
+    [
+     "Step against it",
+     "Loss goes down"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two ideas first.",
+     "show": 0
+    },
+    {
+     "say": "A loss function measures how wrong a model's predictions are. Minimizing it means adjusting the model until predictions get as close to correct as possible.",
+     "show": 1
+    },
+    {
+     "say": "A gradient is the direction of steepest increase in the loss.",
+     "show": 2
+    },
+    {
+     "say": "So you move the opposite way, and the loss goes down.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Steps 4 and 5",
+   "title": "Squared error and its derivative",
+   "file": "gradient_descent_project",
+   "code": "def loss(w, x, y):\n    prediction = w * x\n    return (prediction - y) ** 2\n\ndef gradient(w, x, y):\n    prediction = w * x\n    return 2 * (prediction - y) * x",
+   "beats": [
+    {
+     "say": "The loss is squared error, for a one-parameter model on one data point.",
+     "show": 0
+    },
+    {
+     "say": "Squaring penalizes big mistakes more than small ones.",
+     "show": 1
+    },
+    {
+     "say": "The gradient is its derivative with respect to w: the calculus that tells you which direction reduces the error.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Step 6",
+   "title": "The descent loop",
+   "file": "gradient_descent_project",
+   "code": "w = 0.0\nlearning_rate = 0.01\nx, y = 2.0, 8.0  # example: true relationship is w=4\n\nfor step in range(100):\n    g = gradient(w, x, y)\n    w = w - learning_rate * g\n    if step % 10 == 0:\n        print(f\"Step {step}: w={w:.4f}, loss={loss(w, x, y):.4f}\")",
+   "beats": [
+    {
+     "say": "Now the loop. Start w at zero. The true relationship here is w equals four.",
+     "show": 0
+    },
+    {
+     "say": "Each step, compute the gradient, and move w a small step against it.",
+     "show": 1
+    },
+    {
+     "say": "The learning rate controls the step size.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Step 7",
+   "title": "Experiment with the learning rate",
+   "items": [
+    [
+     "0.5 ✗",
+     "Overshoots · loss explodes"
+    ],
+    [
+     "0.001 ✗",
+     "Still well short of 4"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Try two other learning rates.",
+     "show": 0
+    },
+    {
+     "say": "At zero point five, each step overshoots so far that w swings back and forth, and the loss explodes.",
+     "show": 1
+    },
+    {
+     "say": "At zero point zero zero one, w is still well short of four after a hundred steps.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "graph",
+   "kicker": "Step 8",
+   "title": "Two parameters",
+   "big": "y = 3x + 1",
+   "sub": "w ≈ 3, b ≈ 1 after 2000 steps",
+   "beats": [
+    {
+     "say": "Last, extend the model to w times x, plus b.",
+     "show": 0
+    },
+    {
+     "say": "Use several points, average the gradients, and update both w and b each step. W should end close to three, and b close to one.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does gradient descent subtract the gradient instead of adding it?",
+   "options": [
+    "Subtracting is faster to compute",
+    "The gradient points toward steepest increase in loss, so the opposite way decreases it",
+    "Adding would make the learning rate negative"
+   ],
+   "answer": 1,
+   "good": "That's right. The gradient points toward the steepest increase in loss, so moving the opposite way decreases it.",
+   "bad": "Not quite. The gradient points toward the steepest increase in loss, so moving the opposite way decreases it.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does gradient descent subtract the gradient instead of adding it?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "From-scratch gradient descent works",
+     ""
+    ],
+    [
+     "Learning-rate notes written",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working gradient descent implementation from scratch,",
+     "show": 1
+    },
+    {
+     "say": "and notes on your learning rate experiments.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, a baseline model to measure everything against.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -424,6 +1050,188 @@ baseline_model_project/
 4. What does `average="macro"` do in `f1_score`?
 
 *Answers: 1) To check whether the model generalizes to new data instead of just memorizing the training data. 2) It sets the lowest bar; any real model must beat it to show it learned something. 3) It gets that score only because 63% of the test samples are the common class, and it never detects the other class, which its low macro F1 reveals. 4) It computes F1 for each class separately and averages them equally, so every class counts and it works with two or more classes.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "target",
+   "kicker": "Project 4 · Baseline model",
+   "title": "Set the bar",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "A baseline is a reference point: the number every future improvement gets measured against."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "fork",
+   "kicker": "Steps 2 and 3",
+   "title": "Features, labels, and a split",
+   "file": "baseline_model_project",
+   "code": "df = load_breast_cancer(as_frame=True).frame\nX = df.drop(columns=[\"target\"])  # features\ny = df[\"target\"]                 # label\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)",
+   "beats": [
+    {
+     "say": "Load the dataset. X holds the features, the inputs. Y holds the labels, the answers.",
+     "show": 0
+    },
+    {
+     "say": "Then hold back twenty percent as a test set the model never sees, so you can check it generalizes instead of memorizing.",
+     "show": 1
+    },
+    {
+     "say": "Stratify keeps the same class balance in both parts.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Steps 4 and 5",
+   "title": "Two baselines",
+   "items": [
+    [
+     "Dummy classifier",
+     "Always the most common class"
+    ],
+    [
+     "Logistic regression",
+     "Simple · interpretable · strong"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Train two baselines.",
+     "show": 0
+    },
+    {
+     "say": "A dummy classifier always predicts the most common class. It's dumb on purpose: any real model must beat it.",
+     "show": 1
+    },
+    {
+     "say": "Logistic regression is simple, interpretable, and often surprisingly hard to beat. Standard scaler puts the features on a similar scale first.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "bars",
+   "kicker": "Step 6",
+   "title": "Accuracy versus macro F 1",
+   "file": "expected output",
+   "code": "Dummy (most frequent): accuracy=0.632, macro F1=0.387\nLogistic regression: accuracy=0.982, macro F1=0.981",
+   "beats": [
+    {
+     "say": "Evaluate both on the test set.",
+     "show": 0
+    },
+    {
+     "say": "The dummy gets sixty three percent accuracy, just by always guessing benign. But its macro F 1 is low.",
+     "show": 1
+    },
+    {
+     "say": "Macro F 1 scores each class separately and averages them equally, so it isn't fooled by imbalance.",
+     "show": 1
+    },
+    {
+     "say": "That's why accuracy alone is misleading on imbalanced data.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Step 7",
+   "title": "Write the numbers down",
+   "quote": "Record both models' scores.",
+   "beats": [
+    {
+     "say": "In a text cell called baseline results, record both models' scores.",
+     "show": 0
+    },
+    {
+     "say": "You'll compare future work against them.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "The dummy model scores 63% accuracy. Why isn't it a useful model?",
+   "options": [
+    "It only scores that because 63% of test samples are the common class, and it never detects the other one",
+    "Sixty three percent is below the passing threshold",
+    "It was trained on the test set"
+   ],
+   "answer": 0,
+   "good": "That's right. It never detects the other class. Its accuracy just mirrors the class balance, which its low macro F 1 reveals.",
+   "bad": "Not quite. It never detects the other class. Its accuracy just mirrors the class balance, which its low macro F 1 reveals.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "The dummy model scores 63% accuracy. Why isn't it a useful model?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Baselines trained",
+     ""
+    ],
+    [
+     "Accuracy and F1 documented",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've trained baseline models,",
+     "show": 1
+    },
+    {
+     "say": "with accuracy and F 1 scores documented on a held-out test set.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, a small neural network from scratch.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -557,6 +1365,195 @@ neural_network_project/
 5. How do you know from the output that training worked?
 
 *Answers: 1) It computes a weighted sum of the inputs, adds a bias, and passes the result through an activation function. 2) Identical weights would make every neuron in a layer learn the same thing; random values break symmetry so neurons can specialize. 3) The derivative is `s * (1 - s)`; applying sigmoid again computes the derivative at the wrong point, giving wrong gradients so the network fails to learn. 4) A single-layer model cannot solve XOR, so solving it shows the hidden layer and backpropagation are working. 5) The loss drops toward zero and the predictions round to 0, 1, 1, 0, matching the labels.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "layers",
+   "kicker": "Project 5 · Neural network",
+   "title": "A network with no framework",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    },
+    {
+     "say": "Now you move from classical machine learning to deep learning fundamentals, by building the smallest possible neural network, using only NumPy."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "bulb",
+   "kicker": "Concept",
+   "title": "What a neuron does",
+   "steps": [
+    "Weighted sum of inputs",
+    "Add a bias",
+    "Activation, e.g. sigmoid"
+   ],
+   "beats": [
+    {
+     "say": "A neuron does three things.",
+     "show": 0
+    },
+    {
+     "say": "It computes a weighted sum of its inputs.",
+     "show": 1
+    },
+    {
+     "say": "Adds a bias.",
+     "show": 2
+    },
+    {
+     "say": "And passes the result through an activation function, like sigmoid, which squashes any input into a range between zero and one.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "warning",
+   "kicker": "Step 3",
+   "title": "Sigmoid and its shortcut",
+   "file": "neural_network_project",
+   "code": "def sigmoid(x):\n    return 1 / (1 + np.exp(-x))\n\ndef sigmoid_derivative_from_output(s):\n    # s must be a value that has ALREADY been through sigmoid\n    return s * (1 - s)",
+   "beats": [
+    {
+     "say": "If s is already a sigmoid output, its derivative is simply s times one minus s.",
+     "show": 0
+    },
+    {
+     "say": "The network stores activated values, so it uses this shortcut directly.",
+     "show": 1
+    },
+    {
+     "say": "Applying sigmoid a second time to an activated value is a classic bug that stops the network from learning.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "layers",
+   "kicker": "Steps 4 and 5",
+   "title": "Random weights, then forward",
+   "file": "neural_network_project",
+   "code": "np.random.seed(42)\ninput_size, hidden_size, output_size = 2, 4, 1\nW1 = np.random.randn(input_size, hidden_size)\nb1 = np.zeros((1, hidden_size))\nW2 = np.random.randn(hidden_size, output_size)\nb2 = np.zeros((1, output_size))\n\ndef forward(X):\n    hidden = sigmoid(X @ W1 + b1)\n    output = sigmoid(hidden @ W2 + b2)\n    return hidden, output",
+   "beats": [
+    {
+     "say": "Weights start random on purpose. Identical weights would make every neuron learn the same thing. This is called breaking symmetry.",
+     "show": 0
+    },
+    {
+     "say": "Biases can safely start at zero.",
+     "show": 1
+    },
+    {
+     "say": "The forward pass flows input through the network: weighted sum, plus bias, through the activation, layer by layer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "loop",
+   "kicker": "Steps 6 and 7",
+   "title": "Backpropagate, then train on XOR",
+   "steps": [
+    "Backward: chain rule",
+    "Train 10,000 epochs on XOR",
+    "Rounded: [0 1 1 0]"
+   ],
+   "beats": [
+    {
+     "say": "Backpropagation applies the chain rule, working backward from the output, to find how much each weight contributed to the error.",
+     "show": 1
+    },
+    {
+     "say": "It's the same idea as gradient descent, applied to many parameters at once.",
+     "show": 1
+    },
+    {
+     "say": "Then train on X O R for ten thousand epochs. An epoch is one pass over the training set.",
+     "show": 2
+    },
+    {
+     "say": "The loss falls toward zero, and the predictions round to zero, one, one, zero, matching the labels.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is XOR a good test for this network?",
+   "options": [
+    "It's the fastest dataset to train on",
+    "It has no class imbalance",
+    "A single-layer model can't solve it, so solving it shows the hidden layer and backpropagation work"
+   ],
+   "answer": 2,
+   "good": "That's right. A single-layer model cannot solve X O R, so solving it proves the hidden layer and backpropagation are working.",
+   "bad": "Not quite. A single-layer model cannot solve X O R, so solving it proves the hidden layer and backpropagation are working.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is XOR a good test for this network?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "A from-scratch network works",
+     ""
+    ],
+    [
+     "It solves XOR",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a working from-scratch neural network,",
+     "show": 1
+    },
+    {
+     "say": "that solves a nonlinear classification problem, X O R.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 6, an ablation study.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -716,6 +1713,224 @@ ablation_study_project/
 
 *Answers: 1) A controlled experiment that removes or changes one component of a model while keeping everything else fixed. 2) So any difference in results can be blamed on that one change and not on something else. 3) It stops you from rewriting your expectations after seeing the results, which keeps your conclusions honest. 4) A single run can be lucky or unlucky; several seeds show the typical result and how much it varies. 5) The hidden layer is essential for XOR; without it the model does about as well as guessing.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "boxes",
+   "kicker": "Project 6 · Ablation study",
+   "title": "Find what actually matters",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "An ablation isolates what actually matters in a model design. It's the core skill of empirical A I research."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "Change one thing at a time",
+   "items": [
+    [
+     "full_model",
+     "The Project 5 network"
+    ],
+    [
+     "no_hidden_layer",
+     "Inputs straight to the output"
+    ],
+    [
+     "different_activation",
+     "ReLU instead of sigmoid"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "An ablation removes or changes one component, while holding everything else fixed.",
+     "show": 0
+    },
+    {
+     "say": "You'll test three variants of your Project 5 network.",
+     "show": 0
+    },
+    {
+     "say": "The full model.",
+     "show": 1
+    },
+    {
+     "say": "The same network with no hidden layer.",
+     "show": 2
+    },
+    {
+     "say": "And relu instead of sigmoid in the hidden layer. Relu outputs the maximum of zero and x.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "pencil",
+   "kicker": "Step 4",
+   "title": "Predict before you run",
+   "quote": "Will removing this component help, hurt, or not matter?",
+   "beats": [
+    {
+     "say": "Before running anything, write your hypotheses in a text cell.",
+     "show": 0
+    },
+    {
+     "say": "For each variant: will removing this component help, hurt, or not matter?",
+     "show": 1
+    },
+    {
+     "say": "Writing it first stops you rewriting your expectations after you see the results.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "loop",
+   "kicker": "Steps 5 and 6",
+   "title": "Same everything, five seeds",
+   "file": "ablation_study_project",
+   "code": "seeds = [0, 1, 2, 3, 4]\nfor name, run_fn in variants.items():\n    accuracies = [run_fn(X, y, seed=s)[\"accuracy\"] for s in seeds]\n    results[name][\"accuracy\"] = float(np.mean(accuracies))\n    print(f\"{name}: accuracies={accuracies}, \"\n          f\"mean={np.mean(accuracies):.2f}, std={np.std(accuracies):.2f}\")",
+   "beats": [
+    {
+     "say": "One train function builds every variant, with switches.",
+     "show": 0
+    },
+    {
+     "say": "Every variant gets the same data, epochs, learning rate and seed.",
+     "show": 1
+    },
+    {
+     "say": "And because one run can be lucky or unlucky, you run each with five seeds, and record the mean and the spread.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Steps 7 and 8",
+   "title": "What the evidence says",
+   "items": [
+    [
+     "full_model",
+     "mean 1.00"
+    ],
+    [
+     "no_hidden_layer ✗",
+     "mean 0.55"
+    ],
+    [
+     "different_activation",
+     "mean 0.95 · one seed failed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Compare the results against your hypotheses.",
+     "show": 0
+    },
+    {
+     "say": "The full model averages one hundred percent.",
+     "show": 1
+    },
+    {
+     "say": "With no hidden layer, about fifty five percent. It breaks completely.",
+     "show": 2
+    },
+    {
+     "say": "With relu, about ninety five percent. It usually works, but failed on one seed out of five.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why must everything except the tested component stay the same across variants?",
+   "options": [
+    "So training runs faster",
+    "So any difference in results can be blamed on that one change",
+    "So every variant gets the same accuracy"
+   ],
+   "answer": 1,
+   "good": "That's right. Holding everything else fixed means any difference in results comes from that one change, and not something else.",
+   "bad": "Not quite. Holding everything else fixed means any difference in results comes from that one change, and not something else.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why must everything except the tested component stay the same across variants?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Full model versus variants",
+     ""
+    ],
+    [
+     "Hypotheses stated first",
+     ""
+    ],
+    [
+     "Evidence-based conclusions",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Project 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your ablation study compares the full model against its variants,",
+     "show": 1
+    },
+    {
+     "say": "with hypotheses stated up front,",
+     "show": 2
+    },
+    {
+     "say": "and conclusions based on the evidence.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 7, a short research report.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Project 7 (Module 7): Write a Short Research Report
@@ -796,3 +2011,211 @@ research_report_project/
 4. Why include limitations in the discussion?
 
 *Answers: 1) It summarizes the whole report, so you can only write it accurately once the results and discussion are done. 2) Enough that someone else could repeat the experiment: data, variants, settings, and seeds. 3) Clear axis labels, a title, and a note on what the numbers mean, such as an average over 5 seeds. 4) It shows readers how far they can trust and generalize the results, and points to what should be tested next.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "doc",
+   "kicker": "Project 7 · Research report",
+   "title": "Make it usable by others",
+   "beats": [
+    {
+     "say": "Welcome to the last project."
+    },
+    {
+     "say": "Clear communication is the skill that turns good research into research anyone else can use."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "blueprint",
+   "kicker": "Concept",
+   "title": "The shape of a report",
+   "steps": [
+    "Introduction",
+    "Method",
+    "Results + chart",
+    "Discussion",
+    "Abstract, last"
+   ],
+   "beats": [
+    {
+     "say": "You'll report on your Project 6 ablation study, or combine it with Project 4's baseline.",
+     "show": 0
+    },
+    {
+     "say": "Write the introduction: the question, and why it matters.",
+     "show": 1
+    },
+    {
+     "say": "The method: enough detail to repeat it. The data, each variant, the epochs, the learning rate, and the seeds.",
+     "show": 2
+    },
+    {
+     "say": "The results, with a chart.",
+     "show": 3
+    },
+    {
+     "say": "The discussion: what it means, its limitations, and what you'd test next.",
+     "show": 4
+    },
+    {
+     "say": "And the abstract, last.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "bars",
+   "kicker": "Step 6",
+   "title": "A well-labeled chart",
+   "file": "research_report_project",
+   "code": "results = {\n    \"full_model\": {\"accuracy\": 1.00},\n    \"no_hidden_layer\": {\"accuracy\": 0.55},\n    \"different_activation\": {\"accuracy\": 0.95},\n}\n\nplt.bar(results.keys(), [r[\"accuracy\"] for r in results.values()])\nplt.ylabel(\"Mean accuracy (5 seeds)\")\nplt.ylim(0, 1.05)\nplt.title(\"Ablation study on XOR\")\nplt.savefig(\"results_chart.png\", bbox_inches=\"tight\")",
+   "beats": [
+    {
+     "say": "This is a new notebook, so type in your Project 6 mean accuracies.",
+     "show": 0
+    },
+    {
+     "say": "Then plot a bar chart, label the axis, and say what the numbers are: here, the average over five seeds.",
+     "show": 1
+    },
+    {
+     "say": "A labeled chart communicates a comparison faster than a table of numbers.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Step 7",
+   "title": "Be honest about limitations",
+   "items": [
+    [
+     "Small dataset",
+     ""
+    ],
+    [
+     "Few repetitions",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the discussion, note the limitations.",
+     "show": 0
+    },
+    {
+     "say": "A small dataset.",
+     "show": 1
+    },
+    {
+     "say": "Few repetitions.",
+     "show": 2
+    },
+    {
+     "say": "They tell readers how far to trust the results, and what to test next.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "pencil",
+   "kicker": "Step 8",
+   "title": "The abstract, last",
+   "big": "3–5 sentences",
+   "sub": "question · method · result · takeaway",
+   "beats": [
+    {
+     "say": "Now that everything else is written, write the abstract.",
+     "show": 0
+    },
+    {
+     "say": "Three to five sentences: the question, method, result, and takeaway, so someone can decide whether to read further.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is the abstract written last?",
+   "options": [
+    "It summarizes the whole report, so you can only write it accurately once the rest is done",
+    "Reviewers read it last",
+    "It's the least important section"
+   ],
+   "answer": 0,
+   "good": "That's right. It summarizes the whole report, so you can only write it accurately once the results and discussion are done.",
+   "bad": "Not quite. It summarizes the whole report, so you can only write it accurately once the results and discussion are done.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is the abstract written last?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Abstract and method written",
+     ""
+    ],
+    [
+     "Results charted",
+     ""
+    ],
+    [
+     "Discussion with limitations",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final project.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have a short, structured report with an abstract and a method,",
+     "show": 1
+    },
+    {
+     "say": "visualized results,",
+     "show": 2
+    },
+    {
+     "say": "and a discussion.",
+     "show": 3
+    },
+    {
+     "say": "You've finished the A I Research Engineer tutorials. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
