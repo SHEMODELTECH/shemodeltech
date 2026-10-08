@@ -75,6 +75,280 @@ You can explain, in plain language, what a request and a response are, name the 
 
 *Answers: 1) The part of an application that runs on a server, handling data and logic that a browser alone can't. 2) The set of URLs and rules a backend exposes, letting other programs send it requests and get back structured responses. 3) A request is what the client sends to ask for something or submit data; a response is what the server sends back as a result. 4) `POST`, answered with `201 Created`. 5) Data stored only in a browser lives on that one device, so other users can't reach it without a shared server storing it centrally.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "api",
+   "kicker": "Module 0 · What a backend does",
+   "title": "The part you don't see",
+   "beats": [
+    {
+     "say": "Welcome to Backend Development for Builders."
+    },
+    {
+     "say": "In this course you build one small task API properly, a layer at a time."
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "api",
+   "kicker": "Concept",
+   "title": "Request and response",
+   "steps": [
+    "Client sends a request",
+    "Server routes it",
+    "Code does the work",
+    "Response comes back"
+   ],
+   "beats": [
+    {
+     "say": "A backend runs on a server, not in the user's browser.",
+     "show": 0
+    },
+    {
+     "say": "A client, like a browser or an app, sends a request.",
+     "show": 1
+    },
+    {
+     "say": "The server routes it to your code.",
+     "show": 2
+    },
+    {
+     "say": "Your code does the work, like reading or writing a database.",
+     "show": 3
+    },
+    {
+     "say": "And the server sends back a response.",
+     "show": 4
+    },
+    {
+     "say": "An API is the set of addresses and rules a backend offers, so other programs can talk to it.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "api",
+   "kicker": "Concept",
+   "title": "Methods say what you want",
+   "items": [
+    [
+     "GET",
+     "Read"
+    ],
+    [
+     "POST",
+     "Create"
+    ],
+    [
+     "PATCH",
+     "Change part"
+    ],
+    [
+     "PUT",
+     "Replace"
+    ],
+    [
+     "DELETE",
+     "Remove"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every request has a method, saying what the client wants.",
+     "show": 0
+    },
+    {
+     "say": "Get reads something.",
+     "show": 1
+    },
+    {
+     "say": "Post creates something.",
+     "show": 2
+    },
+    {
+     "say": "Patch changes part of something.",
+     "show": 3
+    },
+    {
+     "say": "Put replaces it.",
+     "show": 4
+    },
+    {
+     "say": "And delete removes it.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Concept",
+   "title": "Status codes say how it went",
+   "items": [
+    [
+     "200",
+     "OK"
+    ],
+    [
+     "201",
+     "Created"
+    ],
+    [
+     "204",
+     "Done, nothing to return"
+    ],
+    [
+     "404",
+     "Not found"
+    ],
+    [
+     "422",
+     "Invalid data"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "And every response has a status code saying how it went.",
+     "show": 0
+    },
+    {
+     "say": "Two hundred, OK.",
+     "show": 1
+    },
+    {
+     "say": "Two oh one, created.",
+     "show": 2
+    },
+    {
+     "say": "Two oh four, done, with nothing to send back.",
+     "show": 3
+    },
+    {
+     "say": "Four oh four, not found.",
+     "show": 4
+    },
+    {
+     "say": "And four twenty two, the data sent was invalid.",
+     "show": 5
+    },
+    {
+     "say": "The data itself usually travels as JSON, which looks like a Python dictionary.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "browser",
+   "kicker": "Lab",
+   "title": "Watch a real backend",
+   "steps": [
+    "Inspect → Network",
+    "Reload a site",
+    "Find method, URL, status, response"
+   ],
+   "beats": [
+    {
+     "say": "Now watch a real one.",
+     "show": 0
+    },
+    {
+     "say": "Open developer tools, and the Network tab.",
+     "show": 1
+    },
+    {
+     "say": "Reload any website.",
+     "show": 2
+    },
+    {
+     "say": "Click a request that returns data, and find its method, address, status code and response.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Which method and status code fit a new task being created?",
+   "options": [
+    "GET and 200",
+    "POST and 201 Created",
+    "DELETE and 204"
+   ],
+   "answer": 1,
+   "good": "That's right. Creating is a post, answered with two oh one, created.",
+   "bad": "Not quite. Creating is a post, answered with two oh one, created.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Which method and status code fit a new task being created?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can explain request and response",
+     ""
+    ],
+    [
+     "You found a real request's method and status",
+     ""
+    ],
+    [
+     "You can say why a backend is needed for shared data",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain a request and a response,",
+     "show": 1
+    },
+    {
+     "say": "name the method and status of a real request,",
+     "show": 2
+    },
+    {
+     "say": "and say why a browser alone can't store data others can see.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 1, your first FastAPI project.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: Your First FastAPI Project
@@ -159,6 +433,189 @@ Your server runs with `uvicorn app.main:app --reload`, `/health` answers with JS
 5. What does `@app.get("/health")` do?
 
 *Answers: 1) Uvicorn is the server that listens for HTTP requests; FastAPI is the framework that routes each request to your Python function and builds the response. 2) Load the module `app/main.py` and use the object named `app` inside it. 3) So each project has its own packages and versions, without clashing with other projects or the system Python. 4) It restarts the server when files change; it's for development only, not production. 5) It registers the function below it to handle `GET` requests to `/health`.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "rocket",
+   "kicker": "Module 1 · Your first FastAPI project",
+   "title": "Set it up properly from day one",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "api",
+   "kicker": "Concept",
+   "title": "Two tools",
+   "items": [
+    [
+     "FastAPI",
+     "Routes requests to your functions"
+    ],
+    [
+     "Uvicorn",
+     "The server that listens"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two tools work together.",
+     "show": 0
+    },
+    {
+     "say": "FastAPI is a Python framework. You write normal functions, mark which address each one handles, and it does the rest: reading requests, checking data, and returning JSON.",
+     "show": 1
+    },
+    {
+     "say": "Uvicorn is the server program that listens for requests and passes them to your app.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "blocks",
+   "kicker": "Concept",
+   "title": "A clear folder structure",
+   "file": "tasks-api/",
+   "code": "app/\n  main.py       # the app and its routes\n  schemas.py    # data shapes (Module 2)\n  database.py   # connection (Module 4)\n  models.py     # tables (Module 4)\n  config.py     # settings (Module 5)\ntests/\n  test_tasks.py # tests (Module 6)",
+   "beats": [
+    {
+     "say": "A clear folder structure saves pain later.",
+     "show": 0
+    },
+    {
+     "say": "Main dot p y holds the routes. Schemas describe your data. Database, models and config each get their own file.",
+     "show": 1
+    },
+    {
+     "say": "And tests live in their own folder.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 2",
+   "title": "Your first endpoint",
+   "file": "app/main.py",
+   "code": "from fastapi import FastAPI\n\napp = FastAPI(title=\"Tasks API\")\n\n@app.get(\"/health\")\ndef health():\n    return {\"status\": \"ok\"}",
+   "beats": [
+    {
+     "say": "In main dot p y, create the app.",
+     "show": 0
+    },
+    {
+     "say": "The decorator, app dot get slash health, means: when a get request arrives for slash health, run this function.",
+     "show": 1
+    },
+    {
+     "say": "The dictionary you return is sent back as JSON.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "terminal",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Run it and use the free docs",
+   "steps": [
+    "uvicorn app.main:app --reload",
+    "curl /health → {\"status\":\"ok\"}",
+    "/docs: try it out"
+   ],
+   "beats": [
+    {
+     "say": "Run uvicorn app dot main colon app, dash dash reload, from the project folder.",
+     "show": 1
+    },
+    {
+     "say": "Curl slash health, and you get status: ok.",
+     "show": 2
+    },
+    {
+     "say": "Then open slash docs. FastAPI builds interactive documentation from your code, for free.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Should you use --reload in production?",
+   "options": [
+    "Yes, always",
+    "No, it's for development only",
+    "Only on weekends"
+   ],
+   "answer": 1,
+   "good": "That's right. Reload restarts the server when files change. It's for development only.",
+   "bad": "Not quite. Reload restarts the server when files change. It's for development only.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Should you use --reload in production?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Your server runs and /health answers",
+     ""
+    ],
+    [
+     "You called an endpoint from /docs",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your server runs, slash health answers with JSON,",
+     "show": 1
+    },
+    {
+     "say": "and you've called an endpoint from the docs page.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 2, routes, methods and validation.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -295,6 +752,234 @@ You created, read, filtered, updated, and deleted tasks with curl, and triggered
 
 *Answers: 1) A path parameter identifies which resource (`/tasks/3`); a query parameter adds options such as filtering (`?done=true`). 2) Clients shouldn't send fields the server controls, like `id`, and the output can include fields the input doesn't. 3) FastAPI responds with `422` and a message describing each problem, and your function never runs. 4) So only the fields the client actually sent are changed; everything else keeps its current value. 5) `PATCH`, because it changes part of an existing task; `POST` is for creating a new one.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "shield",
+   "kicker": "Module 2 · Routes and validation",
+   "title": "Accept data you can trust",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "Today you build all five task routes, and let FastAPI check every request for you."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "path",
+   "kicker": "Concept",
+   "title": "Path and query parameters",
+   "items": [
+    [
+     "Path parameter",
+     "/tasks/{task_id}: which one"
+    ],
+    [
+     "Query parameter",
+     "/tasks?done=true: options"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A route connects a method and a path to a function.",
+     "show": 0
+    },
+    {
+     "say": "A path parameter says which one, like slash tasks slash three.",
+     "show": 1
+    },
+    {
+     "say": "A query parameter adds options, like question mark done equals true.",
+     "show": 2
+    },
+    {
+     "say": "Type hints, like task I D colon int, tell FastAPI it must be a whole number.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Lab · Step 1",
+   "title": "Describe your data with Pydantic",
+   "file": "app/schemas.py",
+   "code": "class TaskCreate(BaseModel):\n    title: str = Field(min_length=1, max_length=200)\n    notes: str | None = Field(default=None, max_length=1000)\n\nclass TaskOut(BaseModel):\n    id: int\n    title: str\n    notes: str | None\n    done: bool",
+   "beats": [
+    {
+     "say": "A Pydantic model lists the fields, their types and their rules.",
+     "show": 0
+    },
+    {
+     "say": "A title must be between one and two hundred characters.",
+     "show": 1
+    },
+    {
+     "say": "Use separate models for what comes in, and what goes out. That way clients can't set fields like I D themselves.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "api",
+   "kicker": "Lab · Step 2",
+   "title": "Five routes",
+   "steps": [
+    "GET /tasks",
+    "GET /tasks/{id}",
+    "POST /tasks",
+    "PATCH /tasks/{id}",
+    "DELETE /tasks/{id}"
+   ],
+   "beats": [
+    {
+     "say": "Then the five routes.",
+     "show": 0
+    },
+    {
+     "say": "List tasks, with an optional done filter.",
+     "show": 1
+    },
+    {
+     "say": "Get one task.",
+     "show": 2
+    },
+    {
+     "say": "Create one, answering two oh one.",
+     "show": 3
+    },
+    {
+     "say": "Patch one, changing only the fields that were sent.",
+     "show": 4
+    },
+    {
+     "say": "And delete one, answering two oh four.",
+     "show": 5
+    },
+    {
+     "say": "For now they live in memory, so they vanish on restart. Module 4 fixes that.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Lab · Step 4",
+   "title": "Break it on purpose",
+   "items": [
+    [
+     "{\"title\": \"\"}",
+     "Too short"
+    ],
+    [
+     "{\"notes\": \"no title\"}",
+     "Title missing"
+    ],
+    [
+     "/tasks/abc",
+     "Not a number"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now break it on purpose.",
+     "show": 0
+    },
+    {
+     "say": "Send an empty title.",
+     "show": 1
+    },
+    {
+     "say": "Leave the title out.",
+     "show": 2
+    },
+    {
+     "say": "Ask for task A B C instead of a number.",
+     "show": 3
+    },
+    {
+     "say": "Each one returns four twenty two, naming the field and the problem. And you wrote no checking code at all.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Which method fits \"mark task 3 as done\"?",
+   "options": [
+    "POST",
+    "PATCH, because it changes part of an existing task",
+    "DELETE"
+   ],
+   "answer": 1,
+   "good": "That's right. Patch changes part of an existing task. Post is for creating a new one.",
+   "bad": "Not quite. Patch changes part of an existing task. Post is for creating a new one.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Which method fits \"mark task 3 as done\"?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Full CRUD with curl",
+     ""
+    ],
+    [
+     "Three validation errors, no checking code",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've created, read, filtered, updated and deleted tasks with curl,",
+     "show": 1
+    },
+    {
+     "say": "and triggered three validation errors without writing any validation code.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, honest status codes and safe errors.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3: Status Codes and Error Handling
@@ -365,6 +1050,212 @@ Your routes share one `get_task_or_404` helper, and you've seen a `404`, a `405`
 5. When would `409 Conflict` be the right answer?
 
 *Answers: 1) 4xx means the client sent something wrong; 5xx means the server failed while handling a valid request. 2) It exposes internal details that help attackers and mean nothing to users; the details belong in server logs. 3) It stops immediately and FastAPI sends the error response instead. 4) `422`, because the data fails validation (FastAPI does this automatically from `max_length`). 5) When the request clashes with the current state, such as registering an email that already exists.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "warning",
+   "kicker": "Module 3 · Status codes and errors",
+   "title": "Be honest about what happened",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "A status code is the first thing a client checks, so it has to be honest."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "warning",
+   "kicker": "Concept",
+   "title": "Three families",
+   "items": [
+    [
+     "2xx",
+     "It worked: 200, 201, 204"
+    ],
+    [
+     "4xx",
+     "Client mistake: 400, 401, 403, 404, 409, 422"
+    ],
+    [
+     "5xx",
+     "Server failed: 500, 503"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Three families.",
+     "show": 0
+    },
+    {
+     "say": "Two hundreds: it worked.",
+     "show": 1
+    },
+    {
+     "say": "Four hundreds: the client made a mistake. Like not found, not allowed, conflict, or invalid data.",
+     "show": 2
+    },
+    {
+     "say": "Five hundreds: the server failed.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "shield",
+   "kicker": "Concept",
+   "title": "Expected versus unexpected",
+   "items": [
+    [
+     "Expected",
+     "Right 4xx + helpful message"
+    ],
+    [
+     "Unexpected",
+     "Plain 500; details in logs only"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Handle two kinds of problem differently.",
+     "show": 0
+    },
+    {
+     "say": "Expected problems, like a missing task, get the right four hundred code and a helpful message.",
+     "show": 1
+    },
+    {
+     "say": "Unexpected problems, like a bug, get a plain five hundred with a generic message. The details go to your logs only.",
+     "show": 2
+    },
+    {
+     "say": "Never send stack traces to clients. They confuse users, and help attackers.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 1",
+   "title": "One helper for 404s",
+   "file": "app/main.py",
+   "code": "def get_task_or_404(task_id: int) -> TaskOut:\n    if task_id not in tasks:\n        raise HTTPException(404, detail=f\"Task {task_id} not found\")\n    return tasks[task_id]",
+   "beats": [
+    {
+     "say": "In the lab, one helper replaces every repeated not found check.",
+     "show": 0
+    },
+    {
+     "say": "Raising an exception stops the function immediately, so the rest only runs if the task exists.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "warning",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Test both kinds of error",
+   "steps": [
+    "/boom → 500 (safe)",
+    "/tasks/999 → 404",
+    "DELETE /tasks → 405"
+   ],
+   "beats": [
+    {
+     "say": "Then add a catch-all handler for anything unexpected, and a temporary route with a bug.",
+     "show": 0
+    },
+    {
+     "say": "The buggy route answers five hundred, with a generic message. The real error only shows in your terminal.",
+     "show": 1
+    },
+    {
+     "say": "A missing task gives four oh four.",
+     "show": 2
+    },
+    {
+     "say": "And deleting slash tasks, which has no delete route, gives four oh five, method not allowed.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "A client sends a 500-character task title. Which status code?",
+   "options": [
+    "500",
+    "422, because the data fails validation",
+    "404"
+   ],
+   "answer": 1,
+   "good": "That's right. Four twenty two, because the data fails validation. FastAPI does this automatically.",
+   "bad": "Not quite. Four twenty two, because the data fails validation. FastAPI does this automatically.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "A client sends a 500-character task title. Which status code?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "One get_task_or_404 helper",
+     ""
+    ],
+    [
+     "You've seen a 404, a 405 and a safe 500",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your routes share one get task or four oh four helper,",
+     "show": 1
+    },
+    {
+     "say": "and you've seen a four oh four, a four oh five, and a safe five hundred.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 4, data that survives a restart.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -530,6 +1421,232 @@ Your tasks live in `tasks.db` and survive a server restart, and every route gets
 
 *Answers: 1) Work with database tables as Python classes and rows as objects, instead of writing raw SQL for every query. 2) It saves the session's changes to the database permanently; without it, the changes are thrown away when the session closes. 3) So the session is handed to the route and then closed after the request finishes, even if an error occurred. 4) To reload the row from the database so values the database created, like the new `id`, are filled in. 5) Mainly the connection URL (and installing a PostgreSQL driver); the `check_same_thread` option is SQLite-only and would be removed.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "database",
+   "kicker": "Module 4 · SQLite and SQLAlchemy",
+   "title": "Data that survives a restart",
+   "beats": [
+    {
+     "say": "Welcome to Module 4."
+    },
+    {
+     "say": "So far, restarting the server wipes every task. Time for a database."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "database",
+   "kicker": "Concept",
+   "title": "The pieces",
+   "items": [
+    [
+     "SQLite",
+     "A database in one file"
+    ],
+    [
+     "ORM",
+     "Tables as classes, rows as objects"
+    ],
+    [
+     "Session + commit",
+     "Change, then save"
+    ],
+    [
+     "Depends",
+     "One session per request"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "SQLite is a complete database in a single file, built into Python.",
+     "show": 1
+    },
+    {
+     "say": "SQLAlchemy's ORM lets you describe a table as a Python class, and work with rows as objects.",
+     "show": 2
+    },
+    {
+     "say": "A session is a short conversation with the database. Make changes, then commit to save them.",
+     "show": 3
+    },
+    {
+     "say": "And a FastAPI dependency gives each request its own session, and closes it afterwards.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "database",
+   "kicker": "Lab · Step 1",
+   "title": "A session per request",
+   "file": "app/database.py",
+   "code": "engine = create_engine(\"sqlite:///./tasks.db\", connect_args={\"check_same_thread\": False})\nSessionLocal = sessionmaker(bind=engine)\n\ndef get_db():\n    with SessionLocal() as db:\n        yield db\n\nSessionDep = Annotated[Session, Depends(get_db)]",
+   "beats": [
+    {
+     "say": "Get D B opens a session and hands it to the route with yield.",
+     "show": 0
+    },
+    {
+     "say": "After the request finishes, it closes the session, even if an error happened.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "table",
+   "kicker": "Lab · Step 2",
+   "title": "A Task table",
+   "file": "app/models.py",
+   "code": "class Task(Base):\n    __tablename__ = \"tasks\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    title: Mapped[str] = mapped_column(String(200))\n    notes: Mapped[str | None] = mapped_column(String(1000))\n    done: Mapped[bool] = mapped_column(default=False)",
+   "beats": [
+    {
+     "say": "The task model describes the table.",
+     "show": 0
+    },
+    {
+     "say": "Each mapped attribute is a column. Optional notes use string or none. The database fills in the I D.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "database",
+   "kicker": "Lab · Step 3",
+   "title": "Creating a task now",
+   "steps": [
+    "Task(**data)",
+    "db.add",
+    "db.commit",
+    "db.refresh",
+    "return task"
+   ],
+   "beats": [
+    {
+     "say": "Creating a task now goes through the database.",
+     "show": 0
+    },
+    {
+     "say": "Build a task from the request data.",
+     "show": 1
+    },
+    {
+     "say": "Add it to the session.",
+     "show": 2
+    },
+    {
+     "say": "Commit, to save it.",
+     "show": 3
+    },
+    {
+     "say": "Refresh, so the new I D is filled in.",
+     "show": 4
+    },
+    {
+     "say": "And return it.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "database",
+   "kicker": "Lab · Step 4",
+   "title": "Prove it survives",
+   "big": "Still there",
+   "sub": "after a restart",
+   "beats": [
+    {
+     "say": "Now prove it. Create two tasks, then stop and restart the server.",
+     "show": 0
+    },
+    {
+     "say": "List the tasks.",
+     "show": 1
+    },
+    {
+     "say": "They're still there, saved in tasks dot d b.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What happens to your changes if you never call db.commit()?",
+   "options": [
+    "They save automatically",
+    "They're thrown away when the session closes",
+    "They save on the next request"
+   ],
+   "answer": 1,
+   "good": "That's right. Without commit, the changes are thrown away when the session closes.",
+   "bad": "Not quite. Without commit, the changes are thrown away when the session closes.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What happens to your changes if you never call db.commit()?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Tasks survive a restart in tasks.db",
+     ""
+    ],
+    [
+     "Every route uses SessionDep",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 4.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your tasks live in tasks dot d b and survive a restart,",
+     "show": 1
+    },
+    {
+     "say": "and every route gets its session through session dep.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 5, configuration and logging.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 5: Configuration and Logging
@@ -614,6 +1731,194 @@ Your app reads its database location and log level from environment variables, l
 5. Why should `.env` be listed in `.gitignore`?
 
 *Answers: 1) So the same code runs in different places with different settings, and secrets never live in the code or in Git. 2) The default, `"INFO"`. 3) Add timestamps and levels, and filter how much detail is shown with a setting, without changing code. 4) Code that runs before and after every request, such as timing and logging it. 5) It often contains secrets and machine-specific settings that must not be committed or shared.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "file",
+   "kicker": "Module 5 · Configuration and logging",
+   "title": "Same code, different places",
+   "beats": [
+    {
+     "say": "Welcome to Module 5."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "lock",
+   "kicker": "Concept",
+   "title": "Configuration",
+   "items": [
+    [
+     "Hard-coded",
+     "Edit code to deploy; secrets in Git"
+    ],
+    [
+     "Environment variables",
+     "Set outside the code, safe defaults"
+    ]
+   ],
+   "crossed": false,
+   "beats": [
+    {
+     "say": "Configuration is anything that changes between where your app runs: the database location, the log level, secret keys.",
+     "show": 0
+    },
+    {
+     "say": "Hard-code them, and you have to edit code to deploy, and you risk committing secrets to Git.",
+     "show": 1
+    },
+    {
+     "say": "Instead, read environment variables, with safe defaults for your own computer.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "file",
+   "kicker": "Lab · Step 1",
+   "title": "One place for settings",
+   "file": "app/config.py",
+   "code": "import os\n\nAPP_NAME = os.getenv(\"APP_NAME\", \"Tasks API\")\nDATABASE_URL = os.getenv(\"DATABASE_URL\", \"sqlite:///./tasks.db\")\nLOG_LEVEL = os.getenv(\"LOG_LEVEL\", \"INFO\").upper()",
+   "beats": [
+    {
+     "say": "Config dot p y is the one place that reads settings.",
+     "show": 0
+    },
+    {
+     "say": "Os dot getenv reads a variable, and falls back to a default if it isn't set.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "terminal",
+   "kicker": "Lab · Step 3",
+   "title": "Log every request",
+   "file": "app/main.py",
+   "code": "@app.middleware(\"http\")\nasync def log_requests(request, call_next):\n    start = time.perf_counter()\n    response = await call_next(request)\n    ms = (time.perf_counter() - start) * 1000\n    logger.info(\"%s %s -> %s (%.1f ms)\", request.method,\n                request.url.path, response.status_code, ms)\n    return response",
+   "beats": [
+    {
+     "say": "Logging beats print. It adds timestamps and levels you can filter.",
+     "show": 0
+    },
+    {
+     "say": "A middleware runs around every request. It times it, and logs the method, path, status and milliseconds.",
+     "show": 1
+    },
+    {
+     "say": "Unexpected errors are logged with the full stack trace, in your logs only.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "lock",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Run with different settings",
+   "steps": [
+    "DATABASE_URL=… LOG_LEVEL=DEBUG uvicorn …",
+    "--env-file .env",
+    ".gitignore: .env, venv/, *.db"
+   ],
+   "beats": [
+    {
+     "say": "Start the server with a different database and log level, and a new dev dot d b appears.",
+     "show": 1
+    },
+    {
+     "say": "Put your settings in a dot env file, and start with dash dash env file.",
+     "show": 2
+    },
+    {
+     "say": "And list dot env, venv and your database files in dot gitignore, so they never reach Git.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why should .env be listed in .gitignore?",
+   "options": [
+    "It makes Git faster",
+    "It often holds secrets that must never be committed",
+    "Git can't read .env files"
+   ],
+   "answer": 1,
+   "good": "That's right. It often contains secrets and machine-specific settings that must not be committed or shared.",
+   "bad": "Not quite. It often contains secrets and machine-specific settings that must not be committed or shared.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why should .env be listed in .gitignore?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Settings come from environment variables",
+     ""
+    ],
+    [
+     "Every request is logged with status and timing",
+     ""
+    ],
+    [
+     "Unexpected errors are logged, never shown",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 5.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your app reads its database and log level from environment variables,",
+     "show": 1
+    },
+    {
+     "say": "logs every request with status and timing,",
+     "show": 2
+    },
+    {
+     "say": "and logs unexpected errors that clients never see.",
+     "show": 3
+    },
+    {
+     "say": "Next, in Module 6, automated tests.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -734,6 +2039,193 @@ You should see `5 passed`. `python -m` makes pytest use your virtual environment
 
 *Answers: 1) Send requests to your app in memory and inspect the responses, without starting a server. 2) So tests start from a clean, known state every time and never change or depend on your real data. 3) A function that prepares something tests need, such as a client with a fresh database, and cleans up afterwards. 4) It runs functions whose names start with `test_` in files named `test_*.py`. 5) The status code is part of the API's contract; clients rely on `201` to know something was created.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "test",
+   "kicker": "Module 6 · Automated tests",
+   "title": "Know it still works, in seconds",
+   "beats": [
+    {
+     "say": "Welcome to Module 6."
+    },
+    {
+     "say": "Tests are small functions that call your API and check the answers."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "test",
+   "kicker": "Concept",
+   "title": "The tools",
+   "items": [
+    [
+     "pytest + assert",
+     "Runs test_ functions"
+    ],
+    [
+     "TestClient",
+     "Calls your app in memory"
+    ],
+    [
+     "Fixture",
+     "Prepares and cleans up"
+    ],
+    [
+     "Override get_db",
+     "A throwaway database"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Pytest runs every function whose name starts with test, and assert checks each result.",
+     "show": 1
+    },
+    {
+     "say": "FastAPI's test client sends requests straight to your app in memory. No server needed.",
+     "show": 2
+    },
+    {
+     "say": "A fixture prepares what a test needs, then cleans up.",
+     "show": 3
+    },
+    {
+     "say": "And tests must never touch your real data. So you swap the database for a throwaway one.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "database",
+   "kicker": "Lab · Step 1",
+   "title": "A fresh database for every test",
+   "file": "tests/conftest.py",
+   "code": "@pytest.fixture\ndef client():\n    engine = create_engine(\"sqlite://\", poolclass=StaticPool,\n                           connect_args={\"check_same_thread\": False})\n    Base.metadata.create_all(bind=engine)\n    app.dependency_overrides[get_db] = override_get_db\n    yield TestClient(app)\n    app.dependency_overrides.clear()",
+   "beats": [
+    {
+     "say": "Conftest dot p y creates a fresh in-memory database for every test.",
+     "show": 0
+    },
+    {
+     "say": "Dependency overrides swaps get D B for one that uses it. Your real tasks dot d b is never touched.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "test",
+   "kicker": "Lab · Step 2",
+   "title": "Your first tests",
+   "file": "tests/test_tasks.py",
+   "code": "def test_create_and_get_task(client):\n    response = client.post(\"/tasks\", json={\"title\": \"Write tests\"})\n    assert response.status_code == 201\n    task = response.json()\n\n    response = client.get(f\"/tasks/{task['id']}\")\n    assert response.json() == task",
+   "beats": [
+    {
+     "say": "A test just names client as a parameter, and pytest hands it over.",
+     "show": 0
+    },
+    {
+     "say": "This one creates a task, checks it got two oh one, then reads it back and checks it matches.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "test",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Run them, then break something",
+   "big": "5 passed",
+   "sub": "python -m pytest -v",
+   "beats": [
+    {
+     "say": "Run python dash m pytest. You should see five passed.",
+     "show": 0
+    },
+    {
+     "say": "Then break the code on purpose. Change two oh one to two hundred.",
+     "show": 1
+    },
+    {
+     "say": "The test fails, and shows you exactly which check broke. Change it back.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why do the tests override get_db?",
+   "options": [
+    "It makes tests run on the internet",
+    "So tests start clean and never touch your real data",
+    "Because SQLite doesn't work in tests"
+   ],
+   "answer": 1,
+   "good": "That's right. So every test starts from a clean state and never changes your real data.",
+   "bad": "Not quite. So every test starts from a clean state and never changes your real data.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why do the tests override get_db?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Tests pass on a throwaway database",
+     ""
+    ],
+    [
+     "You saw a test catch a bug",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 6.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your tests pass against a throwaway database,",
+     "show": 1
+    },
+    {
+     "say": "and you've watched one fail when you broke the code.",
+     "show": 2
+    },
+    {
+     "say": "Next, in the last module, the same API in Node.js.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 7: The Same API in Node.js and Express, and Choosing a Framework
@@ -842,3 +2334,218 @@ You rebuilt three endpoints in Express, got the same responses as your FastAPI a
 *Answers: 1) Run outside the browser on a server, handling network requests, files, and databases directly. 2) It parses JSON request bodies so they're available as a JavaScript object in `req.body`. 3) Express has no built-in validation like Pydantic, so without a check (or a library such as Zod) bad data would be stored. 4) Route parameters always arrive as strings, but the Map's keys are numbers. 5) Django, because it includes an ORM, user accounts, and an automatic admin panel out of the box.*
 
 **Next:** APIs for Builders adds proper API design, GraphQL, and authentication to the app you built here.
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "blocks",
+   "kicker": "Module 7 · Node.js and Express",
+   "title": "Same ideas, another framework",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "You rebuild part of your API in JavaScript, to see which ideas are universal."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "code",
+   "kicker": "Concept",
+   "title": "Node.js and Express",
+   "items": [
+    [
+     "Node.js",
+     "JavaScript on the server"
+    ],
+    [
+     "Express",
+     "Handlers per method and path"
+    ],
+    [
+     "No built-in validation",
+     "Check input yourself, or use Zod"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Node dot j s runs JavaScript outside the browser, so it can run a server.",
+     "show": 1
+    },
+    {
+     "say": "Express is the most widely used Node framework. You register a handler for each method and path.",
+     "show": 2
+    },
+    {
+     "say": "One big difference: Express has no built-in validation. You check input yourself, or add a library like Zod.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Step 2",
+   "title": "A route in Express",
+   "file": "app.js",
+   "code": "app.post(\"/tasks\", (req, res) => {\n  const { title, notes = null } = req.body ?? {};\n  if (typeof title !== \"string\" || title.length < 1 || title.length > 200) {\n    return res.status(422).json({ detail: \"title must be 1 to 200 characters\" });\n  }\n  const task = { id: nextId++, title, notes, done: false };\n  res.status(201).json(task);\n});",
+   "beats": [
+    {
+     "say": "Here's create task in Express.",
+     "show": 0
+    },
+    {
+     "say": "With no Pydantic, you check the title by hand, and answer four twenty two if it's wrong.",
+     "show": 1
+    },
+    {
+     "say": "Otherwise, store it, and answer two oh one with the task as JSON.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "big",
+   "art": "api",
+   "kicker": "Lab · Step 3",
+   "title": "Same requests, same answers",
+   "big": "Same 201 · 404 · 422",
+   "sub": "as your FastAPI app",
+   "beats": [
+    {
+     "say": "Run it with node, dash dash watch, and send the same curl requests.",
+     "show": 0
+    },
+    {
+     "say": "You get the same status codes and the same JSON as your FastAPI app.",
+     "show": 1
+    },
+    {
+     "say": "But type conversion, validation and docs are now your job.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "fork",
+   "kicker": "Choosing a framework",
+   "title": "Which one, when",
+   "items": [
+    [
+     "FastAPI",
+     "JSON APIs, validation and docs built in"
+    ],
+    [
+     "Flask",
+     "Tiny, flexible core"
+    ],
+    [
+     "Django",
+     "Big sites: ORM, accounts, admin"
+    ],
+    [
+     "Express",
+     "One language, front and back"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "So which framework should you choose?",
+     "show": 0
+    },
+    {
+     "say": "FastAPI, for JSON APIs with validation and docs from type hints, especially next to data or AI code.",
+     "show": 1
+    },
+    {
+     "say": "Flask, for a tiny, flexible core.",
+     "show": 2
+    },
+    {
+     "say": "Django, for a larger database-heavy site with built-in accounts and an admin panel.",
+     "show": 3
+    },
+    {
+     "say": "And Express, when your team wants one language for frontend and backend.",
+     "show": 4
+    },
+    {
+     "say": "Everything you practised here carries over to all of them.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why does the Express version check title by hand?",
+   "options": [
+    "Express validates too slowly",
+    "Express has no built-in validation like Pydantic",
+    "JavaScript can't read JSON"
+   ],
+   "answer": 1,
+   "good": "That's right. Express has no built-in validation like Pydantic, so you check it yourself or use a library like Zod.",
+   "bad": "Not quite. Express has no built-in validation like Pydantic, so you check it yourself or use a library like Zod.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why does the Express version check title by hand?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Three endpoints rebuilt in Express",
+     ""
+    ],
+    [
+     "You can explain when to pick each framework",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you've rebuilt three endpoints in Express with the same responses,",
+     "show": 1
+    },
+    {
+     "say": "and can name a good reason to choose each framework.",
+     "show": 2
+    },
+    {
+     "say": "You've finished Backend Development for Builders. Next, APIs for Builders picks up the app you just built.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```

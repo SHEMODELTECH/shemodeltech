@@ -22,7 +22,9 @@ import { WATCH_ART } from './watchArt';
 export const parseWatchScript = (html) => {
   const m = /class="course-watch" data-watch="([^"]*)"/.exec(html || '');
   if (!m) return null;
-  const raw = m[1].replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  let raw = m[1];
+  try { raw = decodeURIComponent(raw); } catch (_) { /* older entity-encoded form */ }
+  raw = raw.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   try {
     const s = JSON.parse(raw);
     return Array.isArray(s.scenes) && s.scenes.length ? s : null;

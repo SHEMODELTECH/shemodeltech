@@ -57,6 +57,182 @@ You can name the three layers of a web page and explain what each one is respons
 
 *Answers: 1) The structure and content of a page, headings, text, images, and other elements. 2) The presentation of a page, colors, spacing, fonts, and layout. 3) The behavior of a page, what happens in response to clicks, typing, or other actions. 4) A way to catch certain kinds of mistakes before the code runs, by checking the types of values used. 5) Designing a page so it works and looks correct across different screen sizes, from phones to desktop monitors.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "browser",
+   "kicker": "Module 0 · How a web page works",
+   "title": "Three layers, three jobs",
+   "beats": [
+    {
+     "say": "Welcome to Web Development for Builders."
+    },
+    {
+     "say": "Every website you've ever used is built from the same three layers."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "layers",
+   "kicker": "Concept",
+   "title": "Structure, presentation, behaviour",
+   "items": [
+    [
+     "HTML",
+     "Structure and content"
+    ],
+    [
+     "CSS",
+     "Presentation and layout"
+    ],
+    [
+     "JavaScript",
+     "Behaviour"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Each layer has its own job.",
+     "show": 0
+    },
+    {
+     "say": "HTML is the structure and content: the headings, paragraphs, images and buttons on the page.",
+     "show": 1
+    },
+    {
+     "say": "CSS is the presentation: colours, spacing, fonts and layout.",
+     "show": 2
+    },
+    {
+     "say": "And JavaScript is the behaviour: what happens when someone clicks, types or scrolls.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "phone",
+   "kicker": "Concept",
+   "title": "Two more ideas",
+   "items": [
+    [
+     "TypeScript",
+     "Catches mistakes before code runs"
+    ],
+    [
+     "Responsive design",
+     "Works on any screen size"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two more ideas you'll meet later in the course.",
+     "show": 0
+    },
+    {
+     "say": "TypeScript sits on top of JavaScript, and catches certain mistakes before the code ever runs.",
+     "show": 1
+    },
+    {
+     "say": "And responsive design makes all of this work on any screen, from a phone to a wide monitor.",
+     "show": 2
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "browser",
+   "kicker": "Lab",
+   "title": "Look inside a real page",
+   "steps": [
+    "Right click",
+    "Inspect",
+    "Click elements to see them highlighted"
+   ],
+   "beats": [
+    {
+     "say": "Now look inside a real website.",
+     "show": 0
+    },
+    {
+     "say": "Right click any page,",
+     "show": 1
+    },
+    {
+     "say": "choose Inspect,",
+     "show": 2
+    },
+    {
+     "say": "and you're looking at its raw HTML. Click elements and watch the matching part of the page light up.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is CSS responsible for?",
+   "options": [
+    "What happens when you click",
+    "Colours, spacing, fonts and layout",
+    "The text and images on the page"
+   ],
+   "answer": 1,
+   "good": "That's right. CSS is the presentation layer: colours, spacing, fonts and layout.",
+   "bad": "Not quite. CSS is the presentation layer: colours, spacing, fonts and layout.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is CSS responsible for?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You can name the three layers and their jobs",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 0.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can name the three layers of a web page and what each one does.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 1, you write HTML.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 1: HTML - Structure and Content
@@ -143,6 +319,229 @@ You have a real HTML file, opened directly in a browser, containing headings, a 
 5. Does HTML alone control how a page looks, colors and spacing included?
 
 *Answers: 1) `<h1>` represents the main, top level heading; `<h2>` represents a subheading, one level below it. 2) It provides alternate text describing the image, used by screen readers and shown if the image fails to load. 3) Browsers can read HTML files directly from disk, no server is required just to view static structure and content. 4) A structural relationship, an element nested inside another is considered part of, or contained within, that outer element. 5) No, HTML controls structure and content only, presentation is CSS's job.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "code",
+   "kicker": "Module 1 · HTML",
+   "title": "Structure and content",
+   "beats": [
+    {
+     "say": "Welcome to Module 1."
+    },
+    {
+     "say": "HTML describes the structure of a page using elements, marked by tags."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Syntax at a glance",
+   "title": "How a tag works",
+   "file": "HTML",
+   "code": "<tagname attribute=\"value\">Content goes here</tagname>\n\n<a href=\"https://example.com\">A link</a>\n<img src=\"photo.jpg\" alt=\"A photo\">",
+   "beats": [
+    {
+     "say": "Here's the pattern.",
+     "show": 0
+    },
+    {
+     "say": "An opening tag, the content, then a closing tag with a slash.",
+     "show": 1
+    },
+    {
+     "say": "Attributes add extra information, like an address for a link, or a source for an image.",
+     "show": 1
+    },
+    {
+     "say": "And some elements close themselves, like an image or an input.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "code",
+   "kicker": "Common tags",
+   "title": "The tags you'll use most",
+   "items": [
+    [
+     "<h1> … <h6>",
+     "Headings"
+    ],
+    [
+     "<p>",
+     "Paragraphs"
+    ],
+    [
+     "<a href>",
+     "Links"
+    ],
+    [
+     "<ul> <ol> <li>",
+     "Lists"
+    ],
+    [
+     "<div> <span>",
+     "Containers"
+    ],
+    [
+     "<form> <input> <button>",
+     "User input"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The tags you'll use most.",
+     "show": 0
+    },
+    {
+     "say": "H one to h six for headings. H one is the main one.",
+     "show": 1
+    },
+    {
+     "say": "P for paragraphs.",
+     "show": 2
+    },
+    {
+     "say": "A for links.",
+     "show": 3
+    },
+    {
+     "say": "U L, O L and L I for lists.",
+     "show": 4
+    },
+    {
+     "say": "Div and span as general containers.",
+     "show": 5
+    },
+    {
+     "say": "And form, input and button for user input.",
+     "show": 6
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "browser",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "Your first page",
+   "file": "index.html",
+   "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>My First Page</title>\n</head>\n<body>\n  <h1>Welcome to My Site</h1>\n  <p>This is a paragraph about this site.</p>\n</body>\n</html>",
+   "beats": [
+    {
+     "say": "Make a folder called my site, and a file called index dot html.",
+     "show": 0
+    },
+    {
+     "say": "It has a head, with the page title, and a body with a heading and a paragraph.",
+     "show": 1
+    },
+    {
+     "say": "Double click it, and it opens straight in your browser. No server needed.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "code",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Add more structure",
+   "steps": [
+    "<h2> About Me",
+    "<ul> list",
+    "<img alt=…>",
+    "<form>"
+   ],
+   "beats": [
+    {
+     "say": "Then add more.",
+     "show": 0
+    },
+    {
+     "say": "A subheading,",
+     "show": 1
+    },
+    {
+     "say": "a list,",
+     "show": 2
+    },
+    {
+     "say": "an image, with alt text describing it for screen readers,",
+     "show": 3
+    },
+    {
+     "say": "and a form, with a label, a text box and a button. You'll connect it to JavaScript later.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What is the alt attribute on an image for?",
+   "options": [
+    "It sets the image size",
+    "It describes the image for screen readers, and shows if it fails to load",
+    "It links the image to another page"
+   ],
+   "answer": 1,
+   "good": "That's right. Alt text describes the image for screen readers, and shows if the image fails to load.",
+   "bad": "Not quite. Alt text describes the image for screen readers, and shows if the image fails to load.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What is the alt attribute on an image for?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Headings, paragraph, list, image and form, in your browser",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 1.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you have an HTML file open in your browser with headings, a paragraph, a list, an image and a form.",
+     "show": 1
+    },
+    {
+     "say": "Next, in Module 2, you style it with CSS.",
+     "show": 1
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -248,6 +647,181 @@ Your page is visibly styled, fonts, colors, spacing, and a hover effect on the b
 
 *Answers: 1) The part of a CSS rule that identifies which HTML elements the rule applies to, such as a tag name, class, or ID. 2) It keeps structure and presentation separate, one CSS file can style many HTML pages, and changes don't require touching the content itself. 3) It applies a set of styles only while the user's mouse is positioned over that element. 4) Because rules can combine, and later or more specific rules can override earlier or less specific ones, cascading down to a final result. 5) No, styling can be changed entirely within the CSS file, without modifying the HTML structure or content at all.*
 
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "palette",
+   "kicker": "Module 2 · CSS",
+   "title": "Presentation and layout",
+   "beats": [
+    {
+     "say": "Welcome to Module 2."
+    },
+    {
+     "say": "CSS turns plain HTML into something that looks designed."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "palette",
+   "kicker": "Syntax at a glance",
+   "title": "How a CSS rule works",
+   "file": "CSS",
+   "code": "selector {\n  property: value;\n}\n\np       { color: #222; }      /* every paragraph */\n.card   { padding: 16px; }    /* class=\"card\" */\n#name   { width: 200px; }     /* id=\"name\" */",
+   "beats": [
+    {
+     "say": "A rule has a selector, then declarations in curly brackets.",
+     "show": 0
+    },
+    {
+     "say": "The selector picks which elements the rule applies to.",
+     "show": 1
+    },
+    {
+     "say": "P means every paragraph. Dot name means every element with that class. Hash name means the one element with that ID.",
+     "show": 1
+    },
+    {
+     "say": "Each declaration is a property, a colon, a value, and a semicolon.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "palette",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "A separate stylesheet",
+   "file": "index.html",
+   "code": "<link rel=\"stylesheet\" href=\"style.css\">",
+   "beats": [
+    {
+     "say": "Create style dot css, with a font, a background colour, spacing, and a coloured heading.",
+     "show": 0
+    },
+    {
+     "say": "Link it from the head of your HTML.",
+     "show": 1
+    },
+    {
+     "say": "Refresh, and the whole page changes, without touching the HTML at all.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "palette",
+   "kicker": "Lab · Step 3",
+   "title": "States, like hover",
+   "file": "style.css",
+   "code": "button {\n  background-color: #2b6cb0;\n  color: white;\n}\n\nbutton:hover {\n  background-color: #1e4e8c;\n}",
+   "beats": [
+    {
+     "say": "Next, style the form's button.",
+     "show": 0
+    },
+    {
+     "say": "Button colon hover is a pseudo class. It only applies while your mouse is over the button.",
+     "show": 1
+    },
+    {
+     "say": "CSS can respond to state, not just structure.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "layers",
+   "kicker": "Lab · Step 4",
+   "title": "Your first layout",
+   "file": "style.css",
+   "code": "ul {\n  display: flex;\n  gap: 12px;\n  list-style: none;\n  padding: 0;\n}",
+   "beats": [
+    {
+     "say": "Finally, a layout property.",
+     "show": 0
+    },
+    {
+     "say": "Display flex puts the list items side by side, and gap adds space between them.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Why is CSS called \"cascading\"?",
+   "options": [
+    "Because it loads from the top of the page",
+    "Rules combine, and later or more specific rules override earlier ones",
+    "Because colours fade down the page"
+   ],
+   "answer": 1,
+   "good": "That's right. Rules combine, and later or more specific rules override earlier or less specific ones.",
+   "bad": "Not quite. Rules combine, and later or more specific rules override earlier or less specific ones.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Why is CSS called \"cascading\"?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Fonts, colours, spacing and a hover effect",
+     ""
+    ],
+    [
+     "All from a separate CSS file",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 2.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your page has fonts, colours, spacing and a hover effect,",
+     "show": 1
+    },
+    {
+     "say": "all from a separate CSS file.",
+     "show": 2
+    },
+    {
+     "say": "Next, in Module 3, you make it interactive with JavaScript.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
+
 ---
 
 ## Module 3: JavaScript - Behavior and Interactivity
@@ -341,6 +915,209 @@ Your page responds to at least two real user actions, a form submission and a bu
 5. What is the key difference between what HTML/CSS do and what JavaScript does?
 
 *Answers: 1) An action or occurrence the browser can detect and respond to, such as a click, a keystroke, or a page finishing loading. 2) It finds the first HTML element matching a given selector, so it can be read or changed with code. 3) It stops the form's default behavior, which would otherwise reload the page, letting custom code run instead. 4) A variable declared inside the listener would reset to its starting value on every click; declaring it outside lets it persist and accumulate between clicks. 5) HTML and CSS describe static structure and appearance; JavaScript adds behavior, letting the page change in response to what a user does.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "cursor",
+   "kicker": "Module 3 · JavaScript",
+   "title": "Behaviour and interactivity",
+   "beats": [
+    {
+     "say": "Welcome to Module 3."
+    },
+    {
+     "say": "JavaScript runs in the browser, and lets your page respond to clicks, typing and more."
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "code",
+   "kicker": "Syntax at a glance",
+   "title": "Four things you'll use constantly",
+   "items": [
+    [
+     "let / const",
+     "Variables"
+    ],
+    [
+     "function",
+     "Reusable code"
+    ],
+    [
+     "querySelector",
+     "Find an element"
+    ],
+    [
+     "addEventListener",
+     "React to events"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Four things you'll use constantly.",
+     "show": 0
+    },
+    {
+     "say": "Let and const create variables. Use const unless the value really needs to change.",
+     "show": 1
+    },
+    {
+     "say": "Functions are reusable blocks of code.",
+     "show": 2
+    },
+    {
+     "say": "Query selector finds an element, using the same selectors as CSS.",
+     "show": 3
+    },
+    {
+     "say": "And add event listener runs your code when something happens, like a click.",
+     "show": 4
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "code",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "Change the page with code",
+   "file": "script.js",
+   "code": "const heading = document.querySelector(\"h1\");\nheading.textContent = \"Welcome, and thanks for stopping by!\";",
+   "beats": [
+    {
+     "say": "Create script dot j s and link it just before the end of the body.",
+     "show": 0
+    },
+    {
+     "say": "Find the h one, and change its text.",
+     "show": 1
+    },
+    {
+     "say": "Refresh, and the heading has changed, driven by code instead of HTML.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "cursor",
+   "kicker": "Lab · Step 3",
+   "title": "Respond to the form",
+   "file": "script.js",
+   "code": "form.addEventListener(\"submit\", function (event) {\n  event.preventDefault();\n  const message = document.createElement(\"p\");\n  message.textContent = `Hello, ${nameInput.value}!`;\n  form.after(message);\n});",
+   "beats": [
+    {
+     "say": "Now the form from Module 1.",
+     "show": 0
+    },
+    {
+     "say": "Prevent default stops the page from reloading.",
+     "show": 1
+    },
+    {
+     "say": "Then read the name, create a new paragraph with a greeting, and add it after the form.",
+     "show": 1
+    },
+    {
+     "say": "Submit it, and the greeting appears instantly, without a reload.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "calc",
+   "kicker": "Lab · Step 4",
+   "title": "A click counter",
+   "file": "script.js",
+   "code": "let count = 0;\ncounterBtn.addEventListener(\"click\", function () {\n  count = count + 1;\n  counterBtn.textContent = `Clicked ${count} times`;\n});",
+   "beats": [
+    {
+     "say": "Finally, a counter.",
+     "show": 0
+    },
+    {
+     "say": "Count lives outside the click listener. If it lived inside, it would reset to zero on every click.",
+     "show": 1
+    },
+    {
+     "say": "Each click adds one, and updates the button's text.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "What does event.preventDefault() do on a form submission?",
+   "options": [
+    "It deletes the form",
+    "It stops the page from reloading, so your own code can run",
+    "It sends the form to a server"
+   ],
+   "answer": 1,
+   "good": "That's right. It stops the form's default reload, so your own code can run instead.",
+   "bad": "Not quite. It stops the form's default reload, so your own code can run instead.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "What does event.preventDefault() do on a form submission?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "Responds to a form submit and a button click",
+     ""
+    ],
+    [
+     "Updates without reloading",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's Module 3.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your page responds to a form submission and a button click,",
+     "show": 1
+    },
+    {
+     "say": "and updates without reloading.",
+     "show": 2
+    },
+    {
+     "say": "Next, in the last module, safer code and any screen size.",
+     "show": 2
+    }
+   ]
+  }
+ ]
+}
+```
 
 ---
 
@@ -461,3 +1238,192 @@ You caught a real type error with TypeScript before it ran, you added the viewpo
 5. If TypeScript catches a type mismatch, does that mean the bug would have definitely appeared for a real user, or is it usually caught earlier than that?
 
 *Answers: 1) A type system, letting you declare what kind of values variables and functions expect, so mismatches are caught before the code runs. 2) No, TypeScript is compiled into plain JavaScript first, and browsers only ever run the compiled `.js` output. 3) It applies the CSS rules inside it only when the screen matches the given condition, here, a width of 600px or less. 4) How a mobile browser sizes and scales the page, so it renders at the device's real width instead of a shrunk down desktop layout. 5) It's usually caught earlier, that's the point, the error is found while writing or compiling the code, well before it could reach a real user.*
+
+```watch
+{
+ "scenes": [
+  {
+   "kind": "title",
+   "art": "phone",
+   "kicker": "Module 4 · TypeScript and responsive design",
+   "title": "Safer code, any screen",
+   "beats": [
+    {
+     "say": "Welcome to the last module."
+    },
+    {
+     "say": "Two topics: TypeScript, which catches mistakes early, and responsive design, which fits any screen."
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "shield",
+   "kicker": "Concept · TypeScript",
+   "title": "Say what type you expect",
+   "file": "TypeScript",
+   "code": "let age: number = 30;\nlet userName: string = \"Alex\";\n\nfunction greet(name: string, timesClicked: number): string {\n  return `Hello, ${name}`;\n}",
+   "beats": [
+    {
+     "say": "TypeScript is JavaScript with types.",
+     "show": 0
+    },
+    {
+     "say": "Add a colon and a type after a name, like age colon number.",
+     "show": 1
+    },
+    {
+     "say": "Functions can say what each input is, and what they return.",
+     "show": 1
+    },
+    {
+     "say": "Browsers don't run TypeScript. It's compiled into plain JavaScript first.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "flow",
+   "art": "warning",
+   "kicker": "Lab · Part A",
+   "title": "Catch a mistake before it runs",
+   "steps": [
+    "tsc greet.ts",
+    "greet(\"Alex\", \"three\")",
+    "Error: string is not a number"
+   ],
+   "beats": [
+    {
+     "say": "In the lab, write greet dot t s and compile it with t s c.",
+     "show": 1
+    },
+    {
+     "say": "Then pass the text three, where a number was expected.",
+     "show": 2
+    },
+    {
+     "say": "TypeScript reports the mistake right away, before it ever reaches a user.",
+     "show": 3
+    },
+    {
+     "say": "By default it still writes the JavaScript file, so always read the errors. The no emit on error option makes it refuse.",
+     "show": 3
+    }
+   ]
+  },
+  {
+   "kind": "code",
+   "art": "phone",
+   "kicker": "Concept · Responsive design",
+   "title": "Media queries",
+   "file": "style.css",
+   "code": ".card {\n  display: flex;\n  gap: 16px;\n}\n\n@media (max-width: 600px) {\n  .card {\n    flex-direction: column;\n  }\n}",
+   "beats": [
+    {
+     "say": "Now responsive design.",
+     "show": 0
+    },
+    {
+     "say": "A media query wraps CSS rules in a condition.",
+     "show": 1
+    },
+    {
+     "say": "Here, when the screen is six hundred pixels or narrower, the card's items stack into a column.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quote",
+   "art": "phone",
+   "kicker": "Lab · Step 5",
+   "title": "The viewport tag",
+   "quote": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+   "beats": [
+    {
+     "say": "One more line makes phones behave.",
+     "show": 0
+    },
+    {
+     "say": "The viewport tag tells mobile browsers to use the device's real width, instead of zooming out a desktop layout.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "quiz",
+   "art": "ask",
+   "kicker": "Quick check",
+   "title": "Does a browser run .ts files directly?",
+   "options": [
+    "Yes, all modern browsers do",
+    "No, TypeScript is compiled into JavaScript first",
+    "Only Chrome does"
+   ],
+   "answer": 1,
+   "good": "That's right. TypeScript is compiled into plain JavaScript, and browsers run the compiled file.",
+   "bad": "Not quite. TypeScript is compiled into plain JavaScript, and browsers run the compiled file.",
+   "beats": [
+    {
+     "say": "Quick check.",
+     "show": 0
+    },
+    {
+     "say": "Does a browser run .ts files directly?",
+     "show": 0
+    },
+    {
+     "say": "Tap your answer.",
+     "show": 1
+    }
+   ]
+  },
+  {
+   "kind": "list",
+   "art": "proof",
+   "kicker": "Checkpoint",
+   "title": "You're done when",
+   "items": [
+    [
+     "You caught a type error with TypeScript",
+     ""
+    ],
+    [
+     "You added the viewport tag",
+     ""
+    ],
+    [
+     "Your layout stacks below 600px",
+     ""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "That's the final module.",
+     "show": 0
+    },
+    {
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you caught a real type error with TypeScript,",
+     "show": 1
+    },
+    {
+     "say": "added the viewport tag,",
+     "show": 2
+    },
+    {
+     "say": "and your layout changes shape below six hundred pixels.",
+     "show": 3
+    },
+    {
+     "say": "You've finished Web Development for Builders. Well done.",
+     "show": 3
+    }
+   ]
+  }
+ ]
+}
+```

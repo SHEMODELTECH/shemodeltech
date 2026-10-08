@@ -112,6 +112,20 @@ export const WATCH_ART = {
     <path class="fk" d="M116 92h92v16h-14v18h-16v-18h-12v12h-16v-12h-34z"/></g></svg>`,
   graph: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="sk" stroke-width="5" d="M120 54L64 132M120 54l56 78M64 132h112M120 54v38"/>
     <circle class="fa" cx="120" cy="54" r="20"/><circle class="fk" cx="64" cy="132" r="16"/><circle class="fk" cx="176" cy="132" r="16"/><circle class="fa" cx="120" cy="104" r="12"/></g></svg>`,
+  layers: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="fl" d="M120 120l70 26-70 26-70-26z"/><path class="fk" d="M120 92l70 26-70 26-70-26z"/>
+    <path class="fa" d="M120 40l70 26-70 26-70-26z"/></g></svg>`,
+  browser: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><rect class="fp sk" stroke-width="5" x="34" y="42" width="172" height="120" rx="12"/><path class="fk" d="M36 44h168v24H36z"/>
+    <circle class="fa" cx="52" cy="56" r="5"/><circle class="fp" cx="68" cy="56" r="5"/><circle class="fp" cx="84" cy="56" r="5"/>
+    <rect class="fa" x="52" y="84" width="80" height="12" rx="4"/><g class="fl"><rect x="52" y="106" width="136" height="8" rx="4"/><rect x="52" y="122" width="110" height="8" rx="4"/><rect x="52" y="138" width="124" height="8" rx="4"/></g></g></svg>`,
+  phone: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><rect class="fk" x="30" y="52" width="120" height="86" rx="8"/><rect class="fp" x="38" y="60" width="104" height="70" rx="3"/>
+    <rect class="fk" x="150" y="40" width="58" height="120" rx="12"/><rect class="fp" x="157" y="54" width="44" height="92" rx="3"/>
+    <rect class="fa" x="46" y="68" width="40" height="54" rx="3"/><rect class="fa" x="94" y="68" width="40" height="54" rx="3"/>
+    <rect class="fa" x="162" y="60" width="34" height="38" rx="3"/><rect class="fa" x="162" y="102" width="34" height="38" rx="3"/></g></svg>`,
+  palette: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="fp sk" stroke-width="5" d="M120 36c-40 0-72 28-72 64 0 30 24 50 50 50 14 0 14-10 10-18-4-8 0-16 10-16h20c30 0 54-14 54-36 0-26-32-44-72-44z"/>
+    <circle class="fa" cx="88" cy="82" r="11"/><circle class="fk" cx="122" cy="66" r="11"/><circle class="fa" cx="156" cy="80" r="11"/><circle class="fl" cx="80" cy="116" r="11"/></g></svg>`,
+  cursor: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><rect class="fa" x="40" y="70" width="110" height="44" rx="22"/><rect class="fp" x="62" y="88" width="66" height="8" rx="4"/>
+    <path class="fk" d="M136 92l58 22-24 8 16 26-12 7-16-26-18 18z"/>
+    <path class="sa" stroke-width="5" stroke-linecap="round" d="M128 66l-8-14M150 70l10-12M162 92h14"/></g></svg>`,
   rocket: `<svg viewBox="0 0 240 200" aria-hidden="true">${bg}<g class="pop2"><path class="fp sk" stroke-width="5" d="M120 26c26 18 36 48 30 90h-60c-6-42 4-72 30-90z"/><circle class="fa" cx="120" cy="74" r="12"/>
     <path class="fa" d="M90 100l-20 30h24zM150 100l20 30h-24z"/><path class="fa" d="M106 120h28l-14 40z"/></g></svg>`,
 };
