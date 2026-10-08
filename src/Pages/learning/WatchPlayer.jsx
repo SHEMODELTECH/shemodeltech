@@ -112,7 +112,7 @@ const Scene = ({ scene, shown, onAnswer, answered }) => {
   );
 };
 
-const WatchPlayer = ({ script, title, onFinished }) => {
+const WatchPlayer = ({ script, title, onFinished, nextText, finishLabel }) => {
   const scenes = useMemo(() => script.scenes || [], [script]);
   const [si, setSi] = useState(0);
   const [bi, setBi] = useState(0);
@@ -262,10 +262,10 @@ const WatchPlayer = ({ script, title, onFinished }) => {
           <div className="wp-cover">
             <div className="wp-cover-in">
               <p className="wp-cover-t">Done watching</p>
-              <p className="wp-cover-s">Next: take this module's quiz and write your short summary.</p>
+              <p className="wp-cover-s">{nextText || "Next: take this module's quiz and write your short summary."}</p>
               <div className="wp-row">
                 <button type="button" className="wp-btn" onClick={() => go(0)}>Watch again</button>
-                {onFinished && <button type="button" className="wp-btn primary" onClick={onFinished}>Take the module quiz</button>}
+                {onFinished && <button type="button" className="wp-btn primary" onClick={onFinished}>{finishLabel || 'Take the module quiz'}</button>}
               </div>
             </div>
           </div>

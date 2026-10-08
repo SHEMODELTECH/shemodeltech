@@ -416,47 +416,132 @@ export const CourseReferences = ({ refs, compact = false, inline = false }) => {
 // ---- Interactive course player ----
 // Self-contained HTML courses bring their own navigation, labs, and quizzes, so
 // they run full-width in a frame under a slim bar with the course controls.
-export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, onOpen, onCertificate }) => (
-  <div className="flex flex-col h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
-    <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2.5 border-b border-gray-200 bg-white">
-      <button onClick={onBack} className="fd-back">
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        Course overview
+// Built-in interactive courses can also have narrated Watch videos, one per
+// module, stored in ./interactiveWatch/<slug>.json (loaded only when needed).
+const loadInteractiveWatch = (slug) =>
+  import(`./interactiveWatch/${slug}.json`).then((m) => (Array.isArray(m.default) ? m.default : null)).catch(() => null);
+
+const ModeSwitch = ({ mode, onChange }) => (
+  <div className="wp-switch !m-0" role="group" aria-label="How do you want to learn this course?">
+    {[['read', 'Course'], ['watch', 'Watch']].map(([k, label]) => (
+      <button
+        key={k}
+        type="button"
+        aria-pressed={mode === k}
+        onClick={() => onChange(k)}
+        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold transition-colors ${mode === k ? 'bg-gray-900 text-white' : 'text-gray-600 hover:text-gray-900'}`}
+      >
+        {k === 'watch' && (
+          <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>
+        )}
+        {label}
       </button>
-      <p className="hidden md:block text-sm font-semibold text-gray-900 truncate">{course.title}</p>
-      <div className="flex items-center gap-2">
-        {isDone ? (
-          <span className="flex items-center gap-1.5 text-sm font-semibold text-pink-700">
-            <CheckIcon className="w-4 h-4" /> Completed
-          </span>
-        ) : (
-          <button onClick={onComplete} className="fd-btn !py-2 !px-3 text-sm">
-            <CheckIcon className="w-4 h-4" /> Mark as complete
-          </button>
-        )}
-        {isDone && onCertificate && (
-          <button onClick={onCertificate} className="text-sm font-semibold text-gray-700 hover:text-gray-900 px-2 py-2">
-            Certificate
-          </button>
-        )}
-        {isDone && next && (
-          <button onClick={() => onOpen(next.slug)} className="text-sm font-semibold text-gray-700 hover:text-gray-900 px-2 py-2">
-            Next course
-          </button>
-        )}
-      </div>
-    </div>
-    {course.html != null ? (
-      // Published from Teacher: shown from its stored copy in a sandboxed frame,
-      // so its scripts can't reach the app or the learner's account.
-      <iframe title={course.title} srcDoc={course.html} sandbox="allow-scripts allow-popups" className="flex-1 w-full border-0 bg-white" />
-    ) : (
-      <iframe title={course.title} src={course.src} className="flex-1 w-full border-0 bg-white" />
-    )}
+    ))}
   </div>
 );
+
+export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, onOpen, onCertificate }) => {
+  const [scripts, setScripts] = useState(null);
+  const [mode, setMode] = useState('read');
+  const [mi, setMi] = useState(0);
+  const titles = useMemo(() => (course.modules || []).map((m) => m.title), [course.modules]);
+
+  useEffect(() => {
+    let alive = true;
+    setScripts(null);
+    if (course.kind === 'interactive' && course.html == null && course.slug) {
+      loadInteractiveWatch(course.slug).then((list) => {
+        if (!alive) return;
+        setScripts(list && list.length ? list : null);
+        try {
+          if (list && list.length && localStorage.getItem('smt-learn-mode') === 'watch') setMode('watch');
+        } catch (_) { /* storage off */ }
+      });
+    }
+    return () => { alive = false; };
+  }, [course.kind, course.html, course.slug]);
+
+  const choose = (m) => {
+    setMode(m);
+    try { localStorage.setItem('smt-learn-mode', m); } catch (_) { /* storage off */ }
+  };
+  const watching = mode === 'watch' && scripts && scripts[mi];
+  const nameOf = (i) => `Module ${i + 1}${titles[i] ? `: ${titles[i]}` : ''}`;
+
+  return (
+    <div className="flex flex-col h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
+      <style>{'.wp-switch{display:inline-flex;background:#fff;border:1px solid #E5E7EB;border-radius:999px;padding:4px;gap:4px}.wp-switch button:focus-visible{outline:3px solid #D41470;outline-offset:2px}'}</style>
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2.5 border-b border-gray-200 bg-white">
+        <button onClick={onBack} className="fd-back">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Course overview
+        </button>
+        <p className="hidden lg:block text-sm font-semibold text-gray-900 truncate">{course.title}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          {scripts && <ModeSwitch mode={mode} onChange={choose} />}
+          {isDone ? (
+            <span className="flex items-center gap-1.5 text-sm font-semibold text-pink-700">
+              <CheckIcon className="w-4 h-4" /> Completed
+            </span>
+          ) : (
+            <button onClick={onComplete} className="fd-btn !py-2 !px-3 text-sm">
+              <CheckIcon className="w-4 h-4" /> Mark as complete
+            </button>
+          )}
+          {isDone && onCertificate && (
+            <button onClick={onCertificate} className="text-sm font-semibold text-gray-700 hover:text-gray-900 px-2 py-2">
+              Certificate
+            </button>
+          )}
+          {isDone && next && (
+            <button onClick={() => onOpen(next.slug)} className="text-sm font-semibold text-gray-700 hover:text-gray-900 px-2 py-2">
+              Next course
+            </button>
+          )}
+        </div>
+      </div>
+      {watching && (
+        <div className="flex-1 overflow-y-auto bg-gray-50">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-5">
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <label htmlFor="wp-module" className="text-sm font-semibold text-gray-700">Module</label>
+              <select
+                id="wp-module"
+                value={mi}
+                onChange={(e) => setMi(Number(e.target.value))}
+                className="flex-1 min-w-0 border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
+              >
+                {scripts.map((_, i) => <option key={i} value={i}>{nameOf(i)}</option>)}
+              </select>
+              <div className="flex gap-1">
+                <button type="button" disabled={mi === 0} onClick={() => setMi(mi - 1)} className="border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm font-semibold disabled:opacity-40" aria-label="Previous module">‹</button>
+                <button type="button" disabled={mi === scripts.length - 1} onClick={() => setMi(mi + 1)} className="border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm font-semibold disabled:opacity-40" aria-label="Next module">›</button>
+              </div>
+            </div>
+            <WatchPlayer
+              key={mi}
+              script={scripts[mi]}
+              title={nameOf(mi)}
+              nextText="Next: open the course, try this module's hands-on lab and take its quiz."
+              finishLabel="Go to the course"
+              onFinished={() => choose('read')}
+            />
+          </div>
+        </div>
+      )}
+      {course.html != null ? (
+        // Published from Teacher: shown from its stored copy in a sandboxed frame,
+        // so its scripts can't reach the app or the learner's account.
+        <iframe title={course.title} srcDoc={course.html} sandbox="allow-scripts allow-popups" className="flex-1 w-full border-0 bg-white" />
+      ) : (
+        // Stays loaded while watching, so the learner's place in the course is kept.
+        <iframe title={course.title} src={course.src} className={`flex-1 w-full border-0 bg-white ${watching ? 'hidden' : ''}`} />
+      )}
+    </div>
+  );
+};
 
 // Explain why a certificate couldn't be issued yet (what's left to do).
 export const certificateErrorToast = (e) => {
