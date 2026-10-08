@@ -167,9 +167,19 @@ const AppLayout = ({ children }) => {
         isGroup: true,
         group: 'admin',
         icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
-        children: ADMIN_SECTIONS
-          .filter(([, , who]) => who === 'all' || who === 'reviewer' || userRole === 'admin')
-          .map(([key, label]) => ({ path: key === 'overview' ? '/admin' : `/admin?tab=${key}`, label })),
+        // Sections under small headings (People, Content, Business, System);
+        // a heading only shows when this person can see something under it.
+        children: (() => {
+          const mine = ADMIN_SECTIONS.filter(([, , who]) => who === 'all' || who === 'reviewer' || userRole === 'admin');
+          const out = [];
+          let last = null;
+          mine.forEach(([key, label, , group]) => {
+            if (group && group !== last) out.push({ heading: group, path: `heading-${group}` });
+            last = group;
+            out.push({ path: key === 'overview' ? '/admin' : `/admin?tab=${key}`, label });
+          });
+          return out;
+        })(),
       },
     ] : []),
   ];
@@ -254,7 +264,7 @@ const AppLayout = ({ children }) => {
           }).map((item) => {
             // Expandable group (e.g. Projects with sub-items)
             if (item.isGroup) {
-              const anyChildActive = item.children.some(c => isActive(c.path));
+              const anyChildActive = item.children.some(c => !c.heading && isActive(c.path));
               const isOpen = item.group === 'admin' ? adminOpen : projectsOpen;
               const toggle = item.group === 'admin' ? setAdminOpen : setProjectsOpen;
               return (
@@ -269,9 +279,13 @@ const AppLayout = ({ children }) => {
                     <span className="flex-1 text-left">{item.label}</span>
                     <svg className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                   </button>
-                  <div className={`overflow-hidden transition-all duration-200 ${isOpen ? 'max-h-[40rem] mt-2' : 'max-h-0'}`}>
+                  <div className={`overflow-hidden transition-all duration-200 ${isOpen ? 'max-h-[200rem] mt-2' : 'max-h-0'}`}>
                     <div className="ml-5 pl-3 border-l-2 border-gray-100 space-y-2 py-1">
-                      {item.children.map(child => child.locked ? (
+                      {item.children.map(child => child.heading ? (
+                        <p key={child.path} className="px-3 pt-3 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 first:pt-1">
+                          {child.heading}
+                        </p>
+                      ) : child.locked ? (
                         <div
                           key={child.path}
                           role="note"
