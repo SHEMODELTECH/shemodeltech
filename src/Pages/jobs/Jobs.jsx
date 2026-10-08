@@ -2,6 +2,7 @@
 // Jobs board (free to browse), job detail, and posting (Premium, verified companies).
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { loadJobStats, recordApplyClick, recordJobView } from '../../utils/jobStats';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -269,6 +270,11 @@ export const JobDetail = () => {
       .catch(() => setJob(null));
   }, [id]);
 
+  // Count a view (once per member per day; the posting company's own visits don't count).
+  useEffect(() => {
+    if (job && profile) recordJobView(job, profile);
+  }, [job, profile]);
+
   if (job === undefined) return <p className="text-gray-500 text-sm">Loading...</p>;
   if (!job) return <p className="text-gray-600">This job is no longer available. <Link to="/jobs" className="text-pink-700 font-semibold">See all jobs</Link></p>;
 
@@ -314,10 +320,10 @@ export const JobDetail = () => {
             <p className="text-sm text-gray-600">{underReview ? 'This post is under review, so applications are paused.' : win.state === 'upcoming' ? `Applications open ${fmt(win.opens)}.` : 'Applications for this job are closed.'}</p>
           )}
           {canApply && job.applyUrl && !profile?.isMinor && (
-            <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">Apply</a>
+            <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordApplyClick(job, profile, 'link')} className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">Apply</a>
           )}
           {canApply && job.applyEmail && !profile?.isMinor && (
-            <a href={`mailto:${job.applyEmail}?subject=${encodeURIComponent(`Application: ${job.title}`)}`} className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Apply by email</a>
+            <a href={`mailto:${job.applyEmail}?subject=${encodeURIComponent(`Application: ${job.title}`)}`} onClick={() => recordApplyClick(job, profile, 'email')} className="border border-gray-300 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-50">Apply by email</a>
           )}
           {profile && profile.uid !== job.companyUid && !profile.isMinor && (
             <button onClick={() => navigate(`/messages?to=${job.companyUid}&text=${encodeURIComponent(`Hi, I'm interested in the ${job.title} role.`)}`)}
@@ -358,6 +364,12 @@ export const MyJobs = () => {
   useEffect(() => {
     if (profile) listMyJobs(profile.uid).then(setJobs).catch(() => setJobs([]));
   }, [profile]);
+  // Views and apply clicks for each post.
+  const [stats, setStats] = useState({});
+  const idsKey = (jobs || []).map((j) => j.id).join(',');
+  useEffect(() => {
+    if (idsKey) loadJobStats(idsKey.split(',')).then(setStats);
+  }, [idsKey]);
   // Featured jobs: Partner and above (or staff).
   const premium = profile && hasPerk(profile, 'featuredJobs', !!features.companyTiers);
   const act = async (fn, msg) => {
@@ -409,6 +421,25 @@ export const MyJobs = () => {
                     : `Open${jobWindow(j).closes ? `, deadline ${jobWindow(j).closes}` : ''}`}
                   {j.featured ? ' · Featured' : ''}
                 </p>
+                {(() => {
+                  const st = stats[j.id] || {};
+                  const views = st.views || 0;
+                  const link = st.applyLink || 0;
+                  const email = st.applyEmail || 0;
+                  const applied = link + email;
+                  return (
+                    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-600">
+                      <span><strong className="text-gray-900">{views}</strong> view{views === 1 ? '' : 's'}</span>
+                      <span>
+                        <strong className="text-gray-900">{applied}</strong> clicked Apply
+                        {email > 0 && <span className="text-gray-500"> ({link} link, {email} email)</span>}
+                      </span>
+                      <span title="Of the members who viewed it, how many clicked Apply">
+                        {views ? <><strong className="text-pink-700">{Math.round((applied / views) * 100)}%</strong> of viewers applied</> : 'No views yet'}
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
               <div className="flex flex-wrap gap-2">
                 <Link to={`/jobs/${j.id}/edit`} className="text-xs font-semibold border border-gray-300 px-3 py-1.5 rounded-lg">Edit</Link>

@@ -557,6 +557,32 @@ service cloud.firestore {
  allow read, write: if isSignedIn() && userId == myUid();
  }
 
+ // Job post numbers (utils/jobStats.js): views and Apply clicks, counts only.
+ // Members add one at a time; only the posting company and staff can read them.
+ match /job_stats/{jobId} {
+ allow read: if isReviewer()
+ || (isSignedIn() && exists(/databases/$(database)/documents/jobs/$(jobId))
+ && get(/databases/$(database)/documents/jobs/$(jobId)).data.companyUid == myUid());
+ allow create: if isSignedIn()
+ && exists(/databases/$(database)/documents/jobs/$(jobId))
+ && request.resource.data.keys().hasOnly(['views', 'applyLink', 'applyEmail', 'interested'])
+ && request.resource.data.get('views', 0) in [0, 1]
+ && request.resource.data.get('applyLink', 0) in [0, 1]
+ && request.resource.data.get('applyEmail', 0) in [0, 1]
+ && request.resource.data.get('interested', 0) in [0, 1];
+ allow update: if isSignedIn()
+ && request.resource.data.keys().hasOnly(['views', 'applyLink', 'applyEmail', 'interested'])
+ && request.resource.data.diff(resource.data).affectedKeys().size() == 1
+ && (
+ request.resource.data.get('views', 0) == resource.data.get('views', 0) + 1
+ || request.resource.data.get('applyLink', 0) == resource.data.get('applyLink', 0) + 1
+ || request.resource.data.get('applyEmail', 0) == resource.data.get('applyEmail', 0) + 1
+ || request.resource.data.get('interested', 0) == resource.data.get('interested', 0) + 1
+ );
+ allow delete: if isAdmin();
+ }
+
+
  // Jobs board. Anyone signed in can browse. Posting is Premium, for verified
  // companies (and staff). Only the posting company or an admin can change a job;
  // featuring a job needs Premium.
