@@ -3,9 +3,11 @@
 // first), how far she's got, and a button back into each, plus how many
 // courses she's completed. Reads the progress already saved on her profile
 // (the same fields the Learning pages use), so it costs no extra reads.
-// Hidden until she's started or finished a course.
+// Hidden until she's started or finished a course. "Hide" folds it to one
+// line (still with a Continue button), remembered on this device.
 import React from 'react';
 import { Link } from 'react-router-dom';
+import CollapseToggle, { useCollapsed } from './CollapseToggle';
 import { coursesForTrack, trackMeta } from '../utils/foundationsCourses';
 
 const toMs = (v) => {
@@ -15,7 +17,8 @@ const toMs = (v) => {
   return new Date(v).getTime() || 0;
 };
 
-const ContinueLearning = ({ profile }) => {
+const ContinueLearning = ({ profile, uid }) => {
+  const [collapsed, toggle] = useCollapsed('continue-learning', uid);
   if (!profile) return null;
   const enrolled = profile.learningEnrolled || {};
   const done = profile.foundationsCourses || {};
@@ -48,13 +51,48 @@ const ContinueLearning = ({ profile }) => {
 
   if (started.length === 0 && completedCount === 0) return null;
 
+  const first = started[0];
+  const continueUrl = (c) => `/learning/${c.track}/${c.slug}/learn?part=${c.part}`;
+
+  if (collapsed) {
+    return (
+      <section className="mb-6 bg-white border border-gray-200 rounded-xl p-4" aria-labelledby="continue-learning-h">
+        <div className="flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <h2 id="continue-learning-h" className="text-base font-bold text-gray-900">Continue learning</h2>
+            <p className="text-sm text-gray-600 truncate">
+              {first
+                ? `${started.length} ${started.length === 1 ? 'course' : 'courses'} in progress · ${first.title} ${Math.round(first.progress * 100)}%`
+                : `${completedCount} ${completedCount === 1 ? 'course' : 'courses'} completed`}
+            </p>
+          </div>
+          {first && (
+            <Link to={continueUrl(first)} className="hidden sm:inline-block flex-shrink-0 text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">
+              Continue
+            </Link>
+          )}
+          <CollapseToggle collapsed onToggle={toggle} controls="continue-learning-body" />
+        </div>
+        {first && (
+          <Link to={continueUrl(first)} className="sm:hidden mt-3 block text-center text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">
+            Continue
+          </Link>
+        )}
+      </section>
+    );
+  }
+
   return (
     <section className="mb-6 bg-white border border-gray-200 rounded-xl p-5 sm:p-6" aria-labelledby="continue-learning-h">
       <div className="flex items-center justify-between gap-3 mb-4">
         <h2 id="continue-learning-h" className="text-lg font-bold text-gray-900">Continue learning</h2>
-        <Link to="/learning/my" className="text-sm font-semibold text-pink-700 hover:underline whitespace-nowrap">My learning</Link>
+        <div className="flex items-center gap-4">
+          <Link to="/learning/my" className="text-sm font-semibold text-pink-700 hover:underline whitespace-nowrap">My learning</Link>
+          <CollapseToggle collapsed={false} onToggle={toggle} controls="continue-learning-body" />
+        </div>
       </div>
 
+      <div id="continue-learning-body">
       {started.length > 0 ? (
         <ul className="space-y-3">
           {started.slice(0, 3).map((c) => (
@@ -70,7 +108,7 @@ const ContinueLearning = ({ profile }) => {
                 </div>
               </div>
               <Link
-                to={`/learning/${c.track}/${c.slug}/learn?part=${c.part}`}
+                to={continueUrl(c)}
                 className="flex-shrink-0 text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg"
               >
                 Continue
@@ -91,6 +129,7 @@ const ContinueLearning = ({ profile }) => {
           <Link to="/learning/my" className="text-pink-700 font-semibold hover:underline">See your certificates</Link>
         </p>
       )}
+      </div>
     </section>
   );
 };

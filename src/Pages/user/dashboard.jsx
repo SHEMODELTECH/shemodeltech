@@ -275,7 +275,7 @@ const DashboardOverview = () => {
       ) : (
         <>
           {/* 3. Courses she's started, and how many she's finished. */}
-          <ContinueLearning profile={profileData} />
+          <ContinueLearning profile={profileData} uid={currentUser?.uid} />
 
           {/* 4. Her numbers, in one slim row. */}
           <div className="mb-6 bg-white border border-gray-200 rounded-xl grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-gray-200 overflow-hidden">

@@ -2,8 +2,10 @@
 // "Recommended for you" on every member's dashboard: up to three open projects
 // that fit her profile. The AI's best match comes first (with its reason),
 // then the closest profile matches, leaving out projects she's already on.
-// One card instead of two, so the dashboard stays short.
+// One card instead of two, so the dashboard stays short. "Hide" folds it to
+// one line, remembered on this device.
 import React, { useState, useEffect } from 'react';
+import CollapseToggle, { useCollapsed } from './CollapseToggle';
 import { useNavigate } from 'react-router-dom';
 import { matchProjects } from '../utils/matchProjects';
 import { getAIRecommendations } from '../utils/aiRecommendations';
@@ -13,6 +15,7 @@ const SHOW = 3;
 const FindFirstProject = ({ profile, uid, currentUser }) => {
   const navigate = useNavigate();
   const [items, setItems] = useState(null);
+  const [collapsed, toggle] = useCollapsed('recommended', uid);
 
   useEffect(() => {
     let active = true;
@@ -63,15 +66,34 @@ const FindFirstProject = ({ profile, uid, currentUser }) => {
   }
   if (!items.length) return null;
 
+  if (collapsed) {
+    return (
+      <section className="bg-white border border-gray-200 rounded-xl p-4 mb-6" aria-labelledby="recommended-h">
+        <div className="flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <h2 id="recommended-h" className="text-base font-bold text-gray-900">Recommended for you</h2>
+            <p className="text-sm text-gray-600 truncate">
+              {items.length} {items.length === 1 ? 'project matches' : 'projects match'} your profile
+            </p>
+          </div>
+          <CollapseToggle collapsed onToggle={toggle} controls="recommended-body" />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6 mb-6" aria-labelledby="recommended-h">
       <div className="flex items-center justify-between gap-3 mb-4">
         <h2 id="recommended-h" className="text-lg font-bold text-gray-900">Recommended for you</h2>
-        <button onClick={() => navigate('/projects')} className="text-sm font-semibold text-pink-700 hover:underline whitespace-nowrap">
-          All projects
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={() => navigate('/projects')} className="text-sm font-semibold text-pink-700 hover:underline whitespace-nowrap">
+            All projects
+          </button>
+          <CollapseToggle collapsed={false} onToggle={toggle} controls="recommended-body" />
+        </div>
       </div>
-      <div className="space-y-3">
+      <div id="recommended-body" className="space-y-3">
         {items.map((p) => (
           <button
             key={p.id}
