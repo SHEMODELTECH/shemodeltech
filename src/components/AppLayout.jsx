@@ -123,33 +123,17 @@ const AppLayout = ({ children, flush = false }) => {
     setSidebarOpen(false);
   }, [location.pathname]);
 
-  // Group project-related sections under one "Projects" menu to reduce clutter.
-  // Both individuals and companies get this menu. The account-type limits live in
-  // the pages themselves, not the nav: companies can browse/view every project
-  // (All Projects, Project Vault) and see the paid projects they've posted (My
-  // Projects), but they can't apply to or lead a project and can only create
-  // 'paid' projects - enforced in ProjectDetail and ProjectSubmission.
-  const projectChildren = [
-    { path: '/projects', label: 'All Projects' },
-    // Staff develop members through cohorts, so they don't need My Projects here.
-    ...(userRole === 'admin' || userRole === 'editor' ? [] : [{ path: '/projects/owner-dashboard', label: 'My Projects' }]),
-    { path: '/project-vault', label: 'Project Vault' },
-    { path: '/disputes', label: 'Payment Dispute' },
-    // Only She Model Tech staff post projects (free and paid). Companies don't run projects.
-    ...(userRole === 'admin' || userRole === 'editor' ? [
-      // Staff project tools live here, not on the Admin dashboard.
-      { path: '/admin/cohorts', label: 'Create a cohort' },
-      { path: '/admin/lead-applications', label: 'Lead applications' },
-      { path: '/admin/projects', label: 'Manage projects' },
-    ] : []),
-  ];
+  // Projects is a single menu link; its sections (All projects, My projects,
+  // Project Vault, Payment disputes, staff tools) are tabs on the project pages
+  // (components/ProjectTabs.jsx).
 
   const navItems = [
     { path: '/dashboard', label: 'Home', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
     // Projects + Workspace: available to individuals AND companies. Companies can
     // browse and view projects and see the paid ones they've posted; they can't
     // apply/lead and can only post 'paid' projects (limits live in the pages).
-    { label: 'Projects', isGroup: true, icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10', children: projectChildren },
+    // Projects is one link: its sections are tabs on the project pages (ProjectTabs).
+    { path: '/projects', label: 'Projects', section: 'projects', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
     { path: '/my-workspaces', label: 'Workspace', icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z' },
     // Learning (courses). Companies don't take courses, so it's hidden for them (staff still see it).
     { path: '/learning', label: 'Learning', hidden: isCompany && !isStaffUser, icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.247m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.247' },
@@ -205,6 +189,15 @@ const AppLayout = ({ children, flush = false }) => {
         { path: '/my-workspaces', label: 'Workspace', icon: WORKSPACE_ICON },
         { path: '/messages', label: 'Messages', icon: MESSAGES_ICON, badge: unreadMessages },
       ];
+
+  // Every project page (listing, a project, My projects, Vault, disputes, the
+  // staff project tools) lights up Projects in the menu.
+  const inProjects = (() => {
+    const p = location.pathname;
+    return p === '/projects' || p.startsWith('/projects/') || p.startsWith('/paid-projects')
+      || ['/project-vault', '/disputes', '/admin/cohorts', '/admin/lead-applications', '/admin/projects']
+        .some((x) => p === x || p.startsWith(`${x}/`));
+  })();
 
   const isActive = (path) => {
     if (path.startsWith('/admin?tab=') || path === '/admin') {
@@ -317,7 +310,7 @@ const AppLayout = ({ children, flush = false }) => {
               );
             }
             // Normal single link
-            const active = isActive(item.path);
+            const active = item.section === 'projects' ? inProjects : isActive(item.path);
             return (
               <Link
                 key={item.path}
@@ -427,7 +420,7 @@ const AppLayout = ({ children, flush = false }) => {
       {!hideSidebar && (
         <nav className={`print:hidden lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 ${sidebarOpen ? 'hidden' : 'flex'} items-stretch justify-around pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_8px_rgba(0,0,0,0.04)]`}>
           {mobileTabs.map((tab) => {
-            const active = tab.path ? isActive(tab.path) : false;
+            const active = tab.path === '/projects' ? inProjects : tab.path ? isActive(tab.path) : false;
             const cls = `relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[60px] active:bg-gray-50 transition-colors ${active ? 'text-pink-600' : 'text-gray-500'}`;
             return (
               <Link key={tab.path} to={tab.path} className={cls}>

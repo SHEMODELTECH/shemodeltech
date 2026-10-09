@@ -11,6 +11,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import PresenceTracker from './components/PresenceTracker';
 import { getUserDocCached } from './utils/firestoreHelpers';
 import AppShell from './components/AppShell';
+import ProjectTabs from './components/ProjectTabs';
 import Navbar from './components/Navbar';
 import ErrorBoundary from './components/ErrorBoundary';
 import { COMPANY_COHORTS_ENABLED } from './config/companyAccess';
@@ -174,6 +175,7 @@ const ProjectsRoute = () => {
   if (shared) return <Navigate to={`/projects/${shared}`} replace />;
   return (
     <SidebarRoute>
+      <ProjectTabs />
       <ProjectsListing />
     </SidebarRoute>
   );
@@ -263,9 +265,9 @@ function App() {
                 <Route path="/badges" element={<SidebarRoute><BadgesInfo /></SidebarRoute>} />
                 {/* Retired: companies no longer sponsor cohorts (see /support-our-mission). */}
                 <Route path="/projects/sponsor-cohort" element={<Navigate to="/support-our-mission" replace />} />
-                <Route path="/admin/cohorts" element={<StaffRoute><CohortManager /></StaffRoute>} />
+                <Route path="/admin/cohorts" element={<StaffRoute><ProjectTabs /><CohortManager /></StaffRoute>} />
                 <Route path="/admin/reviews" element={<Navigate to="/admin/projects" replace />} />
-                <Route path="/admin/projects" element={<StaffRoute><AdminPanel key="admin-projects" only="projects" /></StaffRoute>} />
+                <Route path="/admin/projects" element={<StaffRoute><ProjectTabs /><AdminPanel key="admin-projects" only="projects" /></StaffRoute>} />
                 <Route path="/join/:code" element={<Navigate to="/" replace />} />
                 <Route path="/org/*" element={<Navigate to="/" replace />} />
 
@@ -402,6 +404,7 @@ function App() {
                   path="/projects/owner-dashboard"
                   element={
                     <SidebarRoute>
+                      <ProjectTabs />
                       <ProjectOwnerDashboard />
                     </SidebarRoute>
                   }
@@ -459,6 +462,7 @@ function App() {
                   path="/project-vault"
                   element={
                     <SidebarRoute>
+                      <ProjectTabs />
                       <ProjectVault />
                     </SidebarRoute>
                   }
@@ -475,6 +479,7 @@ function App() {
                   path="/disputes"
                   element={
                     <SidebarRoute>
+                      <ProjectTabs />
                       <DisputePage />
                     </SidebarRoute>
                   }
@@ -483,6 +488,7 @@ function App() {
                   path="/disputes/:projectId"
                   element={
                     <SidebarRoute>
+                      <ProjectTabs />
                       <DisputePage />
                     </SidebarRoute>
                   }
@@ -522,6 +528,7 @@ function App() {
                   path="/admin/lead-applications"
                   element={
                     <StaffRoute>
+                      <ProjectTabs />
                       <LeadApplicationReview />
                     </StaffRoute>
                   }
