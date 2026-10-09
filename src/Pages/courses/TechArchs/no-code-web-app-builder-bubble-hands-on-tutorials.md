@@ -92,104 +92,308 @@ task-tracker (Bubble app)
    ]
   },
   {
-   "kind": "list",
-   "art": "browser",
+   "kind": "diagram",
    "kicker": "Concept",
    "title": "The editor's three tabs",
-   "items": [
-    [
-     "Design",
-     "How a page looks"
-    ],
-    [
-     "Workflow",
-     "What it does"
-    ],
-    [
-     "Data",
-     "What it stores"
-    ]
+   "nodes": [
+    {
+     "id": "ed",
+     "label": "Bubble editor",
+     "x": 16,
+     "y": 50,
+     "sub": "canvas + elements panel",
+     "art": "laptop"
+    },
+    {
+     "id": "design",
+     "label": "Design tab",
+     "x": 72,
+     "y": 18,
+     "sub": "how a page looks",
+     "art": "palette"
+    },
+    {
+     "id": "wf",
+     "label": "Workflow tab",
+     "x": 72,
+     "y": 50,
+     "sub": "what it does",
+     "art": "gear"
+    },
+    {
+     "id": "data",
+     "label": "Data tab",
+     "x": 72,
+     "y": 82,
+     "sub": "what it stores",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "ed",
+     "to": "design"
+    },
+    {
+     "from": "ed",
+     "to": "wf"
+    },
+    {
+     "from": "ed",
+     "to": "data"
+    }
    ],
    "beats": [
     {
      "say": "Sign up at bubble dot i o, click Create an app, and name it task tracker.",
-     "show": 0
+     "show": 1,
+     "on": "ed"
     },
     {
      "say": "The editor has a visual canvas in the middle, an elements panel on the left, and tabs across the top.",
-     "show": 0
+     "show": 1,
+     "on": "ed"
     },
     {
      "say": "Design controls how a page looks.",
-     "show": 1
+     "show": 2,
+     "on": "design"
     },
     {
      "say": "Workflow controls what it does.",
-     "show": 2
+     "show": 3,
+     "on": "wf"
     },
     {
-     "say": "And Data controls what it stores.",
-     "show": 3
+     "say": "And Data controls what it stores. Knowing which tab does what saves you a lot of time.",
+     "show": 4,
+     "on": "data"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
+   "kind": "diagram",
+   "kicker": "Lab · Steps 3 to 6",
+   "title": "A page holds a container, which holds elements",
+   "nodes": [
+    {
+     "id": "page",
+     "label": "index page",
+     "x": 14,
+     "y": 50,
+     "sub": "the home screen",
+     "art": "browser"
+    },
+    {
+     "id": "box",
+     "label": "Container",
+     "x": 50,
+     "y": 50,
+     "sub": "Column layout",
+     "art": "boxes"
+    },
+    {
+     "id": "text",
+     "label": "Text",
+     "x": 86,
+     "y": 25,
+     "sub": "My Task Tracker"
+    },
+    {
+     "id": "btn",
+     "label": "Button",
+     "x": 86,
+     "y": 75,
+     "sub": "below the text",
+     "art": "cursor"
+    }
+   ],
+   "edges": [
+    {
+     "from": "page",
+     "to": "box"
+    },
+    {
+     "from": "box",
+     "to": "text"
+    },
+    {
+     "from": "box",
+     "to": "btn"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A page is one screen of your app, reached by its own U R L. Yours starts with index, the home screen.",
+     "show": 1,
+     "on": "page"
+    },
+    {
+     "say": "From the left panel, drag in a Text, and change it to My Task Tracker.",
+     "show": 3,
+     "on": "text"
+    },
+    {
+     "say": "Then drag in a Button. Elements like these are the visible building blocks of every screen.",
+     "show": 4,
+     "on": "btn"
+    },
+    {
+     "say": "Select both, right click, and choose Group elements in a Container.",
+     "show": 4,
+     "on": "box"
+    },
+    {
+     "say": "Set the container to Column layout, so the text and button stack neatly, one above the other.",
+     "show": 4,
+     "on": [
+      "box",
+      "text",
+      "btn"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Pages, elements, containers",
-   "items": [
+   "title": "Why containers make a page responsive",
+   "columns": [
+    "Screen",
+    "Pinned in place",
+    "In a Column container"
+   ],
+   "rows": [
     [
-     "Page",
-     "One screen, its own URL"
+     "Desktop",
+     "Looks fine",
+     "Looks fine"
     ],
     [
-     "Elements",
-     "Text + Button"
+     "Tablet",
+     "Can start to break",
+     "Rearranges to fit"
     ],
     [
-     "Container",
-     "Column layout · responsive"
+     "Phone",
+     "Breaks or overflows",
+     "Rearranges to fit"
     ]
    ],
    "beats": [
     {
-     "say": "A page is one screen of your app, reached by its own U R L. Your app starts with an index page, the home screen.",
-     "show": 1
+     "say": "A responsive layout rearranges elements to fit any screen size, from phone to desktop."
     },
     {
-     "say": "Elements are the visible building blocks. Drag in a Text and a Button, and change the text to My Task Tracker.",
-     "show": 2
+     "say": "On a desktop, both approaches look fine.",
+     "hl": 0
     },
     {
-     "say": "Then group them in a container set to Column layout.",
-     "show": 3
+     "say": "But elements pinned to fixed positions don't move when the screen shrinks, so the layout breaks.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 1
     },
     {
-     "say": "Containers with row or column layouts make the page responsive, so it rearranges to fit any screen instead of pinning things to fixed positions.",
-     "show": 3
+     "say": "Elements inside a row or column container rearrange themselves to fit.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 2
+    },
+    {
+     "say": "That's why, in Bubble, you build inside containers rather than pinning things in place.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "eye",
+   "kind": "diagram",
    "kicker": "Lab · Step 7",
-   "title": "Preview it",
-   "big": "version-test",
-   "sub": "task-tracker.bubbleapps.io/version-test",
+   "title": "Build, preview, fix, repeat",
+   "nodes": [
+    {
+     "id": "ed",
+     "label": "Editor",
+     "x": 14,
+     "y": 50,
+     "sub": "you build here",
+     "art": "laptop"
+    },
+    {
+     "id": "prev",
+     "label": "Preview",
+     "x": 50,
+     "y": 50,
+     "sub": "version-test",
+     "art": "eye"
+    },
+    {
+     "id": "friend",
+     "label": "Anyone",
+     "x": 86,
+     "y": 50,
+     "sub": "with the link",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "ed",
+     "to": "prev"
+    },
+    {
+     "from": "prev",
+     "to": "friend"
+    }
+   ],
    "beats": [
     {
      "say": "Click Preview in the top right.",
-     "show": 0
+     "show": 3,
+     "on": "ed",
+     "send": {
+      "from": "ed",
+      "to": "prev",
+      "label": "Preview"
+     }
     },
     {
-     "say": "Your page opens at an address ending in version test. That development version works on the free plan, and you can share the link.",
-     "show": 1
+     "say": "Your page opens at an address ending in version test. That development version works on the free plan.",
+     "on": "prev"
     },
     {
-     "say": "Build and preview in a tight loop, so layout problems are caught while they're small.",
-     "show": 1
+     "say": "Spot a layout problem? Go back to the editor, fix it, and preview again.",
+     "on": [
+      "ed",
+      "prev"
+     ],
+     "send": {
+      "from": "prev",
+      "to": "ed",
+      "label": "fix layout"
+     }
+    },
+    {
+     "say": "Building in that tight loop catches problems while they're still small.",
+     "on": "prev",
+     "send": {
+      "from": "ed",
+      "to": "prev",
+      "label": "Preview"
+     }
+    },
+    {
+     "say": "And you can share the version test link with anyone.",
+     "on": "friend",
+     "send": {
+      "from": "prev",
+      "to": "friend",
+      "label": "version-test URL"
+     }
     }
    ]
   },
@@ -375,92 +579,260 @@ Data model
    ]
   },
   {
-   "kind": "list",
-   "art": "blueprint",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Types, fields, records",
-   "items": [
+   "title": "One data type, many records",
+   "nodes": [
+    {
+     "id": "type",
+     "label": "Task",
+     "x": 16,
+     "y": 50,
+     "sub": "data type · template",
+     "art": "blueprint"
+    },
+    {
+     "id": "r1",
+     "label": "Draft the report",
+     "x": 76,
+     "y": 18,
+     "sub": "a record (Thing)",
+     "art": "file"
+    },
+    {
+     "id": "r2",
+     "label": "Email the client",
+     "x": 76,
+     "y": 50,
+     "sub": "a record (Thing)",
+     "art": "file"
+    },
+    {
+     "id": "r3",
+     "label": "Book a room",
+     "x": 76,
+     "y": 82,
+     "sub": "a record (Thing)",
+     "art": "file"
+    }
+   ],
+   "edges": [
+    {
+     "from": "type",
+     "to": "r1"
+    },
+    {
+     "from": "type",
+     "to": "r2"
+    },
+    {
+     "from": "type",
+     "to": "r3"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A data type is a kind of thing your app stores, like a Task or a User.",
+     "show": 1,
+     "on": "type"
+    },
+    {
+     "say": "Naming your data types is really naming the nouns of your app. In the Data tab, click New type, and name it Task.",
+     "show": 1,
+     "on": "type"
+    },
+    {
+     "say": "A record, called a Thing in Bubble, is one actual entry of that type, like the task, Email the client.",
+     "show": 3,
+     "on": "r2"
+    },
+    {
+     "say": "Every record follows the same template.",
+     "show": 4,
+     "on": [
+      "r1",
+      "r2",
+      "r3"
+     ]
+    },
+    {
+     "say": "Types are templates. Records are the real data users create and change.",
+     "show": 4,
+     "on": "type"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Four fields, each with the right type",
+   "columns": [
+    "Field",
+    "Type",
+    "Used for"
+   ],
+   "rows": [
     [
-     "Data type",
-     "The template · Task"
+     "title",
+     "text",
+     "displaying"
     ],
     [
-     "Field",
-     "One piece of info, with its own type"
+     "is_done",
+     "yes/no",
+     "completing"
     ],
     [
-     "Record (Thing)",
-     "One real entry"
+     "due_date",
+     "date",
+     "scheduling"
+    ],
+    [
+     "priority",
+     "text",
+     "sorting by level"
     ]
    ],
    "beats": [
     {
-     "say": "Three ideas.",
-     "show": 0
+     "say": "A field is one piece of information on a data type, and each field has its own type."
     },
     {
-     "say": "A data type is a kind of thing your app stores, like a Task or a User. It's the template for every record of that kind.",
-     "show": 1
+     "say": "Title is text, the words you display.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "A field is one piece of information on a type, like a title or due date, and each field has its own type.",
-     "show": 2
+     "say": "Is done is a yes or no, because a task is either done or not.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "A record, called a Thing in Bubble, is one actual entry, like the task, Email the client.",
-     "show": 3
+     "say": "Due date is a date, so tasks can be scheduled.",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "And priority is text, holding Low, Medium or High.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "Together they cover displaying, completing, scheduling and sorting tasks.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
-   "kicker": "Lab · Steps 3 to 5",
-   "title": "The Task type",
-   "file": "Data model",
-   "code": "Task (data type)\n├── title       : text\n├── is_done     : yes/no\n├── due_date    : date\n└── priority    : text",
-   "beats": [
-    {
-     "say": "Under Data types, click New type, and name it Task.",
-     "show": 0
-    },
-    {
-     "say": "Give it four fields: title, a text. Is done, a yes or no. Due date, a date. And priority, a text.",
-     "show": 1
-    },
-    {
-     "say": "Choosing the right field type is what lets you sort, filter and validate later. A date field sorts by date correctly, which text can't.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "pencil",
-   "kicker": "Lab · Steps 7 and 8",
-   "title": "Sample data, then document it",
-   "steps": [
-    "App data → New entry",
-    "3 sample tasks",
-    "Build against real-looking data",
-    "Document types + fields"
+   "kind": "array",
+   "kicker": "Concept",
+   "title": "Why due_date must be a date, not text",
+   "values": [
+    "1/15/2027",
+    "10/20/2026",
+    "9/30/2026"
    ],
    "beats": [
     {
-     "say": "Next, in the Data tab under App data, click New entry.",
-     "show": 0
+     "say": "Here are three due dates, stored as text, and sorted."
     },
     {
-     "say": "Add three sample tasks with different priorities and due dates.",
-     "show": 1
+     "say": "Text sorts character by character, so January twenty twenty seven comes first, just because it starts with a one.",
+     "hl": 0,
+     "note": "Text sort: wrong order"
     },
     {
-     "say": "Real-looking sample data lets you build and test screens without waiting for users.",
-     "show": 2
+     "say": "And September comes last, because nine sorts after one.",
+     "hl": 2,
+     "note": "Text sort: wrong order"
     },
     {
-     "say": "Then list each type and its fields in your notes. You'll check it constantly.",
-     "show": 3
+     "say": "Store them in a date field instead, and Bubble sorts them as real dates.",
+     "vals": [
+      "9/30/2026",
+      "10/20/2026",
+      "1/15/2027"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "Date sort: earliest first"
+    },
+    {
+     "say": "Choosing the right field type is what lets you sort, filter and validate later.",
+     "vals": [
+      "9/30/2026",
+      "10/20/2026",
+      "1/15/2027"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "Date sort: earliest first"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "Three sample records in App data",
+   "columns": [
+    "title",
+    "is_done",
+    "due_date",
+    "priority"
+   ],
+   "rows": [
+    [
+     "Draft the report",
+     "no",
+     "Oct 20, 2026",
+     "Medium"
+    ],
+    [
+     "Email the client",
+     "no",
+     "Oct 14, 2026",
+     "High"
+    ],
+    [
+     "Book a room",
+     "no",
+     "Oct 28, 2026",
+     "Low"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the Data tab, under App data, click New entry."
+    },
+    {
+     "say": "Add a first task, Draft the report.",
+     "hl": 0
+    },
+    {
+     "say": "Then Email the client, with a different priority and due date.",
+     "hl": 1
+    },
+    {
+     "say": "And Book a room. Three real-looking records.",
+     "hl": 2
+    },
+    {
+     "say": "Notice the type gives the columns, and each record is one row.",
+     "col": 0
+    },
+    {
+     "say": "Now you can build and test screens without waiting for users. List each type and its fields in your notes too.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
@@ -625,95 +997,255 @@ index (page)
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
-   "kicker": "Concept",
-   "title": "Repeating groups",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "How a repeating group gets its rows",
+   "nodes": [
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 14,
+     "y": 50,
+     "sub": "Task records",
+     "art": "database"
+    },
+    {
+     "id": "src",
+     "label": "Data source",
+     "x": 50,
+     "y": 50,
+     "sub": "Search for Tasks",
+     "art": "search"
+    },
+    {
+     "id": "rg",
+     "label": "Repeating Group",
+     "x": 86,
+     "y": 50,
+     "sub": "Type of content: Task",
+     "art": "array"
+    }
+   ],
+   "edges": [
+    {
+     "from": "db",
+     "to": "src"
+    },
+    {
+     "from": "src",
+     "to": "rg"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A repeating group shows one row per record, however many records there are. Drag one onto the index page.",
+     "show": 3,
+     "on": "rg"
+    },
+    {
+     "say": "Set its Type of content to Task. That decides what kind of record each row is.",
+     "on": "rg"
+    },
+    {
+     "say": "Set its Data source to Search for Tasks. That's the query deciding which records to pull.",
+     "on": "src",
+     "send": {
+      "from": "src",
+      "to": "db",
+      "label": "Search for Tasks"
+     }
+    },
+    {
+     "say": "The database hands back all three sample tasks.",
+     "on": "db",
+     "send": {
+      "from": "db",
+      "to": "src",
+      "label": "3 Tasks"
+     }
+    },
+    {
+     "say": "And the group draws one row for each.",
+     "on": "rg",
+     "send": {
+      "from": "src",
+      "to": "rg",
+      "label": "3 rows"
+     }
+    },
+    {
+     "say": "Much of an app's behaviour is really just choosing the right data source for each list.",
+     "on": "src"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Design one cell, get every row",
+   "columns": [
+    "title",
+    "due_date",
+    "priority"
+   ],
+   "rows": [
     [
-     "Type of content",
-     "Task · what each row is"
+     "Draft the report",
+     "Oct 20, 2026",
+     "Medium"
     ],
     [
-     "Data source",
-     "Search for Tasks · which records"
+     "Email the client",
+     "Oct 14, 2026",
+     "High"
+    ],
+    [
+     "Book a room",
+     "Oct 28, 2026",
+     "Low"
     ]
    ],
    "beats": [
     {
-     "say": "A repeating group shows one row per record, automatically, however many records there are. It's how every list in a no-code app is built.",
-     "show": 0
-    },
-    {
-     "say": "Drag one onto the index page.",
-     "show": 0
-    },
-    {
-     "say": "Set Type of content to Task. That decides what kind of record each row is.",
-     "show": 1
-    },
-    {
-     "say": "Set Data source to Search for Tasks. That decides which records are pulled.",
-     "show": 2
-    },
-    {
-     "say": "Much of an app's behaviour is really just choosing the right data source for each list.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "blocks",
-   "kicker": "Lab · Steps 4 to 6",
-   "title": "Design one cell",
-   "file": "index (page)",
-   "code": "Repeating Group (Type: Task, Source: Search for Tasks sorted by due_date)\n└── Cell\n    ├── Text -> current cell's Task's title\n    ├── Text -> current cell's Task's due_date\n    └── Text -> current cell's Task's priority",
-   "beats": [
-    {
      "say": "Inside the first cell, add a Text, and set it dynamically to the current cell's Task's title.",
-     "show": 0
+     "sql": "Text → Current cell's Task's title",
+     "hl": 0,
+     "dim": true,
+     "col": 0
     },
     {
      "say": "Current cell's Task means the specific Task shown in that row.",
-     "show": 1
+     "hl": 0,
+     "dim": true,
+     "col": 0
     },
     {
-     "say": "Add Texts for due date and priority too. You design one cell, and the group applies it to every record.",
-     "show": 1
+     "say": "You only design that one cell. The group applies it to every record.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 0
     },
     {
-     "say": "Then sort the data source by due date, ascending.",
-     "show": 1
+     "say": "Add a Text for due date, bound the same way.",
+     "sql": "Text → Current cell's Task's due_date",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 1
+    },
+    {
+     "say": "And one for priority. Now each row shows enough to act on.",
+     "sql": "Text → Current cell's Task's priority",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Lab · Steps 7 and 8",
-   "title": "Prove it's live",
-   "steps": [
-    "Preview: 3 tasks, sorted",
-    "Add a record, refresh",
-    "It appears on its own"
+   "kind": "array",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "Sort by due_date, then prove it's live",
+   "values": [
+    "Report · Oct 20",
+    "Email · Oct 14",
+    "Room · Oct 28"
    ],
    "beats": [
     {
-     "say": "Preview the app. Your three sample tasks appear in due date order.",
-     "show": 1
+     "say": "Without a sort, the tasks come back in no useful order."
     },
     {
-     "say": "Add a record in the Data tab and refresh.",
-     "show": 2
+     "say": "On the data source, add sorted by due date, ascending.",
+     "vals": [
+      "Email · Oct 14",
+      "Report · Oct 20",
+      "Room · Oct 28"
+     ],
+     "note": "sorted by due_date, ascending"
     },
     {
-     "say": "It appears without changing the page. That proves the list is data-driven, not hardcoded.",
-     "show": 3
+     "say": "Preview the app. The earliest due task is now on top.",
+     "vals": [
+      "Email · Oct 14",
+      "Report · Oct 20",
+      "Room · Oct 28"
+     ],
+     "hl": 0,
+     "note": "sorted by due_date, ascending"
     },
     {
-     "say": "Note which page shows which type, its data source and its sort order. When a list shows the wrong items, look there first.",
-     "show": 3
+     "say": "Now add a record in the Data tab, Call the bank, due October seventeenth, and refresh.",
+     "vals": [
+      "Email · Oct 14",
+      "Bank · Oct 17",
+      "Report · Oct 20",
+      "Room · Oct 28"
+     ],
+     "hl": 1,
+     "note": "new record, no page change"
+    },
+    {
+     "say": "It slots into second place on its own. That proves the list is data-driven, not hardcoded.",
+     "vals": [
+      "Email · Oct 14",
+      "Bank · Oct 17",
+      "Report · Oct 20",
+      "Room · Oct 28"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "4 rows, still sorted"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 8",
+   "title": "Write down the display logic",
+   "columns": [
+    "Page",
+    "Type",
+    "Data source",
+    "Sort"
+   ],
+   "rows": [
+    [
+     "index",
+     "Task",
+     "Search for Tasks",
+     "due_date, ascending"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Finally, note which page shows which data type."
+    },
+    {
+     "say": "Write down the data source it uses.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "And its sort order.",
+     "hl": 0,
+     "col": 3
+    },
+    {
+     "say": "When a list later shows the wrong items, this note is the first place to look.",
+     "hl": 0
     }
    ]
   },
@@ -875,112 +1407,324 @@ Workflows
    ]
   },
   {
-   "kind": "list",
-   "art": "form",
+   "kind": "table",
    "kicker": "Lab · Steps 2 to 4",
-   "title": "Form, then create a Task",
-   "items": [
+   "title": "Map every input to a field",
+   "columns": [
+    "Form input",
+    "Task field",
+    "Saved value"
+   ],
+   "rows": [
     [
-     "Form",
-     "Input · Date picker · Dropdown · Add task"
+     "Input",
+     "title",
+     "Input's value"
     ],
     [
-     "Workflow",
-     "Create a new thing: Task"
+     "Date/Time Picker",
+     "due_date",
+     "picker's value"
     ],
     [
-     "Map inputs",
-     "title, due_date, priority, is_done = no"
+     "Dropdown",
+     "priority",
+     "Low, Medium or High"
+    ],
+    [
+     "(none)",
+     "is_done",
+     "no"
     ]
    ],
    "beats": [
     {
-     "say": "Build a form: an Input for the title, a date and time picker for the due date, a dropdown for priority with Low, Medium and High, and an Add task button.",
-     "show": 1
+     "say": "Build a form with an Input, a date and time picker, a dropdown for priority, and an Add task button."
     },
     {
      "say": "On the button, start a workflow with the action Create a new thing, type Task.",
-     "show": 2
+     "sql": "Create a new thing: Task"
     },
     {
-     "say": "Map each input to its field, and set is done to no.",
-     "show": 3
+     "say": "Set title to the Input's value.",
+     "hl": 0
     },
     {
-     "say": "A missed mapping is why an app saves a blank task.",
-     "show": 3
+     "say": "Due date to the picker's value.",
+     "hl": 1
+    },
+    {
+     "say": "Priority to the dropdown's value.",
+     "hl": 2
+    },
+    {
+     "say": "And is done to no, because a new task isn't finished.",
+     "hl": 3
+    },
+    {
+     "say": "Miss one of these, like the title, and the app saves a blank task even though the user typed one.",
+     "hl": 0,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
-   "kicker": "Lab · Steps 5, 6 and 8",
-   "title": "Validate, complete, reset",
-   "items": [
-    [
-     "Validation",
-     "Not clickable when title is empty"
-    ],
-    [
-     "Complete",
-     "Checkbox → Make changes to Task"
-    ],
-    [
-     "Reset",
-     "Reset relevant inputs"
-    ]
+   "kind": "diagram",
+   "kicker": "Lab · Steps 5 and 8",
+   "title": "The Add task workflow",
+   "nodes": [
+    {
+     "id": "btn",
+     "label": "Add task button",
+     "x": 14,
+     "y": 50,
+     "sub": "event: clicked",
+     "art": "cursor"
+    },
+    {
+     "id": "create",
+     "label": "Create a new Task",
+     "x": 50,
+     "y": 25,
+     "sub": "action 1"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 86,
+     "y": 25,
+     "sub": "Task records",
+     "art": "database"
+    },
+    {
+     "id": "reset",
+     "label": "Reset inputs",
+     "x": 50,
+     "y": 78,
+     "sub": "action 2",
+     "art": "loop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "btn",
+     "to": "create"
+    },
+    {
+     "from": "create",
+     "to": "db"
+    },
+    {
+     "from": "btn",
+     "to": "reset"
+    }
    ],
    "beats": [
     {
-     "say": "Validation means checking input before you save it.",
-     "show": 0
+     "say": "Here's the workflow: one event, then two actions.",
+     "show": 4,
+     "on": "btn"
     },
     {
-     "say": "Add a condition: when the title input is empty, this element isn't clickable.",
-     "show": 1
+     "say": "First, validation. When the title Input is empty, the button isn't clickable, so no broken record can be made.",
+     "on": "btn"
     },
     {
-     "say": "To complete a task, add a Checkbox in the cell, preset to the Task's is done. When it changes, Make changes to the current cell's Task.",
-     "show": 2
+     "say": "With a title typed, a click runs action one, Create a new Task.",
+     "on": "create",
+     "send": {
+      "from": "btn",
+      "to": "create",
+      "label": "clicked"
+     }
     },
     {
-     "say": "And end the Add task workflow with Reset relevant inputs, so nobody submits duplicates.",
-     "show": 3
+     "say": "That turns what the user typed into a real record in the database.",
+     "on": "db",
+     "send": {
+      "from": "create",
+      "to": "db",
+      "label": "new Task"
+     }
+    },
+    {
+     "say": "Then action two, Reset relevant inputs, clears the form, so nobody submits a duplicate.",
+     "on": "reset",
+     "send": {
+      "from": "btn",
+      "to": "reset",
+      "label": "then"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "warning",
+   "kind": "diagram",
+   "kicker": "Lab · Step 6",
+   "title": "Complete a task with Make changes",
+   "nodes": [
+    {
+     "id": "cb",
+     "label": "Checkbox",
+     "x": 18,
+     "y": 50,
+     "sub": "in each cell",
+     "art": "form"
+    },
+    {
+     "id": "task",
+     "label": "Cell's Task",
+     "x": 54,
+     "y": 50,
+     "sub": "field: is_done"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 88,
+     "y": 50,
+     "sub": "saved state",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cb",
+     "to": "task"
+    },
+    {
+     "from": "task",
+     "to": "db"
+    }
+   ],
+   "beats": [
+    {
+     "say": "In the repeating group cell, add a Checkbox.",
+     "show": 1,
+     "on": "cb"
+    },
+    {
+     "say": "Set its preset status to the current cell's Task's is done, so it shows the saved state.",
+     "show": 3,
+     "on": "cb",
+     "send": {
+      "from": "task",
+      "to": "cb",
+      "label": "is_done = no"
+     }
+    },
+    {
+     "say": "The user ticks it. That's the event: its value changes.",
+     "on": "cb"
+    },
+    {
+     "say": "The workflow runs Make changes to the current cell's Task, setting is done to the checkbox's value.",
+     "on": "task",
+     "send": {
+      "from": "cb",
+      "to": "task",
+      "label": "is_done = yes"
+     }
+    },
+    {
+     "say": "And the change is saved. Make changes to a thing is how users edit existing records.",
+     "on": "db",
+     "send": {
+      "from": "task",
+      "to": "db",
+      "label": "saved"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "array",
    "kicker": "Lab · Step 7",
-   "title": "Delete, only after confirming",
-   "steps": [
-    "Popup: Confirm delete",
-    "Delete icon → show popup",
-    "Confirm → Delete thing",
-    "Cancel → Hide popup"
+   "title": "Delete only after the user confirms",
+   "values": [
+    "Delete icon clicked",
+    "Display Task in popup",
+    "Show popup",
+    "Confirm clicked",
+    "Delete thing",
+    "Hide popup"
    ],
    "beats": [
     {
-     "say": "Bubble has no built-in are you sure step, so you build one.",
-     "show": 0
+     "say": "Bubble has no built-in are you sure step, so you build one: a popup called Confirm delete, with Type of content Task."
     },
     {
-     "say": "Add a popup called Confirm delete, with Confirm and Cancel buttons. Set its Type of content to Task.",
-     "show": 1
+     "say": "The user clicks the delete icon in a row.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     }
     },
     {
-     "say": "The cell's delete icon sends the current cell's Task to the popup, then shows it.",
-     "show": 2
+     "say": "Display data sends the current cell's Task to the popup.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     }
     },
     {
-     "say": "Confirm deletes the popup's Task and hides the popup.",
-     "show": 3
+     "say": "Then the popup is shown, asking, delete this task?",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     }
     },
     {
-     "say": "Cancel just hides it. Delete is irreversible, so it only runs after the user confirms.",
-     "show": 4
+     "say": "If the user clicks Confirm, its workflow deletes the popup's Task, then hides the popup.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": [
+      4,
+      5
+     ],
+     "ptr": {
+      "step": 4
+     },
+     "note": "Confirm workflow"
+    },
+    {
+     "say": "If they click Cancel instead, only Hide popup runs. The task is untouched.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "gone": [
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "step": 5
+     },
+     "note": "Cancel workflow"
+    },
+    {
+     "say": "Delete is irreversible, so it only ever runs after a confirmation.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
     }
    ]
   },
@@ -1147,103 +1891,291 @@ Accounts + privacy
    ]
   },
   {
-   "kind": "list",
-   "art": "password",
-   "kicker": "Lab · Steps 2 to 4",
-   "title": "The front door",
-   "items": [
-    [
-     "Sign up",
-     "Creates the account + logs in"
-    ],
-    [
-     "Log in",
-     "Log the user in"
-    ],
-    [
-     "Log out",
-     "Log the user out"
-    ]
+   "kind": "diagram",
+   "kicker": "Lab · Steps 1 to 5",
+   "title": "The front door: sign up, log in, log out",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "Email + password",
+     "x": 14,
+     "y": 50,
+     "sub": "password format",
+     "art": "password"
+    },
+    {
+     "id": "users",
+     "label": "User type",
+     "x": 50,
+     "y": 50,
+     "sub": "built-in · + name",
+     "art": "idcard"
+    },
+    {
+     "id": "cu",
+     "label": "Current User",
+     "x": 86,
+     "y": 50,
+     "sub": "who's logged in",
+     "art": "persona"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "users"
+    },
+    {
+     "from": "users",
+     "to": "cu"
+    }
    ],
    "beats": [
     {
      "say": "Add email and password inputs, with the password's content format set to Password.",
-     "show": 0
+     "show": 1,
+     "on": "form"
     },
     {
-     "say": "Sign up runs Sign the user up. That creates the account, and also logs them in.",
-     "show": 1
+     "say": "The Sign up button runs Sign the user up, which creates a new User.",
+     "show": 2,
+     "on": "users",
+     "send": {
+      "from": "form",
+      "to": "users",
+      "label": "Sign the user up"
+     }
     },
     {
-     "say": "Log in runs Log the user in.",
-     "show": 2
+     "say": "And it also logs them in, so they become the Current User.",
+     "show": 3,
+     "on": "cu",
+     "send": {
+      "from": "users",
+      "to": "cu",
+      "label": "logged in"
+     }
+    },
+    {
+     "say": "Returning users press Log in, which runs Log the user in.",
+     "on": "users",
+     "send": {
+      "from": "form",
+      "to": "users",
+      "label": "Log the user in"
+     }
+    },
+    {
+     "say": "Current User is whoever is logged in right now. That's how an app personalises itself.",
+     "on": "cu",
+     "send": {
+      "from": "users",
+      "to": "cu",
+      "label": "logged in"
+     }
     },
     {
      "say": "And a Log out button runs Log the user out.",
-     "show": 3
+     "on": "form"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "idcard",
-   "kicker": "Lab · Steps 5 to 7",
-   "title": "Link tasks to their owner",
-   "steps": [
-    "Task.creator : User",
-    "On create: creator = Current User",
-    "Search for Tasks: creator = Current User"
+   "kind": "table",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "Give every task an owner, then filter",
+   "columns": [
+    "title",
+    "creator"
    ],
-   "beats": [
-    {
-     "say": "Current User is whoever is logged in right now.",
-     "show": 0
-    },
-    {
-     "say": "Add a creator field, of type User, to Task.",
-     "show": 1
-    },
-    {
-     "say": "In Create a new Task, set creator to Current User.",
-     "show": 2
-    },
-    {
-     "say": "Then change the list's data source to Search for Tasks where creator equals Current User.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "lock",
-   "kicker": "Lab · Step 8",
-   "title": "Privacy rules do the real protecting",
-   "items": [
+   "rows": [
     [
-     "Creator is Current User",
-     "✓ Find in searches · ✓ View all fields"
+     "Email the client",
+     "Amara"
     ],
     [
-     "Everyone else",
-     "✗ Uncheck both (on by default)"
+     "Draft the report",
+     "Ben"
+    ],
+    [
+     "Book a room",
+     "Amara"
+    ],
+    [
+     "Call the bank",
+     "Ben"
     ]
    ],
    "beats": [
     {
-     "say": "Filtering the list only changes what one list shows. The data could still be loaded another way.",
-     "show": 0
+     "say": "Add a creator field, of type User, to Task.",
+     "col": 1
     },
     {
-     "say": "Privacy rules are enforced by the database. In the Data tab, under Privacy, add a rule on Task.",
-     "show": 0
+     "say": "In Create a new Task, set creator to Current User, so every task records who made it.",
+     "sql": "Create a new Task\ncreator = Current User",
+     "col": 1
     },
     {
-     "say": "When this Task's creator is Current User, allow finding it in searches and viewing all fields.",
-     "show": 1
+     "say": "Here, two users, Amara and Ben, have each made two tasks.",
+     "col": 1
     },
     {
-     "say": "Then, in the Everyone else row, uncheck those same permissions. They're on by default.",
-     "show": 2
+     "say": "Now change the list's data source to search only for tasks whose creator is Current User.",
+     "sql": "Search for Tasks\nconstraint: creator = Current User"
+    },
+    {
+     "say": "With Amara logged in, her list shows just her two tasks.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "With Ben logged in, the very same list shows only his.",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "Why the filter alone isn't protection",
+   "nodes": [
+    {
+     "id": "amara",
+     "label": "Amara's browser",
+     "x": 16,
+     "y": 50,
+     "sub": "logged in as Amara",
+     "art": "browser"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 84,
+     "y": 50,
+     "sub": "4 Task records",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "amara",
+     "to": "db"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Amara's list asks only for her own tasks.",
+     "show": 2,
+     "on": "amara",
+     "send": {
+      "from": "amara",
+      "to": "db",
+      "label": "creator = me"
+     }
+    },
+    {
+     "say": "And gets two back. Looks private.",
+     "on": "db",
+     "send": {
+      "from": "db",
+      "to": "amara",
+      "label": "2 tasks"
+     }
+    },
+    {
+     "say": "But the filter only changes what one list shows. Data can be loaded another way, without that filter.",
+     "on": "amara",
+     "send": {
+      "from": "amara",
+      "to": "db",
+      "label": "all Tasks"
+     }
+    },
+    {
+     "say": "With no privacy rule, the database would hand back all four, including Ben's.",
+     "on": "db",
+     "send": {
+      "from": "db",
+      "to": "amara",
+      "label": "4 tasks"
+     }
+    },
+    {
+     "say": "With a privacy rule on Task, the database itself refuses, and returns only Amara's two.",
+     "on": "db",
+     "send": {
+      "from": "db",
+      "to": "amara",
+      "label": "2 tasks only"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 8",
+   "title": "The privacy rule on Task",
+   "columns": [
+    "Who",
+    "Find in searches",
+    "View all fields"
+   ],
+   "rows": [
+    [
+     "Creator = Current User",
+     "yes",
+     "yes"
+    ],
+    [
+     "Everyone else, default",
+     "yes",
+     "yes"
+    ],
+    [
+     "Everyone else, fixed",
+     "no",
+     "no"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Privacy rules control which records a user is even allowed to load, enforced by the database."
+    },
+    {
+     "say": "In the Data tab, under Privacy, add a rule on Task: when this Task's creator is Current User.",
+     "sql": "This Task's creator is Current User",
+     "hl": 0,
+     "dim": true,
+     "col": 0
+    },
+    {
+     "say": "Allow finding it in searches, and viewing all fields.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "But watch the Everyone else row. Those permissions are on by default.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "So uncheck them. Now nobody else can find or view your tasks.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true
     }
    ]
   },
@@ -1402,109 +2334,289 @@ Shareable app
    ]
   },
   {
-   "kind": "list",
-   "art": "phone",
-   "kicker": "Lab · Steps 1 to 3",
-   "title": "Every screen size, every state",
-   "items": [
-    [
-     "Responsive viewer",
-     "Phone · tablet · desktop"
-    ],
-    [
-     "Fix per width",
-     "Widths, min-widths, hidden elements"
-    ],
-    [
-     "Empty state",
-     "Shown when the count is 0"
-    ]
+   "kind": "array",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "Check every width in the responsive viewer",
+   "values": [
+    "Phone",
+    "Tablet",
+    "Desktop"
    ],
    "beats": [
     {
-     "say": "Use Bubble's responsive viewer at phone, tablet and desktop widths. Most users will be on phones.",
-     "show": 1
+     "say": "Open Bubble's responsive viewer, and step through three widths."
     },
     {
-     "say": "Adjust container widths, min widths and hidden elements so each width looks intentional.",
-     "show": 2
+     "say": "Start with phone. Most of your users will be on phones, so look here hardest.",
+     "hl": 0,
+     "ptr": {
+      "width": 0
+     },
+     "note": "Fix widths, min-widths, hidden elements"
     },
     {
-     "say": "And add an empty state. An empty screen looks like a bug.",
-     "show": 3
+     "say": "Then tablet. Adjust container widths and min widths until it looks intentional.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "width": 1
+     },
+     "note": "Fix widths, min-widths, hidden elements"
     },
     {
-     "say": "Add a Text saying No tasks yet, add your first one, visible only when the list's count is zero.",
-     "show": 3
+     "say": "Then desktop. Hide or show elements where a width needs it.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "width": 2
+     },
+     "note": "Fix widths, min-widths, hidden elements"
+    },
+    {
+     "say": "Every width looks intentional. That's where an app goes from amateur to professional.",
+     "ok": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Lab · Step 4",
-   "title": "Test the whole journey, in order",
-   "steps": [
-    "Sign up",
-    "Create tasks",
-    "Complete + delete",
-    "Log out, log in",
-    "Data persists, stays private"
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "An empty state tells users what to do",
+   "columns": [
+    "Tasks in list",
+    "Repeating group",
+    "Empty-state text"
+   ],
+   "rows": [
+    [
+     "0",
+     "empty",
+     "visible"
+    ],
+    [
+     "3",
+     "3 rows",
+     "hidden"
+    ]
    ],
    "beats": [
     {
-     "say": "Click through as a real user, in order.",
-     "show": 0
+     "say": "An empty screen looks like a bug. An empty state tells the user what to do next."
     },
     {
-     "say": "Sign up as a new user, and create tasks.",
-     "show": 1
+     "say": "Add a Text saying, No tasks yet, add your first one.",
+     "col": 2
+    },
+    {
+     "say": "Give it a condition, so it's visible only when the repeating group's list of Tasks has a count of zero.",
+     "sql": "Visible only when\nRepeating Group's List of Tasks:count is 0",
+     "col": 0
+    },
+    {
+     "say": "A brand new user has no tasks, so they see the friendly message.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Once they've added some, the message hides, and the list takes over.",
+     "hl": 1,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 4",
+   "title": "Test the whole journey, in order",
+   "values": [
+    "Sign up",
+    "Create tasks",
+    "Complete",
+    "Delete one",
+    "Log out",
+    "Log back in",
+    "Data persists?",
+    "Still private?"
+   ],
+   "beats": [
+    {
+     "say": "Now click through as a real user, in order."
+    },
+    {
+     "say": "Sign up as a brand new user, and create a few tasks.",
+     "hl": [
+      0,
+      1
+     ],
+     "ptr": {
+      "you": 1
+     }
     },
     {
      "say": "Complete them, and delete one.",
-     "show": 2
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      2,
+      3
+     ],
+     "ptr": {
+      "you": 3
+     }
     },
     {
-     "say": "Log out, and log back in.",
-     "show": 3
+     "say": "Log out, then log back in.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": [
+      4,
+      5
+     ],
+     "ptr": {
+      "you": 5
+     }
     },
     {
-     "say": "Confirm your data persists and stays private. This catches gaps you miss testing pieces alone.",
-     "show": 4
+     "say": "Are your tasks still there? And are they still private to you?",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "hl": [
+      6,
+      7
+     ],
+     "ptr": {
+      "you": 7
+     }
+    },
+    {
+     "say": "Running the journey in order catches gaps between features, which you miss testing pieces alone.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "note": "Whole journey passes"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "cloud",
+   "kind": "diagram",
    "kicker": "Lab · Steps 5 and 6",
    "title": "Development versus Live",
-   "items": [
-    [
-     "Development",
-     "version-test · build + share · free"
-    ],
-    [
-     "Live",
-     "Real users · paid plan · optional"
-    ]
+   "nodes": [
+    {
+     "id": "ed",
+     "label": "Editor",
+     "x": 12,
+     "y": 50,
+     "sub": "you build here",
+     "art": "laptop"
+    },
+    {
+     "id": "dev",
+     "label": "Development",
+     "x": 46,
+     "y": 50,
+     "sub": "version-test · free",
+     "art": "pencil"
+    },
+    {
+     "id": "test",
+     "label": "Testers",
+     "x": 84,
+     "y": 22,
+     "sub": "private window",
+     "art": "people"
+    },
+    {
+     "id": "live",
+     "label": "Live",
+     "x": 84,
+     "y": 78,
+     "sub": "paid plan · optional",
+     "art": "rocket"
+    }
+   ],
+   "edges": [
+    {
+     "from": "ed",
+     "to": "dev"
+    },
+    {
+     "from": "dev",
+     "to": "test"
+    },
+    {
+     "from": "dev",
+     "to": "live"
+    }
    ],
    "beats": [
     {
-     "say": "Bubble has two versions.",
-     "show": 0
-    },
-    {
-     "say": "Development, the version test U R L, is where you build and test. It works on the free plan.",
-     "show": 1
-    },
-    {
-     "say": "Live is what real users see. Deploying copies development to Live, and that needs a paid plan, so it's optional.",
+     "say": "Bubble keeps two versions of your app.",
      "show": 2
     },
     {
-     "say": "Free path: open your version test link in a private window, and run through it once more as a new user.",
-     "show": 2
+     "say": "Everything you build goes into the development version, at the version test U R L.",
+     "on": "dev",
+     "send": {
+      "from": "ed",
+      "to": "dev",
+      "label": "your changes"
+     }
+    },
+    {
+     "say": "On the free plan, that's what you share. Open the link in a private window and run through it as a new user.",
+     "show": 3,
+     "on": "test",
+     "send": {
+      "from": "dev",
+      "to": "test",
+      "label": "version-test URL"
+     }
+    },
+    {
+     "say": "Live is the version real users see. Deploying copies development to Live.",
+     "show": 4,
+     "on": "live",
+     "send": {
+      "from": "dev",
+      "to": "live",
+      "label": "Deploy to Live"
+     }
+    },
+    {
+     "say": "That step needs a paid plan, so it's optional. Keeping them separate lets you build without breaking what people use.",
+     "on": [
+      "dev",
+      "live"
+     ]
     }
    ]
   },
@@ -1540,7 +2652,7 @@ Shareable app
    "title": "On the free plan, how do you share your app with testers?",
    "options": [
     "Deploy it to Live",
-    "Send them the development U R L ending in version test",
+    "Send them the development URL ending in version-test",
     "Export it as a file"
    ],
    "answer": 1,

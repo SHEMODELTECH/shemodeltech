@@ -153,77 +153,325 @@ You can describe the trigger, action, and workflow structure, and you have one r
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "The four building blocks",
-   "items": [
-    [
-     "Trigger",
-     "The event that starts it"
-    ],
-    [
-     "Actions",
-     "Steps that run afterward"
-    ],
-    [
-     "Workflow",
-     "Zap · scenario · flow · workflow"
-    ],
-    [
-     "Data mapping",
-     "Earlier data → later step"
-    ]
+   "title": "A trigger, then actions, with data flowing forward",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "New form response",
+     "x": 12,
+     "y": 50,
+     "sub": "Trigger",
+     "art": "form"
+    },
+    {
+     "id": "sheet",
+     "label": "Add row to sheet",
+     "x": 50,
+     "y": 50,
+     "sub": "Action 1",
+     "art": "table"
+    },
+    {
+     "id": "slack",
+     "label": "Send Slack message",
+     "x": 88,
+     "y": 50,
+     "sub": "Action 2",
+     "art": "chat"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "sheet"
+    },
+    {
+     "from": "sheet",
+     "to": "slack"
+    }
    ],
    "beats": [
     {
-     "say": "Every platform in this course is built from the same idea.",
+     "say": "Every automation in this course has the same shape.",
      "show": 0
     },
     {
-     "say": "A trigger is the event that starts it, like a new form response.",
-     "show": 1
+     "say": "It starts with a trigger: the event that kicks things off. Here, a new form response.",
+     "show": 1,
+     "on": "form"
     },
     {
-     "say": "Actions are the steps that run afterward, like sending a message.",
-     "show": 2
+     "say": "Then come actions, the steps that run afterward. Action one adds a row to a sheet.",
+     "show": 2,
+     "on": "sheet"
     },
     {
-     "say": "A workflow is the trigger plus its actions, chained together. Each tool has its own name for it.",
-     "show": 3
+     "say": "Action two sends a Slack message.",
+     "show": 3,
+     "on": "slack"
     },
     {
-     "say": "And data mapping passes information from an earlier step into a later one, like the sender's name into a personal message.",
-     "show": 4
+     "say": "The trigger hands its data forward: the person's name and email.",
+     "show": 3,
+     "on": "form",
+     "send": {
+      "from": "form",
+      "to": "sheet",
+      "label": "name, email"
+     }
+    },
+    {
+     "say": "And the Slack step can use data from both earlier steps.",
+     "show": 3,
+     "on": "sheet",
+     "send": {
+      "from": "sheet",
+      "to": "slack",
+      "label": "name, email, row"
+     }
+    },
+    {
+     "say": "The trigger plus its actions, chained together, is called a workflow.",
+     "show": 3,
+     "on": [
+      "form",
+      "sheet",
+      "slack"
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "pipeline",
-   "kicker": "Structure at a glance",
-   "title": "Data flows forward",
-   "steps": [
-    "Trigger: new form response",
-    "Action: add row to sheet",
-    "Action: send Slack message"
+   "kind": "table",
+   "kicker": "Concept · Data mapping",
+   "title": "Earlier data fills later fields",
+   "columns": [
+    "Trigger gives",
+    "Value",
+    "Used in"
+   ],
+   "rows": [
+    [
+     "Name",
+     "Alex",
+     "Sheet: Name column"
+    ],
+    [
+     "Email",
+     "alex@example.com",
+     "Sheet: Email column"
+    ],
+    [
+     "Name",
+     "Alex",
+     "Slack message text"
+    ]
    ],
    "beats": [
     {
-     "say": "Here's the shape you'll see in every tool.",
-     "show": 0
+     "say": "Data mapping means passing information from an earlier step into a later one."
     },
     {
-     "say": "A new form response arrives, providing a name and an email.",
-     "show": 1
+     "say": "Say the form trigger gives us a name, Alex, and an email address.",
+     "col": 1
     },
     {
-     "say": "Action one adds a row to a sheet, using data from the trigger.",
-     "show": 2
+     "say": "The sheet step maps the name into its Name column.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Action two sends a Slack message, using data from both earlier steps.",
-     "show": 3
+     "say": "And the email into its Email column.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "The Slack step maps the same name into a personal message.",
+     "hl": 2,
+     "dim": true,
+     "sql": "New sign-up: {{Name}}  →  New sign-up: Alex"
+    },
+    {
+     "say": "You never type Alex yourself. Each run fills in that run's real data.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Sort it",
+   "title": "Trigger or action?",
+   "values": [
+    "New form response",
+    "Add sheet row",
+    "Send Slack msg",
+    "Email w/ attachment",
+    "Create CRM contact"
+   ],
+   "beats": [
+    {
+     "say": "Here are five steps. Which ones are triggers, and which are actions?"
+    },
+    {
+     "say": "A new form response arriving is an event, so it's a trigger.",
+     "hl": 0,
+     "note": "Trigger: an event"
+    },
+    {
+     "say": "A new email with an attachment arriving is also an event that can start a workflow. Another trigger.",
+     "hl": [
+      0,
+      3
+     ],
+     "note": "Trigger: an event"
+    },
+    {
+     "say": "Adding a row, sending a message, and creating a contact are all things that run afterward. Actions.",
+     "ok": [
+      1,
+      2,
+      4
+     ],
+     "hl": [
+      0,
+      3
+     ],
+     "note": "Action: a step that runs after"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Order it",
+   "title": "Build the sign-up workflow in order",
+   "values": [
+    "Welcome email",
+    "Slack note",
+    "Sign-up form",
+    "Members sheet",
+    "CRM contact"
+   ],
+   "beats": [
+    {
+     "say": "Now five steps of a sign-up workflow, all jumbled up."
+    },
+    {
+     "say": "The trigger always comes first: a new sign-up form response.",
+     "vals": [
+      "Sign-up form",
+      "Welcome email",
+      "Slack note",
+      "Members sheet",
+      "CRM contact"
+     ],
+     "ok": 0,
+     "note": "1. Trigger"
+    },
+    {
+     "say": "Next, add the person to the members sheet, then create their contact in the C R M.",
+     "vals": [
+      "Sign-up form",
+      "Members sheet",
+      "CRM contact",
+      "Welcome email",
+      "Slack note"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "2–3. Record the person"
+    },
+    {
+     "say": "Then send them a welcome email, and post a note in the team Slack channel.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "4–5. Tell people"
+    },
+    {
+     "say": "Each action can use data from any step before it. Data only flows forward.",
+     "ptr": {
+      "trigger": 0
+     },
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Data flows left to right"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Same idea, different names",
+   "columns": [
+    "Tool",
+    "A workflow is a",
+    "A step is a"
+   ],
+   "rows": [
+    [
+     "Zapier",
+     "Zap",
+     "trigger / action"
+    ],
+    [
+     "Make",
+     "scenario",
+     "module"
+    ],
+    [
+     "Power Automate",
+     "flow",
+     "trigger / action"
+    ],
+    [
+     "n8n",
+     "workflow",
+     "node"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "You'll meet four tools in this course, and each one has its own vocabulary."
+    },
+    {
+     "say": "Zapier calls a workflow a Zap.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Make calls it a scenario, and each step is a module.",
+     "hl": 1
+    },
+    {
+     "say": "Power Automate calls it a flow.",
+     "hl": 2
+    },
+    {
+     "say": "And n eight n keeps the word workflow, made of nodes.",
+     "hl": 3
+    },
+    {
+     "say": "Different words, same shape: a trigger, then actions.",
+     "col": 2
     }
    ]
   },
@@ -267,7 +515,7 @@ You can describe the trigger, action, and workflow structure, and you have one r
      "show": 0
     },
     {
-     "say": "What does \"data mapping\" mean?",
+     "say": "What does data mapping mean?",
      "show": 0
     },
     {
@@ -400,116 +648,305 @@ You have a working, turned-on Zap that reacts to a real new row in a spreadsheet
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
+   "kind": "diagram",
    "kicker": "Structure at a glance",
-   "title": "Inside a Zap",
-   "items": [
+   "title": "Every step is an app plus an event",
+   "nodes": [
+    {
+     "id": "forms",
+     "label": "Google Forms",
+     "x": 12,
+     "y": 50,
+     "sub": "New Form Response",
+     "art": "form"
+    },
+    {
+     "id": "sheets",
+     "label": "Google Sheets",
+     "x": 50,
+     "y": 50,
+     "sub": "Create Spreadsheet Row",
+     "art": "table"
+    },
+    {
+     "id": "slack",
+     "label": "Slack",
+     "x": 88,
+     "y": 50,
+     "sub": "Send Channel Message",
+     "art": "chat"
+    }
+   ],
+   "edges": [
+    {
+     "from": "forms",
+     "to": "sheets"
+    },
+    {
+     "from": "sheets",
+     "to": "slack"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's a three-step Zap.",
+     "show": 3
+    },
+    {
+     "say": "Each step picks an app, like Google Forms, and an event in that app: new form response.",
+     "on": "forms"
+    },
+    {
+     "say": "The next step's app is Google Sheets, and its event is create spreadsheet row.",
+     "on": "sheets",
+     "send": {
+      "from": "forms",
+      "to": "sheets",
+      "label": "form answers"
+     }
+    },
+    {
+     "say": "Then Slack, send channel message.",
+     "on": "slack",
+     "send": {
+      "from": "sheets",
+      "to": "slack",
+      "label": "row data"
+     }
+    },
+    {
+     "say": "On the free plan, a Zap may allow only one trigger and one action, so this lab uses two steps. Check the current plan.",
+     "on": [
+      "sheets",
+      "slack"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Steps 1 to 6",
+   "title": "Your two-step Zap",
+   "values": [
+    "Create Zap",
+    "Pick sheet",
+    "Add action",
+    "Map fields",
+    "Test",
+    "Turn on"
+   ],
+   "beats": [
+    {
+     "say": "The lab has six steps."
+    },
+    {
+     "say": "Create a Zap, with Google Sheets, new spreadsheet row, as the trigger.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     }
+    },
+    {
+     "say": "Connect your account and pick the sheet and worksheet to watch. Zapier pulls in a sample row.",
+     "ok": 0,
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     }
+    },
+    {
+     "say": "Add an action, like Slack, send channel message, or Gmail, send email.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     }
+    },
+    {
+     "say": "Map the trigger's data into the message.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "now": 3
+     }
+    },
+    {
+     "say": "Test the step with the sample row.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "now": 4
+     }
+    },
+    {
+     "say": "And turn the Zap on, so it runs by itself.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "ptr": {
+      "now": 5
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 4",
+   "title": "Map the row into the message",
+   "columns": [
+    "Name",
+    "Email",
+    "Joined"
+   ],
+   "rows": [
     [
-     "App + event",
-     "Chosen for every step"
+     "Alex",
+     "alex@example.com",
+     "Mon"
     ],
     [
-     "Dynamic value",
-     "Real data from an earlier step"
+     "Sam",
+     "sam@example.com",
+     "Tue"
     ],
     [
-     "Filter",
-     "Continue only if a condition is met"
-    ],
-    [
-     "Free plan",
-     "Trigger + one action"
+     "Jo",
+     "jo@example.com",
+     "Wed"
     ]
    ],
    "beats": [
     {
-     "say": "A Zap has a few parts.",
-     "show": 0
+     "say": "Here's the sheet the trigger watches, with a Name and an Email column."
     },
     {
-     "say": "Each step picks an app, and an event within that app.",
-     "show": 1
+     "say": "In the Slack message field, don't type plain text. Click in, and insert the trigger's column values.",
+     "sql": "New entry from {{Name}}, email: {{Email}}",
+     "col": 0
     },
     {
-     "say": "Fields in a later step can be filled with a dynamic value from an earlier step, clicked from a list instead of typed.",
-     "show": 2
+     "say": "Those are dynamic values. Name points at the Name column.",
+     "col": 0
     },
     {
-     "say": "A filter step stops the Zap unless a condition is met.",
-     "show": 3
+     "say": "And Email points at the Email column.",
+     "col": 1
     },
     {
-     "say": "The free plan may allow only one trigger and one action, so this lab uses two steps. Check the current plan.",
-     "show": 4
+     "say": "When Jo's row is added, the message is filled with Jo's real data.",
+     "hl": 2,
+     "dim": true,
+     "sql": "New entry from Jo, email: jo@example.com"
+    },
+    {
+     "say": "That's why the sample row matters: you can test the mapping with realistic data before turning it on.",
+     "hl": 0,
+     "dim": true,
+     "sql": "Test with sample row → New entry from Alex, email: alex@example.com"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "table",
-   "kicker": "Lab · Steps 1 to 3",
-   "title": "Build the Zap",
-   "steps": [
-    "Create Zap: New Spreadsheet Row",
-    "Pick sheet · sample row",
-    "Action: Slack or Gmail"
+   "kind": "diagram",
+   "kicker": "Lab · Step 6",
+   "title": "Polling: Zapier checks on a timer",
+   "nodes": [
+    {
+     "id": "sheets",
+     "label": "Google Sheets",
+     "x": 12,
+     "y": 50,
+     "sub": "your worksheet",
+     "art": "table"
+    },
+    {
+     "id": "zap",
+     "label": "Your Zap",
+     "x": 50,
+     "y": 50,
+     "sub": "turned on",
+     "art": "stopwatch"
+    },
+    {
+     "id": "slack",
+     "label": "Slack",
+     "x": 88,
+     "y": 50,
+     "sub": "your channel",
+     "art": "chat"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sheets",
+     "to": "zap"
+    },
+    {
+     "from": "zap",
+     "to": "slack"
+    }
    ],
    "beats": [
     {
-     "say": "Click create Zap, and choose Google Sheets, new spreadsheet row, as the trigger.",
-     "show": 1
-    },
-    {
-     "say": "Connect your account, and pick the sheet and worksheet to watch. Zapier pulls in a sample row for testing.",
-     "show": 2
-    },
-    {
-     "say": "Then add an action, like Slack, send channel message, or Gmail, send email.",
+     "say": "Turn the Zap on, then add a new row to the sheet.",
      "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "merge",
-   "kicker": "Lab · Step 4",
-   "title": "Map the row into the message",
-   "file": "Slack message",
-   "code": "New entry from {{Name}}, email: {{Email}}",
-   "beats": [
-    {
-     "say": "Now map the data.",
-     "show": 0
     },
     {
-     "say": "Instead of typing plain text, click into the message field and insert the trigger's column values, like name and email.",
-     "show": 1
+     "say": "Google Sheets is a polling trigger. Zapier asks the sheet for new rows on a timer.",
+     "on": "zap",
+     "send": {
+      "from": "zap",
+      "to": "sheets",
+      "label": "any new rows?"
+     }
     },
     {
-     "say": "Then test the step with the sample row, and confirm the message arrives with real data filled in.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "stopwatch",
-   "kicker": "Lab · Step 6",
-   "title": "Turn it on, and be patient",
-   "quote": "Polling isn't instant. Check the Zap's history if nothing arrives.",
-   "beats": [
-    {
-     "say": "Finally, turn the Zap on and add a new row to the sheet.",
-     "show": 0
+     "say": "If your row was added after the last check, nothing happens yet.",
+     "on": "sheets",
+     "send": {
+      "from": "sheets",
+      "to": "zap",
+      "label": "none yet"
+     }
     },
     {
-     "say": "Google Sheets is a polling trigger, so Zapier checks for new rows on a timer, and on the free plan that timer is slow.",
-     "show": 1
+     "say": "On the next check, the new row comes back.",
+     "on": "sheets",
+     "send": {
+      "from": "sheets",
+      "to": "zap",
+      "label": "1 new row"
+     }
     },
     {
-     "say": "If nothing arrives after that interval plus a few minutes, open the Zap's history to see what happened.",
-     "show": 1
+     "say": "And the Zap posts the message, with no manual step.",
+     "on": "slack",
+     "send": {
+      "from": "zap",
+      "to": "slack",
+      "label": "message"
+     }
+    },
+    {
+     "say": "On the free plan that timer is slow. If nothing arrives after the interval plus a few minutes, open the Zap's history.",
+     "on": "zap"
     }
    ]
   },
@@ -673,112 +1110,319 @@ You have a working Make scenario with a router splitting into two branches, and 
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "table",
    "kicker": "Structure at a glance",
    "title": "Make's vocabulary",
-   "items": [
+   "columns": [
+    "Make says",
+    "Means"
+   ],
+   "rows": [
     [
      "Module",
-     "One step"
+     "one step"
     ],
     [
      "Scenario",
-     "The full workflow"
+     "the full workflow"
     ],
     [
      "Router",
-     "Splits into branches"
+     "splits into branches"
     ],
     [
-     "Mapping",
-     "Clickable field tags"
+     "Filter",
+     "passes matching data"
+    ],
+    [
+     "Field tags",
+     "clickable mapped data"
     ]
    ],
    "beats": [
     {
-     "say": "Make has its own words.",
-     "show": 0
+     "say": "Make has its own words."
     },
     {
      "say": "A module is a single step, a trigger or an action.",
-     "show": 1
+     "hl": 0
     },
     {
      "say": "A scenario is the full workflow, the connected chain of modules.",
-     "show": 2
+     "hl": 1
     },
     {
-     "say": "A router splits the scenario into branches, each with its own filter.",
-     "show": 3
+     "say": "A router splits the scenario into branches.",
+     "hl": 2
     },
     {
-     "say": "And data from any earlier module can be mapped in, shown as clickable tags.",
-     "show": 4
+     "say": "And each branch has its own filter, deciding which data continues down that path.",
+     "hl": 3
+    },
+    {
+     "say": "Data from any earlier module can be mapped in, shown as clickable tags.",
+     "hl": 4
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "fork",
+   "kind": "diagram",
    "kicker": "Lab · Steps 1 to 4",
-   "title": "A router with two branches",
-   "steps": [
-    "Trigger: Watch New Rows",
-    "Router",
-    "Filters: Approved · Rejected",
-    "An email on each branch"
+   "title": "A router with two filtered branches",
+   "nodes": [
+    {
+     "id": "rows",
+     "label": "Watch New Rows",
+     "x": 10,
+     "y": 50,
+     "sub": "Google Sheets",
+     "art": "table"
+    },
+    {
+     "id": "router",
+     "label": "Router",
+     "x": 32,
+     "y": 50,
+     "art": "fork"
+    },
+    {
+     "id": "fa",
+     "label": "Filter A",
+     "x": 58,
+     "y": 25,
+     "sub": "Status = Approved",
+     "art": "funnel"
+    },
+    {
+     "id": "fb",
+     "label": "Filter B",
+     "x": 58,
+     "y": 75,
+     "sub": "Status = Rejected",
+     "art": "funnel"
+    },
+    {
+     "id": "ea",
+     "label": "Approved email",
+     "x": 88,
+     "y": 25,
+     "art": "mail"
+    },
+    {
+     "id": "eb",
+     "label": "Rejected email",
+     "x": 88,
+     "y": 75,
+     "art": "mail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "rows",
+     "to": "router"
+    },
+    {
+     "from": "router",
+     "to": "fa"
+    },
+    {
+     "from": "router",
+     "to": "fb"
+    },
+    {
+     "from": "fa",
+     "to": "ea"
+    },
+    {
+     "from": "fb",
+     "to": "eb"
+    }
    ],
    "beats": [
     {
-     "say": "Create a new scenario, with Google Sheets, watch new rows, as the trigger.",
-     "show": 1
+     "say": "Create a scenario, with Google Sheets, watch new rows, as the trigger.",
+     "show": 1,
+     "on": "rows"
     },
     {
-     "say": "Add a router right after it, creating two branches.",
-     "show": 2
+     "say": "Add a router right after it.",
+     "show": 2,
+     "on": "router"
     },
     {
-     "say": "Filter branch A on status equals approved, and branch B on status equals rejected.",
-     "show": 3
+     "say": "Branch A gets a filter: status equals approved. Branch B: status equals rejected.",
+     "show": 4,
+     "on": [
+      "fa",
+      "fb"
+     ]
     },
     {
-     "say": "Add an email action to each branch, with a different message, mapping in real data from the trigger.",
-     "show": 4
+     "say": "Then add an email action to each branch, with a different message, mapping in data from the trigger.",
+     "show": 6,
+     "on": [
+      "ea",
+      "eb"
+     ]
+    },
+    {
+     "say": "Now a new row arrives with status approved.",
+     "show": 6,
+     "on": "rows",
+     "send": {
+      "from": "rows",
+      "to": "router",
+      "label": "Status: Approved"
+     }
+    },
+    {
+     "say": "Filter A's condition is true, so the data continues.",
+     "show": 6,
+     "on": "fa",
+     "send": {
+      "from": "router",
+      "to": "fa",
+      "label": "Approved"
+     }
+    },
+    {
+     "say": "And only the approved email is sent. Branch B's filter stops it there.",
+     "show": 6,
+     "on": "ea",
+     "send": {
+      "from": "fa",
+      "to": "ea",
+      "label": "name, item"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "test",
-   "kicker": "Lab · Steps 5 and 6",
-   "title": "Test every branch",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Step 5",
+   "title": "Run once, for every branch",
+   "columns": [
+    "Name",
+    "Status",
+    "Branch that fires"
+   ],
+   "rows": [
     [
-     "Run once: Approved",
-     "✓ Only branch A fires"
+     "Alex",
+     "Approved",
+     "A: approved email"
     ],
     [
-     "Run once: Rejected",
-     "✓ Only branch B fires"
+     "Sam",
+     "Rejected",
+     "B: rejected email"
     ],
     [
-     "Scheduling on",
-     "Runs on its own"
+     "Jo",
+     "Pending",
+     "neither"
     ]
    ],
    "beats": [
     {
-     "say": "Click run once with a test row matching branch A, and confirm only branch A fires.",
-     "show": 1
+     "say": "Now test it with the run once button, one test row at a time."
     },
     {
-     "say": "Change the data to match branch B, and run again. Now only the other path fires.",
-     "show": 2
+     "say": "First a row matching branch A's condition. Only branch A should fire.",
+     "sql": "Filter A: Status = Approved",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Then turn on scheduling, which sets how often the trigger checks for new data.",
-     "show": 3
+     "say": "Then change the test data to match branch B, and run again. Now only the other path fires.",
+     "sql": "Filter B: Status = Rejected",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Notice a row matching neither filter doesn't go down either branch. Nothing is sent.",
+     "sql": "Approved? no · Rejected? no",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Testing each condition separately proves each filter fires only for its own data.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 6",
+   "title": "Scheduling sets how often it checks",
+   "values": [
+    "check",
+    "check",
+    "check",
+    "check",
+    "check",
+    "check"
+   ],
+   "beats": [
+    {
+     "say": "Last, turn on scheduling."
+    },
+    {
+     "say": "Scheduling controls how often the trigger checks for new data.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     },
+     "note": "Every interval: any new rows?"
+    },
+    {
+     "say": "When a check finds nothing new, no run starts.",
+     "gone": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     },
+     "note": "Nothing new: no run"
+    },
+    {
+     "say": "When a check finds a new row, a run starts, and the router sends it down the right branch.",
+     "gone": [
+      0,
+      1
+     ],
+     "ok": 2,
+     "hl": 3,
+     "ptr": {
+      "now": 3
+     },
+     "vals": [
+      "check",
+      "check",
+      "new row → run",
+      "check",
+      "check",
+      "check"
+     ],
+     "note": "New row: run the scenario"
+    },
+    {
+     "say": "Each module that runs uses credits from your monthly allowance, so check the current plan.",
+     "gone": [
+      0,
+      1
+     ],
+     "ok": 2,
+     "note": "Runs use credits"
     }
    ]
   },
@@ -961,96 +1605,232 @@ You have a working flow with a condition branching into two different actions, a
    ]
   },
   {
-   "kind": "list",
-   "art": "plug",
+   "kind": "table",
    "kicker": "Structure at a glance",
-   "title": "Power Automate's vocabulary",
-   "items": [
+   "title": "Same ideas, Microsoft's names",
+   "columns": [
+    "Idea",
+    "Zapier",
+    "Make",
+    "Power Automate"
+   ],
+   "rows": [
     [
-     "Flow",
-     "The workflow"
+     "Workflow",
+     "Zap",
+     "scenario",
+     "flow"
     ],
     [
-     "Connectors",
-     "Apps and services"
+     "Apps it talks to",
+     "apps",
+     "modules",
+     "connectors"
     ],
     [
-     "Condition",
-     "If / else: Yes or No"
+     "Branching",
+     "Paths (paid)",
+     "router",
+     "condition"
     ],
     [
-     "Dynamic content",
-     "Values from earlier steps"
+     "Insert earlier data",
+     "dynamic value",
+     "field tags",
+     "dynamic content"
     ]
    ],
    "beats": [
     {
-     "say": "Here's how the same ideas are named.",
-     "show": 0
+     "say": "You already know these ideas. Power Automate just names them differently.",
+     "col": 3
     },
     {
      "say": "A flow is the workflow.",
-     "show": 1
+     "hl": 0,
+     "col": 3
     },
     {
-     "say": "Connectors are the apps and services a flow can trigger from or act on.",
-     "show": 2
+     "say": "Connectors are the apps and services a flow can trigger from or act on, like apps in Zapier or modules in Make.",
+     "hl": 1,
+     "col": 3
     },
     {
-     "say": "A condition branches on true or false, as an if else block.",
-     "show": 3
+     "say": "A condition branches on true or false, as an if else block right in the flow, like Make's router.",
+     "hl": 2,
+     "col": 3
     },
     {
-     "say": "And dynamic content inserts a value from an earlier step.",
-     "show": 4
+     "say": "And dynamic content inserts a value from an earlier step into a later step's field.",
+     "hl": 3,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "fork",
+   "kind": "diagram",
    "kicker": "Lab · Steps 1 to 4",
    "title": "Urgent email, two outcomes",
-   "steps": [
-    "Trigger: new email arrives",
-    "Condition: subject has \"Urgent\"",
-    "Yes: post in Teams",
-    "No: mark as read"
+   "nodes": [
+    {
+     "id": "mail",
+     "label": "New email",
+     "x": 12,
+     "y": 50,
+     "sub": "Outlook trigger",
+     "art": "mail"
+    },
+    {
+     "id": "cond",
+     "label": "Condition",
+     "x": 46,
+     "y": 50,
+     "sub": "Subject has Urgent?",
+     "art": "fork"
+    },
+    {
+     "id": "yes",
+     "label": "Post in Teams",
+     "x": 86,
+     "y": 22,
+     "sub": "Yes branch",
+     "art": "chat"
+    },
+    {
+     "id": "no",
+     "label": "Mark as read",
+     "x": 86,
+     "y": 78,
+     "sub": "No branch",
+     "art": "checklist"
+    }
+   ],
+   "edges": [
+    {
+     "from": "mail",
+     "to": "cond"
+    },
+    {
+     "from": "cond",
+     "to": "yes"
+    },
+    {
+     "from": "cond",
+     "to": "no"
+    }
    ],
    "beats": [
     {
      "say": "Create an automated cloud flow, triggered when a new email arrives in Outlook.",
-     "show": 1
+     "show": 1,
+     "on": "mail"
     },
     {
      "say": "Add a condition: does the subject contain the word urgent?",
-     "show": 2
+     "show": 2,
+     "on": "cond"
     },
     {
-     "say": "On yes, post a message in Teams with the email's subject and sender. Or send yourself an email if you don't have Teams.",
-     "show": 3
+     "say": "On yes, post a message in Teams, with the email's subject and sender as dynamic content. No Teams? Send yourself an email instead.",
+     "show": 3,
+     "on": "yes"
     },
     {
      "say": "On no, mark the email as read, so both outcomes are handled.",
-     "show": 4
+     "show": 4,
+     "on": "no"
+    },
+    {
+     "say": "An email arrives with urgent in the subject.",
+     "show": 4,
+     "on": "mail",
+     "send": {
+      "from": "mail",
+      "to": "cond",
+      "label": "Urgent: ..."
+     }
+    },
+    {
+     "say": "The condition is true, so the yes branch posts to Teams.",
+     "show": 4,
+     "on": "yes",
+     "send": {
+      "from": "cond",
+      "to": "yes",
+      "label": "subject, sender"
+     }
+    },
+    {
+     "say": "A normal email makes the condition false, so the no branch marks it as read.",
+     "show": 4,
+     "on": "no",
+     "send": {
+      "from": "cond",
+      "to": "no",
+      "label": "false"
+     }
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "pulse",
+   "kind": "table",
    "kicker": "Lab · Steps 5 and 6",
-   "title": "Test, then read the run history",
-   "big": "Run history",
-   "sub": "Which branch fired, and what data flowed through",
+   "title": "The run history shows what happened",
+   "columns": [
+    "Subject",
+    "Condition",
+    "Branch run"
+   ],
+   "rows": [
+    [
+     "Urgent: server down",
+     "true",
+     "Yes: post in Teams"
+    ],
+    [
+     "Lunch on Friday?",
+     "false",
+     "No: mark as read"
+    ],
+    [
+     "URGENT invoice",
+     "true",
+     "Yes: post in Teams"
+    ]
+   ],
    "beats": [
     {
-     "say": "Save and test the flow, with sample data or a real test email.",
-     "show": 0
+     "say": "Save the flow and test it, with sample data or by sending yourself real test emails."
     },
     {
-     "say": "Then check the run history. It logs every run, which branch fired, and what data passed through each step.",
-     "show": 1
+     "say": "Then open the run history. Power Automate logs every run.",
+     "col": 0
+    },
+    {
+     "say": "This urgent email made the condition true, so the yes branch ran.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "This one didn't contain urgent, so the no branch ran.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Click into any run to see which branch fired, and what data passed through each step.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "That's how you confirm a flow worked, or find out why it didn't.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
@@ -1232,138 +2012,341 @@ You have a working n8n workflow triggered by a real webhook request, branching w
    ]
   },
   {
-   "kind": "list",
-   "art": "graph",
+   "kind": "diagram",
    "kicker": "Structure at a glance",
-   "title": "n8n's vocabulary",
-   "items": [
+   "title": "Your workflow, node by node",
+   "nodes": [
+    {
+     "id": "curl",
+     "label": "curl request",
+     "x": 8,
+     "y": 50,
+     "sub": "outside system",
+     "art": "terminal"
+    },
+    {
+     "id": "hook",
+     "label": "Webhook",
+     "x": 28,
+     "y": 50,
+     "sub": "trigger node",
+     "art": "plug"
+    },
+    {
+     "id": "if",
+     "label": "IF node",
+     "x": 48,
+     "y": 50,
+     "sub": "status = approved?",
+     "art": "fork"
+    },
+    {
+     "id": "s1",
+     "label": "Edit Fields",
+     "x": 68,
+     "y": 22,
+     "sub": "true branch",
+     "art": "pencil"
+    },
+    {
+     "id": "code",
+     "label": "Code node",
+     "x": 90,
+     "y": 22,
+     "sub": "custom JavaScript",
+     "art": "code"
+    },
+    {
+     "id": "s2",
+     "label": "Edit Fields",
+     "x": 68,
+     "y": 78,
+     "sub": "false branch",
+     "art": "pencil"
+    }
+   ],
+   "edges": [
+    {
+     "from": "curl",
+     "to": "hook"
+    },
+    {
+     "from": "hook",
+     "to": "if"
+    },
+    {
+     "from": "if",
+     "to": "s1"
+    },
+    {
+     "from": "s1",
+     "to": "code"
+    },
+    {
+     "from": "if",
+     "to": "s2"
+    }
+   ],
+   "beats": [
+    {
+     "say": "In n eight n, every step is a node, and the connected chain of nodes is a workflow.",
+     "show": 6
+    },
+    {
+     "say": "Run it locally with n p x n eight n, and open the address it shows, usually port five six seven eight.",
+     "show": 6
+    },
+    {
+     "say": "The trigger is a Webhook node, set to POST. It gives you a test U R L to call.",
+     "on": "hook"
+    },
+    {
+     "say": "An outside system, here a curl request, sends J S O N to that U R L.",
+     "on": "curl",
+     "send": {
+      "from": "curl",
+      "to": "hook",
+      "label": "JSON"
+     }
+    },
+    {
+     "say": "The IF node checks the status.",
+     "on": "if",
+     "send": {
+      "from": "hook",
+      "to": "if",
+      "label": "body.status"
+     }
+    },
+    {
+     "say": "Approved goes down the true branch, to an Edit Fields node and then a Code node.",
+     "on": [
+      "s1",
+      "code"
+     ],
+     "send": {
+      "from": "if",
+      "to": "s1",
+      "label": "true"
+     }
+    },
+    {
+     "say": "Anything else goes down the false branch, to a different Edit Fields node.",
+     "on": "s2",
+     "send": {
+      "from": "if",
+      "to": "s2",
+      "label": "false"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 2 to 4",
+   "title": "What the Webhook node captures",
+   "columns": [
+    "Path",
+    "Value"
+   ],
+   "rows": [
     [
-     "Node",
-     "One step"
+     "body.status",
+     "approved"
     ],
     [
-     "Workflow",
-     "Chain of nodes"
+     "body.name",
+     "Alex"
     ],
     [
-     "IF node",
-     "Branches true / false"
-    ],
-    [
-     "Code node",
-     "JavaScript or Python"
+     "headers.content-type",
+     "application/json"
     ]
    ],
    "beats": [
     {
-     "say": "n eight n has its own terms.",
-     "show": 0
+     "say": "Click listen for test event first. n eight n only accepts a request on the test U R L while it's listening."
     },
     {
-     "say": "A node is a single step, a trigger or an action.",
-     "show": 1
+     "say": "Then send the curl request, with a status and a name.",
+     "sql": "curl -X POST .../webhook-test/your-webhook-id\n-d '{\"status\":\"approved\",\"name\":\"Alex\"}'"
     },
     {
-     "say": "A workflow is the connected chain of nodes.",
-     "show": 2
+     "say": "The webhook node captures it. Notice the J S O N you sent appears under body.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 0
     },
     {
-     "say": "An IF node branches on a condition.",
-     "show": 3
+     "say": "So the status isn't at status. It's at body dot status.",
+     "hl": 0,
+     "dim": true,
+     "col": 0
     },
     {
-     "say": "And a Code node lets you write JavaScript or Python. Other tools have similar options, but here code is an everyday part of building.",
-     "show": 4
+     "say": "That's the value the IF node checks, dragged in from the input panel.",
+     "hl": 0,
+     "dim": true,
+     "col": 1,
+     "sql": "IF  {{ $json.body.status }}  is equal to  approved"
     },
     {
-     "say": "Self-hosting avoids per-task pricing, and keeps data on infrastructure you control.",
-     "show": 4
+     "say": "And each Edit Fields node builds a message from body dot name.",
+     "hl": 1,
+     "dim": true,
+     "col": 1,
+     "sql": "message ← {{ $json.body.name }}"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "plug",
-   "kicker": "Lab · Steps 1 to 4",
-   "title": "Start n8n, then call its webhook",
-   "file": "terminal",
-   "code": "npx n8n\n\ncurl -X POST http://localhost:5678/webhook-test/your-webhook-id \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"status\":\"approved\",\"name\":\"Alex\"}'",
+   "kind": "walk",
+   "kicker": "Lab · Step 7",
+   "title": "Watch the Code node build a greeting",
+   "file": "Code node · JavaScript",
+   "code": "const body = $('Webhook').first().json.body;\nreturn $input.all().map(item => {\n  item.json.greeting =\n    `Hello, ${body.name}! ` +\n    `Your status is ${body.status}.`;\n  return item;\n});",
    "beats": [
     {
-     "say": "Run n eight n locally with npx, and open the address it shows, usually port five six seven eight.",
-     "show": 0
+     "say": "After the true branch's Edit Fields node comes the Code node, run once for all items."
     },
     {
-     "say": "Add a Webhook trigger node, set the method to POST, and copy its test URL.",
-     "show": 1
+     "say": "Line one reads the output of the node named Webhook, and takes its body.",
+     "line": 1,
+     "vars": {
+      "body.name": "Alex",
+      "body.status": "approved"
+     }
     },
     {
-     "say": "Click listen for test event, then send a request with curl. n eight n only accepts it while listening.",
-     "show": 1
+     "say": "It reads straight from the Webhook node, so it doesn't depend on what the Edit Fields step kept.",
+     "line": 1
     },
     {
-     "say": "The J S O N you sent appears under body, so the status is at body dot status.",
-     "show": 1
+     "say": "Dollar input dot all gives every item coming into this node. Here, just one.",
+     "line": 2,
+     "vars": {
+      "items": 1
+     }
+    },
+    {
+     "say": "For that item, it adds a greeting field, built from the name and the status.",
+     "line": [
+      3,
+      4,
+      5
+     ],
+     "vars": {
+      "item.json.greeting": "Hello, Alex! Your status is approved."
+     }
+    },
+    {
+     "say": "Then it returns the item, and the node's output shows the greeting.",
+     "line": [
+      6,
+      7
+     ],
+     "out": "greeting: Hello, Alex! Your status is approved."
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Steps 5 to 7",
-   "title": "Branch, then add a Code node",
-   "file": "Code node",
-   "code": "const body = $('Webhook').first().json.body;\nreturn $input.all().map(item => {\n  item.json.greeting = `Hello, ${body.name}! Your status is ${body.status}.`;\n  return item;\n});",
-   "beats": [
-    {
-     "say": "Next, add an IF node checking whether body dot status equals approved.",
-     "show": 0
-    },
-    {
-     "say": "Put an Edit Fields node on each branch, each with a different message built from the name.",
-     "show": 0
-    },
-    {
-     "say": "Then add a Code node after the true branch, in JavaScript.",
-     "show": 1
-    },
-    {
-     "say": "Dollar input dot all gives every item coming into the node.",
-     "show": 1
-    },
-    {
-     "say": "And dollar, Webhook, reads the output of the node named Webhook, to build a greeting.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "test",
+   "kind": "table",
    "kicker": "Lab · Step 8",
-   "title": "Run the whole workflow",
-   "items": [
+   "title": "Run the whole workflow, both ways",
+   "columns": [
+    "Sent status",
+    "IF result",
+    "What runs"
+   ],
+   "rows": [
     [
-     "\"approved\"",
-     "✓ True branch · greeting appears"
+     "approved",
+     "true",
+     "Edit Fields → Code"
     ],
     [
-     "\"rejected\"",
-     "✓ False branch runs"
+     "rejected",
+     "false",
+     "other Edit Fields"
     ]
    ],
    "beats": [
     {
-     "say": "Click the execute workflow button, which puts the webhook back in listening mode, and send the same request.",
-     "show": 0
+     "say": "Click the execute workflow button. It puts the webhook back in listening mode."
     },
     {
-     "say": "Status approved: the true branch runs, and the Code node's output shows greeting.",
-     "show": 1
+     "say": "Send the same request, with status approved.",
+     "hl": 0,
+     "dim": true,
+     "col": 0
     },
     {
-     "say": "Status rejected: the false branch runs instead.",
-     "show": 2
+     "say": "The IF node is true, so the true branch runs, and the Code node's output shows greeting.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Execute again, and this time send status rejected.",
+     "hl": 1,
+     "dim": true,
+     "col": 0
+    },
+    {
+     "say": "Now the IF node is false, and the false branch runs instead.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Course wrap-up",
+   "title": "Which tool should you pick?",
+   "columns": [
+    "Tool",
+    "Pick it when"
+   ],
+   "rows": [
+    [
+     "Zapier",
+     "simple, linear tasks"
+    ],
+    [
+     "Make",
+     "branches and decisions"
+    ],
+    [
+     "Power Automate",
+     "Microsoft 365 work"
+    ],
+    [
+     "n8n",
+     "self-hosting or code"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "You've now seen four tools with the same shape. So which one fits a task?"
+    },
+    {
+     "say": "Zapier, for fast, simple, straight-line automations between popular apps.",
+     "hl": 0
+    },
+    {
+     "say": "Make, when the automation has real decision points and needs branches.",
+     "hl": 1
+    },
+    {
+     "say": "Power Automate, when the work lives in Microsoft three sixty five, or on a Windows desktop.",
+     "hl": 2
+    },
+    {
+     "say": "And n eight n, when cost at scale, keeping data on your own servers, or custom code matters.",
+     "hl": 3
     }
    ]
   },
@@ -1386,7 +2369,7 @@ You have a working n8n workflow triggered by a real webhook request, branching w
      "show": 0
     },
     {
-     "say": "What kind of trigger did the lab use to receive real data from outside n8n?",
+     "say": "What kind of trigger did the lab use to receive real data from outside n eight n?",
      "show": 0
     },
     {

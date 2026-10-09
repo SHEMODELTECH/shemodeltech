@@ -134,7 +134,7 @@ Most modern software ships in **containers**: a package holding the app plus eve
 - **Pinning versions** (for example `python:3.12-slim` rather than `python:latest`) makes builds repeatable and changes deliberate
 
 **A real supply-chain lesson: the Trivy compromise (March 2026).** Attackers used stolen release credentials to publish a malicious Trivy v0.69.4 and to repoint almost all version tags of the official `trivy-action` (and `setup-trivy`) GitHub Actions to malicious code (CVE-2026-33634). Pipelines that pulled "the latest" or used a tag like `@v0.x` ran the attacker's code, with access to every secret those pipelines held. The defences are the ones from this module and Module 8:
-- Install tools only from the official site or repository, and **verify the checksum** of what you download
+- Install tools only from the official site or repository, and **verify the checksum** of what you download. A checksum only proves the file matches the published one, so it only helps if the checksum comes from a source the attacker didn't control: a malicious release published with stolen credentials can ship its own matching checksums. That's why you also pin to known-good versions (below) and verify signatures or provenance where the project offers them
 - **Pin** what your pipeline runs: exact tool versions, and GitHub Actions pinned to a full commit SHA rather than a tag that can be moved
 - If a compromised version ever ran in your pipeline, treat **every secret it could reach as leaked**: revoke and replace them all
 - A security tool is still software in your supply chain; trusting its name is not the same as verifying it

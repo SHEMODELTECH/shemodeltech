@@ -207,274 +207,574 @@ You have generated an API key, made a successful authenticated request with it, 
    ]
   },
   {
-   "kind": "flow",
-   "art": "globe",
-   "kicker": "Topic 1 · Concept",
-   "title": "Anatomy of a request",
-   "steps": [
-    "Endpoint: a specific URL",
-    "Method: GET / POST / PUT / DELETE",
-    "Request body: JSON you send",
-    "Response: data + status code"
+   "kind": "diagram",
+   "kicker": "Topic 1 · Lab",
+   "title": "Three requests in Postman",
+   "nodes": [
+    {
+     "id": "pm",
+     "label": "Postman",
+     "x": 14,
+     "y": 50,
+     "sub": "you, testing",
+     "art": "laptop"
+    },
+    {
+     "id": "api",
+     "label": "JSONPlaceholder",
+     "x": 50,
+     "y": 50,
+     "sub": "practice REST API",
+     "art": "server"
+    },
+    {
+     "id": "data",
+     "label": "Practice data",
+     "x": 86,
+     "y": 50,
+     "sub": "users and posts",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pm",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "data"
+    }
    ],
    "beats": [
     {
-     "say": "Most modern business A P Is use a style called REST: a web address, plus a method describing the action.",
-     "show": 0
-    },
-    {
-     "say": "The endpoint is a specific U R L for a specific purpose, like slash customers.",
-     "show": 1
-    },
-    {
-     "say": "The method says what kind of action. GET retrieves, POST creates, PUT or PATCH updates, DELETE removes.",
-     "show": 2
-    },
-    {
-     "say": "The request body is the data you send, usually as J S O N.",
+     "say": "Postman sends requests to J S O N Placeholder, a free practice A P I.",
      "show": 3
     },
     {
-     "say": "And the response is what comes back: data, plus a status code.",
-     "show": 4
+     "say": "A request is an endpoint, a U R L, plus a method. First: GET slash users.",
+     "on": "pm",
+     "send": {
+      "from": "pm",
+      "to": "api",
+      "label": "GET /users"
+     }
+    },
+    {
+     "say": "GET only reads. The A P I fetches the users.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "data",
+      "label": "read users"
+     }
+    },
+    {
+     "say": "The response comes back: status two hundred, and a J S O N list of ten users.",
+     "on": "pm",
+     "send": {
+      "from": "api",
+      "to": "pm",
+      "label": "200 · 10 users"
+     }
+    },
+    {
+     "say": "Add an I D to the endpoint, slash users slash one, and you get just one user back.",
+     "on": "pm",
+     "send": {
+      "from": "pm",
+      "to": "api",
+      "label": "GET /users/1"
+     }
+    },
+    {
+     "say": "A smaller response: the single user with I D one.",
+     "on": "pm",
+     "send": {
+      "from": "api",
+      "to": "pm",
+      "label": "200 · 1 user"
+     }
+    },
+    {
+     "say": "Now POST to slash posts, with a request body: title test, body hello, user I D one.",
+     "on": "pm",
+     "send": {
+      "from": "pm",
+      "to": "api",
+      "label": "POST /posts"
+     }
+    },
+    {
+     "say": "Two oh one, Created. Your data comes back with a new I D, one oh one. Nothing is really saved.",
+     "on": "pm",
+     "send": {
+      "from": "api",
+      "to": "pm",
+      "label": "201 · id 101"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "search",
+   "kind": "table",
    "kicker": "Topic 1 · Status codes",
-   "title": "Where to start debugging",
-   "items": [
+   "title": "The code tells you where to look",
+   "columns": [
+    "Code",
+    "Meaning",
+    "Where to look"
+   ],
+   "rows": [
     [
-     "200s",
-     "Success"
+     "200",
+     "OK",
+     "Nothing to fix"
     ],
     [
-     "400s",
-     "Problem with your request"
+     "201",
+     "Created",
+     "Nothing to fix"
     ],
     [
-     "500s",
-     "Problem on their server"
+     "401",
+     "Invalid API key",
+     "Your request"
+    ],
+    [
+     "404",
+     "Not found",
+     "Your request"
+    ],
+    [
+     "429",
+     "Too many requests",
+     "Your request"
+    ],
+    [
+     "500",
+     "Server error",
+     "Their server"
     ]
    ],
    "beats": [
     {
-     "say": "The status code alone often tells you where to look.",
-     "show": 0
+     "say": "Every response carries a status code. Here are the ones in this module."
     },
     {
-     "say": "The two hundreds mean success.",
-     "show": 1
+     "say": "The first digit tells you the family.",
+     "col": 0
     },
     {
-     "say": "The four hundreds usually mean something was wrong with your request, like four oh four, not found.",
-     "show": 2
+     "say": "The two hundreds mean success. Two hundred is OK, two oh one means something was created.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
+    },
+    {
+     "say": "The four hundreds mean something was wrong with your request: a bad key, a wrong address, or too many requests.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "dim": true
     },
     {
      "say": "The five hundreds mean something broke on the A P I's own server.",
-     "show": 3
+     "hl": 5,
+     "dim": true
+    },
+    {
+     "say": "So that one digit alone tells you where to start debugging.",
+     "hl": [
+      2,
+      3,
+      4,
+      5
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "laptop",
-   "kicker": "Topic 1 · Lab",
-   "title": "GET and POST in Postman",
-   "file": "POST https://jsonplaceholder.typicode.com/posts",
-   "code": "{\"title\": \"test\", \"body\": \"hello\", \"userId\": 1}",
-   "beats": [
-    {
-     "say": "In Postman, send a GET to J S O N Placeholder's users list. You should see status two hundred and a list of users.",
-     "show": 0
-    },
-    {
-     "say": "Then GET a single user, slash users slash one, and compare the smaller response.",
-     "show": 1
-    },
-    {
-     "say": "Finally, POST this small J S O N body to slash posts. You get two oh one, Created, and your data back with a new I D.",
-     "show": 1
-    },
-    {
-     "say": "It's a practice A P I, so nothing is really saved.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "bolt",
+   "kind": "diagram",
    "kicker": "Topic 2 · Concept",
-   "title": "Webhooks: we'll call you",
-   "items": [
-    [
-     "Polling",
-     "Asks on a timer"
-    ],
-    [
-     "Webhook URL",
-     "Where to send notifications"
-    ],
-    [
-     "Payload",
-     "JSON: what happened"
-    ],
-    [
-     "Signature / secret",
-     "Proves who sent it"
-    ]
+   "title": "Polling asks; a webhook tells you",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "Sign-up form",
+     "x": 12,
+     "y": 50,
+     "sub": "source system",
+     "art": "form"
+    },
+    {
+     "id": "make",
+     "label": "Your automation",
+     "x": 50,
+     "y": 50,
+     "sub": "Make scenario",
+     "art": "gear"
+    },
+    {
+     "id": "slack",
+     "label": "Slack",
+     "x": 88,
+     "y": 50,
+     "sub": "instant alert",
+     "art": "bell"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "make"
+    },
+    {
+     "from": "make",
+     "to": "slack"
+    }
    ],
    "beats": [
     {
-     "say": "A webhook flips the usual pattern around. Don't call us, we'll call you.",
-     "show": 0
-    },
-    {
-     "say": "Polling is the older way: repeatedly asking anything new, on a timer. Less instant, and less efficient.",
-     "show": 1
-    },
-    {
-     "say": "With a webhook, the other system sends you a message the instant something happens, to a webhook U R L you gave it.",
+     "say": "Your automation wants to know the moment someone signs up.",
      "show": 2
     },
     {
-     "say": "The data it sends is the payload, almost always J S O N, describing exactly what happened.",
-     "show": 3
+     "say": "With polling, it asks the form on a timer: anything new?",
+     "show": 2,
+     "on": "make",
+     "send": {
+      "from": "make",
+      "to": "form",
+      "label": "anything new?"
+     }
     },
     {
-     "say": "Because anyone with the U R L could call it, most systems add a signature or secret token so you can check where it came from.",
-     "show": 4
+     "say": "Usually, no. That's wasted checking, and new entries wait for the next check.",
+     "show": 2,
+     "on": "form",
+     "send": {
+      "from": "form",
+      "to": "make",
+      "label": "nothing yet"
+     }
+    },
+    {
+     "say": "A webhook flips it around: don't call us, we'll call you. You give the form your webhook U R L.",
+     "show": 2,
+     "on": "form"
+    },
+    {
+     "say": "The instant someone signs up, the form sends a payload, J S O N describing what happened.",
+     "show": 2,
+     "on": "make",
+     "send": {
+      "from": "form",
+      "to": "make",
+      "label": "payload · JSON"
+     }
+    },
+    {
+     "say": "Anyone with that U R L could call it, so a signature or secret token lets you check who really sent it.",
+     "show": 2,
+     "on": "make"
+    },
+    {
+     "say": "And your automation reacts straight away, like an instant Slack alert.",
+     "show": 3,
+     "on": "slack",
+     "send": {
+      "from": "make",
+      "to": "slack",
+      "label": "new signup!"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "plug",
+   "kind": "diagram",
    "kicker": "Topic 2 · Lab",
    "title": "Catch a webhook in Make",
-   "steps": [
-    "Custom webhook → copy URL",
-    "POST a test payload",
-    "\"Successfully determined\"",
-    "Email uses the name field"
+   "nodes": [
+    {
+     "id": "pm",
+     "label": "Postman",
+     "x": 12,
+     "y": 50,
+     "sub": "pretend source",
+     "art": "laptop"
+    },
+    {
+     "id": "hook",
+     "label": "Custom webhook",
+     "x": 50,
+     "y": 50,
+     "sub": "Make trigger",
+     "art": "plug"
+    },
+    {
+     "id": "gmail",
+     "label": "Gmail",
+     "x": 88,
+     "y": 50,
+     "sub": "Send an Email",
+     "art": "mail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pm",
+     "to": "hook"
+    },
+    {
+     "from": "hook",
+     "to": "gmail"
+    }
    ],
    "beats": [
     {
-     "say": "In Make, create a scenario with a Custom webhook trigger, and copy the U R L it generates.",
-     "show": 1
+     "say": "In Make, add a Custom webhook trigger. It generates a unique U R L, and waits to learn the payload.",
+     "show": 2,
+     "on": "hook"
     },
     {
-     "say": "From Postman, POST a raw J S O N body with a name, Test User, and an event, signup.",
-     "show": 2
+     "say": "From Postman, POST a raw J S O N body to that U R L: name, Test User, and event, signup.",
+     "show": 2,
+     "on": "pm",
+     "send": {
+      "from": "pm",
+      "to": "hook",
+      "label": "name + event"
+     }
     },
     {
-     "say": "Make shows, successfully determined, and the name and event fields are ready to map.",
-     "show": 3
+     "say": "Make shows, successfully determined. Name and event are now fields you can map.",
+     "show": 2,
+     "on": "hook"
     },
     {
-     "say": "Add a Gmail send an email action using the name field. Run once, resend, and check the email arrives with the name filled in.",
-     "show": 4
+     "say": "Add a Gmail Send an Email action, and map the name field into the message.",
+     "show": 3,
+     "on": "gmail"
+    },
+    {
+     "say": "Click Run once, then resend the request from Postman.",
+     "show": 3,
+     "on": "pm",
+     "send": {
+      "from": "pm",
+      "to": "hook",
+      "label": "resend"
+     }
+    },
+    {
+     "say": "The email arrives, with Test User filled in from the payload.",
+     "show": 3,
+     "on": "gmail",
+     "send": {
+      "from": "hook",
+      "to": "gmail",
+      "label": "name: Test User"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "key",
-   "kicker": "Topic 3 · Concept",
-   "title": "API keys",
-   "items": [
-    [
-     "Authentication",
-     "Who is asking"
-    ],
-    [
-     "Authorization",
-     "What they may do"
-    ],
-    [
-     "Rate limit",
-     "Too many → 429"
-    ],
-    [
-     "Key rotation",
-     "Replace old keys"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "An A P I key is a credential: a long string identifying who, or what app, is making a request.",
-     "show": 0
-    },
-    {
-     "say": "Authentication answers, who is making this request.",
-     "show": 1
-    },
-    {
-     "say": "Authorization answers, what is this requester allowed to do.",
-     "show": 2
-    },
-    {
-     "say": "A rate limit caps how many requests a key can make in a time window. Going over commonly returns four two nine.",
-     "show": 3
-    },
-    {
-     "say": "And key rotation means replacing an old key with a new one, limiting the damage if it ever leaks.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "lock",
+   "kind": "diagram",
    "kicker": "Topic 3 · Lab",
-   "title": "Keep the key out of the URL",
-   "file": "GET",
-   "code": "https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid={{owm_key}}",
+   "title": "The key proves who's asking",
+   "nodes": [
+    {
+     "id": "pm",
+     "label": "Postman",
+     "x": 14,
+     "y": 50,
+     "sub": "owm_key variable",
+     "art": "laptop"
+    },
+    {
+     "id": "owm",
+     "label": "OpenWeatherMap",
+     "x": 50,
+     "y": 50,
+     "sub": "checks the key",
+     "art": "cloud"
+    },
+    {
+     "id": "data",
+     "label": "Weather data",
+     "x": 86,
+     "y": 50,
+     "sub": "current weather",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pm",
+     "to": "owm"
+    },
+    {
+     "from": "owm",
+     "to": "data"
+    }
+   ],
    "beats": [
     {
-     "say": "Sign up for OpenWeatherMap. A new key can take up to about two hours to activate, so start early.",
-     "show": 0
+     "say": "Your OpenWeatherMap key lives in a Postman variable, O W M underscore key, not in the U R L.",
+     "show": 1,
+     "on": "pm"
     },
     {
-     "say": "In Postman, store it in an environment variable called O W M underscore key, marked secret if offered.",
-     "show": 1
+     "say": "You request London's weather. Postman fills in the key from the variable.",
+     "show": 2,
+     "on": "pm",
+     "send": {
+      "from": "pm",
+      "to": "owm",
+      "label": "q=London + key"
+     }
     },
     {
-     "say": "Then request London's weather, and Postman fills in the key from the variable. You should get two hundred.",
-     "show": 1
+     "say": "Authentication: who is asking? The key says it's you.",
+     "show": 2,
+     "on": "owm"
+    },
+    {
+     "say": "Authorization: what may this key do? It's allowed to read weather.",
+     "show": 3,
+     "on": "owm",
+     "send": {
+      "from": "owm",
+      "to": "data",
+      "label": "read weather"
+     }
+    },
+    {
+     "say": "So you get two hundred, and J S O N with the current weather.",
+     "show": 3,
+     "on": "pm",
+     "send": {
+      "from": "owm",
+      "to": "pm",
+      "label": "200 · weather"
+     }
+    },
+    {
+     "say": "Now swap the key for a made-up one, a b c one two three.",
+     "show": 3,
+     "on": "pm",
+     "send": {
+      "from": "pm",
+      "to": "owm",
+      "label": "appid=abc123"
+     }
+    },
+    {
+     "say": "Four oh one, Invalid A P I key. A brand new key does this too, until it activates.",
+     "show": 3,
+     "on": "pm",
+     "send": {
+      "from": "owm",
+      "to": "pm",
+      "label": "401 bad key"
+     }
+    },
+    {
+     "say": "And send too many requests in a time window, and a rate limit answers four two nine.",
+     "show": 3,
+     "on": "owm",
+     "send": {
+      "from": "owm",
+      "to": "pm",
+      "label": "429 slow down"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "warning",
+   "kind": "array",
    "kicker": "Topic 3 · Lab",
-   "title": "Break it, then rotate it",
-   "steps": [
-    "Use a fake key",
-    "See 401 Invalid API key",
-    "Generate new key, update variable",
-    "Delete the old key"
+   "title": "Rotate the key",
+   "values": [
+    "Generate new key",
+    "Update owm_key",
+    "Delete old key",
+    "New key → 200",
+    "Old key → 401"
    ],
    "beats": [
     {
-     "say": "Now swap the variable for a made-up value, like a b c one two three.",
-     "show": 1
+     "say": "Rotating a key means replacing it, so a leaked old key becomes useless. Here are the steps."
     },
     {
-     "say": "You get a four oh one error. That's what an invalid key looks like.",
-     "show": 2
+     "say": "On the A P I keys tab, generate a new key.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     }
     },
     {
-     "say": "Then rotate: generate a new key, update the variable, and delete the old one.",
-     "show": 3
+     "say": "Put it in your O W M underscore key variable. Your requests don't change at all.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     }
     },
     {
-     "say": "Confirm the new key works, allowing for activation, and the old one no longer does.",
-     "show": 4
+     "say": "Delete the old key.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     }
+    },
+    {
+     "say": "Check the new key works, allowing time for it to activate.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     }
+    },
+    {
+     "say": "And that the old one now gets four oh one.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "step": 4
+     }
+    },
+    {
+     "say": "Done. And never paste a key into a public file, chat or repository.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Keys stay in variables, never public"
     }
    ]
   },

@@ -100,120 +100,296 @@ You can describe the data source, screen, and action concepts, and you have a wr
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "The four building blocks",
-   "items": [
+   "title": "Website builder or internal app builder?",
+   "columns": [
+    "",
+    "Website builder",
+    "Internal app builder"
+   ],
+   "rows": [
     [
-     "Data source",
-     "Where the data lives"
+     "Main job",
+     "Display content",
+     "A working tool"
     ],
     [
-     "Screen",
-     "List or detail view"
+     "Who uses it",
+     "The public",
+     "A team or set of users"
     ],
     [
-     "Action",
-     "Writes back to the source"
+     "Data",
+     "Pages to read",
+     "Records you change"
     ],
     [
      "Permissions",
-     "Who sees or edits what"
+     "Same for everyone",
+     "Per user, per record"
     ]
    ],
    "beats": [
     {
-     "say": "Every platform in this course shares the same idea.",
+     "say": "Let's compare the two kinds of builder side by side."
+    },
+    {
+     "say": "A website builder mainly displays content, and it's usually public.",
+     "col": 1
+    },
+    {
+     "say": "An internal app builder builds a working tool, for a team or for specific users.",
+     "col": 2,
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
+    },
+    {
+     "say": "Its data isn't just read. People create and change records.",
+     "col": 2,
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "And not everyone sees everything. Permissions decide who sees which records.",
+     "col": 2,
+     "hl": 3,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept · Structure at a glance",
+   "title": "Data source, screen, action, and back",
+   "nodes": [
+    {
+     "id": "ds",
+     "label": "Data source",
+     "x": 12,
+     "y": 50,
+     "sub": "rows and columns",
+     "art": "database"
+    },
+    {
+     "id": "sc",
+     "label": "Screen",
+     "x": 50,
+     "y": 18,
+     "sub": "list or detail view",
+     "art": "phone"
+    },
+    {
+     "id": "ac",
+     "label": "Action",
+     "x": 50,
+     "y": 82,
+     "sub": "create or edit",
+     "art": "cursor"
+    },
+    {
+     "id": "us",
+     "label": "Users",
+     "x": 88,
+     "y": 50,
+     "sub": "permissions",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "ds",
+     "to": "sc"
+    },
+    {
+     "from": "sc",
+     "to": "ac"
+    },
+    {
+     "from": "ac",
+     "to": "ds"
+    },
+    {
+     "from": "sc",
+     "to": "us"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Every platform in this course is built from the same few parts.",
      "show": 0
     },
     {
-     "say": "A data source is where the information lives: a spreadsheet, a database, or the platform's own storage.",
-     "show": 1
+     "say": "First, a data source: where the information actually lives. A spreadsheet, a database, or the platform's own storage.",
+     "show": 1,
+     "on": "ds"
     },
     {
      "say": "A screen displays that data, as a list of many records, or the detail of one.",
-     "show": 2
+     "show": 2,
+     "on": "sc",
+     "send": {
+      "from": "ds",
+      "to": "sc",
+      "label": "records"
+     }
     },
     {
-     "say": "An action lets a user change the data, and the change writes back to the source.",
-     "show": 3
+     "say": "An action lets a user change the data, like marking a task complete.",
+     "show": 3,
+     "on": "ac",
+     "send": {
+      "from": "sc",
+      "to": "ac",
+      "label": "tap"
+     }
     },
     {
-     "say": "And permissions control which users can see or edit which records.",
-     "show": 4
+     "say": "And that change writes back to the data source. That loop is in every tool you'll use.",
+     "show": 3,
+     "on": "ds",
+     "send": {
+      "from": "ac",
+      "to": "ds",
+      "label": "write back"
+     }
+    },
+    {
+     "say": "Finally, permissions control which users see or edit which records.",
+     "show": 4,
+     "on": "us",
+     "send": {
+      "from": "sc",
+      "to": "us",
+      "label": "only their rows"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "loop",
-   "kicker": "Structure at a glance",
-   "title": "A loop back to the data",
-   "steps": [
-    "Data source",
-    "Screen",
-    "Action",
-    "Back to the data source"
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "One dataset, three ways to look at it",
+   "columns": [
+    "Task",
+    "Assignee",
+    "Status"
    ],
-   "beats": [
-    {
-     "say": "Here's the shape you'll see in every tool.",
-     "show": 0
-    },
-    {
-     "say": "The data source holds rows and columns.",
-     "show": 1
-    },
-    {
-     "say": "A screen displays the records.",
-     "show": 2
-    },
-    {
-     "say": "An action edits or creates a record, and that writes back to the data source.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "layout",
-   "kicker": "Lab",
-   "title": "Sketch a task tracker",
-   "items": [
+   "rows": [
     [
-     "List screen",
-     "All tasks"
+     "Order labels",
+     "ana@team.co",
+     "Open"
     ],
     [
-     "Detail screen",
-     "One task"
+     "Fix printer",
+     "ben@team.co",
+     "Open"
     ],
     [
-     "Action",
-     "Change its Status"
+     "Book venue",
+     "ana@team.co",
+     "Done"
+    ],
+    [
+     "Update price list",
+     "cy@team.co",
+     "Open"
     ]
    ],
    "beats": [
     {
-     "say": "Your lab is a sketch.",
-     "show": 0
+     "say": "Here's a simple task list, the kind of data you'll use all course."
     },
     {
-     "say": "Take a task list with three columns: task, assignee and status.",
-     "show": 0
+     "say": "A list screen shows many records at once.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ]
     },
     {
-     "say": "Sketch a list screen showing all tasks.",
-     "show": 1
+     "say": "A detail screen shows the full information for one record.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "An action changes a field on that record, like its status.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "And with permissions, Ana would only see the tasks assigned to her.",
+     "sql": "Show rows where Assignee = the signed-in user",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab",
+   "title": "Sketch your app before you build it",
+   "values": [
+    "Dataset",
+    "List screen",
+    "Detail screen",
+    "One action"
+   ],
+   "beats": [
+    {
+     "say": "Your lab is a sketch, in four pieces."
+    },
+    {
+     "say": "Pick a dataset shaped like a spreadsheet, for example task, assignee and status.",
+     "hl": 0,
+     "note": "Task · Assignee · Status"
+    },
+    {
+     "say": "Sketch a list screen that shows all the tasks.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "All tasks"
     },
     {
      "say": "A detail screen for one task.",
-     "show": 2
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "note": "One task, every field"
     },
     {
-     "say": "And an action that changes its status. You'll build exactly this in every module.",
-     "show": 3
+     "say": "And one action, which changes that task's status.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "note": "Status → Done"
+    },
+    {
+     "say": "That sketch is exactly what you'll build in every module that follows.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ]
     }
    ]
   },
@@ -371,124 +547,333 @@ You have a published Glide app connected to a real Google Sheet, showing only a 
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
+   "kind": "diagram",
    "kicker": "Structure at a glance",
-   "title": "Glide's building blocks",
-   "items": [
-    [
-     "Table",
-     "Google Sheet or Glide Table"
-    ],
-    [
-     "Collection",
-     "Many rows"
-    ],
-    [
-     "Detail screen",
-     "One row"
-    ],
-    [
-     "Set column values",
-     "A button writes to the row"
-    ],
-    [
-     "Row Owners",
-     "Rows matched to the user's email"
-    ]
+   "title": "Glide's loop from sheet to screen and back",
+   "nodes": [
+    {
+     "id": "t",
+     "label": "Table",
+     "x": 12,
+     "y": 50,
+     "sub": "Google Sheet tab",
+     "art": "table"
+    },
+    {
+     "id": "co",
+     "label": "Collection",
+     "x": 48,
+     "y": 18,
+     "sub": "list of all rows",
+     "art": "phone"
+    },
+    {
+     "id": "dt",
+     "label": "Detail screen",
+     "x": 86,
+     "y": 50,
+     "sub": "one row",
+     "art": "layout"
+    },
+    {
+     "id": "ab",
+     "label": "Action button",
+     "x": 48,
+     "y": 82,
+     "sub": "Set column values",
+     "art": "cursor"
+    }
+   ],
+   "edges": [
+    {
+     "from": "t",
+     "to": "co"
+    },
+    {
+     "from": "co",
+     "to": "dt"
+    },
+    {
+     "from": "dt",
+     "to": "ab"
+    },
+    {
+     "from": "ab",
+     "to": "t"
+    }
    ],
    "beats": [
     {
-     "say": "Glide has its own words.",
-     "show": 0
+     "say": "In Glide, your data source is called a Table: a Google Sheet tab, or a Glide Table.",
+     "show": 1,
+     "on": "t"
     },
     {
-     "say": "A Table is the connected data source, a Google Sheet tab or a Glide Table.",
-     "show": 1
+     "say": "A Collection screen shows many rows at once, as a list, cards, or a calendar.",
+     "show": 2,
+     "on": "co",
+     "send": {
+      "from": "t",
+      "to": "co",
+      "label": "all rows"
+     }
     },
     {
-     "say": "A Collection is a screen showing many rows, as a list, cards, or a calendar.",
-     "show": 2
+     "say": "Tap one row, and its Detail screen shows every field.",
+     "show": 3,
+     "on": "dt",
+     "send": {
+      "from": "co",
+      "to": "dt",
+      "label": "tap a row"
+     }
     },
     {
-     "say": "A Detail screen shows every field of one row.",
-     "show": 3
+     "say": "On that screen, a button runs an action called set column values.",
+     "show": 4,
+     "on": "ab",
+     "send": {
+      "from": "dt",
+      "to": "ab",
+      "label": "Mark Complete"
+     }
     },
     {
-     "say": "An action, like set column values, lets a button write a new value into the row.",
-     "show": 4
-    },
-    {
-     "say": "And Row Owners limits which rows a signed-in user can see, by matching a column to their email.",
-     "show": 5
+     "say": "It writes the new value straight back into that row of the sheet.",
+     "show": 4,
+     "on": "t",
+     "send": {
+      "from": "ab",
+      "to": "t",
+      "label": "Status = Done"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "table",
-   "kicker": "Lab · Steps 1 to 5",
-   "title": "Build the task app",
-   "steps": [
-    "Sheet: Task · Assignee · Status",
-    "Connect a Glide app",
-    "Collection + Detail screen",
-    "\"Mark Complete\" button"
+   "kind": "table",
+   "kicker": "Lab · Steps 1 to 4",
+   "title": "Your sheet becomes a list and a detail screen",
+   "columns": [
+    "Task",
+    "Assignee",
+    "Status"
    ],
-   "beats": [
-    {
-     "say": "Create a Google Sheet with task, assignee as an email address, and status columns.",
-     "show": 1
-    },
-    {
-     "say": "Create a Glide app connected to that sheet.",
-     "show": 2
-    },
-    {
-     "say": "Add a Collection showing task and status, and tap into the Detail screen Glide generates.",
-     "show": 3
-    },
-    {
-     "say": "Then add a Mark Complete button that sets status to done.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "lock",
-   "kicker": "Lab · Steps 6 and 7",
-   "title": "Row Owners, then prove it",
-   "items": [
+   "rows": [
     [
-     "Publish + sign in",
-     "As a test assignee"
+     "Order labels",
+     "ana@team.co",
+     "Open"
     ],
     [
-     "✓ Only your tasks",
-     "Row Owners at work"
+     "Fix printer",
+     "ben@team.co",
+     "Open"
     ],
     [
-     "✓ Sheet updates",
-     "Mark Complete writes back"
+     "Book venue",
+     "ana@team.co",
+     "Done"
+    ],
+    [
+     "Update price list",
+     "cy@team.co",
+     "Open"
     ]
    ],
    "beats": [
     {
-     "say": "Set up Row Owners on the assignee column.",
-     "show": 0
+     "say": "Step one: a Google Sheet with task, assignee as an email address, and status."
     },
     {
-     "say": "Publish, and sign in as a test user matching one assignee's email.",
-     "show": 1
+     "say": "Connect a new Glide app to it, and this sheet becomes your Table.",
+     "sql": "Table: Tasks sheet"
     },
     {
-     "say": "You should only see that user's tasks.",
-     "show": 2
+     "say": "Add a Collection that shows the task in the list.",
+     "col": 0
     },
     {
-     "say": "Tap Mark Complete, and the Google Sheet itself updates. If your free plan lacks Row Owners, follow along.",
-     "show": 3
+     "say": "And its status.",
+     "col": 2
+    },
+    {
+     "say": "Tap the Fix printer row, and Glide's generated Detail screen shows all of its fields.",
+     "hl": 1,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 5",
+   "title": "Mark Complete writes into one cell",
+   "values": [
+    "Open",
+    "Open",
+    "Done",
+    "Open"
+   ],
+   "beats": [
+    {
+     "say": "Here's the status column of the sheet, one value per row."
+    },
+    {
+     "say": "You're on the Detail screen for row two, Fix printer. Its status is open.",
+     "hl": 1,
+     "ptr": {
+      "row": 1
+     },
+     "note": "Detail screen: Fix printer"
+    },
+    {
+     "say": "You tap Mark Complete. Set column values targets just the status column of this row.",
+     "hl": 1,
+     "ptr": {
+      "row": 1
+     },
+     "note": "Set column values: Status → \"Done\""
+    },
+    {
+     "say": "The value changes to done, in the Google Sheet itself.",
+     "vals": [
+      "Open",
+      "Done",
+      "Done",
+      "Open"
+     ],
+     "ok": 1,
+     "ptr": {
+      "row": 1
+     },
+     "note": "Saved to the sheet"
+    },
+    {
+     "say": "The other rows aren't touched.",
+     "vals": [
+      "Open",
+      "Done",
+      "Done",
+      "Open"
+     ],
+     "ok": 1,
+     "hl": [
+      0,
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 6",
+   "title": "Row Owners: each user sees only their rows",
+   "columns": [
+    "Task",
+    "Assignee",
+    "Status"
+   ],
+   "rows": [
+    [
+     "Order labels",
+     "ana@team.co",
+     "Open"
+    ],
+    [
+     "Fix printer",
+     "ben@team.co",
+     "Open"
+    ],
+    [
+     "Book venue",
+     "ana@team.co",
+     "Done"
+    ],
+    [
+     "Update price list",
+     "cy@team.co",
+     "Open"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now set up Row Owners on the assignee column."
+    },
+    {
+     "say": "Glide now only sends a signed-in user the rows where the assignee matches their email.",
+     "sql": "Row Owners: Assignee = signed-in email",
+     "col": 1
+    },
+    {
+     "say": "Sign in as Ana, and you get two rows.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Sign in as Ben, and you get just one.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 7",
+   "title": "Publish, then prove it works",
+   "values": [
+    "Publish",
+    "Sign in",
+    "Only your tasks",
+    "Mark Complete",
+    "Check the sheet"
+   ],
+   "beats": [
+    {
+     "say": "Last, publish the app and test it like a real user.",
+     "hl": 0,
+     "note": "Check the free plan includes Row Owners"
+    },
+    {
+     "say": "Sign in as a test user whose email matches one assignee.",
+     "ok": [
+      0
+     ],
+     "hl": 1
+    },
+    {
+     "say": "You should see only that user's tasks.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "note": "Row Owners at work"
+    },
+    {
+     "say": "Tap Mark Complete on one of them.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3
+    },
+    {
+     "say": "Then open the Google Sheet. The status there has changed too.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "If your plan lacks Row Owners, follow along"
     }
    ]
   },
@@ -657,125 +1042,345 @@ You have a working Bubble app with a custom Data Type, a Repeating Group display
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
-   "kicker": "Structure at a glance",
-   "title": "Bubble's building blocks",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Step 1",
+   "title": "A Data Type you design, and its Things",
+   "columns": [
+    "Title",
+    "Status",
+    "Requester"
+   ],
+   "rows": [
     [
-     "Data Type · Thing",
-     "Your structure · one record"
+     "New laptop",
+     "Open",
+     "Maya"
     ],
     [
-     "Repeating Group",
-     "A list of Things"
+     "Office keys",
+     "Urgent",
+     "Jon"
     ],
     [
-     "Workflow",
-     "Event → actions"
-    ],
-    [
-     "Conditional",
-     "Style by rule"
-    ],
-    [
-     "Privacy Rule",
-     "Enforced at the data level"
+     "Desk chair",
+     "Open",
+     "Lee"
     ]
    ],
    "beats": [
     {
-     "say": "Bubble has six key ideas.",
-     "show": 0
+     "say": "In Bubble, you design the data yourself. Here's a Data Type called Request.",
+     "sql": "Data Type: Request\nfields: Title, Status, Requester (text)"
     },
     {
-     "say": "A Data Type is a structure you define, with its own fields. A Thing is one record of it.",
-     "show": 1
+     "say": "Its fields are title, status and requester. It lives in Bubble's own database, not a spreadsheet."
     },
     {
-     "say": "A Repeating Group displays a list of Things on a page.",
-     "show": 2
+     "say": "Each record is called a Thing. This is one Thing: a request for a new laptop.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "A Workflow connects an event, like a button click, to actions, like create a Thing.",
-     "show": 3
+     "say": "A Repeating Group searches for Requests and shows one cell per Thing.",
+     "sql": "Repeating Group · Type: Request\nData source: Do a search for Requests",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     },
     {
-     "say": "A Conditional changes how an element looks, based on a rule.",
-     "show": 4
-    },
-    {
-     "say": "And a Privacy Rule restricts who can view or edit Things, enforced by Bubble itself.",
-     "show": 5
+     "say": "In each cell, a text element shows the current cell's Request's title.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 0
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "database",
-   "kicker": "Lab · Steps 1 to 4",
-   "title": "Requests, end to end",
-   "steps": [
-    "Data Type: Request",
-    "Repeating Group",
-    "Workflow: create a Request",
-    "Preview: it appears"
+   "kind": "diagram",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "A Workflow turns a click into a new Thing",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "Form",
+     "x": 10,
+     "y": 50,
+     "sub": "Title + Requester",
+     "art": "form"
+    },
+    {
+     "id": "wf",
+     "label": "Workflow",
+     "x": 36,
+     "y": 22,
+     "sub": "event → action",
+     "art": "bolt"
+    },
+    {
+     "id": "db",
+     "label": "Requests",
+     "x": 64,
+     "y": 50,
+     "sub": "Bubble database",
+     "art": "database"
+    },
+    {
+     "id": "rg",
+     "label": "Repeating Group",
+     "x": 90,
+     "y": 22,
+     "sub": "list on the page",
+     "art": "layout"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "wf"
+    },
+    {
+     "from": "wf",
+     "to": "db"
+    },
+    {
+     "from": "db",
+     "to": "rg"
+    }
    ],
    "beats": [
     {
-     "say": "Create a Data Type called Request, with title, status and requester fields.",
-     "show": 1
+     "say": "Add a form with a title input, a requester input, and a button.",
+     "show": 1,
+     "on": "form"
     },
     {
-     "say": "Add a Repeating Group that searches for Requests, showing each one's title.",
-     "show": 2
+     "say": "A Workflow connects an event to an action. The event: button A is clicked.",
+     "show": 2,
+     "on": "wf",
+     "send": {
+      "from": "form",
+      "to": "wf",
+      "label": "Button A clicked"
+     }
     },
     {
-     "say": "Add a form and a button, with a workflow: when the button is clicked, create a new Request.",
-     "show": 3
+     "say": "The action: create a new Request, using the input values.",
+     "show": 3,
+     "on": "db",
+     "send": {
+      "from": "wf",
+      "to": "db",
+      "label": "Create a Request"
+     }
     },
     {
-     "say": "Preview, submit, and the new Thing appears without refreshing the page.",
-     "show": 4
+     "say": "The Repeating Group is already searching for Requests, so it picks up the new Thing.",
+     "show": 4,
+     "on": "rg",
+     "send": {
+      "from": "db",
+      "to": "rg",
+      "label": "new Thing"
+     }
+    },
+    {
+     "say": "Preview and submit, and it appears in the list without refreshing the page.",
+     "show": 4,
+     "on": [
+      "form",
+      "rg"
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "palette",
+   "kind": "table",
    "kicker": "Lab · Steps 5 and 6",
-   "title": "Highlight urgent requests",
-   "big": "Status is Urgent",
-   "sub": "→ the row turns red",
+   "title": "A Conditional styles a row by rule",
+   "columns": [
+    "Title",
+    "Status",
+    "Requester"
+   ],
+   "rows": [
+    [
+     "New laptop",
+     "Open",
+     "Maya"
+    ],
+    [
+     "Office keys",
+     "Urgent",
+     "Jon"
+    ],
+    [
+     "Desk chair",
+     "Open",
+     "Lee"
+    ]
+   ],
    "beats": [
     {
-     "say": "Next, add a Conditional to the text in each cell: when the current cell's Request's status is urgent, make it red.",
-     "show": 0
+     "say": "Now add a Conditional to the text element inside each cell.",
+     "sql": "When Current cell's Request's Status is Urgent\n→ Background style: red"
     },
     {
-     "say": "Set one Thing's status to urgent in the Data tab, and that row turns red.",
-     "show": 1
+     "say": "In the Data tab, you set one Thing's status to urgent: the office keys.",
+     "col": 1
+    },
+    {
+     "say": "Bubble checks the rule for every cell. Only this one matches, so only this row turns red.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "The other rows don't match, so they keep their normal style.",
+     "hl": [
+      0,
+      2
+     ],
+     "col": 1
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "shield",
+   "kind": "table",
    "kicker": "Lab · Step 7",
-   "title": "Protect the data, not just the page",
-   "quote": "Hidden on the page ≠ protected. Privacy Rules guard the data itself.",
+   "title": "A Privacy Rule on Request",
+   "columns": [
+    "Who",
+    "View all fields",
+    "Find in searches"
+   ],
+   "rows": [
+    [
+     "Current User logged in",
+     "Yes",
+     "Yes"
+    ],
+    [
+     "Everyone else",
+     "No (unchecked)",
+     "No (unchecked)"
+    ]
+   ],
    "beats": [
     {
-     "say": "Finally, a Privacy Rule on Request: logged-in users can view all fields and find it in searches.",
-     "show": 0
+     "say": "Last step: in the Data tab, open Privacy and choose Request."
     },
     {
-     "say": "Uncheck those same permissions for everyone else, then preview logged out. The list is empty.",
-     "show": 1
+     "say": "Add a rule: when the current user is logged in, they can view all fields and find Requests in searches.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Hiding something on screen doesn't protect it. A privacy rule does, even if someone inspects the page.",
-     "show": 1
+     "say": "Those permissions are on for everyone by default, so uncheck them in the everyone else row.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Now only logged-in users can find a Request at all.",
+     "col": 0
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept · Privacy Rules",
+   "title": "Protect the data, not just the page",
+   "nodes": [
+    {
+     "id": "anon",
+     "label": "Logged-out visitor",
+     "x": 12,
+     "y": 22,
+     "sub": "preview, no login",
+     "art": "eye"
+    },
+    {
+     "id": "user",
+     "label": "Logged-in user",
+     "x": 12,
+     "y": 78,
+     "sub": "signed in",
+     "art": "people"
+    },
+    {
+     "id": "rule",
+     "label": "Privacy Rule",
+     "x": 50,
+     "y": 50,
+     "sub": "checked by Bubble",
+     "art": "shield"
+    },
+    {
+     "id": "db",
+     "label": "Requests",
+     "x": 88,
+     "y": 50,
+     "sub": "3 Things",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "anon",
+     "to": "rule"
+    },
+    {
+     "from": "user",
+     "to": "rule"
+    },
+    {
+     "from": "rule",
+     "to": "db"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Every search for Requests goes through Bubble's privacy rules first.",
+     "show": 4,
+     "on": "rule"
+    },
+    {
+     "say": "Preview while logged out, and the page asks for the list.",
+     "on": "anon",
+     "send": {
+      "from": "anon",
+      "to": "rule",
+      "label": "search"
+     }
+    },
+    {
+     "say": "The visitor fails the rule, so nothing is sent back. The Repeating Group is empty.",
+     "on": "rule",
+     "send": {
+      "from": "rule",
+      "to": "anon",
+      "label": "0 results"
+     }
+    },
+    {
+     "say": "A logged-in user passes the rule, and gets the Requests.",
+     "on": "user",
+     "send": {
+      "from": "rule",
+      "to": "user",
+      "label": "3 Requests"
+     }
+    },
+    {
+     "say": "Because the data never leaves the server, inspecting the page can't reveal it. Hiding an element can't promise that.",
+     "on": [
+      "rule",
+      "db"
+     ]
     }
    ]
   },
@@ -949,112 +1554,288 @@ You have a published Softr portal connected to a real Airtable base, showing a l
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "diagram",
    "kicker": "Structure at a glance",
-   "title": "Softr's building blocks",
-   "items": [
-    [
-     "Block",
-     "List · Table · Chart · Form"
-    ],
-    [
-     "Airtable View",
-     "Filtered, sorted data"
-    ],
-    [
-     "User Group + ownership",
-     "Each client sees their own"
-    ],
-    [
-     "Action button",
-     "Triggers an Airtable automation"
-    ]
+   "title": "From Airtable base to a client's screen",
+   "nodes": [
+    {
+     "id": "base",
+     "label": "Airtable base",
+     "x": 12,
+     "y": 50,
+     "sub": "Clients table",
+     "art": "database"
+    },
+    {
+     "id": "view",
+     "label": "Airtable View",
+     "x": 40,
+     "y": 20,
+     "sub": "Active Clients",
+     "art": "funnel"
+    },
+    {
+     "id": "block",
+     "label": "List Block",
+     "x": 66,
+     "y": 50,
+     "sub": "Softr page",
+     "art": "layout"
+    },
+    {
+     "id": "ug",
+     "label": "User Group",
+     "x": 90,
+     "y": 20,
+     "sub": "logged-in clients",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "base",
+     "to": "view"
+    },
+    {
+     "from": "view",
+     "to": "block"
+    },
+    {
+     "from": "block",
+     "to": "ug"
+    },
+    {
+     "from": "block",
+     "to": "base"
+    }
    ],
    "beats": [
     {
-     "say": "Softr has four key ideas.",
-     "show": 0
+     "say": "Softr sits on top of data you already keep in Airtable.",
+     "show": 1,
+     "on": "base"
     },
     {
-     "say": "A Block is a pre-built page component, like a list, table, chart or form, bound to your data.",
-     "show": 1
+     "say": "An Airtable View is a filtered, sorted look at a table.",
+     "show": 2,
+     "on": "view",
+     "send": {
+      "from": "base",
+      "to": "view",
+      "label": "filter + sort"
+     }
     },
     {
-     "say": "A Block usually binds to an Airtable View, a filtered, sorted look at a table, so filtering is controlled in Airtable.",
-     "show": 2
+     "say": "A Softr Block, like a list, table, chart or form, binds to that View, not the raw table.",
+     "show": 3,
+     "on": "block",
+     "send": {
+      "from": "view",
+      "to": "block",
+      "label": "View records"
+     }
     },
     {
-     "say": "A User Group defines logged-in users and what they can access. With record ownership, each client sees only their own data.",
-     "show": 3
+     "say": "A User Group decides which logged-in users can reach it, and with record ownership, which records.",
+     "show": 4,
+     "on": "ug",
+     "send": {
+      "from": "block",
+      "to": "ug",
+      "label": "own record"
+     }
     },
     {
-     "say": "And an action button can trigger an Airtable automation.",
-     "show": 4
+     "say": "And an action button can trigger an automation back in Airtable.",
+     "show": 4,
+     "on": [
+      "block",
+      "base"
+     ],
+     "send": {
+      "from": "block",
+      "to": "base",
+      "label": "run automation"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "database",
+   "kind": "table",
    "kicker": "Lab · Steps 1 to 4",
-   "title": "From base to portal",
-   "steps": [
-    "Airtable: Clients table",
-    "View: Active Clients",
-    "Connect a Softr app",
-    "List Block on the View"
+   "title": "The View does the filtering, in Airtable",
+   "columns": [
+    "Name",
+    "Email",
+    "Project Status"
    ],
-   "beats": [
-    {
-     "say": "Create an Airtable base with a Clients table: name, email and project status.",
-     "show": 1
-    },
-    {
-     "say": "Create an Active Clients view, showing only clients with a project status.",
-     "show": 2
-    },
-    {
-     "say": "Create a Softr app, connected to your base.",
-     "show": 3
-    },
-    {
-     "say": "Add a List Block bound to the Active Clients view, showing name and project status.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "lock",
-   "kicker": "Lab · Steps 5 to 7",
-   "title": "Each client sees only their own",
-   "items": [
+   "rows": [
     [
-     "Client User Group",
-     "Login email = Email field"
+     "Ada Lane",
+     "ada@lane.co",
+     "In progress"
     ],
     [
-     "✓ One record only",
-     "Signed in as a client"
+     "Bo Kim",
+     "bo@kim.io",
+     ""
     ],
     [
-     "Admin User Group",
-     "Separate page, every client"
+     "Cara Diaz",
+     "cara@diaz.com",
+     "In review"
+    ],
+    [
+     "Dev Rao",
+     "dev@rao.net",
+     "Complete"
     ]
    ],
    "beats": [
     {
-     "say": "Set up a User Group for clients, with record ownership matching their login email to the email field.",
-     "show": 1
+     "say": "Create a Clients table in Airtable, with name, email and project status."
     },
     {
-     "say": "Publish, sign in as one client, and confirm you see only that one record.",
-     "show": 2
+     "say": "Bo Kim has no project status yet.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Then add an admin-only page with a Table Block of every client, restricted to a separate Admin group. If your free plan lacks a second group, follow along.",
-     "show": 3
+     "say": "Create a View called Active Clients, filtered to a non-empty project status. Bo drops out.",
+     "sql": "View: Active Clients\nProject Status is not empty",
+     "hl": [
+      0,
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Connect a Softr app, and bind a List Block to that View, showing the name.",
+     "sql": "List Block → Clients · Active Clients",
+     "hl": [
+      0,
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 0
+    },
+    {
+     "say": "And the project status. The filtering stays in Airtable, not in Softr.",
+     "hl": [
+      0,
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Record ownership: one client, one record",
+   "columns": [
+    "Name",
+    "Email",
+    "Project Status"
+   ],
+   "rows": [
+    [
+     "Ada Lane",
+     "ada@lane.co",
+     "In progress"
+    ],
+    [
+     "Bo Kim",
+     "bo@kim.io",
+     ""
+    ],
+    [
+     "Cara Diaz",
+     "cara@diaz.com",
+     "In review"
+    ],
+    [
+     "Dev Rao",
+     "dev@rao.net",
+     "Complete"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now set up a User Group for logged-in clients, and turn on record ownership."
+    },
+    {
+     "say": "A client only sees the record whose email field matches their login email.",
+     "sql": "Record ownership: Email = login email",
+     "col": 1
+    },
+    {
+     "say": "Publish, and sign in as Cara. You see Cara's record, and nothing else.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Sign in as Ada instead, and you see only Ada's.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 7",
+   "title": "Two pages, two User Groups",
+   "columns": [
+    "Page",
+    "Block",
+    "User Group",
+    "Shows"
+   ],
+   "rows": [
+    [
+     "Client portal",
+     "List Block",
+     "Clients",
+     "Their own record"
+    ],
+    [
+     "Admin page",
+     "Table Block",
+     "Admin",
+     "Every client"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Finally, add a separate admin-only page."
+    },
+    {
+     "say": "The client portal stays the same: clients see just their own record.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "The admin page uses a Table Block with every client, not filtered by ownership.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "And it's restricted to a separate Admin User Group, so clients can't open it.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "If your free plan doesn't include a second group, follow along with this step.",
+     "col": 2
     }
    ]
   },

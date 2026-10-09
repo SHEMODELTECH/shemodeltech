@@ -105,142 +105,333 @@ operations (Airtable base)
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
-   "kicker": "Steps 1 to 3",
-   "title": "Bases, tables and fields",
-   "items": [
-    [
-     "Base",
-     "operations: one database per project"
-    ],
-    [
-     "Table: Customers",
-     "name · email · status · created"
-    ]
+   "kind": "diagram",
+   "kicker": "Steps 1 and 2",
+   "title": "One base, one table per kind of record",
+   "nodes": [
+    {
+     "id": "base",
+     "label": "operations",
+     "x": 14,
+     "y": 50,
+     "sub": "your Airtable base",
+     "art": "database"
+    },
+    {
+     "id": "cust",
+     "label": "Customers",
+     "x": 55,
+     "y": 22,
+     "sub": "one row per customer",
+     "art": "idcard"
+    },
+    {
+     "id": "ord",
+     "label": "Orders",
+     "x": 55,
+     "y": 78,
+     "sub": "one row per order",
+     "art": "table"
+    },
+    {
+     "id": "tools",
+     "label": "Your tools",
+     "x": 88,
+     "y": 50,
+     "sub": "read and write here",
+     "art": "laptop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "base",
+     "to": "cust"
+    },
+    {
+     "from": "base",
+     "to": "ord"
+    },
+    {
+     "from": "cust",
+     "to": "tools"
+    },
+    {
+     "from": "ord",
+     "to": "tools"
+    }
    ],
    "beats": [
     {
      "say": "Sign up at airtable dot com, and create a base named operations. A base is a single database for a project.",
-     "show": 0
+     "show": 1,
+     "on": "base"
     },
     {
-     "say": "A table holds one kind of record, like Customers or Orders.",
-     "show": 1
+     "say": "Inside it, a table holds one kind of record. First, Customers.",
+     "show": 2,
+     "on": "cust"
     },
     {
-     "say": "Create a Customers table, with name, email, status and created.",
-     "show": 2
+     "say": "Then Orders. A base can hold several tables, each one tidy and separate.",
+     "show": 3,
+     "on": "ord"
     },
     {
-     "say": "Each gets the right field type: single line text, email, single select, and date. Correct types let Airtable check and filter your data later.",
-     "show": 2
+     "say": "Every tool you build later reads and writes these tables.",
+     "show": 4,
+     "on": "tools",
+     "send": {
+      "from": "ord",
+      "to": "tools",
+      "label": "orders data"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "chain",
+   "kind": "table",
+   "kicker": "Step 3",
+   "title": "Every field gets the right type",
+   "columns": [
+    "Field",
+    "Type",
+    "Lets Airtable..."
+   ],
+   "rows": [
+    [
+     "name",
+     "Single line text",
+     "store a short name"
+    ],
+    [
+     "email",
+     "Email",
+     "check the format"
+    ],
+    [
+     "status",
+     "Single select",
+     "allow fixed options"
+    ],
+    [
+     "created",
+     "Date",
+     "filter by date"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Create a Customers table with four fields."
+    },
+    {
+     "say": "Name is single line text.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Email uses the email type, so Airtable checks the format.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "Status is a single select, a fixed list of options.",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "And created is a date. Correct types let Airtable check and filter your data later.",
+     "hl": 3,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Steps 4 and 5",
-   "title": "Link Orders to Customers",
-   "items": [
-    [
-     "order_number",
-     "First column"
-    ],
-    [
-     "amount · status",
-     "Currency · open / shipped / cancelled"
-    ],
-    [
-     "order_date · notes · customer",
-     "Date · long text · link → Customers"
-    ]
+   "title": "Orders link to one customer record",
+   "nodes": [
+    {
+     "id": "o1",
+     "label": "ORD-1001",
+     "x": 14,
+     "y": 18,
+     "sub": "$120 · open",
+     "art": "doc"
+    },
+    {
+     "id": "o4",
+     "label": "ORD-1004",
+     "x": 14,
+     "y": 50,
+     "sub": "$80 · cancelled",
+     "art": "doc"
+    },
+    {
+     "id": "o6",
+     "label": "ORD-1006",
+     "x": 14,
+     "y": 82,
+     "sub": "$210 · shipped",
+     "art": "doc"
+    },
+    {
+     "id": "ada",
+     "label": "Ada Okafor",
+     "x": 74,
+     "y": 50,
+     "sub": "Customers record",
+     "art": "idcard"
+    }
+   ],
+   "edges": [
+    {
+     "from": "o1",
+     "to": "ada"
+    },
+    {
+     "from": "o4",
+     "to": "ada"
+    },
+    {
+     "from": "o6",
+     "to": "ada"
+    }
    ],
    "beats": [
     {
-     "say": "A linked record connects a row in one table to a row in another, so you never copy a customer's details into every order.",
-     "show": 0
-    },
-    {
-     "say": "Create an Orders table. Order number is the first column.",
-     "show": 1
-    },
-    {
-     "say": "Amount is currency. Status is a single select: open, shipped or cancelled.",
-     "show": 2
-    },
-    {
-     "say": "Order date and notes, then customer, a link to the Customers table.",
+     "say": "Create an Orders table: order number first, then amount, status, order date, notes, and customer.",
      "show": 3
     },
     {
-     "say": "Order date is what later steps use to find recent and overdue orders.",
-     "show": 3
+     "say": "Customer is a link to another record. Order ten oh one points at Ada's row in Customers.",
+     "show": 4,
+     "on": [
+      "o1",
+      "ada"
+     ],
+     "send": {
+      "from": "o1",
+      "to": "ada",
+      "label": "customer link"
+     }
+    },
+    {
+     "say": "So do order ten oh four, and order ten oh six.",
+     "show": 4,
+     "on": [
+      "o4",
+      "o6",
+      "ada"
+     ],
+     "send": {
+      "from": "o6",
+      "to": "ada",
+      "label": "customer link"
+     }
+    },
+    {
+     "say": "Ada's details live in one place. Change her email once, and every order sees it.",
+     "show": 4,
+     "on": "ada"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "funnel",
-   "kicker": "Steps 6 and 7",
+   "kind": "table",
+   "kicker": "Steps 6 to 8",
    "title": "Views: one table, many needs",
-   "items": [
+   "columns": [
+    "order",
+    "status",
+    "order_date",
+    "customer"
+   ],
+   "rows": [
     [
-     "Open orders",
-     "status is open"
+     "ORD-1001",
+     "open",
+     "Sep 20",
+     "Ada"
     ],
     [
-     "This month",
-     "order_date within current month"
+     "ORD-1002",
+     "shipped",
+     "Sep 25",
+     "Ben"
     ],
     [
-     "By customer",
-     "Grouped by customer"
+     "ORD-1003",
+     "open",
+     "Oct 9",
+     "Chloe"
+    ],
+    [
+     "ORD-1004",
+     "cancelled",
+     "Oct 2",
+     "Ada"
+    ],
+    [
+     "ORD-1005",
+     "open",
+     "Sep 26",
+     "Ben"
+    ],
+    [
+     "ORD-1006",
+     "shipped",
+     "Oct 7",
+     "Ada"
+    ],
+    [
+     "ORD-1007",
+     "open",
+     "Oct 11",
+     "Chloe"
     ]
    ],
    "beats": [
     {
-     "say": "A view is a saved way of looking at a table, filtered, sorted or grouped, without changing the data.",
-     "show": 0
+     "say": "Here's sample data: varied statuses and dates, including a few old open orders. Say today is October twelfth."
     },
     {
-     "say": "In Orders, create three grid views.",
-     "show": 0
+     "say": "The Open orders view filters to status is open. Four rows.",
+     "sql": "View: Open orders\nstatus is open",
+     "hl": [
+      0,
+      2,
+      4,
+      6
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Open orders, filtered to status is open.",
-     "show": 1
+     "say": "This month keeps orders whose date is within the current month. Also four rows, but different ones.",
+     "sql": "View: This month\norder_date is within this month",
+     "hl": [
+      2,
+      3,
+      5,
+      6
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "This month, where order date is within the current month.",
-     "show": 2
+     "say": "By customer groups the rows, so all of Ada's orders sit together.",
+     "sql": "View: By customer\ngroup by customer",
+     "hl": [
+      0,
+      3,
+      5
+     ],
+     "dim": true,
+     "col": 3
     },
     {
-     "say": "And By customer, grouped by customer.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "pencil",
-   "kicker": "Step 8",
-   "title": "Add realistic sample data",
-   "big": "~10 orders",
-   "sub": "varied, with a few old open ones",
-   "beats": [
-    {
-     "say": "Finally, add several customers and about ten orders.",
-     "show": 0
-    },
-    {
-     "say": "Vary the statuses, amounts and dates, and include a few open orders dated more than two weeks ago.",
-     "show": 1
-    },
-    {
-     "say": "Then you can build and test against something that behaves like real data.",
-     "show": 2
+     "say": "Three views, and not a single record was changed or copied.",
+     "sql": "Views change how you look,\nnot the data"
     }
    ]
   },
@@ -403,122 +594,389 @@ Automated base
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
+   "kind": "walk",
    "kicker": "Steps 1 and 2",
-   "title": "Flag overdue orders",
+   "title": "Trace the is_overdue formula",
    "file": "Orders.is_overdue",
-   "code": "AND({status} = \"open\", DATETIME_DIFF(TODAY(), {order_date}, 'days') > 14)",
+   "code": "AND(\n  {status} = \"open\",\n  DATETIME_DIFF(\n    TODAY(), {order_date}, 'days'\n  ) > 14\n)",
    "beats": [
     {
-     "say": "A formula field calculates its value from other fields, so derived values are always correct.",
-     "show": 0
+     "say": "A formula field calculates its value from other fields. Here's is overdue, traced for order ten oh one.",
+     "line": 1,
+     "vars": {
+      "order": "ORD-1001"
+     }
     },
     {
-     "say": "In Orders, add a formula field called is overdue.",
-     "show": 1
+     "say": "First condition: is the status open? Yes, so this part is true.",
+     "line": 2,
+     "vars": {
+      "status": "open",
+      "is open": true
+     }
     },
     {
-     "say": "It shows one for open orders placed more than fourteen days ago, and zero otherwise.",
-     "show": 1
+     "say": "Next, the days between the order date, September twentieth, and today, October twelfth: twenty two.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "days": 22
+     }
+    },
+    {
+     "say": "Is twenty two more than fourteen? Yes.",
+     "line": 5,
+     "vars": {
+      "> 14": true
+     }
+    },
+    {
+     "say": "Both parts are true, so AND gives one. This order is overdue.",
+     "line": [
+      1,
+      6
+     ],
+     "out": "ORD-1001 → 1"
+    },
+    {
+     "say": "Order ten oh two is seventeen days old, but shipped. The first part is false, so it gets zero.",
+     "line": 2,
+     "vars": {
+      "order": "ORD-1002",
+      "status": "shipped",
+      "is open": false,
+      "days": 17,
+      "> 14": true
+     },
+     "out": "ORD-1002 → 0"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "graph",
+   "kind": "table",
+   "kicker": "Step 2",
+   "title": "The flag on every order",
+   "columns": [
+    "order",
+    "status",
+    "days old",
+    "is_overdue"
+   ],
+   "rows": [
+    [
+     "ORD-1001",
+     "open",
+     "22",
+     "1"
+    ],
+    [
+     "ORD-1002",
+     "shipped",
+     "17",
+     "0"
+    ],
+    [
+     "ORD-1003",
+     "open",
+     "3",
+     "0"
+    ],
+    [
+     "ORD-1004",
+     "cancelled",
+     "10",
+     "0"
+    ],
+    [
+     "ORD-1005",
+     "open",
+     "16",
+     "1"
+    ],
+    [
+     "ORD-1006",
+     "shipped",
+     "5",
+     "0"
+    ],
+    [
+     "ORD-1007",
+     "open",
+     "1",
+     "0"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Airtable runs the same formula on every row, and keeps it up to date by itself."
+    },
+    {
+     "say": "Open orders older than fourteen days get a one. Just two of them.",
+     "sql": "open AND more than 14 days old",
+     "hl": [
+      0,
+      4
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Order ten oh three is open, but only three days old, so it stays at zero.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "Flags like this power the filters and alerts your tools rely on.",
+     "hl": [
+      0,
+      4
+     ],
+     "col": 3
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Steps 3 and 4",
-   "title": "Rollups and lookups",
-   "items": [
+   "title": "A rollup totals each customer's orders",
+   "columns": [
+    "customer",
+    "linked orders",
+    "amount",
+    "total_spent"
+   ],
+   "rows": [
     [
-     "Rollup: total_spent",
-     "SUM(values) of linked amounts"
+     "Ada",
+     "1001, 1004, 1006",
+     "120 + 80 + 210",
+     "$410"
     ],
     [
-     "Lookup",
-     "Pulls values from linked records"
+     "Ben",
+     "1002, 1005",
+     "45 + 60",
+     "$105"
+    ],
+    [
+     "Chloe",
+     "1003, 1007",
+     "300 + 95",
+     "$395"
     ]
    ],
    "beats": [
     {
-     "say": "A rollup summarises linked records.",
-     "show": 0
+     "say": "A rollup summarises linked records. In Customers, add one called total spent."
     },
     {
-     "say": "In Customers, add total spent: a rollup over the linked Orders' amount, using sum of values.",
-     "show": 1
+     "say": "It follows the link to each customer's orders.",
+     "col": 1,
+     "sql": "Rollup: total_spent\nlinked field: Orders"
     },
     {
-     "say": "A lookup is different. It pulls a field's values from linked records, without summarising them.",
-     "show": 2
+     "say": "It reads the amount field from each of those orders.",
+     "col": 2,
+     "sql": "Rollup: total_spent\nfield: amount"
+    },
+    {
+     "say": "And applies SUM of values. Ada's three orders add up to four hundred and ten.",
+     "hl": 0,
+     "col": 3,
+     "sql": "Rollup: total_spent\nSUM(values)"
+    },
+    {
+     "say": "Ben gets one hundred and five, and Chloe three hundred and ninety five. No manual tallying.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "mail",
+   "kind": "diagram",
    "kicker": "Steps 5 and 6",
-   "title": "Email the customer when it ships",
-   "steps": [
-    "Lookup: customer_email",
-    "Trigger: status is shipped",
-    "Send email to customer_email",
-    "Test, then turn on"
+   "title": "Email the customer when an order ships",
+   "nodes": [
+    {
+     "id": "cust",
+     "label": "Chloe",
+     "x": 14,
+     "y": 22,
+     "sub": "Customers · email",
+     "art": "idcard"
+    },
+    {
+     "id": "ord",
+     "label": "ORD-1003",
+     "x": 14,
+     "y": 78,
+     "sub": "status → shipped",
+     "art": "doc"
+    },
+    {
+     "id": "auto",
+     "label": "Automation",
+     "x": 50,
+     "y": 78,
+     "sub": "status is shipped",
+     "art": "bolt"
+    },
+    {
+     "id": "mail",
+     "label": "Send email",
+     "x": 86,
+     "y": 78,
+     "sub": "To: customer_email",
+     "art": "mail"
+    },
+    {
+     "id": "inbox",
+     "label": "Chloe's inbox",
+     "x": 86,
+     "y": 22,
+     "sub": "subject has order no.",
+     "art": "bell"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cust",
+     "to": "ord"
+    },
+    {
+     "from": "ord",
+     "to": "auto"
+    },
+    {
+     "from": "auto",
+     "to": "mail"
+    },
+    {
+     "from": "mail",
+     "to": "inbox"
+    }
    ],
    "beats": [
     {
-     "say": "An automation runs actions when something happens in the base. The free plan limits runs per month.",
-     "show": 0
+     "say": "The email address lives in Customers, not Orders.",
+     "show": 2,
+     "on": "cust"
     },
     {
-     "say": "First, add a lookup field, customer email, through the customer link.",
-     "show": 1
+     "say": "So first add a lookup field, customer email, that pulls it through the customer link onto each order.",
+     "show": 2,
+     "on": "ord",
+     "send": {
+      "from": "cust",
+      "to": "ord",
+      "label": "email lookup"
+     }
     },
     {
-     "say": "Trigger: when a record matches conditions, in Orders, where status is shipped.",
-     "show": 2
+     "say": "Now create an automation: when a record matches conditions, in Orders, status is shipped.",
+     "show": 3,
+     "on": "auto"
     },
     {
-     "say": "Action: send an email to the trigger record's customer email, mentioning the order number.",
-     "show": 3
+     "say": "Someone marks order ten oh three as shipped. It matches, and the automation fires.",
+     "show": 3,
+     "on": [
+      "ord",
+      "auto"
+     ],
+     "send": {
+      "from": "ord",
+      "to": "auto",
+      "label": "matches"
+     }
     },
     {
-     "say": "Use your own email on a test customer, test it, and turn it on.",
-     "show": 4
+     "say": "Its action is Send email, with the To address set to the record's customer email.",
+     "show": 4,
+     "on": "mail",
+     "send": {
+      "from": "auto",
+      "to": "mail",
+      "label": "ORD-1003"
+     }
+    },
+    {
+     "say": "The customer hears their order shipped, and nobody had to remember to tell them.",
+     "show": 5,
+     "on": "inbox",
+     "send": {
+      "from": "mail",
+      "to": "inbox",
+      "label": "Order shipped"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
+   "kind": "table",
    "kicker": "Steps 7 and 8",
-   "title": "Protect data integrity",
-   "items": [
+   "title": "Constrain data at the moment it's entered",
+   "columns": [
+    "Someone enters",
+    "Free text",
+    "Constrained"
+   ],
+   "rows": [
     [
-     "Single-select options",
-     "No typos"
+     "shipped",
+     "saved",
+     "saved"
     ],
     [
-     "Required fields",
-     "Set in a Form view, not the grid"
+     "Shipped (capital)",
+     "saved, filters miss it",
+     "not an option"
+    ],
+    [
+     "shiped (typo)",
+     "saved, filters miss it",
+     "not an option"
+    ],
+    [
+     "no amount",
+     "saved",
+     "form says required"
     ]
    ],
    "beats": [
     {
-     "say": "Data integrity means keeping data accurate and consistent. Tools built on inconsistent data give wrong answers.",
-     "show": 0
+     "say": "Data integrity means keeping data accurate and consistent."
     },
     {
-     "say": "Single select options, like status, prevent typos.",
-     "show": 1
+     "say": "The right value is fine either way.",
+     "hl": 0
     },
     {
-     "say": "Airtable can't make a field required in the grid. Instead, create a form view on Orders and mark order number, amount and customer as required.",
-     "show": 2
+     "say": "But with free text, a capital letter or a typo slips in, and the status filter quietly misses it.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 1
     },
     {
-     "say": "In Project 4, you'll mark the matching inputs required in Retool too.",
-     "show": 2
+     "say": "A single select only offers the real options, so the typo can't happen.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 2
+    },
+    {
+     "say": "Required fields live in a form view, not the grid. Mark order number, amount and customer as required there.",
+     "sql": "Form view on Orders:\norder_number, amount, customer required",
+     "hl": 3,
+     "col": 2
     }
    ]
   },
@@ -541,7 +999,7 @@ Automated base
      "show": 0
     },
     {
-     "say": "Why add the customer_email lookup before building the email automation?",
+     "say": "Why add the customer email lookup before building the email automation?",
      "show": 0
     },
     {
@@ -685,100 +1143,268 @@ Retool app: operations-tool
    ]
   },
   {
-   "kind": "list",
-   "art": "key",
-   "kicker": "Steps 2 and 3",
-   "title": "Connect with a scoped token",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Steps 2 to 4",
+   "title": "App, resource, data: where the token lives",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "operations-tool",
+     "x": 14,
+     "y": 55,
+     "sub": "query: getOrders",
+     "art": "browser"
+    },
+    {
+     "id": "res",
+     "label": "Airtable resource",
+     "x": 50,
+     "y": 55,
+     "sub": "holds the token",
+     "art": "plug"
+    },
+    {
+     "id": "pat",
+     "label": "Access token",
+     "x": 50,
+     "y": 15,
+     "sub": "made in Builder hub",
+     "art": "key"
+    },
+    {
+     "id": "air",
+     "label": "operations base",
+     "x": 86,
+     "y": 55,
+     "sub": "Orders table",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "res"
+    },
+    {
+     "from": "pat",
+     "to": "res"
+    },
+    {
+     "from": "res",
+     "to": "air"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Airtable retired its old A P I keys in February twenty twenty four. You connect with a Personal Access Token.",
+     "show": 3,
+     "on": "pat"
+    },
+    {
+     "say": "You paste the token into a Retool resource, a saved connection. It never goes into a query or a component.",
+     "show": 3,
+     "on": "res",
+     "send": {
+      "from": "pat",
+      "to": "res",
+      "label": "token"
+     }
+    },
+    {
+     "say": "A query uses that resource. Get orders asks for List records on Orders.",
+     "show": 4,
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "res",
+      "label": "List records"
+     }
+    },
+    {
+     "say": "The resource adds the token and calls Airtable.",
+     "show": 4,
+     "on": "res",
+     "send": {
+      "from": "res",
+      "to": "air",
+      "label": "Orders"
+     }
+    },
+    {
+     "say": "The records come back to your app, and the app never saw the token.",
+     "show": 4,
+     "on": "app",
+     "send": {
+      "from": "res",
+      "to": "app",
+      "label": "7 records"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 3",
+   "title": "Give the token only what it needs",
+   "columns": [
+    "Token setting",
+    "Allows",
+    "Why"
+   ],
+   "rows": [
     [
-     "Personal Access Token",
-     "API keys retired Feb 2024"
+     "data.records:read",
+     "read rows",
+     "show orders"
     ],
     [
-     "Scopes",
-     "data.records:read · write · schema.bases:read"
+     "data.records:write",
+     "create, edit, delete",
+     "Project 4 forms"
     ],
     [
-     "Access",
-     "operations base only"
+     "schema.bases:read",
+     "see tables and fields",
+     "pick Orders in Retool"
     ],
     [
-     "Keep it private ✓",
-     "Never in a query or shared doc ✗"
+     "Access: operations",
+     "this one base only",
+     "nothing else exposed"
     ]
    ],
    "beats": [
     {
-     "say": "A resource is a saved connection to a data source. It holds the credentials, so they never appear in your app.",
-     "show": 0
+     "say": "In the Builder hub, create the token with just three scopes."
     },
     {
-     "say": "Airtable retired its old A P I keys in February twenty twenty four, so you use a Personal Access Token.",
-     "show": 1
+     "say": "Records read, to fetch rows.",
+     "hl": 0
     },
     {
-     "say": "Give it only three scopes: read records, write records, and read the base schema.",
-     "show": 2
+     "say": "Records write, which your forms will need in Project 4.",
+     "hl": 1
     },
     {
-     "say": "Under Access, add only your operations base.",
-     "show": 3
+     "say": "And schema bases read, so Retool can list your tables and fields.",
+     "hl": 2
     },
     {
-     "say": "Keep it private. Never paste it into a query, a component or a shared doc. Paste it only into a new Airtable resource in Retool.",
-     "show": 4
+     "say": "Under Access, add only the operations base. If it ever leaks, the damage stops here.",
+     "hl": 3,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
-   "kicker": "Steps 4 and 5",
-   "title": "A query and a live table",
-   "file": "table1 · data",
-   "code": "{{ getOrders.data.records.map(r => ({ id: r.id, ...r.fields })) }}",
+   "kind": "walk",
+   "kicker": "Step 5",
+   "title": "Turn Airtable records into table rows",
+   "file": "table1 · Data",
+   "code": "{{ getOrders.data.records.map(r => ({\n     id: r.id,\n     ...r.fields\n})) }}",
    "beats": [
     {
-     "say": "A query fetches or changes data through a resource.",
-     "show": 0
+     "say": "Get orders returns records. Each one has an I D, and its values tucked inside fields.",
+     "line": 1,
+     "vars": {
+      "records": "7"
+     }
     },
     {
-     "say": "Create a query called get orders: List records, on the Orders table, and run it.",
-     "show": 1
+     "say": "Map takes the first record, r.",
+     "line": 1,
+     "vars": {
+      "r.id": "rec1001",
+      "r.fields": "{order_number, amount, ...}"
+     }
     },
     {
-     "say": "Drag a Table onto the canvas, and set its data to this.",
-     "show": 1
+     "say": "It keeps the record I D as the row's id.",
+     "line": 2,
+     "vars": {
+      "id": "rec1001"
+     }
     },
     {
-     "say": "It turns each Airtable record into one row, with its I D plus its fields.",
-     "show": 1
+     "say": "And spreads every field out beside it, so each field becomes its own column.",
+     "line": 3,
+     "out": "{ id: rec1001, order_number: ORD-1001, ... }"
+    },
+    {
+     "say": "It does the same for all seven records. The Table component now shows seven live rows.",
+     "line": [
+      1,
+      4
+     ],
+     "vars": {
+      "rows": "7"
+     },
+     "out": "… 7 rows"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "layers",
+   "kind": "table",
    "kicker": "Steps 6 to 8",
-   "title": "Master and detail",
-   "file": "Detail panel",
-   "code": "{{ table1.selectedRow.order_number }}\n{{ table1.selectedRow.amount }}",
+   "title": "Click a row, and the detail panel follows",
+   "columns": [
+    "id",
+    "order_number",
+    "amount",
+    "status"
+   ],
+   "rows": [
+    [
+     "rec1001",
+     "ORD-1001",
+     "120",
+     "open"
+    ],
+    [
+     "rec1002",
+     "ORD-1002",
+     "45",
+     "shipped"
+    ],
+    [
+     "rec1003",
+     "ORD-1003",
+     "300",
+     "open"
+    ],
+    [
+     "rec1004",
+     "ORD-1004",
+     "80",
+     "cancelled"
+    ]
+   ],
    "beats": [
     {
-     "say": "A component is a U I element, like a table, button, form or text.",
-     "show": 0
+     "say": "Beside the table, add a Container with Text components. This is the master detail layout."
     },
     {
-     "say": "Add a Container beside the table, with Text components for the selected order's number, amount, status, date and notes.",
-     "show": 1
+     "say": "Click order ten oh three. It becomes table one's selected row.",
+     "hl": 2,
+     "sql": "table1.selectedRow"
     },
     {
-     "say": "Bind each one with a reference in double curly braces, like table one, selected row, amount.",
-     "show": 1
+     "say": "A Text bound to selected row dot order number shows O R D ten oh three.",
+     "hl": 2,
+     "col": 1,
+     "sql": "{{ table1.selectedRow.order_number }}\n→ ORD-1003"
     },
     {
-     "say": "A list plus the selected item's details is the most common internal tool pattern.",
-     "show": 1
+     "say": "Another, bound to selected row dot amount, shows three hundred.",
+     "hl": 2,
+     "col": 2,
+     "sql": "{{ table1.selectedRow.amount }}\n→ 300"
+    },
+    {
+     "say": "Click order ten oh one instead, and every bound Text updates by itself: one hundred and twenty.",
+     "hl": 0,
+     "col": 2,
+     "sql": "{{ table1.selectedRow.amount }}\n→ 120"
     }
    ]
   },
@@ -934,109 +1560,329 @@ Write actions
    ]
   },
   {
-   "kind": "flow",
-   "art": "form",
-   "kicker": "Steps 2 to 4",
-   "title": "Edit a record",
-   "steps": [
-    "Form: status, amount, notes",
-    "Defaults + Required",
-    "updateOrder: Update record",
-    "Run on Submit"
+   "kind": "table",
+   "kicker": "Step 1",
+   "title": "Read queries versus mutating queries",
+   "columns": [
+    "Query",
+    "Action",
+    "Changes data?"
    ],
-   "beats": [
-    {
-     "say": "Add a Form with a Select for status, a Number input for amount, and a Text area for notes.",
-     "show": 1
-    },
-    {
-     "say": "Default each input from the selected row, and turn on Required for the important ones.",
-     "show": 2
-    },
-    {
-     "say": "Create update order: Update record on Orders, with the record I D from the selected row, and fields from the form.",
-     "show": 3
-    },
-    {
-     "say": "Run it from the form's Submit event, or a Save button's click.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "bell",
-   "kicker": "Step 5",
-   "title": "Tell users what happened",
-   "items": [
+   "rows": [
     [
-     "On success ✓",
-     "\"Order saved\" + refresh getOrders"
+     "getOrders",
+     "List records",
+     "no"
     ],
     [
-     "On failure ✗",
-     "Error notification"
+     "getCustomers",
+     "List records",
+     "no"
+    ],
+    [
+     "updateOrder",
+     "Update record",
+     "yes"
+    ],
+    [
+     "createOrder",
+     "Create record",
+     "yes"
+    ],
+    [
+     "deleteOrder",
+     "Delete record",
+     "yes"
     ]
    ],
    "beats": [
     {
-     "say": "Then add feedback.",
-     "show": 0
+     "say": "By the end of this project, your app has five queries."
     },
     {
-     "say": "On success, show a notification saying Order saved, and trigger get orders to refresh the table.",
-     "show": 1
+     "say": "Two only read. Running them twice changes nothing.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "On failure, show an error notification.",
-     "show": 2
-    },
-    {
-     "say": "So users know their change worked, and the tool always shows current data.",
-     "show": 2
+     "say": "Three are mutating. They change real records in Airtable, so each one gets a safeguard.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "chain",
+   "kind": "diagram",
+   "kicker": "Steps 2 to 5",
+   "title": "Edit a record, then tell the user",
+   "nodes": [
+    {
+     "id": "tbl",
+     "label": "table1",
+     "x": 12,
+     "y": 25,
+     "sub": "selected: ORD-1003",
+     "art": "table"
+    },
+    {
+     "id": "form",
+     "label": "Edit form",
+     "x": 45,
+     "y": 25,
+     "sub": "required inputs",
+     "art": "form"
+    },
+    {
+     "id": "upd",
+     "label": "updateOrder",
+     "x": 82,
+     "y": 25,
+     "sub": "Update record",
+     "art": "gear"
+    },
+    {
+     "id": "air",
+     "label": "Airtable Orders",
+     "x": 82,
+     "y": 78,
+     "sub": "the real record",
+     "art": "database"
+    },
+    {
+     "id": "note",
+     "label": "Notification",
+     "x": 45,
+     "y": 78,
+     "sub": "Order saved",
+     "art": "bell"
+    },
+    {
+     "id": "get",
+     "label": "getOrders",
+     "x": 12,
+     "y": 78,
+     "sub": "refresh",
+     "art": "loop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "tbl",
+     "to": "form"
+    },
+    {
+     "from": "form",
+     "to": "upd"
+    },
+    {
+     "from": "upd",
+     "to": "air"
+    },
+    {
+     "from": "upd",
+     "to": "note"
+    },
+    {
+     "from": "upd",
+     "to": "get"
+    },
+    {
+     "from": "get",
+     "to": "tbl"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Each form input takes its default from the selected row, so the form opens with status open.",
+     "show": 2,
+     "on": "form",
+     "send": {
+      "from": "tbl",
+      "to": "form",
+      "label": "status: open"
+     }
+    },
+    {
+     "say": "The user changes status to shipped and submits. The Submit event runs update order.",
+     "show": 3,
+     "on": "upd",
+     "send": {
+      "from": "form",
+      "to": "upd",
+      "label": "Submit"
+     }
+    },
+    {
+     "say": "It sends the selected row's I D, so Airtable knows exactly which record, plus the new fields.",
+     "show": 4,
+     "on": "air",
+     "send": {
+      "from": "upd",
+      "to": "air",
+      "label": "id + fields"
+     }
+    },
+    {
+     "say": "On success, a notification says Order saved.",
+     "show": 5,
+     "on": "note",
+     "send": {
+      "from": "upd",
+      "to": "note",
+      "label": "success"
+     }
+    },
+    {
+     "say": "And get orders runs again, so the table shows the change.",
+     "show": 6,
+     "on": [
+      "get",
+      "tbl"
+     ],
+     "send": {
+      "from": "get",
+      "to": "tbl",
+      "label": "fresh rows"
+     }
+    },
+    {
+     "say": "If it fails, the failure handler shows an error notification instead.",
+     "show": 6,
+     "on": "note"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Step 6",
-   "title": "Create a record with its customer",
-   "file": "createOrder · customer",
-   "code": "// customerSelect option values\n{{ getCustomers.data.records.map(r => r.id) }}\n\n// customer field in createOrder\n{{ [customerSelect.value] }}",
+   "title": "Create an order with a linked customer",
+   "file": "createOrder",
+   "code": "// customerSelect options\nvalues: {{ getCustomers.data.records\n  .map(r => r.id) }}\nlabels: {{ getCustomers.data.records\n  .map(r => r.fields.name) }}\n\n// createOrder · customer field\ncustomer: {{ [customerSelect.value] }}",
    "beats": [
     {
-     "say": "Next, a create form, and a create order query that sets order number, amount, status, date and the linked customer.",
-     "show": 0
+     "say": "To pick a customer, get customers lists the Customers table.",
+     "line": 2,
+     "vars": {
+      "records": "3"
+     }
     },
     {
-     "say": "For the customer, a get customers query feeds a Select: values are record I Ds, labels are names.",
-     "show": 1
+     "say": "The Select's values are the record I Ds.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "values": "[\"recAda\", \"recBen\", \"recChloe\"]"
+     }
     },
     {
-     "say": "Airtable expects a linked record field as a list of record I Ds, so wrap the Select's value in square brackets.",
-     "show": 1
+     "say": "Its labels are the names, so people see Ada, Ben and Chloe, not I Ds.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "labels": "[\"Ada\", \"Ben\", \"Chloe\"]"
+     }
+    },
+    {
+     "say": "The user picks Ben. The Select's value is Ben's record I D.",
+     "line": 8,
+     "vars": {
+      "customerSelect.value": "recBen"
+     }
+    },
+    {
+     "say": "Airtable expects a linked field as a list of I Ds, so the value goes inside square brackets.",
+     "line": 8,
+     "vars": {
+      "customer": "[\"recBen\"]"
+     }
+    },
+    {
+     "say": "Create order runs, and on success get orders refreshes the table.",
+     "line": 8,
+     "out": "Created ORD-1008 → linked to Ben"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "warning",
+   "kind": "array",
    "kicker": "Steps 7 and 8",
-   "title": "Guard the delete",
-   "quote": "Delete this order? This cannot be undone.",
+   "title": "A guarded delete",
+   "values": [
+    "Click Delete",
+    "Confirm modal",
+    "deleteOrder",
+    "Refresh table"
+   ],
    "beats": [
     {
-     "say": "Deletes are irreversible, so confirm first.",
-     "show": 0
+     "say": "Delete can't be undone, so it gets a confirmation step."
     },
     {
-     "say": "Create delete order, Delete record, with the selected row's I D.",
-     "show": 1
+     "say": "Someone clicks Delete on the selected order.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     }
     },
     {
-     "say": "In its settings, turn on the confirmation modal. Add a Delete button, and refresh get orders on success.",
-     "show": 1
+     "say": "The query's confirmation setting shows a modal first: Delete this order? This cannot be undone.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     },
+     "note": "Delete this order? This cannot be undone."
+    },
+    {
+     "say": "If it was a misclick, they cancel, and nothing runs.",
+     "ok": [
+      0,
+      1
+     ],
+     "gone": [
+      2,
+      3
+     ],
+     "note": "Cancel → no change"
+    },
+    {
+     "say": "If they confirm, delete order runs, using the selected row's I D.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     },
+     "note": "Confirm → Delete record"
+    },
+    {
+     "say": "On success, get orders refreshes, and the order is gone from the table.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "ptr": {
+      "now": 3
+     }
     }
    ]
   },
@@ -1059,7 +1905,7 @@ Write actions
      "show": 0
     },
     {
-     "say": "Why does the update query need table1.selectedRow.id?",
+     "say": "Why does the update query need the selected row's I D?",
      "show": 0
     },
     {
@@ -1203,96 +2049,287 @@ Access control
    ]
   },
   {
-   "kind": "code",
-   "art": "eye",
-   "kicker": "Step 3",
-   "title": "Hide admin controls",
-   "file": "Delete button · Hidden",
-   "code": "{{ !adminEmails.value.includes(current_user.email) }}",
+   "kind": "walk",
+   "kicker": "Steps 2 and 3",
+   "title": "Hide the Delete button from non-admins",
+   "file": "Hidden property",
+   "code": "// Variable: adminEmails\n[\"you@example.com\"]\n\n// Delete button · Hidden\n{{ !adminEmails.value\n     .includes(current_user.email) }}",
    "beats": [
     {
-     "say": "On the free path, create a Variable in the Code panel called admin emails, holding a list of admin emails. Use your own.",
-     "show": 0
+     "say": "In the Code panel, a variable called admin emails holds the list of admins.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "adminEmails.value": "[\"you@example.com\"]"
+     }
     },
     {
-     "say": "Then set the Delete button's Hidden property to this check.",
-     "show": 1
+     "say": "The Delete button's Hidden property checks the current user against that list.",
+     "line": [
+      4,
+      6
+     ]
     },
     {
-     "say": "Anyone whose email isn't on the list doesn't see the button. Do the same for sensitive fields.",
-     "show": 1
+     "say": "You open the app. Current user email is you at example dot com.",
+     "line": 6,
+     "vars": {
+      "current_user.email": "you@example.com"
+     }
+    },
+    {
+     "say": "The list includes you, so includes is true. The not sign flips it, so Hidden is false.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "includes": true,
+      "Hidden": false
+     },
+     "out": "you@example.com → Delete shown"
+    },
+    {
+     "say": "Now Sam opens it. Sam isn't in the list, so includes is false, and Hidden is true.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "current_user.email": "sam@example.com",
+      "includes": false,
+      "Hidden": true
+     },
+     "out": "sam@example.com → Delete hidden"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "diagram",
    "kicker": "Steps 4 and 5",
    "title": "Hiding is not enforcing",
-   "items": [
+   "nodes": [
+    {
+     "id": "sam",
+     "label": "Sam",
+     "x": 12,
+     "y": 50,
+     "sub": "not an admin",
+     "art": "persona"
+    },
+    {
+     "id": "ui",
+     "label": "Hidden button",
+     "x": 45,
+     "y": 18,
+     "sub": "browser only",
+     "art": "eye"
+    },
+    {
+     "id": "q",
+     "label": "deleteOrder",
+     "x": 45,
+     "y": 82,
+     "sub": "still in the app",
+     "art": "gear"
+    },
+    {
+     "id": "res",
+     "label": "Resource",
+     "x": 72,
+     "y": 82,
+     "sub": "read-only token",
+     "art": "key"
+    },
+    {
+     "id": "air",
+     "label": "Airtable",
+     "x": 88,
+     "y": 30,
+     "sub": "Orders",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sam",
+     "to": "ui"
+    },
+    {
+     "from": "sam",
+     "to": "q"
+    },
+    {
+     "from": "q",
+     "to": "res"
+    },
+    {
+     "from": "res",
+     "to": "air"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Sam can't see the Delete button. That's a convenience, not a lock.",
+     "show": 2,
+     "on": "ui"
+    },
+    {
+     "say": "Hiding only changes the browser. The delete query still exists, and could be run another way.",
+     "show": 3,
+     "on": "q",
+     "send": {
+      "from": "sam",
+      "to": "q",
+      "label": "run delete"
+     }
+    },
+    {
+     "say": "Real enforcement happens where the data is reached. On a paid plan, non-admins use a resource with a read-only token.",
+     "show": 4,
+     "on": "res",
+     "send": {
+      "from": "q",
+      "to": "res",
+      "label": "delete"
+     }
+    },
+    {
+     "say": "Airtable gets a delete with a token that can only read, and refuses it.",
+     "show": 5,
+     "on": "air",
+     "send": {
+      "from": "res",
+      "to": "air",
+      "label": "delete"
+     }
+    },
+    {
+     "say": "Nothing is deleted. On free, a Disable query check helps, but it still runs in the browser.",
+     "show": 5,
+     "on": "res",
+     "send": {
+      "from": "air",
+      "to": "res",
+      "label": "not allowed"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 6",
+   "title": "One app, two views",
+   "columns": [
+    "Container",
+    "Hidden when",
+    "Admin",
+    "Member"
+   ],
+   "rows": [
     [
-     "Hidden button",
-     "Convenience, not security ✗"
+     "Manager summary",
+     "not an admin",
+     "shown",
+     "hidden"
     ],
     [
-     "Data-layer restriction",
-     "Permission groups · read-only token ✓"
+     "Task list",
+     "an admin",
+     "hidden",
+     "shown"
     ],
     [
-     "Disable query on free",
-     "Extra safeguard, still in the browser"
+     "Delete button",
+     "not an admin",
+     "shown",
+     "hidden"
     ]
    ],
    "beats": [
     {
-     "say": "But hiding a control in the browser is a convenience, not a security control.",
-     "show": 0
+     "say": "Each container's Hidden property uses the same admin emails check."
     },
     {
-     "say": "The action could still be run another way, unless it's blocked where the data is accessed.",
-     "show": 1
+     "say": "Admins get a manager summary, with Statistic components: four open orders, two overdue.",
+     "sql": "Statistics: open orders 4 · overdue 2",
+     "hl": [
+      0,
+      2
+     ],
+     "col": 2
     },
     {
-     "say": "Real enforcement restricts each role at the source: an admin-only permission group for the resource that can delete, and a read-only token for everyone else.",
-     "show": 2
+     "say": "Everyone else gets a simpler task list instead.",
+     "hl": 1,
+     "col": 3
     },
     {
-     "say": "Permission groups on resources and queries need a paid Retool plan, so on free this step is concept only.",
-     "show": 2
-    },
-    {
-     "say": "On free, you can also set delete order's Disable query option with the same check. That's a second safeguard, but it still runs in the browser.",
-     "show": 3
+     "say": "One app that adapts to each role is cheaper to maintain than two tools.",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "doc",
-   "kicker": "Steps 6 to 8",
-   "title": "Role-aware views and a change log",
-   "steps": [
-    "Admin summary vs. task list",
-    "Audit trail: who, what, when",
-    "Change log table",
-    "logChange on update + delete"
+   "kind": "table",
+   "kicker": "Steps 7 and 8",
+   "title": "A change log: who, what, and when",
+   "columns": [
+    "action",
+    "order_number",
+    "user_email",
+    "logged_at"
+   ],
+   "rows": [
+    [
+     "update",
+     "ORD-1003",
+     "you@example.com",
+     "Oct 12, 09:14"
+    ],
+    [
+     "update",
+     "ORD-1001",
+     "sam@example.com",
+     "Oct 12, 09:31"
+    ],
+    [
+     "delete",
+     "ORD-1004",
+     "you@example.com",
+     "Oct 12, 09:40"
+    ]
    ],
    "beats": [
     {
-     "say": "Show admins a manager summary, like total open orders and overdue count, and everyone else a simpler task list, using the same admin check.",
-     "show": 1
+     "say": "In Airtable, add a Change log table. Then a Retool query, log change, creates a record in it.",
+     "sql": "logChange: Create record\nuser_email = {{ current_user.email }}"
     },
     {
-     "say": "Then add an audit trail, which records who changed what, and when.",
-     "show": 2
+     "say": "Update order succeeds, so its success handler runs log change with the action update.",
+     "hl": 0,
+     "col": 0
     },
     {
-     "say": "In Airtable, create a Change log table: action, order number, user email, and logged at.",
-     "show": 3
+     "say": "Sam edits an order, and the log records Sam's email from current user.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "In Retool, a log change query creates a record with current user's email, run from the success handlers of update order and delete order.",
-     "show": 4
+     "say": "You delete an order. The delete success handler logs action delete.",
+     "hl": 2,
+     "col": 0
+    },
+    {
+     "say": "Logged at is a created time field, so Airtable stamps the when by itself.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 3
     }
    ]
   },
@@ -1450,92 +2487,274 @@ Deployed tool
    ]
   },
   {
-   "kind": "list",
-   "art": "layout",
-   "kicker": "Steps 1 to 3",
-   "title": "Make it easy to use",
-   "items": [
-    [
-     "Sections or tabs",
-     "Orders · Customers · Reports"
-    ],
-    [
-     "Helpful states",
-     "Empty · loading · clear labels"
-    ]
+   "kind": "array",
+   "kicker": "Steps 1 and 2",
+   "title": "Group the app the way people think",
+   "values": [
+    "Orders",
+    "Customers",
+    "Reports"
    ],
    "beats": [
     {
-     "say": "A cluttered tool slows people down and gets abandoned.",
-     "show": 0
+     "say": "A cluttered tool slows people down. So group the app into tabs."
     },
     {
-     "say": "Group the app into clear sections or tabs, like Orders, Customers and Reports.",
-     "show": 1
+     "say": "Orders holds the table, the detail panel, and the edit and create forms.",
+     "hl": 0,
+     "note": "Orders: table · detail · forms"
     },
     {
-     "say": "Add empty states, loading indicators, and clear labels throughout.",
-     "show": 2
+     "say": "Customers holds each customer and their total spent.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "Customers: list · total_spent"
+    },
+    {
+     "say": "Reports holds summaries, like open and overdue counts.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "note": "Reports: open 4 · overdue 2"
+    },
+    {
+     "say": "Each task now lives in one obvious place, even as the tool grows.",
+     "ok": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "server",
+   "kind": "table",
+   "kicker": "Step 3",
+   "title": "Helpful states make it feel finished",
+   "columns": [
+    "Moment",
+    "Without",
+    "With"
+   ],
+   "rows": [
+    [
+     "getOrders running",
+     "blank table",
+     "loading indicator"
+    ],
+    [
+     "No open orders",
+     "empty grid",
+     "No open orders yet"
+    ],
+    [
+     "Amount input",
+     "amount",
+     "Amount (USD)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Small touches remove confusion."
+    },
+    {
+     "say": "While get orders runs, show a loading indicator, not a blank table.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "When a list is empty, say so in plain words.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "And give every input a clear label.",
+     "hl": 2,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Step 4",
-   "title": "Staging and production",
-   "items": [
-    [
-     "Staging vs. production",
-     "Paid Retool plan · concept only"
-    ],
-    [
-     "Free habit",
-     "Copy the base as operations-test"
-    ]
+   "title": "Try risky changes on a copy first",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "You",
+     "x": 12,
+     "y": 50,
+     "sub": "the builder",
+     "art": "laptop"
+    },
+    {
+     "id": "test",
+     "label": "operations-test",
+     "x": 50,
+     "y": 20,
+     "sub": "a copy of the base",
+     "art": "flask"
+    },
+    {
+     "id": "prod",
+     "label": "operations",
+     "x": 50,
+     "y": 80,
+     "sub": "the real data",
+     "art": "database"
+    },
+    {
+     "id": "team",
+     "label": "The team",
+     "x": 88,
+     "y": 80,
+     "sub": "uses it every day",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "test"
+    },
+    {
+     "from": "you",
+     "to": "prod"
+    },
+    {
+     "from": "team",
+     "to": "prod"
+    }
    ],
    "beats": [
     {
-     "say": "Many teams keep a staging environment for testing, and production for real use.",
-     "show": 0
+     "say": "Teams often keep staging for testing and production for real use. In Retool that needs a paid plan.",
+     "show": 1,
+     "on": "you"
     },
     {
-     "say": "That way you can improve the tool without risking the data the team depends on.",
-     "show": 1
+     "say": "The free habit: copy your base as operations test.",
+     "show": 2,
+     "on": "test"
     },
     {
-     "say": "Retool's multiple environments need a paid plan, so on free, make a copy of your base called operations test, and try risky changes there first.",
-     "show": 2
+     "say": "Try the risky change there first.",
+     "show": 2,
+     "on": "test",
+     "send": {
+      "from": "you",
+      "to": "test",
+      "label": "risky change"
+     }
+    },
+    {
+     "say": "Meanwhile, the team keeps working on the real base, untouched.",
+     "show": 4,
+     "on": [
+      "team",
+      "prod"
+     ],
+     "send": {
+      "from": "team",
+      "to": "prod",
+      "label": "daily work"
+     }
+    },
+    {
+     "say": "Only once it works do you apply it to the real one.",
+     "show": 4,
+     "on": "prod",
+     "send": {
+      "from": "you",
+      "to": "prod",
+      "label": "proven change"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "people",
+   "kind": "array",
    "kicker": "Steps 5 to 8",
-   "title": "Release, document, onboard",
-   "steps": [
-    "Release + invite test users",
-    "Write the user guide",
-    "Onboard with a real task",
-    "Feedback, iterate once"
+   "title": "From release to adoption",
+   "values": [
+    "Release",
+    "Check adminEmails",
+    "Invite users",
+    "User guide",
+    "Walkthrough",
+    "Iterate once"
    ],
    "beats": [
     {
-     "say": "Release the app so users see a stable version, and invite a few test users. Check admin emails matches who should see admin controls.",
-     "show": 1
+     "say": "Release the app, so users see a stable version.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     }
     },
     {
-     "say": "Write a short user guide: what it does, how to do each common task, and who to ask for help.",
-     "show": 2
+     "say": "Make sure admin emails lists exactly the people who should see admin controls.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     }
     },
     {
-     "say": "Walk each test user through a real task they'll actually do.",
-     "show": 3
+     "say": "Invite a few test users. The free plan limits how many.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     }
     },
     {
-     "say": "Then gather first reactions, and make one round of improvements.",
-     "show": 4
+     "say": "Write a short guide: what the tool does, how to do each task, who to ask.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     }
+    },
+    {
+     "say": "Walk each person through a real task they'll actually do.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "step": 4
+     }
+    },
+    {
+     "say": "Then gather feedback, and make one round of improvements.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "step": 5
+     }
     }
    ]
   },

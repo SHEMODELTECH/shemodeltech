@@ -219,277 +219,580 @@ You have a Zoho workflow rule that fires on a status change and a working Bluepr
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
+   "kind": "diagram",
    "kicker": "Topic 1 · HubSpot",
-   "title": "Records and pipelines",
-   "items": [
-    [
-     "Contact",
-     "A person, plus associations"
-    ],
-    [
-     "Property",
-     "A field on a record"
-    ],
-    [
-     "Pipeline",
-     "Deal stages"
-    ],
-    [
-     "Tasks + dashboards",
-     "To-dos and reports"
-    ]
+   "title": "Everything hangs off the contact",
+   "nodes": [
+    {
+     "id": "contact",
+     "label": "Contact",
+     "x": 50,
+     "y": 50,
+     "sub": "a person + properties",
+     "art": "idcard"
+    },
+    {
+     "id": "company",
+     "label": "Company",
+     "x": 15,
+     "y": 22,
+     "sub": "an organization",
+     "art": "people"
+    },
+    {
+     "id": "deal",
+     "label": "Deal",
+     "x": 85,
+     "y": 22,
+     "sub": "a possible sale",
+     "art": "coin"
+    },
+    {
+     "id": "ticket",
+     "label": "Ticket",
+     "x": 85,
+     "y": 78,
+     "sub": "a support request",
+     "art": "chat"
+    },
+    {
+     "id": "form",
+     "label": "Website form",
+     "x": 15,
+     "y": 78,
+     "sub": "inbound lead",
+     "art": "form"
+    }
+   ],
+   "edges": [
+    {
+     "from": "contact",
+     "to": "company"
+    },
+    {
+     "from": "contact",
+     "to": "deal"
+    },
+    {
+     "from": "contact",
+     "to": "ticket"
+    },
+    {
+     "from": "company",
+     "to": "deal"
+    },
+    {
+     "from": "form",
+     "to": "contact"
+    }
    ],
    "beats": [
     {
-     "say": "HubSpot started as marketing software, so it's approachable, and joins marketing, sales and service data in one place.",
-     "show": 0
-    },
-    {
-     "say": "A contact is the core record: a person. You associate it with companies, deals and tickets.",
+     "say": "HubSpot started as marketing software, and keeps marketing, sales and service data together.",
      "show": 1
     },
     {
-     "say": "A property is a field on a record, like email or lifecycle stage.",
-     "show": 2
+     "say": "Its core record is the contact, a person. Each field, like email, is a property.",
+     "on": "contact"
     },
     {
-     "say": "A pipeline puts deals into stages, from Appointment Scheduled through to Closed Won or Closed Lost.",
-     "show": 3
+     "say": "It links to companies, deals and tickets. A link is called an association.",
+     "show": 4,
+     "on": [
+      "company",
+      "deal",
+      "ticket"
+     ]
     },
     {
-     "say": "Tasks are to-dos with an owner and due date, and dashboards group reports.",
-     "show": 4
+     "say": "In the lab, you associate three contacts with a company.",
+     "on": "company",
+     "send": {
+      "from": "contact",
+      "to": "company",
+      "label": "association"
+     }
     },
     {
-     "say": "One thing to remember: a website form creates a contact, not a deal. On the free plan, deals are created by hand.",
-     "show": 4
+     "say": "A website form creates or updates a contact.",
+     "show": 5,
+     "on": "form",
+     "send": {
+      "from": "form",
+      "to": "contact",
+      "label": "new contact"
+     }
+    },
+    {
+     "say": "But not a deal. On the free plan, someone creates the deal by hand.",
+     "on": "deal",
+     "send": {
+      "from": "contact",
+      "to": "deal",
+      "label": "deal, by hand"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "funnel",
+   "kind": "array",
    "kicker": "Topic 1 · Lab",
-   "title": "Build your HubSpot CRM",
-   "steps": [
-    "Company + 3 contacts",
-    "Deal through stages",
-    "Two tasks",
-    "Dashboard",
-    "Workflow (paid)"
+   "title": "Drag a deal through the default pipeline",
+   "values": [
+    "Appointment",
+    "Qualified",
+    "Presentation",
+    "Decision Maker",
+    "Contract Sent",
+    "Closed Won",
+    "Closed Lost"
    ],
    "beats": [
     {
-     "say": "Create one company and three contacts, and associate each contact with the company.",
-     "show": 1
+     "say": "A pipeline puts deals into stages. These are HubSpot's seven defaults."
     },
     {
-     "say": "Create a deal, set yourself as owner, and drag it across the board from Appointment Scheduled to Presentation Scheduled.",
-     "show": 2
+     "say": "Your new deal starts in Appointment Scheduled.",
+     "hl": 0,
+     "ptr": {
+      "deal": 0
+     }
     },
     {
-     "say": "Add two tasks on the deal: call customer, due today, and send proposal, due tomorrow.",
-     "show": 3
+     "say": "On the board view, drag it to Qualified to Buy.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "deal": 1
+     }
     },
     {
-     "say": "Build a simple dashboard with reports like deals by stage.",
-     "show": 4
+     "say": "Then to Presentation Scheduled. Progress is visible at a glance.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "deal": 2
+     }
     },
     {
-     "say": "Workflows need a paid plan. With a trial, build one triggered when lifecycle stage is set to Lead, that emails you. Otherwise, read along.",
-     "show": 5
+     "say": "Add two tasks: call customer, due today, and send proposal, due tomorrow.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "deal": 2
+     },
+     "note": "Tasks: Call customer · Send proposal"
+    },
+    {
+     "say": "Every deal ends Closed Won or Closed Lost, and a dashboard report counts deals by stage.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      5,
+      6
+     ],
+     "ptr": {
+      "deal": 2
+     },
+     "note": "Dashboard: deals by stage"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "database",
+   "kind": "diagram",
+   "kicker": "Topic 1 · Workflows",
+   "title": "A workflow is a trigger plus actions",
+   "nodes": [
+    {
+     "id": "contact",
+     "label": "Test contact",
+     "x": 14,
+     "y": 50,
+     "sub": "enrolled manually",
+     "art": "idcard"
+    },
+    {
+     "id": "trigger",
+     "label": "Trigger",
+     "x": 50,
+     "y": 50,
+     "sub": "lifecycle = Lead",
+     "art": "bolt"
+    },
+    {
+     "id": "action",
+     "label": "Action",
+     "x": 86,
+     "y": 50,
+     "sub": "internal email to you",
+     "art": "mail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "contact",
+     "to": "trigger"
+    },
+    {
+     "from": "trigger",
+     "to": "action"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A workflow is a trigger plus actions. It needs a paid plan, so try a trial or read along.",
+     "show": 3
+    },
+    {
+     "say": "The trigger: lifecycle stage is set to Lead.",
+     "on": "trigger"
+    },
+    {
+     "say": "You enroll a test contact, and it meets the trigger.",
+     "on": "contact",
+     "send": {
+      "from": "contact",
+      "to": "trigger",
+      "label": "stage: Lead"
+     }
+    },
+    {
+     "say": "So the action runs: an internal email to you.",
+     "on": "action",
+     "send": {
+      "from": "trigger",
+      "to": "action",
+      "label": "notify"
+     }
+    },
+    {
+     "say": "Because marketing and sales share one record, no integration work is needed.",
+     "on": [
+      "contact",
+      "trigger",
+      "action"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Topic 2 · Salesforce",
-   "title": "The enterprise toolkit",
-   "items": [
+   "title": "An object is a table; you can add your own fields",
+   "columns": [
+    "Opportunity field",
+    "Type",
+    "Origin"
+   ],
+   "rows": [
     [
-     "Object",
-     "Standard or custom table"
+     "Opportunity Name",
+     "Text",
+     "Standard"
     ],
     [
-     "Field",
-     "A column on an object"
+     "Account Name",
+     "Lookup (Account)",
+     "Standard"
     ],
     [
-     "Flow Builder",
-     "Screen, record-triggered, scheduled"
+     "Close Date",
+     "Date",
+     "Standard"
     ],
     [
-     "Page Layout",
-     "Drag-and-drop screens"
+     "Stage",
+     "Picklist",
+     "Standard"
+    ],
+    [
+     "Requires Mgr Approval",
+     "Checkbox",
+     "Custom"
     ]
    ],
    "beats": [
     {
-     "say": "Salesforce is the most established enterprise C R M. Its low-code layer is the most powerful, and the steepest to learn.",
-     "show": 0
+     "say": "In Salesforce, an object is a table. Opportunity, a potential sale, is built in.",
+     "sql": "Object: Opportunity (standard)"
     },
     {
-     "say": "An object is a data table. Standard objects like Contact, Account and Opportunity are built in; custom objects you create yourself.",
-     "show": 1
+     "say": "Its fields are columns. These are standard.",
+     "sql": "Object: Opportunity (standard)",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "A field is a column on an object: text, number, date, dropdown or lookup.",
-     "show": 2
+     "say": "A field can be a lookup to another object, like Account Name.",
+     "sql": "Object: Opportunity (standard)",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Flow Builder builds automation visually: screen flows, record-triggered flows and scheduled flows.",
-     "show": 3
+     "say": "Stage is a picklist, much like a HubSpot pipeline.",
+     "sql": "Object: Opportunity (standard)",
+     "hl": 3,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And Page Layouts design how records look on screen. All this flexibility is why big orgs often have a dedicated Salesforce admin.",
-     "show": 4
+     "say": "In the lab, you add a custom checkbox: Requires Manager Approval.",
+     "sql": "Setup > Object Manager >\nOpportunity > Fields",
+     "hl": 4,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "You can even create whole custom objects, which is why big orgs often need a Salesforce admin.",
+     "sql": "Setup > Object Manager >\nOpportunity > Fields",
+     "hl": 4
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "bolt",
+   "kind": "diagram",
    "kicker": "Topic 2 · Lab",
-   "title": "A record-triggered flow",
-   "steps": [
-    "Custom checkbox field",
-    "Record-triggered flow",
-    "Actions and Related Records",
-    "Send Email, activate, test"
+   "title": "A record-triggered flow reacts to the checkbox",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "You",
+     "x": 12,
+     "y": 30,
+     "sub": "tick and save",
+     "art": "cursor"
+    },
+    {
+     "id": "opp",
+     "label": "Opportunity",
+     "x": 38,
+     "y": 50,
+     "sub": "a record is updated",
+     "art": "database"
+    },
+    {
+     "id": "flow",
+     "label": "Flow",
+     "x": 64,
+     "y": 30,
+     "sub": "entry condition",
+     "art": "gear"
+    },
+    {
+     "id": "mail",
+     "label": "Send Email",
+     "x": 90,
+     "y": 50,
+     "sub": "to your address",
+     "art": "mail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "opp"
+    },
+    {
+     "from": "opp",
+     "to": "flow"
+    },
+    {
+     "from": "flow",
+     "to": "mail"
+    }
    ],
    "beats": [
     {
-     "say": "In a free Trailhead Playground, add a custom checkbox field to Opportunity: Requires Manager Approval.",
-     "show": 1
-    },
-    {
-     "say": "Create a record-triggered flow on Opportunity, when a record is updated and the box equals true.",
-     "show": 2
-    },
-    {
-     "say": "Optimize it for Actions and Related Records, because sending email isn't possible in the fast field-update mode.",
-     "show": 3
-    },
-    {
-     "say": "Add a Send Email action to yourself, activate the flow, tick the box on an Opportunity, and check your inbox.",
+     "say": "Flow Builder builds automation visually. This flow is record-triggered, on Opportunity.",
      "show": 4
+    },
+    {
+     "say": "It runs when a record is updated and Requires Manager Approval is true.",
+     "on": "flow"
+    },
+    {
+     "say": "It's optimized for Actions and Related Records, because the fast mode can't send email.",
+     "on": "flow"
+    },
+    {
+     "say": "Activate it, then tick the box on an Opportunity and save.",
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "opp",
+      "label": "box = True"
+     }
+    },
+    {
+     "say": "The record now meets the condition.",
+     "on": "flow",
+     "send": {
+      "from": "opp",
+      "to": "flow",
+      "label": "record updated"
+     }
+    },
+    {
+     "say": "So Send Email fires, and the email arrives.",
+     "on": "mail",
+     "send": {
+      "from": "flow",
+      "to": "mail",
+      "label": "Send Email"
+     }
+    },
+    {
+     "say": "Save again with the box still ticked, and nothing fires: it runs only when the record changes to meet the condition.",
+     "on": "opp"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "chain",
+   "kind": "array",
    "kicker": "Topic 3 · Zoho CRM",
-   "title": "Rules versus enforced process",
-   "items": [
-    [
-     "Module",
-     "A record type"
-    ],
-    [
-     "Workflow rule",
-     "If this, then that"
-    ],
-    [
-     "Blueprint",
-     "Ordered stages, no skipping"
-    ]
+   "title": "A Blueprint won't let a record skip a stage",
+   "values": [
+    "Not Contacted",
+    "Contacted",
+    "Pre-Qualified"
    ],
    "beats": [
     {
-     "say": "Zoho C R M sits between the other two in complexity, inside a big suite of Zoho apps like Books, Forms and Desk.",
-     "show": 0
+     "say": "In Zoho, a module is a record type, like Leads. This Blueprint uses Lead Status for three stages."
     },
     {
-     "say": "A module is Zoho's word for a record type, like Leads, Contacts or Deals.",
-     "show": 1
+     "say": "Your test Lead starts at Not Contacted.",
+     "hl": 0,
+     "ptr": {
+      "lead": 0
+     }
     },
     {
-     "say": "A workflow rule triggers actions when a condition is met, like HubSpot's workflows.",
-     "show": 2
+     "say": "Try to jump to Pre-Qualified. It's blocked.",
+     "hl": 0,
+     "gone": [
+      2
+     ],
+     "ptr": {
+      "lead": 0
+     },
+     "note": "Skip blocked: Contacted comes first"
     },
     {
-     "say": "A Blueprint enforces stages in order. A record literally cannot skip one, which matters for things like loan approvals or refund sign-offs.",
-     "show": 3
+     "say": "So move it to Contacted first.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "lead": 1
+     }
     },
     {
-     "say": "And Zoho is generally the most budget-friendly of the three.",
-     "show": 3
+     "say": "Moving into Pre-Qualified needs a mandatory note.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "ptr": {
+      "lead": 1
+     },
+     "note": "Required: a short note"
+    },
+    {
+     "say": "With the note filled in, it moves on.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "lead": 2
+     },
+     "note": "Note added: moved on"
+    },
+    {
+     "say": "A workflow rule only reacts to a change. It can't stop a skip. Blueprint enforces the order.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "lead": 2
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
-   "kicker": "Topic 3 · Lab",
-   "title": "Walk a Lead through a Blueprint",
-   "steps": [
-    "Workflow rule on Pre-Qualified",
-    "Blueprint: 3 stages",
-    "Required note on last step",
-    "Skip is blocked"
-   ],
-   "beats": [
-    {
-     "say": "Create a Lead by hand. Workflow rules and Blueprint may need a trial of a paid edition.",
-     "show": 0
-    },
-    {
-     "say": "Add a workflow rule that emails you when Lead Status is updated to Pre-Qualified.",
-     "show": 1
-    },
-    {
-     "say": "Build a Blueprint on Leads with three stages: Not Contacted, Contacted, Pre-Qualified.",
-     "show": 2
-    },
-    {
-     "say": "Make the move into the last stage require a short note.",
-     "show": 3
-    },
-    {
-     "say": "Try to skip a stage and watch it get blocked. Then fill in the note, and it moves on.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "venn",
+   "kind": "table",
    "kicker": "Compare",
    "title": "A good fit for each",
-   "items": [
+   "columns": [
+    "Platform",
+    "Low-code core",
+    "Good fit"
+   ],
+   "rows": [
     [
      "HubSpot",
-     "Approachable, inbound marketing + sales"
+     "Workflows, pipelines",
+     "Inbound leads"
     ],
     [
      "Salesforce",
-     "Enterprise, deepest customization"
+     "Objects, Flow Builder",
+     "Large, complex orgs"
     ],
     [
-     "Zoho",
-     "Budget-friendly suite, enforced processes"
+     "Zoho CRM",
+     "Rules, Blueprint",
+     "Budget, enforced steps"
     ]
    ],
    "beats": [
     {
      "say": "So which one fits?",
-     "show": 0
+     "col": 1
     },
     {
-     "say": "HubSpot suits small to mid-sized teams that want marketing and sales in one system, with lots of inbound leads.",
-     "show": 1
+     "say": "HubSpot is approachable, for small to mid-sized teams with inbound leads.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Salesforce suits larger organizations with complex processes and deep customization needs.",
-     "show": 2
+     "say": "Salesforce has the highest ceiling, for large orgs with complex processes.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Zoho suits smaller, budget-conscious businesses that want C R M bundled with other affordable apps, or a strictly enforced process.",
-     "show": 3
+     "say": "Zoho is the most budget-friendly, bundled with apps like Books, Forms and Desk, and great for enforced processes.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Whichever you pick, check which features need a paid tier.",
+     "col": 2
     }
    ]
   },

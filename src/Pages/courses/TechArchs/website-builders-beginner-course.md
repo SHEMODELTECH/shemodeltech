@@ -98,119 +98,277 @@ You can describe the canvas, element, breakpoint, and publishing concepts, and y
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Four ideas every builder shares",
-   "items": [
+   "columns": [
+    "Idea",
+    "What it is",
+    "Example"
+   ],
+   "rows": [
     [
      "Canvas",
-     "The visual workspace"
+     "the visual workspace",
+     "where you arrange"
     ],
     [
      "Element",
-     "Heading, image, button, container"
+     "one piece of the page",
+     "heading, button"
     ],
     [
      "Breakpoint",
-     "Desktop · tablet · mobile"
+     "a screen-size setting",
+     "desktop, tablet, phone"
     ],
     [
      "Publishing",
-     "Live, hosted, real URL"
+     "design to live site",
+     "a real URL"
     ]
    ],
    "beats": [
     {
      "say": "Every platform in this course is built on the same four ideas.",
-     "show": 0
+     "col": 0
     },
     {
      "say": "The canvas is the visual workspace where you place and arrange things.",
-     "show": 1
+     "hl": 0
     },
     {
-     "say": "An element is any single piece on the page: a heading, an image, a button, or a container holding other elements.",
-     "show": 2
+     "say": "An element is any single piece: a heading, an image, a button, or a container holding other elements.",
+     "hl": 1
     },
     {
-     "say": "A breakpoint is a screen size setting, like desktop, tablet or mobile, because a layout that works on a laptop often needs to change on a phone.",
-     "show": 3
+     "say": "A breakpoint is a screen size setting, like desktop, tablet or mobile.",
+     "hl": 2
     },
     {
      "say": "And publishing turns your design into a live website, hosted by the platform, at a real U R L.",
-     "show": 4
+     "hl": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Structure at a glance",
    "title": "Design, respond, publish",
-   "steps": [
-    "Design on the canvas",
-    "Respond per breakpoint",
-    "Publish: go live"
+   "nodes": [
+    {
+     "id": "canvas",
+     "label": "Canvas",
+     "x": 12,
+     "y": 35,
+     "sub": "arrange elements",
+     "art": "layout"
+    },
+    {
+     "id": "bp",
+     "label": "Breakpoints",
+     "x": 45,
+     "y": 35,
+     "sub": "desktop, tablet, mobile",
+     "art": "phone"
+    },
+    {
+     "id": "host",
+     "label": "Platform host",
+     "x": 82,
+     "y": 35,
+     "sub": "publishes your site",
+     "art": "cloud"
+    },
+    {
+     "id": "visitor",
+     "label": "Visitor",
+     "x": 82,
+     "y": 82,
+     "sub": "opens the real URL",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "canvas",
+     "to": "bp"
+    },
+    {
+     "from": "bp",
+     "to": "host"
+    },
+    {
+     "from": "host",
+     "to": "visitor"
+    }
    ],
    "beats": [
     {
      "say": "The same shape appears in every tool.",
-     "show": 0
-    },
-    {
-     "say": "Design: arrange text, images and buttons on the canvas.",
      "show": 1
     },
     {
-     "say": "Respond: adjust the layout for each breakpoint.",
-     "show": 2
+     "say": "Design: you arrange text, images and buttons on the canvas.",
+     "on": "canvas"
     },
     {
-     "say": "Publish: go live at a real address.",
-     "show": 3
+     "say": "Respond: you adjust that layout for each breakpoint.",
+     "show": 2,
+     "on": "bp",
+     "send": {
+      "from": "canvas",
+      "to": "bp",
+      "label": "your design"
+     }
+    },
+    {
+     "say": "Publish: the platform turns it into a live site and hosts it for you.",
+     "show": 3,
+     "on": "host",
+     "send": {
+      "from": "bp",
+      "to": "host",
+      "label": "publish"
+     }
+    },
+    {
+     "say": "Now anyone can open it at a real address, and get the layout that fits their screen.",
+     "show": 4,
+     "on": "visitor",
+     "send": {
+      "from": "host",
+      "to": "visitor",
+      "label": "live page"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "blueprint",
-   "kicker": "Lab",
-   "title": "Plan a three-page site on paper",
-   "items": [
+   "kind": "table",
+   "kicker": "Concept · Breakpoints",
+   "title": "One page, adjusted per screen",
+   "columns": [
+    "Element",
+    "Desktop",
+    "Mobile"
+   ],
+   "rows": [
     [
-     "Home",
-     "Headline, hero image, 3 feature blocks, CTA button"
+     "Headline",
+     "large, one line",
+     "smaller, wraps"
     ],
     [
-     "About",
-     "Its elements, listed"
+     "Hero image",
+     "beside the headline",
+     "above the headline"
     ],
     [
-     "Contact",
-     "Its elements, listed"
+     "3 feature blocks",
+     "3 side by side",
+     "stacked, 1 per row"
+    ],
+    [
+     "CTA button",
+     "inline",
+     "full width"
     ]
    ],
    "beats": [
     {
-     "say": "Your lab is on paper.",
-     "show": 0
+     "say": "Here's an example of why breakpoints matter. A home page, on two screen sizes."
     },
     {
-     "say": "Sketch three pages: Home, About and Contact.",
-     "show": 0
+     "say": "On a laptop, the three feature blocks fit side by side.",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "For each page, list the elements it needs. For Home, maybe a headline, a hero image, three feature blocks and a call to action button.",
-     "show": 1
+     "say": "On a phone, that would be far too cramped, so at the mobile breakpoint they stack.",
+     "hl": 2,
+     "col": 2
     },
     {
-     "say": "Do the same for About and Contact.",
-     "show": 3
+     "say": "Other elements shift too: the hero image moves above the headline, and the button stretches.",
+     "hl": [
+      1,
+      3
+     ],
+     "col": 2
     },
     {
-     "say": "That element list is exactly what you'll place on a canvas in every module that follows.",
-     "show": 3
+     "say": "Same elements, same content. Only the layout changes per breakpoint.",
+     "col": 0
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab",
+   "title": "Plan a three-page site on paper",
+   "values": [
+    "Headline",
+    "Hero image",
+    "Feature 1",
+    "Feature 2",
+    "Feature 3",
+    "CTA button"
+   ],
+   "beats": [
+    {
+     "say": "Your lab is on paper. Sketch three pages: Home, About and Contact.",
+     "note": "Page: Home"
+    },
+    {
+     "say": "For each page, list the elements it needs. Home starts with a headline,",
+     "hl": 0,
+     "note": "Page: Home"
+    },
+    {
+     "say": "a hero image,",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "Page: Home"
+    },
+    {
+     "say": "three feature blocks,",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "note": "Page: Home"
+    },
+    {
+     "say": "and a call to action button.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "note": "Page: Home"
+    },
+    {
+     "say": "Do the same for About and Contact. That list is exactly what you'll place on a canvas in every module.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "Next: About, then Contact"
     }
    ]
   },
@@ -371,124 +529,278 @@ You have a published Webflow page with a styled Div Block using a combo class, a
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
-   "kicker": "Structure at a glance",
-   "title": "Webflow's building blocks",
-   "items": [
+   "kind": "array",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "Build a flex card in the Designer",
+   "values": [
+    "Div Block",
+    "Display: Flex",
+    "+ Heading",
+    "+ Image"
+   ],
+   "beats": [
+    {
+     "say": "Create a Webflow project, open the Designer, and add a Div Block from the Add panel.",
+     "hl": 0,
+     "note": "The basic container"
+    },
+    {
+     "say": "Nearly everything on a page starts as a Div Block holding other elements.",
+     "ok": [
+      0
+     ],
+     "note": "The basic container"
+    },
+    {
+     "say": "In the Style panel, set its display to flex.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "Style panel"
+    },
+    {
+     "say": "Put a heading inside it,",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "note": "Children of the Div Block"
+    },
+    {
+     "say": "and an image.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "note": "Children of the Div Block"
+    },
+    {
+     "say": "Now the flex settings, direction and alignment, control how those children arrange themselves.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "Direction · alignment"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "A combo class changes one card, not all",
+   "columns": [
+    "Element",
+    "Classes",
+    "Background"
+   ],
+   "rows": [
     [
-     "Div Block",
-     "The basic container"
+     "Card 1",
+     "card",
+     "base colour"
     ],
     [
-     "Combo class",
-     "Base style + a specific layer"
+     "Card 2",
+     "card",
+     "base colour"
     ],
     [
-     "CMS Collection",
-     "Content type with fields"
-    ],
-    [
-     "Collection List",
-     "Shows items automatically"
+     "Card 3",
+     "card featured",
+     "new colour"
     ]
    ],
    "beats": [
     {
-     "say": "Four building blocks.",
-     "show": 0
+     "say": "Give the Div Block a base class called card. Here, three elements use it.",
+     "col": 1
     },
     {
-     "say": "A Div Block is the basic container. Nearly everything on a page starts as a Div Block holding other elements.",
-     "show": 1
+     "say": "Every element with the card class shares the same reusable style.",
+     "sql": ".card → base style",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
     },
     {
-     "say": "A class applies a reusable style. A combo class layers a more specific style on top, without duplicating the base.",
-     "show": 2
+     "say": "Now add a combo class on top of one of them: card featured.",
+     "sql": ".card → base style\ncombo: card featured",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "A C M S Collection is a structured content type, like Blog Posts, with defined fields.",
-     "show": 3
+     "say": "Change only the background colour on the combo class.",
+     "sql": ".card → base style\ncombo: card featured → background",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And a Collection List shows a Collection's items on the page automatically.",
-     "show": 4
+     "say": "Everywhere else card is used, the base styling stays intact. No duplicate class needed.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "layers",
-   "kicker": "Lab · Steps 1 to 3",
-   "title": "A flex card with a combo class",
-   "steps": [
-    "Add a Div Block",
-    "Display: Flex + heading and image",
-    "Class card → combo card featured"
+   "kind": "table",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "A Collection is a content type with fields",
+   "columns": [
+    "Title",
+    "Cover Image",
+    "Summary"
+   ],
+   "rows": [
+    [
+     "Opening day",
+     "opening.jpg",
+     "We're open!"
+    ],
+    [
+     "Spring menu",
+     "spring.jpg",
+     "Five new dishes"
+    ]
    ],
    "beats": [
     {
-     "say": "Create a Webflow project, open the Designer, and add a Div Block.",
-     "show": 1
+     "say": "In the C M S panel, create a Collection called Blog Posts.",
+     "sql": "Collection: Blog Posts"
     },
     {
-     "say": "In the Style panel, set its display to flex, and put a heading and an image inside. Flex direction and alignment control how they arrange.",
-     "show": 2
+     "say": "Give it three fields. A title, which is text,",
+     "col": 0
     },
     {
-     "say": "Give it a base class, card, then add a combo class, card featured, and change only the background colour.",
-     "show": 3
+     "say": "a cover image,",
+     "col": 1
     },
     {
-     "say": "Check that the base styling stays intact everywhere else card is used.",
-     "show": 3
+     "say": "and a summary, also text.",
+     "col": 2
+    },
+    {
+     "say": "Then add two sample items. Each item is one row of real placeholder content, like these examples.",
+     "hl": [
+      0,
+      1
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "database",
-   "kicker": "Lab · Steps 4 to 6",
-   "title": "Content that fills itself in",
-   "steps": [
-    "Collection: Blog Posts",
-    "Add two sample items",
-    "Collection List, bound to fields"
+   "kind": "diagram",
+   "kicker": "Lab · Steps 6 and 7",
+   "title": "New posts appear without editing the page",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "You",
+     "x": 12,
+     "y": 25,
+     "sub": "add a CMS item",
+     "art": "pencil"
+    },
+    {
+     "id": "cms",
+     "label": "Blog Posts",
+     "x": 50,
+     "y": 25,
+     "sub": "CMS Collection",
+     "art": "database"
+    },
+    {
+     "id": "list",
+     "label": "Collection List",
+     "x": 50,
+     "y": 75,
+     "sub": "heading ← Title",
+     "art": "layout"
+    },
+    {
+     "id": "live",
+     "label": "Live page",
+     "x": 88,
+     "y": 75,
+     "sub": "your .webflow.io site",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "cms"
+    },
+    {
+     "from": "cms",
+     "to": "list"
+    },
+    {
+     "from": "list",
+     "to": "live"
+    }
    ],
    "beats": [
     {
-     "say": "Now the C M S.",
-     "show": 0
+     "say": "Add a Collection List to your page, and bind it to Blog Posts.",
+     "show": 3,
+     "on": [
+      "cms",
+      "list"
+     ]
     },
     {
-     "say": "Create a Collection called Blog Posts, with fields for title, cover image and summary.",
-     "show": 1
+     "say": "Inside its template, bind a heading to the title field, and an image to the cover image.",
+     "on": "list",
+     "send": {
+      "from": "cms",
+      "to": "list",
+      "label": "Title, Image"
+     }
     },
     {
-     "say": "Add two sample items with real placeholder content.",
-     "show": 2
+     "say": "Publish to your free webflow dot io subdomain. Both posts appear on the live page automatically.",
+     "show": 4,
+     "on": "live",
+     "send": {
+      "from": "list",
+      "to": "live",
+      "label": "2 posts"
+     }
     },
     {
-     "say": "Then add a Collection List to your page, bind it to Blog Posts, and bind a heading and image in its template to the title and cover image fields.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "rocket",
-   "kicker": "Lab · Step 7",
-   "title": "Publish and check",
-   "big": ".webflow.io",
-   "sub": "both blog posts appear automatically",
-   "beats": [
-    {
-     "say": "Finally, publish to your free webflow dot io subdomain.",
-     "show": 0
+     "say": "Later, you add a third post in the C M S.",
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "cms",
+      "label": "new item"
+     }
     },
     {
-     "say": "Both blog posts should appear on the live page automatically. Add a new item later, and it appears too, with no page editing.",
-     "show": 1
+     "say": "The Collection List picks it up, and after you publish again, it's on the live page. No redesign.",
+     "on": [
+      "list",
+      "live"
+     ],
+     "send": {
+      "from": "list",
+      "to": "live",
+      "label": "3 posts"
+     }
     }
    ]
   },
@@ -649,121 +961,242 @@ You have a published Framer page using at least one Stack for layout, a Button C
    ]
   },
   {
-   "kind": "list",
-   "art": "stack",
+   "kind": "table",
    "kicker": "Structure at a glance",
    "title": "Framer's building blocks",
-   "items": [
+   "columns": [
+    "Block",
+    "What it does",
+    "In the lab"
+   ],
+   "rows": [
     [
      "Stack",
-     "Auto-arranges its children"
+     "auto-arranges children",
+     "frame, vertical"
     ],
     [
      "Component",
-     "Reusable; edit once, updates everywhere"
+     "reusable element",
+     "a Button"
     ],
     [
      "Variant",
-     "Default vs. Hover"
+     "an alternate state",
+     "Hover"
     ],
     [
      "Interaction",
-     "Trigger → animation"
+     "trigger → animation",
+     "hover → Hover"
     ]
    ],
    "beats": [
     {
-     "say": "Four building blocks.",
-     "show": 0
+     "say": "Four building blocks, and you'll use every one in the lab.",
+     "col": 0
     },
     {
      "say": "A Stack is a frame set to the Stack layout. It arranges what's inside in a row, column or grid, and re-flows it as content changes.",
-     "show": 1
+     "hl": 0
     },
     {
-     "say": "A Component is a reusable element, like a button. Edit the original, and every copy updates.",
-     "show": 2
+     "say": "A Component is a reusable element, like a button.",
+     "hl": 1
     },
     {
-     "say": "A Variant is an alternate state of a Component, like how a button looks on hover.",
-     "show": 3
+     "say": "A Variant is an alternate state of a Component, like how the button looks on hover.",
+     "hl": 2
     },
     {
      "say": "And an Interaction connects a trigger, like hover, click or scroll, to an animation or Variant change. The exact labels change between versions.",
-     "show": 4
+     "hl": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "cursor",
-   "kicker": "Lab · Steps 1 to 4",
-   "title": "A button that reacts",
-   "steps": [
-    "Frame → Stack, vertical",
-    "Heading + text auto-space",
-    "Button + Hover Variant",
-    "Hover interaction, previewed"
+   "kind": "array",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "A Stack spaces its children for you",
+   "values": [
+    "Heading",
+    "Text"
    ],
    "beats": [
     {
      "say": "Create a Framer project. Add a frame, set its layout to Stack, and its direction to vertical.",
-     "show": 1
+     "note": "Frame · layout: Stack · vertical"
     },
     {
-     "say": "Add a heading and text inside, and watch them space themselves, with no manual positioning.",
-     "show": 2
+     "say": "Add a heading inside the Stack.",
+     "hl": 0,
+     "note": "Frame · layout: Stack · vertical"
     },
     {
-     "say": "Create a Button Component, style its default look, and add a Hover Variant with a different background colour.",
-     "show": 3
+     "say": "Then a text element. Notice they space themselves, with no manual positioning.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "Spacing comes from the Stack"
     },
     {
-     "say": "Then add a hover interaction that switches to the Hover Variant with a smooth transition, and preview it.",
-     "show": 4
+     "say": "Add or remove a child, and the Stack re-flows the rest automatically.",
+     "ok": [
+      0,
+      1
+     ],
+     "note": "Children re-flow as content changes"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "palette",
-   "kicker": "Lab · Steps 5 and 6",
-   "title": "Generate, then make it yours",
-   "quote": "\"A pricing section for a SaaS product\"",
+   "kind": "diagram",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "A button that reacts to hover",
+   "nodes": [
+    {
+     "id": "mouse",
+     "label": "Mouse",
+     "x": 12,
+     "y": 50,
+     "sub": "the trigger",
+     "art": "cursor"
+    },
+    {
+     "id": "btn",
+     "label": "Button",
+     "x": 50,
+     "y": 50,
+     "sub": "Component · Default",
+     "art": "blocks"
+    },
+    {
+     "id": "hover",
+     "label": "Hover Variant",
+     "x": 88,
+     "y": 50,
+     "sub": "new background",
+     "art": "palette"
+    }
+   ],
+   "edges": [
+    {
+     "from": "mouse",
+     "to": "btn"
+    },
+    {
+     "from": "btn",
+     "to": "hover"
+    }
+   ],
    "beats": [
     {
-     "say": "Now try Framer's A I page or section generator. Its name changes between versions.",
-     "show": 0
+     "say": "Create a Button Component, and style its default appearance.",
+     "show": 2,
+     "on": "btn"
     },
     {
-     "say": "Give it a short prompt, like a pricing section for a SaaS product, and review the layout.",
-     "show": 1
+     "say": "Add a Hover Variant with a different background colour.",
+     "show": 3,
+     "on": "hover"
     },
     {
-     "say": "Then edit its text directly, and switch one Stack from row to column. The children reflow automatically.",
-     "show": 1
+     "say": "Now add a hover interaction. When the mouse moves over the button, that's the trigger.",
+     "on": "mouse",
+     "send": {
+      "from": "mouse",
+      "to": "btn",
+      "label": "hover"
+     }
     },
     {
-     "say": "Because the A I output is built from the same real, editable Stacks and elements as anything you build by hand.",
-     "show": 1
+     "say": "The button switches to its Hover Variant, with a smooth transition.",
+     "on": "hover",
+     "send": {
+      "from": "btn",
+      "to": "hover",
+      "label": "switch variant"
+     }
+    },
+    {
+     "say": "Preview it, and confirm the button animates on mouse over.",
+     "on": [
+      "btn",
+      "hover"
+     ]
+    },
+    {
+     "say": "And because it's a Component, editing the original updates every place the button is used.",
+     "on": "btn"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "rocket",
-   "kicker": "Lab · Step 7",
-   "title": "Test it live",
-   "big": "Hover it live",
-   "sub": "on the published page, not just the editor",
+   "kind": "array",
+   "kicker": "Lab · Steps 5 to 7",
+   "title": "Generate a section, then make it yours",
+   "values": [
+    "Prompt",
+    "Generated",
+    "Edit text",
+    "Row → column",
+    "Publish",
+    "Hover live"
+   ],
    "beats": [
+    {
+     "say": "Try Framer's A I page or section generator. Its name changes between versions.",
+     "hl": 0,
+     "note": "\"a pricing section for a SaaS product\""
+    },
+    {
+     "say": "Give it a short prompt, like a pricing section for a SaaS product, and review the layout it makes.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "Built from real Stacks and elements"
+    },
+    {
+     "say": "Edit its text directly.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2
+    },
+    {
+     "say": "Switch one Stack from row to column, and watch its children reflow automatically.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "note": "Same editable Stacks as your own"
+    },
     {
      "say": "Publish to your free Framer subdomain.",
-     "show": 0
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4
     },
     {
-     "say": "Then test the hover animation on the live published page, not just in the editor.",
-     "show": 1
+     "say": "And test the hover animation on the live page, not just in the editor.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "note": "Test it live"
     }
    ]
   },
@@ -786,7 +1219,7 @@ You have a published Framer page using at least one Stack for layout, a Button C
      "show": 0
     },
     {
-     "say": "What did editing the AI-generated section show?",
+     "say": "What did editing the A I generated section show?",
      "show": 0
     },
     {
@@ -810,7 +1243,7 @@ You have a published Framer page using at least one Stack for layout, a Button C
      ""
     ],
     [
-     "One customised A I section",
+     "One customised AI section",
      ""
     ]
    ],
@@ -936,87 +1369,253 @@ You have a published Wix site with at least one App Market app installed and pla
    ]
   },
   {
-   "kind": "flow",
-   "art": "puzzle",
+   "kind": "diagram",
    "kicker": "Structure at a glance",
    "title": "Editor, App Market, Dashboard",
-   "steps": [
-    "Editor: place elements",
-    "App Market: Bookings, Stores, Forms",
-    "Dashboard: manage it all"
+   "nodes": [
+    {
+     "id": "market",
+     "label": "App Market",
+     "x": 12,
+     "y": 25,
+     "sub": "Bookings, Stores, Forms",
+     "art": "plug"
+    },
+    {
+     "id": "editor",
+     "label": "Editor",
+     "x": 48,
+     "y": 25,
+     "sub": "drag-and-drop pages",
+     "art": "layout"
+    },
+    {
+     "id": "visitor",
+     "label": "Customer",
+     "x": 12,
+     "y": 75,
+     "sub": "on the live site",
+     "art": "phone"
+    },
+    {
+     "id": "site",
+     "label": "Live site",
+     "x": 48,
+     "y": 75,
+     "sub": "booking widget",
+     "art": "browser"
+    },
+    {
+     "id": "dash",
+     "label": "Dashboard",
+     "x": 86,
+     "y": 75,
+     "sub": "bookings, orders",
+     "art": "dashboard"
+    }
+   ],
+   "edges": [
+    {
+     "from": "market",
+     "to": "editor"
+    },
+    {
+     "from": "editor",
+     "to": "site"
+    },
+    {
+     "from": "visitor",
+     "to": "site"
+    },
+    {
+     "from": "site",
+     "to": "dash"
+    }
    ],
    "beats": [
     {
-     "say": "Three parts work together.",
-     "show": 0
+     "say": "The Editor is Wix's visual page builder, where you place and resize elements on the canvas.",
+     "show": 2,
+     "on": "editor"
     },
     {
-     "say": "The Editor is the visual page builder, where you place and resize elements on the canvas.",
-     "show": 1
+     "say": "An App from the App Market plugs real business functionality into your pages, like Wix Bookings.",
+     "on": "market",
+     "send": {
+      "from": "market",
+      "to": "editor",
+      "label": "Bookings app"
+     }
     },
     {
-     "say": "An App from the App Market adds real business functionality, like Wix Bookings for appointments, or Wix Stores for e-commerce.",
-     "show": 2
+     "say": "You publish, and the booking widget is live on your site.",
+     "show": 4,
+     "on": "site",
+     "send": {
+      "from": "editor",
+      "to": "site",
+      "label": "publish"
+     }
     },
     {
-     "say": "And the Dashboard is where you manage what those apps power: bookings, orders and form submissions, separate from the page editor.",
-     "show": 3
+     "say": "A customer books an appointment on the live site.",
+     "on": "visitor",
+     "send": {
+      "from": "visitor",
+      "to": "site",
+      "label": "book a slot"
+     }
+    },
+    {
+     "say": "And the booking lands in the Dashboard, where you manage bookings, orders and form submissions, separate from the page editor.",
+     "show": 5,
+     "on": "dash",
+     "send": {
+      "from": "site",
+      "to": "dash",
+      "label": "new booking"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "plug",
+   "kind": "table",
    "kicker": "Lab · Steps 1 to 5",
-   "title": "Build it and add an app",
-   "steps": [
-    "Create the site",
-    "Section: heading, text, button",
-    "Add Bookings or a form",
-    "One service or one field",
-    "Place it on the page"
+   "title": "Add one app, set one thing, place it",
+   "columns": [
+    "Choice",
+    "One setting",
+    "On the page"
+   ],
+   "rows": [
+    [
+     "Wix Bookings",
+     "1 service: name, time",
+     "booking widget"
+    ],
+    [
+     "Wix Forms",
+     "1 custom field",
+     "the form"
+    ]
    ],
    "beats": [
     {
-     "say": "Create a Wix site, blank or with the A I assisted setup.",
-     "show": 1
+     "say": "Create a Wix site, blank or with the A I assisted setup, and add a section with a heading, a paragraph and a button."
     },
     {
-     "say": "In the Editor, add a section with a heading, a paragraph and a button.",
-     "show": 2
+     "say": "Then add the Wix Bookings app from the App Market,",
+     "hl": 0,
+     "col": 0
     },
     {
-     "say": "Add the Wix Bookings app from the App Market, or a form if Bookings doesn't fit your business. In some editors, forms live in the Add Elements panel.",
-     "show": 3
+     "say": "or a form, if Bookings doesn't fit your business. In some editors, forms live in the Add Elements panel.",
+     "hl": 1,
+     "col": 0
     },
     {
      "say": "Configure one setting: a single service with a name and duration, or one custom form field.",
-     "show": 4
+     "hl": [
+      0,
+      1
+     ],
+     "col": 1
     },
     {
-     "say": "Then place the booking widget or form on your page, if the app didn't add it for you.",
-     "show": 5
+     "say": "Then place the booking widget or the form on your page, if the app didn't add it for you.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "dashboard",
+   "kind": "array",
    "kicker": "Lab · Steps 6 and 7",
    "title": "Prove it actually works",
-   "quote": "Submit on the live site → see it in the Dashboard.",
+   "values": [
+    "Publish",
+    "Test on live site",
+    "Check Dashboard"
+   ],
    "beats": [
     {
-     "say": "Publish the site, then submit a real test booking or form entry on the live page.",
-     "show": 0
+     "say": "Placing an app isn't the same as proving it works.",
+     "note": "Placed ≠ working"
+    },
+    {
+     "say": "Publish the site.",
+     "hl": 0
+    },
+    {
+     "say": "Submit a real test booking or form entry on the live page, not the editor.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "Use the live URL"
     },
     {
      "say": "Open the Dashboard, and confirm your test submission actually appears there.",
-     "show": 1
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "note": "It's there: the app works"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Choosing between them",
+   "title": "Which builder for which site?",
+   "columns": [
+    "Tool",
+    "Its strength",
+    "Pick it for"
+   ],
+   "rows": [
+    [
+     "Webflow",
+     "real HTML/CSS + CMS",
+     "exact brand, blogs"
+    ],
+    [
+     "Framer",
+     "stacks, motion, AI",
+     "high-design pages"
+    ],
+    [
+     "Wix",
+     "apps + Dashboard, fast",
+     "small business sites"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now that you've seen all three, here's how they compare.",
+     "col": 1
     },
     {
-     "say": "That's how you know the app works, not just that it's placed on the page.",
-     "show": 1
+     "say": "A content-heavy site that must match a brand exactly, like a blog or a large portfolio? Webflow.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "A high-design landing page where motion and polish matter? Framer.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "A small business that needs bookings or a store working fast? Wix.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     }
    ]
   },

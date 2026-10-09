@@ -99,105 +99,286 @@ portfolio-site (Webflow)
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
-   "kicker": "Concept",
-   "title": "The box model",
-   "items": [
+   "kind": "table",
+   "kicker": "Concept · Step 2",
+   "title": "Every element is a box with four layers",
+   "columns": [
+    "Layer",
+    "What it is",
+    "Where"
+   ],
+   "rows": [
     [
      "Content",
-     "The element itself"
+     "The element itself",
+     "Centre"
     ],
     [
      "Padding",
-     "Space inside"
+     "Space inside",
+     "Inside the border"
     ],
     [
      "Border",
-     "The edge"
+     "The edge",
+     "Around the padding"
     ],
     [
      "Margin",
-     "Space outside"
+     "Space outside",
+     "Outside the border"
     ]
    ],
    "beats": [
     {
-     "say": "Every element on a page is a box with four layers.",
-     "show": 0
+     "say": "Every element on a page is a box, built from four layers."
     },
     {
-     "say": "The content itself.",
-     "show": 1
+     "say": "In the middle is the content itself: the text or the image.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Padding, the space inside.",
-     "show": 2
+     "say": "Around it is padding, the space inside the box.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "A border.",
-     "show": 3
+     "say": "Then the border, the box's edge.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "And margin, the space outside, between it and its neighbours. Almost every spacing problem comes down to padding or margin.",
-     "show": 4
+     "say": "And outside the border, margin: the space between this box and its neighbours.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Almost every spacing problem comes down to these two: padding inside, margin outside.",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "layers",
+   "kind": "diagram",
    "kicker": "Lab · Steps 3 and 4",
-   "title": "Section, then container",
-   "file": "Project structure",
-   "code": "portfolio-site (Webflow)\n│\n└── Home (page)\n    └── Section\n        └── Container (flex)\n            ├── Column div (heading + paragraph)\n            └── Column div (image or text)",
-   "beats": [
+   "title": "Section, then container, then columns",
+   "nodes": [
     {
-     "say": "A div block is an empty box for grouping and arranging. Divs are the skeleton everything hangs on.",
-     "show": 0
+     "id": "home",
+     "label": "Home",
+     "x": 12,
+     "y": 50,
+     "sub": "page",
+     "art": "browser"
     },
     {
-     "say": "Drag in a Section, then a Container inside it, with a heading and a paragraph.",
-     "show": 1
+     "id": "sec",
+     "label": "Section",
+     "x": 36,
+     "y": 50,
+     "sub": "full-width band"
     },
     {
-     "say": "The Section gives a full-width band for backgrounds. The Container keeps content centred and readable.",
-     "show": 1
+     "id": "con",
+     "label": "Container",
+     "x": 62,
+     "y": 50,
+     "sub": "centred, flex"
+    },
+    {
+     "id": "c1",
+     "label": "Column div",
+     "x": 88,
+     "y": 22,
+     "sub": "heading + paragraph"
+    },
+    {
+     "id": "c2",
+     "label": "Column div",
+     "x": 88,
+     "y": 78,
+     "sub": "image or text"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "phone",
-   "kicker": "Lab · Steps 5 to 8",
-   "title": "Flexbox, then stack on mobile",
-   "steps": [
-    "Display: Flex",
-    "Two child divs",
-    "Gap + alignment",
-    "Check tablet + mobile",
-    "Stack columns on mobile"
+   ],
+   "edges": [
+    {
+     "from": "home",
+     "to": "sec"
+    },
+    {
+     "from": "sec",
+     "to": "con"
+    },
+    {
+     "from": "con",
+     "to": "c1"
+    },
+    {
+     "from": "con",
+     "to": "c2"
+    }
    ],
    "beats": [
     {
-     "say": "Flexbox arranges children in a row or column, and controls their spacing and alignment.",
-     "show": 0
-    },
-    {
-     "say": "Set a div to Display Flex, and add two child divs.",
+     "say": "A div block is an empty box for grouping things. Pages are built from boxes nested inside boxes.",
      "show": 1
     },
     {
-     "say": "Use gap and alignment to space them evenly.",
-     "show": 2
+     "say": "On your Home page, drag in a Section. It's a full-width band, perfect for backgrounds.",
+     "show": 2,
+     "on": "sec"
     },
     {
-     "say": "A breakpoint is a screen width where the design changes. Webflow has desktop, tablet and mobile views, edited separately.",
-     "show": 3
+     "say": "Inside it goes a Container, which keeps your content centred and at a readable width.",
+     "show": 3,
+     "on": "con"
     },
     {
-     "say": "In the mobile view, make the columns stack. It's the single most common responsive fix.",
-     "show": 4
+     "say": "Inside the container, add two column divs. The first holds a heading and a paragraph.",
+     "show": 4,
+     "on": "c1"
+    },
+    {
+     "say": "The second holds an image or more text. That's the whole skeleton of the page.",
+     "show": 5,
+     "on": "c2"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Two columns with flexbox",
+   "values": [
+    "Container div",
+    "Display: Flex",
+    "Child div 1",
+    "Child div 2",
+    "Gap",
+    "Alignment"
+   ],
+   "beats": [
+    {
+     "say": "Flexbox arranges a box's children in a row or a column, and controls their spacing and alignment."
+    },
+    {
+     "say": "Select the container div.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     }
+    },
+    {
+     "say": "Set its Display to Flex. Its children now sit side by side in a row.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     },
+     "note": "Children line up in a row"
+    },
+    {
+     "say": "Add the two child divs, one for each column.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      2,
+      3
+     ],
+     "ptr": {
+      "now": 2
+     }
+    },
+    {
+     "say": "Add a gap, so the columns don't touch.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "now": 4
+     }
+    },
+    {
+     "say": "And set the alignment, so they line up evenly. Text beside an image, done.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "ptr": {
+      "now": 5
+     },
+     "note": "Two even columns"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 7 and 8",
+   "title": "One page, three breakpoints",
+   "columns": [
+    "View",
+    "Columns",
+    "What you do"
+   ],
+   "rows": [
+    [
+     "Desktop",
+     "Side by side",
+     "Design here first"
+    ],
+    [
+     "Tablet",
+     "Side by side",
+     "Preview and check"
+    ],
+    [
+     "Mobile",
+     "Stacked",
+     "Flex direction: column"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A breakpoint is a screen width where your design can change. Webflow gives you desktop, tablet and mobile views."
+    },
+    {
+     "say": "On desktop, your two columns sit side by side.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Switch to tablet in the responsive preview. They still fit, so just check it looks right.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "On mobile, side-by-side columns get squashed, so change the flex direction to column, and they stack.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Stacking columns on small screens is the single most common responsive fix.",
+     "hl": 2,
+     "col": 2
     }
    ]
   },
@@ -356,103 +537,393 @@ Style system
    ]
   },
   {
-   "kind": "list",
-   "art": "cursor",
-   "kicker": "Lab · Steps 2 to 4",
-   "title": "Text and buttons",
-   "items": [
-    [
-     "body-text",
-     "Base text style"
-    ],
-    [
-     "Combo class",
-     "A variation on a base class"
-    ],
+   "kind": "diagram",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "One class, many elements",
+   "nodes": [
+    {
+     "id": "cls",
+     "label": "body-text",
+     "x": 14,
+     "y": 50,
+     "sub": "font, size, colour",
+     "art": "palette"
+    },
+    {
+     "id": "p1",
+     "label": "Hero paragraph",
+     "x": 82,
+     "y": 18,
+     "sub": "Home"
+    },
+    {
+     "id": "p2",
+     "label": "About paragraph",
+     "x": 82,
+     "y": 50,
+     "sub": "Home"
+    },
+    {
+     "id": "p3",
+     "label": "Contact paragraph",
+     "x": 82,
+     "y": 82,
+     "sub": "Contact"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cls",
+     "to": "p1"
+    },
+    {
+     "from": "cls",
+     "to": "p2"
+    },
+    {
+     "from": "cls",
+     "to": "p3"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Style one paragraph: its font, size, colour and line height. Save that as a class called body text.",
+     "show": 1,
+     "on": "cls"
+    },
+    {
+     "say": "Give another paragraph the same class, and it picks up the same styles.",
+     "show": 2,
+     "send": {
+      "from": "cls",
+      "to": "p1",
+      "label": "body-text"
+     }
+    },
+    {
+     "say": "And another, and another. You never restyle them one by one.",
+     "show": 4,
+     "on": [
+      "p2",
+      "p3"
+     ],
+     "send": {
+      "from": "cls",
+      "to": "p3",
+      "label": "body-text"
+     }
+    },
+    {
+     "say": "Now change the class's line height once, and every paragraph using it updates together.",
+     "show": 4,
+     "on": [
+      "p1",
+      "p2",
+      "p3"
+     ],
+     "send": {
+      "from": "cls",
+      "to": "p2",
+      "label": "new line height"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Combo classes: a base, plus a variation",
+   "columns": [
+    "Class",
+    "Built on",
+    "Adds"
+   ],
+   "rows": [
     [
      "button",
-     "+ button-primary / button-secondary"
+     "(base class)",
+     "Shared button styles"
+    ],
+    [
+     "button-primary",
+     "button",
+     "Primary colour"
+    ],
+    [
+     "button-secondary",
+     "button",
+     "Secondary colour"
+    ],
+    [
+     "button-large",
+     "button",
+     "A bigger size"
     ]
    ],
    "beats": [
     {
-     "say": "Style a paragraph's font, size, colour and line height, and give it the class body text.",
-     "show": 1
+     "say": "First, create a base class called button, with the styles every button shares.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "A combo class adds a variation on top of a base class, without duplicating styles.",
-     "show": 2
+     "say": "A combo class adds a variation on top of a base class, without copying its styles.",
+     "sql": "combo class = base class + one variation"
     },
     {
-     "say": "Create a button class, then combo classes button primary and button secondary for colour variants.",
-     "show": 3
+     "say": "Button primary is button, plus the primary colour.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Now every button matches, and updates together.",
-     "show": 3
+     "say": "Button secondary is button, plus the secondary colour.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "The same idea works for size, like a large button.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Every one is built on button, so change the base, and every button updates together.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "palette",
+   "kind": "diagram",
    "kicker": "Lab · Steps 5 and 6",
-   "title": "Color swatches",
-   "items": [
-    [
-     "primary",
-     ""
-    ],
-    [
-     "secondary",
-     ""
-    ],
-    [
-     "text",
-     ""
-    ],
-    [
-     "background",
-     ""
-    ]
+   "title": "Change a swatch, rebrand the site",
+   "nodes": [
+    {
+     "id": "sw",
+     "label": "primary swatch",
+     "x": 12,
+     "y": 50,
+     "sub": "a saved colour",
+     "art": "palette"
+    },
+    {
+     "id": "cls",
+     "label": "button-primary",
+     "x": 46,
+     "y": 50,
+     "sub": "uses the swatch"
+    },
+    {
+     "id": "b1",
+     "label": "Hero button",
+     "x": 86,
+     "y": 18,
+     "sub": "Home"
+    },
+    {
+     "id": "b2",
+     "label": "Card button",
+     "x": 86,
+     "y": 50,
+     "sub": "Work section"
+    },
+    {
+     "id": "b3",
+     "label": "Send button",
+     "x": 86,
+     "y": 82,
+     "sub": "Contact"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sw",
+     "to": "cls"
+    },
+    {
+     "from": "cls",
+     "to": "b1"
+    },
+    {
+     "from": "cls",
+     "to": "b2"
+    },
+    {
+     "from": "cls",
+     "to": "b3"
+    }
    ],
    "beats": [
     {
-     "say": "A color swatch is a saved, named colour. Change the swatch, and every element using it updates.",
-     "show": 0
+     "say": "A color swatch is a saved, named colour. Save four: primary, secondary, text and background.",
+     "show": 1,
+     "on": "sw"
     },
     {
-     "say": "That's how you rebrand a whole site in minutes.",
-     "show": 0
+     "say": "Then apply them through your classes. Button primary takes its colour from the primary swatch.",
+     "show": 2,
+     "send": {
+      "from": "sw",
+      "to": "cls",
+      "label": "primary"
+     }
     },
     {
-     "say": "Save your brand colours as four swatches, and apply them through your classes.",
-     "show": 4
+     "say": "And that class is on buttons all over the site.",
+     "show": 5,
+     "on": [
+      "b1",
+      "b2",
+      "b3"
+     ]
+    },
+    {
+     "say": "Now edit the primary swatch to a new colour.",
+     "show": 5,
+     "on": "sw",
+     "send": {
+      "from": "sw",
+      "to": "cls",
+      "label": "new colour"
+     }
+    },
+    {
+     "say": "Every element using it updates at once. That's how you rebrand a whole site in minutes.",
+     "show": 5,
+     "on": [
+      "b1",
+      "b2",
+      "b3"
+     ],
+     "send": {
+      "from": "cls",
+      "to": "b2",
+      "label": "new colour"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "blocks",
-   "kicker": "Lab · Steps 7 and 8",
-   "title": "A card component",
-   "steps": [
-    "Card: image, heading, text, button",
-    "Save as a Component",
-    "style_system.md"
+   "kind": "array",
+   "kicker": "Lab · Step 7",
+   "title": "Build a card, save it as a Component",
+   "values": [
+    "Image",
+    "Heading",
+    "Text",
+    "Button",
+    "Save as Component"
    ],
    "beats": [
     {
-     "say": "Build a card: image, heading, text and button, styled with your classes.",
-     "show": 1
+     "say": "A card is four pieces, each styled with the classes you've already made."
     },
     {
-     "say": "Save it as a Component. Edit it once, and every copy updates.",
-     "show": 2
+     "say": "An image, and a heading.",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "Then list your classes, swatches and components in a notes doc, so you or a teammate can extend the site without breaking it.",
-     "show": 3
+     "say": "Some text, using body text. And a button, using button primary.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Now save the whole card as a Component.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "note": "One block, reusable anywhere"
+    },
+    {
+     "say": "Drop copies anywhere. Edit the component once, and every copy changes with it.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Edit once → every copy updates"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 8",
+   "title": "Write the system down",
+   "columns": [
+    "Type",
+    "What you list"
+   ],
+   "rows": [
+    [
+     "Classes",
+     "body-text, button"
+    ],
+    [
+     "Combo classes",
+     "-primary, -secondary"
+    ],
+    [
+     "Swatches",
+     "primary, secondary, …"
+    ],
+    [
+     "Components",
+     "Card"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Last, list everything in a notes doc, called style system dot m d.",
+     "sql": "style_system.md"
+    },
+    {
+     "say": "Your classes, and the combo classes built on them.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
+    },
+    {
+     "say": "Your four swatches.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "And your components, starting with the card.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "That's what lets you, or a teammate, extend the site later without breaking its consistency.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ]
     }
    ]
   },
@@ -620,107 +1091,427 @@ Optional (paid site plan): separate About and Work pages
    ]
   },
   {
-   "kind": "list",
-   "art": "blueprint",
+   "kind": "table",
    "kicker": "Lab · Step 1",
-   "title": "Plan pages within the free limit",
-   "items": [
+   "title": "Plan pages inside the free limit",
+   "columns": [
+    "Content",
+    "Built as",
+    "Static page?"
+   ],
+   "rows": [
     [
      "Home",
-     "With #about and #work sections"
+     "Static page",
+     "Yes"
     ],
     [
      "Contact",
-     "Second static page"
+     "Static page",
+     "Yes"
     ],
     [
-     "Optional",
-     "Separate About + Work pages (paid plan)"
+     "About",
+     "Home section, #about",
+     "No"
+    ],
+    [
+     "Work",
+     "Home section, #work",
+     "No"
+    ],
+    [
+     "Each project",
+     "CMS template page",
+     "No"
     ]
    ],
    "beats": [
     {
-     "say": "The free Starter plan allows very few static pages, so check the current plan.",
-     "show": 0
+     "say": "The free Starter plan allows only a few static pages, so plan them first."
     },
     {
-     "say": "The free path uses just two static pages, Home and Contact.",
-     "show": 1
+     "say": "You'll use just two static pages: Home and Contact.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "About and Work become sections on Home, with the I Ds about and work.",
-     "show": 2
+     "say": "About and Work become sections on Home, with the I Ds about and work, set in Element settings.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "On a paid site plan, About and Work can be separate pages instead. That's optional.",
-     "show": 3
+     "say": "And in Project 4, a C M S template gives every project its own page, without counting as a static page.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "On a paid plan, About and Work could be separate pages instead. The course works either way.",
+     "hl": [
+      2,
+      3
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "layout",
-   "kicker": "Lab · Steps 2 to 6",
-   "title": "A shared navbar and footer",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Four links, two kinds",
+   "nodes": [
+    {
+     "id": "nav",
+     "label": "Navbar",
+     "x": 50,
+     "y": 15,
+     "sub": "4 links",
+     "art": "compass"
+    },
+    {
+     "id": "home",
+     "label": "Home page",
+     "x": 12,
+     "y": 55
+    },
+    {
+     "id": "about",
+     "label": "#about",
+     "x": 36,
+     "y": 85,
+     "sub": "section on Home"
+    },
+    {
+     "id": "work",
+     "label": "#work",
+     "x": 64,
+     "y": 85,
+     "sub": "section on Home"
+    },
+    {
+     "id": "contact",
+     "label": "Contact page",
+     "x": 88,
+     "y": 55
+    }
+   ],
+   "edges": [
+    {
+     "from": "nav",
+     "to": "home"
+    },
+    {
+     "from": "nav",
+     "to": "about"
+    },
+    {
+     "from": "nav",
+     "to": "work"
+    },
+    {
+     "from": "nav",
+     "to": "contact"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The navbar is how visitors move around your site. Add the Navbar element, styled with your Project 2 classes.",
+     "show": 1,
+     "on": "nav"
+    },
+    {
+     "say": "Home links to the Home page.",
+     "show": 2,
+     "send": {
+      "from": "nav",
+      "to": "home",
+      "label": "Page link"
+     }
+    },
+    {
+     "say": "About uses the link type Section, pointing at the about section on Home.",
+     "show": 3,
+     "send": {
+      "from": "nav",
+      "to": "about",
+      "label": "Section link"
+     }
+    },
+    {
+     "say": "Work does the same, pointing at the work section.",
+     "show": 4,
+     "send": {
+      "from": "nav",
+      "to": "work",
+      "label": "Section link"
+     }
+    },
+    {
+     "say": "And Contact links to the Contact page.",
+     "show": 5,
+     "send": {
+      "from": "nav",
+      "to": "contact",
+      "label": "Page link"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Shared components: edit once, update everywhere",
+   "nodes": [
+    {
+     "id": "nav",
+     "label": "Navbar",
+     "x": 14,
+     "y": 30,
+     "sub": "component",
+     "art": "blocks"
+    },
+    {
+     "id": "foot",
+     "label": "Footer",
+     "x": 14,
+     "y": 72,
+     "sub": "component",
+     "art": "blocks"
+    },
+    {
+     "id": "home",
+     "label": "Home",
+     "x": 84,
+     "y": 18,
+     "sub": "page"
+    },
+    {
+     "id": "contact",
+     "label": "Contact",
+     "x": 84,
+     "y": 50,
+     "sub": "page"
+    },
+    {
+     "id": "tmpl",
+     "label": "Project template",
+     "x": 84,
+     "y": 82,
+     "sub": "added in Project 4"
+    }
+   ],
+   "edges": [
+    {
+     "from": "nav",
+     "to": "home"
+    },
+    {
+     "from": "nav",
+     "to": "contact"
+    },
+    {
+     "from": "nav",
+     "to": "tmpl"
+    },
+    {
+     "from": "foot",
+     "to": "home"
+    },
+    {
+     "from": "foot",
+     "to": "contact"
+    },
+    {
+     "from": "foot",
+     "to": "tmpl"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A navbar and footer should be identical on every page, so turn both into components.",
+     "show": 2,
+     "on": [
+      "nav",
+      "foot"
+     ]
+    },
+    {
+     "say": "Place them on Home and on Contact.",
+     "show": 4,
+     "on": [
+      "home",
+      "contact"
+     ],
+     "send": {
+      "from": "nav",
+      "to": "home",
+      "label": "Navbar"
+     }
+    },
+    {
+     "say": "Later, they go on the C M S template page too.",
+     "show": 5,
+     "on": "tmpl",
+     "send": {
+      "from": "foot",
+      "to": "tmpl",
+      "label": "Footer"
+     }
+    },
+    {
+     "say": "Now change a link in the navbar component, once.",
+     "show": 5,
+     "on": "nav"
+    },
+    {
+     "say": "Every page gets the change. No updating the same navbar by hand.",
+     "show": 5,
+     "on": [
+      "home",
+      "contact",
+      "tmpl"
+     ],
+     "send": {
+      "from": "nav",
+      "to": "contact",
+      "label": "updated"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 6",
+   "title": "The Current state shows where you are",
+   "columns": [
+    "You're on",
+    "Home link",
+    "Contact link"
+   ],
+   "rows": [
     [
-     "Navbar links",
-     "Home · About · Work · Contact"
+     "Home page",
+     "Current style",
+     "Normal"
     ],
     [
-     "Components",
-     "Navbar + footer, edited once"
-    ],
-    [
-     "Current state",
-     "Shows where you are"
+     "Contact page",
+     "Normal",
+     "Current style"
     ]
    ],
    "beats": [
     {
-     "say": "Add the Navbar element, with four links.",
-     "show": 0
+     "say": "The Current state styles the nav link for the page you're on."
     },
     {
-     "say": "Home and Contact link to their pages. About and Work use the link type Section.",
-     "show": 1
+     "say": "On the Home page, the Home link shows its Current style.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Convert the navbar and a footer into components, so one edit updates every page.",
-     "show": 2
+     "say": "On the Contact page, the Contact link does instead.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And style the Current state, so visitors always know which page they're on.",
-     "show": 3
+     "say": "Style the Current state of both links. It's a small touch, but visitors always know where they are.",
+     "hl": [
+      0,
+      1
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "phone",
+   "kind": "array",
    "kicker": "Lab · Steps 7 and 8",
-   "title": "Mobile menu, then click everything",
-   "steps": [
-    "Configure the hamburger menu",
-    "Test at mobile width",
-    "Click every link, every page"
+   "title": "Click every link, on desktop and mobile",
+   "values": [
+    "Home → Home",
+    "Home → About",
+    "Home → Work",
+    "Home → Contact",
+    "Contact → About",
+    "Contact → Work",
+    "Contact → Home",
+    "Mobile menu"
    ],
    "beats": [
     {
-     "say": "Desktop navbars don't fit phones, and most visits are on phones.",
-     "show": 0
+     "say": "Desktop navbars don't fit phones, so set up the navbar's mobile menu, the hamburger.",
+     "hl": 7
     },
     {
-     "say": "Configure the navbar's mobile menu, the hamburger.",
-     "show": 1
+     "say": "Then test. From Home, click each of the four links.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "ptr": {
+      "from": 0
+     }
     },
     {
-     "say": "Test it at mobile width.",
-     "show": 2
+     "say": "From Contact, try About and Work too. Those section links have to jump back to Home.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "hl": [
+      4,
+      5
+     ],
+     "ptr": {
+      "from": 4
+     }
     },
     {
-     "say": "Then click every link on every page, on desktop and mobile, including the section links from the Contact page.",
-     "show": 3
+     "say": "And back to Home.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "ptr": {
+      "from": 6
+     }
+    },
+    {
+     "say": "Finally, repeat it at mobile width, through the hamburger menu. Most visits are on phones.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "ptr": {
+      "from": 7
+     },
+     "note": "Every link works, everywhere"
     }
    ]
   },
@@ -887,97 +1678,339 @@ CMS
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
-   "kicker": "Lab · Steps 2 to 4",
-   "title": "A Projects collection",
-   "file": "CMS",
-   "code": "Collection: Projects (name, summary, image, slug)\n└── 3 sample items",
-   "beats": [
-    {
-     "say": "A collection is a set of similar items, each with defined fields.",
-     "show": 0
-    },
-    {
-     "say": "Create a collection called Projects, with a name, summary, image and slug.",
-     "show": 1
-    },
-    {
-     "say": "Creating it also creates its template page automatically.",
-     "show": 1
-    },
-    {
-     "say": "Then add three sample projects with real content. That's well within the free plan's item cap.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "array",
-   "kicker": "Concept",
-   "title": "List versus template",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "A Projects collection and its fields",
+   "columns": [
+    "Field",
+    "Type",
+    "Holds"
+   ],
+   "rows": [
     [
-     "Collection list",
-     "Many items, one page"
+     "name",
+     "Text",
+     "Project title"
     ],
     [
-     "Collection page",
-     "One page per item"
+     "summary",
+     "Text",
+     "A short description"
+    ],
+    [
+     "image",
+     "Image",
+     "The main picture"
+    ],
+    [
+     "slug",
+     "Text",
+     "The page's URL part"
     ]
    ],
    "beats": [
     {
-     "say": "Two ways to show a collection.",
-     "show": 0
+     "say": "A collection is a set of similar items, each with the same fields. Like choosing a data type for your content."
     },
     {
-     "say": "A collection list shows many items on one page, one block per item. Add one to the work section on Home, and design one card.",
-     "show": 1
+     "say": "In the C M S, create a collection called Projects.",
+     "sql": "Collection: Projects"
     },
     {
-     "say": "A collection page is a single template that generates one live page per item, each with its own U R L.",
-     "show": 2
+     "say": "Give it a name and a summary, both text.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     },
     {
-     "say": "On the free plan, the template page hasn't counted toward the static page limit.",
-     "show": 2
+     "say": "An image field.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "And a slug, the part of the U R L that's unique to each project.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Creating the collection also creates its template page, automatically.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 0
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
-   "kicker": "Lab · Step 8",
-   "title": "Design the detail page and link it",
-   "steps": [
-    "Open the template page",
-    "Add navbar + footer",
-    "Bind fields",
-    "Link cards to pages",
-    "New item → new page"
+   "kind": "table",
+   "kicker": "Lab · Step 4",
+   "title": "Three sample items",
+   "columns": [
+    "name",
+    "slug",
+    "summary"
+   ],
+   "rows": [
+    [
+     "Bakery Website",
+     "bakery-website",
+     "A menu and order page"
+    ],
+    [
+     "Brand Refresh",
+     "brand-refresh",
+     "New logo and colours"
+    ],
+    [
+     "Event Landing",
+     "event-landing",
+     "A one-page signup"
+    ]
    ],
    "beats": [
     {
-     "say": "Open the Projects template page.",
-     "show": 0
+     "say": "Now add three sample projects. These ones are just examples. Use your own real work."
     },
     {
-     "say": "Add your navbar and footer components.",
-     "show": 1
+     "say": "Each item fills in the same fields. Here's the first.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Bind the name, image and summary to the item's fields.",
-     "show": 2
+     "say": "Then the second, and the third.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     },
     {
-     "say": "Link each card in the collection list to its collection page.",
-     "show": 3
+     "say": "Each slug is unique, so each project will get its own address.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 1
     },
     {
-     "say": "Add a fourth project, and a new card and a new page appear, with no design work.",
-     "show": 4
+     "say": "The free plan caps C M S items, but three is well within it.",
+     "col": 0
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Steps 5 to 8",
+   "title": "One collection, a list, and a page per item",
+   "nodes": [
+    {
+     "id": "coll",
+     "label": "Projects",
+     "x": 12,
+     "y": 50,
+     "sub": "collection · 3 items",
+     "art": "database"
+    },
+    {
+     "id": "list",
+     "label": "Collection List",
+     "x": 50,
+     "y": 20,
+     "sub": "Home · work section",
+     "art": "layout"
+    },
+    {
+     "id": "tmpl",
+     "label": "Template page",
+     "x": 50,
+     "y": 80,
+     "sub": "Projects template",
+     "art": "blueprint"
+    },
+    {
+     "id": "live",
+     "label": "Live pages",
+     "x": 88,
+     "y": 50,
+     "sub": "one URL per project",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "coll",
+     "to": "list"
+    },
+    {
+     "from": "coll",
+     "to": "tmpl"
+    },
+    {
+     "from": "tmpl",
+     "to": "live"
+    },
+    {
+     "from": "list",
+     "to": "live"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's the whole system. It starts with your Projects collection.",
+     "show": 1,
+     "on": "coll"
+    },
+    {
+     "say": "In the work section on Home, add a Collection List bound to Projects.",
+     "show": 2,
+     "send": {
+      "from": "coll",
+      "to": "list",
+      "label": "3 items"
+     }
+    },
+    {
+     "say": "Design one card from the fields, and every project appears in that style. Three items, three cards.",
+     "show": 2,
+     "on": "list"
+    },
+    {
+     "say": "Next, the template page. Add your navbar and footer, and bind the name, image and summary to the item's fields.",
+     "show": 3,
+     "send": {
+      "from": "coll",
+      "to": "tmpl",
+      "label": "item fields"
+     }
+    },
+    {
+     "say": "That one template generates a live page for every item, each with its own U R L.",
+     "show": 4,
+     "send": {
+      "from": "tmpl",
+      "to": "live",
+      "label": "3 pages"
+     }
+    },
+    {
+     "say": "Last, link each card to its collection page. Click a card, land on that project.",
+     "show": 4,
+     "send": {
+      "from": "list",
+      "to": "live",
+      "label": "card link"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Collection list or template page?",
+   "columns": [
+    "",
+    "Collection list",
+    "Template page"
+   ],
+   "rows": [
+    [
+     "Shows",
+     "Many items, one page",
+     "One item per page"
+    ],
+    [
+     "Looks like",
+     "Repeated cards",
+     "A full detail page"
+    ],
+    [
+     "Lives on",
+     "Home, work section",
+     "Projects template"
+    ],
+    [
+     "Static page?",
+     "Part of Home",
+     "Not counted"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "These two are easy to mix up, so let's compare."
+    },
+    {
+     "say": "A collection list shows many items on one page.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "A template page shows one item, and makes a separate page for each.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "The list repeats a card. The template is a full detail page.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "And on the free plan, the template page hasn't counted toward the static page limit. Do check the current plan.",
+     "hl": 3,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Concept",
+   "title": "Add a fourth project, and watch",
+   "values": [
+    "Bakery Website",
+    "Brand Refresh",
+    "Event Landing",
+    "(empty slot)"
+   ],
+   "beats": [
+    {
+     "say": "Your site shows three projects, so it has three cards and three detail pages.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
+    },
+    {
+     "say": "Now add a fourth item in the C M S. No design work at all.",
+     "vals": [
+      "Bakery Website",
+      "Brand Refresh",
+      "Event Landing",
+      "Portfolio Site"
+     ],
+     "hl": 3
+    },
+    {
+     "say": "A new card appears in the collection list.",
+     "ok": [
+      3
+     ],
+     "note": "+1 card in the work section"
+    },
+    {
+     "say": "And a new detail page is generated, with its own U R L. That's content without touching the layout.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "+1 page at /projects/portfolio-site"
     }
    ]
   },
@@ -1142,100 +2175,293 @@ Interactions + form
    ]
   },
   {
-   "kind": "list",
-   "art": "cursor",
-   "kicker": "Lab · Steps 2 and 3",
+   "kind": "table",
+   "kicker": "Lab · Steps 1 to 3",
    "title": "Two tasteful interactions",
-   "items": [
+   "columns": [
+    "Interaction",
+    "Trigger",
+    "Effect"
+   ],
+   "rows": [
     [
      "Scroll into view",
-     "Fade in, move up slightly"
+     "Card enters the screen",
+     "Fade in, move up a bit"
     ],
     [
      "Hover",
-     "Slight lift or colour change"
+     "Pointer over it",
+     "Slight lift or colour"
     ]
    ],
    "beats": [
     {
-     "say": "Select your cards, and add a while scrolling into view interaction that fades them in and moves them up slightly. It's the most common tasteful interaction.",
-     "show": 1
+     "say": "Every interaction is a trigger, plus an effect.",
+     "col": 1
     },
     {
-     "say": "Then add a hover state to buttons and cards, like a slight lift or colour change.",
-     "show": 2
+     "say": "Select your cards, and add a while scrolling into view interaction.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Hover feedback tells users what's clickable.",
-     "show": 2
+     "say": "As each card enters the screen, it fades in and moves up slightly. The most common, tasteful animation.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Then add a hover state to buttons and cards: a slight lift, or a colour change.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Hover feedback tells visitors what's clickable. Two interactions are plenty.",
+     "hl": [
+      0,
+      1
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "form",
-   "kicker": "Lab · Steps 4 to 6",
-   "title": "The contact form",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Lab · Steps 4 to 7",
+   "title": "Where a form submission goes",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "Visitor",
+     "x": 10,
+     "y": 50,
+     "sub": "on Contact",
+     "art": "phone"
+    },
+    {
+     "id": "form",
+     "label": "Contact form",
+     "x": 34,
+     "y": 50,
+     "sub": "name, email, message",
+     "art": "form"
+    },
+    {
+     "id": "check",
+     "label": "Validation",
+     "x": 60,
+     "y": 50,
+     "sub": "required + Email type",
+     "art": "shield"
+    },
+    {
+     "id": "mail",
+     "label": "Your inbox",
+     "x": 88,
+     "y": 22,
+     "sub": "Site settings › Forms",
+     "art": "mail"
+    },
+    {
+     "id": "state",
+     "label": "Success state",
+     "x": 88,
+     "y": 78,
+     "sub": "or error state",
+     "art": "bell"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "form"
+    },
+    {
+     "from": "form",
+     "to": "check"
+    },
+    {
+     "from": "check",
+     "to": "mail"
+    },
+    {
+     "from": "check",
+     "to": "state"
+    },
+    {
+     "from": "state",
+     "to": "you"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A form collects what visitors type and sends it somewhere. On many business sites, it's the whole point.",
+     "show": 2
+    },
+    {
+     "say": "On Contact, add a Form with name, email and message, plus a submit button. Short forms get finished.",
+     "show": 2,
+     "send": {
+      "from": "you",
+      "to": "form",
+      "label": "fills it in"
+     }
+    },
+    {
+     "say": "Mark email and message as required, and set the email field type to Email. Junk gets stopped here.",
+     "show": 3,
+     "send": {
+      "from": "form",
+      "to": "check",
+      "label": "submit"
+     }
+    },
+    {
+     "say": "A valid message goes to the notification email set in Site settings, under Forms.",
+     "show": 4,
+     "send": {
+      "from": "check",
+      "to": "mail",
+      "label": "new message"
+     }
+    },
+    {
+     "say": "And the visitor sees your success state, or the error state if something went wrong.",
+     "show": 5,
+     "send": {
+      "from": "state",
+      "to": "you",
+      "label": "Thank you!"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 6",
+   "title": "Validation, case by case",
+   "columns": [
+    "Email",
+    "Message",
+    "Result"
+   ],
+   "rows": [
     [
-     "Fields",
-     "Name · email · message"
+     "ada@mail.com",
+     "Hi, let's talk",
+     "Sent"
     ],
     [
-     "Notifications",
-     "Site settings → Forms"
+     "ada.mail.com",
+     "Hi, let's talk",
+     "Blocked: not an email"
     ],
     [
-     "Validation",
-     "Required + Email type"
+     "(empty)",
+     "Hi, let's talk",
+     "Blocked: required"
+    ],
+    [
+     "ada@mail.com",
+     "(empty)",
+     "Blocked: required"
     ]
    ],
    "beats": [
     {
-     "say": "On many business sites, the form is the whole point.",
-     "show": 0
+     "say": "Let's try four submissions against your rules.",
+     "sql": "email: required, type Email\nmessage: required"
     },
     {
-     "say": "On the Contact page, add a Form with name, email and message, and a submit button. Short forms get completed far more often.",
-     "show": 1
+     "say": "A real email and a message. It goes through.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "In Site settings, under Forms, check which email receives notifications.",
-     "show": 2
+     "say": "An email with no at sign isn't an email, so the Email type rejects it.",
+     "hl": 1,
+     "dim": true,
+     "col": 0
     },
     {
-     "say": "Mark email and message as required, and set the email field type to Email. Validation stops junk submissions.",
-     "show": 3
+     "say": "A blank email is blocked, because it's required.",
+     "hl": 2,
+     "dim": true,
+     "col": 0
+    },
+    {
+     "say": "And so is a blank message. Only the first one ever reaches your inbox.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "mail",
-   "kicker": "Lab · Steps 7 and 8",
-   "title": "Prove it delivers",
-   "steps": [
-    "Success + error states",
+   "kind": "array",
+   "kicker": "Lab · Step 8",
+   "title": "Test it end to end",
+   "values": [
     "Publish to webflow.io",
-    "Submit a real test",
+    "Submit the form",
+    "Success state shows",
     "Message arrives"
    ],
    "beats": [
     {
-     "say": "Edit the text of the success and error states that come with the Form. Without feedback, users resubmit, or assume it's broken.",
-     "show": 1
+     "say": "A form that looks fine but never delivers is worse than none. So test it for real."
     },
     {
-     "say": "Publish to your free webflow dot i o address.",
-     "show": 2
+     "say": "Publish to your free webflow dot i o address. Preview mode isn't enough.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     }
     },
     {
      "say": "Submit the form yourself.",
-     "show": 3
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     }
     },
     {
-     "say": "Confirm the message arrives and the success state shows. Submissions are capped on the free plan, so don't spam it.",
-     "show": 4
+     "say": "Check the success state shows.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     }
+    },
+    {
+     "say": "And confirm the message actually arrives in your inbox.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     }
+    },
+    {
+     "say": "The free plan limits submissions, so a few tests are fine. Just don't spam it.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "Delivered: the form really works"
     }
    ]
   },
@@ -1394,126 +2620,289 @@ Production
    ]
   },
   {
-   "kind": "list",
-   "art": "search",
+   "kind": "table",
    "kicker": "Lab · Steps 1 and 2",
-   "title": "S E O titles and descriptions",
-   "items": [
+   "title": "A title and description for every page",
+   "columns": [
+    "Page",
+    "Title",
+    "Description"
+   ],
+   "rows": [
     [
-     "Every page",
-     "Title + meta description"
+     "Home",
+     "Portfolio | Your Name",
+     "Web designer and…"
     ],
     [
-     "CMS template",
-     "Insert collection fields"
+     "Contact",
+     "Contact | Your Name",
+     "Get in touch about…"
+    ],
+    [
+     "Projects template",
+     "[name] | Projects",
+     "[summary]"
     ]
    ],
    "beats": [
     {
-     "say": "S E O settings tell search engines what each page is about. If people can't find a site, its design doesn't matter.",
-     "show": 0
+     "say": "S E O settings tell search engines what each page is about. If people can't find a site, its design doesn't matter."
     },
     {
-     "say": "In page settings, write a clear title and meta description for each page.",
-     "show": 1
+     "say": "In page settings, give Home a clear title and meta description. These are examples. Write your own.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "On the C M S template, insert collection fields, so each project page gets its own title.",
-     "show": 2
+     "say": "Do the same for Contact.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "These show up in search results and link previews, so they affect whether people click.",
-     "show": 2
+     "say": "On the C M S template, insert collection fields: the project's name in the title, its summary as the description.",
+     "hl": 2,
+     "dim": true,
+     "sql": "Title = name field + \" | Projects\""
+    },
+    {
+     "say": "So every project page gets its own title. These show up in search results and link previews.",
+     "hl": 2,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "access",
-   "kicker": "Lab · Steps 3 to 5",
-   "title": "Accessible and fast",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "The two most common accessibility fixes",
+   "columns": [
+    "Check",
+    "Example",
+    "Fix"
+   ],
+   "rows": [
     [
      "Alt text",
-     "Every meaningful image"
+     "Your profile photo",
+     "Describe what it shows"
+    ],
+    [
+     "Alt text",
+     "Each project image",
+     "Describe the work"
     ],
     [
      "Contrast",
-     "Text vs background"
-    ],
-    [
-     "Compress images",
-     "Top cause of slow sites"
+     "Pale text on pink",
+     "Darken the text"
     ]
    ],
    "beats": [
     {
-     "say": "Accessibility means the site works for everyone.",
-     "show": 0
+     "say": "Accessibility means the site works for everyone, including people using screen readers."
     },
     {
-     "say": "Add alt text to every meaningful image. It describes the image for screen readers and search engines.",
-     "show": 1
+     "say": "Alt text describes an image for screen readers and search engines. Add it to every meaningful image.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 0
     },
     {
-     "say": "Check that text has enough contrast against its background.",
-     "show": 2
+     "say": "Your photo, and each project image, gets a short, plain description.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And compress large images before uploading. They're the top cause of slow sites.",
-     "show": 3
+     "say": "Then check contrast. Text needs to stand out clearly from its background.",
+     "hl": 2,
+     "dim": true,
+     "col": 0
+    },
+    {
+     "say": "These two fixes cover the most common accessibility gaps.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "globe",
-   "kicker": "Lab · Steps 6 and 7",
-   "title": "Publish, and the optional domain",
-   "items": [
-    [
-     "webflow.io",
-     "Free · portfolio-site.webflow.io"
-    ],
-    [
-     "Custom domain",
-     "Optional · paid site plan"
-    ]
+   "kind": "diagram",
+   "kicker": "Lab · Steps 5 to 7",
+   "title": "Publish to the live web",
+   "nodes": [
+    {
+     "id": "des",
+     "label": "Webflow Designer",
+     "x": 12,
+     "y": 50,
+     "sub": "your site",
+     "art": "laptop"
+    },
+    {
+     "id": "wf",
+     "label": "webflow.io address",
+     "x": 50,
+     "y": 22,
+     "sub": "free on every site",
+     "art": "globe"
+    },
+    {
+     "id": "dom",
+     "label": "Custom domain",
+     "x": 50,
+     "y": 80,
+     "sub": "optional · paid plan",
+     "art": "key"
+    },
+    {
+     "id": "vis",
+     "label": "Visitors",
+     "x": 88,
+     "y": 50,
+     "sub": "desktop and phone",
+     "art": "phone"
+    }
+   ],
+   "edges": [
+    {
+     "from": "des",
+     "to": "wf"
+    },
+    {
+     "from": "des",
+     "to": "dom"
+    },
+    {
+     "from": "wf",
+     "to": "vis"
+    },
+    {
+     "from": "dom",
+     "to": "vis"
+    }
    ],
    "beats": [
     {
-     "say": "Every Webflow site can publish for free to a webflow dot i o subdomain.",
-     "show": 1
+     "say": "Before you publish, compress large images. They're the top cause of slow sites.",
+     "show": 1,
+     "on": "des"
     },
     {
-     "say": "Publish, and check every page on desktop and phone. This is your live site.",
-     "show": 1
+     "say": "Publishing pushes your work to the live web. Every site can publish free to a webflow dot i o address, like portfolio site dot webflow dot i o.",
+     "show": 2,
+     "send": {
+      "from": "des",
+      "to": "wf",
+      "label": "Publish"
+     }
     },
     {
-     "say": "Connecting a custom domain needs a paid site plan, under Site settings, Publishing, Custom domains, following Webflow's D N S instructions.",
-     "show": 2
+     "say": "Visitors can reach it right away. Check every page on desktop and phone, and check it loads quickly.",
+     "show": 4,
+     "send": {
+      "from": "wf",
+      "to": "vis",
+      "label": "fast pages"
+     }
     },
     {
-     "say": "If you don't have one, just write the steps in your checklist.",
-     "show": 2
+     "say": "Connecting your own domain is optional, and needs a paid site plan.",
+     "show": 4,
+     "on": "dom"
+    },
+    {
+     "say": "If you have one, add it under Site settings, Publishing, Custom domains, and follow the D N S steps. If not, just note the steps for later.",
+     "show": 4,
+     "send": {
+      "from": "des",
+      "to": "dom",
+      "label": "DNS setup"
+     }
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "checklist",
+   "kind": "array",
    "kicker": "Lab · Step 8",
-   "title": "The launch checklist",
-   "big": "launch_checklist.md",
-   "sub": "Pages · CMS · SEO · live URL",
+   "title": "Your launch checklist",
+   "values": [
+    "Pages",
+    "CMS collections",
+    "SEO titles",
+    "Alt text",
+    "Contrast",
+    "Images compressed",
+    "Live URL"
+   ],
    "beats": [
     {
-     "say": "Finally, write a launch checklist and README.",
-     "show": 0
+     "say": "Last, write a launch checklist and README. It's what you hand a client."
     },
     {
-     "say": "Document the pages, C M S collections, S E O settings and the live U R L. It's what you hand a client.",
-     "show": 1
+     "say": "Document your pages and your C M S collections.",
+     "hl": [
+      0,
+      1
+     ]
+    },
+    {
+     "say": "Your S E O settings, alt text and contrast checks.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "say": "That images are compressed.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5
+    },
+    {
+     "say": "And your live U R L.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "hl": 6
+    },
+    {
+     "say": "Next time you update the site, this is the list you check.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "note": "launch_checklist.md"
     }
    ]
   },
@@ -1524,7 +2913,7 @@ Production
    "title": "Where can a free Webflow site be published?",
    "options": [
     "Only on a custom domain",
-    "To a free webflow dot i o subdomain",
+    "To a free webflow.io subdomain",
     "Nowhere until you upgrade"
    ],
    "answer": 1,

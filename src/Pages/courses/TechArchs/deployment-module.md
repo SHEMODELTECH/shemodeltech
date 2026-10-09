@@ -210,251 +210,511 @@ You have located and read an error log entry from a deliberate failure, fixed th
    ]
   },
   {
-   "kind": "flow",
-   "art": "layers",
+   "kind": "diagram",
    "kicker": "Topic 1 · Publishing",
-   "title": "Draft, staging, publish",
-   "steps": [
-    "Draft: private",
-    "Staging: test copy",
-    "Publish: live",
-    "Version history: roll back"
+   "title": "From private draft to live, with a way back",
+   "nodes": [
+    {
+     "id": "draft",
+     "label": "Draft",
+     "x": 12,
+     "y": 30,
+     "sub": "private, only you",
+     "art": "pencil"
+    },
+    {
+     "id": "stage",
+     "label": "Staging",
+     "x": 48,
+     "y": 30,
+     "sub": "separate test copy",
+     "art": "flask"
+    },
+    {
+     "id": "live",
+     "label": "Live version",
+     "x": 86,
+     "y": 30,
+     "sub": "what real users see",
+     "art": "globe"
+    },
+    {
+     "id": "hist",
+     "label": "Version history",
+     "x": 86,
+     "y": 78,
+     "sub": "every past publish",
+     "art": "book"
+    }
+   ],
+   "edges": [
+    {
+     "from": "draft",
+     "to": "stage"
+    },
+    {
+     "from": "stage",
+     "to": "live"
+    },
+    {
+     "from": "live",
+     "to": "hist"
+    }
    ],
    "beats": [
     {
-     "say": "Publishing makes something you built privately live for real users.",
-     "show": 0
+     "say": "Everything starts as a draft: private and editable. Changes there don't affect real users.",
+     "show": 1,
+     "on": "draft"
     },
     {
-     "say": "A draft, or preview, is private and editable. Changes there don't affect real users.",
-     "show": 1
+     "say": "Larger platforms add a staging copy for final testing, like a private Salesforce sandbox, or Webflow's free webflow dot io address.",
+     "show": 2,
+     "on": "stage",
+     "send": {
+      "from": "draft",
+      "to": "stage",
+      "label": "test copy"
+     }
     },
     {
-     "say": "A staging environment is a separate test copy. Salesforce uses private sandboxes; Webflow offers a free webflow dot io staging address.",
-     "show": 2
+     "say": "Publishing makes the current version the one real users see.",
+     "show": 3,
+     "on": "live",
+     "send": {
+      "from": "stage",
+      "to": "live",
+      "label": "publish"
+     }
     },
     {
-     "say": "Publishing makes the current draft the version real users see.",
-     "show": 3
+     "say": "Each publish is kept in version history.",
+     "show": 4,
+     "on": "hist",
+     "send": {
+      "from": "live",
+      "to": "hist",
+      "label": "v3 saved"
+     }
     },
     {
-     "say": "And version history lets you roll back, usually in a single click.",
-     "show": 4
+     "say": "So if a new publish breaks something, rolling back is usually a single click.",
+     "on": [
+      "hist",
+      "live"
+     ],
+     "send": {
+      "from": "hist",
+      "to": "live",
+      "label": "roll back: v2"
+     }
+    },
+    {
+     "say": "Smaller tools often skip staging, and go straight from draft to live.",
+     "on": [
+      "draft",
+      "live"
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "browser",
+   "kind": "table",
    "kicker": "Topic 1 · Lab",
-   "title": "Change, preview, publish",
-   "steps": [
-    "Small change in draft",
-    "Preview privately",
-    "Publish, check in incognito",
-    "Find version history"
+   "title": "Who can see your change, at each step",
+   "columns": [
+    "Lab step",
+    "You see it",
+    "Users see it"
+   ],
+   "rows": [
+    [
+     "Edit a label in draft",
+     "yes",
+     "no"
+    ],
+    [
+     "Preview the draft",
+     "yes",
+     "no"
+    ],
+    [
+     "Publish",
+     "yes",
+     "yes"
+    ],
+    [
+     "Open live in incognito",
+     "yes",
+     "yes"
+    ],
+    [
+     "Find version history",
+     "older versions",
+     "no"
+    ]
    ],
    "beats": [
     {
-     "say": "Open a project from an earlier module, and make a small visible change in draft mode.",
-     "show": 1
+     "say": "Open a project from an earlier module, and make one small, visible change in draft mode.",
+     "hl": 0
     },
     {
-     "say": "Preview it. You see the change; people using the live version don't, yet.",
-     "show": 2
+     "say": "Preview it. You can see the change, but people using the live version can't yet.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Publish, then open the live link in a fresh private browser window to see the update.",
-     "show": 3
+     "say": "Now publish. From this moment, everyone sees it.",
+     "hl": 2,
+     "col": 2
     },
     {
-     "say": "Finally, find the version history, and check you could roll back.",
-     "show": 4
+     "say": "Check it in a fresh private browser window, which shows you exactly what a visitor gets.",
+     "hl": 3
+    },
+    {
+     "say": "Finally, find the version history, and confirm you could roll back to the previous version.",
+     "hl": 4
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "globe",
+   "kind": "diagram",
    "kicker": "Topic 2 · Domains",
-   "title": "Your own address",
-   "items": [
-    [
-     "Registrar",
-     "Where you bought it"
-    ],
-    [
-     "CNAME / A record",
-     "Where it points"
-    ],
-    [
-     "Propagation",
-     "Minutes to 48 hours"
-    ],
-    [
-     "HTTPS",
-     "The padlock"
-    ]
+   "title": "How your own address finds your site",
+   "nodes": [
+    {
+     "id": "reg",
+     "label": "Registrar",
+     "x": 12,
+     "y": 25,
+     "sub": "where you bought it",
+     "art": "coin"
+    },
+    {
+     "id": "dns",
+     "label": "DNS record",
+     "x": 50,
+     "y": 25,
+     "sub": "CNAME or A record",
+     "art": "globe"
+    },
+    {
+     "id": "visitor",
+     "label": "Visitor",
+     "x": 12,
+     "y": 75,
+     "sub": "types your domain",
+     "art": "browser"
+    },
+    {
+     "id": "host",
+     "label": "Host",
+     "x": 86,
+     "y": 75,
+     "sub": "where the site runs",
+     "art": "server"
+    }
+   ],
+   "edges": [
+    {
+     "from": "reg",
+     "to": "dns"
+    },
+    {
+     "from": "visitor",
+     "to": "dns"
+    },
+    {
+     "from": "visitor",
+     "to": "host"
+    }
    ],
    "beats": [
     {
-     "say": "A domain is the human-readable address, like your business dot com.",
-     "show": 0
-    },
-    {
-     "say": "You buy it from a registrar, like Cloudflare Registrar or Porkbun. That's almost always a different company from your host.",
-     "show": 1
-    },
-    {
-     "say": "D N S records tell the internet where it points. A C NAME points a subdomain to another address; an A record points to a numeric I P address.",
-     "show": 2
-    },
-    {
-     "say": "Propagation is the delay before a change works everywhere: minutes, or rarely up to forty eight hours.",
-     "show": 3
-    },
-    {
-     "say": "And most no-code hosts set up H T T P S for free, shown by the padlock.",
+     "say": "Four parts: the registrar, D N S, a visitor, and the host where your site runs.",
      "show": 4
+    },
+    {
+     "say": "They're almost always different companies, so you don't move the domain. You add a D N S record pointing to your host.",
+     "on": "reg",
+     "send": {
+      "from": "reg",
+      "to": "dns",
+      "label": "add CNAME"
+     }
+    },
+    {
+     "say": "That change takes time to spread: minutes, or rarely up to forty eight hours. That's propagation.",
+     "on": "dns"
+    },
+    {
+     "say": "When someone types your business dot com, their browser first asks D N S where it lives.",
+     "on": "visitor",
+     "send": {
+      "from": "visitor",
+      "to": "dns",
+      "label": "your domain?"
+     }
+    },
+    {
+     "say": "D N S answers with your host's address.",
+     "on": "dns",
+     "send": {
+      "from": "dns",
+      "to": "visitor",
+      "label": "go to host"
+     }
+    },
+    {
+     "say": "The browser connects to the host over H T T P S, which most hosts set up for free.",
+     "on": "host",
+     "send": {
+      "from": "visitor",
+      "to": "host",
+      "label": "HTTPS request"
+     }
+    },
+    {
+     "say": "And your page loads, with the padlock in the address bar.",
+     "on": "visitor",
+     "send": {
+      "from": "host",
+      "to": "visitor",
+      "label": "page + padlock"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "search",
+   "kind": "table",
    "kicker": "Topic 2 · Lab",
-   "title": "A free part, and a paid part",
-   "items": [
+   "title": "Look up real DNS records",
+   "columns": [
+    "Name",
+    "Type",
+    "Points to"
+   ],
+   "rows": [
     [
-     "Look up A + CNAME",
-     "Free DNS lookup tool"
+     "wikipedia.org",
+     "A",
+     "a numeric IP address"
     ],
     [
-     "Find the record you'd need",
-     "Custom domain settings"
+     "www.yourbusiness.com",
+     "CNAME",
+     "your host's address"
     ],
     [
-     "Check the padlock",
-     "On your free address"
-    ],
-    [
-     "Optional: connect a domain",
-     "Paid plan + purchase"
+     "yourbusiness.com",
+     "A",
+     "your host's IP"
     ]
    ],
    "beats": [
     {
-     "say": "There's no free trial domain, so the lab has two parts.",
-     "show": 0
+     "say": "The free part of the lab uses a D N S lookup tool."
     },
     {
-     "say": "Everyone looks up real records with a free D N S lookup tool: the A record of a site like wikipedia dot org, and the C NAME of a few w w w addresses.",
-     "show": 1
+     "say": "Look up the A record of a site you know. An A record points a domain straight to a numeric I P address.",
+     "sql": "Lookup: wikipedia.org · type A",
+     "hl": 0,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Then find your platform's custom domain page, and write down which record type and value it would ask for.",
-     "show": 2
+     "say": "A C NAME points a subdomain, like w w w, to another address. Some return no C NAME at all.",
+     "sql": "Lookup: www.… · type CNAME",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And check your free address shows the padlock.",
-     "show": 3
+     "say": "Then find your project's custom domain settings, and write down the type and value it asks for.",
+     "sql": "Your platform asks for: CNAME or A, plus a value",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 1
     },
     {
-     "say": "The optional paid part: buy a domain, add the record exactly, wait for propagation, and confirm it loads over H T T P S.",
-     "show": 4
+     "say": "And check that your free address already shows the padlock."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "pulse",
-   "kicker": "Topic 3 · Maintenance",
-   "title": "Launch is the beginning",
-   "items": [
-    [
-     "Monitoring",
-     "Is it still working?"
-    ],
-    [
-     "Error log",
-     "What failed, and when"
-    ],
-    [
-     "Deprecation",
-     "A dependency changes"
-    ],
-    [
-     "Maintenance window",
-     "Planned updates"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Publishing is the beginning of the lifecycle, not the end. Accounts expire and automations fail silently.",
-     "show": 0
-    },
-    {
-     "say": "Monitoring checks it's still working as expected.",
-     "show": 1
-    },
-    {
-     "say": "An error log records what went wrong, and when.",
-     "show": 2
-    },
-    {
-     "say": "Deprecation is when a connected service changes or retires something you depend on, which can quietly break a workflow.",
-     "show": 3
-    },
-    {
-     "say": "And a maintenance window is a planned, communicated time for updates.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "Topic 3 · Tip",
-   "title": "Check the logs first",
-   "quote": "Check the error log first, before assuming the whole platform is broken.",
-   "beats": [
-    {
-     "say": "Most outages people hit aren't the platform failing.",
-     "show": 0
-    },
-    {
-     "say": "They're an upstream connected service changing something. So check the error log first, before assuming the whole platform is broken.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "loop",
+   "kind": "table",
    "kicker": "Topic 3 · Lab",
-   "title": "Break it, read it, fix it",
-   "steps": [
-    "Find run history",
-    "Break it on purpose",
-    "Read the error, fix it",
-    "Recurring check-in reminder"
+   "title": "Break it on purpose, then read the log",
+   "columns": [
+    "Run",
+    "Status",
+    "Detail"
+   ],
+   "rows": [
+    [
+     "Run 1",
+     "Success",
+     "Row added"
+    ],
+    [
+     "Run 2",
+     "Success",
+     "Row added"
+    ],
+    [
+     "Run 3",
+     "Failed",
+     "Field not found: Email"
+    ],
+    [
+     "Run 4",
+     "Success",
+     "Row added"
+    ]
    ],
    "beats": [
     {
-     "say": "Return to an automation from the Business Workflows or A P Is module, and find its run history.",
-     "show": 1
+     "say": "Return to an automation from the Business Workflows or A P Is module, and open its run history.",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "Break something on purpose, like disconnecting an account or renaming a field it uses, and trigger it again.",
-     "show": 2
+     "say": "Every run is listed, and whether it succeeded.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 1
     },
     {
-     "say": "Read the error entry: exactly what failed, and why. Then fix it, and confirm it succeeds on a rerun.",
-     "show": 3
+     "say": "Now break something on purpose. Rename a field it depends on, and trigger it again.",
+     "sql": "Renamed the Email field, then re-triggered",
+     "hl": 2
     },
     {
-     "say": "Finally, set a weekly or monthly calendar reminder to check its run history.",
+     "say": "The error entry tells you exactly what failed and why: it couldn't find the Email field.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Restore the field name, run it again, and it succeeds.",
+     "sql": "Fix: restore the field name, then re-run",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Last, set a weekly or monthly calendar reminder to check this run history.",
+     "sql": "Calendar: every week, check the run history"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Topic 3 · Maintenance",
+   "title": "Why things break after launch",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "Your form",
+     "x": 12,
+     "y": 50,
+     "sub": "a new submission",
+     "art": "form"
+    },
+    {
+     "id": "flow",
+     "label": "Automation",
+     "x": 48,
+     "y": 50,
+     "sub": "runs on each entry",
+     "art": "gear"
+    },
+    {
+     "id": "app",
+     "label": "Connected app",
+     "x": 86,
+     "y": 25,
+     "sub": "through its API",
+     "art": "plug"
+    },
+    {
+     "id": "log",
+     "label": "Error log",
+     "x": 86,
+     "y": 75,
+     "sub": "what failed, and when",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "flow"
+    },
+    {
+     "from": "flow",
+     "to": "app"
+    },
+    {
+     "from": "flow",
+     "to": "log"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Publishing is the beginning, not the end. Here's a published automation.",
      "show": 4
+    },
+    {
+     "say": "A new form entry triggers it.",
+     "on": "form",
+     "send": {
+      "from": "form",
+      "to": "flow",
+      "label": "new entry"
+     }
+    },
+    {
+     "say": "It calls a connected app through that app's A P I, and today that works.",
+     "on": "flow",
+     "send": {
+      "from": "flow",
+      "to": "app",
+      "label": "API call"
+     }
+    },
+    {
+     "say": "Then one day, the connected app changes or retires a feature you depend on. That's deprecation.",
+     "on": "app"
+    },
+    {
+     "say": "The same call now fails, with no warning inside the tool you built.",
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "flow",
+      "label": "error"
+     }
+    },
+    {
+     "say": "The failure lands in the error log. So check the log first, before blaming the whole platform.",
+     "on": "log",
+     "send": {
+      "from": "flow",
+      "to": "log",
+      "label": "failure logged"
+     }
+    },
+    {
+     "say": "Then fix it in a planned, announced maintenance window, so nobody is surprised.",
+     "on": "flow"
     }
    ]
   },
@@ -462,11 +722,11 @@ You have located and read an error log entry from a deliberate failure, fixed th
    "kind": "quiz",
    "art": "ask",
    "kicker": "Quick check",
-   "title": "A D N S change isn't working right after you saved it. What's the most likely reason?",
+   "title": "A DNS change isn't working right after you saved it. What's the most likely reason?",
    "options": [
     "Propagation: the change hasn't spread across the internet yet",
     "The registrar deleted your domain",
-    "H T T P S blocks new records"
+    "HTTPS blocks new records"
    ],
    "answer": 0,
    "good": "That's right. Propagation can take minutes, or rarely up to forty eight hours. The change often just needs more time to spread.",

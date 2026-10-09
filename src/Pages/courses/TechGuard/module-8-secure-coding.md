@@ -257,8 +257,9 @@ curl -i http://127.0.0.1:8000/api/records/123
 curl -i -H "Authorization: Bearer ALICE_TOKEN" http://127.0.0.1:8000/api/records/123
 curl -i -H "Authorization: Bearer ALICE_TOKEN" http://127.0.0.1:8000/api/records/124
 ```
+   **A note on 403 vs 404:** this lab returns `404` for a record that doesn't exist but `403` for someone else's record, so each gate shows its own status code. The trade-off is that a caller can tell the two apart and learn which record IDs exist. Many real APIs (including the one you build in She Model Tech's APIs course) return `404` in both cases, which hides whether the record exists at all.
 7. **Test input validation**: request `/api/records/abc` with alice's token and confirm you get `400`.
-8. **Test the rate limit**: wait 10 seconds, then run the step 5 command six times quickly. The sixth call returns `429 Too Many Requests`.
+8. **Test the rate limit**: wait 10 seconds, then run the step 5 command six times quickly. The first five calls still return `401` (they have no token, but they count toward the limit); the sixth returns `429 Too Many Requests`.
 9. **Note the missing gate**: this server uses plain HTTP because it only listens on your own computer. Write one sentence on why a real deployment must serve it over HTTPS (hint: what would an eavesdropper see in the `Authorization` header?).
 
 #### Checkpoint

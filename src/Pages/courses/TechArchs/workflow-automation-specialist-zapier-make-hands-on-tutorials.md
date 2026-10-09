@@ -97,112 +97,283 @@ Zap 1
    ]
   },
   {
-   "kind": "list",
-   "art": "gear",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Triggers, actions and Zaps",
-   "items": [
+   "title": "Trigger, action, Zap",
+   "nodes": [
+    {
+     "id": "sheet",
+     "label": "Google Sheets",
+     "x": 12,
+     "y": 50,
+     "sub": "trigger: new row",
+     "art": "table"
+    },
+    {
+     "id": "zap",
+     "label": "Zap",
+     "x": 50,
+     "y": 50,
+     "sub": "trigger + action",
+     "art": "bolt"
+    },
+    {
+     "id": "gmail",
+     "label": "Gmail",
+     "x": 88,
+     "y": 50,
+     "sub": "action: send email",
+     "art": "mail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sheet",
+     "to": "zap"
+    },
+    {
+     "from": "zap",
+     "to": "gmail"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Every automation begins with a trigger: the event that starts it, like a new row added to a spreadsheet.",
+     "show": 1,
+     "on": "sheet"
+    },
+    {
+     "say": "An action is the work it does when the trigger fires, like sending an email.",
+     "show": 3,
+     "on": "gmail"
+    },
+    {
+     "say": "A Zap is one automated workflow in Zapier: a trigger plus one or more actions.",
+     "show": 3,
+     "on": "zap"
+    },
+    {
+     "say": "So when a new row appears, the trigger fires.",
+     "show": 3,
+     "on": "sheet",
+     "send": {
+      "from": "sheet",
+      "to": "zap",
+      "label": "new row"
+     }
+    },
+    {
+     "say": "And the Zap runs the action: send an email.",
+     "show": 3,
+     "on": "gmail",
+     "send": {
+      "from": "zap",
+      "to": "gmail",
+      "label": "Send Email"
+     }
+    },
+    {
+     "say": "On Zapier's free plan, a Zap may be limited to one action. That's all this project needs.",
+     "show": 3,
+     "on": [
+      "sheet",
+      "zap",
+      "gmail"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Build · Steps 4 to 6",
+   "title": "Set up the Zap, one choice at a time",
+   "values": [
+    "Sheet: name, email",
+    "Trigger app: Sheets",
+    "New Spreadsheet Row",
+    "Pick sheet + tab",
+    "Action: Gmail",
+    "Send Email to you"
+   ],
+   "beats": [
+    {
+     "say": "First, a Google Sheet with the headers name and email in row one, and one sample row.",
+     "hl": 0
+    },
+    {
+     "say": "In Zapier, create a Zap, and choose Google Sheets as the trigger app.",
+     "ok": [
+      0
+     ],
+     "hl": 1
+    },
+    {
+     "say": "The event is New Spreadsheet Row.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2
+    },
+    {
+     "say": "Connect your Google account, then pick your sheet and worksheet.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3
+    },
+    {
+     "say": "Now the action step: the Gmail app.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4
+    },
+    {
+     "say": "Its event is Send Email, with a recipient, subject and body. While testing, send it to your own address.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Build · Step 7",
+   "title": "Mapping fills in each row's details",
+   "columns": [
+    "row",
+    "name",
+    "email"
+   ],
+   "rows": [
     [
-     "Trigger",
-     "The event that starts it"
+     "2",
+     "Ada Lovelace",
+     "ada@example.com"
     ],
     [
-     "Action",
-     "The work done when it fires"
-    ],
-    [
-     "Zap",
-     "Trigger + action(s)"
+     "3",
+     "Grace Hopper",
+     "grace@example.com"
     ]
    ],
    "beats": [
     {
-     "say": "Three ideas sit behind every automation.",
-     "show": 0
+     "say": "Here's the sheet, with two rows of sign-ups, for example."
     },
     {
-     "say": "A trigger is the event that starts it, like a new row added to a spreadsheet.",
-     "show": 1
+     "say": "In the email body, you don't type a name. You insert the name and email fields from the trigger.",
+     "sql": "Body: New sign-up: {name} ({email})",
+     "col": 1
     },
     {
-     "say": "An action is the work it does when the trigger fires, like sending an email.",
-     "show": 2
+     "say": "When row two triggers the Zap, those fields fill in with Ada's details.",
+     "hl": 0,
+     "dim": true,
+     "sql": "New sign-up: Ada Lovelace (ada@example.com)"
     },
     {
-     "say": "And a Zap is one automated workflow in Zapier: a trigger plus one or more actions.",
-     "show": 3
+     "say": "When row three arrives, the same Zap sends Grace's details instead.",
+     "hl": 1,
+     "dim": true,
+     "sql": "New sign-up: Grace Hopper (grace@example.com)"
     },
     {
-     "say": "On Zapier's free plan, a Zap may be limited to one action. That's all this project needs.",
-     "show": 3
+     "say": "That's mapping: one template, and each run carries that row's specific data.",
+     "hl": [
+      0,
+      1
+     ],
+     "sql": "Body: New sign-up: {name} ({email})"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "table",
-   "kicker": "Build · Steps 4 to 6",
-   "title": "Sheet in, email out",
-   "steps": [
-    "Sheet: name, email",
-    "Trigger: New Spreadsheet Row",
-    "Action: Gmail · Send Email"
+   "kind": "diagram",
+   "kicker": "Build · Step 8",
+   "title": "Polling: Zapier asks on a timer",
+   "nodes": [
+    {
+     "id": "sheet",
+     "label": "Google Sheets",
+     "x": 12,
+     "y": 50,
+     "sub": "you add a row",
+     "art": "table"
+    },
+    {
+     "id": "zap",
+     "label": "Zapier",
+     "x": 50,
+     "y": 50,
+     "sub": "checks on a timer",
+     "art": "stopwatch"
+    },
+    {
+     "id": "gmail",
+     "label": "Gmail",
+     "x": 88,
+     "y": 50,
+     "sub": "your inbox",
+     "art": "mail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sheet",
+     "to": "zap"
+    },
+    {
+     "from": "zap",
+     "to": "gmail"
+    }
    ],
    "beats": [
     {
-     "say": "Create a Google Sheet with the headers name and email, and one sample row.",
-     "show": 1
+     "say": "Use the built-in test first, and check the test email arrives. Then publish the Zap.",
+     "on": "zap"
     },
     {
-     "say": "In Zapier, create a Zap. The trigger is Google Sheets, New Spreadsheet Row, on your sheet.",
-     "show": 2
+     "say": "Now add a real row. Nothing happens yet, because the sheet doesn't tell Zapier.",
+     "on": "sheet"
     },
     {
-     "say": "Then add an action: Gmail, Send Email, to your own address while testing.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "merge",
-   "kicker": "Build · Step 7",
-   "title": "Map data between steps",
-   "quote": "New sign-up: {name} ({email})",
-   "beats": [
-    {
-     "say": "Mapping passes data from the trigger into the action.",
-     "show": 0
+     "say": "Google Sheets is a polling trigger. Zapier asks for new rows on a timer, and on the free plan that timer is slow.",
+     "on": "zap",
+     "send": {
+      "from": "zap",
+      "to": "sheet",
+      "label": "any new rows?"
+     }
     },
     {
-     "say": "Insert the name and email fields from the trigger into the email body.",
-     "show": 1
+     "say": "On the next check, it finds your row.",
+     "on": "sheet",
+     "send": {
+      "from": "sheet",
+      "to": "zap",
+      "label": "1 new row"
+     }
     },
     {
-     "say": "That's what makes each email carry the details of that specific row.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "stopwatch",
-   "kicker": "Build · Step 8",
-   "title": "Test, publish, then wait",
-   "big": "Polling",
-   "sub": "Zapier checks for new rows on a timer, so it's not instant",
-   "beats": [
-    {
-     "say": "Use the built-in test, and check the email arrives. Then publish the Zap and add a real row.",
-     "show": 0
-    },
-    {
-     "say": "Google Sheets is a polling trigger. Zapier checks for new rows on a timer, which is slow on the free plan.",
-     "show": 1
-    },
-    {
-     "say": "So the email won't arrive instantly. Wait, then check the Zap's history if nothing arrives.",
-     "show": 2
+     "say": "Only then does the email go out. So wait, and if nothing arrives, check the Zap's history.",
+     "on": "gmail",
+     "send": {
+      "from": "zap",
+      "to": "gmail",
+      "label": "Send Email"
+     }
     }
    ]
   },
@@ -357,130 +528,345 @@ Make scenario: Request router
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Make's vocabulary",
-   "items": [
+   "title": "Same ideas, Make's words",
+   "columns": [
+    "Zapier",
+    "Make",
+    "Means"
+   ],
+   "rows": [
     [
+     "Zap",
      "Scenario",
-     "Make's version of a Zap"
+     "One automation"
     ],
     [
+     "Step",
      "Module",
-     "One step"
+     "One step in it"
     ],
     [
      "Filter",
-     "Sits on the link between modules"
+     "Filter on a link",
+     "Continue only if..."
     ],
     [
+     "Paths",
      "Router",
-     "Branches · Zapier's Paths"
+     "Split into branches"
     ]
    ],
    "beats": [
     {
-     "say": "In Make, an automation is called a scenario. A scenario is to Make what a Zap is to Zapier.",
-     "show": 1
+     "say": "Make uses different words for the same ideas.",
+     "col": 1
+    },
+    {
+     "say": "An automation is a scenario. A scenario is to Make what a Zap is to Zapier.",
+     "hl": 0
     },
     {
      "say": "Each step in it is a module.",
-     "show": 2
+     "hl": 1
     },
     {
-     "say": "A filter lets data continue only when a condition is met. It sits on the link between two modules.",
-     "show": 3
+     "say": "A filter lets data continue only when a condition is met. In Make, it sits on the link between two modules.",
+     "hl": 2
     },
     {
      "say": "And a router splits a scenario into branches, each with its own filter. Zapier calls this Paths.",
-     "show": 4
+     "hl": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "fork",
-   "kicker": "Build · Steps 2 to 6",
-   "title": "A two-branch router",
-   "steps": [
-    "Requests + Log sheets",
-    "Watch New Rows",
-    "A: new + high → Slack",
-    "B: new + low → Log row"
+   "kind": "table",
+   "kicker": "Build · Steps 2 and 6",
+   "title": "Which rows pass which filter?",
+   "columns": [
+    "title",
+    "status",
+    "priority",
+    "date"
    ],
-   "beats": [
-    {
-     "say": "Make a Requests sheet with title, status, priority and date, plus a Log tab.",
-     "show": 1
-    },
-    {
-     "say": "Trigger the scenario with Google Sheets, Watch New Rows.",
-     "show": 2
-    },
-    {
-     "say": "Add a router. Branch A filters status new and priority high, and posts an urgent Slack message.",
-     "show": 3
-    },
-    {
-     "say": "Branch B filters status new and priority low, and adds a row to the Log tab. Rows that aren't new stop at the filters.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Build · Step 7",
-   "title": "Format data between steps",
-   "file": "Slack message · mapping",
-   "code": "formatDate(parseDate(date; \"YYYY-MM-DD\"); \"D MMMM YYYY\")\n\n2026-10-07  →  7 October 2026",
-   "beats": [
-    {
-     "say": "Data rarely arrives in the exact shape the next app needs.",
-     "show": 0
-    },
-    {
-     "say": "In the Slack message, instead of mapping date directly, use Make's format date and parse date functions.",
-     "show": 1
-    },
-    {
-     "say": "A date like twenty twenty six, ten, oh seven becomes seven October twenty twenty six.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "test",
-   "kicker": "Build · Step 8",
-   "title": "Test each branch, then write it down",
-   "items": [
+   "rows": [
     [
-     "Run once",
-     "One high, one low test row"
+     "Fix login bug",
+     "new",
+     "high",
+     "2026-10-07"
     ],
     [
-     "Output bubbles",
-     "See the data at each module"
+     "Update FAQ",
+     "new",
+     "low",
+     "2026-10-08"
     ],
     [
-     "Document",
-     "What each branch does"
+     "Old report",
+     "done",
+     "high",
+     "2026-10-01"
+    ],
+    [
+     "Team lunch",
+     "new",
+     "medium",
+     "2026-10-09"
     ]
    ],
    "beats": [
     {
-     "say": "Add one high priority and one low priority row, both with status new, and click Run once.",
-     "show": 1
+     "say": "Here's the Requests sheet, with title, status, priority and date, and four example rows."
     },
     {
-     "say": "Click the small bubble above each module to see what data passed through.",
-     "show": 2
+     "say": "Branch A's filter needs status new, and priority high.",
+     "sql": "Branch A: status = new AND priority = high",
+     "col": 2
+    },
+    {
+     "say": "Only Fix login bug passes. That one becomes an urgent Slack message.",
+     "hl": 0,
+     "dim": true,
+     "sql": "Branch A: status = new AND priority = high"
+    },
+    {
+     "say": "Branch B's filter needs status new, and priority low. Only Update FAQ passes, and gets logged.",
+     "hl": 1,
+     "dim": true,
+     "sql": "Branch B: status = new AND priority = low"
+    },
+    {
+     "say": "Old report is high priority, but its status is done. AND means both must be true, so it stops.",
+     "hl": 2,
+     "dim": true,
+     "col": 1,
+     "sql": "status = done → fails both filters"
+    },
+    {
+     "say": "And Team lunch is new, but medium matches neither filter, so it stops too.",
+     "hl": 3,
+     "dim": true,
+     "col": 2,
+     "sql": "priority = medium → fails both filters"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Build · Steps 3 to 6",
+   "title": "The router sends each bundle its own way",
+   "nodes": [
+    {
+     "id": "trig",
+     "label": "Watch New Rows",
+     "x": 10,
+     "y": 50,
+     "sub": "Requests sheet",
+     "art": "table"
+    },
+    {
+     "id": "router",
+     "label": "Router",
+     "x": 40,
+     "y": 50,
+     "sub": "two filtered branches",
+     "art": "fork"
+    },
+    {
+     "id": "slack",
+     "label": "Slack message",
+     "x": 86,
+     "y": 18,
+     "sub": "Branch A · urgent",
+     "art": "chat"
+    },
+    {
+     "id": "log",
+     "label": "Add a Row",
+     "x": 86,
+     "y": 82,
+     "sub": "Branch B · Log tab",
+     "art": "table"
+    },
+    {
+     "id": "stop",
+     "label": "Stopped",
+     "x": 70,
+     "y": 50,
+     "sub": "fails the filters",
+     "art": "cross"
+    }
+   ],
+   "edges": [
+    {
+     "from": "trig",
+     "to": "router"
+    },
+    {
+     "from": "router",
+     "to": "slack"
+    },
+    {
+     "from": "router",
+     "to": "log"
+    },
+    {
+     "from": "router",
+     "to": "stop"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The trigger is Google Sheets, Watch New Rows, on the Requests sheet. Then a router.",
+     "show": 2,
+     "on": [
+      "trig",
+      "router"
+     ]
+    },
+    {
+     "say": "The first row comes in as a bundle: Fix login bug.",
+     "show": 4,
+     "on": "trig",
+     "send": {
+      "from": "trig",
+      "to": "router",
+      "label": "Fix login bug"
+     }
+    },
+    {
+     "say": "It passes Branch A's filter, so Slack posts an urgent message to your channel.",
+     "show": 4,
+     "on": "slack",
+     "send": {
+      "from": "router",
+      "to": "slack",
+      "label": "new · high"
+     }
+    },
+    {
+     "say": "Next, Update FAQ.",
+     "show": 4,
+     "on": "trig",
+     "send": {
+      "from": "trig",
+      "to": "router",
+      "label": "Update FAQ"
+     }
+    },
+    {
+     "say": "It passes Branch B's filter, so it's written to the Log tab, with its title and date.",
+     "show": 4,
+     "on": "log",
+     "send": {
+      "from": "router",
+      "to": "log",
+      "label": "new · low"
+     }
+    },
+    {
+     "say": "Rows whose status isn't new, like Old report, pass neither filter. Nothing runs for them.",
+     "show": 5,
+     "on": "stop",
+     "send": {
+      "from": "router",
+      "to": "stop",
+      "label": "status: done"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Build · Step 7",
+   "title": "Reshape a date before Slack sees it",
+   "file": "Slack message · mapping",
+   "code": "formatDate(\n  parseDate(date; \"YYYY-MM-DD\");\n  \"D MMMM YYYY\"\n)",
+   "beats": [
+    {
+     "say": "Data rarely arrives in the exact shape the next app needs. Instead of mapping date directly, use functions."
+    },
+    {
+     "say": "From the trigger, date is the text twenty twenty six, ten, oh seven.",
+     "line": 2,
+     "vars": {
+      "date": "\"2026-10-07\""
+     }
+    },
+    {
+     "say": "Parse date reads that text using the pattern year, month, day, and turns it into a real date.",
+     "line": 2,
+     "vars": {
+      "date": "\"2026-10-07\"",
+      "parsed": "7 Oct 2026 (a date)"
+     }
+    },
+    {
+     "say": "Format date writes it back out: D is the day, M M M M is the full month name, and Y Y Y Y the year.",
+     "line": 3,
+     "vars": {
+      "date": "\"2026-10-07\"",
+      "parsed": "7 Oct 2026 (a date)"
+     }
+    },
+    {
+     "say": "So the Slack message reads: seven October twenty twenty six.",
+     "line": [
+      1,
+      4
+     ],
+     "out": "7 October 2026"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Build · Step 8",
+   "title": "Test each branch on purpose",
+   "columns": [
+    "Test row",
+    "Branch A",
+    "Branch B"
+   ],
+   "rows": [
+    [
+     "new · high",
+     "Slack message ✓",
+     "stopped"
+    ],
+    [
+     "new · low",
+     "stopped",
+     "Log row ✓"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Add one high priority row and one low priority row, both with status new, then click Run once."
+    },
+    {
+     "say": "The high row should post to Slack, and stop at Branch B.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "The low row should stop at Branch A, and land in the Log tab.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Click the small bubble above each module to see exactly what data passed through.",
+     "col": 1
     },
     {
      "say": "Then write, in plain language, what each filter and branch does. Logic you understood while building is easy to forget.",
-     "show": 3
+     "hl": [
+      0,
+      1
+     ]
     }
    ]
   },
@@ -631,95 +1017,385 @@ Make scenario: Form intake
    ]
   },
   {
-   "kind": "list",
-   "art": "array",
-   "kicker": "Concept",
-   "title": "Bundles and credits",
-   "items": [
-    [
-     "Bundle",
-     "3 new rows → 3 runs of the chain"
-    ],
-    [
-     "Credits",
-     "≈ 1 per module run"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Each module runs once for every bundle, or item, the previous module outputs.",
-     "show": 1
-    },
-    {
-     "say": "So three new form responses become three runs through the chain.",
-     "show": 1
-    },
-    {
-     "say": "Make counts usage in credits, called operations before twenty twenty five. Roughly one per module run.",
-     "show": 2
-    },
-    {
-     "say": "Fewer, smarter modules use less of your free monthly allowance.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "form",
+   "kind": "diagram",
    "kicker": "Build · Steps 4 to 6",
-   "title": "Form to contacts to email",
-   "steps": [
-    "Form → Link to Sheets",
-    "Watch New Rows",
-    "Add a Row: Contacts",
-    "Gmail: confirmation"
+   "title": "One bundle travels down the chain",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "Google Form",
+     "x": 10,
+     "y": 30,
+     "sub": "Name, Email",
+     "art": "form"
+    },
+    {
+     "id": "resp",
+     "label": "Responses sheet",
+     "x": 36,
+     "y": 70,
+     "sub": "Watch New Rows",
+     "art": "table"
+    },
+    {
+     "id": "contacts",
+     "label": "Contacts sheet",
+     "x": 64,
+     "y": 30,
+     "sub": "Add a Row",
+     "art": "database"
+    },
+    {
+     "id": "gmail",
+     "label": "Gmail",
+     "x": 90,
+     "y": 70,
+     "sub": "Send an Email",
+     "art": "mail"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "resp"
+    },
+    {
+     "from": "resp",
+     "to": "contacts"
+    },
+    {
+     "from": "contacts",
+     "to": "gmail"
+    }
    ],
    "beats": [
     {
      "say": "Create a Google Form with Name and Email. On its Responses tab, click Link to Sheets.",
-     "show": 1
+     "show": 2,
+     "on": [
+      "form",
+      "resp"
+     ]
     },
     {
-     "say": "In Make, watch new rows on that responses sheet.",
-     "show": 2
+     "say": "Now Ada Lovelace submits the form, and her answers land in the responses sheet.",
+     "show": 2,
+     "on": "resp",
+     "send": {
+      "from": "form",
+      "to": "resp",
+      "label": "Ada's response"
+     }
     },
     {
-     "say": "Add a row that copies Name and Email into a clean Contacts sheet.",
-     "show": 3
+     "say": "Module one, Watch New Rows, picks up that row as a bundle.",
+     "show": 2,
+     "on": "resp"
     },
     {
-     "say": "Then send a confirmation with Gmail, mapping the person's name. When you click into a field, the mapping panel shows every earlier module's output.",
-     "show": 4
+     "say": "Module two, Add a Row, copies Name and Email into a clean Contacts sheet.",
+     "show": 3,
+     "on": "contacts",
+     "send": {
+      "from": "resp",
+      "to": "contacts",
+      "label": "Name, Email"
+     }
+    },
+    {
+     "say": "Module three, Gmail, sends Ada a confirmation, with her name mapped in.",
+     "show": 4,
+     "on": "gmail",
+     "send": {
+      "from": "contacts",
+      "to": "gmail",
+      "label": "Hi Ada"
+     }
+    },
+    {
+     "say": "Chaining three or more steps is where automation starts replacing whole manual processes.",
+     "show": 4,
+     "on": [
+      "resp",
+      "contacts",
+      "gmail"
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "shield",
+   "kind": "table",
+   "kicker": "Build · Step 5",
+   "title": "The mapping panel shows every earlier output",
+   "columns": [
+    "Module",
+    "Field",
+    "Mapped from"
+   ],
+   "rows": [
+    [
+     "2 · Add a Row",
+     "Name",
+     "Name (module 1)"
+    ],
+    [
+     "2 · Add a Row",
+     "Email",
+     "Email (module 1)"
+    ],
+    [
+     "3 · Send an Email",
+     "To",
+     "Email (module 1)"
+    ],
+    [
+     "3 · Send an Email",
+     "Content",
+     "Hi {Name} (module 1)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Each module passes its output to the next through mapped fields."
+    },
+    {
+     "say": "When you click into a field in Add a Row, the mapping panel shows what module one output. Pick Name and Email.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
+    },
+    {
+     "say": "In the email, the panel shows the outputs of every earlier module, so you can still reach module one's fields.",
+     "hl": [
+      2,
+      3
+     ],
+     "col": 2
+    },
+    {
+     "say": "Map the email address, and the person's name into the confirmation message.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Seeing data move down the chain like this makes complex logic easier to reason about.",
+     "col": 0
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Concept · Bundles and credits",
+   "title": "Three responses, three runs of the chain",
+   "values": [
+    "Watch: 3 rows",
+    "Ada · Add",
+    "Ada · Email",
+    "Grace · Add",
+    "Grace · Email",
+    "Katherine · Add",
+    "Katherine · Email"
+   ],
+   "beats": [
+    {
+     "say": "Say three people submit the form before the next run, for example Ada, Grace and Katherine."
+    },
+    {
+     "say": "The trigger checks once, and outputs three bundles.",
+     "hl": 0,
+     "note": "1 check → 3 bundles"
+    },
+    {
+     "say": "Each later module runs once for every bundle. First, Ada's bundle goes down the chain.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "note": "bundle 1"
+    },
+    {
+     "say": "Then Grace's.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "note": "bundle 2"
+    },
+    {
+     "say": "Then Katherine's. Three bundles, three runs through the chain.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": [
+      5,
+      6
+     ],
+     "note": "bundle 3"
+    },
+    {
+     "say": "Make counts usage in credits, called operations before twenty twenty five: roughly one per module run. Here, about seven.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "note": "≈ 1 + 3 + 3 = 7 credits"
+    },
+    {
+     "say": "So fewer, smarter modules use less of your free monthly allowance.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "note": "every extra module × every bundle"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Build · Steps 7 and 8",
-   "title": "Add an error handler",
-   "steps": [
-    "Right-click → Add error handler",
-    "Log to \"Errors\" sheet",
-    "Ignore (or Resume)"
+   "title": "When a step fails, the error route takes over",
+   "nodes": [
+    {
+     "id": "resp",
+     "label": "Watch New Rows",
+     "x": 10,
+     "y": 45,
+     "sub": "module 1",
+     "art": "table"
+    },
+    {
+     "id": "add",
+     "label": "Add a Row",
+     "x": 38,
+     "y": 45,
+     "sub": "Contacts · module 2",
+     "art": "database"
+    },
+    {
+     "id": "gmail",
+     "label": "Send an Email",
+     "x": 86,
+     "y": 18,
+     "sub": "module 3",
+     "art": "mail"
+    },
+    {
+     "id": "errs",
+     "label": "Errors sheet",
+     "x": 58,
+     "y": 85,
+     "sub": "Add a Row",
+     "art": "warning"
+    },
+    {
+     "id": "ignore",
+     "label": "Ignore",
+     "x": 88,
+     "y": 70,
+     "sub": "end this route",
+     "art": "shield"
+    }
+   ],
+   "edges": [
+    {
+     "from": "resp",
+     "to": "add"
+    },
+    {
+     "from": "add",
+     "to": "gmail"
+    },
+    {
+     "from": "add",
+     "to": "errs"
+    },
+    {
+     "from": "errs",
+     "to": "ignore"
+    }
    ],
    "beats": [
     {
      "say": "Real automations hit failures, when an app is down or data is missing. Error handling decides what happens then.",
-     "show": 0
-    },
-    {
-     "say": "Right-click the Add a Row module, and choose Add error handler.",
-     "show": 1
-    },
-    {
-     "say": "On that route, add a row to an Errors sheet, with the error message and time.",
-     "show": 2
-    },
-    {
-     "say": "Finish with the Ignore directive, or Resume if you want the chain to continue. Then submit the form, Run once, and check every bubble.",
      "show": 3
+    },
+    {
+     "say": "Right-click the Add a Row module, and choose Add error handler. A new route appears.",
+     "show": 4,
+     "on": "add"
+    },
+    {
+     "say": "On a good run, the bundle goes straight on to the email.",
+     "show": 5,
+     "on": "gmail",
+     "send": {
+      "from": "add",
+      "to": "gmail",
+      "label": "row added"
+     }
+    },
+    {
+     "say": "But say Add a Row fails. The bundle takes the error route instead.",
+     "show": 5,
+     "on": "add",
+     "send": {
+      "from": "resp",
+      "to": "add",
+      "label": "Grace's bundle"
+     }
+    },
+    {
+     "say": "The handler writes the error message and the time to an Errors sheet.",
+     "show": 5,
+     "on": "errs",
+     "send": {
+      "from": "add",
+      "to": "errs",
+      "label": "error + time"
+     }
+    },
+    {
+     "say": "Then the Ignore directive ends that route quietly, so the scenario doesn't stop. Pick Resume if you want the chain to continue.",
+     "show": 5,
+     "on": "ignore",
+     "send": {
+      "from": "errs",
+      "to": "ignore",
+      "label": "ignore"
+     }
+    },
+    {
+     "say": "To test, submit the form, click Run once, and check every module's output bubble.",
+     "show": 5,
+     "on": [
+      "resp",
+      "add",
+      "gmail"
+     ]
     }
    ]
   },
@@ -885,92 +1561,374 @@ Make scenario: Custom integration
    ]
   },
   {
-   "kind": "list",
-   "art": "bolt",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Webhook versus polling",
-   "items": [
+   "title": "Polling asks. A webhook is told.",
+   "nodes": [
+    {
+     "id": "sheet",
+     "label": "Google Sheets",
+     "x": 12,
+     "y": 25,
+     "sub": "has new data",
+     "art": "table"
+    },
+    {
+     "id": "poll",
+     "label": "Polling trigger",
+     "x": 52,
+     "y": 25,
+     "sub": "checks on a timer",
+     "art": "stopwatch"
+    },
+    {
+     "id": "app",
+     "label": "Another app",
+     "x": 12,
+     "y": 75,
+     "sub": "something happens",
+     "art": "globe"
+    },
+    {
+     "id": "hook",
+     "label": "Custom webhook",
+     "x": 52,
+     "y": 75,
+     "sub": "a unique URL in Make",
+     "art": "plug"
+    }
+   ],
+   "edges": [
+    {
+     "from": "poll",
+     "to": "sheet"
+    },
+    {
+     "from": "app",
+     "to": "hook"
+    }
+   ],
+   "beats": [
+    {
+     "say": "You've met polling: the automation asks for new data on a schedule.",
+     "show": 2,
+     "on": "poll",
+     "send": {
+      "from": "poll",
+      "to": "sheet",
+      "label": "anything new?"
+     }
+    },
+    {
+     "say": "If the answer is not yet, it waits until the next check.",
+     "show": 2,
+     "on": "sheet",
+     "send": {
+      "from": "sheet",
+      "to": "poll",
+      "label": "not yet"
+     }
+    },
+    {
+     "say": "A webhook flips that around. It's a U R L that an app calls the instant something happens.",
+     "show": 4,
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "hook",
+      "label": "data, right now"
+     }
+    },
+    {
+     "say": "So the scenario runs immediately, with no waiting.",
+     "show": 4,
+     "on": "hook"
+    },
+    {
+     "say": "In Make, add Webhooks, Custom webhook, and copy the unique U R L. Anyone who has it can send data in, so treat it like a password.",
+     "show": 4,
+     "on": "hook"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Build · Step 4",
+   "title": "Send test data to the webhook",
+   "file": "terminal",
+   "code": "curl -X POST \"https://hook.eu1.make.com/…\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\": \"Ada Lovelace\",\n       \"email\": \"ada@example.com\",\n       \"plan\": \"pro\"}'",
+   "beats": [
+    {
+     "say": "With the webhook waiting, send a sample request. Postman works, or curl in a terminal."
+    },
+    {
+     "say": "This is a POST request to your webhook U R L. Replace the address with your own.",
+     "line": 1
+    },
+    {
+     "say": "This header says the body is J S O N.",
+     "line": 2
+    },
+    {
+     "say": "J S O N is made of key and value pairs. The name key holds Ada Lovelace,",
+     "line": 3,
+     "vars": {
+      "name": "\"Ada Lovelace\""
+     }
+    },
+    {
+     "say": "email holds ada at example dot com,",
+     "line": 4,
+     "vars": {
+      "name": "\"Ada Lovelace\"",
+      "email": "\"ada@example.com\""
+     }
+    },
+    {
+     "say": "and plan holds pro.",
+     "line": 5,
+     "vars": {
+      "name": "\"Ada Lovelace\"",
+      "email": "\"ada@example.com\"",
+      "plan": "\"pro\""
+     }
+    },
+    {
+     "say": "Make should show Successfully determined. It now knows the shape of the incoming data.",
+     "line": [
+      1,
+      5
+     ],
+     "out": "Make: Successfully determined"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Build · Steps 5 and 6",
+   "title": "Map each JSON key into a column",
+   "columns": [
+    "JSON key",
+    "Value",
+    "Sheet column"
+   ],
+   "rows": [
     [
-     "Webhook ✓",
-     "Runs immediately when data is sent"
+     "name",
+     "Ada Lovelace",
+     "name"
     ],
     [
-     "Polling",
-     "Checks on a schedule"
+     "email",
+     "ada@example.com",
+     "email"
     ],
     [
-     "Webhook URL",
-     "Treat it like a password"
+     "plan",
+     "pro",
+     "plan"
     ]
    ],
    "beats": [
     {
-     "say": "A webhook is a U R L that an app calls to send data the instant something happens.",
-     "show": 1
+     "say": "Being able to read J S O N is what lets you find and map the fields you need."
     },
     {
-     "say": "A polling trigger, like Google Sheets, checks for new data on a schedule instead.",
-     "show": 2
+     "say": "Add Google Sheets, Add a Row, after the webhook. The webhook's keys now appear in the mapping panel.",
+     "col": 0
     },
     {
-     "say": "In Make, add Webhooks, Custom webhook, and copy the unique U R L it shows.",
-     "show": 3
+     "say": "Map name into the name column.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Treat that U R L like a password. Anyone who has it can send data into your automation.",
-     "show": 3
+     "say": "Email into email.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "And plan into plan.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "Send the request again with Run once active, and Ada's row appears in the sheet.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
-   "kicker": "Build · Step 4",
-   "title": "Send test data",
-   "file": "terminal",
-   "code": "curl -X POST \"https://hook.eu1.make.com/REPLACE_WITH_YOUR_WEBHOOK_ID\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\": \"Ada Lovelace\", \"email\": \"ada@example.com\", \"plan\": \"pro\"}'",
+   "kind": "walk",
+   "kicker": "Build · Steps 7 and 8",
+   "title": "Send data out with an HTTP request",
+   "file": "HTTP · Make a request",
+   "code": "POST https://jsonplaceholder.typicode.com/posts\n\n{\"title\": \"New sign-up\",\n \"body\": \"{{name}} chose {{plan}}\",\n \"userId\": 1}",
    "beats": [
     {
-     "say": "With the webhook listening, send a sample request.",
-     "show": 0
+     "say": "Receiving is half the job. An H T T P module lets you call another app's A P I directly, sending data out."
     },
     {
-     "say": "Use Postman, or curl in a terminal, posting J S O N to your own webhook U R L.",
-     "show": 1
+     "say": "Add H T T P, Make a request. Method POST, to JSON Placeholder, a free fake A P I for practice.",
+     "line": 1
     },
     {
-     "say": "J S O N is made of key and value pairs, like plan, pro.",
-     "show": 1
+     "say": "The body type is raw J S O N, with a title, a body, and a user I D.",
+     "line": [
+      3,
+      5
+     ]
     },
     {
-     "say": "Make should show Successfully determined. It now knows the shape of the incoming data.",
-     "show": 1
+     "say": "Replace name and plan by clicking the matching webhook fields in the mapping panel.",
+     "line": 4,
+     "vars": {
+      "name": "\"Ada Lovelace\"",
+      "plan": "\"pro\""
+     }
+    },
+    {
+     "say": "So for Ada, the body says: Ada Lovelace chose pro.",
+     "line": 4,
+     "vars": {
+      "name": "\"Ada Lovelace\"",
+      "plan": "\"pro\"",
+      "body": "\"Ada Lovelace chose pro\""
+     }
+    },
+    {
+     "say": "Turn on Parse response, and send the webhook request again.",
+     "line": [
+      1,
+      5
+     ]
+    },
+    {
+     "say": "The reply is status two oh one, with an I D, usually one oh one. But it doesn't really save anything.",
+     "line": [
+      1,
+      5
+     ],
+     "out": [
+      "201 Created",
+      "{\"title\": \"New sign-up\", ..., \"id\": 101}"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "plug",
-   "kicker": "Build · Steps 6 to 8",
-   "title": "Store it, then send it out",
-   "file": "HTTP · request content",
-   "code": "POST https://jsonplaceholder.typicode.com/posts\n\n{\"title\": \"New sign-up\", \"body\": \"{{name}} chose {{plan}}\", \"userId\": 1}",
+   "kind": "diagram",
+   "kicker": "Project structure",
+   "title": "Data in, data out",
+   "nodes": [
+    {
+     "id": "cli",
+     "label": "Postman or curl",
+     "x": 10,
+     "y": 25,
+     "sub": "test request",
+     "art": "terminal"
+    },
+    {
+     "id": "hook",
+     "label": "Custom webhook",
+     "x": 32,
+     "y": 72,
+     "sub": "receives JSON",
+     "art": "plug"
+    },
+    {
+     "id": "sheet",
+     "label": "Add a Row",
+     "x": 54,
+     "y": 25,
+     "sub": "Google Sheets",
+     "art": "table"
+    },
+    {
+     "id": "http",
+     "label": "HTTP request",
+     "x": 74,
+     "y": 72,
+     "sub": "Make a request",
+     "art": "api"
+    },
+    {
+     "id": "jp",
+     "label": "JSONPlaceholder",
+     "x": 92,
+     "y": 25,
+     "sub": "fake API",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cli",
+     "to": "hook"
+    },
+    {
+     "from": "hook",
+     "to": "sheet"
+    },
+    {
+     "from": "sheet",
+     "to": "http"
+    },
+    {
+     "from": "http",
+     "to": "jp"
+    }
+   ],
    "beats": [
     {
-     "say": "Add Google Sheets, Add a Row, and map name, email and plan into columns.",
-     "show": 0
+     "say": "Here's the whole scenario, end to end.",
+     "show": 5
     },
     {
-     "say": "Then add H T T P, Make a request, posting to JSON Placeholder, a free fake A P I for practice.",
-     "show": 1
+     "say": "A request arrives at the webhook.",
+     "show": 5,
+     "on": "hook",
+     "send": {
+      "from": "cli",
+      "to": "hook",
+      "label": "JSON: Ada, pro"
+     }
     },
     {
-     "say": "Map name and plan from the webhook fields, and turn on Parse response.",
-     "show": 1
+     "say": "Add a Row stores the mapped fields in your sheet.",
+     "show": 5,
+     "on": "sheet",
+     "send": {
+      "from": "hook",
+      "to": "sheet",
+      "label": "mapped fields"
+     }
     },
     {
-     "say": "It replies with status two oh one and an I D, but doesn't really save anything.",
-     "show": 1
+     "say": "Then the H T T P module pushes data out to an A P I with no connector.",
+     "show": 5,
+     "on": "http",
+     "send": {
+      "from": "http",
+      "to": "jp",
+      "label": "POST /posts"
+     }
+    },
+    {
+     "say": "And the A P I answers. Your automation now both receives and sends.",
+     "show": 5,
+     "on": "http",
+     "send": {
+      "from": "jp",
+      "to": "http",
+      "label": "201 · id 101"
+     }
     }
    ]
   },
@@ -1135,134 +2093,438 @@ Business process automation (Make)
    ]
   },
   {
-   "kind": "flow",
-   "art": "blueprint",
+   "kind": "array",
    "kicker": "Build · Steps 1 and 2",
-   "title": "Choose it, then map it on paper",
-   "steps": [
-    "Pick a real process",
-    "Trigger",
-    "Decisions",
-    "Actions"
+   "title": "Map it on paper first: new-lead handling",
+   "values": [
+    "Trigger: new lead",
+    "Decide: priority",
+    "Act: record + notify",
+    "Approve: Status",
+    "Follow up",
+    "Log the run"
    ],
    "beats": [
     {
-     "say": "Pick one real process: new lead handling, order fulfilment, content publishing, or onboarding.",
-     "show": 1
+     "say": "Pick one real process: new lead handling, order fulfilment, content publishing, or onboarding. Here, new leads."
     },
     {
-     "say": "Then write each step on paper first, as a trigger, decisions and actions.",
-     "show": 4
+     "say": "Before building, write each step on paper. It starts with a trigger: a new lead arrives.",
+     "hl": 0,
+     "note": "trigger"
     },
     {
-     "say": "A clear plan keeps a complex automation coherent.",
-     "show": 4
+     "say": "Then the decisions: which route does this lead take?",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "decisions"
+    },
+    {
+     "say": "Then the actions: create records and send notifications.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "note": "actions"
+    },
+    {
+     "say": "A person approves or rejects it, and follow-up actions run.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "note": "human in the loop"
+    },
+    {
+     "say": "And every run is logged. A clear plan like this keeps a complex automation coherent.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "note": "trigger → decisions → actions"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "pipeline",
-   "kicker": "Build · Steps 3 to 5",
-   "title": "Intake, logic, actions",
-   "items": [
-    [
-     "Intake",
-     "Clean capture · Status = Pending"
-    ],
-    [
-     "Decision logic",
-     "Router + filters"
-    ],
-    [
-     "Core actions",
-     "Records, notifications"
-    ]
+   "kind": "diagram",
+   "kicker": "Build · Steps 3 to 5 and 7",
+   "title": "Scenario A: intake, logic, actions",
+   "nodes": [
+    {
+     "id": "intake",
+     "label": "Intake",
+     "x": 10,
+     "y": 50,
+     "sub": "form, webhook or record",
+     "art": "form"
+    },
+    {
+     "id": "main",
+     "label": "Main sheet",
+     "x": 32,
+     "y": 18,
+     "sub": "Status = Pending",
+     "art": "table"
+    },
+    {
+     "id": "router",
+     "label": "Router + filters",
+     "x": 52,
+     "y": 72,
+     "sub": "as in Project 2",
+     "art": "fork"
+    },
+    {
+     "id": "act",
+     "label": "Core actions",
+     "x": 74,
+     "y": 22,
+     "sub": "records, notifications",
+     "art": "gear"
+    },
+    {
+     "id": "log",
+     "label": "Log sheet",
+     "x": 92,
+     "y": 72,
+     "sub": "time, item, outcome",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "intake",
+     "to": "main"
+    },
+    {
+     "from": "main",
+     "to": "router"
+    },
+    {
+     "from": "router",
+     "to": "act"
+    },
+    {
+     "from": "act",
+     "to": "log"
+    }
    ],
    "beats": [
     {
-     "say": "Build the trigger, and capture incoming data cleanly in a main sheet, with a Status column starting as Pending, and a Processed column.",
-     "show": 1
+     "say": "Build the trigger: a linked Google Form sheet, a custom webhook, or a new record.",
+     "show": 1,
+     "on": "intake"
+    },
+    {
+     "say": "Capture each lead cleanly in a main sheet, with Status starting as Pending, and an empty Processed column.",
+     "show": 2,
+     "on": "main",
+     "send": {
+      "from": "intake",
+      "to": "main",
+      "label": "new lead"
+     }
     },
     {
      "say": "If data enters wrong, every later step inherits the problem.",
-     "show": 1
+     "show": 2,
+     "on": "main"
     },
     {
-     "say": "Add a router with filters to route each item, as in Project 2.",
-     "show": 2
+     "say": "Next, a router with filters routes each lead based on its details.",
+     "show": 3,
+     "on": "router",
+     "send": {
+      "from": "main",
+      "to": "router",
+      "label": "lead bundle"
+     }
     },
     {
-     "say": "Then the core actions: create records, send notifications, update systems. That's the actual work being automated.",
-     "show": 3
+     "say": "The core actions do the real work: create records, send notifications, update systems.",
+     "show": 4,
+     "on": "act",
+     "send": {
+      "from": "router",
+      "to": "act",
+      "label": "matched route"
+     }
+    },
+    {
+     "say": "Finally, log each run, with the time, item and outcome. Add error handlers on modules that call outside apps.",
+     "show": 5,
+     "on": "log",
+     "send": {
+      "from": "act",
+      "to": "log",
+      "label": "time, item, ok"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "people",
+   "kind": "diagram",
    "kicker": "Build · Step 6",
    "title": "A human in the loop, with a sheet",
-   "steps": [
-    "A: ask approver",
-    "Approver sets Status",
-    "B: Search Rows (scheduled)",
-    "Follow-up · Processed = yes"
+   "nodes": [
+    {
+     "id": "a",
+     "label": "Scenario A",
+     "x": 12,
+     "y": 30,
+     "sub": "asks the approver",
+     "art": "gear"
+    },
+    {
+     "id": "approver",
+     "label": "Approver",
+     "x": 50,
+     "y": 15,
+     "sub": "Slack or email",
+     "art": "persona"
+    },
+    {
+     "id": "sheet",
+     "label": "Main sheet",
+     "x": 50,
+     "y": 80,
+     "sub": "Status column",
+     "art": "table"
+    },
+    {
+     "id": "b",
+     "label": "Scenario B",
+     "x": 88,
+     "y": 30,
+     "sub": "every 15 minutes",
+     "art": "calendar"
+    }
+   ],
+   "edges": [
+    {
+     "from": "a",
+     "to": "approver"
+    },
+    {
+     "from": "approver",
+     "to": "sheet"
+    },
+    {
+     "from": "a",
+     "to": "sheet"
+    },
+    {
+     "from": "b",
+     "to": "sheet"
+    }
    ],
    "beats": [
     {
-     "say": "Make has no built-in approval button, so a sheet is the approval point.",
-     "show": 0
+     "say": "Make has no built-in approval button, so a sheet becomes the approval point.",
+     "show": 3,
+     "on": "sheet"
     },
     {
-     "say": "Scenario A messages the approver, asking them to set Status to Approved or Rejected.",
-     "show": 1
+     "say": "Scenario A messages the approver, with a link to the sheet.",
+     "show": 3,
+     "on": "approver",
+     "send": {
+      "from": "a",
+      "to": "approver",
+      "label": "please review"
+     }
     },
     {
-     "say": "Scenario B runs on a schedule, and searches for rows with that status where Processed is empty.",
-     "show": 2
+     "say": "They change the lead's Status to Approved, or Rejected.",
+     "show": 3,
+     "on": "sheet",
+     "send": {
+      "from": "approver",
+      "to": "sheet",
+      "label": "Approved"
+     }
     },
     {
-     "say": "It runs the follow-up actions, then sets Processed to yes, so the row isn't handled twice.",
-     "show": 3
+     "say": "Scenario B runs on a schedule, for example every fifteen minutes, and searches the sheet.",
+     "show": 4,
+     "on": "b",
+     "send": {
+      "from": "b",
+      "to": "sheet",
+      "label": "Search Rows"
+     }
+    },
+    {
+     "say": "It runs the follow-up actions for what it finds, then updates the row, setting Processed to yes.",
+     "show": 4,
+     "on": "sheet",
+     "send": {
+      "from": "b",
+      "to": "sheet",
+      "label": "Processed = yes"
+     }
     },
     {
      "say": "That's two active scenarios, so switch off older ones.",
-     "show": 3
+     "show": 4,
+     "on": [
+      "a",
+      "b"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "test",
-   "kicker": "Build · Steps 7 and 8",
-   "title": "Log it, then test real cases",
-   "items": [
+   "kind": "table",
+   "kicker": "Build · Step 6",
+   "title": "What Scenario B's search finds",
+   "columns": [
+    "lead",
+    "priority",
+    "Status",
+    "Processed"
+   ],
+   "rows": [
     [
-     "Log sheet",
-     "Time, item, outcome"
+     "Ada",
+     "high",
+     "Pending",
+     ""
     ],
     [
-     "Error handlers",
-     "On outside-app modules"
+     "Grace",
+     "low",
+     "Approved",
+     ""
     ],
     [
-     "Edge cases",
-     "Missing email, unknown priority, rejected"
+     "Katherine",
+     "high",
+     "Rejected",
+     ""
+    ],
+    [
+     "Mary",
+     "low",
+     "Approved",
+     "yes"
     ]
    ],
    "beats": [
     {
-     "say": "Log each run, with the time, item and outcome, to a Log sheet.",
-     "show": 1
+     "say": "Here's the main sheet when Scenario B wakes up, for example."
     },
     {
-     "say": "Add error handlers on modules that call outside apps.",
-     "show": 2
+     "say": "It searches for rows whose Status is Approved or Rejected, and whose Processed cell is empty.",
+     "sql": "Search Rows: Status = Approved or Rejected\nAND Processed is empty",
+     "col": 2
     },
     {
-     "say": "Then run realistic cases, including edge cases: a missing email, an unknown priority, and an item that gets rejected.",
-     "show": 3
+     "say": "Ada is still Pending, waiting for the approver. Skip.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Grace and Katherine have decisions, and haven't been handled. They're the matches.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Mary was approved too, but Processed already says yes, from an earlier run. So she isn't handled twice.",
+     "hl": 3,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "After the follow-up, Update a Row sets Processed to yes for Grace and Katherine.",
+     "hl": [
+      1,
+      2
+     ],
+     "sql": "Update a Row: Processed = yes"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Build · Step 8",
+   "title": "Test real cases, including edge cases",
+   "columns": [
+    "Case",
+    "Input",
+    "Check"
+   ],
+   "rows": [
+    [
+     "Normal lead",
+     "high, has email",
+     "Routed, approver asked"
+    ],
+    [
+     "Missing email",
+     "email is blank",
+     "Caught, not a crash"
+    ],
+    [
+     "Unknown priority",
+     "matches no filter",
+     "Not silently lost"
+    ],
+    [
+     "Rejected item",
+     "Status = Rejected",
+     "Follow-up, Processed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "End to end testing is the only way to trust a process before it handles live work."
+    },
+    {
+     "say": "Start with a normal lead, and follow it all the way through.",
+     "hl": 0
+    },
+    {
+     "say": "Then the edge cases. A missing email.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "An unknown priority, which no filter expects.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "And an item that gets rejected.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "For each one, the Log sheet should show what happened.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 2
     }
    ]
   },
@@ -1423,111 +2685,383 @@ Reliability + handoff
    ]
   },
   {
-   "kind": "list",
-   "art": "bell",
-   "kicker": "Build · Steps 1 to 3",
-   "title": "Monitoring and alerts",
-   "items": [
+   "kind": "table",
+   "kicker": "Build · Steps 1 and 2",
+   "title": "Run history tells you what happened",
+   "columns": [
+    "Run",
+    "Status",
+    "Detail"
+   ],
+   "rows": [
     [
-     "Run history",
-     "What happened, step by step"
+     "09:00",
+     "Success",
+     "3 bundles"
     ],
     [
-     "Email on error",
-     "Check notification settings"
+     "09:15",
+     "Success",
+     "No new rows"
     ],
     [
-     "Error handler alert",
-     "Slack or email"
+     "09:30",
+     "Error",
+     "Add a Row failed"
+    ],
+    [
+     "09:45",
+     "Success",
+     "1 bundle"
     ]
    ],
    "beats": [
     {
-     "say": "Open the History tab of your Make scenario, and the Zap history in Zapier.",
-     "show": 1
+     "say": "Monitoring means watching whether your automations run successfully. Open the History tab in Make, or the Zap history in Zapier."
     },
     {
-     "say": "Run history shows what happened on each run, including the data each step received. It's your main tool for diagnosing issues.",
-     "show": 1
+     "say": "Each line is one run, for example every fifteen minutes.",
+     "col": 0
     },
     {
-     "say": "Check your notification settings, so both tools email you when a run errors.",
-     "show": 2
+     "say": "Most runs succeed.",
+     "hl": [
+      0,
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "For faster alerts, add an error handler route in Make that sends a Slack message or email.",
-     "show": 3
+     "say": "But one failed. Open it, and you see the data each step received, and which step broke.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "That's your main tool for diagnosing issues.",
+     "hl": 2,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "gauge",
+   "kind": "diagram",
+   "kicker": "Build · Step 3",
+   "title": "Failure alerts reach you",
+   "nodes": [
+    {
+     "id": "scen",
+     "label": "Make scenario",
+     "x": 12,
+     "y": 50,
+     "sub": "a module fails",
+     "art": "gear"
+    },
+    {
+     "id": "notify",
+     "label": "Notifications",
+     "x": 50,
+     "y": 18,
+     "sub": "email on error",
+     "art": "bell"
+    },
+    {
+     "id": "handler",
+     "label": "Error handler",
+     "x": 50,
+     "y": 82,
+     "sub": "route in Make",
+     "art": "shield"
+    },
+    {
+     "id": "you",
+     "label": "You",
+     "x": 88,
+     "y": 50,
+     "sub": "Slack or email",
+     "art": "persona"
+    }
+   ],
+   "edges": [
+    {
+     "from": "scen",
+     "to": "notify"
+    },
+    {
+     "from": "notify",
+     "to": "you"
+    },
+    {
+     "from": "scen",
+     "to": "handler"
+    },
+    {
+     "from": "handler",
+     "to": "you"
+    }
+   ],
+   "beats": [
+    {
+     "say": "When a run errors, you want to know without checking by hand.",
+     "show": 1,
+     "on": "scen"
+    },
+    {
+     "say": "Check your notification settings, so both tools email you when a run errors. Both do by default at the time of writing.",
+     "show": 4,
+     "on": "notify",
+     "send": {
+      "from": "scen",
+      "to": "notify",
+      "label": "run errored"
+     }
+    },
+    {
+     "say": "That email reaches you.",
+     "show": 4,
+     "on": "you",
+     "send": {
+      "from": "notify",
+      "to": "you",
+      "label": "error email"
+     }
+    },
+    {
+     "say": "For faster alerts, add an error handler route in Make.",
+     "show": 4,
+     "on": "handler",
+     "send": {
+      "from": "scen",
+      "to": "handler",
+      "label": "error details"
+     }
+    },
+    {
+     "say": "It sends a Slack message or email with the error details, straight away.",
+     "show": 4,
+     "on": "you",
+     "send": {
+      "from": "handler",
+      "to": "you",
+      "label": "Slack alert"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "array",
    "kicker": "Build · Steps 4 and 5",
-   "title": "Design within quotas",
-   "items": [
+   "title": "Filter early, and save credits",
+   "values": [
+    "new",
+    "done",
+    "done",
+    "new",
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    "done"
+   ],
+   "beats": [
+    {
+     "say": "A quota caps monthly usage. Zapier counts tasks, Make counts credits. Free plans have small quotas."
+    },
+    {
+     "say": "Say ten rows come in, and only two have status new, for example. Three modules follow.",
+     "hl": [
+      0,
+      3
+     ],
+     "note": "10 bundles, 2 qualify"
+    },
+    {
+     "say": "If the filter sits at the end, all ten bundles run through all three modules first.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "filter last: 10 × 3 = 30 module runs"
+    },
+    {
+     "say": "Put the filter early, and the other eight stop before the expensive steps.",
+     "ok": [
+      0,
+      3
+     ],
+     "gone": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "filter first: 2 × 3 = 6 module runs"
+    },
+    {
+     "say": "Same result, a fifth of the usage. Removing unnecessary modules helps the same way.",
+     "ok": [
+      0,
+      3
+     ],
+     "gone": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "30 → 6"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Build · Steps 4 and 5",
+   "title": "Rate limits, quotas and polling",
+   "columns": [
+    "Limit",
+    "Caps",
+    "Design tip"
+   ],
+   "rows": [
     [
      "Rate limit",
-     "Calls per period"
+     "Calls per period",
+     "Don't call too fast"
     ],
     [
      "Quota",
-     "Zapier tasks · Make credits"
+     "Monthly tasks, credits",
+     "Check plan numbers"
     ],
     [
-     "Filters early",
-     "Stop items before costly steps"
+     "Poll every 15 min",
+     "96 checks a day",
+     "Only if you need it"
     ],
     [
-     "Trim + schedule",
-     "Fewer modules, less polling"
+     "Poll every hour",
+     "24 checks a day",
+     "Often enough"
     ]
    ],
    "beats": [
     {
      "say": "A rate limit caps how many times you can call an app in a period.",
-     "show": 1
+     "hl": 0
     },
     {
-     "say": "A quota caps monthly usage. Zapier counts tasks, and Make counts credits.",
-     "show": 2
+     "say": "A quota caps your monthly usage. Check the current numbers on each plan page, and design within them.",
+     "hl": 1
     },
     {
-     "say": "To save them, put filters early, so unneeded items stop before expensive steps.",
-     "show": 3
+     "say": "Polling counts too. Checking every fifteen minutes is ninety six checks a day.",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "Remove unnecessary modules, and schedule polling no more often than needed.",
-     "show": 4
+     "say": "Every hour is twenty four. So schedule polling no more often than you need.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "Efficient automations use fewer tasks or credits, and run faster. That matters when a client pays for usage.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "book",
+   "kind": "table",
    "kicker": "Build · Steps 6 to 8",
-   "title": "Hand it off",
-   "steps": [
-    "Handoff document",
-    "Troubleshooting section",
-    "Walkthrough for the owner"
+   "title": "What a handoff document covers",
+   "columns": [
+    "Section",
+    "Answers"
+   ],
+   "rows": [
+    [
+     "Process",
+     "What it does, and why"
+    ],
+    [
+     "Each Zap or scenario",
+     "How it's built"
+    ],
+    [
+     "Triggers",
+     "When it runs"
+    ],
+    [
+     "Logic",
+     "Filters and routers"
+    ],
+    [
+     "Connected accounts",
+     "Whose logins it uses"
+    ],
+    [
+     "Troubleshooting",
+     "Fixing common issues"
+    ]
    ],
    "beats": [
     {
-     "say": "Without documentation, an automation is a black box only you can maintain.",
-     "show": 0
+     "say": "Without documentation, an automation is a black box only you can maintain."
     },
     {
-     "say": "Write a handoff document: the process, each Zap or scenario, triggers, logic, connected accounts, and troubleshooting.",
-     "show": 1
+     "say": "A handoff document starts with the process, then each Zap or scenario.",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "It's often the actual deliverable a client keeps.",
-     "show": 2
+     "say": "Then the triggers, and the logic.",
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Which accounts are connected.",
+     "hl": 4
+    },
+    {
+     "say": "And a troubleshooting section, for common issues.",
+     "hl": 5
+    },
+    {
+     "say": "This document is often the actual deliverable a client keeps.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
     },
     {
      "say": "Then record or write a short walkthrough for the owner. It transfers understanding, not just files.",
-     "show": 3
+     "col": 1
     }
    ]
   },

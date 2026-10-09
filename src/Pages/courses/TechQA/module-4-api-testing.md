@@ -192,7 +192,7 @@ A developer changes how user records are returned. Instead of someone clicking t
    pm.test("Name is present", () => pm.expect(pm.response.json().name).to.be.a("string"));
    pm.test("Responds within 1 second", () => pm.expect(pm.response.responseTime).to.be.below(1000));
    ```
-3. **Add a negative test:** a GET request to `{{baseUrl}}/users/9999` that asserts the status is `404`.
+3. **Add a negative test:** a GET request to `{{baseUrl}}/users/999` that asserts the status is `404`.
 4. **Chain two requests.** Add a GET request to `{{baseUrl}}/users` (it returns a list of users). In its **Post-response** script, save the first user's `id` into a collection variable:
    ```javascript
    pm.test("Status is 200", () => pm.response.to.have.status(200));
@@ -526,7 +526,7 @@ You have a saved collection with positive, negative, and response-time assertion
      "response time"
     ],
     [
-     "GET /users/9999",
+     "GET /users/999",
      "status is 404",
      "negative"
     ],

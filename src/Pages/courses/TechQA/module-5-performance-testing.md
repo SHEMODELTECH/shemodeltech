@@ -134,7 +134,7 @@ Deciding which type to run starts with the actual business risk: an expected-tra
 1. **Take the JMeter test plan from the previous lab**, make sure Juice Shop is running, and check the HTTP Request still points at `localhost`, port `3000`.
 2. **Reconfigure it as a stress test:** increase the Thread Group well beyond your earlier 50-user run (for example, 200+ users) with a short ramp-up, and run it, watching for the point where errors start appearing or response times spike sharply.
 3. **Reconfigure it as a spike test:** set a very short ramp-up period (for example, all users starting within 1-2 seconds) at a moderate-to-high user count, and compare the results to the same user count with a longer ramp-up.
-4. **Write a one-paragraph summary** distinguishing what each of your three runs (load, stress, spike) was actually testing for, and what each result would (and wouldn't) tell a team making a launch decision.
+4. **Write a one-paragraph summary** distinguishing what each of your three runs (the 50-user load run from Topic 5.1, plus the stress and spike runs above) was actually testing for, and what each result would (and wouldn't) tell a team making a launch decision.
 
 #### Checkpoint
 You've run at least two different load pattern types (stress and spike) against your local Juice Shop using the same base test plan, and written a summary explaining what each type does and doesn't tell you.
@@ -156,9 +156,9 @@ You've run at least two different load pattern types (stress and spike) against 
 
 #### Concept
 
-A load test is only useful if someone can act on its results. Averages hide the problem: if most requests take 200 ms but one in twenty takes 6 seconds, the average still looks fine while real users are waiting. Performance testers report **percentiles**, compare every run against a **baseline**, and turn numbers into a clear finding: what slowed down, at what load, and what it means for users.
+A load test is only useful if someone can act on its results. Averages hide the problem: if 19 of 20 requests take 200 ms and one takes 6,000 ms, the average is 490 ms (9,800 ms ÷ 20), which still looks fine while a real user waited 6 seconds. With exactly one slow request in twenty, that request sits right on the p95 boundary, so depending on how a tool calculates it, p95 may show it or may read as 200 ms; p99 and the maximum show it clearly. That's why you look at several percentiles (p90, p95, p99, max), not one number. Performance testers report **percentiles**, compare every run against a **baseline**, and turn numbers into a clear finding: what slowed down, at what load, and what it means for users.
 
-- A **percentile** (p90, p95, p99) is the response time that 90, 95, or 99 percent of requests were faster than; p95 is a common headline number because it reflects the slow experiences an average hides
+- A **percentile** (p90, p95, p99) is the response time that 90, 95, or 99 percent of requests took that long or less (for example, "p95 = 1.2 seconds" means 95% of requests took 1.2 seconds or less); p95 is a common headline number because it reflects the slow experiences an average hides
 - **Throughput** is how many requests the system handled per second; the **error rate** is the share that failed
 - A **baseline** is a run under normal conditions that later runs are compared against, so "slower" has a precise meaning
 - A **bottleneck** is the one resource that limits everything else, such as database connections, CPU, or memory; response times usually climb sharply once it's reached
@@ -572,7 +572,7 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
      "col": 1
     },
     {
-     "say": "So report percentiles. P ninety five is the time ninety five percent of requests were faster than.",
+     "say": "So report percentiles. P ninety five is the time that ninety five percent of requests took, or less.",
      "hl": 1,
      "col": 1,
      "sql": "p95 = the time 95% of requests beat"

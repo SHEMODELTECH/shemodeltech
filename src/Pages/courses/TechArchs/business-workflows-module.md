@@ -269,273 +269,609 @@ You have a full multi-step automation in Make where a single form submission res
    ]
   },
   {
-   "kind": "list",
-   "art": "form",
+   "kind": "diagram",
    "kicker": "Topic 1 · Forms",
-   "title": "Where the workflow starts",
-   "items": [
+   "title": "Conditional logic: only ask what's relevant",
+   "nodes": [
+    {
+     "id": "s1",
+     "label": "Section 1",
+     "x": 14,
+     "y": 30,
+     "sub": "name, dates, Reason",
+     "art": "form"
+    },
+    {
+     "id": "s2",
+     "label": "Section 2",
+     "x": 50,
+     "y": 16,
+     "sub": "Please specify",
+     "art": "pencil"
+    },
+    {
+     "id": "s3",
+     "label": "Section 3",
+     "x": 50,
+     "y": 70,
+     "sub": "Anything else?",
+     "art": "form"
+    },
+    {
+     "id": "sheet",
+     "label": "Responses sheet",
+     "x": 86,
+     "y": 50,
+     "sub": "one row per submission",
+     "art": "table"
+    }
+   ],
+   "edges": [
+    {
+     "from": "s1",
+     "to": "s2"
+    },
+    {
+     "from": "s1",
+     "to": "s3"
+    },
+    {
+     "from": "s2",
+     "to": "s3"
+    },
+    {
+     "from": "s3",
+     "to": "sheet"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A form turns a request into structured data. Here's the Time Off Request form, in three sections.",
+     "show": 3
+    },
+    {
+     "say": "Section one holds name, email, both dates, and a Reason dropdown, last.",
+     "on": "s1"
+    },
+    {
+     "say": "Go to section based on answer sends Other to section two: please specify.",
+     "on": "s2",
+     "send": {
+      "from": "s1",
+      "to": "s2",
+      "label": "Reason: Other"
+     }
+    },
+    {
+     "say": "Vacation or Sick skip to section three, and never see that question.",
+     "on": "s3",
+     "send": {
+      "from": "s1",
+      "to": "s3",
+      "label": "Reason: Sick"
+     }
+    },
+    {
+     "say": "Linked to Sheets, every submission lands as a new row.",
+     "show": 4,
+     "on": "sheet",
+     "send": {
+      "from": "s3",
+      "to": "sheet",
+      "label": "new row"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 1 · Validation",
+   "title": "Required fields, and the check Google Forms can't do",
+   "columns": [
+    "Name",
+    "Start date",
+    "End date",
+    "Reason"
+   ],
+   "rows": [
     [
-     "Field",
-     "Text, dropdown, date, file"
+     "Amara",
+     "Mar 3",
+     "Mar 5",
+     "Vacation"
     ],
     [
-     "Conditional logic",
-     "Show or skip questions"
+     "Ben",
+     "Mar 12",
+     "Mar 13",
+     "Other"
     ],
     [
-     "Validation",
-     "Required, valid format"
-    ],
-    [
-     "Submission",
-     "One row in a sheet"
+     "Chi",
+     "Mar 20",
+     "Mar 18",
+     "Sick"
     ]
    ],
    "beats": [
     {
-     "say": "Forms are the entry point, where a person's request becomes structured data.",
-     "show": 0
+     "say": "Here are three submissions in the responses sheet."
     },
     {
-     "say": "A field is a single input: short text, dropdown, checkbox, date or file upload.",
-     "show": 1
+     "say": "Validation checks fields before submit. Name and both dates are required, so none can be blank.",
+     "col": 0
     },
     {
-     "say": "Conditional logic shows or skips questions based on an earlier answer.",
-     "show": 2
+     "say": "Google Forms can't check that the end comes after the start, so the automation flags it later.",
+     "sql": "Flag if End date < Start date",
+     "col": 2
     },
     {
-     "say": "Validation enforces a format before submission, like a required field that can't be blank.",
-     "show": 3
-    },
-    {
-     "say": "And each submission typically lands as a row in a spreadsheet. Messy data here causes problems everywhere downstream.",
-     "show": 4
+     "say": "Chi's request ends before it starts, so it gets flagged.",
+     "sql": "Flag if End date < Start date",
+     "hl": 2,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "calendar",
-   "kicker": "Topic 1 · Lab",
-   "title": "A Time Off Request form",
-   "steps": [
-    "Fields + reason dropdown",
-    "\"Other\" → please specify",
-    "Required fields",
-    "Link to Sheets, test"
-   ],
-   "beats": [
-    {
-     "say": "Build a form with name, email, start date, end date, and a reason dropdown: Vacation, Sick or Other.",
-     "show": 1
-    },
-    {
-     "say": "Ask please specify only when the reason is Other. In Google Forms, use, go to section based on answer. In Jotform, use a show or hide condition.",
-     "show": 2
-    },
-    {
-     "say": "Make name and both dates required. Google Forms can't check the end date is after the start, so flag that later in your automation, or use Jotform.",
-     "show": 3
-    },
-    {
-     "say": "Link it to a sheet from the Responses tab, submit a test, and check the row.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "people",
+   "kind": "diagram",
    "kicker": "Topic 2 · Approvals",
-   "title": "Turn a request into a decision",
-   "items": [
+   "title": "Scenario A: ask the approver",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "Form",
+     "x": 12,
+     "y": 50,
+     "sub": "a new request",
+     "art": "form"
+    },
+    {
+     "id": "sheet",
+     "label": "Responses sheet",
+     "x": 40,
+     "y": 22,
+     "sub": "Status + Processed",
+     "art": "table"
+    },
+    {
+     "id": "make",
+     "label": "Scenario A",
+     "x": 68,
+     "y": 50,
+     "sub": "Watch New Rows",
+     "art": "gear"
+    },
+    {
+     "id": "boss",
+     "label": "Approver",
+     "x": 40,
+     "y": 80,
+     "sub": "fixed: you, for now",
+     "art": "persona"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "sheet"
+    },
+    {
+     "from": "sheet",
+     "to": "make"
+    },
+    {
+     "from": "make",
+     "to": "boss"
+    },
+    {
+     "from": "boss",
+     "to": "sheet"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Make has no approval button, so the sheet gets two extra columns: Status and Processed.",
+     "show": 4
+    },
+    {
+     "say": "Amara submits her request, and it lands as a new row.",
+     "on": "form",
+     "send": {
+      "from": "form",
+      "to": "sheet",
+      "label": "new row"
+     }
+    },
+    {
+     "say": "Scenario A watches for new rows, and picks hers up.",
+     "on": "make",
+     "send": {
+      "from": "sheet",
+      "to": "make",
+      "label": "Amara's row"
+     }
+    },
+    {
+     "say": "It emails a fixed approver the details and the sheet link.",
+     "on": "boss",
+     "send": {
+      "from": "make",
+      "to": "boss",
+      "label": "email + link"
+     }
+    },
+    {
+     "say": "The approver decides by setting Status to Approved or Rejected.",
+     "on": "sheet",
+     "send": {
+      "from": "boss",
+      "to": "sheet",
+      "label": "Approved"
+     }
+    },
+    {
+     "say": "In a bigger company, the approver could be dynamic, like the requester's manager.",
+     "on": "boss"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 2 · Approvals",
+   "title": "Which rows does each scenario pick up?",
+   "columns": [
+    "Name",
+    "Timestamp",
+    "Status",
+    "Processed"
+   ],
+   "rows": [
     [
-     "Approver",
-     "Fixed or dynamic"
+     "Dee",
+     "Feb 10",
+     "Approved",
+     "yes"
     ],
     [
-     "Sequential / parallel",
-     "In order, or all at once"
+     "Chi",
+     "Feb 16",
+     "",
+     ""
     ],
     [
-     "Decision branch",
-     "Approved or rejected path"
+     "Amara",
+     "Feb 18",
+     "Approved",
+     ""
     ],
     [
-     "Escalation",
-     "Remind if no response"
+     "Ben",
+     "Feb 19",
+     "Rejected",
+     ""
+    ],
+    [
+     "Eve",
+     "Feb 19",
+     "",
+     ""
     ]
    ],
    "beats": [
     {
-     "say": "Approvals route a submission to the right person, and pause until they respond.",
-     "show": 0
+     "say": "The sheet, a little later. Today is February twentieth."
     },
     {
-     "say": "An approver can be fixed, always the same manager, or dynamic, based on a field like department or amount.",
-     "show": 1
+     "say": "Scenario B searches for rows with a Status but no Processed mark.",
+     "sql": "Search Rows: Status not empty\nAND Processed empty",
+     "col": 2
     },
     {
-     "say": "Sequential approval goes one after another. Parallel goes to several approvers at once.",
-     "show": 2
+     "say": "That finds Amara and Ben.",
+     "sql": "Search Rows: Status not empty\nAND Processed empty",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
     },
     {
-     "say": "A decision branch is what happens next: approved moves forward, rejected stops or loops back.",
-     "show": 3
+     "say": "Dee was handled on an earlier run. Processed says yes, so she's skipped.",
+     "sql": "Search Rows: Status not empty\nAND Processed empty",
+     "hl": 0,
+     "col": 3
     },
     {
-     "say": "An escalation reminds or reroutes when nobody responds. Skipping it is a common beginner mistake.",
-     "show": 4
+     "say": "The optional escalation scenario runs daily, and finds rows with no Status.",
+     "sql": "Search Rows: Status empty",
+     "hl": [
+      1,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "A filter keeps only those older than two days.",
+     "sql": "Status empty AND Timestamp\nearlier than addDays(now; -2)",
+     "col": 1
+    },
+    {
+     "say": "Only Chi has waited too long, so the approver gets a reminder.",
+     "sql": "Status empty AND Timestamp\nearlier than addDays(now; -2)",
+     "hl": 1,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "table",
-   "kicker": "Topic 2 · Lab",
-   "title": "Two scenarios in Make",
-   "steps": [
-    "Add Status + Processed",
-    "A: Watch New Rows → email",
-    "B: Search Rows → Router",
-    "Update Row: Processed = yes"
+   "kind": "diagram",
+   "kicker": "Topics 2 to 4 · Scenario B",
+   "title": "A Router sends each decision down its own route",
+   "nodes": [
+    {
+     "id": "search",
+     "label": "Search Rows",
+     "x": 10,
+     "y": 50,
+     "sub": "decided, unprocessed",
+     "art": "search"
+    },
+    {
+     "id": "router",
+     "label": "Router",
+     "x": 30,
+     "y": 50,
+     "sub": "two filtered routes",
+     "art": "fork"
+    },
+    {
+     "id": "mail",
+     "label": "Email requester",
+     "x": 54,
+     "y": 20,
+     "sub": "Approved route",
+     "art": "mail"
+    },
+    {
+     "id": "crm",
+     "label": "Create record",
+     "x": 78,
+     "y": 20,
+     "sub": "CRM or second sheet",
+     "art": "idcard"
+    },
+    {
+     "id": "slack",
+     "label": "Slack manager",
+     "x": 60,
+     "y": 80,
+     "sub": "Rejected route",
+     "art": "chat"
+    },
+    {
+     "id": "update",
+     "label": "Update a Row",
+     "x": 90,
+     "y": 52,
+     "sub": "Processed = yes",
+     "art": "table"
+    }
+   ],
+   "edges": [
+    {
+     "from": "search",
+     "to": "router"
+    },
+    {
+     "from": "router",
+     "to": "mail"
+    },
+    {
+     "from": "mail",
+     "to": "crm"
+    },
+    {
+     "from": "crm",
+     "to": "update"
+    },
+    {
+     "from": "router",
+     "to": "slack"
+    },
+    {
+     "from": "slack",
+     "to": "update"
+    }
    ],
    "beats": [
     {
-     "say": "Make has no built-in approval button, so add Status and Processed columns. The approver types Approved or Rejected in Status.",
-     "show": 1
-    },
-    {
-     "say": "Scenario A watches for new rows and emails the approver the details and the sheet link.",
+     "say": "Scenario B runs every fifteen minutes.",
      "show": 2
     },
     {
-     "say": "Scenario B searches rows where Status is filled and Processed is empty, and a Router splits them into an Approved route and a Rejected route.",
-     "show": 3
+     "say": "Search Rows hands Amara and Ben to a Router.",
+     "on": "router",
+     "send": {
+      "from": "search",
+      "to": "router",
+      "label": "Amara, Ben"
+     }
     },
     {
-     "say": "Both routes end by setting Processed to yes, so the same row is never handled twice.",
-     "show": 4
+     "say": "The Approved route's filter lets Amara through, and she gets an email.",
+     "show": 3,
+     "on": "mail",
+     "send": {
+      "from": "router",
+      "to": "mail",
+      "label": "Amara: Approved"
+     }
+    },
+    {
+     "say": "Then a connector creates a record in a C R M, or a second sheet.",
+     "show": 4,
+     "on": "crm",
+     "send": {
+      "from": "mail",
+      "to": "crm",
+      "label": "mapped fields"
+     }
+    },
+    {
+     "say": "Ben takes the Rejected route: a different message, on Slack, to a manager.",
+     "show": 5,
+     "on": "slack",
+     "send": {
+      "from": "router",
+      "to": "slack",
+      "label": "Ben: Rejected"
+     }
+    },
+    {
+     "say": "Both routes end by setting Processed to yes, so the next run skips them.",
+     "show": 6,
+     "on": "update",
+     "send": {
+      "from": "crm",
+      "to": "update",
+      "label": "Processed = yes"
+     }
+    },
+    {
+     "say": "Make counts credits, roughly one per module run, so a busy chain adds up.",
+     "on": [
+      "search",
+      "router",
+      "mail",
+      "crm",
+      "slack",
+      "update"
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "stopwatch",
-   "kicker": "Topic 2 · Optional",
-   "title": "An escalation reminder",
-   "quote": "Status still blank after two days → remind the approver.",
-   "beats": [
-    {
-     "say": "Optionally, add a third scenario that runs once a day.",
-     "show": 0
-    },
-    {
-     "say": "It finds rows where Status is still empty and the timestamp is more than two days old, and emails the approver a reminder.",
-     "show": 1
-    },
-    {
-     "say": "If your plan has no free scenario slot, write the design down instead.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "bell",
+   "kind": "table",
    "kicker": "Topic 3 · Notifications",
-   "title": "Tell people what changed",
-   "items": [
+   "title": "Dynamic content fills the message from the row",
+   "columns": [
+    "Field",
+    "Amara's row"
+   ],
+   "rows": [
     [
-     "Trigger event",
-     "What fires it"
+     "Name",
+     "Amara"
     ],
     [
-     "Channel",
-     "Email, Slack, SMS, push"
+     "Email",
+     "amara@example.com"
     ],
     [
-     "Dynamic content",
-     "Real names and dates"
+     "Start date",
+     "Mar 3"
     ],
     [
-     "Don't over-notify",
-     "People stop reading"
+     "End date",
+     "Mar 5"
     ]
    ],
    "beats": [
     {
-     "say": "Notifications keep people informed, so nobody has to check a system by hand.",
-     "show": 0
+     "say": "Amara's approval is the trigger event. Here's her row."
     },
     {
-     "say": "A trigger event fires it: a submission, a status change, an approval, or a schedule.",
-     "show": 1
+     "say": "The email has gaps, called merge fields, filled from the row.",
+     "sql": "Hi {{Name}}, your request for\n{{Start date}} to {{End date}} was approved."
     },
     {
-     "say": "A channel delivers it: email, Slack, S M S, or push.",
-     "show": 2
+     "say": "The recipient is dynamic: whoever made the request.",
+     "sql": "To: {{Email}}",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Dynamic content inserts real data, so it reads, your request for March third to fifth was approved.",
-     "show": 3
+     "say": "The name fills the greeting.",
+     "sql": "Hi Amara, your request for\n{{Start date}} to {{End date}} was approved.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "And too many notifications for minor events trains people to ignore the channel.",
-     "show": 4
+     "say": "And the two dates fill the date range.",
+     "sql": "Hi Amara, your request for\nMar 3 to Mar 5 was approved.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "Specific messages get acted on. Too many, and people ignore the channel.",
+     "sql": "Hi Amara, your request for\nMar 3 to Mar 5 was approved."
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "plug",
+   "kind": "table",
    "kicker": "Topic 4 · Integrations",
-   "title": "Connect to another system",
-   "steps": [
-    "Trigger in App A",
-    "Connector",
-    "Data mapping",
-    "Action in App B"
+   "title": "Data mapping: each field to the right place",
+   "columns": [
+    "Form field (trigger)",
+    "CRM field (action)"
+   ],
+   "rows": [
+    [
+     "Name",
+     "Contact name"
+    ],
+    [
+     "Email",
+     "Email"
+    ],
+    [
+     "Start date",
+     "Leave start"
+    ],
+    [
+     "End date",
+     "Leave end"
+    ],
+    [
+     "Reason",
+     "Leave type"
+    ]
    ],
    "beats": [
     {
-     "say": "Integrations connect your workflow to other systems, so nobody copies data by hand.",
-     "show": 0
+     "say": "An integration links a trigger in one app to an action in another."
     },
     {
-     "say": "A trigger in one app starts it.",
-     "show": 1
+     "say": "On the left, fields from Amara's form submission.",
+     "col": 0
     },
     {
-     "say": "A connector, a pre-built bridge, handles the sign-in and A P I calls.",
-     "show": 2
+     "say": "On the right, fields of the new C R M record.",
+     "col": 1,
+     "sql": "Action: Create a Record"
     },
     {
-     "say": "A data mapping sends each field to the right place, like the form's email to the C R M's email.",
-     "show": 3
+     "say": "The apps don't know which fields match, so you map them: email to email.",
+     "sql": "Action: Create a Record",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "And an action happens in the other app. In the lab, the Approved route also creates a record in a C R M or a second sheet.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "coin",
-   "kicker": "Topic 4 · Pricing",
-   "title": "Every step has a cost",
-   "big": "Tasks · Credits",
-   "sub": "Zapier counts tasks; Make counts credits",
-   "beats": [
-    {
-     "say": "Most platforms charge by monthly usage.",
-     "show": 0
-    },
-    {
-     "say": "Zapier counts tasks. Make counts credits, called operations until twenty twenty five, roughly one per module run. A busy multi-step workflow adds up.",
-     "show": 1
+     "say": "And name, the dates, and the reason.",
+     "sql": "Action: Create a Record",
+     "hl": [
+      0,
+      2,
+      3,
+      4
+     ],
+     "dim": true
     }
    ]
   },
