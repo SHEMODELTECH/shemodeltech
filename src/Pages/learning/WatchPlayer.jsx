@@ -126,7 +126,11 @@ const Diagram = ({ scene, bi }) => {
       n[key] = hi === lo ? 50 : m + ((n[key] - lo) / (hi - lo)) * (100 - 2 * m);
     });
   };
-  if (Object.keys(pos).length) { fitAxis('y', 50 * k); fitAxis('x', 80 * k); }
+  // Estimated half-size of the widest / tallest node (label length, icon).
+  const halfW = Math.max(40, ...(scene.nodes || []).map((n) => Math.min(180, Math.max(76,
+    7.6 * Math.max(String(n.label || '').length, 0.82 * String(n.sub || '').length) + 26)) / 2));
+  const halfH = Math.max(...(scene.nodes || []).map((n) => (n.art ? 46 : 26) + (n.sub ? 8 : 0)), 26);
+  if (Object.keys(pos).length) { fitAxis('y', halfH * k + 4); fitAxis('x', halfW * k + 4); }
   const send = b.send && pos[b.send.from] && pos[b.send.to] ? b.send : null;
   // Tight on space (several rows of nodes in a short stage): drop the icons.
   const rows = new Set(Object.values(pos).map((n) => Math.round(n.y / 8))).size;

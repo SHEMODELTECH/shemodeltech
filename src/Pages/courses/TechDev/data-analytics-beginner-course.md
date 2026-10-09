@@ -204,154 +204,351 @@ You have a written brief where someone else could read the measurable question a
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Four words to know",
-   "items": [
+   "columns": [
+    "Term",
+    "Meaning",
+    "Ivy & Ink example"
+   ],
+   "rows": [
     [
      "Metric",
+     "A number you sum, count or average",
      "Revenue, orders, average order value"
     ],
     [
      "Dimension",
+     "A category you split a metric by",
      "Channel, category, month, city"
     ],
     [
      "Unit of analysis",
+     "What one row represents",
      "One order"
     ],
     [
      "Time window",
+     "The period you look at",
      "Jan 1 to Mar 31, 2026"
     ]
    ],
    "beats": [
     {
-     "say": "A good analysis starts with a measurable question: one where you could say in advance what number would answer it.",
-     "show": 0
+     "say": "A good analysis starts with a measurable question: one where you could say in advance what number would answer it."
     },
     {
-     "say": "A metric is a number you measure, usually summed, counted or averaged, like revenue.",
-     "show": 1
+     "say": "Four words help. A metric is a number you measure, usually summed, counted or averaged, like revenue.",
+     "hl": 0
     },
     {
      "say": "A dimension is a category you split a metric by, like sales channel or month.",
-     "show": 2
+     "hl": 1
     },
     {
-     "say": "The unit of analysis is what one row represents. Here, one order.",
-     "show": 3
+     "say": "The unit of analysis is what one row represents. For Ivy and Ink, that's one order.",
+     "hl": 2
     },
     {
-     "say": "And the time window is the period you look at: January to March, twenty twenty six.",
-     "show": 4
+     "say": "And the time window is the period you look at: January first to March thirty first, twenty twenty six.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "funnel",
-   "kicker": "Concept",
-   "title": "From vague to measurable",
-   "steps": [
-    "Who asks, what decision?",
-    "Pick the metric",
-    "Choose the dimension",
-    "Time window and scope",
-    "Data needed and missing"
+   "kind": "table",
+   "kicker": "See it in the data",
+   "title": "Spot them in Ivy & Ink's orders",
+   "columns": [
+    "order_id",
+    "order_date",
+    "product",
+    "quantity",
+    "unit_price",
+    "channel"
    ],
-   "beats": [
-    {
-     "say": "Here's a recipe for turning a vague request into a measurable question.",
-     "show": 0
-    },
-    {
-     "say": "Who is asking, and what decision will they make? A question with no decision attached is trivia.",
-     "show": 1
-    },
-    {
-     "say": "Which metric best reflects success for that decision?",
-     "show": 2
-    },
-    {
-     "say": "Split by which dimension, over what time window, and for whom?",
-     "show": 3
-    },
-    {
-     "say": "And what data do you need, and do you have it? If something is missing, say so now, not at the end.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "megaphone",
-   "kicker": "Example",
-   "title": "Is Instagram working?",
-   "quote": "From Jan to Mar 2026, how much revenue and how many orders came through Instagram vs Website and Email, and is it growing?",
-   "beats": [
-    {
-     "say": "Vague: is Instagram working for us?",
-     "show": 0
-    },
-    {
-     "say": "Measurable: from January to March, how much revenue and how many orders came through Instagram, compared with the Website and Email, for individual customers, and is it growing month over month?",
-     "show": 1
-    },
-    {
-     "say": "It also reveals what it can't answer. There's no data on time or money spent on Instagram, so we can't measure return on effort.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "doc",
-   "kicker": "Lab",
-   "title": "Write a question brief",
-   "items": [
+   "rows": [
     [
-     "Requested by · Decision",
-     "Who asks, what changes"
+     "1001",
+     "2026-01-03",
+     "Notebook",
+     "2",
+     "8.00",
+     "Website"
     ],
     [
-     "Measurable question",
-     "Metric, dimension"
+     "1002",
+     "2026-01-05",
+     "Gel Pen Set",
+     "1",
+     "6.50",
+     "Instagram"
     ],
     [
-     "Time window · Scope",
-     "e.g. exclude test orders"
+     "1003",
+     "2026-01-08",
+     "Planner",
+     "1",
+     "18.00",
+     "Website"
     ],
     [
-     "Data needed · Data we don't have",
-     "List the gaps now"
+     "1004",
+     "2026-01-10",
+     "Sticky Notes",
+     "3",
+     "3.50",
+     "Instagram"
+    ],
+    [
+     "1005",
+     "2026-01-14",
+     "Fountain Pen",
+     "1",
+     "24.00",
+     "Email"
     ]
    ],
    "beats": [
     {
-     "say": "In the lab, first sort columns into metrics and dimensions.",
-     "show": 0
+     "say": "Here are the first five of the shop's thirty orders."
     },
     {
-     "say": "Then write a question brief from a template.",
-     "show": 0
+     "say": "Each row is one order. That's the unit of analysis.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Quantity is a number you can total or average.",
+     "col": 3
+    },
+    {
+     "say": "Multiply it by unit price and you get revenue, the main metric. Two notebooks at eight dollars is sixteen.",
+     "sql": "revenue = quantity × unit_price",
+     "col": 4,
+     "hl": 0
+    },
+    {
+     "say": "Channel is a label, not a number. Website, Instagram, Email. It's a dimension you split revenue by.",
+     "col": 5
+    },
+    {
+     "say": "And the order date sets the time window, and gives you month as another dimension.",
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "From vague to measurable",
+   "nodes": [
+    {
+     "id": "ask",
+     "label": "Is Instagram working?",
+     "x": 12,
+     "y": 25,
+     "sub": "the vague request",
+     "art": "megaphone"
+    },
+    {
+     "id": "dec",
+     "label": "Decision",
+     "x": 50,
+     "y": 25,
+     "sub": "April marketing focus",
+     "art": "target"
+    },
+    {
+     "id": "met",
+     "label": "Metric",
+     "x": 88,
+     "y": 25,
+     "sub": "revenue, orders",
+     "art": "calc"
+    },
+    {
+     "id": "dim",
+     "label": "Dimension",
+     "x": 88,
+     "y": 75,
+     "sub": "channel, month",
+     "art": "bars"
+    },
+    {
+     "id": "win",
+     "label": "Window and scope",
+     "x": 50,
+     "y": 75,
+     "sub": "Jan–Mar 2026, individuals",
+     "art": "calendar"
+    },
+    {
+     "id": "gap",
+     "label": "Missing data",
+     "x": 12,
+     "y": 75,
+     "sub": "ad spend, time spent",
+     "art": "warning"
+    }
+   ],
+   "edges": [
+    {
+     "from": "ask",
+     "to": "dec"
+    },
+    {
+     "from": "dec",
+     "to": "met"
+    },
+    {
+     "from": "met",
+     "to": "dim"
+    },
+    {
+     "from": "dim",
+     "to": "win"
+    },
+    {
+     "from": "win",
+     "to": "gap"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Someone asks: is Instagram working for us? There's no number that answers that yet.",
+     "show": 1,
+     "on": "ask"
+    },
+    {
+     "say": "Step one: who's asking, and what will they decide? The owner is choosing where to focus April's marketing.",
+     "show": 2,
+     "on": "dec",
+     "send": {
+      "from": "ask",
+      "to": "dec",
+      "label": "who + decision"
+     }
+    },
+    {
+     "say": "Step two: pick the metric that reflects success for that decision. Revenue, with number of orders alongside.",
+     "show": 3,
+     "on": "met",
+     "send": {
+      "from": "dec",
+      "to": "met",
+      "label": "revenue"
+     }
+    },
+    {
+     "say": "Step three: split it by a dimension. Usually the choice being made: channel, plus month to see growth.",
+     "show": 4,
+     "on": "dim",
+     "send": {
+      "from": "met",
+      "to": "dim",
+      "label": "by channel, month"
+     }
+    },
+    {
+     "say": "Step four: a time window and scope. January to March twenty twenty six, individual customers only.",
+     "show": 5,
+     "on": "win",
+     "send": {
+      "from": "dim",
+      "to": "win",
+      "label": "Q1 2026"
+     }
+    },
+    {
+     "say": "Step five: what data do you need, and what's missing? There's no data on time or money spent on Instagram, so we can't measure return on effort.",
+     "show": 6,
+     "on": "gap",
+     "send": {
+      "from": "win",
+      "to": "gap",
+      "label": "what's missing?"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab",
+   "title": "The question brief, filled in",
+   "columns": [
+    "Field",
+    "Ivy & Ink"
+   ],
+   "rows": [
+    [
+     "Requested by",
+     "Ivy & Ink's owner"
+    ],
+    [
+     "Decision",
+     "Where to focus April's marketing time"
+    ],
+    [
+     "Question",
+     "Which channel brought the most revenue and orders from individuals, and which is growing?"
+    ],
+    [
+     "Metrics",
+     "Revenue (main); orders, customers, average order value"
+    ],
+    [
+     "Dimensions · Window",
+     "Channel, month · 2026-01-01 to 2026-03-31"
+    ],
+    [
+     "Scope",
+     "Individuals in; the school's bulk orders reported separately"
+    ],
+    [
+     "Data we don't have",
+     "Ad spend, marketing time, website visitors"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "In the lab you write all of this down as a question brief. Here's the one for Ivy and Ink."
     },
     {
      "say": "Who is asking, and the decision it informs.",
-     "show": 1
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     },
     {
-     "say": "The measurable question, with its main metric and dimensions.",
-     "show": 2
+     "say": "The measurable question, in one sentence.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "The time window, and what's in or out of scope.",
-     "show": 3
+     "say": "The main metric, the dimensions, and the time window.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true
     },
     {
-     "say": "And the data you need, plus the data you don't have. Then write one for a question from your own life or project.",
-     "show": 4
+     "say": "The scope. One business customer, a school placing bulk orders, is reported separately.",
+     "hl": 5,
+     "dim": true
+    },
+    {
+     "say": "And the data you don't have. No ad spend or visitor counts means no return on effort and no conversion rate.",
+     "hl": 6,
+     "dim": true
+    },
+    {
+     "say": "Now write one for a question from your own life or project. You'll answer this one in Module 8."
     }
    ]
   },
@@ -374,7 +571,7 @@ You have a written brief where someone else could read the measurable question a
      "show": 0
     },
     {
-     "say": "Why is \"Is Instagram working?\" a weak analysis question?",
+     "say": "Why is the question, is Instagram working, a weak analysis question?",
      "show": 0
     },
     {
@@ -573,146 +770,509 @@ Your summary cells match the table in Step 5, your channel pivot matches Step 6,
    ]
   },
   {
-   "kind": "list",
-   "art": "funnel",
-   "kicker": "Concept",
-   "title": "Four skills cover most of it",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Step 2",
+   "title": "Add a revenue column",
+   "columns": [
+    "row",
+    "order_id",
+    "quantity (F)",
+    "unit_price (G)",
+    "revenue (I)"
+   ],
+   "rows": [
     [
-     "Sort",
-     "Put rows in order"
+     "2",
+     "1001",
+     "2",
+     "8.00",
+     "16"
     ],
     [
-     "Filter",
-     "Hide, don't delete"
+     "3",
+     "1002",
+     "1",
+     "6.50",
+     "6.5"
     ],
     [
-     "COUNTIFS · SUMIFS · AVERAGEIFS",
-     "Metric for matching rows"
+     "4",
+     "1003",
+     "1",
+     "18.00",
+     "18"
     ],
     [
-     "Pivot table",
-     "Metric by dimension"
+     "5",
+     "1004",
+     "3",
+     "3.50",
+     "10.5"
+    ],
+    [
+     "6",
+     "1005",
+     "1",
+     "24.00",
+     "24"
+    ],
+    [
+     "10",
+     "1009",
+     "20",
+     "8.00",
+     "160"
     ]
    ],
    "beats": [
     {
-     "say": "Four skills cover most beginner analysis.",
-     "show": 0
+     "say": "You've pasted the orders into a sheet and split them into columns. Here are a few rows."
     },
     {
-     "say": "Sorting puts rows in order, like biggest orders first.",
-     "show": 1
+     "say": "Never type revenue by hand. In cell I two, write equals F two times G two. Two notebooks at eight dollars: sixteen.",
+     "sql": "I2:  =F2*G2",
+     "hl": 0,
+     "col": 4
     },
     {
-     "say": "Filtering hides rows that don't match, without deleting them.",
-     "show": 2
+     "say": "Fill it down, and every row works out its own revenue.",
+     "col": 4
     },
     {
-     "say": "Conditional functions, like count ifs, sum ifs and average ifs, calculate a metric only for matching rows.",
-     "show": 3
+     "say": "Row ten is order ten oh nine: twenty notebooks, a hundred and sixty dollars.",
+     "hl": 5,
+     "dim": true,
+     "col": 4
     },
     {
-     "say": "And pivot tables summarize a metric by one or more dimensions in a few clicks.",
-     "show": 4
-    },
-    {
-     "say": "One golden rule: never overwrite the raw data.",
-     "show": 4
+     "say": "And because it's a formula, anyone can see exactly how each number was made. The raw columns stay untouched.",
+     "col": 4
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "calc",
-   "kicker": "Lab · Steps 1 to 4",
-   "title": "Load, calculate, sort, filter",
-   "steps": [
-    "Paste, then split to columns",
-    "revenue: =F2*G2",
-    "Sort: 1009 and 1028 on top",
-    "Filter Instagram: 16 rows, 209"
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "Sort: biggest orders first",
+   "columns": [
+    "order_id",
+    "customer_id",
+    "product",
+    "revenue"
+   ],
+   "rows": [
+    [
+     "1009",
+     "C07",
+     "Notebook",
+     "160"
+    ],
+    [
+     "1028",
+     "C07",
+     "Gel Pen Set",
+     "65"
+    ],
+    [
+     "1005",
+     "C01",
+     "Fountain Pen",
+     "24"
+    ],
+    [
+     "1013",
+     "C04",
+     "Fountain Pen",
+     "24"
+    ],
+    [
+     "1023",
+     "C10",
+     "Washi Tape",
+     "24"
+    ],
+    [
+     "1024",
+     "C03",
+     "Fountain Pen",
+     "24"
+    ],
+    [
+     "1026",
+     "C12",
+     "Notebook",
+     "24"
+    ]
    ],
    "beats": [
     {
-     "say": "Paste the orders into cell A1, then use Data, Split text to columns.",
-     "show": 1
+     "say": "Sort by revenue, largest first. Here are the top seven of thirty.",
+     "sql": "Sort range by revenue, Z → A"
     },
     {
-     "say": "Add a revenue column: quantity times unit price, filled down to row thirty one.",
-     "show": 2
+     "say": "The top two, a hundred and sixty and sixty five, are far bigger than anything else.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 3
     },
     {
-     "say": "Sort by revenue, largest first. The top two orders, a hundred and sixty and sixty five, are both from customer C seven.",
-     "show": 3
+     "say": "And both come from the same customer: C seven.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Filter to Instagram. Sixteen rows, and the sum of visible revenue is two hundred and nine.",
-     "show": 4
+     "say": "Below them, five orders tie at twenty four dollars.",
+     "hl": [
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Sorting only changes the order of rows. Undo it before moving on."
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "fork",
-   "kicker": "Lab · Step 5",
-   "title": "Conditional formulas",
-   "file": "orders sheet",
-   "code": "=SUM(I2:I31)                               → 652\n=COUNTIFS(H2:H31,\"Instagram\")              → 16\n=SUMIFS(I2:I31,H2:H31,\"Instagram\")         → 209\n=COUNTIFS(H2:H31,\"Instagram\",F2:F31,\">=3\") → 5\n=SUMIFS(I2:I31,B2:B31,\">=\"&DATE(2026,3,1),\n        B2:B31,\"<\"&DATE(2026,4,1))          → 246\n=AVERAGE(I2:I31)                           → 21.73\n=MEDIAN(I2:I31)                            → 16",
+   "kind": "table",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Filter, then count with conditions",
+   "columns": [
+    "order_id",
+    "product",
+    "quantity",
+    "channel",
+    "revenue"
+   ],
+   "rows": [
+    [
+     "1019",
+     "Notebook",
+     "2",
+     "Instagram",
+     "16"
+    ],
+    [
+     "1020",
+     "Gel Pen Set",
+     "2",
+     "Instagram",
+     "13"
+    ],
+    [
+     "1021",
+     "Sticky Notes",
+     "2",
+     "Instagram",
+     "7"
+    ],
+    [
+     "1022",
+     "Planner",
+     "1",
+     "Website",
+     "18"
+    ],
+    [
+     "1023",
+     "Washi Tape",
+     "6",
+     "Instagram",
+     "24"
+    ],
+    [
+     "1024",
+     "Fountain Pen",
+     "1",
+     "Email",
+     "24"
+    ],
+    [
+     "1025",
+     "Desk Organizer",
+     "1",
+     "Instagram",
+     "15"
+    ]
+   ],
    "beats": [
     {
-     "say": "Next, build a small summary with formulas.",
-     "show": 0
+     "say": "Here are seven orders from March, to see how filters and conditions work."
     },
     {
-     "say": "Each extra condition is another range and condition pair. Comparisons go in quotes, and you join a function's value with an ampersand.",
-     "show": 1
+     "say": "A filter on channel equals Instagram hides the other rows. It doesn't delete them.",
+     "sql": "Filter: channel = Instagram",
+     "hl": [
+      0,
+      1,
+      2,
+      4,
+      6
+     ],
+     "dim": true,
+     "col": 3
     },
     {
-     "say": "Notice the average order, twenty one seventy three, is bigger than the median, sixteen. Module 6 explains why.",
-     "show": 1
+     "say": "Five of these seven pass. On the full sheet the filter leaves sixteen rows, and their revenue sums to two hundred and nine.",
+     "hl": [
+      0,
+      1,
+      2,
+      4,
+      6
+     ],
+     "dim": true,
+     "col": 4
+    },
+    {
+     "say": "Count ifs counts matching rows with a formula, so nothing has to be hidden at all.",
+     "sql": "=COUNTIFS(H2:H31,\"Instagram\")   → 16",
+     "hl": [
+      0,
+      1,
+      2,
+      4,
+      6
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Add a second range and condition pair, quantity of at least three, and only order ten twenty three still matches here.",
+     "sql": "=COUNTIFS(H2:H31,\"Instagram\",F2:F31,\">=3\")   → 5",
+     "hl": 4,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Across all thirty orders, five rows match both conditions."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
-   "kicker": "Lab · Steps 6 and 7",
-   "title": "Pivot by channel",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Step 5",
+   "title": "A summary built from formulas",
+   "columns": [
+    "Label",
+    "Formula",
+    "Result"
+   ],
+   "rows": [
+    [
+     "Total revenue",
+     "=SUM(I2:I31)",
+     "652"
+    ],
+    [
+     "Instagram revenue",
+     "=SUMIFS(I2:I31,H2:H31,\"Instagram\")",
+     "209"
+    ],
+    [
+     "Website avg order",
+     "=AVERAGEIFS(I2:I31,H2:H31,\"Website\")",
+     "16.89"
+    ],
+    [
+     "Paper via Instagram",
+     "=SUMIFS(I2:I31,E2:E31,\"Paper\",H2:H31,\"Instagram\")",
+     "95"
+    ],
+    [
+     "March revenue",
+     "=SUMIFS(I2:I31,B2:B31,\">=\"&DATE(2026,3,1),B2:B31,\"<\"&DATE(2026,4,1))",
+     "246"
+    ],
+    [
+     "Average order",
+     "=AVERAGE(I2:I31)",
+     "21.73"
+    ],
+    [
+     "Median order",
+     "=MEDIAN(I2:I31)",
+     "16"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Sum adds the whole revenue column: six hundred and fifty two dollars.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Sum ifs adds only the rows that match. Instagram revenue: two hundred and nine.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Average ifs averages matching rows. A Website order averages sixteen eighty nine.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Each extra condition is one more range and condition pair. Paper sold through Instagram: ninety five.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "For dates, join the comparison to a date with an ampersand. March revenue: two hundred and forty six.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "Last, the average order is twenty one seventy three, but the median is only sixteen. Keep that gap in mind. Module 6 explains it.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 6",
+   "title": "Pivot table: revenue by channel",
+   "columns": [
+    "channel",
+    "SUM of revenue",
+    "COUNTA of order_id"
+   ],
+   "rows": [
     [
      "Email",
-     "$291 · 5 orders"
+     "291",
+     "5"
     ],
     [
      "Instagram",
-     "$209 · 16 orders"
+     "209",
+     "16"
     ],
     [
      "Website",
-     "$152 · 9 orders"
+     "152",
+     "9"
+    ],
+    [
+     "Grand Total",
+     "652",
+     "30"
     ]
    ],
    "beats": [
     {
-     "say": "Now a pivot table: channel as rows, sum of revenue, and a count of orders.",
-     "show": 0
+     "say": "A pivot table does all those sums at once. Rows: channel. Values: the sum of revenue, and a count of orders.",
+     "sql": "Rows: channel · Values: SUM(revenue), COUNTA(order_id)"
     },
     {
-     "say": "Email: two hundred and ninety one from just five orders.",
-     "show": 1
+     "say": "Email brings the most revenue: two hundred and ninety one dollars.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Instagram: two hundred and nine from sixteen orders.",
-     "show": 2
+     "say": "But from only five orders. Instagram has sixteen.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
     },
     {
-     "say": "Website: a hundred and fifty two from nine orders.",
-     "show": 3
+     "say": "The grand total, six hundred and fifty two from thirty orders, matches the sum formula.",
+     "hl": 3,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 7",
+   "title": "Two dimensions: category by channel",
+   "columns": [
+    "category",
+    "Email",
+    "Instagram",
+    "Website",
+    "Total"
+   ],
+   "rows": [
+    [
+     "Craft",
+     "—",
+     "60",
+     "8",
+     "68"
+    ],
+    [
+     "Desk",
+     "—",
+     "15",
+     "30",
+     "45"
+    ],
+    [
+     "Paper",
+     "178",
+     "95",
+     "90",
+     "363"
+    ],
+    [
+     "Writing",
+     "113",
+     "39",
+     "24",
+     "176"
+    ],
+    [
+     "Grand Total",
+     "291",
+     "209",
+     "152",
+     "652"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now a pivot with two dimensions: category as rows, channel as columns, and revenue in the cells.",
+     "sql": "Rows: category · Columns: channel · Values: SUM(revenue)"
     },
     {
-     "say": "A second pivot by category and channel shows Email's paper revenue is almost entirely one order. One big order can dominate a small dataset.",
-     "show": 3
+     "say": "Paper is the biggest category, at three hundred and sixty three dollars.",
+     "hl": 2,
+     "col": 4
+    },
+    {
+     "say": "Email's share of Paper is a hundred and seventy eight.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "And a hundred and sixty of that is one order, ten oh nine: the school's twenty notebooks.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "One big order can dominate a small dataset. Check that before calling Email the best channel.",
+     "hl": 4,
+     "dim": true,
+     "col": 1
     }
    ]
   },
@@ -727,15 +1287,15 @@ Your summary cells match the table in Step 5, your channel pivot matches Step 6,
     "Whether a few unusually large orders drive it"
    ],
    "answer": 2,
-   "good": "That's right. One school customer placed two bulk orders worth 225 of Email's 291.",
-   "bad": "Not quite. One school customer placed two bulk orders worth 225 of Email's 291.",
+   "good": "That's right. Whether a few unusually large orders drive it. Here, one school placed two bulk orders worth two hundred twenty five of Email's two hundred ninety one.",
+   "bad": "Not quite. Whether a few unusually large orders drive it. Here, one school placed two bulk orders worth two hundred twenty five of Email's two hundred ninety one.",
    "beats": [
     {
      "say": "Quick check.",
      "show": 0
     },
     {
-     "say": "Email has the most revenue but only 5 orders. What should you check first?",
+     "say": "Email has the most revenue but only five orders. What should you check first?",
      "show": 0
     },
     {
@@ -1176,102 +1736,447 @@ Your outputs match the ones above, and you can explain why the repeat-customer q
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "array",
    "kicker": "Concept",
-   "title": "The core pieces, in order",
-   "file": "query.sql",
-   "code": "SELECT columns or calculations     -- what to show\nFROM table                         -- where the data lives\nJOIN other_table ON matching_key   -- combine tables\nWHERE condition                    -- filter rows before grouping\nGROUP BY dimension                 -- one result row per group\nHAVING condition                   -- filter groups after grouping\nORDER BY column DESC               -- sort the result\nLIMIT n                            -- keep only the first n rows",
-   "beats": [
-    {
-     "say": "Here are the core pieces, in the order they're written.",
-     "show": 0
-    },
-    {
-     "say": "Aggregate functions like count, sum and average collapse many rows into one number. With group by, you get one number per group.",
-     "show": 1
-    },
-    {
-     "say": "Where filters rows before grouping. Having filters the groups after.",
-     "show": 1
-    },
-    {
-     "say": "You'll use SQLite, built into Python as the sequel lite three module.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "laptop",
-   "kicker": "Lab · Steps 1 to 5",
-   "title": "Load and look",
-   "steps": [
-    "Data cell at the top",
-    "COUNT(*): 30 and 12",
-    "SELECT * … LIMIT 5",
-    "WHERE, then ORDER BY revenue"
+   "title": "The clauses, in the order you write them",
+   "values": [
+    "SELECT",
+    "FROM",
+    "JOIN",
+    "WHERE",
+    "GROUP BY",
+    "HAVING",
+    "ORDER BY",
+    "LIMIT"
    ],
    "beats": [
     {
-     "say": "Open a Colab notebook and paste the data cell: orders, plus a customers table. Keep it at the top.",
-     "show": 1
+     "say": "A query is built from clauses, always written in this order."
     },
     {
-     "say": "Create an in-memory database, load both tables, and check you get thirty and twelve.",
-     "show": 2
+     "say": "Select says what to show. From says which table the data lives in.",
+     "hl": [
+      0,
+      1
+     ],
+     "note": "SELECT columns  FROM table"
     },
     {
-     "say": "Always look at the first few rows first, with select star, limit five.",
-     "show": 3
+     "say": "Join combines another table, matching on a shared key.",
+     "hl": 2,
+     "note": "JOIN customers ON customer_id"
     },
     {
-     "say": "Then filter with where, and sort by a calculated revenue column.",
-     "show": 4
+     "say": "Where filters individual rows, before any grouping.",
+     "hl": 3,
+     "note": "WHERE: filter rows"
+    },
+    {
+     "say": "Group by makes one result row per group. Having filters those groups, after grouping.",
+     "hl": [
+      4,
+      5
+     ],
+     "note": "HAVING: filter groups"
+    },
+    {
+     "say": "Order by sorts the result, and limit keeps only the first few rows.",
+     "hl": [
+      6,
+      7
+     ],
+     "note": "ORDER BY revenue DESC  LIMIT 5"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
+   "kind": "table",
+   "kicker": "Lab · Step 4",
+   "title": "WHERE keeps only matching rows",
+   "columns": [
+    "order_id",
+    "product",
+    "quantity",
+    "channel"
+   ],
+   "rows": [
+    [
+     "1001",
+     "Notebook",
+     "2",
+     "Website"
+    ],
+    [
+     "1002",
+     "Gel Pen Set",
+     "1",
+     "Instagram"
+    ],
+    [
+     "1003",
+     "Planner",
+     "1",
+     "Website"
+    ],
+    [
+     "1004",
+     "Sticky Notes",
+     "3",
+     "Instagram"
+    ],
+    [
+     "1005",
+     "Fountain Pen",
+     "1",
+     "Email"
+    ],
+    [
+     "1006",
+     "Washi Tape",
+     "4",
+     "Instagram"
+    ],
+    [
+     "1007",
+     "Desk Organizer",
+     "1",
+     "Website"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are the first seven orders. We want Instagram orders with three or more items."
+    },
+    {
+     "say": "Where checks every row. First: is the channel Instagram? Three of these rows pass.",
+     "sql": "SELECT order_id, product, quantity, channel\nFROM orders\nWHERE channel = 'Instagram' AND quantity >= 3",
+     "hl": [
+      1,
+      3,
+      5
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "And is the quantity at least three? Order ten oh two has just one item, so it drops out.",
+     "hl": [
+      3,
+      5
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Across all thirty orders, five rows pass both checks: the same answer count ifs gave in Sheets.",
+     "hl": [
+      3,
+      5
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Lab · Step 6",
-   "title": "GROUP BY: the SQL pivot table",
-   "file": "notebook",
-   "code": "show(\"\"\"\nSELECT channel,\n       COUNT(*) AS orders,\n       SUM(quantity * unit_price) AS revenue,\n       ROUND(AVG(quantity * unit_price), 2) AS avg_order_value\nFROM orders\nGROUP BY channel\nORDER BY revenue DESC\n\"\"\")",
+   "title": "GROUP BY: one result row per channel",
+   "nodes": [
+    {
+     "id": "all",
+     "label": "orders",
+     "x": 14,
+     "y": 50,
+     "sub": "30 rows",
+     "art": "table"
+    },
+    {
+     "id": "em",
+     "label": "Email",
+     "x": 72,
+     "y": 18,
+     "sub": "5 orders · $291"
+    },
+    {
+     "id": "ig",
+     "label": "Instagram",
+     "x": 72,
+     "y": 50,
+     "sub": "16 orders · $209"
+    },
+    {
+     "id": "web",
+     "label": "Website",
+     "x": 72,
+     "y": 82,
+     "sub": "9 orders · $152"
+    }
+   ],
+   "edges": [
+    {
+     "from": "all",
+     "to": "em"
+    },
+    {
+     "from": "all",
+     "to": "ig"
+    },
+    {
+     "from": "all",
+     "to": "web"
+    }
+   ],
    "beats": [
     {
-     "say": "Group by is the S Q L version of the pivot table.",
-     "show": 0
+     "say": "Group by channel takes all thirty orders and splits them by their channel.",
+     "show": 1,
+     "on": "all"
     },
     {
-     "say": "One row per channel, with the count, the revenue, and the average order value.",
-     "show": 1
+     "say": "The five Email orders form one group. Count gives five, and the sum of revenue is two hundred and ninety one.",
+     "show": 2,
+     "on": "em",
+     "send": {
+      "from": "all",
+      "to": "em",
+      "label": "5 rows"
+     }
     },
     {
-     "say": "Email, two hundred and ninety one. Instagram, two hundred and nine. Website, a hundred and fifty two. The same as your spreadsheet.",
-     "show": 1
+     "say": "Instagram's sixteen orders form another: two hundred and nine dollars.",
+     "show": 3,
+     "on": "ig",
+     "send": {
+      "from": "all",
+      "to": "ig",
+      "label": "16 rows"
+     }
+    },
+    {
+     "say": "And the Website's nine orders: a hundred and fifty two.",
+     "show": 4,
+     "on": "web",
+     "send": {
+      "from": "all",
+      "to": "web",
+      "label": "9 rows"
+     }
+    },
+    {
+     "say": "Average order value shows the twist: fifty eight twenty for Email, but thirteen oh six for Instagram.",
+     "show": 4,
+     "on": [
+      "em",
+      "ig"
+     ]
+    },
+    {
+     "say": "Many rows in, one row per group out. It's the S Q L version of your pivot table.",
+     "show": 4,
+     "on": [
+      "em",
+      "ig",
+      "web"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "merge",
-   "kicker": "Lab · Steps 8 and 9",
-   "title": "JOIN, then HAVING",
-   "file": "notebook",
-   "code": "SELECT c.customer_name,\n       COUNT(*) AS orders,\n       SUM(o.quantity * o.unit_price) AS revenue\nFROM orders AS o\nJOIN customers AS c ON o.customer_id = c.customer_id\nGROUP BY c.customer_name\nHAVING COUNT(*) >= 3\nORDER BY revenue DESC",
+   "kind": "table",
+   "kicker": "Lab · Step 7",
+   "title": "Group by month",
+   "columns": [
+    "month",
+    "orders",
+    "revenue"
+   ],
+   "rows": [
+    [
+     "2026-01",
+     "9",
+     "274.0"
+    ],
+    [
+     "2026-02",
+     "9",
+     "132.0"
+    ],
+    [
+     "2026-03",
+     "12",
+     "246.0"
+    ]
+   ],
    "beats": [
     {
-     "say": "Customer type lives in the customers table, so join it on the shared customer I D.",
-     "show": 0
+     "say": "Dates are stored as text, so the first seven characters give the month. Group by that.",
+     "sql": "SELECT substr(order_date, 1, 7) AS month,\n       COUNT(*) AS orders,\n       SUM(quantity * unit_price) AS revenue\nFROM orders\nGROUP BY month ORDER BY month"
     },
     {
-     "say": "Two orders from one business customer bring in two hundred and twenty five, about a third of all revenue.",
-     "show": 1
+     "say": "January: nine orders, two hundred and seventy four dollars.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "To find repeat customers, the condition is on the group's count, so it goes in having, not where. Six customers have three orders each.",
-     "show": 1
+     "say": "February: also nine orders, but only a hundred and thirty two.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "February looks weak. But hold that thought: January includes the school's hundred and sixty dollar order.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 8",
+   "title": "JOIN brings in the customer",
+   "columns": [
+    "order_id",
+    "customer_id",
+    "customer_name",
+    "customer_type",
+    "revenue"
+   ],
+   "rows": [
+    [
+     "1001",
+     "C01",
+     "Amara",
+     "Individual",
+     "16.0"
+    ],
+    [
+     "1002",
+     "C02",
+     "Bola",
+     "Individual",
+     "6.5"
+    ],
+    [
+     "1009",
+     "C07",
+     "Greenfield School",
+     "Business",
+     "160.0"
+    ],
+    [
+     "1027",
+     "C05",
+     "Esi",
+     "Individual",
+     "18.0"
+    ],
+    [
+     "1028",
+     "C07",
+     "Greenfield School",
+     "Business",
+     "65.0"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The orders table only has a customer I D. The customer's type lives in the customers table.",
+     "col": 1
+    },
+    {
+     "say": "Join matches each order to its customer on that shared key. Here are five of the joined rows.",
+     "sql": "FROM orders AS o\nJOIN customers AS c ON o.customer_id = c.customer_id",
+     "col": 1
+    },
+    {
+     "say": "Now every order carries a name and a type. C seven is Greenfield School, a business.",
+     "hl": [
+      2,
+      4
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Group by customer type: the business placed just two orders, worth two hundred and twenty five dollars.",
+     "sql": "GROUP BY c.customer_type\n→ Business: 2 orders, 225.0 · Individual: 28 orders, 427.0",
+     "hl": [
+      2,
+      4
+     ],
+     "dim": true,
+     "col": 4
+    },
+    {
+     "say": "That's about a third of all revenue from one customer. It changes how you read every channel and month total.",
+     "hl": [
+      2,
+      4
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 9",
+   "title": "HAVING filters the groups",
+   "values": [
+    "Amara 3",
+    "Bola 3",
+    "Chen 3",
+    "Dami 3",
+    "Esi 3",
+    "Femi 2",
+    "Greenfield 2",
+    "Hana 3",
+    "Ife 2",
+    "Jo 2",
+    "Kemi 2",
+    "Lena 2"
+   ],
+   "beats": [
+    {
+     "say": "Who are the repeat customers, with three or more orders? First, group by customer and count.",
+     "note": "GROUP BY c.customer_name → COUNT(*)"
+    },
+    {
+     "say": "That gives twelve groups, one per customer, each with its order count."
+    },
+    {
+     "say": "The condition is on a group's count, not on any single row. So it goes in having, not where.",
+     "note": "HAVING COUNT(*) >= 3"
+    },
+    {
+     "say": "Six customers have three orders. They stay. The other six drop out.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      7
+     ],
+     "gone": [
+      5,
+      6,
+      8,
+      9,
+      10,
+      11
+     ]
+    },
+    {
+     "say": "Sorted by revenue, Amara leads with fifty five dollars, then Chen with fifty.",
+     "hl": [
+      0,
+      2
+     ],
+     "note": "Amara 55.0 · Chen 50.0 · Dami 42.5 · Esi 40.5 · Hana 39.0 · Bola 32.5"
+    },
+    {
+     "say": "Where couldn't do this, because it runs before any counting has happened."
     }
    ]
   },
@@ -1286,15 +2191,15 @@ Your outputs match the ones above, and you can explain why the repeat-customer q
     "When joining two tables"
    ],
    "answer": 1,
-   "good": "That's right. Having filters groups after aggregation. Where filters individual rows before grouping.",
-   "bad": "Not quite. Having filters groups after aggregation. Where filters individual rows before grouping.",
+   "good": "That's right. When the condition is on an aggregated value of a group, like a count of three or more. Where filters individual rows before grouping.",
+   "bad": "Not quite. When the condition is on an aggregated value of a group, like a count of three or more. Where filters individual rows before grouping.",
    "beats": [
     {
      "say": "Quick check.",
      "show": 0
     },
     {
-     "say": "When do you use HAVING instead of WHERE?",
+     "say": "When do you use having instead of where?",
      "show": 0
     },
     {
@@ -1589,118 +2494,404 @@ You can load data from a string, add a calculated column, filter with two condit
    ]
   },
   {
-   "kind": "list",
-   "art": "venn",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Same tasks, third tool",
-   "items": [
+   "columns": [
+    "Task",
+    "SQL",
+    "pandas"
+   ],
+   "rows": [
     [
      "Filter rows",
+     "WHERE",
      "df[df[\"a\"] > 3]"
     ],
     [
      "New column",
-     "df[\"revenue\"] = …"
+     "quantity * unit_price AS revenue",
+     "df[\"revenue\"] = df[\"quantity\"] * df[\"unit_price\"]"
+    ],
+    [
+     "Sort",
+     "ORDER BY",
+     "df.sort_values(...)"
     ],
     [
      "Summarize by group",
+     "GROUP BY",
      "df.groupby(...)"
     ],
     [
      "Combine tables",
+     "JOIN",
      "df.merge(...)"
     ]
    ],
    "beats": [
     {
-     "say": "Everything you did in Sheets and S Q L has a pandas equivalent.",
-     "show": 0
+     "say": "Everything you did in Sheets and S Q L has a pandas version."
     },
     {
-     "say": "Filter rows, like where.",
-     "show": 1
+     "say": "Where becomes a filter inside square brackets.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Add a new column, like your revenue formula.",
-     "show": 2
+     "say": "A calculated column is one line that works on whole columns at once.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Summarize by group, like a pivot table or group by.",
-     "show": 3
+     "say": "Order by becomes sort values. Group by becomes groupby. Join becomes merge.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "col": 2
     },
     {
-     "say": "And combine tables with merge, like a join.",
-     "show": 4
-    },
-    {
-     "say": "Why a third tool? Code is repeatable. Next quarter, you rerun the notebook instead of redoing every click.",
-     "show": 4
+     "say": "Why a third tool? Code is repeatable. Next quarter, you rerun the notebook instead of redoing every click."
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Steps 1 and 3",
-   "title": "Load, calculate, filter",
+   "kind": "walk",
+   "kicker": "Lab · Step 3",
+   "title": "Calculate, filter, sort",
    "file": "notebook",
-   "code": "orders = pd.read_csv(io.StringIO(ORDERS_CSV), parse_dates=[\"order_date\"])\nprint(orders.shape)\n\norders[\"revenue\"] = orders[\"quantity\"] * orders[\"unit_price\"]\n\nbig_instagram = orders[(orders[\"channel\"] == \"Instagram\") & (orders[\"revenue\"] >= 15)]\n\nmarch = orders[orders[\"order_date\"] >= \"2026-03-01\"]\nprint(len(march), march[\"revenue\"].sum())",
+   "code": "orders[\"revenue\"] = orders[\"quantity\"] * orders[\"unit_price\"]\nprint(orders[[\"order_id\", \"quantity\", \"unit_price\", \"revenue\"]].head(3))\n\nbig_instagram = orders[(orders[\"channel\"] == \"Instagram\") & (orders[\"revenue\"] >= 15)]\nprint(big_instagram[[\"order_id\", \"product\", \"revenue\"]])\n\nmarch = orders[orders[\"order_date\"] >= \"2026-03-01\"]\nprint(len(march), march[\"revenue\"].sum())\n\ntop = orders.sort_values([\"revenue\", \"order_id\"], ascending=[False, True])\nprint(top[[\"order_id\", \"customer_id\", \"revenue\"]].head(3))",
    "beats": [
     {
-     "say": "Read the data from the string with read C S V, telling pandas the order date is a real date.",
-     "show": 0
+     "say": "Line one multiplies two whole columns at once, and stores the result as a new revenue column.",
+     "line": 1,
+     "vars": {
+      "orders.shape": "(30, 9)"
+     }
     },
     {
-     "say": "Add a revenue column, and filter with two conditions. Wrap each condition in parentheses, and join them with an ampersand.",
-     "show": 1
+     "say": "The first three rows: sixteen, six fifty, and eighteen.",
+     "line": 2,
+     "out": [
+      "   order_id  quantity  unit_price  revenue",
+      "0      1001         2         8.0     16.0",
+      "1      1002         1         6.5      6.5",
+      "2      1003         1        18.0     18.0"
+     ]
     },
     {
-     "say": "March revenue comes out at two hundred and forty six, matching your spreadsheet. Same number from two tools is a great check.",
-     "show": 1
+     "say": "Line four keeps rows that are Instagram and at least fifteen dollars. Seven orders pass.",
+     "line": 4,
+     "vars": {
+      "big_instagram": "7 rows"
+     }
+    },
+    {
+     "say": "They are ten oh six, ten twelve, ten fourteen, ten nineteen, ten twenty three, ten twenty five and ten twenty seven.",
+     "line": 5,
+     "out": "(7 rows: 1006, 1012, 1014, 1019, 1023, 1025, 1027)"
+    },
+    {
+     "say": "Now March. Comparing a date column with a date string keeps twelve orders.",
+     "line": 7,
+     "vars": {
+      "march": "12 rows"
+     }
+    },
+    {
+     "say": "Twelve orders, two hundred and forty six dollars. The same as sum ifs in Sheets.",
+     "line": 8,
+     "out": "12 246.0"
+    },
+    {
+     "say": "Finally, sort by revenue, largest first, with order I D breaking ties.",
+     "line": 10,
+     "vars": {
+      "top": "30 rows, sorted"
+     }
+    },
+    {
+     "say": "The school's two orders come first, then a twenty four dollar fountain pen.",
+     "line": 11,
+     "out": [
+      "    order_id customer_id  revenue",
+      "8       1009         C07    160.0",
+      "27      1028         C07     65.0",
+      "4       1005         C01     24.0"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "merge",
+   "kind": "table",
+   "kicker": "Lab · How the filter decides",
+   "title": "Two conditions, joined with &",
+   "columns": [
+    "order_id",
+    "channel",
+    "revenue",
+    "channel == \"Instagram\"",
+    "revenue >= 15",
+    "both (&)"
+   ],
+   "rows": [
+    [
+     "1002",
+     "Instagram",
+     "6.5",
+     "True",
+     "False",
+     "False"
+    ],
+    [
+     "1004",
+     "Instagram",
+     "10.5",
+     "True",
+     "False",
+     "False"
+    ],
+    [
+     "1006",
+     "Instagram",
+     "16.0",
+     "True",
+     "True",
+     "True"
+    ],
+    [
+     "1007",
+     "Website",
+     "15.0",
+     "False",
+     "True",
+     "False"
+    ],
+    [
+     "1008",
+     "Instagram",
+     "8.0",
+     "True",
+     "False",
+     "False"
+    ],
+    [
+     "1012",
+     "Instagram",
+     "18.0",
+     "True",
+     "True",
+     "True"
+    ],
+    [
+     "1014",
+     "Instagram",
+     "17.5",
+     "True",
+     "True",
+     "True"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Let's zoom in on that filter, using seven orders."
+    },
+    {
+     "say": "Each condition gives one True or False per row. First: is the channel Instagram?",
+     "col": 3,
+     "hl": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     "dim": true
+    },
+    {
+     "say": "Second: is revenue at least fifteen? Order ten oh seven passes this one, even though it's a Website order.",
+     "col": 4,
+     "hl": [
+      2,
+      3,
+      5,
+      6
+     ],
+     "dim": true
+    },
+    {
+     "say": "The ampersand keeps a row only when both are True. Three rows survive here.",
+     "col": 5,
+     "hl": [
+      2,
+      5,
+      6
+     ],
+     "dim": true
+    },
+    {
+     "say": "Wrap each condition in parentheses. Without them, Python applies the ampersand first and raises an error.",
+     "sql": "orders[(orders[\"channel\"] == \"Instagram\") & (orders[\"revenue\"] >= 15)]",
+     "hl": [
+      2,
+      5,
+      6
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "array",
    "kicker": "Lab · Step 4",
-   "title": "groupby and merge",
-   "file": "notebook",
-   "code": "by_channel = orders.groupby(\"channel\")[\"revenue\"].agg([\"count\", \"sum\", \"mean\"])\nprint(by_channel.round(2))\n\nfull = orders.merge(customers, on=\"customer_id\", how=\"left\")\nprint(full.groupby(\"customer_type\")[\"revenue\"].sum())",
+   "title": "groupby: watch one group",
+   "values": [
+    16,
+    18,
+    15,
+    8,
+    24,
+    15,
+    18,
+    24,
+    14
+   ],
    "beats": [
     {
-     "say": "Group by reads as: split the rows by channel, take the revenue column, and calculate these summaries for each group.",
-     "show": 0
+     "say": "groupby channel, then revenue, then count, sum and mean. Let's watch it for one group.",
+     "note": "orders.groupby(\"channel\")[\"revenue\"].agg([\"count\", \"sum\", \"mean\"])"
     },
     {
-     "say": "Merge with how equals left keeps every order and attaches customer details where the I Ds match, just like a S Q L left join.",
-     "show": 1
+     "say": "Split: these nine revenues are the Website's orders.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "count = 9"
     },
     {
-     "say": "Business customers: two hundred and twenty five. Individuals: four hundred and twenty seven.",
-     "show": 1
+     "say": "Sum: sixteen, plus eighteen, plus fifteen. Forty nine so far.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "i": 2
+     },
+     "note": "16 + 18 + 15 = 49"
+    },
+    {
+     "say": "Plus eight, twenty four and fifteen: ninety six.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "ptr": {
+      "i": 5
+     },
+     "note": "49 + 8 + 24 + 15 = 96"
+    },
+    {
+     "say": "Plus eighteen, twenty four and fourteen: a hundred and fifty two.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "ptr": {
+      "i": 8
+     },
+     "note": "96 + 18 + 24 + 14 = 152.0"
+    },
+    {
+     "say": "Mean: a hundred and fifty two divided by nine. Sixteen eighty nine.",
+     "note": "mean = 152 ÷ 9 = 16.89"
+    },
+    {
+     "say": "pandas does the same for Email and Instagram, then combines the three into one table. It matches S Q L exactly.",
+     "note": "Email 5 · 291.0 · 58.20   Instagram 16 · 209.0 · 13.06   Website 9 · 152.0 · 16.89"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "search",
-   "kicker": "Lab · Step 5",
-   "title": "Check every order matched",
-   "big": "0",
-   "sub": "orders with no matching customer",
+   "kind": "table",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "merge, then check",
+   "columns": [
+    "city",
+    "all customers",
+    "individuals only (Module 3)"
+   ],
+   "rows": [
+    [
+     "Baltimore",
+     "412.0",
+     "187.0"
+    ],
+    [
+     "Atlanta",
+     "127.5",
+     "127.5"
+    ],
+    [
+     "Houston",
+     "112.5",
+     "112.5"
+    ]
+   ],
    "beats": [
     {
-     "say": "Your turn: revenue by city, and a check that every order found a customer.",
-     "show": 0
+     "say": "Merge attaches customer details to each order. How equals left keeps every order, like a left join.",
+     "sql": "full = orders.merge(customers, on=\"customer_id\", how=\"left\")"
     },
     {
-     "say": "Zero missing names means every customer I D matched. A non-zero number would mean some didn't.",
-     "show": 1
+     "say": "Check: how many orders found no matching customer? Zero. Every I D matched.",
+     "sql": "full[\"customer_name\"].isna().sum()   → 0"
     },
     {
-     "say": "And Baltimore shows four hundred and twelve here, not one eighty seven, because this time the school, which is in Baltimore, is included.",
-     "show": 2
+     "say": "Now revenue by city, for all customers. Baltimore: four hundred and twelve.",
+     "sql": "full.groupby(\"city\")[\"revenue\"].sum()",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "But the S Q L query in Module 3 said a hundred and eighty seven. Why?",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "That query kept individuals only, and Greenfield School is in Baltimore. Its two hundred and twenty five dollars is the gap.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "The other two cities match exactly. Matching numbers from two tools is a great way to check your work.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
     }
    ]
   },
@@ -1715,15 +2906,15 @@ You can load data from a string, add a calculated column, filter with two condit
     "The result is sorted by the left table's index"
    ],
    "answer": 0,
-   "good": "That's right. A left merge keeps every order, even if no matching customer is found.",
-   "bad": "Not quite. A left merge keeps every order, even if no matching customer is found.",
+   "good": "That's right. Every row from the left table, orders, is kept, even if no matching customer is found.",
+   "bad": "Not quite. Every row from the left table, orders, is kept, even if no matching customer is found.",
    "beats": [
     {
      "say": "Quick check.",
      "show": 0
     },
     {
-     "say": "What does how=\"left\" in merge guarantee?",
+     "say": "What does how equals left, in merge, guarantee?",
      "show": 0
     },
     {
@@ -1743,7 +2934,7 @@ You can load data from a string, add a calculated column, filter with two condit
      ""
     ],
     [
-     "Your numbers match S Q L and Sheets",
+     "Your numbers match SQL and Sheets",
      ""
     ]
    ],
@@ -2071,129 +3262,498 @@ Your `clean.equals(reference)` prints `True`, and you can explain each line of y
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Concept",
-   "title": "Common problems",
-   "items": [
+   "kind": "table",
+   "kicker": "Before",
+   "title": "Seven rows from the raw export",
+   "columns": [
+    "order_id",
+    "order_date",
+    "customer_id",
+    "quantity",
+    "unit_price",
+    "channel"
+   ],
+   "rows": [
     [
-     "Duplicates · junk rows",
-     "Same order twice · test orders"
+     "1002",
+     "2026-01-05",
+     "C02",
+     "1",
+     "$6.50",
+     "instagram"
     ],
     [
-     "Inconsistent text",
-     "IG, instagram, \"Instagram \""
+     "1010",
+     "2026/02/02",
+     "C08",
+     "2",
+     "6.50",
+     "Instagram"
     ],
     [
-     "Wrong types · mixed formats",
-     "$6.50 · 2026/02/02"
+     "1012",
+     "2026-02-07",
+     "C09",
+     "1",
+     "",
+     "Instagram"
     ],
     [
-     "Missing values",
-     "A blank price"
+     "1015",
+     "2026-02-14",
+     "C05",
+     "1",
+     "6.50",
+     "Instagram"
     ],
     [
-     "Outliers",
-     "Quantity 200"
+     "1015",
+     "2026-02-14",
+     "C05",
+     "1",
+     "6.50",
+     "Instagram"
+    ],
+    [
+     "9999",
+     "2026-02-28",
+     "TEST",
+     "1",
+     "0.00",
+     "Website"
+    ],
+    [
+     "1029",
+     "2026-03-29",
+     "C04",
+     "200",
+     "4.00",
+     "Instagram"
     ]
    ],
    "beats": [
     {
-     "say": "Here are the common problems.",
-     "show": 0
+     "say": "Here are seven rows from the shop's raw export. Every one hides a problem."
     },
     {
-     "say": "Duplicates, like the same order exported twice. And junk rows, like test orders.",
-     "show": 1
+     "say": "A dollar sign in the price, which makes the whole column text. And instagram in lower case.",
+     "hl": 0,
+     "dim": true,
+     "col": 4
     },
     {
-     "say": "Inconsistent text: I G, lowercase instagram, and Instagram with a trailing space.",
-     "show": 2
+     "say": "Slashes in the date instead of dashes.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Wrong types, like prices stored as text with a dollar sign. And mixed date formats.",
-     "show": 3
+     "say": "A price that's simply blank.",
+     "hl": 2,
+     "dim": true,
+     "col": 4
     },
     {
-     "say": "Missing values, like a blank price.",
-     "show": 4
+     "say": "The same order, exported twice.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 0
     },
     {
-     "say": "And outliers, like a quantity of two hundred. Investigate: is it an error, or real but unusual?",
-     "show": 5
+     "say": "A test order, from customer TEST.",
+     "hl": 5,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "And two hundred rolls of washi tape. Real, or a typo?",
+     "hl": 6,
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "bulb",
-   "kicker": "Concept",
-   "title": "Two principles",
-   "quote": "Outliers are not automatically errors. Document every decision.",
-   "beats": [
-    {
-     "say": "Two principles matter more than any function.",
-     "show": 0
-    },
-    {
-     "say": "Outliers are not automatically errors. A school ordering twenty notebooks is unusual but real.",
-     "show": 1
-    },
-    {
-     "say": "And document every decision: what you changed, how many rows it affected, and why.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "search",
-   "kicker": "Lab · Steps 1 to 3",
-   "title": "Diagnose, then fix",
+   "kind": "walk",
+   "kicker": "Lab · Step 2",
+   "title": "Diagnose before you fix",
    "file": "notebook",
-   "code": "clean = raw.copy()\nclean = clean.drop_duplicates()\nis_test = clean[\"customer_id\"] == \"TEST\"\nclean = clean[~is_test].copy()\n\nchannel_map = {\n    \"instagram\": \"Instagram\", \"ig\": \"Instagram\",\n    \"website\": \"Website\",\n    \"email\": \"Email\", \"e-mail\": \"Email\",\n}\nclean[\"channel\"] = clean[\"channel\"].str.strip()\nclean[\"channel\"] = clean[\"channel\"].str.lower().map(channel_map)\nprint(\"Unmapped channels:\", clean[\"channel\"].isna().sum())",
+   "code": "raw = pd.read_csv(io.StringIO(RAW_ORDERS_CSV))\nprint(raw.shape)\nprint(raw.isna().sum())\nprint(list(raw[\"channel\"].unique()))\nprint(\"Exact duplicate rows:\", raw.duplicated().sum())",
    "beats": [
     {
-     "say": "First, diagnose before you fix. The raw export has thirty two rows, one missing price, nine spellings of three channels, and one duplicate.",
-     "show": 0
+     "say": "Never change data until you've looked at what's wrong. Load the raw export.",
+     "line": 1,
+     "vars": {
+      "raw": "DataFrame"
+     }
     },
     {
-     "say": "Then work on a copy, logging each decision. Drop the duplicate and the test order.",
-     "show": 1
+     "say": "Thirty two rows, not thirty. Something extra got in.",
+     "line": 2,
+     "out": "(32, 8)"
     },
     {
-     "say": "Strip spaces, lowercase, and map every spelling to one label. Then count unmapped channels. Zero proves every spelling was handled.",
-     "show": 1
+     "say": "Count missing values per column. Every column has zero, except unit price, with one.",
+     "line": 3,
+     "out": [
+      "order_id       0",
+      "...",
+      "unit_price     1",
+      "channel        0"
+     ]
+    },
+    {
+     "say": "List the distinct channel spellings. Nine of them, for just three channels.",
+     "line": 4,
+     "out": "['Website', 'instagram', 'IG', 'Email', 'Instagram', 'website', 'Instagram ', 'E-mail', 'email']"
+    },
+    {
+     "say": "And one row is an exact duplicate of another.",
+     "line": 5,
+     "out": "Exact duplicate rows: 1"
+    },
+    {
+     "say": "Now you know what's wrong, and how many rows each problem touches."
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "checklist",
-   "kicker": "Lab · Steps 4 to 6",
-   "title": "Missing price, outliers, verify",
-   "steps": [
-    "Fill price from product list",
-    "IQR rule flags 3 orders",
-    "Keep 1009, 1028 · fix 1029 to 2",
-    "clean.equals(reference) → True"
+   "kind": "array",
+   "kicker": "Lab · Step 3",
+   "title": "Nine spellings become three labels",
+   "values": [
+    "\"Website\"",
+    "\"instagram\"",
+    "\"IG\"",
+    "\"Email\"",
+    "\"Instagram\"",
+    "\"website\"",
+    "\"Instagram \"",
+    "\"E-mail\"",
+    "\"email\""
    ],
    "beats": [
     {
-     "say": "The missing planner price is filled with eighteen, from the product price. Safe here, because prices didn't change during the quarter.",
-     "show": 1
+     "say": "Here are the nine spellings from the channel column. Look closely at the seventh: it ends with a space."
     },
     {
-     "say": "The I Q R rule flags three large quantities. The rule only flags; a person decides.",
-     "show": 2
+     "say": "First, strip removes stray spaces from the ends. The seventh becomes plain Instagram.",
+     "vals": [
+      "\"Website\"",
+      "\"instagram\"",
+      "\"IG\"",
+      "\"Email\"",
+      "\"Instagram\"",
+      "\"website\"",
+      "\"Instagram\"",
+      "\"E-mail\"",
+      "\"email\""
+     ],
+     "hl": 6,
+     "note": ".str.strip()"
     },
     {
-     "say": "The owner confirmed two are real school orders, so they stay. The two hundred washi tapes was a typo for two.",
-     "show": 3
+     "say": "Then lower case everything, so capital letters stop mattering.",
+     "vals": [
+      "\"website\"",
+      "\"instagram\"",
+      "\"ig\"",
+      "\"email\"",
+      "\"instagram\"",
+      "\"website\"",
+      "\"instagram\"",
+      "\"e-mail\"",
+      "\"email\""
+     ],
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": ".str.lower()"
     },
     {
-     "say": "Finally, compare with the clean dataset. Clean dot equals reference prints True.",
-     "show": 4
+     "say": "Finally, map each spelling to one label with a dictionary. I G becomes Instagram, and e dash mail becomes Email.",
+     "vals": [
+      "\"Website\"",
+      "\"Instagram\"",
+      "\"Instagram\"",
+      "\"Email\"",
+      "\"Instagram\"",
+      "\"Website\"",
+      "\"Instagram\"",
+      "\"Email\"",
+      "\"Email\""
+     ],
+     "hl": [
+      2,
+      7
+     ],
+     "note": "channel_map = {\"ig\": \"Instagram\", \"e-mail\": \"Email\", ...}"
+    },
+    {
+     "say": "Map turns any spelling it doesn't know into a missing value, so count those. Zero. Every variant was handled.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "Unmapped channels: 0"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 5",
+   "title": "Flag outliers with the I Q R rule",
+   "file": "notebook",
+   "code": "q1 = clean[\"quantity\"].quantile(0.25)\nq3 = clean[\"quantity\"].quantile(0.75)\niqr = q3 - q1\nupper = q3 + 1.5 * iqr\nprint(\"Upper fence:\", upper)\nprint(clean[clean[\"quantity\"] > upper][[\"order_id\", \"customer_id\", \"product\", \"quantity\"]])",
+   "beats": [
+    {
+     "say": "At least a quarter of the orders have just one item, so the first quartile is one.",
+     "line": 1,
+     "vars": {
+      "q1": 1.0
+     }
+    },
+    {
+     "say": "About three quarters have three items or fewer, so the third quartile is three.",
+     "line": 2,
+     "vars": {
+      "q3": 3.0
+     }
+    },
+    {
+     "say": "The interquartile range, the spread of the middle half, is three minus one: two.",
+     "line": 3,
+     "vars": {
+      "iqr": 2.0
+     }
+    },
+    {
+     "say": "The fence is three, plus one and a half times two. Six.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "upper": 6.0
+     },
+     "out": "Upper fence: 6.0"
+    },
+    {
+     "say": "Three orders sit above six: twenty notebooks, ten pen sets, and two hundred rolls of washi tape.",
+     "line": 6,
+     "out": [
+      "    order_id customer_id      product  quantity",
+      "8       1009         C07     Notebook        20",
+      "29      1028         C07  Gel Pen Set        10",
+      "30      1029         C04   Washi Tape       200"
+     ]
+    },
+    {
+     "say": "The rule only flags. A person decides. The owner says the first two are real school orders, and two hundred was a typo for two.",
+     "line": 6
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "After",
+   "title": "The same rows, cleaned",
+   "columns": [
+    "order_id",
+    "order_date",
+    "quantity",
+    "unit_price",
+    "channel",
+    "what happened"
+   ],
+   "rows": [
+    [
+     "1002",
+     "2026-01-05",
+     "1",
+     "6.5",
+     "Instagram",
+     "$ removed, label fixed"
+    ],
+    [
+     "1010",
+     "2026-02-02",
+     "2",
+     "6.5",
+     "Instagram",
+     "date parsed"
+    ],
+    [
+     "1012",
+     "2026-02-07",
+     "1",
+     "18.0",
+     "Instagram",
+     "price filled"
+    ],
+    [
+     "1015",
+     "2026-02-14",
+     "1",
+     "6.5",
+     "Instagram",
+     "kept once"
+    ],
+    [
+     "1015",
+     "—",
+     "—",
+     "—",
+     "—",
+     "dropped: duplicate"
+    ],
+    [
+     "9999",
+     "—",
+     "—",
+     "—",
+     "—",
+     "dropped: test order"
+    ],
+    [
+     "1029",
+     "2026-03-29",
+     "2",
+     "4.0",
+     "Instagram",
+     "200 → 2, owner confirmed"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are the same seven rows after cleaning."
+    },
+    {
+     "say": "The dollar sign is gone, so price is a real number, and the channel reads Instagram.",
+     "hl": 0,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "The date is parsed as a real date.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "The missing Planner price is filled with eighteen from the product price list. Safe, because prices didn't change all quarter.",
+     "hl": 2,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "The duplicate and the test order are gone.",
+     "hl": [
+      4,
+      5
+     ],
+     "dim": true,
+     "col": 5
+    },
+    {
+     "say": "And only the confirmed typo was fixed. The school's real bulk orders stay, because outliers are not automatically errors.",
+     "hl": 6,
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "The cleaning log",
+   "columns": [
+    "step",
+    "rows",
+    "decision"
+   ],
+   "rows": [
+    [
+     "Duplicates",
+     "1",
+     "Dropped exact duplicate (export glitch)"
+    ],
+    [
+     "Test orders",
+     "1",
+     "Dropped rows with customer_id TEST"
+    ],
+    [
+     "Channel labels",
+     "6",
+     "Merged spelling variants into 3 labels"
+    ],
+    [
+     "Types",
+     "30",
+     "Parsed dates; removed $ from prices"
+    ],
+    [
+     "Missing price",
+     "1",
+     "Filled from product price (prices fixed in Q1)"
+    ],
+    [
+     "Outliers",
+     "1",
+     "1029: 200 -> 2; kept 1009, 1028 (real school orders)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Every decision went into a cleaning log: what changed, how many rows, and why."
+    },
+    {
+     "say": "Thirty two rows, minus one duplicate, minus one test order, leaves thirty.",
+     "sql": "32 rows − 1 duplicate − 1 test order = 30 rows",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Channel labels: six rows, not nine. Only rows whose text actually changed are counted.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "The types step touched all thirty rows. One price was filled, and one quantity fixed.",
+     "hl": [
+      3,
+      4,
+      5
+     ],
+     "dim": true
+    },
+    {
+     "say": "Last, compare with the clean data you've used since Module 2. True: every value, type and row matches.",
+     "sql": "clean.equals(reference)   → True"
     }
    ]
   },
@@ -2208,15 +3768,15 @@ Your `clean.equals(reference)` prints `True`, and you can explain each line of y
     "Any spelling not in the dictionary becomes missing, so zero proves all were handled"
    ],
    "answer": 2,
-   "good": "That's right. Map turns any value not in the dictionary into a missing value, so the count proves every spelling was handled.",
-   "bad": "Not quite. Map turns any value not in the dictionary into a missing value, so the count proves every spelling was handled.",
+   "good": "That's right. Map turns any spelling not in the dictionary into a missing value, so a count of zero proves every spelling was handled.",
+   "bad": "Not quite. Map turns any spelling not in the dictionary into a missing value, so a count of zero proves every spelling was handled.",
    "beats": [
     {
      "say": "Quick check.",
      "show": 0
     },
     {
-     "say": "Why print the count of unmapped channels after using .map()?",
+     "say": "Why print the count of unmapped channels after using dot map?",
      "show": 0
     },
     {
@@ -2487,130 +4047,529 @@ You can explain why the median is a better "typical order" here than the mean, w
    ]
   },
   {
-   "kind": "big",
-   "art": "scales",
-   "kicker": "Lab · Step 1",
-   "title": "Mean versus median",
-   "big": "$16 vs $21.73",
-   "sub": "median vs mean: skewed by two school orders",
+   "kind": "array",
+   "kicker": "Concept · Mean vs median",
+   "title": "Email's five orders, two ways",
+   "values": [
+    24,
+    160,
+    18,
+    24,
+    65
+   ],
    "beats": [
     {
-     "say": "The mean adds everything up and divides. One huge value pulls it a lot. The median is the middle value, and extreme values barely move it.",
-     "show": 0
+     "say": "Here are Email's five orders, in date order: twenty four, a hundred and sixty, eighteen, twenty four and sixty five."
     },
     {
-     "say": "Here the mean order is twenty one seventy three, but the median is sixteen. Three quarters of orders are eighteen dollars or less.",
-     "show": 1
+     "say": "The mean adds everything up. Two hundred and ninety one.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "24 + 160 + 18 + 24 + 65 = 291"
     },
     {
-     "say": "The school's bulk orders pull the mean up. Our typical order is about sixteen dollars is the honest sentence.",
-     "show": 2
+     "say": "Then divides by the count, five. Fifty eight twenty.",
+     "note": "mean = 291 ÷ 5 = 58.2"
+    },
+    {
+     "say": "The median sorts the values first.",
+     "vals": [
+      18,
+      24,
+      24,
+      65,
+      160
+     ]
+    },
+    {
+     "say": "Then takes the middle one, the third of five: twenty four.",
+     "hl": 2,
+     "ptr": {
+      "median": 2
+     },
+     "note": "median = 24"
+    },
+    {
+     "say": "Only one of the five orders is anywhere near fifty eight. The hundred and sixty dollar school order pulled the mean up.",
+     "hl": 4,
+     "note": "mean 58.2 vs median 24"
+    },
+    {
+     "say": "Shrink that order to sixteen dollars, and the mean drops to twenty nine forty. The median doesn't move at all.",
+     "vals": [
+      16,
+      18,
+      24,
+      24,
+      65
+     ],
+     "hl": 2,
+     "ptr": {
+      "median": 2
+     },
+     "note": "mean = 147 ÷ 5 = 29.4 · median still 24"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
+   "kind": "walk",
+   "kicker": "Lab · Step 1",
+   "title": "Describe all thirty orders",
+   "file": "notebook",
+   "code": "rev = full[\"revenue\"]\nprint(\"Mean:  \", round(rev.mean(), 2))\nprint(\"Median:\", rev.median())\nprint(rev.describe().round(2))",
+   "beats": [
+    {
+     "say": "Now all thirty orders. Take the revenue column.",
+     "line": 1,
+     "vars": {
+      "rev": "30 values"
+     }
+    },
+    {
+     "say": "The mean is twenty one seventy three.",
+     "line": 2,
+     "out": "Mean:   21.73"
+    },
+    {
+     "say": "The median is sixteen.",
+     "line": 3,
+     "out": "Median: 16.0"
+    },
+    {
+     "say": "Describe gives the rest. The standard deviation, twenty eight seventeen, is bigger than the mean: a sign of a few extreme values.",
+     "line": 4,
+     "out": [
+      "count     30.00",
+      "mean      21.73",
+      "std       28.17",
+      "min        6.50"
+     ]
+    },
+    {
+     "say": "And three quarters of orders are eighteen dollars or less, while the biggest is a hundred and sixty.",
+     "line": 4,
+     "out": [
+      "25%       12.25",
+      "50%       16.00",
+      "75%       18.00",
+      "max      160.00"
+     ]
+    },
+    {
+     "say": "So the honest sentence is: our typical order is about sixteen dollars."
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Lab · Step 2",
    "title": "Compare like with like",
-   "items": [
+   "columns": [
+    "customers",
+    "channel",
+    "count",
+    "sum",
+    "median",
+    "share %"
+   ],
+   "rows": [
     [
-     "All customers",
-     "Email on top · 45% of revenue"
+     "All",
+     "Email",
+     "5",
+     "291.0",
+     "24.0",
+     "44.6"
     ],
     [
-     "Individuals only",
-     "Instagram on top · 49% · Email 16%"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Now compare channels, with and without the business customer.",
-     "show": 0
-    },
-    {
-     "say": "With everyone, Email looks like the top channel, with forty five percent of revenue.",
-     "show": 1
-    },
-    {
-     "say": "For individual shoppers, Email is the smallest, at sixteen percent, and Instagram brings almost half.",
-     "show": 2
-    },
-    {
-     "say": "Both are correct. Show the one that answers the question, and mention the other. And Email for individuals has just three orders, too few to conclude much.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "scatter",
-   "kicker": "Lab · Step 3",
-   "title": "Correlation is not causation",
-   "items": [
+     "All",
+     "Instagram",
+     "16",
+     "209.0",
+     "13.0",
+     "32.1"
+    ],
+    [
+     "All",
+     "Website",
+     "9",
+     "152.0",
+     "16.0",
+     "23.3"
+    ],
     [
      "Individuals",
-     "−0.65"
+     "Email",
+     "3",
+     "66.0",
+     "24.0",
+     "15.5"
     ],
     [
-     "Everyone",
-     "−0.32"
+     "Individuals",
+     "Instagram",
+     "16",
+     "209.0",
+     "13.0",
+     "48.9"
+    ],
+    [
+     "Individuals",
+     "Website",
+     "9",
+     "152.0",
+     "16.0",
+     "35.6"
     ]
    ],
    "beats": [
     {
-     "say": "A correlation runs from minus one to one.",
-     "show": 0
+     "say": "Compare channels, first with every customer included.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true
     },
     {
-     "say": "For individuals, quantity and unit price correlate at minus point six five: cheaper items sell in bigger quantities.",
-     "show": 1
+     "say": "Email looks like the top channel: forty five percent of revenue.",
+     "hl": 0,
+     "dim": true,
+     "col": 5
     },
     {
-     "say": "Including the school weakens it to minus point three two. One or two points can change a small dataset a lot.",
-     "show": 2
+     "say": "Now individuals only, leaving the school out.",
+     "hl": [
+      3,
+      4,
+      5
+     ],
+     "dim": true
     },
     {
-     "say": "But does a low price cause bigger orders? Maybe partly, or people just naturally buy several sticky notes, and nobody needs three planners. Correlation tells you where to look, not why.",
-     "show": 2
+     "say": "Email falls to sixty six dollars, just sixteen percent. Instagram brings almost half.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 5
+    },
+    {
+     "say": "And look at the count. Email for individuals is just three orders, too few to conclude much.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Both tables are correct. The honest move is to show the one that answers the question, and mention the other."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "venn",
-   "kicker": "Lab · Step 4",
-   "title": "Simpson's paradox",
-   "items": [
+   "kind": "chart",
+   "kicker": "Lab · Step 3",
+   "title": "Correlation: price vs quantity",
+   "xlabel": "unit price ($0–25)",
+   "ylabel": "quantity (0–20)",
+   "points": [
     [
-     "Mobile",
-     "A 7.5% ✓ · B 6.0%"
+     32.0,
+     10
     ],
     [
-     "Desktop",
-     "A 25.0% ✓ · B 22.5%"
+     26.0,
+     5
     ],
     [
-     "Overall",
-     "A 11.0% · B 19.2% ✓"
+     72.0,
+     5
+    ],
+    [
+     14.0,
+     15
+    ],
+    [
+     96.0,
+     5
+    ],
+    [
+     16.0,
+     20
+    ],
+    [
+     60.0,
+     5
+    ],
+    [
+     32.0,
+     5
+    ],
+    [
+     32.0,
+     100
+    ],
+    [
+     26.0,
+     10
+    ],
+    [
+     16.0,
+     10
+    ],
+    [
+     14.0,
+     25
+    ],
+    [
+     16.0,
+     15
+    ],
+    [
+     14.0,
+     10
+    ],
+    [
+     16.0,
+     30
+    ],
+    [
+     32.0,
+     15
+    ],
+    [
+     26.0,
+     50
+    ],
+    [
+     14.0,
+     20
     ]
    ],
    "beats": [
     {
-     "say": "Finally, an invented page test.",
-     "show": 0
+     "say": "Each dot is a price and quantity pair from the orders. Some dots stand for several orders."
     },
     {
-     "say": "Version A wins on mobile, seven and a half percent versus six.",
-     "show": 1
+     "say": "The expensive items, fountain pens, planners and organizers, all sit at a quantity of one.",
+     "groups": [
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "And on desktop, twenty five versus twenty two and a half.",
-     "show": 2
+     "say": "Cheaper items spread higher. Sticky notes and washi tape get bought several at a time.",
+     "groups": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1
+     ]
     },
     {
-     "say": "Yet B wins overall, nineteen point two versus eleven. Most of B's visitors were on desktop, where everyone buys more. Compare within groups.",
-     "show": 3
+     "say": "For individual customers, the correlation is minus point six five: as price goes up, quantity tends to go down.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      1
+     ]
+    },
+    {
+     "say": "Add the school's two bulk orders, high up here, and it weakens to minus point three two. Two points changed it that much.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      3
+     ]
+    },
+    {
+     "say": "Does a low price cause bigger orders? Maybe partly. But nobody needs three planners. Correlation tells you where to look, not why.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 4",
+   "title": "Simpson's paradox",
+   "columns": [
+    "version",
+    "device",
+    "visitors",
+    "buyers",
+    "rate %"
+   ],
+   "rows": [
+    [
+     "A",
+     "Mobile",
+     "800",
+     "60",
+     "7.5"
+    ],
+    [
+     "A",
+     "Desktop",
+     "200",
+     "50",
+     "25.0"
+    ],
+    [
+     "B",
+     "Mobile",
+     "200",
+     "12",
+     "6.0"
+    ],
+    [
+     "B",
+     "Desktop",
+     "800",
+     "180",
+     "22.5"
+    ],
+    [
+     "A",
+     "All",
+     "1000",
+     "110",
+     "11.0"
+    ],
+    [
+     "B",
+     "All",
+     "1000",
+     "192",
+     "19.2"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "One more trap, with an invented page test: two versions, A and B, split by device."
+    },
+    {
+     "say": "On mobile, A wins: seven point five percent against six.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 4
+    },
+    {
+     "say": "On desktop, A wins again: twenty five against twenty two point five.",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 4
+    },
+    {
+     "say": "Now add the devices together. B wins overall: nineteen point two against eleven.",
+     "hl": [
+      4,
+      5
+     ],
+     "dim": true,
+     "col": 4
+    },
+    {
+     "say": "Why? Look at the visitors. B had eight hundred desktop visitors, A had only two hundred, and desktop buyers buy far more often.",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "The overall number mixes up which version with which device. Compare within groups instead."
     }
    ]
   },
@@ -2625,8 +4584,8 @@ You can explain why the median is a better "typical order" here than the mean, w
     "It makes the table look complete"
    ],
    "answer": 1,
-   "good": "That's right. The count tells readers how much to trust the average. One more order can change a small average a lot.",
-   "bad": "Not quite. The count tells readers how much to trust the average. One more order can change a small average a lot.",
+   "good": "That's right. An average from a few orders can change a lot with one more order, so the count tells readers how much to trust it.",
+   "bad": "Not quite. An average from a few orders can change a lot with one more order, so the count tells readers how much to trust it.",
    "beats": [
     {
      "say": "Quick check.",
@@ -2924,142 +4883,2103 @@ You've made a bar, line, histogram, and scatter chart, each with a title and lab
    ]
   },
   {
-   "kind": "list",
-   "art": "pie",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Pick the form",
-   "items": [
+   "columns": [
+    "You want to show",
+    "Use",
+    "Avoid"
+   ],
+   "rows": [
     [
+     "Amounts across categories",
      "Bar chart",
-     "Compare categories"
+     "Pie charts with many slices"
     ],
     [
+     "Change over time",
      "Line chart",
-     "Change over time"
+     "Bars for long time series"
     ],
     [
+     "How values are distributed",
      "Histogram",
-     "Distribution"
+     "Just reporting the mean"
     ],
     [
+     "Relationship between two numbers",
      "Scatter plot",
-     "Two numbers"
+     "Two separate charts side by side"
     ]
    ],
    "beats": [
     {
-     "say": "Comparing amounts across categories? A bar chart.",
-     "show": 1
+     "say": "Comparing amounts across categories? Use a bar chart.",
+     "hl": 0,
+     "col": 1
     },
     {
      "say": "Change over time? A line chart.",
-     "show": 2
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "How values are distributed? A histogram.",
-     "show": 3
+     "say": "How values are spread out? A histogram, not just the mean.",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "A relationship between two numbers? A scatter plot.",
-     "show": 4
+     "say": "And a relationship between two numbers? A scatter plot.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "Let's draw Ivy and Ink's data each way, and see what each one reveals."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Concept",
-   "title": "Rules for honest charts",
-   "items": [
+   "kind": "chart",
+   "kicker": "Lab · Step 1",
+   "title": "Q1 2026 revenue by channel",
+   "xlabel": "Email · Instagram · Website",
+   "ylabel": "revenue ($0–300)",
+   "points": [
     [
-     "Bars start at zero",
-     ""
+     20,
+     2
     ],
     [
-     "Label everything",
-     ""
+     20,
+     6
     ],
     [
-     "One y-axis · honest window",
-     ""
+     20,
+     10
     ],
     [
-     "No clutter · not color alone",
-     ""
+     20,
+     14
+    ],
+    [
+     20,
+     18
+    ],
+    [
+     20,
+     22
+    ],
+    [
+     20,
+     26
+    ],
+    [
+     20,
+     30
+    ],
+    [
+     20,
+     34
+    ],
+    [
+     20,
+     38
+    ],
+    [
+     20,
+     42
+    ],
+    [
+     20,
+     46
+    ],
+    [
+     20,
+     50
+    ],
+    [
+     20,
+     54
+    ],
+    [
+     20,
+     58
+    ],
+    [
+     20,
+     62
+    ],
+    [
+     20,
+     66
+    ],
+    [
+     20,
+     70
+    ],
+    [
+     20,
+     74
+    ],
+    [
+     20,
+     78
+    ],
+    [
+     20,
+     82
+    ],
+    [
+     20,
+     86
+    ],
+    [
+     20,
+     90
+    ],
+    [
+     20,
+     94
+    ],
+    [
+     20,
+     97.0
+    ],
+    [
+     24,
+     2
+    ],
+    [
+     24,
+     6
+    ],
+    [
+     24,
+     10
+    ],
+    [
+     24,
+     14
+    ],
+    [
+     24,
+     18
+    ],
+    [
+     24,
+     22
+    ],
+    [
+     24,
+     26
+    ],
+    [
+     24,
+     30
+    ],
+    [
+     24,
+     34
+    ],
+    [
+     24,
+     38
+    ],
+    [
+     24,
+     42
+    ],
+    [
+     24,
+     46
+    ],
+    [
+     24,
+     50
+    ],
+    [
+     24,
+     54
+    ],
+    [
+     24,
+     58
+    ],
+    [
+     24,
+     62
+    ],
+    [
+     24,
+     66
+    ],
+    [
+     24,
+     70
+    ],
+    [
+     24,
+     74
+    ],
+    [
+     24,
+     78
+    ],
+    [
+     24,
+     82
+    ],
+    [
+     24,
+     86
+    ],
+    [
+     24,
+     90
+    ],
+    [
+     24,
+     94
+    ],
+    [
+     24,
+     97.0
+    ],
+    [
+     48,
+     2
+    ],
+    [
+     48,
+     6
+    ],
+    [
+     48,
+     10
+    ],
+    [
+     48,
+     14
+    ],
+    [
+     48,
+     18
+    ],
+    [
+     48,
+     22
+    ],
+    [
+     48,
+     26
+    ],
+    [
+     48,
+     30
+    ],
+    [
+     48,
+     34
+    ],
+    [
+     48,
+     38
+    ],
+    [
+     48,
+     42
+    ],
+    [
+     48,
+     46
+    ],
+    [
+     48,
+     50
+    ],
+    [
+     48,
+     54
+    ],
+    [
+     48,
+     58
+    ],
+    [
+     48,
+     62
+    ],
+    [
+     48,
+     66
+    ],
+    [
+     48,
+     69.7
+    ],
+    [
+     52,
+     2
+    ],
+    [
+     52,
+     6
+    ],
+    [
+     52,
+     10
+    ],
+    [
+     52,
+     14
+    ],
+    [
+     52,
+     18
+    ],
+    [
+     52,
+     22
+    ],
+    [
+     52,
+     26
+    ],
+    [
+     52,
+     30
+    ],
+    [
+     52,
+     34
+    ],
+    [
+     52,
+     38
+    ],
+    [
+     52,
+     42
+    ],
+    [
+     52,
+     46
+    ],
+    [
+     52,
+     50
+    ],
+    [
+     52,
+     54
+    ],
+    [
+     52,
+     58
+    ],
+    [
+     52,
+     62
+    ],
+    [
+     52,
+     66
+    ],
+    [
+     52,
+     69.7
+    ],
+    [
+     76,
+     2
+    ],
+    [
+     76,
+     6
+    ],
+    [
+     76,
+     10
+    ],
+    [
+     76,
+     14
+    ],
+    [
+     76,
+     18
+    ],
+    [
+     76,
+     22
+    ],
+    [
+     76,
+     26
+    ],
+    [
+     76,
+     30
+    ],
+    [
+     76,
+     34
+    ],
+    [
+     76,
+     38
+    ],
+    [
+     76,
+     42
+    ],
+    [
+     76,
+     46
+    ],
+    [
+     76,
+     50.7
+    ],
+    [
+     80,
+     2
+    ],
+    [
+     80,
+     6
+    ],
+    [
+     80,
+     10
+    ],
+    [
+     80,
+     14
+    ],
+    [
+     80,
+     18
+    ],
+    [
+     80,
+     22
+    ],
+    [
+     80,
+     26
+    ],
+    [
+     80,
+     30
+    ],
+    [
+     80,
+     34
+    ],
+    [
+     80,
+     38
+    ],
+    [
+     80,
+     42
+    ],
+    [
+     80,
+     46
+    ],
+    [
+     80,
+     50.7
     ]
    ],
    "beats": [
     {
-     "say": "A few rules keep charts honest.",
-     "show": 0
+     "say": "Revenue by channel, as bars sorted from largest to smallest: Email, Instagram, Website."
     },
     {
-     "say": "Bar charts start at zero, because a bar's length is the value.",
-     "show": 1
+     "say": "The axis starts at zero, so each bar's height is its value: two hundred ninety one, two hundred nine, a hundred fifty two."
     },
     {
-     "say": "Label everything: a title, axis labels with units, and a legend.",
-     "show": 2
+     "say": "Now highlight the part of Email's bar that came from the school: two hundred twenty five of its two hundred ninety one dollars.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Use one y axis. Don't cherry-pick the time window.",
-     "show": 3
-    },
-    {
-     "say": "Remove clutter, and don't rely on color alone.",
-     "show": 4
+     "say": "Without the school, Email would be the shortest bar of all. The chart is only as honest as the question behind it.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "trend",
+   "kind": "chart",
    "kicker": "Lab · Step 2",
-   "title": "A line chart that corrects a story",
-   "file": "notebook",
-   "code": "fig, ax = plt.subplots(figsize=(6, 4))\nax.plot(monthly.index, monthly.values, marker=\"o\", linewidth=2, label=\"All customers\")\nax.plot(monthly_ind.index, monthly_ind.values, marker=\"o\", linewidth=2, label=\"Individuals only\")\nax.set_title(\"Monthly revenue, Q1 2026\")\nax.set_ylabel(\"Revenue ($)\")\nax.set_ylim(bottom=0)\nax.legend()\nplt.show()",
-   "beats": [
-    {
-     "say": "Using matplotlib, plot monthly revenue for all customers, and for individuals only.",
-     "show": 0
-    },
-    {
-     "say": "All customers dips sharply in February and looks like a problem.",
-     "show": 1
-    },
-    {
-     "say": "Individuals only rises steadily: a hundred and fourteen, a hundred and thirty two, a hundred and eighty one. The dip is just a month without a school order.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Lab · Step 4",
-   "title": "Same data, two impressions",
-   "items": [
+   "title": "Monthly revenue, Q1 2026",
+   "xlabel": "Jan · Feb · Mar",
+   "ylabel": "revenue ($0–300)",
+   "points": [
     [
-     "✗ Axis starts at 12",
-     "Gap looks 4× bigger"
+     15,
+     91.3
     ],
     [
-     "✓ Axis starts at 0",
-     "$16.89 vs $13.06, about 30%"
+     50,
+     44.0
+    ],
+    [
+     85,
+     82.0
+    ],
+    [
+     15,
+     38.0
+    ],
+    [
+     50,
+     44.0
+    ],
+    [
+     85,
+     60.3
     ]
    ],
    "beats": [
     {
-     "say": "Now the same average order values, drawn two ways.",
-     "show": 0
+     "say": "Monthly revenue, with two series: all customers, and individuals only."
     },
     {
-     "say": "With the axis starting at twelve, the Website bar looks more than four times taller than Instagram's.",
-     "show": 1
+     "say": "All customers first: two hundred seventy four, then a hundred thirty two, then two hundred forty six. It looks like February crashed.",
+     "groups": [
+      1,
+      1,
+      1,
+      3,
+      3,
+      3
+     ]
     },
     {
-     "say": "With the axis at zero, you see the truth: Website orders are about thirty percent larger. Same numbers, very different impression.",
-     "show": 2
+     "say": "Now individuals only: a hundred fourteen, a hundred thirty two, a hundred eighty one. Steady growth.",
+     "groups": [
+      3,
+      3,
+      3,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "In February the two series meet, because there was no school order that month.",
+     "groups": [
+      3,
+      1,
+      3,
+      3,
+      1,
+      3
+     ]
+    },
+    {
+     "say": "The February dip was just a month without a bulk order. This one chart corrects a misleading story.",
+     "groups": [
+      2,
+      2,
+      2,
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Step 3",
+   "title": "How big is a typical order?",
+   "xlabel": "order revenue ($0–170)",
+   "ylabel": "orders",
+   "points": [
+    [
+     2.9,
+     4
+    ],
+    [
+     2.9,
+     9
+    ],
+    [
+     2.9,
+     14
+    ],
+    [
+     2.9,
+     19
+    ],
+    [
+     2.9,
+     24
+    ],
+    [
+     2.9,
+     29
+    ],
+    [
+     8.8,
+     4
+    ],
+    [
+     8.8,
+     9
+    ],
+    [
+     8.8,
+     14
+    ],
+    [
+     8.8,
+     19
+    ],
+    [
+     8.8,
+     24
+    ],
+    [
+     8.8,
+     29
+    ],
+    [
+     8.8,
+     34
+    ],
+    [
+     8.8,
+     39
+    ],
+    [
+     8.8,
+     44
+    ],
+    [
+     8.8,
+     49
+    ],
+    [
+     8.8,
+     54
+    ],
+    [
+     8.8,
+     59
+    ],
+    [
+     8.8,
+     64
+    ],
+    [
+     8.8,
+     69
+    ],
+    [
+     8.8,
+     74
+    ],
+    [
+     8.8,
+     79
+    ],
+    [
+     8.8,
+     84
+    ],
+    [
+     14.7,
+     4
+    ],
+    [
+     14.7,
+     9
+    ],
+    [
+     14.7,
+     14
+    ],
+    [
+     14.7,
+     19
+    ],
+    [
+     14.7,
+     24
+    ],
+    [
+     38.2,
+     4
+    ],
+    [
+     91.2,
+     4
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A histogram sorts orders into ten dollar bins and stacks them up. Each dot here is one order."
+    },
+    {
+     "say": "Six orders under ten dollars, seventeen between ten and twenty, and five between twenty and thirty.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "Then two lonely orders far to the right: sixty five, and a hundred and sixty. The school.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "Mark the median, sixteen, on the axis. It sits right inside the crowd.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       9.4,
+       0
+      ]
+     ]
+    },
+    {
+     "say": "And the mean, twenty one seventy three. Those two orders pull it to the right.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       9.4,
+       0
+      ],
+      [
+       12.8,
+       0
+      ]
+     ]
+    },
+    {
+     "say": "This picture explains the gap between mean and median better than any single number."
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Step 4",
+   "title": "Same numbers, two impressions",
+   "xlabel": "misleading | honest",
+   "ylabel": "avg order ($)",
+   "points": [
+    [
+     14,
+     2
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     14,
+     10
+    ],
+    [
+     14,
+     14
+    ],
+    [
+     14,
+     19.3
+    ],
+    [
+     18,
+     2
+    ],
+    [
+     18,
+     6
+    ],
+    [
+     18,
+     10
+    ],
+    [
+     18,
+     14
+    ],
+    [
+     18,
+     19.3
+    ],
+    [
+     32,
+     2
+    ],
+    [
+     32,
+     6
+    ],
+    [
+     32,
+     10
+    ],
+    [
+     32,
+     14
+    ],
+    [
+     32,
+     18
+    ],
+    [
+     32,
+     22
+    ],
+    [
+     32,
+     26
+    ],
+    [
+     32,
+     30
+    ],
+    [
+     32,
+     34
+    ],
+    [
+     32,
+     38
+    ],
+    [
+     32,
+     42
+    ],
+    [
+     32,
+     46
+    ],
+    [
+     32,
+     50
+    ],
+    [
+     32,
+     54
+    ],
+    [
+     32,
+     58
+    ],
+    [
+     32,
+     62
+    ],
+    [
+     32,
+     66
+    ],
+    [
+     32,
+     70
+    ],
+    [
+     32,
+     74
+    ],
+    [
+     32,
+     78
+    ],
+    [
+     32,
+     82
+    ],
+    [
+     32,
+     86
+    ],
+    [
+     32,
+     88.9
+    ],
+    [
+     36,
+     2
+    ],
+    [
+     36,
+     6
+    ],
+    [
+     36,
+     10
+    ],
+    [
+     36,
+     14
+    ],
+    [
+     36,
+     18
+    ],
+    [
+     36,
+     22
+    ],
+    [
+     36,
+     26
+    ],
+    [
+     36,
+     30
+    ],
+    [
+     36,
+     34
+    ],
+    [
+     36,
+     38
+    ],
+    [
+     36,
+     42
+    ],
+    [
+     36,
+     46
+    ],
+    [
+     36,
+     50
+    ],
+    [
+     36,
+     54
+    ],
+    [
+     36,
+     58
+    ],
+    [
+     36,
+     62
+    ],
+    [
+     36,
+     66
+    ],
+    [
+     36,
+     70
+    ],
+    [
+     36,
+     74
+    ],
+    [
+     36,
+     78
+    ],
+    [
+     36,
+     82
+    ],
+    [
+     36,
+     86
+    ],
+    [
+     36,
+     88.9
+    ],
+    [
+     64,
+     2
+    ],
+    [
+     64,
+     6
+    ],
+    [
+     64,
+     10
+    ],
+    [
+     64,
+     14
+    ],
+    [
+     64,
+     18
+    ],
+    [
+     64,
+     22
+    ],
+    [
+     64,
+     26
+    ],
+    [
+     64,
+     30
+    ],
+    [
+     64,
+     34
+    ],
+    [
+     64,
+     38
+    ],
+    [
+     64,
+     42
+    ],
+    [
+     64,
+     46
+    ],
+    [
+     64,
+     50
+    ],
+    [
+     64,
+     54
+    ],
+    [
+     64,
+     58
+    ],
+    [
+     64,
+     62
+    ],
+    [
+     64,
+     65.3
+    ],
+    [
+     68,
+     2
+    ],
+    [
+     68,
+     6
+    ],
+    [
+     68,
+     10
+    ],
+    [
+     68,
+     14
+    ],
+    [
+     68,
+     18
+    ],
+    [
+     68,
+     22
+    ],
+    [
+     68,
+     26
+    ],
+    [
+     68,
+     30
+    ],
+    [
+     68,
+     34
+    ],
+    [
+     68,
+     38
+    ],
+    [
+     68,
+     42
+    ],
+    [
+     68,
+     46
+    ],
+    [
+     68,
+     50
+    ],
+    [
+     68,
+     54
+    ],
+    [
+     68,
+     58
+    ],
+    [
+     68,
+     62
+    ],
+    [
+     68,
+     65.3
+    ],
+    [
+     82,
+     2
+    ],
+    [
+     82,
+     6
+    ],
+    [
+     82,
+     10
+    ],
+    [
+     82,
+     14
+    ],
+    [
+     82,
+     18
+    ],
+    [
+     82,
+     22
+    ],
+    [
+     82,
+     26
+    ],
+    [
+     82,
+     30
+    ],
+    [
+     82,
+     34
+    ],
+    [
+     82,
+     38
+    ],
+    [
+     82,
+     42
+    ],
+    [
+     82,
+     46
+    ],
+    [
+     82,
+     50
+    ],
+    [
+     82,
+     54
+    ],
+    [
+     82,
+     58
+    ],
+    [
+     82,
+     62
+    ],
+    [
+     82,
+     66
+    ],
+    [
+     82,
+     70
+    ],
+    [
+     82,
+     74
+    ],
+    [
+     82,
+     78
+    ],
+    [
+     82,
+     82
+    ],
+    [
+     82,
+     84.5
+    ],
+    [
+     86,
+     2
+    ],
+    [
+     86,
+     6
+    ],
+    [
+     86,
+     10
+    ],
+    [
+     86,
+     14
+    ],
+    [
+     86,
+     18
+    ],
+    [
+     86,
+     22
+    ],
+    [
+     86,
+     26
+    ],
+    [
+     86,
+     30
+    ],
+    [
+     86,
+     34
+    ],
+    [
+     86,
+     38
+    ],
+    [
+     86,
+     42
+    ],
+    [
+     86,
+     46
+    ],
+    [
+     86,
+     50
+    ],
+    [
+     86,
+     54
+    ],
+    [
+     86,
+     58
+    ],
+    [
+     86,
+     62
+    ],
+    [
+     86,
+     66
+    ],
+    [
+     86,
+     70
+    ],
+    [
+     86,
+     74
+    ],
+    [
+     86,
+     78
+    ],
+    [
+     86,
+     82
+    ],
+    [
+     86,
+     84.5
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two charts of the same numbers: average order value, thirteen oh six for Instagram, sixteen eighty nine for the Website."
+    },
+    {
+     "say": "On the left, the axis starts at twelve. The Website bar looks more than four times taller than Instagram's.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "say": "On the right, the axis starts at zero. Now you see the truth: Website orders are about thirty percent larger.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "Readers judge a bar by its length. Cut the axis, and a small gap looks huge.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "The other honesty rules: label everything, use one y axis, don't cherry pick the time window, and don't rely on color alone."
     }
    ]
   },
@@ -3074,8 +6994,8 @@ You've made a bar, line, histogram, and scatter chart, each with a title and lab
     "It makes the bars easier to color"
    ],
    "answer": 0,
-   "good": "That's right. Readers judge a bar by its length, so a cut axis makes small differences look huge.",
-   "bad": "Not quite. Readers judge a bar by its length, so a cut axis makes small differences look huge.",
+   "good": "That's right. Readers judge a bar by its length, so cutting the axis exaggerates differences.",
+   "bad": "Not quite. Readers judge a bar by its length, so cutting the axis exaggerates differences.",
    "beats": [
     {
      "say": "Quick check.",
@@ -3352,113 +7272,304 @@ You have a notebook that runs top to bottom without errors and a one-page findin
    ]
   },
   {
-   "kind": "list",
-   "art": "doc",
+   "kind": "table",
    "kicker": "Concept",
    "title": "A one-page findings write-up",
-   "items": [
+   "columns": [
+    "#",
+    "Part",
+    "For Ivy & Ink"
+   ],
+   "rows": [
     [
-     "Question · Answer first",
-     ""
+     "1",
+     "The question",
+     "Which channel should April's marketing focus on?"
     ],
     [
-     "Key findings · One chart",
-     ""
+     "2",
+     "The answer first",
+     "Focus on Instagram"
     ],
     [
+     "3",
+     "Key findings",
+     "Three or four, each with a number and its context"
+    ],
+    [
+     "4",
+     "One chart",
+     "Individual revenue by channel, month by month"
+    ],
+    [
+     "5",
      "Recommendation",
-     "And what would change your mind"
+     "What to do, and what would change your mind"
     ],
     [
-     "Limitations · Method notes",
-     ""
+     "6",
+     "Limitations",
+     "Only 3 months; no spend or visitor data"
+    ],
+    [
+     "7",
+     "Method notes",
+     "Data source plus the cleaning log"
     ]
    ],
    "beats": [
     {
-     "say": "A good write-up is short and built around the decision.",
-     "show": 0
+     "say": "A good write-up is short, and built around the decision. It has seven parts."
     },
     {
-     "say": "The question, then the answer first, in one or two sentences.",
-     "show": 1
+     "say": "The question from your brief, and then the answer, straight away. Busy readers may stop after the first lines.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     },
     {
-     "say": "Three or so key findings, each with a number and its context, and one chart.",
-     "show": 2
+     "say": "Key findings, each with a number and its context, and one chart that supports the main point.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
     },
     {
-     "say": "A recommendation: what to do, and what would change your mind.",
-     "show": 3
+     "say": "A recommendation, including what would change your mind.",
+     "hl": 4,
+     "dim": true
     },
     {
-     "say": "Then limitations, and method notes, including your cleaning log.",
-     "show": 4
+     "say": "Then limitations, and method notes with your cleaning log.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "test",
+   "kind": "walk",
    "kicker": "Lab · Step 2",
    "title": "Check, then analyze",
    "file": "notebook",
-   "code": "assert full[\"order_id\"].is_unique\nassert (full[\"quantity\"] > 0).all()\n\nind = full[full[\"customer_type\"] == \"Individual\"]\nby_channel = ind.groupby(\"channel\").agg(\n    orders=(\"order_id\", \"count\"),\n    customers=(\"customer_id\", \"nunique\"),\n    revenue=(\"revenue\", \"sum\"),\n    avg_order=(\"revenue\", \"mean\"),\n)",
+   "code": "assert full[\"order_id\"].is_unique\nassert full[\"customer_name\"].notna().all()\nassert (full[\"quantity\"] > 0).all()\nprint(\"Checks passed:\", len(full), \"orders\")\n\nind = full[full[\"customer_type\"] == \"Individual\"]\nby_channel = ind.groupby(\"channel\").agg(\n    orders=(\"order_id\", \"count\"),\n    customers=(\"customer_id\", \"nunique\"),\n    revenue=(\"revenue\", \"sum\"),\n    avg_order=(\"revenue\", \"mean\"),\n)\nby_channel[\"revenue_share_%\"] = by_channel[\"revenue\"] / by_channel[\"revenue\"].sum() * 100\nprint(by_channel.round(1))",
    "beats": [
     {
-     "say": "Add quick automated checks. Assert stops the notebook if a condition is false.",
-     "show": 0
+     "say": "First, quick checks. Each assert stops the notebook if its condition is false.",
+     "line": [
+      1,
+      2,
+      3
+     ]
     },
     {
-     "say": "Then named aggregation: each new column gets a name, a source column, and a summary.",
-     "show": 1
+     "say": "Unique order I Ds, every order has a customer, every quantity is positive. All pass.",
+     "line": 4,
+     "out": "Checks passed: 30 orders"
     },
     {
-     "say": "Instagram: sixteen orders, eight customers, two hundred and nine dollars, forty nine percent of individual revenue.",
-     "show": 1
+     "say": "The question is about individuals, so keep only their twenty eight orders.",
+     "line": 6,
+     "vars": {
+      "ind": "28 rows"
+     }
+    },
+    {
+     "say": "Named aggregation builds one column per summary: orders, unique customers, revenue, and average order.",
+     "line": [
+      7,
+      12
+     ],
+     "vars": {
+      "by_channel": "3 rows"
+     }
+    },
+    {
+     "say": "Then each channel's share of the four hundred and twenty seven dollars from individuals.",
+     "line": 13
+    },
+    {
+     "say": "Instagram: sixteen orders from eight customers, two hundred and nine dollars, forty nine percent.",
+     "line": 14,
+     "out": [
+      "           orders  customers  revenue  avg_order  revenue_share_%",
+      "Email           3          3     66.0       22.0             15.5",
+      "Instagram      16          8    209.0       13.1             48.9",
+      "Website         9          7    152.0       16.9             35.6"
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "growth",
+   "kind": "chart",
    "kicker": "Lab · Step 3",
-   "title": "One chart that answers it",
-   "big": "$41 → $67 → $101",
-   "sub": "Instagram revenue from individuals, Jan to Mar",
+   "title": "Revenue from individuals, by channel",
+   "xlabel": "Jan · Feb · Mar",
+   "ylabel": "revenue ($0–120)",
+   "points": [
+    [
+     15,
+     34.2
+    ],
+    [
+     50,
+     55.8
+    ],
+    [
+     85,
+     84.2
+    ],
+    [
+     15,
+     40.8
+    ],
+    [
+     50,
+     39.2
+    ],
+    [
+     85,
+     46.7
+    ],
+    [
+     15,
+     20.0
+    ],
+    [
+     50,
+     15.0
+    ],
+    [
+     85,
+     20.0
+    ]
+   ],
    "beats": [
     {
-     "say": "Plot individual revenue by channel and month.",
-     "show": 0
+     "say": "One chart that answers the question: revenue from individuals, by channel, month by month."
     },
     {
-     "say": "Instagram climbs steeply: forty one, sixty seven, a hundred and one. The Website stays roughly flat, and Email stays low.",
-     "show": 1
+     "say": "Instagram climbs steeply: forty one, sixty seven, a hundred and one.",
+     "groups": [
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
     },
     {
-     "say": "By March, Instagram brought in nearly twice as much as the Website.",
-     "show": 2
+     "say": "The Website stays roughly flat: forty nine, forty seven, fifty six.",
+     "groups": [
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "say": "And Email stays low: twenty four, eighteen, twenty four.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "say": "In January the Website was ahead. By March, Instagram brought in nearly twice as much.",
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "target",
+   "kind": "table",
    "kicker": "Lab · Step 5",
-   "title": "Lead with the answer",
-   "quote": "Focus on Instagram. It brings the most individual revenue and grew every month.",
+   "title": "Findings, each with its context",
+   "columns": [
+    "Finding",
+    "Number",
+    "Context"
+   ],
+   "rows": [
+    [
+     "Biggest channel",
+     "$209",
+     "49% of $427 from individuals; 16 of 28 orders"
+    ],
+    [
+     "Growing",
+     "$41 → $67 → $101",
+     "Website roughly flat: $49, $47, $56"
+    ],
+    [
+     "Smaller orders",
+     "median $13",
+     "vs $16 on the Website"
+    ],
+    [
+     "One big customer",
+     "$225",
+     "35% of all Q1 revenue, reported separately"
+    ]
+   ],
    "beats": [
     {
-     "say": "Pull your numbers from code, not by retyping, then write the page.",
-     "show": 0
+     "say": "Lead with the answer: focus April's marketing on Instagram.",
+     "sql": "ANSWER: Focus on Instagram, and test ways to raise its order size."
     },
     {
-     "say": "The answer: focus on Instagram. It brings the most orders and revenue from individuals, and is the only channel that grew every month.",
-     "show": 1
+     "say": "It's the biggest channel for individuals: two hundred and nine dollars, forty nine percent of their revenue.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Be honest about limits: only three months, no data on time or money spent per channel. Then review your page before you share it.",
-     "show": 1
+     "say": "It's the only channel that grew every month.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "But its orders are smaller: a typical Instagram order is thirteen dollars, against sixteen on the Website.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "And one school placed thirty five percent of all revenue. That's why it's reported separately.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Every number carries context. Then come the limits: only three months, and no data on what each channel cost.",
+     "col": 2
     }
    ]
   },

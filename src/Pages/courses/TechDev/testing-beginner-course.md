@@ -1101,7 +1101,7 @@ test("POST /tasks without a title returns 400", async () => {
 ```
 Run `npm test` again, all three tests should pass.
 
-4. **Break something on purpose, at the integration level.** Temporarily remove the `app.use(express.json())` line, then rerun the tests. The POST tests fail, `req.body` is `undefined` without that middleware, something a unit test of an isolated function would never have caught, since it only shows up when the pieces run together. Restore the line once you've seen the failure.
+4. **Break something on purpose, at the integration level.** Temporarily remove the `app.use(express.json())` line, then rerun the tests. The GET test still passes, but both POST tests fail: without that middleware `req.body` is `undefined`, so reading `req.body.title` throws a `TypeError` and Express answers with a 500 server error. Jest reports `Expected: 201, Received: 500` (and `Expected: 400, Received: 500` for the validation test). That's something a unit test of an isolated function would never have caught, since it only shows up when the pieces run together. Restore the line once you've seen the failure.
 
 ### Checkpoint
 You have passing integration tests confirming your API's routing, middleware, and logic work correctly together, and you've seen a test fail specifically because of a missing piece of integration (the JSON middleware), not a logic bug.

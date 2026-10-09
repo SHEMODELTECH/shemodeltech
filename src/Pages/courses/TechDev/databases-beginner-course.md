@@ -430,6 +430,17 @@ INSERT INTO users (email) VALUES ('alice@example.com');
 -- READ: get data back
 SELECT id, email FROM users WHERE email = 'alice@example.com';
 
+-- A second table: each task's owner_id points at a row in users
+-- (ON DELETE CASCADE removes a user's tasks when that user is deleted)
+CREATE TABLE tasks (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+);
+
+INSERT INTO tasks (title, owner_id) VALUES ('Write course notes', 1);
+INSERT INTO tasks (title, owner_id) VALUES ('Review PR', 1);
+
 -- READ with a JOIN: combine data across two related tables
 SELECT tasks.title, users.email
 FROM tasks
@@ -443,7 +454,7 @@ UPDATE users SET email = 'alice.new@example.com' WHERE id = 1;
 DELETE FROM users WHERE id = 1;
 ```
 
-(The `JOIN` example assumes a second table, `tasks`, whose `owner_id` column holds the `id` of the user who owns each task.)
+(The `tasks` table's `owner_id` column holds the `id` of the user who owns each task. Alice was the first user inserted, so her `id` is 1.)
 
 Translate each query above into a plain-English sentence, on paper or in a notes file, before moving on. This is the actual skill - reading SQL fluently, not memorizing syntax.
 
@@ -2195,6 +2206,8 @@ onSnapshot(tasksQuery, (snapshot) => {
 ```
 
 **4. The key idea to notice:** `onSnapshot` doesn't just fetch data once, it keeps listening. Try it: keep the console open, then add a document to the `tasks` collection by hand in the Firebase console (with `done` set to `false`). Your page logs the new list instantly, without you writing any polling or websocket code yourself.
+
+Heads up: the `addDoc` call runs every time the page loads, so each refresh adds another copy of "Write course notes". Once you've seen it saved, comment out the `addDoc` block so later refreshes only listen.
 
 ### Checkpoint
 You saw a task you added in the Firebase console appear in your page's console instantly, and you can explain what makes `onSnapshot` different from a normal database query.

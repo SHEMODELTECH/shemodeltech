@@ -225,184 +225,544 @@ You ran all three parts. You can point to the features, the label, the training 
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Words you'll see in every module",
-   "items": [
+   "title": "Features, label, example",
+   "columns": [
+    "hours_per_week",
+    "lessons_done_wk1",
+    "finished"
+   ],
+   "rows": [
     [
-     "Feature",
-     "An input, e.g. hours per week"
+     "1",
+     "1",
+     "0"
     ],
     [
-     "Label",
-     "The answer, e.g. finished?"
+     "2",
+     "2",
+     "0"
     ],
     [
-     "Training",
-     "model.fit(X, y)"
+     "8",
+     "6",
+     "1"
     ],
     [
-     "Inference",
-     "model.predict(new_X)"
+     "6",
+     "5",
+     "1"
+    ],
+    [
+     "0.5",
+     "0",
+     "0"
+    ],
+    [
+     "7",
+     "6",
+     "1"
     ]
    ],
    "beats": [
     {
-     "say": "A few words come up in every module.",
-     "show": 0
+     "say": "Here are six of the ten students from the first lab."
     },
     {
-     "say": "A feature is an input the model looks at, like hours studied per week.",
-     "show": 1
+     "say": "Each row is one example: one student.",
+     "hl": 2
     },
     {
-     "say": "The label is the answer you want to predict, like whether the student finished.",
-     "show": 2
+     "say": "These two columns are features, the inputs the model looks at. Together they're called capital X.",
+     "col": 0
     },
     {
-     "say": "Training is the model learning patterns from labeled examples.",
-     "show": 3
+     "say": "The last column is the label, the answer we want to predict: did they finish? That's lowercase y.",
+     "col": 2
     },
     {
-     "say": "And inference is using the trained model on new data.",
-     "show": 4
-    },
-    {
-     "say": "By convention, capital X holds the features, and lowercase y holds the labels.",
-     "show": 4
+     "say": "A one means finished. Three of these six students finished.",
+     "col": 2,
+     "hl": [
+      2,
+      3,
+      5
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
-   "kicker": "Concept",
-   "title": "Two kinds of machine learning",
-   "items": [
+   "kind": "walk",
+   "kicker": "Lab · Part 1",
+   "title": "Create it, fit it, predict",
+   "file": "first_model.py",
+   "code": "X = data[[\"hours_per_week\", \"lessons_done_wk1\"]]\ny = data[\"finished\"]\n\nmodel = DecisionTreeClassifier(max_depth=2, random_state=42)\nmodel.fit(X, y)          # TRAINING\n\nnew_students = pd.DataFrame({\n    \"hours_per_week\":   [2.5, 6.5],\n    \"lessons_done_wk1\": [1,   5],\n})\nprint(model.predict(new_students))\nprint(model.predict_proba(new_students))",
+   "beats": [
+    {
+     "say": "X takes the two feature columns for all ten students. y takes the label.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "X": "10 rows × 2 features",
+      "y": "10 labels"
+     }
+    },
+    {
+     "say": "Line four creates a decision tree. It hasn't learned anything yet.",
+     "line": 4,
+     "vars": {
+      "model": "untrained"
+     }
+    },
+    {
+     "say": "Fit is training. The tree studies the ten examples and finds one question that splits them perfectly.",
+     "line": 5,
+     "vars": {
+      "model": "hours ≤ 4.0 → 0, else 1"
+     }
+    },
+    {
+     "say": "Now two new students it has never seen: two and a half hours, and six and a half hours.",
+     "line": [
+      7,
+      10
+     ],
+     "vars": {
+      "new_students": "2 rows"
+     }
+    },
+    {
+     "say": "Predict is inference. The first gets zero, won't finish. The second gets one, will finish.",
+     "line": 11,
+     "out": "[0 1]"
+    },
+    {
+     "say": "Predict proba shows its confidence for class zero and class one. Here, a hundred percent each time.",
+     "line": 12,
+     "out": [
+      "[[1. 0.]",
+      " [0. 1.]]"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Why it said 0, then 1",
+   "title": "The rule it learned, on a chart",
+   "xlabel": "hours per week",
+   "ylabel": "lessons in week 1",
+   "points": [
     [
-     "Regression",
-     "Supervised · label is a number"
+     10,
+     12
     ],
     [
-     "Classification",
-     "Supervised · label is a category"
+     20,
+     24
     ],
     [
-     "Clustering",
-     "Unsupervised · no labels"
+     80,
+     72
+    ],
+    [
+     60,
+     60
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     70,
+     72
+    ],
+    [
+     30,
+     24
+    ],
+    [
+     90,
+     84
+    ],
+    [
+     15,
+     12
+    ],
+    [
+     50,
+     48
     ]
    ],
    "beats": [
     {
-     "say": "This course covers two main kinds.",
-     "show": 0
+     "say": "Here are all ten students: hours per week across, lessons in week one going up."
     },
     {
-     "say": "Supervised learning: every example has a label. If the label is a number, it's regression.",
-     "show": 1
+     "say": "Colour them by the label. Pink finished, dark didn't.",
+     "groups": [
+      2,
+      2,
+      1,
+      1,
+      2,
+      1,
+      2,
+      1,
+      2,
+      1
+     ]
     },
     {
-     "say": "If the label is a category, like spam or not spam, it's classification.",
-     "show": 2
+     "say": "Every dark student studies three hours or less. Every pink one, five or more. So the tree's rule is: more than four hours?",
+     "groups": [
+      2,
+      2,
+      1,
+      1,
+      2,
+      1,
+      2,
+      1,
+      2,
+      1
+     ]
     },
     {
-     "say": "Unsupervised learning has no labels. The model finds structure on its own, like groups of similar customers. That's clustering.",
-     "show": 3
+     "say": "The six and a half hour student lands among the finishers.",
+     "marks": [
+      [
+       65,
+       60
+      ]
+     ]
+    },
+    {
+     "say": "The two and a half hour student lands among those who didn't.",
+     "marks": [
+      [
+       65,
+       60
+      ],
+      [
+       25,
+       12
+      ]
+     ]
+    },
+    {
+     "say": "The data splits so cleanly that the model is a hundred percent sure. Real data never is, so be suspicious of that.",
+     "marks": [
+      [
+       65,
+       60
+      ],
+      [
+       25,
+       12
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "Two main kinds of machine learning",
+   "nodes": [
+    {
+     "id": "data",
+     "label": "Your data",
+     "x": 12,
+     "y": 50,
+     "sub": "rows of examples",
+     "art": "table"
+    },
+    {
+     "id": "sup",
+     "label": "Supervised",
+     "x": 45,
+     "y": 25,
+     "sub": "every row has a label",
+     "art": "target"
+    },
+    {
+     "id": "uns",
+     "label": "Unsupervised",
+     "x": 45,
+     "y": 75,
+     "sub": "no labels",
+     "art": "scatter"
+    },
+    {
+     "id": "reg",
+     "label": "Regression",
+     "x": 85,
+     "y": 12,
+     "sub": "label is a number"
+    },
+    {
+     "id": "cls",
+     "label": "Classification",
+     "x": 85,
+     "y": 40,
+     "sub": "label is a category"
+    },
+    {
+     "id": "clu",
+     "label": "Clustering",
+     "x": 85,
+     "y": 75,
+     "sub": "find groups"
+    }
+   ],
+   "edges": [
+    {
+     "from": "data",
+     "to": "sup"
+    },
+    {
+     "from": "data",
+     "to": "uns"
+    },
+    {
+     "from": "sup",
+     "to": "reg"
+    },
+    {
+     "from": "sup",
+     "to": "cls"
+    },
+    {
+     "from": "uns",
+     "to": "clu"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Start with your data, and one question: does every example have a label?",
+     "show": 1,
+     "on": "data"
+    },
+    {
+     "say": "If it does, that's supervised learning. The model learns to map features to labels.",
+     "show": 2,
+     "on": "sup",
+     "send": {
+      "from": "data",
+      "to": "sup",
+      "label": "has labels"
+     }
+    },
+    {
+     "say": "When the label is a number, like a price or a temperature, it's regression.",
+     "show": 4,
+     "on": "reg",
+     "send": {
+      "from": "sup",
+      "to": "reg",
+      "label": "temperature in °C"
+     }
+    },
+    {
+     "say": "When the label is a category, like finished or not, it's classification.",
+     "show": 5,
+     "on": "cls",
+     "send": {
+      "from": "sup",
+      "to": "cls",
+      "label": "finished: 0 or 1"
+     }
+    },
+    {
+     "say": "With no labels at all, it's unsupervised. The model looks for structure on its own.",
+     "show": 6,
+     "on": "uns",
+     "send": {
+      "from": "data",
+      "to": "uns",
+      "label": "no labels"
+     }
+    },
+    {
+     "say": "The most common kind is clustering: grouping similar examples together.",
+     "show": 6,
+     "on": "clu",
+     "send": {
+      "from": "uns",
+      "to": "clu",
+      "label": "groups of customers"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Part 3",
+   "title": "No labels: k means finds three groups",
+   "xlabel": "visits per month",
+   "ylabel": "average spend",
+   "points": [
+    [
+     6,
+     80
+    ],
+    [
+     12,
+     95
+    ],
+    [
+     6,
+     70
+    ],
+    [
+     72,
+     10
+    ],
+    [
+     90,
+     15
+    ],
+    [
+     66,
+     12
+    ],
+    [
+     36,
+     40
+    ],
+    [
+     42,
+     45
+    ],
+    [
+     30,
+     38
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Part three has nine customers, with no labels. Just visits per month and average spend."
+    },
+    {
+     "say": "We ask k means for three groups. Nobody tells it what they are.",
+     "groups": [
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "It marks a centre for each group.",
+     "groups": [
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       76,
+       12.3
+      ],
+      [
+       36,
+       41
+      ],
+      [
+       8,
+       81.7
+      ]
+     ]
+    },
+    {
+     "say": "Top left: rare big spenders. Bottom right: frequent small spenders. And a middle group.",
+     "groups": [
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "It labels them zero, one and two. Those numbers are just names. They carry no order or meaning."
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "When not to use it",
    "title": "Sometimes ordinary code wins",
-   "items": [
+   "columns": [
+    "Situation",
+    "Use"
+   ],
+   "rows": [
     [
-     "A simple rule works",
-     "Write the if statement"
+     "Orders over $50 ship free",
+     "An if statement"
     ],
     [
-     "Little data or labels",
-     ""
+     "Very little data, or no reliable labels",
+     "Not ML, yet"
     ],
     [
-     "Costly, unexplainable mistakes",
+     "Costly mistakes you can't check",
      "Support people, don't replace them"
     ],
     [
-     "Must be exactly right",
-     "Tax, balances"
+     "Must be exactly right, like tax",
+     "Ordinary code"
+    ],
+    [
+     "Dropout risk, from years of history",
+     "ML fits well"
     ]
    ],
    "beats": [
     {
-     "say": "Machine learning isn't always the right tool.",
-     "show": 0
+     "say": "Machine learning isn't always the right tool."
     },
     {
-     "say": "If a simple rule works, like orders over fifty dollars ship free, just write the if statement.",
-     "show": 1
+     "say": "If a simple rule already works, like free shipping over fifty dollars, just write the if statement.",
+     "hl": 0
     },
     {
-     "say": "If you have very little data, or no reliable labels, skip it.",
-     "show": 2
+     "say": "With very little data, or no reliable labels, there's nothing to learn from.",
+     "hl": 1
     },
     {
-     "say": "If mistakes are very costly and you can't check them, a model should support human judgment, not replace it.",
-     "show": 3
+     "say": "When mistakes about people are costly and can't be checked, a model should support human judgment, not replace it.",
+     "hl": 2
     },
     {
-     "say": "And if the answer must be exactly right every time, like tax, use ordinary code.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Part 1",
-   "title": "Your first model",
-   "file": "Colab cell",
-   "code": "X = data[[\"hours_per_week\", \"lessons_done_wk1\"]]   # features\ny = data[\"finished\"]                                # label\n\nmodel = DecisionTreeClassifier(max_depth=2, random_state=42)\nmodel.fit(X, y)          # TRAINING\n\nnew_students = pd.DataFrame({\n    \"hours_per_week\":   [2.5, 6.5],\n    \"lessons_done_wk1\": [1,   5],\n})\nprint(model.predict(new_students))   # [0 1]",
-   "beats": [
-    {
-     "say": "Part one trains your first model, on a tiny dataset of students.",
-     "show": 0
+     "say": "When the answer must be exactly right every time, like tax, use ordinary code.",
+     "hl": 3
     },
     {
-     "say": "X holds two features, and y holds the label: did they finish.",
-     "show": 1
-    },
-    {
-     "say": "Fit is training. Predict is inference, on new students the model has never seen.",
-     "show": 1
-    },
-    {
-     "say": "It predicts zero for the first, and one for the second. Every scikit-learn model follows this pattern: create it, fit it, then predict.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "scatter",
-   "kicker": "Lab · Parts 2 and 3",
-   "title": "A real dataset, then no labels",
-   "big": "569 × 30",
-   "sub": "breast cancer data · then 3 customer groups, no labels",
-   "beats": [
-    {
-     "say": "Part two loads a real dataset: five hundred and sixty nine tumor samples, each with thirty measured features.",
-     "show": 0
-    },
-    {
-     "say": "Part three uses k-means on customers with no labels at all. It finds three groups on its own: rare big spenders, frequent small spenders, and a middle group.",
-     "show": 1
-    },
-    {
-     "say": "The group numbers are just names. They carry no order or meaning.",
-     "show": 2
+     "say": "But predicting who might drop out, with no clear rule and lots of history? That's a good fit.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
@@ -669,125 +1029,454 @@ You can explain why the split happens before encoding and scaling, and you can n
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Concept",
-   "title": "Four ideas for every project",
-   "items": [
+   "kind": "array",
+   "kicker": "Idea 1 · Split first",
+   "title": "Lock away a test set before anything else",
+   "values": [
+    550,
+    800,
+    1200,
+    650,
+    900,
+    1500,
+    700,
+    1000,
+    850,
+    600,
+    1100,
+    750
+   ],
+   "beats": [
+    {
+     "say": "Here are the twelve apartment listings from the lab, shown by size in square feet."
+    },
+    {
+     "say": "Before anything learns from the data, train test split picks a quarter of the rows at random.",
+     "hl": [
+      0,
+      9,
+      10
+     ],
+     "note": "test_size=0.25 → 3 rows"
+    },
+    {
+     "say": "Rows zero, nine and ten become the test set. They're locked away, like a final exam.",
+     "gone": [
+      0,
+      9,
+      10
+     ],
+     "note": "Test set: 550, 600, 1100 sq ft"
+    },
+    {
+     "say": "The other nine are the training set. The model and every preparation step learn only from these.",
+     "gone": [
+      0,
+      9,
+      10
+     ],
+     "ok": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      11
+     ],
+     "note": "Training set: 9 rows"
+    },
+    {
+     "say": "If you study using the exam questions, your exam score means nothing. The same is true for models.",
+     "gone": [
+      0,
+      9,
+      10
+     ],
+     "ok": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      11
+     ],
+     "note": "Train rows: 9 | Test rows: 3"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Idea 2 · Encoding",
+   "title": "One yes-or-no column per category",
+   "columns": [
+    "neighborhood",
+    "Downtown",
+    "Midtown",
+    "Suburb"
+   ],
+   "rows": [
     [
-     "Train/test split",
-     "Hold back a final exam"
+     "Downtown",
+     "1",
+     "0",
+     "0"
     ],
     [
-     "One-hot encoding",
-     "One 1/0 column per category"
+     "Midtown",
+     "0",
+     "1",
+     "0"
     ],
     [
-     "Scaling",
-     "Mean 0, standard deviation 1"
-    ],
-    [
-     "Data leakage",
-     "Future info sneaks into training"
+     "Suburb",
+     "0",
+     "0",
+     "1"
     ]
    ],
    "beats": [
     {
-     "say": "First, the train test split. Set aside part of your data as a test set, like a final exam the model never studies from.",
-     "show": 1
+     "say": "Models need numbers, but neighborhood is text.",
+     "col": 0
     },
     {
-     "say": "Second, encoding categories. One-hot encoding makes one yes or no column per category, instead of a fake order like zero, one, two.",
-     "show": 2
+     "say": "You could write Downtown as zero, Midtown one, Suburb two. But then Suburb looks like twice Midtown, which means nothing.",
+     "sql": "Downtown=0, Midtown=1, Suburb=2   ✗ fake order",
+     "col": 0
     },
     {
-     "say": "Third, scaling numbers. Standard scaler rescales each column to mean zero and standard deviation one.",
-     "show": 3
+     "say": "One hot encoding makes one yes or no column per category instead.",
+     "sql": "OneHotEncoder(sparse_output=False, handle_unknown=\"ignore\")"
     },
     {
-     "say": "Fourth, data leakage: information that wouldn't be available at prediction time, sneaking into training.",
-     "show": 4
+     "say": "A Downtown listing gets a one in the Downtown column, and zeros elsewhere.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Suburb gets its own column. No fake order, no fake distance.",
+     "hl": 2,
+     "col": 3
+    },
+    {
+     "say": "Has parking is encoded the same way, so the lab ends up with five category columns.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "shield",
-   "kicker": "The rule",
-   "title": "Split first",
-   "quote": "Split first, then fit every preprocessing step on the training set only, and only transform the test set.",
+   "kind": "diagram",
+   "kicker": "Idea 3 · Scaling",
+   "title": "Fit on training data, transform the rest",
+   "nodes": [
+    {
+     "id": "all",
+     "label": "All 12 listings",
+     "x": 12,
+     "y": 50,
+     "art": "table"
+    },
+    {
+     "id": "train",
+     "label": "Training set",
+     "x": 42,
+     "y": 22,
+     "sub": "9 rows"
+    },
+    {
+     "id": "test",
+     "label": "Test set",
+     "x": 42,
+     "y": 78,
+     "sub": "3 rows",
+     "art": "lock"
+    },
+    {
+     "id": "scaler",
+     "label": "StandardScaler",
+     "x": 82,
+     "y": 50,
+     "sub": "learns mean and spread",
+     "art": "calc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "all",
+     "to": "train"
+    },
+    {
+     "from": "all",
+     "to": "test"
+    },
+    {
+     "from": "train",
+     "to": "scaler"
+    },
+    {
+     "from": "scaler",
+     "to": "test"
+    }
+   ],
    "beats": [
     {
-     "say": "Here's the rule that prevents leaky preprocessing.",
-     "show": 0
+     "say": "Size runs into the hundreds and thousands. Bedrooms run from one to four. Scaling puts them on a similar scale.",
+     "show": 1
     },
     {
-     "say": "Split first. Then fit every preprocessing step on the training set only, and only transform the test set.",
-     "show": 1
+     "say": "First, split.",
+     "show": 3,
+     "send": {
+      "from": "all",
+      "to": "train",
+      "label": "9 rows"
+     }
+    },
+    {
+     "say": "The test rows go into the locked box.",
+     "show": 3,
+     "on": "test",
+     "send": {
+      "from": "all",
+      "to": "test",
+      "label": "3 rows"
+     }
+    },
+    {
+     "say": "Fit the scaler on the training rows only. It learns a mean size of nine hundred twenty seven point eight square feet.",
+     "show": 4,
+     "on": "scaler",
+     "send": {
+      "from": "train",
+      "to": "scaler",
+      "label": "fit → mean 927.8"
+     }
+    },
+    {
+     "say": "Then use that same mean to transform the test rows, as if they had arrived later.",
+     "show": 4,
+     "on": "test",
+     "send": {
+      "from": "scaler",
+      "to": "test",
+      "label": "transform only"
+     }
+    },
+    {
+     "say": "Fit on all twelve rows, and the mean would be eight hundred eighty three point three. The test rows would have leaked into training.",
+     "show": 4,
+     "on": [
+      "all",
+      "scaler"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pipeline",
+   "kind": "walk",
    "kicker": "Lab · Part 1",
-   "title": "Split, encode and scale",
-   "file": "Colab cell",
-   "code": "X_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.25, random_state=42\n)\n\nencoder = OneHotEncoder(sparse_output=False, handle_unknown=\"ignore\")\nencoder.fit(X_train[cat_cols])\ntrain_cats = encoder.transform(X_train[cat_cols])\ntest_cats = encoder.transform(X_test[cat_cols])\n\nscaler = StandardScaler()\nscaler.fit(X_train[num_cols])\ntrain_nums = scaler.transform(X_train[num_cols])\ntest_nums = scaler.transform(X_test[num_cols])",
+   "title": "Watch the scaler learn from 9 rows",
+   "file": "prepare.py",
+   "code": "X_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.25, random_state=42\n)\nprint(\"Train rows:\", len(X_train), \"| Test rows:\", len(X_test))\n\nnum_cols = [\"size_sqft\", \"bedrooms\"]\nscaler = StandardScaler()\nscaler.fit(X_train[num_cols])\nprint(\"Learned means:\", scaler.mean_.round(1))\n\ntrain_nums = scaler.transform(X_train[num_cols])\ntest_nums = scaler.transform(X_test[num_cols])",
    "beats": [
     {
-     "say": "In part one, you prepare apartment listings to predict rent.",
-     "show": 0
+     "say": "Split first. Nine rows to train, three to test.",
+     "line": [
+      1,
+      4
+     ],
+     "out": "Train rows: 9 | Test rows: 3",
+     "vars": {
+      "X_train": "9 rows",
+      "X_test": "3 rows"
+     }
     },
     {
-     "say": "Split first: nine training rows, three test rows.",
-     "show": 1
+     "say": "Create a scaler for the two number columns.",
+     "line": [
+      6,
+      7
+     ]
     },
     {
-     "say": "The encoder and the scaler each learn from the training data only, then transform both sets.",
-     "show": 1
+     "say": "Fit looks only at the nine training rows. Mean size nine hundred twenty seven point eight, mean bedrooms two point one.",
+     "line": [
+      8,
+      9
+     ],
+     "out": "Learned means: [927.8   2.1]",
+     "vars": {
+      "scaler.mean_": "[927.8, 2.1]",
+      "scaler.scale_": "[256.2, 0.87]"
+     }
     },
     {
-     "say": "The learned mean, about nine hundred and twenty eight square feet, comes from the nine training rows alone.",
-     "show": 1
+     "say": "Transform subtracts the mean and divides by the spread. The fifteen hundred square foot listing becomes two point two three.",
+     "line": 11,
+     "vars": {
+      "train_nums[1]": "[2.23, 2.16]"
+     }
+    },
+    {
+     "say": "The test rows use the same training numbers. The eleven hundred square foot listing becomes zero point six seven.",
+     "line": 12,
+     "vars": {
+      "test_nums[0]": "[0.67, 1.02]"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "diagram",
+   "kicker": "Idea 4 · Leakage",
+   "title": "Would you know this value in time?",
+   "nodes": [
+    {
+     "id": "now",
+     "label": "Customer today",
+     "x": 12,
+     "y": 50,
+     "sub": "months, tickets",
+     "art": "idcard"
+    },
+    {
+     "id": "pred",
+     "label": "Predict churn",
+     "x": 40,
+     "y": 50,
+     "sub": "we need it now",
+     "art": "neural"
+    },
+    {
+     "id": "leave",
+     "label": "Customer leaves",
+     "x": 66,
+     "y": 50,
+     "sub": "next month"
+    },
+    {
+     "id": "survey",
+     "label": "Exit survey",
+     "x": 90,
+     "y": 50,
+     "sub": "filled in after",
+     "art": "form"
+    }
+   ],
+   "edges": [
+    {
+     "from": "now",
+     "to": "pred"
+    },
+    {
+     "from": "pred",
+     "to": "leave"
+    },
+    {
+     "from": "leave",
+     "to": "survey"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Part two predicts whether a customer will cancel next month. Follow the timeline.",
+     "show": 1,
+     "on": "now"
+    },
+    {
+     "say": "Today, we know how long they've been a customer, and their support tickets.",
+     "show": 2,
+     "on": "pred",
+     "send": {
+      "from": "now",
+      "to": "pred",
+      "label": "months, tickets"
+     }
+    },
+    {
+     "say": "Next month, some customers leave.",
+     "show": 3,
+     "on": "leave",
+     "send": {
+      "from": "pred",
+      "to": "leave",
+      "label": "churned"
+     }
+    },
+    {
+     "say": "Only then do they fill out an exit survey.",
+     "show": 4,
+     "on": "survey",
+     "send": {
+      "from": "leave",
+      "to": "survey",
+      "label": "filled_exit_survey"
+     }
+    },
+    {
+     "say": "So at prediction time, that column is always empty. Training on it is leakage: an answer from the future.",
+     "show": 4,
+     "on": [
+      "pred",
+      "survey"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Lab · Part 2",
-   "title": "Watch leakage inflate a score",
-   "items": [
+   "title": "Leakage inflates the score",
+   "columns": [
+    "Features",
+    "Test accuracy",
+    "Known in time?"
+   ],
+   "rows": [
     [
-     "Honest features",
-     "0.728 ✓"
+     "months_as_customer, support_tickets",
+     "0.728",
+     "Yes"
     ],
     [
-     "With filled_exit_survey",
-     "0.964 ✗ leaky"
+     "+ filled_exit_survey",
+     "0.964",
+     "No"
     ]
    ],
    "beats": [
     {
-     "say": "Part two predicts whether a customer will cancel.",
-     "show": 0
+     "say": "Here's what the lab printed."
     },
     {
-     "say": "With honest features, accuracy is about seventy three percent.",
-     "show": 1
+     "say": "With honest features, the model is right about seventy three percent of the time.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Add a column for filling out the exit survey, and it jumps to ninety six percent.",
-     "show": 2
+     "say": "Add the leaky exit survey column, and it jumps to ninety six percent. It looks amazing.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "But only people who already left fill out exit surveys. On the day you need a prediction, that column is always empty.",
-     "show": 2
+     "say": "But you'd never have that value when you need the prediction, so the model is useless.",
+     "hl": 1,
+     "col": 2,
+     "dim": true
     },
     {
-     "say": "When a score looks too good, ask: would I really know this value when I need the prediction?",
-     "show": 2
+     "say": "When a score looks too good to be true, check every feature and ask: would I really know this in time?",
+     "col": 2
     }
    ]
   },
@@ -1009,117 +1698,501 @@ You can state, in one sentence, how far off the linear model is on average and h
    ]
   },
   {
-   "kind": "list",
-   "art": "calc",
+   "kind": "chart",
    "kicker": "Concept",
-   "title": "How far off are we?",
-   "items": [
+   "title": "Fitting a line to the points",
+   "xlabel": "body mass index (bmi)",
+   "ylabel": "disease progression",
+   "points": [
     [
-     "MAE",
-     "Average miss, in label units"
+     3.5,
+     26.9
     ],
     [
-     "RMSE",
-     "Punishes big misses more"
+     10.8,
+     45.1
     ],
     [
-     "R²",
-     "1.0 perfect · 0.0 = the average"
+     12.7,
+     27.4
+    ],
+    [
+     14.3,
+     20.6
+    ],
+    [
+     16.2,
+     17.1
+    ],
+    [
+     19.6,
+     29.1
+    ],
+    [
+     21.6,
+     26.0
+    ],
+    [
+     23.5,
+     40.0
+    ],
+    [
+     24.6,
+     49.1
+    ],
+    [
+     27.0,
+     24.0
+    ],
+    [
+     28.1,
+     30.6
+    ],
+    [
+     29.3,
+     48.9
+    ],
+    [
+     31.6,
+     51.7
+    ],
+    [
+     33.5,
+     62.6
+    ],
+    [
+     37.7,
+     19.1
+    ],
+    [
+     41.2,
+     27.4
+    ],
+    [
+     43.9,
+     66.3
+    ],
+    [
+     48.5,
+     52.6
+    ],
+    [
+     50.0,
+     51.4
+    ],
+    [
+     54.3,
+     65.7
+    ],
+    [
+     57.0,
+     75.1
+    ],
+    [
+     61.2,
+     84.3
+    ],
+    [
+     96.6,
+     69.1
     ]
    ],
    "beats": [
     {
-     "say": "You measure a regression model on the test set.",
-     "show": 0
+     "say": "Each dot is a patient from the diabetes test set: body mass index across, disease progression one year later going up."
     },
     {
-     "say": "M A E, mean absolute error: on average, predictions are off by this much.",
-     "show": 1
+     "say": "First, the baseline. It ignores the features and always predicts the training average, about one hundred fifty four.",
+     "line": [
+      0,
+      43.9
+     ]
     },
     {
-     "say": "R M S E, root mean squared error: also in label units, but it punishes big misses more.",
-     "show": 2
+     "say": "Now linear regression with one feature, b m i. It learns a weight and an intercept: a sloped line.",
+     "line": [
+      0.799,
+      14.9
+     ]
     },
     {
-     "say": "And R squared: the fraction of variation the model explains. One is perfect. Zero is no better than predicting the average.",
-     "show": 3
+     "say": "Training picks the line with the smallest average squared distance to the points.",
+     "line": [
+      0.799,
+      14.9
+     ]
+    },
+    {
+     "say": "Higher b m i, higher predicted progression. But many dots sit far from the line. One feature isn't enough.",
+     "line": [
+      0.799,
+      14.9
+     ]
+    },
+    {
+     "say": "On the whole test set, this one-feature model is off by fifty two points on average. The baseline is off by sixty four.",
+     "line": [
+      0.799,
+      14.9
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "target",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Always compare to a baseline",
-   "quote": "If your real model cannot clearly beat the baseline, it has not learned anything useful.",
+   "title": "How far off are we? M A E and R M S E",
+   "columns": [
+    "test row",
+    "actual",
+    "predicted",
+    "error",
+    "error²"
+   ],
+   "rows": [
+    [
+     "4",
+     "111",
+     "123.8",
+     "+12.8",
+     "164"
+    ],
+    [
+     "5",
+     "84",
+     "92.2",
+     "+8.2",
+     "67"
+    ],
+    [
+     "6",
+     "242",
+     "258.2",
+     "+16.2",
+     "263"
+    ],
+    [
+     "7",
+     "272",
+     "181.3",
+     "−90.7",
+     "8,220"
+    ]
+   ],
    "beats": [
     {
-     "say": "A number like M A E equals forty three means nothing alone.",
-     "show": 0
+     "say": "Here are four test patients and the full ten-feature model's predictions."
     },
     {
-     "say": "A baseline is the dumbest reasonable model, like always predicting the average. If your model can't clearly beat it, it hasn't learned anything useful.",
-     "show": 1
+     "say": "Three predictions are close: off by thirteen, eight and sixteen points.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 3
+    },
+    {
+     "say": "One is a big miss: ninety one points too low.",
+     "hl": 3,
+     "col": 3
+    },
+    {
+     "say": "M A E, mean absolute error, ignores the sign and averages: thirty two points. Same units as the label.",
+     "sql": "MAE = (12.8 + 8.2 + 16.2 + 90.7) / 4 = 32.0",
+     "col": 3
+    },
+    {
+     "say": "R M S E squares each error first, so the big miss counts for far more.",
+     "sql": "MAE = 32.0",
+     "col": 4,
+     "hl": 3
+    },
+    {
+     "say": "Average the squares, take the square root: forty six point seven. R M S E is never smaller than M A E.",
+     "sql": "MAE = 32.0     RMSE = √((164 + 67 + 263 + 8220) / 4) = 46.7",
+     "col": 4
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab",
    "title": "Baseline versus linear regression",
-   "file": "Colab cell",
-   "code": "baseline = DummyRegressor(strategy=\"mean\")\nbaseline.fit(X_train, y_train)\nbase_pred = baseline.predict(X_test)\n\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)\npred = model.predict(X_test)\n\nprint(f\"Baseline MAE:  {mean_absolute_error(y_test, base_pred):.1f}\")\nprint(f\"Linear MAE:    {mean_absolute_error(y_test, pred):.1f}\")",
+   "file": "regression.py",
+   "code": "baseline = DummyRegressor(strategy=\"mean\")\nbaseline.fit(X_train, y_train)\nbase_pred = baseline.predict(X_test)\n\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)\npred = model.predict(X_test)\n\nprint(f\"Baseline MAE:  {mean_absolute_error(y_test, base_pred):.1f}\")\nprint(f\"Linear MAE:    {mean_absolute_error(y_test, pred):.1f}\")\nprint(f\"Baseline RMSE: {root_mean_squared_error(y_test, base_pred):.1f}\")\nprint(f\"Linear RMSE:   {root_mean_squared_error(y_test, pred):.1f}\")\nprint(f\"Linear R^2:    {model.score(X_test, y_test):.2f}\")",
    "beats": [
     {
-     "say": "The lab uses the diabetes dataset: four hundred and forty two patients, ten features.",
-     "show": 0
+     "say": "The diabetes data has four hundred forty two patients and ten features. Eighty percent train, twenty percent test.",
+     "vars": {
+      "X_train": "353 × 10",
+      "X_test": "89 × 10"
+     }
     },
     {
-     "say": "First, a dummy regressor that always predicts the training average.",
-     "show": 1
+     "say": "The baseline learns just one number: the average training label.",
+     "line": [
+      1,
+      3
+     ],
+     "vars": {
+      "base_pred": "153.7 for everyone"
+     }
     },
     {
-     "say": "Then a real linear regression, trained and scored on the same split.",
-     "show": 1
+     "say": "Linear regression learns ten weights and an intercept.",
+     "line": [
+      5,
+      7
+     ],
+     "vars": {
+      "model": "10 weights + intercept 151.3"
+     }
+    },
+    {
+     "say": "The baseline is off by sixty four points on average. Linear regression, by about forty three. A third better.",
+     "line": [
+      9,
+      10
+     ],
+     "out": [
+      "Baseline MAE:  64.0",
+      "Linear MAE:    42.8"
+     ]
+    },
+    {
+     "say": "R M S E tells the same story.",
+     "line": [
+      11,
+      12
+     ],
+     "out": [
+      "Baseline RMSE: 73.2",
+      "Linear RMSE:   53.9"
+     ]
+    },
+    {
+     "say": "R squared is zero point four five: it explains a bit under half the variation. Zero would mean no better than the average.",
+     "line": 13,
+     "out": "Linear R^2:    0.45"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
-   "kicker": "Lab · How to read it",
-   "title": "A real improvement, and a warning",
-   "items": [
+   "kind": "chart",
+   "kicker": "Lab · The chart",
+   "title": "Predicted versus actual",
+   "xlabel": "actual progression",
+   "ylabel": "predicted progression",
+   "points": [
     [
-     "Baseline MAE 64.0 → Linear MAE 42.8",
-     "About a third better"
+     26.9,
+     25.8
     ],
     [
-     "R² 0.45",
-     "Explains under half"
+     45.1,
+     18.0
     ],
     [
-     "s1 −931.5, s2 +518.1",
-     "Correlated · don't over-read"
+     27.4,
+     15.7
+    ],
+    [
+     20.6,
+     16.0
+    ],
+    [
+     17.1,
+     22.2
+    ],
+    [
+     29.1,
+     30.2
+    ],
+    [
+     26.0,
+     45.0
+    ],
+    [
+     40.0,
+     35.6
+    ],
+    [
+     49.1,
+     42.3
+    ],
+    [
+     24.0,
+     26.3
+    ],
+    [
+     30.6,
+     31.1
+    ],
+    [
+     48.9,
+     50.2
+    ],
+    [
+     51.7,
+     48.9
+    ],
+    [
+     62.6,
+     39.9
+    ],
+    [
+     19.1,
+     37.3
+    ],
+    [
+     27.4,
+     31.0
+    ],
+    [
+     66.3,
+     54.0
+    ],
+    [
+     52.6,
+     47.5
+    ],
+    [
+     51.4,
+     49.7
+    ],
+    [
+     65.7,
+     83.3
+    ],
+    [
+     75.1,
+     53.8
+    ],
+    [
+     84.3,
+     62.7
+    ],
+    [
+     69.1,
+     73.8
     ]
    ],
    "beats": [
     {
-     "say": "The baseline is off by sixty four points on average. Linear regression, by about forty three. That's a real improvement of about a third.",
-     "show": 1
+     "say": "The lab's chart plots each test patient's actual value across, and the prediction going up."
     },
     {
-     "say": "R squared is zero point four five: the model explains a bit under half the variation.",
-     "show": 2
+     "say": "Points on this diagonal would be perfect predictions.",
+     "line": [
+      1,
+      0
+     ]
     },
     {
-     "say": "But s1 and s2 get huge, opposite weights. They're strongly correlated, so they cancel each other out.",
-     "show": 3
+     "say": "Look at the far right: the sickest patients are predicted too low.",
+     "line": [
+      1,
+      0
+     ],
+     "marks": [
+      [
+       84.3,
+       62.7
+      ]
+     ]
     },
     {
-     "say": "Don't read that as a medical finding. Treat coefficients as hints, not proof.",
-     "show": 3
+     "say": "And on the left, the mildest are predicted too high.",
+     "line": [
+      1,
+      0
+     ],
+     "marks": [
+      [
+       84.3,
+       62.7
+      ],
+      [
+       19.1,
+       37.3
+      ]
+     ]
+    },
+    {
+     "say": "The model is cautious. It pulls predictions toward the middle, which is common for linear models on noisy data.",
+     "line": [
+      1,
+      0
+     ],
+     "marks": [
+      [
+       84.3,
+       62.7
+      ],
+      [
+       19.1,
+       37.3
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "A warning",
+   "title": "Coefficients are hints, not proof",
+   "columns": [
+    "feature",
+    "weight"
+   ],
+   "rows": [
+    [
+     "s1",
+     "−931.5"
+    ],
+    [
+     "s5",
+     "736.2"
+    ],
+    [
+     "bmi",
+     "542.4"
+    ],
+    [
+     "s2",
+     "518.1"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The lab prints the four biggest weights."
+    },
+    {
+     "say": "It's tempting to read s one as the most important, and as lowering disease progression.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "But s one and s two are two blood measurements that move together. Their correlation is about zero point nine.",
+     "hl": [
+      0,
+      3
+     ]
+    },
+    {
+     "say": "So the model gives them big, opposite weights that roughly cancel out.",
+     "hl": [
+      0,
+      3
+     ],
+     "col": 1,
+     "dim": true
+    },
+    {
+     "say": "Don't conclude that s one lowers progression. B M I, which isn't tangled up this way, is a more trustworthy signal.",
+     "hl": 2,
+     "dim": true
     }
    ]
   },
@@ -1127,11 +2200,11 @@ You can state, in one sentence, how far off the linear model is on average and h
    "kind": "quiz",
    "art": "ask",
    "kicker": "Quick check",
-   "title": "What's the difference between M A E and R M S E?",
+   "title": "What's the difference between MAE and RMSE?",
    "options": [
-    "M A E is in different units from the label",
-    "R M S E squares errors first, so it punishes big misses more",
-    "R M S E is always smaller than M A E"
+    "MAE is in different units from the label",
+    "RMSE squares errors first, so it punishes big misses more",
+    "RMSE is always smaller than MAE"
    ],
    "answer": 1,
    "good": "That's right. R M S E squares errors before averaging, so it punishes large misses more and is never smaller than M A E.",
@@ -1180,7 +2253,7 @@ You can state, in one sentence, how far off the linear model is on average and h
      "show": 1
     },
     {
-     "say": "and you can explain why the s1 coefficient isn't a medical finding.",
+     "say": "and you can explain why the s one coefficient isn't a medical finding.",
      "show": 2
     },
     {
@@ -1386,134 +2459,387 @@ From the confusion matrix in Part 1 you can count the false negatives and false 
    ]
   },
   {
-   "kind": "list",
-   "art": "tree",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Two classic classifiers",
-   "items": [
-    [
-     "Logistic regression",
-     "Weighted sum → probability · likes scaling"
-    ],
-    [
-     "Decision tree",
-     "Yes/no questions · no scaling"
-    ]
+   "title": "Logistic regression: a sum, squeezed into a probability",
+   "nodes": [
+    {
+     "id": "x",
+     "label": "30 features",
+     "x": 10,
+     "y": 50,
+     "sub": "one tumor, scaled",
+     "art": "table"
+    },
+    {
+     "id": "z",
+     "label": "Weighted sum",
+     "x": 36,
+     "y": 50,
+     "sub": "z = 0.24",
+     "art": "calc"
+    },
+    {
+     "id": "s",
+     "label": "S-curve",
+     "x": 62,
+     "y": 50,
+     "sub": "squeeze to 0–1",
+     "art": "trend"
+    },
+    {
+     "id": "out",
+     "label": "benign",
+     "x": 88,
+     "y": 50,
+     "sub": "since 0.559 > 0.5"
+    }
+   ],
+   "edges": [
+    {
+     "from": "x",
+     "to": "z"
+    },
+    {
+     "from": "z",
+     "to": "s"
+    },
+    {
+     "from": "s",
+     "to": "out"
+    }
    ],
    "beats": [
     {
-     "say": "Logistic regression computes a weighted sum, then squeezes it into a probability between zero and one. Above zero point five, it predicts class one.",
-     "show": 1
+     "say": "Follow the third tumor in the test set through logistic regression.",
+     "show": 1,
+     "on": "x"
     },
     {
-     "say": "It's fast, and it benefits from scaled features.",
-     "show": 1
+     "say": "First, a weighted sum of its thirty scaled features, just like linear regression. It comes to zero point two four.",
+     "show": 2,
+     "on": "z",
+     "send": {
+      "from": "x",
+      "to": "z",
+      "label": "w·x + b"
+     }
     },
     {
-     "say": "A decision tree asks a series of yes or no questions about features. It needs no scaling, but deep trees easily memorize the training data.",
-     "show": 2
+     "say": "Then an S shaped curve squeezes that into a probability between zero and one.",
+     "show": 3,
+     "on": "s",
+     "send": {
+      "from": "z",
+      "to": "s",
+      "label": "z = 0.24"
+     }
+    },
+    {
+     "say": "Zero point five five nine: above one half, so it predicts class one, benign.",
+     "show": 4,
+     "on": "out",
+     "send": {
+      "from": "s",
+      "to": "out",
+      "label": "P(benign) = 0.559"
+     }
+    },
+    {
+     "say": "It's right, but only just. Fifty six percent is not very sure.",
+     "show": 4,
+     "on": [
+      "s",
+      "out"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "pie",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Accuracy is not enough",
-   "items": [
-    [
-     "Precision",
-     "TP / (TP + FP) · few false alarms"
-    ],
-    [
-     "Recall",
-     "TP / (TP + FN) · few misses"
-    ],
-    [
-     "F1",
-     "High only when both are high"
-    ]
+   "title": "A decision tree asks yes-or-no questions",
+   "nodes": [
+    {
+     "id": "root",
+     "label": "worst radius ≤ 16.8?",
+     "x": 50,
+     "y": 15
+    },
+    {
+     "id": "a",
+     "label": "worst concave points ≤ 0.14?",
+     "x": 22,
+     "y": 50
+    },
+    {
+     "id": "b",
+     "label": "texture error ≤ 0.47?",
+     "x": 78,
+     "y": 50
+    },
+    {
+     "id": "la",
+     "label": "benign",
+     "x": 22,
+     "y": 85,
+     "sub": "248 benign, 3 malignant"
+    },
+    {
+     "id": "lb",
+     "label": "malignant",
+     "x": 78,
+     "y": 85,
+     "sub": "132 malignant, 0 benign"
+    }
+   ],
+   "edges": [
+    {
+     "from": "root",
+     "to": "a"
+    },
+    {
+     "from": "root",
+     "to": "b"
+    },
+    {
+     "from": "a",
+     "to": "la"
+    },
+    {
+     "from": "b",
+     "to": "lb"
+    }
    ],
    "beats": [
     {
-     "say": "If five percent of transactions are fraud, a model that always says normal is ninety five percent accurate, and catches nothing.",
-     "show": 0
+     "say": "This is the top of the depth three tree from the lab, trained on the same data.",
+     "show": 1,
+     "on": "root"
     },
     {
-     "say": "So look at each kind of mistake. Precision: when the model says positive, how often is it right?",
-     "show": 1
+     "say": "Its first question: is the worst radius sixteen point eight or less?",
+     "show": 1,
+     "on": "root"
     },
     {
-     "say": "Recall: of all the real positives, how many did it find?",
-     "show": 2
+     "say": "Yes leads to a question about concave points.",
+     "show": 2,
+     "on": "a",
+     "send": {
+      "from": "root",
+      "to": "a",
+      "label": "yes"
+     }
     },
     {
-     "say": "And F 1 balances the two. It's high only when both are high.",
-     "show": 3
+     "say": "No leads to a question about texture.",
+     "show": 3,
+     "on": "b",
+     "send": {
+      "from": "root",
+      "to": "b",
+      "label": "no"
+     }
+    },
+    {
+     "say": "One more question down the yes side, most tumors land here: two hundred forty eight benign, three malignant.",
+     "show": 4,
+     "on": "la",
+     "send": {
+      "from": "a",
+      "to": "la",
+      "label": "yes, then 1 more"
+     }
+    },
+    {
+     "say": "Down the no side, a group of one hundred thirty two, every one malignant. No scaling needed anywhere.",
+     "show": 5,
+     "on": "lb",
+     "send": {
+      "from": "b",
+      "to": "lb",
+      "label": "no, then 1 more"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "table",
    "kicker": "Lab · Part 1",
-   "title": "Two classifiers on real data",
-   "file": "Colab cell",
-   "code": "scaler = StandardScaler().fit(X_train)\nX_train_s = scaler.transform(X_train)\nX_test_s = scaler.transform(X_test)\n\nlogreg = LogisticRegression(max_iter=1000)\nlogreg.fit(X_train_s, y_train)\nlog_pred = logreg.predict(X_test_s)\n\ntree = DecisionTreeClassifier(max_depth=3, random_state=42)\ntree.fit(X_train, y_train)\ntree_pred = tree.predict(X_test)\n\nprint(confusion_matrix(y_test, log_pred))",
+   "title": "Read the confusion matrix",
+   "columns": [
+    "",
+    "Predicted malignant",
+    "Predicted benign"
+   ],
+   "rows": [
+    [
+     "Actually malignant (53)",
+     "52",
+     "1"
+    ],
+    [
+     "Actually benign (90)",
+     "1",
+     "89"
+    ]
+   ],
    "beats": [
     {
-     "say": "Part one trains both on the breast cancer data, with stratify, so both sets keep the same class mix.",
-     "show": 0
+     "say": "Logistic regression scores ninety eight point six percent accuracy. The tree, ninety four point four. But accuracy isn't enough."
     },
     {
-     "say": "Logistic regression gets scaled features. The tree doesn't need them.",
-     "show": 1
+     "say": "Here's logistic regression's confusion matrix on the hundred forty three test tumors. Rows are the truth, columns the prediction.",
+     "col": 0
     },
     {
-     "say": "Logistic regression scores about ninety nine percent. Its confusion matrix shows one miss and one false alarm. This dataset is unusually clean.",
-     "show": 1
+     "say": "Fifty three tumors are truly malignant. The model caught fifty two.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "And it missed one: a false negative, called benign when it wasn't.",
+     "hl": 0,
+     "col": 2,
+     "dim": true
+    },
+    {
+     "say": "Of the ninety benign tumors, one got a false alarm, a false positive.",
+     "hl": 1,
+     "col": 1,
+     "dim": true
+    },
+    {
+     "say": "Recall for malignant: of all fifty three real ones, it found fifty two. Ninety eight percent.",
+     "sql": "recall = TP / (TP + FN) = 52 / 53 = 0.98",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Precision: of the fifty three it called malignant, fifty two were right. Also ninety eight percent.",
+     "sql": "precision = TP / (TP + FP) = 52 / 53 = 0.98",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "array",
+   "kicker": "Lab · Part 1",
+   "title": "Probabilities, not just labels",
+   "values": [
+    "0.969",
+    "0.000",
+    "0.559"
+   ],
+   "beats": [
+    {
+     "say": "The lab prints the probability of benign for the first three test tumors."
+    },
+    {
+     "say": "Ninety seven percent. Confidently benign.",
+     "hl": 0,
+     "ptr": {
+      "tumor": 0
+     },
+     "note": "0.969 ≥ 0.5 → benign"
+    },
+    {
+     "say": "Zero. Confidently malignant.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "tumor": 1
+     },
+     "note": "0.000 < 0.5 → malignant"
+    },
+    {
+     "say": "Fifty six percent. It leans benign, but it's quite unsure.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "tumor": 2
+     },
+     "note": "0.559: inside 0.3 to 0.7"
+    },
+    {
+     "say": "A real screening tool might send uncertain cases like this one to a human, instead of trusting the label.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "note": "uncertain → ask a specialist"
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Lab · Part 2",
    "title": "Why accuracy lies",
-   "items": [
+   "columns": [
+    "Model",
+    "Accuracy",
+    "Precision",
+    "Recall",
+    "Fraud found"
+   ],
+   "rows": [
     [
      "Always 'normal'",
-     "acc 0.947 · recall 0.000 ✗"
+     "0.947",
+     "0.000",
+     "0.000",
+     "0 of 53"
     ],
     [
      "LogReg",
-     "acc 0.954 · recall 0.132"
+     "0.954",
+     "1.000",
+     "0.132",
+     "7 of 53"
     ],
     [
      "LogReg balanced",
-     "acc 0.706 · recall 0.736 ✓"
+     "0.706",
+     "0.122",
+     "0.736",
+     "39 of 53"
     ]
    ],
    "beats": [
     {
-     "say": "Part two builds a fraud problem: about five percent positives.",
-     "show": 0
+     "say": "Part two builds a fraud problem. About five percent of rows are fraud. The test set has fifty three."
     },
     {
-     "say": "The always normal dummy gets ninety five percent accuracy, and catches nothing.",
-     "show": 1
+     "say": "A dummy that always says normal gets ninety five percent accuracy, and catches no fraud at all.",
+     "hl": 0,
+     "col": 4
     },
     {
-     "say": "Plain logistic regression has perfect precision, but finds only thirteen percent of the fraud.",
-     "show": 2
+     "say": "Plain logistic regression: slightly higher accuracy, perfect precision, but it finds only seven of the fifty three.",
+     "hl": 1,
+     "col": 3
     },
     {
-     "say": "With class weight balanced, recall jumps to seventy four percent. The price: many false alarms, and accuracy drops to seventy one percent.",
-     "show": 3
+     "say": "With class weight balanced, recall jumps to seventy four percent: thirty nine found.",
+     "hl": 2,
+     "col": 3
     },
     {
-     "say": "Choose the metric from the real cost of each mistake, then choose the model.",
-     "show": 3
+     "say": "The price: two hundred eighty false alarms, so precision is twelve percent, and accuracy drops to seventy one.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "If a human can clear false alarms quickly, the lowest accuracy model is the most useful. Choose the metric from the cost of each mistake.",
+     "hl": 2,
+     "dim": true
     }
    ]
   },
@@ -1818,126 +3144,532 @@ You can spot overfitting from a train/test score table, explain why the leaky sc
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
-   "kicker": "Concept",
-   "title": "The honest workflow",
-   "steps": [
-    "Split off a test set",
-    "Cross-validate on training data",
-    "Retrain the chosen model",
-    "Score on the test set once"
-   ],
-   "beats": [
-    {
-     "say": "Here's the honest workflow.",
-     "show": 0
-    },
-    {
-     "say": "Split off a test set, and don't touch it.",
-     "show": 1
-    },
-    {
-     "say": "Use cross validation on the training set to compare models and choose hyperparameters.",
-     "show": 2
-    },
-    {
-     "say": "Retrain the chosen model on the full training set.",
-     "show": 3
-    },
-    {
-     "say": "Score it on the test set once, and report that number.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "tree",
+   "kind": "chart",
    "kicker": "Lab · Part 1",
    "title": "See overfitting happen",
-   "items": [
+   "xlabel": "max_depth: 1, 2, 3, 5, 8, None",
+   "ylabel": "accuracy, 60% to 100%",
+   "points": [
     [
-     "depth 1",
-     "train 0.690 · test 0.683"
+     10,
+     22.5
     ],
     [
-     "depth 8",
-     "train 0.943 · test 0.794"
+     26,
+     38.0
     ],
     [
-     "no limit",
-     "train 1.000 · test 0.778 ✗"
+     42,
+     40.5
+    ],
+    [
+     58,
+     57.8
+    ],
+    [
+     74,
+     85.8
+    ],
+    [
+     90,
+     100.0
+    ],
+    [
+     10,
+     20.8
+    ],
+    [
+     26,
+     37.5
+    ],
+    [
+     42,
+     39.0
+    ],
+    [
+     58,
+     44.5
+    ],
+    [
+     74,
+     48.5
+    ],
+    [
+     90,
+     44.5
     ]
    ],
    "beats": [
     {
-     "say": "Part one grows decision trees deeper and deeper, on data where ten percent of labels were flipped.",
-     "show": 0
+     "say": "Part one trains decision trees of growing depth, on data where ten percent of labels were flipped on purpose.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
     },
     {
-     "say": "At depth one, train and test are close, but both low. That's underfitting.",
-     "show": 1
+     "say": "Pink is accuracy on the training data. As the tree gets deeper, it races upward.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
     },
     {
-     "say": "At depth eight, training races to ninety four percent, while test barely moves.",
-     "show": 2
+     "say": "Dark is accuracy on the test data.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
     },
     {
-     "say": "With no limit, training is one hundred percent. It memorized the noise. The gap is your warning light.",
-     "show": 3
+     "say": "At depths one to three, both are low and close together. The tree is too simple. That's underfitting.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       26,
+       38.0
+      ],
+      [
+       26,
+       37.5
+      ]
+     ]
+    },
+    {
+     "say": "With no depth limit, training accuracy hits a hundred percent, even on the flipped labels. It memorized noise.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       90,
+       100.0
+      ],
+      [
+       90,
+       44.5
+      ]
+     ]
+    },
+    {
+     "say": "Yet test accuracy barely moved: seventy eight percent. That gap is your overfitting warning light.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       90,
+       100.0
+      ],
+      [
+       90,
+       44.5
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "warning",
+   "kind": "array",
+   "kicker": "Lab · Part 2",
+   "title": "5-fold cross-validation",
+   "values": [
+    "Fold 1",
+    "Fold 2",
+    "Fold 3",
+    "Fold 4",
+    "Fold 5"
+   ],
+   "beats": [
+    {
+     "say": "One test split can be lucky or unlucky. Cross validation splits the four hundred twenty six training rows into five folds."
+    },
+    {
+     "say": "Round one: train on folds two to five, score on fold one.",
+     "hl": 0,
+     "ptr": {
+      "validate": 0
+     },
+     "note": "score 0.977"
+    },
+    {
+     "say": "Round two: fold two takes its turn as the validation set.",
+     "vals": [
+      "0.977",
+      "Fold 2",
+      "Fold 3",
+      "Fold 4",
+      "Fold 5"
+     ],
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "validate": 1
+     },
+     "note": "score 0.976"
+    },
+    {
+     "say": "Fold three scores lowest, ninety five point three.",
+     "vals": [
+      "0.977",
+      "0.976",
+      "Fold 3",
+      "Fold 4",
+      "Fold 5"
+     ],
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "validate": 2
+     },
+     "note": "score 0.953"
+    },
+    {
+     "say": "Then folds four and five.",
+     "vals": [
+      "0.977",
+      "0.976",
+      "0.953",
+      "Fold 4",
+      "Fold 5"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "note": "scores 0.965 and 0.976"
+    },
+    {
+     "say": "Five scores. The average, ninety six point nine, is a steadier estimate, and the spread shows how much it varies.",
+     "vals": [
+      "0.977",
+      "0.976",
+      "0.953",
+      "0.965",
+      "0.976"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Mean: 0.969  (+/- 0.009)"
+    },
+    {
+     "say": "Because the scaler sits in a pipeline, it's re-fit inside every round, on that round's training folds only.",
+     "vals": [
+      "0.977",
+      "0.976",
+      "0.953",
+      "0.965",
+      "0.976"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Pipeline: scale → model"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Lab · Part 3",
    "title": "Leakage turns noise into a great model",
-   "file": "Colab cell",
-   "code": "# WRONG: select features using ALL the data, then cross-validate\nX_selected = SelectKBest(f_classif, k=20).fit_transform(X, y)\nleaky = cross_val_score(LogisticRegression(max_iter=1000), X_selected, y, cv=5)\n\n# RIGHT: selection inside a Pipeline, re-fit on each training fold\npipe = Pipeline([\n    (\"select\", SelectKBest(f_classif, k=20)),\n    (\"model\", LogisticRegression(max_iter=1000)),\n])\nhonest = cross_val_score(pipe, X, y, cv=5)",
+   "file": "noise.py",
+   "code": "rng = np.random.default_rng(42)\nX = rng.normal(size=(100, 5000))\ny = rng.integers(0, 2, size=100)\n\n# WRONG: pick 20 \"best\" features using ALL the data\nX_selected = SelectKBest(f_classif, k=20).fit_transform(X, y)\nleaky = cross_val_score(LogisticRegression(max_iter=1000), X_selected, y, cv=5)\nprint(f\"Selection outside CV: {leaky.mean():.2f}\")\n\n# RIGHT: selection inside a Pipeline\npipe = Pipeline([(\"select\", SelectKBest(f_classif, k=20)),\n                 (\"model\", LogisticRegression(max_iter=1000))])\nhonest = cross_val_score(pipe, X, y, cv=5)\nprint(f\"Selection inside CV:  {honest.mean():.2f}\")",
    "beats": [
     {
-     "say": "Part three is a famous trap: pure noise, random features and random labels. Honest scores should be about fifty percent.",
-     "show": 0
+     "say": "This data is pure noise: a hundred rows, five thousand random features, random labels.",
+     "line": [
+      1,
+      3
+     ],
+     "vars": {
+      "X": "100 × 5000 random",
+      "y": "100 random 0s and 1s"
+     }
     },
     {
-     "say": "Pick the twenty best features using all the data, then cross validate, and you get eighty nine percent on noise.",
-     "show": 1
+     "say": "Nothing can be learned here. An honest score should be about fifty percent."
     },
     {
-     "say": "Put selection inside a pipeline, so it's re-fit on each training fold, and the honest score is fifty two percent.",
-     "show": 1
+     "say": "The wrong way: pick the twenty best features using all hundred rows, labels included.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "X_selected": "100 × 20"
+     }
     },
     {
-     "say": "Any step that learns from data belongs inside the pipeline.",
-     "show": 1
+     "say": "Then cross validate. The fold scores range from eighty percent to a perfect one hundred.",
+     "line": 7,
+     "vars": {
+      "leaky": "[1.0, 0.8, 0.9, 0.85, 0.9]"
+     }
+    },
+    {
+     "say": "Eighty nine percent on noise. The features were chosen by peeking at the validation rows' labels.",
+     "line": 8,
+     "out": "Selection outside CV: 0.89"
+    },
+    {
+     "say": "The right way: put selection inside a pipeline, so it's re-fit on each fold's training part only.",
+     "line": [
+      10,
+      13
+     ],
+     "vars": {
+      "honest": "[0.45, 0.45, 0.5, 0.6, 0.6]"
+     }
+    },
+    {
+     "say": "Fifty two percent. About a coin flip, as it should be.",
+     "line": 14,
+     "out": "Selection inside CV:  0.52"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "gear",
+   "kind": "table",
    "kicker": "Lab · Part 4",
-   "title": "Tune with GridSearchCV",
-   "file": "Colab cell",
-   "code": "param_grid = {\"model__C\": [0.01, 0.1, 1, 10, 100]}\n\nsearch = GridSearchCV(pipe, param_grid, cv=5, scoring=\"f1\")\nsearch.fit(X_train, y_train)     # tuning uses ONLY the training data\n\nprint(\"Best settings:\", search.best_params_)\n\n# Only now, once, touch the test set\nprint(f\"Test F1: {search.score(X_test, y_test):.3f}\")",
+   "title": "Tune C with GridSearchCV",
+   "columns": [
+    "C",
+    "Mean CV F1",
+    "Model"
+   ],
+   "rows": [
+    [
+     "0.01",
+     "0.962",
+     "too simple"
+    ],
+    [
+     "0.1",
+     "0.982",
+     "best"
+    ],
+    [
+     "1",
+     "0.976",
+     ""
+    ],
+    [
+     "10",
+     "0.972",
+     ""
+    ],
+    [
+     "100",
+     "0.966",
+     "too flexible"
+    ]
+   ],
    "beats": [
     {
-     "say": "Part four tunes C, which controls regularization, with grid search.",
-     "show": 0
+     "say": "C is a hyperparameter: you choose it before training. Small C means a simpler model."
     },
     {
-     "say": "model, two underscores, C, means the C setting of the pipeline step named model.",
-     "show": 1
+     "say": "Grid search runs five fold cross validation for every value of C, on the training data only.",
+     "sql": "GridSearchCV(pipe, {\"model__C\": [0.01, 0.1, 1, 10, 100]}, cv=5, scoring=\"f1\")",
+     "col": 1
     },
     {
-     "say": "Tuning uses only training data. The best C is zero point one.",
-     "show": 1
+     "say": "The smallest C is too simple. The largest is too flexible. Both do worse.",
+     "hl": [
+      0,
+      4
+     ],
+     "col": 1
     },
     {
-     "say": "Only then, once, touch the test set. Test F 1 is close to the cross validation estimate, a good sign the evaluation was honest.",
-     "show": 1
+     "say": "C equals zero point one wins, with a cross validation F 1 of zero point nine eight two.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Only now, once, it touches the test set: zero point nine eight three. Close to the estimate. A sign the evaluation was honest.",
+     "sql": "Best CV F1: 0.982   →   Test F1: 0.983",
+     "hl": 1,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "The honest workflow",
+   "nodes": [
+    {
+     "id": "split",
+     "label": "1. Split off a test set",
+     "x": 12,
+     "y": 30,
+     "sub": "don't touch it",
+     "art": "lock"
+    },
+    {
+     "id": "cv",
+     "label": "2. Cross-validate",
+     "x": 38,
+     "y": 70,
+     "sub": "compare, tune on train",
+     "art": "loop"
+    },
+    {
+     "id": "retrain",
+     "label": "3. Retrain",
+     "x": 64,
+     "y": 30,
+     "sub": "best model, all train"
+    },
+    {
+     "id": "test",
+     "label": "4. Test once",
+     "x": 90,
+     "y": 70,
+     "sub": "report that number",
+     "art": "target"
+    }
+   ],
+   "edges": [
+    {
+     "from": "split",
+     "to": "cv"
+    },
+    {
+     "from": "cv",
+     "to": "retrain"
+    },
+    {
+     "from": "retrain",
+     "to": "test"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Put it together, and you get the honest workflow.",
+     "show": 1,
+     "on": "split"
+    },
+    {
+     "say": "One: split off a test set, and don't touch it.",
+     "show": 1,
+     "on": "split"
+    },
+    {
+     "say": "Two: use cross validation on the training set to compare models and choose hyperparameters.",
+     "show": 2,
+     "on": "cv",
+     "send": {
+      "from": "split",
+      "to": "cv",
+      "label": "training set"
+     }
+    },
+    {
+     "say": "Three: retrain the chosen model on the full training set.",
+     "show": 3,
+     "on": "retrain",
+     "send": {
+      "from": "cv",
+      "to": "retrain",
+      "label": "C = 0.1"
+     }
+    },
+    {
+     "say": "Four: score it on the test set once, and report that number.",
+     "show": 4,
+     "on": "test",
+     "send": {
+      "from": "retrain",
+      "to": "test",
+      "label": "Test F1 0.983"
+     }
     }
    ]
   },
@@ -2010,7 +3742,7 @@ You can spot overfitting from a train/test score table, explain why the leaky sc
      "show": 3
     },
     {
-     "say": "Next, in Module 6, unsupervised learning with k-means clustering.",
+     "say": "Next, in Module 6, unsupervised learning with k means clustering.",
      "show": 3
     }
    ]
@@ -2185,118 +3917,501 @@ You can explain the elbow in the inertia column, why the features were scaled be
    ]
   },
   {
-   "kind": "flow",
-   "art": "loop",
+   "kind": "chart",
    "kicker": "Concept",
-   "title": "How k-means works",
-   "steps": [
-    "Place k centroids",
-    "Assign points to nearest",
-    "Move centroids to the average",
-    "Repeat until stable"
-   ],
-   "beats": [
-    {
-     "say": "You choose k, the number of clusters. Then:",
-     "show": 0
-    },
-    {
-     "say": "Place k centers, called centroids.",
-     "show": 1
-    },
-    {
-     "say": "Assign every point to its nearest centroid.",
-     "show": 2
-    },
-    {
-     "say": "Move each centroid to the average of its points.",
-     "show": 3
-    },
-    {
-     "say": "Repeat until the assignments stop changing.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "trend",
-   "kicker": "Concept",
-   "title": "Choosing k",
-   "items": [
+   "title": "How k means works, step by step",
+   "xlabel": "visits per month",
+   "ylabel": "average spend",
+   "points": [
     [
-     "Inertia",
-     "Look for the elbow"
+     6,
+     80
     ],
     [
-     "Silhouette",
-     "−1 to 1 · higher is clearer"
+     12,
+     95
+    ],
+    [
+     6,
+     70
+    ],
+    [
+     72,
+     10
+    ],
+    [
+     90,
+     15
+    ],
+    [
+     66,
+     12
+    ],
+    [
+     36,
+     40
+    ],
+    [
+     42,
+     45
+    ],
+    [
+     30,
+     38
     ]
    ],
    "beats": [
     {
-     "say": "Two tools help you choose k.",
-     "show": 0
+     "say": "Here are the nine customers from Module 1 again. We choose k equals three."
     },
     {
-     "say": "Inertia always goes down as k grows, so look for the elbow, where more clusters stop helping much.",
-     "show": 1
+     "say": "Step one: place three centres at starting positions.",
+     "marks": [
+      [
+       12,
+       90
+      ],
+      [
+       30,
+       30
+      ],
+      [
+       60,
+       60
+      ]
+     ]
     },
     {
-     "say": "The silhouette score runs from minus one to one. Higher means clearer, better separated clusters.",
-     "show": 2
+     "say": "Step two: every customer joins its nearest centre. The dark centre grabs most of them.",
+     "marks": [
+      [
+       12,
+       90
+      ],
+      [
+       30,
+       30
+      ],
+      [
+       60,
+       60
+      ]
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2
+     ]
     },
     {
-     "say": "And remember: k-means measures distance, so scale your features first.",
-     "show": 2
+     "say": "Step three: each centre moves to the average position of its customers.",
+     "marks": [
+      [
+       8,
+       81.7
+      ],
+      [
+       49.2,
+       29
+      ],
+      [
+       90,
+       15
+      ]
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Repeat. Assign again: the customer at twelve visits switches to the grey group.",
+     "marks": [
+      [
+       8,
+       81.7
+      ],
+      [
+       49.2,
+       29
+      ],
+      [
+       90,
+       15
+      ]
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Move the centres again.",
+     "marks": [
+      [
+       8,
+       81.7
+      ],
+      [
+       43.5,
+       33.8
+      ],
+      [
+       81,
+       12.5
+      ]
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Assign again: the customer at eleven visits switches too.",
+     "marks": [
+      [
+       8,
+       81.7
+      ],
+      [
+       43.5,
+       33.8
+      ],
+      [
+       81,
+       12.5
+      ]
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Move again. Now every centre sits in the middle of its group.",
+     "marks": [
+      [
+       8,
+       81.7
+      ],
+      [
+       36,
+       41
+      ],
+      [
+       76,
+       12.3
+      ]
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "One more assign, and nothing changes. So k means stops. Same three groups as Module 1.",
+     "marks": [
+      [
+       8,
+       81.7
+      ],
+      [
+       36,
+       41
+      ],
+      [
+       76,
+       12.3
+      ]
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      2,
+      2,
+      2
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "target",
-   "kicker": "Lab · Part 1",
-   "title": "Both tools agree",
-   "big": "k = 4",
-   "sub": "the elbow, and the best silhouette (0.792)",
+   "kind": "chart",
+   "kicker": "Choosing k",
+   "title": "Look for the elbow",
+   "xlabel": "k = 2, 3, 4, 5, 6, 7",
+   "ylabel": "inertia (÷100)",
+   "points": [
+    [
+     10,
+     94.2
+    ],
+    [
+     26,
+     21.1
+    ],
+    [
+     42,
+     5.7
+    ],
+    [
+     58,
+     5.1
+    ],
+    [
+     74,
+     4.6
+    ],
+    [
+     90,
+     4.1
+    ]
+   ],
    "beats": [
     {
-     "say": "Part one hides four groups in three hundred points.",
-     "show": 0
+     "say": "Part one makes three hundred points with four hidden groups, then tries k from two to seven."
     },
     {
-     "say": "Inertia drops sharply up to k equals four, then only a little. And the silhouette score peaks at four too.",
-     "show": 1
+     "say": "Inertia is the total squared distance from each point to its centre. Smaller means tighter groups.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
     },
     {
-     "say": "Real data is rarely this clear. Then pick the k that gives groups people can understand and act on.",
-     "show": 2
+     "say": "It drops sharply: nine thousand four hundred, then two thousand one hundred, then five hundred sixty five at k equals four.",
+     "groups": [
+      1,
+      1,
+      1,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "say": "After that, it barely moves. That bend is the elbow.",
+     "groups": [
+      3,
+      3,
+      1,
+      1,
+      1,
+      1
+     ],
+     "marks": [
+      [
+       42,
+       5.7
+      ]
+     ]
+    },
+    {
+     "say": "Inertia always falls as k grows, so you can't just pick the lowest. You pick the elbow.",
+     "groups": [
+      3,
+      3,
+      1,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       42,
+       5.7
+      ]
+     ]
+    },
+    {
+     "say": "The silhouette score agrees: it peaks at k equals four, at zero point seven nine two. Four groups, as hidden.",
+     "groups": [
+      3,
+      3,
+      1,
+      3,
+      3,
+      3
+     ],
+     "marks": [
+      [
+       42,
+       5.7
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "people",
+   "kind": "table",
+   "kicker": "Why scale first",
+   "title": "k means measures distance",
+   "columns": [
+    "True group",
+    "Size",
+    "Own cluster, scaled",
+    "Own cluster, unscaled"
+   ],
+   "rows": [
+    [
+     "dabblers",
+     "60",
+     "60",
+     "60"
+    ],
+    [
+     "quiet finishers",
+     "50",
+     "50",
+     "48"
+    ],
+    [
+     "community-driven",
+     "40",
+     "39",
+     "31"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Part two simulates a hundred fifty learners in three groups. We know the truth, so we can check."
+    },
+    {
+     "say": "Minutes per week range up to about two hundred twenty. Forum posts, only up to eighteen.",
+     "sql": "minutes: 0.7 to 217.8    forum_posts: 0 to 18"
+    },
+    {
+     "say": "Without scaling, minutes dominate the distances. Nine community learners get lumped in with the quiet finishers.",
+     "col": 3,
+     "hl": 2
+    },
+    {
+     "say": "With the standard scaler first, every feature counts equally. Thirty nine of forty land together.",
+     "col": 2,
+     "hl": 2
+    },
+    {
+     "say": "Across all three groups, scaling recovers one hundred forty nine of the hundred fifty.",
+     "sql": "scaled: 149 of 150 in their own cluster",
+     "col": 2,
+     "hl": [
+      0,
+      1,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Lab · Part 2",
-   "title": "Cluster learners, then name them",
-   "file": "Colab cell",
-   "code": "# Scale first: otherwise \"minutes\" would dominate the distances\nX = StandardScaler().fit_transform(learners)\nkm = KMeans(n_clusters=3, n_init=10, random_state=42)\nlearners[\"cluster\"] = km.fit_predict(X)\n\n# Interpret: describe each cluster in the ORIGINAL units\nsummary = learners.groupby(\"cluster\").agg(\n    size=(\"minutes_per_week\", \"size\"),\n    minutes=(\"minutes_per_week\", \"mean\"),\n    lessons=(\"lessons_completed\", \"mean\"),\n    posts=(\"forum_posts\", \"mean\"),\n).round(1)",
+   "title": "A cluster is just a number until you name it",
+   "columns": [
+    "cluster",
+    "size",
+    "minutes",
+    "lessons",
+    "posts",
+    "name"
+   ],
+   "rows": [
+    [
+     "0",
+     "60",
+     "31.0",
+     "3.4",
+     "0.2",
+     "?"
+    ],
+    [
+     "1",
+     "39",
+     "145.7",
+     "18.3",
+     "11.8",
+     "?"
+    ],
+    [
+     "2",
+     "51",
+     "177.7",
+     "25.0",
+     "1.3",
+     "?"
+    ]
+   ],
    "beats": [
     {
-     "say": "Part two clusters simulated learners. Scale first, or minutes per week would dominate the distances.",
-     "show": 0
+     "say": "Here's the summary the lab prints: the average of each feature, per cluster, in the original units."
     },
     {
-     "say": "Then describe each cluster in the original units.",
-     "show": 1
+     "say": "Cluster zero: about thirty minutes a week, few lessons, almost no posts. Call them dabblers.",
+     "hl": 0,
+     "sql": "0 → dabblers: a short, easy win"
     },
     {
-     "say": "You'll find dabblers, community driven learners who post a lot, and quiet finishers who study most but rarely post.",
-     "show": 1
+     "say": "Cluster one: fairly active, and they post a lot. Community driven.",
+     "hl": 1,
+     "col": 4,
+     "sql": "1 → community-driven: discussion prompts"
     },
     {
-     "say": "k-means always returns k groups, so check them with people who understand the learners before acting.",
-     "show": 1
+     "say": "Cluster two: the most study time and lessons, but rarely post. Quiet finishers.",
+     "hl": 2,
+     "col": 2,
+     "sql": "2 → quiet finishers: clear self-paced material"
+    },
+    {
+     "say": "Careful, though. k means always returns k groups, even when the data has none. Check names with people who know the learners.",
+     "sql": "k-means always returns k groups"
     }
    ]
   },
@@ -2586,129 +4701,930 @@ You can compute one neuron's output by hand, explain what the learning rate cont
    ]
   },
   {
-   "kind": "flow",
-   "art": "calc",
+   "kind": "diagram",
    "kicker": "Concept",
    "title": "What one neuron does",
-   "steps": [
-    "Weighted sum + bias",
-    "Activation (ReLU)"
-   ],
-   "beats": [
+   "nodes": [
     {
-     "say": "One neuron does exactly two things.",
-     "show": 0
+     "id": "x1",
+     "label": "x1 = 0.5",
+     "x": 12,
+     "y": 18,
+     "sub": "weight 0.9"
     },
     {
-     "say": "It computes a weighted sum of its inputs, plus a bias. The same calculation as linear regression.",
-     "show": 1
+     "id": "x2",
+     "label": "x2 = 0.8",
+     "x": 12,
+     "y": 50,
+     "sub": "weight −0.4"
     },
     {
-     "say": "Then it passes that through an activation function, like ray-loo: negatives become zero.",
-     "show": 2
+     "id": "x3",
+     "label": "x3 = 0.2",
+     "x": 12,
+     "y": 82,
+     "sub": "weight 1.5"
     },
     {
-     "say": "Without that bend, stacked neurons would still be a straight-line model.",
-     "show": 2
+     "id": "sum",
+     "label": "Weighted sum",
+     "x": 50,
+     "y": 50,
+     "sub": "+ bias 0.1",
+     "art": "calc"
+    },
+    {
+     "id": "relu",
+     "label": "ReLU",
+     "x": 86,
+     "y": 50,
+     "sub": "negatives → 0",
+     "art": "neural"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "loop",
-   "kicker": "Concept",
-   "title": "Gradient descent",
-   "steps": [
-    "Predict",
-    "Measure the loss",
-    "Compute the gradient",
-    "Step downhill",
-    "Repeat"
+   ],
+   "edges": [
+    {
+     "from": "x1",
+     "to": "sum"
+    },
+    {
+     "from": "x2",
+     "to": "sum"
+    },
+    {
+     "from": "x3",
+     "to": "sum"
+    },
+    {
+     "from": "sum",
+     "to": "relu"
+    }
    ],
    "beats": [
     {
-     "say": "Training works by gradient descent.",
-     "show": 0
-    },
-    {
-     "say": "Make predictions with the current weights.",
-     "show": 1
-    },
-    {
-     "say": "Measure how wrong they are, with a loss function.",
-     "show": 2
-    },
-    {
-     "say": "Compute the gradient: which way each weight should move to reduce the loss.",
+     "say": "One neuron does exactly two things. Here it has three inputs, each with a weight.",
      "show": 3
     },
     {
-     "say": "Nudge every weight a small step downhill. The step size is the learning rate.",
-     "show": 4
+     "say": "Step one, a weighted sum. Zero point five times zero point nine gives zero point four five.",
+     "show": 4,
+     "on": "x1",
+     "send": {
+      "from": "x1",
+      "to": "sum",
+      "label": "0.5 × 0.9 = 0.45"
+     }
     },
     {
-     "say": "Then repeat, many times.",
-     "show": 5
+     "say": "Zero point eight times minus zero point four: minus zero point three two. A negative weight pulls down.",
+     "show": 4,
+     "on": "x2",
+     "send": {
+      "from": "x2",
+      "to": "sum",
+      "label": "0.8 × −0.4 = −0.32"
+     }
+    },
+    {
+     "say": "Zero point two times one point five: zero point three.",
+     "show": 4,
+     "on": "x3",
+     "send": {
+      "from": "x3",
+      "to": "sum",
+      "label": "0.2 × 1.5 = 0.30"
+     }
+    },
+    {
+     "say": "Add them, plus the bias of zero point one. The weighted sum is zero point five three.",
+     "show": 4,
+     "on": "sum"
+    },
+    {
+     "say": "Step two, the activation, ray-loo. It's positive, so it passes through unchanged: zero point five three.",
+     "show": 5,
+     "on": "relu",
+     "send": {
+      "from": "sum",
+      "to": "relu",
+      "label": "z = 0.53"
+     }
+    },
+    {
+     "say": "A negative sum, like minus two, would come out as zero. That bend is what lets networks draw curves.",
+     "show": 5,
+     "on": "relu",
+     "send": {
+      "from": "sum",
+      "to": "relu",
+      "label": "−2.0 → 0.0"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab · Part 2",
    "title": "Gradient descent, by hand",
-   "file": "Colab cell",
-   "code": "w = 0.0                 # start with a bad guess\nlearning_rate = 0.02\n\nfor step in range(1, 31):\n    pred = w * x\n    error = pred - y\n    loss = np.mean(error ** 2)            # mean squared error\n    gradient = np.mean(2 * error * x)     # slope of the loss\n    w = w - learning_rate * gradient      # small step downhill",
+   "file": "descent.py",
+   "code": "x = np.array([1.0, 2.0, 3.0, 4.0])\ny = np.array([3.0, 6.0, 9.0, 12.0])\nw = 0.0                 # start with a bad guess\nlearning_rate = 0.02\n\nfor step in range(1, 31):\n    pred = w * x\n    error = pred - y\n    loss = np.mean(error ** 2)\n    gradient = np.mean(2 * error * x)\n    w = w - learning_rate * gradient",
    "beats": [
     {
-     "say": "In part two, a one-weight model must find w equals three, starting from zero.",
-     "show": 0
+     "say": "A model with one weight predicts y equals w times x. The data was made with w equals three.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "Each step: predict, measure the loss, compute the gradient, and step downhill.",
-     "show": 1
+     "say": "It starts with a bad guess: w is zero.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "w": 0.0,
+      "learning_rate": 0.02
+     }
     },
     {
-     "say": "The loss shrinks every step, and w climbs to three by step thirty.",
-     "show": 1
+     "say": "Step one. Every prediction is zero, so every error is negative.",
+     "line": [
+      6,
+      8
+     ],
+     "vars": {
+      "step": 1,
+      "pred": "[0, 0, 0, 0]",
+      "error": "[-3, -6, -9, -12]"
+     }
     },
     {
-     "say": "Try a learning rate of zero point two, and the steps overshoot further each time.",
-     "show": 1
+     "say": "The loss, the mean squared error, is sixty seven point five.",
+     "line": 9,
+     "vars": {
+      "loss": 67.5
+     }
+    },
+    {
+     "say": "The gradient is minus forty five: increasing w would reduce the loss.",
+     "line": 10,
+     "vars": {
+      "gradient": -45.0
+     }
+    },
+    {
+     "say": "So w moves against the gradient, upward. Zero point zero two times forty five: w becomes zero point nine.",
+     "line": 11,
+     "vars": {
+      "w": 0.9
+     }
+    },
+    {
+     "say": "Step two. Predictions are closer now, and the loss halves to thirty three.",
+     "line": [
+      7,
+      9
+     ],
+     "vars": {
+      "step": 2,
+      "pred": "[0.9, 1.8, 2.7, 3.6]",
+      "error": "[-2.1, -4.2, -6.3, -8.4]",
+      "loss": 33.075
+     }
+    },
+    {
+     "say": "The gradient is smaller, minus thirty one point five, so the step is smaller. W becomes one point five three.",
+     "line": [
+      10,
+      11
+     ],
+     "vars": {
+      "gradient": -31.5,
+      "w": 1.53
+     }
+    },
+    {
+     "say": "Repeat thirty times, and w settles at three.",
+     "line": 6,
+     "vars": {
+      "step": 30,
+      "w": 3.0,
+      "loss": 0.0
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
-   "kicker": "Lab · Part 3",
-   "title": "A network that beats a straight line",
-   "items": [
+   "kind": "chart",
+   "kicker": "Learning rate",
+   "title": "How big a step to take",
+   "xlabel": "step 0 to 10",
+   "ylabel": "w (target 3)",
+   "points": [
     [
-     "Logistic regression",
-     "0.867 · straight line"
+     5,
+     0.0
     ],
     [
-     "Neural network (16, 16)",
-     "0.987 · curved boundary ✓"
+     14,
+     22.5
+    ],
+    [
+     23,
+     38.3
+    ],
+    [
+     32,
+     49.3
+    ],
+    [
+     41,
+     57.0
+    ],
+    [
+     50,
+     62.4
+    ],
+    [
+     59,
+     66.2
+    ],
+    [
+     68,
+     68.8
+    ],
+    [
+     77,
+     70.7
+    ],
+    [
+     86,
+     72.0
+    ],
+    [
+     95,
+     72.9
+    ],
+    [
+     14,
+     1.1
+    ],
+    [
+     23,
+     2.2
+    ],
+    [
+     32,
+     3.3
+    ],
+    [
+     41,
+     4.4
+    ],
+    [
+     50,
+     5.5
+    ],
+    [
+     59,
+     6.5
+    ],
+    [
+     68,
+     7.5
+    ],
+    [
+     77,
+     8.6
+    ],
+    [
+     86,
+     9.6
+    ],
+    [
+     95,
+     10.5
     ]
    ],
    "beats": [
     {
-     "say": "Part three uses two interleaving half moons. A straight line can't separate them.",
-     "show": 0
+     "say": "Here's w after each of the first ten steps.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
     },
     {
-     "say": "Logistic regression tops out around eighty seven percent.",
-     "show": 1
+     "say": "With a learning rate of zero point zero two, w climbs quickly toward the target of three.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "line": [
+      0,
+      75
+     ]
     },
     {
-     "say": "A small network with two hidden layers of sixteen neurons draws a curved boundary, and reaches about ninety nine percent.",
-     "show": 2
+     "say": "Each step is smaller than the last, because the gradient shrinks as the error shrinks.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "line": [
+      0,
+      75
+     ],
+     "marks": [
+      [
+       95,
+       72.9
+      ]
+     ]
     },
     {
-     "say": "That's three hundred and thirty seven learned numbers. Large language models use the same ingredients, at a scale of billions, with the transformer design.",
-     "show": 2
+     "say": "With zero point zero zero one, the steps are tiny. After ten steps, w is only zero point four two.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      0,
+      75
+     ],
+     "marks": [
+      [
+       95,
+       72.9
+      ],
+      [
+       95,
+       10.5
+      ]
+     ]
+    },
+    {
+     "say": "Too small is very slow. After all thirty steps it reaches only one point zero nine.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      0,
+      75
+     ],
+     "marks": [
+      [
+       95,
+       72.9
+      ],
+      [
+       95,
+       10.5
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Learning rate",
+   "title": "Too big, and the steps overshoot",
+   "values": [
+    "0",
+    "9",
+    "−9",
+    "27",
+    "−45",
+    "99",
+    "−189"
+   ],
+   "beats": [
+    {
+     "say": "Now try a learning rate of zero point two. Watch w after each step. The target is three.",
+     "ptr": {
+      "w": 0
+     }
+    },
+    {
+     "say": "Step one jumps straight past three, to nine.",
+     "hl": 1,
+     "ptr": {
+      "w": 1
+     },
+     "note": "overshoot: 9 > 3"
+    },
+    {
+     "say": "Step two overcorrects to minus nine.",
+     "ok": [
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "w": 2
+     },
+     "note": "−9: further away"
+    },
+    {
+     "say": "Then twenty seven. Then minus forty five.",
+     "ok": [
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "ptr": {
+      "w": 4
+     },
+     "note": "each miss is bigger"
+    },
+    {
+     "say": "The loss grows every step instead of shrinking. Training has blown up.",
+     "ok": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": [
+      5,
+      6
+     ],
+     "ptr": {
+      "w": 6
+     },
+     "note": "loss: 67.5 → 270 → 1080 → …"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Lab · Part 3",
+   "title": "A network beats a straight line",
+   "xlabel": "feature 1",
+   "ylabel": "feature 2",
+   "points": [
+    [
+     71.9,
+     12.1
+    ],
+    [
+     34.5,
+     78.2
+    ],
+    [
+     66.8,
+     25.2
+    ],
+    [
+     64.9,
+     21.7
+    ],
+    [
+     85.6,
+     64.8
+    ],
+    [
+     57.0,
+     12.1
+    ],
+    [
+     67.6,
+     41.5
+    ],
+    [
+     57.9,
+     61.9
+    ],
+    [
+     68.5,
+     7.0
+    ],
+    [
+     56.6,
+     8.1
+    ],
+    [
+     80.9,
+     26.3
+    ],
+    [
+     48.7,
+     95.5
+    ],
+    [
+     46.1,
+     20.4
+    ],
+    [
+     45.4,
+     47.8
+    ],
+    [
+     3.1,
+     55.1
+    ],
+    [
+     37.2,
+     77.8
+    ],
+    [
+     51.0,
+     18.5
+    ],
+    [
+     63.5,
+     55.2
+    ],
+    [
+     97.3,
+     40.3
+    ],
+    [
+     86.3,
+     33.9
+    ],
+    [
+     51.3,
+     37.3
+    ],
+    [
+     65.7,
+     17.8
+    ],
+    [
+     20.4,
+     57.6
+    ],
+    [
+     71.9,
+     13.9
+    ],
+    [
+     86.2,
+     66.7
+    ],
+    [
+     83.3,
+     21.5
+    ],
+    [
+     49.5,
+     41.0
+    ],
+    [
+     86.8,
+     40.8
+    ],
+    [
+     49.5,
+     27.5
+    ],
+    [
+     80.0,
+     37.5
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Two interleaving half moons, thirty points from the test set."
+    },
+    {
+     "say": "Colour them by their true class.",
+     "groups": [
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      1,
+      1,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Logistic regression can only draw a straight line. Here's the one it learned.",
+     "groups": [
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      1,
+      1,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      0.461,
+      21.3
+     ]
+    },
+    {
+     "say": "The points on the wrong side turn grey. On the whole test set, it gets twenty of one hundred fifty wrong: eighty seven percent.",
+     "groups": [
+      2,
+      1,
+      2,
+      2,
+      3,
+      2,
+      3,
+      1,
+      2,
+      2,
+      2,
+      1,
+      2,
+      3,
+      1,
+      1,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      0.461,
+      21.3
+     ]
+    },
+    {
+     "say": "A small network with two hidden layers of sixteen neurons draws a curved boundary instead.",
+     "groups": [
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      1,
+      1,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": null
+    },
+    {
+     "say": "It gets every point here right, and only two wrong on the whole test set: ninety eight point seven percent.",
+     "groups": [
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      1,
+      1,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": null
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Part 3",
+   "title": "Counting what the network learned",
+   "columns": [
+    "Layer",
+    "Weights",
+    "Biases",
+    "Total"
+   ],
+   "rows": [
+    [
+     "2 inputs → 16",
+     "2 × 16 = 32",
+     "16",
+     "48"
+    ],
+    [
+     "16 → 16",
+     "16 × 16 = 256",
+     "16",
+     "272"
+    ],
+    [
+     "16 → 1 output",
+     "16 × 1 = 16",
+     "1",
+     "17"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "How many numbers did that network learn?"
+    },
+    {
+     "say": "Two inputs connect to sixteen neurons: thirty two weights, plus sixteen biases.",
+     "hl": 0
+    },
+    {
+     "say": "Sixteen to sixteen: two hundred fifty six weights, sixteen biases.",
+     "hl": 1
+    },
+    {
+     "say": "And sixteen to one output: seventeen more.",
+     "hl": 2
+    },
+    {
+     "say": "Three hundred thirty seven in total. Large language models use the same ingredients, with billions.",
+     "sql": "Total weights + biases: 337",
+     "col": 3
     }
    ]
   },
@@ -3130,147 +6046,664 @@ You built a complete workflow: explored the data, split it, built a leak-proof p
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Concept",
-   "title": "Where bias comes from",
-   "items": [
-    [
-     "Under-representation",
-     "Few examples for a group"
-    ],
-    [
-     "Different patterns",
-     "Per group"
-    ],
-    [
-     "Biased labels",
-     "Copies past unfairness"
-    ],
-    [
-     "Proxy features",
-     "Zip code tracks a group"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Models learn from historical data, and data reflects how it was collected.",
-     "show": 0
-    },
-    {
-     "say": "Under-representation: one group has far fewer examples.",
-     "show": 1
-    },
-    {
-     "say": "Different patterns per group: what predicts one group may not predict another.",
-     "show": 2
-    },
-    {
-     "say": "Biased labels: copy unfair past decisions, and you copy the unfairness.",
-     "show": 3
-    },
-    {
-     "say": "And proxy features: removing a sensitive column doesn't help if something like zip code tracks it.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "bars",
+   "kind": "table",
    "kicker": "Lab · Part 1",
    "title": "Fine overall, failing one group",
-   "items": [
+   "columns": [
+    "",
+    "Test rows",
+    "Accuracy"
+   ],
+   "rows": [
     [
      "Overall",
+     "600",
      "0.877"
     ],
     [
-     "Group A · 540 rows",
-     "0.917 ✓"
+     "Group A",
+     "540",
+     "0.917"
     ],
     [
-     "Group B · 60 rows",
-     "0.517 ✗"
+     "Group B",
+     "60",
+     "0.517"
     ]
    ],
    "beats": [
     {
-     "say": "In part one, group A is ninety percent of the data. Group B, ten percent, follows a different pattern.",
-     "show": 0
+     "say": "Part one builds two groups. Group A is ninety percent of the data. Group B is ten percent."
     },
     {
-     "say": "Overall accuracy is eighty eight percent. Sounds good.",
-     "show": 1
+     "say": "Overall, the model is right eighty eight percent of the time. Sounds good.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Group A gets ninety two percent.",
-     "show": 2
+     "say": "Split the test results by group. Group A: ninety two percent.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Group B gets fifty two percent, no better than flipping a coin. The overall number hid it completely.",
-     "show": 3
+     "say": "Group B: fifty two percent. No better than flipping a coin.",
+     "hl": 2,
+     "col": 2,
+     "dim": true
+    },
+    {
+     "say": "Group B has only sixty test rows, so it barely moves the overall number. The overall score hid this completely.",
+     "hl": 2,
+     "col": 1,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
-   "kicker": "Lab · Part 2",
-   "title": "The end-to-end mini project",
-   "steps": [
-    "Explore the data",
-    "Split + pipeline",
-    "Baseline, tune, test once",
-    "Check per site",
-    "Model card + write-up"
+   "kind": "chart",
+   "kicker": "Lab · Part 1",
+   "title": "Why group B fails",
+   "xlabel": "f2",
+   "ylabel": "f1",
+   "points": [
+    [
+     19.3,
+     44.9
+    ],
+    [
+     7.8,
+     69.2
+    ],
+    [
+     96.6,
+     61.1
+    ],
+    [
+     50.6,
+     69.4
+    ],
+    [
+     20.7,
+     14.8
+    ],
+    [
+     49.1,
+     72.5
+    ],
+    [
+     22.0,
+     70.9
+    ],
+    [
+     30.0,
+     47.7
+    ],
+    [
+     38.3,
+     20.5
+    ],
+    [
+     36.9,
+     46.8
+    ],
+    [
+     29.7,
+     36.0
+    ],
+    [
+     18.7,
+     45.3
+    ],
+    [
+     26.4,
+     64.2
+    ],
+    [
+     76.1,
+     38.9
+    ],
+    [
+     78.7,
+     44.6
+    ],
+    [
+     72.5,
+     41.1
+    ],
+    [
+     62.4,
+     18.7
+    ],
+    [
+     39.6,
+     26.3
+    ],
+    [
+     72.7,
+     14.4
+    ],
+    [
+     10.2,
+     72.6
+    ],
+    [
+     61.8,
+     38.0
+    ],
+    [
+     58.5,
+     53.4
+    ],
+    [
+     5.5,
+     40.1
+    ],
+    [
+     83.4,
+     48.7
+    ],
+    [
+     73.1,
+     54.7
+    ],
+    [
+     43.3,
+     55.8
+    ],
+    [
+     58.2,
+     34.5
+    ],
+    [
+     55.7,
+     44.7
+    ]
    ],
    "beats": [
     {
-     "say": "Part two builds an appointment no-show predictor, start to finish.",
-     "show": 0
+     "say": "Here are fourteen test rows from each group, plotted by the two features."
     },
     {
-     "say": "Create and explore the data. Only ten percent is rural.",
-     "show": 1
+     "say": "In group A, the label depends mostly on f one, going up. Pink is label one, dark is label zero.",
+     "groups": [
+      2,
+      1,
+      1,
+      1,
+      2,
+      1,
+      1,
+      2,
+      2,
+      1,
+      2,
+      2,
+      1,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
     },
     {
-     "say": "Split, and build a pipeline with scaling and one-hot encoding, using balanced class weights.",
-     "show": 2
+     "say": "The model learned a line that splits on f one. For group A, it works: thirteen of these fourteen are right.",
+     "groups": [
+      2,
+      1,
+      1,
+      1,
+      2,
+      1,
+      1,
+      2,
+      2,
+      1,
+      2,
+      2,
+      1,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "line": [
+      -0.262,
+      63.2
+     ]
     },
     {
-     "say": "Beat a baseline, and tune C with cross validation. Then evaluate once on the test set.",
-     "show": 3
+     "say": "Now group B. Its label depends on f two, going across: pink mostly on the right, dark on the left.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      2,
+      1,
+      2,
+      1,
+      1,
+      2,
+      1,
+      1,
+      2,
+      2,
+      1
+     ],
+     "line": [
+      -0.262,
+      63.2
+     ]
     },
     {
-     "say": "Check results per site. Rural looks better, but it's only fifty one test rows, too few to be confident.",
-     "show": 4
+     "say": "The line cuts the wrong way for them. Only seven of these fourteen are right, a coin flip.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      2,
+      1,
+      2,
+      1,
+      1,
+      2,
+      1,
+      1,
+      2,
+      2,
+      1
+     ],
+     "line": [
+      -0.262,
+      63.2
+     ]
     },
     {
-     "say": "Finally, write a model card, and a short write-up.",
-     "show": 5
+     "say": "The model learned the majority's pattern, because the majority dominated the data.",
+     "groups": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      1,
+      1,
+      1,
+      2,
+      1,
+      2,
+      1,
+      1,
+      2,
+      1,
+      1,
+      2,
+      2,
+      1
+     ],
+     "line": [
+      -0.262,
+      63.2
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "doc",
-   "kicker": "Lab · Step 6",
-   "title": "Write a model card",
-   "file": "Model card",
-   "code": "MODEL CARD: Appointment no-show predictor (practice project)\nPurpose: flag appointments that may need an extra reminder call.\nNot for: denying, delaying, or deprioritizing anyone's care.\nData: 2000 SIMULATED appointments, 2 sites (10% rural).\nEvaluation: 5-fold CV on training data, then one held-out test set.\nOverall test F1 (no-show class): 0.60\nBy site: urban F1 0.55, rural F1 0.76\n         (rural has only 51 test rows, so its numbers are unstable)\nKnown limitations: simulated data; rural patients under-represented;\n       distance affects rural patients differently than the model assumes.",
+   "kind": "diagram",
+   "kicker": "Lab · Part 2",
+   "title": "The end-to-end mini project",
+   "nodes": [
+    {
+     "id": "explore",
+     "label": "1. Explore",
+     "x": 10,
+     "y": 25,
+     "sub": "2,000 rows, 10% rural",
+     "art": "search"
+    },
+    {
+     "id": "split",
+     "label": "2. Split + pipeline",
+     "x": 36,
+     "y": 70,
+     "sub": "scale, one-hot",
+     "art": "pipeline"
+    },
+    {
+     "id": "tune",
+     "label": "3. Baseline + tune",
+     "x": 62,
+     "y": 25,
+     "sub": "5-fold CV",
+     "art": "loop"
+    },
+    {
+     "id": "test",
+     "label": "4. Test once",
+     "x": 88,
+     "y": 70,
+     "sub": "500 rows",
+     "art": "target"
+    },
+    {
+     "id": "site",
+     "label": "5. Check per site",
+     "x": 62,
+     "y": 85,
+     "sub": "urban vs rural",
+     "art": "scales"
+    },
+    {
+     "id": "card",
+     "label": "6. Model card",
+     "x": 88,
+     "y": 15,
+     "sub": "limits written down",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "explore",
+     "to": "split"
+    },
+    {
+     "from": "split",
+     "to": "tune"
+    },
+    {
+     "from": "tune",
+     "to": "test"
+    },
+    {
+     "from": "test",
+     "to": "site"
+    },
+    {
+     "from": "test",
+     "to": "card"
+    }
+   ],
    "beats": [
     {
-     "say": "A model card travels with the model.",
-     "show": 0
+     "say": "Part two predicts missed clinic appointments, so staff can make an extra reminder call.",
+     "show": 1,
+     "on": "explore"
     },
     {
-     "say": "It says what it's for, and what it must not be used for, like denying or delaying anyone's care.",
-     "show": 1
+     "say": "Explore first: only ten percent of rows are rural, and rural no shows are far more common, sixty one percent versus twenty five.",
+     "show": 1,
+     "on": "explore"
     },
     {
-     "say": "It describes the data, how it was evaluated, results per group, and known limitations.",
-     "show": 1
+     "say": "Split, then build one pipeline: scaling for numbers, one hot encoding for the reminder type. Site is not a feature.",
+     "show": 2,
+     "on": "split",
+     "send": {
+      "from": "explore",
+      "to": "split",
+      "label": "1,500 train / 500 test"
+     }
+    },
+    {
+     "say": "Compare with a baseline, and tune C with cross validation. F 1 of zero point five five seven, double the baseline's.",
+     "show": 3,
+     "on": "tune",
+     "send": {
+      "from": "split",
+      "to": "tune",
+      "label": "C = 0.01 · F1 0.557 vs 0.275"
+     }
+    },
+    {
+     "say": "Evaluate once on the test set.",
+     "show": 4,
+     "on": "test",
+     "send": {
+      "from": "tune",
+      "to": "test",
+      "label": "recall 0.73 · precision 0.50"
+     }
+    },
+    {
+     "say": "Then check each site separately, and write it all down in a model card.",
+     "show": 6,
+     "on": [
+      "site",
+      "card"
+     ],
+     "send": {
+      "from": "test",
+      "to": "site",
+      "label": "per-site F1"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 4",
+   "title": "Evaluate once on the test set",
+   "columns": [
+    "",
+    "Predicted showed up",
+    "Predicted no-show"
+   ],
+   "rows": [
+    [
+     "Actually showed up (358)",
+     "257",
+     "101"
+    ],
+    [
+     "Actually no-show (142)",
+     "39",
+     "103"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here's the confusion matrix for the five hundred test appointments."
+    },
+    {
+     "say": "Of the hundred forty two real no shows, the model flagged one hundred three.",
+     "hl": 1,
+     "col": 2,
+     "sql": "recall = 103 / 142 = 0.73"
+    },
+    {
+     "say": "And missed thirty nine.",
+     "hl": 1,
+     "col": 1,
+     "dim": true
+    },
+    {
+     "say": "It flagged two hundred four in total, and one hundred one were false alarms. So precision is about one half.",
+     "col": 2,
+     "sql": "precision = 103 / (103 + 101) = 0.50"
+    },
+    {
+     "say": "For an extra reminder call, that trade-off may be fine. For anything with a cost to the patient, it wouldn't be.",
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 5",
+   "title": "Check performance per site",
+   "columns": [
+    "site",
+    "test rows",
+    "no-show rate",
+    "precision",
+    "recall",
+    "F1"
+   ],
+   "rows": [
+    [
+     "urban",
+     "449",
+     "0.245",
+     "0.461",
+     "0.691",
+     "0.553"
+    ],
+    [
+     "rural",
+     "51",
+     "0.627",
+     "0.692",
+     "0.844",
+     "0.761"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now split the test results by site."
+    },
+    {
+     "say": "Surprise: the model scores better on the rural site. F 1 of zero point seven six, against zero point five five.",
+     "col": 5,
+     "hl": 1
+    },
+    {
+     "say": "Part of that is the base rate. Sixty three percent of rural appointments are no shows, so any flag is more likely right.",
+     "col": 2,
+     "hl": 1
+    },
+    {
+     "say": "And look at the test rows: only fifty one rural. Moving a few predictions would change these numbers a lot.",
+     "col": 1,
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "The honest conclusion: rural results look acceptable, but rest on very little data. We need more rural data.",
+     "hl": 1,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Step 6",
+   "title": "Write a model card",
+   "columns": [
+    "Section",
+    "What it says"
+   ],
+   "rows": [
+    [
+     "Purpose",
+     "Flag appointments for an extra reminder call"
+    ],
+    [
+     "Not for",
+     "Denying, delaying, or deprioritizing care"
+    ],
+    [
+     "Data",
+     "2000 simulated appointments, 10% rural"
+    ],
+    [
+     "Evaluation",
+     "5-fold CV, then one held-out test set"
+    ],
+    [
+     "Results",
+     "F1 0.60 overall; urban 0.55, rural 0.76"
+    ],
+    [
+     "Limitations",
+     "Rural under-represented; only 51 rural test rows"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Finally, a model card travels with the model, so anyone using it later knows its limits."
+    },
+    {
+     "say": "What it's for: flagging appointments for an extra reminder call.",
+     "hl": 0
+    },
+    {
+     "say": "And what it must never be used for: denying or delaying anyone's care.",
+     "hl": 1
+    },
+    {
+     "say": "What data it learned from, and how it was evaluated.",
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Results overall and per site.",
+     "hl": 4
+    },
+    {
+     "say": "And known limitations, stated plainly.",
+     "hl": 5,
+     "dim": true
     }
    ]
   },

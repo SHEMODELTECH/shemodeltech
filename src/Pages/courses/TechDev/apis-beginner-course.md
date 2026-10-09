@@ -3719,7 +3719,7 @@ Users log in for a JWT, every task endpoint requires it, and a test proves one u
 
 ### Concept
 
-**GraphQL** exposes a single endpoint. Instead of the server deciding what each URL returns, the client sends a **query** naming exactly the fields it wants, including nested data. This avoids **over-fetching** (getting more data than you need) and **under-fetching** (needing several requests for one screen). REST, to show a task with its owner's email, might need two calls:
+**GraphQL** exposes a single endpoint. Instead of the server deciding what each URL returns, the client sends a **query** naming exactly the fields it wants, including nested data. This avoids **over-fetching** (getting more data than you need) and **under-fetching** (needing several requests for one screen). REST, to show a task with its owner's email, might need two calls (the second is a typical `GET /users/{id}` endpoint, hypothetical here, since our API only exposes `/v1/users/me`):
 ```
 GET /v1/tasks/5    -> { "id": 5, "title": "...", "owner_id": 3, ... }
 GET /v1/users/3    -> { "id": 3, "email": "ada@example.com" }
