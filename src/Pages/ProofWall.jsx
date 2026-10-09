@@ -26,6 +26,7 @@ import EmojiPicker from '../components/EmojiPicker';
 import ReportButton from '../components/ReportButton';
 import WallActions, { WallStats, useWallView } from '../components/WallActions';
 import { loadStats, recordClick, statKey } from '../utils/wallStats';
+import { isConfirmEmailError, writeErrorMessage } from '../utils/emailVerification';
 import { formatTimeline, industryLabel, levelLabel, roleNames, skillTrackLabel } from '../utils/projectLabels';
 
 const fmtAgo = (ts) => {
@@ -621,7 +622,7 @@ const ProofWall = () => {
         link: updateLink.trim() || null,
         imageUrl,
         mentions: kept,
-      });
+      }, { throwErrors: true });
 
       // Notification to the author so it shows under "My Posts".
       try {
@@ -677,7 +678,9 @@ const ProofWall = () => {
       console.error(e);
       // Show the real reason. A generic message here cost real debugging time
       // when the actual cause (image storage not configured) was known.
-      toast.error(e?.message ? `Could not share your update: ${e.message}` : 'Could not share your update.');
+      toast.error(isConfirmEmailError(e)
+        ? writeErrorMessage(e)
+        : e?.message ? `Could not share your update: ${e.message}` : 'Could not share your update.');
       setUploadingImg(false);
     }
     setPosting(false);

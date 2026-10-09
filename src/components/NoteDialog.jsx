@@ -3,6 +3,7 @@
 // application was declined), instead of the browser's one-line prompt box.
 
 import React, { useEffect, useRef, useState } from 'react';
+import { CONFIRM_EMAIL_MESSAGE, isConfirmEmailError } from '../utils/emailVerification';
 
 const NoteDialog = ({
   open,
@@ -113,6 +114,8 @@ const NoteDialog = ({
 // Turn a Firebase error into something useful to read.
 export const friendlyError = (e, fallback = 'Something went wrong. Please try again.') => {
   const code = e?.code || '';
+  // New accounts must confirm their email before posting, messaging or applying.
+  if (isConfirmEmailError(e)) return CONFIRM_EMAIL_MESSAGE;
   if (code === 'permission-denied')
     return 'Permission denied by the database. If this keeps happening, the database rules may need to be deployed again.';
   if (code === 'unavailable') return 'You seem to be offline. Check your connection and try again.';

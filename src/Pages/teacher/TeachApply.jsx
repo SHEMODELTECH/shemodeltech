@@ -10,6 +10,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import LearningLayout, { signInAndReturn } from '../learning/LearningLayout';
 import { TEACH_TRACKS, applyToTeach, getMyTeacherApplication } from '../../utils/teachers';
+import { writeErrorMessage } from '../../utils/emailVerification';
 
 // Minimum lengths for the written answers, counted in words.
 const MIN_WORDS = { experience: 20, motivation: 10 };
@@ -72,7 +73,7 @@ const TeachApply = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       console.error(err);
-      toast.error('Could not send your application. Please try again.');
+      toast.error(writeErrorMessage(err, 'Could not send your application. Please try again.'));
     }
     setSending(false);
   };

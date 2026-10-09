@@ -24,6 +24,14 @@ import { db } from '../firebase/config';
 import { authFetch } from './authFetch';
 import { alertStaff } from './staffAlerts';
 
+// Text for the HTML parts of an email (heading, body).
+const esc = (t) =>
+  String(t || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
 export const LEAD_APP_STATUS = {
   SUBMITTED: 'submitted',
   INTERVIEW_SCHEDULED: 'interview_scheduled',
@@ -395,8 +403,10 @@ const notify = async (uid, payload, email) => {
       body: JSON.stringify({
         to: email,
         subject: payload.title || 'Update from She Model Tech',
-        heading: payload.title,
-        body: payload.body || '',
+        // heading and body are HTML in the email: escape what people typed
+        // (project titles, reviewer messages), like staffAlerts.js does.
+        heading: esc(payload.title),
+        body: esc(payload.body),
         ctaLabel: 'Open She Model Tech',
         ctaUrl: payload.link
           ? `${site}${payload.link.startsWith('http') ? '' : ''}${payload.link}`

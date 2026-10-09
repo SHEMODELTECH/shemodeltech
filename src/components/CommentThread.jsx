@@ -12,6 +12,7 @@ import { usePhotos } from '../hooks/usePhotos';
 import { MentionTextarea } from './MentionTextarea';
 import EmojiPicker from './EmojiPicker';
 import ReportButton from './ReportButton';
+import { writeErrorMessage } from '../utils/emailVerification';
 
 // MentionTextarea keeps its own ref, so point the emoji picker at the textarea inside a wrapper.
 const textareaIn = (wrapRef) => ({ get current() { return wrapRef.current?.querySelector('textarea') || null; } });
@@ -198,7 +199,7 @@ const CommentThread = ({ activityId, ownerUid, me, comments, setComments, onCoun
         : [];
       notifyCommentAuthors({ activityId, me, ownerUid, parents, mentions: kept, text: t });
       return true;
-    } catch (e) { toast.error('Could not post.'); return false; }
+    } catch (e) { toast.error(writeErrorMessage(e, 'Could not post.')); return false; }
   };
   const remove = async (c) => {
     try {

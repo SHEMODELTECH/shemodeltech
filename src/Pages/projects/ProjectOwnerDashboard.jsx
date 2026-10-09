@@ -217,6 +217,7 @@ const ProjectOwnerDashboard = () => {
       // Send approval email to applicant
       try {
         await notifyApplicationApproved({
+          id: app.id, // the server looks up the applicant and project from this
           applicantEmail: app.applicantEmail,
           applicantName: app.applicantName,
           projectTitle: project.projectTitle,
@@ -250,7 +251,7 @@ const ProjectOwnerDashboard = () => {
       // Send rejection email to applicant
       try {
         await notifyApplicationRejected(
-          { applicantEmail: app.applicantEmail, applicantName: app.applicantName },
+          { id: app.id, applicantEmail: app.applicantEmail, applicantName: app.applicantName },
           { projectTitle: app.projectTitle },
           ''
         );

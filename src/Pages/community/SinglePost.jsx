@@ -44,6 +44,7 @@ import MentionTextarea from '../../components/community/MentionTextarea';
 import { ReactionAvatars, ReactionsModal } from '../../components/community/ReactionComponents';
 import FollowButton from '../../components/community/FollowButton';
 import usePosterName from '../../hooks/usePosterName';
+import { writeErrorMessage } from '../../utils/emailVerification';
 
 /**
  * She Model Tech - Single Post View
@@ -454,7 +455,7 @@ const SinglePost = () => {
       
     } catch (error) {
       console.error('Error submitting reply:', error);
-      showWarningMessage('Failed to post reply. Please try again.');
+      showWarningMessage(writeErrorMessage(error, 'Failed to post reply. Please try again.'));
     } finally {
       setSubmittingReply(false);
     }

@@ -11,6 +11,7 @@ import { REACTIONS } from '../utils/updateSocial';
 import { compact, notifyWallReaction, recordView, repostCard, setWallReaction } from '../utils/wallStats';
 import ReactionsModal from './ReactionsModal';
 import { usePhotos } from '../hooks/usePhotos';
+import { writeErrorMessage } from '../utils/emailVerification';
 
 const Eye = () => (
   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -117,7 +118,7 @@ const WallActions = ({ card, stats = {}, onStats, me, onReposted }) => {
       toast.success('Reposted to the Proof Wall.');
       if (onReposted) onReposted();
     } catch (e) {
-      toast.error('Could not repost.');
+      toast.error(writeErrorMessage(e, 'Could not repost.'));
     }
     setBusy(false);
   };

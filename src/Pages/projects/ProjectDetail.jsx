@@ -31,6 +31,7 @@ import { BADGE_TRACKS, roleTrack, trackByKey, trackStanding } from '../../config
 import { levelGuide, isStretch } from '../../utils/projectTemplates';
 import TeamStrength from '../../components/TeamStrength';
 import { dobFields } from '../../utils/age';
+import { writeErrorMessage } from '../../utils/emailVerification';
 import { addInterest, isInterested, recordLeadIntent } from '../../utils/projectInterest';
 import { ShareDialogButton, shareUrl } from '../../components/ShareButtons';
 
@@ -447,6 +448,7 @@ const ProjectDetail = () => {
         }
         // Email notification
         await notifyNewApplicationToOwner({
+          projectId, // the server finds the lead and your application from this
           projectOwnerEmail: project.submitterEmail || project.contactEmail,
           projectOwnerName: project.contactName || project.submitterName,
           applicantName: currentUser.displayName || currentUser.email,
@@ -461,7 +463,7 @@ const ProjectDetail = () => {
       }
     } catch (err) {
       console.error('Error applying:', err);
-      toast.error('Failed to submit application');
+      toast.error(writeErrorMessage(err, 'Failed to submit application'));
     }
     setSubmittingApp(false);
   };

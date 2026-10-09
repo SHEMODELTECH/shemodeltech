@@ -28,6 +28,7 @@ import { sendPush } from '../utils/pushNotifications';
 import { useFeatures } from '../utils/features';
 import { FREE_MESSAGE_LIMIT, companyTier } from '../config/tiers';
 import { usePresenceMany } from '../utils/presence';
+import { isConfirmEmailError, writeErrorMessage } from '../utils/emailVerification';
 import PresenceBadge, { PresenceView } from '../components/PresenceBadge';
 
 const getConversationId = (uid1, uid2) => [uid1, uid2].sort().join('_');
@@ -291,7 +292,7 @@ const Messages = () => {
       setTimeout(() => inputRef.current?.focus(), 100);
     } catch (err) {
       console.error('Error opening conversation:', err, 'code=', err?.code);
-      toast.error('Could not start chat: ' + (err?.message || 'unknown error'));
+      toast.error(isConfirmEmailError(err) ? writeErrorMessage(err) : 'Could not start chat: ' + (err?.message || 'unknown error'));
     }
   };
 
@@ -342,6 +343,13 @@ const Messages = () => {
       }
     } catch (e) {
       console.error('Send error:', e);
+      if (isConfirmEmailError(e)) {
+        // Nothing was sent: give her the text back for after she confirms.
+        setNewMessage(text);
+        toast.error(writeErrorMessage(e), { toastId: 'confirm-email' });
+      } else {
+        toast.error('Could not send your message. Please try again.');
+      }
     } finally {
       setSending(false);
       inputRef.current?.focus();

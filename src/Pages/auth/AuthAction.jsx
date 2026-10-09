@@ -9,6 +9,7 @@ import { applyActionCode } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { refreshEmailVerified } from '../../utils/emailVerification';
 
 const AuthAction = () => {
   const [params] = useSearchParams();
@@ -23,7 +24,12 @@ const AuthAction = () => {
     if (mode === 'verifyEmail' || mode === 'recoverEmail') {
       if (!oobCode) { setStatus('error'); return; }
       applyActionCode(auth, oobCode)
-        .then(() => setStatus('done'))
+        .then(async () => {
+          // Already signed in (same browser)? Pick up the confirmation now, so
+          // posting, messaging and applying work without signing in again.
+          if (mode === 'verifyEmail' && auth.currentUser) await refreshEmailVerified();
+          setStatus('done');
+        })
         .catch(() => setStatus('error'));
     }
   }, [mode, oobCode]);
@@ -53,8 +59,17 @@ const AuthAction = () => {
                   <svg className="w-7 h-7 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                 </div>
                 <p className="text-gray-900 font-semibold mb-1">{mode === 'recoverEmail' ? 'Email change reversed' : 'Email verified'}</p>
-                <p className="text-gray-500 text-sm mb-6">Your account is all set - you can sign in now.</p>
-                <button onClick={() => navigate('/login')} className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Sign in now</button>
+                {mode === 'verifyEmail' && auth.currentUser ? (
+                  <>
+                    <p className="text-gray-500 text-sm mb-6">Your account is all set - you can post, message and apply now.</p>
+                    <button onClick={() => navigate('/dashboard')} className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Continue</button>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-gray-500 text-sm mb-6">Your account is all set - you can sign in now.</p>
+                    <button onClick={() => navigate('/login')} className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm transition-all">Sign in now</button>
+                  </>
+                )}
               </>
             )}
             {status === 'error' && (

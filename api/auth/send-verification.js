@@ -4,6 +4,7 @@
 // on the branded page (with a "Sign in now" button) instead of the default
 // firebaseapp.com page that offers no way forward.
 const { sendMail } = require('../../lib/mailer');
+const { escapeHtml } = require('../../lib/escapeHtml');
 const admin = require('firebase-admin');
 
 if (!admin.apps.length) {
@@ -35,7 +36,9 @@ module.exports = async function handler(req, res) {
  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
  const email = String(req.body?.email || '').trim().toLowerCase();
- const name = String(req.body?.name || '').trim();
+ // The greeting name is NOT taken from the request body (anyone could put
+ // their own HTML or links there and have us email it to someone else's
+ // address). It is read from the account itself below.
  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
  return res.status(400).json({ error: 'Please enter a valid email address.' });
  }
@@ -59,6 +62,19 @@ module.exports = async function handler(req, res) {
  throw err;
  }
  if (!oobCode) return res.status(200).json({ success: true });
+
+ // The account's own display name (set by the client with updateProfile
+ // right after sign-up), escaped and kept short. No name: greet without one.
+ let name = '';
+ try {
+ const u = await admin.auth().getUserByEmail(email);
+ name = escapeHtml(String(u.displayName || '').replace(/\s+/g, ' ').trim().slice(0, 60));
+ } catch (err) {
+ if (err.code === 'auth/user-not-found' || err.code === 'auth/email-not-found') {
+ return res.status(200).json({ success: true });
+ }
+ name = '';
+ }
 
  // Link to OUR branded action page - it applies the code and shows a
  // "Sign in now" button, so the flow never dead-ends.

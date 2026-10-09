@@ -57,3 +57,30 @@ jobs:
         run: npm run build
         env:
           CI: true
+
+  # Security rules for the database (firestore.rules), tested against the
+  # Firebase emulator. Vercel doesn't deploy these: after this job is green,
+  # deploy them with `firebase deploy --only firestore:rules`.
+  database-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: tests/firestore-rules
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install test tools
+        run: npm install --no-audit --no-fund
+
+      - name: Run the rules tests
+        run: npm test

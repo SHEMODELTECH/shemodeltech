@@ -23,7 +23,9 @@ export const ACTIVITY_TYPES = {
 };
 
 // --- Write a REAL activity event (call from badge/ship/lead/milestone moments) ---
-export const logActivity = async (event) => {
+// opts.throwErrors: let the caller show why it failed (the Proof Wall composer);
+// everywhere else a failed activity log never breaks the underlying action.
+export const logActivity = async (event, opts = {}) => {
   try {
     const ref = await addDoc(collection(db, 'activity'), {
       type: event.type,                       // 'badge' | 'ship' | 'lead' | 'milestone' | 'update'
@@ -44,6 +46,7 @@ export const logActivity = async (event) => {
   } catch (e) {
     // Never let activity logging break the underlying action.
     console.error('logActivity failed:', e);
+    if (opts.throwErrors) throw e;
   }
 };
 

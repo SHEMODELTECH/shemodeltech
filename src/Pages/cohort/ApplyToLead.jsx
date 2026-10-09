@@ -15,6 +15,7 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { clearLeadIntent } from '../../utils/projectInterest';
+import { writeErrorMessage } from '../../utils/emailVerification';
 import {
   applyToLead,
   getMyApplication,
@@ -197,7 +198,7 @@ const ApplyToLead = () => {
       navigate('/apply-to-lead', { replace: true });
       setExisting({ status: 'submitted', rankedProjectIds: ranked, pitch });
     } catch (e) {
-      toast.error(e.message || 'Could not submit your application.');
+      toast.error(writeErrorMessage(e, e.message || 'Could not submit your application.'));
     }
     setSaving(false);
   };

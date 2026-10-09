@@ -33,6 +33,7 @@ const admin = require('../../lib/firebaseAdmin');
 const { sendMail } = require('../../lib/mailer');
 const { pushToUids } = require('../../lib/push');
 const { runBackup } = require('../../lib/backupJob');
+const { escapeHtml, safeUrl } = require('../../lib/escapeHtml');
 
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
@@ -74,24 +75,25 @@ const daysSinceTs = (ts) => {
 
 const shell = (title, body, cta) => `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#353331">
- <h1 style="font-size:20px;margin:0 0 16px">${title}</h1>
+ <h1 style="font-size:20px;margin:0 0 16px">${escapeHtml(title)}</h1>
  ${body}
- ${cta ? `<p style="margin:24px 0"><a href="${cta.url}" style="background:#D41470;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${cta.label}</a></p>` : ''}
+ ${cta ? `<p style="margin:24px 0"><a href="${escapeHtml(cta.url)}" style="background:#D41470;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${escapeHtml(cta.label)}</a></p>` : ''}
  <hr style="border:none;border-top:1px solid #eee;margin:28px 0"/>
  <p style="color:#A3A3A3;font-size:12px">${BRAND_NAME} &middot; <a href="${SITE}" style="color:#A3A3A3">shemodeltech.com</a><br/>
  Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:#A3A3A3">${SUPPORT_EMAIL}</a></p>
 </div>`;
 
 const reminderEmail = (project, daysLeft, isLead) => {
- const url = `${SITE}/projects/${project.id}/workspace`;
+ const url = `${SITE}/projects/${encodeURIComponent(project.id)}/workspace`;
  const title = project.projectTitle || project.title || 'your project';
+ const safeTitle = escapeHtml(title); // for the HTML; the subject is plain text
 
  if (daysLeft === 0) {
  return {
  subject: `Today is the deadline for "${title}"`,
  html: shell(
  `Today is the deadline`,
- `<p>The deadline for <strong>${title}</strong> is today.</p>
+ `<p>The deadline for <strong>${safeTitle}</strong> is today.</p>
  <p>If you need more time, ${isLead ? 'you can request a one-week extension from the workspace' : 'ask your project lead to request a one-week extension'}, there's a ${GRACE_PERIOD_DAYS}-day grace period, so nothing is lost yet.</p>`,
  { url, label: 'Open the workspace' }
  ),
@@ -102,7 +104,7 @@ const reminderEmail = (project, daysLeft, isLead) => {
  subject: `${daysLeft} day${daysLeft === 1 ? '' : 's'} left on "${title}"`,
  html: shell(
  `${daysLeft} day${daysLeft === 1 ? '' : 's'} to go`,
- `<p>The deadline for <strong>${title}</strong> ${urgency}, <strong>${daysLeft} day${daysLeft === 1 ? '' : 's'}</strong> left.</p>
+ `<p>The deadline for <strong>${safeTitle}</strong> ${urgency}, <strong>${daysLeft} day${daysLeft === 1 ? '' : 's'}</strong> left.</p>
  ${isLead ? `<p>As project lead, you'll submit the work for review when the team is ready. Make sure the GitHub repository is up to date and that <strong>SHEMODELTECH</strong> has been added as a collaborator.</p>` : `<p>Now is a good moment to push anything you haven't committed yet, so your contribution is on the record.</p>`}`,
  { url, label: 'Open the workspace' }
  ),
@@ -110,13 +112,14 @@ const reminderEmail = (project, daysLeft, isLead) => {
 };
 
 const graceEmail = (project, graceDaysLeft, isLead) => {
- const url = `${SITE}/projects/${project.id}/workspace`;
+ const url = `${SITE}/projects/${encodeURIComponent(project.id)}/workspace`;
  const title = project.projectTitle || project.title || 'your project';
+ const safeTitle = escapeHtml(title); // for the HTML; the subject is plain text
  return {
  subject: `Grace period: ${graceDaysLeft} day${graceDaysLeft === 1 ? '' : 's'} left on "${title}"`,
  html: shell(
  `You're in the grace period`,
- `<p><strong>${title}</strong> passed its deadline and is now in the ${GRACE_PERIOD_DAYS}-day grace period.</p>
+ `<p><strong>${safeTitle}</strong> passed its deadline and is now in the ${GRACE_PERIOD_DAYS}-day grace period.</p>
  <p><strong>${graceDaysLeft} day${graceDaysLeft === 1 ? '' : 's'}</strong> remain to submit${isLead ? '' : ', your lead needs to submit for review'}.</p>
  <p>Badges and certificates are awarded after review, so it's worth finishing.</p>`,
  { url, label: 'Open the workspace' }
@@ -185,7 +188,7 @@ async function markSent(db, key, meta) {
 // Each send is flagged on the registration, so re-runs never double-email.
 // ─────────────────────────────────────────────────────────────
 const EV_SITE = process.env.SITE_URL || 'https://shemodeltech.com';
-const evEsc = (t) => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const evEsc = (t) => escapeHtml(t || '');
 const evWhen = (iso) => {
  const d = new Date(iso);
  const day = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' });
@@ -221,7 +224,7 @@ async function eventTasks(db, stats) {
  to: u.email,
  subject: title,
  text: `${title}\n\n${message}\n\n${ctaUrl}`,
- html: `<h2 style="margin:0 0 12px">${evEsc(title)}</h2><p>Hi ${evEsc((u.displayName || '').split(' ')[0] || 'there')},</p>${htmlBody}<p style="margin:22px 0"><a href="${ctaUrl}" style="background:#D41470;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${evEsc(ctaLabel)}</a></p>`,
+ html: `<h2 style="margin:0 0 12px">${evEsc(title)}</h2><p>Hi ${evEsc((u.displayName || '').split(' ')[0] || 'there')},</p>${htmlBody}<p style="margin:22px 0"><a href="${evEsc(ctaUrl)}" style="background:#D41470;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;display:inline-block">${evEsc(ctaLabel)}</a></p>`,
  }).catch((e) => console.error('event email failed:', e.message));
  }
  const link = ctaUrl.startsWith(EV_SITE) ? ctaUrl.slice(EV_SITE.length) || '/events' : ctaUrl;
@@ -243,7 +246,7 @@ async function eventTasks(db, stats) {
  await r.ref.update({ status: 'registered', movedUpAt: admin.firestore.FieldValue.serverTimestamp() });
  r.status = 'registered';
  placed += 1;
- const url = `${EV_SITE}/events/${ev.id}`;
+ const url = `${EV_SITE}/events/${encodeURIComponent(ev.id)}`;
  await tell(r.uid, `You have a place: ${ev.title}`, `${evWhen(ev.startAt)} (Eastern time). A place opened up, so you’re now registered.`,
  `<p>A place opened up for <strong>${evEsc(ev.title)}</strong>, so you’re now registered.</p><p><strong>When:</strong> ${evWhen(ev.startAt)} (Eastern time), online.</p><p>We’ll email you the joining link before it starts.</p>`,
  url, 'See the event');
@@ -255,7 +258,9 @@ async function eventTasks(db, stats) {
  const msLeft = start - now;
  if (msLeft > 26 * 3600000 || msLeft < -10 * 60000) continue;
  const info = await db.collection('events').doc(ev.id).collection('private').doc('info').get().catch(() => null);
- const joinUrl = (info && info.exists && info.data().joinUrl) || `${EV_SITE}/events/${ev.id}`;
+ // Only http(s) joining links are emailed (never javascript: or data: links).
+ const eventPage = `${EV_SITE}/events/${encodeURIComponent(ev.id)}`;
+ const joinUrl = safeUrl(info && info.exists && info.data().joinUrl, eventPage);
  // A few registrants at a time: one at a time (email + bell + push each)
  // could run past the serverless time limit for a big event.
  const remindOne = async (r) => {
@@ -263,7 +268,7 @@ async function eventTasks(db, stats) {
  // We're live now (from the start time to 10 minutes after).
  if (msLeft <= 0 && !r.remindedLive) {
  await tell(r.uid, `We're live now: ${ev.title}`, 'It has started. Tap to join.',
- `<p><strong>${evEsc(ev.title)}</strong> has started. Come and join us!</p><p>Joining link: <a href="${joinUrl}">${evEsc(joinUrl)}</a></p>`,
+ `<p><strong>${evEsc(ev.title)}</strong> has started. Come and join us!</p><p>Joining link: <a href="${evEsc(joinUrl)}">${evEsc(joinUrl)}</a></p>`,
  joinUrl, 'Join now');
  await r.ref.update({ remindedLive: true, reminded30: true, reminded1d: true });
  stats.eventLiveNow = (stats.eventLiveNow || 0) + 1;
@@ -272,7 +277,7 @@ async function eventTasks(db, stats) {
  // 30 minutes before (sent from 35 minutes out until the start).
  if (msLeft > 0 && msLeft <= 35 * 60000 && !r.reminded30) {
  await tell(r.uid, `Starting soon: ${ev.title}`, 'It starts in about 30 minutes. Use the joining link to get in.',
- `<p><strong>${evEsc(ev.title)}</strong> starts in about 30 minutes, online.</p><p>Joining link: <a href="${joinUrl}">${evEsc(joinUrl)}</a></p>`,
+ `<p><strong>${evEsc(ev.title)}</strong> starts in about 30 minutes, online.</p><p>Joining link: <a href="${evEsc(joinUrl)}">${evEsc(joinUrl)}</a></p>`,
  joinUrl, 'Join now');
  await r.ref.update({ reminded30: true, reminded1d: true });
  stats.eventReminders30 = (stats.eventReminders30 || 0) + 1;
@@ -281,7 +286,7 @@ async function eventTasks(db, stats) {
  // 1 day before (anything from 24 hours down to 40 minutes out).
  if (msLeft <= 24 * 3600000 && msLeft > 40 * 60000 && !r.reminded1d) {
  await tell(r.uid, `Tomorrow: ${ev.title}`, `${evWhen(ev.startAt)} (Eastern time), online. Here’s your joining link.`,
- `<p>A reminder that <strong>${evEsc(ev.title)}</strong> is coming up.</p><p><strong>When:</strong> ${evWhen(ev.startAt)} (Eastern time), online.</p><p>Joining link: <a href="${joinUrl}">${evEsc(joinUrl)}</a></p><p>We’ll send one more reminder 30 minutes before it starts.</p>`,
+ `<p>A reminder that <strong>${evEsc(ev.title)}</strong> is coming up.</p><p><strong>When:</strong> ${evWhen(ev.startAt)} (Eastern time), online.</p><p>Joining link: <a href="${evEsc(joinUrl)}">${evEsc(joinUrl)}</a></p><p>We’ll send one more reminder 30 minutes before it starts.</p>`,
  joinUrl, 'Open the joining link');
  await r.ref.update({ reminded1d: true });
  stats.eventReminders1d = (stats.eventReminders1d || 0) + 1;

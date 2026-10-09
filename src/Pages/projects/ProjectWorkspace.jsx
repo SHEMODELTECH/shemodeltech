@@ -16,6 +16,7 @@ import EmojiPicker from '../../components/EmojiPicker';
 import ReportButton from '../../components/ReportButton';
 import { teamForumLink, buildMentionables, findMentions, splitMentions, sendTeamNotices } from '../../utils/teamForum';
 import { getUserDocCached } from '../../utils/firestoreHelpers';
+import { writeErrorMessage } from '../../utils/emailVerification';
 
 const formatTime = (ts) => {
   if (!ts) return '';
@@ -477,7 +478,7 @@ const ProjectWorkspace = () => {
       setNewPost('');
       setNewPostLink('');
       setNewPostImage(null);
-    } catch (e) { toast.error('Failed to post'); setUploadingImage(false); }
+    } catch (e) { toast.error(writeErrorMessage(e, 'Failed to post')); setUploadingImage(false); }
     setPosting(false);
   };
 
@@ -529,7 +530,7 @@ const ProjectWorkspace = () => {
         ...(parent?.authorId ? [[parent.authorId, n('team_reply', `${myName} replied to your post in ${teamName}`)]] : []),
         ...posts.filter((p) => p.parentId === parentId).map((p) => [p.authorId, n('team_reply', `${myName} also replied to a post in ${teamName}`)]),
       ]);
-    } catch (e) { toast.error('Failed to reply'); }
+    } catch (e) { toast.error(writeErrorMessage(e, 'Failed to reply')); }
   };
 
   // Edit your own post or reply. Anyone newly tagged in the edit is told once.

@@ -7,10 +7,16 @@
 //   level: 'important' (default) or 'social' (mentions and replies)
 // Auth: a shared secret in the `x-push-secret` header (PUSH_API_SECRET env var),
 // OR a Firebase ID token in `authorization: Bearer <token>` (verified server-side).
+// Members (lib/sendGuard.js guardPush): a confirmed email (lib/confirmedEmail.js;
+// not needed to notify staff), at most 50 recipients per request, a daily cap,
+// companies only people they're talking to, and the same push can't be sent
+// to the same people twice within a minute.
 
 const admin = require('../lib/firebaseAdmin');
 const { guardPush } = require('../lib/sendGuard');
 const { pushToUids } = require('../lib/push');
+const { throttle } = require('../lib/requireUser');
+const crypto = require('crypto');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -54,6 +60,14 @@ module.exports = async (req, res) => {
       if (!g.ok) return res.status(g.status || 403).json({ error: g.error });
       uids = g.uids;
       safeLink = g.link;
+      // Repeats: the same message to the same people from the same sender is
+      // refused for a minute (stops a script replaying one request).
+      const sig = crypto.createHash('sha256')
+        .update(JSON.stringify([[...uids].sort(), String(title), String(message), safeLink]))
+        .digest('hex').slice(0, 32);
+      if (!(await throttle(`push_${caller.uid}_${sig}`, 60))) {
+        return res.status(429).json({ error: 'This notification was just sent.' });
+      }
     }
 
     const r = await pushToUids(uids.slice(0, 1000), {

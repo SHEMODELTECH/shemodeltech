@@ -8,6 +8,7 @@ import { db } from '../firebase/config';
 import { useFeatures } from '../utils/features';
 import { isBlockedForCompany } from '../utils/companyPaths';
 import AgeCheck from './AgeCheck';
+import EmailConfirmBanner from './EmailConfirmBanner';
 import TopBarIcons from './TopBarIcons';
 import { ADMIN_SECTIONS } from '../config/adminSections';
 
@@ -414,6 +415,8 @@ const AppLayout = ({ children }) => {
 
         {/* Page content */}
         <main className="flex-1 min-w-0 px-4 pt-4 pb-24 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8 lg:pb-8">
+          {/* New email/password accounts: confirm the email to post, message and apply. */}
+          <EmailConfirmBanner />
           {children}
         </main>
       </div>

@@ -1,0 +1,14 @@
+{
+  "name": "smt-firestore-rules-tests",
+  "private": true,
+  "description": "Tests for firestore.rules, run against the Firebase emulator. Kept separate from the app so Vercel never installs these tools. Run: npm install && npm test (needs Java 21).",
+  "type": "module",
+  "scripts": {
+    "test": "firebase emulators:exec --only firestore --project demo-smt \"node rules.test.mjs\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
+    "firebase": "^10.14.1",
+    "firebase-tools": "^13.35.1"
+  }
+}

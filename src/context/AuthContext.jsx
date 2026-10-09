@@ -245,10 +245,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Re-send the verification email to the signed-in user (branded flow).
+  // Throws an error with code 'rate-limited' when one was sent in the last
+  // minute (the server allows one a minute), so the page can say so kindly.
   const resendVerification = async () => {
     if (!auth.currentUser) return;
+    let res = null;
     try {
-      const res = await fetch('/api/auth/send-verification', {
+      res = await fetch('/api/auth/send-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -256,11 +259,18 @@ export const AuthProvider = ({ children }) => {
           name: auth.currentUser.displayName || '',
         }),
       });
-      if (!res.ok) throw new Error('send failed');
     } catch (_) {
-      // Fallback to the default sender rather than failing silently.
-      return sendEmailVerification(auth.currentUser);
+      res = null;
     }
+    if (res && res.status === 429) {
+      const data = await res.json().catch(() => ({}));
+      const err = new Error(data.error || 'Please wait a minute before requesting another email.');
+      err.code = 'rate-limited';
+      throw err;
+    }
+    if (res && res.ok) return;
+    // Fallback to the default sender rather than failing silently.
+    return sendEmailVerification(auth.currentUser);
   };
 
   // Sign out function

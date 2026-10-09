@@ -5,6 +5,7 @@
 // =================================================================
 
 const { sendMail } = require('../../lib/mailer');
+const { escapeHtml: esc } = require('../../lib/escapeHtml');
 const admin = require('firebase-admin');
 
 if (!admin.apps.length) {
@@ -27,6 +28,9 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 const SITE = 'https://shemodeltech.com';
 const QUIET_DAYS = 3; // "went quiet" threshold
+// Firestore ids and keys go into links encoded. Headlines and details are
+// plain text (they carry project titles and names) and are escaped in renderEmail.
+const enc = (v) => encodeURIComponent(String(v == null ? '' : v));
 
 const tsToDate = (t) => {
  try { return t?.toDate ? t.toDate() : (t?._seconds ? new Date(t._seconds * 1000) : null); }
@@ -172,14 +176,14 @@ module.exports = async function handler(req, res) {
 
  for (const p of involved) {
  const title = p.projectTitle || p.title || 'your project';
- const link = `${SITE}/projects/${p.id}`;
+ const link = `${SITE}/projects/${enc(p.id)}`;
 
  // STATE 1: stepped up to lead but stalled at setup (never opened the team).
  if (p.submitterId === user.uid && p.status === 'setup') {
  items.push({
  headline: `Finish setting up "${title}"`,
  detail: 'You stepped up to lead this project but haven\'t opened it to the team yet. Set the roles and start recruiting.',
- link: `${SITE}/projects/${p.id}/setup`,
+ link: `${SITE}/projects/${enc(p.id)}/setup`,
  });
  continue;
  }
@@ -191,7 +195,7 @@ module.exports = async function handler(req, res) {
  items.push({
  headline: `Your team on "${title}" is waiting`,
  detail: 'You were approved but haven\'t opened the workspace yet. Jump in and meet your team.',
- link: `${SITE}/projects/${p.id}/workspace`,
+ link: `${SITE}/projects/${enc(p.id)}/workspace`,
  });
  continue;
  }
@@ -201,7 +205,7 @@ module.exports = async function handler(req, res) {
  items.push({
  headline: `Your team on "${title}" needs its lead`,
  detail: `It's been ${daysSince(projActivity)} days since you were in the workspace. Check in with your team and keep the project moving.`,
- link: `${SITE}/projects/${p.id}/workspace`,
+ link: `${SITE}/projects/${enc(p.id)}/workspace`,
  });
  continue;
  }
@@ -211,7 +215,7 @@ module.exports = async function handler(req, res) {
  items.push({
  headline: `Pick up where you left off on "${title}"`,
  detail: `It's been ${daysSince(projActivity)} days. Your team is counting on your part.`,
- link: `${SITE}/projects/${p.id}/workspace`,
+ link: `${SITE}/projects/${enc(p.id)}/workspace`,
  });
  }
  }
@@ -230,7 +234,7 @@ module.exports = async function handler(req, res) {
  items.push({
  headline: `You applied to lead "${title}"`,
  detail: 'This project still needs a lead. If you\'re ready, confirm and set up your team.',
- link: `${SITE}/projects/${p.id}`,
+ link: `${SITE}/projects/${enc(p.id)}`,
  });
  }
  }
@@ -253,7 +257,7 @@ module.exports = async function handler(req, res) {
        items.push({
          headline: `Continue ${nice}${part ? `, Part ${part}` : ''}`,
          detail: 'You started this course. A few minutes today keeps you moving toward your certificate.',
-         link: `${SITE}/learning/${track}/${slug}`,
+         link: `${SITE}/learning/${enc(track)}/${enc(slug)}`,
        });
        if (items.filter((i) => i.link.includes('/learning/')).length >= 2) break;
      }
@@ -272,7 +276,7 @@ module.exports = async function handler(req, res) {
  items.push({
  headline: 'Finish your lead application',
  detail: `You started applying to lead "${title}", but it hasn't been sent yet. It only takes a few minutes: fill it in and tap Submit.`,
- link: `${SITE}/apply-to-lead?project=${pid}`,
+ link: `${SITE}/apply-to-lead?project=${enc(pid)}`,
  });
  }
  }
@@ -344,7 +348,7 @@ module.exports = async function handler(req, res) {
  headline,
  detail: `${detail} On a project that is coming soon, tap Join to apply to lead it or join the team.`,
  link: `${SITE}/projects`,
- suggestions: picks.map(p => ({ title: p.projectTitle || p.title || 'Open project', link: `${SITE}/projects/${p.id}` })),
+ suggestions: picks.map(p => ({ title: p.projectTitle || p.title || 'Open project', link: `${SITE}/projects/${enc(p.id)}` })),
  });
  } else {
  // Nothing to join right now: point her to the lead waitlist.
@@ -418,16 +422,16 @@ function renderEmail(name, items, isNudgeOnly) {
  const rows = items.map(it => {
  const suggestionsHtml = (it.suggestions && it.suggestions.length)
  ? `<div style="margin:6px 0 12px">${it.suggestions.map(s =>
- `<a href="${s.link}" style="display:block;background:#ffffff;border:1px solid #E5E5E5;border-radius:6px;padding:9px 12px;margin-bottom:6px;text-decoration:none;color:#D41470;font-size:13px;font-weight:600">${s.title} &rarr;</a>`
+ `<a href="${esc(s.link)}" style="display:block;background:#ffffff;border:1px solid #E5E5E5;border-radius:6px;padding:9px 12px;margin-bottom:6px;text-decoration:none;color:#D41470;font-size:13px;font-weight:600">${esc(s.title)} &rarr;</a>`
  ).join('')}</div>`
  : '';
  const btnLabel = it.suggestions ? 'Browse all projects' : 'Continue';
  return `
  <div style="border-left:4px solid #D97706;background:#fff8f5;border-radius:8px;padding:14px;margin-bottom:10px">
- <p style="margin:0 0 4px;font-size:14px;font-weight:bold;color:#D41470">${it.headline}</p>
- <p style="margin:0 0 10px;font-size:13px;color:#111111">${it.detail}</p>
+ <p style="margin:0 0 4px;font-size:14px;font-weight:bold;color:#D41470">${esc(it.headline)}</p>
+ <p style="margin:0 0 10px;font-size:13px;color:#111111">${esc(it.detail)}</p>
  ${suggestionsHtml}
- <a href="${it.link}" style="display:inline-block;background:linear-gradient(135deg,#D97706,#D97706);color:#ffffff;text-decoration:none;font-weight:600;font-size:13px;padding:8px 16px;border-radius:6px">${btnLabel}</a>
+ <a href="${esc(it.link)}" style="display:inline-block;background:linear-gradient(135deg,#D97706,#D97706);color:#ffffff;text-decoration:none;font-weight:600;font-size:13px;padding:8px 16px;border-radius:6px">${btnLabel}</a>
  </div>`;
  }).join('');
 
@@ -436,7 +440,7 @@ function renderEmail(name, items, isNudgeOnly) {
  <div style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid #E5E5E5">
  <div style="background:linear-gradient(135deg,#D97706,#D97706);color:#fff;padding:24px;text-align:center">
  <h1 style="margin:0;font-size:19px">${isNudgeOnly ? 'There\'s a project waiting for you' : 'Pick up where you left off'}</h1>
- <p style="margin:8px 0 0;font-size:13px;opacity:.95">Hi ${name}, ${isNudgeOnly ? 'here are projects in your track to jump into' : 'here\'s what\'s waiting for you on She Model Tech'}</p>
+ <p style="margin:8px 0 0;font-size:13px;opacity:.95">Hi ${esc(name)}, ${isNudgeOnly ? 'here are projects in your track to jump into' : 'here\'s what\'s waiting for you on She Model Tech'}</p>
  </div>
  <div style="padding:22px">
  ${rows}

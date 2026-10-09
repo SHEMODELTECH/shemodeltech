@@ -4,6 +4,7 @@
 // =================================================================
 
 const { sendMail } = require('../../lib/mailer');
+const { escapeHtml: esc } = require('../../lib/escapeHtml');
 const { subDays } = require('date-fns');
 const admin = require('firebase-admin');
 
@@ -26,6 +27,10 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 const SITE = 'https://shemodeltech.com';
+// Ids from Firestore go into links encoded; titles, names and descriptions are
+// escaped with esc() (cut to length first, so an entity is never split).
+const enc = (v) => encodeURIComponent(String(v == null ? '' : v));
+const cut = (t, n) => { const s = String(t || ''); return esc(s.substring(0, n)) + (s.length > n ? '...' : ''); };
 
 // Run work for many members a few at a time, so the job finishes inside the
 // serverless time limit (strictly one at a time took minutes).
@@ -149,7 +154,7 @@ module.exports = async function handler(req, res) {
  const convSnap = await db.collection('conversations')
  .where('participants', 'array-contains', user.uid).get();
  user.unreadMessages = 0;
- convSnap.docs.forEach(d => { user.unreadMessages += (d.data().unreadBy?.[user.uid] || 0); });
+ convSnap.docs.forEach(d => { user.unreadMessages += Number(d.data().unreadBy?.[user.uid]) || 0; });
  } catch (e) {
  user.applications = []; user.approvals = []; user.badges = []; user.unreadMessages = 0;
  }
@@ -179,11 +184,11 @@ module.exports = async function handler(req, res) {
  const left = daysLeftOf(p);
  const when = p.status === 'overdue' ? 'Finish up and submit for review'
  : left == null ? '' : left > 1 ? `${left} days left` : left === 1 ? '1 day left' : left === 0 ? 'Due today' : '';
- return `<div class="it"><h3><a href="${SITE}/projects/${p.id}/workspace" style="color:#111111;text-decoration:none">${p.projectTitle || 'Project'}</a></h3><p>${lead ? 'You lead this project' : 'Team member'} · ${label[p.status]}${when ? ` · ${when}` : ''}</p></div>`;
+ return `<div class="it"><h3><a href="${SITE}/projects/${enc(p.id)}/workspace" style="color:#111111;text-decoration:none">${esc(p.projectTitle || 'Project')}</a></h3><p>${lead ? 'You lead this project' : 'Team member'} · ${label[p.status]}${when ? ` · ${when}` : ''}</p></div>`;
  };
  return `<div class="sc"><h2>Your Projects</h2>
 ${ongoing.map(row).join('')}
-${doneThisWeek.map(p => `<div class="it"><h3>Completed this week: ${p.projectTitle || 'Project'}</h3><p>Well done! See your badge and certificate in the <a href="${SITE}/project-vault" style="color:#D41470">Project Vault</a>.</p></div>`).join('')}
+${doneThisWeek.map(p => `<div class="it"><h3>Completed this week: ${esc(p.projectTitle || 'Project')}</h3><p>Well done! See your badge and certificate in the <a href="${SITE}/project-vault" style="color:#D41470">Project Vault</a>.</p></div>`).join('')}
 </div>`;
  };
 
@@ -203,7 +208,7 @@ ${doneThisWeek.map(p => `<div class="it"><h3>Completed this week: ${p.projectTit
  };
  const joinSection = (user) => {
  const g = groupsFor(user);
- const row = (p, note) => `<div class="it"><h3><a href="${SITE}/projects/${p.id}" style="color:#111111;text-decoration:none">${p.projectTitle || 'Project'}</a></h3><p>${note}${(p.isPaid || p.cohortPaid) ? ' · Paid, 18 and older' : ''}</p></div>`;
+ const row = (p, note) => `<div class="it"><h3><a href="${SITE}/projects/${enc(p.id)}" style="color:#111111;text-decoration:none">${esc(p.projectTitle || 'Project')}</a></h3><p>${note}${(p.isPaid || p.cohortPaid) ? ' · Paid, 18 and older' : ''}</p></div>`;
  const block = (title, list, note) => list.length ? `<p style="margin:10px 0 6px;font-size:12px;font-weight:bold;color:#404040;text-transform:uppercase;letter-spacing:.04em">${title}</p>${list.map(p => row(p, note)).join('')}` : '';
  const waitlist = g.needsLead.length === 0
  ? `<p style="font-size:12px;color:#111111;margin:10px 0 0">Want to lead a project? No project needs a lead right now. <a href="${SITE}/apply-to-lead" style="color:#D41470">Join the lead waitlist</a> and we'll email you when one does.</p>`
@@ -243,7 +248,7 @@ body{font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;backgr
 .btn.blue{background:linear-gradient(135deg,#D41470,#D41470)}
 .ft{background:#262626;color:#D4D4D4;padding:18px;text-align:center;font-size:11px}.ft a{color:#D97706;text-decoration:none}
 </style></head><body><div class="c">
-<div class="hd"><h1>Your Weekly Recap</h1><p>Hi ${name}, here is your week on She Model Tech</p>
+<div class="hd"><h1>Your Weekly Recap</h1><p>Hi ${esc(name)}, here is your week on She Model Tech</p>
 <div style="margin-top:8px;font-size:11px;opacity:.85">${weekStart} to ${weekEnd}</div></div>
 <div class="ct">
 
@@ -269,7 +274,7 @@ ${totalActivity === 0 ? `<p style="color:#111111;font-size:12px;text-align:cente
 
 ${cohortsNew.length > 0 ? `<div class="sc"><h2>New Cohorts This Week</h2>
 ${cohortsNew.slice(0,4).map(c => `<div class="it">
-<h3>${c.name || 'New cohort'}</h3>
+<h3>${esc(c.name || 'New cohort')}</h3>
 <p>${c.isPaid ? `Paid cohort · $${Number(c.payPerPerson) || 0} per person · 18 and older` : 'Free cohort · earn a badge'} · apply to lead or join a team</p>
 </div>`).join('')}
 <a href="${SITE}/projects" class="btn" style="color:#ffffff">See the projects</a></div>` : ''}
@@ -280,22 +285,22 @@ ${joinSection(user)}
 
 ${projects.length > 0 ? `<div class="sc"><h2>New Projects to Join</h2>
 ${projects.slice(0,5).map(p => `<div class="it">
-<h3>${p.projectTitle || 'Project'}</h3>
-<p>${(p.projectDescription || '').substring(0, 90)}${(p.projectDescription||'').length > 90 ? '...' : ''}</p>
+<h3>${esc(p.projectTitle || 'Project')}</h3>
+<p>${cut(p.projectDescription, 90)}</p>
 </div>`).join('')}
 <a href="${SITE}/projects" class="btn" style="color:#ffffff">Browse projects</a></div>` : ''}
 
 ${paid.length > 0 ? `<div class="sc"><h2>New Paid Projects</h2>
 ${paid.slice(0,4).map(c => `<div class="it">
-<h3>${c.title || 'Paid project'}</h3>
-<p>${c.companyName || ''} · earn a badge to apply</p>
+<h3>${esc(c.title || 'Paid project')}</h3>
+<p>${esc(c.companyName || '')} · earn a badge to apply</p>
 </div>`).join('')}
 <a href="${SITE}/projects" class="btn" style="color:#ffffff">See paid projects</a></div>` : ''}
 
 ${newCourses.length > 0 ? `<div class="sc"><h2>New Courses from Our Mentors</h2>
 ${newCourses.slice(0,4).map(c => `<div class="it">
-<h3><a href="${SITE}/learning/${c.track}/p-${c.id}" style="color:#111111;text-decoration:none">${c.title || 'New course'}</a></h3>
-<p>${[c.level, c.authorName ? `by ${c.authorName}` : ''].filter(Boolean).join(' · ')}${c.summary ? ` · ${c.summary.substring(0, 80)}${c.summary.length > 80 ? '...' : ''}` : ''}</p>
+<h3><a href="${SITE}/learning/${enc(c.track)}/p-${enc(c.id)}" style="color:#111111;text-decoration:none">${esc(c.title || 'New course')}</a></h3>
+<p>${[c.level, c.authorName ? `by ${c.authorName}` : ''].filter(Boolean).map(esc).join(' · ')}${c.summary ? ` · ${cut(c.summary, 80)}` : ''}</p>
 </div>`).join('')}
 <a href="${SITE}/learning" class="btn" style="color:#ffffff">Browse free courses</a></div>` : ''}
 

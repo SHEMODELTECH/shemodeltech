@@ -8,18 +8,19 @@
 // anything the caller writes, only a notice pointing staff to the Admin tabs.
 const admin = require('../lib/firebaseAdmin');
 const { sendMail } = require('../lib/mailer');
+const { escapeHtml, headerSafe } = require('../lib/escapeHtml');
 
 const SITE = process.env.SITE_URL || 'https://shemodeltech.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'shemodeltech@gmail.com';
 const KINDS = {
   // (Organization requests and Summit partner requests are retired.)
-  team: { col: 'team_applications', title: (d) => `New team application: ${d.name || 'someone'}` },
+  team: { col: 'team_applications', title: (d) => `New team application: ${headerSafe(d.name).slice(0, 100) || 'someone'}` },
 };
 
 // Shared links (/s/e/<id>, /s/p/<id>): a tiny page with the event's or
 // project's own title, description, and image, so LinkedIn, WhatsApp, and
 // others show a proper preview card. People are sent straight on to the page.
-const htmlEsc = (t) => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const htmlEsc = (t) => escapeHtml(t || '');
 const CATEGORY = { workshop: 'Workshop', talk: 'Tech talk', podcast: 'Podcast', demo: 'Live demo', demoday: 'Demo day', shoutout: 'Team shout-out' };
 const shareCard = async (req, res) => {
   const kind = req.query.share === 'p' ? 'p' : 'e';
@@ -131,7 +132,7 @@ module.exports = async function handler(req, res) {
 
     const title = kind.title(result);
     const staff = await db.collection('users').where('role', 'in', ['admin', 'editor']).get();
-    const esc = (t) => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const esc = (t) => escapeHtml(t || '');
     // Team applications use name/email; the rest of this file reads contactEmail.
     if (req.body.kind === 'team') { result.contactEmail = result.email; result.contactName = result.name; }
     const TEAM_ROLE = { community: 'Community Manager', communication: 'Communication Strategist', social: 'Social Media Manager', brand: 'Brand Strategist', partnership: 'Partnership Manager', sponsorship: 'Sponsorship Manager', program: 'Program Manager', designer: 'Designer', content: 'Content Strategist' };
@@ -140,12 +141,12 @@ module.exports = async function handler(req, res) {
       : req.body.kind === 'org'
       ? [['Organization', result.orgName], ['Type', result.orgType], ['Interested in', result.type], ['Learners', result.learners], ['Format', result.format], ['Timeline', result.timeline], ['Topics', result.topics], ['Courses', result.courses], ['Contact', `${result.contactName || ''} <${result.contactEmail || ''}> ${result.contactPhone || ''}`], ['Message', result.message]]
       : [['Company', result.companyName], ['Option', result.option], ['Contact', `${result.contactName || ''} <${result.contactEmail || ''}>`], ['Message', result.message]];
-    const detailHtml = lines.filter(([, v]) => v).map(([k, v]) => `<p><strong>${k}:</strong> ${esc(v)}</p>`).join('');
+    const detailHtml = lines.filter(([, v]) => v).map(([k, v]) => `<p><strong>${esc(k)}:</strong> ${esc(v)}</p>`).join('');
     const detailText = lines.filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join('\n');
     // The team inbox always gets the full request.
     await sendMail({
       to: SUPPORT_EMAIL,
-      replyTo: result.contactEmail || undefined,
+      replyTo: (result.contactEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result.contactEmail)) ? result.contactEmail : undefined,
       subject: title,
       text: `${title}\n\n${detailText}\n\nManage it in the Admin dashboard: ${SITE}/admin`,
       html: `<p><strong>${esc(title)}</strong></p>${detailHtml}<p><a href="${SITE}/admin">Manage it in the Admin dashboard</a></p>`,
@@ -179,7 +180,7 @@ module.exports = async function handler(req, res) {
             to: email,
             subject: title,
             text: `${title}\n\nReview it in the Admin dashboard: ${SITE}/admin`,
-            html: `<p><strong>${title.replace(/</g, '&lt;')}</strong></p><p><a href="${SITE}/admin">Review it in the Admin dashboard</a></p>`,
+            html: `<p><strong>${esc(title)}</strong></p><p><a href="${SITE}/admin">Review it in the Admin dashboard</a></p>`,
           }).catch(() => {});
         }
       })
