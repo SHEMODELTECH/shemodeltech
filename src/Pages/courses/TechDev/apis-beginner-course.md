@@ -205,125 +205,315 @@ You inspected a real API request, and your task API runs locally.
      "say": "Welcome to APIs for Builders."
     },
     {
-     "say": "In this course you grow one task API into something other people can rely on."
+     "say": "In this course you grow one task A P I into something other people can rely on."
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "plug",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "What an API is",
-   "quote": "A defined way for two pieces of software to talk to each other.",
+   "title": "An API is how one program asks another",
+   "nodes": [
+    {
+     "id": "wapp",
+     "label": "Weather app",
+     "x": 12,
+     "y": 28,
+     "sub": "on your phone",
+     "art": "phone"
+    },
+    {
+     "id": "wapi",
+     "label": "Weather API",
+     "x": 46,
+     "y": 28,
+     "sub": "a weather company",
+     "art": "cloud"
+    },
+    {
+     "id": "fe",
+     "label": "Your frontend",
+     "x": 12,
+     "y": 74,
+     "sub": "app or website",
+     "art": "browser"
+    },
+    {
+     "id": "be",
+     "label": "Your backend",
+     "x": 50,
+     "y": 74,
+     "sub": "your API",
+     "art": "server"
+    },
+    {
+     "id": "pay",
+     "label": "Payment provider",
+     "x": 88,
+     "y": 74,
+     "sub": "another API",
+     "art": "coin"
+    }
+   ],
+   "edges": [
+    {
+     "from": "wapp",
+     "to": "wapi"
+    },
+    {
+     "from": "fe",
+     "to": "be"
+    },
+    {
+     "from": "be",
+     "to": "pay"
+    }
+   ],
    "beats": [
     {
-     "say": "An API is a defined way for two pieces of software to talk to each other.",
-     "show": 0
+     "say": "An A P I is a defined way for two pieces of software to talk to each other.",
+     "show": 2
     },
     {
-     "say": "Your phone's weather app doesn't calculate the weather. It asks a weather company's API, and shows you the answer.",
-     "show": 1
+     "say": "Your weather app doesn't calculate the weather. It sends a request to a weather company's A P I.",
+     "show": 2,
+     "on": "wapp",
+     "send": {
+      "from": "wapp",
+      "to": "wapi",
+      "label": "GET forecast"
+     }
     },
     {
-     "say": "Almost every app is a frontend talking to a backend through an API, and that backend often calls other APIs too.",
-     "show": 1
+     "say": "The A P I sends back the answer, and the app just displays it.",
+     "show": 2,
+     "on": "wapi",
+     "send": {
+      "from": "wapi",
+      "to": "wapp",
+      "label": "200 · JSON forecast"
+     }
+    },
+    {
+     "say": "Your own apps work the same way: a frontend asks your backend, through your A P I.",
+     "show": 4,
+     "on": [
+      "fe",
+      "be"
+     ],
+     "send": {
+      "from": "fe",
+      "to": "be",
+      "label": "request"
+     }
+    },
+    {
+     "say": "And that backend often calls other A P I s in turn, like a payment provider.",
+     "show": 5,
+     "on": [
+      "be",
+      "pay"
+     ],
+     "send": {
+      "from": "be",
+      "to": "pay",
+      "label": "request"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "doc",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "An API is a contract",
-   "items": [
+   "title": "Once people depend on it, it's a contract",
+   "columns": [
+    "Part",
+    "Example",
+    "Change it carelessly and..."
+   ],
+   "rows": [
     [
      "URLs",
-     ""
+     "GET /health",
+     "their requests hit nothing"
     ],
     [
      "Data shapes",
-     ""
+     "{\"status\": \"ok\"}",
+     "their code reads a missing field"
     ],
     [
      "Errors",
-     ""
+     "404 + a message",
+     "their error handling misfires"
     ]
    ],
    "beats": [
     {
-     "say": "Once people depend on your API, it becomes a contract.",
-     "show": 0
+     "say": "Once other people's apps depend on your A P I, it becomes a contract with three parts."
     },
     {
-     "say": "Its addresses,",
-     "show": 1
+     "say": "Its addresses. If a U R L moves, their requests go nowhere.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "the shape of its data,",
-     "show": 2
+     "say": "The shape of its data. Rename a field, and their code reads something that isn't there.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "and its errors.",
-     "show": 3
-    },
-    {
-     "say": "Change any of them carelessly, and their apps break.",
-     "show": 3
+     "say": "And its errors. Change those, and their error handling stops working.",
+     "hl": 2,
+     "dim": true
     },
     {
      "say": "This course makes that contract clear, extends it, and protects it.",
-     "show": 3
+     "col": 0
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "browser",
+   "kind": "table",
    "kicker": "Lab · Step 1",
-   "title": "Watch a live API",
-   "steps": [
-    "Inspect",
-    "Network tab",
-    "Click a Fetch / XHR request"
+   "title": "Every request in the Network tab has the same parts",
+   "columns": [
+    "Part",
+    "What you'll see"
+   ],
+   "rows": [
+    [
+     "Method",
+     "GET"
+    ],
+    [
+     "URL",
+     "http://localhost:8000/health"
+    ],
+    [
+     "Status",
+     "200 OK"
+    ],
+    [
+     "Response header",
+     "content-type: application/json"
+    ],
+    [
+     "Response body",
+     "{\"status\":\"ok\"}"
+    ]
    ],
    "beats": [
     {
-     "say": "First, watch a real API at work.",
-     "show": 0
+     "say": "Open your browser's developer tools, go to the Network tab, load any site, and click a fetch request."
     },
     {
-     "say": "Open your browser's developer tools.",
-     "show": 1
+     "say": "Every request has a method, the verb. Here, GET, which means read.",
+     "hl": 0
     },
     {
-     "say": "Go to the Network tab.",
-     "show": 2
+     "say": "A U R L, the address it went to.",
+     "hl": 1
     },
     {
-     "say": "Load any website, and click a fetch request to see what it sent and what came back.",
-     "show": 3
+     "say": "A status code. Two hundred means it worked.",
+     "hl": 2
+    },
+    {
+     "say": "And a response, here labelled as J S O N, with the data in its body.",
+     "hl": [
+      3,
+      4
+     ]
+    },
+    {
+     "say": "This is the very request you'll make to your own app in a minute.",
+     "hl": [
+      1,
+      4
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "diagram",
    "kicker": "Lab · Steps 2 and 3",
-   "title": "Your starting app",
-   "file": "Terminal",
-   "code": "uvicorn app.main:app --reload\ncurl http://localhost:8000/health\n# {\"status\":\"ok\"}",
+   "title": "Your starting app answers its first request",
+   "nodes": [
+    {
+     "id": "term",
+     "label": "Terminal",
+     "x": 14,
+     "y": 50,
+     "sub": "curl",
+     "art": "terminal"
+    },
+    {
+     "id": "api",
+     "label": "Tasks API",
+     "x": 50,
+     "y": 50,
+     "sub": "uvicorn app.main:app",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "tasks.db",
+     "x": 86,
+     "y": 50,
+     "sub": "SQLite",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "term",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "db"
+    }
+   ],
    "beats": [
     {
-     "say": "Then get the starting app.",
-     "show": 0
+     "say": "Here's the starting app: a FastAPI server and an S Q Lite database file.",
+     "show": 3
     },
     {
-     "say": "If you finished the Backend course, open your tasks API. If not, the module has starter files to paste.",
-     "show": 1
+     "say": "When uvicorn starts it, the lifespan function creates any missing tables.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "create_all → tasks table"
+     }
     },
     {
-     "say": "Run it, and the health check should answer status: ok.",
-     "show": 1
+     "say": "Now curl asks for slash health.",
+     "on": "term",
+     "send": {
+      "from": "term",
+      "to": "api",
+      "label": "GET /health"
+     }
+    },
+    {
+     "say": "This route doesn't need the database. It answers straight away: status two hundred, status ok.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "term",
+      "label": "200 · {\"status\":\"ok\"}"
+     }
+    },
+    {
+     "say": "If you see that, your A P I is running, and the task routes arrive in Module 1.",
+     "on": [
+      "term",
+      "api"
+     ]
     }
    ]
   },
@@ -346,7 +536,7 @@ You inspected a real API request, and your task API runs locally.
      "show": 0
     },
     {
-     "say": "Is an API always between two different companies' software?",
+     "say": "Is an A P I always between two different companies' software?",
      "show": 0
     },
     {
@@ -380,11 +570,11 @@ You inspected a real API request, and your task API runs locally.
      "show": 0
     },
     {
-     "say": "you've inspected a real API request,",
+     "say": "you've inspected a real A P I request,",
      "show": 1
     },
     {
-     "say": "and your task API runs on your computer.",
+     "say": "and your task A P I runs on your computer.",
      "show": 2
     },
     {
@@ -561,7 +751,7 @@ Run `python -m pytest`.
      "say": "Welcome to Module 1."
     },
     {
-     "say": "REST organises an API around resources, like tasks and users, each with its own address."
+     "say": "REST organises an A P I around resources, like tasks and users, each with its own address."
     },
     {
      "say": "Good REST design is mostly about being consistent."
@@ -569,134 +759,417 @@ Run `python -m pytest`.
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Four habits of good REST",
-   "items": [
+   "title": "Nouns in the URL, verbs in the method",
+   "columns": [
+    "Method",
+    "Path",
+    "Does",
+    "Status"
+   ],
+   "rows": [
     [
-     "Plural nouns, not verbs",
-     "GET /tasks · PATCH /tasks/5"
+     "GET",
+     "/v1/tasks",
+     "List tasks (a page)",
+     "200"
     ],
     [
-     "Query parameters for options",
-     "?done=false · ?q=milk · ?sort=-title"
+     "POST",
+     "/v1/tasks",
+     "Create a task",
+     "201"
     ],
     [
-     "Paginate every list",
-     "items, total, limit, offset"
+     "GET",
+     "/v1/tasks/5",
+     "Read task 5",
+     "200"
     ],
     [
-     "Version in the path",
-     "/v1/tasks"
+     "PATCH",
+     "/v1/tasks/5",
+     "Change some fields, e.g. {\"done\": true}",
+     "200"
+    ],
+    [
+     "DELETE",
+     "/v1/tasks/5",
+     "Remove task 5",
+     "204"
+    ],
+    [
+     "POST",
+     "/tasks/5/complete",
+     "✗ a verb in the URL",
+     "-"
     ]
    ],
    "beats": [
     {
-     "say": "Four habits.",
-     "show": 0
+     "say": "In REST, the U R L names a thing, using a plural noun. The H T T P method is the verb.",
+     "col": 1
     },
     {
-     "say": "Use plural nouns, not verbs. Get slash tasks. Patch slash tasks slash five. Not get tasks, and not slash complete.",
-     "show": 1
+     "say": "GET slash v one slash tasks lists them. POST to the same address creates one, and answers two oh one, created.",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "Use query parameters for options, like filtering, searching and sorting.",
-     "show": 2
+     "say": "Add an i d to the path, and you're talking about one task: read it, change it, or delete it.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "col": 0
     },
     {
-     "say": "Paginate lists. Never return everything, because a table that grows to a hundred thousand rows will time out.",
-     "show": 3
+     "say": "To mark task five done, you don't invent a new address. You PATCH it, with done true in the body.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "And version the API in the path, like slash v one.",
-     "show": 4
+     "say": "Slash tasks slash five slash complete puts a verb in the U R L. That's the habit to avoid.",
+     "hl": 5,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "cross",
-   "kicker": "Example",
-   "title": "Mark a task done",
-   "quote": "PATCH /tasks/5   {\"done\": true}",
+   "kind": "diagram",
+   "kicker": "Lab · Step 4",
+   "title": "Create three tasks",
+   "nodes": [
+    {
+     "id": "cli",
+     "label": "curl",
+     "x": 12,
+     "y": 50,
+     "sub": "your terminal",
+     "art": "terminal"
+    },
+    {
+     "id": "api",
+     "label": "POST /v1/tasks",
+     "x": 50,
+     "y": 50,
+     "sub": "create_task",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "tasks table",
+     "x": 88,
+     "y": 50,
+     "sub": "SQLite",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cli",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "db"
+    }
+   ],
    "beats": [
     {
-     "say": "Here's a common mistake.",
-     "show": 0
+     "say": "The lab starts by creating three tasks. Here's the first.",
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "api",
+      "label": "{\"title\": \"Buy milk\"}"
+     }
     },
     {
-     "say": "To mark task five done, it's tempting to add slash tasks slash five slash complete.",
-     "show": 1
+     "say": "The server checks the body against Task Create, then inserts a row.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "INSERT · Buy milk"
+     }
     },
     {
-     "say": "But that puts a verb in the address. In REST, you send patch to slash tasks slash five, with done set to true.",
-     "show": 1
+     "say": "The database gives the new row an i d: one.",
+     "on": "db",
+     "send": {
+      "from": "db",
+      "to": "api",
+      "label": "id = 1"
+     }
+    },
+    {
+     "say": "And the server answers two oh one, with the whole task as J S O N.",
+     "on": "cli",
+     "send": {
+      "from": "api",
+      "to": "cli",
+      "label": "201 · {\"id\": 1, \"title\": \"Buy milk\", \"notes\": null, \"done\": false}"
+     }
+    },
+    {
+     "say": "The loop does the same for Write report, i d two, and Buy stamps, i d three.",
+     "on": "db",
+     "send": {
+      "from": "cli",
+      "to": "api",
+      "label": "Write report → 2 · Buy stamps → 3"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
-   "kicker": "Lab · Steps 1 and 2",
-   "title": "A page of results",
-   "file": "app/schemas.py",
-   "code": "class TaskPage(BaseModel):\n    items: list[TaskOut]\n    total: int\n    limit: int\n    offset: int",
+   "kind": "array",
+   "kicker": "Concept · Pagination",
+   "title": "limit and offset hand out one page at a time",
+   "values": [
+    "1 · Buy milk",
+    "2 · Write report",
+    "3 · Buy stamps"
+   ],
    "beats": [
     {
-     "say": "In the lab, you add a page schema: the items, plus total, limit and offset.",
-     "show": 0
+     "say": "Never return every row. A table that grows to a hundred thousand rows would time out."
     },
     {
-     "say": "That's everything a client needs to build next page buttons.",
-     "show": 1
+     "say": "Ask for limit two. You get the first two tasks.",
+     "hl": [
+      0,
+      1
+     ],
+     "ptr": {
+      "offset": 0
+     },
+     "note": "GET /v1/tasks?limit=2 → {\"items\": [1, 2], \"total\": 3, \"limit\": 2, \"offset\": 0}"
     },
     {
-     "say": "The list endpoint caps the page size at a hundred, and only allows four sort options.",
-     "show": 1
+     "say": "The total says three, so the client knows there's another page.",
+     "hl": [
+      0,
+      1
+     ],
+     "ptr": {
+      "offset": 0
+     },
+     "note": "offset 0 + limit 2 < total 3 → show a Next button"
+    },
+    {
+     "say": "Ask again with offset two, which means skip two. You get the last task.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "offset": 2
+     },
+     "note": "GET /v1/tasks?limit=2&offset=2 → {\"items\": [3], \"total\": 3, ...}"
+    },
+    {
+     "say": "Two plus two passes the total of three, so that was the last page.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "offset 2 + limit 2 ≥ total 3 → no more pages"
+    },
+    {
+     "say": "And limit five hundred is refused with four twenty two, because the limit is capped at one hundred.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "GET /v1/tasks?limit=500 → 422"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
-   "kicker": "Lab · Steps 3 and 4",
-   "title": "Try it under /v1",
-   "file": "Terminal",
-   "code": "curl \"http://localhost:8000/v1/tasks?limit=2\"\ncurl \"http://localhost:8000/v1/tasks?limit=2&offset=2\"\ncurl \"http://localhost:8000/v1/tasks?q=buy&sort=-title\"",
+   "kind": "walk",
+   "kicker": "Lab · Step 2",
+   "title": "Trace a search: ?q=buy&sort=-title",
+   "file": "app/routers/tasks.py",
+   "code": "query = select(Task)\nif done is not None:\n    query = query.where(Task.done == done)\nif q:\n    query = query.where(Task.title.ilike(f\"%{q}%\"))\n\ntotal = db.scalar(select(func.count()).select_from(query.subquery()))\n\ncolumn = getattr(Task, sort.removeprefix(\"-\"))\nquery = query.order_by(column.desc() if sort.startswith(\"-\") else column)\nitems = db.scalars(query.limit(limit).offset(offset)).all()\nreturn {\"items\": items, \"total\": total, \"limit\": limit, \"offset\": offset}",
    "beats": [
     {
-     "say": "You mount the routes under slash v one, then try them.",
-     "show": 0
+     "say": "Now the request GET slash v one slash tasks, with q equals buy and sort equals minus title.",
+     "vars": {
+      "done": "None",
+      "q": "\"buy\"",
+      "sort": "\"-title\"",
+      "limit": 20,
+      "offset": 0
+     }
     },
     {
-     "say": "Limit two gives you the first page. Offset two gives the next.",
-     "show": 1
+     "say": "Start with every task.",
+     "line": 1,
+     "vars": {
+      "done": "None",
+      "q": "\"buy\"",
+      "sort": "\"-title\"",
+      "limit": 20,
+      "offset": 0
+     }
     },
     {
-     "say": "And q equals buy, sorted by title descending, finds Buy stamps, then Buy milk.",
-     "show": 1
+     "say": "Done is None, so there's no done filter.",
+     "line": 2
+    },
+    {
+     "say": "Q is buy, so keep titles that contain buy, ignoring case.",
+     "line": [
+      4,
+      5
+     ]
+    },
+    {
+     "say": "Count the matches before paging: Buy milk and Buy stamps. Total is two.",
+     "line": 7,
+     "vars": {
+      "q": "\"buy\"",
+      "sort": "\"-title\"",
+      "limit": 20,
+      "offset": 0,
+      "total": 2
+     }
+    },
+    {
+     "say": "Strip the minus sign to get the column: title.",
+     "line": 9,
+     "vars": {
+      "q": "\"buy\"",
+      "sort": "\"-title\"",
+      "total": 2,
+      "column": "Task.title"
+     }
+    },
+    {
+     "say": "The minus meant descending, so sort Z to A.",
+     "line": 10,
+     "vars": {
+      "q": "\"buy\"",
+      "sort": "\"-title\"",
+      "total": 2,
+      "column": "Task.title desc"
+     }
+    },
+    {
+     "say": "Take one page of up to twenty: Buy stamps, then Buy milk.",
+     "line": 11,
+     "vars": {
+      "total": 2,
+      "items": "[\"Buy stamps\", \"Buy milk\"]"
+     }
+    },
+    {
+     "say": "And send it back as a page, with the total, limit and offset.",
+     "line": 12,
+     "out": "{\"items\": [{\"id\": 3, \"title\": \"Buy stamps\", ...}, {\"id\": 1, \"title\": \"Buy milk\", ...}], \"total\": 2, \"limit\": 20, \"offset\": 0}"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "rocket",
-   "kicker": "Versioning",
-   "title": "When to release /v2",
-   "quote": "Breaking change? Ship /v2 and keep /v1 running.",
+   "kind": "diagram",
+   "kicker": "Concept · Versioning",
+   "title": "Breaking change? Ship /v2, keep /v1",
+   "nodes": [
+    {
+     "id": "old",
+     "label": "Older app",
+     "x": 12,
+     "y": 26,
+     "sub": "built on v1",
+     "art": "phone"
+    },
+    {
+     "id": "new",
+     "label": "Updated app",
+     "x": 12,
+     "y": 74,
+     "sub": "moved to v2",
+     "art": "browser"
+    },
+    {
+     "id": "v1",
+     "label": "/v1/tasks",
+     "x": 56,
+     "y": 26,
+     "sub": "unchanged",
+     "art": "server"
+    },
+    {
+     "id": "v2",
+     "label": "/v2/tasks",
+     "x": 56,
+     "y": 74,
+     "sub": "a field renamed",
+     "art": "server"
+    }
+   ],
+   "edges": [
+    {
+     "from": "old",
+     "to": "v1"
+    },
+    {
+     "from": "new",
+     "to": "v2"
+    }
+   ],
    "beats": [
     {
-     "say": "When do you release version two?",
-     "show": 0
+     "say": "Your router is mounted under slash v one. That number protects your clients.",
+     "show": 3,
+     "on": "v1"
     },
     {
-     "say": "Only for a breaking change, like renaming or removing a field. Then keep version one running until clients move.",
-     "show": 1
+     "say": "An older app keeps calling slash v one, and keeps getting the shape it was built for.",
+     "show": 3,
+     "on": "old",
+     "send": {
+      "from": "old",
+      "to": "v1",
+      "label": "GET /v1/tasks"
+     }
     },
     {
-     "say": "Adding new things can stay in version one.",
-     "show": 1
+     "say": "Say you must rename a field. That's a breaking change, so it goes in slash v two.",
+     "show": 4,
+     "on": "v2"
+    },
+    {
+     "say": "Updated apps move to slash v two when they're ready.",
+     "show": 4,
+     "on": "new",
+     "send": {
+      "from": "new",
+      "to": "v2",
+      "label": "GET /v2/tasks"
+     }
+    },
+    {
+     "say": "Keep slash v one running until everyone has moved. Adding a field isn't breaking, so it can stay in v one.",
+     "show": 4,
+     "on": [
+      "v1",
+      "old"
+     ],
+     "send": {
+      "from": "v1",
+      "to": "old",
+      "label": "200 · same shape as before"
+     }
     }
    ]
   },
@@ -920,137 +1393,429 @@ Every error, including unknown URLs and validation failures, uses the same shape
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "One error format everywhere",
-   "file": "Every error",
-   "code": "{\"error\": {\n  \"code\": \"not_found\",\n  \"message\": \"Task 5 not found\",\n  \"fields\": null\n}}",
-   "beats": [
-    {
-     "say": "A good API uses one error format everywhere.",
-     "show": 0
-    },
-    {
-     "say": "A code, like not found, that programs can rely on.",
-     "show": 1
-    },
-    {
-     "say": "A message for humans, which you can reword without breaking anyone.",
-     "show": 1
-    },
-    {
-     "say": "And fields, listing exactly which inputs were wrong.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "table",
-   "kicker": "Lab · Step 1",
-   "title": "Map status codes to codes",
-   "items": [
+   "title": "Two errors, two shapes. Then one.",
+   "columns": [
+    "Request",
+    "Status",
+    "Body"
+   ],
+   "rows": [
     [
-     "401",
-     "unauthorized"
-    ],
-    [
+     "GET /v1/tasks/999",
      "404",
-     "not_found"
+     "{\"detail\": \"Task 999 not found\"}"
     ],
     [
+     "POST /v1/tasks {\"title\": \"\"}",
      "422",
-     "validation_error"
+     "{\"detail\": [ ...a list... ]}"
     ],
     [
-     "429",
-     "rate_limited"
-    ],
-    [
-     "5xx",
-     "server_error"
+     "Any error, after this module",
+     "4xx / 5xx",
+     "{\"error\": {\"code\", \"message\", \"fields\"}}"
     ]
    ],
    "beats": [
     {
-     "say": "In the lab, you map each status code to a stable code.",
-     "show": 0
+     "say": "Here's the problem. A missing task comes back with detail as a sentence.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Four oh one, unauthorized.",
-     "show": 1
+     "say": "But invalid input comes back with detail as a list. Clients have to handle each one differently.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Four oh four, not found.",
-     "show": 2
+     "say": "The fix is one shape everywhere: an error object with a code, a message, and fields.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Four twenty two, validation error.",
-     "show": 3
-    },
-    {
-     "say": "Four twenty nine, rate limited.",
-     "show": 4
-    },
-    {
-     "say": "And anything in the five hundreds is a server error, logged in full for you, with a polite message for the user.",
-     "show": 5
+     "say": "The code is stable, for programs to check. The message is for people, and you can reword it any time.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
-   "kicker": "Lab · Step 3",
-   "title": "Check every error",
-   "file": "Terminal",
-   "code": "curl http://localhost:8000/v1/tasks/999\ncurl -X POST http://localhost:8000/v1/tasks \\\n  -H \"Content-Type: application/json\" -d '{\"title\": \"\"}'\ncurl \"http://localhost:8000/v1/tasks?limit=0\"\ncurl -X DELETE http://localhost:8000/v1/tasks",
+   "kind": "walk",
+   "kicker": "Lab · Step 1",
+   "title": "error_json builds every error",
+   "file": "app/errors.py",
+   "code": "ERROR_CODES = {\n    401: \"unauthorized\",\n    404: \"not_found\",\n    405: \"method_not_allowed\",\n    422: \"validation_error\",\n    # ...plus 400, 403, 409 and 429\n}\n\ndef error_json(status_code, message, fields=None, headers=None):\n    code = ERROR_CODES.get(status_code, \"server_error\" if status_code >= 500 else \"error\")\n    body = ErrorResponse(error=ErrorDetail(code=code, message=message, fields=fields))\n    return JSONResponse(status_code=status_code, content=body.model_dump(), headers=headers)",
    "beats": [
     {
-     "say": "Then try four different mistakes.",
-     "show": 0
+     "say": "Every handler calls one function, error J S O N. Let's send it a four oh four.",
+     "line": 9,
+     "vars": {
+      "status_code": 404,
+      "message": "\"Task 999 not found\"",
+      "fields": "None"
+     }
     },
     {
-     "say": "A missing task, an empty title, a page size of zero, and a method that isn't allowed.",
-     "show": 1
+     "say": "It looks up four oh four in the table of codes, and finds not found.",
+     "line": [
+      3,
+      10
+     ],
+     "vars": {
+      "status_code": 404,
+      "message": "\"Task 999 not found\"",
+      "code": "\"not_found\""
+     }
     },
     {
-     "say": "All four now come back in the same shape.",
-     "show": 1
+     "say": "It wraps the code, message and fields in the error shape.",
+     "line": 11
+    },
+    {
+     "say": "And returns it with the same status, four oh four.",
+     "line": 12,
+     "out": "404 {\"error\": {\"code\": \"not_found\", \"message\": \"Task 999 not found\", \"fields\": null}}"
+    },
+    {
+     "say": "Now a crash nobody planned for: status five hundred.",
+     "line": 9,
+     "vars": {
+      "status_code": 500,
+      "message": "\"Something went wrong on our side\"",
+      "fields": "None"
+     }
+    },
+    {
+     "say": "Five hundred isn't in the table, and it's five hundred or more, so the code becomes server error.",
+     "line": 10,
+     "vars": {
+      "status_code": 500,
+      "message": "\"Something went wrong on our side\"",
+      "code": "\"server_error\""
+     }
+    },
+    {
+     "say": "Same shape again. The client never has to guess.",
+     "line": [
+      11,
+      12
+     ],
+     "out": "500 {\"error\": {\"code\": \"server_error\", \"message\": \"Something went wrong on our side\", \"fields\": null}}"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "book",
-   "kicker": "Lab · Step 4",
-   "title": "Docs for free with OpenAPI",
-   "steps": [
-    "/openapi.json",
-    "/docs",
-    "Client libraries, mocks, tests"
+   "kind": "diagram",
+   "kicker": "Lab · Step 3",
+   "title": "Four bad requests, one shape back",
+   "nodes": [
+    {
+     "id": "cli",
+     "label": "curl",
+     "x": 10,
+     "y": 50,
+     "sub": "client",
+     "art": "terminal"
+    },
+    {
+     "id": "app",
+     "label": "Tasks API",
+     "x": 42,
+     "y": 50,
+     "sub": "/v1 router",
+     "art": "server"
+    },
+    {
+     "id": "http",
+     "label": "http_error",
+     "x": 82,
+     "y": 22,
+     "sub": "404, 405 ...",
+     "art": "warning"
+    },
+    {
+     "id": "val",
+     "label": "validation_error",
+     "x": 82,
+     "y": 78,
+     "sub": "422",
+     "art": "form"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cli",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "http"
+    },
+    {
+     "from": "app",
+     "to": "val"
+    }
    ],
    "beats": [
     {
-     "say": "FastAPI also publishes an OpenAPI description of your API.",
-     "show": 0
+     "say": "Two handlers catch errors before they reach the client.",
+     "on": [
+      "http",
+      "val"
+     ]
     },
     {
-     "say": "Slash openapi dot json is the raw contract.",
-     "show": 1
+     "say": "First, GET slash v one slash tasks slash nine nine nine.",
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "app",
+      "label": "GET /v1/tasks/999"
+     }
     },
     {
-     "say": "It powers the readable docs at slash docs.",
-     "show": 2
+     "say": "There's no task nine nine nine, so the route raises a four oh four, and the H T T P error handler catches it.",
+     "on": "http",
+     "send": {
+      "from": "app",
+      "to": "http",
+      "label": "404 · Task 999 not found"
+     }
     },
     {
-     "say": "And other tools use it to generate client libraries, mock servers and tests.",
-     "show": 3
+     "say": "Back comes code not found.",
+     "on": "cli",
+     "send": {
+      "from": "app",
+      "to": "cli",
+      "label": "404 · {\"error\": {\"code\": \"not_found\", ...}}"
+     }
     },
     {
-     "say": "The more you describe, the more useful it is.",
-     "show": 3
+     "say": "Second, POST a task with an empty title.",
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "app",
+      "label": "POST /v1/tasks {\"title\": \"\"}"
+     }
+    },
+    {
+     "say": "FastAPI rejects it before your code runs, and the validation handler lists the bad field.",
+     "on": "val",
+     "send": {
+      "from": "app",
+      "to": "val",
+      "label": "body.title too short"
+     }
+    },
+    {
+     "say": "Back comes four twenty two, validation error, with fields filled in.",
+     "on": "cli",
+     "send": {
+      "from": "app",
+      "to": "cli",
+      "label": "422 · {\"error\": {\"code\": \"validation_error\", \"fields\": [...]}}"
+     }
+    },
+    {
+     "say": "Limit zero goes the same way. And DELETE on the whole list, a method that route doesn't allow, comes back four oh five, in the same shape.",
+     "on": [
+      "http",
+      "val"
+     ],
+     "send": {
+      "from": "app",
+      "to": "cli",
+      "label": "422 validation_error · 405 method_not_allowed"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "What each one returned",
+   "columns": [
+    "Request",
+    "Status",
+    "code",
+    "fields"
+   ],
+   "rows": [
+    [
+     "GET /v1/tasks/999",
+     "404",
+     "not_found",
+     "null"
+    ],
+    [
+     "POST /v1/tasks {\"title\": \"\"}",
+     "422",
+     "validation_error",
+     "body.title: String should have at least 1 character"
+    ],
+    [
+     "GET /v1/tasks?limit=0",
+     "422",
+     "validation_error",
+     "query.limit: Input should be greater than or equal to 1"
+    ],
+    [
+     "DELETE /v1/tasks",
+     "405",
+     "method_not_allowed",
+     "null"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Side by side, every response has the same three keys."
+    },
+    {
+     "say": "A program can branch on the code column alone.",
+     "col": 2
+    },
+    {
+     "say": "Fields tells a form exactly which input to highlight. Body dot title for the empty title.",
+     "hl": 1,
+     "col": 3
+    },
+    {
+     "say": "And query dot limit for the limit of zero.",
+     "hl": 2,
+     "col": 3
+    },
+    {
+     "say": "Errors that aren't about one input simply have no fields.",
+     "hl": [
+      0,
+      3
+     ],
+     "dim": true,
+     "col": 3
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 4",
+   "title": "One description, many uses: OpenAPI",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "Your FastAPI app",
+     "x": 12,
+     "y": 50,
+     "sub": "routes, schemas, summaries",
+     "art": "code"
+    },
+    {
+     "id": "spec",
+     "label": "/openapi.json",
+     "x": 46,
+     "y": 50,
+     "sub": "the contract",
+     "art": "doc"
+    },
+    {
+     "id": "docs",
+     "label": "/docs",
+     "x": 84,
+     "y": 18,
+     "sub": "interactive docs",
+     "art": "browser"
+    },
+    {
+     "id": "redoc",
+     "label": "/redoc",
+     "x": 84,
+     "y": 50,
+     "sub": "readable docs",
+     "art": "book"
+    },
+    {
+     "id": "tools",
+     "label": "Tools",
+     "x": 84,
+     "y": 82,
+     "sub": "clients, mocks, tests",
+     "art": "gear"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "spec"
+    },
+    {
+     "from": "spec",
+     "to": "docs"
+    },
+    {
+     "from": "spec",
+     "to": "redoc"
+    },
+    {
+     "from": "spec",
+     "to": "tools"
+    }
+   ],
+   "beats": [
+    {
+     "say": "FastAPI reads your routes and schemas, and writes a machine-readable description of your A P I.",
+     "show": 2,
+     "send": {
+      "from": "app",
+      "to": "spec",
+      "label": "tags · summaries · 404 and 422 responses"
+     }
+    },
+    {
+     "say": "That's slash open A P I dot J S O N. It's the raw contract.",
+     "show": 2,
+     "on": "spec"
+    },
+    {
+     "say": "Slash docs turns it into interactive pages, grouped by tag, listing each endpoint's errors.",
+     "show": 3,
+     "on": "docs",
+     "send": {
+      "from": "spec",
+      "to": "docs",
+      "label": "render"
+     }
+    },
+    {
+     "say": "Slash redoc renders the same file as readable reference docs.",
+     "show": 4,
+     "on": "redoc",
+     "send": {
+      "from": "spec",
+      "to": "redoc",
+      "label": "render"
+     }
+    },
+    {
+     "say": "And other tools use it to generate client libraries, mock servers, and tests.",
+     "show": 5,
+     "on": "tools",
+     "send": {
+      "from": "spec",
+      "to": "tools",
+      "label": "generate"
+     }
+    },
+    {
+     "say": "The more you describe, the more useful all of these become.",
+     "show": 5,
+     "on": [
+      "app",
+      "spec"
+     ]
     }
    ]
   },
@@ -1115,7 +1880,7 @@ Every error, including unknown URLs and validation failures, uses the same shape
      "show": 2
     },
     {
-     "say": "Next, in Module 3, you call other people's APIs safely.",
+     "say": "Next, in Module 3, you call other people's A P I s safely.",
      "show": 2
     }
    ]
@@ -1268,7 +2033,7 @@ You can show, with the fake server, that your client retries a `503` and a `429`
      "say": "Welcome to Module 3."
     },
     {
-     "say": "Sooner or later your backend calls someone else's API: payments, email, maps, an AI model."
+     "say": "Sooner or later your backend calls someone else's A P I: payments, email, maps, an A I model."
     },
     {
      "say": "Those services are sometimes slow, down, or busy. Your app has to survive that."
@@ -1276,137 +2041,422 @@ You can show, with the fake server, that your client retries a `503` and a `429`
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Five rules for outbound calls",
-   "items": [
+   "title": "Retry it, or not?",
+   "columns": [
+    "What happened",
+    "Retry?",
+    "Why"
+   ],
+   "rows": [
     [
-     "Timeouts",
-     "Never wait forever"
+     "Timeout or network error",
+     "Yes",
+     "Might work next time"
     ],
     [
-     "Retry carefully",
-     "Timeouts, 429, 5xx. Never 400 or 404"
+     "429 Too Many Requests",
+     "Yes, after Retry-After",
+     "You were too fast"
     ],
     [
-     "Backoff with jitter",
-     "0.5s, 1s, 2s, plus randomness"
+     "500, 502, 503, 504",
+     "Yes",
+     "Their problem, often temporary"
     ],
     [
-     "Respect rate limits",
-     "Honour Retry-After"
+     "400 Bad Request",
+     "No",
+     "Our mistake: same every time"
     ],
     [
-     "Keys in env variables",
-     "Never in code"
+     "404 Not Found",
+     "No",
+     "It still won't be there"
+    ],
+    [
+     "A payment POST",
+     "No",
+     "Could charge twice"
     ]
    ],
    "beats": [
     {
-     "say": "Five rules.",
-     "show": 0
+     "say": "Every outbound call needs a timeout, so a slow service can't hang your request forever."
     },
     {
-     "say": "Always set a timeout. Without one, a slow service can hang your request forever.",
-     "show": 1
+     "say": "Then decide what to retry. Timeouts and network errors might succeed next time.",
+     "hl": 0
     },
     {
-     "say": "Retry carefully. Only failures that might work next time, like timeouts, four twenty nine, and five hundreds. Never a four oh four.",
-     "show": 2
+     "say": "Four twenty nine means slow down. Wait as long as the Retry After header says, then try again.",
+     "hl": 1
     },
     {
-     "say": "Back off. Wait longer after each failure, plus a little randomness, so everyone doesn't retry at the same moment.",
-     "show": 3
+     "say": "Five hundred errors are the other side's problem, and often clear up.",
+     "hl": 2
     },
     {
-     "say": "Respect rate limits, and the retry after header that tells you how long to wait.",
-     "show": 4
+     "say": "But a four hundred or four oh four will fail exactly the same way every time. Don't retry.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true
     },
     {
-     "say": "And keep API keys in environment variables, never in code.",
-     "show": 5
+     "say": "And only retry requests that are safe to repeat, like GET.",
+     "hl": 5,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "coin",
+   "kind": "diagram",
    "kicker": "Careful",
-   "title": "Never retry a payment blindly",
-   "quote": "Retrying a payment POST could charge the customer twice.",
-   "beats": [
+   "title": "Why a payment POST is never retried blindly",
+   "nodes": [
     {
-     "say": "One important warning.",
-     "show": 0
+     "id": "api",
+     "label": "Your API",
+     "x": 14,
+     "y": 50,
+     "sub": "checkout",
+     "art": "server"
     },
     {
-     "say": "Only retry requests that are safe to repeat, like get.",
-     "show": 1
-    },
-    {
-     "say": "If you retry a payment post, and the first one actually went through, you could charge the customer twice.",
-     "show": 1
+     "id": "pay",
+     "label": "Payment provider",
+     "x": 84,
+     "y": 50,
+     "sub": "charges the card",
+     "art": "coin"
     }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 1",
-   "title": "A careful client with httpx",
-   "file": "app/external.py",
-   "code": "RETRY_STATUSES = {429, 500, 502, 503, 504}\n\ndef make_client():\n    return httpx.Client(timeout=httpx.Timeout(5.0, connect=2.0))\n\n# wait: Retry-After if given, else 0.5s, 1s, 2s... + jitter",
-   "beats": [
+   ],
+   "edges": [
     {
-     "say": "In the lab you build get json, using a library called httpx.",
-     "show": 0
-    },
-    {
-     "say": "It sets a five second timeout.",
-     "show": 1
-    },
-    {
-     "say": "It retries four twenty nine and five hundreds, waiting longer each time, and honours retry after.",
-     "show": 1
-    },
-    {
-     "say": "Any other four hundred error is your own mistake, so it fails straight away.",
-     "show": 1
+     "from": "api",
+     "to": "pay"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "server",
-   "kicker": "Lab · Step 2",
-   "title": "Test with a fake server",
-   "steps": [
-    "503: retry",
-    "429, Retry-After 1: wait, retry",
-    "200: success",
-    "404: no retry"
    ],
    "beats": [
     {
-     "say": "Then you test it with a fake server, no internet needed.",
-     "show": 0
+     "say": "Your checkout asks a payment provider to charge a card.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "pay",
+      "label": "POST charge"
+     }
     },
     {
-     "say": "It fails with five oh three.",
-     "show": 1
+     "say": "The provider charges it successfully.",
+     "on": "pay"
     },
     {
-     "say": "Then asks you to slow down, with four twenty nine and retry after one second.",
-     "show": 2
+     "say": "But the reply is lost on the way back, and your request times out.",
+     "on": "api",
+     "send": {
+      "from": "pay",
+      "to": "api",
+      "label": "200 charged … lost"
+     }
     },
     {
-     "say": "Then succeeds.",
-     "show": 3
+     "say": "If your code blindly retries,",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "pay",
+      "label": "POST charge (again)"
+     }
     },
     {
-     "say": "Your client tries three times, and waits the second it was asked to. A four oh four is tried only once.",
-     "show": 4
+     "say": "the customer is charged twice. That's why get J S O N only ever retries GET requests.",
+     "on": "pay"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Concept · Backoff",
+   "title": "Wait longer after each failure",
+   "values": [
+    "0.5s",
+    "1s",
+    "2s",
+    "4s",
+    "8s"
+   ],
+   "beats": [
+    {
+     "say": "When you do retry, don't hammer the service. Wait longer each time."
+    },
+    {
+     "say": "After the first failure, wait half a second.",
+     "hl": 0,
+     "ptr": {
+      "attempt 1": 0
+     },
+     "note": "0.5 × 2^(attempt − 1)"
+    },
+    {
+     "say": "After the second, one second. After the third, two.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "ptr": {
+      "2": 1,
+      "3": 2
+     }
+    },
+    {
+     "say": "The wait keeps doubling, but wait time caps it at eight seconds.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "note": "min(..., 8)"
+    },
+    {
+     "say": "Each wait also gets up to a quarter second of randomness, called jitter, so clients don't all retry at the same instant.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "+ random.uniform(0, 0.25)"
+    },
+    {
+     "say": "With the default of four attempts, there are at most three waits.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "gone": [
+      3,
+      4
+     ],
+     "note": "max_attempts = 4 → 3 waits at most"
+    },
+    {
+     "say": "And if the server sends a Retry After header, that number wins instead, up to thirty seconds.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "gone": [
+      3,
+      4
+     ],
+     "note": "Retry-After: 2 → wait 2s"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 2",
+   "title": "get_json against a fake server: 503, 429, then 200",
+   "file": "app/external.py",
+   "code": "for attempt in range(1, max_attempts + 1):\n    response = None\n    try:\n        response = client.get(url, params=params)\n        if response.status_code not in RETRY_STATUSES:\n            response.raise_for_status()  # other 4xx: our mistake\n            return response.json()\n        problem = f\"HTTP {response.status_code}\"\n    except (httpx.TimeoutException, httpx.NetworkError) as exc:\n        problem = type(exc).__name__\n    if attempt == max_attempts:\n        raise RuntimeError(f\"Gave up on {url} after {attempt} attempts ({problem})\")\n    delay = wait_time(attempt, response)\n    time.sleep(delay)",
+   "beats": [
+    {
+     "say": "The fake server will fail once, ask us to slow down once, then succeed.",
+     "vars": {
+      "url": "\"https://api.example.com/quote\"",
+      "max_attempts": 4
+     }
+    },
+    {
+     "say": "Attempt one. The request goes out.",
+     "line": [
+      1,
+      4
+     ],
+     "vars": {
+      "attempt": 1
+     },
+     "out": "Fake server got: GET https://api.example.com/quote"
+    },
+    {
+     "say": "Five oh three is a retry status, so note the problem.",
+     "line": [
+      5,
+      8
+     ],
+     "vars": {
+      "attempt": 1,
+      "status": 503,
+      "problem": "\"HTTP 503\""
+     }
+    },
+    {
+     "say": "It isn't the last attempt. With no Retry After header, wait about half a second.",
+     "line": [
+      11,
+      13,
+      14
+     ],
+     "vars": {
+      "attempt": 1,
+      "problem": "\"HTTP 503\"",
+      "delay": "0.5 + jitter"
+     }
+    },
+    {
+     "say": "Attempt two. This time, four twenty nine, with Retry After one.",
+     "line": [
+      1,
+      4,
+      5,
+      8
+     ],
+     "vars": {
+      "attempt": 2,
+      "status": 429,
+      "problem": "\"HTTP 429\""
+     },
+     "out": "Fake server got: GET https://api.example.com/quote"
+    },
+    {
+     "say": "The server told us how long to wait, so we wait exactly one second.",
+     "line": [
+      13,
+      14
+     ],
+     "vars": {
+      "attempt": 2,
+      "problem": "\"HTTP 429\"",
+      "delay": 1
+     }
+    },
+    {
+     "say": "Attempt three. Two hundred is not a retry status.",
+     "line": [
+      1,
+      4,
+      5
+     ],
+     "vars": {
+      "attempt": 3,
+      "status": 200
+     },
+     "out": "Fake server got: GET https://api.example.com/quote"
+    },
+    {
+     "say": "Raise for status finds nothing wrong, so we return the J S O N.",
+     "line": [
+      6,
+      7
+     ],
+     "out": "{'quote': 'Make it work, then make it good.'}"
+    },
+    {
+     "say": "Now a server that answers four oh four. It isn't a retry status, so raise for status throws on the first attempt.",
+     "line": [
+      4,
+      5,
+      6
+     ],
+     "vars": {
+      "url": "\"https://api.example.com/missing\"",
+      "attempt": 1,
+      "status": 404
+     },
+     "out": [
+      "Fake server got: GET https://api.example.com/missing",
+      "No retry for: 404"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 3",
+   "title": "A real API tells you your rate limit",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "Your script",
+     "x": 14,
+     "y": 50,
+     "sub": "make_client()",
+     "art": "laptop"
+    },
+    {
+     "id": "gh",
+     "label": "GitHub API",
+     "x": 84,
+     "y": 50,
+     "sub": "about 60 / hour without a key",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "gh"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Now a real A P I. GitHub allows about sixty requests an hour without a key.",
+     "on": "gh"
+    },
+    {
+     "say": "Get J S O N asks for the FastAPI repository.",
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "gh",
+      "label": "GET /repos/fastapi/fastapi"
+     }
+    },
+    {
+     "say": "It comes back with its full name and its star count.",
+     "on": "app",
+     "send": {
+      "from": "gh",
+      "to": "app",
+      "label": "200 · {\"full_name\": \"fastapi/fastapi\", \"stargazers_count\": …}"
+     }
+    },
+    {
+     "say": "Then ask the rate limit endpoint.",
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "gh",
+      "label": "GET /rate_limit"
+     }
+    },
+    {
+     "say": "The X rate limit remaining header says how many requests you have left this hour.",
+     "on": "app",
+     "send": {
+      "from": "gh",
+      "to": "app",
+      "label": "X-RateLimit-Remaining: 59"
+     }
+    },
+    {
+     "say": "Respect it, cache results you reuse, and keep any keys in environment variables, never in code.",
+     "on": [
+      "app",
+      "gh"
+     ]
     }
    ]
   },
@@ -1429,7 +2479,7 @@ You can show, with the fake server, that your client retries a `503` and a `429`
      "show": 0
     },
     {
-     "say": "Why retry a 503 but not a 404?",
+     "say": "Why retry a five oh three, but not a four oh four?",
      "show": 0
     },
     {
@@ -1617,131 +2667,309 @@ You can explain authentication versus authorization and sessions versus tokens, 
      "say": "Welcome to Module 4."
     },
     {
-     "say": "Today your API gets user accounts, with passwords stored the right way."
+     "say": "Today your A P I gets user accounts, with passwords stored the right way."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "fingerprint",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Who, and what",
-   "items": [
+   "title": "Who are you? What may you do?",
+   "columns": [
+    "",
+    "Question",
+    "When it fails"
+   ],
+   "rows": [
     [
      "Authentication",
-     "Who is this?"
+     "Who is this?",
+     "401: we don't know who you are"
     ],
     [
      "Authorization",
-     "What can they do?"
-    ],
-    [
-     "401 vs 403",
-     "Unknown user vs not allowed"
+     "What are they allowed to do?",
+     "403: we know you, but you can't do this"
     ]
    ],
    "beats": [
     {
-     "say": "Two questions.",
-     "show": 0
+     "say": "Two words that sound alike, and mean different things."
     },
     {
-     "say": "Authentication asks: who is this?",
-     "show": 1
+     "say": "Authentication asks: who is this? If the A P I can't tell, it answers four oh one.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Authorization asks: what are they allowed to do? A logged-in user still mustn't read someone else's tasks.",
-     "show": 2
+     "say": "Authorization asks: what are they allowed to do? Logged in, but not allowed, is four oh three.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Four oh one means we don't know who you are. Four oh three means we know, but you can't do this.",
-     "show": 3
+     "say": "A logged-in user is authenticated, but still mustn't read someone else's tasks.",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "key",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Sessions or tokens",
-   "items": [
+   "title": "Two ways to stay logged in",
+   "columns": [
+    "",
+    "Sessions",
+    "Tokens (JWT)"
+   ],
+   "rows": [
     [
-     "Sessions",
-     "Server stores a record per user"
+     "Client holds",
+     "A random session ID, in a cookie",
+     "A signed token, in Authorization: Bearer"
     ],
     [
-     "Tokens (JWT)",
-     "Server just checks a signature"
+     "Server stores",
+     "A record per logged-in user",
+     "Nothing per user: checks the signature"
+    ],
+    [
+     "Logging out",
+     "Delete the record: instant",
+     "Valid until it expires: keep it short"
+    ],
+    [
+     "Good fit",
+     "Websites on one domain",
+     "APIs, mobile apps, several servers"
     ]
    ],
    "beats": [
     {
-     "say": "There are two common ways to keep someone logged in.",
-     "show": 0
+     "say": "After login, the client needs a way to prove it's still you. There are two common ways."
     },
     {
-     "say": "Sessions. The browser holds a random ID, and the server stores a record for each logged-in user. Logging out takes effect at once.",
-     "show": 1
+     "say": "With sessions, the client holds a random i d, and the server keeps a record for every logged-in user.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 1
     },
     {
-     "say": "Tokens, like JWTs. The client holds a signed token, and the server stores nothing per user. It just checks the signature. Good for APIs, mobile apps, and many servers.",
-     "show": 2
+     "say": "With tokens, the client holds a signed token, and the server stores nothing. It just checks the signature.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
+    },
+    {
+     "say": "The trade-off: deleting a session logs you out at once, but a token works until it expires.",
+     "hl": 2
+    },
+    {
+     "say": "So sessions suit a website on one domain, and tokens suit A P I s, mobile apps, and many servers.",
+     "hl": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "hash",
-   "kicker": "Concept · Lab step 1",
-   "title": "Never store passwords",
-   "file": "Python",
-   "code": "password_hash = PasswordHash.recommended()   # Argon2\nstored = password_hash.hash(\"correct horse battery staple\")\n\npassword_hash.verify(\"correct horse battery staple\", stored)  # True\npassword_hash.verify(\"wrong guess\", stored)                  # False",
+   "kind": "walk",
+   "kicker": "Lab · Step 1",
+   "title": "Hash, verify, and see the salt",
+   "file": "try_pwdlib.py",
+   "code": "from pwdlib import PasswordHash\n\npassword_hash = PasswordHash.recommended()\nstored = password_hash.hash(\"correct horse battery staple\")\nprint(stored)\nprint(password_hash.verify(\"correct horse battery staple\", stored))\nprint(password_hash.verify(\"wrong guess\", stored))\nprint(password_hash.hash(\"correct horse battery staple\") == stored)",
    "beats": [
     {
-     "say": "Either way, never store passwords. Store a hash.",
-     "show": 0
+     "say": "Never store passwords. Store a hash: the output of a one-way function. pwdlib uses Argon two by default.",
+     "line": [
+      1,
+      3
+     ]
     },
     {
-     "say": "Use Argon2, through a library called pwdlib. It's slow on purpose, so attackers can't test billions of guesses.",
-     "show": 1
+     "say": "Hash the password. Out comes a long string that starts with argon two i d.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "stored": "$argon2id$v=19$m=65536,t=3,p=4$..."
+     },
+     "out": "$argon2id$v=19$m=65536,t=3,p=4$..."
     },
     {
-     "say": "It adds a random salt each time, so hashing the same password twice gives different results, and verify still works.",
-     "show": 1
+     "say": "Verify with the right password: True.",
+     "line": 6,
+     "out": "True"
+    },
+    {
+     "say": "Verify with a wrong guess: False.",
+     "line": 7,
+     "out": "False"
+    },
+    {
+     "say": "Now hash the same password again. It doesn't match the first hash.",
+     "line": 8,
+     "out": "False"
+    },
+    {
+     "say": "That's the random salt. Each hash is different, so attackers can't spot two users with the same password.",
+     "line": 8
+    },
+    {
+     "say": "Verify still works, because the salt and settings are stored inside the hash string itself.",
+     "line": [
+      5,
+      6
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "form",
-   "kicker": "Lab · Steps 2 to 6",
-   "title": "Registration",
-   "steps": [
-    "User model",
-    "UserOut (no password)",
-    "POST /v1/users",
-    "201, then 409"
+   "kind": "diagram",
+   "kicker": "Lab · Steps 5 and 6",
+   "title": "Register a user, twice",
+   "nodes": [
+    {
+     "id": "cli",
+     "label": "curl",
+     "x": 12,
+     "y": 50,
+     "sub": "client",
+     "art": "terminal"
+    },
+    {
+     "id": "api",
+     "label": "POST /v1/users",
+     "x": 50,
+     "y": 50,
+     "sub": "register",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "users table",
+     "x": 88,
+     "y": 50,
+     "sub": "SQLite",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cli",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "Then you build registration.",
-     "show": 0
+     "say": "Ada registers with an email and a password.",
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "api",
+      "label": "{\"email\": \"ada@example.com\", \"password\": \"correct-horse-battery\"}"
+     }
     },
     {
-     "say": "A user table, with an email and a password hash.",
-     "show": 1
+     "say": "First, the server checks whether that email is already taken.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "SELECT … WHERE email = 'ada@example.com'"
+     }
     },
     {
-     "say": "A user out schema with no password field, so a hash can never leak in a response.",
-     "show": 2
+     "say": "It isn't.",
+     "on": "db",
+     "send": {
+      "from": "db",
+      "to": "api",
+      "label": "no row"
+     }
     },
     {
-     "say": "A post slash users endpoint.",
-     "show": 3
+     "say": "So it hashes the password, and stores only the hash.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "INSERT ada@example.com, $argon2id$..."
+     }
     },
     {
-     "say": "Register once, and you get two oh one. Register again with the same email, and you get four oh nine.",
-     "show": 4
+     "say": "The reply is two oh one, with the i d and email. User Out has no password field, so the hash can't leak.",
+     "on": "cli",
+     "send": {
+      "from": "api",
+      "to": "cli",
+      "label": "201 · {\"id\": 1, \"email\": \"ada@example.com\"}"
+     }
+    },
+    {
+     "say": "Run the same request again, and the email check finds Ada's row.",
+     "on": "db",
+     "send": {
+      "from": "db",
+      "to": "api",
+      "label": "row found"
+     }
+    },
+    {
+     "say": "So the answer is four oh nine, conflict, in our usual error shape.",
+     "on": "cli",
+     "send": {
+      "from": "api",
+      "to": "cli",
+      "label": "409 · {\"error\": {\"code\": \"conflict\", \"message\": \"That email is already registered\"}}"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 6",
+   "title": "What's actually in the database",
+   "columns": [
+    "id",
+    "email",
+    "password_hash"
+   ],
+   "rows": [
+    [
+     "1",
+     "ada@example.com",
+     "$argon2id$v=19$m=65536,t=3,p=4$..."
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now look inside the users table."
+    },
+    {
+     "say": "There's Ada's email.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "And where you might expect her password, there's only the Argon two hash.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "If this database ever leaks, attackers get hashes they can't reverse, not working passwords.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "And because Argon two is slow on purpose, they can't test billions of guesses quickly.",
+     "col": 2
     }
    ]
   },
@@ -1764,7 +2992,7 @@ You can explain authentication versus authorization and sessions versus tokens, 
      "show": 0
     },
     {
-     "say": "Why is a slow hash like Argon2 better than a fast one for passwords?",
+     "say": "Why is a slow hash like Argon two better than a fast one for passwords?",
      "show": 0
     },
     {
@@ -1802,7 +3030,7 @@ You can explain authentication versus authorization and sessions versus tokens, 
      "show": 1
     },
     {
-     "say": "and your API stores Argon2 hashed passwords.",
+     "say": "and your A P I stores Argon two hashed passwords.",
      "show": 2
     },
     {
@@ -2025,169 +3253,391 @@ Users log in for a JWT, every task endpoint requires it, and a test proves one u
    ]
   },
   {
-   "kind": "list",
-   "art": "idcard",
+   "kind": "array",
    "kicker": "Concept",
-   "title": "What's in a JWT",
-   "items": [
-    [
-     "Header",
-     ""
-    ],
-    [
-     "Payload",
-     "Claims: sub (user ID), exp (expiry)"
-    ],
-    [
-     "Signature",
-     "Made with your server's secret key"
-    ]
+   "title": "A JWT is three parts, joined by dots",
+   "values": [
+    "header",
+    "payload",
+    "signature"
    ],
    "beats": [
     {
-     "say": "A JWT, or JSON web token, is a compact, signed piece of text.",
-     "show": 0
+     "say": "A J W T, a J S O N web token, is three pieces of text joined by dots."
     },
     {
-     "say": "It has three parts, separated by dots.",
-     "show": 0
+     "say": "The header says how it was signed.",
+     "hl": 0,
+     "note": "{\"alg\": \"HS256\", \"typ\": \"JWT\"}"
     },
     {
-     "say": "A header,",
-     "show": 1
+     "say": "The payload carries claims: sub, the user's i d, and exp, when it expires.",
+     "hl": 1,
+     "note": "{\"sub\": \"1\", \"exp\": now + 30 minutes}"
     },
     {
-     "say": "a payload with claims, like the user's ID and when it expires,",
-     "show": 2
+     "say": "The signature is made with a secret key only your server knows.",
+     "hl": 2,
+     "note": "signed with JWT_SECRET_KEY"
     },
     {
-     "say": "and a signature, made with a key only your server knows. So the server can trust it without looking anything up.",
-     "show": 3
+     "say": "Change one letter of the payload, and the signature no longer matches. So the server can trust it without storing anything.",
+     "hl": [
+      1,
+      2
+     ],
+     "note": "tampered payload → signature check fails → 401"
+    },
+    {
+     "say": "But the payload is only encoded, not encrypted. Anyone holding the token can read it, so never put secrets in it.",
+     "hl": 1,
+     "note": "encoded ≠ encrypted"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Two rules",
-   "title": "Before you use JWTs",
-   "items": [
-    [
-     "Readable by anyone",
-     "No secrets in the payload"
-    ],
-    [
-     "Short lifetimes",
-     "A stolen token works until it expires"
-    ]
+   "kind": "diagram",
+   "kicker": "Lab · Steps 4 and 6",
+   "title": "Log in, then send the token every time",
+   "nodes": [
+    {
+     "id": "cli",
+     "label": "Client",
+     "x": 12,
+     "y": 50,
+     "sub": "curl or an app",
+     "art": "laptop"
+    },
+    {
+     "id": "api",
+     "label": "Tasks API",
+     "x": 50,
+     "y": 50,
+     "sub": "/v1/auth/token",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "users table",
+     "x": 88,
+     "y": 50,
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cli",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "Two rules.",
-     "show": 0
+     "say": "Ada logs in with her email and password.",
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "api",
+      "label": "POST /v1/auth/token {\"email\": \"ada@example.com\", \"password\": …}"
+     }
     },
     {
-     "say": "The payload is encoded, not encrypted. Anyone holding the token can read it, so never put secrets in it.",
-     "show": 1
+     "say": "The server finds her row by email.",
+     "on": "db",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "SELECT … WHERE email = 'ada@example.com'"
+     }
     },
     {
-     "say": "And keep lifetimes short, because a stolen token works until it expires.",
-     "show": 2
+     "say": "Verify checks the password against the stored hash. It matches.",
+     "on": "api",
+     "send": {
+      "from": "db",
+      "to": "api",
+      "label": "id 1 · $argon2id$..."
+     }
+    },
+    {
+     "say": "So the server signs a token for user one, valid for thirty minutes.",
+     "on": "cli",
+     "send": {
+      "from": "api",
+      "to": "cli",
+      "label": "200 · {\"access_token\": \"eyJhbGciOiJIUzI1NiIs…\", \"token_type\": \"bearer\"}"
+     }
+    },
+    {
+     "say": "From now on, every request carries it in the Authorization header.",
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "api",
+      "label": "GET /v1/users/me · Authorization: Bearer eyJ…"
+     }
+    },
+    {
+     "say": "The server checks the signature, reads sub, one, and fetches that user.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "get User 1"
+     }
+    },
+    {
+     "say": "And answers with who you are.",
+     "on": "cli",
+     "send": {
+      "from": "api",
+      "to": "cli",
+      "label": "200 · {\"id\": 1, \"email\": \"ada@example.com\"}"
+     }
+    },
+    {
+     "say": "A wrong email or password gets one message for both, so attackers can't use it to find registered emails.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "cli",
+      "label": "401 · \"Wrong email or password\""
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "password",
-   "kicker": "Lab",
-   "title": "The login flow",
-   "steps": [
-    "POST /v1/auth/token",
-    "Get access_token",
-    "Authorization: Bearer …",
-    "Verified, or 401"
-   ],
+   "kind": "walk",
+   "kicker": "Lab · Step 3",
+   "title": "get_current_user guards every task route",
+   "file": "app/security.py",
+   "code": "if credentials is None:\n    raise unauthorized\ntry:\n    payload = jwt.decode(credentials.credentials, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])\nexcept jwt.InvalidTokenError:  # bad signature, malformed, or expired\n    raise unauthorized\nuser = db.get(User, int(payload[\"sub\"]))\nif user is None:\n    raise unauthorized\nreturn user",
    "beats": [
     {
-     "say": "Here's the flow you build.",
-     "show": 0
+     "say": "Every task route now depends on get current user. Let's send it three requests."
     },
     {
-     "say": "Post your email and password to slash auth slash token.",
-     "show": 1
+     "say": "First, GET slash v one slash tasks, with no Authorization header. Credentials is None.",
+     "line": 1,
+     "vars": {
+      "credentials": "None"
+     }
     },
     {
-     "say": "Get back an access token.",
-     "show": 2
+     "say": "So it raises unauthorized, and the client gets four oh one.",
+     "line": 2,
+     "out": "401 {\"error\": {\"code\": \"unauthorized\", \"message\": \"Missing, invalid, or expired token\", \"fields\": null}}"
     },
     {
-     "say": "Send it on every request as authorization, bearer, then the token.",
-     "show": 3
+     "say": "Second, a token whose expiry time has passed.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "credentials": "Bearer eyJ… (expired)"
+     }
     },
     {
-     "say": "Get current user checks the signature and the expiry. Bad or missing? Four oh one.",
-     "show": 4
+     "say": "Decode raises an expired signature error, a kind of invalid token error. Four oh one again.",
+     "line": [
+      5,
+      6
+     ],
+     "out": "401 {\"error\": {\"code\": \"unauthorized\", \"message\": \"Missing, invalid, or expired token\", \"fields\": null}}"
+    },
+    {
+     "say": "Third, Ada's fresh token. The signature checks out, and the payload says sub, one.",
+     "line": 4,
+     "vars": {
+      "credentials": "Bearer eyJ…",
+      "payload": "{\"sub\": \"1\", \"exp\": …}"
+     }
+    },
+    {
+     "say": "Look up user one. She exists.",
+     "line": [
+      7,
+      8
+     ],
+     "vars": {
+      "payload": "{\"sub\": \"1\", \"exp\": …}",
+      "user": "User(id=1, email='ada@example.com')"
+     }
+    },
+    {
+     "say": "So the route runs, with Ada as the current user.",
+     "line": 10,
+     "out": "200 → the route runs as Ada"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "shield",
-   "kicker": "Security detail",
-   "title": "Don't reveal which part was wrong",
-   "quote": "\"Wrong email or password\"",
-   "beats": [
-    {
-     "say": "A wrong login says wrong email or password, never which one.",
-     "show": 0
-    },
-    {
-     "say": "Otherwise, attackers could use it to discover which emails are registered.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "lock",
+   "kind": "diagram",
    "kicker": "Lab · Step 5",
-   "title": "Each user sees only their own tasks",
-   "file": "app/routers/tasks.py",
-   "code": "def get_task_or_404(db, task_id, user):\n    task = db.get(Task, task_id)\n    if task is None or task.owner_id != user.id:\n        raise HTTPException(404, f\"Task {task_id} not found\")\n    return task",
+   "title": "Bob asks for Ada's task",
+   "nodes": [
+    {
+     "id": "bob",
+     "label": "Bob",
+     "x": 12,
+     "y": 50,
+     "sub": "his own token",
+     "art": "persona"
+    },
+    {
+     "id": "api",
+     "label": "Tasks API",
+     "x": 50,
+     "y": 50,
+     "sub": "get_task_or_404",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "tasks table",
+     "x": 88,
+     "y": 50,
+     "sub": "task 1 · owner_id 1",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "bob",
+     "to": "api"
+    },
+    {
+     "from": "api",
+     "to": "db"
+    }
+   ],
    "beats": [
     {
-     "say": "Now authorization. Every task gets an owner.",
-     "show": 0
+     "say": "Ada created task one, called Private. Its owner i d is one. Bob is user two.",
+     "on": "db"
     },
     {
-     "say": "Lists only show your own tasks.",
-     "show": 1
+     "say": "Bob asks for task one, with his own valid token.",
+     "on": "bob",
+     "send": {
+      "from": "bob",
+      "to": "api",
+      "label": "GET /v1/tasks/1 · Bearer (Bob)"
+     }
     },
     {
-     "say": "And someone else's task returns four oh four, the same as a missing one. A four oh three would confirm it exists.",
-     "show": 1
+     "say": "The server loads task one.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "get Task 1"
+     }
+    },
+    {
+     "say": "The task exists, but its owner is one, not two.",
+     "on": "api",
+     "send": {
+      "from": "db",
+      "to": "api",
+      "label": "owner_id = 1"
+     }
+    },
+    {
+     "say": "So Bob gets exactly the same four oh four as a task that doesn't exist.",
+     "on": "bob",
+     "send": {
+      "from": "api",
+      "to": "bob",
+      "label": "404 · {\"error\": {\"code\": \"not_found\", \"message\": \"Task 1 not found\"}}"
+     }
+    },
+    {
+     "say": "And when Bob lists tasks, the query only keeps rows where owner i d is two.",
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "db",
+      "label": "WHERE owner_id = 2"
+     }
+    },
+    {
+     "say": "There are none, so his total is zero.",
+     "on": "bob",
+     "send": {
+      "from": "api",
+      "to": "bob",
+      "label": "200 · {\"items\": [], \"total\": 0, ...}"
+     }
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "test",
+   "kind": "table",
    "kicker": "Lab · Step 7",
-   "title": "Prove it with a test",
-   "big": "404",
-   "sub": "Bob asking for Ada's task",
+   "title": "Why 404, not 403",
+   "columns": [
+    "Request",
+    "As Ada",
+    "As Bob"
+   ],
+   "rows": [
+    [
+     "GET /v1/tasks/1",
+     "200 · Private",
+     "404 · not_found"
+    ],
+    [
+     "GET /v1/tasks/999",
+     "404 · not_found",
+     "404 · not_found"
+    ],
+    [
+     "GET /v1/tasks",
+     "total: 1",
+     "total: 0"
+    ],
+    [
+     "Any of these, no token",
+     "401",
+     "401"
+    ]
+   ],
    "beats": [
     {
-     "say": "Finally, a test proves it.",
-     "show": 0
+     "say": "Here's what the test proves, side by side."
     },
     {
-     "say": "Bob logs in, asks for Ada's task, and gets four oh four.",
-     "show": 1
+     "say": "Ada can read her task. Bob gets four oh four.",
+     "hl": 0
     },
     {
-     "say": "And his task list is empty.",
-     "show": 2
+     "say": "And for Bob, task one looks exactly like task nine nine nine, which doesn't exist at all.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
+    },
+    {
+     "say": "A four oh three would confirm the task exists. A four oh four reveals nothing about other people's data.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Lists only show your own tasks, and with no token at all, everything is four oh one.",
+     "hl": [
+      2,
+      3
+     ]
     }
    ]
   },
@@ -2210,7 +3660,7 @@ Users log in for a JWT, every task endpoint requires it, and a test proves one u
      "show": 0
     },
     {
-     "say": "Is a JWT's payload encrypted?",
+     "say": "Is a J W T's payload encrypted?",
      "show": 0
     },
     {
@@ -2244,7 +3694,7 @@ Users log in for a JWT, every task endpoint requires it, and a test proves one u
      "show": 0
     },
     {
-     "say": "users log in for a JWT and every task endpoint requires it,",
+     "say": "users log in for a J W T and every task endpoint requires it,",
      "show": 1
     },
     {
@@ -2459,154 +3909,441 @@ You fetched tasks with their owner's email in one GraphQL request, created a tas
    ]
   },
   {
-   "kind": "list",
-   "art": "funnel",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Two problems it solves",
-   "items": [
+   "title": "One screen: a task and its owner's email",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "Your screen",
+     "x": 12,
+     "y": 50,
+     "sub": "needs title + email",
+     "art": "phone"
+    },
+    {
+     "id": "rest",
+     "label": "REST",
+     "x": 70,
+     "y": 22,
+     "sub": "/v1/tasks, /v1/users",
+     "art": "server"
+    },
+    {
+     "id": "gql",
+     "label": "GraphQL",
+     "x": 70,
+     "y": 78,
+     "sub": "POST /graphql",
+     "art": "graph"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "rest"
+    },
+    {
+     "from": "app",
+     "to": "gql"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A screen wants to show task five, and its owner's email.",
+     "show": 1,
+     "on": "app"
+    },
+    {
+     "say": "With REST, first ask for the task.",
+     "show": 2,
+     "on": "rest",
+     "send": {
+      "from": "app",
+      "to": "rest",
+      "label": "GET /v1/tasks/5"
+     }
+    },
+    {
+     "say": "It returns every task field, and only an owner i d.",
+     "show": 2,
+     "on": "app",
+     "send": {
+      "from": "rest",
+      "to": "app",
+      "label": "{\"id\": 5, \"title\": \"...\", \"owner_id\": 3, ...}"
+     }
+    },
+    {
+     "say": "So you need a second request for the user.",
+     "show": 2,
+     "on": "rest",
+     "send": {
+      "from": "app",
+      "to": "rest",
+      "label": "GET /v1/users/3"
+     }
+    },
+    {
+     "say": "Two round trips for one screen.",
+     "show": 2,
+     "on": "app",
+     "send": {
+      "from": "rest",
+      "to": "app",
+      "label": "{\"id\": 3, \"email\": \"ada@example.com\"}"
+     }
+    },
+    {
+     "say": "With GraphQL, one request names exactly the fields you want, nested.",
+     "show": 3,
+     "on": "gql",
+     "send": {
+      "from": "app",
+      "to": "gql",
+      "label": "task(id: 5) { title owner { email } }"
+     }
+    },
+    {
+     "say": "And one response comes back, in the same shape you asked for.",
+     "show": 3,
+     "on": "app",
+     "send": {
+      "from": "gql",
+      "to": "app",
+      "label": "{\"data\": {\"task\": {\"title\": \"...\", \"owner\": {\"email\": \"ada@example.com\"}}}}"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Over-fetching and under-fetching",
+   "columns": [
+    "Field",
+    "GET /v1/tasks/5 sends",
+    "The screen needs"
+   ],
+   "rows": [
     [
-     "Over-fetching",
-     "More data than you need"
+     "id",
+     "✓",
+     ""
     ],
     [
-     "Under-fetching",
-     "Several requests for one screen"
+     "title",
+     "✓",
+     "✓"
+    ],
+    [
+     "notes",
+     "✓",
+     ""
+    ],
+    [
+     "done",
+     "✓",
+     ""
+    ],
+    [
+     "owner_id",
+     "✓",
+     ""
+    ],
+    [
+     "owner email",
+     "✗ needs a 2nd call",
+     "✓"
     ]
    ],
    "beats": [
     {
-     "say": "It solves two problems.",
-     "show": 0
+     "say": "Compare what REST sent with what the screen actually needed."
     },
     {
-     "say": "Over-fetching. Getting more data than you need.",
-     "show": 1
+     "say": "Over-fetching: i d, notes, done and owner i d all came back, and the screen uses none of them.",
+     "hl": [
+      0,
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And under-fetching. Needing several requests for one screen.",
-     "show": 2
+     "say": "Under-fetching: the one thing it did need, the email, wasn't there, so it took a second request.",
+     "hl": 5,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "A GraphQL query asks for just title and owner email. Nothing more, nothing less.",
+     "hl": [
+      1,
+      5
+     ],
+     "dim": true,
+     "sql": "task(id: 5) { title owner { email } }"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "api",
-   "kicker": "Example",
-   "title": "One request instead of two",
-   "file": "GraphQL query",
-   "code": "query {\n  task(id: 5) {\n    title\n    owner {\n      email\n    }\n  }\n}",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Lab · Step 4",
+   "title": "Resolvers run only for the fields you ask for",
+   "nodes": [
     {
-     "say": "To show a task with its owner's email, REST needs two calls: the task, then the user.",
-     "show": 0
+     "id": "cli",
+     "label": "GraphiQL",
+     "x": 10,
+     "y": 50,
+     "sub": "Bearer token",
+     "art": "browser"
     },
     {
-     "say": "GraphQL gets exactly that, in one request.",
-     "show": 1
+     "id": "tasks",
+     "label": "Query.tasks",
+     "x": 42,
+     "y": 25,
+     "sub": "resolver",
+     "art": "code"
     },
     {
-     "say": "Ask for the task's title, and inside it, the owner's email.",
-     "show": 1
+     "id": "owner",
+     "label": "Task.owner",
+     "x": 42,
+     "y": 75,
+     "sub": "resolver",
+     "art": "code"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 86,
+     "y": 50,
+     "sub": "tasks, users",
+     "art": "database"
     }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "blocks",
-   "kicker": "Concept",
-   "title": "The vocabulary",
-   "items": [
-    [
-     "Schema",
-     "Typed description of the API"
-    ],
-    [
-     "Query",
-     "Reads data"
-    ],
-    [
-     "Mutation",
-     "Changes data"
-    ],
-    [
-     "Resolver",
-     "Fills one field, only when asked"
-    ]
+   ],
+   "edges": [
+    {
+     "from": "cli",
+     "to": "tasks"
+    },
+    {
+     "from": "tasks",
+     "to": "db"
+    },
+    {
+     "from": "cli",
+     "to": "owner"
+    },
+    {
+     "from": "owner",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "A few words.",
-     "show": 0
+     "say": "Ada sends this query to slash graph Q L, with her token.",
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "tasks",
+      "label": "tasks(done: false) { title owner { email } }"
+     }
     },
     {
-     "say": "A schema describes every type.",
-     "show": 1
+     "say": "The tasks resolver loads only her unfinished tasks.",
+     "on": "tasks",
+     "send": {
+      "from": "tasks",
+      "to": "db",
+      "label": "WHERE owner_id = 1 AND done = false"
+     }
     },
     {
-     "say": "Queries read data.",
-     "show": 2
+     "say": "The query asked for owner, so the owner resolver runs for each task.",
+     "on": "owner",
+     "send": {
+      "from": "owner",
+      "to": "db",
+      "label": "get User 1"
+     }
     },
     {
-     "say": "Mutations change it.",
-     "show": 3
+     "say": "The answer is shaped exactly like the question.",
+     "on": "cli",
+     "send": {
+      "from": "owner",
+      "to": "cli",
+      "label": "{\"data\": {\"tasks\": [{\"title\": \"Try GraphQL\", \"owner\": {\"email\": \"ada@example.com\"}}]}}"
+     }
     },
     {
-     "say": "And a resolver is a function that fills one field. It only runs if the query asks for that field.",
-     "show": 4
+     "say": "Now remove owner from the query and run it again.",
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "tasks",
+      "label": "tasks(done: false) { title }"
+     }
+    },
+    {
+     "say": "The owner resolver doesn't run at all. No user lookup happens.",
+     "on": [
+      "tasks",
+      "db"
+     ],
+     "send": {
+      "from": "tasks",
+      "to": "cli",
+      "label": "{\"data\": {\"tasks\": [{\"title\": \"Try GraphQL\"}]}}"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "code",
-   "kicker": "Lab",
-   "title": "Build it with Strawberry",
-   "steps": [
-    "Strawberry + your JWT",
-    "/graphql explorer",
-    "createTask, then tasks { owner }"
-   ],
+   "kind": "walk",
+   "kicker": "Lab · Step 2",
+   "title": "A mutation creates a task",
+   "file": "app/graphql_api.py",
+   "code": "@strawberry.mutation\ndef create_task(self, info: Info, title: str, notes: str | None = None) -> Task:\n    if not 1 <= len(title) <= 200:\n        raise ValueError(\"title must be 1 to 200 characters\")\n    db = info.context[\"db\"]\n    task = models.Task(title=title, notes=notes, owner_id=logged_in_user(info).id)\n    db.add(task)\n    db.commit()\n    db.refresh(task)\n    return to_graphql(task)",
    "beats": [
     {
-     "say": "In the lab, you add GraphQL with a library called Strawberry.",
-     "show": 0
+     "say": "Queries read data. Mutations change it. Strawberry exposes this function as create task, in camel case.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "It reuses your database and your JWT check.",
-     "show": 1
+     "say": "Ada sends: create task, with title Try GraphQL.",
+     "line": 2,
+     "vars": {
+      "title": "\"Try GraphQL\"",
+      "notes": "None"
+     }
     },
     {
-     "say": "Open the explorer at slash graphql, and add your token.",
-     "show": 2
+     "say": "The title is eleven characters, between one and two hundred, so it passes.",
+     "line": 3,
+     "vars": {
+      "title": "\"Try GraphQL\"",
+      "len(title)": 11
+     }
     },
     {
-     "say": "Create a task with a mutation, then query your tasks with their owners.",
-     "show": 3
+     "say": "Build a task owned by the logged-in user, Ada, user one.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "title": "\"Try GraphQL\"",
+      "owner_id": 1
+     }
     },
     {
-     "say": "Remove owner from the query, and the owner resolver doesn't run at all.",
-     "show": 3
+     "say": "Save it, and refresh to get its new i d.",
+     "line": [
+      7,
+      9
+     ],
+     "vars": {
+      "title": "\"Try GraphQL\"",
+      "owner_id": 1,
+      "task.id": 1
+     }
+    },
+    {
+     "say": "Return it, and the client gets back only the fields it asked for.",
+     "line": 10,
+     "out": "200 {\"data\": {\"createTask\": {\"id\": 1, \"title\": \"Try GraphQL\", \"done\": false}}}"
+    },
+    {
+     "say": "Now an empty title. Length zero fails the check, and it raises a value error.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "title": "\"\"",
+      "len(title)": 0
+     }
+    },
+    {
+     "say": "Notice the status is still two hundred. GraphQL errors arrive in an errors list, so clients check the body.",
+     "line": 4,
+     "out": "200 {\"data\": null, \"errors\": [{\"message\": \"title must be 1 to 200 characters\", ...}]}"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "scales",
+   "kind": "table",
    "kicker": "When to use it",
-   "title": "GraphQL isn't always better",
-   "quote": "Different clients, different data shapes? GraphQL. One simple client? REST.",
+   "title": "REST or GraphQL?",
+   "columns": [
+    "",
+    "REST",
+    "GraphQL"
+   ],
+   "rows": [
+    [
+     "Endpoints",
+     "Many URLs",
+     "One: /graphql"
+    ],
+    [
+     "Who picks the fields",
+     "The server",
+     "The client's query"
+    ],
+    [
+     "Errors",
+     "Status codes",
+     "Usually 200 + an errors list"
+    ],
+    [
+     "Changes",
+     "/v1, /v2",
+     "Add fields, deprecate old ones"
+    ],
+    [
+     "Best for",
+     "Simple app, one client",
+     "Nested data, many different clients"
+    ]
+   ],
    "beats": [
     {
-     "say": "When should you use it?",
-     "show": 0
+     "say": "So which should you use? Here's how they differ."
     },
     {
-     "say": "When you have nested data, and several apps that each want different slices. That's why GitHub and Shopify offer it.",
-     "show": 1
+     "say": "REST has many addresses, and the server decides what each returns. GraphQL has one, and the client decides.",
+     "hl": [
+      0,
+      1
+     ]
+    },
+    {
+     "say": "Errors and versions work differently too.",
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "GraphQL shines with nested data and several frontends that each want different slices, which is why GitHub and Shopify offer it.",
+     "hl": 4,
+     "col": 2
     },
     {
      "say": "For a simple app with one client, REST is usually simpler.",
-     "show": 1
+     "hl": 4,
+     "col": 1
     }
    ]
   },
@@ -2811,123 +4548,404 @@ You watched a real "Sign in with Google" redirect, generated a login URL with `s
      "say": "OAuth lets a user give your app limited access to their data on another service, without ever sharing their password with you."
     },
     {
-     "say": "OpenID Connect adds a signed ID token that says who the user is. Together, they power Sign in with Google."
+     "say": "OpenID Connect adds a signed I D token that says who the user is. Together, they power Sign in with Google."
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "The five steps",
-   "steps": [
-    "Redirect to Google",
-    "User approves scopes",
-    "Back with a code",
-    "Code → tokens",
-    "Log in to your app"
+   "title": "The authorization code flow, in five steps",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "Browser",
+     "x": 12,
+     "y": 50,
+     "sub": "the user",
+     "art": "persona"
+    },
+    {
+     "id": "app",
+     "label": "Your app",
+     "x": 50,
+     "y": 20,
+     "sub": "localhost:8000",
+     "art": "server"
+    },
+    {
+     "id": "login",
+     "label": "Google login",
+     "x": 50,
+     "y": 82,
+     "sub": "accounts.google.com",
+     "art": "fingerprint"
+    },
+    {
+     "id": "token",
+     "label": "Google token",
+     "x": 88,
+     "y": 20,
+     "sub": "oauth2.googleapis.com",
+     "art": "key"
+    },
+    {
+     "id": "info",
+     "label": "Google userinfo",
+     "x": 88,
+     "y": 82,
+     "sub": "openidconnect…",
+     "art": "idcard"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "app"
+    },
+    {
+     "from": "user",
+     "to": "login"
+    },
+    {
+     "from": "app",
+     "to": "token"
+    },
+    {
+     "from": "app",
+     "to": "info"
+    }
    ],
    "beats": [
     {
-     "say": "Here's the authorization code flow, in five steps.",
-     "show": 0
+     "say": "Step one. The user clicks Sign in with Google, and your app redirects them to Google's login page.",
+     "show": 3,
+     "on": "app",
+     "send": {
+      "from": "app",
+      "to": "user",
+      "label": "redirect → accounts.google.com/o/oauth2/v2/auth?…"
+     }
     },
     {
-     "say": "Your app sends the user to Google's login page.",
-     "show": 1
+     "say": "The address carries your client i d, the scopes you want, a state value, and a code challenge.",
+     "show": 3,
+     "on": "login",
+     "send": {
+      "from": "user",
+      "to": "login",
+      "label": "client_id · scope=openid email profile · state · code_challenge"
+     }
     },
     {
-     "say": "They log in, and approve the access you asked for, called scopes.",
-     "show": 2
+     "say": "Step two. The user logs in to Google, and approves the access your app asked for. Your app never sees their password.",
+     "show": 3,
+     "on": "login"
     },
     {
-     "say": "Google sends them back to your app with an authorization code.",
-     "show": 3
+     "say": "Step three. Google sends them back to your callback, with an authorization code and the same state.",
+     "show": 3,
+     "on": "user",
+     "send": {
+      "from": "login",
+      "to": "user",
+      "label": "redirect → /auth/google/callback?code=…&state=…"
+     }
     },
     {
-     "say": "Your server swaps that code for tokens: an access token, and an ID token.",
-     "show": 4
+     "say": "The browser follows it to your app. Your app checks the state matches the one it saved.",
+     "show": 3,
+     "on": "app",
+     "send": {
+      "from": "user",
+      "to": "app",
+      "label": "GET /auth/google/callback?code=…&state=…"
+     }
     },
     {
-     "say": "And your app logs them in, for example by issuing your own JWT from Module 5.",
-     "show": 5
+     "say": "Step four. Your server swaps the code for tokens, sending the P K C E verifier as proof.",
+     "show": 4,
+     "on": "token",
+     "send": {
+      "from": "app",
+      "to": "token",
+      "label": "POST /token · code + code_verifier"
+     }
+    },
+    {
+     "say": "Back come an access token, for calling Google's A P I s, and an I D token, saying who the user is.",
+     "show": 4,
+     "on": "app",
+     "send": {
+      "from": "token",
+      "to": "app",
+      "label": "access_token · id_token"
+     }
+    },
+    {
+     "say": "With the access token, your app can ask for the user's profile.",
+     "show": 5,
+     "on": "info",
+     "send": {
+      "from": "app",
+      "to": "info",
+      "label": "GET /v1/userinfo · Bearer access_token"
+     }
+    },
+    {
+     "say": "Google returns their stable sub i d, email, and name.",
+     "show": 5,
+     "on": "app",
+     "send": {
+      "from": "info",
+      "to": "app",
+      "label": "{\"sub\": \"…\", \"email\": \"…\", \"name\": \"…\"}"
+     }
+    },
+    {
+     "say": "Step five. Find or create that user, and log them in with your own J W T from Module 5.",
+     "show": 5,
+     "on": "user",
+     "send": {
+      "from": "app",
+      "to": "user",
+      "label": "your own JWT: create_access_token(user.id)"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
-   "kicker": "Two safety details",
-   "title": "state and PKCE",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Step 2",
+   "title": "What's in the login URL",
+   "columns": [
+    "Parameter",
+    "Value"
+   ],
+   "rows": [
     [
-     "state",
-     "Proves the callback is from a login you started"
+     "client_id",
+     "your-client-id"
     ],
     [
-     "PKCE",
-     "A stolen code is useless without your secret"
+     "redirect_uri",
+     "http://localhost:8000/auth/google/callback"
+    ],
+    [
+     "response_type",
+     "code"
+    ],
+    [
+     "scope",
+     "openid email profile"
+    ],
+    [
+     "state",
+     "32 random bytes, URL-safe"
+    ],
+    [
+     "code_challenge",
+     "SHA-256 of the verifier"
+    ],
+    [
+     "code_challenge_method",
+     "S256"
     ]
    ],
    "beats": [
     {
-     "say": "Two safety details matter.",
-     "show": 0
+     "say": "Here's every piece of the login address your app builds.",
+     "sql": "https://accounts.google.com/o/oauth2/v2/auth?..."
     },
     {
-     "say": "State is a random value you create in step one and check in step three, so an attacker can't slip their own code into your callback.",
-     "show": 1
+     "say": "Client i d says which app is asking. Redirect U R I says where Google should send the user back.",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "PKCE. Your app makes a one-time secret, and sends Google only its hash. When swapping the code, it sends the secret itself.",
-     "show": 2
+     "say": "Response type code asks for an authorization code, not tokens, in the browser.",
+     "hl": 2
     },
     {
-     "say": "Google checks they match, so a stolen code is useless on its own.",
-     "show": 2
+     "say": "Scope lists the access you want. Open I D, email and profile is enough to know who they are.",
+     "hl": 3
+    },
+    {
+     "say": "State is a random value your app saves and checks when the user returns.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "And the code challenge is a hash of a secret your app keeps. S two five six names the hashing method.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab · Step 2",
-   "title": "Build the login link",
+   "title": "Make state and a PKCE pair",
    "file": "pkce_demo.py",
-   "code": "state = secrets.token_urlsafe(32)\nverifier, challenge = make_pkce_pair()\n\nlogin_url = AUTHORIZE_URL + \"?\" + urlencode({\n    \"response_type\": \"code\",\n    \"scope\": \"openid email profile\",\n    \"state\": state,\n    \"code_challenge\": challenge,\n    \"code_challenge_method\": \"S256\",\n})",
+   "code": "def make_pkce_pair() -> tuple[str, str]:\n    verifier = secrets.token_urlsafe(64)  # the one-time secret your app keeps\n    digest = hashlib.sha256(verifier.encode()).digest()\n    challenge = base64.urlsafe_b64encode(digest).rstrip(b\"=\").decode()  # what Google sees first\n    return verifier, challenge\n\nstate = secrets.token_urlsafe(32)\nverifier, challenge = make_pkce_pair()\n\nlogin_url = AUTHORIZE_URL + \"?\" + urlencode({...})\nprint(\"Save in the user's session -> state:\", state)\nprint(\"Save in the user's session -> verifier:\", verifier)\nprint(\"Send the user to:\\n\" + login_url)",
    "beats": [
     {
-     "say": "In the lab, you build step one, offline.",
-     "show": 0
+     "say": "This part runs offline. First, make the P K C E pair.",
+     "line": [
+      1,
+      8
+     ]
     },
     {
-     "say": "Make a random state, and a PKCE pair: a verifier you keep, and a challenge Google sees first.",
-     "show": 1
+     "say": "The verifier is sixty four random bytes, written as eighty six U R L safe characters. Your app keeps it secret.",
+     "line": 2,
+     "vars": {
+      "verifier": "86 random characters"
+     }
     },
     {
-     "say": "Put them in the login link, with your client ID, redirect address and scopes. Keep the state and verifier until the user comes back.",
-     "show": 1
+     "say": "Hash it with S H A two five six.",
+     "line": 3,
+     "vars": {
+      "verifier": "86 random characters",
+      "digest": "32 bytes"
+     }
+    },
+    {
+     "say": "Then encode that hash as U R L safe text, and drop the padding. That's the challenge, forty three characters.",
+     "line": 4,
+     "vars": {
+      "verifier": "86 random characters",
+      "challenge": "43 characters"
+     }
+    },
+    {
+     "say": "Separately, state is another random value, also forty three characters.",
+     "line": 7,
+     "vars": {
+      "state": "43 random characters",
+      "verifier": "86 random characters",
+      "challenge": "43 characters"
+     }
+    },
+    {
+     "say": "Only the challenge goes into the login U R L. Google can't work the verifier out from it.",
+     "line": 10
+    },
+    {
+     "say": "Your app saves state and the verifier, for example in a short-lived signed cookie, until the user comes back.",
+     "line": [
+      11,
+      12
+     ],
+     "out": [
+      "Save in the user's session -> state: …",
+      "Save in the user's session -> verifier: …"
+     ]
+    },
+    {
+     "say": "And sends the user to the login U R L. Your values will be different every run.",
+     "line": 13,
+     "out": [
+      "Send the user to:",
+      "https://accounts.google.com/o/oauth2/v2/auth?client_id=your-client-id&…"
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "package",
-   "kicker": "In production",
-   "title": "Use a maintained library",
-   "quote": "In production, use a maintained library such as Authlib.",
+   "kind": "diagram",
+   "kicker": "Two safety details",
+   "title": "What state and PKCE stop",
+   "nodes": [
+    {
+     "id": "bad",
+     "label": "Attacker",
+     "x": 14,
+     "y": 50,
+     "art": "bug"
+    },
+    {
+     "id": "app",
+     "label": "Your app",
+     "x": 54,
+     "y": 22,
+     "sub": "/auth/google/callback",
+     "art": "server"
+    },
+    {
+     "id": "token",
+     "label": "Google token",
+     "x": 54,
+     "y": 80,
+     "sub": "checks the verifier",
+     "art": "key"
+    }
+   ],
+   "edges": [
+    {
+     "from": "bad",
+     "to": "app"
+    },
+    {
+     "from": "bad",
+     "to": "token"
+    },
+    {
+     "from": "app",
+     "to": "token"
+    }
+   ],
    "beats": [
     {
-     "say": "For a real app, use a maintained library such as Authlib.",
-     "show": 0
+     "say": "Two attacks, two defences."
     },
     {
-     "say": "It also verifies the ID token's signature for you.",
-     "show": 1
+     "say": "First, an attacker steals an authorization code and tries to swap it for tokens.",
+     "on": "bad",
+     "send": {
+      "from": "bad",
+      "to": "token",
+      "label": "POST /token · stolen code, no verifier"
+     }
     },
     {
-     "say": "Then step five is code you already know: find or create the user, and return your own token.",
-     "show": 1
+     "say": "Google checks the verifier against the challenge from step one. The attacker doesn't have it, so the code is useless.",
+     "on": "token",
+     "send": {
+      "from": "token",
+      "to": "bad",
+      "label": "400 · rejected"
+     }
+    },
+    {
+     "say": "Second, an attacker tries to slip their own code into your callback.",
+     "on": "bad",
+     "send": {
+      "from": "bad",
+      "to": "app",
+      "label": "/auth/google/callback?code=theirs&state=wrong"
+     }
+    },
+    {
+     "say": "The state doesn't match the one your app saved for this login, so your app refuses it.",
+     "on": "app"
+    },
+    {
+     "say": "P K C E is recommended for every client, and essential for mobile and single page apps, which can't keep a client secret.",
+     "on": [
+      "app",
+      "token"
+     ]
+    },
+    {
+     "say": "In production, use a maintained library such as Authlib, which also verifies the I D token's signature.",
+     "on": "app"
     }
    ]
   },
@@ -2942,15 +4960,15 @@ You watched a real "Sign in with Google" redirect, generated a login URL with `s
     "Reading the ID token"
    ],
    "answer": 1,
-   "good": "That's right. PKCE makes a stolen authorization code useless, because swapping it needs the secret only your app holds.",
-   "bad": "Not quite. PKCE makes a stolen authorization code useless, because swapping it needs the secret only your app holds.",
+   "good": "That's right. P K C E makes a stolen authorization code useless, because swapping it needs the secret only your app holds.",
+   "bad": "Not quite. P K C E makes a stolen authorization code useless, because swapping it needs the secret only your app holds.",
    "beats": [
     {
      "say": "Quick check.",
      "show": 0
     },
     {
-     "say": "What attack does PKCE stop?",
+     "say": "What attack does P K C E stop?",
      "show": 0
     },
     {
@@ -2992,7 +5010,7 @@ You watched a real "Sign in with Google" redirect, generated a login URL with `s
      "show": 1
     },
     {
-     "say": "built a login link with state and PKCE,",
+     "say": "built a login link with state and P K C E,",
      "show": 2
     },
     {

@@ -119,156 +119,232 @@ You can open a terminal, navigate folders, run a Python file, and have made your
    ]
   },
   {
-   "kind": "list",
-   "art": "book",
+   "kind": "table",
    "kicker": "Five words you'll use every day",
    "title": "The basics",
-   "items": [
+   "columns": [
+    "Word",
+    "What it is",
+    "Example"
+   ],
+   "rows": [
     [
      "Terminal",
-     "Type commands instead of clicking"
+     "Type commands instead of clicking",
+     "pwd"
     ],
     [
      "Python",
-     "The language we'll use"
+     "The language we'll use",
+     "python hello.py"
     ],
     [
      "Variable",
-     "A named piece of information"
+     "A named piece of information",
+     "age = 25"
     ],
     [
      "Function",
-     "Reusable instructions you call by name"
+     "Reusable instructions you call by name",
+     "greet(\"Engineer\")"
     ],
     [
      "Git",
-     "Tracks every change to your code"
+     "Tracks every change to your code",
+     "git commit"
     ]
    ],
    "beats": [
     {
-     "say": "Here are five ideas you'll use in every module.",
-     "show": 0
+     "say": "Here are five ideas you'll use in every module, each with a tiny example.",
+     "col": 0
     },
     {
-     "say": "The terminal. A text-based way to talk to your computer. Instead of clicking icons, you type commands.",
-     "show": 1
+     "say": "The terminal. Instead of clicking icons, you type commands to your computer.",
+     "hl": 0
     },
     {
-     "say": "Python. The programming language we'll use. A precise way of giving instructions to a computer.",
-     "show": 2
+     "say": "Python. The programming language we'll use, a precise way of giving instructions.",
+     "hl": 1
     },
     {
-     "say": "A variable. It stores a piece of information with a name, like age equals twenty five.",
-     "show": 3
+     "say": "A variable stores a piece of information with a name, like age equals twenty five.",
+     "hl": 2
     },
     {
-     "say": "A function. A reusable block of instructions you call by name, so you don't retype the same logic.",
-     "show": 4
+     "say": "A function is a block of instructions you call by name, so you never retype the same logic.",
+     "hl": 3
     },
     {
-     "say": "And Git. It tracks changes to your code over time, like track changes in a document, built for code and teams.",
-     "show": 5
+     "say": "And Git tracks every change to your code, like track changes in a document, built for code and teams.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
-   "kicker": "Lab · Step 1",
-   "title": "Check Python is installed",
+   "kind": "walk",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "Check Python, then move around",
    "file": "Terminal",
-   "code": "python --version\n# Python 3.12.x",
+   "code": "python --version\npwd\nmkdir trackit\ncd trackit\npwd\nls",
    "beats": [
     {
-     "say": "First, open your terminal and check that Python is installed.",
-     "show": 0
+     "say": "Open your terminal and type python, dash dash version.",
+     "line": 1
     },
     {
-     "say": "Type python, space, dash dash version.",
-     "show": 1
+     "say": "You should see something like Python three point twelve. On a Mac, try python three if this fails.",
+     "line": 1,
+     "out": "Python 3.12.4"
     },
     {
-     "say": "You should see something like Python three point twelve.",
-     "show": 1
+     "say": "P W D prints the folder you're standing in. Yours will show your own name.",
+     "line": 2,
+     "vars": {
+      "folder": "/Users/you"
+     },
+     "out": "/Users/you"
     },
     {
-     "say": "On a Mac or Linux, if that doesn't work, try python three instead.",
-     "show": 1
+     "say": "M K D I R trackit makes a new, empty folder called trackit. It prints nothing.",
+     "line": 3
+    },
+    {
+     "say": "C D trackit moves you into it.",
+     "line": 4,
+     "vars": {
+      "folder": "/Users/you/trackit"
+     }
+    },
+    {
+     "say": "Ask P W D again, and the path now ends in trackit.",
+     "line": 5,
+     "out": "/Users/you/trackit"
+    },
+    {
+     "say": "L S lists the files here. The folder is brand new, so it prints nothing yet. On Windows, use dir.",
+     "line": 6
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "tree",
-   "kicker": "Lab · Step 2",
-   "title": "Move around with the terminal",
-   "file": "Terminal",
-   "code": "pwd           # where am I?\nls            # what's in this folder? (dir on Windows)\nmkdir trackit # make a folder\ncd trackit    # go into it",
-   "beats": [
-    {
-     "say": "Next, a few commands to move around.",
-     "show": 0
-    },
-    {
-     "say": "P W D prints which folder you're in. L S lists the files in it.",
-     "show": 1
-    },
-    {
-     "say": "M K D I R trackit makes a new folder called trackit, and C D trackit moves you into it.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab · Step 3",
-   "title": "Your first Python file",
+   "title": "Your first Python file, running",
    "file": "hello.py",
    "code": "def greet(name):\n    return f\"Hello, {name}! Welcome to TrackIt.\"\n\nmessage = greet(\"Engineer\")\nprint(message)",
    "beats": [
     {
-     "say": "Now your first program. Create a file called hello dot p y.",
-     "show": 0
+     "say": "You run this with python hello dot p y. Python reads it from the top.",
+     "line": 1
     },
     {
-     "say": "It defines a function called greet, which takes a name and returns a welcome message.",
-     "show": 1
+     "say": "Def only defines the function greet. Nothing inside it runs yet.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "Then it calls greet with the word Engineer and prints the result.",
-     "show": 1
+     "say": "Line four calls greet, and hands it the word Engineer.",
+     "line": 4
     },
     {
-     "say": "Run it with python hello dot p y, and you'll see: Hello, Engineer! Welcome to TrackIt.",
-     "show": 1
+     "say": "Inside greet, the variable name now holds Engineer.",
+     "line": 1,
+     "vars": {
+      "name": "\"Engineer\""
+     }
+    },
+    {
+     "say": "The f string drops the name into the sentence and returns it.",
+     "line": 2
+    },
+    {
+     "say": "That sentence is stored in the variable message.",
+     "line": 4,
+     "vars": {
+      "message": "\"Hello, Engineer! Welcome to TrackIt.\""
+     }
+    },
+    {
+     "say": "And print shows it in the terminal.",
+     "line": 5,
+     "out": "Hello, Engineer! Welcome to TrackIt."
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "git",
+   "kind": "diagram",
    "kicker": "Lab · Step 4",
    "title": "Save your work with Git",
-   "file": "Terminal",
-   "code": "git init\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"you@example.com\"\ngit add hello.py\ngit commit -m \"First commit: hello world\"",
+   "nodes": [
+    {
+     "id": "dir",
+     "label": "trackit folder",
+     "x": 12,
+     "y": 50,
+     "sub": "hello.py",
+     "art": "file"
+    },
+    {
+     "id": "stage",
+     "label": "Picked to save",
+     "x": 50,
+     "y": 50,
+     "sub": "git add",
+     "art": "checklist"
+    },
+    {
+     "id": "hist",
+     "label": "History",
+     "x": 88,
+     "y": 50,
+     "sub": "every commit, forever",
+     "art": "git"
+    }
+   ],
+   "edges": [
+    {
+     "from": "dir",
+     "to": "stage"
+    },
+    {
+     "from": "stage",
+     "to": "hist"
+    }
+   ],
    "beats": [
     {
-     "say": "Last step. Save your work with Git.",
-     "show": 0
+     "say": "Last step. Git init starts tracking your trackit folder, and two config lines tell Git your name and email.",
+     "show": 1,
+     "on": "dir"
     },
     {
-     "say": "Git init starts tracking this folder. The two config lines tell Git your name and email.",
-     "show": 1
+     "say": "Git add hello dot p y picks the file you want to save.",
+     "show": 2,
+     "on": "stage",
+     "send": {
+      "from": "dir",
+      "to": "stage",
+      "label": "git add hello.py"
+     }
     },
     {
-     "say": "Git add picks the file to save, and git commit saves it with a message describing the change.",
-     "show": 1
+     "say": "Git commit saves a snapshot of it into the history, with a message describing the change.",
+     "show": 3,
+     "on": "hist",
+     "send": {
+      "from": "stage",
+      "to": "hist",
+      "label": "commit: \"First commit: hello world\""
+     }
     },
     {
-     "say": "That's your first commit. Every change from now on can be tracked and undone.",
-     "show": 1
+     "say": "Each commit is a labelled point you can return to. No more hello v two, or hello final final.",
+     "show": 3,
+     "on": "hist"
     }
    ]
   },
@@ -291,7 +367,7 @@ You can open a terminal, navigate folders, run a Python file, and have made your
      "show": 0
     },
     {
-     "say": "Why use Git instead of saving files like hello_v2.py?",
+     "say": "Why use Git instead of saving copies like hello underscore v two dot p y?",
      "show": 0
     },
     {
@@ -329,7 +405,7 @@ You can open a terminal, navigate folders, run a Python file, and have made your
      "show": 0
     },
     {
-     "say": "You're done when you can do four things.",
+     "say": "You're done when:",
      "show": 0
     },
     {
@@ -463,234 +539,262 @@ A `SPEC.md` file exists in your project folder and you can explain the product i
    ]
   },
   {
-   "kind": "list",
-   "art": "target",
-   "kicker": "Why start here",
-   "title": "A clear target gets projects finished",
-   "items": [
-    [
-     "Know exactly what to build",
-     ""
-    ],
-    [
-     "Waste less time on unneeded features",
-     ""
-    ],
-    [
-     "Actually finish",
-     ""
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Many side projects never get finished.",
-     "show": 0
-    },
-    {
-     "say": "Usually the code isn't the problem. There's no clear target to build toward.",
-     "show": 0
-    },
-    {
-     "say": "A clear target means you know exactly what to build,",
-     "show": 1
-    },
-    {
-     "say": "you waste less time on features nobody needs,",
-     "show": 2
-    },
-    {
-     "say": "and you actually finish.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "doc",
+   "kind": "table",
    "kicker": "The tool",
    "title": "A spec answers five questions",
-   "items": [
+   "columns": [
+    "Section",
+    "It asks",
+    "TrackIt's answer"
+   ],
+   "rows": [
     [
      "Problem",
-     "What pain point exists?"
+     "What pain point exists?",
+     "Logging tasks feels like admin work"
     ],
     [
      "Users",
-     "Who exactly has this problem?"
+     "Who exactly has it?",
+     "Individuals managing personal projects"
     ],
     [
      "Core flow",
-     "The handful of steps a user takes to get value"
+     "Steps to get value",
+     "Type it, AI structures it, mark done"
     ],
     [
      "Non-goals",
-     "What you're deliberately not building yet"
+     "What we won't build yet",
+     "Teams, mobile app, recurring tasks"
     ],
     [
      "Success metric",
-     "One number that tells you it's working"
+     "One number that says it works",
+     "Task logged in under 10 seconds"
     ]
    ],
    "beats": [
     {
-     "say": "The tool for this is called a spec.",
-     "show": 0
+     "say": "Skipping this step is why many side projects never finish. There's no clear target.",
+     "col": 0
     },
     {
-     "say": "It's a short document, often less than a page, that answers five questions.",
-     "show": 0
+     "say": "A spec is a short document that answers five questions. Here they are, with TrackIt's answers.",
+     "col": 1
     },
     {
-     "say": "The problem. What pain point exists?",
-     "show": 1
+     "say": "The problem: people abandon task apps, because logging tasks feels like admin work.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "The users. Who exactly has this problem?",
-     "show": 2
+     "say": "The users: individuals managing personal projects.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "The core flow. The handful of steps a user takes to get value.",
-     "show": 3
+     "say": "The core flow: the handful of steps a user takes to get value.",
+     "hl": 2,
+     "col": 2
     },
     {
-     "say": "The non-goals. What you're deliberately not building yet.",
-     "show": 4
+     "say": "Non-goals: what you're deliberately not building yet.",
+     "hl": 3,
+     "col": 2
     },
     {
-     "say": "And the success metric. One number that tells you it's working.",
-     "show": 5
+     "say": "And one success metric: a task logged in under ten seconds.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "mess",
-   "kicker": "Example: TrackIt · Problem",
-   "title": "What hurts?",
-   "quote": "People abandon task apps because logging tasks feels like admin work.",
-   "beats": [
-    {
-     "say": "Let's write one together, for TrackIt.",
-     "show": 0
-    },
-    {
-     "say": "First, the problem.",
-     "show": 0
-    },
-    {
-     "say": "People abandon task apps because logging tasks feels like admin work.",
-     "show": 1
-    },
-    {
-     "say": "It describes something painful for real people. It doesn't mention a single feature yet.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "persona",
-   "kicker": "Example: TrackIt · Users",
-   "title": "Who has this problem?",
-   "quote": "Individuals managing personal projects.",
-   "beats": [
-    {
-     "say": "Next, the users.",
-     "show": 0
-    },
-    {
-     "say": "TrackIt is for individuals managing personal projects.",
-     "show": 1
-    },
-    {
-     "say": "Be specific. A product for everyone is really for no one in particular.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Example: TrackIt · Core flow",
    "title": "The shortest path to value",
-   "steps": [
-    "Sign up",
-    "Type a task in plain English",
-    "AI structures it",
-    "See it on a list",
-    "Mark done"
+   "nodes": [
+    {
+     "id": "signup",
+     "label": "Sign up",
+     "x": 10,
+     "y": 30,
+     "art": "idcard"
+    },
+    {
+     "id": "type",
+     "label": "Type a task",
+     "x": 40,
+     "y": 30,
+     "sub": "plain English",
+     "art": "pencil"
+    },
+    {
+     "id": "ai",
+     "label": "AI structures it",
+     "x": 72,
+     "y": 30,
+     "sub": "title, date, priority",
+     "art": "sparkle"
+    },
+    {
+     "id": "list",
+     "label": "See it on a list",
+     "x": 72,
+     "y": 78,
+     "art": "checklist"
+    },
+    {
+     "id": "done",
+     "label": "Mark done",
+     "x": 30,
+     "y": 78,
+     "art": "proof"
+    }
+   ],
+   "edges": [
+    {
+     "from": "signup",
+     "to": "type"
+    },
+    {
+     "from": "type",
+     "to": "ai"
+    },
+    {
+     "from": "ai",
+     "to": "list"
+    },
+    {
+     "from": "list",
+     "to": "done"
+    }
    ],
    "beats": [
     {
-     "say": "The core flow is the shortest path from opening the app to getting value.",
-     "show": 0
+     "say": "The core flow is the shortest path from opening the app to getting value. First, sign up.",
+     "show": 1,
+     "on": "signup"
     },
     {
-     "say": "Sign up.",
-     "show": 1
+     "say": "Then type a task in plain English.",
+     "show": 2,
+     "on": "type",
+     "send": {
+      "from": "signup",
+      "to": "type",
+      "label": "new user"
+     }
     },
     {
-     "say": "Type a task in plain English.",
-     "show": 2
+     "say": "The AI turns that sentence into a structured task.",
+     "show": 3,
+     "on": "ai",
+     "send": {
+      "from": "type",
+      "to": "ai",
+      "label": "\"Finish the report by Friday\""
+     }
     },
     {
-     "say": "The AI turns it into a structured task.",
-     "show": 3
+     "say": "It appears on your list.",
+     "show": 4,
+     "on": "list",
+     "send": {
+      "from": "ai",
+      "to": "list",
+      "label": "title · due date · priority"
+     }
     },
     {
-     "say": "See it on your list.",
-     "show": 4
-    },
-    {
-     "say": "And mark it done.",
-     "show": 5
-    },
-    {
-     "say": "Five steps. If your flow needs twenty, it's too big for version one.",
-     "show": 5
+     "say": "And you mark it done. Five steps. If your flow needs twenty, it's too big for version one.",
+     "show": 5,
+     "on": "done",
+     "send": {
+      "from": "list",
+      "to": "done",
+      "label": "✓"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "cross",
+   "kind": "array",
    "kicker": "Example: TrackIt · Non-goals",
-   "title": "Not in version 1",
-   "items": [
-    [
-     "Team collaboration",
-     ""
-    ],
-    [
-     "A mobile app",
-     ""
-    ],
-    [
-     "Recurring tasks",
-     ""
-    ]
+   "title": "Saying no, on purpose",
+   "values": [
+    "Sign up",
+    "AI quick add",
+    "Task list",
+    "Mark done",
+    "Team collaboration",
+    "Mobile app",
+    "Recurring tasks"
    ],
-   "crossed": true,
    "beats": [
     {
-     "say": "Now the part most beginners skip. Non-goals.",
-     "show": 0
+     "say": "Here are seven features someone might want in TrackIt."
     },
     {
-     "say": "In version one, TrackIt has no team collaboration,",
-     "show": 1
+     "say": "The first four are the core flow. They're in version one.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "version 1"
     },
     {
-     "say": "no mobile app,",
-     "show": 2
+     "say": "Team collaboration, a mobile app, and recurring tasks are written down as non-goals.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "gone": [
+      4,
+      5,
+      6
+     ],
+     "note": "non-goals (v1)"
     },
     {
-     "say": "and no recurring tasks.",
-     "show": 3
+     "say": "A non-goal is a deliberate, stated choice. Something you simply forgot is an oversight.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "gone": [
+      4,
+      5,
+      6
+     ],
+     "hl": [
+      4,
+      5,
+      6
+     ]
     },
     {
-     "say": "A non-goal is a decision you made on purpose. That's different from something you forgot.",
-     "show": 3
+     "say": "It also says who TrackIt is not for yet: teams.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "gone": [
+      5,
+      6
+     ],
+     "hl": 4,
+     "note": "for individuals, not teams"
     }
    ]
   },
@@ -721,28 +825,65 @@ A `SPEC.md` file exists in your project folder and you can explain the product i
    ]
   },
   {
-   "kind": "code",
-   "art": "pencil",
+   "kind": "table",
    "kicker": "Your turn · Lab",
-   "title": "Write SPEC.md",
-   "file": "SPEC.md",
-   "code": "Problem: People abandon task apps because logging tasks feels like admin work\nUsers: Individuals managing personal projects\nCore flow: sign up -> type a task -> AI structures it -> see it on a list -> mark done\nNon-goals: no team collaboration, no mobile app, no recurring tasks (v1)\nSuccess metric: time from \"open app\" to \"task logged\" under 10 seconds",
+   "title": "Which part of the spec is this?",
+   "columns": [
+    "Line from a spec",
+    "Section"
+   ],
+   "rows": [
+    [
+     "People lose track of small tasks spread across notes, chats, and apps.",
+     "Problem"
+    ],
+    [
+     "Busy students and early-career professionals.",
+     "Users"
+    ],
+    [
+     "Type a task in plain English, see it structured on a list, mark it done.",
+     "Core flow"
+    ],
+    [
+     "No team sharing or calendar sync in version 1.",
+     "Non-goals"
+    ],
+    [
+     "Time from opening the app to logging a task.",
+     "Success metric"
+    ]
+   ],
    "beats": [
     {
-     "say": "Your turn.",
-     "show": 0
+     "say": "Now practise. Each line comes from a spec. Which section does it belong in?",
+     "col": 0
     },
     {
-     "say": "In your project folder, create a file called SPEC dot M D.",
-     "show": 1
+     "say": "Losing track of tasks across notes and chats names a pain point. That's the problem.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Fill in the five parts for TrackIt, using this template.",
-     "show": 1
+     "say": "Busy students and early-career professionals says exactly who. Users.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "Then rewrite one part in your own words, as if you're explaining TrackIt to a friend.",
-     "show": 1
+     "say": "Type, see it structured, mark it done. Those are the steps to value: the core flow.",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "No team sharing in version one is left out on purpose. A non-goal.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "And time to log a task is the one number. Then write SPEC dot M D in your own words.",
+     "hl": 4,
+     "dim": true,
+     "col": 1
     }
    ]
   },
@@ -795,7 +936,7 @@ A `SPEC.md` file exists in your project folder and you can explain the product i
      "show": 0
     },
     {
-     "say": "You're done when two things are true.",
+     "say": "You're done when:",
      "show": 0
     },
     {
@@ -807,7 +948,7 @@ A `SPEC.md` file exists in your project folder and you can explain the product i
      "show": 2
     },
     {
-     "say": "Next, in Module 2, you build your first API.",
+     "say": "Next, in Module 2, you build your first A P I.",
      "show": 2
     }
    ]
@@ -894,139 +1035,237 @@ Your API runs locally and responds to two different endpoints, one of which take
    ]
   },
   {
-   "kind": "list",
-   "art": "server",
+   "kind": "diagram",
    "kicker": "Concepts",
-   "title": "Three words to know",
-   "items": [
-    [
-     "API",
-     "How one program talks to another"
-    ],
-    [
-     "Web framework",
-     "Handles requests and responses for you (FastAPI)"
-    ],
-    [
-     "Endpoint",
-     "A specific URL your API answers, like /health"
-    ]
+   "title": "How a request reaches your code",
+   "nodes": [
+    {
+     "id": "browser",
+     "label": "Browser",
+     "x": 12,
+     "y": 50,
+     "sub": "localhost:8000",
+     "art": "browser"
+    },
+    {
+     "id": "fw",
+     "label": "FastAPI app",
+     "x": 50,
+     "y": 50,
+     "sub": "the web framework",
+     "art": "server"
+    },
+    {
+     "id": "fn",
+     "label": "health_check()",
+     "x": 88,
+     "y": 50,
+     "sub": "your function",
+     "art": "code"
+    }
+   ],
+   "edges": [
+    {
+     "from": "browser",
+     "to": "fw"
+    },
+    {
+     "from": "fw",
+     "to": "fn"
+    }
    ],
    "beats": [
     {
-     "say": "Three words first.",
-     "show": 0
-    },
-    {
-     "say": "An API, or application programming interface, is how one piece of software talks to another. Here, how a browser talks to your backend.",
-     "show": 1
-    },
-    {
-     "say": "A web framework handles the repetitive plumbing of receiving requests and sending responses. We'll use one called FastAPI.",
-     "show": 2
-    },
-    {
-     "say": "And an endpoint is a specific address your API answers, like slash health, or slash tasks.",
+     "say": "An A P I is how one piece of software talks to another. Here, a browser talks to your backend.",
      "show": 3
+    },
+    {
+     "say": "The browser asks for one address on your server, an endpoint, slash health.",
+     "on": "browser",
+     "send": {
+      "from": "browser",
+      "to": "fw",
+      "label": "GET /health"
+     }
+    },
+    {
+     "say": "FastAPI, the web framework, handles the plumbing. It finds the function for that endpoint and runs it.",
+     "on": "fw",
+     "send": {
+      "from": "fw",
+      "to": "fn",
+      "label": "/health"
+     }
+    },
+    {
+     "say": "Your function returns a small dictionary.",
+     "on": "fn",
+     "send": {
+      "from": "fn",
+      "to": "fw",
+      "label": "{\"status\": \"ok\"}"
+     }
+    },
+    {
+     "say": "And FastAPI turns it into a J S O N response for the browser. You only wrote the logic.",
+     "on": "browser",
+     "send": {
+      "from": "fw",
+      "to": "browser",
+      "label": "200 · {\"status\":\"ok\"}"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "package",
+   "kind": "walk",
    "kicker": "Lab · Step 1",
    "title": "A clean space for this project",
    "file": "Terminal",
    "code": "python -m venv venv\nsource venv/bin/activate   # Windows: venv\\Scripts\\activate\npip install fastapi uvicorn",
    "beats": [
     {
-     "say": "Step one. Set up a virtual environment.",
-     "show": 0
+     "say": "First, make a virtual environment, a private folder of packages just for this project.",
+     "line": 1,
+     "vars": {
+      "venv/": "created, empty"
+     }
     },
     {
-     "say": "A virtual environment keeps this project's installed packages separate from your other projects, so they don't clash.",
-     "show": 1
+     "say": "Activate it. From now on, pip installs into this project only.",
+     "line": 2,
+     "vars": {
+      "active": "venv"
+     },
+     "out": "(venv) $"
     },
     {
-     "say": "Create it, switch it on, then install FastAPI and uvicorn, the program that runs your app.",
-     "show": 1
+     "say": "Install FastAPI, and uvicorn, the server that runs it.",
+     "line": 3,
+     "vars": {
+      "venv/": "fastapi, uvicorn"
+     }
+    },
+    {
+     "say": "Another project can use different versions without any conflict.",
+     "line": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 2",
-   "title": "Your first endpoint",
+   "kind": "walk",
+   "kicker": "Lab · Steps 2 to 4",
+   "title": "Two endpoints, two requests",
    "file": "main.py",
-   "code": "from fastapi import FastAPI\n\napp = FastAPI(title=\"TrackIt API\")\n\n@app.get(\"/health\")\ndef health_check():\n    return {\"status\": \"ok\"}",
+   "code": "from fastapi import FastAPI\n\napp = FastAPI(title=\"TrackIt API\")\n\n@app.get(\"/health\")\ndef health_check():\n    return {\"status\": \"ok\"}\n\n@app.get(\"/greet/{name}\")\ndef greet(name: str):\n    return {\"message\": f\"Hello, {name}!\"}",
    "beats": [
     {
-     "say": "Step two. Your first endpoint, in a file called main dot p y.",
-     "show": 0
+     "say": "Here's main dot p y. Line three creates the app, called TrackIt A P I.",
+     "line": [
+      1,
+      3
+     ]
     },
     {
-     "say": "You create the app, then the line app dot get slash health tells FastAPI: when someone asks for slash health, run the function below.",
-     "show": 1
+     "say": "At sign app dot get slash health tells FastAPI: answer requests to slash health with the function below.",
+     "line": [
+      5,
+      6
+     ]
     },
     {
-     "say": "That function returns status: ok. A simple way to check your server is alive.",
-     "show": 1
+     "say": "Start it with uvicorn main colon app, dash dash reload. Reload restarts it whenever you save.",
+     "line": 3,
+     "out": "Uvicorn running on http://127.0.0.1:8000"
+    },
+    {
+     "say": "Visit localhost, port eight thousand, slash health. Health check runs, and returns status ok.",
+     "line": [
+      6,
+      7
+     ],
+     "out": "GET /health → {\"status\":\"ok\"}"
+    },
+    {
+     "say": "The second endpoint has curly brackets around name. That part of the address is a variable.",
+     "line": 9
+    },
+    {
+     "say": "Visit slash greet slash Ada, and name becomes Ada.",
+     "line": [
+      9,
+      10
+     ],
+     "vars": {
+      "name": "\"Ada\""
+     }
+    },
+    {
+     "say": "The f string builds the message. Hello, Ada!",
+     "line": 11,
+     "out": "GET /greet/Ada → {\"message\":\"Hello, Ada!\"}"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "browser",
-   "kicker": "Lab · Step 3",
-   "title": "Run it and visit it",
-   "steps": [
-    "uvicorn main:app --reload",
-    "Open localhost:8000/health",
-    "{\"status\": \"ok\"}"
+   "kind": "table",
+   "kicker": "Trace it",
+   "title": "Which function answers each address?",
+   "columns": [
+    "You visit",
+    "Matches",
+    "name",
+    "Response"
+   ],
+   "rows": [
+    [
+     "/health",
+     "health_check",
+     "—",
+     "{\"status\":\"ok\"}"
+    ],
+    [
+     "/greet/Ada",
+     "greet",
+     "Ada",
+     "{\"message\":\"Hello, Ada!\"}"
+    ],
+    [
+     "/greet/YourName",
+     "greet",
+     "YourName",
+     "{\"message\":\"Hello, YourName!\"}"
+    ],
+    [
+     "/tasks",
+     "nothing yet",
+     "—",
+     "404 {\"detail\":\"Not Found\"}"
+    ]
    ],
    "beats": [
     {
-     "say": "Step three. Start the server.",
-     "show": 0
+     "say": "FastAPI compares each address you visit with the endpoints you wrote.",
+     "col": 0
     },
     {
-     "say": "Run uvicorn main colon app, dash dash reload.",
-     "show": 1
+     "say": "Slash health has no input. It always gives the same answer.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Open your browser at localhost, port eight thousand, slash health.",
-     "show": 2
+     "say": "Anything after slash greet slash is captured as name, and comes back in the message.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 2
     },
     {
-     "say": "And you'll see status: ok.",
-     "show": 3
-    },
-    {
-     "say": "The reload flag restarts the server whenever you save a change.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "globe",
-   "kicker": "Lab · Step 4",
-   "title": "An endpoint that takes input",
-   "file": "main.py",
-   "code": "@app.get(\"/greet/{name}\")\ndef greet(name: str):\n    return {\"message\": f\"Hello, {name}!\"}",
-   "beats": [
-    {
-     "say": "Step four. An endpoint that takes input.",
-     "show": 0
-    },
-    {
-     "say": "The curly brackets around name in the address mean: this part can change.",
-     "show": 1
-    },
-    {
-     "say": "Visit slash greet slash your name, and the API answers with a message that uses it.",
-     "show": 1
+     "say": "Slash tasks doesn't match any endpoint yet, so FastAPI answers four oh four, not found.",
+     "hl": 3,
+     "dim": true,
+     "col": 3
     }
    ]
   },
@@ -1049,7 +1288,7 @@ Your API runs locally and responds to two different endpoints, one of which take
      "show": 0
     },
     {
-     "say": "What does @app.get(\"/health\") tell FastAPI to do?",
+     "say": "What does at sign app dot get, slash health, tell FastAPI to do?",
      "show": 0
     },
     {
@@ -1079,7 +1318,11 @@ Your API runs locally and responds to two different endpoints, one of which take
      "show": 0
     },
     {
-     "say": "You're done when your API runs on your computer,",
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your A P I runs on your computer,",
      "show": 1
     },
     {
@@ -1242,152 +1485,427 @@ You can explain why the heap version scales better than re-sorting, and you have
    ]
   },
   {
-   "kind": "list",
-   "art": "stack",
-   "kicker": "Concepts",
-   "title": "Three ideas",
-   "items": [
-    [
-     "Data structure",
-     "Organizes data so some operations are fast"
-    ],
-    [
-     "Heap",
-     "Keeps the most urgent item on top"
-    ],
-    [
-     "Big O",
-     "How speed changes as data grows"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Three ideas.",
-     "show": 0
-    },
-    {
-     "say": "A data structure is a way of organizing information so certain operations are fast.",
-     "show": 1
-    },
-    {
-     "say": "A heap is a data structure that always keeps the most urgent item easy to grab, without sorting the whole list.",
-     "show": 2
-    },
-    {
-     "say": "And Big O notation describes how an operation's speed changes as your data grows.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "growth",
+   "kind": "chart",
    "kicker": "Big O in plain words",
-   "title": "How speed changes as data grows",
-   "items": [
+   "title": "Re-sorting every time vs. peeking at a heap",
+   "xlabel": "number of tasks",
+   "ylabel": "work per call (illustrative)",
+   "points": [
     [
-     "O(1)",
-     "Constant: dictionary lookup"
+     10,
+     5.5
     ],
     [
-     "O(log n)",
-     "Gentle: binary search"
+     25,
+     19.2
     ],
     [
-     "O(n)",
-     "Grows with the data: scan a list"
+     40,
+     35.2
     ],
     [
-     "O(n log n)",
-     "Sorting a list"
+     55,
+     52.5
+    ],
+    [
+     70,
+     70.9
+    ],
+    [
+     85,
+     90
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     25,
+     4
+    ],
+    [
+     40,
+     4
+    ],
+    [
+     55,
+     4
+    ],
+    [
+     70,
+     4
+    ],
+    [
+     85,
+     4
     ]
    ],
    "beats": [
     {
-     "say": "A few Big O values you'll see often.",
-     "show": 0
+     "say": "Big O describes how an operation's work changes as your data grows. Each dot is one call."
     },
     {
-     "say": "O of one. The same speed however big the data is, like looking up a key in a dictionary.",
-     "show": 1
+     "say": "These dots are the naive way: sort the whole list, every call. That's O of n log n.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "O of log n. Slows down very gently, like binary search, which halves what's left each step.",
-     "show": 2
+     "say": "Notice it keeps climbing. More tasks, more work, every single time you ask what's next.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "marks": [
+      [
+       85,
+       90
+      ]
+     ]
     },
     {
-     "say": "O of n. Grows with the data, like checking every item in a list.",
-     "show": 3
+     "say": "These are a heap's peek at the most urgent task. O of one: flat, whatever the size.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
     },
     {
-     "say": "And O of n log n. Slower, but still fine. Good general sorting grows like this.",
-     "show": 4
+     "say": "With ten tasks you'd never notice the gap. With ten thousand, you would.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       10,
+       5.5
+      ],
+      [
+       10,
+       4
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "warning",
-   "kicker": "Lab · Step 1",
-   "title": "The naive way",
-   "file": "next_task_naive",
-   "code": "def next_task_naive(tasks):\n    sorted_tasks = sorted(tasks, key=lambda t: (t.due_date, t.priority))\n    return sorted_tasks[0]",
+   "kind": "table",
+   "kicker": "Big O",
+   "title": "How fast is each operation?",
+   "columns": [
+    "Operation",
+    "Big O",
+    "Why"
+   ],
+   "rows": [
+    [
+     "Look up a user by ID in a dict",
+     "O(1)",
+     "Same time, any size"
+    ],
+    [
+     "Find a value in an unsorted list",
+     "O(n)",
+     "Might check every item"
+    ],
+    [
+     "Binary search a sorted list",
+     "O(log n)",
+     "Halves what's left each step"
+    ],
+    [
+     "Sort tasks by due date",
+     "O(n log n)",
+     "Good general sorting"
+    ],
+    [
+     "Add a task to a heap",
+     "O(log n)",
+     "Climbs the heap's height"
+    ],
+    [
+     "Peek at the heap's top task",
+     "O(1)",
+     "It's always at the top"
+    ]
+   ],
    "beats": [
     {
-     "say": "Here's the naive way to find TrackIt's next task.",
-     "show": 0
+     "say": "Here are six operations you'll meet, from fastest to slower.",
+     "col": 1
     },
     {
-     "say": "It sorts the entire list by due date and priority, then takes the first one.",
-     "show": 1
+     "say": "O of one means constant. A dictionary lookup takes about the same time, however big it gets.",
+     "hl": [
+      0,
+      5
+     ]
     },
     {
-     "say": "It works, but it re-sorts everything every single time you want just one item. That gets wasteful as the list grows.",
-     "show": 1
+     "say": "O of log n grows very slowly, because each step halves the work.",
+     "hl": [
+      2,
+      4
+     ]
+    },
+    {
+     "say": "O of n means checking every item in the worst case.",
+     "hl": 1
+    },
+    {
+     "say": "And O of n log n is sorting. Fine once, wasteful if you repeat it on every call.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "tree",
+   "kind": "array",
    "kicker": "Lab · Step 2",
-   "title": "The better way: a heap",
-   "file": "priority.py",
-   "code": "class TaskQueue:\n    def __init__(self):\n        self._heap: list[Task] = []\n\n    def add(self, task):\n        heapq.heappush(self._heap, task)   # O(log n)\n\n    def next_up(self):\n        return self._heap[0]               # O(1)",
+   "title": "A heap keeps the most urgent item on top",
+   "values": [
+    2,
+    5,
+    3,
+    9,
+    7
+   ],
    "beats": [
     {
-     "say": "The better way uses a heap, with Python's heap q module.",
-     "show": 0
+     "say": "Here's a heap, shown as a list. Think of each number as days until a task is due.",
+     "note": "each parent ≤ its children"
     },
     {
-     "say": "The less-than method tells Python how to compare two tasks: earlier due date first, then higher priority.",
-     "show": 1
+     "say": "The rule: every item is smaller than the items below it. So the smallest is always at index zero.",
+     "hl": 0,
+     "ptr": {
+      "top": 0
+     },
+     "note": "top = 2"
     },
     {
-     "say": "Adding a task is O of log n. Peeking at the most urgent one is O of one, because it always sits on top.",
-     "show": 1
+     "say": "Heap push adds a task due in one day. It goes on the end first.",
+     "vals": [
+      2,
+      5,
+      3,
+      9,
+      7,
+      1
+     ],
+     "hl": 5,
+     "ptr": {
+      "new": 5
+     },
+     "note": "heappush(heap, 1)"
+    },
+    {
+     "say": "Its parent is the three at index two. One is smaller, so they swap.",
+     "vals": [
+      2,
+      5,
+      1,
+      9,
+      7,
+      3
+     ],
+     "hl": 2,
+     "ptr": {
+      "new": 2
+     },
+     "note": "1 < 3 → swap"
+    },
+    {
+     "say": "Its new parent is the two at the top. One is smaller again, so swap once more.",
+     "vals": [
+      1,
+      5,
+      2,
+      9,
+      7,
+      3
+     ],
+     "hl": 0,
+     "ptr": {
+      "new": 0
+     },
+     "note": "1 < 2 → swap"
+    },
+    {
+     "say": "Two swaps, not a full sort. The urgent task is on top, so next up just reads index zero.",
+     "vals": [
+      1,
+      5,
+      2,
+      9,
+      7,
+      3
+     ],
+     "ok": [
+      0
+     ],
+     "ptr": {
+      "top": 0
+     },
+     "note": "[1, 5, 2, 9, 7, 3]"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "calendar",
+   "kind": "walk",
    "kicker": "Lab · Step 3",
-   "title": "Try it",
-   "big": "\"Urgent task\"",
-   "sub": "q.next_up().title",
+   "title": "Try it: which task is next?",
+   "file": "try_priority.py",
+   "code": "q = TaskQueue()\nq.add(Task(id=1, title=\"Later task\",\n           due_date=date.today() + timedelta(days=5), priority=1))\nq.add(Task(id=2, title=\"Urgent task\",\n           due_date=date.today(), priority=3))\n\nprint(q.next_up().title)\n\n# inside Task:\ndef __lt__(self, other):\n    return (self.due_date, self.priority) < (other.due_date, other.priority)",
    "beats": [
     {
-     "say": "Now try it. Add a task due in five days, and an urgent task due today.",
-     "show": 0
+     "say": "Make an empty task queue.",
+     "line": 1,
+     "vars": {
+      "q._heap": "[]"
+     }
     },
     {
-     "say": "Ask the queue what's next.",
-     "show": 1
+     "say": "Add a later task: due in five days, top priority one.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "q._heap": "[Later task]"
+     }
     },
     {
-     "say": "It answers: Urgent task. The earliest due date wins.",
-     "show": 2
+     "say": "Add an urgent task: due today, priority three. Heap push puts it on the end, then compares.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "q._heap": "[Later, Urgent]"
+     }
+    },
+    {
+     "say": "To compare two tasks, Python calls the less than method you defined.",
+     "line": [
+      10,
+      11
+     ]
+    },
+    {
+     "say": "It compares due dates first. Today comes before five days from now, so urgent is less. They swap.",
+     "line": 11,
+     "vars": {
+      "q._heap": "[Urgent, Later]"
+     }
+    },
+    {
+     "say": "Priority would only matter if the due dates tied.",
+     "line": 11
+    },
+    {
+     "say": "Next up reads the top of the heap.",
+     "line": 7,
+     "out": "Urgent task"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Why the heap wins",
+   "title": "Every call, side by side",
+   "columns": [
+    "You want…",
+    "Naive list",
+    "Heap"
+   ],
+   "rows": [
+    [
+     "What's next?",
+     "Sort all n: O(n log n)",
+     "Read the top: O(1)"
+    ],
+    [
+     "Add a task",
+     "Append: O(1)",
+     "Push: O(log n)"
+    ],
+    [
+     "Finish the next task",
+     "Sort all n again",
+     "Pop: O(log n)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Let's put the two approaches side by side.",
+     "col": 0
+    },
+    {
+     "say": "Next task naive sorts the entire list just to read one item.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "The heap already has it on top.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "Adding costs the heap a little, a few swaps, as you saw.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "But you only ever needed the top item, so re-sorting everything repeats work on every call.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 1
     }
    ]
   },
@@ -1440,7 +1958,11 @@ You can explain why the heap version scales better than re-sorting, and you have
      "show": 0
     },
     {
-     "say": "You're done when you can explain why the heap scales better than re-sorting,",
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain why the heap scales better than re-sorting,",
      "show": 1
     },
     {
@@ -1584,147 +2106,386 @@ You can explain what a table, row, column, and foreign key are, you have `models
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
+   "kind": "table",
    "kicker": "Concepts",
-   "title": "How a database is organized",
-   "items": [
+   "title": "A table: rows, columns, and a link",
+   "columns": [
+    "id",
+    "title",
+    "due_date",
+    "priority",
+    "done",
+    "owner_id"
+   ],
+   "rows": [
     [
-     "Table",
-     "One kind of thing, like tasks"
+     "1",
+     "Write the spec",
+     "—",
+     "1",
+     "false",
+     "1"
     ],
     [
-     "Rows and columns",
-     "One row per record, one column per detail"
+     "2",
+     "Draw the architecture",
+     "2026-10-14",
+     "2",
+     "false",
+     "1"
     ],
     [
-     "Foreign key",
-     "Links a row to a row in another table"
+     "3",
+     "Set up Git",
+     "2026-10-12",
+     "3",
+     "true",
+     "1"
     ],
     [
-     "ORM",
-     "Use Python objects instead of raw SQL"
+     "4",
+     "Plan a trip",
+     "2026-10-13",
+     "3",
+     "false",
+     "2"
+    ],
+    [
+     "5",
+     "Read a chapter",
+     "2026-10-12",
+     "4",
+     "false",
+     "1"
     ]
    ],
    "beats": [
     {
-     "say": "A database stores data permanently.",
-     "show": 0
+     "say": "A relational database stores data in tables. Here's an example tasks table."
     },
     {
-     "say": "A relational database organizes it into tables,",
-     "show": 1
+     "say": "Each row is one task.",
+     "hl": 1
     },
     {
-     "say": "each with rows, one per record, and columns, one per detail.",
-     "show": 2
+     "say": "Each column is one piece of information every task has, like its priority.",
+     "col": 3
     },
     {
-     "say": "Tables can link to each other. A foreign key says which row in another table this one belongs to.",
-     "show": 3
+     "say": "Owner I D is a foreign key. It holds the I D of a row in the users table, the task's owner.",
+     "col": 5
     },
     {
-     "say": "And an ORM lets you work with tables using normal Python objects instead of writing raw SQL for everything.",
-     "show": 4
+     "say": "So tasks one, two, three and five belong to user one. Task four belongs to user two.",
+     "hl": [
+      0,
+      1,
+      2,
+      4
+     ],
+     "col": 5
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "blueprint",
-   "kicker": "Lab · Step 2",
-   "title": "Describe your tables",
-   "file": "models.py",
-   "code": "class User(Base):\n    __tablename__ = \"users\"\n    email = Column(String, unique=True, nullable=False, index=True)\n\nclass Task(Base):\n    __tablename__ = \"tasks\"\n    title = Column(String, nullable=False)\n    done = Column(Boolean, default=False)\n    owner_id = Column(Integer, ForeignKey(\"users.id\"), index=True)",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Concepts · ORM",
+   "title": "Python classes become tables",
+   "nodes": [
     {
-     "say": "We describe two tables with SQLAlchemy: users and tasks.",
-     "show": 0
+     "id": "models",
+     "label": "models.py",
+     "x": 12,
+     "y": 30,
+     "sub": "class User, class Task",
+     "art": "blueprint"
     },
     {
-     "say": "Each user has an email, marked unique, so two people can't sign up with the same one.",
-     "show": 1
+     "id": "orm",
+     "label": "SQLAlchemy",
+     "x": 50,
+     "y": 30,
+     "sub": "the ORM",
+     "art": "gear"
     },
     {
-     "say": "Each task has a title, due date, priority, and done flag, plus owner I D, a foreign key that links it to its user.",
-     "show": 1
+     "id": "db",
+     "label": "trackit.db",
+     "x": 88,
+     "y": 30,
+     "sub": "SQLite file",
+     "art": "database"
+    },
+    {
+     "id": "users",
+     "label": "users",
+     "x": 70,
+     "y": 80,
+     "sub": "id · email · hashed_password",
+     "art": "table"
+    },
+    {
+     "id": "tasks",
+     "label": "tasks",
+     "x": 30,
+     "y": 80,
+     "sub": "… · owner_id",
+     "art": "table"
     }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 3",
-   "title": "Read the SQL",
-   "file": "SQL",
-   "code": "SELECT title, due_date, priority\nFROM tasks\nWHERE owner_id = 1\n  AND done = false\nORDER BY due_date ASC, priority ASC;",
-   "beats": [
+   ],
+   "edges": [
     {
-     "say": "You should still be able to read the SQL an ORM writes for you.",
-     "show": 0
+     "from": "models",
+     "to": "orm"
     },
     {
-     "say": "This reads as: get the title, due date and priority of every unfinished task belonging to user one,",
-     "show": 1
+     "from": "orm",
+     "to": "db"
     },
     {
-     "say": "ordered by the soonest due date.",
-     "show": 1
+     "from": "db",
+     "to": "users"
+    },
+    {
+     "from": "db",
+     "to": "tasks"
+    },
+    {
+     "from": "tasks",
+     "to": "users"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "file",
-   "kicker": "Lab · Steps 4 and 5",
-   "title": "Create it, then save real data",
-   "steps": [
-    "database.py",
-    "init_db()",
-    "try_db.py saves a task",
-    "trackit.db exists"
    ],
    "beats": [
     {
-     "say": "Models only describe the tables. Nothing exists on disk yet.",
-     "show": 0
+     "say": "An O R M lets you describe tables as ordinary Python classes. That's models dot p y.",
+     "show": 1,
+     "on": "models"
     },
     {
-     "say": "Database dot p y connects to SQLite, a database stored in a single file,",
-     "show": 1
+     "say": "SQLAlchemy, the O R M, reads those classes.",
+     "show": 2,
+     "on": "orm",
+     "send": {
+      "from": "models",
+      "to": "orm",
+      "label": "User, Task"
+     }
     },
     {
-     "say": "and init D B creates any tables that don't exist yet.",
-     "show": 2
+     "say": "When init D B runs, it writes the S Q L to create them in trackit dot d b, a single file.",
+     "show": 3,
+     "on": "db",
+     "send": {
+      "from": "orm",
+      "to": "db",
+      "label": "CREATE TABLE …"
+     }
     },
     {
-     "say": "Then try D B dot p y saves a user with one task, and reads it back.",
-     "show": 3
+     "say": "Now there's a users table, with an email marked unique,",
+     "show": 4,
+     "on": "users",
+     "send": {
+      "from": "db",
+      "to": "users",
+      "label": "users"
+     }
     },
     {
-     "say": "A file called trackit dot d b now exists. Your data survives.",
-     "show": 4
+     "say": "and a tasks table.",
+     "show": 5,
+     "on": "tasks",
+     "send": {
+      "from": "db",
+      "to": "tasks",
+      "label": "tasks"
+     }
+    },
+    {
+     "say": "Foreign key users dot id links each task to the user who owns it.",
+     "show": 5,
+     "on": [
+      "tasks",
+      "users"
+     ],
+     "send": {
+      "from": "tasks",
+      "to": "users",
+      "label": "ForeignKey(\"users.id\")"
+     }
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "shield",
-   "kicker": "Lab · A useful error",
-   "title": "The database protects your data",
-   "quote": "Same email twice? The database refuses. That's a feature.",
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "Read the SQL the ORM writes for you",
+   "columns": [
+    "id",
+    "title",
+    "due_date",
+    "priority",
+    "done",
+    "owner_id"
+   ],
+   "rows": [
+    [
+     "1",
+     "Write the spec",
+     "—",
+     "1",
+     "false",
+     "1"
+    ],
+    [
+     "2",
+     "Draw the architecture",
+     "2026-10-14",
+     "2",
+     "false",
+     "1"
+    ],
+    [
+     "3",
+     "Set up Git",
+     "2026-10-12",
+     "3",
+     "true",
+     "1"
+    ],
+    [
+     "4",
+     "Plan a trip",
+     "2026-10-13",
+     "3",
+     "false",
+     "2"
+    ],
+    [
+     "5",
+     "Read a chapter",
+     "2026-10-12",
+     "4",
+     "false",
+     "1"
+    ]
+   ],
    "beats": [
     {
-     "say": "Run try D B a second time, and you'll get an error.",
-     "show": 0
+     "say": "You don't run this yet, but you should be able to read it. Get the title, due date and priority,",
+     "sql": "SELECT title, due_date, priority\nFROM tasks"
     },
     {
-     "say": "That's because email is unique, and that email is already saved.",
-     "show": 1
+     "say": "of every task where the owner is user one.",
+     "sql": "SELECT title, due_date, priority\nFROM tasks\nWHERE owner_id = 1",
+     "hl": [
+      0,
+      1,
+      2,
+      4
+     ],
+     "dim": true,
+     "col": 5
+    },
+    {
+     "say": "And done is false. Set up Git is finished, so it drops out.",
+     "sql": "SELECT title, due_date, priority\nFROM tasks\nWHERE owner_id = 1\n  AND done = false",
+     "hl": [
+      0,
+      1,
+      4
+     ],
+     "dim": true,
+     "col": 4
+    },
+    {
+     "say": "Order by soonest due date. Read a chapter, due the twelfth, comes before draw the architecture, due the fourteenth.",
+     "sql": "SELECT title, due_date, priority\nFROM tasks\nWHERE owner_id = 1\n  AND done = false\nORDER BY due_date ASC, priority ASC;",
+     "hl": [
+      4,
+      1
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Write the spec has no due date at all. In SQLite, empty values sort first, so it lands at the very top.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "One more. Select star from tasks where done is true means: every column of every finished task.",
+     "sql": "SELECT * FROM tasks WHERE done = true;",
+     "hl": 2,
+     "dim": true,
+     "col": 4
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Save real data, then read it back",
+   "file": "try_db.py",
+   "code": "init_db()\nwith SessionLocal() as session:\n    user = User(email=\"ada@example.com\",\n                hashed_password=\"not-a-real-hash-yet\")\n    user.tasks.append(Task(title=\"Write the spec\", priority=1))\n    session.add(user)\n    session.commit()\n\n    for task in session.query(Task).filter(\n            Task.owner_id == user.id, Task.done == False):\n        print(task.title, task.priority)",
+   "beats": [
+    {
+     "say": "Init D B creates any tables that don't exist yet. Now trackit dot d b is on disk.",
+     "line": 1,
+     "vars": {
+      "trackit.db": "users: 0 · tasks: 0"
+     }
+    },
+    {
+     "say": "Open a session, a conversation with the database, and build a user called Ada.",
+     "line": [
+      2,
+      4
+     ],
+     "vars": {
+      "user.email": "\"ada@example.com\"",
+      "user.id": "None"
+     }
+    },
+    {
+     "say": "Attach one task to her: write the spec, priority one.",
+     "line": 5,
+     "vars": {
+      "user.tasks": "[Task(\"Write the spec\")]"
+     }
+    },
+    {
+     "say": "Add and commit. Only now is anything written. Ada gets I D one, and her task's owner I D is one too.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "user.id": 1,
+      "trackit.db": "users: 1 · tasks: 1"
+     }
+    },
+    {
+     "say": "Query tasks where the owner is Ada, and done is false.",
+     "line": [
+      9,
+      10
+     ]
+    },
+    {
+     "say": "One row matches. Print its title and priority.",
+     "line": 11,
+     "out": "Write the spec 1"
+    },
+    {
+     "say": "Run the script a second time, and saving fails. Email is unique, and Ada's email is already saved.",
+     "line": 7,
+     "out": "IntegrityError: UNIQUE constraint failed: users.email"
     },
     {
      "say": "That's the database protecting your data. Delete trackit dot d b to start fresh.",
-     "show": 1
+     "line": 7
     }
    ]
   },
@@ -1747,7 +2508,7 @@ You can explain what a table, row, column, and foreign key are, you have `models
      "show": 0
     },
     {
-     "say": "What does ForeignKey(\"users.id\") do?",
+     "say": "What does foreign key, users dot id, do?",
      "show": 0
     },
     {
@@ -1781,7 +2542,11 @@ You can explain what a table, row, column, and foreign key are, you have `models
      "show": 0
     },
     {
-     "say": "You're done when you can explain a table, a row, a column and a foreign key,",
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can explain a table, a row, a column and a foreign key,",
      "show": 1
     },
     {
@@ -1861,107 +2626,292 @@ You have a written answer to all three questions above, in your own words, even 
    ]
   },
   {
-   "kind": "flow",
-   "art": "blueprint",
+   "kind": "diagram",
    "kicker": "Lab · Step 1",
-   "title": "TrackIt today",
-   "steps": [
-    "Browser",
-    "FastAPI app",
-    "Database"
+   "title": "TrackIt today, and what breaks first",
+   "nodes": [
+    {
+     "id": "browser",
+     "label": "Browser",
+     "x": 12,
+     "y": 50,
+     "sub": "what the user sees",
+     "art": "browser"
+    },
+    {
+     "id": "app",
+     "label": "FastAPI app",
+     "x": 50,
+     "y": 50,
+     "sub": "one server",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 88,
+     "y": 50,
+     "sub": "SQLite now, PostgreSQL later",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "browser",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "Start by drawing TrackIt's current architecture. Pen and paper is fine.",
-     "show": 0
-    },
-    {
-     "say": "The browser,",
-     "show": 1
+     "say": "Draw TrackIt's architecture first. Pen and paper is fine. The browser,",
+     "show": 1,
+     "on": "browser"
     },
     {
      "say": "talks to your FastAPI app,",
-     "show": 2
+     "show": 2,
+     "on": "app",
+     "send": {
+      "from": "browser",
+      "to": "app",
+      "label": "GET /tasks"
+     }
     },
     {
-     "say": "which talks to the database. SQLite now, PostgreSQL later.",
-     "show": 3
+     "say": "which talks to the database.",
+     "show": 3,
+     "on": "db",
+     "send": {
+      "from": "app",
+      "to": "db",
+      "label": "SELECT …"
+     }
+    },
+    {
+     "say": "Question one. A thousand people use it at once. What breaks first?",
+     "show": 3,
+     "on": "app",
+     "send": {
+      "from": "browser",
+      "to": "app",
+      "label": "× 1,000 requests"
+     }
+    },
+    {
+     "say": "Likely the database. Every one of those requests ends up hitting one database at the same time.",
+     "show": 3,
+     "on": "db",
+     "send": {
+      "from": "app",
+      "to": "db",
+      "label": "× 1,000 queries"
+     }
+    },
+    {
+     "say": "Question two. Where's the single point of failure? There's one app server. If it goes down, everything goes down.",
+     "show": 3,
+     "on": "app"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "gauge",
+   "kind": "diagram",
+   "kicker": "Think it through",
+   "title": "Would more servers help?",
+   "nodes": [
+    {
+     "id": "users",
+     "label": "1,000 users",
+     "x": 12,
+     "y": 50,
+     "art": "people"
+    },
+    {
+     "id": "a",
+     "label": "App server A",
+     "x": 50,
+     "y": 22,
+     "art": "server"
+    },
+    {
+     "id": "b",
+     "label": "App server B",
+     "x": 50,
+     "y": 78,
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 88,
+     "y": 50,
+     "sub": "still just one",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "users",
+     "to": "a"
+    },
+    {
+     "from": "users",
+     "to": "b"
+    },
+    {
+     "from": "a",
+     "to": "db"
+    },
+    {
+     "from": "b",
+     "to": "db"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A common first idea: add more servers.",
+     "show": 3,
+     "on": [
+      "a",
+      "b"
+     ]
+    },
+    {
+     "say": "Half the traffic goes to server A,",
+     "show": 3,
+     "on": "a",
+     "send": {
+      "from": "users",
+      "to": "a",
+      "label": "500 requests"
+     }
+    },
+    {
+     "say": "and half to server B. The app servers are no longer a single point of failure.",
+     "show": 3,
+     "on": "b",
+     "send": {
+      "from": "users",
+      "to": "b",
+      "label": "500 requests"
+     }
+    },
+    {
+     "say": "But both still send every query to the same database.",
+     "show": 4,
+     "on": "db",
+     "send": {
+      "from": "a",
+      "to": "db",
+      "label": "500 queries"
+     }
+    },
+    {
+     "say": "So if the database was the bottleneck, it's exactly as busy as before.",
+     "show": 4,
+     "on": "db",
+     "send": {
+      "from": "b",
+      "to": "db",
+      "label": "500 queries"
+     }
+    },
+    {
+     "say": "That's why you find the real bottleneck before you add anything.",
+     "show": 4,
+     "on": "db"
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Lab · Step 2",
-   "title": "Three questions for any design",
-   "items": [
+   "title": "Question three: must it be instantly correct?",
+   "columns": [
+    "Data",
+    "Instantly correct?",
+    "So you can…"
+   ],
+   "rows": [
     [
-     "What breaks first under load?",
-     ""
+     "A task the user just saved",
+     "Yes",
+     "Write it to the database right away"
     ],
     [
-     "Where is the single point of failure?",
-     ""
-    ],
-    [
-     "Which data must be instantly correct, and which can lag?",
-     ""
+     "\"Tasks completed this month\"",
+     "Can lag a little",
+     "Cache it, recalculate every few minutes"
     ]
    ],
    "beats": [
     {
-     "say": "Now ask three questions. You'll ask these of every design you ever build.",
-     "show": 0
+     "say": "The third question: which data must always be accurate, and which could be slightly delayed?",
+     "col": 0
     },
     {
-     "say": "What breaks first if a thousand people use it at once?",
-     "show": 1
+     "say": "A task being saved must be accurate immediately. If it vanishes, the user notices.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "What's the single point of failure, the one part that takes everything down if it fails?",
-     "show": 2
+     "say": "A count of tasks completed this month could lag a few seconds, and no one would notice.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "And which data must always be correct right away, and which can lag a little?",
-     "show": 3
+     "say": "And it's slow to calculate. So you can cache it, or recalculate it every few minutes, instead of on every request.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "table",
    "kicker": "Sample answers",
    "title": "Compare with your own",
-   "items": [
+   "columns": [
+    "Question",
+    "Sample reasoning"
+   ],
+   "rows": [
     [
-     "Database is the first bottleneck",
-     ""
+     "What breaks first at 1,000 users?",
+     "The database connection: many requests, one database"
     ],
     [
-     "One app server is the single point of failure",
-     ""
+     "Single point of failure?",
+     "One app server. It goes down, everything goes down"
     ],
     [
-     "Saved tasks: instant. Monthly counts: can lag",
-     ""
+     "Instantly accurate vs. can lag?",
+     "Saved tasks: instant. Monthly count: can lag"
     ]
    ],
    "beats": [
     {
-     "say": "Here's some sample reasoning to compare with yours.",
-     "show": 0
+     "say": "Now write your own answers. Then compare them with these samples.",
+     "col": 0
     },
     {
-     "say": "The database connection would likely break first, with many requests hitting one database.",
-     "show": 1
+     "say": "What breaks first? The database, with many requests hitting it at once.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "There's one app server. If it goes down, everything goes down.",
-     "show": 2
+     "say": "The single point of failure: the one app server.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "A saved task must be correct immediately. A tasks completed this month count could lag a few seconds and nobody would notice.",
-     "show": 3
+     "say": "And accuracy: saved tasks must be instant, the monthly count can lag. A rough draft is fine.",
+     "hl": 2,
+     "col": 1
     }
    ]
   },
@@ -1984,7 +2934,7 @@ You have a written answer to all three questions above, in your own words, even 
      "show": 0
     },
     {
-     "say": "Is \"add more servers\" always the right first fix?",
+     "say": "Is adding more servers always the right first fix?",
      "show": 0
     },
     {
@@ -2010,11 +2960,11 @@ You have a written answer to all three questions above, in your own words, even 
      "show": 0
     },
     {
-     "say": "You're done when you've written an answer to all three questions, in your own words,",
-     "show": 1
+     "say": "You're done when:",
+     "show": 0
     },
     {
-     "say": "even if it's a rough draft.",
+     "say": "you've written an answer to all three questions, in your own words, even if it's a rough draft.",
      "show": 1
     },
     {
@@ -2103,130 +3053,321 @@ You can hash a password, verify it correctly, and explain why plain-text passwor
    ]
   },
   {
-   "kind": "list",
-   "art": "fingerprint",
+   "kind": "table",
    "kicker": "Concepts",
    "title": "Three words to know",
-   "items": [
+   "columns": [
+    "Word",
+    "Question it answers",
+    "TrackIt example"
+   ],
+   "rows": [
     [
      "Authentication",
-     "Who are you? (log in)"
+     "Who are you?",
+     "Logging in as ada@example.com"
     ],
     [
      "Authorization",
-     "What are you allowed to do?"
+     "What are you allowed to do?",
+     "Ada sees only Ada's tasks"
     ],
     [
      "Hash",
-     "One-way scramble of a password"
+     "How do we store a password safely?",
+     "Store a one-way scramble, never the password"
     ]
    ],
    "beats": [
     {
-     "say": "Three ideas.",
-     "show": 0
+     "say": "Three words come up in every security conversation.",
+     "col": 0
     },
     {
      "say": "Authentication confirms who a user is. That's logging in.",
-     "show": 1
+     "hl": 0
     },
     {
-     "say": "Authorization confirms what they're allowed to do, like only seeing their own tasks.",
-     "show": 2
+     "say": "Authorization confirms what they're allowed to do, like seeing only their own tasks.",
+     "hl": 1
     },
     {
-     "say": "And a hash is a one-way scramble of a password, so even you, the developer, never see or store the real one.",
-     "show": 3
+     "say": "And a hash is a one-way transformation of a password, so even you, the developer, never see the real one.",
+     "hl": 2,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "password",
-   "kicker": "Lab · Step 2",
-   "title": "Hash and check passwords",
+   "kind": "diagram",
+   "kicker": "Concepts",
+   "title": "What gets stored, and how login checks it",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "Sign up",
+     "x": 12,
+     "y": 30,
+     "sub": "\"mypassword123\"",
+     "art": "password"
+    },
+    {
+     "id": "hash",
+     "label": "hash_password",
+     "x": 50,
+     "y": 30,
+     "sub": "bcrypt + random salt",
+     "art": "hash"
+    },
+    {
+     "id": "db",
+     "label": "users table",
+     "x": 88,
+     "y": 30,
+     "sub": "hashed_password",
+     "art": "database"
+    },
+    {
+     "id": "login",
+     "label": "Log in",
+     "x": 12,
+     "y": 80,
+     "sub": "types a password",
+     "art": "idcard"
+    },
+    {
+     "id": "verify",
+     "label": "verify_password",
+     "x": 50,
+     "y": 80,
+     "sub": "True or False",
+     "art": "shield"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "hash"
+    },
+    {
+     "from": "hash",
+     "to": "db"
+    },
+    {
+     "from": "login",
+     "to": "verify"
+    },
+    {
+     "from": "db",
+     "to": "verify"
+    }
+   ],
+   "beats": [
+    {
+     "say": "At sign up, the user's password goes straight into hash password.",
+     "show": 2,
+     "on": "hash",
+     "send": {
+      "from": "user",
+      "to": "hash",
+      "label": "\"mypassword123\""
+     }
+    },
+    {
+     "say": "Bcrypt mixes in random data, called a salt, and scrambles it one way. Only that hash is stored.",
+     "show": 3,
+     "on": "db",
+     "send": {
+      "from": "hash",
+      "to": "db",
+      "label": "$2b$12$…"
+     }
+    },
+    {
+     "say": "At login, the typed password goes to verify password.",
+     "show": 5,
+     "on": "verify",
+     "send": {
+      "from": "login",
+      "to": "verify",
+      "label": "typed password"
+     }
+    },
+    {
+     "say": "It fetches the stored hash and checks whether the typed password produces a match.",
+     "show": 5,
+     "on": "verify",
+     "send": {
+      "from": "db",
+      "to": "verify",
+      "label": "stored hash"
+     }
+    },
+    {
+     "say": "The real password is never stored, so even a stolen database can't simply be read back.",
+     "show": 5,
+     "on": [
+      "db",
+      "verify"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Hash, then check",
    "file": "auth.py",
-   "code": "import bcrypt\n\ndef hash_password(plain: str) -> str:\n    return bcrypt.hashpw(plain.encode(\"utf-8\"), bcrypt.gensalt()).decode(\"utf-8\")\n\ndef verify_password(plain: str, hashed: str) -> bool:\n    return bcrypt.checkpw(plain.encode(\"utf-8\"), hashed.encode(\"utf-8\"))",
+   "code": "import bcrypt\n\ndef hash_password(plain: str) -> str:\n    return bcrypt.hashpw(plain.encode(\"utf-8\"), bcrypt.gensalt()).decode(\"utf-8\")\n\ndef verify_password(plain: str, hashed: str) -> bool:\n    return bcrypt.checkpw(plain.encode(\"utf-8\"), hashed.encode(\"utf-8\"))\n\nhashed = hash_password(\"mypassword123\")\nprint(hashed)\nprint(verify_password(\"mypassword123\", hashed))\nprint(verify_password(\"wrongpassword\", hashed))",
    "beats": [
     {
-     "say": "We use a library called bcrypt.",
-     "show": 0
+     "say": "Bcrypt works on bytes, so each function encodes the text first.",
+     "line": [
+      4,
+      7
+     ]
     },
     {
-     "say": "Hash password scrambles a password. Gen salt adds random data, so the same password gives a different hash each time.",
-     "show": 1
+     "say": "Hash my password one two three.",
+     "line": 9,
+     "vars": {
+      "plain": "\"mypassword123\""
+     }
     },
     {
-     "say": "Verify password checks a login attempt against the saved hash, without ever unscrambling it.",
-     "show": 1
+     "say": "Gen salt adds random data, then bcrypt scrambles it into a sixty character hash.",
+     "line": 4,
+     "vars": {
+      "hashed": "\"$2b$12$tQTXyOB4.gQo…\""
+     }
+    },
+    {
+     "say": "Print shows an unreadable hash, not the password. Run it again and you'll get a different one.",
+     "line": 10,
+     "out": "$2b$12$tQTXyOB4.gQoPAnnYJn/T.t4woKElXOFNydCJew5G9gu7GeEz49uC"
+    },
+    {
+     "say": "Check the right password against the hash. True.",
+     "line": [
+      11,
+      7
+     ],
+     "out": "True"
+    },
+    {
+     "say": "Check the wrong password. False.",
+     "line": [
+      12,
+      7
+     ],
+     "out": "False"
+    },
+    {
+     "say": "Bcrypt only accepts passwords up to seventy two bytes, so set a sensible maximum length at sign up.",
+     "line": 7
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "hash",
-   "kicker": "Lab · Step 3",
-   "title": "Try it",
-   "big": "True / False",
-   "sub": "An unreadable hash, then the right password, then the wrong one",
-   "beats": [
-    {
-     "say": "Try it. Hash my password one two three and print it.",
-     "show": 0
-    },
-    {
-     "say": "You get an unreadable hash, not the real password.",
-     "show": 1
-    },
-    {
-     "say": "Verifying the right password returns true. The wrong one returns false.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Lab · Step 4",
-   "title": "Ask these on every endpoint",
-   "items": [
+   "kind": "table",
+   "kicker": "Why hash?",
+   "title": "Three ways to store a password",
+   "columns": [
+    "Stored as",
+    "Can it be turned back?",
+    "If the database is stolen"
+   ],
+   "rows": [
     [
-     "Must they be logged in?",
-     ""
+     "Plain text",
+     "Already readable",
+     "Every password exposed"
     ],
     [
-     "Only their own data?",
-     ""
+     "Encrypted",
+     "Yes, with the key",
+     "Exposed if the key leaks too"
     ],
     [
-     "Input checked first?",
-     ""
-    ],
-    [
-     "Errors give nothing away?",
-     ""
+     "Hashed (bcrypt)",
+     "No, one-way",
+     "Can't be directly reversed"
     ]
    ],
    "beats": [
     {
-     "say": "From now on, ask four questions about every endpoint you build.",
-     "show": 0
+     "say": "Here are three ways you could store a password.",
+     "col": 0
     },
     {
-     "say": "Does this need the user to be logged in?",
-     "show": 1
+     "say": "Plain text is never acceptable. Anyone who sees the database sees every password.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Does it only return data that belongs to them?",
-     "show": 2
+     "say": "Encryption can be reversed with a key. If the key leaks, so do the passwords.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "Is their input checked before it touches the database?",
-     "show": 3
+     "say": "A hash can't be reversed. That's why you, the developer, can't look up a user's real password either.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 4",
+   "title": "Ask these on every endpoint",
+   "columns": [
+    "Question",
+    "For GET /tasks"
+   ],
+   "rows": [
+    [
+     "Requires login?",
+     "Yes. No login, no tasks"
+    ],
+    [
+     "Only the user's own data?",
+     "Filter by the logged-in owner_id"
+    ],
+    [
+     "Input validated first?",
+     "Check it before it touches the database"
+    ],
+    [
+     "Errors leak nothing?",
+     "\"Invalid credentials\", not \"wrong password\""
+    ]
+   ],
+   "beats": [
+    {
+     "say": "From now on, ask four questions about every endpoint you build. Let's try them on get slash tasks.",
+     "col": 0
     },
     {
-     "say": "And do error messages avoid giving details away? Say invalid credentials, not wrong password.",
-     "show": 4
+     "say": "Does it require the user to be logged in? Yes.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Does it return only the logged-in user's tasks? If it returned everyone's, anyone could read anyone's data.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "Is the user's input validated before it touches the database?",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "And do error messages avoid leaking details? Say invalid credentials, never wrong password.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
     }
    ]
   },
@@ -2249,7 +3390,7 @@ You can hash a password, verify it correctly, and explain why plain-text passwor
      "show": 0
     },
     {
-     "say": "Why say \"invalid credentials\" instead of \"wrong password\"?",
+     "say": "Why say invalid credentials, instead of wrong password?",
      "show": 0
     },
     {
@@ -2279,7 +3420,11 @@ You can hash a password, verify it correctly, and explain why plain-text passwor
      "show": 0
     },
     {
-     "say": "You're done when you can hash a password and verify it correctly,",
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you can hash a password and verify it correctly,",
      "show": 1
     },
     {
@@ -2406,106 +3551,278 @@ You understand why `ParsedTask` and the try/except block exist, even before wiri
    ]
   },
   {
-   "kind": "code",
-   "art": "doc",
-   "kicker": "Lab · Step 1",
-   "title": "Decide what a good answer looks like",
-   "file": "ai_parse.py",
-   "code": "class ParsedTask(BaseModel):\n    title: str\n    due_date: date | None\n    priority: int = Field(ge=1, le=5)  # must be 1 to 5",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "The design",
+   "title": "Where each piece lives",
+   "nodes": [
     {
-     "say": "First, define exactly what a parsed task must look like, with a library called pydantic.",
-     "show": 0
+     "id": "browser",
+     "label": "Browser",
+     "x": 10,
+     "y": 50,
+     "sub": "user's text only",
+     "art": "browser"
     },
     {
-     "say": "A title, a due date or nothing, and a priority that must be between one and five.",
-     "show": 1
+     "id": "server",
+     "label": "Your server",
+     "x": 40,
+     "y": 50,
+     "sub": "prompt + API key",
+     "art": "server"
     },
     {
-     "say": "This is called a schema. Anything that doesn't fit gets rejected.",
-     "show": 1
+     "id": "llm",
+     "label": "Claude API",
+     "x": 78,
+     "y": 20,
+     "sub": "the model",
+     "art": "neural"
+    },
+    {
+     "id": "check",
+     "label": "ParsedTask",
+     "x": 78,
+     "y": 80,
+     "sub": "the schema check",
+     "art": "shield"
     }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "lock",
-   "kicker": "Lab · Step 2",
-   "title": "Write the instruction, keep it on the server",
-   "file": "SYSTEM_PROMPT",
-   "code": "Extract a task from the user's text. Respond ONLY with JSON matching:\n{\"title\": string, \"due_date\": \"YYYY-MM-DD\" or null, \"priority\": integer 1-5}\nNo preamble, no markdown formatting.",
-   "beats": [
+   ],
+   "edges": [
     {
-     "say": "Next, the instruction you send to the model.",
-     "show": 0
+     "from": "browser",
+     "to": "server"
     },
     {
-     "say": "It asks for JSON only, in exactly the shape your schema expects.",
-     "show": 1
+     "from": "server",
+     "to": "llm"
     },
     {
-     "say": "This prompt lives in your server code, never in the browser. Anything in the browser can be read and changed by the user.",
-     "show": 1
+     "from": "server",
+     "to": "check"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "neural",
-   "kicker": "Lab · Step 3",
-   "title": "Call the model safely",
-   "steps": [
-    "Add today's date",
-    "Call the model",
-    "Parse JSON",
-    "Check the schema",
-    "Retry if it fails"
    ],
    "beats": [
     {
-     "say": "Here's the flow when someone uses quick add.",
-     "show": 0
+     "say": "The user types, finish the budget report by Friday, it's urgent. Only that text leaves the browser.",
+     "show": 2,
+     "on": "browser",
+     "send": {
+      "from": "browser",
+      "to": "server",
+      "label": "\"Finish the budget report by Friday…\""
+     }
     },
     {
-     "say": "Tell the model today's date, so by Friday can become a real date.",
-     "show": 1
+     "say": "The system prompt and your A P I key stay on the server. Anything in the browser, a user could read and rewrite.",
+     "show": 2,
+     "on": "server"
     },
     {
-     "say": "Send the prompt and the user's text to the model.",
-     "show": 2
+     "say": "The server adds today's date, so by Friday can become a real date, and calls the model.",
+     "show": 3,
+     "on": "llm",
+     "send": {
+      "from": "server",
+      "to": "llm",
+      "label": "system prompt + date + text"
+     }
     },
     {
-     "say": "Read the answer as JSON.",
-     "show": 3
+     "say": "The model sends back text that should be J S O N. Should be. Not guaranteed.",
+     "show": 3,
+     "on": "server",
+     "send": {
+      "from": "llm",
+      "to": "server",
+      "label": "raw text"
+     }
     },
     {
-     "say": "Check it against your schema.",
-     "show": 4
-    },
-    {
-     "say": "If anything fails, catch it and ask the user to try again. Never crash, and never save bad data.",
-     "show": 5
+     "say": "So before anything is saved, the answer is checked against the parsed task schema.",
+     "show": 4,
+     "on": "check",
+     "send": {
+      "from": "server",
+      "to": "check",
+      "label": "json.loads → ParsedTask"
+     }
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "shield",
-   "kicker": "The key lesson",
-   "title": "Never assume the AI's output is valid",
-   "quote": "Never assume the AI's output is valid. Validate it, and have a fallback.",
+   "kind": "walk",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "A good answer, traced",
+   "file": "ai_parse.py",
+   "code": "class ParsedTask(BaseModel):\n    title: str\n    due_date: date | None\n    priority: int = Field(ge=1, le=5)  # must be 1 to 5\n\ndef parse_quick_add(user_text: str) -> ParsedTask:\n    message = f\"Today's date is {date.today().isoformat()}.\\n\\nTask: {user_text}\"\n    raw_response = call_llm(SYSTEM_PROMPT, message)\n    try:\n        data = json.loads(raw_response)\n        return ParsedTask(**data)\n    except (json.JSONDecodeError, ValueError):\n        raise ValueError(\"Could not parse task from AI response - ask the user to retry\")",
    "beats": [
     {
-     "say": "Here's the key lesson of this module.",
-     "show": 0
+     "say": "First, decide what a good answer looks like: a title, a due date or nothing, and a priority from one to five.",
+     "line": [
+      1,
+      4
+     ]
     },
     {
-     "say": "Never assume the AI's output is valid. Always check it against a schema, and always have a plan for when it isn't.",
-     "show": 1
+     "say": "Say today is Monday, the twelfth of October twenty twenty six. The date goes into the message.",
+     "line": 7,
+     "vars": {
+      "user_text": "\"Finish the budget report by Friday, it's urgent\"",
+      "today": "2026-10-12"
+     }
     },
     {
-     "say": "Also, keep your API key in an environment variable. Never paste it into your code.",
-     "show": 1
+     "say": "Call the model with the system prompt and that message.",
+     "line": 8,
+     "vars": {
+      "raw_response": "'{\"title\": \"Finish the budget report\", \"due_date\": \"2026-10-16\", \"priority\": 1}'"
+     }
+    },
+    {
+     "say": "Json dot loads turns the text into a Python dictionary. It's valid J S O N.",
+     "line": [
+      9,
+      10
+     ],
+     "vars": {
+      "data": "dict with 3 keys"
+     }
+    },
+    {
+     "say": "Parsed task checks every field. A real title, a real date, and one is between one and five.",
+     "line": [
+      11,
+      4
+     ]
+    },
+    {
+     "say": "All good, so it returns a parsed task you can trust.",
+     "line": 11,
+     "out": "title='Finish the budget report' due_date=datetime.date(2026, 10, 16) priority=1"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Never trust, always validate",
+   "title": "What the model might send back",
+   "columns": [
+    "Model's answer",
+    "What fails",
+    "Result"
+   ],
+   "rows": [
+    [
+     "{\"title\": \"Finish the budget report\", \"due_date\": \"2026-10-16\", \"priority\": 1}",
+     "nothing",
+     "ParsedTask ✓"
+    ],
+    [
+     "Here is your task: {\"title\": …}",
+     "json.loads",
+     "retry"
+    ],
+    [
+     "{… \"due_date\": null, \"priority\": 9}",
+     "priority ≤ 5",
+     "retry"
+    ],
+    [
+     "{… \"due_date\": \"Friday\", \"priority\": 1}",
+     "not a date",
+     "retry"
+    ],
+    [
+     "{\"due_date\": \"2026-10-16\", \"priority\": 1}",
+     "title missing",
+     "retry"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Models are probabilistic. Here are five answers you could get back.",
+     "col": 0
+    },
+    {
+     "say": "The good one passes both checks.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "Here, the model added a chatty sentence before the J S O N. Json dot loads fails with a decode error.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "This one is valid J S O N, but priority nine breaks the one to five rule.",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "The word Friday isn't a real date, and this one forgot the title entirely.",
+     "hl": [
+      3,
+      4
+     ],
+     "col": 1
+    },
+    {
+     "say": "Every failure lands in the except block, which raises one clear error: ask the user to retry. No crash, no bad data saved.",
+     "hl": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "The key lesson",
+   "title": "A bad answer, traced",
+   "file": "ai_parse.py",
+   "code": "class ParsedTask(BaseModel):\n    title: str\n    due_date: date | None\n    priority: int = Field(ge=1, le=5)  # must be 1 to 5\n\ndef parse_quick_add(user_text: str) -> ParsedTask:\n    message = f\"Today's date is {date.today().isoformat()}.\\n\\nTask: {user_text}\"\n    raw_response = call_llm(SYSTEM_PROMPT, message)\n    try:\n        data = json.loads(raw_response)\n        return ParsedTask(**data)\n    except (json.JSONDecodeError, ValueError):\n        raise ValueError(\"Could not parse task from AI response - ask the user to retry\")",
+   "beats": [
+    {
+     "say": "Same function, but this time the model answers with priority nine.",
+     "line": 8,
+     "vars": {
+      "raw_response": "'{\"title\": \"Finish the budget report\", \"due_date\": null, \"priority\": 9}'"
+     }
+    },
+    {
+     "say": "It's valid J S O N, so json dot loads succeeds.",
+     "line": 10,
+     "vars": {
+      "data": "dict with 3 keys"
+     }
+    },
+    {
+     "say": "But parsed task sees priority nine, and the rule says at most five. It raises a validation error.",
+     "line": [
+      11,
+      4
+     ]
+    },
+    {
+     "say": "Pydantic's validation error is a kind of value error, so the except block catches it.",
+     "line": 12
+    },
+    {
+     "say": "We raise one clear error instead, and the app asks the user to try again.",
+     "line": 13,
+     "out": "ValueError: Could not parse task from AI response - ask the user to retry"
+    },
+    {
+     "say": "Never assume the AI's output is valid. Check it against a schema, and always have a fallback.",
+     "line": [
+      9,
+      13
+     ]
     }
    ]
   },
@@ -2528,7 +3845,7 @@ You understand why `ParsedTask` and the try/except block exist, even before wiri
      "show": 0
     },
     {
-     "say": "What should happen if the AI's answer isn't valid JSON?",
+     "say": "What should happen if the AI's answer isn't valid J S O N?",
      "show": 0
     },
     {
@@ -2558,11 +3875,15 @@ You understand why `ParsedTask` and the try/except block exist, even before wiri
      "show": 0
     },
     {
-     "say": "You're done when you understand why the parsed task schema exists,",
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "you understand why the parsed task schema exists,",
      "show": 1
     },
     {
-     "say": "and why the try and except block is there, even before wiring up a real API key.",
+     "say": "and why the try and except block is there, even before wiring up a real A P I key.",
      "show": 2
     },
     {
@@ -2665,136 +3986,264 @@ Your tests pass locally, and you've created a branch and pull request on GitHub.
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Concepts",
-   "title": "Two ideas",
-   "items": [
+   "kind": "walk",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Run your first tests",
+   "file": "test_priority.py",
+   "code": "def test_next_up_returns_earliest_due_date():\n    q = TaskQueue()\n    q.add(Task(id=1, title=\"Later task\", due_date=date.today() + timedelta(days=5), priority=1))\n    q.add(Task(id=2, title=\"Urgent task\", due_date=date.today(), priority=3))\n    assert q.next_up().title == \"Urgent task\"\n\ndef test_same_due_date_breaks_tie_by_priority():\n    today = date.today()\n    q = TaskQueue()\n    q.add(Task(id=1, title=\"Low priority\", due_date=today, priority=5))\n    q.add(Task(id=2, title=\"High priority\", due_date=today, priority=1))\n    assert q.next_up().title == \"High priority\"",
+   "beats": [
+    {
+     "say": "A test is code that checks your other code, automatically. Pytest runs every function whose name starts with test.",
+     "line": [
+      1,
+      7
+     ]
+    },
+    {
+     "say": "Test one: a later task due in five days, and an urgent task due today.",
+     "line": [
+      2,
+      4
+     ],
+     "vars": {
+      "next_up": "\"Urgent task\""
+     }
+    },
+    {
+     "say": "Assert checks a condition is true. Urgent task equals urgent task, so it passes quietly.",
+     "line": 5,
+     "out": "test_next_up_returns_earliest_due_date PASSED"
+    },
+    {
+     "say": "Test two: both due today, priorities five and one.",
+     "line": [
+      8,
+      11
+     ],
+     "vars": {
+      "next_up": "\"High priority\""
+     }
+    },
+    {
+     "say": "The dates tie, so priority decides. High priority wins, and the assert passes.",
+     "line": 12,
+     "out": "test_same_due_date_breaks_tie_by_priority PASSED"
+    },
+    {
+     "say": "Run pytest test priority dot p y, dash v, and you see both pass.",
+     "line": 12,
+     "out": "2 passed"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Why tests matter",
+   "title": "A test catches a bug you didn't see",
+   "columns": [
+    "Test",
+    "Expected",
+    "Got",
+    "Result"
+   ],
+   "rows": [
     [
-     "Test",
-     "Code that checks your code, automatically"
+     "earliest_due_date",
+     "Urgent task",
+     "Urgent task",
+     "PASSED"
     ],
     [
-     "Pull request",
-     "A proposed change, reviewed before it's merged"
+     "breaks_tie_by_priority",
+     "High priority",
+     "High priority",
+     "PASSED"
     ]
    ],
    "beats": [
     {
-     "say": "Two ideas.",
-     "show": 0
+     "say": "Both tests pass with the code as written.",
+     "col": 3
     },
     {
-     "say": "A test is code that checks your other code works, automatically, so you don't re-check everything by hand after each change.",
-     "show": 1
+     "say": "Now imagine a teammate swaps the order inside the less than method, to compare priority first, then date.",
+     "sql": "return (self.priority, self.due_date) < (other.priority, other.due_date)"
     },
     {
-     "say": "A pull request is a proposed change, reviewed before it's merged in. It's how teams work together safely.",
-     "show": 2
+     "say": "Test one runs again. The later task has priority one, so now it wins.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "Pytest fails loudly: assert later task equals urgent task.",
+     "hl": 0,
+     "col": 3,
+     "sql": "FAILED test_next_up_returns_earliest_due_date\nAssertionError: assert 'Later task' == 'Urgent task'"
+    },
+    {
+     "say": "Test two still passes, because its dates tie anyway. That's why one test is rarely enough.",
+     "hl": 1,
+     "col": 3
+    },
+    {
+     "say": "Without the test, this bug would ship silently. With it, you knew in seconds.",
+     "hl": 0,
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 2",
-   "title": "Your first tests",
-   "file": "test_priority.py",
-   "code": "def test_next_up_returns_earliest_due_date():\n    q = TaskQueue()\n    q.add(Task(1, \"Later task\", date.today() + timedelta(days=5), 1))\n    q.add(Task(2, \"Urgent task\", date.today(), 3))\n    assert q.next_up().title == \"Urgent task\"",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Lab · Steps 4 and 5",
+   "title": "Branch, push, pull request, merge",
+   "nodes": [
     {
-     "say": "Install pytest, then write your first test.",
-     "show": 0
+     "id": "main",
+     "label": "main",
+     "x": 12,
+     "y": 25,
+     "sub": "the working version",
+     "art": "git"
     },
     {
-     "say": "It adds a task due in five days and an urgent one due today.",
-     "show": 1
+     "id": "branch",
+     "label": "feature/task-queue",
+     "x": 12,
+     "y": 78,
+     "sub": "your safe copy",
+     "art": "merge"
     },
     {
-     "say": "Then assert says: the next task must be the urgent one. If it isn't, the test fails loudly.",
-     "show": 1
+     "id": "gh",
+     "label": "GitHub",
+     "x": 50,
+     "y": 78,
+     "sub": "origin",
+     "art": "cloud"
     },
     {
-     "say": "A second test checks that on the same due date, higher priority wins.",
-     "show": 1
+     "id": "pr",
+     "label": "Pull request",
+     "x": 88,
+     "y": 78,
+     "sub": "review the change",
+     "art": "eye"
+    },
+    {
+     "id": "merged",
+     "label": "main on GitHub",
+     "x": 88,
+     "y": 25,
+     "sub": "updated",
+     "art": "proof"
     }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "terminal",
-   "kicker": "Lab · Step 3",
-   "title": "Run them",
-   "big": "2 passed",
-   "sub": "pytest test_priority.py -v",
-   "beats": [
+   ],
+   "edges": [
     {
-     "say": "Run pytest test priority dot p y, dash v.",
-     "show": 0
+     "from": "main",
+     "to": "branch"
     },
     {
-     "say": "You should see both tests pass.",
-     "show": 1
+     "from": "branch",
+     "to": "gh"
+    },
+    {
+     "from": "gh",
+     "to": "pr"
+    },
+    {
+     "from": "pr",
+     "to": "merged"
     }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "git",
-   "kicker": "Lab · Step 4",
-   "title": "Put your project on GitHub",
-   "file": "Terminal",
-   "code": "git branch -M main\ngit remote add origin https://github.com/YOUR-USERNAME/trackit.git\ngit push -u origin main",
-   "beats": [
-    {
-     "say": "Next, put your project on GitHub.",
-     "show": 0
-    },
-    {
-     "say": "Create an empty repository called trackit on github dot com.",
-     "show": 1
-    },
-    {
-     "say": "Then connect your folder to it, and push your main branch.",
-     "show": 1
-    },
-    {
-     "say": "GitHub won't take your account password here. Sign in through the browser window, the GitHub CLI, or a personal access token.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "merge",
-   "kicker": "Lab · Step 5",
-   "title": "The team workflow",
-   "steps": [
-    "git checkout -b feature/task-queue",
-    "git commit",
-    "git push",
-    "Open a pull request"
    ],
    "beats": [
     {
-     "say": "Now the workflow real teams use.",
-     "show": 0
+     "say": "First, connect your project to a new, empty GitHub repository, and push main.",
+     "show": 1,
+     "on": "main"
     },
     {
-     "say": "Make a branch, a safe copy to work on.",
-     "show": 1
+     "say": "Git checkout dash b makes a branch: an isolated copy. Main stays safe for everyone.",
+     "show": 2,
+     "on": "branch",
+     "send": {
+      "from": "main",
+      "to": "branch",
+      "label": "git checkout -b feature/task-queue"
+     }
     },
     {
-     "say": "Commit your changes there.",
-     "show": 2
+     "say": "You add your files and commit on the branch, then push it to GitHub.",
+     "show": 3,
+     "on": "gh",
+     "send": {
+      "from": "branch",
+      "to": "gh",
+      "label": "git push origin feature/task-queue"
+     }
     },
     {
-     "say": "Push the branch to GitHub.",
-     "show": 3
+     "say": "On GitHub, you open a pull request: a proposed change, for someone to review.",
+     "show": 4,
+     "on": "pr",
+     "send": {
+      "from": "gh",
+      "to": "pr",
+      "label": "open PR"
+     }
     },
     {
-     "say": "And open a pull request, even when you work alone. It builds the habit.",
-     "show": 4
+     "say": "Once it's approved, it merges into main. Do this even when you work alone. It builds the habit.",
+     "show": 5,
+     "on": "merged",
+     "send": {
+      "from": "pr",
+      "to": "merged",
+      "label": "merge"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 5",
+   "title": "The same workflow, in the terminal",
+   "file": "Terminal",
+   "code": "git checkout -b feature/task-queue\ngit add SPEC.md main.py priority.py try_priority.py models.py \\\n    database.py try_db.py auth.py ai_parse.py test_priority.py\ngit commit -m \"Add TrackIt app, priority queue, and tests\"\ngit push origin feature/task-queue",
+   "beats": [
+    {
+     "say": "Make the branch and switch to it.",
+     "line": 1,
+     "vars": {
+      "branch": "feature/task-queue"
+     },
+     "out": "Switched to a new branch 'feature/task-queue'"
+    },
+    {
+     "say": "Pick every file you've written so far.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "picked": "10 files"
+     }
+    },
+    {
+     "say": "Commit them with a message that says what changed.",
+     "line": 4
+    },
+    {
+     "say": "Push the branch to GitHub. Pushing over H T T P S, GitHub asks you to sign in through the browser, not with your password.",
+     "line": 5
+    },
+    {
+     "say": "Then open the pull request on GitHub.",
+     "line": 5,
+     "vars": {
+      "on GitHub": "feature/task-queue → PR"
+     }
     }
    ]
   },
@@ -2847,7 +4296,11 @@ Your tests pass locally, and you've created a branch and pull request on GitHub.
      "show": 0
     },
     {
-     "say": "You're done when your tests pass on your computer,",
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your tests pass on your computer,",
      "show": 1
     },
     {
@@ -2965,144 +4418,390 @@ Your app runs inside a Docker container, and a pull request on GitHub automatica
    ]
   },
   {
-   "kind": "list",
-   "art": "container",
+   "kind": "diagram",
    "kicker": "Concepts",
-   "title": "Two ideas",
-   "items": [
-    [
-     "Docker",
-     "Your app and everything it needs, in one package"
-    ],
-    [
-     "CI",
-     "Tests run automatically on every change"
-    ]
+   "title": "Build once, run the same everywhere",
+   "nodes": [
+    {
+     "id": "df",
+     "label": "Dockerfile",
+     "x": 12,
+     "y": 50,
+     "sub": "the recipe",
+     "art": "file"
+    },
+    {
+     "id": "img",
+     "label": "trackit-api",
+     "x": 45,
+     "y": 50,
+     "sub": "the image",
+     "art": "container"
+    },
+    {
+     "id": "you",
+     "label": "Your laptop",
+     "x": 85,
+     "y": 15,
+     "art": "laptop"
+    },
+    {
+     "id": "mate",
+     "label": "Teammate's laptop",
+     "x": 85,
+     "y": 50,
+     "art": "laptop"
+    },
+    {
+     "id": "server",
+     "label": "Real server",
+     "x": 85,
+     "y": 85,
+     "art": "server"
+    }
+   ],
+   "edges": [
+    {
+     "from": "df",
+     "to": "img"
+    },
+    {
+     "from": "img",
+     "to": "you"
+    },
+    {
+     "from": "img",
+     "to": "mate"
+    },
+    {
+     "from": "img",
+     "to": "server"
+    }
    ],
    "beats": [
     {
-     "say": "Two ideas.",
-     "show": 0
+     "say": "Without containers, every machine has its own Python and its own packages. That's how you get, it works on my machine.",
+     "show": 1,
+     "on": "df"
     },
     {
-     "say": "Docker packages your app with everything it needs, so it behaves the same on your laptop, a teammate's, and a real server. No more it works on my machine.",
-     "show": 1
+     "say": "Docker build follows the Dockerfile and packages your app with everything it needs, into one image.",
+     "show": 2,
+     "on": "img",
+     "send": {
+      "from": "df",
+      "to": "img",
+      "label": "docker build -t trackit-api ."
+     }
     },
     {
-     "say": "C I, continuous integration, runs your tests automatically every time you propose a change.",
-     "show": 2
+     "say": "Run that image on your laptop,",
+     "show": 3,
+     "on": "you",
+     "send": {
+      "from": "img",
+      "to": "you",
+      "label": "docker run"
+     }
+    },
+    {
+     "say": "on a teammate's laptop,",
+     "show": 4,
+     "on": "mate",
+     "send": {
+      "from": "img",
+      "to": "mate",
+      "label": "docker run"
+     }
+    },
+    {
+     "say": "or on a real server, and it behaves the same, because it's the same package.",
+     "show": 5,
+     "on": "server",
+     "send": {
+      "from": "img",
+      "to": "server",
+      "label": "docker run"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "file",
-   "kicker": "Lab · Steps 1 and 2",
-   "title": "A Dockerfile, and what to leave out",
+   "kind": "walk",
+   "kicker": "Lab · Steps 1 and 3",
+   "title": "Read the Dockerfile, line by line",
    "file": "Dockerfile",
    "code": "FROM python:3.12-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
    "beats": [
     {
-     "say": "A Dockerfile is the recipe for your container.",
-     "show": 0
+     "say": "Start from a small official image that already has Python three point twelve.",
+     "line": 1,
+     "vars": {
+      "image has": "Python 3.12"
+     }
     },
     {
-     "say": "Start from Python three point twelve, install your requirements, copy your code, and start uvicorn.",
-     "show": 1
+     "say": "Work inside a folder called slash app.",
+     "line": 2,
+     "vars": {
+      "folder": "/app"
+     }
     },
     {
-     "say": "A dot docker ignore file leaves out things that only work on your computer, like your venv and your local database.",
-     "show": 1
+     "say": "Copy in requirements dot t x t, made by pip freeze. It lists every package and its version.",
+     "line": 3,
+     "vars": {
+      "image has": "Python 3.12, requirements.txt"
+     }
+    },
+    {
+     "say": "Install them all inside the image.",
+     "line": 4,
+     "vars": {
+      "image has": "Python 3.12, fastapi, sqlalchemy, bcrypt, pytest…"
+     }
+    },
+    {
+     "say": "Copy in the rest of your code.",
+     "line": 5,
+     "vars": {
+      "image has": "… + your code"
+     }
+    },
+    {
+     "say": "And this command starts uvicorn on port eight thousand when the container runs.",
+     "line": 6,
+     "out": "Uvicorn running on http://0.0.0.0:8000"
+    },
+    {
+     "say": "Docker run, dash p eight thousand colon eight thousand, connects that port to your machine. Slash health works just as before.",
+     "line": 6,
+     "out": "GET /health → {\"status\":\"ok\"}"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "terminal",
-   "kicker": "Lab · Steps 3 and 4",
-   "title": "Build and run it",
-   "steps": [
-    "pip freeze > requirements.txt",
-    "docker build -t trackit-api .",
-    "docker run -p 8000:8000 trackit-api"
+   "kind": "array",
+   "kicker": "Lab · Step 2",
+   "title": "What COPY . . takes, and what .dockerignore leaves out",
+   "values": [
+    "main.py",
+    "priority.py",
+    "models.py",
+    "database.py",
+    "requirements.txt",
+    "venv/",
+    "__pycache__/",
+    "trackit.db",
+    ".git/"
    ],
    "beats": [
     {
-     "say": "Then three commands.",
-     "show": 0
+     "say": "Copy dot dot copies everything in your project folder."
     },
     {
-     "say": "Pip freeze writes requirements dot t x t, the list of everything you installed.",
-     "show": 1
+     "say": "Your code and requirements file belong in the image.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "copied"
     },
     {
-     "say": "Docker build makes the container.",
-     "show": 2
+     "say": "But venv only works on your own computer.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5
     },
     {
-     "say": "Docker run starts it.",
-     "show": 3
+     "say": "So list it in dot docker ignore, along with cached files, your local trackit dot d b, and dot git.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "gone": [
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": ".dockerignore"
     },
     {
-     "say": "Visit slash health again. It works exactly as before, now inside Docker.",
-     "show": 3
+     "say": "The image gets only what it needs, and none of your personal data.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "gone": [
+      5,
+      6,
+      7,
+      8
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pipeline",
+   "kind": "walk",
    "kicker": "Lab · Step 5",
    "title": "Tests that run themselves",
    "file": ".github/workflows/ci.yml",
    "code": "name: CI\non: [pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - uses: actions/setup-python@v6\n        with:\n          python-version: \"3.12\"\n      - run: pip install -r requirements.txt\n      - run: pytest",
    "beats": [
     {
-     "say": "Now continuous integration, with GitHub Actions.",
-     "show": 0
+     "say": "This file lives in dot github slash workflows. GitHub reads it automatically.",
+     "line": 1
     },
     {
-     "say": "This file says: on every pull request, set up Python, install the requirements, and run pytest.",
-     "show": 1
+     "say": "On pull request: it runs every time someone opens or updates a pull request.",
+     "line": 2,
+     "vars": {
+      "trigger": "pull request opened"
+     }
     },
     {
-     "say": "From now on, a problem gets caught before a person even looks at the code.",
-     "show": 1
+     "say": "GitHub starts a fresh Linux machine for the test job.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "machine": "ubuntu-latest"
+     }
+    },
+    {
+     "say": "It checks out your code, and sets up Python three point twelve.",
+     "line": [
+      7,
+      10
+     ],
+     "vars": {
+      "python": "3.12"
+     }
+    },
+    {
+     "say": "It installs your requirements.",
+     "line": 11
+    },
+    {
+     "say": "And runs pytest. Your two tests run with no one having to remember.",
+     "line": 12,
+     "out": "2 passed"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "git",
+   "kind": "diagram",
    "kicker": "Lab · Step 6",
    "title": "Ship it",
-   "steps": [
-    "Merge Module 8 PR",
-    "git checkout -b feature/docker-ci",
-    "git commit",
-    "git push",
-    "Open a pull request"
+   "nodes": [
+    {
+     "id": "you",
+     "label": "feature/docker-ci",
+     "x": 12,
+     "y": 50,
+     "sub": "your branch",
+     "art": "git"
+    },
+    {
+     "id": "pr",
+     "label": "Pull request",
+     "x": 45,
+     "y": 50,
+     "sub": "on GitHub",
+     "art": "merge"
+    },
+    {
+     "id": "ci",
+     "label": "CI",
+     "x": 80,
+     "y": 20,
+     "sub": "runs pytest",
+     "art": "pipeline"
+    },
+    {
+     "id": "main",
+     "label": "main",
+     "x": 80,
+     "y": 80,
+     "sub": "merged",
+     "art": "rocket"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "pr"
+    },
+    {
+     "from": "pr",
+     "to": "ci"
+    },
+    {
+     "from": "pr",
+     "to": "main"
+    }
    ],
    "beats": [
     {
-     "say": "Last step. Merge your Module 8 pull request first.",
-     "show": 0
+     "say": "First merge your Module 8 pull request, so your app and tests are on main. Then pull, and make a new branch.",
+     "show": 1,
+     "on": "you"
     },
     {
-     "say": "Then make a new branch,",
-     "show": 1
+     "say": "Commit the Dockerfile, dot docker ignore, requirements, and the C I file. Push, and open a pull request.",
+     "show": 2,
+     "on": "pr",
+     "send": {
+      "from": "you",
+      "to": "pr",
+      "label": "git push -u origin feature/docker-ci"
+     }
     },
     {
-     "say": "commit your Dockerfile and C I file,",
-     "show": 2
+     "say": "Opening the pull request triggers C I.",
+     "show": 3,
+     "on": "ci",
+     "send": {
+      "from": "pr",
+      "to": "ci",
+      "label": "on: pull_request"
+     }
     },
     {
-     "say": "push,",
-     "show": 3
+     "say": "The tests come back green, right on the pull request, before a human even looks.",
+     "show": 3,
+     "on": "pr",
+     "send": {
+      "from": "ci",
+      "to": "pr",
+      "label": "✓ 2 passed"
+     }
     },
     {
-     "say": "and open a pull request. Watch GitHub run your tests automatically.",
-     "show": 4
+     "say": "Now it's safe to merge. That's how real teams ship.",
+     "show": 4,
+     "on": "main",
+     "send": {
+      "from": "pr",
+      "to": "main",
+      "label": "merge"
+     }
     }
    ]
   },
@@ -3125,7 +4824,7 @@ Your app runs inside a Docker container, and a pull request on GitHub automatica
      "show": 0
     },
     {
-     "say": "What triggers the CI workflow you wrote?",
+     "say": "What triggers the C I workflow you wrote?",
      "show": 0
     },
     {
@@ -3155,7 +4854,11 @@ Your app runs inside a Docker container, and a pull request on GitHub automatica
      "show": 0
     },
     {
-     "say": "You're done when your app runs inside a Docker container,",
+     "say": "You're done when:",
+     "show": 0
+    },
+    {
+     "say": "your app runs inside a Docker container,",
      "show": 1
     },
     {

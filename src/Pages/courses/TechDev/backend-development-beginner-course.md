@@ -88,186 +88,382 @@ You can explain, in plain language, what a request and a response are, name the 
      "say": "Welcome to Backend Development for Builders."
     },
     {
-     "say": "In this course you build one small task API properly, a layer at a time."
+     "say": "In this course you build one small task A P I properly, a layer at a time."
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "api",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Request and response",
-   "steps": [
-    "Client sends a request",
-    "Server routes it",
-    "Code does the work",
-    "Response comes back"
+   "title": "A request goes in, a response comes back",
+   "nodes": [
+    {
+     "id": "client",
+     "label": "Client",
+     "x": 12,
+     "y": 50,
+     "sub": "browser or app",
+     "art": "browser"
+    },
+    {
+     "id": "server",
+     "label": "Server",
+     "x": 50,
+     "y": 50,
+     "sub": "routes it to your code",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 88,
+     "y": 50,
+     "sub": "stored tasks",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "client",
+     "to": "server"
+    },
+    {
+     "from": "server",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "A backend runs on a server, not in the user's browser.",
-     "show": 0
+     "say": "A backend is the part of an app that runs on a server, not in the user's browser.",
+     "show": 2,
+     "on": "server"
     },
     {
-     "say": "A client, like a browser or an app, sends a request.",
-     "show": 1
+     "say": "A client, like a browser or a phone app, sends a request: get slash tasks.",
+     "show": 2,
+     "on": "client",
+     "send": {
+      "from": "client",
+      "to": "server",
+      "label": "GET /tasks"
+     }
     },
     {
-     "say": "The server routes it to your code.",
-     "show": 2
+     "say": "The server routes it to your code, and the code reads the data it needs.",
+     "show": 3,
+     "on": "db",
+     "send": {
+      "from": "server",
+      "to": "db",
+      "label": "read tasks"
+     }
     },
     {
-     "say": "Your code does the work, like reading or writing a database.",
-     "show": 3
+     "say": "The data comes back to the server.",
+     "on": "server",
+     "send": {
+      "from": "db",
+      "to": "server",
+      "label": "1 task"
+     }
     },
     {
-     "say": "And the server sends back a response.",
-     "show": 4
+     "say": "And the server sends a response: status two hundred, with the task as JSON.",
+     "on": "client",
+     "send": {
+      "from": "server",
+      "to": "client",
+      "label": "200 · [{\"id\": 1, \"title\": \"Ship it\", …}]"
+     }
     },
     {
-     "say": "An API is the set of addresses and rules a backend offers, so other programs can talk to it.",
-     "show": 4
+     "say": "The addresses and rules a server offers, like slash tasks, are its A P I.",
+     "on": [
+      "server"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "doc",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Methods say what you want",
-   "items": [
+   "title": "The method says what. The status says how it went.",
+   "columns": [
+    "Request",
+    "Method",
+    "Status",
+    "Meaning"
+   ],
+   "rows": [
     [
+     "Read the task list",
      "GET",
-     "Read"
-    ],
-    [
-     "POST",
-     "Create"
-    ],
-    [
-     "PATCH",
-     "Change part"
-    ],
-    [
-     "PUT",
-     "Replace"
-    ],
-    [
-     "DELETE",
-     "Remove"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Every request has a method, saying what the client wants.",
-     "show": 0
-    },
-    {
-     "say": "Get reads something.",
-     "show": 1
-    },
-    {
-     "say": "Post creates something.",
-     "show": 2
-    },
-    {
-     "say": "Patch changes part of something.",
-     "show": 3
-    },
-    {
-     "say": "Put replaces it.",
-     "show": 4
-    },
-    {
-     "say": "And delete removes it.",
-     "show": 5
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "hash",
-   "kicker": "Concept",
-   "title": "Status codes say how it went",
-   "items": [
-    [
      "200",
      "OK"
     ],
     [
+     "Create a new task",
+     "POST",
      "201",
      "Created"
     ],
     [
-     "204",
-     "Done, nothing to return"
+     "Mark a task done",
+     "PATCH",
+     "200",
+     "OK"
     ],
     [
+     "Replace a whole task",
+     "PUT",
+     "200",
+     "OK"
+    ],
+    [
+     "Delete a task",
+     "DELETE",
+     "204",
+     "Done, nothing to send back"
+    ],
+    [
+     "Read a task that isn't there",
+     "GET",
      "404",
      "Not found"
     ],
     [
+     "Create a task with no title",
+     "POST",
      "422",
-     "Invalid data"
+     "The data sent was invalid"
     ]
    ],
    "beats": [
     {
-     "say": "And every response has a status code saying how it went.",
-     "show": 0
+     "say": "Every request has a method, saying what the client wants. Every response has a status code, saying how it went.",
+     "col": 1
     },
     {
-     "say": "Two hundred, OK.",
-     "show": 1
+     "say": "Get reads. Reading the task list comes back two hundred, OK.",
+     "hl": 0
     },
     {
-     "say": "Two oh one, created.",
-     "show": 2
+     "say": "Post creates. A new task comes back two oh one, created.",
+     "hl": 1
     },
     {
-     "say": "Two oh four, done, with nothing to send back.",
-     "show": 3
+     "say": "Patch changes part of something, like marking a task done. Put replaces the whole thing.",
+     "hl": [
+      2,
+      3
+     ]
     },
     {
-     "say": "Four oh four, not found.",
-     "show": 4
+     "say": "Delete removes it, and answers two oh four: done, with nothing to send back.",
+     "hl": 4
     },
     {
-     "say": "And four twenty two, the data sent was invalid.",
-     "show": 5
+     "say": "Things go wrong too. Ask for a task that isn't there, and you get four oh four, not found.",
+     "hl": 5,
+     "col": 2
     },
     {
-     "say": "The data itself usually travels as JSON, which looks like a Python dictionary.",
-     "show": 5
+     "say": "Send data that breaks the rules, like a task with no title, and you get four twenty two.",
+     "hl": 6,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "browser",
-   "kicker": "Lab",
-   "title": "Watch a real backend",
-   "steps": [
-    "Inspect → Network",
-    "Reload a site",
-    "Find method, URL, status, response"
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "Why shared data needs a backend",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "Your browser",
+     "x": 12,
+     "y": 25,
+     "sub": "you add a task",
+     "art": "laptop"
+    },
+    {
+     "id": "friend",
+     "label": "Friend's phone",
+     "x": 12,
+     "y": 78,
+     "sub": "wants to see it",
+     "art": "phone"
+    },
+    {
+     "id": "server",
+     "label": "Server",
+     "x": 50,
+     "y": 50,
+     "sub": "the backend",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 88,
+     "y": 50,
+     "sub": "one shared copy",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "server"
+    },
+    {
+     "from": "friend",
+     "to": "server"
+    },
+    {
+     "from": "server",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "Now watch a real one.",
-     "show": 0
+     "say": "Picture two people sharing one task list.",
+     "show": 2,
+     "on": [
+      "you",
+      "friend"
+     ]
     },
     {
-     "say": "Open developer tools, and the Network tab.",
-     "show": 1
+     "say": "If your browser kept the task to itself, it would live only on your device. Your friend could never see it.",
+     "show": 2,
+     "on": "you"
     },
     {
-     "say": "Reload any website.",
-     "show": 2
+     "say": "With a backend, your browser posts the task to the server.",
+     "show": 3,
+     "on": "server",
+     "send": {
+      "from": "you",
+      "to": "server",
+      "label": "POST /tasks"
+     }
     },
     {
-     "say": "Click a request that returns data, and find its method, address, status code and response.",
-     "show": 3
+     "say": "The server saves it in a database, in one central place.",
+     "show": 4,
+     "on": "db",
+     "send": {
+      "from": "server",
+      "to": "db",
+      "label": "save task"
+     }
+    },
+    {
+     "say": "Now your friend's phone asks for the list.",
+     "on": "friend",
+     "send": {
+      "from": "friend",
+      "to": "server",
+      "label": "GET /tasks"
+     }
+    },
+    {
+     "say": "The server reads it from the database.",
+     "on": "server",
+     "send": {
+      "from": "db",
+      "to": "server",
+      "label": "Ship it"
+     }
+    },
+    {
+     "say": "And sends it back. Same data, on another device.",
+     "on": "friend",
+     "send": {
+      "from": "server",
+      "to": "friend",
+      "label": "200 · Ship it"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab",
+   "title": "What you'll see in the Network tab",
+   "columns": [
+    "Name",
+    "Method",
+    "Status",
+    "Type"
+   ],
+   "rows": [
+    [
+     "/",
+     "GET",
+     "200",
+     "document"
+    ],
+    [
+     "styles.css",
+     "GET",
+     "200",
+     "stylesheet"
+    ],
+    [
+     "logo.png",
+     "GET",
+     "200",
+     "png"
+    ],
+    [
+     "tasks",
+     "GET",
+     "200",
+     "fetch"
+    ],
+    [
+     "tasks",
+     "POST",
+     "201",
+     "fetch"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now find a real one. Right click, choose Inspect, open the Network tab, and reload any site."
+    },
+    {
+     "say": "Every line is one request. Many just load the page itself: the page, its styles, its pictures.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
+    },
+    {
+     "say": "The ones that return data are usually labelled fetch, or X H R.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Click one, and read its method and its status code. Your site's list will look different.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Its response tab shows the JSON the backend sent back.",
+     "hl": 3,
+     "dim": true,
+     "sql": "[{\"id\": 1, \"title\": \"Ship it\", \"done\": false}]"
     }
    ]
   },
@@ -340,7 +536,7 @@ You can explain, in plain language, what a request and a response are, name the 
      "show": 3
     },
     {
-     "say": "Next, in Module 1, your first FastAPI project.",
+     "say": "Next, in Module 1, your first Fast A P I project.",
      "show": 3
     }
    ]
@@ -445,105 +641,422 @@ Your server runs with `uvicorn app.main:app --reload`, `/health` answers with JS
    "beats": [
     {
      "say": "Welcome to Module 1."
+    },
+    {
+     "say": "Today you create the project, write your first endpoint, and run it."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "puzzle",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Two tools",
-   "items": [
+   "title": "Uvicorn listens. FastAPI routes.",
+   "nodes": [
+    {
+     "id": "curl",
+     "label": "Terminal",
+     "x": 10,
+     "y": 50,
+     "sub": "curl",
+     "art": "terminal"
+    },
+    {
+     "id": "uv",
+     "label": "Uvicorn",
+     "x": 37,
+     "y": 50,
+     "sub": "listens on port 8000",
+     "art": "server"
+    },
+    {
+     "id": "fa",
+     "label": "FastAPI",
+     "x": 63,
+     "y": 50,
+     "sub": "finds the right function",
+     "art": "router"
+    },
+    {
+     "id": "fn",
+     "label": "health()",
+     "x": 90,
+     "y": 50,
+     "sub": "your code",
+     "art": "code"
+    }
+   ],
+   "edges": [
+    {
+     "from": "curl",
+     "to": "uv"
+    },
+    {
+     "from": "uv",
+     "to": "fa"
+    },
+    {
+     "from": "fa",
+     "to": "fn"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Two tools work together. Uvicorn is the server that listens. Fast A P I routes each request to your function.",
+     "show": 4
+    },
+    {
+     "say": "Curl sends get slash health to port eight thousand.",
+     "on": "uv",
+     "send": {
+      "from": "curl",
+      "to": "uv",
+      "label": "GET /health"
+     }
+    },
+    {
+     "say": "Uvicorn receives it, and passes it to your Fast A P I app.",
+     "on": "fa",
+     "send": {
+      "from": "uv",
+      "to": "fa",
+      "label": "GET /health"
+     }
+    },
+    {
+     "say": "Fast A P I finds the function registered for get slash health, and runs it.",
+     "on": "fn",
+     "send": {
+      "from": "fa",
+      "to": "fn",
+      "label": "health()"
+     }
+    },
+    {
+     "say": "The function returns a plain Python dictionary.",
+     "on": "fa",
+     "send": {
+      "from": "fn",
+      "to": "fa",
+      "label": "{\"status\": \"ok\"}"
+     }
+    },
+    {
+     "say": "Fast A P I turns it into JSON for Uvicorn.",
+     "on": "uv",
+     "send": {
+      "from": "fa",
+      "to": "uv",
+      "label": "JSON"
+     }
+    },
+    {
+     "say": "And Uvicorn sends it back. Curl prints it.",
+     "on": "curl",
+     "send": {
+      "from": "uv",
+      "to": "curl",
+      "label": "{\"status\":\"ok\"}"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "One file, one job",
+   "columns": [
+    "File",
+    "Holds",
+    "Arrives in"
+   ],
+   "rows": [
     [
-     "FastAPI",
-     "Routes requests to your functions"
+     "app/main.py",
+     "The app and its routes",
+     "Module 1"
     ],
     [
-     "Uvicorn",
-     "The server that listens"
+     "app/schemas.py",
+     "Shape of data in and out",
+     "Module 2"
+    ],
+    [
+     "app/database.py",
+     "The database connection",
+     "Module 4"
+    ],
+    [
+     "app/models.py",
+     "The database tables",
+     "Module 4"
+    ],
+    [
+     "app/config.py",
+     "Settings from environment variables",
+     "Module 5"
+    ],
+    [
+     "tests/test_tasks.py",
+     "The tests",
+     "Module 6"
+    ],
+    [
+     "requirements.txt",
+     "Packages the project needs",
+     "Module 1"
     ]
    ],
    "beats": [
     {
-     "say": "Two tools work together.",
-     "show": 0
+     "say": "By the end of the course, your project will look like this. Each file has one job.",
+     "col": 0
     },
     {
-     "say": "FastAPI is a Python framework. You write normal functions, mark which address each one handles, and it does the rest: reading requests, checking data, and returning JSON.",
-     "show": 1
+     "say": "Today you make two of them: main dot p y, and requirements dot t x t.",
+     "hl": [
+      0,
+      6
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Uvicorn is the server program that listens for requests and passes them to your app.",
-     "show": 2
+     "say": "Schemas arrive in Module 2.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Database and models in Module 4.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "Config in Module 5, and tests in Module 6.",
+     "hl": [
+      4,
+      5
+     ],
+     "dim": true
+    },
+    {
+     "say": "Because each job has its own file, you can change one without reading the whole app.",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "tree",
-   "kicker": "Concept",
-   "title": "A clear folder structure",
-   "file": "tasks-api/",
-   "code": "app/\n  main.py       # the app and its routes\n  schemas.py    # data shapes (Module 2)\n  database.py   # connection (Module 4)\n  models.py     # tables (Module 4)\n  config.py     # settings (Module 5)\ntests/\n  test_tasks.py # tests (Module 6)",
-   "beats": [
-    {
-     "say": "A clear folder structure saves pain later.",
-     "show": 0
-    },
-    {
-     "say": "Main dot p y holds the routes. Schemas describe your data. Database, models and config each get their own file.",
-     "show": 1
-    },
-    {
-     "say": "And tests live in their own folder.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 2",
-   "title": "Your first endpoint",
-   "file": "app/main.py",
-   "code": "from fastapi import FastAPI\n\napp = FastAPI(title=\"Tasks API\")\n\n@app.get(\"/health\")\ndef health():\n    return {\"status\": \"ok\"}",
-   "beats": [
-    {
-     "say": "In main dot p y, create the app.",
-     "show": 0
-    },
-    {
-     "say": "The decorator, app dot get slash health, means: when a get request arrives for slash health, run this function.",
-     "show": 1
-    },
-    {
-     "say": "The dictionary you return is sent back as JSON.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "terminal",
-   "kicker": "Lab · Steps 3 and 4",
-   "title": "Run it and use the free docs",
-   "steps": [
-    "uvicorn app.main:app --reload",
-    "curl /health → {\"status\":\"ok\"}",
-    "/docs: try it out"
+   "kind": "array",
+   "kicker": "Lab · Step 1",
+   "title": "Six commands to a clean project",
+   "values": [
+    "mkdir tasks-api",
+    "python3 -m venv venv",
+    "source venv/bin/activate",
+    "pip install \"fastapi[standard]\" …",
+    "pip freeze > requirements.txt",
+    "mkdir app tests"
    ],
    "beats": [
     {
-     "say": "Run uvicorn app dot main colon app, dash dash reload, from the project folder.",
-     "show": 1
+     "say": "Setting up takes six commands, run in order."
     },
     {
-     "say": "Curl slash health, and you get status: ok.",
-     "show": 2
+     "say": "Make the project folder, tasks dash A P I, and move into it.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     },
+     "note": "then: cd tasks-api"
     },
     {
-     "say": "Then open slash docs. FastAPI builds interactive documentation from your code, for free.",
-     "show": 3
+     "say": "Create a virtual environment: an isolated folder of packages, just for this project.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     }
+    },
+    {
+     "say": "Activate it, so everything you install goes into it, not into the system Python.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     },
+     "note": "Git Bash on Windows: source venv/Scripts/activate"
+    },
+    {
+     "say": "Install Fast A P I with its standard extras, which include Uvicorn, plus S Q L Alchemy and py test.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     },
+     "note": "\"fastapi[standard]\" sqlalchemy pytest"
+    },
+    {
+     "say": "Freeze writes the exact versions into requirements dot t x t.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "step": 4
+     }
+    },
+    {
+     "say": "Then make the app and tests folders, and an empty init file inside app.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "step": 5
+     },
+     "note": "touch app/__init__.py"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Your first endpoint, running",
+   "file": "app/main.py",
+   "code": "from fastapi import FastAPI\n\napp = FastAPI(title=\"Tasks API\")\n\n\n@app.get(\"/health\")\ndef health():\n    return {\"status\": \"ok\"}\n\n\n@app.get(\"/about\")\ndef about():\n    return {\"name\": \"Tasks API\", \"version\": \"0.1\"}",
+   "beats": [
+    {
+     "say": "Line one imports Fast A P I.",
+     "line": 1
+    },
+    {
+     "say": "Line three creates the app. This is the object Uvicorn will look for.",
+     "line": 3,
+     "vars": {
+      "app": "FastAPI(title=\"Tasks API\")"
+     }
+    },
+    {
+     "say": "The decorator registers the function below it: when a get request arrives for slash health, run health.",
+     "line": [
+      6,
+      7
+     ]
+    },
+    {
+     "say": "Nothing has run yet. Start the server with uvicorn, app dot main colon app, dash dash reload.",
+     "out": "Uvicorn running on http://127.0.0.1:8000"
+    },
+    {
+     "say": "Now curl slash health. Fast A P I runs health, and line eight returns a dictionary.",
+     "line": [
+      7,
+      8
+     ]
+    },
+    {
+     "say": "It arrives as JSON.",
+     "line": 8,
+     "out": "{\"status\":\"ok\"}"
+    },
+    {
+     "say": "Your turn: add get slash about the same way, and save. Reload restarts the server for you.",
+     "line": [
+      11,
+      13
+     ]
+    },
+    {
+     "say": "Curl slash about, and you get the name and version. Both endpoints also appear at slash docs, ready to try.",
+     "line": 13,
+     "out": "{\"name\":\"Tasks API\",\"version\":\"0.1\"}"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 3",
+   "title": "What app.main:app means",
+   "values": [
+    "app",
+    ".",
+    "main",
+    ":",
+    "app"
+   ],
+   "beats": [
+    {
+     "say": "Look closely at what you gave Uvicorn: app dot main colon app.",
+     "note": "uvicorn app.main:app --reload"
+    },
+    {
+     "say": "Before the colon is a module path. First, the folder called app.",
+     "hl": 0,
+     "note": "app/"
+    },
+    {
+     "say": "Then the file main dot p y inside it.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "note": "app/main.py"
+    },
+    {
+     "say": "After the colon: the variable named app inside that file.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "note": "app = FastAPI(title=\"Tasks API\")"
+    },
+    {
+     "say": "That's why you run it from the tasks dash A P I folder, where the app folder can be found.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "run from tasks-api/, not from inside app/"
+    },
+    {
+     "say": "And dash dash reload restarts the server when you save. It's for development only, never production.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "--reload: development only"
     }
    ]
   },
@@ -566,7 +1079,7 @@ Your server runs with `uvicorn app.main:app --reload`, `/health` answers with JS
      "show": 0
     },
     {
-     "say": "Should you use --reload in production?",
+     "say": "Should you use dash dash reload in production?",
      "show": 0
     },
     {
@@ -600,7 +1113,7 @@ Your server runs with `uvicorn app.main:app --reload`, `/health` answers with JS
      "show": 0
     },
     {
-     "say": "your server runs, slash health answers with JSON,",
+     "say": "your server runs, and slash health answers with JSON,",
      "show": 1
     },
     {
@@ -765,148 +1278,439 @@ You created, read, filtered, updated, and deleted tasks with curl, and triggered
      "say": "Welcome to Module 2."
     },
     {
-     "say": "Today you build all five task routes, and let FastAPI check every request for you."
+     "say": "Today you build all five task routes, and let Fast A P I check every request for you."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "path",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Path and query parameters",
-   "items": [
+   "title": "A route = a method + a path + a function",
+   "columns": [
+    "Method",
+    "Path",
+    "Function",
+    "Success"
+   ],
+   "rows": [
     [
-     "Path parameter",
-     "/tasks/{task_id}: which one"
+     "GET",
+     "/health",
+     "health",
+     "200"
     ],
     [
-     "Query parameter",
-     "/tasks?done=true: options"
+     "GET",
+     "/tasks",
+     "list_tasks",
+     "200"
+    ],
+    [
+     "GET",
+     "/tasks/{task_id}",
+     "get_task",
+     "200"
+    ],
+    [
+     "POST",
+     "/tasks",
+     "create_task",
+     "201"
+    ],
+    [
+     "PATCH",
+     "/tasks/{task_id}",
+     "update_task",
+     "200"
+    ],
+    [
+     "DELETE",
+     "/tasks/{task_id}",
+     "delete_task",
+     "204"
     ]
    ],
    "beats": [
     {
-     "say": "A route connects a method and a path to a function.",
-     "show": 0
+     "say": "A route connects a method and a path to a function. Here's every route in main dot p y.",
+     "col": 1
     },
     {
-     "say": "A path parameter says which one, like slash tasks slash three.",
-     "show": 1
+     "say": "Get slash tasks lists every task.",
+     "hl": 1
     },
     {
-     "say": "A query parameter adds options, like question mark done equals true.",
-     "show": 2
+     "say": "Put a task I D in the path, and you get just that one. A path parameter says which one.",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "Type hints, like task I D colon int, tell FastAPI it must be a whole number.",
-     "show": 2
+     "say": "The list can also take a query parameter, after a question mark, for options like filtering.",
+     "hl": 1,
+     "sql": "GET /tasks?done=true"
+    },
+    {
+     "say": "Post creates a task, and answers two oh one.",
+     "hl": 3,
+     "col": 3
+    },
+    {
+     "say": "Patch changes part of a task. Delete removes one, and answers two oh four.",
+     "hl": [
+      4,
+      5
+     ],
+     "col": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "shield",
-   "kicker": "Lab · Step 1",
-   "title": "Describe your data with Pydantic",
-   "file": "app/schemas.py",
-   "code": "class TaskCreate(BaseModel):\n    title: str = Field(min_length=1, max_length=200)\n    notes: str | None = Field(default=None, max_length=1000)\n\nclass TaskOut(BaseModel):\n    id: int\n    title: str\n    notes: str | None\n    done: bool",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "Pydantic checks the body before your code runs",
+   "nodes": [
     {
-     "say": "A Pydantic model lists the fields, their types and their rules.",
-     "show": 0
+     "id": "client",
+     "label": "Client",
+     "x": 12,
+     "y": 50,
+     "sub": "curl",
+     "art": "terminal"
     },
     {
-     "say": "A title must be between one and two hundred characters.",
-     "show": 1
+     "id": "check",
+     "label": "TaskCreate",
+     "x": 50,
+     "y": 80,
+     "sub": "title: 1 to 200 chars",
+     "art": "shield"
     },
     {
-     "say": "Use separate models for what comes in, and what goes out. That way clients can't set fields like I D themselves.",
-     "show": 1
+     "id": "route",
+     "label": "create_task",
+     "x": 88,
+     "y": 50,
+     "sub": "your code",
+     "art": "code"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "api",
-   "kicker": "Lab · Step 2",
-   "title": "Five routes",
-   "steps": [
-    "GET /tasks",
-    "GET /tasks/{id}",
-    "POST /tasks",
-    "PATCH /tasks/{id}",
-    "DELETE /tasks/{id}"
+   ],
+   "edges": [
+    {
+     "from": "client",
+     "to": "check"
+    },
+    {
+     "from": "check",
+     "to": "route"
+    },
+    {
+     "from": "route",
+     "to": "client"
+    }
    ],
    "beats": [
     {
-     "say": "Then the five routes.",
-     "show": 0
+     "say": "Before your code runs, Fast A P I checks the body against a Pydantic model.",
+     "show": 3,
+     "on": "check"
     },
     {
-     "say": "List tasks, with an optional done filter.",
-     "show": 1
+     "say": "A good request: the title, learn Fast A P I.",
+     "on": "check",
+     "send": {
+      "from": "client",
+      "to": "check",
+      "label": "{\"title\": \"Learn FastAPI\"}"
+     }
     },
     {
-     "say": "Get one task.",
-     "show": 2
+     "say": "It matches the rules, so the data passes through to your function.",
+     "on": "route",
+     "send": {
+      "from": "check",
+      "to": "route",
+      "label": "data: TaskCreate"
+     }
     },
     {
-     "say": "Create one, answering two oh one.",
-     "show": 3
+     "say": "Your code stores it, and answers two oh one, created.",
+     "on": "client",
+     "send": {
+      "from": "route",
+      "to": "client",
+      "label": "201 · {\"id\": 1, …}"
+     }
     },
     {
-     "say": "Patch one, changing only the fields that were sent.",
-     "show": 4
+     "say": "Now a bad one: an empty title.",
+     "on": "check",
+     "send": {
+      "from": "client",
+      "to": "check",
+      "label": "{\"title\": \"\"}"
+     }
     },
     {
-     "say": "And delete one, answering two oh four.",
-     "show": 5
-    },
-    {
-     "say": "For now they live in memory, so they vanish on restart. Module 4 fixes that.",
-     "show": 5
+     "say": "It's shorter than the minimum, so Fast A P I answers four twenty two itself. Your function never runs.",
+     "on": "client",
+     "send": {
+      "from": "check",
+      "to": "client",
+      "label": "422 · detail"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "cross",
-   "kicker": "Lab · Step 4",
-   "title": "Break it on purpose",
-   "items": [
+   "kind": "walk",
+   "kicker": "Lab · Create",
+   "title": "Where a new task comes from",
+   "file": "app/main.py",
+   "code": "tasks: dict[int, TaskOut] = {}\nnext_id = 1\n\n@app.post(\"/tasks\", response_model=TaskOut, status_code=status.HTTP_201_CREATED)\ndef create_task(data: TaskCreate):\n    global next_id\n    task = TaskOut(id=next_id, title=data.title, notes=data.notes, done=False)\n    tasks[next_id] = task\n    next_id += 1\n    return task",
+   "beats": [
+    {
+     "say": "For now, tasks live in a dictionary in memory, and the next I D starts at one.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "tasks": "{}",
+      "next_id": 1
+     }
+    },
+    {
+     "say": "First curl: post the title, learn Fast A P I. Pydantic has already checked it.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "data": "TaskCreate(title=\"Learn FastAPI\", notes=None)"
+     }
+    },
+    {
+     "say": "The server builds the task. The I D comes from next I D, not from the client, and done starts False.",
+     "line": 7,
+     "vars": {
+      "task": "TaskOut(id=1, title=\"Learn FastAPI\", notes=None, done=False)"
+     }
+    },
+    {
+     "say": "Store it under key one, and move next I D on to two.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "tasks": "{1: task}",
+      "next_id": 2
+     }
+    },
+    {
+     "say": "Return it. Fast A P I sends it as JSON, with status two oh one.",
+     "line": 10,
+     "out": "{\"id\":1,\"title\":\"Learn FastAPI\",\"notes\":null,\"done\":false}"
+    },
+    {
+     "say": "Second curl: write tests, with the notes, use py test. It gets I D two.",
+     "line": [
+      7,
+      10
+     ],
+     "vars": {
+      "data": "TaskCreate(title=\"Write tests\", notes=\"use pytest\")",
+      "task": "TaskOut(id=2, title=\"Write tests\", notes=\"use pytest\", done=False)",
+      "tasks": "{1: …, 2: …}",
+      "next_id": 3
+     },
+     "out": "{\"id\":2,\"title\":\"Write tests\",\"notes\":\"use pytest\",\"done\":false}"
+    },
+    {
+     "say": "That's why there are separate models in and out. Task create has no I D field, so a client can't pick one.",
+     "line": 5
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Update",
+   "title": "PATCH changes only what you sent",
+   "columns": [
+    "field",
+    "task 1 now",
+    "TaskUpdate",
+    "changes",
+    "after"
+   ],
+   "rows": [
     [
-     "{\"title\": \"\"}",
-     "Too short"
+     "title",
+     "\"Learn FastAPI\"",
+     "None",
+     "—",
+     "\"Learn FastAPI\""
     ],
     [
-     "{\"notes\": \"no title\"}",
-     "Title missing"
+     "notes",
+     "None",
+     "None",
+     "—",
+     "None"
     ],
     [
-     "/tasks/abc",
-     "Not a number"
+     "done",
+     "False",
+     "True",
+     "True",
+     "True"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Third curl: patch task one, with done set to true.",
+     "sql": "PATCH /tasks/1   {\"done\": true}",
+     "col": 1
+    },
+    {
+     "say": "Pydantic fills every field the client didn't send with None.",
+     "col": 2
+    },
+    {
+     "say": "Model dump, with exclude none, drops those. So changes holds only done.",
+     "col": 3,
+     "hl": 2,
+     "sql": "changes = data.model_dump(exclude_none=True)   # {\"done\": True}"
+    },
+    {
+     "say": "Model copy applies just that change. Title and notes keep their values.",
+     "col": 4,
+     "hl": [
+      0,
+      1
+     ]
+    },
+    {
+     "say": "Only done changed.",
+     "col": 4,
+     "hl": 2,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Filter and delete",
+   "title": "Query, delete, list",
+   "values": [
+    "#1 Learn FastAPI · done",
+    "#2 Write tests"
+   ],
+   "beats": [
+    {
+     "say": "Now there are two tasks, and only the first one is done."
+    },
+    {
+     "say": "Get slash tasks, done equals true. The list keeps only tasks whose done matches.",
+     "hl": 0,
+     "gone": [
+      1
+     ],
+     "note": "GET /tasks?done=true → [#1]"
+    },
+    {
+     "say": "Delete slash tasks slash two. It answers two oh four, with no body.",
+     "ok": [
+      0
+     ],
+     "gone": [
+      1
+     ],
+     "note": "DELETE /tasks/2 → 204"
+    },
+    {
+     "say": "List them all, and only task one is left.",
+     "vals": [
+      "#1 Learn FastAPI · done"
+     ],
+     "ok": [
+      0
+     ],
+     "note": "GET /tasks → [#1]"
+    },
+    {
+     "say": "Restart the server, and even that one is gone. It only lived in memory. Module 4 fixes that.",
+     "vals": [
+      "#1 Learn FastAPI · done"
+     ],
+     "gone": [
+      0
+     ],
+     "note": "after a restart: []"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Break it",
+   "title": "Three errors you didn't write",
+   "columns": [
+    "Request",
+    "Problem",
+    "Status"
+   ],
+   "rows": [
+    [
+     "POST {\"title\": \"\"}",
+     "title shorter than 1 character",
+     "422"
+    ],
+    [
+     "POST {\"notes\": \"no title\"}",
+     "title is missing",
+     "422"
+    ],
+    [
+     "GET /tasks/abc",
+     "task_id isn't an int",
+     "422"
+    ],
+    [
+     "POST {\"title\": \"x\", \"priority\": 9}",
+     "priority above 5 (your turn)",
+     "422"
     ]
    ],
    "beats": [
     {
      "say": "Now break it on purpose.",
-     "show": 0
+     "col": 0
     },
     {
-     "say": "Send an empty title.",
-     "show": 1
+     "say": "An empty title fails the minimum length of one.",
+     "hl": 0
     },
     {
-     "say": "Leave the title out.",
-     "show": 2
+     "say": "No title at all: it's required, so it's missing.",
+     "hl": 1
     },
     {
-     "say": "Ask for task A B C instead of a number.",
-     "show": 3
+     "say": "And a b c can't be a task I D, because the type hint says int.",
+     "hl": 2
     },
     {
-     "say": "Each one returns four twenty two, naming the field and the problem. And you wrote no checking code at all.",
-     "show": 3
+     "say": "Each answers four twenty two, with a detail list naming the field and the problem.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
+    },
+    {
+     "say": "Your turn: add a priority field from one to five, send nine, and read the error.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
@@ -929,7 +1733,7 @@ You created, read, filtered, updated, and deleted tasks with curl, and triggered
      "show": 0
     },
     {
-     "say": "Which method fits \"mark task 3 as done\"?",
+     "say": "Which method fits mark task three as done?",
      "show": 0
     },
     {
@@ -1069,121 +1873,306 @@ Your routes share one `get_task_or_404` helper, and you've seen a `404`, a `405`
    ]
   },
   {
-   "kind": "list",
-   "art": "hash",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Three families",
-   "items": [
+   "title": "The first digit says who's responsible",
+   "columns": [
+    "Situation",
+    "Status",
+    "Range"
+   ],
+   "rows": [
     [
-     "2xx",
-     "It worked: 200, 201, 204"
+     "A task was created",
+     "201 Created",
+     "2xx"
     ],
     [
-     "4xx",
-     "Client mistake: 400, 401, 403, 404, 409, 422"
+     "GET /tasks/999",
+     "404 Not Found",
+     "4xx"
     ],
     [
-     "5xx",
-     "Server failed: 500, 503"
+     "A 500-character title",
+     "422 Invalid data",
+     "4xx"
+    ],
+    [
+     "DELETE /tasks",
+     "405 Method Not Allowed",
+     "4xx"
+    ],
+    [
+     "Email already registered",
+     "409 Conflict",
+     "4xx"
+    ],
+    [
+     "Not logged in",
+     "401",
+     "4xx"
+    ],
+    [
+     "A bug divides by zero",
+     "500 Internal Server Error",
+     "5xx"
     ]
    ],
    "beats": [
     {
-     "say": "Three families.",
-     "show": 0
+     "say": "The first digit of a status code tells you who's responsible.",
+     "sql": "2xx it worked · 4xx the client made a mistake · 5xx the server failed",
+     "col": 2
     },
     {
-     "say": "Two hundreds: it worked.",
-     "show": 1
+     "say": "Two hundreds mean it worked, like a task being created.",
+     "hl": 0
     },
     {
-     "say": "Four hundreds: the client made a mistake. Like not found, not allowed, conflict, or invalid data.",
-     "show": 2
+     "say": "Four hundreds mean the client made a mistake: a missing task, invalid data, or a method that path doesn't have.",
+     "hl": [
+      1,
+      2,
+      3
+     ]
     },
     {
-     "say": "Five hundreds: the server failed.",
-     "show": 3
+     "say": "Four oh nine, conflict, means the request clashes with what exists, like an email that's already registered. Four oh one means not logged in.",
+     "hl": [
+      4,
+      5
+     ]
+    },
+    {
+     "say": "Five hundreds mean the server failed, on a request that was fine.",
+     "hl": 6,
+     "dim": true
+    },
+    {
+     "say": "A mobile app can pick the right message from the code alone, without reading your text.",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
-   "kicker": "Concept",
-   "title": "Expected versus unexpected",
-   "items": [
-    [
-     "Expected",
-     "Right 4xx + helpful message"
-    ],
-    [
-     "Unexpected",
-     "Plain 500; details in logs only"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Handle two kinds of problem differently.",
-     "show": 0
-    },
-    {
-     "say": "Expected problems, like a missing task, get the right four hundred code and a helpful message.",
-     "show": 1
-    },
-    {
-     "say": "Unexpected problems, like a bug, get a plain five hundred with a generic message. The details go to your logs only.",
-     "show": 2
-    },
-    {
-     "say": "Never send stack traces to clients. They confuse users, and help attackers.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab · Step 1",
-   "title": "One helper for 404s",
+   "title": "One helper for every not found",
    "file": "app/main.py",
-   "code": "def get_task_or_404(task_id: int) -> TaskOut:\n    if task_id not in tasks:\n        raise HTTPException(404, detail=f\"Task {task_id} not found\")\n    return tasks[task_id]",
+   "code": "def get_task_or_404(task_id: int) -> TaskOut:\n    if task_id not in tasks:\n        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f\"Task {task_id} not found\")\n    return tasks[task_id]\n\n@app.get(\"/tasks/{task_id}\", response_model=TaskOut)\ndef get_task(task_id: int):\n    return get_task_or_404(task_id)\n\n@app.delete(\"/tasks/{task_id}\", status_code=status.HTTP_204_NO_CONTENT)\ndef delete_task(task_id: int):\n    get_task_or_404(task_id)\n    del tasks[task_id]",
    "beats": [
     {
-     "say": "In the lab, one helper replaces every repeated not found check.",
-     "show": 0
+     "say": "Three routes repeated the same not found check. Now one helper does it.",
+     "line": [
+      1,
+      4
+     ],
+     "vars": {
+      "tasks": "{1: Learn FastAPI}"
+     }
     },
     {
-     "say": "Raising an exception stops the function immediately, so the rest only runs if the task exists.",
-     "show": 1
+     "say": "A client asks for task nine nine nine.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "task_id": 999
+     }
+    },
+    {
+     "say": "Get task calls the helper. Nine nine nine isn't in tasks.",
+     "line": [
+      8,
+      2
+     ]
+    },
+    {
+     "say": "So the helper raises a four oh four. Raising stops everything, in the helper and in the route.",
+     "line": 3,
+     "out": "404 {\"detail\":\"Task 999 not found\"}"
+    },
+    {
+     "say": "Now delete task one.",
+     "line": [
+      10,
+      11
+     ],
+     "vars": {
+      "task_id": 1
+     }
+    },
+    {
+     "say": "The helper finds it and returns, so the route carries on.",
+     "line": [
+      12,
+      4
+     ]
+    },
+    {
+     "say": "Del removes it, and the response is two oh four, with no body.",
+     "line": 13,
+     "vars": {
+      "tasks": "{}"
+     },
+     "out": "204 (no body)"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "bug",
-   "kicker": "Lab · Steps 2 and 3",
-   "title": "Test both kinds of error",
-   "steps": [
-    "/boom → 500 (safe)",
-    "/tasks/999 → 404",
-    "DELETE /tasks → 405"
+   "kind": "diagram",
+   "kicker": "Lab · Step 2",
+   "title": "Unexpected errors: log the details, send a plain 500",
+   "nodes": [
+    {
+     "id": "client",
+     "label": "Client",
+     "x": 12,
+     "y": 50,
+     "sub": "curl -i /boom",
+     "art": "terminal"
+    },
+    {
+     "id": "route",
+     "label": "/boom",
+     "x": 50,
+     "y": 20,
+     "sub": "return 1 / 0",
+     "art": "bug"
+    },
+    {
+     "id": "handler",
+     "label": "unexpected_error",
+     "x": 50,
+     "y": 80,
+     "sub": "catches everything else",
+     "art": "shield"
+    },
+    {
+     "id": "logs",
+     "label": "Server terminal",
+     "x": 88,
+     "y": 80,
+     "sub": "only you see this",
+     "art": "eye"
+    }
+   ],
+   "edges": [
+    {
+     "from": "client",
+     "to": "route"
+    },
+    {
+     "from": "route",
+     "to": "handler"
+    },
+    {
+     "from": "handler",
+     "to": "client"
+    },
+    {
+     "from": "handler",
+     "to": "logs"
+    }
    ],
    "beats": [
     {
-     "say": "Then add a catch-all handler for anything unexpected, and a temporary route with a bug.",
-     "show": 0
+     "say": "Expected problems get a four hundred code. But what about a bug you didn't expect?",
+     "show": 4
     },
     {
-     "say": "The buggy route answers five hundred, with a generic message. The real error only shows in your terminal.",
-     "show": 1
+     "say": "Add a temporary route, slash boom, that divides by zero, and call it.",
+     "on": "route",
+     "send": {
+      "from": "client",
+      "to": "route",
+      "label": "GET /boom"
+     }
     },
     {
-     "say": "A missing task gives four oh four.",
-     "show": 2
+     "say": "One divided by zero raises a zero division error. Nothing in the route catches it.",
+     "on": "handler",
+     "send": {
+      "from": "route",
+      "to": "handler",
+      "label": "ZeroDivisionError"
+     }
     },
     {
-     "say": "And deleting slash tasks, which has no delete route, gives four oh five, method not allowed.",
-     "show": 3
+     "say": "Your exception handler catches anything unexpected, and prints the real error in your server terminal.",
+     "on": "logs",
+     "send": {
+      "from": "handler",
+      "to": "logs",
+      "label": "GET /boom: ZeroDivisionError('division by zero')"
+     }
+    },
+    {
+     "say": "The client gets only a plain five hundred: internal server error.",
+     "on": "client",
+     "send": {
+      "from": "handler",
+      "to": "client",
+      "label": "500 · {\"detail\": \"Internal server error\"}"
+     }
+    },
+    {
+     "say": "Never send stack traces to clients. They confuse users, and they help attackers.",
+     "on": [
+      "client",
+      "logs"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "Three requests, three honest answers",
+   "columns": [
+    "Request",
+    "Status line",
+    "Body"
+   ],
+   "rows": [
+    [
+     "GET /boom",
+     "500 Internal Server Error",
+     "{\"detail\":\"Internal server error\"}"
+    ],
+    [
+     "GET /tasks/999",
+     "404 Not Found",
+     "{\"detail\":\"Task 999 not found\"}"
+    ],
+    [
+     "DELETE /tasks",
+     "405 Method Not Allowed",
+     "{\"detail\":\"Method Not Allowed\"}"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Run all three with curl dash i, which shows the status line.",
+     "sql": "curl -i …",
+     "col": 1
+    },
+    {
+     "say": "Slash boom: five hundred, with a generic message. The details stayed in your terminal.",
+     "hl": 0
+    },
+    {
+     "say": "Task nine nine nine: four oh four, from your helper.",
+     "hl": 1
+    },
+    {
+     "say": "Delete slash tasks: four oh five. You never wrote that. Fast A P I sends it because slash tasks has no delete route.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Then remove slash boom. It was only there to test."
     }
    ]
   },
@@ -1198,15 +2187,15 @@ Your routes share one `get_task_or_404` helper, and you've seen a `404`, a `405`
     "404"
    ],
    "answer": 1,
-   "good": "That's right. Four twenty two, because the data fails validation. FastAPI does this automatically.",
-   "bad": "Not quite. Four twenty two, because the data fails validation. FastAPI does this automatically.",
+   "good": "That's right. Four twenty two, because the data fails validation. Fast A P I does this automatically.",
+   "bad": "Not quite. Four twenty two, because the data fails validation. Fast A P I does this automatically.",
    "beats": [
     {
      "say": "Quick check.",
      "show": 0
     },
     {
-     "say": "A client sends a 500-character task title. Which status code?",
+     "say": "A client sends a five hundred character task title. Which status code?",
      "show": 0
     },
     {
@@ -1439,141 +2428,338 @@ Your tasks live in `tasks.db` and survive a server restart, and every route gets
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "The pieces",
-   "items": [
+   "title": "One request, one session",
+   "nodes": [
+    {
+     "id": "client",
+     "label": "Client",
+     "x": 12,
+     "y": 30,
+     "sub": "POST /tasks",
+     "art": "terminal"
+    },
+    {
+     "id": "route",
+     "label": "create_task",
+     "x": 50,
+     "y": 30,
+     "sub": "your route",
+     "art": "code"
+    },
+    {
+     "id": "db",
+     "label": "tasks.db",
+     "x": 88,
+     "y": 30,
+     "sub": "a SQLite file",
+     "art": "database"
+    },
+    {
+     "id": "getdb",
+     "label": "get_db",
+     "x": 50,
+     "y": 80,
+     "sub": "opens a session",
+     "art": "plug"
+    }
+   ],
+   "edges": [
+    {
+     "from": "client",
+     "to": "route"
+    },
+    {
+     "from": "route",
+     "to": "db"
+    },
+    {
+     "from": "getdb",
+     "to": "route"
+    }
+   ],
+   "beats": [
+    {
+     "say": "S Q Lite is a whole database in one file. S Q L Alchemy lets you work with it through Python objects.",
+     "show": 3,
+     "on": "db"
+    },
+    {
+     "say": "A request arrives to create a task.",
+     "on": "route",
+     "send": {
+      "from": "client",
+      "to": "route",
+      "label": "{\"title\": \"Learn FastAPI\"}"
+     }
+    },
+    {
+     "say": "Before the route runs, get d b opens a session, a short conversation with the database, and yields it.",
+     "show": 4,
+     "on": "getdb",
+     "send": {
+      "from": "getdb",
+      "to": "route",
+      "label": "db: Session"
+     }
+    },
+    {
+     "say": "Any route with a parameter of type session dep gets its own session this way.",
+     "on": "getdb"
+    },
+    {
+     "say": "The route adds the task and commits. Now it's saved in tasks dot d b.",
+     "on": "db",
+     "send": {
+      "from": "route",
+      "to": "db",
+      "label": "INSERT · commit"
+     }
+    },
+    {
+     "say": "Refresh reloads the row, so the new I D, one, is filled in.",
+     "on": "route",
+     "send": {
+      "from": "db",
+      "to": "route",
+      "label": "id = 1"
+     }
+    },
+    {
+     "say": "The route answers two oh one. Then get d b closes the session, even if there was an error.",
+     "on": [
+      "client",
+      "getdb"
+     ],
+     "send": {
+      "from": "route",
+      "to": "client",
+      "label": "201 · {\"id\": 1, …}"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "A model class is a table",
+   "columns": [
+    "id",
+    "title",
+    "notes",
+    "done"
+   ],
+   "rows": [
     [
-     "SQLite",
-     "A database in one file"
+     "1",
+     "Learn FastAPI",
+     "NULL",
+     "1"
     ],
     [
-     "ORM",
-     "Tables as classes, rows as objects"
-    ],
-    [
-     "Session + commit",
-     "Change, then save"
-    ],
-    [
-     "Depends",
-     "One session per request"
+     "2",
+     "Write tests",
+     "use pytest",
+     "0"
     ]
    ],
    "beats": [
     {
-     "say": "SQLite is a complete database in a single file, built into Python.",
-     "show": 1
+     "say": "The model class describes a table. Each mapped attribute becomes a column.",
+     "sql": "class Task(Base):\n    __tablename__ = \"tasks\"",
+     "col": 0
     },
     {
-     "say": "SQLAlchemy's ORM lets you describe a table as a Python class, and work with rows as objects.",
-     "show": 2
+     "say": "The I D is the primary key. The database fills it in.",
+     "col": 0
     },
     {
-     "say": "A session is a short conversation with the database. Make changes, then commit to save them.",
-     "show": 3
+     "say": "Title is required, up to two hundred characters. Notes can be empty, which is stored as null.",
+     "col": 2,
+     "hl": 0
     },
     {
-     "say": "And a FastAPI dependency gives each request its own session, and closes it afterwards.",
-     "show": 4
+     "say": "Done defaults to False. S Q Lite stores True and False as one and zero.",
+     "col": 3
+    },
+    {
+     "say": "Say task one has been marked done. To list done tasks, select builds a query.",
+     "sql": "query = select(Task).order_by(Task.id)\nquery = query.where(Task.done == done)   # done=True",
+     "col": 3
+    },
+    {
+     "say": "D b dot scalars runs it, and back come Task objects: just task one.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Now restart the server and list again. Both rows are still there, in tasks dot d b.",
+     "hl": [
+      0,
+      1
+     ],
+     "sql": "GET /tasks   (after a restart)"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 1",
-   "title": "A session per request",
-   "file": "app/database.py",
-   "code": "engine = create_engine(\"sqlite:///./tasks.db\", connect_args={\"check_same_thread\": False})\nSessionLocal = sessionmaker(bind=engine)\n\ndef get_db():\n    with SessionLocal() as db:\n        yield db\n\nSessionDep = Annotated[Session, Depends(get_db)]",
-   "beats": [
-    {
-     "say": "Get D B opens a session and hands it to the route with yield.",
-     "show": 0
-    },
-    {
-     "say": "After the request finishes, it closes the session, even if an error happened.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "table",
-   "kicker": "Lab · Step 2",
-   "title": "A Task table",
-   "file": "app/models.py",
-   "code": "class Task(Base):\n    __tablename__ = \"tasks\"\n\n    id: Mapped[int] = mapped_column(primary_key=True)\n    title: Mapped[str] = mapped_column(String(200))\n    notes: Mapped[str | None] = mapped_column(String(1000))\n    done: Mapped[bool] = mapped_column(default=False)",
-   "beats": [
-    {
-     "say": "The task model describes the table.",
-     "show": 0
-    },
-    {
-     "say": "Each mapped attribute is a column. Optional notes use string or none. The database fills in the I D.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "chain",
+   "kind": "walk",
    "kicker": "Lab · Step 3",
-   "title": "Creating a task now",
-   "steps": [
-    "Task(**data)",
-    "db.add",
-    "db.commit",
-    "db.refresh",
-    "return task"
+   "title": "Saving a new task",
+   "file": "app/main.py",
+   "code": "@app.post(\"/tasks\", response_model=TaskOut, status_code=status.HTTP_201_CREATED)\ndef create_task(data: TaskCreate, db: SessionDep):\n    task = Task(**data.model_dump())\n    db.add(task)\n    db.commit()\n    db.refresh(task)  # reload so task.id is filled in\n    return task",
+   "beats": [
+    {
+     "say": "Post a task. Fast A P I hands the route the checked data, and a session from get d b.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "data": "TaskCreate(title=\"Learn FastAPI\", notes=None)",
+      "db": "Session"
+     }
+    },
+    {
+     "say": "Model dump turns the data into a dictionary, and star star unpacks it into a new Task object.",
+     "line": 3,
+     "vars": {
+      "task.title": "\"Learn FastAPI\"",
+      "task.id": "None",
+      "tasks.db": "no new row"
+     }
+    },
+    {
+     "say": "Add puts it in the session. Nothing is saved yet.",
+     "line": 4
+    },
+    {
+     "say": "Commit writes it to the database, permanently.",
+     "line": 5,
+     "vars": {
+      "tasks.db": "row 1 saved"
+     }
+    },
+    {
+     "say": "Refresh reloads the row, so values the database created, like the I D, are filled in.",
+     "line": 6,
+     "vars": {
+      "task.id": 1,
+      "task.done": false
+     }
+    },
+    {
+     "say": "Return the Task object. Response model, with from attributes, turns it into JSON.",
+     "line": 7,
+     "out": "{\"id\":1,\"title\":\"Learn FastAPI\",\"notes\":null,\"done\":false}"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Concept",
+   "title": "Commit, or it never happened",
+   "values": [
+    "open session",
+    "db.add(task)",
+    "db.commit()",
+    "db.refresh(task)",
+    "close session"
    ],
    "beats": [
     {
-     "say": "Creating a task now goes through the database.",
-     "show": 0
+     "say": "Every request gets one short session. Here's its life."
     },
     {
-     "say": "Build a task from the request data.",
-     "show": 1
+     "say": "Get d b opens it.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     },
+     "note": "with SessionLocal() as db: yield db"
     },
     {
-     "say": "Add it to the session.",
-     "show": 2
+     "say": "The route adds the task.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     }
     },
     {
-     "say": "Commit, to save it.",
-     "show": 3
+     "say": "Commit saves it.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     },
+     "note": "now it's in tasks.db"
     },
     {
-     "say": "Refresh, so the new I D is filled in.",
-     "show": 4
+     "say": "Refresh reloads it.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     }
     },
     {
-     "say": "And return it.",
-     "show": 5
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "server",
-   "kicker": "Lab · Step 4",
-   "title": "Prove it survives",
-   "big": "Still there",
-   "sub": "after a restart",
-   "beats": [
-    {
-     "say": "Now prove it. Create two tasks, then stop and restart the server.",
-     "show": 0
+     "say": "And after the response, the with block closes the session.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "step": 4
+     }
     },
     {
-     "say": "List the tasks.",
-     "show": 1
+     "say": "Now picture a route that adds or changes data, but never calls commit.",
+     "vals": [
+      "open session",
+      "db.add(task)",
+      "close session"
+     ],
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     },
+     "note": "no commit"
     },
     {
-     "say": "They're still there, saved in tasks dot d b.",
-     "show": 2
+     "say": "When the session closes, the change is thrown away. It never reaches tasks dot d b.",
+     "vals": [
+      "open session",
+      "db.add(task)",
+      "close session"
+     ],
+     "ok": [
+      0
+     ],
+     "gone": [
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     },
+     "note": "change discarded"
     }
    ]
   },
@@ -1596,7 +2782,7 @@ Your tasks live in `tasks.db` and survive a server restart, and every route gets
      "show": 0
     },
     {
-     "say": "What happens to your changes if you never call db.commit()?",
+     "say": "What happens to your changes if you never call d b dot commit?",
      "show": 0
     },
     {
@@ -1743,102 +2929,295 @@ Your app reads its database location and log level from environment variables, l
    "beats": [
     {
      "say": "Welcome to Module 5."
+    },
+    {
+     "say": "Today your app reads its settings from outside the code, and writes down what it does."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "key",
-   "kicker": "Concept",
-   "title": "Configuration",
-   "items": [
-    [
-     "Hard-coded",
-     "Edit code to deploy; secrets in Git"
-    ],
-    [
-     "Environment variables",
-     "Set outside the code, safe defaults"
-    ]
-   ],
-   "crossed": false,
-   "beats": [
-    {
-     "say": "Configuration is anything that changes between where your app runs: the database location, the log level, secret keys.",
-     "show": 0
-    },
-    {
-     "say": "Hard-code them, and you have to edit code to deploy, and you risk committing secrets to Git.",
-     "show": 1
-    },
-    {
-     "say": "Instead, read environment variables, with safe defaults for your own computer.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "file",
+   "kind": "walk",
    "kicker": "Lab · Step 1",
-   "title": "One place for settings",
+   "title": "Settings come from the environment",
    "file": "app/config.py",
    "code": "import os\n\nAPP_NAME = os.getenv(\"APP_NAME\", \"Tasks API\")\nDATABASE_URL = os.getenv(\"DATABASE_URL\", \"sqlite:///./tasks.db\")\nLOG_LEVEL = os.getenv(\"LOG_LEVEL\", \"INFO\").upper()",
    "beats": [
     {
-     "say": "Config dot p y is the one place that reads settings.",
-     "show": 0
+     "say": "Configuration is anything that changes between where the app runs. Config dot p y is the one place that reads it.",
+     "line": [
+      1,
+      5
+     ]
     },
     {
-     "say": "Os dot getenv reads a variable, and falls back to a default if it isn't set.",
-     "show": 1
+     "say": "First run: plain uvicorn, nothing set. Get env finds no app name, so it uses the default, Tasks A P I.",
+     "line": 3,
+     "vars": {
+      "APP_NAME": "\"Tasks API\""
+     }
+    },
+    {
+     "say": "No database U R L either, so it's the local tasks dot d b.",
+     "line": 4,
+     "vars": {
+      "DATABASE_URL": "\"sqlite:///./tasks.db\""
+     }
+    },
+    {
+     "say": "And the log level falls back to INFO.",
+     "line": 5,
+     "vars": {
+      "LOG_LEVEL": "\"INFO\""
+     }
+    },
+    {
+     "say": "Second run: set two environment variables in front of the command.",
+     "out": "$ DATABASE_URL=\"sqlite:///./dev.db\" LOG_LEVEL=DEBUG uvicorn app.main:app --reload"
+    },
+    {
+     "say": "Now get env finds them. The database becomes dev dot d b, and a new file appears.",
+     "line": 4,
+     "vars": {
+      "DATABASE_URL": "\"sqlite:///./dev.db\""
+     }
+    },
+    {
+     "say": "The log level becomes DEBUG. Upper keeps it in capitals, even if someone types lowercase.",
+     "line": 5,
+     "vars": {
+      "LOG_LEVEL": "\"DEBUG\""
+     }
+    },
+    {
+     "say": "Same code, different settings. You never edited a line.",
+     "line": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pulse",
-   "kicker": "Lab · Step 3",
-   "title": "Log every request",
-   "file": "app/main.py",
-   "code": "@app.middleware(\"http\")\nasync def log_requests(request, call_next):\n    start = time.perf_counter()\n    response = await call_next(request)\n    ms = (time.perf_counter() - start) * 1000\n    logger.info(\"%s %s -> %s (%.1f ms)\", request.method,\n                request.url.path, response.status_code, ms)\n    return response",
-   "beats": [
-    {
-     "say": "Logging beats print. It adds timestamps and levels you can filter.",
-     "show": 0
-    },
-    {
-     "say": "A middleware runs around every request. It times it, and logs the method, path, status and milliseconds.",
-     "show": 1
-    },
-    {
-     "say": "Unexpected errors are logged with the full stack trace, in your logs only.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "terminal",
-   "kicker": "Lab · Steps 4 and 5",
-   "title": "Run with different settings",
-   "steps": [
-    "DATABASE_URL=… LOG_LEVEL=DEBUG uvicorn …",
-    "--env-file .env",
-    ".gitignore: .env, venv/, *.db"
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Logging levels filter the detail",
+   "columns": [
+    "Level",
+    "Used for",
+    "LOG_LEVEL=INFO",
+    "LOG_LEVEL=DEBUG"
+   ],
+   "rows": [
+    [
+     "DEBUG",
+     "Fine detail while developing",
+     "hidden",
+     "shown"
+    ],
+    [
+     "INFO",
+     "Normal events: requests, new tasks",
+     "shown",
+     "shown"
+    ],
+    [
+     "WARNING",
+     "Something odd, still working",
+     "shown",
+     "shown"
+    ],
+    [
+     "ERROR",
+     "Failures, with logger.exception's stack trace",
+     "shown",
+     "shown"
+    ]
    ],
    "beats": [
     {
-     "say": "Start the server with a different database and log level, and a new dev dot d b appears.",
-     "show": 1
+     "say": "Unlike print, logging gives every line a timestamp and a level.",
+     "col": 0
     },
     {
-     "say": "Put your settings in a dot env file, and start with dash dash env file.",
-     "show": 2
+     "say": "Debug is the most detailed. Info records normal events, like a request or a new task.",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "And list dot env, venv and your database files in dot gitignore, so they never reach Git.",
-     "show": 3
+     "say": "Warning flags something odd. Error means something failed.",
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Your exception handler now calls logger dot exception, which writes the full stack trace, in your logs only.",
+     "hl": 3,
+     "dim": true,
+     "sql": "logger.exception(\"Unexpected error on %s %s\", request.method, request.url.path)"
+    },
+    {
+     "say": "Set the level to INFO, and debug lines are hidden. Info and above are shown.",
+     "col": 2,
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "Switch to DEBUG, and you see everything. No code change, just a setting.",
+     "col": 3,
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 3",
+   "title": "Middleware times every request",
+   "file": "app/main.py",
+   "code": "@app.middleware(\"http\")\nasync def log_requests(request: Request, call_next):\n    start = time.perf_counter()\n    response = await call_next(request)\n    ms = (time.perf_counter() - start) * 1000\n    logger.info(\"%s %s -> %s (%.1f ms)\", request.method, request.url.path, response.status_code, ms)\n    return response",
+   "beats": [
+    {
+     "say": "Middleware is code that runs around every request. This one logs each request, with its timing.",
+     "line": [
+      1,
+      2
+     ]
+    },
+    {
+     "say": "A post to slash tasks arrives. The middleware notes the start time.",
+     "line": 3,
+     "vars": {
+      "request": "POST /tasks"
+     }
+    },
+    {
+     "say": "Call next hands the request on to the route. Create task runs, and logs its own line.",
+     "line": 4,
+     "out": "INFO tasks_api: Created task 1"
+    },
+    {
+     "say": "The response comes back to the middleware, with status two oh one.",
+     "line": 4,
+     "vars": {
+      "response.status_code": 201
+     }
+    },
+    {
+     "say": "It works out how many milliseconds passed.",
+     "line": 5,
+     "vars": {
+      "ms": 4.2
+     }
+    },
+    {
+     "say": "And logs the method, path, status and time.",
+     "line": 6,
+     "out": "INFO tasks_api: POST /tasks -> 201 (4.2 ms)"
+    },
+    {
+     "say": "Then it returns the response, unchanged. In the real log, each line also starts with a timestamp.",
+     "line": 7
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 5",
+   "title": "Keep settings in .env, and out of Git",
+   "nodes": [
+    {
+     "id": "env",
+     "label": ".env",
+     "x": 12,
+     "y": 30,
+     "sub": "DATABASE_URL, LOG_LEVEL",
+     "art": "file"
+    },
+    {
+     "id": "uv",
+     "label": "Uvicorn",
+     "x": 50,
+     "y": 30,
+     "sub": "--env-file .env",
+     "art": "terminal"
+    },
+    {
+     "id": "app",
+     "label": "config.py",
+     "x": 88,
+     "y": 30,
+     "sub": "os.getenv(...)",
+     "art": "gear"
+    },
+    {
+     "id": "git",
+     "label": "Git",
+     "x": 12,
+     "y": 80,
+     "sub": ".gitignore: .env, venv/, *.db",
+     "art": "git"
+    }
+   ],
+   "edges": [
+    {
+     "from": "env",
+     "to": "uv"
+    },
+    {
+     "from": "uv",
+     "to": "app"
+    },
+    {
+     "from": "env",
+     "to": "git"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Typing variables every time gets old. Put them in a dot env file instead.",
+     "show": 1,
+     "on": "env"
+    },
+    {
+     "say": "Start Uvicorn with dash dash env file, dot env. It loads them as environment variables.",
+     "show": 2,
+     "on": "uv",
+     "send": {
+      "from": "env",
+      "to": "uv",
+      "label": "DATABASE_URL, LOG_LEVEL"
+     }
+    },
+    {
+     "say": "Config dot p y reads them exactly as before.",
+     "show": 3,
+     "on": "app",
+     "send": {
+      "from": "uv",
+      "to": "app",
+      "label": "os.getenv"
+     }
+    },
+    {
+     "say": "But dot env often holds secrets, so it must never reach Git.",
+     "show": 4,
+     "on": "git"
+    },
+    {
+     "say": "List dot env in dot git ignore, along with venv and your database files. Git never sees them.",
+     "show": 4,
+     "on": [
+      "env",
+      "git"
+     ]
     }
    ]
   },
@@ -1861,7 +3240,7 @@ Your app reads its database location and log level from environment variables, l
      "show": 0
     },
     {
-     "say": "Why should .env be listed in .gitignore?",
+     "say": "Why should dot env be listed in dot git ignore?",
      "show": 0
     },
     {
@@ -2052,107 +3431,352 @@ You should see `5 passed`. `python -m` makes pytest use your virtual environment
      "say": "Welcome to Module 6."
     },
     {
-     "say": "Tests are small functions that call your API and check the answers."
+     "say": "Tests are small functions that call your A P I and check the answers."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "The tools",
-   "items": [
+   "title": "Tests use a throwaway database",
+   "nodes": [
+    {
+     "id": "test",
+     "label": "test_tasks.py",
+     "x": 10,
+     "y": 50,
+     "sub": "run by pytest",
+     "art": "test"
+    },
+    {
+     "id": "tc",
+     "label": "TestClient",
+     "x": 36,
+     "y": 50,
+     "sub": "no server needed",
+     "art": "plug"
+    },
+    {
+     "id": "app",
+     "label": "Your app",
+     "x": 62,
+     "y": 50,
+     "sub": "routes + get_db",
+     "art": "code"
+    },
+    {
+     "id": "real",
+     "label": "tasks.db",
+     "x": 90,
+     "y": 80,
+     "sub": "your real data",
+     "art": "database"
+    },
+    {
+     "id": "mem",
+     "label": "In-memory DB",
+     "x": 90,
+     "y": 20,
+     "sub": "\"sqlite://\"",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "test",
+     "to": "tc"
+    },
+    {
+     "from": "tc",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "real"
+    },
+    {
+     "from": "app",
+     "to": "mem"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Py test runs every function whose name starts with test.",
+     "show": 1,
+     "on": "test"
+    },
+    {
+     "say": "Each test calls your A P I through a test client.",
+     "show": 2,
+     "on": "tc",
+     "send": {
+      "from": "test",
+      "to": "tc",
+      "label": "client.post(\"/tasks\")"
+     }
+    },
+    {
+     "say": "The test client sends the request straight to your app, in memory. No server is running.",
+     "show": 3,
+     "on": "app",
+     "send": {
+      "from": "tc",
+      "to": "app",
+      "label": "POST /tasks"
+     }
+    },
+    {
+     "say": "Normally, get d b would give the route a session on tasks dot d b. Tests must never touch that.",
+     "show": 4,
+     "on": "real"
+    },
+    {
+     "say": "So the fixture overrides get d b, swapping in a fresh database that lives only in memory.",
+     "show": 5,
+     "on": "mem"
+    },
+    {
+     "say": "Now every request lands in the throwaway database.",
+     "on": "mem",
+     "send": {
+      "from": "app",
+      "to": "mem",
+      "label": "INSERT task"
+     }
+    },
+    {
+     "say": "When the test ends, it's gone, and the next test starts clean.",
+     "on": [
+      "mem",
+      "test"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Step 1",
+   "title": "The client fixture, step by step",
+   "values": [
+    "in-memory engine",
+    "create tables",
+    "override get_db",
+    "yield TestClient",
+    "test runs",
+    "clear overrides"
+   ],
+   "beats": [
+    {
+     "say": "A fixture prepares what a test needs, then cleans up afterwards."
+    },
+    {
+     "say": "First, an engine on S Q Lite colon slash slash, with nothing after it. That's a database in memory.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     },
+     "note": "create_engine(\"sqlite://\", poolclass=StaticPool)"
+    },
+    {
+     "say": "Static pool keeps one connection open, so that database lives for the whole test.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     },
+     "note": "StaticPool: one shared connection"
+    },
+    {
+     "say": "Create the tables in it.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     },
+     "note": "Base.metadata.create_all(bind=engine)"
+    },
+    {
+     "say": "Point get d b at the test sessions instead.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     },
+     "note": "app.dependency_overrides[get_db] = override_get_db"
+    },
+    {
+     "say": "Yield the client. The test runs right here, using it.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "ptr": {
+      "step": 4
+     }
+    },
+    {
+     "say": "Afterwards, clear the overrides, and the app is back to normal.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "step": 5
+     },
+     "note": "app.dependency_overrides.clear()"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 2",
+   "title": "One test, line by line",
+   "file": "tests/test_tasks.py",
+   "code": "def test_create_and_get_task(client):\n    response = client.post(\"/tasks\", json={\"title\": \"Write tests\"})\n    assert response.status_code == 201\n    task = response.json()\n    assert task[\"title\"] == \"Write tests\"\n    assert task[\"done\"] is False\n\n    response = client.get(f\"/tasks/{task['id']}\")\n    assert response.status_code == 200\n    assert response.json() == task",
+   "beats": [
+    {
+     "say": "Naming client as a parameter is all it takes. Py test runs the fixture and passes it in.",
+     "line": 1,
+     "vars": {
+      "client": "TestClient"
+     }
+    },
+    {
+     "say": "Post a task. The database is fresh, so it gets I D one.",
+     "line": 2,
+     "vars": {
+      "response.status_code": 201
+     }
+    },
+    {
+     "say": "Assert checks the status is two oh one. It is, so the test carries on.",
+     "line": 3
+    },
+    {
+     "say": "Read the JSON body, then check the title, and that done is False.",
+     "line": [
+      4,
+      6
+     ],
+     "vars": {
+      "task": "{\"id\": 1, \"title\": \"Write tests\", \"notes\": None, \"done\": False}"
+     }
+    },
+    {
+     "say": "Now get that task back by its I D.",
+     "line": 8,
+     "vars": {
+      "response.status_code": 200
+     }
+    },
+    {
+     "say": "Two hundred, and the body matches exactly.",
+     "line": [
+      9,
+      10
+     ]
+    },
+    {
+     "say": "Every assert passed, so the test passes.",
+     "out": "tests/test_tasks.py::test_create_and_get_task PASSED"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Watch a test catch a bug",
+   "columns": [
+    "Test",
+    "Checks",
+    "Before",
+    "After the bug"
+   ],
+   "rows": [
     [
-     "pytest + assert",
-     "Runs test_ functions"
+     "test_health",
+     "200 and status ok",
+     "PASSED",
+     "PASSED"
     ],
     [
-     "TestClient",
-     "Calls your app in memory"
+     "test_create_and_get_task",
+     "201, then the same task back",
+     "PASSED",
+     "FAILED"
     ],
     [
-     "Fixture",
-     "Prepares and cleans up"
+     "test_empty_title_is_rejected",
+     "422 for an empty title",
+     "PASSED",
+     "PASSED"
     ],
     [
-     "Override get_db",
-     "A throwaway database"
+     "test_missing_task_returns_404",
+     "404 and its message",
+     "PASSED",
+     "PASSED"
+    ],
+    [
+     "test_update_filter_and_delete",
+     "PATCH, filter, 204, then 404",
+     "PASSED",
+     "PASSED"
     ]
    ],
    "beats": [
     {
-     "say": "Pytest runs every function whose name starts with test, and assert checks each result.",
-     "show": 1
+     "say": "Run python dash m py test, dash v. Five tests, about a second.",
+     "sql": "python -m pytest -v",
+     "col": 1
     },
     {
-     "say": "FastAPI's test client sends requests straight to your app in memory. No server needed.",
-     "show": 2
+     "say": "All five pass.",
+     "col": 2,
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ]
     },
     {
-     "say": "A fixture prepares what a test needs, then cleans up.",
-     "show": 3
+     "say": "Now break something on purpose: change two oh one created to two hundred OK.",
+     "sql": "status_code=status.HTTP_200_OK   # was HTTP_201_CREATED"
     },
     {
-     "say": "And tests must never touch your real data. So you swap the database for a throwaway one.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "database",
-   "kicker": "Lab · Step 1",
-   "title": "A fresh database for every test",
-   "file": "tests/conftest.py",
-   "code": "@pytest.fixture\ndef client():\n    engine = create_engine(\"sqlite://\", poolclass=StaticPool,\n                           connect_args={\"check_same_thread\": False})\n    Base.metadata.create_all(bind=engine)\n    app.dependency_overrides[get_db] = override_get_db\n    yield TestClient(app)\n    app.dependency_overrides.clear()",
-   "beats": [
-    {
-     "say": "Conftest dot p y creates a fresh in-memory database for every test.",
-     "show": 0
+     "say": "Run again. Create and get task fails, because it checks for two oh one.",
+     "col": 3,
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Dependency overrides swaps get D B for one that uses it. Your real tasks dot d b is never touched.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 2",
-   "title": "Your first tests",
-   "file": "tests/test_tasks.py",
-   "code": "def test_create_and_get_task(client):\n    response = client.post(\"/tasks\", json={\"title\": \"Write tests\"})\n    assert response.status_code == 201\n    task = response.json()\n\n    response = client.get(f\"/tasks/{task['id']}\")\n    assert response.json() == task",
-   "beats": [
-    {
-     "say": "A test just names client as a parameter, and pytest hands it over.",
-     "show": 0
+     "say": "Py test shows exactly which assert broke. The other four still pass, because none of them checks that code.",
+     "col": 3,
+     "hl": [
+      0,
+      2,
+      3,
+      4
+     ],
+     "sql": "1 failed, 4 passed"
     },
     {
-     "say": "This one creates a task, checks it got two oh one, then reads it back and checks it matches.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "terminal",
-   "kicker": "Lab · Steps 3 and 4",
-   "title": "Run them, then break something",
-   "big": "5 passed",
-   "sub": "python -m pytest -v",
-   "beats": [
-    {
-     "say": "Run python dash m pytest. You should see five passed.",
-     "show": 0
-    },
-    {
-     "say": "Then break the code on purpose. Change two oh one to two hundred.",
-     "show": 1
-    },
-    {
-     "say": "The test fails, and shows you exactly which check broke. Change it back.",
-     "show": 2
+     "say": "Change it back. A test just caught a bug before your users did."
     }
    ]
   },
@@ -2175,7 +3799,7 @@ You should see `5 passed`. `python -m` makes pytest use your virtual environment
      "show": 0
     },
     {
-     "say": "Why do the tests override get_db?",
+     "say": "Why do the tests override get d b?",
      "show": 0
     },
     {
@@ -2217,7 +3841,7 @@ You should see `5 passed`. `python -m` makes pytest use your virtual environment
      "show": 2
     },
     {
-     "say": "Next, in the last module, the same API in Node.js.",
+     "say": "Next, in the last module, the same A P I in Node.",
      "show": 2
     }
    ]
@@ -2348,135 +3972,285 @@ You rebuilt three endpoints in Express, got the same responses as your FastAPI a
      "say": "Welcome to the last module."
     },
     {
-     "say": "You rebuild part of your API in JavaScript, to see which ideas are universal."
+     "say": "You rebuild part of your A P I in JavaScript, to see which ideas are universal."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "package",
-   "kicker": "Concept",
-   "title": "Node.js and Express",
-   "items": [
+   "kind": "walk",
+   "kicker": "Lab · Step 2",
+   "title": "Creating a task in Express",
+   "file": "app.js",
+   "code": "app.use(express.json()); // parse JSON request bodies into req.body\nconst tasks = new Map(); // id -> task, in memory only\nlet nextId = 1;\n\napp.post(\"/tasks\", (req, res) => {\n  const { title, notes = null } = req.body ?? {};\n  // No Pydantic here: we check the input by hand\n  if (typeof title !== \"string\" || title.length < 1 || title.length > 200) {\n    return res.status(422).json({ detail: \"title must be a string of 1 to 200 characters\" });\n  }\n  const task = { id: nextId++, title, notes, done: false };\n  tasks.set(task.id, task);\n  res.status(201).json(task);\n});",
+   "beats": [
+    {
+     "say": "Express registers a handler for each method and path, much like Fast A P I's decorators.",
+     "line": 5
+    },
+    {
+     "say": "First, express dot json parses JSON bodies into req dot body.",
+     "line": 1,
+     "vars": {
+      "nextId": 1
+     }
+    },
+    {
+     "say": "Post the title, ship it. Title is pulled out, and notes defaults to null.",
+     "line": 6,
+     "vars": {
+      "title": "\"Ship it\"",
+      "notes": "null"
+     }
+    },
+    {
+     "say": "There's no Pydantic, so we check by hand. It's a string of seven characters, so it passes.",
+     "line": 8
+    },
+    {
+     "say": "Build the task. Next I D plus plus uses one, then moves on to two.",
+     "line": 11,
+     "vars": {
+      "task.id": 1,
+      "nextId": 2
+     }
+    },
+    {
+     "say": "Store it in the map, and send two oh one with the task as JSON.",
+     "line": [
+      12,
+      13
+     ],
+     "out": "201 {\"id\":1,\"title\":\"Ship it\",\"notes\":null,\"done\":false}"
+    },
+    {
+     "say": "Now post a title of one two three. A number, not text.",
+     "line": 6,
+     "vars": {
+      "title": 123,
+      "notes": "null",
+      "task.id": "—"
+     }
+    },
+    {
+     "say": "Its type isn't string, so we return four twenty two, with our own message.",
+     "line": [
+      8,
+      9
+     ],
+     "out": "422 {\"detail\":\"title must be a string of 1 to 200 characters\"}"
+    },
+    {
+     "say": "Next I D is still two. Without that check, the number would have been stored.",
+     "line": 3,
+     "vars": {
+      "nextId": 2
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 2",
+   "title": "Everything in the URL arrives as a string",
+   "columns": [
+    "Request",
+    "req.params.id",
+    "Number(…)",
+    "tasks.get",
+    "Response"
+   ],
+   "rows": [
     [
-     "Node.js",
-     "JavaScript on the server"
+     "GET /tasks/1",
+     "\"1\"",
+     "1",
+     "the task",
+     "200"
     ],
     [
-     "Express",
-     "Handlers per method and path"
+     "GET /tasks/9",
+     "\"9\"",
+     "9",
+     "undefined",
+     "404 Task 9 not found"
     ],
     [
-     "No built-in validation",
-     "Check input yourself, or use Zod"
+     "without Number()",
+     "\"1\"",
+     "—",
+     "undefined",
+     "404, wrongly"
     ]
    ],
    "beats": [
     {
-     "say": "Node dot j s runs JavaScript outside the browser, so it can run a server.",
-     "show": 1
+     "say": "Getting one task shows another difference. Route parameters arrive as strings.",
+     "col": 1
     },
     {
-     "say": "Express is the most widely used Node framework. You register a handler for each method and path.",
-     "show": 2
+     "say": "The map's keys are numbers, so Number turns the string one into the number one, and the task is found.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "One big difference: Express has no built-in validation. You check input yourself, or add a library like Zod.",
-     "show": 3
+     "say": "Task nine isn't there. Tasks dot get gives undefined, and we send the four oh four ourselves.",
+     "hl": 1,
+     "col": 4
+    },
+    {
+     "say": "Forget Number, and the string one never matches the number one. Task one would look missing.",
+     "hl": 2,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Query parameters are strings too. That's why done is compared with the text, true.",
+     "sql": "const done = req.query.done === \"true\";"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 2",
-   "title": "A route in Express",
-   "file": "app.js",
-   "code": "app.post(\"/tasks\", (req, res) => {\n  const { title, notes = null } = req.body ?? {};\n  if (typeof title !== \"string\" || title.length < 1 || title.length > 200) {\n    return res.status(422).json({ detail: \"title must be 1 to 200 characters\" });\n  }\n  const task = { id: nextId++, title, notes, done: false };\n  res.status(201).json(task);\n});",
+   "kind": "table",
+   "kicker": "Compare",
+   "title": "Same ideas, different spelling",
+   "columns": [
+    "Idea",
+    "FastAPI",
+    "Express"
+   ],
+   "rows": [
+    [
+     "Route",
+     "@app.get(\"/tasks/{task_id}\")",
+     "app.get(\"/tasks/:id\", …)"
+    ],
+    [
+     "Path parameter",
+     "task_id: int, converted for you",
+     "Number(req.params.id)"
+    ],
+    [
+     "JSON body",
+     "data: TaskCreate",
+     "req.body, via express.json()"
+    ],
+    [
+     "Validation",
+     "Automatic 422 from Pydantic",
+     "By hand, or a library like Zod"
+    ],
+    [
+     "Status code",
+     "status_code=201",
+     "res.status(201)"
+    ],
+    [
+     "Docs",
+     "Free at /docs",
+     "None built in"
+    ],
+    [
+     "Restart on save",
+     "--reload",
+     "node --watch"
+    ]
+   ],
    "beats": [
     {
-     "say": "Here's create task in Express.",
-     "show": 0
+     "say": "Side by side, the ideas are the same. Only the spelling changes.",
+     "col": 0
     },
     {
-     "say": "With no Pydantic, you check the title by hand, and answer four twenty two if it's wrong.",
-     "show": 1
+     "say": "Routes, parameters, JSON bodies and status codes are universal.",
+     "hl": [
+      0,
+      1,
+      2,
+      4
+     ]
     },
     {
-     "say": "Otherwise, store it, and answer two oh one with the task as JSON.",
-     "show": 1
+     "say": "But type conversion, validation and docs were Fast A P I conveniences. In Express, they're your job.",
+     "hl": [
+      1,
+      3,
+      5
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Even the dev loop matches: node dash dash watch restarts on save, like dash dash reload.",
+     "hl": 6,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "venn",
-   "kicker": "Lab · Step 3",
-   "title": "Same requests, same answers",
-   "big": "Same 201 · 404 · 422",
-   "sub": "as your FastAPI app",
-   "beats": [
-    {
-     "say": "Run it with node, dash dash watch, and send the same curl requests.",
-     "show": 0
-    },
-    {
-     "say": "You get the same status codes and the same JSON as your FastAPI app.",
-     "show": 1
-    },
-    {
-     "say": "But type conversion, validation and docs are now your job.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "fork",
+   "kind": "table",
    "kicker": "Choosing a framework",
-   "title": "Which one, when",
-   "items": [
+   "title": "Pick by language, and how much is built in",
+   "columns": [
+    "Framework",
+    "Language",
+    "Choose it when",
+    "Trade-off"
+   ],
+   "rows": [
     [
      "FastAPI",
-     "JSON APIs, validation and docs built in"
+     "Python",
+     "JSON APIs, validation and docs from type hints",
+     "Fewer built-ins for full websites"
     ],
     [
      "Flask",
-     "Tiny, flexible core"
+     "Python",
+     "A tiny, flexible core for small apps",
+     "You assemble the pieces yourself"
     ],
     [
      "Django",
-     "Big sites: ORM, accounts, admin"
+     "Python",
+     "Larger database-heavy sites: ORM, admin, accounts",
+     "More to learn up front"
     ],
     [
      "Express",
-     "One language, front and back"
+     "JavaScript",
+     "One language front and back, or a Node codebase",
+     "Validation, structure, docs are up to you"
     ]
    ],
    "beats": [
     {
-     "say": "So which framework should you choose?",
-     "show": 0
+     "say": "All four are mature. Pick by your team's language, and how much you want built in.",
+     "col": 1
     },
     {
-     "say": "FastAPI, for JSON APIs with validation and docs from type hints, especially next to data or AI code.",
-     "show": 1
+     "say": "Fast A P I suits JSON A P Is, especially next to data or A I code.",
+     "hl": 0
     },
     {
-     "say": "Flask, for a tiny, flexible core.",
-     "show": 2
+     "say": "Flask is a tiny core you build up yourself.",
+     "hl": 1
     },
     {
-     "say": "Django, for a larger database-heavy site with built-in accounts and an admin panel.",
-     "show": 3
+     "say": "Django brings an O R M, an admin panel and user accounts.",
+     "hl": 2
     },
     {
-     "say": "And Express, when your team wants one language for frontend and backend.",
-     "show": 4
+     "say": "Express suits teams who want one language, front and back.",
+     "hl": 3
     },
     {
-     "say": "Everything you practised here carries over to all of them.",
-     "show": 4
+     "say": "So, a big Python content site where staff edit data in an admin panel? Django.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Whichever you choose, everything you practised here carries over."
     }
    ]
   },
@@ -2541,7 +4315,7 @@ You rebuilt three endpoints in Express, got the same responses as your FastAPI a
      "show": 2
     },
     {
-     "say": "You've finished Backend Development for Builders. Next, APIs for Builders picks up the app you just built.",
+     "say": "You've finished Backend Development for Builders. Next, A P Is for Builders picks up the app you just built.",
      "show": 2
     }
    ]

@@ -80,103 +80,371 @@ You can explain the testing pyramid and why most tests should be unit tests rath
    ]
   },
   {
-   "kind": "list",
-   "art": "pyramid",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "The testing pyramid",
-   "items": [
+   "title": "The testing pyramid, layer by layer",
+   "columns": [
+    "Layer",
+    "How many",
+    "Speed",
+    "Checks",
+    "Module"
+   ],
+   "rows": [
     [
-     "Unit",
-     "Many · fast · one piece"
+     "End-to-end",
+     "Few",
+     "Slow",
+     "The whole system, in a browser",
+     "3"
     ],
     [
      "Integration",
-     "Some · pieces together"
+     "Some",
+     "Medium",
+     "Pieces working together",
+     "2"
     ],
     [
-     "End-to-end",
-     "Few · slow · whole system"
+     "Unit",
+     "Many",
+     "Fast",
+     "One small piece at a time",
+     "1"
     ]
    ],
    "beats": [
     {
-     "say": "Tests are usually described as a pyramid.",
-     "show": 0
+     "say": "Tests are usually described as a pyramid with three layers. Read it from the bottom up.",
+     "col": 0
     },
     {
      "say": "At the bottom, unit tests. Many of them, fast, each checking one small piece.",
-     "show": 1
+     "hl": 2
     },
     {
-     "say": "In the middle, integration tests. Some of them, checking pieces work together.",
-     "show": 2
+     "say": "In the middle, integration tests. Some of them, checking that pieces work together.",
+     "hl": 1
     },
     {
-     "say": "At the top, end-to-end tests. A few of them, slow but realistic, driving the whole system.",
-     "show": 3
+     "say": "At the top, end-to-end tests. Just a few, slow, but they drive the whole system like a real person.",
+     "hl": 0
     },
     {
-     "say": "Lower layers are faster and cheaper, so most tests should live there.",
-     "show": 3
+     "say": "Each layer gets its own module in this course: one, two, and three.",
+     "col": 4
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "Where you'd use this",
-   "title": "The hidden question",
-   "quote": "Did this change break something else?",
-   "beats": [
-    {
-     "say": "Without tests, every change carries a hidden question.",
-     "show": 0
-    },
-    {
-     "say": "Did this break something else?",
-     "show": 1
-    },
-    {
-     "say": "Tests answer it in seconds, every time, instead of users finding out first.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Lab",
-   "title": "Your first test cases, in plain English",
-   "items": [
+   "kind": "chart",
+   "kicker": "Concept",
+   "title": "Why most tests live at the bottom",
+   "points": [
     [
-     "The total is never negative",
-     ""
+     8,
+     92
     ],
     [
+     12,
+     86
+    ],
+    [
+     15,
+     94
+    ],
+    [
+     18,
+     88
+    ],
+    [
+     22,
+     90
+    ],
+    [
+     10,
+     82
+    ],
+    [
+     25,
+     84
+    ],
+    [
+     20,
+     80
+    ],
+    [
+     45,
+     60
+    ],
+    [
+     52,
+     54
+    ],
+    [
+     48,
+     50
+    ],
+    [
+     56,
+     58
+    ],
+    [
+     84,
+     18
+    ],
+    [
+     90,
+     12
+    ]
+   ],
+   "xlabel": "how realistic",
+   "ylabel": "how fast",
+   "beats": [
+    {
+     "say": "Here, each dot is one test in a healthy project, placed by how realistic it is and how fast it runs."
+    },
+    {
+     "say": "This big cluster in the top left is the unit tests. Very fast, but each one sees only a small piece.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "say": "In the middle sit a few integration tests. Slower, but more realistic.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3
+     ]
+    },
+    {
+     "say": "And bottom right, just two end-to-end tests. The slowest, and the most realistic.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "The trend is clear: the more realistic a test, the slower and costlier it is.",
+     "line": [
+      -0.95,
+      100
+     ]
+    },
+    {
+     "say": "So you write many cheap tests at the bottom, and save the slow ones for what matters most."
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Where you'd use this",
+   "title": "The hidden question: did this break something?",
+   "nodes": [
+    {
+     "id": "chg",
+     "label": "You change code",
+     "x": 12,
+     "y": 40,
+     "sub": "a small edit",
+     "art": "pencil"
+    },
+    {
+     "id": "tests",
+     "label": "Test suite",
+     "x": 50,
+     "y": 40,
+     "sub": "runs in seconds",
+     "art": "test"
+    },
+    {
+     "id": "pass",
+     "label": "All pass",
+     "x": 88,
+     "y": 18,
+     "sub": "ship it",
+     "art": "proof"
+    },
+    {
+     "id": "fail",
+     "label": "One fails",
+     "x": 88,
+     "y": 62,
+     "sub": "fix it first",
+     "art": "bug"
+    },
+    {
+     "id": "users",
+     "label": "Your users",
+     "x": 50,
+     "y": 85,
+     "sub": "find it the hard way",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "chg",
+     "to": "users"
+    },
+    {
+     "from": "chg",
+     "to": "tests"
+    },
+    {
+     "from": "tests",
+     "to": "pass"
+    },
+    {
+     "from": "tests",
+     "to": "fail"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Every change to a codebase carries a hidden question: did this break something else?",
+     "show": 1,
+     "on": "chg"
+    },
+    {
+     "say": "Without tests, the change goes straight out, and your users are the ones who find the bug.",
+     "show": 5,
+     "on": "users",
+     "send": {
+      "from": "chg",
+      "to": "users",
+      "label": "cart total is wrong!"
+     }
+    },
+    {
+     "say": "With tests, every change first runs through the test suite, automatically.",
+     "on": "tests",
+     "send": {
+      "from": "chg",
+      "to": "tests",
+      "label": "npm test"
+     }
+    },
+    {
+     "say": "If everything passes, you ship with confidence.",
+     "on": "pass",
+     "send": {
+      "from": "tests",
+      "to": "pass",
+      "label": "all passed"
+     }
+    },
+    {
+     "say": "If one fails, you know in seconds, and you fix it before anyone else sees it.",
+     "on": "fail",
+     "send": {
+      "from": "tests",
+      "to": "fail",
+      "label": "1 failed"
+     }
+    },
+    {
+     "say": "Tests can't promise nothing will ever break. But they catch what they check, every single time.",
+     "on": [
+      "pass",
+      "fail"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab",
+   "title": "Plain-English rules become test cases",
+   "columns": [
+    "Rule that should always be true",
+    "Input",
+    "Expected"
+   ],
+   "rows": [
+    [
      "An empty cart totals zero",
-     ""
+     "[]",
+     "0"
+    ],
+    [
+     "The total is never negative",
+     "any cart",
+     "0 or more"
+    ],
+    [
+     "2 × $10 plus 1 × $5 totals $25",
+     "two items",
+     "25"
     ]
    ],
    "beats": [
     {
-     "say": "Your lab has no code yet.",
-     "show": 0
+     "say": "Your lab has no code yet. Picture a function that totals a shopping cart."
     },
     {
-     "say": "Think of a function, like one that totals a shopping cart, and write three things that should always be true.",
-     "show": 0
+     "say": "Write down three things that should always be true about it. First: an empty cart totals zero.",
+     "hl": 0
     },
     {
-     "say": "For example: the total is never negative.",
-     "show": 1
+     "say": "Second: the total is never negative, whatever is in the cart.",
+     "hl": 1
     },
     {
-     "say": "An empty cart totals zero.",
-     "show": 2
+     "say": "Third, a normal case: two items at ten dollars plus one at five should total twenty five.",
+     "hl": 2
     },
     {
-     "say": "Those sentences are your first test cases.",
-     "show": 2
+     "say": "Each rule names an input and the result you expect.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
+    },
+    {
+     "say": "That's a test case. In Module 1, the first one becomes real code.",
+     "hl": 0,
+     "dim": true,
+     "sql": "test(\"returns zero for an empty cart\", () => {\n  expect(calculateTotal([])).toBe(0);\n});"
     }
    ]
   },
@@ -381,142 +649,303 @@ You have a set of passing unit tests covering a normal case, an edge case (empty
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
-   "kicker": "Concept",
-   "title": "Arrange, Act, Assert",
-   "steps": [
-    "Arrange: set up input",
-    "Act: run the code",
-    "Assert: check the result"
-   ],
-   "beats": [
-    {
-     "say": "Unit tests follow a simple pattern.",
-     "show": 0
-    },
-    {
-     "say": "Arrange: set up the input.",
-     "show": 1
-    },
-    {
-     "say": "Act: run the code.",
-     "show": 2
-    },
-    {
-     "say": "Assert: check the result.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Syntax at a glance",
-   "title": "Your first Jest test",
-   "file": "cart.test.js",
-   "code": "test(\"calculates the total for multiple items\", () => {\n  const items = [\n    { price: 10, quantity: 2 },\n    { price: 5, quantity: 1 }\n  ];\n  expect(calculateTotal(items)).toBe(25);\n});\n\ntest(\"returns zero for an empty cart\", () => {\n  expect(calculateTotal([])).toBe(0);\n});",
+   "title": "Arrange, Act, Assert",
+   "file": "cart.js + cart.test.js",
+   "code": "// cart.js\nfunction calculateTotal(items) {\n  return items.reduce((sum, item) => sum + item.price * item.quantity, 0);\n}\n\n// cart.test.js\ntest(\"calculates the total for multiple items\", () => {\n  const items = [\n    { price: 10, quantity: 2 },\n    { price: 5, quantity: 1 }\n  ];\n  expect(calculateTotal(items)).toBe(25);\n});",
    "beats": [
     {
-     "say": "Here's a test in Jest.",
-     "show": 0
+     "say": "Here's the function we want to check, and a Jest test for it.",
+     "line": [
+      2,
+      4
+     ]
     },
     {
-     "say": "The description reads like a sentence about the expected behaviour.",
-     "show": 1
+     "say": "The test's description reads like a sentence about the expected behaviour.",
+     "line": 7
     },
     {
-     "say": "Arrange the items, act by calling calculate total, and assert with expect, to be twenty five.",
-     "show": 1
+     "say": "Arrange: set up the input. Two items: ten dollars times two, and five dollars times one.",
+     "line": [
+      8,
+      11
+     ],
+     "vars": {
+      "items": "2 items"
+     }
     },
     {
-     "say": "A second test checks the edge case: an empty cart totals zero.",
-     "show": 1
+     "say": "Act: call calculate total with those items.",
+     "line": [
+      12,
+      3
+     ],
+     "vars": {
+      "sum": 0
+     }
+    },
+    {
+     "say": "Reduce starts the sum at zero. The first item adds ten times two. Twenty.",
+     "line": 3,
+     "vars": {
+      "item": "{ price: 10, quantity: 2 }",
+      "sum": 20
+     }
+    },
+    {
+     "say": "The second item adds five times one. Twenty five.",
+     "line": 3,
+     "vars": {
+      "item": "{ price: 5, quantity: 1 }",
+      "sum": 25
+     }
+    },
+    {
+     "say": "Assert: expect the result to be twenty five. It is, so the test passes.",
+     "line": 12,
+     "out": "✓ calculates the total for multiple items"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "target",
+   "kind": "table",
    "kicker": "Matchers",
-   "title": "Ways to check a result",
-   "items": [
+   "title": "expect wraps the result, the matcher judges it",
+   "columns": [
+    "Assertion",
+    "Result",
+    "Why"
+   ],
+   "rows": [
     [
-     ".toBe(x)",
-     "Exact value"
+     "expect(25).toBe(25)",
+     "pass",
+     "Exactly equal"
     ],
     [
-     ".toEqual(x)",
-     "Same object contents"
+     "expect(20).toBe(999)",
+     "fail",
+     "20 is not 999"
     ],
     [
-     ".toThrow()",
-     "Expected error"
+     "expect({ id: 1 }).toBe({ id: 1 })",
+     "fail",
+     "Two different objects"
+    ],
+    [
+     "expect({ id: 1 }).toEqual({ id: 1 })",
+     "pass",
+     "Same contents"
+    ],
+    [
+     "expect(() => applyDiscount(100, 150)).toThrow()",
+     "pass",
+     "The call throws an error"
     ]
    ],
    "beats": [
     {
-     "say": "Expect wraps the result, then a matcher says what it should be.",
-     "show": 0
+     "say": "Expect wraps the actual result. The matcher after it says what the result should be.",
+     "col": 0
     },
     {
-     "say": "To be, for an exact value.",
-     "show": 1
+     "say": "To be checks for an exact value. Twenty five is twenty five, so it passes.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "To equal, for objects with the same contents.",
-     "show": 2
+     "say": "Twenty is not nine hundred ninety nine, so this one fails.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "And to throw, when an error is expected.",
-     "show": 3
+     "say": "Careful with objects. To be fails here, because these are two separate objects.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "To equal compares what's inside instead, so the same contents pass.",
+     "hl": 3,
+     "col": 2
+    },
+    {
+     "say": "And to throw passes when the call throws an error. You'll use that in a moment.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "cross",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 to 3",
-   "title": "Run it, then fail on purpose",
-   "steps": [
-    "npm test: 2 passed",
-    "Add a wrong test",
-    "Read the failure, then remove it"
+   "title": "Fail on purpose, and read the output",
+   "file": "cart.test.js",
+   "code": "test(\"this test is intentionally wrong\", () => {\n  expect(calculateTotal([{ price: 10, quantity: 2 }])).toBe(999);\n});",
+   "beats": [
+    {
+     "say": "Set up the project, install Jest, and run N P M test. Your first two tests pass.",
+     "out": [
+      "✓ calculates the total for multiple items",
+      "✓ returns zero for an empty cart"
+     ]
+    },
+    {
+     "say": "Now add a test that's wrong on purpose.",
+     "line": 1
+    },
+    {
+     "say": "One item, ten dollars times two, is twenty. But the test expects nine hundred ninety nine.",
+     "line": 2,
+     "vars": {
+      "received": 20,
+      "expected": 999
+     }
+    },
+    {
+     "say": "Jest marks exactly which test failed.",
+     "line": 2,
+     "out": "✕ this test is intentionally wrong"
+    },
+    {
+     "say": "It shows what it expected, and what it actually got.",
+     "line": 2,
+     "out": [
+      "Expected: 999",
+      "Received: 20"
+     ]
+    },
+    {
+     "say": "And a summary: one failed, two passed. Now you'll recognise a real failure. Remove this test.",
+     "out": "Tests: 1 failed, 2 passed, 3 total"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 4",
+   "title": "Test the error case too",
+   "file": "cart.js + cart.test.js",
+   "code": "function applyDiscount(total, percent) {\n  if (percent < 0 || percent > 100) {\n    throw new Error(\"Invalid discount percent\");\n  }\n  return total - (total * percent) / 100;\n}\n\ntest(\"applies a discount correctly\", () => {\n  expect(applyDiscount(100, 10)).toBe(90);\n});\n\ntest(\"throws for an invalid discount percent\", () => {\n  expect(() => applyDiscount(100, 150)).toThrow(\"Invalid discount percent\");\n});",
+   "beats": [
+    {
+     "say": "Apply discount takes off a percentage, but refuses a percent below zero or above a hundred.",
+     "line": [
+      1,
+      6
+     ]
+    },
+    {
+     "say": "The normal case: ten percent off one hundred.",
+     "line": [
+      9,
+      1
+     ],
+     "vars": {
+      "total": 100,
+      "percent": 10
+     }
+    },
+    {
+     "say": "Is ten below zero, or above a hundred? No, so no error.",
+     "line": 2
+    },
+    {
+     "say": "One hundred, minus one hundred times ten over a hundred. Ninety.",
+     "line": 5,
+     "out": "✓ applies a discount correctly"
+    },
+    {
+     "say": "The error case: one hundred and fifty percent.",
+     "line": 13,
+     "vars": {
+      "total": 100,
+      "percent": 150
+     }
+    },
+    {
+     "say": "A hundred and fifty is above a hundred, so the function throws.",
+     "line": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Because the call is wrapped in an arrow function, expect runs it and catches the error.",
+     "line": 13
+    },
+    {
+     "say": "The message matches, so this test passes too. Without the wrapper, the error would escape and fail the test.",
+     "line": 13,
+     "out": "✓ throws for an invalid discount percent"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Checkpoint",
+   "title": "Your suite covers three kinds of case",
+   "columns": [
+    "Test",
+    "Kind of case",
+    "Result"
+   ],
+   "rows": [
+    [
+     "calculates the total for multiple items",
+     "Normal",
+     "✓"
+    ],
+    [
+     "returns zero for an empty cart",
+     "Edge",
+     "✓"
+    ],
+    [
+     "applies a discount correctly",
+     "Normal",
+     "✓"
+    ],
+    [
+     "throws for an invalid discount percent",
+     "Error",
+     "✓"
+    ]
    ],
    "beats": [
     {
-     "say": "Set up a project, install Jest, and run npm test. Both tests pass.",
-     "show": 1
+     "say": "Here's your whole unit test suite.",
+     "col": 0
     },
     {
-     "say": "Then add a test that's wrong on purpose, expecting nine hundred and ninety nine.",
-     "show": 2
+     "say": "Two normal cases: the everyday inputs.",
+     "hl": [
+      0,
+      2
+     ],
+     "col": 1
     },
     {
-     "say": "Jest shows exactly which test failed, what it expected, and what it got. Then remove it.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "shield",
-   "kicker": "Lab · Step 4",
-   "title": "Test the error case too",
-   "file": "cart.test.js",
-   "code": "test(\"applies a discount correctly\", () => {\n  expect(applyDiscount(100, 10)).toBe(90);\n});\n\ntest(\"throws for an invalid discount percent\", () => {\n  expect(() => applyDiscount(100, 150)).toThrow(\"Invalid discount percent\");\n});",
-   "beats": [
-    {
-     "say": "Next, apply discount, which throws an error for a percent below zero or above a hundred.",
-     "show": 0
+     "say": "One edge case: an empty cart, right at the boundary.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "Test the normal case: ten percent off a hundred is ninety.",
-     "show": 1
+     "say": "And one error case: a bad input that must be refused.",
+     "hl": 3,
+     "col": 1
     },
     {
-     "say": "And the error case: wrap the call in a function, and expect it to throw.",
-     "show": 1
+     "say": "Run N P M test, and all four pass, in well under a second.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 2,
+     "sql": "Tests: 4 passed, 4 total"
     }
    ]
   },
@@ -699,7 +1128,7 @@ You have passing integration tests confirming your API's routing, middleware, an
      "say": "Welcome to Module 2."
     },
     {
-     "say": "An integration test checks that several real pieces work together, like an API route with its routing and middleware."
+     "say": "An integration test checks that several real pieces work together, like an A P I route with its routing and middleware."
     },
     {
      "say": "It trades a little speed for more realistic confidence."
@@ -707,67 +1136,295 @@ You have passing integration tests confirming your API's routing, middleware, an
    ]
   },
   {
-   "kind": "code",
-   "art": "api",
-   "kicker": "Syntax at a glance",
-   "title": "Real HTTP requests, no server",
-   "file": "app.test.js",
-   "code": "test(\"POST /tasks creates a new task\", async () => {\n  const response = await request(app)\n    .post(\"/tasks\")\n    .send({ title: \"Write tests\" });\n  expect(response.status).toBe(201);\n  expect(response.body.title).toBe(\"Write tests\");\n});",
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "One request, through every real piece",
+   "nodes": [
+    {
+     "id": "test",
+     "label": "app.test.js",
+     "x": 12,
+     "y": 30,
+     "sub": "Supertest",
+     "art": "test"
+    },
+    {
+     "id": "mw",
+     "label": "express.json()",
+     "x": 38,
+     "y": 70,
+     "sub": "middleware",
+     "art": "gear"
+    },
+    {
+     "id": "route",
+     "label": "POST /tasks",
+     "x": 64,
+     "y": 30,
+     "sub": "route handler",
+     "art": "router"
+    },
+    {
+     "id": "data",
+     "label": "tasks",
+     "x": 88,
+     "y": 70,
+     "sub": "in-memory list",
+     "art": "array"
+    }
+   ],
+   "edges": [
+    {
+     "from": "test",
+     "to": "mw"
+    },
+    {
+     "from": "mw",
+     "to": "route"
+    },
+    {
+     "from": "route",
+     "to": "data"
+    }
+   ],
    "beats": [
     {
-     "say": "Supertest sends real HTTP requests into your Express app, without starting a server.",
-     "show": 0
+     "say": "Four real pieces: the test, the J S O N middleware, the route, and the tasks list.",
+     "show": 4
     },
     {
-     "say": "The test is async, because a request takes time.",
-     "show": 1
+     "say": "Supertest sends a real H T T P request straight into the app. No server, no port.",
+     "on": "test",
+     "send": {
+      "from": "test",
+      "to": "mw",
+      "label": "POST /tasks {\"title\":\"Write tests\"}"
+     }
     },
     {
-     "say": "Then check the status and the body, exactly what a real client would get.",
-     "show": 1
+     "say": "The middleware reads the J S O N body, and hands the route a ready-made request body.",
+     "on": "mw",
+     "send": {
+      "from": "mw",
+      "to": "route",
+      "label": "req.body = { title: \"Write tests\" }"
+     }
+    },
+    {
+     "say": "The route checks there's a title, and saves a new task as number two.",
+     "on": "route",
+     "send": {
+      "from": "route",
+      "to": "data",
+      "label": "push { id: 2, … }"
+     }
+    },
+    {
+     "say": "The answer travels back: status two oh one, created, with the new task.",
+     "on": "mw",
+     "send": {
+      "from": "route",
+      "to": "mw",
+      "label": "201 · { id: 2, title: … }"
+     }
+    },
+    {
+     "say": "And the test receives exactly what a real client would get.",
+     "on": "test",
+     "send": {
+      "from": "mw",
+      "to": "test",
+      "label": "201"
+     }
+    },
+    {
+     "say": "A unit test would check one piece alone. This test checks the whole chain.",
+     "on": [
+      "test",
+      "mw",
+      "route",
+      "data"
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "test",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 to 3",
-   "title": "Three passing tests",
-   "big": "3 passed",
-   "sub": "GET, POST, and POST without a title → 400",
+   "title": "Trace all three requests",
+   "file": "app.js",
+   "code": "app.use(express.json());\n\nlet tasks = [{ id: 1, title: \"Learn testing\" }];\n\napp.get(\"/tasks\", (req, res) => res.json(tasks));\n\napp.post(\"/tasks\", (req, res) => {\n  if (!req.body.title) return res.status(400).json({ error: \"Title required\" });\n  const newTask = { id: tasks.length + 1, title: req.body.title };\n  tasks.push(newTask);\n  res.status(201).json(newTask);\n});",
    "beats": [
     {
-     "say": "Install Express, and Supertest as a dev dependency.",
-     "show": 0
+     "say": "The app starts with one task in its list.",
+     "line": 3,
+     "vars": {
+      "tasks.length": 1
+     }
     },
     {
-     "say": "Test listing tasks, creating one, and a bad request with no title, which returns four hundred.",
-     "show": 1
+     "say": "Test one sends a get request to slash tasks. The route replies with the whole list, and status two hundred.",
+     "line": 5,
+     "out": "GET /tasks → 200 · 1 task"
     },
     {
-     "say": "All three pass, through real routing and middleware.",
-     "show": 2
+     "say": "The test expects two hundred, and more than zero tasks. Both true. Pass.",
+     "line": 5
+    },
+    {
+     "say": "Test two posts a task with the title write tests.",
+     "line": 7,
+     "vars": {
+      "req.body": "{ title: \"Write tests\" }"
+     }
+    },
+    {
+     "say": "There is a title, so it carries on, and builds task number two.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "newTask.id": 2
+     }
+    },
+    {
+     "say": "It's pushed onto the list, and sent back with status two oh one.",
+     "line": [
+      10,
+      11
+     ],
+     "vars": {
+      "tasks.length": 2
+     },
+     "out": "POST /tasks → 201 · { id: 2, title: \"Write tests\" }"
+    },
+    {
+     "say": "Test three posts an empty body. No title.",
+     "line": 7,
+     "vars": {
+      "req.body": "{}",
+      "newTask.id": "—"
+     }
+    },
+    {
+     "say": "So the route stops early with four hundred, and the error title required.",
+     "line": 8,
+     "out": "POST /tasks → 400 · { error: \"Title required\" }"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "plug",
+   "kind": "table",
    "kicker": "Lab · Step 4",
-   "title": "Break the wiring on purpose",
-   "quote": "Remove express.json() → POST tests fail. A wiring bug, not a logic bug.",
+   "title": "Remove one line, and watch what breaks",
+   "columns": [
+    "Test",
+    "With express.json()",
+    "Without it"
+   ],
+   "rows": [
+    [
+     "GET /tasks returns the task list",
+     "200 ✓",
+     "200 ✓"
+    ],
+    [
+     "POST /tasks creates a new task",
+     "201 ✓",
+     "500 ✕"
+    ],
+    [
+     "POST /tasks without a title returns 400",
+     "400 ✓",
+     "500 ✕"
+    ]
+   ],
    "beats": [
     {
-     "say": "Now remove the line app dot use, express dot json, and rerun.",
-     "show": 0
+     "say": "With the middleware in place, all three tests pass.",
+     "col": 1
     },
     {
-     "say": "The post tests fail. Without that middleware, the request body is undefined.",
-     "show": 1
+     "say": "Now delete the line app dot use, express dot json, and rerun.",
+     "col": 2
     },
     {
-     "say": "A unit test of one function could never catch this. It only shows when the pieces run together. Put the line back.",
-     "show": 1
+     "say": "The get test still passes. It never reads a request body.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "But both post tests fail. Without the middleware, the request body is undefined.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 2,
+     "sql": "TypeError: Cannot read properties of undefined (reading 'title')"
+    },
+    {
+     "say": "Reading title from undefined crashes the route, so Express answers five hundred, a server error.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2,
+     "sql": "Expected: 201\nReceived: 500"
+    },
+    {
+     "say": "Every function is fine on its own. The bug is in the wiring, which only shows when the pieces run together. Put the line back.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Read the failure",
+   "title": "Logic bug or wiring bug?",
+   "columns": [
+    "Failing test says",
+    "Points to",
+    "Caught by"
+   ],
+   "rows": [
+    [
+     "Expected: 90, Received: 99",
+     "Logic: wrong calculation",
+     "Unit test"
+    ],
+    [
+     "Expected: 201, Received: 500",
+     "Wiring: missing middleware",
+     "Integration test"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "When a test fails, its output tells you where to look."
+    },
+    {
+     "say": "Say apply discount returned ninety nine instead of ninety. The maths inside one function is wrong. That's a logic bug.",
+     "hl": 0
+    },
+    {
+     "say": "A unit test catches that, quickly and on its own.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "But a server error from a route whose logic is fine means a piece is missing between them. That's a wiring bug.",
+     "hl": 1
+    },
+    {
+     "say": "Only an integration test, running the pieces together, can catch that one.",
+     "hl": 1,
+     "col": 2
     }
    ]
   },
@@ -972,89 +1629,283 @@ You have a passing Playwright test that opens a real browser, performs a real us
    ]
   },
   {
-   "kind": "code",
-   "art": "cursor",
-   "kicker": "Syntax at a glance",
-   "title": "A Playwright test",
-   "file": "example.spec.js",
-   "code": "test(\"user can add a task and see it in the list\", async ({ page }) => {\n  await page.goto(\"http://localhost:3000\");\n  await page.locator(\"#task-input\").fill(\"Write end-to-end tests\");\n  await page.locator(\"#add-task-button\").click();\n  await expect(page.locator(\"li\")).toContainText(\"Write end-to-end tests\");\n});",
-   "beats": [
-    {
-     "say": "Here's a test in Playwright.",
-     "show": 0
-    },
-    {
-     "say": "Go to the page. Fill in the task box. Click add.",
-     "show": 1
-    },
-    {
-     "say": "Then check the list actually contains the new task, on the rendered page.",
-     "show": 1
-    },
-    {
-     "say": "Playwright waits for each element automatically. In bigger projects, find elements the way a user would, like by role and name.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "terminal",
+   "kind": "diagram",
    "kicker": "Lab · Steps 1 to 3",
-   "title": "Set it up",
-   "steps": [
-    "npx serve . -l 3000",
-    "Install @playwright/test + chromium",
-    "npx playwright test"
+   "title": "Two terminals, one real browser",
+   "nodes": [
+    {
+     "id": "srv",
+     "label": "npx serve . -l 3000",
+     "x": 86,
+     "y": 30,
+     "sub": "terminal 1 · serves index.html",
+     "art": "server"
+    },
+    {
+     "id": "spec",
+     "label": "example.spec.js",
+     "x": 14,
+     "y": 30,
+     "sub": "terminal 2 · npx playwright test",
+     "art": "test"
+    },
+    {
+     "id": "browser",
+     "label": "Chromium",
+     "x": 50,
+     "y": 72,
+     "sub": "driven by Playwright",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "spec",
+     "to": "browser"
+    },
+    {
+     "from": "browser",
+     "to": "srv"
+    }
    ],
    "beats": [
     {
-     "say": "Create a tiny task list page, and serve it on port three thousand. Leave that running.",
-     "show": 1
+     "say": "In the first terminal, serve the tiny task list page on port three thousand. Leave it running.",
+     "show": 1,
+     "on": "srv"
     },
     {
-     "say": "In a second terminal, install Playwright and its Chromium browser.",
-     "show": 2
+     "say": "In a second terminal, install Playwright and its Chromium browser, then run N P X playwright test.",
+     "show": 3,
+     "on": "spec"
     },
     {
-     "say": "Run npx playwright test. It opens a browser, types, clicks, and checks the result.",
-     "show": 3
+     "say": "Playwright opens a real, automated browser, and tells it to go to the page.",
+     "on": "browser",
+     "send": {
+      "from": "spec",
+      "to": "browser",
+      "label": "page.goto(\"http://localhost:3000\")"
+     }
+    },
+    {
+     "say": "The browser asks the server for the page, just as if you'd typed the address.",
+     "on": "srv",
+     "send": {
+      "from": "browser",
+      "to": "srv",
+      "label": "GET /"
+     }
+    },
+    {
+     "say": "The server sends back index dot H T M L, and the browser renders it.",
+     "on": "browser",
+     "send": {
+      "from": "srv",
+      "to": "browser",
+      "label": "index.html"
+     }
+    },
+    {
+     "say": "Normally you won't see any of this. Add dash dash headed to watch the window type and click on its own.",
+     "on": "browser"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "eye",
-   "kicker": "Lab · Step 4",
-   "title": "Watch it happen",
-   "big": "--headed",
-   "sub": "see the browser drive itself",
+   "kind": "array",
+   "kicker": "Syntax at a glance",
+   "title": "The test, one action at a time",
+   "values": [
+    "goto",
+    "fill",
+    "click",
+    "expect"
+   ],
    "beats": [
     {
-     "say": "Add dash dash headed to watch.",
-     "show": 0
+     "say": "The Playwright test is four actions, each one awaited, in order."
     },
     {
-     "say": "A browser window opens, types and clicks entirely on its own.",
-     "show": 1
+     "say": "Go to the page. The task list starts empty.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     },
+     "note": "page.goto(\"http://localhost:3000\") · 0 tasks"
+    },
+    {
+     "say": "Find the input by its I D, and type the new task into it, like a person would.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     },
+     "note": "#task-input ← \"Write end-to-end tests\""
+    },
+    {
+     "say": "Click the add button. Playwright waits until the button is ready before clicking.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     },
+     "note": "#add-task-button clicked"
+    },
+    {
+     "say": "Then check the rendered page: a list item must contain the new task's text.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     },
+     "note": "li contains \"Write end-to-end tests\""
+    },
+    {
+     "say": "It does, so the test passes. In bigger projects, find elements by role and name instead of I D.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "page.getByRole(\"button\", { name: \"Add\" })"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "form",
+   "kind": "walk",
    "kicker": "Lab · Step 5",
-   "title": "Test what shouldn't work",
-   "file": "example.spec.js",
-   "code": "test(\"clicking add with an empty input adds nothing\", async ({ page }) => {\n  await page.goto(\"http://localhost:3000\");\n  await page.locator(\"#add-task-button\").click();\n  await expect(page.locator(\"li\")).toHaveCount(0);\n});",
+   "title": "What the click actually runs",
+   "file": "index.html",
+   "code": "document.querySelector(\"#add-task-button\").addEventListener(\"click\", () => {\n  const input = document.querySelector(\"#task-input\");\n  if (!input.value) return;\n  const li = document.createElement(\"li\");\n  li.textContent = input.value;\n  document.querySelector(\"#task-list\").appendChild(li);\n  input.value = \"\";\n});",
    "beats": [
     {
-     "say": "Finally, test a case that shouldn't work.",
-     "show": 0
+     "say": "This is the page's own script. Playwright's click sets it running, just like a real click.",
+     "line": 1,
+     "vars": {
+      "list items": 0
+     }
     },
     {
-     "say": "Click add with an empty box, and expect the list to have zero items.",
-     "show": 1
+     "say": "In the first test, the input holds write end-to-end tests.",
+     "line": 2,
+     "vars": {
+      "input.value": "\"Write end-to-end tests\""
+     }
+    },
+    {
+     "say": "It isn't empty, so the script carries on.",
+     "line": 3
+    },
+    {
+     "say": "It makes a new list item, and puts the text inside it.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "li.textContent": "\"Write end-to-end tests\""
+     }
+    },
+    {
+     "say": "The item joins the list on screen, and the input is cleared.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "list items": 1,
+      "input.value": "\"\""
+     },
+     "out": "✓ user can add a task and see it in the list"
+    },
+    {
+     "say": "The second test gets a fresh page, so the list starts empty again. This time it clicks add with nothing typed.",
+     "line": 1,
+     "vars": {
+      "list items": 0,
+      "input.value": "\"\"",
+      "li.textContent": "—"
+     }
+    },
+    {
+     "say": "The input is empty, so the script returns straight away. Nothing is added.",
+     "line": 3
+    },
+    {
+     "say": "The test expects the list to have zero items. It does, so it passes.",
+     "line": 3,
+     "out": "✓ clicking add with an empty input adds nothing"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Big picture",
+   "title": "Which layer catches which problem?",
+   "columns": [
+    "Problem",
+    "Cheapest test that catches it"
+   ],
+   "rows": [
+    [
+     "A cart total is calculated wrongly",
+     "Unit (Module 1)"
+    ],
+    [
+     "The JSON middleware is missing",
+     "Integration (Module 2)"
+    ],
+    [
+     "Clicking Add doesn't show the new task",
+     "End-to-end (Module 3)"
+    ],
+    [
+     "Frontend and backend don't actually connect",
+     "End-to-end (Module 3)"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Let's put the whole pyramid to work. For each problem, pick the cheapest test that catches it."
+    },
+    {
+     "say": "A wrong calculation lives inside one function. A fast unit test is enough.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "A missing middleware only shows when pieces run together. That's an integration test.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "Whether the new task actually appears on screen can only be checked in a real browser.",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "And a frontend and backend that each work alone, but never connect, only shows up end to end.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "That's why end-to-end tests are few, and saved for the flows that must never break.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
     }
    ]
   },

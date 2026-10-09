@@ -75,65 +75,336 @@ You can name the four layers above in order and explain what each one solves.
    ]
   },
   {
-   "kind": "quote",
-   "art": "laptop",
+   "kind": "diagram",
    "kicker": "The classic problem",
    "title": "\"It works on my machine\"",
-   "quote": "\"It works on my machine.\"",
-   "beats": [
+   "nodes": [
     {
-     "say": "The classic failure is: it works on my machine.",
-     "show": 0
+     "id": "laptop",
+     "label": "Your laptop",
+     "x": 14,
+     "y": 50,
+     "sub": "everything set up",
+     "art": "laptop"
     },
     {
-     "say": "Code behaves differently once it leaves your laptop, because of different versions, missing settings, or other quirks.",
-     "show": 1
+     "id": "server",
+     "label": "A server",
+     "x": 50,
+     "y": 50,
+     "sub": "a different setup",
+     "art": "server"
+    },
+    {
+     "id": "users",
+     "label": "Real users",
+     "x": 86,
+     "y": 50,
+     "sub": "the public",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "laptop",
+     "to": "server"
+    },
+    {
+     "from": "server",
+     "to": "users"
+    }
+   ],
+   "beats": [
+    {
+     "say": "On your laptop, the app runs perfectly.",
+     "show": 1,
+     "on": "laptop"
+    },
+    {
+     "say": "So you copy the code to a server.",
+     "show": 2,
+     "on": "server",
+     "send": {
+      "from": "laptop",
+      "to": "server",
+      "label": "copy the code"
+     }
+    },
+    {
+     "say": "But the server isn't your laptop. Something about its environment is different.",
+     "show": 2,
+     "on": "server"
+    },
+    {
+     "say": "So real users get an error instead of your app.",
+     "show": 3,
+     "on": "users",
+     "send": {
+      "from": "server",
+      "to": "users",
+      "label": "error"
+     }
+    },
+    {
+     "say": "Same code, different environment. That's the classic failure: it works on my machine.",
+     "on": [
+      "laptop",
+      "server"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
-   "kicker": "Concept",
-   "title": "Four layers that solve it",
-   "items": [
+   "kind": "table",
+   "kicker": "Why it happens",
+   "title": "What can differ between machines",
+   "columns": [
+    "What differs",
+    "Your laptop",
+    "The server"
+   ],
+   "rows": [
     [
-     "Docker",
-     "Same environment everywhere"
+     "Version",
+     "Python 3.12",
+     "an older Python"
     ],
     [
-     "CI",
-     "Tests every change"
+     "Packages",
+     "all installed",
+     "one missing"
     ],
     [
-     "CD",
-     "Ships what passes"
-    ],
-    [
-     "Cloud",
-     "Where users reach it"
+     "Configuration",
+     "settings in place",
+     "never copied over"
     ]
    ],
    "beats": [
     {
-     "say": "Four things solve it, layered on top of each other.",
-     "show": 0
+     "say": "Here are the usual suspects, side by side.",
+     "col": 0
     },
     {
-     "say": "Docker packages your app so it runs the same everywhere.",
-     "show": 1
+     "say": "A version difference: the server runs an older Python than you do.",
+     "hl": 0
     },
     {
-     "say": "C I, continuous integration, tests every change automatically.",
-     "show": 2
+     "say": "A missing package that you installed long ago, and forgot about.",
+     "hl": 1
     },
     {
-     "say": "C D, continuous deployment, ships the changes that pass.",
-     "show": 3
+     "say": "Or missing configuration: a setting that only ever lived on your laptop.",
+     "hl": 2
     },
     {
-     "say": "And cloud deployment is where it all runs, for real users.",
-     "show": 4
+     "say": "None of these are in your code, which is why reading the code won't find them.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "Four layers that solve it",
+   "nodes": [
+    {
+     "id": "dev",
+     "label": "Your change",
+     "x": 12,
+     "y": 25,
+     "sub": "new code",
+     "art": "code"
+    },
+    {
+     "id": "ci",
+     "label": "CI",
+     "x": 42,
+     "y": 25,
+     "sub": "tests every change",
+     "art": "test"
+    },
+    {
+     "id": "cd",
+     "label": "CD",
+     "x": 72,
+     "y": 25,
+     "sub": "ships what passes",
+     "art": "pipeline"
+    },
+    {
+     "id": "docker",
+     "label": "Docker image",
+     "x": 88,
+     "y": 62,
+     "sub": "same environment",
+     "art": "container"
+    },
+    {
+     "id": "cloud",
+     "label": "Cloud",
+     "x": 58,
+     "y": 82,
+     "sub": "where it runs",
+     "art": "cloud"
+    },
+    {
+     "id": "users",
+     "label": "Users",
+     "x": 22,
+     "y": 82,
+     "sub": "the public",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "dev",
+     "to": "ci"
+    },
+    {
+     "from": "ci",
+     "to": "cd"
+    },
+    {
+     "from": "cd",
+     "to": "docker"
+    },
+    {
+     "from": "docker",
+     "to": "cloud"
+    },
+    {
+     "from": "cloud",
+     "to": "users"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Four things solve this, layered together. Let's follow one change through them.",
+     "show": 1,
+     "on": "dev"
+    },
+    {
+     "say": "C I, continuous integration, tests that change automatically.",
+     "show": 2,
+     "on": "ci",
+     "send": {
+      "from": "dev",
+      "to": "ci",
+      "label": "push"
+     }
+    },
+    {
+     "say": "It passes, so C D, continuous deployment, ships it automatically.",
+     "show": 3,
+     "on": "cd",
+     "send": {
+      "from": "ci",
+      "to": "cd",
+      "label": "tests passed"
+     }
+    },
+    {
+     "say": "What ships is a Docker image: your app packaged with its exact environment.",
+     "show": 4,
+     "on": "docker",
+     "send": {
+      "from": "cd",
+      "to": "docker",
+      "label": "docker build"
+     }
+    },
+    {
+     "say": "The cloud runs that same image, so your laptop and the server finally match.",
+     "show": 5,
+     "on": "cloud",
+     "send": {
+      "from": "docker",
+      "to": "cloud",
+      "label": "same image"
+     }
+    },
+    {
+     "say": "And real users reach it at a public address.",
+     "show": 6,
+     "on": "users",
+     "send": {
+      "from": "cloud",
+      "to": "users",
+      "label": "public URL"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Concept",
+   "title": "Every change takes the same path",
+   "values": [
+    "push",
+    "CI tests",
+    "CD ships",
+    "live"
+   ],
+   "beats": [
+    {
+     "say": "Deployment isn't a one time task. Watch one change travel."
+    },
+    {
+     "say": "It's pushed.",
+     "hl": 0,
+     "ptr": {
+      "change": 0
+     },
+     "note": "change 1"
+    },
+    {
+     "say": "C I tests it, and the tests pass.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "change": 1
+     },
+     "note": "change 1"
+    },
+    {
+     "say": "C D ships it, and it goes live.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "change": 3
+     },
+     "note": "change 1 is live"
+    },
+    {
+     "say": "Then the next change starts again, right at the beginning.",
+     "hl": 0,
+     "ptr": {
+      "change": 0
+     },
+     "note": "change 2: same path, every time"
+    },
+    {
+     "say": "Without automation, a person repeats these steps by hand for every change. More people means more changes, and more chances for a mistake.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "automation runs the same way every time"
     }
    ]
   },
@@ -149,7 +420,7 @@ You can name the four layers above in order and explain what each one solves.
      "show": 0
     },
     {
-     "say": "Write down one time something worked locally, but broke in production.",
+     "say": "Write down one time something worked locally, but broke in production. You don't need to solve it.",
      "show": 1
     }
    ]
@@ -173,7 +444,7 @@ You can name the four layers above in order and explain what each one solves.
      "show": 0
     },
     {
-     "say": "What's the difference between CI and CD?",
+     "say": "What's the difference between C I and C D?",
      "show": 0
     },
     {
@@ -305,83 +576,359 @@ You built a Docker image and ran two separate containers from it successfully.
    ]
   },
   {
-   "kind": "list",
-   "art": "blueprint",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Image and container",
-   "items": [
+   "columns": [
+    "",
+    "Image",
+    "Container"
+   ],
+   "rows": [
     [
-     "Image",
-     "The packaged blueprint"
+     "What it is",
+     "The packaged blueprint",
+     "A running instance"
     ],
     [
-     "Container",
-     "A running copy of it"
+     "Made with",
+     "docker build",
+     "docker run"
+    ],
+    [
+     "How many",
+     "One: trackit-api",
+     "As many as you start"
     ]
    ],
    "beats": [
     {
      "say": "Two words to keep straight.",
-     "show": 0
+     "col": 0
     },
     {
-     "say": "An image is the packaged blueprint.",
-     "show": 1
+     "say": "An image is the packaged blueprint. A container is a running instance of it.",
+     "hl": 0
     },
     {
-     "say": "A container is a running copy of that image.",
-     "show": 2
+     "say": "You make an image with docker build, and start a container with docker run.",
+     "hl": 1
+    },
+    {
+     "say": "From one image, you can start as many containers as you like.",
+     "hl": 2,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "file",
+   "kind": "walk",
    "kicker": "Lab · Step 2",
-   "title": "Write a Dockerfile",
+   "title": "Read the Dockerfile like a recipe",
    "file": "Dockerfile",
    "code": "FROM python:3.12-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nEXPOSE 8000\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
    "beats": [
     {
-     "say": "A Dockerfile is the recipe.",
-     "show": 0
+     "say": "A Dockerfile is the recipe for your image. Docker follows it from the top.",
+     "line": 1,
+     "vars": {
+      "base": "python:3.12-slim"
+     }
     },
     {
-     "say": "Start from Python three point twelve, and set the working folder.",
-     "show": 1
+     "say": "Start from a small image that already has Python three point twelve.",
+     "line": 1
     },
     {
-     "say": "Copy requirements dot t x t and install them first. Docker caches that step, so later builds are fast when only your code changes.",
-     "show": 1
+     "say": "Work in a folder called slash app inside the image.",
+     "line": 2,
+     "vars": {
+      "workdir": "/app"
+     }
     },
     {
-     "say": "Then copy your code, and start uvicorn.",
-     "show": 1
+     "say": "Copy in just requirements dot t x t, on its own.",
+     "line": 3,
+     "vars": {
+      "/app": "requirements.txt"
+     }
+    },
+    {
+     "say": "Install what it lists: fastapi and uvicorn.",
+     "line": 4,
+     "vars": {
+      "installed": "fastapi, uvicorn"
+     }
+    },
+    {
+     "say": "Now copy everything else, including main dot p y.",
+     "line": 5,
+     "vars": {
+      "/app": "requirements.txt, main.py, Dockerfile"
+     }
+    },
+    {
+     "say": "Expose eight thousand notes the port the app listens on.",
+     "line": 6,
+     "vars": {
+      "port": 8000
+     }
+    },
+    {
+     "say": "And C M D is the command a container runs when it starts: uvicorn, serving main dot app on port eight thousand.",
+     "line": 7,
+     "vars": {
+      "starts with": "uvicorn main:app"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "terminal",
-   "kicker": "Lab · Steps 3 and 4",
-   "title": "Build it, run it, run it again",
-   "steps": [
-    "docker build -t trackit-api .",
-    "docker run -p 8000:8000",
-    "docker run -p 9000:8000"
+   "kind": "array",
+   "kicker": "Lab · Step 2",
+   "title": "Keep clutter out with .dockerignore",
+   "values": [
+    "main.py",
+    "requirements.txt",
+    "Dockerfile",
+    "venv/",
+    "__pycache__/"
    ],
    "beats": [
     {
-     "say": "Docker build makes the image.",
-     "show": 1
+     "say": "Copy dot dot copies everything in your folder into the image.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ]
     },
     {
-     "say": "Docker run starts a container. Dash p eight thousand colon eight thousand connects your machine's port to the container's.",
-     "show": 2
+     "say": "If you made a virtual environment here, your venv folder comes along, and so does pycache.",
+     "hl": [
+      3,
+      4
+     ],
+     "note": "not needed: the image installs its own packages"
     },
     {
-     "say": "Stop it, and run it again on port nine thousand. Same image, same behaviour. That's the promise of containers.",
-     "show": 3
+     "say": "So create a file called dot dockerignore, listing venv and pycache.",
+     "hl": [
+      3,
+      4
+     ],
+     "note": ".dockerignore → venv/  __pycache__/"
+    },
+    {
+     "say": "Now Docker leaves them out, and only your app goes in.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "gone": [
+      3,
+      4
+     ],
+     "note": "COPY . . skips what .dockerignore lists"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Why the order matters",
+   "title": "Docker caches each step",
+   "values": [
+    "FROM python",
+    "WORKDIR /app",
+    "COPY requirements",
+    "RUN pip install",
+    "COPY . .",
+    "EXPOSE 8000",
+    "CMD uvicorn"
+   ],
+   "beats": [
+    {
+     "say": "Docker builds the image one step at a time, and remembers each result. That's the cache."
+    },
+    {
+     "say": "On the first build, every step runs, including the slow one: installing packages.",
+     "ok": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     "hl": 3,
+     "note": "first build: every step runs"
+    },
+    {
+     "say": "Now you edit main dot p y, and build again.",
+     "note": "main.py changed"
+    },
+    {
+     "say": "The first four steps haven't changed, so Docker reuses them. Nothing is reinstalled.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "cached"
+    },
+    {
+     "say": "Copy dot dot sees a changed file, so it runs again, with every step after it.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": [
+      4,
+      5,
+      6
+     ],
+     "note": "rebuilt from the change onward"
+    },
+    {
+     "say": "That's why requirements are copied and installed first. Copy all your code first, and every tiny edit would reinstall everything.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 3,
+     "note": "pip install reruns only when requirements.txt changes"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "One image, two containers",
+   "nodes": [
+    {
+     "id": "img",
+     "label": "trackit-api",
+     "x": 14,
+     "y": 50,
+     "sub": "the image",
+     "art": "package"
+    },
+    {
+     "id": "c1",
+     "label": "Container",
+     "x": 52,
+     "y": 22,
+     "sub": "-p 8000:8000",
+     "art": "container"
+    },
+    {
+     "id": "br",
+     "label": "Browser",
+     "x": 88,
+     "y": 50,
+     "sub": "localhost",
+     "art": "browser"
+    },
+    {
+     "id": "c2",
+     "label": "Container",
+     "x": 52,
+     "y": 78,
+     "sub": "-p 9000:8000",
+     "art": "container"
+    }
+   ],
+   "edges": [
+    {
+     "from": "img",
+     "to": "c1"
+    },
+    {
+     "from": "img",
+     "to": "c2"
+    },
+    {
+     "from": "br",
+     "to": "c1"
+    },
+    {
+     "from": "br",
+     "to": "c2"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Docker build dash t trackit A P I makes one image with that name.",
+     "show": 1,
+     "on": "img"
+    },
+    {
+     "say": "Docker run starts a container. Dash p connects port eight thousand on your machine to port eight thousand inside it.",
+     "show": 2,
+     "on": "c1",
+     "send": {
+      "from": "img",
+      "to": "c1",
+      "label": "docker run -p 8000:8000"
+     }
+    },
+    {
+     "say": "Visit localhost, port eight thousand, slash health.",
+     "show": 3,
+     "on": "br",
+     "send": {
+      "from": "br",
+      "to": "c1",
+      "label": "GET localhost:8000/health"
+     }
+    },
+    {
+     "say": "Back comes status ok.",
+     "on": "br",
+     "send": {
+      "from": "c1",
+      "to": "br",
+      "label": "{\"status\":\"ok\"}"
+     }
+    },
+    {
+     "say": "Stop it with control C, then run the same image again, this time on port nine thousand.",
+     "show": 4,
+     "on": "c2",
+     "send": {
+      "from": "img",
+      "to": "c2",
+      "label": "docker run -p 9000:8000"
+     }
+    },
+    {
+     "say": "Outside it's port nine thousand. Inside, the app still listens on eight thousand.",
+     "on": "c2",
+     "send": {
+      "from": "br",
+      "to": "c2",
+      "label": "GET localhost:9000/health"
+     }
+    },
+    {
+     "say": "Same image, same answer. That's the promise of containers.",
+     "on": [
+      "br",
+      "c2"
+     ],
+     "send": {
+      "from": "c2",
+      "to": "br",
+      "label": "{\"status\":\"ok\"}"
+     }
     }
    ]
   },
@@ -438,7 +985,7 @@ You built a Docker image and ran two separate containers from it successfully.
      "show": 1
     },
     {
-     "say": "Next, in Module 2, CI and CD.",
+     "say": "Next, in Module 2, C I and C D.",
      "show": 1
     }
    ]
@@ -518,89 +1065,309 @@ Your test passes locally, and you can describe, step by step, what should happen
      "say": "Welcome to Module 2."
     },
     {
-     "say": "CI and CD are what let a team ship many times a day with confidence, instead of dreading every release."
+     "say": "C I and C D are what let a team ship many times a day with confidence, instead of dreading every release."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Two halves",
-   "items": [
+   "title": "CI checks. CD ships what passes.",
+   "nodes": [
+    {
+     "id": "dev",
+     "label": "You",
+     "x": 12,
+     "y": 30,
+     "sub": "push or pull request",
+     "art": "laptop"
+    },
+    {
+     "id": "ci",
+     "label": "CI",
+     "x": 46,
+     "y": 30,
+     "sub": "tests, linting, build",
+     "art": "test"
+    },
+    {
+     "id": "cd",
+     "label": "CD",
+     "x": 82,
+     "y": 30,
+     "sub": "build image, deploy",
+     "art": "pipeline"
+    },
+    {
+     "id": "prod",
+     "label": "Production",
+     "x": 82,
+     "y": 80,
+     "sub": "real users",
+     "art": "server"
+    }
+   ],
+   "edges": [
+    {
+     "from": "dev",
+     "to": "ci"
+    },
+    {
+     "from": "ci",
+     "to": "cd"
+    },
+    {
+     "from": "cd",
+     "to": "prod"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's the whole loop: you, C I, C D, and production.",
+     "show": 4
+    },
+    {
+     "say": "You push a change. C I, continuous integration, runs the checks: tests, linting, a build.",
+     "on": "ci",
+     "send": {
+      "from": "dev",
+      "to": "ci",
+      "label": "change A"
+     }
+    },
+    {
+     "say": "Every check passes, so C D, continuous deployment, takes over.",
+     "on": "cd",
+     "send": {
+      "from": "ci",
+      "to": "cd",
+      "label": "✓ passed"
+     }
+    },
+    {
+     "say": "It ships the change to production automatically. Nobody copies files by hand.",
+     "on": "prod",
+     "send": {
+      "from": "cd",
+      "to": "prod",
+      "label": "deploy"
+     }
+    },
+    {
+     "say": "Now a second change, with a bug in it.",
+     "on": "ci",
+     "send": {
+      "from": "dev",
+      "to": "ci",
+      "label": "change B"
+     }
+    },
+    {
+     "say": "A test fails. The change is blocked, and you find out right away, from C I instead of from a user.",
+     "on": "dev",
+     "send": {
+      "from": "ci",
+      "to": "dev",
+      "label": "✗ test failed"
+     }
+    },
+    {
+     "say": "Production never saw it. C D only ships what passes.",
+     "on": "prod"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 1",
+   "title": "Watch the test run",
+   "file": "test_main.py",
+   "code": "from fastapi.testclient import TestClient\nfrom main import app\n\nclient = TestClient(app)\n\ndef test_health_check():\n    response = client.get(\"/health\")\n    assert response.status_code == 200\n    assert response.json() == {\"status\": \"ok\"}",
+   "beats": [
+    {
+     "say": "The test imports a test client, and your app from main dot p y.",
+     "line": [
+      1,
+      2
+     ]
+    },
+    {
+     "say": "The client can call your app directly, with no server running.",
+     "line": 4,
+     "vars": {
+      "client": "TestClient(app)"
+     }
+    },
+    {
+     "say": "Pytest finds every function whose name starts with test, and runs it.",
+     "line": 6
+    },
+    {
+     "say": "It asks for slash health, just as a browser would.",
+     "line": 7,
+     "vars": {
+      "response.status_code": 200,
+      "response.json()": "{\"status\": \"ok\"}"
+     }
+    },
+    {
+     "say": "Is the status code two hundred? Yes, so this check passes.",
+     "line": 8
+    },
+    {
+     "say": "Is the body exactly status ok? Yes again.",
+     "line": 9,
+     "out": "test_main.py::test_health_check PASSED [100%]"
+    },
+    {
+     "say": "Pytest reports one passed. This is the exact test C I will run for you, on every change.",
+     "line": 9,
+     "out": "1 passed"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "What happens to each change",
+   "columns": [
+    "Change",
+    "Tests",
+    "Merge?",
+    "Deployed?"
+   ],
+   "rows": [
     [
-     "Continuous integration",
-     "Check every change automatically"
+     "Add a new endpoint",
+     "pass",
+     "yes",
+     "yes"
     ],
     [
-     "Continuous deployment",
-     "Ship what passes, automatically"
+     "Typo breaks /health",
+     "fail",
+     "blocked",
+     "no"
+    ],
+    [
+     "Fix the typo",
+     "pass",
+     "yes",
+     "yes"
     ]
    ],
    "beats": [
     {
-     "say": "Continuous integration runs checks, like tests and builds, every time code changes. Problems are caught right away.",
-     "show": 1
+     "say": "Three changes, one rule.",
+     "sql": "Rule: only a change that passes every check moves on"
     },
     {
-     "say": "Continuous deployment ships the code that passes, automatically. Nobody copies files by hand.",
-     "show": 2
+     "say": "A new endpoint: the tests pass, it's merged, and C D deploys it.",
+     "hl": 0
+    },
+    {
+     "say": "A typo breaks slash health. The test fails, so the change is blocked.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "It's never merged, and never deployed.",
+     "hl": 1,
+     "col": 3
+    },
+    {
+     "say": "Fix the typo, and it passes and ships like normal.",
+     "hl": 2
+    },
+    {
+     "say": "So C D doesn't mean every push goes live. It means every push that passes.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "test",
-   "kicker": "Lab · Step 1",
-   "title": "A test to automate",
-   "file": "test_main.py",
-   "code": "client = TestClient(app)\n\ndef test_health_check():\n    response = client.get(\"/health\")\n    assert response.status_code == 200\n    assert response.json() == {\"status\": \"ok\"}",
-   "beats": [
-    {
-     "say": "First, a test for your app.",
-     "show": 0
-    },
-    {
-     "say": "It calls slash health and checks for two hundred, and status: ok.",
-     "show": 1
-    },
-    {
-     "say": "Run it with pytest. This is what CI will run for you.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "chain",
+   "kind": "array",
    "kicker": "Lab · Step 2",
-   "title": "Plan the pipeline",
-   "steps": [
-    "Push or open a PR",
-    "CI runs tests",
+   "title": "Plan the pipeline before you build it",
+   "values": [
+    "Push or open PR",
+    "CI installs + tests",
     "Pass → merge",
-    "CD deploys"
+    "CD builds + deploys"
    ],
    "beats": [
     {
-     "say": "Then plan the pipeline before building it.",
-     "show": 0
+     "say": "Before building a pipeline, plan it. Four steps."
     },
     {
      "say": "Someone pushes code or opens a pull request.",
-     "show": 1
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     }
     },
     {
-     "say": "CI installs everything and runs the tests.",
-     "show": 2
+     "say": "C I installs the dependencies and runs the tests, automatically.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     }
     },
     {
-     "say": "If they pass, the change can be merged.",
-     "show": 3
+     "say": "If the tests pass, the change can be merged.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     }
     },
     {
-     "say": "Once merged, CD builds and deploys it.",
-     "show": 4
+     "say": "Once merged, C D builds the Docker image and deploys it.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "now": 3
+     }
+    },
+    {
+     "say": "If a test fails at step two, everything after it stops.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "gone": [
+      2,
+      3
+     ],
+     "ptr": {
+      "now": 1
+     },
+     "note": "tests fail → no merge, no deploy"
+    },
+    {
+     "say": "Module 3 builds exactly this pipeline, with GitHub Actions.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "next: GitHub Actions"
     }
    ]
   },
@@ -623,7 +1390,7 @@ Your test passes locally, and you can describe, step by step, what should happen
      "show": 0
     },
     {
-     "say": "Does CD mean every push goes live with zero checks?",
+     "say": "Does C D mean every push goes live with zero checks?",
      "show": 0
     },
     {
@@ -777,72 +1544,297 @@ You have a real pull request on GitHub showing an automated check that passed (o
    ]
   },
   {
-   "kind": "code",
-   "art": "git",
+   "kind": "array",
    "kicker": "Lab · Step 1",
-   "title": "Put the code on GitHub",
-   "file": "Terminal",
-   "code": "git init\ngit add .\ngit commit -m \"Initial app with tests\"\ngit branch -M main\ngit remote add origin https://github.com/yourusername/trackit-api.git\ngit push -u origin main",
-   "beats": [
-    {
-     "say": "First, push your code to a new GitHub repository.",
-     "show": 0
-    },
-    {
-     "say": "Add a dot gitignore first, so generated files like pycache and your venv stay out.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 2",
-   "title": "The workflow file",
-   "file": ".github/workflows/ci.yml",
-   "code": "on:\n  pull_request:\n    branches: [main]\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - uses: actions/setup-python@v6\n        with:\n          python-version: \"3.12\"\n      - run: pip install -r requirements.txt pytest httpx\n      - run: pytest test_main.py -v",
-   "beats": [
-    {
-     "say": "Now the workflow.",
-     "show": 0
-    },
-    {
-     "say": "It runs on pull requests and pushes to main, on a fresh Ubuntu machine.",
-     "show": 1
-    },
-    {
-     "say": "The steps check out your code first, because the machine starts empty. Then set up Python, install, and run the tests.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "checklist",
-   "kicker": "Lab · Steps 3 and 4",
-   "title": "Watch it work, and fail",
-   "steps": [
-    "Open a pull request",
-    "Tests run automatically",
-    "Break it: red",
-    "Fix it: green"
+   "title": "Only real code goes to GitHub",
+   "values": [
+    "main.py",
+    "requirements.txt",
+    "Dockerfile",
+    "test_main.py",
+    "__pycache__/",
+    ".pytest_cache/",
+    "venv/"
    ],
    "beats": [
     {
-     "say": "Push the workflow on a branch, and open a pull request.",
-     "show": 1
+     "say": "Here's your project folder after Modules 1 and 2."
     },
     {
-     "say": "Your tests run automatically, and the pull request shows a pass or fail check.",
-     "show": 2
+     "say": "Some of it is generated: pycache, the pytest cache, and your venv.",
+     "hl": [
+      4,
+      5,
+      6
+     ],
+     "note": "made by Python, pytest, and you"
     },
     {
-     "say": "Then break the test on purpose. The check turns red.",
-     "show": 3
+     "say": "A dot gitignore file lists those three, so Git skips them.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "gone": [
+      4,
+      5,
+      6
+     ],
+     "note": ".gitignore → __pycache__/  .pytest_cache/  venv/"
     },
     {
-     "say": "Fix it, and it turns green. That's the feedback loop.",
-     "show": 4
+     "say": "Then git add, commit, and push to a new repository called trackit A P I. Only your real code goes up.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "gone": [
+      4,
+      5,
+      6
+     ],
+     "note": "git push -u origin main"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 2",
+   "title": "Follow the workflow on a fresh machine",
+   "file": ".github/workflows/ci.yml (trimmed)",
+   "code": "on:\n  pull_request:\n    branches: [main]\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - uses: actions/setup-python@v6\n        with: { python-version: \"3.12\" }\n      - run: pip install -r requirements.txt pytest httpx\n      - run: pytest test_main.py -v",
+   "beats": [
+    {
+     "say": "The on block says when to run: a pull request into main, or a push to main.",
+     "line": [
+      1,
+      5
+     ],
+     "vars": {
+      "event": "pull_request → main"
+     }
+    },
+    {
+     "say": "The test job runs on ubuntu latest: a fresh virtual machine that GitHub provides.",
+     "line": [
+      7,
+      8
+     ],
+     "vars": {
+      "machine": "fresh Ubuntu",
+      "files": "none"
+     }
+    },
+    {
+     "say": "It starts completely empty, so the first step checks out your code.",
+     "line": 10,
+     "vars": {
+      "files": "your repository"
+     }
+    },
+    {
+     "say": "Next, set up Python three point twelve.",
+     "line": [
+      11,
+      12
+     ],
+     "vars": {
+      "python": "3.12"
+     }
+    },
+    {
+     "say": "Install your requirements, plus pytest and h t t p x.",
+     "line": 13,
+     "vars": {
+      "installed": "fastapi, uvicorn, pytest, httpx"
+     }
+    },
+    {
+     "say": "Finally, run the tests.",
+     "line": 14,
+     "out": "test_main.py::test_health_check PASSED [100%]"
+    },
+    {
+     "say": "Every step succeeded, so the job passes.",
+     "line": 14,
+     "out": "1 passed"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 2",
+   "title": "Does the workflow run?",
+   "columns": [
+    "What you do",
+    "Matches",
+    "Runs?"
+   ],
+   "rows": [
+    [
+     "Open a PR into main",
+     "pull_request",
+     "yes"
+    ],
+    [
+     "Push again to that PR's branch",
+     "pull_request",
+     "yes"
+    ],
+    [
+     "Merge, or push to main",
+     "push",
+     "yes"
+    ],
+    [
+     "Push add-ci, no PR open",
+     "nothing",
+     "no"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Let's test the on block against four things you might do.",
+     "sql": "on:\n  pull_request: { branches: [main] }\n  push: { branches: [main] }"
+    },
+    {
+     "say": "Open a pull request into main. That matches, so it runs.",
+     "hl": 0
+    },
+    {
+     "say": "Push another commit to that pull request's branch. It runs again, for the update.",
+     "hl": 1
+    },
+    {
+     "say": "Merge, or push straight to main. That matches push, so it runs.",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "Push your branch with no pull request open. Nothing matches, so nothing runs.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Watch it pass, fail, and pass",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "You",
+     "x": 12,
+     "y": 50,
+     "sub": "branch add-ci",
+     "art": "laptop"
+    },
+    {
+     "id": "pr",
+     "label": "Pull request",
+     "x": 50,
+     "y": 25,
+     "sub": "add-ci → main",
+     "art": "git"
+    },
+    {
+     "id": "gha",
+     "label": "GitHub Actions",
+     "x": 88,
+     "y": 50,
+     "sub": "ubuntu-latest",
+     "art": "server"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "pr"
+    },
+    {
+     "from": "pr",
+     "to": "gha"
+    }
+   ],
+   "beats": [
+    {
+     "say": "You work on a branch called add C I, and push it.",
+     "show": 3,
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "pr",
+      "label": "git push origin add-ci"
+     }
+    },
+    {
+     "say": "Open a pull request. That event starts the workflow.",
+     "on": "gha",
+     "send": {
+      "from": "pr",
+      "to": "gha",
+      "label": "pull_request"
+     }
+    },
+    {
+     "say": "The tests pass, and the pull request shows a green check, right on the page.",
+     "on": "pr",
+     "send": {
+      "from": "gha",
+      "to": "pr",
+      "label": "✓ passed"
+     }
+    },
+    {
+     "say": "Now break it on purpose. Change the test's expected value to something wrong, and push.",
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "pr",
+      "label": "wrong expected value"
+     }
+    },
+    {
+     "say": "The workflow runs again.",
+     "on": "gha",
+     "send": {
+      "from": "pr",
+      "to": "gha",
+      "label": "pull_request"
+     }
+    },
+    {
+     "say": "The test fails, and the check turns red. You wouldn't merge this with confidence.",
+     "on": "pr",
+     "send": {
+      "from": "gha",
+      "to": "pr",
+      "label": "✗ failed"
+     }
+    },
+    {
+     "say": "Fix the expected value, and push again.",
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "pr",
+      "label": "fix pushed"
+     }
+    },
+    {
+     "say": "Green again. That's the feedback loop C I gives you.",
+     "on": "pr",
+     "send": {
+      "from": "gha",
+      "to": "pr",
+      "label": "✓ passed"
+     }
     }
    ]
   },
@@ -1005,126 +1997,413 @@ You have a real, public URL serving your app, and merging a pull request into `m
    ]
   },
   {
-   "kind": "flow",
-   "art": "rocket",
-   "kicker": "Lab · Step 1",
-   "title": "Deploy to Render",
-   "steps": [
-    "Push to GitHub",
-    "New Web Service",
-    "Render builds the Dockerfile",
-    "Public URL"
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Who handles what",
+   "columns": [
+    "Who handles…",
+    "PaaS (Render, Railway, Fly.io)",
+    "Raw cloud infrastructure"
    ],
-   "beats": [
-    {
-     "say": "Here's the flow, using Render. Railway and Fly dot io work much the same.",
-     "show": 0
-    },
-    {
-     "say": "Push your code, including the Dockerfile, to GitHub.",
-     "show": 1
-    },
-    {
-     "say": "In Render, create a new web service and connect your repository.",
-     "show": 2
-    },
-    {
-     "say": "Render finds your Dockerfile, builds it, and deploys it.",
-     "show": 3
-    },
-    {
-     "say": "You get a public address.",
-     "show": 4
-    },
-    {
-     "say": "On the free plan, it sleeps after about fifteen minutes without visitors, so the first request after a pause can take up to a minute. That's normal.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "globe",
-   "kicker": "Lab · Step 2",
-   "title": "Prove it's really live",
-   "big": "{\"status\": \"ok\"}",
-   "sub": "from your public URL",
-   "beats": [
-    {
-     "say": "Don't just trust the dashboard.",
-     "show": 0
-    },
-    {
-     "say": "Curl your public address, slash health.",
-     "show": 1
-    },
-    {
-     "say": "You get status: ok, now reachable from anywhere in the world.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "shield",
-   "kicker": "Lab · Step 3",
-   "title": "Only deploy what passes",
-   "items": [
+   "rows": [
     [
-     "Option A",
-     "Auto-deploy after CI checks pass"
+     "Servers",
+     "the provider",
+     "you"
     ],
     [
-     "Option B",
-     "Workflow triggers the deploy hook after tests"
+     "Networking",
+     "the provider",
+     "you"
+    ],
+    [
+     "Scaling",
+     "the provider",
+     "you"
+    ],
+    [
+     "Your app",
+     "you",
+     "you"
     ]
    ],
    "beats": [
     {
-     "say": "By default, Render redeploys on every push, even if tests fail. You want the opposite.",
-     "show": 0
+     "say": "Two ways to run in the cloud. The question is: who handles what?",
+     "col": 0
     },
     {
-     "say": "Option A, the simplest: set auto-deploy to wait until CI checks pass.",
-     "show": 1
+     "say": "With a platform as a service, the provider runs the servers.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Option B: turn auto-deploy off, and have your workflow call Render's deploy hook, kept as a GitHub secret, only after the tests pass on main.",
-     "show": 2
+     "say": "It handles the networking, and the scaling too.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 1
+    },
+    {
+     "say": "So the only thing left for you is your app.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "Raw cloud infrastructure gives you more control, but every row becomes your job. That's why beginners start with a platform.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "merge",
-   "kicker": "Lab · Step 3",
-   "title": "Ship through a pull request",
-   "steps": [
-    "New branch + test update",
-    "Pull request: CI passes",
-    "Merge",
-    "Live automatically"
+   "kind": "diagram",
+   "kicker": "Lab · Steps 1 and 2",
+   "title": "Deploy, then prove it's live",
+   "nodes": [
+    {
+     "id": "gh",
+     "label": "GitHub repo",
+     "x": 12,
+     "y": 30,
+     "sub": "trackit-api + Dockerfile",
+     "art": "git"
+    },
+    {
+     "id": "render",
+     "label": "Render",
+     "x": 50,
+     "y": 30,
+     "sub": "New Web Service",
+     "art": "cloud"
+    },
+    {
+     "id": "live",
+     "label": "Live service",
+     "x": 88,
+     "y": 30,
+     "sub": "trackit-api.onrender.com",
+     "art": "container"
+    },
+    {
+     "id": "you",
+     "label": "You, anywhere",
+     "x": 88,
+     "y": 80,
+     "sub": "curl",
+     "art": "terminal"
+    }
+   ],
+   "edges": [
+    {
+     "from": "gh",
+     "to": "render"
+    },
+    {
+     "from": "render",
+     "to": "live"
+    },
+    {
+     "from": "you",
+     "to": "live"
+    }
    ],
    "beats": [
     {
-     "say": "Now ship a change the right way.",
-     "show": 0
+     "say": "Your code, including the Dockerfile from Module 1, is on GitHub.",
+     "show": 1,
+     "on": "gh"
     },
     {
-     "say": "On a new branch, change slash health to include a version, and update the test to match.",
-     "show": 1
+     "say": "In Render, create a new web service and connect that repository.",
+     "show": 2,
+     "on": "render",
+     "send": {
+      "from": "gh",
+      "to": "render",
+      "label": "connect repository"
+     }
     },
     {
-     "say": "Open a pull request, and wait for CI to pass.",
-     "show": 2
+     "say": "Render detects your Dockerfile automatically, and builds the same image you built locally.",
+     "on": "render"
     },
     {
-     "say": "Merge it.",
-     "show": 3
+     "say": "Then it deploys it, and gives you a public address.",
+     "show": 3,
+     "on": "live",
+     "send": {
+      "from": "render",
+      "to": "live",
+      "label": "deploy"
+     }
     },
     {
-     "say": "CI runs again on main, and only then does the new version go live. You never touched the server.",
-     "show": 4
+     "say": "Don't just trust the dashboard. Curl the public address, slash health.",
+     "show": 4,
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "live",
+      "label": "curl …onrender.com/health"
+     }
+    },
+    {
+     "say": "The same status ok you saw locally, now reachable from anywhere in the world.",
+     "on": "you",
+     "send": {
+      "from": "live",
+      "to": "you",
+      "label": "{\"status\":\"ok\"}"
+     }
+    },
+    {
+     "say": "On the free plan, it sleeps after about fifteen minutes without traffic, so the first request after a pause can take up to a minute. That's normal.",
+     "on": "live"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "Which changes go live?",
+   "columns": [
+    "What happens",
+    "Tests",
+    "Render default",
+    "Wait for CI"
+   ],
+   "rows": [
+    [
+     "Pull request opened",
+     "pass",
+     "no deploy",
+     "no deploy"
+    ],
+    [
+     "PR merged into main",
+     "pass",
+     "deploys",
+     "deploys"
+    ],
+    [
+     "Push to main, test broken",
+     "fail",
+     "deploys!",
+     "no deploy"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "By default, Render redeploys on every push to main, even if your tests fail.",
+     "col": 2
+    },
+    {
+     "say": "An open pull request doesn't change main, so nothing deploys either way.",
+     "hl": 0
+    },
+    {
+     "say": "A merge that passes the tests deploys in both setups. Good.",
+     "hl": 1
+    },
+    {
+     "say": "But a push with a broken test: the default deploys it anyway. Broken code reaches users.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "Wait for C I instead, and that broken push is blocked.",
+     "hl": 2,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Two ways to set that up. Option A, the simplest: set auto deploy to wait until C I checks pass. Option B: turn it off, and let your workflow trigger the deploy.",
+     "sql": "Option A: Auto-Deploy → After CI Checks Pass\nOption B: Auto-Deploy Off + a deploy job in ci.yml"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 3 · Option B",
+   "title": "When does the deploy job run?",
+   "file": ".github/workflows/ci.yml (added)",
+   "code": "  deploy:\n    needs: test\n    if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n    runs-on: ubuntu-latest\n    steps:\n      - name: Trigger Render deploy\n        run: curl -fsS -X POST \"$RENDER_DEPLOY_HOOK_URL\"\n        env:\n          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}",
+   "beats": [
+    {
+     "say": "Option B adds a deploy job to your workflow, at the same level as test.",
+     "line": 1
+    },
+    {
+     "say": "Case one: a pull request is opened, and the test job passes. Needs test is satisfied.",
+     "line": 2,
+     "vars": {
+      "event_name": "pull_request",
+      "test job": "passed",
+      "deploy job": "—"
+     }
+    },
+    {
+     "say": "But the event isn't a push, so the if line is false. Nothing deploys yet.",
+     "line": 3,
+     "vars": {
+      "deploy job": "skipped"
+     }
+    },
+    {
+     "say": "Case two: the pull request is merged, which is a push to main. Tests pass, and the if line is true.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "event_name": "push",
+      "ref": "refs/heads/main",
+      "test job": "passed",
+      "deploy job": "running"
+     }
+    },
+    {
+     "say": "The job posts to Render's deploy hook. Its address comes from a GitHub secret, never from your code.",
+     "line": [
+      7,
+      9
+     ],
+     "vars": {
+      "deploy job": "deploying"
+     }
+    },
+    {
+     "say": "Case three: a push to main where the tests fail. Needs test isn't met, so deploy never runs.",
+     "line": 2,
+     "vars": {
+      "event_name": "push",
+      "ref": "refs/heads/main",
+      "test job": "failed",
+      "deploy job": "skipped"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 3",
+   "title": "Ship a change through a pull request",
+   "nodes": [
+    {
+     "id": "br",
+     "label": "bump-version",
+     "x": 10,
+     "y": 25,
+     "sub": "adds \"version\": \"1.1\"",
+     "art": "git"
+    },
+    {
+     "id": "pr",
+     "label": "Pull request",
+     "x": 42,
+     "y": 25,
+     "sub": "CI check",
+     "art": "checklist"
+    },
+    {
+     "id": "main",
+     "label": "main",
+     "x": 74,
+     "y": 25,
+     "sub": "CI runs again",
+     "art": "merge"
+    },
+    {
+     "id": "render",
+     "label": "Render",
+     "x": 88,
+     "y": 72,
+     "sub": "deploys",
+     "art": "cloud"
+    },
+    {
+     "id": "live",
+     "label": "Live URL",
+     "x": 46,
+     "y": 78,
+     "sub": "/health",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "br",
+     "to": "pr"
+    },
+    {
+     "from": "pr",
+     "to": "main"
+    },
+    {
+     "from": "main",
+     "to": "render"
+    },
+    {
+     "from": "render",
+     "to": "live"
+    }
+   ],
+   "beats": [
+    {
+     "say": "On a new branch, slash health now returns version one point one. Update the test to match, or C I will, correctly, fail.",
+     "show": 1,
+     "on": "br"
+    },
+    {
+     "say": "Push the branch, and open a pull request.",
+     "show": 2,
+     "on": "pr",
+     "send": {
+      "from": "br",
+      "to": "pr",
+      "label": "git push origin bump-version"
+     }
+    },
+    {
+     "say": "Wait for the C I check to pass.",
+     "on": "pr"
+    },
+    {
+     "say": "Click merge. That updates main, and C I runs again on main.",
+     "show": 3,
+     "on": "main",
+     "send": {
+      "from": "pr",
+      "to": "main",
+      "label": "Merge"
+     }
+    },
+    {
+     "say": "Only after it passes does Render deploy the new version.",
+     "show": 4,
+     "on": "render",
+     "send": {
+      "from": "main",
+      "to": "render",
+      "label": "✓ CI passed"
+     }
+    },
+    {
+     "say": "A minute or two later, the live address shows version one point one. You never touched the server.",
+     "show": 5,
+     "on": "live",
+     "send": {
+      "from": "render",
+      "to": "live",
+      "label": "{\"status\":\"ok\",\"version\":\"1.1\"}"
+     }
     }
    ]
   },
@@ -1147,7 +2426,7 @@ You have a real, public URL serving your app, and merging a pull request into `m
      "show": 0
     },
     {
-     "say": "What's the risk of auto-deploying without CI tests first?",
+     "say": "What's the risk of auto deploying without C I tests first?",
      "show": 0
     },
     {
@@ -1185,7 +2464,7 @@ You have a real, public URL serving your app, and merging a pull request into `m
      "show": 1
     },
     {
-     "say": "and merging a pull request updates it, only after CI passes.",
+     "say": "and merging a pull request updates it, only after C I passes.",
      "show": 2
     },
     {

@@ -75,99 +75,341 @@ You can name the three layers of a web page and explain what each one is respons
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Structure, presentation, behaviour",
-   "items": [
-    [
-     "HTML",
-     "Structure and content"
-    ],
-    [
-     "CSS",
-     "Presentation and layout"
-    ],
-    [
-     "JavaScript",
-     "Behaviour"
-    ]
+   "title": "Three files build one button",
+   "nodes": [
+    {
+     "id": "page",
+     "label": "The page",
+     "x": 80,
+     "y": 50,
+     "sub": "what you see",
+     "art": "browser"
+    },
+    {
+     "id": "html",
+     "label": "HTML",
+     "x": 18,
+     "y": 18,
+     "sub": "structure",
+     "art": "doc"
+    },
+    {
+     "id": "css",
+     "label": "CSS",
+     "x": 18,
+     "y": 50,
+     "sub": "presentation",
+     "art": "palette"
+    },
+    {
+     "id": "js",
+     "label": "JavaScript",
+     "x": 18,
+     "y": 82,
+     "sub": "behaviour",
+     "art": "cursor"
+    }
+   ],
+   "edges": [
+    {
+     "from": "html",
+     "to": "page"
+    },
+    {
+     "from": "css",
+     "to": "page"
+    },
+    {
+     "from": "js",
+     "to": "page"
+    }
    ],
    "beats": [
     {
-     "say": "Each layer has its own job.",
-     "show": 0
+     "say": "Let's follow one button, Say Hello, as the browser builds it.",
+     "show": 1,
+     "on": "page"
     },
     {
-     "say": "HTML is the structure and content: the headings, paragraphs, images and buttons on the page.",
-     "show": 1
+     "say": "HTML is the structure. It says a button exists, and what it says.",
+     "show": 2,
+     "on": "html",
+     "send": {
+      "from": "html",
+      "to": "page",
+      "label": "<button>Say Hello</button>"
+     }
     },
     {
-     "say": "CSS is the presentation: colours, spacing, fonts and layout.",
-     "show": 2
+     "say": "CSS is the presentation. It makes that button blue, with rounded corners.",
+     "show": 3,
+     "on": "css",
+     "send": {
+      "from": "css",
+      "to": "page",
+      "label": "background-color: #2b6cb0;"
+     }
     },
     {
-     "say": "And JavaScript is the behaviour: what happens when someone clicks, types or scrolls.",
-     "show": 3
+     "say": "JavaScript is the behaviour. It decides what happens when someone clicks.",
+     "show": 4,
+     "on": "js",
+     "send": {
+      "from": "js",
+      "to": "page",
+      "label": "click → show a greeting"
+     }
+    },
+    {
+     "say": "Three layers, three separate jobs, one working button.",
+     "show": 4,
+     "on": [
+      "html",
+      "css",
+      "js"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bulb",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Two more ideas",
-   "items": [
+   "title": "Something broke. Which layer do you open?",
+   "columns": [
+    "Symptom",
+    "Look in"
+   ],
+   "rows": [
     [
-     "TypeScript",
-     "Catches mistakes before code runs"
+     "The button isn't on the page",
+     "HTML"
     ],
     [
-     "Responsive design",
-     "Works on any screen size"
+     "The button is the wrong colour",
+     "CSS"
+    ],
+    [
+     "Clicking the button does nothing",
+     "JavaScript"
+    ],
+    [
+     "Text was passed where a number belongs",
+     "TypeScript catches it"
+    ],
+    [
+     "The page is cramped on a phone",
+     "Responsive design"
     ]
    ],
    "beats": [
     {
-     "say": "Two more ideas you'll meet later in the course.",
-     "show": 0
+     "say": "Knowing the split tells you where a problem lives."
     },
     {
-     "say": "TypeScript sits on top of JavaScript, and catches certain mistakes before the code ever runs.",
-     "show": 1
+     "say": "If the button is missing altogether, that's structure. Look in the HTML.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "And responsive design makes all of this work on any screen, from a phone to a wide monitor.",
-     "show": 2
+     "say": "Right button, wrong colour? That's presentation. Look in the CSS.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "Looks fine but does nothing when clicked? That's behaviour. Look in the JavaScript.",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "Two more ideas for later. TypeScript sits on top of JavaScript, and catches mistakes like this before the code runs.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "And responsive design makes the page work on any screen, from a phone to a wide monitor.",
+     "hl": 4,
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "search",
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "Two more ideas you'll meet in Module 4",
+   "nodes": [
+    {
+     "id": "ts",
+     "label": "TypeScript",
+     "x": 12,
+     "y": 50,
+     "sub": "JavaScript plus types",
+     "art": "shield"
+    },
+    {
+     "id": "js",
+     "label": "JavaScript",
+     "x": 40,
+     "y": 50,
+     "sub": "what browsers run",
+     "art": "code"
+    },
+    {
+     "id": "page",
+     "label": "Your page",
+     "x": 66,
+     "y": 50,
+     "sub": "one set of files",
+     "art": "layout"
+    },
+    {
+     "id": "phone",
+     "label": "Phone",
+     "x": 90,
+     "y": 22,
+     "sub": "narrow screen",
+     "art": "phone"
+    },
+    {
+     "id": "wide",
+     "label": "Wide monitor",
+     "x": 90,
+     "y": 80,
+     "sub": "wide screen",
+     "art": "laptop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "ts",
+     "to": "js"
+    },
+    {
+     "from": "js",
+     "to": "page"
+    },
+    {
+     "from": "page",
+     "to": "phone"
+    },
+    {
+     "from": "page",
+     "to": "wide"
+    }
+   ],
+   "beats": [
+    {
+     "say": "TypeScript is JavaScript with types added. It checks your code before anything runs.",
+     "show": 1,
+     "on": "ts"
+    },
+    {
+     "say": "Browsers don't run it directly. It's turned into plain JavaScript first.",
+     "show": 2,
+     "on": "js",
+     "send": {
+      "from": "ts",
+      "to": "js",
+      "label": "checked, then compiled"
+     }
+    },
+    {
+     "say": "That JavaScript becomes part of your page, alongside the HTML and CSS.",
+     "show": 3,
+     "on": "page",
+     "send": {
+      "from": "js",
+      "to": "page",
+      "label": "script.js"
+     }
+    },
+    {
+     "say": "Responsive design means that same page fits a narrow phone,",
+     "show": 5,
+     "on": "phone",
+     "send": {
+      "from": "page",
+      "to": "phone",
+      "label": "stacked layout"
+     }
+    },
+    {
+     "say": "and a wide monitor, without building two different sites.",
+     "show": 5,
+     "on": "wide",
+     "send": {
+      "from": "page",
+      "to": "wide",
+      "label": "side-by-side layout"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Lab",
    "title": "Look inside a real page",
-   "steps": [
-    "Right click",
-    "Inspect",
-    "Click elements to see them highlighted"
+   "nodes": [
+    {
+     "id": "page",
+     "label": "Any website",
+     "x": 22,
+     "y": 50,
+     "sub": "what you see",
+     "art": "browser"
+    },
+    {
+     "id": "panel",
+     "label": "Inspect panel",
+     "x": 78,
+     "y": 50,
+     "sub": "its raw HTML",
+     "art": "search"
+    }
+   ],
+   "edges": [
+    {
+     "from": "page",
+     "to": "panel"
+    }
    ],
    "beats": [
     {
-     "say": "Now look inside a real website.",
-     "show": 0
+     "say": "Open any website in your browser.",
+     "show": 1,
+     "on": "page"
     },
     {
-     "say": "Right click any page,",
-     "show": 1
+     "say": "Right click the page, and choose Inspect.",
+     "show": 2,
+     "on": "panel",
+     "send": {
+      "from": "page",
+      "to": "panel",
+      "label": "right click → Inspect"
+     }
     },
     {
-     "say": "choose Inspect,",
-     "show": 2
+     "say": "The panel that opens is the raw HTML structure of that real, live page.",
+     "show": 2,
+     "on": "panel"
     },
     {
-     "say": "and you're looking at its raw HTML. Click elements and watch the matching part of the page light up.",
-     "show": 3
+     "say": "Click an element in the panel, like a heading.",
+     "show": 2,
+     "on": "panel"
+    },
+    {
+     "say": "A highlighted box appears around the matching part of the page.",
+     "show": 2,
+     "on": "page",
+     "send": {
+      "from": "panel",
+      "to": "page",
+      "label": "highlight <h1>"
+     }
     }
    ]
   },
@@ -338,146 +580,390 @@ You have a real HTML file, opened directly in a browser, containing headings, a 
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "table",
    "kicker": "Syntax at a glance",
-   "title": "How a tag works",
-   "file": "HTML",
-   "code": "<tagname attribute=\"value\">Content goes here</tagname>\n\n<a href=\"https://example.com\">A link</a>\n<img src=\"photo.jpg\" alt=\"A photo\">",
-   "beats": [
-    {
-     "say": "Here's the pattern.",
-     "show": 0
-    },
-    {
-     "say": "An opening tag, the content, then a closing tag with a slash.",
-     "show": 1
-    },
-    {
-     "say": "Attributes add extra information, like an address for a link, or a source for an image.",
-     "show": 1
-    },
-    {
-     "say": "And some elements close themselves, like an image or an input.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "doc",
-   "kicker": "Common tags",
-   "title": "The tags you'll use most",
-   "items": [
+   "title": "The parts of an element",
+   "columns": [
+    "Part",
+    "Example",
+    "Job"
+   ],
+   "rows": [
     [
-     "<h1> … <h6>",
-     "Headings"
+     "Opening tag",
+     "<a href=\"https://example.com\">",
+     "Starts the element"
     ],
     [
-     "<p>",
-     "Paragraphs"
+     "Attribute",
+     "href=\"https://example.com\"",
+     "Extra information"
     ],
     [
-     "<a href>",
-     "Links"
+     "Content",
+     "A link",
+     "What the reader sees"
     ],
     [
-     "<ul> <ol> <li>",
-     "Lists"
+     "Closing tag",
+     "</a>",
+     "Ends it, with a slash"
     ],
     [
-     "<div> <span>",
-     "Containers"
-    ],
-    [
-     "<form> <input> <button>",
-     "User input"
+     "Self-closing",
+     "<img src=\"photo.jpg\" alt=\"A photo\">",
+     "No content, no closing tag"
     ]
    ],
    "beats": [
     {
-     "say": "The tags you'll use most.",
-     "show": 0
+     "say": "Here's one link, taken apart.",
+     "sql": "<a href=\"https://example.com\">A link</a>"
     },
     {
-     "say": "H one to h six for headings. H one is the main one.",
-     "show": 1
+     "say": "The opening tag starts the element. A means a link.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "P for paragraphs.",
-     "show": 2
+     "say": "Inside it, an attribute adds extra information. H ref is the address the link goes to.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "A for links.",
-     "show": 3
+     "say": "Then the content, the words the reader actually sees.",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "U L, O L and L I for lists.",
-     "show": 4
+     "say": "And the closing tag, the same name with a slash, ends it.",
+     "hl": 3,
+     "col": 1
     },
     {
-     "say": "Div and span as general containers.",
-     "show": 5
-    },
-    {
-     "say": "And form, input and button for user input.",
-     "show": 6
+     "say": "Some elements have no content at all, so they close themselves, like an image or an input.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "browser",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 and 2",
-   "title": "Your first page",
+   "title": "The browser reads your page from the top",
    "file": "index.html",
-   "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>My First Page</title>\n</head>\n<body>\n  <h1>Welcome to My Site</h1>\n  <p>This is a paragraph about this site.</p>\n</body>\n</html>",
+   "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>My First Page</title>\n</head>\n<body>\n  <h1>Welcome to My Site</h1>\n  <p>This is a paragraph describing what this site is about.</p>\n</body>\n</html>",
    "beats": [
     {
-     "say": "Make a folder called my site, and a file called index dot html.",
-     "show": 0
+     "say": "Make a folder called my site, and inside it a file called index dot html.",
+     "line": 1
     },
     {
-     "say": "It has a head, with the page title, and a body with a heading and a paragraph.",
-     "show": 1
+     "say": "Doctype tells the browser this is a modern HTML page.",
+     "line": 1
     },
     {
-     "say": "Double click it, and it opens straight in your browser. No server needed.",
-     "show": 1
+     "say": "Everything lives inside the html element, written in English.",
+     "line": [
+      2,
+      11
+     ]
+    },
+    {
+     "say": "The head holds information about the page, not content on it.",
+     "line": [
+      3,
+      6
+     ]
+    },
+    {
+     "say": "The title goes on the browser tab: My First Page.",
+     "line": 5,
+     "vars": {
+      "tab": "My First Page"
+     }
+    },
+    {
+     "say": "The body holds what you actually see.",
+     "line": [
+      7,
+      10
+     ]
+    },
+    {
+     "say": "An h one, the main heading.",
+     "line": 8,
+     "out": "Welcome to My Site   ← main heading"
+    },
+    {
+     "say": "And a p, a paragraph below it.",
+     "line": 9,
+     "out": "This is a paragraph describing what this site is about."
+    },
+    {
+     "say": "Double click the file, and it opens straight in your browser. No server needed.",
+     "line": [
+      8,
+      9
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "blocks",
-   "kicker": "Lab · Steps 3 and 4",
-   "title": "Add more structure",
-   "steps": [
-    "<h2> About Me",
-    "<ul> list",
-    "<img alt=…>",
-    "<form>"
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "Nesting: elements inside elements",
+   "nodes": [
+    {
+     "id": "html",
+     "label": "<html>",
+     "x": 50,
+     "y": 15,
+     "sub": "the whole page"
+    },
+    {
+     "id": "head",
+     "label": "<head>",
+     "x": 25,
+     "y": 48,
+     "sub": "about the page"
+    },
+    {
+     "id": "body",
+     "label": "<body>",
+     "x": 75,
+     "y": 48,
+     "sub": "what you see"
+    },
+    {
+     "id": "title",
+     "label": "<title>",
+     "x": 25,
+     "y": 84,
+     "sub": "My First Page"
+    },
+    {
+     "id": "h1",
+     "label": "<h1>",
+     "x": 62,
+     "y": 84,
+     "sub": "Welcome to My Site"
+    },
+    {
+     "id": "p",
+     "label": "<p>",
+     "x": 88,
+     "y": 84,
+     "sub": "This is a paragraph…"
+    }
+   ],
+   "edges": [
+    {
+     "from": "html",
+     "to": "head"
+    },
+    {
+     "from": "html",
+     "to": "body"
+    },
+    {
+     "from": "head",
+     "to": "title"
+    },
+    {
+     "from": "body",
+     "to": "h1"
+    },
+    {
+     "from": "body",
+     "to": "p"
+    }
    ],
    "beats": [
     {
-     "say": "Then add more.",
-     "show": 0
+     "say": "That page is really a set of boxes inside boxes.",
+     "show": 1,
+     "on": "html"
     },
     {
-     "say": "A subheading,",
-     "show": 1
+     "say": "Inside html sit two children: head and body.",
+     "show": 3,
+     "on": [
+      "head",
+      "body"
+     ]
     },
     {
-     "say": "a list,",
-     "show": 2
+     "say": "The title is nested inside head, so it's part of the page's information.",
+     "show": 4,
+     "on": "title"
     },
     {
-     "say": "an image, with alt text describing it for screen readers,",
-     "show": 3
+     "say": "The heading and the paragraph are nested inside body, so they're part of the visible content.",
+     "show": 6,
+     "on": [
+      "h1",
+      "p"
+     ]
     },
     {
-     "say": "and a form, with a label, a text box and a button. You'll connect it to JavaScript later.",
-     "show": 4
+     "say": "The browser reads this structure to know what to show, and in what order.",
+     "show": 6,
+     "on": "body"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 3",
+   "title": "Each tag makes one predictable piece",
+   "file": "index.html",
+   "code": "<h2>About Me</h2>\n<p>I'm learning web development, one module at a time.</p>\n\n<ul>\n  <li>HTML for structure</li>\n  <li>CSS for style</li>\n  <li>JavaScript for behavior</li>\n</ul>\n\n<img src=\"https://placehold.co/200x100\" alt=\"A placeholder image\">",
+   "beats": [
+    {
+     "say": "Now add more structure inside the body.",
+     "line": [
+      1,
+      10
+     ]
+    },
+    {
+     "say": "An h two is a subheading, one level below the h one.",
+     "line": 1,
+     "out": "About Me   ← subheading"
+    },
+    {
+     "say": "Another paragraph.",
+     "line": 2,
+     "out": "I'm learning web development, one module at a time."
+    },
+    {
+     "say": "U L opens an unordered list, a list with bullet points.",
+     "line": [
+      4,
+      8
+     ]
+    },
+    {
+     "say": "Each L I is one item in it.",
+     "line": [
+      5,
+      7
+     ],
+     "out": [
+      "• HTML for structure",
+      "• CSS for style",
+      "• JavaScript for behavior"
+     ]
+    },
+    {
+     "say": "The image tag closes itself. Source says where the picture comes from.",
+     "line": 10,
+     "vars": {
+      "src": "https://placehold.co/200x100"
+     },
+     "out": "[ 200 × 100 image ]"
+    },
+    {
+     "say": "And alt describes it, for screen readers, and in case the image fails to load.",
+     "line": 10,
+     "vars": {
+      "src": "https://placehold.co/200x100",
+      "alt": "A placeholder image"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 4",
+   "title": "A form, ready for JavaScript later",
+   "nodes": [
+    {
+     "id": "label",
+     "label": "<label>",
+     "x": 15,
+     "y": 30,
+     "sub": "for=\"name\" · Your name:",
+     "art": "pencil"
+    },
+    {
+     "id": "input",
+     "label": "<input>",
+     "x": 55,
+     "y": 30,
+     "sub": "id=\"name\" · a text box",
+     "art": "form"
+    },
+    {
+     "id": "button",
+     "label": "<button>",
+     "x": 55,
+     "y": 78,
+     "sub": "type=\"submit\" · Say Hello",
+     "art": "cursor"
+    },
+    {
+     "id": "form",
+     "label": "<form>",
+     "x": 88,
+     "y": 55,
+     "sub": "wraps all three",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "label",
+     "to": "input"
+    },
+    {
+     "from": "input",
+     "to": "form"
+    },
+    {
+     "from": "button",
+     "to": "form"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Last, a form with three parts.",
+     "show": 4,
+     "on": "form"
+    },
+    {
+     "say": "The label's for attribute says name. The input's I D is also name. That match ties them together.",
+     "on": [
+      "label",
+      "input"
+     ],
+     "send": {
+      "from": "label",
+      "to": "input",
+      "label": "for=\"name\" = id=\"name\""
+     }
+    },
+    {
+     "say": "So a screen reader announces your name when the box is focused, and clicking the label focuses the box.",
+     "on": "input"
+    },
+    {
+     "say": "The button's type is submit, so clicking it submits the whole form.",
+     "on": [
+      "button",
+      "form"
+     ],
+     "send": {
+      "from": "button",
+      "to": "form",
+      "label": "submit"
+     }
+    },
+    {
+     "say": "Right now that just reloads the page. In Module 3, JavaScript takes over.",
+     "on": "form"
     }
    ]
   },
@@ -665,90 +1151,417 @@ Your page is visibly styled, fonts, colors, spacing, and a hover effect on the b
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "table",
    "kicker": "Syntax at a glance",
-   "title": "How a CSS rule works",
-   "file": "CSS",
-   "code": "selector {\n  property: value;\n}\n\np       { color: #222; }      /* every paragraph */\n.card   { padding: 16px; }    /* class=\"card\" */\n#name   { width: 200px; }     /* id=\"name\" */",
+   "title": "A selector picks which elements a rule styles",
+   "columns": [
+    "Tag",
+    "class",
+    "id",
+    "Content"
+   ],
+   "rows": [
+    [
+     "h1",
+     "",
+     "",
+     "Welcome to My Site"
+    ],
+    [
+     "p",
+     "",
+     "",
+     "This is a paragraph…"
+    ],
+    [
+     "p",
+     "",
+     "",
+     "I'm learning web development…"
+    ],
+    [
+     "div",
+     "card",
+     "",
+     "Item One, Two, Three"
+    ],
+    [
+     "input",
+     "",
+     "name",
+     "(text box)"
+    ],
+    [
+     "button",
+     "",
+     "",
+     "Say Hello"
+    ]
+   ],
    "beats": [
     {
-     "say": "A rule has a selector, then declarations in curly brackets.",
-     "show": 0
+     "say": "Here are some elements from your page, including the card you'll add in Module 4."
     },
     {
-     "say": "The selector picks which elements the rule applies to.",
-     "show": 1
+     "say": "A rule is a selector, then declarations in curly brackets: a property, a colon, a value, a semicolon.",
+     "sql": "selector {\n  property: value;\n}"
     },
     {
-     "say": "P means every paragraph. Dot name means every element with that class. Hash name means the one element with that ID.",
-     "show": 1
+     "say": "A plain tag name, like p, picks every paragraph. That's two rows.",
+     "sql": "p { color: #222; }",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 0
     },
     {
-     "say": "Each declaration is a property, a colon, a value, and a semicolon.",
-     "show": 1
+     "say": "A dot and a name picks every element with that class. Only the card.",
+     "sql": ".card { padding: 16px; }",
+     "hl": 3,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "A hash and a name picks the one element with that I D: the name box.",
+     "sql": "#name { width: 200px; }",
+     "hl": 4,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "file",
-   "kicker": "Lab · Steps 1 and 2",
-   "title": "A separate stylesheet",
-   "file": "index.html",
-   "code": "<link rel=\"stylesheet\" href=\"style.css\">",
-   "beats": [
-    {
-     "say": "Create style dot css, with a font, a background colour, spacing, and a coloured heading.",
-     "show": 0
-    },
-    {
-     "say": "Link it from the head of your HTML.",
-     "show": 1
-    },
-    {
-     "say": "Refresh, and the whole page changes, without touching the HTML at all.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "cursor",
-   "kicker": "Lab · Step 3",
-   "title": "States, like hover",
+   "kind": "walk",
+   "kicker": "Lab · Step 1",
+   "title": "Read style.css one declaration at a time",
    "file": "style.css",
-   "code": "button {\n  background-color: #2b6cb0;\n  color: white;\n}\n\nbutton:hover {\n  background-color: #1e4e8c;\n}",
+   "code": "body {\n  font-family: Arial, sans-serif;\n  background-color: #f4f4f4;\n  color: #222;\n  max-width: 700px;\n  margin: 0 auto;\n  padding: 20px;\n}\n\nh1 {\n  color: #2b6cb0;\n}",
    "beats": [
     {
-     "say": "Next, style the form's button.",
-     "show": 0
+     "say": "Create style dot css. The first rule targets the body, the whole visible page.",
+     "line": [
+      1,
+      8
+     ]
+    },
+    {
+     "say": "Font family sets Arial, with any sans serif font as a backup.",
+     "line": 2,
+     "vars": {
+      "font": "Arial"
+     }
+    },
+    {
+     "say": "A light grey background, and dark grey text.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "font": "Arial",
+      "background": "#f4f4f4",
+      "text colour": "#222"
+     }
+    },
+    {
+     "say": "Max width stops the page growing wider than seven hundred pixels.",
+     "line": 5,
+     "vars": {
+      "font": "Arial",
+      "background": "#f4f4f4",
+      "text colour": "#222",
+      "max width": "700px"
+     }
+    },
+    {
+     "say": "Margin zero auto centres it, and padding adds twenty pixels of breathing room inside.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "font": "Arial",
+      "background": "#f4f4f4",
+      "text colour": "#222",
+      "max width": "700px",
+      "position": "centred",
+      "padding": "20px"
+     }
+    },
+    {
+     "say": "A second rule targets h one, and colours just the heading blue.",
+     "line": [
+      10,
+      12
+     ],
+     "vars": {
+      "font": "Arial",
+      "background": "#f4f4f4",
+      "text colour": "#222",
+      "max width": "700px",
+      "position": "centred",
+      "padding": "20px",
+      "h1 colour": "#2b6cb0"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · Step 2",
+   "title": "One link joins the two files",
+   "nodes": [
+    {
+     "id": "html",
+     "label": "index.html",
+     "x": 15,
+     "y": 25,
+     "sub": "structure",
+     "art": "doc"
+    },
+    {
+     "id": "css",
+     "label": "style.css",
+     "x": 15,
+     "y": 78,
+     "sub": "presentation",
+     "art": "palette"
+    },
+    {
+     "id": "page",
+     "label": "Browser",
+     "x": 82,
+     "y": 50,
+     "sub": "the styled page",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "html",
+     "to": "css"
+    },
+    {
+     "from": "html",
+     "to": "page"
+    },
+    {
+     "from": "css",
+     "to": "page"
+    }
+   ],
+   "beats": [
+    {
+     "say": "On its own, style dot css does nothing. The HTML has to point to it.",
+     "show": 2,
+     "on": "css"
+    },
+    {
+     "say": "Add a link tag inside the head of index dot html, naming the stylesheet.",
+     "show": 2,
+     "on": "html",
+     "send": {
+      "from": "html",
+      "to": "css",
+      "label": "<link rel=\"stylesheet\" href=\"style.css\">"
+     }
+    },
+    {
+     "say": "The browser reads your HTML for the content,",
+     "show": 3,
+     "on": "page",
+     "send": {
+      "from": "html",
+      "to": "page",
+      "label": "headings, list, form"
+     }
+    },
+    {
+     "say": "and the CSS file for how it should look.",
+     "show": 3,
+     "on": "page",
+     "send": {
+      "from": "css",
+      "to": "page",
+      "label": "font, colours, spacing"
+     }
+    },
+    {
+     "say": "Refresh, and the whole page changes, without touching a single line of HTML.",
+     "show": 3,
+     "on": "page"
+    },
+    {
+     "say": "And because the styles live in their own file, many pages can share the same stylesheet.",
+     "show": 3,
+     "on": [
+      "css",
+      "html"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "Hover: a rule that waits for a state",
+   "columns": [
+    "Rule",
+    "Property",
+    "Value"
+   ],
+   "rows": [
+    [
+     "button",
+     "background-color",
+     "#2b6cb0"
+    ],
+    [
+     "button",
+     "color",
+     "white"
+    ],
+    [
+     "button:hover",
+     "background-color",
+     "#1e4e8c"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now style the form's button. Here are three of its declarations, from two rules."
+    },
+    {
+     "say": "The button rule always applies: a blue background, and white text.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     },
     {
      "say": "Button colon hover is a pseudo class. It only applies while your mouse is over the button.",
-     "show": 1
+     "hl": 2,
+     "col": 0
     },
     {
-     "say": "CSS can respond to state, not just structure.",
-     "show": 1
+     "say": "Mouse away: the hover rule is asleep, so the background stays blue.",
+     "sql": "mouse away → background #2b6cb0",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Mouse over: both rules want to set the background, and they disagree.",
+     "sql": "mouse over → ?",
+     "hl": [
+      0,
+      2
+     ],
+     "col": 1
+    },
+    {
+     "say": "The hover rule is more specific, and it comes later, so it wins. A darker blue.",
+     "sql": "mouse over → background #1e4e8c",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "That's the cascade: rules combine, and later or more specific ones override.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "array",
+   "kind": "table",
    "kicker": "Lab · Step 4",
-   "title": "Your first layout",
-   "file": "style.css",
-   "code": "ul {\n  display: flex;\n  gap: 12px;\n  list-style: none;\n  padding: 0;\n}",
+   "title": "Two ul rules combine into one layout",
+   "columns": [
+    "Property",
+    "Value",
+    "From",
+    "Effect"
+   ],
+   "rows": [
+    [
+     "line-height",
+     "1.6",
+     "Step 1",
+     "Roomier lines"
+    ],
+    [
+     "display",
+     "flex",
+     "Step 4",
+     "Items sit side by side"
+    ],
+    [
+     "gap",
+     "12px",
+     "Step 4",
+     "Space between items"
+    ],
+    [
+     "list-style",
+     "none",
+     "Step 4",
+     "No bullet points"
+    ],
+    [
+     "padding",
+     "0",
+     "Step 4",
+     "No left indent"
+    ]
+   ],
    "beats": [
     {
-     "say": "Finally, a layout property.",
-     "show": 0
+     "say": "Your stylesheet now has two rules for the same list. They don't fight. They combine.",
+     "col": 2
     },
     {
-     "say": "Display flex puts the list items side by side, and gap adds space between them.",
-     "show": 1
+     "say": "Line height still comes from step one.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "Display flex is the layout property. The list items move into a row, side by side.",
+     "hl": 1
+    },
+    {
+     "say": "Gap puts twelve pixels between them.",
+     "hl": 2
+    },
+    {
+     "say": "List style none removes the bullets, and padding zero removes the usual indent.",
+     "hl": [
+      3,
+      4
+     ]
+    },
+    {
+     "say": "All five declarations land on the same list.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "col": 3
     }
    ]
   },
@@ -771,7 +1584,7 @@ Your page is visibly styled, fonts, colors, spacing, and a hover effect on the b
      "show": 0
     },
     {
-     "say": "Why is CSS called \"cascading\"?",
+     "say": "Why is CSS called cascading?",
      "show": 0
     },
     {
@@ -934,118 +1747,400 @@ Your page responds to at least two real user actions, a form submission and a bu
    ]
   },
   {
-   "kind": "list",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Syntax at a glance",
-   "title": "Four things you'll use constantly",
-   "items": [
-    [
-     "let / const",
-     "Variables"
-    ],
-    [
-     "function",
-     "Reusable code"
-    ],
-    [
-     "querySelector",
-     "Find an element"
-    ],
-    [
-     "addEventListener",
-     "React to events"
-    ]
-   ],
+   "title": "Variables, functions and decisions",
+   "file": "script.js",
+   "code": "let x = 5;          // a variable that can change later\nconst y = \"hello\";  // a variable that cannot be reassigned\n\nfunction add(a, b) {\n  return a + b;\n}\n\nif (x > 3) {\n  console.log(\"big\");\n} else {\n  console.log(\"small\");\n}",
    "beats": [
     {
-     "say": "Four things you'll use constantly.",
-     "show": 0
+     "say": "Let makes a variable that can change later. X is five.",
+     "line": 1,
+     "vars": {
+      "x": 5
+     }
     },
     {
-     "say": "Let and const create variables. Use const unless the value really needs to change.",
-     "show": 1
+     "say": "Const makes one that can't be reassigned. Use const unless the value really needs to change.",
+     "line": 2,
+     "vars": {
+      "x": 5,
+      "y": "\"hello\""
+     }
     },
     {
-     "say": "Functions are reusable blocks of code.",
-     "show": 2
+     "say": "Function defines reusable code called add. Nothing runs yet. It waits to be called by name.",
+     "line": [
+      4,
+      6
+     ]
     },
     {
-     "say": "Query selector finds an element, using the same selectors as CSS.",
-     "show": 3
+     "say": "If checks a condition. Is five greater than three? Yes.",
+     "line": 8
     },
     {
-     "say": "And add event listener runs your code when something happens, like a click.",
-     "show": 4
+     "say": "So the first branch runs, and the console shows big.",
+     "line": 9,
+     "out": "big"
+    },
+    {
+     "say": "The else branch is skipped entirely.",
+     "line": [
+      10,
+      12
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "browser",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 and 2",
-   "title": "Change the page with code",
+   "title": "Find an element, then change it",
    "file": "script.js",
    "code": "const heading = document.querySelector(\"h1\");\nheading.textContent = \"Welcome, and thanks for stopping by!\";",
    "beats": [
     {
-     "say": "Create script dot j s and link it just before the end of the body.",
-     "show": 0
+     "say": "Create script dot j s, and link it with a script tag just before the end of the body.",
+     "line": 1
     },
     {
-     "say": "Find the h one, and change its text.",
-     "show": 1
+     "say": "Query selector finds the first element matching a selector. The same kind of selector CSS uses.",
+     "line": 1,
+     "vars": {
+      "heading": "<h1>Welcome to My Site</h1>"
+     }
     },
     {
-     "say": "Refresh, and the heading has changed, driven by code instead of HTML.",
-     "show": 1
+     "say": "Setting its text content replaces the words inside it.",
+     "line": 2,
+     "vars": {
+      "heading": "<h1>Welcome, and thanks for stopping by!</h1>"
+     }
+    },
+    {
+     "say": "Refresh, and the heading has changed. Driven by code, not by editing the HTML.",
+     "line": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "form",
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "What happens when you press Say Hello",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "You",
+     "x": 8,
+     "y": 50,
+     "sub": "type Alex, press the button",
+     "art": "cursor"
+    },
+    {
+     "id": "form",
+     "label": "<form>",
+     "x": 32,
+     "y": 50,
+     "sub": "fires a submit event",
+     "art": "form"
+    },
+    {
+     "id": "code",
+     "label": "Your listener",
+     "x": 62,
+     "y": 20,
+     "sub": "event.preventDefault()",
+     "art": "code"
+    },
+    {
+     "id": "reload",
+     "label": "Page reload",
+     "x": 62,
+     "y": 82,
+     "sub": "the default",
+     "art": "loop"
+    },
+    {
+     "id": "page",
+     "label": "The page",
+     "x": 90,
+     "y": 50,
+     "sub": "new greeting",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "form"
+    },
+    {
+     "from": "form",
+     "to": "code"
+    },
+    {
+     "from": "form",
+     "to": "reload"
+    },
+    {
+     "from": "code",
+     "to": "page"
+    }
+   ],
+   "beats": [
+    {
+     "say": "An event is something the browser notices, like a click, a keystroke, or a form being submitted.",
+     "show": 2,
+     "on": "form"
+    },
+    {
+     "say": "You type a name and press Say Hello. The form fires a submit event.",
+     "show": 2,
+     "on": "form",
+     "send": {
+      "from": "user",
+      "to": "form",
+      "label": "submit"
+     }
+    },
+    {
+     "say": "Left alone, the browser's default is to reload the page, and your greeting would vanish.",
+     "show": 4,
+     "on": "reload",
+     "send": {
+      "from": "form",
+      "to": "reload",
+      "label": "default"
+     }
+    },
+    {
+     "say": "But you added an event listener. The browser hands the event to your function first.",
+     "show": 5,
+     "on": "code",
+     "send": {
+      "from": "form",
+      "to": "code",
+      "label": "event"
+     }
+    },
+    {
+     "say": "Prevent default cancels the reload, so your code decides what happens instead.",
+     "show": 5,
+     "on": "code"
+    },
+    {
+     "say": "And your code updates the page directly. No reload at all.",
+     "show": 5,
+     "on": "page",
+     "send": {
+      "from": "code",
+      "to": "page",
+      "label": "Hello, Alex!"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Lab · Step 3",
-   "title": "Respond to the form",
+   "title": "Respond to the form, line by line",
    "file": "script.js",
-   "code": "form.addEventListener(\"submit\", function (event) {\n  event.preventDefault();\n  const message = document.createElement(\"p\");\n  message.textContent = `Hello, ${nameInput.value}!`;\n  form.after(message);\n});",
+   "code": "const form = document.querySelector(\"form\");\n\nform.addEventListener(\"submit\", function (event) {\n  event.preventDefault();\n  const nameInput = document.querySelector(\"#name\");\n  const message = document.createElement(\"p\");\n  message.textContent = `Hello, ${nameInput.value}! Thanks for saying hi.`;\n  form.after(message);\n});",
    "beats": [
     {
-     "say": "Now the form from Module 1.",
-     "show": 0
+     "say": "First, find the form and keep it in a constant.",
+     "line": 1,
+     "vars": {
+      "form": "<form>"
+     }
     },
     {
-     "say": "Prevent default stops the page from reloading.",
-     "show": 1
+     "say": "Add event listener says: when this form is submitted, run this function. Nothing runs yet.",
+     "line": [
+      3,
+      9
+     ]
     },
     {
-     "say": "Then read the name, create a new paragraph with a greeting, and add it after the form.",
-     "show": 1
+     "say": "Now you type Alex and press Say Hello. The function runs, with the event passed in.",
+     "line": 3,
+     "vars": {
+      "form": "<form>",
+      "event": "submit"
+     }
     },
     {
-     "say": "Submit it, and the greeting appears instantly, without a reload.",
-     "show": 1
+     "say": "Prevent default stops the reload.",
+     "line": 4
+    },
+    {
+     "say": "Find the name box. Its value is whatever was typed: Alex.",
+     "line": 5,
+     "vars": {
+      "form": "<form>",
+      "event": "submit",
+      "nameInput.value": "\"Alex\""
+     }
+    },
+    {
+     "say": "Create a brand new, empty paragraph element.",
+     "line": 6,
+     "vars": {
+      "form": "<form>",
+      "event": "submit",
+      "nameInput.value": "\"Alex\"",
+      "message": "<p></p>"
+     }
+    },
+    {
+     "say": "Fill it with the greeting, with Alex dropped into the template.",
+     "line": 7,
+     "vars": {
+      "form": "<form>",
+      "event": "submit",
+      "nameInput.value": "\"Alex\"",
+      "message": "<p>Hello, Alex! Thanks for saying hi.</p>"
+     }
+    },
+    {
+     "say": "Form dot after places it on the page, right after the form. It appears instantly.",
+     "line": 8,
+     "vars": {
+      "form": "<form>",
+      "event": "submit",
+      "nameInput.value": "\"Alex\"",
+      "message": "<p>Hello, Alex! Thanks for saying hi.</p>",
+      "on the page": "Hello, Alex! Thanks for saying hi."
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
+   "kind": "walk",
    "kicker": "Lab · Step 4",
-   "title": "A click counter",
+   "title": "A click counter that remembers",
    "file": "script.js",
-   "code": "let count = 0;\ncounterBtn.addEventListener(\"click\", function () {\n  count = count + 1;\n  counterBtn.textContent = `Clicked ${count} times`;\n});",
+   "code": "const counterBtn = document.querySelector(\"#counter-btn\");\nlet count = 0;\n\ncounterBtn.addEventListener(\"click\", function () {\n  count = count + 1;\n  counterBtn.textContent = `Clicked ${count} times`;\n});",
    "beats": [
     {
-     "say": "Finally, a counter.",
-     "show": 0
+     "say": "Find the counter button. It starts out saying clicked zero times.",
+     "line": 1,
+     "vars": {
+      "button text": "Clicked 0 times"
+     }
     },
     {
-     "say": "Count lives outside the click listener. If it lived inside, it would reset to zero on every click.",
-     "show": 1
+     "say": "Count starts at zero, outside the listener.",
+     "line": 2,
+     "vars": {
+      "button text": "Clicked 0 times",
+      "count": 0
+     }
     },
     {
-     "say": "Each click adds one, and updates the button's text.",
-     "show": 1
+     "say": "Set up the click listener. It waits.",
+     "line": [
+      4,
+      7
+     ]
+    },
+    {
+     "say": "First click. Count becomes one, and the text updates.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "button text": "Clicked 1 times",
+      "count": 1
+     }
+    },
+    {
+     "say": "Second click. Count was one, so now it's two.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "button text": "Clicked 2 times",
+      "count": 2
+     }
+    },
+    {
+     "say": "Third click. Three.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "button text": "Clicked 3 times",
+      "count": 3
+     }
+    },
+    {
+     "say": "Count keeps its value between clicks, because it lives outside the function.",
+     "line": 2
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Why it matters",
+   "title": "Where you declare count changes everything",
+   "columns": [
+    "Click",
+    "count outside the listener",
+    "count inside the listener"
+   ],
+   "rows": [
+    [
+     "1st",
+     "1",
+     "1"
+    ],
+    [
+     "2nd",
+     "2",
+     "1"
+    ],
+    [
+     "3rd",
+     "3",
+     "1"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Compare two versions of the counter, over three clicks."
+    },
+    {
+     "say": "With count outside, each click builds on the last: one, two, three.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 1
+    },
+    {
+     "say": "Move let count equals zero inside the function, and every click starts again from zero.",
+     "col": 2
+    },
+    {
+     "say": "So the button says one, every single time.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
+    },
+    {
+     "say": "A variable declared inside the listener resets on every click. Outside, it persists.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
     }
    ]
   },
@@ -1068,7 +2163,7 @@ Your page responds to at least two real user actions, a form submission and a bu
      "show": 0
     },
     {
-     "say": "What does event.preventDefault() do on a form submission?",
+     "say": "What does event dot prevent default do on a form submission?",
      "show": 0
     },
     {
@@ -1257,96 +2352,279 @@ You caught a real type error with TypeScript before it ran, you added the viewpo
    ]
   },
   {
-   "kind": "code",
-   "art": "shield",
-   "kicker": "Concept · TypeScript",
+   "kind": "walk",
+   "kicker": "Lab · Part A",
    "title": "Say what type you expect",
-   "file": "TypeScript",
-   "code": "let age: number = 30;\nlet userName: string = \"Alex\";\n\nfunction greet(name: string, timesClicked: number): string {\n  return `Hello, ${name}`;\n}",
+   "file": "greet.ts",
+   "code": "function greet(name: string, timesClicked: number): string {\n  return `Hello, ${name}! You've clicked ${timesClicked} times.`;\n}\n\nconsole.log(greet(\"Alex\", 3));\n\n// step 3: change the last line to\nconsole.log(greet(\"Alex\", \"three\"));",
    "beats": [
     {
-     "say": "TypeScript is JavaScript with types.",
-     "show": 0
+     "say": "TypeScript is JavaScript with types. A colon after a name says what kind of value it must hold.",
+     "line": 1
     },
     {
-     "say": "Add a colon and a type after a name, like age colon number.",
-     "show": 1
+     "say": "Name must be a string. Times clicked must be a number. And the colon after the brackets says the function returns a string.",
+     "line": 1,
+     "vars": {
+      "name": "string",
+      "timesClicked": "number",
+      "returns": "string"
+     }
     },
     {
-     "say": "Functions can say what each input is, and what they return.",
-     "show": 1
+     "say": "Call it with Alex and three. Both match their types.",
+     "line": 5,
+     "vars": {
+      "name": "\"Alex\"",
+      "timesClicked": 3,
+      "returns": "string"
+     }
     },
     {
-     "say": "Browsers don't run TypeScript. It's compiled into plain JavaScript first.",
-     "show": 1
+     "say": "The template fills in both, and the console shows the greeting.",
+     "line": 2,
+     "out": "Hello, Alex! You've clicked 3 times."
+    },
+    {
+     "say": "Now step three. Pass the word three, in quotes, instead of the number.",
+     "line": 8,
+     "vars": {
+      "name": "\"Alex\"",
+      "timesClicked": "\"three\"",
+      "returns": "string"
+     }
+    },
+    {
+     "say": "That's a string where a number was expected, and TypeScript flags it.",
+     "line": [
+      1,
+      8
+     ],
+     "out": "error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'."
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "bug",
+   "kind": "diagram",
    "kicker": "Lab · Part A",
-   "title": "Catch a mistake before it runs",
-   "steps": [
-    "tsc greet.ts",
-    "greet(\"Alex\", \"three\")",
-    "Error: string is not a number"
+   "title": "Browsers never run TypeScript",
+   "nodes": [
+    {
+     "id": "ts",
+     "label": "greet.ts",
+     "x": 12,
+     "y": 50,
+     "sub": "your TypeScript",
+     "art": "file"
+    },
+    {
+     "id": "tsc",
+     "label": "tsc",
+     "x": 45,
+     "y": 50,
+     "sub": "the TypeScript compiler",
+     "art": "gear"
+    },
+    {
+     "id": "js",
+     "label": "greet.js",
+     "x": 80,
+     "y": 22,
+     "sub": "plain JavaScript",
+     "art": "file"
+    },
+    {
+     "id": "err",
+     "label": "Error report",
+     "x": 80,
+     "y": 80,
+     "sub": "read it, fix it",
+     "art": "bug"
+    }
+   ],
+   "edges": [
+    {
+     "from": "ts",
+     "to": "tsc"
+    },
+    {
+     "from": "tsc",
+     "to": "js"
+    },
+    {
+     "from": "tsc",
+     "to": "err"
+    }
    ],
    "beats": [
     {
-     "say": "In the lab, write greet dot t s and compile it with t s c.",
-     "show": 1
+     "say": "Install TypeScript with N P M, then run t s c greet dot t s.",
+     "show": 2,
+     "on": "tsc",
+     "send": {
+      "from": "ts",
+      "to": "tsc",
+      "label": "tsc greet.ts"
+     }
     },
     {
-     "say": "Then pass the text three, where a number was expected.",
-     "show": 2
+     "say": "The compiler checks every type, then writes greet dot j s, plain JavaScript a browser can run.",
+     "show": 3,
+     "on": "js",
+     "send": {
+      "from": "tsc",
+      "to": "js",
+      "label": "greet.js"
+     }
     },
     {
-     "say": "TypeScript reports the mistake right away, before it ever reaches a user.",
-     "show": 3
+     "say": "With the word three, it reports the error instead, while you're still writing code, long before any user.",
+     "show": 4,
+     "on": "err",
+     "send": {
+      "from": "tsc",
+      "to": "err",
+      "label": "string ≠ number"
+     }
     },
     {
-     "say": "By default it still writes the JavaScript file, so always read the errors. The no emit on error option makes it refuse.",
-     "show": 3
+     "say": "Careful: by default, it still writes greet dot j s anyway. So always read the errors.",
+     "show": 4,
+     "on": [
+      "js",
+      "err"
+     ],
+     "send": {
+      "from": "tsc",
+      "to": "js",
+      "label": "greet.js, written anyway"
+     }
+    },
+    {
+     "say": "To make it refuse while errors exist, add the no emit on error option.",
+     "show": 4,
+     "on": "tsc",
+     "send": {
+      "from": "ts",
+      "to": "tsc",
+      "label": "tsc --noEmitOnError greet.ts"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "layout",
-   "kicker": "Concept · Responsive design",
-   "title": "Media queries",
+   "kind": "walk",
+   "kicker": "Lab · Part B",
+   "title": "A media query only applies when its condition is true",
    "file": "style.css",
    "code": ".card {\n  display: flex;\n  gap: 16px;\n}\n\n@media (max-width: 600px) {\n  .card {\n    flex-direction: column;\n  }\n}",
    "beats": [
     {
-     "say": "Now responsive design.",
-     "show": 0
+     "say": "Now responsive design. Add a card with three items to your page.",
+     "line": [
+      1,
+      4
+     ]
     },
     {
-     "say": "A media query wraps CSS rules in a condition.",
-     "show": 1
+     "say": "On a wide screen, say a thousand pixels, the card is a flex row: items side by side, sixteen pixels apart.",
+     "line": [
+      1,
+      4
+     ],
+     "vars": {
+      "screen width": "1000px",
+      "flex-direction": "row (default)"
+     },
+     "out": "[ Item One ]  [ Item Two ]  [ Item Three ]"
     },
     {
-     "say": "Here, when the screen is six hundred pixels or narrower, the card's items stack into a column.",
-     "show": 1
+     "say": "The media query asks: is the screen six hundred pixels wide or less? Not at a thousand, so its rules are skipped.",
+     "line": 6
+    },
+    {
+     "say": "Now narrow the window to four hundred pixels.",
+     "line": 6,
+     "vars": {
+      "screen width": "400px",
+      "flex-direction": "row (default)"
+     }
+    },
+    {
+     "say": "Four hundred is six hundred or less, so the condition is true, and the rule inside switches on.",
+     "line": [
+      6,
+      8
+     ],
+     "vars": {
+      "screen width": "400px",
+      "flex-direction": "column"
+     }
+    },
+    {
+     "say": "The items now stack vertically.",
+     "line": 8,
+     "out": [
+      "[ Item One ]",
+      "[ Item Two ]",
+      "[ Item Three ]"
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "browser",
+   "kind": "table",
    "kicker": "Lab · Step 5",
-   "title": "The viewport tag",
-   "quote": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+   "title": "Why phones need the viewport tag",
+   "columns": [
+    "Viewport tag?",
+    "Phone lays out the page at",
+    "max-width: 600px?",
+    "What you see"
+   ],
+   "rows": [
+    [
+     "No",
+     "about 980px, then zooms out",
+     "No",
+     "A tiny desktop layout"
+    ],
+    [
+     "Yes",
+     "the device's real width, e.g. 375px",
+     "Yes",
+     "Items stacked, readable"
+    ]
+   ],
    "beats": [
     {
-     "say": "One more line makes phones behave.",
-     "show": 0
+     "say": "There's a catch on real phones."
     },
     {
-     "say": "The viewport tag tells mobile browsers to use the device's real width, instead of zooming out a desktop layout.",
-     "show": 1
+     "say": "Without the viewport tag, a mobile browser pretends to be a desktop, about nine hundred eighty pixels wide, then shrinks it to fit.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Nine hundred eighty is wider than six hundred, so your media query never switches on. You get a tiny desktop layout.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Add the viewport tag inside the head.",
+     "sql": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+    },
+    {
+     "say": "Now the phone uses its real width, like three hundred seventy five pixels.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "That's under six hundred, so the media query applies, and the items stack, readable.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
     }
    ]
   },
@@ -1369,7 +2647,7 @@ You caught a real type error with TypeScript before it ran, you added the viewpo
      "show": 0
     },
     {
-     "say": "Does a browser run .ts files directly?",
+     "say": "Does a browser run dot t s files directly?",
      "show": 0
     },
     {

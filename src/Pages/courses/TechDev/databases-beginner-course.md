@@ -80,77 +80,242 @@ You can name all four database types above and give one reason to choose each.
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Four kinds",
-   "items": [
-    [
-     "Relational",
-     "PostgreSQL, MySQL: structure and consistency"
-    ],
-    [
-     "Document",
-     "MongoDB: flexible shapes"
-    ],
-    [
-     "Realtime",
-     "Firebase: live updates"
-    ],
-    [
-     "In-memory",
-     "Redis: extreme speed"
-    ]
+   "title": "Data that outlives your program",
+   "nodes": [
+    {
+     "id": "prog",
+     "label": "Your program",
+     "x": 14,
+     "y": 50,
+     "sub": "data in memory",
+     "art": "code"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 54,
+     "y": 50,
+     "sub": "data on disk",
+     "art": "database"
+    },
+    {
+     "id": "other",
+     "label": "Another user",
+     "x": 88,
+     "y": 22,
+     "sub": "same data, same time",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "prog",
+     "to": "db"
+    },
+    {
+     "from": "other",
+     "to": "db"
+    }
    ],
    "beats": [
     {
-     "say": "Here are the four kinds in this course.",
-     "show": 0
+     "say": "While your program runs, its data lives in memory.",
+     "show": 2,
+     "on": "prog"
     },
     {
-     "say": "Relational, like PostgreSQL and MySQL. Best for structured data with relationships, and strong consistency.",
-     "show": 1
+     "say": "Saving a task writes it to the database, somewhere lasting.",
+     "show": 2,
+     "on": "db",
+     "send": {
+      "from": "prog",
+      "to": "db",
+      "label": "save: Write course notes"
+     }
     },
     {
-     "say": "Document, like MongoDB. Best for flexible data whose shape changes.",
-     "show": 2
+     "say": "Stop the program, and its memory is wiped. The task is still safe in the database.",
+     "show": 2,
+     "on": "db"
     },
     {
-     "say": "Realtime, like Firebase. Best for live updates, with very little backend code.",
-     "show": 3
+     "say": "Start it again, and read the task straight back.",
+     "show": 2,
+     "on": "prog",
+     "send": {
+      "from": "db",
+      "to": "prog",
+      "label": "read: Write course notes"
+     }
     },
     {
-     "say": "And in-memory, like Redis. Best for extreme speed: caching, sessions and counters.",
-     "show": 4
+     "say": "And another user, or another process, can read and write the same data safely, at the same time.",
+     "show": 3,
+     "on": [
+      "other",
+      "db"
+     ],
+     "send": {
+      "from": "other",
+      "to": "db",
+      "label": "read + write"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "architecture",
-   "kicker": "Where you'd use this",
-   "title": "Real products use several",
-   "steps": [
-    "PostgreSQL: users, orders",
-    "Redis: sessions, cache",
-    "Firebase: chat"
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Four kinds, four strengths",
+   "columns": [
+    "Type",
+    "Example",
+    "Best at"
+   ],
+   "rows": [
+    [
+     "Relational (SQL)",
+     "PostgreSQL, MySQL",
+     "Structure, relationships, consistency"
+    ],
+    [
+     "Document (NoSQL)",
+     "MongoDB",
+     "Flexible, evolving shapes"
+    ],
+    [
+     "Realtime / BaaS",
+     "Firebase",
+     "Live updates, little backend code"
+    ],
+    [
+     "In-memory key-value",
+     "Redis",
+     "Extreme speed: cache, sessions, counters"
+    ]
    ],
    "beats": [
     {
-     "say": "Most real products use more than one at once.",
-     "show": 0
+     "say": "Here are the four kinds in this course, and what each is best at.",
+     "col": 2
     },
     {
-     "say": "PostgreSQL for users and orders, which need consistency.",
-     "show": 1
+     "say": "Relational, like PostgreSQL and MySQL. Structured data with relationships, and strong consistency.",
+     "hl": 0
     },
     {
-     "say": "Redis for sessions and caching, which need speed.",
-     "show": 2
+     "say": "Document, like MongoDB. Flexible data whose shape varies or keeps changing.",
+     "hl": 1
     },
     {
-     "say": "And maybe Firebase for a chat feature, which needs live updates.",
-     "show": 3
+     "say": "Realtime, like Firebase. Live updates, with very little backend code.",
+     "hl": 2
+    },
+    {
+     "say": "And in-memory, like Redis. Extreme speed, for caching, sessions and counters.",
+     "hl": 3,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Where you'd use this",
+   "title": "Real products use several at once",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "Your product",
+     "x": 14,
+     "y": 50,
+     "sub": "one app",
+     "art": "laptop"
+    },
+    {
+     "id": "pg",
+     "label": "PostgreSQL",
+     "x": 80,
+     "y": 18,
+     "sub": "users, orders",
+     "art": "database"
+    },
+    {
+     "id": "rd",
+     "label": "Redis",
+     "x": 80,
+     "y": 50,
+     "sub": "sessions, cache",
+     "art": "bolt"
+    },
+    {
+     "id": "fb",
+     "label": "Firebase",
+     "x": 80,
+     "y": 82,
+     "sub": "chat",
+     "art": "cloud"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "pg"
+    },
+    {
+     "from": "app",
+     "to": "rd"
+    },
+    {
+     "from": "app",
+     "to": "fb"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Most real products use more than one database at once.",
+     "show": 1,
+     "on": "app"
+    },
+    {
+     "say": "PostgreSQL holds users and orders, which need consistency and relationships.",
+     "show": 2,
+     "on": "pg",
+     "send": {
+      "from": "app",
+      "to": "pg",
+      "label": "new order"
+     }
+    },
+    {
+     "say": "Redis holds sessions and cached results, which need speed.",
+     "show": 3,
+     "on": "rd",
+     "send": {
+      "from": "app",
+      "to": "rd",
+      "label": "session lookup"
+     }
+    },
+    {
+     "say": "And maybe Firebase runs a chat feature, pushing new messages live.",
+     "show": 4,
+     "on": "fb",
+     "send": {
+      "from": "fb",
+      "to": "app",
+      "label": "new message, live"
+     }
+    },
+    {
+     "say": "Picking the wrong one for a job is one of the most common early architecture mistakes.",
+     "show": 4,
+     "on": [
+      "pg",
+      "rd",
+      "fb"
+     ]
     }
    ]
   },
@@ -166,7 +331,7 @@ You can name all four database types above and give one reason to choose each.
      "show": 0
     },
     {
-     "say": "For TrackIt, or your own idea, write one paragraph: which of the four would you reach for first, and why?",
+     "say": "For TrackIt, a simple task tracker we'll use all course, or your own idea, write one paragraph: which of the four would you reach for first, and why?",
      "show": 1
     }
    ]
@@ -315,24 +480,32 @@ You can read each query above and explain what it does without looking at the co
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "CRUD",
-   "items": [
+   "title": "Four operations spell CRUD",
+   "columns": [
+    "Letter",
+    "Operation",
+    "SQL"
+   ],
+   "rows": [
     [
+     "C",
      "Create",
      "CREATE TABLE · INSERT"
     ],
     [
+     "R",
      "Read",
      "SELECT"
     ],
     [
+     "U",
      "Update",
      "UPDATE"
     ],
     [
+     "D",
      "Delete",
      "DELETE"
     ]
@@ -340,105 +513,379 @@ You can read each query above and explain what it does without looking at the co
    "beats": [
     {
      "say": "The four core operations spell CRUD.",
-     "show": 0
+     "col": 0
     },
     {
-     "say": "Create,",
-     "show": 1
+     "say": "Create: make a table, then insert rows into it.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Read,",
-     "show": 2
+     "say": "Read: select rows back out.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Update,",
-     "show": 3
+     "say": "Update: change rows that already exist.",
+     "hl": 2,
+     "col": 2
     },
     {
-     "say": "and Delete.",
-     "show": 4
+     "say": "And delete: remove rows. Let's watch each one on real rows.",
+     "hl": 3,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "table",
+   "kicker": "Lab · Create and read",
+   "title": "The users table",
+   "columns": [
+    "id",
+    "email",
+    "created_at"
+   ],
+   "rows": [
+    [
+     "1",
+     "alice@example.com",
+     "2026-07-01 09:00"
+    ],
+    [
+     "2",
+     "bob@example.com",
+     "2026-07-01 09:05"
+    ],
+    [
+     "3",
+     "chidi@example.com",
+     "2026-07-01 09:12"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Create table defines users, with three columns. Here it is after three people signed up.",
+     "sql": "CREATE TABLE users (\n    id SERIAL PRIMARY KEY,\n    email VARCHAR(255) UNIQUE NOT NULL,\n    created_at TIMESTAMP DEFAULT NOW()\n);"
+    },
+    {
+     "say": "I D is serial, so the database numbers each new row itself: one, two, three. It's the primary key, so no two rows share one.",
+     "col": 0
+    },
+    {
+     "say": "Alice's insert gave only an email. Her I D and created at time filled themselves in.",
+     "sql": "INSERT INTO users (email) VALUES ('alice@example.com');",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "Run that same insert again, and it fails. Email is unique, and row one already has it.",
+     "sql": "INSERT INTO users (email) VALUES ('alice@example.com');\n-- ERROR: duplicate key value violates unique constraint",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Now read. Select checks every row's email, and only row one matches.",
+     "sql": "SELECT id, email FROM users WHERE email = 'alice@example.com';",
+     "hl": 0,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "We asked for just I D and email, so that's what comes back: one, alice at example dot com.",
+     "hl": 0,
+     "dim": true,
+     "col": 0
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · JOIN",
+   "title": "tasks point at users through owner_id",
+   "nodes": [
+    {
+     "id": "t1",
+     "label": "Write course notes",
+     "x": 20,
+     "y": 18,
+     "sub": "owner_id 1",
+     "art": "checklist"
+    },
+    {
+     "id": "t2",
+     "label": "Review PR",
+     "x": 20,
+     "y": 50,
+     "sub": "owner_id 2",
+     "art": "checklist"
+    },
+    {
+     "id": "t3",
+     "label": "Design logo",
+     "x": 20,
+     "y": 82,
+     "sub": "owner_id 1",
+     "art": "checklist"
+    },
+    {
+     "id": "u1",
+     "label": "alice@example.com",
+     "x": 80,
+     "y": 30,
+     "sub": "users.id 1",
+     "art": "persona"
+    },
+    {
+     "id": "u2",
+     "label": "bob@example.com",
+     "x": 80,
+     "y": 70,
+     "sub": "users.id 2",
+     "art": "persona"
+    }
+   ],
+   "edges": [
+    {
+     "from": "t1",
+     "to": "u1"
+    },
+    {
+     "from": "t2",
+     "to": "u2"
+    },
+    {
+     "from": "t3",
+     "to": "u1"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A second table, tasks. Each task stores an owner I D: the I D of the user who owns it.",
+     "show": 3,
+     "on": [
+      "t1",
+      "t2",
+      "t3"
+     ]
+    },
+    {
+     "say": "And here are the users those numbers point to.",
+     "show": 5,
+     "on": [
+      "u1",
+      "u2"
+     ]
+    },
+    {
+     "say": "Write course notes has owner I D one, which matches Alice's I D.",
+     "on": [
+      "t1",
+      "u1"
+     ],
+     "send": {
+      "from": "t1",
+      "to": "u1",
+      "label": "owner_id 1 = id 1"
+     }
+    },
+    {
+     "say": "Review P R has owner I D two. That's Bob.",
+     "on": [
+      "t2",
+      "u2"
+     ],
+     "send": {
+      "from": "t2",
+      "to": "u2",
+      "label": "owner_id 2 = id 2"
+     }
+    },
+    {
+     "say": "Design logo has owner I D one again. Alice.",
+     "on": [
+      "t3",
+      "u1"
+     ],
+     "send": {
+      "from": "t3",
+      "to": "u1",
+      "label": "owner_id 1 = id 1"
+     }
+    },
+    {
+     "say": "That matching rule, owner I D equals users dot I D, is exactly what a join uses.",
+     "on": [
+      "t1",
+      "t3",
+      "u1"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · JOIN",
+   "title": "JOIN glues matching rows together",
+   "columns": [
+    "tasks.title",
+    "tasks.owner_id",
+    "users.id",
+    "users.email"
+   ],
+   "rows": [
+    [
+     "Write course notes",
+     "1",
+     "1",
+     "alice@example.com"
+    ],
+    [
+     "Review PR",
+     "2",
+     "2",
+     "bob@example.com"
+    ],
+    [
+     "Design logo",
+     "1",
+     "1",
+     "alice@example.com"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Join pairs each task with the user whose I D equals its owner I D, making one wide row.",
+     "sql": "FROM tasks\nJOIN users ON tasks.owner_id = users.id",
+     "col": 1
+    },
+    {
+     "say": "See how the two middle columns always match. That's the on condition.",
+     "col": 2
+    },
+    {
+     "say": "Now the where clause keeps only rows whose email is Alice's. Two rows pass.",
+     "sql": "SELECT tasks.title, users.email\nFROM tasks\nJOIN users ON tasks.owner_id = users.id\nWHERE users.email = 'alice@example.com';",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "We selected task title and user email, so the answer is: Write course notes, and Design logo, each with Alice's email.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 0
+    },
+    {
+     "say": "One table alone couldn't tell you that. The title lives in tasks, and the email lives in users.",
+     "hl": [
+      0,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Update and delete",
+   "title": "WHERE decides which rows change",
+   "values": [
+    "1 · alice@example.com",
+    "2 · bob@example.com",
+    "3 · chidi@example.com"
+   ],
+   "beats": [
+    {
+     "say": "Back to the three users."
+    },
+    {
+     "say": "Update users, set a new email, where I D is one.",
+     "ptr": {
+      "id = 1": 0
+     },
+     "hl": 0,
+     "note": "UPDATE users SET email = 'alice.new@example.com' WHERE id = 1;"
+    },
+    {
+     "say": "Where narrows it to row one, so only Alice's email changes.",
+     "vals": [
+      "1 · alice.new@example.com",
+      "2 · bob@example.com",
+      "3 · chidi@example.com"
+     ],
+     "hl": 0,
+     "ok": [
+      0
+     ]
+    },
+    {
+     "say": "Delete from users where I D is one removes just that row.",
+     "gone": [
+      0
+     ],
+     "note": "DELETE FROM users WHERE id = 1;"
+    },
+    {
+     "say": "But leave off the where, and every single row is deleted. Update without where changes every row too.",
+     "gone": [
+      0,
+      1,
+      2
+     ],
+     "note": "DELETE FROM users;  → every row gone"
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Lab",
-   "title": "Create and read",
-   "file": "SQL",
-   "code": "CREATE TABLE users (\n    id SERIAL PRIMARY KEY,\n    email VARCHAR(255) UNIQUE NOT NULL\n);\n\nINSERT INTO users (email) VALUES ('alice@example.com');\n\nSELECT id, email FROM users WHERE email = 'alice@example.com';",
+   "title": "Read SQL as plain English",
+   "columns": [
+    "SQL",
+    "In plain English"
+   ],
+   "rows": [
+    [
+     "SELECT id, email FROM users WHERE email = 'alice@…'",
+     "Get Alice's id and email"
+    ],
+    [
+     "SELECT tasks.title, users.email … JOIN users …",
+     "List Alice's task titles, with her email"
+    ],
+    [
+     "UPDATE users SET email = … WHERE id = 1",
+     "Change user 1's email"
+    ],
+    [
+     "DELETE FROM users WHERE id = 1",
+     "Remove user 1"
+    ]
+   ],
    "beats": [
     {
-     "say": "Create table defines a users table. Every user gets an automatic I D, and an email that must be unique.",
-     "show": 0
+     "say": "Your lab: translate each query into one plain English sentence.",
+     "col": 0
     },
     {
-     "say": "Insert adds a row.",
-     "show": 1
+     "say": "Select I D and email, where email is Alice's, becomes: get Alice's I D and email.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Select reads it back: get the I D and email of the user whose email is alice at example dot com.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "merge",
-   "kicker": "Lab",
-   "title": "Join two tables",
-   "file": "SQL",
-   "code": "SELECT tasks.title, users.email\nFROM tasks\nJOIN users ON tasks.owner_id = users.id\nWHERE users.email = 'alice@example.com';",
-   "beats": [
-    {
-     "say": "A join combines related data from two tables.",
-     "show": 0
-    },
-    {
-     "say": "This reads as: get each task's title and its owner's email, for tasks owned by Alice.",
-     "show": 1
-    },
-    {
-     "say": "The tasks table's owner I D matches the users table's I D.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "Careful",
-   "title": "Always use WHERE",
-   "quote": "DELETE FROM users;  ← deletes every row. Always add WHERE.",
-   "beats": [
-    {
-     "say": "One warning.",
-     "show": 0
-    },
-    {
-     "say": "Delete from users, without a where clause, deletes every single row in the table.",
-     "show": 1
-    },
-    {
-     "say": "The same goes for update.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "book",
-   "kicker": "Lab",
-   "title": "Read SQL fluently",
-   "quote": "Translate every query into a plain English sentence.",
-   "beats": [
-    {
-     "say": "Your lab: translate each query into a plain English sentence.",
-     "show": 0
-    },
-    {
-     "say": "That's the real skill. Reading SQL fluently, not memorising syntax.",
-     "show": 1
+     "say": "Do the rest on paper before you check. Reading SQL fluently is the real skill, not memorising syntax.",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "col": 1
     }
    ]
   },
@@ -461,7 +908,7 @@ You can read each query above and explain what it does without looking at the co
      "show": 0
     },
     {
-     "say": "What happens if you insert the same email twice with UNIQUE?",
+     "say": "What happens if you insert the same email twice, when email is unique?",
      "show": 0
     },
     {
@@ -597,64 +1044,274 @@ You have a running Postgres database with a real table, and you queried it both 
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 and 2",
-   "title": "Create a table in psql",
+   "title": "Build TrackIt's table in psql",
    "file": "psql",
-   "code": "CREATE DATABASE trackit;\n\\c trackit\n\nCREATE TABLE tasks (\n    id SERIAL PRIMARY KEY,\n    title VARCHAR(255) NOT NULL,\n    done BOOLEAN DEFAULT FALSE,\n    due_date DATE\n);",
+   "code": "CREATE DATABASE trackit;\n\\c trackit\n\nCREATE TABLE tasks (\n    id SERIAL PRIMARY KEY,\n    title VARCHAR(255) NOT NULL,\n    done BOOLEAN DEFAULT FALSE,\n    due_date DATE\n);\n\nINSERT INTO tasks (title, due_date) VALUES ('Write course notes', '2026-07-10');\nINSERT INTO tasks (title, due_date) VALUES ('Review PR', '2026-07-05');\n\nSELECT * FROM tasks WHERE done = FALSE ORDER BY due_date ASC;",
    "beats": [
     {
-     "say": "Install Postgres, or use a free hosted one like Supabase or Neon.",
-     "show": 0
+     "say": "Install Postgres, or use a free hosted one like Supabase or Neon. Then open psql, its command line tool.",
+     "vars": {
+      "connected to": "postgres",
+      "tasks": "—"
+     }
     },
     {
-     "say": "In psql, its command-line tool, create the trackit database, and connect with backslash c.",
-     "show": 1
+     "say": "Create database trackit makes a new, empty database.",
+     "line": 1,
+     "out": "CREATE DATABASE"
     },
     {
-     "say": "Then create a tasks table. Title is required. Done defaults to false.",
-     "show": 1
+     "say": "Backslash c switches into it.",
+     "line": 2,
+     "vars": {
+      "connected to": "trackit"
+     },
+     "out": "You are now connected to database \"trackit\" as user \"postgres\"."
+    },
+    {
+     "say": "Create table makes tasks. Title is required, and done defaults to false.",
+     "line": [
+      4,
+      9
+     ],
+     "vars": {
+      "tasks": "0 rows"
+     },
+     "out": "CREATE TABLE"
+    },
+    {
+     "say": "Insert the first task. Psql replies insert zero one: one row added.",
+     "line": 11,
+     "vars": {
+      "tasks": "1 row"
+     },
+     "out": "INSERT 0 1"
+    },
+    {
+     "say": "Insert a second, Review P R.",
+     "line": 12,
+     "vars": {
+      "tasks": "2 rows"
+     },
+     "out": "INSERT 0 1"
+    },
+    {
+     "say": "Select every unfinished task, soonest due date first. Review P R, due July fifth, comes out on top.",
+     "line": 14,
+     "out": [
+      " id |       title        | done |  due_date",
+      "----+--------------------+------+------------",
+      "  2 | Review PR          | f    | 2026-07-05",
+      "  1 | Write course notes | f    | 2026-07-10",
+      "(2 rows)"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
+   "kind": "table",
    "kicker": "Lab · Step 2",
-   "title": "Add and query tasks",
-   "file": "psql",
-   "code": "INSERT INTO tasks (title, due_date) VALUES ('Write course notes', '2026-07-10');\nINSERT INTO tasks (title, due_date) VALUES ('Review PR', '2026-07-05');\n\nSELECT * FROM tasks WHERE done = FALSE ORDER BY due_date ASC;",
+   "title": "What's really in the tasks table",
+   "columns": [
+    "id",
+    "title",
+    "done",
+    "due_date"
+   ],
+   "rows": [
+    [
+     "1",
+     "Write course notes",
+     "false",
+     "2026-07-10"
+    ],
+    [
+     "2",
+     "Review PR",
+     "false",
+     "2026-07-05"
+    ]
+   ],
    "beats": [
     {
-     "say": "Insert two tasks with due dates.",
-     "show": 0
+     "say": "Here are the two rows, in the order they were inserted."
     },
     {
-     "say": "Then select every unfinished task, soonest due date first.",
-     "show": 1
+     "say": "We never typed an I D. Serial numbered them one and two.",
+     "col": 0
+    },
+    {
+     "say": "Newer code may write generated always as identity instead. Same auto numbering, the S Q L standard way.",
+     "sql": "id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY",
+     "col": 0
+    },
+    {
+     "say": "We never typed done either. Default false filled it in on both rows.",
+     "sql": "done BOOLEAN DEFAULT FALSE",
+     "col": 2
+    },
+    {
+     "say": "So where done equals false keeps both rows.",
+     "sql": "SELECT * FROM tasks WHERE done = FALSE ORDER BY due_date ASC;",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
+    },
+    {
+     "say": "Order by due date ascending puts the earliest date first. That's row two, July fifth.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "And a task with no title? Postgres refuses it, because title is not null.",
+     "sql": "INSERT INTO tasks (due_date) VALUES ('2026-07-12');\n-- ERROR: null value in column \"title\" violates not-null constraint",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "diagram",
    "kicker": "Lab · Step 3",
-   "title": "Connect from Python",
-   "file": "Python",
-   "code": "import os\nimport psycopg\n\nconn = psycopg.connect(dbname=\"trackit\", user=\"postgres\",\n                       password=os.environ[\"PGPASSWORD\"], host=\"localhost\")\ncur = conn.cursor()\ncur.execute(\"SELECT title, due_date FROM tasks WHERE done = FALSE ORDER BY due_date ASC;\")\nfor row in cur.fetchall():\n    print(row)",
+   "title": "Your code talks to the database",
+   "nodes": [
+    {
+     "id": "sh",
+     "label": "Terminal",
+     "x": 14,
+     "y": 22,
+     "sub": "export PGPASSWORD=…",
+     "art": "terminal"
+    },
+    {
+     "id": "py",
+     "label": "Python script",
+     "x": 50,
+     "y": 72,
+     "sub": "psycopg driver",
+     "art": "code"
+    },
+    {
+     "id": "pg",
+     "label": "PostgreSQL",
+     "x": 86,
+     "y": 22,
+     "sub": "trackit database",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sh",
+     "to": "py"
+    },
+    {
+     "from": "py",
+     "to": "pg"
+    }
+   ],
    "beats": [
     {
-     "say": "Your app needs to talk to the database in code, so connect from Python with psycopg.",
-     "show": 0
+     "say": "Your app can't type into psql. It needs to talk to the database in code. Install psycopg, the Python driver, with pip.",
+     "show": 3,
+     "on": "py"
     },
     {
-     "say": "Keep the password out of your code. Read it from an environment variable called P G password.",
-     "show": 1
+     "say": "Keep the password out of your code. Set it in the terminal as an environment variable called P G password.",
+     "on": "sh",
+     "send": {
+      "from": "sh",
+      "to": "py",
+      "label": "PGPASSWORD"
+     }
     },
     {
-     "say": "Then run the same query and print each row.",
-     "show": 1
+     "say": "The script connects to trackit on this machine, and sends the same query.",
+     "on": "pg",
+     "send": {
+      "from": "py",
+      "to": "pg",
+      "label": "connect + SELECT"
+     }
+    },
+    {
+     "say": "Postgres sends back the two unfinished tasks.",
+     "on": "py",
+     "send": {
+      "from": "pg",
+      "to": "py",
+      "label": "2 rows"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Step 3",
+   "title": "Run the query from Python",
+   "file": "Python",
+   "code": "import os\nimport psycopg\n\nconn = psycopg.connect(\n    dbname=\"trackit\",\n    user=\"postgres\",\n    password=os.environ[\"PGPASSWORD\"],\n    host=\"localhost\",\n)\ncur = conn.cursor()\ncur.execute(\"SELECT title, due_date FROM tasks WHERE done = FALSE ORDER BY due_date ASC;\")\nfor row in cur.fetchall():\n    print(row)\nconn.close()",
+   "beats": [
+    {
+     "say": "Import os, to read environment variables, and psycopg.",
+     "line": [
+      1,
+      2
+     ]
+    },
+    {
+     "say": "Connect: database trackit, user postgres, the password read from P G password, on localhost.",
+     "line": [
+      4,
+      9
+     ],
+     "vars": {
+      "conn": "open → trackit"
+     }
+    },
+    {
+     "say": "A cursor is the object that runs queries for you.",
+     "line": 10,
+     "vars": {
+      "cur": "cursor"
+     }
+    },
+    {
+     "say": "Execute sends the select: title and due date of unfinished tasks, soonest first.",
+     "line": 11
+    },
+    {
+     "say": "Fetch all returns the rows. The first is Review P R. Notice the date comes back as a real Python date.",
+     "line": [
+      12,
+      13
+     ],
+     "vars": {
+      "row": "('Review PR', date(2026, 7, 5))"
+     },
+     "out": "('Review PR', datetime.date(2026, 7, 5))"
+    },
+    {
+     "say": "Then Write course notes, due July tenth.",
+     "line": [
+      12,
+      13
+     ],
+     "vars": {
+      "row": "('Write course notes', date(2026, 7, 10))"
+     },
+     "out": "('Write course notes', datetime.date(2026, 7, 10))"
+    },
+    {
+     "say": "Close the connection when you're done.",
+     "line": 14,
+     "vars": {
+      "conn": "closed"
+     }
     }
    ]
   },
@@ -814,88 +1471,211 @@ You can list at least two syntax differences between Postgres and MySQL for the 
    ]
   },
   {
-   "kind": "list",
-   "art": "terminal",
+   "kind": "diagram",
    "kicker": "Lab · Step 1",
-   "title": "Get MySQL running",
-   "items": [
-    [
-     "Install it",
-     "MySQL Community Server, or brew on macOS"
-    ],
-    [
-     "Or use Docker",
-     "docker run … mysql:8.4"
-    ]
+   "title": "Get a MySQL server running",
+   "nodes": [
+    {
+     "id": "term",
+     "label": "Your terminal",
+     "x": 14,
+     "y": 50,
+     "sub": "mysql -u root -p",
+     "art": "terminal"
+    },
+    {
+     "id": "dock",
+     "label": "Docker",
+     "x": 50,
+     "y": 18,
+     "sub": "mysql:8.4 image",
+     "art": "container"
+    },
+    {
+     "id": "ctr",
+     "label": "trackit-mysql",
+     "x": 86,
+     "y": 50,
+     "sub": "MySQL 8.4 · port 3306",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "term",
+     "to": "dock"
+    },
+    {
+     "from": "dock",
+     "to": "ctr"
+    },
+    {
+     "from": "term",
+     "to": "ctr"
+    }
    ],
    "beats": [
     {
-     "say": "Two ways to get it running.",
-     "show": 0
+     "say": "Option one: install MySQL Community Server, or on a Mac, brew install mysql. Then mysql, dash u root, dash p, opens the client.",
+     "show": 1,
+     "on": "term"
     },
     {
-     "say": "Install MySQL Community Server, or on a Mac, use brew.",
-     "show": 1
+     "say": "Option two: Docker.",
+     "show": 3
     },
     {
-     "say": "Or run it in Docker. If it can't connect at first, wait twenty to thirty seconds while it starts.",
-     "show": 2
+     "say": "Docker run fetches MySQL eight point four, the long term support release.",
+     "on": "dock",
+     "send": {
+      "from": "term",
+      "to": "dock",
+      "label": "docker run … mysql:8.4"
+     }
+    },
+    {
+     "say": "It starts a container called trackit mysql, with your root password, on port thirty three oh six.",
+     "on": "ctr",
+     "send": {
+      "from": "dock",
+      "to": "ctr",
+      "label": "start · root password · 3306"
+     }
+    },
+    {
+     "say": "Docker exec opens the MySQL client inside that container.",
+     "on": [
+      "term",
+      "ctr"
+     ],
+     "send": {
+      "from": "term",
+      "to": "ctr",
+      "label": "docker exec … mysql -u root -p"
+     }
+    },
+    {
+     "say": "If it says it can't connect, MySQL is still starting. Wait twenty to thirty seconds, then try again.",
+     "on": "ctr"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
+   "kind": "walk",
    "kicker": "Lab · Step 2",
    "title": "The same table, in MySQL",
-   "file": "MySQL",
-   "code": "CREATE DATABASE trackit;\nUSE trackit;\n\nCREATE TABLE tasks (\n    id INT AUTO_INCREMENT PRIMARY KEY,\n    title VARCHAR(255) NOT NULL,\n    done BOOLEAN DEFAULT FALSE,\n    due_date DATE\n);",
+   "file": "mysql",
+   "code": "CREATE DATABASE trackit;\nUSE trackit;\n\nCREATE TABLE tasks (\n    id INT AUTO_INCREMENT PRIMARY KEY,\n    title VARCHAR(255) NOT NULL,\n    done BOOLEAN DEFAULT FALSE,\n    due_date DATE\n);\n\nINSERT INTO tasks (title, due_date) VALUES ('Write course notes', '2026-07-10');\n\nSELECT * FROM tasks WHERE done = FALSE ORDER BY due_date ASC;",
    "beats": [
     {
      "say": "Here's the same tasks table, in MySQL.",
-     "show": 0
+     "line": 1,
+     "out": "Query OK, 1 row affected"
     },
     {
-     "say": "Use trackit switches database, and the I D uses auto increment.",
-     "show": 1
+     "say": "Use trackit switches database. Postgres used backslash c.",
+     "line": 2,
+     "out": "Database changed"
     },
     {
-     "say": "Everything else, the insert and the select, is the same SQL you already know.",
-     "show": 1
+     "say": "The I D uses auto increment, where Postgres used serial. Everything else matches.",
+     "line": [
+      4,
+      9
+     ],
+     "out": "Query OK, 0 rows affected"
+    },
+    {
+     "say": "The insert is identical.",
+     "line": 11,
+     "vars": {
+      "tasks": "1 row"
+     },
+     "out": "Query OK, 1 row affected"
+    },
+    {
+     "say": "So is the select. One small surprise: MySQL stores a boolean as a tiny number, so false shows as zero.",
+     "line": 13,
+     "out": [
+      "| id | title              | done | due_date   |",
+      "|  1 | Write course notes |    0 | 2026-07-10 |",
+      "1 row in set"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "venn",
+   "kind": "table",
    "kicker": "Lab · Step 3",
    "title": "Spot the differences",
-   "items": [
+   "columns": [
+    "Part",
+    "PostgreSQL",
+    "MySQL"
+   ],
+   "rows": [
     [
-     "\\c trackit  vs  USE trackit;",
-     "Switching database"
+     "Switch database",
+     "\\c trackit",
+     "USE trackit;"
     ],
     [
-     "SERIAL  vs  AUTO_INCREMENT",
-     "Auto-numbered IDs"
+     "Auto-numbered id",
+     "SERIAL",
+     "INT AUTO_INCREMENT"
+    ],
+    [
+     "title column",
+     "VARCHAR(255) NOT NULL",
+     "VARCHAR(255) NOT NULL"
+    ],
+    [
+     "done column",
+     "BOOLEAN DEFAULT FALSE",
+     "BOOLEAN DEFAULT FALSE"
+    ],
+    [
+     "The query",
+     "SELECT … WHERE … ORDER BY",
+     "SELECT … WHERE … ORDER BY"
     ]
    ],
    "beats": [
     {
-     "say": "Spot the differences.",
-     "show": 0
+     "say": "Line the two versions up side by side.",
+     "col": 0
     },
     {
-     "say": "Postgres switches database with backslash c. MySQL uses use.",
-     "show": 1
+     "say": "Difference one: switching database. Backslash c in Postgres, use in MySQL.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Postgres auto-numbers with serial. MySQL uses auto increment.",
-     "show": 2
+     "say": "Difference two: auto numbered I Ds. Serial in Postgres, auto increment in MySQL.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "The core queries are nearly identical, so your SQL skills transfer.",
-     "show": 2
+     "say": "Everything else, the columns and the query, is the same.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "Differences show up mostly in setup, functions and advanced features, not in everyday queries.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 0
+    },
+    {
+     "say": "That's why S Q L experience transfers between them, with only small adjustments.",
+     "hl": 4,
+     "col": 1
     }
    ]
   },
@@ -918,7 +1698,7 @@ You can list at least two syntax differences between Postgres and MySQL for the 
      "show": 0
     },
     {
-     "say": "Does SQL experience transfer between MySQL and Postgres?",
+     "say": "Does S Q L experience transfer between MySQL and Postgres?",
      "show": 0
     },
     {
@@ -1053,80 +1833,216 @@ You inserted two documents with different fields into the same collection withou
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
-   "kicker": "Where you'd use this",
-   "title": "When flexible data helps",
-   "items": [
+   "kind": "walk",
+   "kicker": "Lab · Step 2",
+   "title": "Two tasks, two different shapes",
+   "file": "mongosh",
+   "code": "use trackit\ndb.tasks.insertOne({\n  title: \"Write course notes\", done: false,\n  due_date: new Date(\"2026-07-10\"),\n  tags: [\"writing\", \"course\"]\n})\ndb.tasks.insertOne({\n  title: \"Design logo\", done: false,\n  due_date: new Date(\"2026-07-08\"),\n  design_tool: \"Figma\"\n})\ndb.tasks.find({ done: false }).sort({ due_date: 1 })",
+   "beats": [
+    {
+     "say": "In mongosh, use trackit switches to the trackit database.",
+     "line": 1,
+     "out": "switched to db trackit"
+    },
+    {
+     "say": "Insert a task with a title, done, a due date, and a list of tags.",
+     "line": [
+      2,
+      6
+     ],
+     "vars": {
+      "tasks": "1 document"
+     },
+     "out": "{ acknowledged: true, insertedId: ObjectId('…') }"
+    },
+    {
+     "say": "Insert a second task. No tags this time, but a design tool field instead.",
+     "line": [
+      7,
+      11
+     ],
+     "vars": {
+      "tasks": "2 documents"
+     },
+     "out": "{ acknowledged: true, insertedId: ObjectId('…') }"
+    },
+    {
+     "say": "No schema change, no error. Different fields in one collection is completely normal here.",
+     "line": [
+      5,
+      10
+     ]
+    },
+    {
+     "say": "Find every unfinished task, with due date one, meaning ascending. Design logo, July eighth, comes first.",
+     "line": 12,
+     "out": [
+      "{ _id: ObjectId('…'), title: 'Design logo', … }",
+      "{ _id: ObjectId('…'), title: 'Write course notes', … }"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 3",
+   "title": "If those two tasks were a SQL table",
+   "columns": [
+    "title",
+    "done",
+    "due_date",
+    "tags",
+    "design_tool"
+   ],
+   "rows": [
     [
-     "Product catalogues",
-     ""
+     "Write course notes",
+     "false",
+     "2026-07-10",
+     "writing, course",
+     "NULL"
     ],
     [
-     "User content and logs",
-     ""
-    ],
-    [
-     "Early-stage products",
-     ""
+     "Design logo",
+     "false",
+     "2026-07-08",
+     "NULL",
+     "Figma"
     ]
    ],
    "beats": [
     {
-     "say": "That flexibility helps when data varies, or keeps changing.",
-     "show": 0
+     "say": "Picture those two documents forced into one relational table."
     },
     {
-     "say": "Product catalogues, where each product type has different attributes,",
-     "show": 1
+     "say": "Every row needs every column. So the notes task gets an empty design tool.",
+     "hl": 0,
+     "col": 4
     },
     {
-     "say": "user-generated content and event logs,",
-     "show": 2
+     "say": "And the logo task gets empty tags.",
+     "hl": 1,
+     "col": 3
     },
     {
-     "say": "and early products, where the shape isn't settled yet.",
-     "show": 3
+     "say": "Each new kind of task means a schema change, or more nullable columns.",
+     "col": 4
+    },
+    {
+     "say": "In MongoDB, each document simply carries the fields it has. That's why it suits product catalogues, user content, logs, and early products.",
+     "hl": [
+      0,
+      1
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "file",
-   "kicker": "Lab · Step 2",
-   "title": "Two different documents",
-   "file": "mongosh",
-   "code": "db.tasks.insertOne({\n  title: \"Write course notes\",\n  done: false,\n  tags: [\"writing\", \"course\"]\n})\n\ndb.tasks.insertOne({\n  title: \"Design logo\",\n  done: false,\n  design_tool: \"Figma\"\n})",
+   "kind": "walk",
+   "kicker": "Lab · Step 4",
+   "title": "Insert and query from Python",
+   "file": "Python",
+   "code": "from datetime import datetime\n\nfrom pymongo import MongoClient\n\nclient = MongoClient(\"mongodb://localhost:27017\")\ndb = client[\"trackit\"]\n\ndb.tasks.insert_one({\"title\": \"Review PR\", \"done\": False, \"due_date\": datetime(2026, 7, 5)})\n\nfor task in db.tasks.find({\"done\": False}).sort(\"due_date\", 1):\n    print(task)",
    "beats": [
     {
-     "say": "In mongosh, insert two tasks.",
-     "show": 0
+     "say": "Install pymongo, then connect to MongoDB on this machine, port twenty seven oh one seven.",
+     "line": [
+      3,
+      5
+     ],
+     "vars": {
+      "client": "localhost:27017"
+     }
     },
     {
-     "say": "One has tags. The other has a design tool field instead.",
-     "show": 1
+     "say": "Pick the trackit database, the same one mongosh used.",
+     "line": 6,
+     "vars": {
+      "db": "trackit"
+     }
     },
     {
-     "say": "In a relational database, that would need a schema change. Here, it's completely normal.",
-     "show": 1
+     "say": "Insert a third task, Review P R, due July fifth.",
+     "line": 8,
+     "vars": {
+      "tasks": "3 documents"
+     }
+    },
+    {
+     "say": "Find unfinished tasks, sorted by due date, one meaning ascending. Review P R is earliest.",
+     "line": [
+      10,
+      11
+     ],
+     "vars": {
+      "task": "Review PR"
+     },
+     "out": "{'_id': ObjectId('…'), 'title': 'Review PR', …}"
+    },
+    {
+     "say": "Then Design logo, then Write course notes. Each prints as a Python dictionary.",
+     "line": [
+      10,
+      11
+     ],
+     "vars": {
+      "task": "Write course notes"
+     },
+     "out": [
+      "{'_id': ObjectId('…'), 'title': 'Design logo', …}",
+      "{'_id': ObjectId('…'), 'title': 'Write course notes', …}"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "search",
-   "kicker": "Lab · Steps 2 and 4",
-   "title": "Query them back",
-   "file": "mongosh / Python",
-   "code": "db.tasks.find({ done: false }).sort({ due_date: 1 })\n\n# Python\nfor task in db.tasks.find({\"done\": False}).sort(\"due_date\", 1):\n    print(task)",
+   "kind": "array",
+   "kicker": "Lab · Step 4",
+   "title": "One collection, sorted by due_date",
+   "values": [
+    "Write course notes · Jul 10",
+    "Design logo · Jul 8",
+    "Review PR · Jul 5"
+   ],
    "beats": [
     {
-     "say": "Find every unfinished task, sorted by due date.",
-     "show": 0
+     "say": "Here are the three task documents, in the order they were inserted."
     },
     {
-     "say": "From Python, pymongo does the same: insert one, then find and sort.",
-     "show": 1
+     "say": "Find done false: all three are unfinished, so all three match.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "note": "find({ done: false })"
+    },
+    {
+     "say": "Sort due date one puts the earliest first.",
+     "vals": [
+      "Review PR · Jul 5",
+      "Design logo · Jul 8",
+      "Write course notes · Jul 10"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "sort({ due_date: 1 }) → earliest first"
+    },
+    {
+     "say": "Notice it sorts fine even though the documents have different fields.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "note": "design_tool / tags don't matter here"
     }
    ]
   },
@@ -1166,7 +2082,7 @@ You inserted two documents with different fields into the same collection withou
      "show": 0
     },
     {
-     "say": "What's MongoDB's word for what SQL calls a table?",
+     "say": "What's MongoDB's word for what S Q L calls a table?",
      "show": 0
     },
     {
@@ -1313,44 +2229,6 @@ You saw a task you added in the Firebase console appear in your page's console i
    ]
   },
   {
-   "kind": "list",
-   "art": "chat",
-   "kicker": "Where you'd use this",
-   "title": "Features that need to feel live",
-   "items": [
-    [
-     "Chat",
-     ""
-    ],
-    [
-     "Shared, live lists",
-     ""
-    ],
-    [
-     "Live scoreboards",
-     ""
-    ]
-   ],
-   "beats": [
-    {
-     "say": "It shines for features that need to feel live.",
-     "show": 0
-    },
-    {
-     "say": "A chat,",
-     "show": 1
-    },
-    {
-     "say": "a shared to-do list where changes appear for everyone,",
-     "show": 2
-    },
-    {
-     "say": "or a live scoreboard.",
-     "show": 3
-    }
-   ]
-  },
-  {
    "kind": "flow",
    "art": "gear",
    "kicker": "Lab · Steps 1 and 2",
@@ -1367,7 +2245,7 @@ You saw a task you added in the Firebase console appear in your page's console i
      "show": 1
     },
     {
-     "say": "Create a Firestore database in test mode. Test mode rules expire after thirty days, so you must write real rules before anyone else uses it.",
+     "say": "Create a Firestore database in test mode.",
      "show": 2
     },
     {
@@ -1375,65 +2253,211 @@ You saw a task you added in the Firebase console appear in your page's console i
      "show": 3
     },
     {
-     "say": "Then make a small Vite project and install Firebase.",
+     "say": "Then make a small Vite project, and install Firebase.",
      "show": 4
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "table",
+   "kicker": "Lab · Step 1",
+   "title": "Who can read and write?",
+   "columns": [
+    "Setting",
+    "Who can read and write",
+    "The catch"
+   ],
+   "rows": [
+    [
+     "Production mode",
+     "Nobody, until you write rules",
+     "Lab code fails: permission error"
+    ],
+    [
+     "Test mode",
+     "Anyone, for now",
+     "Expires after 30 days"
+    ],
+    [
+     "Real security rules",
+     "Only who your rules allow",
+     "You have to write them"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "When the browser talks straight to the database, security rules decide who gets in.",
+     "col": 1
+    },
+    {
+     "say": "Production mode blocks everything until you write rules, so the lab code would fail.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "Test mode lets anyone in, which is why we pick it for the lab. Its rules expire after thirty days.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "Before anyone else uses your app, write real rules.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "And the web config isn't a secret. It only identifies your project. The rules protect your data.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Lab · Step 3",
    "title": "Add a task, then listen",
    "file": "src/main.js",
-   "code": "await addDoc(collection(db, \"tasks\"), {\n  title: \"Write course notes\",\n  done: false,\n});\n\nconst q = query(collection(db, \"tasks\"), where(\"done\", \"==\", false));\nonSnapshot(q, (snapshot) => {\n  snapshot.forEach((doc) => console.log(doc.id, doc.data()));\n});",
+   "code": "const app = initializeApp(firebaseConfig);\nconst db = getFirestore(app);\nawait addDoc(collection(db, \"tasks\"), {\n  title: \"Write course notes\",\n  done: false,\n  dueDate: \"2026-07-10\",\n});\n\nconst tasksQuery = query(collection(db, \"tasks\"), where(\"done\", \"==\", false));\nonSnapshot(tasksQuery, (snapshot) => {\n  snapshot.forEach((doc) => {\n    console.log(doc.id, doc.data());\n  });\n});",
    "beats": [
     {
-     "say": "Add doc saves a task.",
-     "show": 0
+     "say": "Start the app with your config, and get the Firestore database.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "On snapshot is the key idea. It doesn't fetch once. It keeps listening, and re-runs whenever the data changes.",
-     "show": 1
+     "say": "Add doc saves a task into the tasks collection. Firestore makes up its I D.",
+     "line": [
+      3,
+      7
+     ],
+     "vars": {
+      "tasks collection": "1 doc"
+     }
+    },
+    {
+     "say": "Build a query: tasks where done equals false.",
+     "line": 9
+    },
+    {
+     "say": "On snapshot attaches a listener to that query. It doesn't fetch once and stop. It keeps listening.",
+     "line": 10
+    },
+    {
+     "say": "Right away the callback runs, and logs each matching task. Just one so far.",
+     "line": [
+      11,
+      12
+     ],
+     "out": "k2Jd9… {title: 'Write course notes', …}"
+    },
+    {
+     "say": "Now add a task by hand in the Firebase console. The callback runs again by itself, and logs the new list of two.",
+     "line": [
+      10,
+      12
+     ],
+     "vars": {
+      "tasks collection": "2 docs"
+     },
+     "out": [
+      "k2Jd9… {title: 'Write course notes', …}",
+      "Pq7xA… {title: 'Review PR', …}"
+     ]
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "bolt",
+   "kind": "diagram",
    "kicker": "Lab · Step 4",
-   "title": "Watch it update live",
-   "big": "Instant",
-   "sub": "new tasks appear without a refresh",
-   "beats": [
+   "title": "Firestore pushes changes to you",
+   "nodes": [
     {
-     "say": "Now try it. Keep the browser console open.",
-     "show": 0
+     "id": "page",
+     "label": "Your page",
+     "x": 14,
+     "y": 50,
+     "sub": "browser console",
+     "art": "browser"
     },
     {
-     "say": "Add a task by hand in the Firebase console.",
-     "show": 1
+     "id": "fs",
+     "label": "Firestore",
+     "x": 54,
+     "y": 50,
+     "sub": "tasks collection",
+     "art": "cloud"
     },
     {
-     "say": "Your page logs the new list instantly. No polling, no extra code.",
-     "show": 2
+     "id": "con",
+     "label": "Firebase console",
+     "x": 88,
+     "y": 20,
+     "sub": "you, by hand",
+     "art": "laptop"
     }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "lock",
-   "kicker": "Careful",
-   "title": "Security rules control access",
-   "quote": "The web config identifies your project. Security rules protect your data.",
-   "beats": [
+   ],
+   "edges": [
     {
-     "say": "When the browser talks directly to the database, security rules decide who can read and write.",
-     "show": 0
+     "from": "page",
+     "to": "fs"
     },
     {
-     "say": "The config isn't a secret. Your rules are what protect the data.",
-     "show": 1
+     "from": "con",
+     "to": "fs"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's what just happened, as a picture.",
+     "show": 2
+    },
+    {
+     "say": "The page saves a task.",
+     "on": "fs",
+     "send": {
+      "from": "page",
+      "to": "fs",
+      "label": "addDoc: Write course notes"
+     }
+    },
+    {
+     "say": "Then it subscribes. Firestore remembers this page is listening for unfinished tasks.",
+     "on": "fs",
+     "send": {
+      "from": "page",
+      "to": "fs",
+      "label": "onSnapshot: done == false"
+     }
+    },
+    {
+     "say": "It sends the current list straight away: one task.",
+     "on": "page",
+     "send": {
+      "from": "fs",
+      "to": "page",
+      "label": "snapshot: 1 task"
+     }
+    },
+    {
+     "say": "Now you add Review P R in the console, with done set to false.",
+     "show": 3,
+     "on": "con",
+     "send": {
+      "from": "con",
+      "to": "fs",
+      "label": "add: Review PR, done: false"
+     }
+    },
+    {
+     "say": "Firestore pushes the new list to the page instantly. You wrote no polling and no websocket code.",
+     "on": "page",
+     "send": {
+      "from": "fs",
+      "to": "page",
+      "label": "snapshot: 2 tasks"
+     }
     }
    ]
   },
@@ -1612,117 +2636,312 @@ You can explain why Redis is fast (in-memory) and why it's usually paired with, 
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "diagram",
    "kicker": "Where you'd use this",
-   "title": "Four classic jobs",
-   "items": [
-    [
-     "Caching",
-     ""
-    ],
-    [
-     "Sessions",
-     ""
-    ],
-    [
-     "Rate limiting",
-     ""
-    ],
-    [
-     "Leaderboards",
-     ""
-    ]
+   "title": "Redis sits beside your main database",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "Your app",
+     "x": 14,
+     "y": 50,
+     "sub": "TrackIt server",
+     "art": "server"
+    },
+    {
+     "id": "rd",
+     "label": "Redis",
+     "x": 82,
+     "y": 22,
+     "sub": "in memory · very fast",
+     "art": "bolt"
+    },
+    {
+     "id": "pg",
+     "label": "PostgreSQL",
+     "x": 82,
+     "y": 78,
+     "sub": "on disk · source of truth",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "rd"
+    },
+    {
+     "from": "app",
+     "to": "pg"
+    }
    ],
    "beats": [
     {
-     "say": "Four classic jobs.",
-     "show": 0
-    },
-    {
-     "say": "Caching, so an expensive query isn't recomputed every time.",
-     "show": 1
-    },
-    {
-     "say": "Sessions, for logged-in users.",
-     "show": 2
-    },
-    {
-     "say": "Rate limiting, counting how many requests someone made in the last minute.",
+     "say": "Redis usually sits beside your main database, not instead of it.",
      "show": 3
     },
     {
-     "say": "And real-time leaderboards.",
-     "show": 4
+     "say": "Things you can't lose, like users and tasks, go to the main database, on disk.",
+     "on": "pg",
+     "send": {
+      "from": "app",
+      "to": "pg",
+      "label": "save task"
+     }
+    },
+    {
+     "say": "Logged in users' sessions go to Redis, held in memory, so reads are extremely fast.",
+     "on": "rd",
+     "send": {
+      "from": "app",
+      "to": "rd",
+      "label": "session: user 1"
+     }
+    },
+    {
+     "say": "So do counters, for rate limiting, and real-time leaderboards.",
+     "on": "rd",
+     "send": {
+      "from": "app",
+      "to": "rd",
+      "label": "rate_limit:alice +1"
+     }
+    },
+    {
+     "say": "And cached copies of expensive results, so you don't recompute them every time.",
+     "on": "rd",
+     "send": {
+      "from": "app",
+      "to": "rd",
+      "label": "cache: trending_tasks"
+     }
+    },
+    {
+     "say": "If Redis restarts and loses that, nothing important is gone. The truth is still on disk.",
+     "on": [
+      "rd",
+      "pg"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "stopwatch",
+   "kind": "walk",
    "kicker": "Lab · Step 2",
    "title": "Keys that expire",
    "file": "redis-cli",
    "code": "SET user:1:name \"Alice\"\nGET user:1:name\nEXPIRE user:1:name 3600\nTTL user:1:name",
    "beats": [
     {
-     "say": "In redis-cli, set a key, then get it.",
-     "show": 0
+     "say": "In redis cli, set stores the value Alice under the key user colon one colon name.",
+     "line": 1,
+     "vars": {
+      "user:1:name": "\"Alice\"",
+      "expires in": "never"
+     },
+     "out": "OK"
     },
     {
-     "say": "Expire tells Redis to delete it automatically after an hour, and T T L shows the seconds left.",
-     "show": 1
+     "say": "Get reads it straight back.",
+     "line": 2,
+     "out": "\"Alice\""
+    },
+    {
+     "say": "Expire gives the key a life of thirty six hundred seconds: one hour. The one means it worked.",
+     "line": 3,
+     "vars": {
+      "expires in": "3600 s"
+     },
+     "out": "(integer) 1"
+    },
+    {
+     "say": "T T L asks how many seconds are left. Right now, about thirty six hundred.",
+     "line": 4,
+     "out": "(integer) 3600"
+    },
+    {
+     "say": "When that reaches zero, Redis deletes the key by itself.",
+     "line": 4,
+     "vars": {
+      "user:1:name": "(deleted)",
+      "expires in": "—"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "database",
+   "kind": "walk",
    "kicker": "Lab · Step 3",
-   "title": "Cache an expensive query",
-   "steps": [
-    "Check the cache",
-    "Hit: return instantly",
-    "Miss: compute, cache 60s"
+   "title": "Cache an expensive result",
+   "file": "cache_demo.py",
+   "code": "def get_trending_tasks():\n    cache_key = \"trending_tasks\"\n    cached = r.get(cache_key)\n    if cached:\n        return json.loads(cached)   # instant, skips the database entirely\n\n    # Pretend this is an expensive database query\n    result = [\"Write course notes\", \"Design logo\", \"Review PR\"]\n    r.set(cache_key, json.dumps(result), ex=60)   # cache for 60 seconds\n    return result\n\nprint(get_trending_tasks())   # first call: computes and caches the result\nprint(get_trending_tasks())   # second call: served from Redis",
+   "beats": [
+    {
+     "say": "First call. Ask Redis for trending tasks. Nothing's there yet, so cached is None.",
+     "line": [
+      12,
+      3
+     ],
+     "vars": {
+      "cached": "None",
+      "Redis: trending_tasks": "(empty)"
+     }
+    },
+    {
+     "say": "None counts as false, so we skip the early return.",
+     "line": 4
+    },
+    {
+     "say": "Do the expensive work. Here we pretend, with a list of three tasks.",
+     "line": 8,
+     "vars": {
+      "result": "[3 tasks]"
+     }
+    },
+    {
+     "say": "Save it in Redis as J S O N text, expiring in sixty seconds.",
+     "line": 9,
+     "vars": {
+      "Redis: trending_tasks": "'[\"Write course notes\", …]' · 60 s"
+     }
+    },
+    {
+     "say": "Return it, and print.",
+     "line": [
+      10,
+      12
+     ],
+     "out": "['Write course notes', 'Design logo', 'Review PR']"
+    },
+    {
+     "say": "Second call. This time Redis has it, so cached holds the J S O N text.",
+     "line": [
+      13,
+      3
+     ],
+     "vars": {
+      "cached": "'[\"Write course notes\", …]'",
+      "result": "—"
+     }
+    },
+    {
+     "say": "J S O N dot loads turns it back into a list, and we return straight away. The database is never touched.",
+     "line": [
+      4,
+      5
+     ],
+     "out": "['Write course notes', 'Design logo', 'Review PR']"
+    },
+    {
+     "say": "After sixty seconds the key expires, and the next call computes fresh data.",
+     "line": 9,
+     "vars": {
+      "Redis: trending_tasks": "(expired)"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Step 4",
+   "title": "Rate limiting, attempt by attempt",
+   "columns": [
+    "attempt",
+    "count",
+    "count == 1?",
+    "count > 5?",
+    "prints"
+   ],
+   "rows": [
+    [
+     "1",
+     "1",
+     "yes: expire 60s",
+     "False",
+     "1 allowed"
+    ],
+    [
+     "2",
+     "2",
+     "no",
+     "False",
+     "2 allowed"
+    ],
+    [
+     "3",
+     "3",
+     "no",
+     "False",
+     "3 allowed"
+    ],
+    [
+     "4",
+     "4",
+     "no",
+     "False",
+     "4 allowed"
+    ],
+    [
+     "5",
+     "5",
+     "no",
+     "False",
+     "5 allowed"
+    ],
+    [
+     "6",
+     "6",
+     "no",
+     "True",
+     "6 limited"
+    ],
+    [
+     "7",
+     "7",
+     "no",
+     "True",
+     "7 limited"
+    ]
    ],
    "beats": [
     {
-     "say": "From Python, cache an expensive result.",
-     "show": 0
+     "say": "Rate limiting is just a counter with an expiry. Here's alice making seven requests.",
+     "sql": "count = r.incr(key)          # key = \"rate_limit:alice\"\nif count == 1:\n    r.expire(key, 60)\nreturn count > limit          # limit = 5"
     },
     {
-     "say": "Check Redis first.",
-     "show": 1
+     "say": "Attempt one. The key doesn't exist yet, so incr creates it, starting at one.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "If it's there, return it instantly and skip the database.",
-     "show": 2
+     "say": "Count is one, so this is the first request in the window. Start a sixty second timer.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "If not, compute it, and store it for sixty seconds.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "gauge",
-   "kicker": "Lab · Step 4",
-   "title": "Rate limiting",
-   "file": "cache_demo.py",
-   "code": "def is_rate_limited(user_id, limit=5):\n    key = f\"rate_limit:{user_id}\"\n    count = r.incr(key)\n    if count == 1:\n        r.expire(key, 60)\n    return count > limit",
-   "beats": [
-    {
-     "say": "Rate limiting is a counter with an expiry.",
-     "show": 0
+     "say": "Attempts two to five just add one. None is more than five, so all five are allowed.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "col": 3
     },
     {
-     "say": "Incr adds one to the user's counter, starting at one if it's new. On the first request, give it a sixty second expiry.",
-     "show": 1
+     "say": "Attempt six makes the count six. Six is more than five, so it's limited. Seven too.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true,
+     "col": 4
     },
     {
-     "say": "More than five requests in that minute? Limited. Attempts six and seven are blocked, until the minute passes.",
-     "show": 1
+     "say": "When the sixty seconds are up, the key expires, the count starts again at one, and alice is allowed again.",
+     "hl": 0,
+     "col": 2
     }
    ]
   },
@@ -1859,98 +3078,255 @@ You produced your own reasoning for all four scenarios above before checking the
    ]
   },
   {
-   "kind": "list",
-   "art": "compass",
+   "kind": "table",
    "kicker": "Questions to ask",
    "title": "For any new feature",
-   "items": [
+   "columns": [
+    "Ask",
+    "Then reach for"
+   ],
+   "rows": [
     [
      "Clear structure and relationships?",
-     "PostgreSQL / MySQL"
+     "Relational: Postgres / MySQL"
     ],
     [
-     "Shape varies or changes?",
-     "MongoDB"
+     "Shape varies or changes often?",
+     "Document: MongoDB"
     ],
     [
-     "Live updates?",
+     "Live updates pushed instantly?",
      "Firebase"
     ],
     [
-     "Temporary or cached?",
+     "Temporary, or a cache of data stored elsewhere?",
      "Redis"
+    ],
+    [
+     "Strict consistency, or raw speed?",
+     "Weigh it for this feature"
     ]
    ],
    "beats": [
     {
-     "say": "For any new feature, ask:",
-     "show": 0
+     "say": "Which database is best is the wrong question. The answer depends on the data, and how you use it.",
+     "col": 0
+    },
+    {
+     "say": "So for any new feature, ask these questions instead.",
+     "col": 0
     },
     {
      "say": "Does the data have clear structure and relationships? Relational.",
-     "show": 1
+     "hl": 0,
+     "col": 1
     },
     {
      "say": "Does its shape vary a lot, or change often? Document.",
-     "show": 2
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "Do users need live updates instantly? Firebase.",
-     "show": 3
+     "say": "Do users need live updates, pushed instantly? Firebase.",
+     "hl": 2,
+     "col": 1
     },
     {
      "say": "Is it temporary, or a cache of something stored elsewhere? Redis.",
-     "show": 4
+     "hl": 3,
+     "col": 1
     },
     {
-     "say": "And how much does strict consistency matter, compared with raw speed?",
-     "show": 4
+     "say": "And for this specific feature, how much does strict consistency matter, compared with raw speed?",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "pencil",
+   "kind": "table",
    "kicker": "Lab",
    "title": "Decide for TrackIt",
-   "items": [
+   "columns": [
+    "TrackIt feature",
+    "Deciding question",
+    "Pick"
+   ],
+   "rows": [
     [
-     "Accounts and tasks",
+     "User accounts and their tasks",
+     "Structured, related, must stay consistent",
      "PostgreSQL"
     ],
     [
-     "Who's online",
+     "Who's online indicator",
+     "Pushed live to every connected user",
      "Firebase"
     ],
     [
      "Weekly summary cache",
+     "Temporary, fine to expire and recompute",
      "Redis"
     ],
     [
-     "Custom templates",
+     "Custom task templates",
+     "Fields vary wildly per template",
      "MongoDB"
     ]
    ],
    "beats": [
     {
-     "say": "Now decide for four TrackIt features. Pause and make your choices before the answers.",
-     "show": 0
+     "say": "Four TrackIt features. Pause now, and write your own choice and reason for each.",
+     "col": 0
     },
     {
-     "say": "User accounts and their tasks: PostgreSQL. Structured, relational, needs consistency.",
-     "show": 1
+     "say": "User accounts and their tasks: structured, related, needing consistency. PostgreSQL.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "A live who's online indicator: Firebase. It needs realtime updates.",
-     "show": 2
+     "say": "A live who's online indicator needs updates pushed to everyone. Firebase.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Caching a weekly summary: Redis. Temporary, and fine to recompute.",
-     "show": 3
+     "say": "A cached weekly summary is temporary, and fine to recompute. Redis.",
+     "hl": 2,
+     "col": 2
     },
     {
-     "say": "Custom task templates with wildly different fields: MongoDB. Flexible shapes.",
-     "show": 4
+     "say": "Custom templates with wildly different fields: MongoDB.",
+     "hl": 3,
+     "col": 2
+    },
+    {
+     "say": "Compare your reasoning, not just the labels.",
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab",
+   "title": "One product, four databases",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "TrackIt",
+     "x": 50,
+     "y": 50,
+     "sub": "one app",
+     "art": "laptop"
+    },
+    {
+     "id": "pg",
+     "label": "PostgreSQL",
+     "x": 14,
+     "y": 18,
+     "sub": "accounts, tasks",
+     "art": "database"
+    },
+    {
+     "id": "fb",
+     "label": "Firebase",
+     "x": 86,
+     "y": 18,
+     "sub": "who's online",
+     "art": "cloud"
+    },
+    {
+     "id": "rd",
+     "label": "Redis",
+     "x": 14,
+     "y": 82,
+     "sub": "weekly summary cache",
+     "art": "bolt"
+    },
+    {
+     "id": "mg",
+     "label": "MongoDB",
+     "x": 86,
+     "y": 82,
+     "sub": "custom templates",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "pg"
+    },
+    {
+     "from": "app",
+     "to": "fb"
+    },
+    {
+     "from": "app",
+     "to": "rd"
+    },
+    {
+     "from": "app",
+     "to": "mg"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Put those answers together, and TrackIt uses all four.",
+     "show": 1,
+     "on": "app"
+    },
+    {
+     "say": "Accounts and tasks are saved in PostgreSQL.",
+     "show": 2,
+     "on": "pg",
+     "send": {
+      "from": "app",
+      "to": "pg",
+      "label": "new task"
+     }
+    },
+    {
+     "say": "Firebase pushes who's online to every open screen.",
+     "show": 3,
+     "on": "fb",
+     "send": {
+      "from": "fb",
+      "to": "app",
+      "label": "Alice is online"
+     }
+    },
+    {
+     "say": "Redis serves the weekly summary without recomputing it.",
+     "show": 4,
+     "on": "rd",
+     "send": {
+      "from": "rd",
+      "to": "app",
+      "label": "cached summary"
+     }
+    },
+    {
+     "say": "And MongoDB stores templates of any shape.",
+     "show": 5,
+     "on": "mg",
+     "send": {
+      "from": "app",
+      "to": "mg",
+      "label": "save template"
+     }
+    },
+    {
+     "say": "Each tool handles the part it's best at. Defaulting to one for everything means fighting it on the rest.",
+     "on": [
+      "pg",
+      "fb",
+      "rd",
+      "mg"
+     ]
+    },
+    {
+     "say": "And as TrackIt grows, revisit these choices. The right database can change as your needs change.",
+     "on": "app"
     }
    ]
   },

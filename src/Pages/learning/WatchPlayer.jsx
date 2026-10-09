@@ -46,7 +46,8 @@ const PauseIcon = () => <path d="M7 5h4v14H7zM13 5h4v14h-4z" />;
 //   table:    real rows; a beat can show a query ("sql"), highlight rows ("hl"),
 //             fade the rest ("dim") and highlight a column ("col").
 //   walk:     code that runs line by line; a beat highlights lines ("line") and
-//             adds console output ("out", kept for later beats).
+//             adds console output ("out", kept for later beats); "vars" sets
+//             live variable values, which stay until changed ("vars": null clears).
 //   array:    boxes of values; a beat can change values ("vals"), highlight boxes
 //             ("hl"), mark some done ("ok"), fade ruled-out ones ("gone") and place
 //             pointers ("ptr": {name: index}).
@@ -112,8 +113,20 @@ const Diagram = ({ scene, bi }) => {
   const pos = {};
   // (In portrait the columns are narrow, so pull nodes in from the edges.)
   (scene.nodes || []).forEach((n) => {
-    pos[n.id] = portrait ? { ...n, x: 50 + (n.y - 50) * 0.84, y: 50 + (n.x - 50) * 0.9 } : n;
+    pos[n.id] = portrait ? { ...n, x: 50 + (n.y - 50) * 0.84, y: 50 + (n.x - 50) * 0.9 } : { ...n };
   });
+  // Keep every node fully inside the stage: if nodes sit too close to an edge,
+  // spread them over the safe area instead (keeps their arrangement).
+  const fitAxis = (key, half) => {
+    const m = Math.min(45, (half / Math.max(key === 'y' ? box.h : box.w, 1)) * 100);
+    const vals = Object.values(pos).map((n) => n[key]);
+    const lo = Math.min(...vals); const hi = Math.max(...vals);
+    if (lo >= m && hi <= 100 - m) return;
+    Object.values(pos).forEach((n) => {
+      n[key] = hi === lo ? 50 : m + ((n[key] - lo) / (hi - lo)) * (100 - 2 * m);
+    });
+  };
+  if (Object.keys(pos).length) { fitAxis('y', 50 * k); fitAxis('x', 80 * k); }
   const send = b.send && pos[b.send.from] && pos[b.send.to] ? b.send : null;
   // Tight on space (several rows of nodes in a short stage): drop the icons.
   const rows = new Set(Object.values(pos).map((n) => Math.round(n.y / 8))).size;
@@ -186,14 +199,21 @@ const Walk = ({ scene, bi }) => {
   const cur = asSet(b.line); // a line number, or a list of line numbers
   const out = [];
   for (let i = 0; i <= bi; i += 1) if (beats[i] && beats[i].out) out.push(...[].concat(beats[i].out));
+  // Variables stay on screen once set (like in a real program); "vars": null clears them.
+  let vars = {};
+  for (let i = 0; i <= bi; i += 1) {
+    const v = beats[i] && beats[i].vars;
+    if (v === null) vars = {};
+    else if (v) vars = { ...vars, ...v };
+  }
   return (
     <div className="wx-walk">
       <pre className="wx-src">
         {scene.file && <span className="wp-file">{scene.file}</span>}
         {lines.map((l, i) => <div key={i} className={cur.has(i + 1) ? 'cur' : ''}><span className="ln">{i + 1}</span>{l || ' '}</div>)}
       </pre>
-      {upTo(beats, bi, 'vars') && (
-        <div className="wx-vars">{Object.entries(upTo(beats, bi, 'vars')).map(([k, v]) => <span key={`${k}${v}`}><i>{k}</i> = <b>{String(v)}</b></span>)}</div>
+      {Object.keys(vars).length > 0 && (
+        <div className="wx-vars">{Object.entries(vars).map(([k, v]) => <span key={`${k}${v}`}><i>{k}</i> = <b>{String(v)}</b></span>)}</div>
       )}
       {(out.length > 0 || scene.console) && (
         <pre className="wx-out" aria-label="Output">{out.map((o, i) => <div key={i} className={i >= out.length - [].concat(b.out || []).length ? 'new' : ''}>{o}</div>)}</pre>
@@ -622,8 +642,8 @@ export const WATCH_CSS = `
 .wx-node.on { border-color:var(--wp-accent); box-shadow:0 0 0 4px var(--wp-soft); transform:translate(-50%,-50%) scale(calc(var(--k,1) * 1.06)); }
 .wx-node.off { opacity:0; transform:translate(-50%,-40%) scale(var(--k,1)); }
 .wp-art.wx-node-art svg { width:40px; max-width:none; height:auto; display:block; }
-.wx-packet { position:absolute; transform:translate(-50%,-50%); background:var(--wp-accent); color:#fff; font-weight:700; font-size:clamp(10px,1.3vw,13px); padding:5px 10px; border-radius:999px; white-space:nowrap; box-shadow:0 4px 12px rgba(212,20,112,.3); z-index:2; animation:wx-send 1.6s ease-in-out forwards; margin-top:-26px; }
-@keyframes wx-send { 0% { left:var(--x1); top:var(--y1); opacity:0; } 12% { opacity:1; } 100% { left:var(--x2); top:var(--y2); opacity:1; } }
+.wx-packet { position:absolute; transform:translate(-50%,-50%); background:var(--wp-accent); color:#fff; font-weight:700; font-size:clamp(10px,1.3vw,13px); padding:5px 10px; border-radius:14px; white-space:normal; max-width:34%; width:max-content; text-align:center; line-height:1.25; box-shadow:0 4px 12px rgba(212,20,112,.3); z-index:2; animation:wx-send 1.6s ease-in-out forwards; margin-top:-26px; }
+@keyframes wx-send { 0% { left:clamp(18%, var(--x1), 82%); top:var(--y1); opacity:0; } 12% { opacity:1; } 100% { left:clamp(18%, var(--x2), 82%); top:var(--y2); opacity:1; } }
 .wx-table { width:100%; display:grid; gap:8px; align-content:center; max-height:100%; }
 .wx-sql { display:block; background:var(--wp-ink); color:#fff; border-radius:10px; padding:8px 12px; font-size:clamp(11px,1.4vw,14px); white-space:pre-wrap; animation:wx-in .4s ease both; }
 .wx-table table { width:100%; border-collapse:separate; border-spacing:0; font-size:clamp(11px,1.4vw,14px); }

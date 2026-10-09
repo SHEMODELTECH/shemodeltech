@@ -588,6 +588,8 @@ You ran the code above, saw each type printed correctly, and understand why `pri
 | Logical | `and or not` | Combine true/false conditions |
 | Assignment | `= += -= *=` | Assign or update a variable |
 
+Three arithmetic operators are easy to mix up: `7 / 2` gives `3.5` (a full decimal result), `7 // 2` gives `3` (whole-number division, the remainder dropped), and `7 % 2` gives `1` (just the remainder). `%` is handy for checks like "is this number even?" (`n % 2 == 0`).
+
 ### Where you'd actually use this
 
 Calculating a total cart price (arithmetic), checking if a user is old enough to sign up (comparison), and deciding if someone can access a feature only if they're logged in *and* have a premium account (logical).
@@ -618,7 +620,7 @@ login_count += 1   # same as: login_count = login_count + 1
 print(login_count) # 1
 ```
 
-**Your turn:** Write one line that sets `can_checkout` to `True` only if `cart_total` is over 0 *and* the user is logged in *or* is a guest (`is_guest = True`). Print it, then change the values and check it again.
+**Your turn:** Write one line that sets `can_checkout` to `True` only if `cart_total` is over 0 *and* the user is either logged in *or* a guest (`is_guest = True`). Put brackets around the *or* part: Python checks `and` before `or`, so without them a guest with an empty cart could check out. Print it, then change the values and check it again.
 
 ### Checkpoint
 You can predict the output of each print statement above before running it.

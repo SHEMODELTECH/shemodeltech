@@ -114,111 +114,283 @@ You ran the timing comparison and can explain, in your own words, why the fast v
    ]
   },
   {
-   "kind": "list",
-   "art": "trend",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Big O describes growth",
-   "items": [
+   "title": "Big O describes growth, not exact speed",
+   "columns": [
+    "Notation",
+    "Meaning",
+    "Example"
+   ],
+   "rows": [
     [
      "O(1)",
-     "Constant: dictionary lookup"
+     "Same speed at any size",
+     "Dictionary key lookup"
     ],
     [
      "O(log n)",
-     "Slow growth: binary search"
+     "Grows slowly",
+     "Binary search"
     ],
     [
      "O(n)",
-     "In step: scan a list"
+     "Grows in step with the data",
+     "Scanning a list once"
     ],
     [
      "O(n log n)",
+     "A little worse than linear",
      "Efficient sorting"
     ],
     [
      "O(n²)",
-     "Every pair: double data, 4× time"
+     "Double the data, 4× the time",
+     "Comparing every pair"
     ]
    ],
    "beats": [
     {
      "say": "Big O describes how an operation's cost grows as your data grows. Not the exact speed, the pattern.",
-     "show": 0
+     "col": 0
     },
     {
-     "say": "O of one: the same speed at any size.",
-     "show": 1
+     "say": "O of one is constant: looking up a dictionary key takes the same time at any size.",
+     "hl": 0
     },
     {
-     "say": "O of log n: grows slowly.",
-     "show": 2
+     "say": "O of log n grows slowly, like binary search.",
+     "hl": 1
     },
     {
-     "say": "O of n: grows in step with the data.",
-     "show": 3
+     "say": "O of n grows in step with the data, like scanning a list once.",
+     "hl": 2
     },
     {
-     "say": "O of n log n: a little worse, like efficient sorting.",
-     "show": 4
+     "say": "O of n log n is a little worse. That's efficient sorting.",
+     "hl": 3
     },
     {
-     "say": "And O of n squared: double the data, four times the time.",
-     "show": 5
+     "say": "And O of n squared compares every pair. Double the data, and the time goes up four times.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "Why it matters",
-   "title": "Fine in testing, broken in production",
-   "quote": "100 users: instant. 100,000 users: minutes.",
+   "kind": "array",
+   "kicker": "Lab · The slow way",
+   "title": "has_duplicates_slow compares every pair",
+   "values": [
+    0,
+    1,
+    2,
+    3,
+    3
+   ],
    "beats": [
     {
-     "say": "With a hundred users, an n squared operation feels instant.",
-     "show": 0
+     "say": "Here's a tiny version of the lab data: zero to three, plus a repeated three.",
+     "note": "data = list(range(4)) + [3]"
     },
     {
-     "say": "With a hundred thousand, the same code can take minutes.",
-     "show": 1
+     "say": "The slow version takes item zero and compares it with every item after it. Four comparisons, no match.",
+     "hl": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "ptr": {
+      "i": 0
+     },
+     "note": "i = 0 → 4 comparisons"
     },
     {
-     "say": "It's the most common reason apps that worked in testing fall over in production.",
-     "show": 1
+     "say": "Then item one, against everything after it. Three more, still nothing.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "ptr": {
+      "i": 1
+     },
+     "note": "i = 1 → 3 more (7 so far)"
+    },
+    {
+     "say": "Item two: two more comparisons.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "ptr": {
+      "i": 2
+     },
+     "note": "i = 2 → 2 more (9 so far)"
+    },
+    {
+     "say": "Item three against item four: three equals three. Found, on the tenth comparison.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "ptr": {
+      "i": 3,
+      "j": 4
+     },
+     "note": "items[3] == items[4] → True"
+    },
+    {
+     "say": "Every item has to meet every other item. That's why it's n squared.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "5 items → 10 comparisons"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "stopwatch",
-   "kicker": "Lab",
-   "title": "Time it yourself",
-   "items": [
+   "kind": "walk",
+   "kicker": "Lab · The fast way",
+   "title": "has_duplicates_fast remembers what it's seen",
+   "file": "duplicates.py",
+   "code": "def has_duplicates_fast(items):\n    # O(n): uses a set for instant lookups\n    seen = set()\n    for item in items:\n        if item in seen:\n            return True\n        seen.add(item)\n    return False\n\ndata = list(range(4)) + [3]\nprint(has_duplicates_fast(data))",
+   "beats": [
+    {
+     "say": "Same tiny data: zero, one, two, three, three.",
+     "line": 10,
+     "vars": {
+      "data": "[0, 1, 2, 3, 3]"
+     }
+    },
+    {
+     "say": "The fast version starts with an empty set called seen.",
+     "line": 3,
+     "vars": {
+      "data": "[0, 1, 2, 3, 3]",
+      "seen": "set()"
+     }
+    },
+    {
+     "say": "Zero: is it in seen? No. Add it.",
+     "line": [
+      4,
+      5,
+      7
+     ],
+     "vars": {
+      "item": 0,
+      "seen": "{0}"
+     }
+    },
+    {
+     "say": "One, two, and three: each one is new, so each gets added.",
+     "line": [
+      4,
+      5,
+      7
+     ],
+     "vars": {
+      "item": 3,
+      "seen": "{0, 1, 2, 3}"
+     }
+    },
+    {
+     "say": "Then the last three. Is it in seen? Yes, instantly. Return True.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "item": 3,
+      "seen": "{0, 1, 2, 3}"
+     },
+     "out": "True"
+    },
+    {
+     "say": "Five items, five quick checks. One pass through the list. That's O of n.",
+     "line": 4
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Why it matters",
+   "title": "Fine in testing, broken in production",
+   "columns": [
+    "Items",
+    "Slow: comparisons",
+    "Fast: checks"
+   ],
+   "rows": [
     [
-     "Compare every pair",
-     "O(n²)"
+     "5",
+     "10",
+     "5"
     ],
     [
-     "Remember with a set",
-     "O(n)"
+     "101",
+     "5,050",
+     "101"
+    ],
+    [
+     "5,001",
+     "12,502,500",
+     "5,001"
+    ],
+    [
+     "10,001",
+     "50,005,000",
+     "10,001"
+    ],
+    [
+     "100,001",
+     "5,000,050,000",
+     "100,001"
     ]
    ],
    "beats": [
     {
-     "say": "In the lab, you time two ways to find a duplicate.",
-     "show": 0
+     "say": "Here's the work each version does on the lab's data, at different sizes."
     },
     {
-     "say": "The slow way compares every pair. That's n squared.",
-     "show": 1
+     "say": "At five items, ten comparisons against five. Nobody would notice.",
+     "hl": 0
     },
     {
-     "say": "The fast way remembers what it's seen in a set. That's n.",
-     "show": 2
+     "say": "The lab runs five thousand and one items: twelve and a half million comparisons, against five thousand and one checks.",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "Double the data, and the slow one takes about four times longer. The fast one, about twice.",
-     "show": 2
+     "say": "Your turn doubles it to ten thousand and one. The slow count goes up four times. The fast count only doubles.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "At a hundred thousand users, the slow way needs five billion comparisons. That's how code that worked in testing falls over in production.",
+     "hl": 4,
+     "dim": true,
+     "col": 1
     }
    ]
   },
@@ -241,7 +413,7 @@ You ran the timing comparison and can explain, in your own words, why the fast v
      "show": 0
     },
     {
-     "say": "As data doubles, what happens to an O(n²) operation?",
+     "say": "As data doubles, what happens to an O of n squared operation?",
      "show": 0
     },
     {
@@ -366,70 +538,273 @@ You can explain why appending to a list is fast but inserting at position 0 is s
    ]
   },
   {
-   "kind": "list",
-   "art": "gauge",
+   "kind": "array",
    "kicker": "Concept",
    "title": "What's fast, what's slow",
-   "items": [
-    [
-     "By index",
-     "O(1)"
-    ],
-    [
-     "Search for a value",
-     "O(n)"
-    ],
-    [
-     "Add/remove at the end",
-     "O(1)"
-    ],
-    [
-     "At the start or middle",
-     "O(n): items shift"
-    ]
+   "values": [
+    "Book",
+    "Pen"
    ],
    "beats": [
     {
-     "say": "Here are the costs.",
-     "show": 0
+     "say": "A list keeps items in numbered slots, starting at zero. Here's a cart with two items."
     },
     {
-     "say": "Getting an item by position: O of one.",
-     "show": 1
+     "say": "Append puts Notebook in a new slot at the end. Nothing else moves, so it's O of one.",
+     "vals": [
+      "Book",
+      "Pen",
+      "Notebook"
+     ],
+     "hl": 2,
+     "note": "cart.append(\"Notebook\") → O(1)"
     },
     {
-     "say": "Searching for a value: O of n.",
-     "show": 2
+     "say": "Asking for cart two jumps straight to slot two. One step, at any size.",
+     "vals": [
+      "Book",
+      "Pen",
+      "Notebook"
+     ],
+     "hl": 2,
+     "ptr": {
+      "cart[2]": 2
+     },
+     "note": "access by index → O(1)"
     },
     {
-     "say": "Adding or removing at the end: O of one.",
-     "show": 3
+     "say": "Searching for a value is different. Python checks slot after slot until it finds it.",
+     "vals": [
+      "Book",
+      "Pen",
+      "Notebook"
+     ],
+     "gone": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "check": 2
+     },
+     "note": "\"Notebook\" in cart → 3 checks, O(n)"
     },
     {
-     "say": "At the start or middle: O of n, because everything after it has to shift.",
-     "show": 4
+     "say": "Now move Notebook to the front, like the your turn exercise. First, remove takes it out of the end.",
+     "vals": [
+      "Book",
+      "Pen"
+     ],
+     "gone": [],
+     "note": "cart.remove(\"Notebook\")"
+    },
+    {
+     "say": "Then insert at position zero. Every other item has to shift one slot right. That's O of n.",
+     "vals": [
+      "Notebook",
+      "Book",
+      "Pen"
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "note": "cart.insert(0, ...) → 2 items shifted, O(n)"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab",
-   "title": "A shopping cart, and a palindrome",
-   "file": "Python",
-   "code": "def add_item(cart, item):\n    cart.append(item)          # O(1)\n\ndef remove_item(cart, item):\n    if item in cart:           # O(n) search\n        cart.remove(item)      # O(n) removal\n\ndef is_palindrome(s):\n    cleaned = s.lower().replace(\" \", \"\")\n    return cleaned == cleaned[::-1]",
+   "title": "A shopping cart",
+   "file": "cart.py",
+   "code": "cart = []\n\ndef add_item(cart, item):\n    cart.append(item)          # O(1)\n\ndef remove_item(cart, item):\n    if item in cart:           # O(n) search\n        cart.remove(item)      # O(n) removal\n\nadd_item(cart, \"Book\")\nadd_item(cart, \"Pen\")\nadd_item(cart, \"Notebook\")\nremove_item(cart, \"Pen\")\nprint(cart)  # [\"Book\", \"Notebook\"]",
    "beats": [
     {
-     "say": "Append adds to the cart instantly.",
-     "show": 0
+     "say": "The cart starts as an empty list.",
+     "line": 1,
+     "vars": {
+      "cart": "[]"
+     }
     },
     {
-     "say": "Removing an item first searches for it, then shifts everything after it. Both are O of n.",
-     "show": 1
+     "say": "Add item appends Book to the end.",
+     "line": [
+      10,
+      4
+     ],
+     "vars": {
+      "cart": "['Book']"
+     }
     },
     {
-     "say": "And a palindrome check: lower-case it, remove spaces, and compare with its reverse.",
-     "show": 1
+     "say": "Then Pen, then Notebook. Each one lands at the end, instantly.",
+     "line": [
+      11,
+      12,
+      4
+     ],
+     "vars": {
+      "cart": "['Book', 'Pen', 'Notebook']"
+     }
+    },
+    {
+     "say": "Remove item checks that Pen is in the cart first, so remove can't fail.",
+     "line": [
+      13,
+      7
+     ]
+    },
+    {
+     "say": "Then it removes Pen.",
+     "line": 8,
+     "vars": {
+      "cart": "['Book', 'Notebook']"
+     }
+    },
+    {
+     "say": "Print shows Book and Notebook.",
+     "line": 14,
+     "out": "['Book', 'Notebook']"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Trace it",
+   "title": "What remove actually does",
+   "values": [
+    "Book",
+    "Pen",
+    "Notebook"
+   ],
+   "beats": [
+    {
+     "say": "Let's zoom in on removing Pen."
+    },
+    {
+     "say": "Pen in cart checks from the front. Book? No.",
+     "hl": 0,
+     "ptr": {
+      "check": 0
+     }
+    },
+    {
+     "say": "Pen? Yes. So it's safe to remove.",
+     "gone": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "check": 1
+     },
+     "note": "\"Pen\" in cart → True"
+    },
+    {
+     "say": "Remove takes Pen out of slot one.",
+     "vals": [
+      "Book",
+      "—",
+      "Notebook"
+     ],
+     "gone": [
+      1
+     ],
+     "note": "cart.remove(\"Pen\")"
+    },
+    {
+     "say": "And Notebook shifts left to fill the gap. With a thousand items after Pen, that's a thousand moves.",
+     "vals": [
+      "Book",
+      "Notebook"
+     ],
+     "gone": [],
+     "hl": 1,
+     "note": "items after it shift → O(n)"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Strings",
+   "title": "Is it a palindrome?",
+   "values": [
+    "r",
+    "a",
+    "c",
+    "e",
+    "c",
+    "a",
+    "r"
+   ],
+   "beats": [
+    {
+     "say": "Strings work like lists of characters. Is palindrome first lower-cases the text and removes spaces. Racecar is already clean.",
+     "note": "cleaned = \"racecar\""
+    },
+    {
+     "say": "The slice with two colons and minus one makes a reversed copy. Racecar backwards is still racecar.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "note": "cleaned[::-1] → \"racecar\""
+    },
+    {
+     "say": "Every letter matches its reverse, so it returns True.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "note": "True"
+    },
+    {
+     "say": "Now hello world. Lower-case it, remove the space: ten letters.",
+     "vals": [
+      "h",
+      "e",
+      "l",
+      "l",
+      "o",
+      "w",
+      "o",
+      "r",
+      "l",
+      "d"
+     ],
+     "ok": [],
+     "note": "cleaned = \"helloworld\""
+    },
+    {
+     "say": "Reversed, it starts with d.",
+     "vals": [
+      "d",
+      "l",
+      "r",
+      "o",
+      "w",
+      "o",
+      "l",
+      "l",
+      "e",
+      "h"
+     ],
+     "note": "cleaned[::-1] → \"dlrowolleh\""
+    },
+    {
+     "say": "The very first letters already differ, h and d, so the answer is False.",
+     "hl": 0,
+     "note": "\"h\" ≠ \"d\" → False"
     }
    ]
   },
@@ -572,88 +947,233 @@ You can explain why looking up a user in a dictionary is faster than looping thr
    ]
   },
   {
-   "kind": "list",
-   "art": "key",
-   "kicker": "Where you'd use this",
-   "title": "Arguably the most-used structure",
-   "items": [
+   "kind": "array",
+   "kicker": "Concept",
+   "title": "The hash tells Python where to look",
+   "values": [
+    "—",
+    "—",
+    "—",
+    "—",
+    "—",
+    "—"
+   ],
+   "beats": [
+    {
+     "say": "Under the hood, a dictionary keeps a row of numbered slots."
+    },
+    {
+     "say": "To store Alice, Python hashes her email into a number, and that number picks a slot. Say slot four.",
+     "vals": [
+      "—",
+      "—",
+      "—",
+      "—",
+      "alice → Alice",
+      "—"
+     ],
+     "hl": 4,
+     "note": "hash(\"alice@example.com\") → slot 4 (for this picture)"
+    },
+    {
+     "say": "Bob's email hashes to a different number. Say slot one.",
+     "vals": [
+      "—",
+      "bob → Bob",
+      "—",
+      "—",
+      "alice → Alice",
+      "—"
+     ],
+     "hl": 1,
+     "note": "hash(\"bob@example.com\") → slot 1"
+    },
+    {
+     "say": "To find Bob, Python hashes the same email again, gets slot one, and jumps straight there.",
+     "hl": 1,
+     "ptr": {
+      "get": 1
+     },
+     "note": "one jump, no scanning"
+    },
+    {
+     "say": "Two users or two million, it's the same single jump. That's O of one. A list would check every user in turn.",
+     "hl": 1,
+     "note": "dict: O(1)   ·   list of users: O(n)"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab",
+   "title": "Count words with a dictionary",
+   "file": "word_count.py",
+   "code": "def word_frequency(text: str) -> dict:\n    counts = {}\n    for word in text.lower().split():\n        counts[word] = counts.get(word, 0) + 1\n    return counts\n\ntext = \"the cat sat on the mat the cat ran\"\nprint(word_frequency(text))",
+   "beats": [
+    {
+     "say": "Here's a sentence with nine words.",
+     "line": 7
+    },
+    {
+     "say": "Counts starts as an empty dictionary.",
+     "line": [
+      8,
+      2
+     ],
+     "vars": {
+      "counts": "{}"
+     }
+    },
+    {
+     "say": "First word, the. Counts dot get returns zero, because the is new. Zero plus one is one.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "word": "the",
+      "counts": "{'the': 1}"
+     }
+    },
+    {
+     "say": "Cat, sat, and on are new too. Each one gets a count of one.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "word": "on",
+      "counts": "{'the': 1, 'cat': 1, 'sat': 1, 'on': 1}"
+     }
+    },
+    {
+     "say": "Now the again. This time get finds one, so it becomes two.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "word": "the",
+      "counts": "{'the': 2, 'cat': 1, 'sat': 1, 'on': 1}"
+     }
+    },
+    {
+     "say": "Mat is new. Then the again: three.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "word": "the",
+      "counts": "{'the': 3, 'cat': 1, 'sat': 1, 'on': 1, 'mat': 1}"
+     }
+    },
+    {
+     "say": "Cat goes up to two, and ran is new.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "word": "ran",
+      "counts": "{'the': 3, 'cat': 2, 'sat': 1, 'on': 1, 'mat': 1, 'ran': 1}"
+     }
+    },
+    {
+     "say": "Return the counts, and print them.",
+     "line": [
+      5,
+      8
+     ],
+     "out": "{'the': 3, 'cat': 2, 'sat': 1, 'on': 1, 'mat': 1, 'ran': 1}"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Your turn",
+   "title": "Which word is most common?",
+   "columns": [
+    "word",
+    "count"
+   ],
+   "rows": [
     [
-     "User by email",
-     ""
+     "the",
+     "3"
     ],
     [
-     "Caching",
-     ""
+     "cat",
+     "2"
     ],
     [
-     "Counting",
-     ""
+     "sat",
+     "1"
     ],
     [
-     "Deduplicating",
-     ""
+     "on",
+     "1"
+    ],
+    [
+     "mat",
+     "1"
+    ],
+    [
+     "ran",
+     "1"
     ]
    ],
    "beats": [
     {
-     "say": "It's arguably the most used structure in real backends.",
-     "show": 0
+     "say": "Here are those counts as a table, in the order the words were first seen."
     },
     {
-     "say": "Looking up a user by email,",
-     "show": 1
+     "say": "Max, with key equals counts dot get, compares the words by their counts.",
+     "sql": "max(counts, key=counts.get)",
+     "col": 1
     },
     {
-     "say": "caching,",
-     "show": 2
+     "say": "The highest count is three, so most common word returns the.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "counting things, like word frequency,",
-     "show": 3
-    },
-    {
-     "say": "and removing duplicates.",
-     "show": 4
+     "say": "And each count was found by key, with no scanning. That's why counting is a classic hash map job.",
+     "hl": 0,
+     "col": 0
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Lab",
-   "title": "Count words",
-   "file": "Python",
-   "code": "def word_frequency(text):\n    counts = {}\n    for word in text.lower().split():\n        counts[word] = counts.get(word, 0) + 1\n    return counts",
-   "beats": [
-    {
-     "say": "To count words, loop through them.",
-     "show": 0
-    },
-    {
-     "say": "Counts dot get, word, zero, returns the current count, or zero if the word is new. Then add one.",
-     "show": 1
-    },
-    {
-     "say": "In the sample sentence, the appears three times.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "idcard",
+   "kind": "walk",
    "kicker": "Lab",
    "title": "Find a user instantly",
-   "file": "Python",
-   "code": "users_by_email = {\n    \"alice@example.com\": {\"id\": 1, \"name\": \"Alice\"},\n    \"bob@example.com\": {\"id\": 2, \"name\": \"Bob\"},\n}\n\nusers_by_email.get(\"bob@example.com\")   # O(1)",
+   "file": "users.py",
+   "code": "users_by_email = {\n    \"alice@example.com\": {\"id\": 1, \"name\": \"Alice\"},\n    \"bob@example.com\": {\"id\": 2, \"name\": \"Bob\"},\n}\n\ndef find_user(email: str):\n    return users_by_email.get(email)  # O(1), not O(n)\n\nprint(find_user(\"bob@example.com\"))",
    "beats": [
     {
-     "say": "And to find a user by email, look up the key.",
-     "show": 0
+     "say": "The users are stored by email. The email is the key.",
+     "line": [
+      1,
+      4
+     ]
     },
     {
-     "say": "That's O of one. A list would have to check every user, one by one.",
-     "show": 1
+     "say": "We ask for bob at example dot com.",
+     "line": 9,
+     "vars": {
+      "email": "\"bob@example.com\""
+     }
+    },
+    {
+     "say": "Get hashes the key and jumps straight to Bob's record. No loop at all.",
+     "line": 7
+    },
+    {
+     "say": "Print shows Bob's id and name.",
+     "line": 9,
+     "out": "{'id': 2, 'name': 'Bob'}"
     }
    ]
   },
@@ -676,7 +1196,7 @@ You can explain why looking up a user in a dictionary is faster than looping thr
      "show": 0
     },
     {
-     "say": "What happens with counts[word] += 1 on a word that isn't there yet?",
+     "say": "What happens with counts of word, plus equals one, on a word that isn't there yet?",
      "show": 0
     },
     {
@@ -805,100 +1325,308 @@ You can explain why `order_id in processed_order_ids` stays fast even as the set
    ]
   },
   {
-   "kind": "list",
-   "art": "search",
-   "kicker": "Where you'd use this",
-   "title": "Have I seen this before?",
-   "items": [
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "A list and a set, side by side",
+   "columns": [
+    "",
+    "list",
+    "set"
+   ],
+   "rows": [
     [
-     "Deduplicate emails",
-     ""
+     "Duplicates allowed?",
+     "Yes",
+     "No"
     ],
     [
-     "Already voted?",
-     ""
+     "Keeps order?",
+     "Yes",
+     "No"
     ],
     [
-     "Skip processed orders",
-     ""
+     "\"x in ...\" cost",
+     "O(n)",
+     "O(1)"
+    ],
+    [
+     "Built on",
+     "Slots in order",
+     "Hashing, like a dict"
     ]
    ],
    "beats": [
     {
-     "say": "Use a set whenever the question is, have I seen this before?",
-     "show": 0
+     "say": "A set looks a bit like a list, but it makes different promises."
     },
     {
-     "say": "Removing duplicate emails before a send,",
-     "show": 1
+     "say": "A list happily keeps duplicates. A set never does.",
+     "hl": 0
     },
     {
-     "say": "checking whether someone has already voted,",
-     "show": 2
+     "say": "A list remembers order. A set doesn't, so it may print in any order.",
+     "hl": 1
     },
     {
-     "say": "or skipping orders you've already processed.",
-     "show": 3
+     "say": "Checking membership: a list scans every item, but a set jumps straight there.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "Because, like a dictionary, a set is built on hashing.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "checklist",
+   "kind": "array",
+   "kicker": "Lab",
+   "title": "Deduplicate emails before a send",
+   "values": [
+    "a@x.com",
+    "b@x.com",
+    "a@x.com",
+    "c@x.com",
+    "b@x.com"
+   ],
+   "beats": [
+    {
+     "say": "Here are five raw email addresses, with some repeats."
+    },
+    {
+     "say": "Set of raw emails takes them one at a time. a at x dot com is new, so it goes in.",
+     "ok": [
+      0
+     ],
+     "ptr": {
+      "next": 0
+     },
+     "note": "{a}"
+    },
+    {
+     "say": "b at x dot com is new too.",
+     "ok": [
+      0,
+      1
+     ],
+     "ptr": {
+      "next": 1
+     },
+     "note": "{a, b}"
+    },
+    {
+     "say": "Then a again. It's already there, so nothing changes.",
+     "ok": [
+      0,
+      1
+     ],
+     "gone": [
+      2
+     ],
+     "ptr": {
+      "next": 2
+     },
+     "note": "a already in the set → skipped"
+    },
+    {
+     "say": "c is new.",
+     "ok": [
+      0,
+      1,
+      3
+     ],
+     "gone": [
+      2
+     ],
+     "ptr": {
+      "next": 3
+     },
+     "note": "{a, b, c}"
+    },
+    {
+     "say": "And b is a repeat.",
+     "ok": [
+      0,
+      1,
+      3
+     ],
+     "gone": [
+      2,
+      4
+     ],
+     "ptr": {
+      "next": 4
+     },
+     "note": "b already in the set → skipped"
+    },
+    {
+     "say": "Length of the set is three. The duplicates are gone, automatically.",
+     "ok": [
+      0,
+      1,
+      3
+     ],
+     "gone": [
+      2,
+      4
+     ],
+     "note": "len(unique_emails) → 3"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Lab",
    "title": "Skip what's already done",
-   "file": "Python",
-   "code": "processed_order_ids = set()\n\ndef process_order(order_id):\n    if order_id in processed_order_ids:   # O(1)\n        print(f\"Order {order_id} already processed\")\n        return\n    processed_order_ids.add(order_id)",
+   "file": "orders.py",
+   "code": "processed_order_ids = set()\n\ndef process_order(order_id):\n    if order_id in processed_order_ids:   # O(1) check, not O(n)\n        print(f\"Order {order_id} already processed, skipping\")\n        return\n    processed_order_ids.add(order_id)\n    print(f\"Processing order {order_id}\")\n\nprocess_order(101)\nprocess_order(102)\nprocess_order(101)   # skipped",
    "beats": [
     {
-     "say": "Here, processed order I Ds live in a set.",
-     "show": 0
+     "say": "We start with an empty set of processed order IDs.",
+     "line": 1,
+     "vars": {
+      "processed_order_ids": "set()"
+     }
     },
     {
-     "say": "If an order is already in it, skip it. Otherwise, add it and process it.",
-     "show": 1
+     "say": "Order one oh one. Is it in the set? No.",
+     "line": [
+      10,
+      4
+     ],
+     "vars": {
+      "order_id": 101,
+      "processed_order_ids": "set()"
+     }
     },
     {
-     "say": "That check stays fast, even with a million orders.",
-     "show": 1
+     "say": "So add it, and process it.",
+     "line": [
+      7,
+      8
+     ],
+     "vars": {
+      "order_id": 101,
+      "processed_order_ids": "{101}"
+     },
+     "out": "Processing order 101"
+    },
+    {
+     "say": "Order one oh two is new as well.",
+     "line": [
+      11,
+      4,
+      7,
+      8
+     ],
+     "vars": {
+      "order_id": 102,
+      "processed_order_ids": "{101, 102}"
+     },
+     "out": "Processing order 102"
+    },
+    {
+     "say": "Now one oh one arrives again. The set says yes, instantly.",
+     "line": [
+      12,
+      4
+     ],
+     "vars": {
+      "order_id": 101,
+      "processed_order_ids": "{101, 102}"
+     }
+    },
+    {
+     "say": "So it prints a skip message and returns. The order is never processed twice.",
+     "line": [
+      5,
+      6
+     ],
+     "out": "Order 101 already processed, skipping"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "venn",
+   "kind": "table",
    "kicker": "Lab",
-   "title": "Set operations",
-   "items": [
+   "title": "Set operations: what do Alice and Bob share?",
+   "columns": [
+    "interest",
+    "Alice",
+    "Bob"
+   ],
+   "rows": [
     [
-     "a & b",
-     "Intersection: in both"
+     "hiking",
+     "✓",
+     ""
     ],
     [
-     "a - b",
-     "Difference: only in a"
+     "coding",
+     "✓",
+     "✓"
     ],
     [
-     "a | b",
-     "Union: in either"
+     "reading",
+     "✓",
+     ""
+    ],
+    [
+     "chess",
+     "✓",
+     "✓"
+    ],
+    [
+     "gaming",
+     "",
+     "✓"
+    ],
+    [
+     "cooking",
+     "",
+     "✓"
     ]
    ],
    "beats": [
     {
-     "say": "Sets also combine quickly.",
-     "show": 0
+     "say": "Alice has four interests, and Bob has four. Here they are in one table."
     },
     {
-     "say": "The ampersand gives the intersection: interests Alice and Bob share.",
-     "show": 1
+     "say": "The ampersand gives the intersection: what's in both. Coding and chess.",
+     "sql": "shared = alice_interests & bob_interests",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true
     },
     {
-     "say": "Minus gives the difference: Alice's only.",
-     "show": 2
+     "say": "The minus sign gives the difference: Alice's, minus Bob's. Hiking and reading.",
+     "sql": "only_alice = alice_interests - bob_interests",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And the bar gives the union: everyone's.",
-     "show": 3
+     "say": "And the bar gives the union: everything from both, once each. Six interests.",
+     "sql": "everyone = alice_interests | bob_interests",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    },
+    {
+     "say": "Your turn uses the same trick: new list minus old list gives just the new subscribers.",
+     "sql": "new_list_set - old_list_set"
     }
    ]
   },
@@ -921,7 +1649,7 @@ You can explain why `order_id in processed_order_ids` stays fast even as the set
      "show": 0
     },
     {
-     "say": "What does & do between two sets?",
+     "say": "What does the ampersand do between two sets?",
      "show": 0
     },
     {
@@ -1050,92 +1778,291 @@ You can explain why `add_front` is O(1) for a linked list but O(n) for a Python 
    ]
   },
   {
-   "kind": "list",
-   "art": "scales",
+   "kind": "diagram",
+   "kicker": "Lab",
+   "title": "Build a playlist with add_front",
+   "nodes": [
+    {
+     "id": "head",
+     "label": "head",
+     "x": 10,
+     "y": 50,
+     "sub": "where the list starts"
+    },
+    {
+     "id": "c",
+     "label": "Song C",
+     "x": 88,
+     "y": 50,
+     "sub": "next: None"
+    },
+    {
+     "id": "b",
+     "label": "Song B",
+     "x": 66,
+     "y": 50,
+     "sub": "next → Song C"
+    },
+    {
+     "id": "a",
+     "label": "Song A",
+     "x": 40,
+     "y": 50,
+     "sub": "next → Song B"
+    }
+   ],
+   "edges": [
+    {
+     "from": "head",
+     "to": "a"
+    },
+    {
+     "from": "a",
+     "to": "b"
+    },
+    {
+     "from": "b",
+     "to": "c"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A new linked list has a head, and nothing else. Head is None.",
+     "show": 1,
+     "on": "head"
+    },
+    {
+     "say": "Add front, Song C. A new node is made, and head now points at it.",
+     "show": 2,
+     "on": [
+      "head",
+      "c"
+     ]
+    },
+    {
+     "say": "Add front, Song B. The new node's next points at the old head, Song C.",
+     "show": 3,
+     "on": "b",
+     "send": {
+      "from": "b",
+      "to": "c",
+      "label": "new_node.next = self.head"
+     }
+    },
+    {
+     "say": "Then head moves to Song B. Song C never moved at all.",
+     "show": 3,
+     "on": [
+      "head",
+      "b"
+     ]
+    },
+    {
+     "say": "Add front, Song A. Its next points at Song B.",
+     "show": 4,
+     "on": "a",
+     "send": {
+      "from": "a",
+      "to": "b",
+      "label": "new_node.next = self.head"
+     }
+    },
+    {
+     "say": "And head points at Song A. Two pointer changes, no shifting. That's O of one.",
+     "show": 4,
+     "on": [
+      "head",
+      "a"
+     ],
+     "send": {
+      "from": "head",
+      "to": "a",
+      "label": "self.head = new_node"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Trace it",
+   "title": "to_list walks the chain",
+   "file": "playlist.py",
+   "code": "class LinkedList:\n    def add_front(self, value):\n        new_node = Node(value)\n        new_node.next = self.head\n        self.head = new_node        # O(1) - no shifting required\n\n    def to_list(self):\n        result = []\n        current = self.head\n        while current:\n            result.append(current.value)\n            current = current.next\n        return result\nprint(playlist.to_list())",
+   "beats": [
+    {
+     "say": "After the three add front calls, head points at Song A.",
+     "line": [
+      2,
+      5
+     ]
+    },
+    {
+     "say": "To list starts with an empty result, and current at the head.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "current": "Song A",
+      "result": "[]"
+     }
+    },
+    {
+     "say": "Current is a node, so the loop runs. Add Song A, then follow next to Song B.",
+     "line": [
+      10,
+      11,
+      12
+     ],
+     "vars": {
+      "current": "Song B",
+      "result": "['Song A']"
+     }
+    },
+    {
+     "say": "Add Song B, and follow next to Song C.",
+     "line": [
+      10,
+      11,
+      12
+     ],
+     "vars": {
+      "current": "Song C",
+      "result": "['Song A', 'Song B']"
+     }
+    },
+    {
+     "say": "Add Song C. Its next is None, so current becomes None.",
+     "line": [
+      10,
+      11,
+      12
+     ],
+     "vars": {
+      "current": "None",
+      "result": "['Song A', 'Song B', 'Song C']"
+     }
+    },
+    {
+     "say": "None ends the while loop, and we print the songs in order.",
+     "line": [
+      10,
+      13,
+      14
+     ],
+     "out": "['Song A', 'Song B', 'Song C']"
+    },
+    {
+     "say": "Notice there was no way to jump to Song C. We had to walk there, one node at a time.",
+     "line": 12
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Compare",
+   "title": "The same add_front, on a Python list",
+   "values": [
+    "Song B",
+    "Song C"
+   ],
+   "beats": [
+    {
+     "say": "Now do the same thing with a plain Python list."
+    },
+    {
+     "say": "Inserting Song A at position zero means Song B and Song C both shift one slot right.",
+     "vals": [
+      "Song A",
+      "Song B",
+      "Song C"
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "note": "insert(0, \"Song A\") → 2 items shifted"
+    },
+    {
+     "say": "With ten thousand songs, that's ten thousand moves. That's O of n.",
+     "vals": [
+      "Song A",
+      "Song B",
+      "Song C"
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "note": "list: O(n)   ·   linked list: O(1)"
+    },
+    {
+     "say": "But on the list, asking for slot two is one instant step.",
+     "vals": [
+      "Song A",
+      "Song B",
+      "Song C"
+     ],
+     "ptr": {
+      "[2]": 2
+     },
+     "hl": 2,
+     "note": "list[2] → O(1)"
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Concept",
    "title": "The trade-off",
-   "items": [
+   "columns": [
+    "Operation",
+    "Python list",
+    "Linked list"
+   ],
+   "rows": [
     [
-     "Reach an item",
-     "O(n): walk the chain"
+     "Get item #500",
+     "O(1), jump to it",
+     "O(n), walk from head"
     ],
     [
-     "Insert or remove there",
-     "O(1): change pointers"
+     "Add to the front",
+     "O(n), everything shifts",
+     "O(1), change pointers"
+    ],
+    [
+     "Search for a value",
+     "O(n)",
+     "O(n)"
     ]
    ],
    "beats": [
     {
-     "say": "The trade-off.",
-     "show": 0
+     "say": "So here's the trade-off.",
+     "col": 0
     },
     {
-     "say": "You can't jump to item five hundred. You have to walk the chain, which is O of n.",
-     "show": 1
+     "say": "A linked list gives up instant access by position. To reach item five hundred, you walk.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "But once you're there, inserting or removing is O of one. You just change pointers, nothing shifts.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab",
-   "title": "Add to the front",
-   "file": "Python",
-   "code": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n\ndef add_front(self, value):\n    new_node = Node(value)\n    new_node.next = self.head\n    self.head = new_node        # O(1)",
-   "beats": [
-    {
-     "say": "Add front makes a new node, points it at the current head, and makes it the new head.",
-     "show": 0
+     "say": "In return, adding at the front, or at a spot you've already reached, is just a pointer change.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "That's O of one. A Python list would have to shift everything along.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "browser",
-   "kicker": "Where you'd use this",
-   "title": "Chains in real products",
-   "items": [
-    [
-     "Undo / redo",
-     ""
-    ],
-    [
-     "Playlists",
-     ""
-    ],
-    [
-     "Back and forward",
-     ""
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Real examples look like chains.",
-     "show": 0
+     "say": "Searching is O of n for both. Your turn's contains method walks the chain, so it's O of n too.",
+     "hl": 2
     },
     {
-     "say": "Undo and redo history.",
-     "show": 1
-    },
-    {
-     "say": "A playlist you reorder often.",
-     "show": 2
-    },
-    {
-     "say": "A browser's back and forward.",
-     "show": 3
-    },
-    {
-     "say": "In practice you'll mostly use built-ins, but this explains why they behave the way they do.",
-     "show": 3
+     "say": "Undo history and browser back and forward work this way. Day to day, you'll mostly use list or deque.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
@@ -1158,7 +2085,7 @@ You can explain why `add_front` is O(1) for a linked list but O(n) for a Python 
      "show": 0
     },
     {
-     "say": "Can you reach the 100th item of a linked list in O(1)?",
+     "say": "Can you reach the hundredth item of a linked list in O of one?",
      "show": 0
     },
     {
@@ -1284,76 +2211,281 @@ You can explain, without looking back, why undo uses a stack and background jobs
    "beats": [
     {
      "say": "Welcome to Module 5."
+    },
+    {
+     "say": "Stacks and queues are both lists with a rule about which end you take from."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "venn",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Last in, or first in?",
-   "items": [
+   "columns": [
+    "",
+    "Stack",
+    "Queue"
+   ],
+   "rows": [
     [
-     "Stack (LIFO)",
-     "Plates: take from the top"
+     "Rule",
+     "Last in, first out",
+     "First in, first out"
     ],
     [
-     "Queue (FIFO)",
-     "A line: first come, first served"
+     "Like",
+     "A stack of plates",
+     "A checkout line"
+    ],
+    [
+     "Add",
+     ".append()",
+     ".append()"
+    ],
+    [
+     "Take",
+     ".pop() from the end",
+     ".popleft() from the front"
+    ],
+    [
+     "Python",
+     "list",
+     "collections.deque"
+    ],
+    [
+     "Used for",
+     "Undo, balanced brackets",
+     "Background jobs, tickets"
     ]
    ],
    "beats": [
     {
-     "say": "A stack is last in, first out, like a stack of plates. You take from the top.",
-     "show": 1
+     "say": "A stack is last in, first out. Like a stack of plates, you take from the top.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 1
     },
     {
-     "say": "A queue is first in, first out, like a checkout line.",
-     "show": 2
+     "say": "A queue is first in, first out. Like a checkout line, the first person is served first.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
     },
     {
-     "say": "A Python list works well as a stack. For a queue, use deque, which is fast at both ends.",
-     "show": 2
+     "say": "Both add with append. A stack takes from the end with pop. A queue takes from the front with pop left.",
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "A list works fine as a stack. For a queue, use deque.",
+     "hl": 4
+    },
+    {
+     "say": "Stacks power undo. Queues power background jobs.",
+     "hl": 5,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pencil",
+   "kind": "array",
    "kicker": "Lab · Stack",
-   "title": "Undo",
-   "file": "Python",
-   "code": "class UndoStack:\n    def __init__(self):\n        self._actions = []\n\n    def do(self, action):\n        self._actions.append(action)   # O(1)\n\n    def undo(self):\n        if self._actions:\n            return self._actions.pop()  # O(1), the most recent",
+   "title": "Undo takes the most recent action",
+   "values": [
+    "typed 'hello'"
+   ],
    "beats": [
     {
-     "say": "Undo is a stack.",
-     "show": 0
+     "say": "Do pushes an action onto the stack. The end of the list is the top.",
+     "hl": 0,
+     "ptr": {
+      "top": 0
+     },
+     "note": "do(\"typed 'hello'\")"
     },
     {
-     "say": "Do appends an action. Undo pops the last one, so the most recent action is undone first.",
-     "show": 1
+     "say": "Do again: typed world goes on top.",
+     "vals": [
+      "typed 'hello'",
+      "typed ' world'"
+     ],
+     "hl": 1,
+     "ptr": {
+      "top": 1
+     },
+     "note": "do(\"typed ' world'\")"
+    },
+    {
+     "say": "Undo pops from the top, so the most recent action comes off first.",
+     "vals": [
+      "typed 'hello'"
+     ],
+     "ptr": {
+      "top": 0
+     },
+     "note": "undo() → \"typed ' world'\""
+    },
+    {
+     "say": "Both do and undo touch only the end, so both are O of one.",
+     "hl": 0,
+     "note": "append / pop → O(1)"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pipeline",
+   "kind": "array",
    "kicker": "Lab · Queue",
-   "title": "Background jobs",
-   "file": "Python",
-   "code": "from collections import deque\n\njob_queue = deque()\njob_queue.append(\"send welcome email to Alice\")\njob_queue.append(\"send welcome email to Bob\")\n\njob_queue.popleft()   # Alice first: O(1)",
+   "title": "Jobs run in the order they arrived",
+   "values": [
+    "email Alice"
+   ],
    "beats": [
     {
-     "say": "Background jobs are a queue.",
-     "show": 0
+     "say": "Enqueue job adds Alice's welcome email to the back of the queue.",
+     "hl": 0,
+     "ptr": {
+      "front": 0
+     },
+     "note": "enqueue_job(\"send welcome email to Alice\")"
     },
     {
-     "say": "Append adds a job at the back. Pop left takes the next from the front, so Alice's email, queued first, goes first.",
-     "show": 1
+     "say": "Then Bob's email joins behind it.",
+     "vals": [
+      "email Alice",
+      "email Bob"
+     ],
+     "hl": 1,
+     "ptr": {
+      "front": 0
+     },
+     "note": "enqueue_job(\"send welcome email to Bob\")"
     },
     {
-     "say": "Both are O of one with deque. A plain list's pop zero is O of n.",
-     "show": 1
+     "say": "Process next job takes from the front. Alice was first in, so she's first out.",
+     "vals": [
+      "email Bob"
+     ],
+     "ptr": {
+      "front": 0
+     },
+     "note": "popleft() → \"send welcome email to Alice\""
+    },
+    {
+     "say": "Deque does that in O of one. A plain list's pop zero would shift every remaining job left: O of n.",
+     "hl": 0,
+     "note": "deque.popleft(): O(1)   ·   list.pop(0): O(n)"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Your turn",
+   "title": "Balanced brackets with a stack",
+   "values": [
+    "(",
+    "a",
+    "(",
+    "b",
+    ")",
+    "c",
+    ")"
+   ],
+   "beats": [
+    {
+     "say": "Is balanced checks brackets with a stack. Push on an open bracket, pop on a close.",
+     "note": "is_balanced(\"(a(b)c)\")"
+    },
+    {
+     "say": "Open bracket: push. The stack holds one.",
+     "hl": 0,
+     "ptr": {
+      "i": 0
+     },
+     "note": "stack: ["
+    },
+    {
+     "say": "a is not a bracket, so skip it. Then another open bracket: push. Two on the stack.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "i": 2
+     },
+     "note": "stack: [ ["
+    },
+    {
+     "say": "Skip b. The close bracket pops one off.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "i": 4
+     },
+     "note": "stack: ["
+    },
+    {
+     "say": "Skip c. The last close bracket pops the final one.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "hl": 6,
+     "ptr": {
+      "i": 6
+     },
+     "note": "stack: empty"
+    },
+    {
+     "say": "The stack ends empty, so the text is balanced. True.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "note": "→ True"
+    },
+    {
+     "say": "Now open, open, close. One open bracket is left over, so it's False.",
+     "vals": [
+      "(",
+      "(",
+      ")"
+     ],
+     "ok": [],
+     "hl": 0,
+     "note": "stack left: [   → False"
+    },
+    {
+     "say": "And close, open fails straight away. You can't pop from an empty stack.",
+     "vals": [
+      ")",
+      "("
+     ],
+     "hl": 0,
+     "ptr": {
+      "i": 0
+     },
+     "note": "pop on empty → False"
     }
    ]
   },
@@ -1502,96 +2634,316 @@ You can identify the base case and recursive step in both examples above without
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Two parts, always",
-   "items": [
+   "columns": [
+    "Function",
+    "Base case (stop)",
+    "Recursive step"
+   ],
+   "rows": [
     [
-     "Base case",
-     "Answer directly, and stop"
+     "deep_sum",
+     "item is a plain number: add it",
+     "item is a list: deep_sum(item)"
     ],
     [
-     "Recursive step",
-     "Move toward the base case"
+     "count_files",
+     "type is \"file\": count 1",
+     "type is \"folder\": count_files(item)"
     ]
    ],
    "beats": [
     {
-     "say": "Every recursive function needs two parts.",
-     "show": 0
+     "say": "Every recursive function needs two parts."
     },
     {
-     "say": "A base case simple enough to answer directly, which stops it.",
-     "show": 1
+     "say": "A base case, simple enough to answer directly, which stops the calls.",
+     "col": 1
     },
     {
-     "say": "And a step that moves toward that base case.",
-     "show": 2
+     "say": "And a recursive step, which calls itself on a smaller piece.",
+     "col": 2
     },
     {
-     "say": "Without a base case, it calls itself until it crashes.",
-     "show": 2
+     "say": "In deep sum, a plain number is the base case, and a nested list triggers the recursive call.",
+     "hl": 0
+    },
+    {
+     "say": "In count files, a file is the base case, and a folder triggers the call.",
+     "hl": 1
+    },
+    {
+     "say": "Without a base case, it calls itself until Python stops it with a recursion error.",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "array",
+   "kicker": "Trace it",
+   "title": "deep_sum, at the top level",
+   "values": [
+    "1",
+    "[2, 3, [4, 5]]",
+    "6",
+    "[7]"
+   ],
+   "beats": [
+    {
+     "say": "Here's the nested list from the lab. At the top level it has four items.",
+     "note": "nested = [1, [2, 3, [4, 5]], 6, [7]]"
+    },
+    {
+     "say": "One is a plain number. Base case: add it. Total is one.",
+     "hl": 0,
+     "ptr": {
+      "item": 0
+     },
+     "note": "total = 1"
+    },
+    {
+     "say": "The next item is a list, so deep sum calls itself on it. That inner call returns fourteen.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "item": 1
+     },
+     "note": "deep_sum([2, 3, [4, 5]]) → 14, total = 15"
+    },
+    {
+     "say": "Six is a plain number. Total is twenty one.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "item": 2
+     },
+     "note": "total = 21"
+    },
+    {
+     "say": "Seven is wrapped in a list, so one more call. It returns seven.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "item": 3
+     },
+     "note": "deep_sum([7]) → 7, total = 28"
+    },
+    {
+     "say": "The loop ends and deep sum returns twenty eight.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "print(deep_sum(nested)) → 28"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Trace it",
+   "title": "Each call hands back a smaller answer",
+   "nodes": [
+    {
+     "id": "top",
+     "label": "deep_sum(nested)",
+     "x": 14,
+     "y": 50,
+     "sub": "total → 28",
+     "art": "loop"
+    },
+    {
+     "id": "mid",
+     "label": "deep_sum([2, 3, [4, 5]])",
+     "x": 50,
+     "y": 24,
+     "sub": "2 + 3 + …"
+    },
+    {
+     "id": "in",
+     "label": "deep_sum([4, 5])",
+     "x": 86,
+     "y": 24,
+     "sub": "4 + 5"
+    },
+    {
+     "id": "seven",
+     "label": "deep_sum([7])",
+     "x": 50,
+     "y": 78,
+     "sub": "7"
+    }
+   ],
+   "edges": [
+    {
+     "from": "top",
+     "to": "mid"
+    },
+    {
+     "from": "mid",
+     "to": "in"
+    },
+    {
+     "from": "top",
+     "to": "seven"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Where did fourteen come from? Let's follow the calls.",
+     "show": 1,
+     "on": "top"
+    },
+    {
+     "say": "The top call meets the list two, three, four five, and calls deep sum on it.",
+     "show": 2,
+     "on": "mid",
+     "send": {
+      "from": "top",
+      "to": "mid",
+      "label": "[2, 3, [4, 5]]"
+     }
+    },
+    {
+     "say": "That call adds two and three, then meets the list four, five, and calls again.",
+     "show": 3,
+     "on": "in",
+     "send": {
+      "from": "mid",
+      "to": "in",
+      "label": "[4, 5]"
+     }
+    },
+    {
+     "say": "Four and five are plain numbers, so no more calls. It returns nine.",
+     "show": 3,
+     "on": "mid",
+     "send": {
+      "from": "in",
+      "to": "mid",
+      "label": "9"
+     }
+    },
+    {
+     "say": "Two plus three plus nine is fourteen, handed back to the top.",
+     "show": 3,
+     "on": "top",
+     "send": {
+      "from": "mid",
+      "to": "top",
+      "label": "14"
+     }
+    },
+    {
+     "say": "Later, the list with seven gets its own call, and returns seven.",
+     "show": 4,
+     "on": "top",
+     "send": {
+      "from": "seven",
+      "to": "top",
+      "label": "7"
+     }
+    },
+    {
+     "say": "One, plus fourteen, plus six, plus seven: twenty eight.",
+     "show": 4,
+     "on": [
+      "top",
+      "mid",
+      "in",
+      "seven"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Lab",
-   "title": "Add up nested lists",
-   "file": "Python",
-   "code": "def deep_sum(data):\n    total = 0\n    for item in data:\n        if isinstance(item, list):\n            total += deep_sum(item)   # recursive step\n        else:\n            total += item             # base case\n    return total\n\ndeep_sum([1, [2, 3, [4, 5]], 6, [7]])   # 28",
+   "title": "Count files in nested folders",
+   "file": "files.py",
+   "code": "def count_files(folder):\n    count = 0\n    for item in folder[\"items\"]:\n        if item[\"type\"] == \"file\":\n            count += 1                       # base case\n        elif item[\"type\"] == \"folder\":\n            count += count_files(item)       # recursive step\n    return count\n\nfile_system = {\"items\": [\n    {\"type\": \"file\"},\n    {\"type\": \"folder\", \"items\": [{\"type\": \"file\"}, {\"type\": \"file\"}]},\n]}\nprint(count_files(file_system))",
    "beats": [
     {
-     "say": "Deep sum adds every number in nested lists.",
-     "show": 0
+     "say": "The file system holds one file, and one folder with two files inside.",
+     "line": [
+      10,
+      13
+     ]
     },
     {
-     "say": "If an item is a list, call deep sum on it. That's the recursive step.",
-     "show": 1
+     "say": "The outer call starts its count at zero.",
+     "line": [
+      14,
+      2
+     ],
+     "vars": {
+      "call": "outer",
+      "count": 0
+     }
     },
     {
-     "say": "If it's a number, add it. That's the base case. The answer is twenty eight.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "tree",
-   "kicker": "Where you'd use this",
-   "title": "Anything nested",
-   "items": [
-    [
-     "Folders in folders",
-     ""
-    ],
-    [
-     "Replies to replies",
-     ""
-    ],
-    [
-     "Category trees",
-     ""
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Recursion fits naturally nested things.",
-     "show": 0
+     "say": "The first item is a file. Base case: count is one.",
+     "line": [
+      3,
+      4,
+      5
+     ],
+     "vars": {
+      "call": "outer",
+      "count": 1
+     }
     },
     {
-     "say": "Folders inside folders,",
-     "show": 1
+     "say": "The second item is a folder, so count files calls itself on that folder.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "call": "inner",
+      "count": 0
+     }
     },
     {
-     "say": "replies to replies,",
-     "show": 2
+     "say": "Inside, two files. The inner count reaches two, and returns it.",
+     "line": [
+      3,
+      4,
+      5,
+      8
+     ],
+     "vars": {
+      "call": "inner",
+      "count": 2
+     }
     },
     {
-     "say": "and categories inside categories.",
-     "show": 3
+     "say": "Back in the outer call, one plus two is three.",
+     "line": 7,
+     "vars": {
+      "call": "outer",
+      "count": 3
+     }
+    },
+    {
+     "say": "Return and print: three files.",
+     "line": [
+      8,
+      14
+     ],
+     "out": "3"
     }
    ]
   },
@@ -1755,75 +3107,411 @@ You can explain why searching a balanced BST is roughly O(log n) instead of O(n)
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
-   "kicker": "Concept",
-   "title": "Binary search trees",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Lab",
+   "title": "Insert product IDs into a binary search tree",
+   "nodes": [
+    {
+     "id": "n50",
+     "label": "50",
+     "x": 50,
+     "y": 15,
+     "sub": "root"
+    },
+    {
+     "id": "n30",
+     "label": "30",
+     "x": 28,
+     "y": 48
+    },
+    {
+     "id": "n70",
+     "label": "70",
+     "x": 72,
+     "y": 48
+    },
+    {
+     "id": "n20",
+     "label": "20",
+     "x": 14,
+     "y": 82
+    },
+    {
+     "id": "n40",
+     "label": "40",
+     "x": 40,
+     "y": 82
+    },
+    {
+     "id": "n60",
+     "label": "60",
+     "x": 60,
+     "y": 82
+    },
+    {
+     "id": "n80",
+     "label": "80",
+     "x": 86,
+     "y": 82
+    }
+   ],
+   "edges": [
+    {
+     "from": "n50",
+     "to": "n30"
+    },
+    {
+     "from": "n50",
+     "to": "n70"
+    },
+    {
+     "from": "n30",
+     "to": "n20"
+    },
+    {
+     "from": "n30",
+     "to": "n40"
+    },
+    {
+     "from": "n70",
+     "to": "n60"
+    },
+    {
+     "from": "n70",
+     "to": "n80"
+    }
+   ],
+   "beats": [
+    {
+     "say": "In a binary search tree, each node has at most two children: smaller on the left, larger on the right.",
+     "show": 0
+    },
+    {
+     "say": "We insert fifty first. The tree is empty, so fifty becomes the root.",
+     "show": 1,
+     "on": "n50"
+    },
+    {
+     "say": "Thirty is smaller than fifty, so it goes left.",
+     "show": 2,
+     "on": "n30",
+     "send": {
+      "from": "n50",
+      "to": "n30",
+      "label": "30 < 50 → left"
+     }
+    },
+    {
+     "say": "Seventy is larger, so it goes right.",
+     "show": 3,
+     "on": "n70",
+     "send": {
+      "from": "n50",
+      "to": "n70",
+      "label": "70 > 50 → right"
+     }
+    },
+    {
+     "say": "Twenty: smaller than fifty, go left. Smaller than thirty, go left again.",
+     "show": 4,
+     "on": [
+      "n30",
+      "n20"
+     ],
+     "send": {
+      "from": "n30",
+      "to": "n20",
+      "label": "20 < 30 → left"
+     }
+    },
+    {
+     "say": "Forty: left of fifty, but larger than thirty, so it goes right of thirty.",
+     "show": 5,
+     "on": [
+      "n30",
+      "n40"
+     ],
+     "send": {
+      "from": "n30",
+      "to": "n40",
+      "label": "40 > 30 → right"
+     }
+    },
+    {
+     "say": "Sixty and eighty go right of fifty, then left and right of seventy.",
+     "show": 7,
+     "on": [
+      "n60",
+      "n80"
+     ]
+    },
+    {
+     "say": "Seven IDs, three levels. Every left side is smaller, every right side is larger.",
+     "show": 7
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Trace it",
+   "title": "Search follows one path down",
+   "nodes": [
+    {
+     "id": "n50",
+     "label": "50",
+     "x": 50,
+     "y": 15,
+     "sub": "root"
+    },
+    {
+     "id": "n30",
+     "label": "30",
+     "x": 28,
+     "y": 48
+    },
+    {
+     "id": "n70",
+     "label": "70",
+     "x": 72,
+     "y": 48
+    },
+    {
+     "id": "n20",
+     "label": "20",
+     "x": 14,
+     "y": 82
+    },
+    {
+     "id": "n40",
+     "label": "40",
+     "x": 40,
+     "y": 82
+    },
+    {
+     "id": "n60",
+     "label": "60",
+     "x": 60,
+     "y": 82
+    },
+    {
+     "id": "n80",
+     "label": "80",
+     "x": 86,
+     "y": 82
+    }
+   ],
+   "edges": [
+    {
+     "from": "n50",
+     "to": "n30"
+    },
+    {
+     "from": "n50",
+     "to": "n70"
+    },
+    {
+     "from": "n30",
+     "to": "n20"
+    },
+    {
+     "from": "n30",
+     "to": "n40"
+    },
+    {
+     "from": "n70",
+     "to": "n60"
+    },
+    {
+     "from": "n70",
+     "to": "n80"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Contains sixty. Start at the root: sixty is larger than fifty, so go right.",
+     "on": "n50",
+     "send": {
+      "from": "n50",
+      "to": "n70",
+      "label": "60 > 50 → right"
+     }
+    },
+    {
+     "say": "Sixty is smaller than seventy, so go left.",
+     "on": "n70",
+     "send": {
+      "from": "n70",
+      "to": "n60",
+      "label": "60 < 70 → left"
+     }
+    },
+    {
+     "say": "Sixty equals sixty. True, after just three checks. The whole left side was never looked at.",
+     "on": "n60"
+    },
+    {
+     "say": "Contains ninety nine. Larger than fifty, go right. Larger than seventy, go right.",
+     "on": [
+      "n50",
+      "n70"
+     ],
+     "send": {
+      "from": "n70",
+      "to": "n80",
+      "label": "99 > 70 → right"
+     }
+    },
+    {
+     "say": "Larger than eighty, but eighty has no right child. We hit None, so it returns False.",
+     "on": "n80"
+    },
+    {
+     "say": "Your turn's min value just keeps going left from the root: fifty, thirty, twenty.",
+     "on": [
+      "n50",
+      "n30",
+      "n20"
+     ],
+     "send": {
+      "from": "n30",
+      "to": "n20",
+      "label": "min_value() → 20"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Why it's fast",
+   "title": "Each check cuts the tree roughly in half",
+   "columns": [
+    "Values in a balanced tree",
+    "Most checks to find one"
+   ],
+   "rows": [
     [
-     "Binary tree",
-     "At most two children"
+     "7",
+     "3"
     ],
     [
-     "Binary search tree",
-     "Smaller left, larger right"
+     "15",
+     "4"
     ],
     [
-     "Search",
-     "About O(log n) when balanced"
+     "1,000",
+     "10"
+    ],
+    [
+     "1,000,000",
+     "20"
     ]
    ],
    "beats": [
     {
-     "say": "A binary tree allows at most two children per node.",
-     "show": 1
+     "say": "Every check throws away about half of what's left, just like binary search."
     },
     {
-     "say": "A binary search tree keeps them ordered: smaller values go left, larger go right.",
-     "show": 2
+     "say": "Our catalogue has seven values, so any search takes at most three checks.",
+     "hl": 0
     },
     {
-     "say": "So each comparison skips about half the tree. Searching a balanced one is roughly O of log n.",
-     "show": 3
+     "say": "Double it to fifteen, and that's only one more level.",
+     "hl": 1
+    },
+    {
+     "say": "A million values, about twenty checks. That's O of log n.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "search",
-   "kicker": "Lab",
-   "title": "Search a product catalogue",
-   "file": "Python",
-   "code": "def _contains_recursive(self, node, value):\n    if node is None:\n        return False\n    if node.value == value:\n        return True\n    if value < node.value:\n        return self._contains_recursive(node.left, value)\n    return self._contains_recursive(node.right, value)",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Watch out",
+   "title": "Sorted inserts make a lopsided tree",
+   "nodes": [
     {
-     "say": "Insert product I Ds: fifty, thirty, seventy, and so on.",
-     "show": 0
+     "id": "s20",
+     "label": "20",
+     "x": 12,
+     "y": 15,
+     "sub": "root"
     },
     {
-     "say": "Contains compares with each node. Smaller? Go left. Larger? Go right. Hit an empty spot? It isn't there.",
-     "show": 1
+     "id": "s30",
+     "label": "30",
+     "x": 31,
+     "y": 33
     },
     {
-     "say": "Sixty is found. Ninety nine isn't.",
-     "show": 1
+     "id": "s40",
+     "label": "40",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "s50",
+     "label": "50",
+     "x": 69,
+     "y": 67
+    },
+    {
+     "id": "s60",
+     "label": "60",
+     "x": 88,
+     "y": 85
     }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "Careful",
-   "title": "Unbalanced trees get slow",
-   "quote": "Sorted inserts → a lopsided tree → search slows to O(n).",
-   "beats": [
+   ],
+   "edges": [
     {
-     "say": "One catch.",
-     "show": 0
+     "from": "s20",
+     "to": "s30"
     },
     {
-     "say": "Insert values already in sorted order, and the tree becomes one long branch. Search slows down to O of n, like a linked list.",
-     "show": 1
+     "from": "s30",
+     "to": "s40"
+    },
+    {
+     "from": "s40",
+     "to": "s50"
+    },
+    {
+     "from": "s50",
+     "to": "s60"
+    }
+   ],
+   "beats": [
+    {
+     "say": "But insert values already in sorted order, twenty, thirty, forty, fifty, sixty, and see what happens.",
+     "show": 1,
+     "on": "s20"
+    },
+    {
+     "say": "Each new value is larger than everything before it, so it always goes right.",
+     "show": 3,
+     "on": "s40",
+     "send": {
+      "from": "s30",
+      "to": "s40",
+      "label": "40 > 30 → right"
+     }
+    },
+    {
+     "say": "The tree becomes one long chain.",
+     "show": 5,
+     "on": "s60"
+    },
+    {
+     "say": "Now searching for sixty takes five checks, one per node. It's behaved like a linked list: O of n.",
+     "show": 5,
+     "on": [
+      "s20",
+      "s30",
+      "s40",
+      "s50",
+      "s60"
+     ]
     }
    ]
   },
@@ -1970,96 +3658,397 @@ You can explain why BFS, not DFS, is the right choice when you specifically need
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
-   "kicker": "Concept",
-   "title": "Two ways to explore",
-   "items": [
-    [
-     "BFS",
-     "Level by level: shortest path"
-    ],
-    [
-     "DFS",
-     "Deep first: explore everything"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Two ways to explore a graph.",
-     "show": 0
-    },
-    {
-     "say": "Breadth first search, B F S, goes level by level, using a queue. It finds the shortest path.",
-     "show": 1
-    },
-    {
-     "say": "Depth first search, D F S, goes as deep as it can before backtracking. Good for exploring every possibility.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "network",
-   "kicker": "Where you'd use this",
-   "title": "Graphs are everywhere",
-   "items": [
-    [
-     "Social networks",
-     ""
-    ],
-    [
-     "Recommendations",
-     ""
-    ],
-    [
-     "Routes",
-     ""
-    ],
-    [
-     "Dependencies",
-     ""
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Social networks: who's connected to whom.",
-     "show": 1
-    },
-    {
-     "say": "Recommendations: people who bought this also bought that.",
-     "show": 2
-    },
-    {
-     "say": "Route navigation.",
-     "show": 3
-    },
-    {
-     "say": "And package managers like pip and npm, working out what to install.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Lab",
-   "title": "Shortest path with BFS",
-   "file": "Python",
-   "code": "def bfs_shortest_path(graph, start, target):\n    visited = {start}\n    queue = deque([[start]])\n    while queue:\n        path = queue.popleft()\n        if path[-1] == target:\n            return path\n        for neighbor in graph.get(path[-1], []):\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append(path + [neighbor])",
+   "title": "B F S explores level by level",
+   "nodes": [
+    {
+     "id": "alice",
+     "label": "Alice",
+     "x": 12,
+     "y": 50,
+     "sub": "start",
+     "art": "persona"
+    },
+    {
+     "id": "bob",
+     "label": "Bob",
+     "x": 48,
+     "y": 18,
+     "sub": "follows Dave",
+     "art": "persona"
+    },
+    {
+     "id": "carol",
+     "label": "Carol",
+     "x": 48,
+     "y": 82,
+     "sub": "follows Dave",
+     "art": "persona"
+    },
+    {
+     "id": "dave",
+     "label": "Dave",
+     "x": 86,
+     "y": 50,
+     "sub": "target",
+     "art": "persona"
+    }
+   ],
+   "edges": [
+    {
+     "from": "alice",
+     "to": "bob"
+    },
+    {
+     "from": "alice",
+     "to": "carol"
+    },
+    {
+     "from": "bob",
+     "to": "dave"
+    },
+    {
+     "from": "carol",
+     "to": "dave"
+    }
+   ],
    "beats": [
     {
-     "say": "The queue holds paths, not just nodes.",
-     "show": 0
+     "say": "A small social graph. Alice follows Bob and Carol, and they both follow Dave.",
+     "show": 4
     },
     {
-     "say": "Take the next path. If it reaches the target, done. Otherwise, add each unvisited neighbour as a longer path.",
-     "show": 1
+     "say": "We want the shortest path from Alice to Dave. Breadth first search starts at Alice.",
+     "show": 4,
+     "on": "alice"
     },
     {
-     "say": "The visited set stops it going round in circles. From Alice to Dave, the answer is Alice, Bob, Dave.",
-     "show": 1
+     "say": "Level one: everyone Alice follows. Bob first.",
+     "show": 4,
+     "on": "bob",
+     "send": {
+      "from": "alice",
+      "to": "bob",
+      "label": "[Alice, Bob]"
+     }
+    },
+    {
+     "say": "Then Carol. Both paths join the back of the queue.",
+     "show": 4,
+     "on": "carol",
+     "send": {
+      "from": "alice",
+      "to": "carol",
+      "label": "[Alice, Carol]"
+     }
+    },
+    {
+     "say": "Level two: Bob's turn. He follows Dave, who hasn't been visited yet, so Dave is marked visited.",
+     "show": 4,
+     "on": "dave",
+     "send": {
+      "from": "bob",
+      "to": "dave",
+      "label": "[Alice, Bob, Dave]"
+     }
+    },
+    {
+     "say": "Carol also follows Dave, but Dave is already visited, so that path is skipped.",
+     "show": 4,
+     "on": "carol"
+    },
+    {
+     "say": "The path ending at Dave reaches the front of the queue. Found: Alice, Bob, Dave.",
+     "show": 4,
+     "on": [
+      "alice",
+      "bob",
+      "dave"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Trace it",
+   "title": "The queue holds paths, not just people",
+   "file": "bfs.py",
+   "code": "def bfs_shortest_path(graph, start, target):\n    visited = {start}\n    queue = deque([[start]])   # queue of paths, not just nodes\n    while queue:\n        path = queue.popleft()\n        node = path[-1]\n        if node == target:\n            return path\n        for neighbor in graph.get(node, []):\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append(path + [neighbor])\n    return None  # no path found\nprint(bfs_shortest_path(graph, \"Alice\", \"Dave\"))",
+   "beats": [
+    {
+     "say": "Start: Alice is visited, and the queue holds one path, just Alice.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "visited": "{Alice}",
+      "queue": "[[Alice]]"
+     }
+    },
+    {
+     "say": "Pop left takes that path. The last node is Alice, not Dave.",
+     "line": [
+      5,
+      6,
+      7
+     ],
+     "vars": {
+      "visited": "{Alice}",
+      "queue": "[]",
+      "path": "[Alice]",
+      "node": "Alice"
+     }
+    },
+    {
+     "say": "Bob and Carol are new, so both are visited and their paths join the queue.",
+     "line": [
+      9,
+      10,
+      11,
+      12
+     ],
+     "vars": {
+      "visited": "{Alice, Bob, Carol}",
+      "queue": "[[Alice, Bob], [Alice, Carol]]",
+      "path": "[Alice]",
+      "node": "Alice"
+     }
+    },
+    {
+     "say": "Next path: Alice, Bob. Bob follows Dave, who is new, so that path joins the back.",
+     "line": [
+      5,
+      6,
+      9,
+      10,
+      11,
+      12
+     ],
+     "vars": {
+      "visited": "{Alice, Bob, Carol, Dave}",
+      "queue": "[[Alice, Carol], [Alice, Bob, Dave]]",
+      "path": "[Alice, Bob]",
+      "node": "Bob"
+     }
+    },
+    {
+     "say": "Next: Alice, Carol. Carol follows Dave, but Dave is already visited. Nothing is added.",
+     "line": [
+      5,
+      6,
+      9,
+      10
+     ],
+     "vars": {
+      "visited": "{Alice, Bob, Carol, Dave}",
+      "queue": "[[Alice, Bob, Dave]]",
+      "path": "[Alice, Carol]",
+      "node": "Carol"
+     }
+    },
+    {
+     "say": "Last path: Alice, Bob, Dave. The node is Dave, the target. Return the path.",
+     "line": [
+      5,
+      6,
+      7,
+      8
+     ],
+     "vars": {
+      "visited": "{Alice, Bob, Carol, Dave}",
+      "queue": "[]",
+      "path": "[Alice, Bob, Dave]",
+      "node": "Dave"
+     },
+     "out": "['Alice', 'Bob', 'Dave']"
+    },
+    {
+     "say": "Because the queue is first in, first out, shorter paths always come out before longer ones.",
+     "line": 3
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Your turn",
+   "title": "Why a loop doesn't trap B F S",
+   "nodes": [
+    {
+     "id": "alice",
+     "label": "Alice",
+     "x": 12,
+     "y": 50,
+     "sub": "→ Bob, Carol",
+     "art": "persona"
+    },
+    {
+     "id": "bob",
+     "label": "Bob",
+     "x": 48,
+     "y": 18,
+     "sub": "start",
+     "art": "persona"
+    },
+    {
+     "id": "carol",
+     "label": "Carol",
+     "x": 48,
+     "y": 82,
+     "sub": "target",
+     "art": "persona"
+    },
+    {
+     "id": "dave",
+     "label": "Dave",
+     "x": 86,
+     "y": 50,
+     "sub": "→ Eve",
+     "art": "persona"
+    },
+    {
+     "id": "eve",
+     "label": "Eve",
+     "x": 70,
+     "y": 82,
+     "sub": "→ Alice",
+     "art": "persona"
+    }
+   ],
+   "edges": [
+    {
+     "from": "alice",
+     "to": "bob"
+    },
+    {
+     "from": "alice",
+     "to": "carol"
+    },
+    {
+     "from": "bob",
+     "to": "dave"
+    },
+    {
+     "from": "dave",
+     "to": "eve"
+    },
+    {
+     "from": "eve",
+     "to": "alice"
+    }
+   ],
+   "beats": [
+    {
+     "say": "In your turn, Dave follows Eve, and Eve follows Alice. Now there's a loop.",
+     "show": 5,
+     "on": [
+      "alice",
+      "bob",
+      "dave",
+      "eve"
+     ]
+    },
+    {
+     "say": "Find Bob to Carol. From Bob, the only way out is Dave.",
+     "show": 5,
+     "on": "dave",
+     "send": {
+      "from": "bob",
+      "to": "dave",
+      "label": "[Bob, Dave]"
+     }
+    },
+    {
+     "say": "Dave leads to Eve.",
+     "show": 5,
+     "on": "eve",
+     "send": {
+      "from": "dave",
+      "to": "eve",
+      "label": "[Bob, Dave, Eve]"
+     }
+    },
+    {
+     "say": "Eve leads to Alice.",
+     "show": 5,
+     "on": "alice",
+     "send": {
+      "from": "eve",
+      "to": "alice",
+      "label": "[Bob, Dave, Eve, Alice]"
+     }
+    },
+    {
+     "say": "Alice follows Bob, but Bob is already visited, so B F S doesn't go round again.",
+     "show": 5,
+     "on": "bob"
+    },
+    {
+     "say": "Alice also follows Carol. Found: Bob, Dave, Eve, Alice, Carol. The visited set is what stops the loop.",
+     "show": 5,
+     "on": "carol",
+     "send": {
+      "from": "alice",
+      "to": "carol",
+      "label": "→ Carol"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "B F S or D F S?",
+   "columns": [
+    "",
+    "BFS (breadth-first)",
+    "DFS (depth-first)"
+   ],
+   "rows": [
+    [
+     "Explores",
+     "Level by level",
+     "As deep as possible, then backtracks"
+    ],
+    [
+     "Uses",
+     "A queue (FIFO)",
+     "A stack, or recursion"
+    ],
+    [
+     "Guarantees",
+     "First path found is shortest",
+     "No shortest-path promise"
+    ],
+    [
+     "Good for",
+     "Shortest path, degrees of connection",
+     "Exploring all possibilities"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "There are two classic ways to explore a graph.",
+     "col": 0
+    },
+    {
+     "say": "B F S explores level by level. D F S dives as deep as it can, then backs up.",
+     "hl": 0
+    },
+    {
+     "say": "B F S uses a queue. That first in, first out order is what makes it go level by level.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "So the first path B F S finds is the shortest. D F S makes no such promise.",
+     "hl": 2,
+     "col": 1
+    },
+    {
+     "say": "Shortest route, degrees of connection: use B F S. Exploring every possibility: D F S is fine.",
+     "hl": 3
     }
    ]
   },
@@ -2082,7 +4071,7 @@ You can explain why BFS, not DFS, is the right choice when you specifically need
      "show": 0
     },
     {
-     "say": "What does BFS guarantee that DFS doesn't?",
+     "say": "What does B F S guarantee that D F S doesn't?",
      "show": 0
     },
     {
@@ -2209,60 +4198,253 @@ You can sort a list of dictionaries by one field, and by two fields with a tiebr
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "array",
    "kicker": "Lab",
-   "title": "Sort by a field",
-   "file": "Python",
-   "code": "by_price = sorted(products, key=lambda p: p[\"price\"])\n# Mouse, Monitor, Laptop\n\nby_price_desc = sorted(products, key=lambda p: p[\"price\"], reverse=True)\n# Laptop, Monitor, Mouse",
+   "title": "Sort products by price",
+   "values": [
+    "Laptop · 1200",
+    "Mouse · 25",
+    "Monitor · 300"
+   ],
    "beats": [
     {
-     "say": "Key tells sorted what to compare. Here, each product's price.",
-     "show": 0
+     "say": "Three products, in the order they were added."
     },
     {
-     "say": "Add reverse equals true for highest first.",
-     "show": 1
+     "say": "The key, a lambda, tells sorted what to compare: each product's price.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "note": "key=lambda p: p[\"price\"] → 1200, 25, 300"
     },
     {
-     "say": "Sorted returns a new list. Your original isn't changed.",
-     "show": 1
+     "say": "Smallest price first: Mouse, Monitor, Laptop.",
+     "vals": [
+      "Mouse · 25",
+      "Monitor · 300",
+      "Laptop · 1200"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "by_price → ['Mouse', 'Monitor', 'Laptop']"
+    },
+    {
+     "say": "Add reverse equals True, and you get the most expensive first.",
+     "vals": [
+      "Laptop · 1200",
+      "Monitor · 300",
+      "Mouse · 25"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "by_price_desc → ['Laptop', 'Monitor', 'Mouse']"
+    },
+    {
+     "say": "And products itself? Unchanged. Sorted always returns a new list.",
+     "vals": [
+      "Laptop · 1200",
+      "Mouse · 25",
+      "Monitor · 300"
+     ],
+     "ok": [],
+     "note": "products is still in its original order"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "table",
+   "kind": "table",
    "kicker": "Lab",
-   "title": "Sort by two fields",
-   "file": "Python",
-   "code": "sorted(products, key=lambda p: (p[\"category\"], p[\"price\"]))\n# Mouse, Laptop (Electronics), then Desk (Furniture)",
+   "title": "Sort by two fields with a tuple",
+   "columns": [
+    "name",
+    "category",
+    "price",
+    "key tuple"
+   ],
+   "rows": [
+    [
+     "Laptop",
+     "Electronics",
+     "1200",
+     "(\"Electronics\", 1200)"
+    ],
+    [
+     "Desk",
+     "Furniture",
+     "300",
+     "(\"Furniture\", 300)"
+    ],
+    [
+     "Mouse",
+     "Electronics",
+     "25",
+     "(\"Electronics\", 25)"
+    ]
+   ],
    "beats": [
     {
-     "say": "To sort by category, then price, use a tuple as the key.",
-     "show": 0
+     "say": "Now sort by category first, then by price.",
+     "sql": "sorted(products_with_category,\n       key=lambda p: (p[\"category\"], p[\"price\"]))"
     },
     {
-     "say": "It sorts by the first value, and breaks ties with the second, in one pass.",
-     "show": 1
+     "say": "The key turns each product into a tuple: category, then price.",
+     "col": 3
+    },
+    {
+     "say": "Tuples compare their first value first. Electronics comes before Furniture, so Laptop and Mouse go ahead of Desk.",
+     "hl": [
+      0,
+      2
+     ],
+     "col": 1
+    },
+    {
+     "say": "Laptop and Mouse tie on category, so the price breaks the tie. Twenty five beats twelve hundred.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Result: Mouse, Laptop, Desk, in one pass.",
+     "sql": "→ ['Mouse', 'Laptop', 'Desk']"
+    },
+    {
+     "say": "For your turn, use minus price, and the highest price comes first in each category: Laptop, Mouse, Desk.",
+     "sql": "key=lambda p: (p[\"category\"], -p[\"price\"])\n→ ['Laptop', 'Mouse', 'Desk']",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "pyramid",
-   "kicker": "Lab",
-   "title": "When not to re-sort: a heap",
-   "file": "Python",
-   "code": "import heapq\ntasks = []\nheapq.heappush(tasks, (3, \"Reply to email\"))\nheapq.heappush(tasks, (1, \"Fix login bug\"))\nheapq.heappush(tasks, (2, \"Review pull request\"))\n\nheapq.heappop(tasks)   # (1, \"Fix login bug\")",
+   "kind": "array",
+   "kicker": "Lab · Heap",
+   "title": "A heap keeps the most urgent task in front",
+   "values": [
+    "(3, Reply to email)"
+   ],
    "beats": [
     {
-     "say": "If you keep needing the most urgent item, don't re-sort everything each time.",
-     "show": 0
+     "say": "A heap holds tasks as priority and name. A lower number means more urgent. First, reply to email, priority three.",
+     "hl": 0,
+     "note": "heappush(tasks, (3, \"Reply to email\"))"
     },
     {
-     "say": "A heap always keeps the smallest at the front. Adding or removing one is O of log n.",
-     "show": 1
+     "say": "Push fix login bug, priority one. It lands at the end.",
+     "vals": [
+      "(3, Reply to email)",
+      "(1, Fix login bug)"
+     ],
+     "hl": 1,
+     "note": "heappush(tasks, (1, \"Fix login bug\"))"
+    },
+    {
+     "say": "One is smaller than its parent, three, so they swap. The smallest is now at the front.",
+     "vals": [
+      "(1, Fix login bug)",
+      "(3, Reply to email)"
+     ],
+     "hl": [
+      0,
+      1
+     ],
+     "note": "sift up: 1 < 3 → swap"
+    },
+    {
+     "say": "Push review pull request, priority two. Its parent is one, which is smaller, so it stays.",
+     "vals": [
+      "(1, Fix login bug)",
+      "(3, Reply to email)",
+      "(2, Review pull request)"
+     ],
+     "hl": 2,
+     "note": "heappush(tasks, (2, \"Review pull request\"))"
+    },
+    {
+     "say": "Notice the list isn't fully sorted. Three sits before two. A heap only promises the smallest is at index zero.",
+     "ptr": {
+      "tasks[0]": 0
+     },
+     "hl": 0,
+     "note": "tasks[0] → (1, 'Fix login bug')"
+    },
+    {
+     "say": "Heap pop removes fix login bug. The last task moves to the front, and two is still smaller than three.",
+     "vals": [
+      "(2, Review pull request)",
+      "(3, Reply to email)"
+     ],
+     "hl": 0,
+     "note": "heappop(tasks) → (1, 'Fix login bug'), O(log n)"
+    },
+    {
+     "say": "And n smallest two gives the next two most urgent tasks.",
+     "vals": [
+      "(2, Review pull request)",
+      "(3, Reply to email)"
+     ],
+     "ok": [
+      0,
+      1
+     ],
+     "note": "nsmallest(2, tasks) → [(2, …), (3, …)]"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Sort once, or keep a heap?",
+   "columns": [
+    "You need",
+    "Reach for",
+    "Cost"
+   ],
+   "rows": [
+    [
+     "A list in order, once",
+     "sorted()",
+     "O(n log n)"
+    ],
+    [
+     "The most urgent item, again and again",
+     "heapq",
+     "O(log n) per add or remove"
+    ],
+    [
+     "To re-sort after every new item",
+     "Usually a mistake",
+     "O(n log n) every time"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "So when do you sort, and when do you use a heap?",
+     "col": 0
+    },
+    {
+     "say": "If you need the whole list in order, once, sorted is perfect.",
+     "hl": 0
+    },
+    {
+     "say": "If you keep needing the most urgent item while new ones arrive, a heap costs only log n each time.",
+     "hl": 1,
+     "col": 2
+    },
+    {
+     "say": "Re-sorting a huge list after every change repeats the same work over and over.",
+     "hl": 2,
+     "dim": true
     }
    ]
   },
@@ -2285,7 +4467,7 @@ You can sort a list of dictionaries by one field, and by two fields with a tiebr
      "show": 0
     },
     {
-     "say": "Does sorted() change the original list?",
+     "say": "Does sorted change the original list?",
      "show": 0
     },
     {
@@ -2394,76 +4576,333 @@ You can explain why binary search requires sorted data and what happens if you r
    "beats": [
     {
      "say": "Welcome to Module 10."
+    },
+    {
+     "say": "There are two ways to find something: check every item, or, if the data is sorted, keep cutting it in half."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "array",
-   "kicker": "Concept",
-   "title": "Two ways to search",
-   "items": [
+   "kind": "array",
+   "kicker": "Lab · Linear search",
+   "title": "Check every item, one by one",
+   "values": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18
+   ],
+   "beats": [
+    {
+     "say": "The lab uses half a million sorted even numbers. Here's the same idea with ten: zero to eighteen. We want fourteen.",
+     "note": "sorted_ids = list(range(0, 20, 2))"
+    },
+    {
+     "say": "Linear search starts at index zero. Zero isn't fourteen.",
+     "hl": 0,
+     "ptr": {
+      "i": 0
+     },
+     "note": "0 ≠ 14"
+    },
+    {
+     "say": "It keeps going, one item at a time: two, four, six, eight, ten, twelve.",
+     "gone": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "hl": 6,
+     "ptr": {
+      "i": 6
+     },
+     "note": "7 checks so far"
+    },
+    {
+     "say": "Fourteen, at index seven, on the eighth check.",
+     "gone": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "hl": 7,
+     "ptr": {
+      "i": 7
+     },
+     "note": "return 7 → 8 checks"
+    },
+    {
+     "say": "In the real list, forty five thousand sits at index twenty two thousand five hundred. That's twenty two thousand five hundred and one checks.",
+     "gone": [],
+     "note": "linear_search(sorted_ids, 45000) → 22,501 checks"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · Binary search",
+   "title": "Halve the search every step",
+   "values": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18
+   ],
+   "beats": [
+    {
+     "say": "Binary search, same list, same target: fourteen. Low starts at zero, high at nine.",
+     "ptr": {
+      "low": 0,
+      "high": 9
+     }
+    },
+    {
+     "say": "The middle is index four, holding eight.",
+     "hl": 4,
+     "ptr": {
+      "low": 0,
+      "mid": 4,
+      "high": 9
+     },
+     "note": "mid = (0 + 9) // 2 = 4"
+    },
+    {
+     "say": "Eight is less than fourteen, so fourteen must be to the right. Everything up to eight is ruled out.",
+     "gone": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "ptr": {
+      "low": 5,
+      "high": 9
+     },
+     "note": "8 < 14 → low = 5"
+    },
+    {
+     "say": "New middle: index seven, holding fourteen. Found, in two checks.",
+     "hl": 7,
+     "ptr": {
+      "low": 5,
+      "mid": 7,
+      "high": 9
+     },
+     "note": "mid = (5 + 9) // 2 = 7 → return 7"
+    },
+    {
+     "say": "On the real list of half a million, finding forty five thousand takes seventeen checks.",
+     "gone": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "ok": [
+      7
+     ],
+     "note": "binary_search(sorted_ids, 45000) → 17 checks"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Trace it",
+   "title": "What happens when the target isn't there",
+   "file": "search.py",
+   "code": "def binary_search(sorted_items, target):\n    low, high = 0, len(sorted_items) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if sorted_items[mid] == target:\n            return mid\n        elif sorted_items[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1\n\nprint(binary_search(list(range(0, 20, 2)), 15))",
+   "beats": [
+    {
+     "say": "Same ten numbers, but now we search for fifteen, which isn't there.",
+     "line": [
+      13,
+      2
+     ],
+     "vars": {
+      "target": 15,
+      "low": 0,
+      "high": 9
+     }
+    },
+    {
+     "say": "Middle is index four: eight. Eight is less than fifteen, so low moves to five.",
+     "line": [
+      3,
+      4,
+      7,
+      8
+     ],
+     "vars": {
+      "target": 15,
+      "low": 5,
+      "high": 9,
+      "mid": 4
+     }
+    },
+    {
+     "say": "Middle is index seven: fourteen. Still less than fifteen, so low moves to eight.",
+     "line": [
+      3,
+      4,
+      7,
+      8
+     ],
+     "vars": {
+      "target": 15,
+      "low": 8,
+      "high": 9,
+      "mid": 7
+     }
+    },
+    {
+     "say": "Middle is index eight: sixteen. That's more than fifteen, so high moves down to seven.",
+     "line": [
+      3,
+      4,
+      9,
+      10
+     ],
+     "vars": {
+      "target": 15,
+      "low": 8,
+      "high": 7,
+      "mid": 8
+     }
+    },
+    {
+     "say": "Now low, eight, is bigger than high, seven. There's nothing left to search, so the loop ends.",
+     "line": 3
+    },
+    {
+     "say": "It returns minus one: not found, after only three checks.",
+     "line": 11,
+     "out": "-1"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Why it matters",
+   "title": "Half a million items, about twenty checks",
+   "columns": [
+    "Sorted items",
+    "Linear: worst case",
+    "Binary: worst case"
+   ],
+   "rows": [
     [
-     "Linear search",
-     "One by one: O(n)"
+     "10",
+     "10",
+     "4"
     ],
     [
-     "Binary search",
-     "Halve each step: O(log n). Needs sorted data."
+     "1,000",
+     "1,000",
+     "10"
+    ],
+    [
+     "500,000",
+     "500,000",
+     "19"
     ]
    ],
    "beats": [
     {
-     "say": "Linear search checks each item, one by one. O of n.",
-     "show": 1
+     "say": "Here's the most checks each search can need."
     },
     {
-     "say": "Binary search only works on sorted data. It keeps cutting the search space in half. O of log n.",
-     "show": 2
+     "say": "With ten items, it hardly matters: ten checks, or four.",
+     "hl": 0
+    },
+    {
+     "say": "With a thousand, it's a thousand checks against ten.",
+     "hl": 1
+    },
+    {
+     "say": "With the lab's half a million, linear search may need half a million checks. Binary search never needs more than nineteen.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Each step halves what's left. That's O of log n.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab",
-   "title": "Halve it every step",
-   "file": "Python",
-   "code": "def binary_search(sorted_items, target):\n    low, high = 0, len(sorted_items) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if sorted_items[mid] == target:\n            return mid\n        elif sorted_items[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1",
+   "kind": "array",
+   "kicker": "Watch out",
+   "title": "Binary search on unsorted data",
+   "values": [
+    9,
+    4,
+    7,
+    1,
+    3
+   ],
    "beats": [
     {
-     "say": "Look at the middle item.",
-     "show": 0
+     "say": "Now try binary search on a list that isn't sorted. We look for nine, which is right at index zero."
     },
     {
-     "say": "If it's the target, done. If it's too small, search the top half. Too big, the bottom half.",
-     "show": 1
+     "say": "The middle is seven. Seven is less than nine, so it throws away the left half, including nine.",
+     "hl": 2,
+     "gone": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "mid": 2
+     },
+     "note": "7 < 9 → low = 3"
     },
     {
-     "say": "Repeat until found, or nothing's left.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "stopwatch",
-   "kicker": "Lab",
-   "title": "Half a million items",
-   "big": "~20 steps",
-   "sub": "to search 500,000 sorted items",
-   "beats": [
-    {
-     "say": "In a list of five hundred thousand sorted numbers,",
-     "show": 0
+     "say": "Then one, then three. Both smaller, so it keeps going right.",
+     "gone": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "ptr": {
+      "mid": 4
+     },
+     "note": "1 < 9, 3 < 9"
     },
     {
-     "say": "binary search finds any item in about twenty steps.",
-     "show": 1
-    },
-    {
-     "say": "Linear search could take tens of thousands.",
-     "show": 2
+     "say": "It runs out and returns minus one. Wrong: nine was there all along. Binary search needs sorted data.",
+     "gone": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 0,
+     "note": "returns -1, but 9 is at index 0"
     }
    ]
   },
@@ -2623,67 +5062,295 @@ You can explain, in plain language, why `fib_fast` avoids the repeated work that
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
-   "kicker": "The problem",
-   "title": "Repeated work",
-   "items": [
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "fib_slow repeats the same work",
+   "nodes": [
+    {
+     "id": "f5",
+     "label": "fib_slow(5)",
+     "x": 50,
+     "y": 14
+    },
+    {
+     "id": "f4",
+     "label": "fib_slow(4)",
+     "x": 26,
+     "y": 48
+    },
+    {
+     "id": "f3r",
+     "label": "fib_slow(3)",
+     "x": 76,
+     "y": 48,
+     "sub": "computed again!"
+    },
+    {
+     "id": "f3l",
+     "label": "fib_slow(3)",
+     "x": 12,
+     "y": 84
+    },
+    {
+     "id": "f2",
+     "label": "fib_slow(2)",
+     "x": 40,
+     "y": 84
+    }
+   ],
+   "edges": [
+    {
+     "from": "f5",
+     "to": "f4"
+    },
+    {
+     "from": "f5",
+     "to": "f3r"
+    },
+    {
+     "from": "f4",
+     "to": "f3l"
+    },
+    {
+     "from": "f4",
+     "to": "f2"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Fib slow of five adds fib of four and fib of three.",
+     "show": 3,
+     "on": "f5"
+    },
+    {
+     "say": "Fib of four, in turn, needs fib of three and fib of two.",
+     "show": 5,
+     "on": "f4"
+    },
+    {
+     "say": "Look: fib of three appears twice. Each copy does the whole calculation from scratch.",
+     "show": 5,
+     "on": [
+      "f3l",
+      "f3r"
+     ]
+    },
+    {
+     "say": "Lower down, it gets worse. Fib of two is worked out three times, and fib of one five times.",
+     "show": 5,
+     "on": "f2"
+    },
+    {
+     "say": "Nothing is remembered, so the same answers are recalculated again and again.",
+     "show": 5
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Trace it",
+   "title": "Count the calls",
+   "columns": [
+    "Call",
+    "Times computed in fib_slow(5)"
+   ],
+   "rows": [
     [
-     "fib_slow(30)",
-     "Recomputes the same values many times"
+     "fib(5)",
+     "1"
     ],
     [
-     "Result",
-     "Dramatically slower as n grows"
+     "fib(4)",
+     "1"
+    ],
+    [
+     "fib(3)",
+     "2"
+    ],
+    [
+     "fib(2)",
+     "3"
+    ],
+    [
+     "fib(1)",
+     "5"
+    ],
+    [
+     "fib(0)",
+     "3"
     ]
    ],
    "beats": [
     {
-     "say": "Here's the problem it solves.",
-     "show": 0
+     "say": "Here's how many times each value gets computed for fib slow of five.",
+     "col": 1
     },
     {
-     "say": "A plain recursive Fibonacci recalculates the same smaller values again and again.",
-     "show": 1
+     "say": "Fib of three twice, fib of two three times, fib of one five times.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "col": 1
     },
     {
-     "say": "So it gets dramatically slower as n grows.",
-     "show": 2
+     "say": "Fifteen calls in total, just for five.",
+     "sql": "fib_slow(5) → 15 calls"
+    },
+    {
+     "say": "For thirty, it's two million, six hundred ninety two thousand, five hundred thirty seven calls.",
+     "sql": "fib_slow(30) → 2,692,537 calls"
+    },
+    {
+     "say": "With memoization, fib fast of thirty needs fifty nine.",
+     "sql": "fib_slow(30) → 2,692,537 calls\nfib_fast(30) → 59 calls"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
    "kicker": "Lab",
-   "title": "Remember the answers",
-   "file": "Python",
-   "code": "def fib_fast(n, memo=None):\n    if memo is None:\n        memo = {}\n    if n in memo:\n        return memo[n]\n    if n <= 1:\n        return n\n    memo[n] = fib_fast(n - 1, memo) + fib_fast(n - 2, memo)\n    return memo[n]",
+   "title": "fib_fast remembers every answer",
+   "file": "fib.py",
+   "code": "def fib_fast(n, memo=None):\n    if memo is None:\n        memo = {}\n    if n in memo:\n        return memo[n]\n    if n <= 1:\n        return n\n    memo[n] = fib_fast(n - 1, memo) + fib_fast(n - 2, memo)\n    return memo[n]\n\nprint(fib_fast(5))",
    "beats": [
     {
-     "say": "Fib fast keeps a memo, a dictionary of answers.",
-     "show": 0
+     "say": "Call fib fast of five. The memo starts as an empty dictionary.",
+     "line": [
+      11,
+      2,
+      3
+     ],
+     "vars": {
+      "n": 5,
+      "memo": "{}"
+     }
     },
     {
-     "say": "If the answer for n is already there, return it instantly. Otherwise, compute it once, store it, and return it.",
-     "show": 1
+     "say": "Line eight asks for fib of four, which asks for three, which asks for two.",
+     "line": 8,
+     "vars": {
+      "n": 2,
+      "memo": "{}"
+     }
+    },
+    {
+     "say": "Fib of one and fib of zero are base cases: one and zero. So memo two is one.",
+     "line": [
+      6,
+      7,
+      8
+     ],
+     "vars": {
+      "n": 2,
+      "memo": "{2: 1}"
+     }
+    },
+    {
+     "say": "Back in fib of three: one plus one. Memo three is two.",
+     "line": 8,
+     "vars": {
+      "n": 3,
+      "memo": "{2: 1, 3: 2}"
+     }
+    },
+    {
+     "say": "Fib of four needs fib of two. It's already in the memo, so it comes back instantly.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "n": 4,
+      "memo": "{2: 1, 3: 2}"
+     }
+    },
+    {
+     "say": "Memo four is three.",
+     "line": 8,
+     "vars": {
+      "n": 4,
+      "memo": "{2: 1, 3: 2, 4: 3}"
+     }
+    },
+    {
+     "say": "Fib of five needs fib of three: another instant memo hit. Three plus two is five.",
+     "line": [
+      4,
+      5,
+      8,
+      9
+     ],
+     "vars": {
+      "n": 5,
+      "memo": "{2: 1, 3: 2, 4: 3, 5: 5}"
+     },
+     "out": "5"
+    },
+    {
+     "say": "Every value was computed once. That's the whole trick.",
+     "line": 8
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "calc",
-   "kicker": "Where you'd use this",
-   "title": "It's caching, for calculations",
-   "quote": "Dynamic programming = caching, applied to calculations.",
+   "kind": "walk",
+   "kicker": "Lab",
+   "title": "The same idea, for prices",
+   "file": "shipping.py",
+   "code": "price_cache = {}\n\ndef calculate_shipping_cost(weight_kg, distance_km):\n    key = (weight_kg, distance_km)\n    if key in price_cache:\n        return price_cache[key]           # instant, already computed\n    cost = (weight_kg * 2.5) + (distance_km * 0.1)\n    price_cache[key] = cost\n    return cost\n\nprint(calculate_shipping_cost(2, 100))\nprint(calculate_shipping_cost(2, 100))\nprint(len(price_cache))",
    "beats": [
     {
-     "say": "The same idea works anywhere you recalculate the same thing, like a shipping cost for the same weight and distance.",
-     "show": 0
+     "say": "The cache starts empty.",
+     "line": 1,
+     "vars": {
+      "price_cache": "{}"
+     }
     },
     {
-     "say": "Dynamic programming is really caching, applied to computation. Python even has it built in, with the cache decorator.",
-     "show": 1
+     "say": "Two kilos, a hundred kilometres. The key is the pair, two and one hundred. Not in the cache.",
+     "line": [
+      11,
+      4,
+      5
+     ],
+     "vars": {
+      "key": "(2, 100)",
+      "price_cache": "{}"
+     }
+    },
+    {
+     "say": "So we calculate: five plus ten, fifteen. Store it, and return it.",
+     "line": [
+      7,
+      8,
+      9
+     ],
+     "vars": {
+      "key": "(2, 100)",
+      "cost": 15.0,
+      "price_cache": "{(2, 100): 15.0}"
+     },
+     "out": "15.0"
+    },
+    {
+     "say": "Same inputs again. This time the key is in the cache, so it returns straight away.",
+     "line": [
+      12,
+      5,
+      6
+     ],
+     "vars": {
+      "key": "(2, 100)",
+      "price_cache": "{(2, 100): 15.0}"
+     },
+     "out": "15.0"
+    },
+    {
+     "say": "Only one result is stored. It's caching, applied to a calculation.",
+     "line": 13,
+     "out": "1"
     }
    ]
   },
@@ -2728,7 +5395,7 @@ You can explain, in plain language, why `fib_fast` avoids the repeated work that
    ],
    "beats": [
     {
-     "say": "That's the final module.",
+     "say": "That's Module 11.",
      "show": 0
     },
     {

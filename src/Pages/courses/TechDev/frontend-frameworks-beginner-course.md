@@ -91,145 +91,397 @@ You can explain components and declarative UI, and you have a component sketch o
      "say": "Welcome to Frontend Frameworks for Builders."
     },
     {
-     "say": "Across this course you'll build one app, a Reading List: first in React, then as a multi-page Next.js app with a server."
+     "say": "Across this course you'll build one app, a Reading List: first in React, then as a multi-page Next dot js app with a server."
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "mess",
+   "kind": "diagram",
    "kicker": "The problem",
-   "title": "Every change, by hand",
-   "quote": "Whenever data changes, you must update every place that shows it.",
-   "beats": [
+   "title": "Imperative: you update every place by hand",
+   "nodes": [
     {
-     "say": "As an app grows, finding and changing page elements by hand gets repetitive and error prone.",
-     "show": 0
+     "id": "data",
+     "label": "books.length",
+     "x": 14,
+     "y": 50,
+     "sub": "3 → 4",
+     "art": "code"
     },
     {
-     "say": "Whenever data changes, you must update every place that shows it.",
-     "show": 1
+     "id": "list",
+     "label": "The book list",
+     "x": 82,
+     "y": 18,
+     "sub": "shows each book",
+     "art": "layout"
+    },
+    {
+     "id": "stats",
+     "label": "Stats line",
+     "x": 82,
+     "y": 50,
+     "sub": "\"0 of 4 finished\"",
+     "art": "bars"
+    },
+    {
+     "id": "tab",
+     "label": "Tab title",
+     "x": 82,
+     "y": 82,
+     "sub": "\"Reading List (4)\"",
+     "art": "browser"
     }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "venn",
-   "kicker": "Concept",
-   "title": "Imperative versus declarative",
-   "items": [
-    [
-     "Imperative",
-     "\"Find it, change its text\""
-    ],
-    [
-     "Declarative",
-     "\"The counter shows {count}\""
-    ],
-    [
-     "Components",
-     "Reusable pieces of UI"
-    ]
+   ],
+   "edges": [
+    {
+     "from": "data",
+     "to": "list"
+    },
+    {
+     "from": "data",
+     "to": "stats"
+    },
+    {
+     "from": "data",
+     "to": "tab"
+    }
    ],
    "beats": [
     {
-     "say": "A framework changes how you think.",
-     "show": 0
-    },
-    {
-     "say": "Imperative code says how: find the counter element, change its text to five.",
-     "show": 1
-    },
-    {
-     "say": "Declarative code says what: the counter shows count. Change count, and the page follows.",
-     "show": 2
-    },
-    {
-     "say": "And you build the page from components, reusable pieces of UI.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "layers",
-   "kicker": "The landscape",
-   "title": "Frameworks you'll hear about",
-   "items": [
-    [
-     "React",
-     "UI from components"
-    ],
-    [
-     "Next.js",
-     "React + routing + server"
-    ],
-    [
-     "Vue",
-     "HTML-like templates"
-    ],
-    [
-     "Angular",
-     "Complete, opinionated platform"
-    ],
-    [
-     "Svelte",
-     "Compiles to small JS"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "React is a library for building UI from components.",
-     "show": 1
-    },
-    {
-     "say": "Next dot js is built on React, adding routing, server rendering and data fetching.",
-     "show": 2
-    },
-    {
-     "say": "Vue uses HTML-like templates, with a gentle learning curve.",
-     "show": 3
-    },
-    {
-     "say": "Angular is a complete, opinionated platform, popular with large enterprise teams.",
+     "say": "Picture the Reading List. One piece of data, how many books there are, shows up in three places.",
      "show": 4
     },
     {
-     "say": "And Svelte is a compiler that produces small, plain JavaScript.",
-     "show": 5
+     "say": "You add a book, so the count goes from three to four.",
+     "on": "data"
     },
     {
-     "say": "Once you know components, props, state and routing, any of them is mostly new syntax.",
-     "show": 5
+     "say": "In plain JavaScript, you find the list element and add a new row yourself.",
+     "on": "list",
+     "send": {
+      "from": "data",
+      "to": "list",
+      "label": "querySelector(...).append(...)"
+     }
+    },
+    {
+     "say": "Then you find the stats line and change its text.",
+     "on": "stats",
+     "send": {
+      "from": "data",
+      "to": "stats",
+      "label": "element.textContent = ..."
+     }
+    },
+    {
+     "say": "And then the tab title. Forget any one of these, and the page is out of sync with your data.",
+     "on": "tab",
+     "send": {
+      "from": "data",
+      "to": "tab",
+      "label": "document.title = ..."
+     }
+    },
+    {
+     "say": "That's imperative code: you write every step of how the page changes.",
+     "on": [
+      "list",
+      "stats",
+      "tab"
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "blueprint",
-   "kicker": "Lab",
-   "title": "Sketch the Reading List",
-   "steps": [
-    "Spot 5 reusable pieces",
-    "Note their data",
-    "Sketch the Reading List"
+   "kind": "diagram",
+   "kicker": "The fix",
+   "title": "Declarative: describe the page, React keeps it in sync",
+   "nodes": [
+    {
+     "id": "data",
+     "label": "books",
+     "x": 14,
+     "y": 50,
+     "sub": "your data",
+     "art": "code"
+    },
+    {
+     "id": "react",
+     "label": "React",
+     "x": 46,
+     "y": 50,
+     "sub": "works out the changes",
+     "art": "gear"
+    },
+    {
+     "id": "list",
+     "label": "<BookList books={books} />",
+     "x": 84,
+     "y": 18,
+     "sub": "component",
+     "art": "layout"
+    },
+    {
+     "id": "stats",
+     "label": "<Stats total={books.length} />",
+     "x": 84,
+     "y": 50,
+     "sub": "component",
+     "art": "bars"
+    },
+    {
+     "id": "tab",
+     "label": "Reading List ({books.length})",
+     "x": 84,
+     "y": 82,
+     "sub": "tab title",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "data",
+     "to": "react"
+    },
+    {
+     "from": "react",
+     "to": "list"
+    },
+    {
+     "from": "react",
+     "to": "stats"
+    },
+    {
+     "from": "react",
+     "to": "tab"
+    }
    ],
    "beats": [
     {
-     "say": "Your lab is on paper.",
-     "show": 0
+     "say": "With a framework, each piece of the page simply says what it shows, for the current data.",
+     "show": 5
     },
     {
-     "say": "Pick a site you use daily, and spot five reusable pieces, like a message row or a product card.",
-     "show": 1
+     "say": "Now you change only the data: the books list gets a fourth book.",
+     "on": "data",
+     "send": {
+      "from": "data",
+      "to": "react",
+      "label": "books: 4 items"
+     }
     },
     {
-     "say": "For each, note the data it needs, and what changes as you use it.",
-     "show": 2
+     "say": "React works out what's different, and updates the list,",
+     "on": "list",
+     "send": {
+      "from": "react",
+      "to": "list",
+      "label": "+1 row"
+     }
     },
     {
-     "say": "Then sketch the Reading List: a header, an add-a-book form, a filter bar, a list and a book card. Each box becomes a component.",
-     "show": 3
+     "say": "the stats line,",
+     "on": "stats",
+     "send": {
+      "from": "react",
+      "to": "stats",
+      "label": "4"
+     }
+    },
+    {
+     "say": "and the tab title. You never touched them. That's declarative: change the data, and the page follows.",
+     "on": "tab",
+     "send": {
+      "from": "react",
+      "to": "tab",
+      "label": "4"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "The landscape",
+   "title": "Frameworks you'll hear about",
+   "columns": [
+    "Name",
+    "What it is",
+    "Teams choose it for"
+   ],
+   "rows": [
+    [
+     "React",
+     "A library: UI from components",
+     "Most popular starting point"
+    ],
+    [
+     "Next.js",
+     "Built on React",
+     "Routing, server rendering, data"
+    ],
+    [
+     "Vue",
+     "HTML-like templates",
+     "Gentle learning curve"
+    ],
+    [
+     "Angular",
+     "Complete TypeScript platform",
+     "Big teams, one official way"
+    ],
+    [
+     "Svelte",
+     "A compiler to small plain JS",
+     "Small bundles, little boilerplate"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here are the five names you'll hear most.",
+     "col": 0
+    },
+    {
+     "say": "React is a library for building user interfaces from components.",
+     "hl": 0
+    },
+    {
+     "say": "Next dot js is a framework built on React. It adds routing, server rendering and data fetching.",
+     "hl": 1
+    },
+    {
+     "say": "This course focuses on these two.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
+    },
+    {
+     "say": "Vue uses templates close to plain H T M L. Angular is a complete platform, popular with large enterprise teams. Svelte compiles to small, plain JavaScript.",
+     "hl": [
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "say": "Once you know components, props, state and routing, any of them is mostly new syntax.",
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab",
+   "title": "Sketch the Reading List as components",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "App",
+     "x": 50,
+     "y": 15,
+     "sub": "the whole page",
+     "art": "layout"
+    },
+    {
+     "id": "hdr",
+     "label": "Header",
+     "x": 10,
+     "y": 55,
+     "sub": "title, owner"
+    },
+    {
+     "id": "form",
+     "label": "AddBookForm",
+     "x": 32,
+     "y": 55,
+     "sub": "title, author, genre",
+     "art": "form"
+    },
+    {
+     "id": "filt",
+     "label": "FilterBar",
+     "x": 55,
+     "y": 55,
+     "sub": "All · To read · Finished"
+    },
+    {
+     "id": "list",
+     "label": "BookList",
+     "x": 80,
+     "y": 55,
+     "sub": "an array of books",
+     "art": "array"
+    },
+    {
+     "id": "card",
+     "label": "BookCard",
+     "x": 80,
+     "y": 87,
+     "sub": "one book's data",
+     "art": "book"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "hdr"
+    },
+    {
+     "from": "app",
+     "to": "form"
+    },
+    {
+     "from": "app",
+     "to": "filt"
+    },
+    {
+     "from": "app",
+     "to": "list"
+    },
+    {
+     "from": "list",
+     "to": "card"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Your lab is on paper. Sketch the Reading List as boxes.",
+     "show": 1,
+     "on": "app"
+    },
+    {
+     "say": "A header, an add a book form, and a filter bar: all, to read, finished.",
+     "show": 4,
+     "on": [
+      "hdr",
+      "form",
+      "filt"
+     ]
+    },
+    {
+     "say": "A list, which holds one book card for every book.",
+     "show": 6,
+     "on": [
+      "list",
+      "card"
+     ]
+    },
+    {
+     "say": "Next to each box, note the data it needs. A book card needs a title, an author and a genre.",
+     "on": "card"
+    },
+    {
+     "say": "Each box becomes a component. You'll build every one of them in this course.",
+     "on": [
+      "app",
+      "hdr",
+      "form",
+      "filt",
+      "list",
+      "card"
+     ]
     }
    ]
   },
@@ -252,7 +504,7 @@ You can explain components and declarative UI, and you have a component sketch o
      "show": 0
     },
     {
-     "say": "What does \"declarative\" mean?",
+     "say": "What does declarative mean?",
      "show": 0
     },
     {
@@ -461,109 +713,258 @@ Your page shows a header and four book cards rendered from components with props
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "walk",
+   "kicker": "Lab · Render it",
+   "title": "A component is a function that returns JSX",
+   "file": "BookCard.jsx + App.jsx",
+   "code": "function BookCard({ title, author, genre }) {\n  return (\n    <article className=\"book-card\">\n      <h2>{title}</h2>\n      <p>\n        by {author} · {genre}\n      </p>\n    </article>\n  );\n}\n\n// in App.jsx\n<BookCard title=\"Kindred\" author=\"Octavia E. Butler\" genre=\"Science fiction\" />\n<BookCard title=\"Hidden Figures\" author=\"Margot Lee Shetterly\" genre=\"History\" />",
+   "beats": [
+    {
+     "say": "Book Card is just a function. Its name starts with a capital letter, and it returns J S X.",
+     "line": [
+      1,
+      10
+     ]
+    },
+    {
+     "say": "In App, we use it like a tag, and pass three props, like attributes.",
+     "line": 13
+    },
+    {
+     "say": "React calls Book Card with one object holding those props. The curly braces unpack it into title, author and genre.",
+     "line": 1,
+     "vars": {
+      "title": "\"Kindred\"",
+      "author": "\"Octavia E. Butler\"",
+      "genre": "\"Science fiction\""
+     }
+    },
+    {
+     "say": "Curly braces in J S X drop a JavaScript value into the markup. The heading shows Kindred.",
+     "line": 4,
+     "out": "Kindred"
+    },
+    {
+     "say": "And the paragraph fills in the author and genre.",
+     "line": 6,
+     "out": "by Octavia E. Butler · Science fiction"
+    },
+    {
+     "say": "The second card calls the very same function, with different props.",
+     "line": [
+      14,
+      1
+     ],
+     "vars": {
+      "title": "\"Hidden Figures\"",
+      "author": "\"Margot Lee Shetterly\"",
+      "genre": "\"History\""
+     }
+    },
+    {
+     "say": "Same code, new card. Write it once, reuse it with different props.",
+     "line": [
+      4,
+      6
+     ],
+     "out": [
+      "Hidden Figures",
+      "by Margot Lee Shetterly · History"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "JSX rules",
-   "items": [
+   "title": "Props flow down from parent to child",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "App",
+     "x": 50,
+     "y": 15,
+     "sub": "the parent",
+     "art": "layout"
+    },
+    {
+     "id": "hdr",
+     "label": "Header",
+     "x": 12,
+     "y": 72,
+     "sub": "owner",
+     "art": "pencil"
+    },
+    {
+     "id": "c1",
+     "label": "BookCard",
+     "x": 37,
+     "y": 72,
+     "sub": "Kindred",
+     "art": "book"
+    },
+    {
+     "id": "c2",
+     "label": "BookCard",
+     "x": 63,
+     "y": 72,
+     "sub": "Hidden Figures",
+     "art": "book"
+    },
+    {
+     "id": "c3",
+     "label": "BookCard",
+     "x": 88,
+     "y": 72,
+     "sub": "Things Fall Apart",
+     "art": "book"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "hdr"
+    },
+    {
+     "from": "app",
+     "to": "c1"
+    },
+    {
+     "from": "app",
+     "to": "c2"
+    },
+    {
+     "from": "app",
+     "to": "c3"
+    }
+   ],
+   "beats": [
+    {
+     "say": "App is the parent. Header and three book cards are its children.",
+     "show": 5,
+     "on": "app"
+    },
+    {
+     "say": "App hands Header one prop: owner equals Ope.",
+     "on": "hdr",
+     "send": {
+      "from": "app",
+      "to": "hdr",
+      "label": "owner=\"Ope\""
+     }
+    },
+    {
+     "say": "It hands the first card the details of Kindred.",
+     "on": "c1",
+     "send": {
+      "from": "app",
+      "to": "c1",
+      "label": "title=\"Kindred\" …"
+     }
+    },
+    {
+     "say": "And the other two cards get their own books.",
+     "on": [
+      "c2",
+      "c3"
+     ],
+     "send": {
+      "from": "app",
+      "to": "c3",
+      "label": "title=\"Things Fall Apart\" …"
+     }
+    },
+    {
+     "say": "Props only flow down, from parent to child. A component never changes its own props.",
+     "on": [
+      "hdr",
+      "c1",
+      "c2",
+      "c3"
+     ]
+    },
+    {
+     "say": "Your turn: change owner to your name, and add a fourth card for a book you want to read.",
+     "on": "app"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "JSX rules",
+   "title": "Where JSX differs from HTML",
+   "columns": [
+    "Rule",
+    "HTML habit",
+    "JSX"
+   ],
+   "rows": [
     [
-     "One parent",
-     "Or a fragment <>…</>"
+     "One parent element",
+     "<h1>…</h1><p>…</p>",
+     "<>…</>  (a fragment)"
     ],
     [
-     "className",
-     "Not class"
+     "class is reserved in JS",
+     "class=\"book-card\"",
+     "className=\"book-card\""
+    ],
+    [
+     "for is reserved too",
+     "for=\"title\"",
+     "htmlFor=\"title\""
     ],
     [
      "Close every tag",
-     "<img />, <input />"
+     "<img> <input>",
+     "<img /> <input />"
     ],
     [
-     "{ }",
-     "JavaScript inside JSX"
+     "Values in braces",
+     "-",
+     "<p>{author}</p>"
+    ],
+    [
+     "Capital = your component",
+     "<article>",
+     "<BookCard />"
     ]
    ],
    "beats": [
     {
-     "say": "J S X has a few rules.",
-     "show": 0
+     "say": "J S X looks like H T M L, with a few rules.",
+     "col": 0
     },
     {
-     "say": "Return one parent element, or wrap siblings in an empty fragment.",
-     "show": 1
+     "say": "A component returns one parent element. To return siblings without an extra div, wrap them in an empty fragment.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Use class name instead of class, and html for instead of for.",
-     "show": 2
+     "say": "Class is a reserved word in JavaScript, so J S X uses class name.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Close every tag, including image and input.",
-     "show": 3
+     "say": "For the same reason, a label's for becomes html for.",
+     "hl": 2,
+     "col": 2
     },
     {
-     "say": "And put any JavaScript expression inside curly braces.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 3",
-   "title": "A BookCard component",
-   "file": "src/BookCard.jsx",
-   "code": "function BookCard({ title, author, genre }) {\n  return (\n    <article className=\"book-card\">\n      <h2>{title}</h2>\n      <p>by {author} · {genre}</p>\n    </article>\n  );\n}\n\nexport default BookCard;",
-   "beats": [
-    {
-     "say": "Create the project with Vite, then your first component: Book Card.",
-     "show": 0
+     "say": "Every tag must close, including image and input.",
+     "hl": 3,
+     "col": 2
     },
     {
-     "say": "Props are a component's inputs. Book Card receives title, author and genre, destructured from one object.",
-     "show": 1
+     "say": "Any JavaScript value goes inside curly braces.",
+     "hl": 4,
+     "col": 2
     },
     {
-     "say": "It returns an article showing them in curly braces.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "boxes",
-   "kicker": "Lab · Step 4",
-   "title": "Reuse it with different props",
-   "file": "src/App.jsx",
-   "code": "function App() {\n  return (\n    <main>\n      <Header owner=\"Ope\" />\n      <BookCard title=\"Kindred\" author=\"Octavia E. Butler\" genre=\"Science fiction\" />\n      <BookCard title=\"Hidden Figures\" author=\"Margot Lee Shetterly\" genre=\"History\" />\n      <BookCard title=\"Things Fall Apart\" author=\"Chinua Achebe\" genre=\"Fiction\" />\n    </main>\n  );\n}",
-   "beats": [
-    {
-     "say": "Now use it in App.",
-     "show": 0
-    },
-    {
-     "say": "Three cards, from one component, each with different props.",
-     "show": 1
-    },
-    {
-     "say": "App is the parent; Header and Book Card are children. Props flow down, and a component never changes its own props.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "pencil",
-   "kicker": "Your turn",
-   "title": "Make it yours",
-   "quote": "Your name in the header. A fourth book on the list.",
-   "beats": [
-    {
-     "say": "Your turn.",
-     "show": 0
-    },
-    {
-     "say": "Change the owner to your own name, and add a fourth book you want to read.",
-     "show": 1
+     "say": "And lowercase tags are built-in H T M L, while a capital letter tells React it's your own component.",
+     "hl": 5,
+     "dim": true,
+     "col": 2
     }
    ]
   },
@@ -722,148 +1123,320 @@ Each card tracks its own pages and read status.
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Concept",
-   "title": "useState",
-   "file": "BookCard.jsx",
-   "code": "const [isRead, setIsRead] = useState(false);",
+   "kind": "walk",
+   "kicker": "Lab · Trace it",
+   "title": "Click, set state, re-render",
+   "file": "BookCard.jsx (inside the function)",
+   "code": "const [isRead, setIsRead] = useState(false);\nconst [pagesRead, setPagesRead] = useState(0);\nreturn (\n  <article className=\"book-card\">\n    <h2>{title}</h2>\n    <p>Pages read: {pagesRead}</p>\n    <button type=\"button\" onClick={() => setPagesRead((pages) => pages + 10)}>\n      +10 pages\n    </button>\n    <button type=\"button\" onClick={() => setIsRead(!isRead)}>\n      {isRead ? \"Mark as unread\" : \"Mark as read\"}\n    </button>\n  </article>\n);",
    "beats": [
     {
-     "say": "You create state with the use state hook.",
-     "show": 0
+     "say": "Use state gives back a pair: the current value, and a setter to change it.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "isRead": false,
+      "pagesRead": 0
+     }
     },
     {
-     "say": "It returns the current value, and a setter.",
-     "show": 1
+     "say": "On the first render, the card shows pages read zero.",
+     "line": 6,
+     "out": "Pages read: 0"
     },
     {
-     "say": "Calling the setter stores the new value, and re-renders the component, so the page updates.",
-     "show": 1
+     "say": "Is read is false, so the ternary picks the label: mark as read.",
+     "line": 11,
+     "out": "[ Mark as read ]"
+    },
+    {
+     "say": "Now you click plus ten pages. The arrow function runs, and calls the setter.",
+     "line": 7
+    },
+    {
+     "say": "React stores ten, and calls the whole function again. That's a re-render.",
+     "line": 2,
+     "vars": {
+      "pagesRead": 10
+     }
+    },
+    {
+     "say": "This time the paragraph reads ten.",
+     "line": 6,
+     "out": "Pages read: 10"
+    },
+    {
+     "say": "Click mark as read. Set is read gets not false, which is true.",
+     "line": 10,
+     "vars": {
+      "isRead": true
+     }
+    },
+    {
+     "say": "Another re-render, and the label flips.",
+     "line": 11,
+     "out": "[ Mark as unread ]"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "The rules",
-   "items": [
+   "title": "Every setter call starts a re-render",
+   "nodes": [
+    {
+     "id": "click",
+     "label": "Click",
+     "x": 12,
+     "y": 50,
+     "sub": "+10 pages",
+     "art": "cursor"
+    },
+    {
+     "id": "set",
+     "label": "setPagesRead",
+     "x": 38,
+     "y": 18,
+     "sub": "the setter",
+     "art": "code"
+    },
+    {
+     "id": "react",
+     "label": "React",
+     "x": 74,
+     "y": 18,
+     "sub": "stores the new value",
+     "art": "gear"
+    },
+    {
+     "id": "fn",
+     "label": "BookCard()",
+     "x": 88,
+     "y": 66,
+     "sub": "runs again",
+     "art": "code"
+    },
+    {
+     "id": "page",
+     "label": "The page",
+     "x": 45,
+     "y": 84,
+     "sub": "updated",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "click",
+     "to": "set"
+    },
+    {
+     "from": "set",
+     "to": "react"
+    },
+    {
+     "from": "react",
+     "to": "fn"
+    },
+    {
+     "from": "fn",
+     "to": "page"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's that loop as a picture.",
+     "show": 5
+    },
+    {
+     "say": "A click runs your handler, which calls the setter.",
+     "on": "set",
+     "send": {
+      "from": "click",
+      "to": "set",
+      "label": "onClick"
+     }
+    },
+    {
+     "say": "The setter hands React the new value.",
+     "on": "react",
+     "send": {
+      "from": "set",
+      "to": "react",
+      "label": "pages + 10"
+     }
+    },
+    {
+     "say": "React calls your component function again, with the new state.",
+     "on": "fn",
+     "send": {
+      "from": "react",
+      "to": "fn",
+      "label": "pagesRead = 10"
+     }
+    },
+    {
+     "say": "And updates only what changed on the page.",
+     "on": "page",
+     "send": {
+      "from": "fn",
+      "to": "page",
+      "label": "Pages read: 10"
+     }
+    },
+    {
+     "say": "So never assign state directly. Always call the setter, or React never hears about the change.",
+     "on": "set"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Concept",
+   "title": "Each copy of a component has its own state",
+   "values": [
+    "Kindred: 0 pages",
+    "Hidden Figures: 0 pages",
+    "Things Fall Apart: 0 pages"
+   ],
+   "beats": [
+    {
+     "say": "Three book cards, made from the same component."
+    },
+    {
+     "say": "Click plus ten on Hidden Figures.",
+     "hl": 1,
+     "ptr": {
+      "click": 1
+     },
+     "vals": [
+      "Kindred: 0 pages",
+      "Hidden Figures: 10 pages",
+      "Things Fall Apart: 0 pages"
+     ]
+    },
+    {
+     "say": "Only that card changes. The other two keep their own zero.",
+     "hl": 1,
+     "ok": [
+      0,
+      2
+     ],
+     "note": "three cards → three separate pagesRead values"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "A common bug",
+   "title": "Two updates, but only +10?",
+   "columns": [
+    "Call",
+    "pages it reads",
+    "stores"
+   ],
+   "rows": [
     [
-     "Always use the setter",
-     "Never assign directly"
+     "setPagesRead(pagesRead + 10)",
+     "0",
+     "10"
     ],
     [
-     "Depends on old value?",
-     "setX((old) => old + 10)"
+     "setPagesRead(pagesRead + 10)",
+     "0",
+     "10"
     ],
     [
-     "Each copy",
-     "Has its own state"
+     "setPagesRead((pages) => pages + 10)",
+     "0",
+     "10"
     ],
     [
-     "Hooks at the top level",
-     "Not in ifs or loops"
+     "setPagesRead((pages) => pages + 10)",
+     "10",
+     "20"
     ]
    ],
    "beats": [
     {
-     "say": "A few rules.",
-     "show": 0
+     "say": "Try calling the setter twice in one click. Pages read starts at zero."
     },
     {
-     "say": "Never assign state directly. Always call the setter.",
-     "show": 1
+     "say": "Written as pages read plus ten, both calls read the same old value: zero.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 1
     },
     {
-     "say": "When the new value depends on the old one, pass a function, so React supplies the latest value.",
-     "show": 2
+     "say": "So both store ten. You clicked once, asked for twenty, and got ten.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Each copy of a component has its own state.",
-     "show": 3
+     "say": "Pass a function instead, and React hands each call the latest value.",
+     "hl": [
+      2,
+      3
+     ],
+     "col": 1
     },
     {
-     "say": "And call hooks only at the top level, never inside ifs or loops.",
-     "show": 4
+     "say": "Zero becomes ten, then ten becomes twenty. When the new value depends on the old one, pass a function.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bolt",
+   "kind": "table",
    "kicker": "Events",
-   "title": "Pass a function, don't call it",
-   "items": [
+   "title": "Pass a function, don't call one",
+   "columns": [
+    "You write",
+    "When it runs",
+    "Result"
+   ],
+   "rows": [
     [
      "onClick={() => setIsRead(true)}",
-     "Runs on click ✓"
+     "When clicked",
+     "Works"
     ],
     [
      "onClick={setIsRead(true)}",
-     "Runs while rendering ✗"
+     "During rendering",
+     "Runs immediately"
     ]
    ],
    "beats": [
     {
-     "say": "Events use camel case props, like on click.",
-     "show": 0
+     "say": "Events use camel case props like on click, and take a function."
     },
     {
-     "say": "Write an arrow function, so React calls it when the button is clicked.",
-     "show": 1
+     "say": "An arrow function is a function waiting to be called. React calls it when the button is clicked.",
+     "hl": 0
     },
     {
-     "say": "If you write set is read of true directly, it runs immediately, during rendering.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Lab · Step 1",
-   "title": "Pages and read status",
-   "file": "src/BookCard.jsx",
-   "code": "const [isRead, setIsRead] = useState(false);\nconst [pagesRead, setPagesRead] = useState(0);\n\n<button onClick={() => setPagesRead((pages) => pages + 10)}>\n  +10 pages\n</button>\n<button onClick={() => setIsRead(!isRead)}>\n  {isRead ? \"Mark as unread\" : \"Mark as read\"}\n</button>",
-   "beats": [
-    {
-     "say": "Give Book Card two pieces of state: is read, and pages read.",
-     "show": 0
+     "say": "Without the arrow, you call the setter right now, while rendering, not on click.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Plus ten pages uses the function form of the setter.",
-     "show": 1
-    },
-    {
-     "say": "The read button flips is read, and a ternary switches its label.",
-     "show": 1
-    },
-    {
-     "say": "Click one card, and only that card changes. Each has its own state.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "bug",
-   "kicker": "Lab · Step 4",
-   "title": "See a common bug",
-   "big": "+10, not +20",
-   "sub": "both calls read the same old value",
-   "beats": [
-    {
-     "say": "Now see a common bug.",
-     "show": 0
-    },
-    {
-     "say": "Call set pages read with pages read plus ten, twice in one click. It only adds ten, because both calls read the same old value.",
-     "show": 1
-    },
-    {
-     "say": "With the function form, twice adds twenty.",
-     "show": 2
+     "say": "Your turn: add a reset button that sets pages read back to zero, using an arrow function.",
+     "hl": 0,
+     "col": 0
     }
    ]
   },
@@ -886,7 +1459,7 @@ Each card tracks its own pages and read status.
      "show": 0
     },
     {
-     "say": "You render three BookCards. How many pagesRead values exist?",
+     "say": "You render three book cards. How many pages read values exist?",
      "show": 0
     },
     {
@@ -1082,117 +1655,221 @@ The list renders from an array with stable keys, notes show only when present, a
    ]
   },
   {
-   "kind": "code",
-   "art": "hash",
-   "kicker": "Concept",
-   "title": "Every item needs a key",
-   "file": "BookList.jsx",
-   "code": "{books.map((book) => (\n  <li key={book.id}>{book.title}</li>\n))}",
+   "kind": "array",
+   "kicker": "Lab · map",
+   "title": "books.map() turns data into elements",
+   "values": [
+    "id 1 · Kindred",
+    "id 2 · Hidden Figures",
+    "id 3 · Things Fall Apart"
+   ],
    "beats": [
     {
-     "say": "Each item needs a key.",
-     "show": 0
+     "say": "Here's the starter books array from books dot j s: three objects, each with an I D."
     },
     {
-     "say": "Unique among its siblings, and stable for that item, like a database I D.",
-     "show": 1
+     "say": "Map visits the first book, and returns a list item with key one, holding a book card.",
+     "hl": 0,
+     "ptr": {
+      "book": 0
+     },
+     "note": "<li key={1}><BookCard title=\"Kindred\" … /></li>"
     },
     {
-     "say": "React uses keys to match items between renders. Array indexes are risky for changing lists, because state can attach to the wrong item.",
-     "show": 1
+     "say": "Then the second, with key two.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "book": 1
+     },
+     "note": "<li key={2}><BookCard title=\"Hidden Figures\" … /></li>"
+    },
+    {
+     "say": "Then the third, with key three. Three items in, three list items out.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "ptr": {
+      "book": 2
+     },
+     "note": "<li key={3}><BookCard title=\"Things Fall Apart\" … /></li>"
+    },
+    {
+     "say": "Add a fourth book with I D four to the array, and a fourth card appears. No component changes.",
+     "vals": [
+      "id 1 · Kindred",
+      "id 2 · Hidden Figures",
+      "id 3 · Things Fall Apart",
+      "id 4 · your book"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
-   "kicker": "Concept",
-   "title": "Conditional rendering",
-   "items": [
+   "kind": "array",
+   "kicker": "Why keys matter",
+   "title": "Index keys attach state to the wrong book",
+   "values": [
+    "key 0 · Kindred · 30 pages",
+    "key 1 · Hidden Figures · 0",
+    "key 2 · Things Fall Apart · 0"
+   ],
+   "beats": [
+    {
+     "say": "React uses keys to match items between renders. Suppose we used the array index as the key."
+    },
+    {
+     "say": "You've read thirty pages of Kindred. That state belongs to the card with key zero.",
+     "hl": 0,
+     "note": "pagesRead lives in the card React knows as key 0"
+    },
+    {
+     "say": "Now Kindred is removed. The other two books shift up, and get new indexes.",
+     "vals": [
+      "key 0 · Hidden Figures · 30 pages",
+      "key 1 · Things Fall Apart · 0"
+     ],
+     "hl": 0,
+     "note": "key 0 still exists, so React keeps its state"
+    },
+    {
+     "say": "React still sees a key zero, so it keeps that card's state. Hidden Figures now claims thirty pages. Wrong.",
+     "vals": [
+      "key 0 · Hidden Figures · 30 pages",
+      "key 1 · Things Fall Apart · 0"
+     ],
+     "gone": [
+      0
+     ],
+     "note": "index keys → state on the wrong item"
+    },
+    {
+     "say": "With key equals book dot I D instead, key one disappears with Kindred, and each book keeps its own state.",
+     "vals": [
+      "key 2 · Hidden Figures · 0",
+      "key 3 · Things Fall Apart · 0"
+     ],
+     "ok": [
+      0,
+      1
+     ],
+     "note": "key={book.id}: unique and stable"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Conditional rendering",
+   "title": "Show it only when it applies",
+   "columns": [
+    "Data",
+    "Code",
+    "Shows"
+   ],
+   "rows": [
     [
-     "if + early return",
-     "Empty-list message"
+     "note: \"Recommended by a friend\"",
+     "{note && <p>Note: {note}</p>}",
+     "Note: Recommended by a friend"
     ],
     [
-     "cond && <A />",
-     "Only when true"
+     "no note",
+     "{note && <p>Note: {note}</p>}",
+     "(nothing)"
     ],
     [
-     "cond ? <A /> : <B />",
-     "Choose between two"
+     "isRead: true",
+     "{isRead && <span>✓ Finished</span>}",
+     "✓ Finished"
     ],
     [
-     "{count && …}",
-     "Shows a stray 0 ✗"
+     "isRead: false",
+     "{isRead ? \"Mark as unread\" : \"Mark as read\"}",
+     "Mark as read"
+    ],
+    [
+     "books: []",
+     "if (books.length === 0) return <p>…</p>",
+     "Your list is empty. Add a book…"
     ]
    ],
    "beats": [
     {
-     "say": "Three ways to show things conditionally.",
-     "show": 0
+     "say": "Three patterns decide what appears.",
+     "col": 1
     },
     {
-     "say": "An if, with an early return, for example an empty-list message.",
-     "show": 1
+     "say": "Double ampersand shows something only when the left side is true. Kindred has a note, so it shows.",
+     "hl": 0
     },
     {
-     "say": "Condition and-and element, to show something only when true.",
-     "show": 2
+     "say": "Hidden Figures has no note, so nothing renders at all.",
+     "hl": 1
     },
     {
-     "say": "And a ternary, to choose between two things.",
-     "show": 3
+     "say": "The same pattern adds a finished badge once a book is read.",
+     "hl": 2
     },
     {
-     "say": "Watch out: count and-and paragraph shows a literal zero when count is zero. Use count greater than zero.",
-     "show": 4
+     "say": "A question mark ternary chooses between two things, like the button label.",
+     "hl": 3
+    },
+    {
+     "say": "And an if with an early return handles the empty list. Pass an empty array to try it.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Steps 1 and 2",
-   "title": "A BookList from an array",
-   "file": "src/BookList.jsx",
-   "code": "function BookList({ books }) {\n  if (books.length === 0) {\n    return <p>Your list is empty. Add a book to get started.</p>;\n  }\n  return (\n    <ul className=\"book-list\">\n      {books.map((book) => (\n        <li key={book.id}><BookCard {...} /></li>\n      ))}\n    </ul>\n  );\n}",
-   "beats": [
-    {
-     "say": "Move the books into an array in books dot j s, then create Book List.",
-     "show": 0
-    },
-    {
-     "say": "If the list is empty, return a friendly message.",
-     "show": 1
-    },
-    {
-     "say": "Otherwise, map each book to a list item, keyed by its I D.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Lab · Steps 3 to 6",
-   "title": "Try every case",
-   "steps": [
-    "Note & badge only when present",
-    "Empty array → message",
-    "No key → console warning"
+   "kind": "table",
+   "kicker": "A common bug",
+   "title": "Why a stray 0 appears",
+   "columns": [
+    "count",
+    "count && <p>…</p>",
+    "count > 0 && <p>…</p>"
+   ],
+   "rows": [
+    [
+     "0",
+     "\"0\" on the page",
+     "(nothing)"
+    ],
+    [
+     "2",
+     "<p>You have items</p>",
+     "<p>You have items</p>"
+    ]
    ],
    "beats": [
     {
-     "say": "Book Card now shows a note only when one exists, and a Finished badge when read.",
-     "show": 1
+     "say": "Watch out with numbers on the left of double ampersand."
     },
     {
-     "say": "Pass an empty array, and you see the empty message.",
-     "show": 2
+     "say": "When count is two, both versions show the paragraph.",
+     "hl": 1
     },
     {
-     "say": "Delete the key, and React warns in the console. Put it back.",
-     "show": 3
+     "say": "But when count is zero, the expression is the number zero, and React renders numbers. A stray zero appears.",
+     "hl": 0,
+     "col": 1
+    },
+    {
+     "say": "Use a real true or false, like count greater than zero, and nothing shows.",
+     "hl": 0,
+     "col": 2,
+     "dim": true
     }
    ]
   },
@@ -1215,7 +1892,7 @@ The list renders from an array with stable keys, notes show only when present, a
      "show": 0
     },
     {
-     "say": "Why can {count && <p>…</p>} show a stray \"0\"?",
+     "say": "Why can count, double ampersand, a paragraph, show a stray zero?",
      "show": 0
     },
     {
@@ -1426,138 +2103,333 @@ Valid books are added; invalid input shows an error.
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "What a React form needs",
-   "items": [
-    [
-     "State per field",
-     "value + onChange"
-    ],
-    [
-     "onSubmit on the form",
-     "Enter works too"
-    ],
-    [
-     "preventDefault()",
-     "No page reload"
-    ],
-    [
-     "Validate after .trim()",
-     "Clear error message"
-    ],
-    [
-     "<label htmlFor>",
-     "Matches the input id"
-    ]
+   "title": "A controlled input goes round a loop",
+   "nodes": [
+    {
+     "id": "input",
+     "label": "Title input",
+     "x": 12,
+     "y": 50,
+     "sub": "what you see",
+     "art": "form"
+    },
+    {
+     "id": "change",
+     "label": "onChange",
+     "x": 45,
+     "y": 15,
+     "sub": "setTitle(event.target.value)",
+     "art": "code"
+    },
+    {
+     "id": "state",
+     "label": "title state",
+     "x": 86,
+     "y": 50,
+     "sub": "the source of truth",
+     "art": "boxes"
+    },
+    {
+     "id": "value",
+     "label": "value={title}",
+     "x": 45,
+     "y": 85,
+     "sub": "re-render",
+     "art": "code"
+    }
+   ],
+   "edges": [
+    {
+     "from": "input",
+     "to": "change"
+    },
+    {
+     "from": "change",
+     "to": "state"
+    },
+    {
+     "from": "state",
+     "to": "value"
+    },
+    {
+     "from": "value",
+     "to": "input"
+    }
    ],
    "beats": [
     {
-     "say": "A React form usually has five things.",
-     "show": 0
-    },
-    {
-     "say": "State for each field.",
-     "show": 1
-    },
-    {
-     "say": "An on submit handler on the form, so pressing Enter works too.",
-     "show": 2
-    },
-    {
-     "say": "Event dot prevent default, because browsers reload the page on submit.",
-     "show": 3
-    },
-    {
-     "say": "Validation after trimming, with a clear error.",
+     "say": "Four parts: the input, its on change handler, the title state, and value equals title.",
      "show": 4
     },
     {
-     "say": "And a label for each input, linked by matching I Ds.",
-     "show": 5
+     "say": "You type the letter K. On change receives the event.",
+     "on": "change",
+     "send": {
+      "from": "input",
+      "to": "change",
+      "label": "\"K\""
+     }
+    },
+    {
+     "say": "It calls set title, so state now holds K.",
+     "on": "state",
+     "send": {
+      "from": "change",
+      "to": "state",
+      "label": "setTitle(\"K\")"
+     }
+    },
+    {
+     "say": "React re-renders, and value equals title gives the input K.",
+     "on": "value",
+     "send": {
+      "from": "state",
+      "to": "value",
+      "label": "title = \"K\""
+     }
+    },
+    {
+     "say": "The box shows K because state says so.",
+     "on": "input",
+     "send": {
+      "from": "value",
+      "to": "input",
+      "label": "value=\"K\""
+     }
+    },
+    {
+     "say": "That's why you can validate or clear it any time: set title to empty, and the box empties.",
+     "on": "state",
+     "send": {
+      "from": "state",
+      "to": "value",
+      "label": "title = \"\""
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "shield",
-   "kicker": "Lab · Step 1",
-   "title": "The submit handler",
-   "file": "src/AddBookForm.jsx",
-   "code": "function handleSubmit(event) {\n  event.preventDefault();\n  const cleanTitle = title.trim();\n  const cleanAuthor = author.trim();\n  if (cleanTitle === \"\" || cleanAuthor === \"\") {\n    setError(\"Please enter both a title and an author.\");\n    return;\n  }\n  onAdd({ id: crypto.randomUUID(), title: cleanTitle, author: cleanAuthor, genre });\n  setTitle(\"\"); setAuthor(\"\"); setError(\"\");\n}",
+   "kind": "walk",
+   "kicker": "Lab · Trace it",
+   "title": "Validate on submit",
+   "file": "AddBookForm.jsx",
+   "code": "function handleSubmit(event) {\n  event.preventDefault(); // stop the browser from reloading the page\n  const cleanTitle = title.trim();\n  const cleanAuthor = author.trim();\n  if (cleanTitle === \"\" || cleanAuthor === \"\") {\n    setError(\"Please enter both a title and an author.\");\n    return;\n  }\n  // ...plus a check that titles are at most 100 characters\n  onAdd({ id: crypto.randomUUID(), title: cleanTitle, author: cleanAuthor, genre: genre });\n  setTitle(\"\"); setAuthor(\"\"); setGenre(\"Fiction\"); setError(\"\");\n}",
    "beats": [
     {
-     "say": "Here's the heart of Add Book Form.",
-     "show": 0
+     "say": "The handler sits on the form's on submit, so pressing Enter works too.",
+     "line": 1
     },
     {
-     "say": "Stop the reload. Trim the values. If either is empty, set an error and stop.",
-     "show": 1
+     "say": "First, prevent default. Browsers reload the page on submit, which would wipe our state.",
+     "line": 2
     },
     {
-     "say": "Otherwise, call on add with a new book, using crypto random U U I D for its I D, then clear the form.",
-     "show": 1
+     "say": "Try one: both boxes hold only spaces.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "title": "\"   \"",
+      "author": "\"   \""
+     }
+    },
+    {
+     "say": "Trim removes the spaces, leaving empty text.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "cleanTitle": "\"\"",
+      "cleanAuthor": "\"\""
+     }
+    },
+    {
+     "say": "Empty fails the check, so we set the error message and return. Nothing is added.",
+     "line": [
+      5,
+      7
+     ],
+     "vars": {
+      "error": "\"Please enter both a title and an author.\""
+     },
+     "out": "Please enter both a title and an author."
+    },
+    {
+     "say": "Try two: Atomic Habits, by James Clear, genre Tech.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "title": "\"Atomic Habits\"",
+      "author": "\"James Clear\"",
+      "cleanTitle": "\"Atomic Habits\"",
+      "cleanAuthor": "\"James Clear\"",
+      "genre": "\"Tech\""
+     }
+    },
+    {
+     "say": "Both have text, so the check passes, and on add receives the new book with a fresh I D.",
+     "line": [
+      5,
+      10
+     ]
+    },
+    {
+     "say": "Finally, every field resets, and the error clears. The form is empty again.",
+     "line": 11,
+     "vars": {
+      "title": "\"\"",
+      "author": "\"\"",
+      "genre": "\"Fiction\"",
+      "error": "\"\""
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "tree",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Data down, events up",
-   "steps": [
-    "App owns the books",
-    "Passes onAdd down",
-    "Form calls onAdd(book)",
-    "List re-renders"
+   "title": "Data goes down, events go up",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "App",
+     "x": 50,
+     "y": 15,
+     "sub": "useState(starterBooks)",
+     "art": "layout"
+    },
+    {
+     "id": "form",
+     "label": "AddBookForm",
+     "x": 18,
+     "y": 78,
+     "sub": "onAdd",
+     "art": "form"
+    },
+    {
+     "id": "list",
+     "label": "BookList",
+     "x": 82,
+     "y": 78,
+     "sub": "books",
+     "art": "array"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "form"
+    },
+    {
+     "from": "app",
+     "to": "list"
+    }
    ],
    "beats": [
     {
-     "say": "The list lives in App, so App holds it in state.",
-     "show": 0
+     "say": "The list lives in App, so App holds the books in state.",
+     "show": 3,
+     "on": "app"
     },
     {
-     "say": "App passes its add book function down, as the on add prop.",
-     "show": 1
+     "say": "App passes the books down to Book List.",
+     "on": "list",
+     "send": {
+      "from": "app",
+      "to": "list",
+      "label": "books (3)"
+     }
     },
     {
-     "say": "The form calls on add with the new book.",
-     "show": 2
+     "say": "And passes its add book function down to the form, as the on add prop.",
+     "on": "form",
+     "send": {
+      "from": "app",
+      "to": "form",
+      "label": "onAdd={addBook}"
+     }
     },
     {
-     "say": "App updates its state, and the list re-renders.",
-     "show": 3
+     "say": "When you submit, the form calls on add. The event travels up to App.",
+     "on": "app",
+     "send": {
+      "from": "form",
+      "to": "app",
+      "label": "onAdd({ title: \"Atomic Habits\", … })"
+     }
+    },
+    {
+     "say": "App sets new state and re-renders, so Book List receives four books.",
+     "on": "list",
+     "send": {
+      "from": "app",
+      "to": "list",
+      "label": "books (4)"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "array",
+   "kind": "array",
    "kicker": "Concept",
-   "title": "A new array, not push",
-   "items": [
-    [
-     "[...currentBooks, newBook]",
-     "New array ✓"
-    ],
-    [
-     "currentBooks.push(newBook)",
-     "Same array ✗"
-    ]
+   "title": "Make a new array, don't push",
+   "values": [
+    "Kindred",
+    "Hidden Figures",
+    "Things Fall Apart"
    ],
    "beats": [
     {
-     "say": "One more rule.",
-     "show": 0
+     "say": "Here are the current books."
     },
     {
-     "say": "Update arrays by making a new array, with the spread operator.",
-     "show": 1
+     "say": "Add book builds a new array: spread out every current book, then add the new one at the end.",
+     "vals": [
+      "Kindred",
+      "Hidden Figures",
+      "Things Fall Apart",
+      "Atomic Habits"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "note": "[...currentBooks, newBook] → a new array"
     },
     {
-     "say": "Don't use push. It changes the old array in place, and React only notices new values.",
-     "show": 2
+     "say": "React compares old and new. It's a different array, so React re-renders.",
+     "vals": [
+      "Kindred",
+      "Hidden Figures",
+      "Things Fall Apart",
+      "Atomic Habits"
+     ],
+     "hl": 3,
+     "note": "new value → re-render"
+    },
+    {
+     "say": "Push would change the existing array in place. Same array, so React may not notice, and the page may not update.",
+     "vals": [
+      "Kindred",
+      "Hidden Figures",
+      "Things Fall Apart",
+      "Atomic Habits"
+     ],
+     "gone": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "currentBooks.push(newBook) → same array, changed in place"
     }
    ]
   },
@@ -1580,7 +2452,7 @@ Valid books are added; invalid input shows an error.
      "show": 0
     },
     {
-     "say": "Why does the submit handler call event.preventDefault()?",
+     "say": "Why does the submit handler call event dot prevent default?",
      "show": 0
     },
     {
@@ -1778,129 +2650,262 @@ Books load with a loading state, failures show an error, cleanup aborts the requ
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "The dependency array",
-   "items": [
+   "title": "One status, three screens",
+   "columns": [
+    "status",
+    "What App renders"
+   ],
+   "rows": [
     [
-     "[]",
-     "Once, after first render"
+     "\"loading\"",
+     "<p>Loading your books...</p>"
     ],
     [
-     "[books.length]",
-     "When that value changes"
+     "\"error\"",
+     "<p>Could not load your books. Refresh to try again.</p>"
     ],
     [
-     "(none)",
-     "After every render"
+     "\"ready\"",
+     "<BookList books={books} />"
     ]
    ],
    "beats": [
     {
-     "say": "The dependency array controls when the effect runs.",
-     "show": 0
+     "say": "Fetching takes time and can fail, so App keeps a status in state.",
+     "sql": "const [status, setStatus] = useState(\"loading\");"
     },
     {
-     "say": "An empty array: once, after the first render.",
-     "show": 1
+     "say": "It starts as loading, so the first thing you see is a loading message.",
+     "hl": 0
     },
     {
-     "say": "With values: after the first render, and whenever those values change.",
-     "show": 2
+     "say": "If the request fails, status becomes error, and you get a clear message instead of a crash.",
+     "hl": 1
     },
     {
-     "say": "No array at all: after every render. Rarely what you want.",
-     "show": 3
+     "say": "When the data arrives, status becomes ready, and the list renders.",
+     "hl": 2
+    },
+    {
+     "say": "Exactly one of these shows at a time.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 0
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "stopwatch",
+   "kind": "walk",
+   "kicker": "Lab · Trace it",
+   "title": "Load the books, or fail gracefully",
+   "file": "App.jsx (inside the effect)",
+   "code": "async function loadBooks() {\n  try {\n    const response = await fetch(\"/starter-books.json\", { signal: controller.signal });\n    if (!response.ok) throw new Error(`Request failed with status ${response.status}`);\n    const data = await response.json();\n    setBooks(data);\n    setStatus(\"ready\");\n  } catch (error) {\n    if (error.name === \"AbortError\") return; // we cancelled it on purpose\n    console.error(error);\n    setStatus(\"error\");\n  }\n}",
+   "beats": [
+    {
+     "say": "Before anything loads, books is empty and status is loading.",
+     "line": 1,
+     "vars": {
+      "books": "[]",
+      "status": "\"loading\""
+     }
+    },
+    {
+     "say": "Fetch asks for starter books dot j s o n, from the public folder.",
+     "line": 3
+    },
+    {
+     "say": "The server answers two hundred, so response dot ok is true, and we don't throw.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "response.status": 200,
+      "response.ok": true
+     }
+    },
+    {
+     "say": "We read the J S O N: an array of three books.",
+     "line": 5,
+     "vars": {
+      "data": "[3 books]"
+     }
+    },
+    {
+     "say": "Set books, then set status to ready. The list appears.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "books": "[3 books]",
+      "status": "\"ready\""
+     }
+    },
+    {
+     "say": "Now suppose the file is missing, and the server answers four oh four.",
+     "line": 3,
+     "vars": {
+      "books": "[]",
+      "status": "\"loading\"",
+      "response.status": 404,
+      "response.ok": false,
+      "data": "—"
+     }
+    },
+    {
+     "say": "Response dot ok is false, so we throw an error, and jump straight to catch.",
+     "line": [
+      4,
+      8
+     ]
+    },
+    {
+     "say": "It isn't an abort, so we log it, and set status to error. The user sees a message, not a crash.",
+     "line": [
+      9,
+      11
+     ],
+     "vars": {
+      "status": "\"error\""
+     },
+     "out": "Error: Request failed with status 404"
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Three states for every fetch",
-   "items": [
+   "title": "The dependency array decides when an effect runs",
+   "columns": [
+    "Moment",
+    "books.length",
+    "Effect 1: []",
+    "Effect 2: [books.length]"
+   ],
+   "rows": [
     [
-     "loading",
-     "Loading your books..."
+     "First render",
+     "0",
+     "runs: fetch",
+     "runs: \"Reading List (0)\""
     ],
     [
-     "error",
-     "Could not load your books"
+     "Books loaded",
+     "3",
+     "skipped",
+     "runs: \"Reading List (3)\""
     ],
     [
-     "ready",
-     "Show the list"
+     "Book added",
+     "4",
+     "skipped",
+     "runs: \"Reading List (4)\""
     ]
    ],
    "beats": [
     {
-     "say": "Fetching takes time, and can fail, so the UI needs three states.",
-     "show": 0
+     "say": "App has two effects. Here's each moment App renders."
     },
     {
-     "say": "Loading.",
-     "show": 1
+     "say": "After the first render, both run. Effect one starts the fetch. Effect two sets the tab title to zero books.",
+     "hl": 0
     },
     {
-     "say": "Error.",
-     "show": 2
+     "say": "An empty array means run once, after the first render. So effect one never runs again.",
+     "col": 2,
+     "hl": [
+      1,
+      2
+     ]
     },
     {
-     "say": "And ready.",
-     "show": 3
+     "say": "Effect two lists books dot length, so it runs whenever that number changes: three, then four.",
+     "col": 3,
+     "hl": [
+      1,
+      2
+     ]
+    },
+    {
+     "say": "With no array at all, an effect runs after every render. That's rarely what you want.",
+     "col": 0
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 2",
-   "title": "Load the books, with cleanup",
-   "file": "src/App.jsx",
-   "code": "useEffect(() => {\n  const controller = new AbortController();\n  async function loadBooks() {\n    try {\n      const response = await fetch(\"/starter-books.json\", { signal: controller.signal });\n      if (!response.ok) throw new Error(`Status ${response.status}`);\n      setBooks(await response.json());\n      setStatus(\"ready\");\n    } catch (error) {\n      if (error.name === \"AbortError\") return;\n      setStatus(\"error\");\n    }\n  }\n  loadBooks();\n  return () => controller.abort();\n}, []);",
-   "beats": [
-    {
-     "say": "Here's the loading effect.",
-     "show": 0
-    },
-    {
-     "say": "Fetch the J S O N file. If the response isn't ok, throw. Otherwise, store the books and set status to ready.",
-     "show": 1
-    },
-    {
-     "say": "The cleanup function aborts the request if App disappears before it finishes.",
-     "show": 1
-    },
-    {
-     "say": "In development, Strict Mode runs effects twice, so a cancelled first request means your cleanup works.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Lab · Steps 3 to 5",
-   "title": "Test each state",
-   "steps": [
-    "Slow network → Loading",
-    "Missing file → Error",
-    "Add a book → tab title updates"
+   "kind": "array",
+   "kicker": "Cleanup",
+   "title": "In development, StrictMode runs effects twice",
+   "values": [
+    "effect runs",
+    "cleanup",
+    "effect runs again",
+    "response arrives"
    ],
    "beats": [
     {
-     "say": "Throttle the network, and you see Loading first.",
-     "show": 1
+     "say": "In development, strict mode runs each effect, its cleanup, then the effect again, to expose missing cleanup."
     },
     {
-     "say": "Point fetch at a missing file, and you get the error message, not a crash.",
-     "show": 2
+     "say": "The effect runs, makes an abort controller, and sends request one.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     },
+     "note": "request 1 sent"
     },
     {
-     "say": "Add a book, and a second effect updates the tab title.",
-     "show": 3
+     "say": "The cleanup runs: controller dot abort cancels request one.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     },
+     "note": "controller.abort() → request 1 cancelled"
+    },
+    {
+     "say": "Request one fails with an abort error, and catch quietly returns. We cancelled it on purpose.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     },
+     "note": "error.name === \"AbortError\" → return"
+    },
+    {
+     "say": "The effect runs again, with a new controller, and sends request two.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     },
+     "note": "request 2 sent"
+    },
+    {
+     "say": "Request two succeeds, and the books appear. A cancelled first request in the Network tab is your cleanup working.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "ptr": {
+      "now": 3
+     },
+     "note": "setBooks(data) · setStatus(\"ready\")"
     }
    ]
   },
@@ -1923,7 +2928,7 @@ Books load with a loading state, failures show an error, cleanup aborts the requ
      "show": 0
     },
     {
-     "say": "What does an empty dependency array [] mean?",
+     "say": "What does an empty dependency array mean?",
      "show": 0
     },
     {
@@ -2288,114 +3293,362 @@ and in the two buttons, change `onToggleRead(id)` to `toggleRead(id)` and `onRem
    ]
   },
   {
-   "kind": "flow",
-   "art": "pyramid",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Lift it to the common parent",
-   "steps": [
-    "Find the common parent",
-    "App owns read",
-    "Pass value + function down",
-    "Card calls onToggleRead(id)"
+   "title": "App owns the state. Props go down, events come up",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "App",
+     "x": 50,
+     "y": 14,
+     "sub": "books · filter",
+     "art": "layout"
+    },
+    {
+     "id": "stats",
+     "label": "Stats",
+     "x": 12,
+     "y": 52,
+     "sub": "total · read",
+     "art": "bars"
+    },
+    {
+     "id": "filt",
+     "label": "FilterBar",
+     "x": 45,
+     "y": 52,
+     "sub": "filter · onChange"
+    },
+    {
+     "id": "list",
+     "label": "BookList",
+     "x": 82,
+     "y": 52,
+     "sub": "books · onToggleRead",
+     "art": "array"
+    },
+    {
+     "id": "card",
+     "label": "BookCard",
+     "x": 82,
+     "y": 86,
+     "sub": "read · pagesRead",
+     "art": "book"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "stats"
+    },
+    {
+     "from": "app",
+     "to": "filt"
+    },
+    {
+     "from": "app",
+     "to": "list"
+    },
+    {
+     "from": "list",
+     "to": "card"
+    }
    ],
    "beats": [
     {
-     "say": "Move the state to the closest common parent of everything that needs it.",
-     "show": 0
+     "say": "Read status moves up to the closest common parent of everything that needs it: App.",
+     "show": 5,
+     "on": "app"
     },
     {
-     "say": "App now owns each book's read field.",
-     "show": 1
+     "say": "App tells Stats the totals. Nothing is read yet.",
+     "on": "stats",
+     "send": {
+      "from": "app",
+      "to": "stats",
+      "label": "total=3 read=0"
+     }
     },
     {
-     "say": "It passes the value down, with a function to change it.",
-     "show": 2
+     "say": "It gives the filter bar the current filter, and the function to change it.",
+     "on": "filt",
+     "send": {
+      "from": "app",
+      "to": "filt",
+      "label": "filter=\"all\""
+     }
     },
     {
-     "say": "The card calls on toggle read, with its I D.",
-     "show": 3
+     "say": "Books go down through Book List, and each card gets its book's data, including read.",
+     "on": "card",
+     "send": {
+      "from": "list",
+      "to": "card",
+      "label": "{...book}  read=false"
+     }
+    },
+    {
+     "say": "You click mark as read on Kindred. The card calls on toggle read with Kindred's I D, one.",
+     "on": "card",
+     "send": {
+      "from": "card",
+      "to": "list",
+      "label": "onToggleRead(1)"
+     }
+    },
+    {
+     "say": "That function came down through Book List, so the call reaches App's toggle read.",
+     "on": "app",
+     "send": {
+      "from": "list",
+      "to": "app",
+      "label": "toggleRead(1)"
+     }
+    },
+    {
+     "say": "App updates its books and re-renders, so Stats now says one of three books finished.",
+     "on": "stats",
+     "send": {
+      "from": "app",
+      "to": "stats",
+      "label": "total=3 read=1"
+     }
+    },
+    {
+     "say": "Pages read is used by one card only, so it stays in that card. Keep state as low as possible.",
+     "on": "card"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bulb",
-   "kicker": "Guidelines",
-   "title": "Two guidelines",
-   "items": [
+   "kind": "array",
+   "kicker": "Lab · Trace it",
+   "title": "toggleRead(1) builds a new array with map",
+   "values": [
+    "1 · Kindred · unread",
+    "2 · Hidden Figures · unread",
+    "3 · Things Fall Apart · unread"
+   ],
+   "beats": [
+    {
+     "say": "Toggle read must change one book without touching the original array. Map builds a new one."
+    },
+    {
+     "say": "Book one: its I D matches. So map returns a copy, with read flipped to true.",
+     "hl": 0,
+     "ptr": {
+      "book": 0
+     },
+     "vals": [
+      "1 · Kindred · read ✓",
+      "2 · Hidden Figures · unread",
+      "3 · Things Fall Apart · unread"
+     ],
+     "note": "{ ...book, read: !book.read }"
+    },
+    {
+     "say": "Book two doesn't match, so the same book is passed through unchanged.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "book": 1
+     },
+     "note": "book.id === id ? … : book"
+    },
+    {
+     "say": "Book three, the same.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "book": 2
+     },
+     "note": "unchanged"
+    },
+    {
+     "say": "The result is a brand new array, so React re-renders. Remove book works the same way, with filter.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "currentBooks.filter((book) => book.id !== id)"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Don't store what you can calculate",
+   "columns": [
+    "id",
+    "title",
+    "read"
+   ],
+   "rows": [
     [
-     "Keep state low",
-     "pagesRead stays in the card"
+     "1",
+     "Kindred",
+     "true"
     ],
     [
-     "Derive, don't store",
-     "readCount, visibleBooks"
+     "2",
+     "Hidden Figures",
+     "false"
+    ],
+    [
+     "3",
+     "Things Fall Apart",
+     "false"
     ]
    ],
    "beats": [
     {
-     "say": "Keep state as low as possible. Pages read is used by one card, so it stays there.",
-     "show": 1
+     "say": "Here are the books after marking Kindred as read."
     },
     {
-     "say": "And don't store what you can calculate. Counts and filtered lists are derived values. Compute them while rendering, so they can't get out of sync.",
-     "show": 2
+     "say": "Read count is worked out on every render: keep the books that are read, and count them. One.",
+     "sql": "const readCount = books.filter((book) => book.read).length;",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "Choose the to read filter. Visible books keeps the two that aren't read.",
+     "sql": "filter = \"unread\"  →  visibleBooks",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Choose finished, and only Kindred shows.",
+     "sql": "filter = \"read\"  →  visibleBooks",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "These are derived values. Calculated from books and filter, they can never drift out of sync.",
+     "sql": "filter = \"all\"  →  visibleBooks",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Lab · Step 1",
-   "title": "Update immutably, derive the rest",
-   "file": "src/App.jsx",
-   "code": "function toggleRead(id) {\n  setBooks((current) =>\n    current.map((b) => (b.id === id ? { ...b, read: !b.read } : b))\n  );\n}\nfunction removeBook(id) {\n  setBooks((current) => current.filter((b) => b.id !== id));\n}\n\n// Derived values\nconst readCount = books.filter((b) => b.read).length;\nconst visibleBooks = books.filter((b) =>\n  filter === \"read\" ? b.read : filter === \"unread\" ? !b.read : true\n);",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Lab · Step 2",
+   "title": "Context skips the middleman",
+   "nodes": [
     {
-     "say": "Toggle read builds a new array with map, replacing only the matching book with an updated copy.",
-     "show": 0
+     "id": "app",
+     "label": "App",
+     "x": 15,
+     "y": 20,
+     "sub": "toggleRead · removeBook",
+     "art": "layout"
     },
     {
-     "say": "Remove book builds one with filter.",
-     "show": 1
+     "id": "ctx",
+     "label": "BooksContext",
+     "x": 82,
+     "y": 20,
+     "sub": "value={{ toggleRead, removeBook }}",
+     "art": "plug"
     },
     {
-     "say": "Read count and visible books are calculated on every render, not stored.",
-     "show": 1
+     "id": "list",
+     "label": "BookList",
+     "x": 15,
+     "y": 80,
+     "sub": "only books now",
+     "art": "array"
+    },
+    {
+     "id": "card",
+     "label": "BookCard",
+     "x": 82,
+     "y": 80,
+     "sub": "useContext(BooksContext)",
+     "art": "book"
     }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "layers",
-   "kicker": "Step 2",
-   "title": "From prop drilling to context",
-   "items": [
-    [
-     "Prop drilling",
-     "Passing props through just to reach a child"
-    ],
-    [
-     "createContext",
-     "BooksContext"
-    ],
-    [
-     "useContext",
-     "Any descendant reads it"
-    ]
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "ctx"
+    },
+    {
+     "from": "app",
+     "to": "list"
+    },
+    {
+     "from": "list",
+     "to": "card"
+    },
+    {
+     "from": "ctx",
+     "to": "card"
+    }
    ],
    "beats": [
     {
-     "say": "Book List only passes the actions along. That's prop drilling.",
-     "show": 1
+     "say": "Book List never used on toggle read. It only passed it along. That's prop drilling.",
+     "show": 4,
+     "on": "list"
     },
     {
-     "say": "Context lets a parent provide a value that any descendant reads, with use context.",
-     "show": 2
+     "say": "So App provides its two actions through context.",
+     "on": "ctx",
+     "send": {
+      "from": "app",
+      "to": "ctx",
+      "label": "{ toggleRead, removeBook }"
+     }
     },
     {
-     "say": "App wraps everything in Books Context, and Book Card reads toggle read and remove book directly. Use it sparingly; props are easier to follow.",
-     "show": 3
+     "say": "Book List now gets only the books.",
+     "on": "list",
+     "send": {
+      "from": "app",
+      "to": "list",
+      "label": "books"
+     }
+    },
+    {
+     "say": "And hands each card its book.",
+     "on": "card",
+     "send": {
+      "from": "list",
+      "to": "card",
+      "label": "{...book}"
+     }
+    },
+    {
+     "say": "The card reads the actions straight from context, with use context.",
+     "on": "card",
+     "send": {
+      "from": "ctx",
+      "to": "card",
+      "label": "useContext"
+     }
+    },
+    {
+     "say": "Use it sparingly, for things many deep components need. Plain props are easier to follow.",
+     "on": [
+      "app",
+      "card"
+     ]
     }
    ]
   },
@@ -2418,7 +3671,7 @@ and in the two buttons, change `onToggleRead(id)` to `toggleRead(id)` and `onRem
      "show": 0
     },
     {
-     "say": "Why are readCount and visibleBooks calculated, not stored in state?",
+     "say": "Why are read count and visible books calculated, not stored in state?",
      "show": 0
     },
     {
@@ -2579,121 +3832,345 @@ The app works by keyboard alone, focus is visible, errors are announced, and the
    ]
   },
   {
-   "kind": "list",
-   "art": "cursor",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Buttons, not divs",
-   "items": [
+   "title": "Most fixes are the right HTML",
+   "columns": [
+    "Problem",
+    "Fix"
+   ],
+   "rows": [
     [
-     "<button>",
-     "Tab, Enter, Space, announced ✓"
+     "A placeholder used as a label",
+     "<label htmlFor=\"title\">"
     ],
     [
      "<div onClick>",
-     "Unreachable by keyboard ✗"
+     "<button>"
+    ],
+    [
+     "Every button just says \"Remove\"",
+     "aria-label={`Remove ${title}`}"
+    ],
+    [
+     "disabled to mean \"selected\"",
+     "aria-pressed={filter === option.value}"
+    ],
+    [
+     "Errors appear silently",
+     "role=\"alert\" + aria-describedby"
+    ],
+    [
+     "Images with no alt",
+     "alt=\"Cover of Kindred\" or alt=\"\""
+    ],
+    [
+     "Focus outline removed",
+     ":focus-visible { outline: … }"
     ]
    ],
    "beats": [
     {
-     "say": "A real button can be reached with Tab, works with Enter and Space, and is announced as a button.",
-     "show": 1
+     "say": "Here are the problems this lab fixes, and the fix for each.",
+     "col": 0
     },
     {
-     "say": "A div with on click does none of those.",
-     "show": 2
+     "say": "A placeholder vanishes as you type, so every input needs a real label, linked by html for and I D.",
+     "hl": 0
+    },
+    {
+     "say": "Actions are buttons. A div with on click can't be reached with the keyboard.",
+     "hl": 1
+    },
+    {
+     "say": "Many buttons all called remove confuse screen reader users, so each gets a clear name.",
+     "hl": 2
+    },
+    {
+     "say": "Aria pressed marks the active filter, and announced states and errors come next.",
+     "hl": [
+      3,
+      4
+     ]
+    },
+    {
+     "say": "Images need alt text, and focus must always be visible.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Concept",
-   "title": "The essentials",
-   "items": [
-    [
-     "Labels",
-     "Not placeholders"
-    ],
-    [
-     "Clear names",
-     "aria-label=\"Remove Kindred\""
-    ],
-    [
-     "aria-pressed",
-     "Not disabled"
-    ],
-    [
-     "role=\"alert\" / \"status\"",
-     "Announce changes"
-    ],
-    [
-     "alt text",
-     "alt=\"\" if decorative"
-    ]
+   "kind": "array",
+   "kicker": "Lab · Keyboard test",
+   "title": "Tab moves through everything you can use",
+   "values": [
+    "Title",
+    "Author",
+    "Genre",
+    "Add book",
+    "All",
+    "To read",
+    "Finished",
+    "+10 pages",
+    "Mark as read",
+    "Remove Kindred"
    ],
    "beats": [
     {
-     "say": "Every input needs a real label. A placeholder vanishes as you type.",
-     "show": 1
+     "say": "These are the stops the Tab key visits, in order, through the form, the filters and the first card."
     },
     {
-     "say": "Give repeated buttons clear names, like aria label: Remove Kindred.",
-     "show": 2
+     "say": "Tab lands on the title input first.",
+     "hl": 0,
+     "ptr": {
+      "tab": 0
+     }
     },
     {
-     "say": "Mark the active toggle with aria pressed, not disabled, because disabled buttons are skipped by the keyboard.",
-     "show": 3
+     "say": "Keep pressing Tab, and focus walks through every control, in the same order you see them.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "hl": 9,
+     "ptr": {
+      "tab": 9
+     },
+     "note": "Remove Kindred · a real <button>"
     },
     {
-     "say": "Announce errors with role alert, and updates like Loading with role status.",
+     "say": "Now swap the remove button for a div with on click. Tab skips right past it.",
+     "vals": [
+      "Title",
+      "Author",
+      "Genre",
+      "Add book",
+      "All",
+      "To read",
+      "Finished",
+      "+10 pages",
+      "Mark as read",
+      "<div> Remove"
+     ],
+     "gone": [
+      9
+     ],
+     "ptr": {
+      "tab": 8
+     },
+     "note": "never focused, ignores Enter and Space"
+    },
+    {
+     "say": "And the old filter bar disabled the active button. Disabled buttons are skipped too.",
+     "vals": [
+      "Title",
+      "Author",
+      "Genre",
+      "Add book",
+      "All (disabled)",
+      "To read",
+      "Finished",
+      "+10 pages",
+      "Mark as read",
+      "Remove Kindred"
+     ],
+     "gone": [
+      4
+     ],
+     "note": "disabled → skipped by the keyboard"
+    },
+    {
+     "say": "With aria pressed instead, All stays reachable, and is announced as pressed.",
+     "vals": [
+      "Title",
+      "Author",
+      "Genre",
+      "Add book",
+      "All (pressed)",
+      "To read",
+      "Finished",
+      "+10 pages",
+      "Mark as read",
+      "Remove Kindred"
+     ],
+     "hl": 4,
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "aria-pressed=\"true\""
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab",
+   "title": "Errors that screen readers announce",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "Add book",
+     "x": 12,
+     "y": 25,
+     "sub": "submitted empty",
+     "art": "form"
+    },
+    {
+     "id": "err",
+     "label": "#form-error",
+     "x": 50,
+     "y": 25,
+     "sub": "role=\"alert\"",
+     "art": "warning"
+    },
+    {
+     "id": "sr",
+     "label": "Screen reader",
+     "x": 88,
+     "y": 50,
+     "sub": "speaks it",
+     "art": "access"
+    },
+    {
+     "id": "input",
+     "label": "Title input",
+     "x": 50,
+     "y": 78,
+     "sub": "aria-invalid · aria-describedby",
+     "art": "pencil"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "err"
+    },
+    {
+     "from": "err",
+     "to": "sr"
+    },
+    {
+     "from": "input",
+     "to": "err"
+    },
+    {
+     "from": "input",
+     "to": "sr"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's how the form error reaches someone who can't see it.",
      "show": 4
     },
     {
-     "say": "And alt text: describe informative images, and give decorative ones an empty alt.",
-     "show": 5
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "form",
-   "kicker": "Lab · Step 5",
-   "title": "Connect errors to inputs",
-   "file": "src/AddBookForm.jsx",
-   "code": "<input\n  id=\"title\"\n  aria-invalid={error !== \"\"}\n  aria-describedby={error ? \"form-error\" : undefined}\n/>\n\n{error && (\n  <p id=\"form-error\" className=\"error\" role=\"alert\">{error}</p>\n)}",
-   "beats": [
-    {
-     "say": "In the form, mark the inputs invalid when there's an error, and point them at the error text.",
-     "show": 0
+     "say": "You submit an empty form, and the error paragraph appears.",
+     "on": "err",
+     "send": {
+      "from": "form",
+      "to": "err",
+      "label": "Please enter both a title and an author."
+     }
     },
     {
-     "say": "Role alert makes the screen reader announce the error the moment it appears.",
-     "show": 1
+     "say": "Role alert means the screen reader reads it out at once.",
+     "on": "sr",
+     "send": {
+      "from": "err",
+      "to": "sr",
+      "label": "announced immediately"
+     }
+    },
+    {
+     "say": "Aria described by points the title input at that error, by its I D, form error.",
+     "on": "input",
+     "send": {
+      "from": "input",
+      "to": "err",
+      "label": "aria-describedby=\"form-error\""
+     }
+    },
+    {
+     "say": "So when focus returns to the input, it's read as invalid, followed by the error text.",
+     "on": "sr",
+     "send": {
+      "from": "input",
+      "to": "sr",
+      "label": "Title, invalid entry, Please enter both…"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Lab · Steps 7 and 8",
-   "title": "Test it for real",
-   "steps": [
-    "Keyboard-only test",
-    "Lighthouse audit",
-    "Fix what it finds"
+   "kind": "table",
+   "kicker": "Lab · Alt text",
+   "title": "Describe what matters, or nothing",
+   "columns": [
+    "Image",
+    "alt",
+    "Why"
+   ],
+   "rows": [
+    [
+     "A book cover",
+     "\"Cover of Kindred\"",
+     "It carries information"
+    ],
+    [
+     "A decorative swirl",
+     "\"\"",
+     "Screen readers skip it"
+    ],
+    [
+     "Magnifying glass, the search button's only content",
+     "\"Search\"",
+     "Describe the action"
+    ],
+    [
+     "Any image",
+     "(left out)",
+     "Never: it may read the file name"
+    ]
    ],
    "beats": [
     {
-     "say": "Put the mouse away. Using only Tab, Shift Tab, Enter and Space, add a book, mark it read, filter, and remove it. Focus should always be visible.",
-     "show": 1
+     "say": "Your turn: alt text for three images.",
+     "col": 1
     },
     {
-     "say": "Then run a Lighthouse accessibility audit, and fix what it reports.",
-     "show": 2
+     "say": "A book cover carries information, so describe it: cover of, and the title.",
+     "hl": 0
     },
     {
-     "say": "Automated tools catch only some problems, so the keyboard test still matters.",
-     "show": 2
+     "say": "A decorative swirl adds nothing, so alt is empty, and screen readers skip it.",
+     "hl": 1
+    },
+    {
+     "say": "When an icon is a button's only content, describe the action: search.",
+     "hl": 2
+    },
+    {
+     "say": "And never leave alt out completely.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
@@ -2716,7 +4193,7 @@ The app works by keyboard alone, focus is visible, errors are announced, and the
      "show": 0
     },
     {
-     "say": "When should an image have alt=\"\"?",
+     "say": "When should an image have an empty alt?",
      "show": 0
     },
     {
@@ -3001,88 +4478,255 @@ A Next.js app with a shared layout, four kinds of page, a dynamic route and a 40
    ]
   },
   {
-   "kind": "code",
-   "art": "tree",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Folders become URLs",
-   "file": "app/",
-   "code": "app/\n  layout.js            -> wraps every page\n  page.js              -> /\n  about/page.js        -> /about\n  books/page.js        -> /books\n  books/[id]/page.js   -> /books/1, /books/2, ...\n  books/[id]/loading.js -> shown while it loads",
-   "beats": [
-    {
-     "say": "In the App Router, folders inside app define the URLs.",
-     "show": 0
-    },
-    {
-     "say": "Only a page dot js file makes a folder visitable.",
-     "show": 1
-    },
-    {
-     "say": "A layout wraps every page below it, and stays on screen as you navigate.",
-     "show": 1
-    },
-    {
-     "say": "A folder in square brackets is a dynamic segment: one file handles every I D.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab · Step 6",
-   "title": "The dynamic route",
-   "file": "app/books/[id]/page.js",
-   "code": "export default async function BookPage({ params }) {\n  const { id } = await params;\n  const book = books.find((b) => b.id === id);\n  if (!book) notFound();\n  return (\n    <>\n      <h1>{book.title}</h1>\n      <p>Status: {book.read ? \"Finished\" : \"To read\"}</p>\n      <Link href=\"/books\">Back to all books</Link>\n    </>\n  );\n}",
-   "beats": [
-    {
-     "say": "Here's the book page.",
-     "show": 0
-    },
-    {
-     "say": "Params is a promise, so the page is async, and awaits it.",
-     "show": 1
-    },
-    {
-     "say": "Find the book. If there isn't one, not found shows the four oh four page.",
-     "show": 1
-    },
-    {
-     "say": "Because this page needs the request, it sits behind a loading dot js file.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "layout",
-   "kicker": "Concept",
-   "title": "Link and layouts",
-   "items": [
+   "title": "Folders inside app/ become URLs",
+   "columns": [
+    "File",
+    "URL"
+   ],
+   "rows": [
     [
-     "<Link>",
-     "No full reload, prefetches"
+     "app/layout.js",
+     "wraps every page"
     ],
     [
-     "layout.js",
-     "Stays on screen"
+     "app/page.js",
+     "/"
     ],
     [
-     "notFound()",
-     "/books/999 → 404"
+     "app/about/page.js",
+     "/about"
+    ],
+    [
+     "app/books/page.js",
+     "/books"
+    ],
+    [
+     "app/books/[id]/page.js",
+     "/books/1, /books/2, …"
+    ],
+    [
+     "app/books/[id]/loading.js",
+     "shown while that page loads"
     ]
    ],
    "beats": [
     {
-     "say": "Link navigates without a full reload, and prefetches pages, so navigation feels instant.",
-     "show": 1
+     "say": "In the App Router, the folder path decides the U R L.",
+     "col": 0
     },
     {
-     "say": "Click around, and the header never flickers, because the layout stays.",
-     "show": 2
+     "say": "Page dot j s in the app folder is the home page, slash.",
+     "hl": 1
     },
     {
-     "say": "Visit books slash nine nine nine, and you get the four oh four page.",
-     "show": 3
+     "say": "An about folder with a page dot j s becomes slash about. Books becomes slash books.",
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Only a page dot j s file makes a folder visitable.",
+     "hl": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "col": 0
+    },
+    {
+     "say": "A folder in square brackets is a dynamic segment. One file handles every book.",
+     "hl": 4,
+     "col": 1
+    },
+    {
+     "say": "Loading dot j s shows while that page loads, and layout dot j s wraps all the pages below it.",
+     "hl": [
+      0,
+      5
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "The layout stays. Only the page swaps",
+   "nodes": [
+    {
+     "id": "lay",
+     "label": "RootLayout",
+     "x": 50,
+     "y": 14,
+     "sub": "<html> · header · nav",
+     "art": "layout"
+    },
+    {
+     "id": "home",
+     "label": "Home",
+     "x": 12,
+     "y": 72,
+     "sub": "/",
+     "art": "browser"
+    },
+    {
+     "id": "books",
+     "label": "Books",
+     "x": 37,
+     "y": 72,
+     "sub": "/books",
+     "art": "array"
+    },
+    {
+     "id": "book",
+     "label": "Book",
+     "x": 63,
+     "y": 72,
+     "sub": "/books/2",
+     "art": "book"
+    },
+    {
+     "id": "about",
+     "label": "About",
+     "x": 88,
+     "y": 72,
+     "sub": "/about",
+     "art": "file"
+    }
+   ],
+   "edges": [
+    {
+     "from": "lay",
+     "to": "home"
+    },
+    {
+     "from": "lay",
+     "to": "books"
+    },
+    {
+     "from": "lay",
+     "to": "book"
+    },
+    {
+     "from": "lay",
+     "to": "about"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The root layout holds the H T M L, the body, and the header with its links.",
+     "show": 5,
+     "on": "lay"
+    },
+    {
+     "say": "On the home page, the layout's children is the home page.",
+     "on": [
+      "lay",
+      "home"
+     ],
+     "send": {
+      "from": "lay",
+      "to": "home",
+      "label": "children"
+     }
+    },
+    {
+     "say": "Click the Books link. Only the children swap. The header stays on screen, and never flickers.",
+     "on": [
+      "lay",
+      "books"
+     ],
+     "send": {
+      "from": "lay",
+      "to": "books",
+      "label": "<Link href=\"/books\">"
+     }
+    },
+    {
+     "say": "Click a book, and the dynamic page fills the same slot.",
+     "on": [
+      "lay",
+      "book"
+     ],
+     "send": {
+      "from": "lay",
+      "to": "book",
+      "label": "/books/2"
+     }
+    },
+    {
+     "say": "Link navigates without a full reload, and prefetches pages, so it feels instant.",
+     "on": "lay"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Trace it",
+   "title": "One file, every book",
+   "file": "app/books/[id]/page.js",
+   "code": "import { notFound } from \"next/navigation\";\nimport { books } from \"@/lib/books\";\nexport default async function BookPage({ params }) {\n  const { id } = await params;\n  const book = books.find((b) => b.id === id);\n  if (!book) notFound(); // shows the built-in 404 page\n  return (\n    <>\n      <h1>{book.title}</h1>\n      <p>by {book.author} · {book.genre}</p>\n      <p>Status: {book.read ? \"Finished\" : \"To read\"}</p>\n    </>\n  );\n}",
+   "beats": [
+    {
+     "say": "You visit slash books slash two.",
+     "line": 3
+    },
+    {
+     "say": "Params is a promise, so the page is async and awaits it. I D is the text two.",
+     "line": 4,
+     "vars": {
+      "id": "\"2\""
+     }
+    },
+    {
+     "say": "Find looks for a book whose I D equals two. That's why the I Ds in lib slash books are strings: U R L parts are text.",
+     "line": 5,
+     "vars": {
+      "book": "{ id: \"2\", title: \"Hidden Figures\", … }"
+     }
+    },
+    {
+     "say": "A book was found, so we skip not found.",
+     "line": 6
+    },
+    {
+     "say": "The page renders Hidden Figures.",
+     "line": [
+      9,
+      10
+     ],
+     "out": [
+      "Hidden Figures",
+      "by Margot Lee Shetterly · History"
+     ]
+    },
+    {
+     "say": "Its read field is true, so the status says finished.",
+     "line": 11,
+     "out": "Status: Finished"
+    },
+    {
+     "say": "Now visit slash books slash nine nine nine.",
+     "line": 4,
+     "vars": {
+      "id": "\"999\""
+     }
+    },
+    {
+     "say": "No book matches, so find gives undefined.",
+     "line": 5,
+     "vars": {
+      "book": "undefined"
+     }
+    },
+    {
+     "say": "Not found stops the page and shows the four oh four page instead.",
+     "line": 6,
+     "out": "404 | This page could not be found."
     }
    ]
   },
@@ -3105,7 +4749,7 @@ A Next.js app with a shared layout, four kinds of page, a dynamic route and a 40
      "show": 0
     },
     {
-     "say": "What does a folder named [id] create?",
+     "say": "What does a folder named I D, in square brackets, create?",
      "show": 0
     },
     {
@@ -3235,109 +4879,270 @@ The detail page (server) renders an interactive counter (client).
    ]
   },
   {
-   "kind": "list",
-   "art": "server",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Server Components",
-   "items": [
-    [
-     "Can",
-     "async, databases, secrets"
-    ],
-    [
-     "Can't",
-     "useState, onClick, localStorage"
-    ]
+   "title": "A server page with one client piece",
+   "nodes": [
+    {
+     "id": "data",
+     "label": "lib/books.js",
+     "x": 12,
+     "y": 22,
+     "sub": "server only",
+     "art": "database"
+    },
+    {
+     "id": "page",
+     "label": "BookPage",
+     "x": 46,
+     "y": 22,
+     "sub": "Server Component",
+     "art": "server"
+    },
+    {
+     "id": "counter",
+     "label": "PagesCounter",
+     "x": 46,
+     "y": 80,
+     "sub": "\"use client\"",
+     "art": "cursor"
+    },
+    {
+     "id": "browser",
+     "label": "Browser",
+     "x": 86,
+     "y": 50,
+     "sub": "HTML + a little JS",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "data",
+     "to": "page"
+    },
+    {
+     "from": "page",
+     "to": "counter"
+    },
+    {
+     "from": "page",
+     "to": "browser"
+    },
+    {
+     "from": "counter",
+     "to": "browser"
+    }
    ],
    "beats": [
     {
-     "say": "Server Components can be async, read databases and secrets safely, and keep big libraries out of the download.",
-     "show": 1
+     "say": "Book Page is a Server Component. It runs on the server, so it can read the data directly.",
+     "show": 2,
+     "on": "page",
+     "send": {
+      "from": "data",
+      "to": "page",
+      "label": "Hidden Figures"
+     }
     },
     {
-     "say": "But they can't use state, effects, event handlers or browser A P Is.",
-     "show": 2
+     "say": "Inside it sits Pages Counter, which starts with use client. That makes it a Client Component.",
+     "show": 3,
+     "on": "counter",
+     "send": {
+      "from": "page",
+      "to": "counter",
+      "label": "title=\"Hidden Figures\""
+     }
+    },
+    {
+     "say": "The server renders everything to H T M L, and sends it.",
+     "show": 4,
+     "on": "browser",
+     "send": {
+      "from": "page",
+      "to": "browser",
+      "label": "HTML"
+     }
+    },
+    {
+     "say": "Only the counter's JavaScript follows, so it can come alive in the browser. That's hydration.",
+     "on": "browser",
+     "send": {
+      "from": "counter",
+      "to": "browser",
+      "label": "PagesCounter.js"
+     }
+    },
+    {
+     "say": "Book Page's code and lib slash books never reach the browser.",
+     "on": [
+      "data",
+      "page"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "browser",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Client Components",
-   "items": [
+   "title": "Server or client?",
+   "columns": [
+    "You need to…",
+    "Use a"
+   ],
+   "rows": [
     [
-     "\"use client\";",
-     "First line of the file"
+     "Fetch data or read a database",
+     "Server Component"
     ],
     [
-     "Hydration",
-     "JS takes over in the browser"
+     "Use a secret, like an API key",
+     "Server Component"
     ],
     [
-     "Keep them small",
-     "At the leaves of the page"
+     "Render mostly static content",
+     "Server Component"
+    ],
+    [
+     "useState, useEffect or other hooks",
+     "Client Component"
+    ],
+    [
+     "onClick or onChange",
+     "Client Component"
+    ],
+    [
+     "Browser APIs like localStorage",
+     "Client Component"
     ]
    ],
    "beats": [
     {
-     "say": "A Client Component has use client at the top of its file.",
-     "show": 1
+     "say": "How do you choose?",
+     "col": 0
     },
     {
-     "say": "It's rendered to HTML on the server, then its JavaScript runs in the browser, so it can hold state and respond to clicks. That's hydration.",
-     "show": 2
+     "say": "Data, secrets and mostly static content stay on the server. That's the default, so you write nothing.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     },
     {
-     "say": "Keep pages on the server, and make small interactive pieces client components.",
-     "show": 3
+     "say": "Hooks, event handlers and browser A P Is need the browser.",
+     "sql": "\"use client\";   ← first line of the file",
+     "hl": [
+      3,
+      4,
+      5
+     ]
+    },
+    {
+     "say": "Try use state in Book Page, and Next dot js stops you with an error.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "So keep pages on the server, and make small interactive pieces client components.",
+     "hl": [
+      0,
+      4
+     ],
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "cursor",
-   "kicker": "Lab · Step 3",
-   "title": "A small Client Component",
+   "kind": "walk",
+   "kicker": "Lab",
+   "title": "The counter runs in the browser",
    "file": "app/ui/PagesCounter.js",
-   "code": "\"use client\";\n\nimport { useState } from \"react\";\n\nexport default function PagesCounter({ title }) {\n  const [pagesRead, setPagesRead] = useState(0);\n  return (\n    <button onClick={() => setPagesRead((p) => p + 10)}>\n      {title}: {pagesRead} pages · +10\n    </button>\n  );\n}",
+   "code": "\"use client\";\nimport { useState } from \"react\";\nexport default function PagesCounter({ title }) {\n  const [pagesRead, setPagesRead] = useState(0);\n  return (\n    <section>\n      <p>Pages of {title} read this session: {pagesRead}</p>\n      <button type=\"button\" onClick={() => setPagesRead((pages) => pages + 10)}>\n        +10 pages\n      </button>\n    </section>\n  );\n}",
    "beats": [
     {
-     "say": "Bring back your pages counter as a client component.",
-     "show": 0
+     "say": "Line one, use client, marks this file as client code.",
+     "line": 1
     },
     {
-     "say": "Use client at the top, then the same use state code as before.",
-     "show": 1
+     "say": "The server page passes one prop: a plain string, the title.",
+     "line": 3,
+     "vars": {
+      "title": "\"Hidden Figures\""
+     }
     },
     {
-     "say": "Drop it into the server-rendered book page. Only the counter's code goes to the browser.",
-     "show": 1
+     "say": "The server renders the first H T M L, with pages read at zero.",
+     "line": [
+      4,
+      7
+     ],
+     "vars": {
+      "pagesRead": 0
+     },
+     "out": "Pages of Hidden Figures read this session: 0"
+    },
+    {
+     "say": "After hydration, the button works. Click it, and state updates right in the browser.",
+     "line": 8,
+     "vars": {
+      "pagesRead": 10
+     },
+     "out": "Pages of Hidden Figures read this session: 10"
+    },
+    {
+     "say": "No trip to the server for that. The rest of the page was server-rendered H T M L.",
+     "line": 7
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "terminal",
-   "kicker": "Lab · Steps 1, 2 and 5",
-   "title": "Prove where code runs",
-   "steps": [
-    "console.log → terminal",
-    "useState on server → error",
-    "Only client code in the browser"
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Props from server to client must be plain data",
+   "columns": [
+    "Prop",
+    "Can it cross?"
+   ],
+   "rows": [
+    [
+     "title=\"Hidden Figures\"",
+     "Yes: a string"
+    ],
+    [
+     "pages={10}",
+     "Yes: a number"
+    ],
+    [
+     "book={{ id: \"2\", read: true }}",
+     "Yes: a plain object"
+    ],
+    [
+     "onDone={() => …}",
+     "No: a function"
+    ]
    ],
    "beats": [
     {
-     "say": "Log from the books page, and it appears in your terminal, not the browser.",
-     "show": 1
+     "say": "Props from a server component travel over the network to the browser."
     },
     {
-     "say": "Add use state to a server page, and Next dot js errors.",
-     "show": 2
+     "say": "So they must be serializable: strings, numbers,",
+     "hl": [
+      0,
+      1
+     ]
     },
     {
-     "say": "Search the browser's loaded files: the counter's there, but the book page and its data aren't.",
-     "show": 3
+     "say": "arrays and plain objects.",
+     "hl": 2
+    },
+    {
+     "say": "An ordinary function can't be sent. Server Actions, in Module 11, are the one exception.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
@@ -3360,7 +5165,7 @@ The detail page (server) renders an interactive counter (client).
      "show": 0
     },
     {
-     "say": "Why must props from a Server to a Client Component be serializable?",
+     "say": "Why must props from a Server Component to a Client Component be serializable?",
      "show": 0
     },
     {
@@ -3591,93 +5396,288 @@ Pages load data on the server, `/books` streams with a fallback, and `/api/books
    ]
   },
   {
-   "kind": "code",
-   "art": "server",
-   "kicker": "Lab · Step 2",
-   "title": "Stream the list with Suspense",
-   "file": "app/books/page.js",
-   "code": "async function BookList() {\n  const books = await getBooks(); // runs on the server\n  return <ul>{books.map((b) => <li key={b.id}>{b.title}</li>)}</ul>;\n}\n\nexport default function BooksPage() {\n  return (\n    <>\n      <h1>Books</h1>\n      <Suspense fallback={<p>Loading books...</p>}>\n        <BookList />\n      </Suspense>\n    </>\n  );\n}",
-   "beats": [
-    {
-     "say": "Book List is now an async server component that awaits get books.",
-     "show": 0
-    },
-    {
-     "say": "Wrap it in Suspense, with a fallback. The rest of the page is sent at once, and the list streams in.",
-     "show": 1
-    },
-    {
-     "say": "No use effect, and no loading variables. It's the server version of your React loading state.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "stopwatch",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Mark request-time data",
-   "quote": "await connection() — run this per request, not at build time.",
+   "title": "Suspense streams the list in",
+   "nodes": [
+    {
+     "id": "browser",
+     "label": "Browser",
+     "x": 12,
+     "y": 50,
+     "sub": "visits /books",
+     "art": "browser"
+    },
+    {
+     "id": "page",
+     "label": "BooksPage",
+     "x": 50,
+     "y": 18,
+     "sub": "heading · link · fallback",
+     "art": "layout"
+    },
+    {
+     "id": "list",
+     "label": "BookList",
+     "x": 50,
+     "y": 82,
+     "sub": "async · await getBooks()",
+     "art": "array"
+    },
+    {
+     "id": "data",
+     "label": "lib/books.js",
+     "x": 88,
+     "y": 82,
+     "sub": "await connection()",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "browser",
+     "to": "page"
+    },
+    {
+     "from": "browser",
+     "to": "list"
+    },
+    {
+     "from": "list",
+     "to": "data"
+    }
+   ],
    "beats": [
     {
-     "say": "One detail.",
-     "show": 0
+     "say": "You visit slash books.",
+     "show": 4,
+     "on": "browser",
+     "send": {
+      "from": "browser",
+      "to": "page",
+      "label": "GET /books"
+     }
     },
     {
-     "say": "Our fake database is instant, so Next dot js would bake the list into the page at build time.",
-     "show": 1
+     "say": "The heading, the link and the fallback are sent straight away. You see loading books.",
+     "on": "page",
+     "send": {
+      "from": "page",
+      "to": "browser",
+      "label": "Books · Loading books..."
+     }
     },
     {
-     "say": "Await connection says: wait for a real request, as a real database call would.",
-     "show": 1
+     "say": "Meanwhile, on the server, Book List awaits get books.",
+     "on": "list",
+     "send": {
+      "from": "list",
+      "to": "data",
+      "label": "getBooks()"
+     }
+    },
+    {
+     "say": "Connection says: wait for a real request, as a database query would. Then the books come back.",
+     "on": "data",
+     "send": {
+      "from": "data",
+      "to": "list",
+      "label": "3 books"
+     }
+    },
+    {
+     "say": "The finished list streams into the page, replacing the fallback. No use effect, no loading variables.",
+     "on": "browser",
+     "send": {
+      "from": "list",
+      "to": "browser",
+      "label": "<ul> 3 books </ul>"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "api",
-   "kicker": "Lab · Step 4",
-   "title": "A Route Handler",
+   "kind": "walk",
+   "kicker": "Lab · Trace it",
+   "title": "A Route Handler for POST /api/books",
    "file": "app/api/books/route.js",
-   "code": "export async function GET() {\n  return Response.json(await getBooks());\n}\n\nexport async function POST(request) {\n  const body = await request.json();\n  const error = validateBook(body);\n  if (error) return Response.json({ error }, { status: 400 });\n  const book = await createBook(body);\n  return Response.json(book, { status: 201 });\n}",
+   "code": "export async function POST(request) {\n  let body;\n  try { body = await request.json(); }\n  catch { return Response.json({ error: \"Send a JSON body.\" }, { status: 400 }); }\n  const title = String(body.title ?? \"\").trim();\n  const author = String(body.author ?? \"\").trim();\n  const genre = String(body.genre ?? \"Fiction\");\n  const error = validateBook({ title, author });\n  if (error) return Response.json({ error }, { status: 400 });\n  const book = await createBook({ title, author, genre });\n  return Response.json(book, { status: 201 });\n}",
    "beats": [
     {
-     "say": "A Route Handler is an A P I endpoint that returns data, not a page.",
-     "show": 0
+     "say": "A Route Handler returns data, not a page. The function's name is the H T T P method: post.",
+     "line": 1
     },
     {
-     "say": "Export functions named after H T T P methods. Get returns the whole list as J S O N.",
-     "show": 1
+     "say": "Curl sends a J S O N body: Atomic Habits, by James Clear, genre Tech.",
+     "line": 3,
+     "vars": {
+      "body": "{ title: \"Atomic Habits\", author: \"James Clear\", genre: \"Tech\" }"
+     }
     },
     {
-     "say": "Post reads the body, validates it, and returns four hundred for bad input, or two oh one with the new book.",
-     "show": 1
+     "say": "We pull out each field as text, and trim the title and author.",
+     "line": [
+      5,
+      7
+     ],
+     "vars": {
+      "title": "\"Atomic Habits\"",
+      "author": "\"James Clear\"",
+      "genre": "\"Tech\""
+     }
+    },
+    {
+     "say": "Validate book finds nothing wrong, so error is empty.",
+     "line": 8,
+     "vars": {
+      "error": "\"\""
+     }
+    },
+    {
+     "say": "Create book adds it, and we answer two oh one: created.",
+     "line": [
+      10,
+      11
+     ],
+     "out": "201 {\"id\":\"…\",\"title\":\"Atomic Habits\",…,\"read\":false}"
+    },
+    {
+     "say": "Now send an empty title.",
+     "line": 5,
+     "vars": {
+      "body": "{ title: \"\", author: \"James Clear\" }",
+      "title": "\"\"",
+      "genre": "\"Fiction\""
+     }
+    },
+    {
+     "say": "Validate book returns a message, so we answer four hundred: bad request.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "error": "\"Please enter both a title and an author.\""
+     },
+     "out": "400 {\"error\":\"Please enter both a title and an author.\"}"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "plug",
-   "kicker": "When",
-   "title": "When you need a Route Handler",
-   "items": [
+   "kind": "array",
+   "kicker": "Concept",
+   "title": "One shared list in server memory",
+   "values": [
+    "Kindred",
+    "Hidden Figures",
+    "Things Fall Apart"
+   ],
+   "beats": [
+    {
+     "say": "Here's the stand-in database: an array on global this, shared by pages and Route Handlers."
+    },
+    {
+     "say": "The post pushes Atomic Habits onto it. Push is fine here: this is a server list, not React state.",
+     "vals": [
+      "Kindred",
+      "Hidden Figures",
+      "Things Fall Apart",
+      "Atomic Habits"
+     ],
+     "hl": 3,
+     "note": "books.push(book)"
+    },
+    {
+     "say": "Refresh slash books, or slash A P I slash books, and both see the same four books.",
+     "vals": [
+      "Kindred",
+      "Hidden Figures",
+      "Things Fall Apart",
+      "Atomic Habits"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "globalThis.readingListBooks"
+    },
+    {
+     "say": "But restart the server, and memory starts over. Real apps use a database.",
+     "vals": [
+      "Kindred",
+      "Hidden Figures",
+      "Things Fall Apart"
+     ],
+     "note": "restart → back to the starter books"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · Test it",
+   "title": "What /api/books answers",
+   "columns": [
+    "Request",
+    "Status",
+    "Body"
+   ],
+   "rows": [
     [
-     "Your pages",
-     "Fetch in the Server Component"
+     "GET /api/books",
+     "200",
+     "the whole list as JSON"
     ],
     [
-     "Others",
-     "Mobile app, service, webhook → Route Handler"
+     "POST Atomic Habits",
+     "201",
+     "the new book"
+    ],
+    [
+     "POST with an empty title",
+     "400",
+     "{ error: \"Please enter both…\" }"
+    ],
+    [
+     "POST that isn't JSON",
+     "400",
+     "{ error: \"Send a JSON body.\" }"
+    ],
+    [
+     "GET /api/books/999 (your turn)",
+     "404",
+     "{ error: \"Not found\" }"
     ]
    ],
    "beats": [
     {
-     "say": "Your own pages can fetch directly on the server.",
-     "show": 1
+     "say": "Here's every answer your A P I can give.",
+     "col": 1
     },
     {
-     "say": "You need a Route Handler when something else needs the data: a mobile app, another service, or a webhook.",
-     "show": 2
+     "say": "Open slash A P I slash books in the browser to see the list as J S O N.",
+     "hl": 0
+    },
+    {
+     "say": "A valid post gets two oh one, created.",
+     "hl": 1
+    },
+    {
+     "say": "Bad input gets four hundred, with a message.",
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Your turn: a handler for one book, which answers four oh four when it's missing.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "Use Route Handlers when something other than your pages needs the data, like a mobile app or a webhook.",
+     "col": 0
     }
    ]
   },
@@ -3700,7 +5700,7 @@ Pages load data on the server, `/books` streams with a fallback, and `/api/books
      "show": 0
     },
     {
-     "say": "What does <Suspense fallback={…}> do around BookList?",
+     "say": "What does Suspense, with a fallback, do around Book List?",
      "show": 0
     },
     {
@@ -3910,105 +5910,269 @@ export default function NewBookPage() {
    ]
   },
   {
-   "kind": "code",
-   "art": "shield",
-   "kicker": "Lab · Step 1",
-   "title": "The Server Action",
-   "file": "app/actions.js",
-   "code": "\"use server\";\n\nexport async function addBookAction(previousState, formData) {\n  const title = String(formData.get(\"title\") ?? \"\").trim();\n  const author = String(formData.get(\"author\") ?? \"\").trim();\n  const error = validateBook({ title, author });\n  if (error) return { error, title, author };\n\n  await createBook({ title, author });\n  revalidatePath(\"/books\");\n  redirect(\"/books\");\n}",
-   "beats": [
-    {
-     "say": "Here's the action.",
-     "show": 0
-    },
-    {
-     "say": "It reads each field from form data, so every input needs a name.",
-     "show": 1
-    },
-    {
-     "say": "Always validate on the server. Anyone can call an action directly. If it fails, return the error and the typed values.",
-     "show": 1
-    },
-    {
-     "say": "Otherwise, create the book, revalidate the books page, and redirect there.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "cursor",
-   "kicker": "Lab · Step 2",
-   "title": "useActionState",
-   "file": "app/ui/AddBookForm.js",
-   "code": "const [state, formAction, isPending] =\n  useActionState(addBookAction, initialState);\n\n<form action={formAction}>\n  <input name=\"title\" defaultValue={state.title} />\n  {state.error && <p role=\"alert\">{state.error}</p>}\n  <button disabled={isPending}>\n    {isPending ? \"Adding...\" : \"Add book\"}\n  </button>\n</form>",
-   "beats": [
-    {
-     "say": "The form is a client component.",
-     "show": 0
-    },
-    {
-     "say": "Use action state returns three things: the state, a form action, and is pending.",
-     "show": 1
-    },
-    {
-     "say": "Whatever the action returns becomes the new state, so errors and typed values come back.",
-     "show": 1
-    },
-    {
-     "say": "The button shows Adding, and is disabled while pending.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "bulb",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Worth knowing",
-   "items": [
+   "title": "From form to server and back",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "AddBookForm",
+     "x": 12,
+     "y": 50,
+     "sub": "Client Component",
+     "art": "form"
+    },
+    {
+     "id": "action",
+     "label": "addBookAction",
+     "x": 50,
+     "y": 18,
+     "sub": "\"use server\"",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "lib/books.js",
+     "x": 88,
+     "y": 18,
+     "sub": "createBook",
+     "art": "database"
+    },
+    {
+     "id": "list",
+     "label": "/books",
+     "x": 88,
+     "y": 82,
+     "sub": "the updated list",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "action"
+    },
+    {
+     "from": "action",
+     "to": "db"
+    },
+    {
+     "from": "action",
+     "to": "list"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The form's action is a function that runs on the server.",
+     "show": 4
+    },
+    {
+     "say": "You submit with only an author. React sends the form data to the action.",
+     "on": "action",
+     "send": {
+      "from": "form",
+      "to": "action",
+      "label": "FormData: title=\"\", author=\"James Clear\""
+     }
+    },
+    {
+     "say": "Validation fails, so the action returns the error and the typed values. The form shows the error and keeps your typing.",
+     "on": "form",
+     "send": {
+      "from": "action",
+      "to": "form",
+      "label": "{ error, title, author, genre }"
+     }
+    },
+    {
+     "say": "You fill in the title and submit again. This time the action saves the book.",
+     "on": "db",
+     "send": {
+      "from": "action",
+      "to": "db",
+      "label": "createBook({ title: \"Atomic Habits\", … })"
+     }
+    },
+    {
+     "say": "Then revalidate path makes sure no stale copy of books is shown, and redirect takes you there.",
+     "on": "list",
+     "send": {
+      "from": "action",
+      "to": "list",
+      "label": "redirect(\"/books\")"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Trace it",
+   "title": "The action validates on the server",
+   "file": "app/actions.js",
+   "code": "\"use server\";\n// imports: revalidatePath, redirect, createBook, validateBook\nexport async function addBookAction(previousState, formData) {\n  const title = String(formData.get(\"title\") ?? \"\").trim();\n  const author = String(formData.get(\"author\") ?? \"\").trim();\n  const genre = String(formData.get(\"genre\") ?? \"Fiction\");\n  const error = validateBook({ title, author });\n  if (error) {\n    return { error, title, author, genre }; // send the typed values back so the form keeps them\n  }\n  await createBook({ title, author, genre });\n  revalidatePath(\"/books\"); // make sure no cached copy of /books is shown\n  redirect(\"/books\");\n}",
+   "beats": [
+    {
+     "say": "Use server at the top makes every export in this file a Server Action.",
+     "line": 1
+    },
+    {
+     "say": "The action reads each field from form data by its name. That's why every input needs a name.",
+     "line": [
+      4,
+      6
+     ],
+     "vars": {
+      "title": "\"\"",
+      "author": "\"James Clear\"",
+      "genre": "\"Fiction\""
+     }
+    },
+    {
+     "say": "The same validate book as the A P I. The title is empty, so there's an error.",
+     "line": 7,
+     "vars": {
+      "error": "\"Please enter both a title and an author.\""
+     }
+    },
+    {
+     "say": "Whatever the action returns becomes the form's new state.",
+     "line": [
+      8,
+      9
+     ],
+     "out": "state = { error: \"Please enter both…\", title: \"\", author: \"James Clear\", genre: \"Fiction\" }"
+    },
+    {
+     "say": "Second try: Atomic Habits, by James Clear. Validation passes.",
+     "line": [
+      4,
+      7
+     ],
+     "vars": {
+      "title": "\"Atomic Habits\"",
+      "error": "\"\""
+     }
+    },
+    {
+     "say": "Create book saves it. Revalidate path and redirect send you to the fresh list.",
+     "line": [
+      11,
+      13
+     ]
+    },
+    {
+     "say": "Always validate here. Anyone can call a Server Action directly, skipping the browser.",
+     "line": 7
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "useActionState tracks each submit",
+   "columns": [
+    "Moment",
+    "isPending",
+    "state.error",
+    "Button"
+   ],
+   "rows": [
     [
-     "Uncontrolled inputs",
-     "defaultValue; read on submit"
+     "Page loads",
+     "false",
+     "\"\"",
+     "Add book"
     ],
     [
-     "Progressive enhancement",
-     "Works before JS loads"
+     "Submitted, waiting",
+     "true",
+     "\"\"",
+     "Adding... (disabled)"
+    ],
+    [
+     "Action returned an error",
+     "false",
+     "\"Please enter both…\"",
+     "Add book"
     ]
    ],
    "beats": [
     {
-     "say": "These inputs are uncontrolled. The browser holds the value, and the action reads it once, on submit.",
-     "show": 1
+     "say": "Use action state returns three things: the state, a form action, and is pending.",
+     "sql": "const [state, formAction, isPending] = useActionState(addBookAction, initialState);"
     },
     {
-     "say": "And a real form works even before JavaScript loads. That's progressive enhancement.",
-     "show": 2
+     "say": "When the page loads, state is the initial state: no error.",
+     "hl": 0
+    },
+    {
+     "say": "While the action runs, is pending is true, so the button says adding, and is disabled.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "When the action returns, its result becomes the state, and the error shows.",
+     "hl": 2,
+     "col": 2
+    },
+    {
+     "say": "Add a one and a half second delay to the action to watch the pending state yourself.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Lab · Steps 4 and 5",
-   "title": "Try it",
-   "steps": [
-    "Bad input → error, typing kept",
-    "Good input → redirect to /books",
-    "Slow save → \"Adding...\""
+   "kind": "table",
+   "kicker": "Compare",
+   "title": "Controlled vs uncontrolled inputs",
+   "columns": [
+    "",
+    "Module 4 form",
+    "Server Action form"
+   ],
+   "rows": [
+    [
+     "The value lives in",
+     "React state: value=",
+     "The browser: defaultValue="
+    ],
+    [
+     "It's read",
+     "On every keystroke",
+     "Once, on submit"
+    ],
+    [
+     "Each input needs",
+     "value + onChange",
+     "a name"
+    ],
+    [
+     "Works before JS loads",
+     "No",
+     "Yes"
+    ]
    ],
    "beats": [
     {
-     "say": "Submit with only an author: the error shows, and your typing is kept.",
-     "show": 1
+     "say": "These inputs work differently from the Module 4 form."
     },
     {
-     "say": "Add a real book: you land on books, with it listed. The A P I sees it too.",
-     "show": 2
+     "say": "There, React state held every value. Here, the browser holds it, and default value only sets the start.",
+     "hl": 0
     },
     {
-     "say": "Add a fake delay, and the button shows Adding, and disables itself.",
-     "show": 3
+     "say": "Form actions read the data once, on submit, so each input just needs a name.",
+     "hl": [
+      1,
+      2
+     ]
+    },
+    {
+     "say": "And because it's a real form, it works even before JavaScript loads. That's progressive enhancement.",
+     "hl": 3,
+     "col": 2
     }
    ]
   },
@@ -4156,147 +6320,329 @@ Both apps build cleanly and your Reading List is live, redeploying on every push
    ]
   },
   {
-   "kind": "list",
-   "art": "terminal",
-   "kicker": "Concept",
-   "title": "Build, then start",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Read the build",
+   "title": "npm run build marks every route",
+   "columns": [
+    "Route",
+    "Mark",
+    "Meaning"
+   ],
+   "rows": [
     [
-     "npm run build",
-     "Optimised build; fails on errors"
+     "/",
+     "○",
+     "Static: prerendered"
     ],
     [
-     "npm start",
-     "Serve it like a host"
+     "/about",
+     "○",
+     "Static: prerendered"
+    ],
+    [
+     "/books",
+     "◐",
+     "Static shell, data streamed per request"
+    ],
+    [
+     "/books/[id]",
+     "◐",
+     "Static shell, data streamed per request"
+    ],
+    [
+     "/api/books",
+     "ƒ",
+     "Dynamic: run on demand"
+    ],
+    [
+     "dist/ (the Vite app)",
+     "-",
+     "Plain HTML, CSS and JS files"
     ]
    ],
    "beats": [
     {
-     "say": "N P M run build compiles, minifies, and prerenders what it can. It fails on errors, so run it before every deploy.",
-     "show": 1
+     "say": "N P M run build compiles, minifies and prerenders what it can. Then N P M start serves it, like a host would.",
+     "sql": "npm run build && npm start"
     },
     {
-     "say": "N P M start serves that build, like a host would.",
-     "show": 2
+     "say": "Home and about need no request data, so they're fully static. The mark is an empty circle.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 1
+    },
+    {
+     "say": "Books and a single book are a half circle: a static shell, with data streamed in for each request.",
+     "hl": [
+      2,
+      3
+     ],
+     "col": 1
+    },
+    {
+     "say": "The A P I route is an f: dynamic, run on demand.",
+     "hl": 4,
+     "col": 1
+    },
+    {
+     "say": "And the Vite app builds to a dist folder of plain files, which almost any static host can serve.",
+     "hl": 5,
+     "dim": true
+    },
+    {
+     "say": "If anything is broken, the build fails and names the file and line. Run it before every deploy.",
+     "col": 0
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
+   "kind": "diagram",
+   "kicker": "Lab",
+   "title": "Push a branch, preview it, merge, go live",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "Your laptop",
+     "x": 10,
+     "y": 50,
+     "sub": "git push",
+     "art": "laptop"
+    },
+    {
+     "id": "gh",
+     "label": "GitHub",
+     "x": 37,
+     "y": 50,
+     "sub": "repository",
+     "art": "git"
+    },
+    {
+     "id": "v",
+     "label": "Vercel",
+     "x": 63,
+     "y": 50,
+     "sub": "npm run build",
+     "art": "cloud"
+    },
+    {
+     "id": "prev",
+     "label": "Preview URL",
+     "x": 90,
+     "y": 18,
+     "sub": "for a branch",
+     "art": "eye"
+    },
+    {
+     "id": "live",
+     "label": "Live site",
+     "x": 90,
+     "y": 82,
+     "sub": "main",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "gh"
+    },
+    {
+     "from": "gh",
+     "to": "v"
+    },
+    {
+     "from": "v",
+     "to": "prev"
+    },
+    {
+     "from": "v",
+     "to": "live"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's the usual team flow.",
+     "show": 5
+    },
+    {
+     "say": "You push a branch to GitHub.",
+     "on": "gh",
+     "send": {
+      "from": "you",
+      "to": "gh",
+      "label": "git push"
+     }
+    },
+    {
+     "say": "Vercel is connected to the repository, so it builds every push.",
+     "on": "v",
+     "send": {
+      "from": "gh",
+      "to": "v",
+      "label": "new commit"
+     }
+    },
+    {
+     "say": "A branch gets its own preview U R L, for the team to review.",
+     "on": "prev",
+     "send": {
+      "from": "v",
+      "to": "prev",
+      "label": "preview deploy"
+     }
+    },
+    {
+     "say": "Merge into main, and the live site deploys automatically.",
+     "on": "live",
+     "send": {
+      "from": "v",
+      "to": "live",
+      "label": "production deploy"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Reading the build output",
-   "items": [
+   "title": "Only NEXT_PUBLIC_ reaches the browser",
+   "columns": [
+    "Variable",
+    "Set in",
+    "Reaches the browser?"
+   ],
+   "rows": [
     [
-     "○ Static",
-     "/ and /about"
+     "NEXT_PUBLIC_SITE_NAME=My Reading List",
+     ".env.local · Vercel settings",
+     "Yes"
     ],
     [
-     "◐ Partial Prerender",
-     "/books, /books/[id]"
-    ],
-    [
-     "ƒ Dynamic",
-     "/api/books"
+     "A secret, e.g. an API key",
+     ".env.local · Vercel settings",
+     "No: server code only"
     ]
    ],
    "beats": [
     {
-     "say": "The build output marks each route.",
-     "show": 0
+     "say": "Environment variables hold settings and secrets.",
+     "col": 0
     },
     {
-     "say": "A circle means static: prerendered.",
-     "show": 1
+     "say": "Locally, they go in dot env dot local, which is already in git ignore. On the host, in the project settings.",
+     "col": 1
     },
     {
-     "say": "A half circle means partial prerender: a static shell, with dynamic content streamed in.",
-     "show": 2
+     "say": "A name starting with next public is copied into the browser code, so a page can show the site name.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "And f means dynamic: rendered on demand.",
-     "show": 3
+     "say": "Anything else stays on the server. So never give a secret that prefix.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "cloud",
-   "kicker": "Lab · Steps 3 to 5",
-   "title": "Deploy to Vercel",
-   "steps": [
-    "Push to GitHub",
-    "Import into Vercel",
-    "Test the public URL",
-    "Push → auto-deploy"
-   ],
-   "beats": [
-    {
-     "say": "Push the app to a GitHub repository.",
-     "show": 1
-    },
-    {
-     "say": "Sign in to Vercel with GitHub, import the repository, keep the detected settings, and deploy.",
-     "show": 2
-    },
-    {
-     "say": "Test every page at the public address.",
-     "show": 3
-    },
-    {
-     "say": "Change the About text and push. A new deployment starts automatically.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "key",
-   "kicker": "Concept",
-   "title": "Environment variables",
-   "items": [
-    [
-     "NEXT_PUBLIC_…",
-     "Reaches the browser"
-    ],
-    [
-     "Everything else",
-     "Server only: secrets live here"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Settings and secrets go in environment variables: dot env dot local on your machine, and project settings on the host.",
-     "show": 0
-    },
-    {
-     "say": "Only names starting with next public reach the browser.",
-     "show": 1
-    },
-    {
-     "say": "So never give a secret that prefix.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "warning",
+   "kind": "diagram",
    "kicker": "Limitation",
-   "title": "Memory isn't a database",
-   "quote": "For real data, replace lib/books.js with database calls.",
+   "title": "Why added books can vanish",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "Visitor",
+     "x": 10,
+     "y": 50,
+     "sub": "adds a book",
+     "art": "people"
+    },
+    {
+     "id": "a",
+     "label": "Server copy A",
+     "x": 52,
+     "y": 20,
+     "sub": "books: 4",
+     "art": "server"
+    },
+    {
+     "id": "b",
+     "label": "Server copy B",
+     "x": 52,
+     "y": 80,
+     "sub": "books: 3",
+     "art": "server"
+    },
+    {
+     "id": "db",
+     "label": "Database",
+     "x": 90,
+     "y": 50,
+     "sub": "the real fix",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "a"
+    },
+    {
+     "from": "you",
+     "to": "b"
+    },
+    {
+     "from": "a",
+     "to": "db"
+    },
+    {
+     "from": "b",
+     "to": "db"
+    }
+   ],
    "beats": [
     {
-     "say": "One limitation.",
-     "show": 0
+     "say": "The book list lives in server memory. Hosts may run several copies of your app.",
+     "show": 3
     },
     {
-     "say": "The book list lives in server memory. Hosts run several copies and restart them, so added books can vanish.",
-     "show": 1
+     "say": "You add a book. It lands in copy A's memory.",
+     "on": "a",
+     "send": {
+      "from": "you",
+      "to": "a",
+      "label": "POST Atomic Habits"
+     }
     },
     {
-     "say": "For real data, swap the functions in lib slash books for database calls. The rest of the app stays the same.",
-     "show": 1
+     "say": "Your next visit reaches copy B, which never saw it. And any copy can restart, and forget.",
+     "on": "b",
+     "send": {
+      "from": "b",
+      "to": "you",
+      "label": "3 books"
+     }
+    },
+    {
+     "say": "The fix: replace the functions in lib slash books with database calls. Every copy reads the same data.",
+     "show": 4,
+     "on": "db",
+     "send": {
+      "from": "a",
+      "to": "db",
+      "label": "createBook → INSERT"
+     }
+    },
+    {
+     "say": "The rest of the app stays the same.",
+     "on": [
+      "a",
+      "b",
+      "db"
+     ]
     }
    ]
   },
@@ -4319,7 +6665,7 @@ Both apps build cleanly and your Reading List is live, redeploying on every push
      "show": 0
     },
     {
-     "say": "Which environment variables reach the browser in Next.js?",
+     "say": "Which environment variables reach the browser in Next dot js?",
      "show": 0
     },
     {

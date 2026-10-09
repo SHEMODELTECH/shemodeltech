@@ -71,96 +71,197 @@ You can explain, in one sentence each, what Git does and what GitHub adds on top
    ]
   },
   {
-   "kind": "list",
-   "art": "mess",
+   "kind": "array",
    "kicker": "The problem",
-   "title": "Sound familiar?",
-   "items": [
-    [
-     "project_final.zip",
-     ""
-    ],
-    [
-     "project_final_v2.zip",
-     ""
-    ],
-    [
-     "project_final_v2_ACTUALLY_FINAL.zip",
-     ""
-    ]
+   "title": "Which one is correct?",
+   "values": [
+    "project_final.zip",
+    "project_final_v2.zip",
+    "project_final_v2_ACTUALLY_FINAL.zip"
    ],
-   "crossed": true,
    "beats": [
     {
-     "say": "Without version control, teams end up with folders like these.",
-     "show": 0
+     "say": "Without version control, a project folder ends up looking like this."
     },
     {
      "say": "Project final dot zip.",
-     "show": 1
+     "hl": 0
     },
     {
-     "say": "Project final v2 dot zip.",
-     "show": 2
+     "say": "Then project final v2, because something changed.",
+     "hl": 1
     },
     {
-     "say": "Project final v2, actually final.",
-     "show": 3
+     "say": "Then project final v2, actually final.",
+     "hl": 2
     },
     {
-     "say": "And nobody is fully sure which one is correct.",
-     "show": 3
+     "say": "Which one is correct? What changed between them, and who changed it? Nobody is fully sure.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "note": "no history, no messages, no author"
+    },
+    {
+     "say": "With version control, the same work becomes one folder with a clear list of changes, each with a message.",
+     "vals": [
+      "Add project README",
+      "Add carbonara recipe heading",
+      "Add tomato soup recipe heading"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "one folder, every change recorded"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "layers",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "What version control does",
-   "quote": "Every change recorded. Any version recoverable. Nobody overwrites anybody.",
-   "beats": [
-    {
-     "say": "Version control records every change to your files over time.",
-     "show": 0
-    },
-    {
-     "say": "So you can go back to any version, see who changed what, and combine work from several people without overwriting each other.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "venn",
-   "kicker": "Concept",
-   "title": "Git and GitHub are different",
-   "items": [
+   "title": "Zip copies versus version control",
+   "columns": [
+    "Question",
+    "Folder of zips",
+    "Version control"
+   ],
+   "rows": [
     [
-     "Git",
-     "Tracks changes on your computer"
+     "Which version is latest?",
+     "Guess from the name",
+     "The newest commit"
     ],
     [
-     "GitHub",
-     "Hosts Git projects online to share"
+     "What changed?",
+     "Open both and compare",
+     "Shown line by line"
+    ],
+    [
+     "Who changed it, and why?",
+     "Unknown",
+     "Name and message saved"
+    ],
+    [
+     "Undo one mistake?",
+     "Pick an old zip, lose newer work",
+     "Reverse just that change"
+    ],
+    [
+     "Two people editing?",
+     "Someone overwrites someone",
+     "Changes are combined"
     ]
    ],
    "beats": [
     {
-     "say": "Two names you'll hear constantly.",
-     "show": 0
+     "say": "Version control records every change to your files over time. Here's what that buys you.",
+     "col": 0
     },
     {
-     "say": "Git is the tool that tracks changes, on your own computer.",
-     "show": 1
+     "say": "Which version is the latest? With zips, you guess from the file name. With version control, it's simply the newest snapshot.",
+     "hl": 0
     },
     {
-     "say": "GitHub is a website that hosts Git projects online, so people can share and work on them together.",
-     "show": 2
+     "say": "What changed? Version control shows you, line by line.",
+     "hl": 1
     },
     {
-     "say": "Git works without GitHub. But GitHub needs Git underneath it.",
-     "show": 2
+     "say": "Who changed it, and why? Every change is saved with a name and a message.",
+     "hl": 2
+    },
+    {
+     "say": "Undo one mistake? You can reverse just that change, and keep all the newer work.",
+     "hl": 3
+    },
+    {
+     "say": "And when two people edit, their changes are combined, instead of one overwriting the other.",
+     "hl": 4,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "Git and GitHub are different",
+   "nodes": [
+    {
+     "id": "me",
+     "label": "Your computer",
+     "x": 14,
+     "y": 50,
+     "sub": "Git tracks changes here",
+     "art": "laptop"
+    },
+    {
+     "id": "gh",
+     "label": "GitHub",
+     "x": 50,
+     "y": 22,
+     "sub": "hosts the project online",
+     "art": "cloud"
+    },
+    {
+     "id": "mate",
+     "label": "Teammate's computer",
+     "x": 86,
+     "y": 50,
+     "sub": "Git here too",
+     "art": "laptop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "me",
+     "to": "gh"
+    },
+    {
+     "from": "gh",
+     "to": "mate"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Git is the tool that tracks changes, right on your own computer.",
+     "show": 1,
+     "on": "me"
+    },
+    {
+     "say": "It works completely on its own. No website, no internet needed.",
+     "show": 1,
+     "on": "me"
+    },
+    {
+     "say": "GitHub is a website that hosts Git projects online.",
+     "show": 2,
+     "on": "gh",
+     "send": {
+      "from": "me",
+      "to": "gh",
+      "label": "your history"
+     }
+    },
+    {
+     "say": "So a teammate can get the same project, with its full history, on their computer.",
+     "show": 3,
+     "on": "mate",
+     "send": {
+      "from": "gh",
+      "to": "mate",
+      "label": "same history"
+     }
+    },
+    {
+     "say": "Notice Git is at both ends. GitHub is built on top of Git, and needs it underneath.",
+     "show": 3,
+     "on": [
+      "me",
+      "mate"
+     ]
     }
    ]
   },
@@ -368,127 +469,386 @@ You have a local Git repository with several commits (including one revert), and
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
+   "kind": "diagram",
    "kicker": "Concept",
    "title": "Edit, stage, commit",
-   "steps": [
-    "Edit files",
-    "git add (stage)",
-    "git commit (save snapshot)"
+   "nodes": [
+    {
+     "id": "work",
+     "label": "Your folder",
+     "x": 14,
+     "y": 50,
+     "sub": "files you edit",
+     "art": "file"
+    },
+    {
+     "id": "stage",
+     "label": "Staging area",
+     "x": 50,
+     "y": 50,
+     "sub": "the next snapshot",
+     "art": "boxes"
+    },
+    {
+     "id": "hist",
+     "label": "History",
+     "x": 86,
+     "y": 50,
+     "sub": "saved commits",
+     "art": "layers"
+    }
+   ],
+   "edges": [
+    {
+     "from": "work",
+     "to": "stage"
+    },
+    {
+     "from": "stage",
+     "to": "hist"
+    }
    ],
    "beats": [
     {
-     "say": "A repository is a folder Git is tracking. A commit is a saved snapshot of your files, with a message.",
-     "show": 0
-    },
-    {
-     "say": "The everyday rhythm has three steps.",
-     "show": 0
-    },
-    {
-     "say": "Edit your files.",
-     "show": 1
-    },
-    {
-     "say": "Stage the ones you want to save, with git add. That means: include this in the next snapshot.",
-     "show": 2
-    },
-    {
-     "say": "Then commit, which saves the snapshot with a message describing what changed.",
+     "say": "A repository is a folder Git is tracking. Changes move through three places.",
      "show": 3
+    },
+    {
+     "say": "First, you edit files in your folder, like the README.",
+     "on": "work"
+    },
+    {
+     "say": "Git add stages a change. That means: include this in the next snapshot.",
+     "on": "stage",
+     "send": {
+      "from": "work",
+      "to": "stage",
+      "label": "git add README.md"
+     }
+    },
+    {
+     "say": "Git commit saves everything staged as a snapshot, with a message. That's a commit.",
+     "on": "hist",
+     "send": {
+      "from": "stage",
+      "to": "hist",
+      "label": "git commit -m \"Add project README\""
+     }
+    },
+    {
+     "say": "Anything you never staged stays behind in your folder, and isn't in the commit.",
+     "on": "work"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 to 3",
    "title": "Your first repository",
    "file": "Terminal",
-   "code": "mkdir recipe-notes\ncd recipe-notes\ngit init\n\necho \"# Recipe Notes\" > README.md\ngit status\ngit add README.md\ngit commit -m \"Add project README\"",
+   "code": "git config --global user.name \"Your Name\"\ngit config --global user.email \"you@example.com\"\nmkdir recipe-notes\ncd recipe-notes\ngit init\necho \"# Recipe Notes\" > README.md\ngit status\ngit add README.md\ngit commit -m \"Add project README\"",
    "beats": [
     {
-     "say": "Set your name and email once, make a folder called recipe notes, and run git init to start tracking it.",
-     "show": 0
+     "say": "Tell Git your name and email once. They're stamped on every commit you make.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "Create a README, and git status shows it as untracked. It exists, but Git isn't saving it yet.",
-     "show": 1
+     "say": "Make a folder called recipe notes, and step inside it.",
+     "line": [
+      3,
+      4
+     ]
     },
     {
-     "say": "Git add stages it, and git commit saves your first snapshot.",
-     "show": 1
+     "say": "Git init turns this folder into a repository. Tracking starts now.",
+     "line": 5,
+     "out": "Initialized empty Git repository in .../recipe-notes/.git/",
+     "vars": {
+      "commits": 0
+     }
+    },
+    {
+     "say": "Echo writes a heading into a new file called README.",
+     "line": 6,
+     "vars": {
+      "README.md": "untracked",
+      "commits": 0
+     }
+    },
+    {
+     "say": "Git status reports it as untracked. The file exists, but Git isn't saving it yet.",
+     "line": 7,
+     "out": [
+      "Untracked files:",
+      "        README.md"
+     ]
+    },
+    {
+     "say": "Git add stages it, ready for the next snapshot.",
+     "line": 8,
+     "vars": {
+      "README.md": "staged"
+     }
+    },
+    {
+     "say": "Git commit saves the snapshot with your message. One commit in the history.",
+     "line": 9,
+     "vars": {
+      "README.md": "committed",
+      "commits": 1
+     },
+     "out": " 1 file changed, 1 insertion(+)"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "doc",
-   "kicker": "Lab · Steps 4 and 5",
-   "title": "Read your history",
-   "big": "2 commits",
-   "sub": "git log --oneline",
+   "kind": "table",
+   "kicker": "Lab · Steps 3 and 4",
+   "title": "Reading git status",
+   "columns": [
+    "After you...",
+    "git status says",
+    "Meaning"
+   ],
+   "rows": [
+    [
+     "create README.md",
+     "Untracked files: README.md",
+     "Git sees it, isn't saving it"
+    ],
+    [
+     "git add README.md",
+     "Changes to be committed: new file: README.md",
+     "Staged for the next commit"
+    ],
+    [
+     "git commit",
+     "nothing to commit, working tree clean",
+     "Saved. Nothing new"
+    ],
+    [
+     "append Pasta Carbonara",
+     "Changes not staged for commit: modified: README.md",
+     "Changed, not staged yet"
+    ],
+    [
+     "git add, then git commit",
+     "nothing to commit, working tree clean",
+     "Two commits now"
+    ]
+   ],
    "beats": [
     {
-     "say": "Add a carbonara heading and commit again.",
-     "show": 0
+     "say": "Git status is the command you'll run most. It tells you where every file stands.",
+     "col": 1
     },
     {
-     "say": "Now git log, dash dash oneline, shows your history.",
-     "show": 1
+     "say": "A brand new file is untracked.",
+     "hl": 0
     },
     {
-     "say": "Two commits, two snapshots you can always come back to.",
-     "show": 2
+     "say": "After git add, it's listed under changes to be committed.",
+     "hl": 1
+    },
+    {
+     "say": "After the commit, there's nothing left to commit. The working tree is clean.",
+     "hl": 2
+    },
+    {
+     "say": "Now step four: append a carbonara heading. Git spots the change, but it isn't staged.",
+     "hl": 3
+    },
+    {
+     "say": "Add and commit again, and you're clean once more, with two commits in the history.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "search",
+   "kind": "walk",
    "kicker": "Lab · Step 6",
    "title": "Undo a change you haven't committed",
    "file": "Terminal",
-   "code": "echo \"oops, this line is a mistake\" >> README.md\ngit diff\ngit restore README.md\ngit diff        # shows nothing now",
+   "code": "echo \"oops, this line is a mistake\" >> README.md\ngit diff\ngit restore README.md\ngit diff",
    "beats": [
     {
-     "say": "Now, mistakes. Add a line you didn't mean to.",
-     "show": 0
+     "say": "Your README has two committed lines. Now add a line you didn't mean to.",
+     "line": 1,
+     "vars": {
+      "README.md": "3 lines, 1 uncommitted"
+     }
     },
     {
-     "say": "Git diff shows what changed since your last commit. Added lines start with a plus.",
-     "show": 1
+     "say": "Git diff shows what changed since your last commit. The added line starts with a plus.",
+     "line": 2,
+     "out": [
+      " # Recipe Notes",
+      " ## Pasta Carbonara",
+      "+oops, this line is a mistake"
+     ]
     },
     {
-     "say": "Git restore throws that change away. Be careful: restored changes are gone for good.",
-     "show": 1
+     "say": "Git restore throws the uncommitted change away. The file goes back to the last commit.",
+     "line": 3,
+     "vars": {
+      "README.md": "2 lines, matches last commit"
+     }
+    },
+    {
+     "say": "So the second git diff shows nothing at all.",
+     "line": 4,
+     "out": "(no output)"
+    },
+    {
+     "say": "Be careful: restored changes are gone for good. Git never saved them.",
+     "line": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "loop",
+   "kind": "walk",
    "kicker": "Lab · Step 7",
    "title": "Undo a commit safely",
    "file": "Terminal",
-   "code": "git commit -m \"Add a recipe I regret\"\ngit revert --no-edit HEAD\ngit log --oneline",
+   "code": "echo \"## Burnt Toast\" >> README.md\ngit add README.md\ngit commit -m \"Add a recipe I regret\"\ngit revert --no-edit HEAD\ngit log --oneline\ncat README.md",
    "beats": [
     {
-     "say": "What if you already committed the mistake?",
-     "show": 0
+     "say": "What if you already committed the mistake? Add a burnt toast heading, stage it, and commit.",
+     "line": [
+      1,
+      3
+     ],
+     "vars": {
+      "commits": 3,
+      "README.md": "3 lines"
+     }
     },
     {
-     "say": "Git revert HEAD undoes the latest commit. HEAD means the latest commit.",
-     "show": 1
+     "say": "Git revert HEAD undoes the latest commit. HEAD just means the latest commit.",
+     "line": 4,
+     "out": "[...] Revert \"Add a recipe I regret\"",
+     "vars": {
+      "commits": 4,
+      "README.md": "2 lines"
+     }
     },
     {
-     "say": "It doesn't delete anything. It adds a new commit that reverses the old one.",
-     "show": 1
+     "say": "Git log, dash dash oneline, lists the history, newest first.",
+     "line": 5,
+     "out": [
+      "a9e5aa0 Revert \"Add a recipe I regret\"",
+      "4009602 Add a recipe I regret",
+      "13014be Add carbonara recipe heading",
+      "cb7d486 Add project README"
+     ]
     },
     {
-     "say": "So your history stays honest, and it's safe even after you've shared your work.",
-     "show": 1
+     "say": "Four commits. The regretted one is still there, with a new commit on top that reverses it.",
+     "line": 5
+    },
+    {
+     "say": "And the file itself is back to two lines. No burnt toast.",
+     "line": 6,
+     "out": [
+      "# Recipe Notes",
+      "## Pasta Carbonara"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "revert adds, it never deletes",
+   "nodes": [
+    {
+     "id": "c1",
+     "label": "cb7d486",
+     "x": 12,
+     "y": 50,
+     "sub": "Add project README",
+     "art": "doc"
+    },
+    {
+     "id": "c2",
+     "label": "13014be",
+     "x": 37,
+     "y": 50,
+     "sub": "Add carbonara heading",
+     "art": "doc"
+    },
+    {
+     "id": "c3",
+     "label": "4009602",
+     "x": 62,
+     "y": 50,
+     "sub": "Add a recipe I regret",
+     "art": "bug"
+    },
+    {
+     "id": "c4",
+     "label": "a9e5aa0",
+     "x": 87,
+     "y": 50,
+     "sub": "Revert the regret · HEAD",
+     "art": "loop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "c1",
+     "to": "c2"
+    },
+    {
+     "from": "c2",
+     "to": "c3"
+    },
+    {
+     "from": "c3",
+     "to": "c4"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's that history as a chain. Each commit builds on the one before.",
+     "show": 2,
+     "on": [
+      "c1",
+      "c2"
+     ]
+    },
+    {
+     "say": "Then the commit you regret joins the chain.",
+     "show": 3,
+     "on": "c3",
+     "send": {
+      "from": "c2",
+      "to": "c3",
+      "label": "+ ## Burnt Toast"
+     }
+    },
+    {
+     "say": "Revert doesn't cut it out. It adds a new commit that removes that line again.",
+     "show": 4,
+     "on": "c4",
+     "send": {
+      "from": "c3",
+      "to": "c4",
+      "label": "- ## Burnt Toast"
+     }
+    },
+    {
+     "say": "The history stays honest, so revert is safe even after you've shared your work.",
+     "show": 4,
+     "on": [
+      "c3",
+      "c4"
+     ]
     }
    ]
   },
@@ -644,122 +1004,273 @@ You have pushed commits from your machine to a real GitHub repository, and clone
    ]
   },
   {
-   "kind": "list",
-   "art": "api",
+   "kind": "diagram",
    "kicker": "Concept",
    "title": "Remote, push, pull",
-   "items": [
-    [
-     "Remote",
-     "A copy hosted elsewhere, like GitHub"
-    ],
-    [
-     "Push",
-     "Send your commits up"
-    ],
-    [
-     "Pull",
-     "Bring others' commits down"
-    ]
+   "nodes": [
+    {
+     "id": "me",
+     "label": "recipe-notes",
+     "x": 14,
+     "y": 70,
+     "sub": "your computer",
+     "art": "laptop"
+    },
+    {
+     "id": "gh",
+     "label": "origin",
+     "x": 50,
+     "y": 22,
+     "sub": "GitHub: the remote",
+     "art": "cloud"
+    },
+    {
+     "id": "copy",
+     "label": "recipe-notes-copy",
+     "x": 86,
+     "y": 70,
+     "sub": "another computer",
+     "art": "laptop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "me",
+     "to": "gh"
+    },
+    {
+     "from": "gh",
+     "to": "copy"
+    }
    ],
    "beats": [
     {
-     "say": "Three words.",
-     "show": 0
+     "say": "A remote is a copy of your repository hosted somewhere else, usually GitHub. By habit, it's called origin.",
+     "show": 2,
+     "on": "gh"
     },
     {
-     "say": "A remote is a copy of your repository hosted somewhere else, usually GitHub.",
-     "show": 1
+     "say": "Push sends your local commits up to the remote.",
+     "show": 2,
+     "on": "gh",
+     "send": {
+      "from": "me",
+      "to": "gh",
+      "label": "git push"
+     }
     },
     {
-     "say": "Push sends your commits up to the remote.",
-     "show": 2
+     "say": "On another computer, clone downloads the whole repository, history and all.",
+     "show": 3,
+     "on": "copy",
+     "send": {
+      "from": "gh",
+      "to": "copy",
+      "label": "git clone"
+     }
     },
     {
-     "say": "Pull brings down commits made by others, or by you on another computer.",
-     "show": 3
+     "say": "And pull brings down new commits that someone else pushed.",
+     "show": 3,
+     "on": "me",
+     "send": {
+      "from": "gh",
+      "to": "me",
+      "label": "git pull"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 and 2",
    "title": "Connect and push",
    "file": "Terminal",
    "code": "git remote add origin https://github.com/yourusername/recipe-notes.git\ngit branch -M main\ngit push -u origin main",
    "beats": [
     {
-     "say": "On github dot com, create an empty repository called recipe notes.",
-     "show": 0
+     "say": "On github dot com, create an empty repository called recipe notes. No README.",
+     "line": 1
     },
     {
-     "say": "Then connect your folder to it with git remote add origin, and push your main branch.",
-     "show": 1
+     "say": "Git remote add saves its address under the name origin.",
+     "line": 1,
+     "vars": {
+      "origin": "github.com/yourusername/recipe-notes"
+     }
     },
     {
-     "say": "GitHub won't take your account password here. Sign in through the browser window, the GitHub CLI, or a personal access token.",
-     "show": 1
+     "say": "Git branch, dash capital M, main, names your branch main.",
+     "line": 2,
+     "vars": {
+      "branch": "main"
+     }
     },
     {
-     "say": "Refresh the page, and your commits are there.",
-     "show": 1
+     "say": "Git push, dash u, origin main, sends your four commits up, and links your main to GitHub's.",
+     "line": 3,
+     "out": [
+      "To https://github.com/yourusername/recipe-notes.git",
+      " * [new branch]      main -> main",
+      "branch 'main' set up to track 'origin/main'."
+     ],
+     "vars": {
+      "on laptop": "4 commits",
+      "on GitHub": "4 commits"
+     }
+    },
+    {
+     "say": "GitHub won't take your account password here. Sign in through the browser window, the GitHub C L I, or a personal access token.",
+     "line": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "loop",
+   "kind": "walk",
    "kicker": "Lab · Step 3",
-   "title": "The everyday loop",
-   "steps": [
-    "Edit",
-    "git add",
-    "git commit",
-    "git push"
+   "title": "The everyday loop: edit, add, commit, push",
+   "file": "Terminal",
+   "code": "echo \"## Tomato Soup\" >> README.md\ngit add README.md\ngit commit -m \"Add tomato soup recipe heading\"\ngit status\ngit push\ngit status",
+   "beats": [
+    {
+     "say": "From now on, every change follows one loop. Edit the README.",
+     "line": 1,
+     "vars": {
+      "on laptop": "4 commits",
+      "on GitHub": "4 commits"
+     }
+    },
+    {
+     "say": "Add it, and commit it. Your computer now has five commits.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "on laptop": "5 commits"
+     }
+    },
+    {
+     "say": "Git status notices that GitHub is behind.",
+     "line": 4,
+     "out": "Your branch is ahead of 'origin/main' by 1 commit."
+    },
+    {
+     "say": "Git push sends the new commit up.",
+     "line": 5,
+     "out": "   a9e5aa0..bec8c9e  main -> main",
+     "vars": {
+      "on GitHub": "5 commits"
+     }
+    },
+    {
+     "say": "Now status says you're up to date. Both sides match.",
+     "line": 6,
+     "out": "Your branch is up to date with 'origin/main'."
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "GitHub only sees what you push",
+   "columns": [
+    "Moment",
+    "Your computer",
+    "GitHub",
+    "git status says"
+   ],
+   "rows": [
+    [
+     "After first push",
+     "4 commits",
+     "4 commits",
+     "up to date"
+    ],
+    [
+     "Commit tomato soup",
+     "5 commits",
+     "4 commits",
+     "ahead by 1 commit"
+    ],
+    [
+     "git push",
+     "5 commits",
+     "5 commits",
+     "up to date"
+    ]
    ],
    "beats": [
     {
-     "say": "From now on, every change follows the same loop.",
-     "show": 0
+     "say": "Here are those moments side by side."
     },
     {
-     "say": "Edit.",
-     "show": 1
+     "say": "After the first push, both sides have the same four commits.",
+     "hl": 0
     },
     {
-     "say": "Add.",
-     "show": 2
+     "say": "Commit the tomato soup, and only your computer has it. GitHub doesn't know yet.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "Commit.",
-     "show": 3
+     "say": "Push, and GitHub catches up.",
+     "hl": 2,
+     "col": 2
     },
     {
-     "say": "Push.",
-     "show": 4
+     "say": "Commit without pushing, and GitHub never sees the change.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "laptop",
+   "kind": "walk",
    "kicker": "Lab · Step 4",
    "title": "Pretend to be a teammate",
    "file": "Terminal",
-   "code": "cd ..\ngit clone https://github.com/yourusername/recipe-notes.git recipe-notes-copy\ncd recipe-notes-copy\ncat README.md",
+   "code": "cd ..\ngit clone https://github.com/yourusername/recipe-notes.git recipe-notes-copy\ncd recipe-notes-copy\ncat README.md\ngit log --oneline",
    "beats": [
     {
-     "say": "Now pretend you're a teammate on another computer.",
-     "show": 0
+     "say": "Now pretend you're a teammate on another computer. Step out of your project folder.",
+     "line": 1
     },
     {
-     "say": "Git clone downloads the whole repository from GitHub, with its full history, into a new folder.",
-     "show": 1
+     "say": "Git clone downloads the whole repository from GitHub into a new folder, recipe notes copy.",
+     "line": 2,
+     "out": [
+      "Cloning into 'recipe-notes-copy'...",
+      "done."
+     ]
     },
     {
-     "say": "That's different from git init, which starts a brand new, empty one.",
-     "show": 1
+     "say": "Step inside and read the README. All three lines arrived.",
+     "line": [
+      3,
+      4
+     ],
+     "out": [
+      "# Recipe Notes",
+      "## Pasta Carbonara",
+      "## Tomato Soup"
+     ]
+    },
+    {
+     "say": "And the log shows all five commits. Not just the files, the full history.",
+     "line": 5,
+     "out": [
+      "bec8c9e Add tomato soup recipe heading",
+      "a9e5aa0 Revert \"Add a recipe I regret\"",
+      "4009602 Add a recipe I regret",
+      "13014be Add carbonara recipe heading",
+      "cb7d486 Add project README"
+     ]
+    },
+    {
+     "say": "That's different from git init, which starts a brand new, empty repository.",
+     "line": 2
     }
    ]
   },
@@ -922,100 +1433,341 @@ You created a branch, made commits only on it, and can show that `main` was unaf
    ]
   },
   {
-   "kind": "list",
-   "art": "people",
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "A branch splits off from main",
+   "nodes": [
+    {
+     "id": "c4",
+     "label": "a9e5aa0",
+     "x": 12,
+     "y": 60,
+     "sub": "Revert the regret",
+     "art": "doc"
+    },
+    {
+     "id": "c5",
+     "label": "bec8c9e",
+     "x": 42,
+     "y": 60,
+     "sub": "Tomato soup · main",
+     "art": "flag"
+    },
+    {
+     "id": "d1",
+     "label": "6f0476d",
+     "x": 76,
+     "y": 22,
+     "sub": "Desserts · add-dessert-section",
+     "art": "fork"
+    }
+   ],
+   "edges": [
+    {
+     "from": "c4",
+     "to": "c5"
+    },
+    {
+     "from": "c5",
+     "to": "d1"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's the end of main's history. Its latest commit is the tomato soup.",
+     "show": 2,
+     "on": "c5"
+    },
+    {
+     "say": "Git checkout dash b, add dessert section, starts a new branch right here, and switches to it.",
+     "show": 2,
+     "on": "c5"
+    },
+    {
+     "say": "Commit the desserts, and the new commit lands on the branch only.",
+     "show": 3,
+     "on": "d1",
+     "send": {
+      "from": "c5",
+      "to": "d1",
+      "label": "git commit -m \"Add desserts…\""
+     }
+    },
+    {
+     "say": "Main still ends at tomato soup. Nothing you did on the branch touched it.",
+     "show": 3,
+     "on": "c5"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Where you'd use this",
-   "title": "When more than one thing is happening",
-   "items": [
-    [
-     "Fix a bug while someone else builds a feature",
-     ""
-    ],
-    [
-     "Try an idea without risking main",
-     ""
-    ]
+   "title": "Two jobs at once, main stays safe",
+   "nodes": [
+    {
+     "id": "main",
+     "label": "main",
+     "x": 14,
+     "y": 50,
+     "sub": "the version everyone relies on",
+     "art": "shield"
+    },
+    {
+     "id": "fix",
+     "label": "fix-bug",
+     "x": 80,
+     "y": 22,
+     "sub": "you, fixing a bug",
+     "art": "bug"
+    },
+    {
+     "id": "feat",
+     "label": "new-feature",
+     "x": 80,
+     "y": 78,
+     "sub": "a teammate, building a feature",
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "main",
+     "to": "fix"
+    },
+    {
+     "from": "main",
+     "to": "feat"
+    }
    ],
    "beats": [
     {
      "say": "Branches matter whenever more than one thing is happening at once.",
-     "show": 0
+     "show": 1,
+     "on": "main"
     },
     {
-     "say": "You're fixing a bug while a teammate adds a feature,",
-     "show": 1
+     "say": "You branch off to fix a bug.",
+     "show": 2,
+     "on": "fix",
+     "send": {
+      "from": "main",
+      "to": "fix",
+      "label": "git checkout -b fix-bug"
+     }
     },
     {
-     "say": "or you want to try an idea without risking the version everyone relies on.",
-     "show": 2
+     "say": "At the same time, a teammate branches off to build a feature.",
+     "show": 3,
+     "on": "feat",
+     "send": {
+      "from": "main",
+      "to": "feat",
+      "label": "git checkout -b new-feature"
+     }
+    },
+    {
+     "say": "Neither of you can break main, or each other's work. Each change comes back only when it's ready.",
+     "show": 3,
+     "on": "main"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "fork",
-   "kicker": "Lab · Steps 1 and 2",
-   "title": "Make a branch and commit on it",
+   "kind": "walk",
+   "kicker": "Lab · Steps 1 to 3",
+   "title": "Commit on a branch, then compare",
    "file": "Terminal",
-   "code": "git checkout -b add-dessert-section\n\necho \"## Desserts\" >> README.md\necho \"### Tiramisu\" >> README.md\ngit add README.md\ngit commit -m \"Add desserts section with tiramisu\"",
+   "code": "git checkout -b add-dessert-section\necho \"## Desserts\" >> README.md\necho \"### Tiramisu\" >> README.md\ngit add README.md\ngit commit -m \"Add desserts section with tiramisu\"\ngit checkout main\ncat README.md\ngit checkout add-dessert-section\ncat README.md",
    "beats": [
     {
-     "say": "Git checkout dash b creates a branch called add dessert section, and switches to it.",
-     "show": 0
+     "say": "Back in your recipe notes folder, create the branch and switch to it in one step.",
+     "line": 1,
+     "out": "Switched to a new branch 'add-dessert-section'",
+     "vars": {
+      "on branch": "add-dessert-section"
+     }
     },
     {
-     "say": "Add a desserts section with tiramisu, and commit it.",
-     "show": 1
+     "say": "Add a desserts heading and a tiramisu heading, then stage and commit them.",
+     "line": [
+      2,
+      5
+     ],
+     "out": "[add-dessert-section 6f0476d] Add desserts section with tiramisu",
+     "vars": {
+      "README.md": "5 lines"
+     }
     },
     {
-     "say": "That commit exists only on this branch.",
-     "show": 1
+     "say": "Now switch to main. Git swaps the file to main's version.",
+     "line": 6,
+     "out": "Switched to branch 'main'",
+     "vars": {
+      "on branch": "main",
+      "README.md": "3 lines"
+     }
+    },
+    {
+     "say": "Cat shows three lines. No desserts here.",
+     "line": 7,
+     "out": [
+      "# Recipe Notes",
+      "## Pasta Carbonara",
+      "## Tomato Soup"
+     ]
+    },
+    {
+     "say": "Switch back to the branch, and the desserts are there again.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "on branch": "add-dessert-section",
+      "README.md": "5 lines"
+     },
+     "out": [
+      "Switched to branch 'add-dessert-section'",
+      "# Recipe Notes",
+      "## Pasta Carbonara",
+      "## Tomato Soup",
+      "## Desserts",
+      "### Tiramisu"
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "shield",
+   "kind": "table",
    "kicker": "Lab · Step 3",
-   "title": "Prove main is untouched",
-   "steps": [
-    "main: no desserts",
-    "add-dessert-section: desserts"
+   "title": "Same file, two branches",
+   "columns": [
+    "Line",
+    "main",
+    "add-dessert-section"
+   ],
+   "rows": [
+    [
+     "1",
+     "# Recipe Notes",
+     "# Recipe Notes"
+    ],
+    [
+     "2",
+     "## Pasta Carbonara",
+     "## Pasta Carbonara"
+    ],
+    [
+     "3",
+     "## Tomato Soup",
+     "## Tomato Soup"
+    ],
+    [
+     "4",
+     "",
+     "## Desserts"
+    ],
+    [
+     "5",
+     "",
+     "### Tiramisu"
+    ]
    ],
    "beats": [
     {
-     "say": "Now check.",
-     "show": 0
+     "say": "Here's the README on each branch, line by line."
     },
     {
-     "say": "Switch to main and look at the README. No desserts.",
-     "show": 1
+     "say": "The first three lines are shared. Both branches grew from the same commits.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     },
     {
-     "say": "Switch back to your branch. Desserts are there.",
-     "show": 2
+     "say": "Lines four and five exist only on add dessert section.",
+     "hl": [
+      3,
+      4
+     ],
+     "col": 2
     },
     {
-     "say": "Each branch keeps its own history until you deliberately combine them.",
-     "show": 2
+     "say": "Main has nothing there. Each branch keeps its own history until you deliberately combine them.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "cloud",
+   "kind": "diagram",
    "kicker": "Lab · Step 4",
-   "title": "Push the branch",
-   "file": "Terminal",
-   "code": "git push -u origin add-dessert-section",
-   "beats": [
+   "title": "Push the branch to GitHub",
+   "nodes": [
     {
-     "say": "Finally, push the branch to GitHub.",
-     "show": 0
+     "id": "me",
+     "label": "Your computer",
+     "x": 14,
+     "y": 50,
+     "sub": "on add-dessert-section",
+     "art": "laptop"
     },
     {
-     "say": "On GitHub you'll now see two branches: main, unchanged, and your new branch with the dessert work.",
-     "show": 1
+     "id": "ghm",
+     "label": "main",
+     "x": 82,
+     "y": 22,
+     "sub": "on GitHub · unchanged",
+     "art": "flag"
+    },
+    {
+     "id": "ghb",
+     "label": "add-dessert-section",
+     "x": 82,
+     "y": 78,
+     "sub": "on GitHub · new",
+     "art": "fork"
+    }
+   ],
+   "edges": [
+    {
+     "from": "me",
+     "to": "ghm"
+    },
+    {
+     "from": "me",
+     "to": "ghb"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Finally, push the branch.",
+     "show": 1,
+     "on": "me"
+    },
+    {
+     "say": "Git push, dash u, origin, add dessert section, creates the branch on GitHub too.",
+     "show": 3,
+     "on": "ghb",
+     "send": {
+      "from": "me",
+      "to": "ghb",
+      "label": "git push -u origin add-dessert-section"
+     }
+    },
+    {
+     "say": "GitHub now shows two branches: main, unchanged, and your branch with the dessert work.",
+     "show": 3,
+     "on": [
+      "ghm",
+      "ghb"
+     ]
     }
    ]
   },
@@ -1208,148 +1960,385 @@ You opened and merged a real pull request on GitHub, then deliberately caused, a
    ]
   },
   {
-   "kind": "list",
-   "art": "chat",
-   "kicker": "Concept",
-   "title": "Two ideas",
-   "items": [
-    [
-     "Pull request",
-     "Propose, discuss, then merge"
-    ],
-    [
-     "Merge conflict",
-     "Same lines changed two ways. You decide."
-    ]
-   ],
-   "beats": [
-    {
-     "say": "A pull request is a request to merge one branch into another, usually main,",
-     "show": 1
-    },
-    {
-     "say": "with space to discuss and review the change before it's combined.",
-     "show": 1
-    },
-    {
-     "say": "A merge conflict happens when two branches change the same lines in different ways.",
-     "show": 2
-    },
-    {
-     "say": "Git can't decide which to keep, so it asks you. That's normal, not a sign something went wrong.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "cloud",
+   "kind": "diagram",
    "kicker": "Lab · Steps 1 to 3",
-   "title": "Your first pull request",
-   "steps": [
-    "Open the pull request",
-    "Merge on GitHub",
-    "git checkout main, git pull",
-    "Desserts in main"
+   "title": "A pull request carries a branch into main",
+   "nodes": [
+    {
+     "id": "br",
+     "label": "add-dessert-section",
+     "x": 12,
+     "y": 25,
+     "sub": "your branch on GitHub",
+     "art": "fork"
+    },
+    {
+     "id": "pr",
+     "label": "Pull request",
+     "x": 50,
+     "y": 25,
+     "sub": "describe, review, discuss",
+     "art": "chat"
+    },
+    {
+     "id": "gh",
+     "label": "main on GitHub",
+     "x": 88,
+     "y": 25,
+     "sub": "now has desserts",
+     "art": "cloud"
+    },
+    {
+     "id": "me",
+     "label": "main on your computer",
+     "x": 88,
+     "y": 78,
+     "sub": "after git pull",
+     "art": "laptop"
+    }
+   ],
+   "edges": [
+    {
+     "from": "br",
+     "to": "pr"
+    },
+    {
+     "from": "pr",
+     "to": "gh"
+    },
+    {
+     "from": "gh",
+     "to": "me"
+    }
    ],
    "beats": [
     {
-     "say": "On GitHub, open a pull request for your dessert branch, with a short description.",
-     "show": 1
+     "say": "A pull request asks to merge one branch into another, usually main.",
+     "show": 2,
+     "on": "pr"
     },
     {
-     "say": "Click merge pull request.",
-     "show": 2
+     "say": "On GitHub, open one for your dessert branch, with a short description.",
+     "show": 2,
+     "on": "pr",
+     "send": {
+      "from": "br",
+      "to": "pr",
+      "label": "Add desserts section"
+     }
     },
     {
-     "say": "Then on your computer, switch to main and git pull.",
-     "show": 3
+     "say": "Teammates can review and comment here, before anything enters main.",
+     "show": 2,
+     "on": "pr"
     },
     {
-     "say": "The desserts section is now in main.",
-     "show": 4
+     "say": "Click merge pull request. The desserts are now part of main on GitHub.",
+     "show": 3,
+     "on": "gh",
+     "send": {
+      "from": "pr",
+      "to": "gh",
+      "label": "Merge pull request"
+     }
+    },
+    {
+     "say": "Your computer's main hasn't changed yet. Git pull brings the merge down.",
+     "show": 4,
+     "on": "me",
+     "send": {
+      "from": "gh",
+      "to": "me",
+      "label": "git pull"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "warning",
+   "kind": "walk",
+   "kicker": "Lab · Step 3",
+   "title": "Sync your local main",
+   "file": "Terminal",
+   "code": "git checkout main\ngit pull\ncat README.md",
+   "beats": [
+    {
+     "say": "Switch to main.",
+     "line": 1,
+     "out": "Switched to branch 'main'",
+     "vars": {
+      "README.md": "3 lines"
+     }
+    },
+    {
+     "say": "Git pull fetches the merged work from GitHub and moves your main forward.",
+     "line": 2,
+     "out": [
+      "Fast-forward",
+      " README.md | 2 ++",
+      " 1 file changed, 2 insertions(+)"
+     ],
+     "vars": {
+      "README.md": "5 lines"
+     }
+    },
+    {
+     "say": "Cat shows the desserts section, here on main.",
+     "line": 3,
+     "out": [
+      "# Recipe Notes",
+      "## Pasta Carbonara",
+      "## Tomato Soup",
+      "## Desserts",
+      "### Tiramisu"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Lab · Steps 4 and 5",
-   "title": "Cause a conflict on purpose",
-   "steps": [
-    "Branch A: My Favorite Recipes",
-    "Branch B: Kitchen Notebook",
-    "Merge both",
-    "Conflict!"
+   "title": "Two branches change the same line",
+   "nodes": [
+    {
+     "id": "base",
+     "label": "main",
+     "x": 10,
+     "y": 50,
+     "sub": "# Recipe Notes",
+     "art": "flag"
+    },
+    {
+     "id": "a",
+     "label": "edit-title-a",
+     "x": 38,
+     "y": 18,
+     "sub": "# My Favorite Recipes",
+     "art": "fork"
+    },
+    {
+     "id": "b",
+     "label": "edit-title-b",
+     "x": 38,
+     "y": 82,
+     "sub": "# Kitchen Notebook",
+     "art": "fork"
+    },
+    {
+     "id": "m",
+     "label": "main",
+     "x": 64,
+     "y": 18,
+     "sub": "after pull request merge",
+     "art": "merge"
+    },
+    {
+     "id": "x",
+     "label": "Conflict",
+     "x": 90,
+     "y": 50,
+     "sub": "line 1 changed two ways",
+     "art": "warning"
+    }
+   ],
+   "edges": [
+    {
+     "from": "base",
+     "to": "a"
+    },
+    {
+     "from": "base",
+     "to": "b"
+    },
+    {
+     "from": "a",
+     "to": "m"
+    },
+    {
+     "from": "m",
+     "to": "x"
+    },
+    {
+     "from": "b",
+     "to": "x"
+    }
    ],
    "beats": [
     {
-     "say": "Now, make a conflict on purpose.",
-     "show": 0
+     "say": "Now make a conflict on purpose. Start from main, where line one is Recipe Notes.",
+     "show": 1,
+     "on": "base"
     },
     {
-     "say": "On one branch, change the title to My Favorite Recipes.",
-     "show": 1
+     "say": "On branch edit title a, change line one to My Favorite Recipes. Commit and push.",
+     "show": 2,
+     "on": "a",
+     "send": {
+      "from": "base",
+      "to": "a",
+      "label": "line 1 → My Favorite Recipes"
+     }
     },
     {
-     "say": "On a second branch, change the same line to Kitchen Notebook.",
-     "show": 2
+     "say": "Go back to main, and on branch edit title b, change the same line to Kitchen Notebook.",
+     "show": 3,
+     "on": "b",
+     "send": {
+      "from": "base",
+      "to": "b",
+      "label": "line 1 → Kitchen Notebook"
+     }
     },
     {
-     "say": "Merge the first through GitHub, then merge the second on your computer.",
-     "show": 3
+     "say": "Merge branch a through GitHub, just like before. Main's title is now My Favorite Recipes.",
+     "show": 4,
+     "on": "m",
+     "send": {
+      "from": "a",
+      "to": "m",
+      "label": "Merge pull request"
+     }
     },
     {
-     "say": "Git reports a conflict on line one.",
-     "show": 4
+     "say": "Now pull, and merge branch b into main on your computer.",
+     "show": 5,
+     "on": "x",
+     "send": {
+      "from": "b",
+      "to": "x",
+      "label": "git merge edit-title-b"
+     }
+    },
+    {
+     "say": "Both sides changed line one, in different ways. Git can't choose, so it stops and asks you.",
+     "show": 5,
+     "on": [
+      "m",
+      "b",
+      "x"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
+   "kind": "walk",
+   "kicker": "Lab · Step 5",
+   "title": "Git reports the conflict",
+   "file": "Terminal",
+   "code": "git checkout main\ngit pull\ngit merge edit-title-b\ngit status",
+   "beats": [
+    {
+     "say": "Switch to main and pull, so you have the merged My Favorite Recipes title.",
+     "line": [
+      1,
+      2
+     ],
+     "out": [
+      "Fast-forward",
+      " README.md | 2 +-"
+     ]
+    },
+    {
+     "say": "Now merge edit title b.",
+     "line": 3,
+     "out": [
+      "Auto-merging README.md",
+      "CONFLICT (content): Merge conflict in README.md",
+      "Automatic merge failed; fix conflicts and then commit the result."
+     ]
+    },
+    {
+     "say": "Git status names the file that needs you: both modified, README.",
+     "line": 4,
+     "out": [
+      "You have unmerged paths.",
+      "        both modified:   README.md"
+     ]
+    },
+    {
+     "say": "Nothing is broken. Git paused the merge, and is waiting for your decision.",
+     "line": 3
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Lab · Reading the markers",
    "title": "What a conflict looks like",
    "file": "README.md",
-   "code": "<<<<<<< HEAD\n# My Favorite Recipes\n=======\n# Kitchen Notebook\n>>>>>>> edit-title-b",
+   "code": "<<<<<<< HEAD\n# My Favorite Recipes\n=======\n# Kitchen Notebook\n>>>>>>> edit-title-b\n## Pasta Carbonara\n## Tomato Soup\n## Desserts\n### Tiramisu",
    "beats": [
     {
-     "say": "Open the file, and you'll see markers.",
-     "show": 0
+     "say": "Open the README, and Git has written both versions into it, with markers.",
+     "line": [
+      1,
+      5
+     ]
     },
     {
-     "say": "Everything between the arrows pointing left and the equals signs is your current version.",
-     "show": 1
+     "say": "From the arrows pointing left to the equals signs is your current branch, main. HEAD.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "Between the equals signs and the arrows pointing right is the incoming one.",
-     "show": 1
+     "say": "From the equals signs to the arrows pointing right is the incoming branch, edit title b.",
+     "line": [
+      3,
+      5
+     ]
     },
     {
-     "say": "Keep one version, or write a new one, and delete all the markers.",
-     "show": 1
+     "say": "The rest of the file had no clash, so Git merged it on its own.",
+     "line": [
+      6,
+      9
+     ]
+    },
+    {
+     "say": "Keep one title, or write a new one, and delete all three marker lines.",
+     "line": 2,
+     "vars": {
+      "line 1 after editing": "# My Favorite Recipes"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "walk",
    "kicker": "Lab · Step 6",
    "title": "Finish the merge",
    "file": "Terminal",
-   "code": "git add README.md\ngit commit -m \"Resolve title conflict, keep My Favorite Recipes\"\ngit push",
+   "code": "# after editing README.md to keep one title line\ngit add README.md\ngit status\ngit commit -m \"Resolve title conflict, keep My Favorite Recipes\"\ngit push",
    "beats": [
     {
-     "say": "Once the file looks right, finish with two commands.",
-     "show": 0
+     "say": "Once the file looks right, git add marks the conflict as resolved.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "Git add the resolved file, then git commit. Then push.",
-     "show": 1
+     "say": "Status confirms it, and reminds you the merge isn't finished yet.",
+     "line": 3,
+     "out": [
+      "All conflicts fixed but you are still merging.",
+      "  (use \"git commit\" to conclude merge)"
+     ]
+    },
+    {
+     "say": "Git commit concludes the merge, with a message saying what you kept.",
+     "line": 4,
+     "out": "[main b3fb7d2] Resolve title conflict, keep My Favorite Recipes"
+    },
+    {
+     "say": "And git push shares the resolved main on GitHub.",
+     "line": 5,
+     "out": "   139e5d4..b3fb7d2  main -> main"
     },
     {
      "say": "That's it. You've resolved your first merge conflict.",
-     "show": 1
+     "line": 4
     }
    ]
   },
