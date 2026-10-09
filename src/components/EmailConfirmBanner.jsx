@@ -21,7 +21,7 @@ import {
 
 const CHECK_EVERY_MS = 60 * 1000;
 
-const EmailConfirmBanner = () => {
+const EmailConfirmBanner = ({ className = '' }) => {
   const { currentUser, resendVerification } = useAuth();
   const [profile, setProfile] = useState(null);
   const [confirmed, setConfirmed] = useState(!!currentUser?.emailVerified);
@@ -111,7 +111,7 @@ const EmailConfirmBanner = () => {
   };
 
   return (
-    <div role="status" className="mb-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 sm:flex sm:items-center sm:gap-4">
+    <div role="status" className={`mb-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 sm:flex sm:items-center sm:gap-4 ${className}`}>
       <div className="flex-1 min-w-0">
         <p className="m-0 text-sm font-semibold text-gray-900">Confirm your email to post, message and apply.</p>
         <p className="m-0 mt-0.5 text-sm text-gray-700 break-words">

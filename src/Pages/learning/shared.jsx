@@ -13,6 +13,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { deleteField, doc, getDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
+import { useInAppShell } from '../../components/AppShell';
 import { db } from '../../firebase/config';
 import { coursesForTrack, trackMeta } from '../../utils/foundationsCourses';
 import { renderCourse } from '../../utils/renderCourseMarkdown';
@@ -457,6 +458,9 @@ const ModeSwitch = ({ mode, onChange }) => (
 );
 
 export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, onOpen, onCertificate }) => {
+  // Inside the member app frame the top bar is 72px and phones have a 60px
+  // bottom menu, so the player's height is worked out for that.
+  const inAppShell = useInAppShell();
   // Videos available for this course: [{ num, title, script }] in course order.
   const [scripts, setScripts] = useState(null);
   const [mode, setMode] = useState('read');
@@ -501,7 +505,7 @@ export const InteractivePlayer = ({ course, isDone, onBack, onComplete, next, on
   const nameOf = (i) => (scripts && scripts[i] ? `Module ${scripts[i].num}${scripts[i].title ? `: ${scripts[i].title}` : ''}` : '');
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]">
+    <div className={`flex flex-col ${inAppShell ? 'h-[calc(100dvh-4rem-60px)] sm:h-[calc(100dvh-4.5rem-60px)] lg:h-[calc(100dvh-4.5rem)]' : 'h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)]'}`}>
       <style>{'.wp-switch{display:inline-flex;background:#fff;border:1px solid #E5E7EB;border-radius:999px;padding:4px;gap:4px}.wp-switch button:focus-visible{outline:3px solid #D41470;outline-offset:2px}'}</style>
       <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-2.5 border-b border-gray-200 bg-white">
         <button onClick={onBack} className="fd-back">

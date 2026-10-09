@@ -12,7 +12,7 @@ import EmailConfirmBanner from './EmailConfirmBanner';
 import TopBarIcons from './TopBarIcons';
 import { ADMIN_SECTIONS } from '../config/adminSections';
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({ children, flush = false }) => {
   const { currentUser } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -414,9 +414,9 @@ const AppLayout = ({ children }) => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 min-w-0 px-4 pt-4 pb-24 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8 lg:pb-8">
+        <main className={flush ? 'flex-1 min-w-0 pb-24 lg:pb-0' : 'flex-1 min-w-0 px-4 pt-4 pb-24 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8 lg:pb-8'}>
           {/* New email/password accounts: confirm the email to post, message and apply. */}
-          <EmailConfirmBanner />
+          <EmailConfirmBanner className={flush ? 'mx-4 mt-4 sm:mx-6 lg:mx-8' : ''} />
           {children}
         </main>
       </div>

@@ -4,6 +4,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import SocialLinks from './SocialLinks';
+import { useInAppShell } from './AppShell';
 
 export const FOOTER_LINKS = [
   ['/team', 'Team'],
@@ -13,7 +14,7 @@ export const FOOTER_LINKS = [
   ['/privacy', 'Privacy'],
 ];
 
-const Footer = ({ dark = false }) => (
+const PublicFooter = ({ dark = false }) => (
   <footer className={`border-t ${dark ? 'border-gray-800 bg-gray-950' : 'border-gray-200 bg-white'} py-8`}>
     <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
       <Link to="/" aria-label="She Model Tech home">
@@ -33,5 +34,9 @@ const Footer = ({ dark = false }) => (
     </div>
   </footer>
 );
+
+// Inside the signed-in app frame (sidebar + top bar) pages don't show the
+// public site footer, so every member page looks the same.
+const Footer = (props) => (useInAppShell() ? null : <PublicFooter {...props} />);
 
 export default Footer;

@@ -179,6 +179,15 @@ const ProjectsRoute = () => {
   );
 };
 
+// Public pages that signed-in members also use (Events): members see them
+// inside the app frame like every other member page; visitors get the
+// public look.
+const MemberFrame = ({ children }) => {
+  const { currentUser, loading } = useAuth();
+  if (loading) return null;
+  return currentUser ? <AppShell flush>{children}</AppShell> : children;
+};
+
 const SidebarRoute = ({ children }) => (
   <BasicProtectedRoute>
     <AppShell>{children}</AppShell>
@@ -245,8 +254,8 @@ function App() {
                 <Route path="/team" element={<Team />} />
                 {/* She Model Tech doesn't offer training programs: these pages are retired. */}
                 <Route path="/organizations" element={<Navigate to="/" replace />} />
-                <Route path="/events" element={<Events />} />
-                <Route path="/events/:id" element={<EventDetail />} />
+                <Route path="/events" element={<MemberFrame><Events /></MemberFrame>} />
+                <Route path="/events/:id" element={<MemberFrame><EventDetail /></MemberFrame>} />
                 <Route path="/summit" element={<Navigate to="/events" replace />} />
                 <Route path="/support-our-mission" element={<SupportMission />} />
                 {/* Project proposals are closed: projects come from She Model Tech cohorts. */}

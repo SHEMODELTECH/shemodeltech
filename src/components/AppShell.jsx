@@ -6,10 +6,12 @@ import AppLayout from './AppLayout';
 export const AppShellContext = createContext(false);
 export const useInAppShell = () => useContext(AppShellContext);
 
-const AppShell = ({ children }) => {
+// flush: no page padding, for pages that lay out their own full-width
+// sections (Learning, Events).
+const AppShell = ({ children, flush = false }) => {
   return (
     <AppShellContext.Provider value={true}>
-      <AppLayout>
+      <AppLayout flush={flush}>
         {children}
       </AppLayout>
     </AppShellContext.Provider>

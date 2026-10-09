@@ -10,6 +10,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase/config';
 import { FD_CSS } from './shared';
 import Footer from '../../components/Footer';
+import AppShell from '../../components/AppShell';
 
 // Remember where to come back to after signing in (read by afterAuthPath).
 export const signInAndReturn = (navigate, path) => {
@@ -88,6 +89,37 @@ const LearningLayout = ({ children, accent, bare = false }) => {
       Sign in
     </button>
   );
+
+  // Signed-in members: Learning opens inside the same app frame (sidebar and
+  // top bar) as every other member page, with a small tab row for the links
+  // the public Learning header used to carry. Visitors keep the public header.
+  if (currentUser) {
+    const tabs = [
+      { to: '/learning', label: 'All courses', active: onLearning },
+      { to: '/learning/my', label: 'My learning' },
+      canTeach ? { to: '/teacher', label: 'Mentor Hub' } : { to: '/teach', label: 'Become a mentor' },
+    ];
+    const tabCls = ({ isActive }) =>
+      `whitespace-nowrap px-1 py-3 text-sm sm:text-base font-semibold border-b-2 transition-colors ${
+        isActive ? 'text-pink-600 border-pink-600' : 'text-gray-600 border-transparent hover:text-pink-600'
+      }`;
+    return (
+      <AppShell flush>
+        <div className="fd-root bg-white" style={accent ? { '--acc': accent.accent, '--tint': accent.tint } : undefined}>
+          <style>{FD_CSS}</style>
+          {/* Course reading view (bare) has its own Back button: no tab row. */}
+          {!bare && <nav aria-label="Learning" className="border-b border-gray-200 bg-white">
+            <div className="container mx-auto px-3 xs:px-4 sm:px-6 max-w-7xl flex gap-5 sm:gap-7 overflow-x-auto">
+              {tabs.map((it) => (
+                <NavLink key={it.to} to={it.to} end={it.to === '/learning'} className={(a) => tabCls({ isActive: it.active ?? a.isActive })}>{it.label}</NavLink>
+              ))}
+            </div>
+          </nav>}
+          {children}
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <div className="fd-root min-h-screen bg-white" style={accent ? { '--acc': accent.accent, '--tint': accent.tint } : undefined}>
