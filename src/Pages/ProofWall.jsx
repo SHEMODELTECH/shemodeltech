@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import { uploadImageToBlob, validateImageFile } from '../utils/blobStorage';
 import { MentionTextarea } from '../components/MentionTextarea';
 import UpdateActions from '../components/UpdateActions';
+import FeaturedMentor from '../components/FeaturedMentor';
 import EmojiPicker from '../components/EmojiPicker';
 import ReportButton from '../components/ReportButton';
 import WallActions, { WallStats, useWallView } from '../components/WallActions';
@@ -1490,6 +1491,7 @@ const ProofWall = () => {
           <a href="/talent-board" className="block text-sm font-semibold text-pink-700 hover:underline">See the Talent Board</a>
         </div>
       </div>
+      <FeaturedMentor />
     </aside>
     </div>
   );

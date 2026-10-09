@@ -1,17 +1,16 @@
 // src/Pages/learning/LearningHome.jsx
-// The course catalog at /learning: search, filters, a "Continue learning" row
-// for enrolled members, and every course as a card in a grid, grouped by track.
+// The course catalog at /learning: search, filters (levels, "From mentors",
+// tracks), and every course as a card in a grid, grouped by track. In-progress
+// courses are in My learning; mentors are spotlighted on the Proof Wall.
 // Also serves /learning/my ("My learning"): only the member's enrolled courses.
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import LearningLayout, { signInAndReturn } from './LearningLayout';
 import { CheckIcon, TRACK_ORDER, certificateErrorToast, coursePartTitles, formatTime, look, useLearning } from './shared';
 import { coursesForTrack, loadCourseMarkdown, trackMeta, tracksWithCourses } from '../../utils/foundationsCourses';
 import { listPublished, toCatalogCourse } from '../../utils/learningPublished';
 import { getPublicCourseStats, showPublicStats, short, statsFor } from '../../utils/courseStats';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../firebase/config';
 import MentorCourseStaffTools from '../../components/MentorCourseStaffTools';
 import BuiltInCourseStaffTools, { useCourseOverridesVersion } from '../../components/BuiltInCourseStaffTools';
 import { useStaffRole } from '../../components/MentorCourseStaffTools';
@@ -98,9 +97,9 @@ const LearningHome = ({ mine = false }) => {
   const lr = useLearning();
   const overridesVersion = useCourseOverridesVersion(); // staff edits to built-in courses
   const staffRole = useStaffRole();
-  // Profile photos for mentors whose courses were published before photos were saved on them.
-  const [authorPhotos, setAuthorPhotos] = useState({});
-  const [query, setQuery] = useState('');
+  // ?q= opens the catalog already searched (e.g. "See her courses" on the Proof Wall).
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(() => searchParams.get('q') || '');
   const [track, setTrack] = useState('all');
   const [level, setLevel] = useState('all');
 
@@ -108,25 +107,7 @@ const LearningHome = ({ mine = false }) => {
   const [published, setPublished] = useState([]);
   useEffect(() => {
     listPublished()
-      .then(async (list) => {
-        const courses = list.map(toCatalogCourse);
-        setPublished(courses);
-        const missing = [...new Set(courses.filter((c) => c.authorUid && !c.authorPhotoURL).map((c) => c.authorUid))];
-        if (missing.length) {
-          const found = {};
-          await Promise.all(
-            missing.map(async (uid) => {
-              try {
-                const u = await getDoc(doc(db, 'users', uid));
-                if (u.exists() && u.data().photoURL) found[uid] = u.data().photoURL;
-              } catch (_) {
-                /* profiles are readable when signed in */
-              }
-            })
-          );
-          setAuthorPhotos(found);
-        }
-      })
+      .then((list) => setPublished(list.map(toCatalogCourse)))
       .catch(() => setPublished([]));
   }, []);
 
@@ -156,8 +137,6 @@ const LearningHome = ({ mine = false }) => {
     const n = c.partCount || coursePartTitles(c).length || 1;
     return Math.min(1, (lr.lastPartOf(c.track, c.slug) - 1) / n);
   };
-
-  const inProgress = all.filter((c) => statusOf(c) === 'enrolled');
 
   // Course text (for searching inside courses) is downloaded only once someone
   // searches; until then, search covers titles, summaries, and module titles.
@@ -291,6 +270,15 @@ const LearningHome = ({ mine = false }) => {
             <div className="lr-chips" role="group" aria-label="Level">
               {chip('all', 'All levels')}
               {LEVELS.map((l) => chip(l, l))}
+              {!mine && published.length > 0 && (
+                <button
+                  onClick={() => setTrack((t) => (t === 'mentors' ? 'all' : 'mentors'))}
+                  aria-pressed={track === 'mentors'}
+                  className={`lr-chip ${track === 'mentors' ? 'is-active' : ''}`}
+                >
+                  From mentors
+                </button>
+              )}
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               {mine && (
@@ -322,107 +310,10 @@ const LearningHome = ({ mine = false }) => {
           </div>
         </section>
 
-        {/* Continue learning */}
-        {!mine && lr.signedIn && inProgress.length > 0 && !q && (
-          <section className="pt-10" aria-labelledby="continue-h">
-            <h2 id="continue-h" className="text-xl font-bold text-gray-900 mb-4">Continue learning</h2>
-            <div className="lr-grid">
-              {inProgress.slice(0, 4).map((c) => (
-                <CourseCard key={c.track + c.slug} course={c} status="enrolled" progress={progressOf(c)} />
-              ))}
-            </div>
-          </section>
+        {/* Mentor courses (the "From mentors" chip): say what they are. */}
+        {!mine && track === 'mentors' && (
+          <p className="pt-4 text-sm text-gray-600">Courses created by She Model Tech mentors and approved by our team.</p>
         )}
-
-        {/* From our mentors: newest mentor-created courses, so learners notice them */}
-        {!mine && !q && track === 'all' && level === 'all' && published.length > 0 && (
-          <section className="pt-10" aria-labelledby="mentors-h">
-            <div className="lr-mentor-band">
-              <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-pink-700">New in Learning</p>
-                  <h2 id="mentors-h" className="text-xl font-bold text-gray-900 mt-1">From our mentors</h2>
-                  <p className="text-sm text-gray-600 mt-1 max-w-2xl">
-                    Courses created by She Model Tech mentors and approved by our team.
-                  </p>
-                </div>
-                {published.length > 3 && (
-                  <button onClick={() => setTrack('mentors')} className="text-sm font-semibold text-pink-700 hover:underline">
-                    See all {published.length}
-                  </button>
-                )}
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {[...published]
-                  .sort((a, b) => (b.publishedAtMs || 0) - (a.publishedAtMs || 0))
-                  .slice(0, 3)
-                  .map((c) => (
-                    <div key={c.track + c.slug}><CourseCard course={c} status={statusOf(c)} progress={progressOf(c)} /><MentorCourseStaffTools course={c} onRemoved={(x) => setPublished((ps) => ps.filter((y) => y.publishedId !== x.publishedId))} /><BuiltInCourseStaffTools course={c} track={c.track} /></div>
-                  ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Featured instructors: every mentor with a published course (free for mentors) */}
-        {!mine && !q && track === 'all' && level === 'all' && published.length > 0 && (() => {
-          const byAuthor = {};
-          published.forEach((c) => {
-            if (!c.authorName) return;
-            const key = c.authorUid || c.authorName;
-            const a = byAuthor[key] || (byAuthor[key] = { key, uid: c.authorUid, name: c.authorName, photo: c.authorPhotoURL || null, courses: [], ratingSum: 0, ratingCount: 0 });
-            a.courses.push(c);
-            if (!a.photo && c.authorPhotoURL) a.photo = c.authorPhotoURL;
-            const st = statsFor(publicStats, c.track, c.slug);
-            if (st?.ratingCount) {
-              a.ratingSum += st.ratingAvg * st.ratingCount;
-              a.ratingCount += st.ratingCount;
-            }
-          });
-          const authors = Object.values(byAuthor).sort((x, y) => y.ratingCount - x.ratingCount || y.courses.length - x.courses.length);
-          if (!authors.length) return null;
-          return (
-            <section className="pt-8" aria-labelledby="instructors-h">
-              <div className="flex items-baseline justify-between gap-3 mb-3">
-                <h2 id="instructors-h" className="text-lg font-bold text-gray-900">Featured instructors</h2>
-                <p className="text-xs text-gray-500 hidden sm:block">Tap a mentor to see her courses</p>
-              </div>
-              <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1" role="list">
-                {authors.map((a) => {
-                  const photo = a.photo || authorPhotos[a.uid];
-                  const avg = a.ratingCount ? a.ratingSum / a.ratingCount : 0;
-                  return (
-                    <button
-                      key={a.key}
-                      type="button"
-                      role="listitem"
-                      onClick={() => {
-                        setQuery(a.name);
-                        try { document.getElementById('lr-filters')?.scrollIntoView({ behavior: 'smooth' }); } catch (_) { /* ignore */ }
-                      }}
-                      className="flex-shrink-0 flex items-center gap-3 bg-white border border-pink-100 hover:border-pink-300 rounded-xl pl-2 pr-4 py-2 text-left transition-colors"
-                    >
-                      {photo ? (
-                        <img src={photo} alt="" className="w-10 h-10 rounded-full object-cover border border-pink-100" />
-                      ) : (
-                        <span className="w-10 h-10 rounded-full bg-pink-600 text-white font-bold flex items-center justify-center" aria-hidden="true">
-                          {a.name[0]}
-                        </span>
-                      )}
-                      <span className="min-w-0">
-                        <span className="block text-sm font-semibold text-gray-900 truncate max-w-[11rem]">{a.name}</span>
-                        <span className="block text-xs text-gray-500">
-                          {a.courses.length} course{a.courses.length === 1 ? '' : 's'}
-                          {a.ratingCount ? <> · <span className="text-pink-600" aria-hidden="true">★</span> {avg.toFixed(1)}<span className="sr-only">{` rated ${avg.toFixed(1)} out of 5`}</span></> : null}
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })()}
 
         {/* Courses */}
         {mine && lr.loading ? (
@@ -580,7 +471,6 @@ export const LR_CSS = `
 .lr-mentor-tag { display:inline-flex; align-items:center; gap:.35rem; font-size:.68rem; font-weight:800; letter-spacing:.02em;
   color:#B0105C; background:#FDF2F7; border:1px solid #F9C6DD; padding:.12rem .5rem; border-radius:999px; }
 .lr-new { color:#fff; background:#D41470; border-radius:999px; padding:0 .4rem; font-size:.62rem; }
-.lr-mentor-band { background:linear-gradient(135deg,#F5F5F5 0%,#FDF2F7 100%); border:1px solid #F9C6DD; border-radius:1.25rem; padding:1.25rem; }
 .lr-inter { font-weight:700; color:var(--c); background:var(--t); padding:.1rem .45rem; border-radius:999px; }
 .lr-chips { display:flex; gap:.5rem; overflow-x:auto; scrollbar-width:none; padding-bottom:.25rem; }
 .lr-chips::-webkit-scrollbar { display:none; }
