@@ -192,7 +192,8 @@ const TalentBoard = () => {
           </div>
         )}
 
-        {/* Search and Filter */}
+        {/* Search and Filter (once there's someone to find) */}
+        {(loading || talents.length > 0) && (
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <input
             type="text"
@@ -210,14 +211,27 @@ const TalentBoard = () => {
             <option value="mentors">Mentors</option>
           </select>
         </div>
+        )}
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div>
           </div>
+        ) : talents.length === 0 ? (
+          <div className="text-center py-12 px-4 border border-dashed border-gray-300 rounded-2xl">
+            <p className="text-gray-900 font-semibold mb-1">The Talent Board is just getting started</p>
+            <p className="text-gray-600 text-sm max-w-md mx-auto mb-5">
+              Members appear here once they earn a badge on a She Model Tech project, so companies can see verified work.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <Link to="/projects" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Find a project</Link>
+              <Link to="/badges" className="text-sm font-semibold border border-gray-300 hover:bg-gray-50 text-gray-800 px-4 py-2 rounded-lg">How badges work</Link>
+            </div>
+          </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-gray-400 text-sm">No talent found matching your criteria.</p>
+            <p className="text-gray-700 text-sm mb-3">No one matches that search.</p>
+            <button onClick={() => { setSearchTerm(''); setFilterBadge(''); }} className="text-sm font-semibold text-pink-700 hover:underline">Clear filters</button>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">

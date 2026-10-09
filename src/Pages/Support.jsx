@@ -30,7 +30,8 @@ const Support = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
-  const [openFaq, setOpenFaq] = useState(null);
+  const [openFaq, setOpenFaq] = useState(null); // the open question's text
+  const [faqSearch, setFaqSearch] = useState('');
 
   const handleChange = (field) => (e) => setForm((p) => ({ ...p, [field]: e.target.value }));
 
@@ -135,6 +136,52 @@ const Support = () => {
     },
   ];
 
+  // The questions, grouped so they're quick to scan. Search looks through
+  // every question and answer.
+  const FAQ_GROUPS = [
+    ['Getting started', ['What is She Model Tech?', 'How does it work?', 'Is She Model Tech free to use?', 'I am new to tech - where do I start?']],
+    ['Projects', ['How do projects work?', 'Does She Model Tech have paid projects?', 'What does a project lead need to provide?', 'What resources should a project lead set up?', 'How does the project approval process work?', 'What makes a strong final project submission?']],
+    ['Badges, Proof Wall & Talent Board', ['How are badges earned, and how do levels work?', 'What are the 6 TechTalent Badges?', 'Do project owners earn badges too?', 'How do badges and Top Talent visibility work together?', 'How do I get the most out of the Proof Wall?', 'What is the Talent Board?']],
+    ['Account & safety', ['Can I control who sees my email?', 'Are companies on She Model Tech verified?', 'How do I report inappropriate content or users?', 'Is my data safe?']],
+  ];
+  const grouped = new Set(FAQ_GROUPS.flatMap(([, qs]) => qs));
+  const leftover = faqs.filter((f) => !grouped.has(f.q)).map((f) => f.q);
+  const groups = FAQ_GROUPS.map(([title, qs]) => [title, qs.map((q) => faqs.find((f) => f.q === q)).filter(Boolean)]);
+  if (leftover.length) groups.push(['More questions', leftover.map((q) => faqs.find((f) => f.q === q))]);
+  const words = faqSearch.toLowerCase().split(/\s+/).filter(Boolean);
+  const matches = words.length
+    ? faqs.filter((f) => words.every((w) => `${f.q} ${f.a}`.toLowerCase().includes(w)))
+    : null;
+  const toContact = () => {
+    try { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); } catch (_) { /* ignore */ }
+  };
+
+  const faqItem = (faq) => (
+    <div key={faq.q} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <button
+        onClick={() => setOpenFaq(openFaq === faq.q ? null : faq.q)}
+        aria-expanded={openFaq === faq.q}
+        className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+      >
+        <span className="text-gray-900 text-sm font-medium pr-4">{faq.q}</span>
+        <svg
+          className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${openFaq === faq.q ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {openFaq === faq.q && (
+        <div className="px-4 pb-4">
+          <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
+        </div>
+      )}
+    </div>
+  );
+
   const inputClass =
     'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-all';
 
@@ -145,57 +192,62 @@ const Support = () => {
       <p className="text-gray-500 text-sm mb-8">Find answers or contact us.</p>
 
       {/* Direct contact - open to every member */}
-      <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-8">
-        <p className="text-gray-900 text-sm font-semibold">Email us directly</p>
-        <p className="text-gray-600 text-xs">
-          Every member can reach the team at{' '}
-          <a
-            href={`mailto:${BRAND.supportEmail}`}
-            className="text-pink-600 font-medium hover:underline"
-          >
-            {BRAND.supportEmail}
-          </a>
-          , or use the form below.
-        </p>
+      <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <p className="text-gray-900 text-sm font-semibold">Can't find your answer?</p>
+          <p className="text-gray-600 text-xs">
+            Email the team at{' '}
+            <a href={`mailto:${BRAND.supportEmail}`} className="text-pink-600 font-medium hover:underline">
+              {BRAND.supportEmail}
+            </a>
+            , or send us a message.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={toContact}
+          className="flex-shrink-0 text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg"
+        >
+          Contact us
+        </button>
       </div>
 
       {/* FAQ */}
       <div className="mb-10">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-        <div className="space-y-2">
-          {faqs.map((faq, i) => (
-            <div key={i} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-              <button
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
-              >
-                <span className="text-gray-900 text-sm font-medium pr-4">{faq.q}</span>
-                <svg
-                  className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {openFaq === i && (
-                <div className="px-4 pb-4">
-                  <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
-                </div>
-              )}
-            </div>
-          ))}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-lg font-bold text-gray-900">Frequently Asked Questions</h2>
+          <input
+            type="search"
+            value={faqSearch}
+            onChange={(e) => setFaqSearch(e.target.value)}
+            placeholder="Search questions"
+            aria-label="Search questions"
+            className="h-10 sm:w-72 rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+          />
         </div>
+        {matches ? (
+          matches.length ? (
+            <div className="space-y-2">{matches.map(faqItem)}</div>
+          ) : (
+            <p className="text-sm text-gray-600 py-6">
+              No questions match that.{' '}
+              <button type="button" onClick={toContact} className="text-pink-700 font-semibold hover:underline">Ask us directly</button>
+            </p>
+          )
+        ) : (
+          <div className="space-y-8">
+            {groups.map(([title, list]) => (
+              <section key={title} aria-label={title}>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-pink-700 mb-2">{title}</h3>
+                <div className="space-y-2">{list.map(faqItem)}</div>
+              </section>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Contact Form */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6">
+      <div id="contact" className="bg-white border border-gray-200 rounded-xl p-6 scroll-mt-24">
         <h2 className="text-lg font-bold text-gray-900 mb-4">Contact Us</h2>
         {submitted ? (
           <div className="text-center py-8">

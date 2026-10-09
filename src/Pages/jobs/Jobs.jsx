@@ -226,6 +226,8 @@ export const JobsBoard = () => {
         </div>
       )}
 
+      {/* Search and filters only once there are jobs to search. */}
+      {jobs && jobs.length > 0 && (
       <div className="flex flex-wrap gap-2 mb-4">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search jobs" aria-label="Search jobs" className={`${input} flex-1 min-w-[12rem]`} />
         <select value={type} onChange={(e) => setType(e.target.value)} aria-label="Job type" className={input}>
@@ -236,13 +238,25 @@ export const JobsBoard = () => {
           <input type="checkbox" checked={remoteOnly} onChange={(e) => setRemoteOnly(e.target.checked)} /> Remote only
         </label>
       </div>
+      )}
 
       {jobs === null ? (
         <p className="text-gray-500 text-sm">Loading jobs...</p>
+      ) : jobs.length === 0 ? (
+        <div className="border border-dashed border-gray-300 rounded-2xl p-8 text-center">
+          <p className="text-gray-900 font-semibold mb-1">
+            {(features.jobPosting || features.companyTiers) ? 'No open jobs right now' : 'Jobs from hiring companies are coming soon'}
+          </p>
+          <p className="text-gray-600 text-sm max-w-md mx-auto mb-5">
+            Companies look for proof of real work. Build yours on a She Model Tech project, so you're ready when roles open.
+          </p>
+          <Link to="/projects" className="inline-block text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Find a project</Link>
+        </div>
       ) : shown.length === 0 ? (
-        <p className="text-gray-500 text-sm border border-dashed border-gray-300 rounded-xl p-8 text-center">
-          {(features.jobPosting || features.companyTiers) ? 'No open jobs match right now. Check back soon.' : 'Job listings from hiring companies are coming soon. For now, build your proof on She Model Tech projects.'}
-        </p>
+        <div className="border border-dashed border-gray-300 rounded-xl p-8 text-center">
+          <p className="text-gray-700 text-sm mb-3">No jobs match that search.</p>
+          <button onClick={() => { setQ(''); setType('all'); setRemoteOnly(false); }} className="text-sm font-semibold text-pink-700 hover:underline">Clear filters</button>
+        </div>
       ) : (
         <div className="grid gap-3">{shown.map((j) => <JobCard key={j.id} j={j} />)}</div>
       )}

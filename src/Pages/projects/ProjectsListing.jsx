@@ -23,6 +23,7 @@ import AIRecommendations from '../../components/AIRecommendations';
 import { useFeatures } from '../../utils/features';
 import { ShareDialogButton, shareUrl } from '../../components/ShareButtons';
 import { COMPANY_COHORTS_ENABLED } from '../../config/companyAccess';
+import { useCollapsed } from '../../components/CollapseToggle';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -261,6 +262,12 @@ const ProjectsListing = () => {
     setFilters({ industryTrack: '', timeline: '', payType: '' });
   };
 
+  // "How projects work here" can be hidden once read (remembered on this device).
+  const [introHidden, toggleIntro] = useCollapsed('projects-intro', currentUser?.uid);
+  const filtering = !!(searchQuery || filters.industryTrack || filters.timeline || filters.payType);
+  // Members have the Projects tabs above, so the big heading would repeat them.
+  const showHeading = !!myProfile?.isCompany;
+
   const selectClass =
     'bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 min-h-[44px] text-gray-900 text-sm focus:border-pink-500 focus:outline-none transition-all appearance-none';
 
@@ -268,40 +275,53 @@ const ProjectsListing = () => {
     <>
       <div className="min-h-screen overflow-x-hidden " style={{ backgroundColor: '#ffffff' }}>
         <main className="pb-16 sm:pb-20">
-          <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
+          <div className="mx-auto max-w-6xl">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div>
-                <h1
-                  className="text-2xl sm:text-3xl font-black text-gray-900"
-                  style={{ fontFamily: '"Inter", sans-serif' }}
-                >
-                  <span className="text-gray-900">Projects</span>
-                </h1>
-                <p className="text-gray-400 text-sm mt-1">
-                  {filteredProjects.length} active{' '}
-                  {filteredProjects.length === 1 ? 'project' : 'projects'}
+                {showHeading && (
+                  <h1 className="text-2xl sm:text-3xl font-black text-gray-900" style={{ fontFamily: '"Inter", sans-serif' }}>
+                    Projects
+                  </h1>
+                )}
+                <p className={showHeading ? 'text-gray-400 text-sm mt-1' : 'text-gray-500 text-sm'}>
+                  {filteredProjects.length} open {filteredProjects.length === 1 ? 'project' : 'projects'}
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-              </div>
+              {introHidden && (
+                <button type="button" onClick={toggleIntro} className="text-sm font-semibold text-pink-700 hover:underline">
+                  How projects work
+                </button>
+              )}
             </div>
 
             {/* AI-powered project matches: free for every member */}
             {myProfile && !myProfile.isCompany && <AIRecommendations currentUser={currentUser} />}
 
-            {/* How leading works */}
-            <div className="bg-pink-50 border border-pink-200 rounded-2xl p-4 mb-6">
-              <p className="text-gray-800 text-sm font-semibold mb-1">How projects work here</p>
-              <p className="text-gray-600 text-sm">
-                Tap <span className="font-semibold">Join the Project</span> to lead a project or join its
-                team as a contributor. Leads are chosen after a short chat, because a whole team depends on
-                whoever takes it on. As a lead you shape the project, set the roles, and your team
-                builds it with you.
-              </p>
-            </div>
+            {/* How leading works (hideable) */}
+            {!introHidden && (
+              <div className="bg-pink-50 border border-pink-200 rounded-2xl p-4 mb-6 flex items-start gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-800 text-sm font-semibold mb-1">How projects work here</p>
+                  <p className="text-gray-600 text-sm">
+                    Tap <span className="font-semibold">Join the Project</span> to lead a project or join its
+                    team as a contributor. Leads are chosen after a short chat, because a whole team depends on
+                    whoever takes it on. As a lead you shape the project, set the roles, and your team
+                    builds it with you.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={toggleIntro}
+                  className="flex-shrink-0 text-xs font-semibold text-gray-600 hover:text-gray-900 px-2 py-1"
+                >
+                  Got it
+                </button>
+              </div>
+            )}
 
-            {/* Search + Filters */}
+            {/* Search + Filters (once there are projects to search) */}
+            {(loading || projects.length > 0) && (
             <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 mb-6 space-y-3">
               <input
                 type="text"
@@ -346,7 +366,7 @@ const ProjectsListing = () => {
                   <option value="paid">Paid Projects</option>
                   <option value="free">Free (Collaborative) Projects</option>
                 </select>
-                {(searchQuery || filters.industryTrack || filters.timeline || filters.payType) && (
+                {filtering && (
                   <button
                     onClick={clearFilters}
                     className="text-pink-600 hover:text-pink-500 text-xs font-semibold px-3 py-2 transition-colors"
@@ -356,6 +376,7 @@ const ProjectsListing = () => {
                 )}
               </div>
             </div>
+            )}
 
             {/* Loading */}
             {loading && (
@@ -366,10 +387,25 @@ const ProjectsListing = () => {
 
             {/* Empty */}
             {!loading && filteredProjects.length === 0 && (
-              <div className="text-center py-20">
-                <p className="text-gray-400 text-lg font-semibold mb-2">No projects found</p>
-                <p className="text-gray-500 text-sm">Try adjusting your search or filters</p>
-              </div>
+              filtering ? (
+                <div className="text-center py-16">
+                  <p className="text-gray-900 text-lg font-semibold mb-2">No projects match that</p>
+                  <p className="text-gray-500 text-sm mb-4">Try another word, or clear the filters.</p>
+                  <button onClick={clearFilters} className="text-sm font-semibold text-pink-700 hover:underline">Clear filters</button>
+                </div>
+              ) : (
+                <div className="text-center py-16 px-4 border border-dashed border-gray-300 rounded-2xl">
+                  <p className="text-gray-900 text-lg font-semibold mb-2">No open projects right now</p>
+                  <p className="text-gray-600 text-sm max-w-md mx-auto mb-5">
+                    New projects open regularly. In the meantime, see what members have built in the
+                    Project Vault, or take a free course to get ready.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                    <Link to="/project-vault" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">See the Project Vault</Link>
+                    <Link to="/learning" className="text-sm font-semibold border border-gray-300 hover:bg-gray-50 text-gray-800 px-4 py-2 rounded-lg">Browse courses</Link>
+                  </div>
+                </div>
+              )
             )}
 
             {/* Project Cards */}

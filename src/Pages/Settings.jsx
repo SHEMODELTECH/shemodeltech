@@ -310,6 +310,7 @@ const Settings = () => {
               </p>
             </div>
           </div>
+          <h2 className="pt-3 text-xs font-bold uppercase tracking-wider text-pink-700">About you</h2>
           <div>
             <label className={labelCls}>Full Name *</label>
             <input
@@ -335,6 +336,8 @@ const Settings = () => {
               ))}
             </select>
           </div>
+          <h2 className="pt-3 text-xs font-bold uppercase tracking-wider text-pink-700">Education & skills</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelCls}>Highest Level of Education</label>
             <select
@@ -362,6 +365,7 @@ const Settings = () => {
               Your field of study, or area of concentration if in high school.
             </p>
           </div>
+          </div>
           <div>
             <label className={labelCls}>Courses, Certifications &amp; Skills</label>
             <input
@@ -388,6 +392,7 @@ const Settings = () => {
               <option value="expert">Expert</option>
             </select>
           </div>
+          <h2 className="pt-3 text-xs font-bold uppercase tracking-wider text-pink-700">Location</h2>
           <div>
             <label className={labelCls}>Current Country *</label>
             <input
@@ -420,6 +425,7 @@ const Settings = () => {
               />
             </div>
           </div>
+          <h2 className="pt-3 text-xs font-bold uppercase tracking-wider text-pink-700">Interests</h2>
           <div>
             <label className={labelCls}>What are you interested in? *</label>
             <p className="text-xs text-gray-500 mb-2">
@@ -493,6 +499,7 @@ const Settings = () => {
               </div>
             </div>
           )}
+          <h2 className="pt-3 text-xs font-bold uppercase tracking-wider text-pink-700">Links & privacy</h2>
           <div>
             <label className={labelCls}>LinkedIn URL{!profileData?.isCompany ? ' *' : ''}</label>
             <input
@@ -542,13 +549,17 @@ const Settings = () => {
               />
             </button>
           </div>
-          <button
-            onClick={handleSaveProfile}
-            disabled={saving}
-            className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50"
-          >
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
+          {/* Save stays in view while scrolling (above the phone tab bar). */}
+          <div className="sticky z-30 bottom-[calc(60px+env(safe-area-inset-bottom))] lg:bottom-0 -mx-6 -mb-6 px-6 py-3 bg-white/95 backdrop-blur border-t border-gray-200 rounded-b-xl flex items-center justify-between gap-3">
+            <p className="text-xs text-gray-500 hidden sm:block">Changes are saved when you press Save.</p>
+            <button
+              onClick={handleSaveProfile}
+              disabled={saving}
+              className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
         </div>
       )}
 
