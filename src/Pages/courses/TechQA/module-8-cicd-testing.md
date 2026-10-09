@@ -276,246 +276,552 @@ Your workflow saves a JUnit report as an artifact on every run, even when tests 
      "say": "Welcome to Module 8, C I, C D testing."
     },
     {
-     "say": "A pipeline turns your test suite from something a person runs occasionally into something that runs automatically, every time, without being forgotten."
+     "say": "A pipeline runs your tests automatically on every change, so they never get forgotten."
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
+   "kind": "diagram",
    "kicker": "Topic 8.1 · Automated pipelines",
    "title": "From commit to deploy",
-   "steps": [
-    "Commit / PR",
-    "Build",
-    "Test stage",
-    "Quality gate",
-    "Deploy"
+   "nodes": [
+    {
+     "id": "commit",
+     "label": "Commit / PR",
+     "x": 12,
+     "y": 25,
+     "sub": "the trigger",
+     "art": "git"
+    },
+    {
+     "id": "build",
+     "label": "Build",
+     "x": 45,
+     "y": 25,
+     "sub": "install deps",
+     "art": "package"
+    },
+    {
+     "id": "test",
+     "label": "Test stage",
+     "x": 82,
+     "y": 25,
+     "sub": "run the suite",
+     "art": "test"
+    },
+    {
+     "id": "gate",
+     "label": "Quality gate",
+     "x": 68,
+     "y": 78,
+     "sub": "all tests pass?",
+     "art": "shield"
+    },
+    {
+     "id": "deploy",
+     "label": "Deploy",
+     "x": 24,
+     "y": 78,
+     "sub": "release it",
+     "art": "rocket"
+    }
+   ],
+   "edges": [
+    {
+     "from": "commit",
+     "to": "build"
+    },
+    {
+     "from": "build",
+     "to": "test"
+    },
+    {
+     "from": "test",
+     "to": "gate"
+    },
+    {
+     "from": "gate",
+     "to": "deploy"
+    },
+    {
+     "from": "gate",
+     "to": "commit"
+    }
    ],
    "beats": [
     {
-     "say": "C I, continuous integration, builds and tests automatically on every change. C D extends that to preparing or releasing the change.",
-     "show": 0
-    },
-    {
-     "say": "A trigger, like a commit or pull request, starts the pipeline.",
-     "show": 1
-    },
-    {
-     "say": "It builds, installing dependencies.",
-     "show": 2
-    },
-    {
-     "say": "A test stage runs the suite. Separate stages make a failure easy to pinpoint.",
+     "say": "C I builds and tests your code automatically on every change.",
      "show": 3
     },
     {
-     "say": "A quality gate blocks merging or deploying unless the tests pass.",
-     "show": 4
+     "say": "A trigger starts it: a new commit, or a pull request.",
+     "show": 3,
+     "on": "commit",
+     "send": {
+      "from": "commit",
+      "to": "build",
+      "label": "git push"
+     }
     },
     {
-     "say": "Only then does it deploy. And keep it fast, because a slow pipeline gets skipped.",
-     "show": 5
+     "say": "The build installs dependencies.",
+     "show": 3,
+     "on": "build",
+     "send": {
+      "from": "build",
+      "to": "test",
+      "label": "build ok"
+     }
+    },
+    {
+     "say": "The test stage runs the suite. As its own stage, a failure here is easy to pinpoint.",
+     "show": 4,
+     "on": "test",
+     "send": {
+      "from": "test",
+      "to": "gate",
+      "label": "all passed"
+     }
+    },
+    {
+     "say": "The quality gate checks that tests passed. They did, so C D releases the change.",
+     "show": 5,
+     "on": "gate",
+     "send": {
+      "from": "gate",
+      "to": "deploy",
+      "label": "release"
+     }
+    },
+    {
+     "say": "If a test fails, the gate blocks the merge or deploy, and the change goes back.",
+     "show": 5,
+     "on": [
+      "gate",
+      "commit"
+     ],
+     "send": {
+      "from": "gate",
+      "to": "commit",
+      "label": "blocked"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "git",
+   "kind": "walk",
    "kicker": "Topic 8.1 · Lab",
-   "title": "A GitHub Actions workflow",
-   "file": ".github/workflows/test.yml",
+   "title": "Watch the workflow run",
+   "file": "test.yml",
    "code": "on: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - name: Set up Python\n        uses: actions/setup-python@v6\n        with:\n          python-version: '3.12'\n      - name: Install dependencies\n        run: pip install pytest\n      - name: Run tests\n        run: pytest",
    "beats": [
     {
-     "say": "In the lab, start with a tiny Python project: an add function, and a pytest test.",
-     "show": 0
+     "say": "In the lab, add this file at dot github, workflows, test dot y m l."
     },
     {
-     "say": "Add this file at dot github, workflows, test dot y m l.",
-     "show": 1
+     "say": "The trigger: every push and every pull request.",
+     "line": 1,
+     "vars": {
+      "event": "push"
+     }
     },
     {
-     "say": "On every push and pull request, it checks out the code, sets up Python, installs pytest, and runs it.",
-     "show": 1
+     "say": "One job, called test, on a fresh Ubuntu machine.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "event": "push",
+      "runner": "ubuntu-latest"
+     }
+    },
+    {
+     "say": "It checks out your code.",
+     "line": 6
+    },
+    {
+     "say": "Sets up Python three point one two.",
+     "line": [
+      7,
+      10
+     ],
+     "vars": {
+      "python": "3.12"
+     }
+    },
+    {
+     "say": "Then it installs pytest.",
+     "line": [
+      11,
+      12
+     ],
+     "vars": {
+      "pytest": "installed"
+     }
+    },
+    {
+     "say": "And runs pytest. Add two and three is five, so the test passes.",
+     "line": [
+      13,
+      14
+     ],
+     "out": [
+      "test_calculator.py .  [100%]",
+      "1 passed"
+     ]
+    },
+    {
+     "say": "Pytest exits with zero, so the run turns green.",
+     "line": 14,
+     "vars": {
+      "exit code": 0
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "cross",
+   "kind": "table",
    "kicker": "Topic 8.1 · Lab",
-   "title": "Break it, then fix it",
-   "steps": [
-    "Push: green",
-    "Break a test: red",
-    "Trace commit + stage",
-    "Fix: green again"
+   "title": "Break it, trace it, fix it",
+   "columns": [
+    "Run",
+    "Commit",
+    "Failed step",
+    "Result"
+   ],
+   "rows": [
+    [
+     "#1",
+     "a1f3c2e add workflow",
+     "none",
+     "passed"
+    ],
+    [
+     "#2",
+     "7b9d04e break test",
+     "Run tests",
+     "failed"
+    ],
+    [
+     "#3",
+     "c2e8a51 fix test",
+     "none",
+     "passed"
+    ]
    ],
    "beats": [
     {
-     "say": "Push it, and watch it run under the Actions tab.",
-     "show": 1
+     "say": "Each push makes a new run under the Actions tab. Run one passed.",
+     "hl": 0
     },
     {
-     "say": "Then break a test on purpose, and push. The pipeline fails.",
-     "show": 2
+     "say": "Now break the test on purpose: expect six instead of five, and push.",
+     "sql": "assert add(2, 3) == 6",
+     "hl": 1
     },
     {
-     "say": "Pinpoint exactly which commit and which stage caused it.",
-     "show": 3
+     "say": "Run two fails.",
+     "sql": "assert add(2, 3) == 6",
+     "hl": 1,
+     "dim": true,
+     "col": 3
     },
     {
-     "say": "Fix the test, push again, and it goes back to passing.",
-     "show": 4
+     "say": "The failed step is Run tests, so it's the test stage.",
+     "sql": "assert add(2, 3) == 6",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "And the run points to one commit: the change that broke it.",
+     "sql": "assert add(2, 3) == 6",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Put the five back and push. Run three is green again.",
+     "sql": "assert add(2, 3) == 5",
+     "hl": 2,
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
+   "kind": "array",
    "kicker": "Topic 8.2 · Regression testing",
-   "title": "Did anything old break?",
-   "items": [
-    [
-     "Regression suite",
-     "Existing tests, re-run"
-    ],
-    [
-     "Maintenance",
-     "Keep tests accurate"
-    ],
-    [
-     "Smoke tests",
-     "Fast critical subset, first"
-    ],
-    [
-     "New feature?",
-     "Still needs new tests"
-    ]
+   "title": "An old test catches a new bug",
+   "values": [
+    "test_add",
+    "test_addition",
+    "test_title_case"
    ],
    "beats": [
     {
-     "say": "Regression testing re-runs existing tests after a change, to confirm nothing that used to work broke.",
-     "show": 0
+     "say": "Regression testing re-runs existing tests after a change, to check nothing old broke."
     },
     {
-     "say": "Test suite maintenance keeps those tests accurate as the app changes.",
-     "show": 1
+     "say": "Two existing tests, plus one new test for a new title case function.",
+     "hl": 2,
+     "note": "new feature, new test"
     },
     {
-     "say": "Smoke tests are a small, fast subset of the most critical checks, run first.",
-     "show": 2
+     "say": "Now an unrelated bug slips into the add function.",
+     "note": "bug added to add()"
     },
     {
-     "say": "And a passing regression suite only means nothing old broke. A new feature still needs its own new tests.",
-     "show": 3
+     "say": "Run the full suite. Test add fails.",
+     "hl": 0,
+     "ptr": {
+      "run": 0
+     },
+     "note": "FAILED test_add"
+    },
+    {
+     "say": "Test addition and the new title case test both pass.",
+     "hl": 0,
+     "ok": [
+      1,
+      2
+     ],
+     "ptr": {
+      "run": 2
+     },
+     "note": "1 failed, 2 passed"
+    },
+    {
+     "say": "That's regression testing doing its job.",
+     "hl": 0,
+     "ok": [
+      1,
+      2
+     ],
+     "note": "caught by an existing test"
+    },
+    {
+     "say": "Fix the bug, push again, and all three pass.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "3 passed"
+    },
+    {
+     "say": "Passing old tests only means nothing old broke. The new feature needs its own test.",
+     "hl": 2,
+     "ok": [
+      0,
+      1
+     ],
+     "note": "new feature: own test"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "test",
+   "kind": "walk",
    "kicker": "Topic 8.2 · Lab",
-   "title": "Smoke tests first",
-   "file": "test_calculator.py · test.yml",
-   "code": "import pytest\n\n@pytest.mark.smoke\ndef test_addition():\n    assert 1 + 1 == 2\n\n# in the workflow:\n      - name: Run smoke tests\n        run: pytest -m smoke\n      - name: Run full test suite\n        run: pytest",
+   "title": "Smoke tests run first",
+   "file": "smoke setup",
+   "code": "import pytest\n\n@pytest.mark.smoke\ndef test_addition():\n    assert 1 + 1 == 2\n# pytest.ini\n[pytest]\nmarkers =\n    smoke: fast checks of the most critical behavior\n# test.yml\n- name: Run smoke tests\n  run: pytest -m smoke\n- name: Run full test suite\n  run: pytest",
    "beats": [
     {
-     "say": "In the lab, add a test for a small new feature, then slip in an unrelated bug elsewhere. An existing test catches it. That's regression testing doing its job.",
-     "show": 0
+     "say": "Smoke tests are a small, fast subset of critical checks."
     },
     {
-     "say": "Then tag your fastest, most critical tests with a pytest marker called smoke, and register it in pytest dot i n i.",
-     "show": 1
+     "say": "Tag one with a pytest marker called smoke.",
+     "line": [
+      3,
+      4
+     ]
     },
     {
-     "say": "In the workflow, run pytest dash m smoke first. If smoke tests fail, the full suite is skipped.",
-     "show": 1
+     "say": "Register it in pytest dot i n i.",
+     "line": [
+      6,
+      9
+     ]
+    },
+    {
+     "say": "In the workflow, pytest dash m smoke runs only tagged tests, first.",
+     "line": [
+      11,
+      12
+     ],
+     "out": "1 passed, 2 deselected"
+    },
+    {
+     "say": "If a smoke test failed, the full suite would be skipped.",
+     "line": 12,
+     "vars": {
+      "smoke": "passed"
+     }
+    },
+    {
+     "say": "It passed, so the full suite runs.",
+     "line": [
+      13,
+      14
+     ],
+     "vars": {
+      "smoke": "passed"
+     },
+     "out": "3 passed"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "file",
+   "kind": "walk",
    "kicker": "Topic 8.3 · Test reports",
-   "title": "More than just failed",
-   "items": [
-    [
-     "Test report",
-     "JUnit XML, every test"
-    ],
-    [
-     "Artifact",
-     "Saved with the run"
-    ],
-    [
-     "if: always()",
-     "Upload even on failure"
-    ]
-   ],
+   "title": "Save the report, even on red",
+   "file": "test.yml",
+   "code": "- name: Run full test suite\n  run: pytest --junitxml=report.xml\n- name: Upload test report\n  if: always()\n  uses: actions/upload-artifact@v5\n  with:\n    name: test-report\n    path: report.xml",
    "beats": [
     {
-     "say": "A pipeline that only says failed slows everyone down.",
-     "show": 0
+     "say": "A pipeline that only says failed slows everyone down."
     },
     {
-     "say": "A test report records every test's result, commonly as J Unit X M L, which most C I tools can read.",
-     "show": 1
+     "say": "Add junit x m l to the pytest line, so it writes a report. Say a test fails.",
+     "line": 2,
+     "out": [
+      "1 failed, 2 passed",
+      "generated xml file: report.xml"
+     ],
+     "vars": {
+      "tests": "failed"
+     }
     },
     {
-     "say": "An artifact is a file the pipeline saves from a run, so you can download it later.",
-     "show": 2
+     "say": "Later steps are normally skipped after a failure. If always runs this one anyway.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "tests": "failed",
+      "upload runs": true
+     }
     },
     {
-     "say": "In the lab, run pytest with junit x m l equals report dot x m l, and upload it with if always, so it's saved even when tests fail, which is exactly when you need it.",
-     "show": 3
+     "say": "It saves report dot x m l as an artifact, kept with the run.",
+     "line": [
+      5,
+      8
+     ],
+     "out": "artifact test-report uploaded"
+    },
+    {
+     "say": "Download it to see exactly which test failed, and why.",
+     "line": 7
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "array",
    "kicker": "Topic 8.3 · Flaky tests",
-   "title": "Pass and fail, same code",
-   "items": [
-    [
-     "Causes",
-     "Timing, order, shared data, services"
-    ],
-    [
-     "Harm",
-     "Red builds get ignored"
-    ],
-    [
-     "Quarantine",
-     "Out of the gate, with a ticket"
-    ],
-    [
-     "Don't",
-     "Hide it with retries or sleeps"
-    ]
+   "title": "Same code, different results",
+   "values": [
+    0.62,
+    0.17,
+    0.88,
+    0.45,
+    0.29,
+    0.71
    ],
    "beats": [
     {
-     "say": "A flaky test passes and fails with no code change, usually from timing, test order, shared data, or an unreliable external service.",
-     "show": 0
+     "say": "A flaky test passes and fails on the same code. This one fails when a random number is below zero point three.",
+     "note": "fails if random < 0.3"
     },
     {
-     "say": "It teaches people to ignore red builds, so real failures get missed.",
-     "show": 1
+     "say": "Run one: zero point six two. Pass.",
+     "ok": [
+      0
+     ],
+     "ptr": {
+      "run": 0
+     }
     },
     {
-     "say": "Quarantine it: move it out of the blocking suite while it's fixed, with a tracking ticket.",
-     "show": 2
+     "say": "Run two: zero point one seven. Fail.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "run": 1
+     }
     },
     {
-     "say": "Use retries sparingly, and fix the cause rather than adding sleeps.",
-     "show": 3
+     "say": "Runs three and four pass.",
+     "ok": [
+      0,
+      2,
+      3
+     ],
+     "hl": 1,
+     "ptr": {
+      "run": 3
+     }
     },
     {
-     "say": "In the lab, make a test that fails when a random number is below zero point three, rerun it several times, write a triage note, then remove it.",
-     "show": 4
+     "say": "Run five: zero point two nine. Fail again.",
+     "ok": [
+      0,
+      2,
+      3
+     ],
+     "hl": [
+      1,
+      4
+     ],
+     "ptr": {
+      "run": 4
+     }
+    },
+    {
+     "say": "Run six passes. Two failures in six, nothing changed.",
+     "ok": [
+      0,
+      2,
+      3,
+      5
+     ],
+     "hl": [
+      1,
+      4
+     ],
+     "note": "same code: 4 passed, 2 failed"
+    },
+    {
+     "say": "Real causes are timing, test order, shared data, or flaky services. Left alone, people start ignoring red builds.",
+     "ok": [
+      0,
+      2,
+      3,
+      5
+     ],
+     "hl": [
+      1,
+      4
+     ]
+    },
+    {
+     "say": "Write a triage note, then fix the cause or quarantine it with a ticket. Don't hide it with retries or sleeps.",
+     "ok": [
+      0,
+      2,
+      3,
+      5
+     ],
+     "hl": [
+      1,
+      4
+     ],
+     "note": "triage: fix or quarantine"
     }
    ]
   },

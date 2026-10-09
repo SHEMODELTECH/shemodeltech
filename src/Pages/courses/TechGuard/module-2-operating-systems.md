@@ -199,245 +199,681 @@ You can read your own token and privileges, list which accounts have administrat
    ]
   },
   {
-   "kind": "list",
-   "art": "server",
+   "kind": "array",
    "kicker": "Topic 2.1 · Linux",
-   "title": "Users, permissions, privilege",
-   "items": [
+   "title": "Read a permission string, then change it",
+   "values": [
+    "-",
+    "r",
+    "w",
+    "-",
+    "r",
+    "-",
+    "-",
+    "r",
+    "-",
+    "-"
+   ],
+   "beats": [
+    {
+     "say": "On Linux, every process runs as a user, and file permissions decide what that user can touch.",
+     "note": "touch testfile · ls -l testfile"
+    },
+    {
+     "say": "Ls dash l shows ten characters. The first is the type: a dash means a regular file.",
+     "hl": 0,
+     "note": "- file · d directory"
+    },
+    {
+     "say": "The next three are for the owner: read, write, but no execute.",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "ptr": {
+      "owner": 1
+     },
+     "note": "owner: rw-"
+    },
+    {
+     "say": "Then three for the file's group: read only.",
+     "ok": [
+      1,
+      2,
+      3
+     ],
+     "hl": [
+      4,
+      5,
+      6
+     ],
+     "ptr": {
+      "group": 4
+     },
+     "note": "group: r--"
+    },
+    {
+     "say": "And three for everyone else: read only.",
+     "ok": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "hl": [
+      7,
+      8,
+      9
+     ],
+     "ptr": {
+      "others": 7
+     },
+     "note": "others: r--"
+    },
+    {
+     "say": "Now run C H mod six hundred. Each digit sets one group of three: read is four, write is two, execute is one.",
+     "vals": [
+      "-",
+      "r",
+      "w",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-"
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "ptr": {
+      "owner": 1
+     },
+     "note": "chmod 600 → 6 = 4 + 2 (rw-) · 0 · 0"
+    },
+    {
+     "say": "Six gives the owner read and write. The two zeros take everything from group and others.",
+     "vals": [
+      "-",
+      "r",
+      "w",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-"
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "gone": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "-rw-------"
+    },
+    {
+     "say": "That's least privilege on a single file: only the access that's genuinely needed.",
+     "vals": [
+      "-",
+      "r",
+      "w",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-"
+     ],
+     "ok": [
+      1,
+      2
+     ],
+     "gone": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "only the owner can read or write"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Topic 2.1 · Lab",
+   "title": "sudo: one command as root, and a record of it",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "You",
+     "x": 12,
+     "y": 28,
+     "sub": "a normal user",
+     "art": "persona"
+    },
+    {
+     "id": "sudo",
+     "label": "sudo",
+     "x": 46,
+     "y": 54,
+     "sub": "checks you're allowed",
+     "art": "key"
+    },
+    {
+     "id": "cmd",
+     "label": "id",
+     "x": 86,
+     "y": 22,
+     "sub": "runs as root",
+     "art": "terminal"
+    },
+    {
+     "id": "log",
+     "label": "auth.log",
+     "x": 86,
+     "y": 80,
+     "sub": "in /var/log",
+     "art": "file"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "sudo"
+    },
+    {
+     "from": "sudo",
+     "to": "cmd"
+    },
+    {
+     "from": "sudo",
+     "to": "log"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Who am I and I D show who you are: a normal user, with limited rights.",
+     "show": 1,
+     "on": "you"
+    },
+    {
+     "say": "To do one thing as root, you put sudo in front of the command.",
+     "show": 2,
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "sudo",
+      "label": "sudo id"
+     }
+    },
+    {
+     "say": "Sudo asks for your password and checks you're allowed.",
+     "show": 2,
+     "on": "sudo"
+    },
+    {
+     "say": "Then just that one command runs as root.",
+     "show": 3,
+     "on": "cmd",
+     "send": {
+      "from": "sudo",
+      "to": "cmd",
+      "label": "run as root"
+     }
+    },
+    {
+     "say": "I D now prints U I D zero: root.",
+     "show": 3,
+     "on": "cmd",
+     "send": {
+      "from": "cmd",
+      "to": "sudo",
+      "label": "uid=0(root)"
+     }
+    },
+    {
+     "say": "And sudo leaves a record of who ran what, and when.",
+     "show": 4,
+     "on": "log",
+     "send": {
+      "from": "sudo",
+      "to": "log",
+      "label": "who ran what"
+     }
+    },
+    {
+     "say": "Sudo tail slash var slash log slash auth dot log shows it. Without that file, use journal C T L dash e.",
+     "show": 4,
+     "on": "log"
+    },
+    {
+     "say": "Logged in as root, every action has full power the whole time. Sudo keeps those moments short and recorded.",
+     "show": 4,
+     "on": [
+      "you",
+      "sudo"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 2.1 · Lab",
+   "title": "Audit for SUID and world-writable files",
+   "columns": [
+    "Path (example)",
+    "Owner",
+    "Found by",
+    "Verdict"
+   ],
+   "rows": [
     [
-     "Users and groups",
-     "root is the superuser"
+     "/usr/bin/passwd",
+     "root",
+     "-4000 SUID",
+     "expected"
     ],
     [
-     "rwx",
-     "Owner · group · others"
+     "/usr/bin/sudo",
+     "root",
+     "-4000 SUID",
+     "expected"
     ],
     [
-     "sudo",
-     "One command, elevated"
+     "/opt/tool/helper",
+     "root",
+     "-4000 SUID",
+     "unknown: investigate"
     ],
     [
-     "/var/log/auth.log",
-     "Logins and sudo use"
+     "/opt/app/run.sh",
+     "root",
+     "-0002 any-write",
+     "anyone can edit"
     ]
    ],
    "beats": [
     {
-     "say": "Linux runs most of the world's servers. Every process runs as a user, and file permissions decide what that user can touch.",
-     "show": 0
+     "say": "Now audit the system the way a defender would. Here are example results.",
+     "sql": "find / -perm -4000 -type f 2>/dev/null"
     },
     {
-     "say": "Every file and process has an owning user and group. Root is the all-powerful superuser.",
-     "show": 1
+     "say": "The first search finds SUID files. They run with their owner's privileges, often root, not yours.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
     },
     {
-     "say": "Each file has read, write and execute permissions, set separately for owner, group, and everyone else.",
-     "show": 2
+     "say": "Some are expected. Passwd and sudo need root to do their jobs.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     },
     {
-     "say": "Sudo lets a normal user run one command as root, which is safer than being root all the time.",
-     "show": 3
+     "say": "A SUID root file you don't recognise is a red flag. If it's exploitable, an ordinary user could become root.",
+     "hl": 2,
+     "dim": true,
+     "col": 3
     },
     {
-     "say": "And logs in slash var slash log, especially auth dot log, record logins and sudo use.",
-     "show": 4
+     "say": "The second search finds world-writable files: anyone on the system can change them.",
+     "sql": "find / -perm -0002 -type f 2>/dev/null",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "If a privileged process runs a file like that, it's a path to root. Tighten it, or remove what isn't needed.",
+     "hl": 3,
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "lock",
-   "kicker": "Topic 2.1 · Lab",
-   "title": "Read and change permissions",
-   "file": "terminal",
-   "code": "whoami\nid\nls -l\ntouch testfile\nchmod 600 testfile\nls -l testfile",
-   "beats": [
-    {
-     "say": "Start with who am I and I D, to see your user and groups.",
-     "show": 0
-    },
-    {
-     "say": "Ls dash l shows the r w x triads. Then create a file and set it to six hundred.",
-     "show": 1
-    },
-    {
-     "say": "Six hundred means the owner can read and write, and group and others get nothing.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Topic 2.1 · Risk",
-   "title": "Where privilege escalates",
-   "items": [
-    [
-     "SUID binaries",
-     "Run as their owner, often root"
-    ],
-    [
-     "World-writable files",
-     "Anyone can change them"
-    ],
-    [
-     "Services as root",
-     "✗ Run as a limited user ✓"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Permission mistakes are one of the largest attack surfaces on Linux.",
-     "show": 0
-    },
-    {
-     "say": "A SUID binary runs with its owner's privileges, often root. A stray or exploitable one lets an ordinary user escalate to root.",
-     "show": 1
-    },
-    {
-     "say": "World-writable files and over-permissive directories are classic weak spots too.",
-     "show": 2
-    },
-    {
-     "say": "And a service running as root hands root to anyone who compromises it. Least privilege means each service runs as its own limited user.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "search",
-   "kicker": "Topic 2.1 · Lab",
-   "title": "Audit, then check the log",
-   "file": "terminal",
-   "code": "find / -perm -4000 -type f 2>/dev/null\nfind / -perm -0002 -type f 2>/dev/null\nsudo id\nsudo tail /var/log/auth.log",
-   "beats": [
-    {
-     "say": "Now hunt for risky files, the way an auditor would: SUID binaries, then world-writable files.",
-     "show": 0
-    },
-    {
-     "say": "Then run one command with sudo, and read the log entry it leaves in auth dot log. Without that file, use journal c t l dash e.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "key",
+   "kind": "table",
    "kicker": "Topic 2.2 · Windows",
-   "title": "Tokens meet ACLs",
-   "steps": [
-    "Token: SIDs + privileges",
-    "Object with an ACL",
-    "Does a SID match a permit?",
-    "Granted or denied"
+   "title": "Does a SID in your token match the ACL?",
+   "columns": [
+    "Account (SID)",
+    "Rights",
+    "Means"
+   ],
+   "rows": [
+    [
+     "NT AUTHORITY\\SYSTEM",
+     "(I)(F)",
+     "full control"
+    ],
+    [
+     "BUILTIN\\Administrators",
+     "(I)(F)",
+     "full control"
+    ],
+    [
+     "BUILTIN\\Users",
+     "(I)(RX)",
+     "read and execute"
+    ]
    ],
    "beats": [
     {
-     "say": "Windows is the biggest endpoint target, and its model is different.",
-     "show": 0
+     "say": "Windows uses S I Ds, security identifiers, and access control lists. I C A C L S shows one.",
+     "sql": "icacls C:\\Windows\\System32\\drivers\\etc\\hosts"
     },
     {
-     "say": "Every account and group has a S I D, a security identifier, and your access token carries your S I Ds and privileges.",
-     "show": 1
+     "say": "F means full control. R X means read and execute. And I means inherited from the folder.",
+     "col": 1
     },
     {
-     "say": "Files and registry keys carry an access control list, or A C L, listing exactly who gets which rights.",
-     "show": 2
+     "say": "A standard user tries to edit the hosts file. Their token carries their S I Ds, including Users.",
+     "sql": "token: your SID · Users · ...  →  write?",
+     "hl": 2
     },
     {
-     "say": "Windows checks whether any S I D in your token matches an entry that permits the access.",
-     "show": 3
+     "say": "Windows checks the A C L. Users only permits read and execute, so the write is denied.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Then access is granted or denied.",
-     "show": 4
+     "say": "An administrator's token includes the Administrators S I D, but U A C prompts before using it.",
+     "sql": "token: Administrators (after UAC prompt)  →  write?",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Once they confirm, the Administrators entry matches, and full control is granted.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Who am I slash all shows the S I Ds and privileges in your own token.",
+     "sql": "whoami /all"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
-   "kicker": "Topic 2.2 · Defences",
-   "title": "UAC, Defender, Registry, logs",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 2.2 · Lab",
+   "title": "Read the Security log",
+   "columns": [
+    "Time",
+    "Event ID",
+    "Account",
+    "Result"
+   ],
+   "rows": [
     [
-     "UAC",
-     "Confirm before admin rights"
+     "09:14:02",
+     "4625",
+     "admin",
+     "failed logon"
     ],
+    [
+     "09:14:03",
+     "4625",
+     "admin",
+     "failed logon"
+    ],
+    [
+     "09:14:04",
+     "4625",
+     "admin",
+     "failed logon"
+    ],
+    [
+     "09:14:05",
+     "4625",
+     "admin",
+     "failed logon"
+    ],
+    [
+     "09:14:06",
+     "4625",
+     "admin",
+     "failed logon"
+    ],
+    [
+     "09:14:08",
+     "4624",
+     "admin",
+     "successful logon"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Here's an example slice of a Windows Security log.",
+     "sql": "Get-WinEvent -LogName Security -MaxEvents 20"
+    },
+    {
+     "say": "Event forty six twenty five is a failed logon.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "col": 1
+    },
+    {
+     "say": "Five failures on the same account, about a second apart. A burst like that can point to a brute force attempt.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "Then forty six twenty four, a successful logon. Right after that burst, it's worth investigating straight away.",
+     "hl": 5,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "In Event Viewer, open Windows Logs, then Security, and filter for these two I Ds.",
+     "sql": "Event Viewer → Windows Logs → Security · filter 4624, 4625",
+     "hl": [
+      4,
+      5
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 2.2 · Lab",
+   "title": "Three more checks on a Windows machine",
+   "columns": [
+    "Check",
+    "Command",
+    "Healthy sign"
+   ],
+   "rows": [
     [
      "Defender",
-     "Built-in antivirus"
+     "Get-MpComputerStatus",
+     "real-time: on"
     ],
     [
-     "Run keys",
-     "Autostart, malware persistence"
+     "Admins",
+     "Get-LocalGroupMember",
+     "only who needs it"
     ],
     [
-     "4624 / 4625",
-     "Logon success / failure"
+     "Autostart",
+     "reg query ...\\Run",
+     "programs you know"
     ]
    ],
    "beats": [
     {
-     "say": "Four more pieces to know.",
-     "show": 0
+     "say": "Microsoft Defender Antivirus is the built-in protection. Confirm real-time protection is on and definitions are current.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "User Account Control prompts before anything uses administrator rights, keeping you in a standard context until elevation is truly needed.",
-     "show": 1
+     "say": "List the Administrators group. Keep it short: one bad click by an administrator can compromise the whole machine.",
+     "sql": "Get-LocalGroup Administrators | Get-LocalGroupMember",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Microsoft Defender Antivirus is the built-in protection.",
-     "show": 2
+     "say": "Then the registry Run key. Programs listed there relaunch at every login, a favourite place for malware persistence.",
+     "sql": "reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\"",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "The Registry's Run keys relaunch a program at every login, a favourite place for malware persistence.",
-     "show": 3
-    },
-    {
-     "say": "And the Security event log records logons: event forty six twenty four for success, forty six twenty five for failure. A burst of failures can mean a brute force attempt.",
-     "show": 4
+     "say": "Anything there you don't recognise, investigate and clean out.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
-   "kicker": "Topic 2.2 · Lab",
-   "title": "Inspect a Windows machine",
-   "file": "PowerShell",
-   "code": "whoami /all\nGet-LocalGroup Administrators | Get-LocalGroupMember\nicacls C:\\Windows\\System32\\drivers\\etc\\hosts\nGet-MpComputerStatus\nGet-WinEvent -LogName Security -MaxEvents 20\nreg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\"",
-   "beats": [
-    {
-     "say": "In PowerShell, who am I slash all shows your S I D, groups and privileges.",
-     "show": 0
-    },
-    {
-     "say": "List the administrators group, read the hosts file's A C L with i c a c l s, and confirm Defender's real-time protection is on.",
-     "show": 1
-    },
-    {
-     "say": "Then read recent Security events, and check the Run key for autostart entries.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "idcard",
+   "kind": "diagram",
    "kicker": "Both systems",
-   "title": "Least privilege, everywhere",
-   "quote": "Give any user or process only the access it genuinely needs.",
-   "beats": [
+   "title": "Least privilege limits the damage",
+   "nodes": [
     {
-     "say": "The same rule runs through both systems.",
-     "show": 0
+     "id": "atk",
+     "label": "Attacker",
+     "x": 12,
+     "y": 50,
+     "sub": "finds a flaw",
+     "art": "bug"
     },
     {
-     "say": "Standard users for everyday work. Admin or root only when a task truly needs it. Reducing admin rights is one of the highest-impact defensive changes you can make.",
-     "show": 1
+     "id": "svc1",
+     "label": "Service as root",
+     "x": 48,
+     "y": 22,
+     "sub": "or as administrator",
+     "art": "server"
+    },
+    {
+     "id": "all",
+     "label": "Whole system",
+     "x": 88,
+     "y": 22,
+     "sub": "every file, every user",
+     "art": "warning"
+    },
+    {
+     "id": "svc2",
+     "label": "Limited service",
+     "x": 48,
+     "y": 78,
+     "sub": "runs as its own user",
+     "art": "server"
+    },
+    {
+     "id": "own",
+     "label": "Its own files",
+     "x": 88,
+     "y": 78,
+     "sub": "and nothing else",
+     "art": "lock"
+    }
+   ],
+   "edges": [
+    {
+     "from": "atk",
+     "to": "svc1"
+    },
+    {
+     "from": "svc1",
+     "to": "all"
+    },
+    {
+     "from": "atk",
+     "to": "svc2"
+    },
+    {
+     "from": "svc2",
+     "to": "own"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Say an attacker compromises a service that runs as root.",
+     "show": 2,
+     "on": "atk",
+     "send": {
+      "from": "atk",
+      "to": "svc1",
+      "label": "compromise"
+     }
+    },
+    {
+     "say": "They inherit root, and with it, the whole system.",
+     "show": 3,
+     "on": "all",
+     "send": {
+      "from": "svc1",
+      "to": "all",
+      "label": "root access"
+     }
+    },
+    {
+     "say": "Now the same flaw in a service running as its own limited user.",
+     "show": 4,
+     "on": "svc2",
+     "send": {
+      "from": "atk",
+      "to": "svc2",
+      "label": "compromise"
+     }
+    },
+    {
+     "say": "They only get what that user could touch.",
+     "show": 5,
+     "on": "own",
+     "send": {
+      "from": "svc2",
+      "to": "own",
+      "label": "limited rights"
+     }
+    },
+    {
+     "say": "That's least privilege, on both systems: standard users for everyday work, root or admin only when a task truly needs it.",
+     "show": 5,
+     "on": [
+      "svc2",
+      "own"
+     ]
+    },
+    {
+     "say": "Reducing admin rights is one of the highest-impact defensive changes you can make.",
+     "show": 5,
+     "on": "svc2"
     }
    ]
   },
@@ -460,7 +896,7 @@ You can read your own token and privileges, list which accounts have administrat
      "show": 0
     },
     {
-     "say": "Which event ID marks a failed logon in the Windows Security log?",
+     "say": "Which event I D marks a failed logon in the Windows Security log?",
      "show": 0
     },
     {

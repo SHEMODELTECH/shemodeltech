@@ -314,40 +314,85 @@ You can name and briefly explain all seven testing principles, and you've applie
      "say": "You'll learn how software gets built, how testing is planned alongside it, and the principles that decide what to test."
     },
     {
-     "say": "No tools needed. It follows the I S T Q B foundation syllabus topics, but it doesn't give certification."
+     "say": "No tools needed. It follows the I S T Q B syllabus topics, without giving certification."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
-   "kicker": "Topic 1.1 · Concept",
-   "title": "The six SDLC phases",
-   "items": [
-    [
-     "Requirements",
-     "What should it do?"
-    ],
-    [
-     "Design",
-     "How will it work?"
-    ],
-    [
-     "Development",
-     "Build the code"
-    ],
-    [
-     "Testing",
-     "Verify against requirements"
-    ],
-    [
-     "Deployment",
-     "Release to users"
-    ],
-    [
-     "Maintenance",
-     "Fix and improve"
-    ]
+   "kind": "diagram",
+   "kicker": "Topic 1.1 · SDLC",
+   "title": "Six phases, each feeding the next",
+   "nodes": [
+    {
+     "id": "req",
+     "label": "Requirements",
+     "x": 15,
+     "y": 25,
+     "sub": "What should it do?",
+     "art": "doc"
+    },
+    {
+     "id": "des",
+     "label": "Design",
+     "x": 50,
+     "y": 25,
+     "sub": "How will it work?",
+     "art": "blueprint"
+    },
+    {
+     "id": "dev",
+     "label": "Development",
+     "x": 85,
+     "y": 25,
+     "sub": "Build the code",
+     "art": "code"
+    },
+    {
+     "id": "test",
+     "label": "Testing",
+     "x": 85,
+     "y": 75,
+     "sub": "Verify vs requirements",
+     "art": "test"
+    },
+    {
+     "id": "dep",
+     "label": "Deployment",
+     "x": 50,
+     "y": 75,
+     "sub": "Release to users",
+     "art": "rocket"
+    },
+    {
+     "id": "mnt",
+     "label": "Maintenance",
+     "x": 15,
+     "y": 75,
+     "sub": "Fix and improve",
+     "art": "gear"
+    }
+   ],
+   "edges": [
+    {
+     "from": "req",
+     "to": "des"
+    },
+    {
+     "from": "des",
+     "to": "dev"
+    },
+    {
+     "from": "dev",
+     "to": "test"
+    },
+    {
+     "from": "test",
+     "to": "dep"
+    },
+    {
+     "from": "dep",
+     "to": "mnt"
+    }
    ],
    "beats": [
     {
@@ -355,303 +400,505 @@ You can name and briefly explain all seven testing principles, and you've applie
      "show": 0
     },
     {
-     "say": "Requirements: deciding what the software should do.",
-     "show": 1
+     "say": "Requirements: what should it do?",
+     "show": 1,
+     "on": "req"
     },
     {
-     "say": "Design: deciding how it will do it.",
-     "show": 2
+     "say": "They hand a spec to Design: how will it work?",
+     "show": 2,
+     "on": "des",
+     "send": {
+      "from": "req",
+      "to": "des",
+      "label": "spec"
+     }
     },
     {
-     "say": "Development: writing the code.",
-     "show": 3
+     "say": "Design hands an architecture to Development, which writes the code.",
+     "show": 3,
+     "on": "dev",
+     "send": {
+      "from": "des",
+      "to": "dev",
+      "label": "architecture"
+     }
     },
     {
-     "say": "Testing: verifying the code does what the requirements said.",
-     "show": 4
+     "say": "Testing checks it against the requirements.",
+     "show": 4,
+     "on": "test",
+     "send": {
+      "from": "dev",
+      "to": "test",
+      "label": "build"
+     }
     },
     {
-     "say": "Deployment: releasing it to real users.",
-     "show": 5
+     "say": "Deployment releases it to real users.",
+     "show": 5,
+     "on": "dep",
+     "send": {
+      "from": "test",
+      "to": "dep",
+      "label": "tested build"
+     }
     },
     {
-     "say": "And Maintenance: fixing issues and adding small improvements after release.",
-     "show": 6
+     "say": "And Maintenance fixes and improves it after release.",
+     "show": 6,
+     "on": "mnt",
+     "send": {
+      "from": "dep",
+      "to": "mnt",
+      "label": "live app"
+     }
     },
     {
-     "say": "Each phase hands something to the next. Requirements produce a spec, design produces an architecture.",
-     "show": 6
+     "say": "Waterfall, Agile and the V Model just arrange and repeat these same six phases.",
+     "on": [
+      "req",
+      "des",
+      "dev",
+      "test",
+      "dep",
+      "mnt"
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "search",
-   "kicker": "Topic 1.1 · Structure",
+   "kind": "table",
+   "kicker": "Topic 1.1 · SDLC · Lab",
    "title": "QA lives in every phase",
-   "quote": "Reviewing a requirement for ambiguity is QA work, before any code exists.",
-   "beats": [
-    {
-     "say": "A model, like Waterfall, Agile or the V Model, is just a way of arranging and repeating these same phases.",
-     "show": 0
-    },
-    {
-     "say": "And Q A isn't only the Testing box.",
-     "show": 1
-    },
-    {
-     "say": "Reviewing requirements for testability, or designs for edge cases, is Q A work too. In the lab, you walk one requirement, like users can mark a task as complete, through all six phases, and find one Q A activity before testing starts.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "layers",
-   "kicker": "Topic 1.2 · Concept",
-   "title": "The STLC runs alongside",
-   "items": [
+   "columns": [
+    "Phase",
+    "Mark a task complete",
+    "QA work"
+   ],
+   "rows": [
     [
-     "Requirement Analysis",
-     "What needs testing?"
+     "Requirements",
+     "Write the requirement",
+     "Review for ambiguity"
     ],
     [
-     "Test Planning",
-     "Scope, approach, schedule"
+     "Design",
+     "Checkbox, done state",
+     "Spot edge cases"
     ],
     [
-     "Test Case Development",
-     "Cases and test data"
+     "Development",
+     "Code the toggle",
+     "Write test cases"
     ],
     [
-     "Environment Setup",
-     "Systems and data"
+     "Testing",
+     "Build ready to check",
+     "Run the tests"
     ],
     [
-     "Test Execution",
-     "Run, log, re-run"
+     "Deployment",
+     "Release to users",
+     "Check the release"
     ],
     [
-     "Test Closure",
-     "Report and document"
+     "Maintenance",
+     "Fixes, six months on",
+     "Re-test the fixes"
     ]
    ],
    "beats": [
     {
-     "say": "The Software Testing Life Cycle, or S T L C, is testing's own sequence of activities. It runs alongside the S D L C, not after it.",
-     "show": 0
+     "say": "In the lab, you walk one requirement through all six phases: users can mark a task as complete.",
+     "col": 1
     },
     {
-     "say": "Requirement analysis: what needs testing?",
-     "show": 1
+     "say": "Q A isn't only the Testing row.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Look at the Q A column: there's work in every phase.",
+     "col": 2
+    },
+    {
+     "say": "Before any code exists, you review the requirement for ambiguity.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "And the design for edge cases.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Topic 1.2 · STLC",
+   "title": "Testing's own life cycle",
+   "values": [
+    "Analysis",
+    "Planning",
+    "Case dev",
+    "Env setup",
+    "Execution",
+    "Closure"
+   ],
+   "beats": [
+    {
+     "say": "The Software Testing Life Cycle, or S T L C, runs alongside the S D L C, not after it."
+    },
+    {
+     "say": "Requirement analysis: what needs testing? It starts while requirements are written.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     },
+     "note": "Starts during Requirements"
     },
     {
      "say": "Test planning: scope, approach, resources and schedule.",
-     "show": 2
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     },
+     "note": "Scope · approach · schedule"
     },
     {
-     "say": "Test case development: writing test cases and test data.",
-     "show": 3
+     "say": "Then test cases and test data get written, during design and development.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     },
+     "note": "During Design and Development"
     },
     {
-     "say": "Environment setup: preparing systems and data.",
-     "show": 4
+     "say": "Environment setup prepares systems and data.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "now": 3
+     },
+     "note": "Systems · data · config"
     },
     {
-     "say": "Test execution: running tests, logging results, and re-running failed cases after fixes.",
-     "show": 5
+     "say": "Execution peaks once there's a build: run, log defects, re-run after fixes.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "now": 4
+     },
+     "note": "Run · log · re-run"
     },
     {
-     "say": "And test closure: reporting and lessons learned. Each phase has entry criteria to start, and exit criteria to finish.",
-     "show": 6
+     "say": "Closure reports results and lessons learned.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "now": 5
+     },
+     "note": "Report and document"
+    },
+    {
+     "say": "Each phase has entry criteria to start, and exit criteria to finish.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "Entry criteria → work → exit criteria"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Topic 1.2 · Structure",
-   "title": "Five parts of a test case",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 1.2 · STLC · Lab",
+   "title": "Two test cases, five parts each",
+   "columns": [
+    "Part",
+    "TC-01",
+    "TC-02"
+   ],
+   "rows": [
     [
      "ID / title",
-     ""
+     "Mark a task complete",
+     "Unmark a done task"
     ],
     [
      "Preconditions",
-     ""
+     "Logged in, 1 open task",
+     "Task already done"
     ],
     [
-     "Numbered steps",
-     ""
+     "Steps",
+     "1. Tick its checkbox",
+     "1. Untick its checkbox"
     ],
     [
      "Test data",
-     "Real values, not ideas"
+     "Task: \"Buy milk\"",
+     "Task: \"Buy milk\""
     ],
     [
      "Expected result",
-     ""
+     "Shown as completed",
+     "Shown as open again"
     ]
    ],
    "beats": [
     {
-     "say": "A test case is a specific, repeatable check of one behaviour. It has five parts.",
-     "show": 0
+     "say": "A test case is a specific, repeatable check of one behaviour. Here are two.",
+     "col": 0
     },
     {
-     "say": "An I D and title.",
-     "show": 1
+     "say": "Part one, an I D and title.",
+     "hl": 0
     },
     {
-     "say": "Preconditions.",
-     "show": 2
+     "say": "Part two, preconditions: what must be true first.",
+     "hl": 1
     },
     {
-     "say": "Numbered steps.",
-     "show": 3
+     "say": "Part three, numbered steps.",
+     "hl": 2
     },
     {
-     "say": "Test data: the actual values you feed in, like a valid email or an empty field, so it's concrete, not theoretical.",
-     "show": 4
+     "say": "Part four, test data: a real value, like a task called buy milk. Concrete, not theoretical.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "And an expected result.",
-     "show": 5
+     "say": "And part five, the expected result.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "blueprint",
-   "kicker": "Topic 1.2 · Lab",
-   "title": "Plan one requirement",
-   "steps": [
-    "One-paragraph test plan",
-    "Two full test cases",
-    "Exit criteria"
+   "kind": "table",
+   "kicker": "Topic 1.2 · STLC · Exit criteria",
+   "title": "Running once isn't enough",
+   "columns": [
+    "Test case",
+    "Run 1",
+    "Run 2"
    ],
-   "beats": [
-    {
-     "say": "In the lab, take the mark a task as complete requirement.",
-     "show": 0
-    },
-    {
-     "say": "Write a one paragraph test plan: what you'll test, what's out of scope, and in what order.",
-     "show": 1
-    },
-    {
-     "say": "Write two full test cases, each with all five parts.",
-     "show": 2
-    },
-    {
-     "say": "Then define exit criteria, like all test cases executed at least once, and no open critical defects.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "bulb",
-   "kicker": "Topic 1.3 · Concept",
-   "title": "Seven testing principles, part one",
-   "items": [
+   "rows": [
     [
-     "Shows presence, not absence",
-     "Passing ≠ perfect"
+     "TC-01 Mark complete",
+     "Pass",
+     "–"
     ],
     [
-     "Exhaustive testing is impossible",
-     "Choose by risk"
-    ],
-    [
-     "Early testing saves cost",
-     "Fix it in requirements"
-    ],
-    [
-     "Defects cluster",
-     "Focus effort there"
+     "TC-02 Unmark",
+     "Fail · bug logged",
+     "Pass after fix"
     ]
    ],
    "beats": [
     {
-     "say": "Testing principles are hard-won truths that hold whatever you test, and whatever tool you use.",
-     "show": 0
+     "say": "The lab ends with exit criteria for this mini test cycle.",
+     "sql": "Exit criteria:\n- every test case executed at least once\n- no open critical defects"
     },
     {
-     "say": "Testing shows the presence of defects, not their absence.",
-     "show": 1
+     "say": "Run one: test case one passes.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Exhaustive testing is impossible, so you choose based on risk.",
-     "show": 2
+     "say": "Test case two fails, so you log a defect. Everything ran once, but a defect is open.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "Early testing saves time and cost. A defect found in requirements is cheapest to fix.",
-     "show": 3
+     "say": "After the fix, you re-run it, and it passes.",
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "And defects cluster. A few modules usually hold most of the bugs, so focus there.",
-     "show": 4
+     "say": "Both criteria met. Testing can close.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bug",
-   "kicker": "Topic 1.3 · Concept",
-   "title": "Seven testing principles, part two",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 1.3 · Testing principles",
+   "title": "Seven principles, seven situations",
+   "columns": [
+    "Situation",
+    "Principle"
+   ],
+   "rows": [
     [
-     "Tests wear out",
-     "Pesticide paradox · refresh them"
+     "All tests passed",
+     "Presence, not absence"
     ],
     [
-     "Context-dependent",
-     "Bank ≠ game"
+     "500-char text field",
+     "Exhaustive impossible"
     ],
     [
-     "Absence-of-defects fallacy",
-     "Bug-free can still fail users"
+     "Spec flaw found early",
+     "Early testing saves"
+    ],
+    [
+     "Checkout 30 bugs",
+     "Defects cluster"
+    ],
+    [
+     "Same 200 tests, a year",
+     "Tests wear out"
+    ],
+    [
+     "Bank app vs a game",
+     "Context-dependent"
+    ],
+    [
+     "Bug-free but confusing",
+     "Absence-of-defects"
     ]
    ],
    "beats": [
     {
-     "say": "Three more.",
-     "show": 0
+     "say": "Seven principles shape every testing decision."
     },
     {
-     "say": "Tests wear out, often called the pesticide paradox. The same tests stop finding new bugs, so review and update them.",
-     "show": 1
+     "say": "All tests passed? Testing shows the presence of defects, not their absence.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Testing is context dependent. A banking app and a game are tested differently.",
-     "show": 2
+     "say": "A five hundred character field? Exhaustive testing is impossible, so choose by risk.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "And the absence of defects fallacy. A bug-free system can still fail if it doesn't meet users' real needs.",
-     "show": 3
+     "say": "A flaw caught in the requirements costs a conversation, not rework. Early testing saves cost.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Thirty bugs in checkout, two in settings? Defects cluster, so focus there.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "The same two hundred tests pass for a year while users find bugs? Tests wear out, so update them.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "A banking app and a game are tested differently. Testing is context dependent.",
+     "hl": 5,
+     "dim": true
+    },
+    {
+     "say": "And a bug-free app users can't figure out still fails. That's the absence of defects fallacy.",
+     "hl": 6,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "presentation",
-   "kicker": "Topic 1.3 · Lab",
-   "title": "Report a clean run honestly",
-   "quote": "No defects found in this scope. Not: the software is bug-free.",
+   "kind": "array",
+   "kicker": "Topic 1.3 · Testing principles · Lab",
+   "title": "Five inputs, not fifty",
+   "values": [
+    "Mark done",
+    "Unmark",
+    "Mark again",
+    "Long title",
+    "Many tasks"
+   ],
    "beats": [
     {
-     "say": "In the lab, pick five realistic inputs instead of fifty, and say where bugs are most likely to cluster.",
-     "show": 0
+     "say": "For mark a task complete, pick five realistic scenarios, not fifty.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Chosen by risk"
     },
     {
-     "say": "Then write one honest sentence for a product manager after a clean test run.",
-     "show": 1
+     "say": "Defects cluster, so lean on the riskiest: marking an already completed task.",
+     "hl": 2,
+     "ptr": {
+      "risk": 2
+     },
+     "note": "Lean testing effort here"
     },
     {
-     "say": "Not, the software is bug-free. Instead: no defects found in this scope.",
-     "show": 1
+     "say": "You run all five. Nothing fails.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Clean run"
+    },
+    {
+     "say": "What do you tell the product manager? Not, the software is bug-free.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "✗ \"The software is bug-free\""
+    },
+    {
+     "say": "Instead: no defects found in this scope. Honest, and true to the principle.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "✓ \"No defects found in this scope\""
     }
    ]
   },
@@ -720,23 +967,23 @@ You can name and briefly explain all seven testing principles, and you've applie
      "show": 0
     },
     {
-     "say": "you've named the six S D L C phases in order, and a Q A activity outside the Testing phase,",
+     "say": "you can name the six S D L C phases, and Q A work outside Testing,",
      "show": 1
     },
     {
-     "say": "you've written a short test plan and two structured test cases mapped to S T L C phases,",
+     "say": "you've written a test plan and two structured test cases,",
      "show": 2
     },
     {
-     "say": "you've defined exit criteria for a test cycle,",
+     "say": "you've defined exit criteria,",
      "show": 3
     },
     {
-     "say": "you've applied at least two testing principles to a real scenario,",
+     "say": "you've applied two testing principles to a real scenario,",
      "show": 4
     },
     {
-     "say": "and you can explain how the S D L C, the S T L C and the principles relate.",
+     "say": "and you can explain how the S D L C, S T L C and principles relate.",
      "show": 5
     },
     {

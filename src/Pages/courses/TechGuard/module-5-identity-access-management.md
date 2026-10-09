@@ -264,286 +264,670 @@ You have created an identity, granted it least-privilege authorization, enabled 
    ]
   },
   {
-   "kind": "list",
-   "art": "fingerprint",
+   "kind": "diagram",
    "kicker": "Topic 5.1 · MFA",
-   "title": "Factors from different kinds",
-   "items": [
-    [
-     "Know",
-     "Password or PIN"
-    ],
-    [
-     "Have",
-     "Phone or security key"
-    ],
-    [
-     "Are",
-     "Fingerprint or face"
-    ]
+   "title": "Two factors, two different kinds",
+   "nodes": [
+    {
+     "id": "know",
+     "label": "Something you know",
+     "x": 14,
+     "y": 18,
+     "sub": "password or PIN",
+     "art": "password"
+    },
+    {
+     "id": "have",
+     "label": "Something you have",
+     "x": 14,
+     "y": 50,
+     "sub": "authenticator app",
+     "art": "phone"
+    },
+    {
+     "id": "are",
+     "label": "Something you are",
+     "x": 14,
+     "y": 82,
+     "sub": "fingerprint or face",
+     "art": "fingerprint"
+    },
+    {
+     "id": "gate",
+     "label": "Login check",
+     "x": 55,
+     "y": 50,
+     "sub": "two+ factor types",
+     "art": "lock"
+    },
+    {
+     "id": "in",
+     "label": "Access granted",
+     "x": 88,
+     "y": 50,
+     "sub": "your account",
+     "art": "shield"
+    }
+   ],
+   "edges": [
+    {
+     "from": "know",
+     "to": "gate"
+    },
+    {
+     "from": "have",
+     "to": "gate"
+    },
+    {
+     "from": "are",
+     "to": "gate"
+    },
+    {
+     "from": "gate",
+     "to": "in"
+    }
    ],
    "beats": [
     {
-     "say": "Multi-factor authentication asks for two or more factors, from different categories, so stealing one isn't enough.",
-     "show": 0
-    },
-    {
      "say": "Something you know, like a password or PIN.",
-     "show": 1
+     "show": 1,
+     "on": "know"
     },
     {
-     "say": "Something you have, like a phone or a hardware token.",
-     "show": 2
+     "say": "Something you have, like a phone.",
+     "show": 2,
+     "on": "have"
     },
     {
-     "say": "Something you are, like a fingerprint or face.",
-     "show": 3
+     "say": "Something you are, like a fingerprint.",
+     "show": 3,
+     "on": "are"
     },
     {
-     "say": "Two passwords isn't M F A. Both are things you know, so one phishing page could capture both.",
-     "show": 3
+     "say": "M F A asks for two or more, from different kinds.",
+     "show": 4,
+     "on": "gate"
+    },
+    {
+     "say": "You type your password. One factor.",
+     "show": 4,
+     "on": "know",
+     "send": {
+      "from": "know",
+      "to": "gate",
+      "label": "password"
+     }
+    },
+    {
+     "say": "Then a code from your authenticator app. A different kind.",
+     "show": 4,
+     "on": "have",
+     "send": {
+      "from": "have",
+      "to": "gate",
+      "label": "6-digit code"
+     }
+    },
+    {
+     "say": "Both check out, so you're in.",
+     "show": 5,
+     "on": "in",
+     "send": {
+      "from": "gate",
+      "to": "in",
+      "label": "access granted"
+     }
+    },
+    {
+     "say": "A stolen password alone now gets nobody in. Two passwords wouldn't count: one phishing page could capture both.",
+     "show": 5,
+     "on": "know"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
+   "kind": "table",
    "kicker": "Topic 5.1 · Not all MFA is equal",
-   "title": "From weakest to strongest",
-   "items": [
+   "title": "Which second factor?",
+   "columns": [
+    "Second factor",
+    "Built on",
+    "Verdict"
+   ],
+   "rows": [
     [
-     "SMS codes",
-     "Weakest · SIM-swapping"
+     "SMS code",
+     "phone network",
+     "Weakest: SIM swap"
     ],
     [
      "TOTP app",
+     "shared secret + clock",
      "Much stronger"
     ],
     [
-     "Passkey / security key",
+     "Passkey",
+     "FIDO2 / WebAuthn",
+     "Phishing-resistant"
+    ],
+    [
+     "Security key",
+     "FIDO2 / WebAuthn",
      "Phishing-resistant"
     ]
    ],
    "beats": [
     {
-     "say": "The second factor you choose matters.",
-     "show": 0
+     "say": "Not all second factors are equal."
     },
     {
-     "say": "S M S codes are better than nothing, but the weakest. They can be intercepted, or stolen by SIM swapping.",
-     "show": 1
+     "say": "S M S codes are the weakest. They can be intercepted, or stolen by SIM swapping.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "T O T P apps generate a rotating six digit code. Far stronger than S M S.",
-     "show": 2
+     "say": "T O T P apps make a rotating six digit code. Far stronger.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Hardware security keys and passkeys, built on FIDO two and Web Authn, are phishing resistant. They cryptographically verify the real site, so a fake one can't reuse the login.",
-     "show": 3
+     "say": "Passkeys and security keys, built on FIDO two, verify the real site, so a fake one can't reuse the login.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
     },
     {
-     "say": "N I S T's 2025 guidance reflects this. S M S is a restricted option, and services that need M F A must offer at least one phishing resistant option.",
-     "show": 3
+     "say": "N I S T's 2025 guideline agrees: S M S is restricted, and a phishing resistant option must be offered.",
+     "sql": "NIST SP 800-63B-4: SMS = restricted",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "In the lab, you turn on T O T P on a test account you own, and save your recovery codes.",
+     "sql": "Lab: enable TOTP, scan QR, confirm, save recovery codes",
+     "hl": 1,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "phone",
-   "kicker": "Topic 5.1 · Lab",
-   "title": "Turn on TOTP",
-   "steps": [
-    "Enable TOTP",
-    "Scan the QR code",
-    "Confirm + save recovery codes",
-    "Compare passkeys"
-   ],
-   "beats": [
-    {
-     "say": "On a test account you own, open the security settings and enable T O T P.",
-     "show": 1
-    },
-    {
-     "say": "Scan the Q R code with an authenticator app. It starts generating six digit codes.",
-     "show": 2
-    },
-    {
-     "say": "Enter the current code to confirm, and save your recovery codes somewhere safe.",
-     "show": 3
-    },
-    {
-     "say": "Then check whether the account supports a passkey or security key, and why that's stronger. Try the password widget too, but never type a password you really use.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "layers",
+   "kind": "diagram",
    "kicker": "Topic 5.2 · RBAC",
    "title": "Permissions belong to roles",
-   "steps": [
-    "Users",
-    "Roles",
-    "Permissions",
-    "Resources"
+   "nodes": [
+    {
+     "id": "ana",
+     "label": "Ana",
+     "x": 12,
+     "y": 22,
+     "sub": "user",
+     "art": "persona"
+    },
+    {
+     "id": "sam",
+     "label": "Sam",
+     "x": 12,
+     "y": 78,
+     "sub": "user",
+     "art": "persona"
+    },
+    {
+     "id": "editor",
+     "label": "Editor role",
+     "x": 40,
+     "y": 50,
+     "sub": "a job function",
+     "art": "idcard"
+    },
+    {
+     "id": "perm",
+     "label": "Publish a post",
+     "x": 66,
+     "y": 50,
+     "sub": "a permission",
+     "art": "key"
+    },
+    {
+     "id": "posts",
+     "label": "Blog posts",
+     "x": 90,
+     "y": 50,
+     "sub": "the resource",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "ana",
+     "to": "editor"
+    },
+    {
+     "from": "sam",
+     "to": "editor"
+    },
+    {
+     "from": "editor",
+     "to": "perm"
+    },
+    {
+     "from": "perm",
+     "to": "posts"
+    }
    ],
    "beats": [
     {
-     "say": "Role-based access control attaches permissions to roles, not to people one by one.",
-     "show": 0
-    },
-    {
-     "say": "Users are assigned roles.",
-     "show": 1
-    },
-    {
-     "say": "Roles, like Editor or Viewer, carry permissions.",
+     "say": "R B A C never gives permissions to people one by one. Here are two users.",
      "show": 2
     },
     {
-     "say": "Permissions are specific allowed actions on resources.",
-     "show": 3
+     "say": "Ana is assigned the Editor role.",
+     "show": 3,
+     "on": "ana",
+     "send": {
+      "from": "ana",
+      "to": "editor",
+      "label": "assigned"
+     }
     },
     {
-     "say": "So audits and offboarding become one question: which role? To remove someone's access, you remove their roles.",
-     "show": 4
+     "say": "So is Sam.",
+     "show": 3,
+     "on": "sam",
+     "send": {
+      "from": "sam",
+      "to": "editor",
+      "label": "assigned"
+     }
+    },
+    {
+     "say": "The role carries a permission: publish a post.",
+     "show": 4,
+     "on": "editor",
+     "send": {
+      "from": "editor",
+      "to": "perm",
+      "label": "carries"
+     }
+    },
+    {
+     "say": "A specific action, on a specific resource.",
+     "show": 5,
+     "on": "perm",
+     "send": {
+      "from": "perm",
+      "to": "posts",
+      "label": "publish"
+     }
+    },
+    {
+     "say": "To audit Ana, just look at her roles.",
+     "show": 5,
+     "on": [
+      "ana",
+      "editor"
+     ]
+    },
+    {
+     "say": "When Sam leaves, remove his role. One change.",
+     "show": 5,
+     "on": "sam"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
+   "kind": "table",
    "kicker": "Topic 5.2 · Lab",
-   "title": "Design a blog's roles",
-   "items": [
+   "title": "Design the blog's roles",
+   "columns": [
+    "Permission",
+    "Author",
+    "Editor",
+    "Viewer"
+   ],
+   "rows": [
     [
-     "Three roles",
-     "Author · Editor · Viewer"
+     "Read posts",
+     "yes",
+     "yes",
+     "yes"
     ],
     [
-     "Least privilege",
-     "Only what the role needs"
+     "Write a post",
+     "yes",
+     "no",
+     "no"
     ],
     [
-     "Separation of duties",
-     "Writing ≠ publishing your own post"
+     "Approve and publish",
+     "no",
+     "yes",
+     "no"
     ]
    ],
    "beats": [
     {
-     "say": "In the lab, design roles for a blog where some people write, some publish, and some only read.",
-     "show": 0
+     "say": "In the lab, you design roles for a blog."
     },
     {
-     "say": "Author, Editor and Viewer, each with a table of exact permissions.",
-     "show": 1
+     "say": "Authors read and write posts.",
+     "col": 1
     },
     {
-     "say": "Apply least privilege: remove any permission the role doesn't truly need.",
-     "show": 2
+     "say": "Editors read, approve and publish.",
+     "col": 2
     },
     {
-     "say": "Add separation of duties: no single role can both write and publish its own post.",
-     "show": 3
+     "say": "Viewers only read. Least privilege: only what each job needs.",
+     "col": 3
     },
     {
-     "say": "Watch for an over-broad does everything role. It quietly defeats the whole point.",
-     "show": 3
+     "say": "Separation of duties: no role can both write and publish.",
+     "sql": "Rule: no role has both Write and Publish",
+     "hl": [
+      1,
+      2
+     ]
+    },
+    {
+     "say": "Writing and publishing never share a column, so the rule holds.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
+    },
+    {
+     "say": "An over-broad, does everything role would defeat the point.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "key",
+   "kind": "diagram",
    "kicker": "Topic 5.3 · IAM",
    "title": "Two separate gates",
-   "steps": [
-    "Identity",
-    "Authentication",
-    "Authorization",
-    "Access"
+   "nodes": [
+    {
+     "id": "id",
+     "label": "Identity",
+     "x": 10,
+     "y": 30,
+     "sub": "user, service, device",
+     "art": "idcard"
+    },
+    {
+     "id": "authn",
+     "label": "Authentication",
+     "x": 37,
+     "y": 70,
+     "sub": "Who are you?",
+     "art": "fingerprint"
+    },
+    {
+     "id": "authz",
+     "label": "Authorization",
+     "x": 63,
+     "y": 30,
+     "sub": "What may you do?",
+     "art": "checklist"
+    },
+    {
+     "id": "res",
+     "label": "Resource",
+     "x": 90,
+     "y": 70,
+     "sub": "reports bucket",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "id",
+     "to": "authn"
+    },
+    {
+     "from": "authn",
+     "to": "authz"
+    },
+    {
+     "from": "authz",
+     "to": "res"
+    }
    ],
    "beats": [
     {
-     "say": "I A M brings it all together.",
-     "show": 0
+     "say": "An identity is a user, a service or a device.",
+     "show": 1,
+     "on": "id"
     },
     {
-     "say": "An identity is the digital representation of a user, a service or a device.",
-     "show": 1
+     "say": "Gate one, authentication, proves who you are. M F A lives here.",
+     "show": 2,
+     "on": "authn",
+     "send": {
+      "from": "id",
+      "to": "authn",
+      "label": "password + MFA"
+     }
     },
     {
-     "say": "Authentication proves who you are. That's where M F A lives.",
-     "show": 2
+     "say": "Gate two, authorization, decides what you may do, using roles and policies.",
+     "show": 3,
+     "on": "authz",
+     "send": {
+      "from": "authn",
+      "to": "authz",
+      "label": "analyst: read"
+     }
     },
     {
-     "say": "Authorization decides what you may do. That's where roles and policies live.",
-     "show": 3
+     "say": "Reading a report is allowed.",
+     "show": 4,
+     "on": "res",
+     "send": {
+      "from": "authz",
+      "to": "res",
+      "label": "allowed"
+     }
     },
     {
-     "say": "Only then is access granted. In the cloud, every action is an identity asking to do something, which is why I A M is called the control plane.",
+     "say": "The same, fully authenticated analyst asks to delete one. Authorization says no.",
+     "show": 4,
+     "on": "authz",
+     "send": {
+      "from": "authn",
+      "to": "authz",
+      "label": "delete?"
+     }
+    },
+    {
+     "say": "Different gates. Mixing them up causes real bugs.",
+     "show": 4,
+     "on": [
+      "authn",
+      "authz"
+     ]
+    },
+    {
+     "say": "In the cloud, every action passes these gates, so I A M is the control plane.",
      "show": 4
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "loop",
-   "kicker": "Topic 5.3 · Lifecycle",
-   "title": "Joiner, mover, leaver",
-   "items": [
-    [
-     "Joiner",
-     "Provision"
-    ],
-    [
-     "Mover",
-     "Change access"
-    ],
-    [
-     "Leaver",
-     "Remove promptly"
-    ]
-   ],
+   "kind": "walk",
+   "kicker": "Topic 5.3 · Lab",
+   "title": "Who can delete a report?",
+   "file": "report-analyst-policy.json",
+   "code": "{\"Sid\": \"ReadReports\", \"Effect\": \"Allow\",\n \"Action\": [\"s3:GetObject\"],\n \"Resource\":\n  \"arn:aws:s3:::example-reports-bucket/monthly/*\"},\n{\"Sid\": \"ListReportsFolder\", \"Effect\": \"Allow\",\n \"Action\": [\"s3:ListBucket\"],\n \"Resource\": \"arn:aws:s3:::example-reports-bucket\",\n \"Condition\": {\"StringLike\":\n   {\"s3:prefix\": [\"monthly/*\"]}}},\n{\"Sid\": \"TooBroad\", \"Effect\": \"Allow\",\n \"Action\": [\"s3:*\"],\n \"Resource\": \"*\"}",
    "beats": [
     {
-     "say": "Identities have a lifecycle.",
-     "show": 0
+     "say": "No cloud account? This sample policy is for an analyst who should only read monthly reports.",
+     "line": [
+      1,
+      12
+     ]
     },
     {
-     "say": "Joiner: provision the account.",
-     "show": 1
+     "say": "A request to read a monthly report.",
+     "vars": {
+      "request": "s3:GetObject",
+      "on": "monthly/ report"
+     }
     },
     {
-     "say": "Mover: change its access when the job changes.",
-     "show": 2
+     "say": "Statement one allows it.",
+     "line": [
+      1,
+      4
+     ],
+     "out": "GetObject monthly/... -> Allow (ReadReports)"
     },
     {
-     "say": "Leaver: remove it. Accounts left active after someone leaves are a common foothold for attackers, so prompt deprovisioning is a security control, not housekeeping.",
-     "show": 3
+     "say": "Listing the monthly folder matches statement two.",
+     "line": [
+      5,
+      9
+     ],
+     "vars": {
+      "request": "s3:ListBucket",
+      "on": "prefix monthly/"
+     },
+     "out": "ListBucket monthly/ -> Allow (ListReportsFolder)"
+    },
+    {
+     "say": "Now a delete. Neither statement allows that.",
+     "line": [
+      1,
+      9
+     ],
+     "vars": {
+      "request": "s3:DeleteObject",
+      "on": "monthly/ report"
+     }
+    },
+    {
+     "say": "But too broad allows every storage action, on every bucket. The delete goes through.",
+     "line": [
+      10,
+      12
+     ],
+     "out": "DeleteObject -> Allow (TooBroad)  !!"
+    },
+    {
+     "say": "Remove it, and the delete is denied: anything not explicitly allowed is denied by default.",
+     "line": [
+      1,
+      9
+     ],
+     "out": "TooBroad removed: DeleteObject -> Deny (default)"
+    },
+    {
+     "say": "Require M F A, and remove access when the analyst leaves.",
+     "line": [
+      1,
+      9
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "cloudlock",
+   "kind": "array",
    "kicker": "Topic 5.3 · Lab",
-   "title": "Spot the broad statement",
-   "file": "policy.json",
-   "code": "{\n  \"Sid\": \"ReadReports\",\n  \"Effect\": \"Allow\",\n  \"Action\": [\"s3:GetObject\"],\n  \"Resource\": \"arn:aws:s3:::example-reports-bucket/monthly/*\"\n},\n{\n  \"Sid\": \"TooBroad\",\n  \"Effect\": \"Allow\",\n  \"Action\": [\"s3:*\"],\n  \"Resource\": \"*\"\n}",
+   "title": "One identity, joiner to leaver",
+   "values": [
+    "Create identity",
+    "Scoped policy",
+    "Turn on MFA",
+    "Test limits",
+    "Deprovision"
+   ],
    "beats": [
     {
-     "say": "No cloud account? Read this sample A W S policy for a report analyst who should only read monthly reports from one bucket.",
-     "show": 0
+     "say": "With a free tier account, you walk one identity through its lifecycle.",
+     "ptr": {
+      "step": 0
+     }
     },
     {
-     "say": "The first two statements allow reading and listing the monthly folder. But too broad allows every storage action, including deleting, on every bucket.",
-     "show": 1
+     "say": "Joiner: create it with no permissions.",
+     "ptr": {
+      "step": 0
+     },
+     "hl": 0,
+     "note": "Joiner: starts with nothing"
     },
     {
-     "say": "Remove it, and a delete is denied, because anything not explicitly allowed is denied by default. Require M F A at sign in, and remove access when the analyst leaves.",
-     "show": 1
+     "say": "Attach only what one job needs.",
+     "ptr": {
+      "step": 1
+     },
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "note": "Authorization, least privilege"
+    },
+    {
+     "say": "Turn on M F A.",
+     "ptr": {
+      "step": 2
+     },
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "note": "Authentication: second factor"
+    },
+    {
+     "say": "Test it: allowed inside its role, denied outside.",
+     "ptr": {
+      "step": 3
+     },
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "note": "Allowed inside the role, denied outside"
+    },
+    {
+     "say": "If the job changes, update access. That's the mover stage.",
+     "ptr": {
+      "step": 1
+     },
+     "ok": [
+      0,
+      2,
+      3
+     ],
+     "hl": 1,
+     "note": "Mover: change access with the job"
+    },
+    {
+     "say": "Then leaver: remove access promptly. Forgotten accounts are a common foothold for attackers.",
+     "ptr": {
+      "step": 4
+     },
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Leaver: remove access promptly"
     }
    ]
   },

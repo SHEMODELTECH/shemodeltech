@@ -558,10 +558,12 @@ A **moving average filter** smooths noisy data by averaging each point with its 
 ```python
 filtered = moving_average(readings)
 plt.plot(readings, label="raw", alpha=0.5)
-plt.plot(filtered, label="filtered")
+plt.plot(range(4, len(readings)), filtered, label="filtered")   # window 5 starts at reading 4
 plt.legend()
 plt.savefig("filtered_comparison.png")
 ```
+
+The filtered signal is 4 points shorter than the raw one, because `mode="valid"` only keeps full windows of 5. Each average belongs at the last reading of its window, so `range(4, len(readings))` starts the filtered line at reading 4 and lines it up with the raw data.
 
 **Step 6: Simulate a sensor failure.**
 

@@ -304,241 +304,629 @@ You can retrieve and read a site's certificate chain, identify its issuer and ex
    ]
   },
   {
-   "kind": "list",
-   "art": "key",
+   "kind": "diagram",
    "kicker": "Topic 4.1 · Encryption",
-   "title": "Two families of keys",
-   "items": [
+   "title": "Plaintext in, ciphertext out, and back",
+   "nodes": [
+    {
+     "id": "pt",
+     "label": "Plaintext",
+     "x": 12,
+     "y": 50,
+     "sub": "readable original",
+     "art": "doc"
+    },
+    {
+     "id": "enc",
+     "label": "Encrypt",
+     "x": 50,
+     "y": 16,
+     "sub": "algorithm + key",
+     "art": "lock"
+    },
+    {
+     "id": "ct",
+     "label": "Ciphertext",
+     "x": 88,
+     "y": 50,
+     "sub": "scrambled",
+     "art": "hash"
+    },
+    {
+     "id": "dec",
+     "label": "Decrypt",
+     "x": 50,
+     "y": 84,
+     "sub": "right key reverses it",
+     "art": "key"
+    },
+    {
+     "id": "key",
+     "label": "The key",
+     "x": 50,
+     "y": 50,
+     "sub": "the only secret",
+     "art": "key"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pt",
+     "to": "enc"
+    },
+    {
+     "from": "enc",
+     "to": "ct"
+    },
+    {
+     "from": "ct",
+     "to": "dec"
+    },
+    {
+     "from": "dec",
+     "to": "pt"
+    },
+    {
+     "from": "key",
+     "to": "enc"
+    },
+    {
+     "from": "key",
+     "to": "dec"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Encryption starts with readable plaintext.",
+     "show": 1,
+     "on": "pt"
+    },
+    {
+     "say": "An algorithm and a key transform it.",
+     "show": 2,
+     "on": "enc",
+     "send": {
+      "from": "pt",
+      "to": "enc",
+      "label": "secret message"
+     }
+    },
+    {
+     "say": "Out comes ciphertext, scrambled and unreadable.",
+     "show": 3,
+     "on": "ct",
+     "send": {
+      "from": "enc",
+      "to": "ct",
+      "label": "scrambled bytes"
+     }
+    },
+    {
+     "say": "The right key reverses it, back to the original.",
+     "show": 4,
+     "on": "dec",
+     "send": {
+      "from": "dec",
+      "to": "pt",
+      "label": "secret message"
+     }
+    },
+    {
+     "say": "Symmetric encryption uses this same key on both sides.",
+     "show": 5,
+     "on": "key",
+     "send": {
+      "from": "key",
+      "to": "dec",
+      "label": "same key"
+     }
+    },
+    {
+     "say": "By Kerckhoffs's principle, only the key is secret. Algorithms like A E S are public and heavily reviewed.",
+     "show": 5,
+     "on": "key"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 4.1 · Two families",
+   "title": "Symmetric, asymmetric, hybrid",
+   "columns": [
+    "Kind",
+    "Keys",
+    "Speed",
+    "Example"
+   ],
+   "rows": [
     [
-     "Symmetric · AES",
-     "One key · fast · hard to share"
+     "Symmetric",
+     "One shared key",
+     "Fast",
+     "AES"
     ],
     [
-     "Asymmetric · RSA",
-     "Public + private · solves sharing · slow"
+     "Asymmetric",
+     "Public + private",
+     "Slow",
+     "RSA"
     ],
     [
-     "Hybrid · TLS",
-     "Agree a key, then go symmetric"
+     "Hybrid",
+     "Agree a key, then AES",
+     "Fast",
+     "TLS"
     ]
    ],
    "beats": [
     {
-     "say": "Encryption turns readable plaintext into scrambled ciphertext, using an algorithm and a key.",
-     "show": 0
+     "say": "Two families, and a hybrid of both."
     },
     {
-     "say": "Symmetric encryption, like A E S, uses one shared key. It's fast and ideal for bulk data, but sharing that key safely is the hard part.",
-     "show": 1
+     "say": "Symmetric, like A E S, uses one shared key. Fast, but sharing that key safely is hard.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Asymmetric encryption, like R S A, uses a key pair. The public key can be shared, the private key stays secret. It solves key distribution, but it's slow.",
+     "say": "Asymmetric, like R S A, uses a pair. What the public key encrypts, only the private key decrypts.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "That solves sharing, but it's slow.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Hybrid, like T L S, uses public keys to agree a session key, then goes symmetric.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "A five gigabyte backup? Symmetric, for speed.",
+     "hl": 0,
+     "dim": true,
+     "col": 2,
+     "sql": "5 GB backup → which one?"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Topic 4.1 · Hybrid in practice",
+   "title": "How TLS 1.3 gets a session key",
+   "nodes": [
+    {
+     "id": "br",
+     "label": "Your browser",
+     "x": 14,
+     "y": 28,
+     "sub": "client",
+     "art": "browser"
+    },
+    {
+     "id": "srv",
+     "label": "Web server",
+     "x": 86,
+     "y": 28,
+     "sub": "has a certificate",
+     "art": "server"
+    },
+    {
+     "id": "sk",
+     "label": "Session key",
+     "x": 50,
+     "y": 78,
+     "sub": "computed, never sent",
+     "art": "key"
+    }
+   ],
+   "edges": [
+    {
+     "from": "br",
+     "to": "srv"
+    },
+    {
+     "from": "br",
+     "to": "sk"
+    },
+    {
+     "from": "srv",
+     "to": "sk"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Here's how T L S one point three combines the two.",
      "show": 2
     },
     {
-     "say": "Hybrid systems, like T L S, use public-key cryptography to agree a session key, then switch to fast symmetric encryption for the data.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "merge",
-   "kicker": "Topic 4.1 · Principles",
-   "title": "The key is the secret",
-   "quote": "Security rests on the secrecy of the key, not the secrecy of the algorithm.",
-   "beats": [
-    {
-     "say": "In T L S one point three, both sides compute the same session key through an ephemeral Diffie-Hellman key agreement, without it ever being sent. The server's certificate key signs the exchange, so you know who you're talking to.",
-     "show": 0
+     "say": "The browser sends its share of an ephemeral Diffie-Hellman exchange.",
+     "show": 2,
+     "on": "br",
+     "send": {
+      "from": "br",
+      "to": "srv",
+      "label": "key share"
+     }
     },
     {
-     "say": "And Kerckhoffs's principle: security should rest on the secrecy of the key, not the algorithm. That's why A E S and R S A are public and heavily reviewed.",
-     "show": 1
+     "say": "The server replies with its share, signed by its certificate key, proving who it is.",
+     "show": 2,
+     "on": "srv",
+     "send": {
+      "from": "srv",
+      "to": "br",
+      "label": "key share + sig"
+     }
+    },
+    {
+     "say": "Both sides compute the same session key. It's never sent.",
+     "show": 3,
+     "on": "sk"
+    },
+    {
+     "say": "Then everything uses fast symmetric encryption.",
+     "show": 3,
+     "on": [
+      "br",
+      "srv"
+     ],
+     "send": {
+      "from": "srv",
+      "to": "br",
+      "label": "encrypted page"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "walk",
    "kicker": "Topic 4.1 · Lab",
    "title": "Both kinds, by hand",
    "file": "terminal",
-   "code": "openssl enc -aes-256-cbc -pbkdf2 -salt -in secret.txt -out secret.enc\nopenssl enc -d -aes-256-cbc -pbkdf2 -in secret.enc -out decrypted.txt\n\nopenssl genrsa -out private.pem 2048\nopenssl rsa -in private.pem -pubout -out public.pem\nopenssl pkeyutl -encrypt -pubin -inkey public.pem -in secret.txt -out rsa.enc\nopenssl pkeyutl -decrypt -inkey private.pem -in rsa.enc -out rsa.dec",
+   "code": "echo \"secret message\" > secret.txt\nopenssl enc -aes-256-cbc -pbkdf2 -salt \\\n  -in secret.txt -out secret.enc\nopenssl enc -d -aes-256-cbc -pbkdf2 \\\n  -in secret.enc -out decrypted.txt\ncat decrypted.txt\nopenssl genrsa -out private.pem 2048\nopenssl rsa -in private.pem -pubout \\\n  -out public.pem\nopenssl pkeyutl -encrypt -pubin \\\n  -inkey public.pem -in secret.txt -out rsa.enc\nopenssl pkeyutl -decrypt -inkey private.pem \\\n  -in rsa.enc -out rsa.dec\ncat rsa.dec",
    "beats": [
     {
-     "say": "In the lab, encrypt a file with A E S two fifty six, then decrypt it with the same password.",
-     "show": 0
+     "say": "Make a small file to work on.",
+     "line": 1,
+     "vars": {
+      "secret.txt": "secret message"
+     }
     },
     {
-     "say": "Next, generate an R S A key pair. Encrypt with the public key, and only the private key can decrypt.",
-     "show": 1
+     "say": "Encrypt it with A E S two fifty six, choosing a password.",
+     "line": [
+      2,
+      3
+     ],
+     "out": "enter AES-256-CBC encryption password:",
+     "vars": {
+      "secret.enc": "ciphertext"
+     }
     },
     {
-     "say": "Then ask yourself which you'd use for a five gigabyte backup, and why. Think about speed.",
-     "show": 1
+     "say": "Decrypt with the same password, and the original comes back.",
+     "line": [
+      4,
+      5,
+      6
+     ],
+     "out": "secret message",
+     "vars": {
+      "decrypted.txt": "secret message"
+     }
+    },
+    {
+     "say": "Generate an R S A pair: a private key, and its public key.",
+     "line": [
+      7,
+      8,
+      9
+     ],
+     "vars": {
+      "private.pem": "keep secret",
+      "public.pem": "shareable"
+     }
+    },
+    {
+     "say": "Encrypt with the public key.",
+     "line": [
+      10,
+      11
+     ],
+     "vars": {
+      "rsa.enc": "ciphertext"
+     }
+    },
+    {
+     "say": "Only the private key can decrypt it.",
+     "line": [
+      12,
+      13,
+      14
+     ],
+     "out": "secret message",
+     "vars": {
+      "rsa.dec": "secret message"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "hash",
+   "kind": "table",
    "kicker": "Topic 4.2 · Hashing",
    "title": "A one-way fingerprint",
-   "items": [
+   "columns": [
+    "Input",
+    "SHA-256 starts with"
+   ],
+   "rows": [
     [
-     "One-way",
-     "No way back to the input"
+     "hello",
+     "2cf24dba5fb0…"
     ],
     [
-     "Deterministic",
-     "Same input, same digest"
+     "hello",
+     "2cf24dba5fb0…"
     ],
     [
-     "Avalanche",
-     "Tiny change, new digest"
+     "Hello",
+     "185f8db32271…"
     ],
     [
-     "Collision-resistant",
-     "MD5, SHA-1 are broken"
+     "transfer $100 to Ada",
+     "b7cb98017fbe…"
+    ],
+    [
+     "transfer $900 to Ada",
+     "eedf09dc5e5e…"
     ]
    ],
    "beats": [
     {
-     "say": "Hashing runs any input through a one-way function, producing a fixed-length digest. You can't reverse it.",
-     "show": 0
+     "say": "Hashing turns any input into a fixed-length digest. It's one-way: there's no way back.",
+     "sql": "echo -n \"hello\" | sha256sum"
     },
     {
-     "say": "It's deterministic: the same input always gives the same hash.",
-     "show": 1
+     "say": "Hash hello twice: same digest every time.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "The avalanche effect: change one character, and the digest is completely different.",
-     "show": 2
+     "say": "A capital H gives a completely different digest. That's the avalanche effect.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 1,
+     "sql": "echo -n \"Hello\" | sha256sum"
     },
     {
-     "say": "Collision resistance means two inputs with the same hash are hard to find. Practical collisions have been found for M D five and S H A one, so they're broken for security use.",
-     "show": 3
+     "say": "Change one digit in a payment message: nothing alike.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Remember: encryption is two-way, for data you need to read back. Hashing is one-way, for data you only need to verify.",
-     "show": 4
+     "say": "That's how integrity checks catch tampering in a file.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "sql": "sha256sum somefile.txt"
+    },
+    {
+     "say": "Collisions, two inputs with one hash, should be hard to find. M D five and S H A one have them, so they're broken.",
+     "col": 1
+    },
+    {
+     "say": "Encryption is two-way, for data you read back. Hashing is one-way, for data you verify.",
+     "col": 0
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "fingerprint",
-   "kicker": "Topic 4.2 · Lab",
-   "title": "Watch the avalanche",
-   "file": "terminal",
-   "code": "echo -n \"hello\" | sha256sum\necho -n \"Hello\" | sha256sum\n\necho \"my original text\" > somefile.txt\nsha256sum somefile.txt",
-   "beats": [
-    {
-     "say": "Hash hello with S H A two fifty six. Then hash it again with a capital H.",
-     "show": 0
-    },
-    {
-     "say": "The two digests look completely unrelated.",
-     "show": 1
-    },
-    {
-     "say": "Then hash a file, change it slightly, and hash it again. A changed digest is how integrity checks catch tampering.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "password",
+   "kind": "table",
    "kicker": "Topic 4.2 · Passwords",
-   "title": "Salted and slow",
-   "items": [
+   "title": "Same password, two ways to store it",
+   "columns": [
+    "User",
+    "Stored",
+    "Value"
+   ],
+   "rows": [
     [
-     "sha256(password)",
-     "Fast, unsalted ✗"
+     "ada",
+     "sha256(pw)",
+     "a941a4c4fd0c…"
     ],
     [
-     "Salt",
-     "Unique random value per password ✓"
+     "bo",
+     "sha256(pw)",
+     "a941a4c4fd0c…"
     ],
     [
-     "bcrypt / Argon2",
-     "Slow on purpose ✓"
+     "ada",
+     "bcrypt, salted",
+     "$2b$12$UxDa0GAaLm…"
+    ],
+    [
+     "bo",
+     "bcrypt, salted",
+     "$2b$12$mlhkKC3Nui…"
     ]
    ],
    "beats": [
     {
-     "say": "For passwords, a plain fast hash isn't enough.",
-     "show": 0
+     "say": "Two users pick the same password, sunshine."
     },
     {
-     "say": "S H A two fifty six of the password alone is fast and unsalted. Identical passwords hash identically, so rainbow tables and fast brute force work.",
-     "show": 1
+     "say": "Store plain S H A two fifty six, and both rows are identical.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2,
+     "sql": "sha256(password)"
     },
     {
-     "say": "Instead add a salt, a unique random value per password, so identical passwords hash differently.",
-     "show": 2
+     "say": "Fast and unsalted, so rainbow tables and brute force work.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And use a deliberately slow hash, like bcrypt or Argon2, to make brute forcing expensive.",
-     "show": 3
+     "say": "Add a salt, a unique random value per password, and they differ.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2,
+     "sql": "bcrypt(salt + password)"
+    },
+    {
+     "say": "And bcrypt, like Argon two, is slow on purpose, so every guess is expensive.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
+   "kind": "diagram",
    "kicker": "Topic 4.3 · Certificates",
    "title": "The chain of trust",
-   "steps": [
-    "Root CA, trusted by your device",
-    "Intermediate CA",
-    "Site certificate",
-    "Browser validates the chain"
+   "nodes": [
+    {
+     "id": "root",
+     "label": "Root CA",
+     "x": 12,
+     "y": 25,
+     "sub": "trusted by your device",
+     "art": "shield"
+    },
+    {
+     "id": "int",
+     "label": "Intermediate CA",
+     "x": 38,
+     "y": 72,
+     "sub": "signed by the root",
+     "art": "idcard"
+    },
+    {
+     "id": "leaf",
+     "label": "Site certificate",
+     "x": 64,
+     "y": 25,
+     "sub": "example.com + its key",
+     "art": "idcard"
+    },
+    {
+     "id": "br",
+     "label": "Your browser",
+     "x": 88,
+     "y": 72,
+     "sub": "validates the chain",
+     "art": "browser"
+    }
+   ],
+   "edges": [
+    {
+     "from": "root",
+     "to": "int"
+    },
+    {
+     "from": "int",
+     "to": "leaf"
+    },
+    {
+     "from": "leaf",
+     "to": "br"
+    }
    ],
    "beats": [
     {
-     "say": "A certificate binds a public key to an identity, like a domain name, so you know the key isn't an imposter's.",
-     "show": 0
+     "say": "A certificate binds a public key to an identity, like a domain name.",
+     "show": 3,
+     "on": "leaf"
     },
     {
      "say": "Your device already trusts a set of root certificate authorities.",
-     "show": 1
+     "show": 3,
+     "on": "root"
     },
     {
      "say": "A root signs an intermediate.",
-     "show": 2
+     "show": 3,
+     "on": "int",
+     "send": {
+      "from": "root",
+      "to": "int",
+      "label": "signs"
+     }
     },
     {
      "say": "The intermediate signs the site's leaf certificate.",
-     "show": 3
+     "show": 3,
+     "on": "leaf",
+     "send": {
+      "from": "int",
+      "to": "leaf",
+      "label": "signs"
+     }
     },
     {
-     "say": "And your browser validates the whole chain. If any link is untrusted, expired or revoked, you get a certificate warning.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "idcard",
-   "kicker": "Topic 4.3 · Lab",
-   "title": "Read a real certificate",
-   "file": "terminal",
-   "code": "openssl s_client -connect example.com:443 -showcerts\n\necho | openssl s_client -connect example.com:443 2>/dev/null \\\n  | openssl x509 -text -noout",
-   "beats": [
-    {
-     "say": "Fetch a real site's certificate chain with Open S S L s client.",
-     "show": 0
+     "say": "Your browser checks every link back to a trusted root.",
+     "show": 4,
+     "on": "br",
+     "send": {
+      "from": "leaf",
+      "to": "br",
+      "label": "cert chain"
+     }
     },
     {
-     "say": "Then print the leaf certificate in readable form, and find who issued it and when it expires.",
-     "show": 1
+     "say": "Untrusted, expired, revoked, or the wrong name? You get a warning.",
+     "show": 4,
+     "on": [
+      "br",
+      "leaf"
+     ]
     },
     {
-     "say": "Check the same chain from your browser's padlock. And remember: certificates prove identity. T L S session keys do the actual encrypting.",
-     "show": 1
+     "say": "In the lab, fetch a real chain with Open S S L, and find its issuer and expiry.",
+     "show": 4,
+     "on": [
+      "int",
+      "leaf"
+     ]
+    },
+    {
+     "say": "Certificates prove identity. The T L S session keys do the actual encrypting.",
+     "show": 4,
+     "on": "br"
     }
    ]
   },
@@ -561,7 +949,7 @@ You can retrieve and read a site's certificate chain, identify its issuer and ex
      "show": 0
     },
     {
-     "say": "Why isn't a plain SHA-256 hash good enough for storing passwords?",
+     "say": "Why isn't a plain S H A two fifty six hash good enough for storing passwords?",
      "show": 0
     },
     {

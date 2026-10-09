@@ -255,331 +255,718 @@ You have a written charter, a session log of at least five explored actions with
      "say": "Welcome to Module 2, Manual Testing."
     },
     {
-     "say": "You'll write test cases, report bugs a developer can act on, and run exploratory sessions."
+     "say": "You'll write test cases, report bugs, and run exploratory sessions."
     },
     {
-     "say": "All you need is a browser, and two free practice sites built for testers: The Internet, and Sauce Demo. Use them only through their normal pages."
+     "say": "You need a browser and two free practice sites for testers, The Internet and Sauce Demo, used only through their normal pages."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "test",
+   "kind": "table",
    "kicker": "Topic 2.1 · Concept",
    "title": "Anatomy of a test case",
-   "items": [
+   "columns": [
+    "Field",
+    "Value"
+   ],
+   "rows": [
     [
-     "ID and title",
-     "What it checks"
+     "ID · title",
+     "TC-01 · Valid login"
     ],
     [
      "Preconditions",
-     "State before starting"
+     "Logged out, on /login"
     ],
     [
      "Steps",
-     "Numbered, specific"
+     "1 user 2 pass 3 Login"
     ],
     [
-     "Test data",
-     "Actual values"
+     "Test data · user",
+     "tomsmith"
+    ],
+    [
+     "Test data · pass",
+     "SuperSecretPassword!"
     ],
     [
      "Expected result",
-     "Precise enough to compare"
+     "Secure area + message"
+    ],
+    [
+     "Actual result",
+     "Filled in when run"
     ]
    ],
    "beats": [
     {
-     "say": "A test case is a specific, repeatable procedure that checks one piece of behaviour.",
-     "show": 0
+     "say": "A test case is a repeatable check of one behaviour. Here's one for a login form.",
+     "col": 0
     },
     {
      "say": "An I D and title say what it checks.",
-     "show": 1
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Preconditions describe the state before you start, like being logged in.",
-     "show": 2
+     "say": "Preconditions: the state before you start.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Steps are exact and numbered, so someone else could follow them without guessing.",
-     "show": 3
+     "say": "Steps: exact and numbered, so anyone could follow them.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Test data gives the actual values.",
-     "show": 4
+     "say": "Test data: the exact values every run types.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true
     },
     {
-     "say": "And the expected result is precise enough to compare with what actually happens. A group of related cases is a test suite.",
-     "show": 5
+     "say": "The expected result, decided in advance.",
+     "hl": 5,
+     "dim": true
+    },
+    {
+     "say": "And the actual result, filled in when someone runs it. A group of related cases is a test suite.",
+     "hl": 6,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "target",
+   "kind": "diagram",
    "kicker": "Topic 2.1 · Structure",
-   "title": "Expected versus actual",
-   "steps": [
-    "Expected: decided in advance",
-    "Actual: what happened",
-    "Match? Pass. Otherwise, fail"
+   "title": "Expected versus actual decides the verdict",
+   "nodes": [
+    {
+     "id": "pre",
+     "label": "Preconditions",
+     "x": 12,
+     "y": 25,
+     "sub": "on /login, logged out",
+     "art": "browser"
+    },
+    {
+     "id": "steps",
+     "label": "Steps",
+     "x": 46,
+     "y": 25,
+     "sub": "wrong password",
+     "art": "checklist"
+    },
+    {
+     "id": "exp",
+     "label": "Expected",
+     "x": 84,
+     "y": 25,
+     "sub": "written in advance",
+     "art": "doc"
+    },
+    {
+     "id": "act",
+     "label": "Actual",
+     "x": 46,
+     "y": 78,
+     "sub": "what really happened",
+     "art": "eye"
+    },
+    {
+     "id": "v",
+     "label": "Match?",
+     "x": 84,
+     "y": 78,
+     "sub": "pass or fail",
+     "art": "scales"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pre",
+     "to": "steps"
+    },
+    {
+     "from": "steps",
+     "to": "exp"
+    },
+    {
+     "from": "steps",
+     "to": "act"
+    },
+    {
+     "from": "exp",
+     "to": "v"
+    },
+    {
+     "from": "act",
+     "to": "v"
+    }
    ],
    "beats": [
     {
-     "say": "Run the steps, then compare.",
-     "show": 0
+     "say": "Take test case two, a wrong password. It starts from its preconditions.",
+     "show": 1,
+     "on": "pre"
     },
     {
-     "say": "The expected result is decided in advance.",
-     "show": 1
+     "say": "Its steps: tomsmith, a wrong password, click Login.",
+     "show": 2,
+     "on": "steps",
+     "send": {
+      "from": "pre",
+      "to": "steps",
+      "label": "wrong password"
+     }
     },
     {
-     "say": "The actual result is what really happened.",
-     "show": 2
+     "say": "Before running it, you write the expected result: a password invalid error.",
+     "show": 3,
+     "on": "exp",
+     "send": {
+      "from": "steps",
+      "to": "exp",
+      "label": "password invalid"
+     }
     },
     {
-     "say": "If they match, the test passes. If not, it fails. Two people running the same case should get the same actual result.",
-     "show": 3
+     "say": "Then you run the steps exactly as written.",
+     "show": 4,
+     "on": "act",
+     "send": {
+      "from": "steps",
+      "to": "act",
+      "label": "run it"
+     }
+    },
+    {
+     "say": "The page says: Your password is invalid.",
+     "show": 5,
+     "on": "act",
+     "send": {
+      "from": "act",
+      "to": "v",
+      "label": "password invalid"
+     }
+    },
+    {
+     "say": "It matches what you expected, so the test passes. Otherwise, it fails.",
+     "show": 5,
+     "on": "v",
+     "send": {
+      "from": "exp",
+      "to": "v",
+      "label": "password invalid"
+     }
+    },
+    {
+     "say": "Two people running this case should get the same actual result.",
+     "show": 5,
+     "on": [
+      "steps",
+      "act"
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "form",
+   "kind": "table",
    "kicker": "Topic 2.1 · Lab",
-   "title": "Test a practice login form",
-   "steps": [
-    "Write 3 test cases first",
-    "Run them as written",
-    "Pass or fail, fix vague steps"
+   "title": "Three cases, written before you touch the form",
+   "columns": [
+    "ID",
+    "Case",
+    "Test data",
+    "Verdict"
+   ],
+   "rows": [
+    [
+     "TC-01",
+     "Valid login",
+     "tomsmith · right pwd",
+     "Pass"
+    ],
+    [
+     "TC-02",
+     "Wrong password",
+     "tomsmith · wrong pwd",
+     "Pass"
+    ],
+    [
+     "TC-03",
+     "Empty username",
+     "blank · any pwd",
+     "Pass"
+    ]
    ],
    "beats": [
     {
-     "say": "Open the practice login page on The Internet. It shows the valid test username and password.",
-     "show": 0
+     "say": "Your lab: the practice login page on The Internet. It shows the valid username and password."
     },
     {
-     "say": "Before touching the form, write three test cases: a valid login, an invalid password, and an empty username.",
-     "show": 1
+     "say": "Write three cases before you touch the form.",
+     "col": 1
     },
     {
-     "say": "Run each exactly as written, and copy any message word for word.",
-     "show": 2
+     "say": "Run each one, and copy the actual result word for word.",
+     "hl": 0,
+     "dim": true,
+     "sql": "TC-01 actual: \"You logged into a secure area!\""
     },
     {
-     "say": "Mark each pass or fail. If a step was too vague to follow, rewrite it. That's the most common weakness.",
-     "show": 3
+     "say": "The wrong password gives this.",
+     "hl": 1,
+     "dim": true,
+     "sql": "TC-02 actual: \"Your password is invalid!\""
+    },
+    {
+     "say": "And the empty username gives this.",
+     "hl": 2,
+     "dim": true,
+     "sql": "TC-03 actual: \"Your username is invalid!\""
+    },
+    {
+     "say": "Mark each pass or fail, with one sentence for any difference.",
+     "col": 3
+    },
+    {
+     "say": "If a step was too vague to follow, rewrite it. That's the most common weakness.",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bug",
+   "kind": "table",
    "kicker": "Topic 2.2 · Concept",
    "title": "A bug report a developer can act on",
-   "items": [
+   "columns": [
+    "Field",
+    "Good report",
+    "Vague report"
+   ],
+   "rows": [
     [
      "Title",
-     "Short, specific"
+     "Cart total not updated",
+     "Cart is broken"
     ],
     [
-     "Steps to reproduce",
-     "Exact, numbered"
+     "Steps",
+     "Add 2 items, Remove 1",
+     "—"
     ],
     [
-     "Expected vs. actual",
-     ""
+     "Expected",
+     "Total minus that price",
+     "—"
     ],
     [
-     "Severity + priority",
-     ""
+     "Actual",
+     "Item gone, total same",
+     "—"
+    ],
+    [
+     "Severity",
+     "High: wrong total",
+     "—"
+    ],
+    [
+     "Priority",
+     "High: on checkout path",
+     "—"
     ],
     [
      "Environment",
-     "Browser, OS, device, version"
-    ],
-    [
-     "Evidence",
-     "Screenshots, logs"
+     "Chrome · Win 11 · v2.4",
+     "—"
     ]
    ],
    "beats": [
     {
-     "say": "A good bug report lets a developer reproduce, understand and fix the problem without asking what you meant.",
-     "show": 0
+     "say": "The lab's bug: Remove Item takes the item away, but the total doesn't change."
     },
     {
-     "say": "A short, specific title.",
-     "show": 1
+     "say": "A vague report says: cart is broken. Nobody can act on that.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Exact steps to reproduce.",
-     "show": 2
+     "say": "A good one starts with a specific title.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Expected versus actual result.",
-     "show": 3
+     "say": "Exact steps to reproduce it. Reproduce it twice before you report it.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Severity and priority.",
-     "show": 4
+     "say": "Expected versus actual.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "The environment: browser, operating system, device, app version.",
-     "show": 5
+     "say": "Severity and priority, each with a reason.",
+     "hl": [
+      4,
+      5
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And evidence, like screenshots or logs. Reproduce a bug at least twice before you report it.",
-     "show": 6
+     "say": "The environment, plus evidence like a screenshot.",
+     "hl": 6,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Every one of these is missing from the vague version.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
+   "kind": "chart",
    "kicker": "Topic 2.2 · Structure",
-   "title": "Severity is not priority",
-   "items": [
+   "title": "Severity and priority are independent",
+   "points": [
     [
-     "Checkout fails for everyone",
-     "High sev · high pri"
+     85,
+     85
     ],
     [
-     "Crash on an obsolete browser",
-     "High sev · low pri"
+     85,
+     15
     ],
     [
-     "Homepage typo in company name",
-     "Low sev · high pri"
+     15,
+     85
     ],
     [
-     "Admin tooltip punctuation",
-     "Low sev · low pri"
+     15,
+     15
     ]
    ],
+   "xlabel": "severity: how bad",
+   "ylabel": "priority: how soon",
    "beats": [
     {
-     "say": "Severity is how bad the impact is. Priority is how soon it needs fixing. They're independent.",
-     "show": 0
+     "say": "Severity is how bad the impact is. Priority is how soon to fix it."
     },
     {
-     "say": "Checkout fails for every user: high severity, high priority.",
-     "show": 1
+     "say": "Checkout fails for every user: high and high.",
+     "groups": [
+      1,
+      0,
+      0,
+      0
+     ]
     },
     {
      "say": "A crash on an obsolete browser almost nobody uses: high severity, low priority.",
-     "show": 2
+     "groups": [
+      1,
+      2,
+      0,
+      0
+     ]
     },
     {
      "say": "The company name misspelled on the homepage: low severity, but high priority, because everyone sees it.",
-     "show": 3
+     "groups": [
+      1,
+      2,
+      3,
+      0
+     ]
     },
     {
-     "say": "A wrong punctuation mark on a rarely used admin tooltip: low and low.",
-     "show": 4
+     "say": "Wrong punctuation on a rarely used admin tooltip: low and low.",
+     "groups": [
+      1,
+      2,
+      3,
+      0
+     ],
+     "marks": [
+      [
+       15,
+       15
+      ]
+     ]
+    },
+    {
+     "say": "Then report a real bug: shop on Sauce Demo as problem user, and include a screenshot.",
+     "groups": [
+      1,
+      2,
+      3,
+      0
+     ],
+     "marks": [
+      [
+       15,
+       15
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "pencil",
-   "kicker": "Topic 2.2 · Lab",
-   "title": "Report a real bug",
-   "steps": [
-    "Full report: cart total bug",
-    "Vague version to compare",
-    "Real bug on Sauce Demo"
-   ],
-   "beats": [
-    {
-     "say": "Imagine removing a cart item doesn't update the total. Write a full report, and justify its severity and priority.",
-     "show": 1
-    },
-    {
-     "say": "Then rewrite it as a vague report, cart is broken, and compare what the good version adds.",
-     "show": 2
-    },
-    {
-     "say": "Finally, log in to Sauce Demo as problem user, shop like a customer, and report one real bug with a screenshot.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "compass",
+   "kind": "diagram",
    "kicker": "Topic 2.3 · Concept",
    "title": "Exploratory, not random",
-   "items": [
-    [
-     "Charter",
-     "A focused goal"
-    ],
-    [
-     "Timeboxed session",
-     "One charter each"
-    ],
-    [
-     "Notes",
-     "As you go"
-    ],
-    [
-     "Debrief",
-     "Covered, found, not reached"
-    ]
+   "nodes": [
+    {
+     "id": "c",
+     "label": "Charter",
+     "x": 12,
+     "y": 22,
+     "sub": "a focused goal",
+     "art": "compass"
+    },
+    {
+     "id": "e",
+     "label": "Explore",
+     "x": 46,
+     "y": 22,
+     "sub": "follow what you notice",
+     "art": "search"
+    },
+    {
+     "id": "n",
+     "label": "Note",
+     "x": 84,
+     "y": 22,
+     "sub": "actions, observations",
+     "art": "pencil"
+    },
+    {
+     "id": "b",
+     "label": "Bug?",
+     "x": 84,
+     "y": 75,
+     "art": "bug"
+    },
+    {
+     "id": "r",
+     "label": "Report",
+     "x": 50,
+     "y": 88,
+     "sub": "a bug report",
+     "art": "doc"
+    },
+    {
+     "id": "d",
+     "label": "Debrief",
+     "x": 14,
+     "y": 68,
+     "sub": "covered, found, next",
+     "art": "presentation"
+    }
+   ],
+   "edges": [
+    {
+     "from": "c",
+     "to": "e"
+    },
+    {
+     "from": "e",
+     "to": "n"
+    },
+    {
+     "from": "n",
+     "to": "b"
+    },
+    {
+     "from": "b",
+     "to": "r"
+    },
+    {
+     "from": "r",
+     "to": "d"
+    },
+    {
+     "from": "b",
+     "to": "d"
+    }
    ],
    "beats": [
     {
-     "say": "Exploratory testing is learning the software and testing it at the same time, guided by what you discover.",
+     "say": "Exploratory testing means learning the software and testing it at once.",
      "show": 0
     },
     {
-     "say": "A test charter is a short written goal, like explore the checkout's handling of invalid coupons for thirty minutes.",
-     "show": 1
+     "say": "It starts with a charter: explore checkout as problem user for twenty five minutes.",
+     "show": 1,
+     "on": "c"
     },
     {
-     "say": "Session-based testing runs it in timeboxed sessions, each with its own charter.",
-     "show": 2
+     "say": "You explore in a timeboxed session, one charter each.",
+     "show": 2,
+     "on": "e",
+     "send": {
+      "from": "c",
+      "to": "e",
+      "label": "25 min timer"
+     }
     },
     {
-     "say": "Notes taken during the session record what you tried and noticed.",
-     "show": 3
+     "say": "You note what you tried and noticed.",
+     "show": 3,
+     "on": "n",
+     "send": {
+      "from": "e",
+      "to": "n",
+      "label": "what I tried"
+     }
     },
     {
-     "say": "And a debrief summarises what was covered, what was found, and what wasn't reached.",
-     "show": 4
+     "say": "Anything odd might be a bug.",
+     "show": 4,
+     "on": "b",
+     "send": {
+      "from": "n",
+      "to": "b",
+      "label": "anything odd?"
+     }
+    },
+    {
+     "say": "If it is, write a bug report.",
+     "show": 5,
+     "on": "r",
+     "send": {
+      "from": "b",
+      "to": "r",
+      "label": "yes"
+     }
+    },
+    {
+     "say": "Either way, a debrief: covered, found, and not reached.",
+     "show": 6,
+     "on": "d",
+     "send": {
+      "from": "r",
+      "to": "d",
+      "label": "findings"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "stopwatch",
+   "kind": "array",
    "kicker": "Topic 2.3 · Lab",
-   "title": "Run a session",
-   "steps": [
-    "Charter",
-    "Timed session, 5+ tries",
-    "Notes as you go",
-    "Debrief"
+   "title": "Five things a script wouldn't try",
+   "values": [
+    "Rapid clicks",
+    "Unusual order",
+    "Back midway",
+    "Empty field",
+    "Very long value"
    ],
    "beats": [
     {
-     "say": "Write a charter for one area of Sauce Demo, like checkout as problem user for twenty five minutes. Compare with standard user, which should behave correctly.",
-     "show": 1
+     "say": "In the lab, run that charter with a timer, and try five things a script wouldn't."
     },
     {
-     "say": "Run it with a timer, trying at least five things a script wouldn't: rapid actions, going back midway, empty or very long values.",
-     "show": 2
+     "say": "Rapid actions.",
+     "hl": 0,
+     "ptr": {
+      "try": 0
+     },
+     "note": "Log: one line, what you tried, what happened"
     },
     {
-     "say": "Write one line of notes per thing you tried.",
-     "show": 3
+     "say": "An unusual order.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "try": 1
+     },
+     "note": "Log: one line, what you tried, what happened"
     },
     {
-     "say": "Then a short debrief: what you covered, what looked odd, and what you'd explore next.",
-     "show": 4
+     "say": "Going back midway.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "try": 2
+     },
+     "note": "Log: one line, what you tried, what happened"
+    },
+    {
+     "say": "An empty field.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "try": 3
+     },
+     "note": "Log: one line, what you tried, what happened"
+    },
+    {
+     "say": "A very long value.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "try": 4
+     },
+     "note": "Log: one line, what you tried, what happened"
+    },
+    {
+     "say": "Compare with standard user, which should behave correctly.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Compare with standard_user"
+    },
+    {
+     "say": "Then debrief: what you covered, what looked odd, and what's next.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Debrief: covered · odd · next time"
     }
    ]
   },

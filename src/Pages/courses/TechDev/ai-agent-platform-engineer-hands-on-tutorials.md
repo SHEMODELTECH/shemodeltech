@@ -1428,7 +1428,7 @@ print(run_agent("Check if I have a note about groceries, and if not, create one.
 print(NOTES)
 ```
 
-Watch the log: the agent searches first, then decides what to do based on the result. Printing `NOTES` shows whether it created anything.
+Watch the log: the agent searches first, then decides what to do based on the result. Printing `NOTES` shows whether it created anything. `search_notes` matches exact text, so `'groceries'` does not match "Grocery list" (only `'grocery'` does); depending on the word the model searches for, it may create a new note even though one exists.
 
 **Step 8: Understand the agent's memory.**
 The `messages` list grows on every step: the goal, each model reply, and each tool result. Because the whole list is sent on every call, the agent can use earlier tool results in later decisions within the same task. That list is the agent's short-term memory. Add a **text cell** and explain, in two sentences, what the agent would forget if you only sent the latest message each time.
@@ -4655,7 +4655,7 @@ if __name__ == "__main__":
 How the MCP section works:
 - `expose` wraps each registry tool in a `guarded` function. MCP only ever sees `guarded`, and `guarded` only ever runs the tool through `registry.execute`, so **no MCP call can skip the permission check or the audit log**.
 - `@wraps(original)` copies the original function's name and signature onto the wrapper. MCP reads that signature to build the input schema, so `get_weather` still advertises one required string, `city`.
-- `ToolError` is the SDK's way to send a readable error back to the client as a result with `is_error` set to `True`. Other exceptions are hidden from the client on purpose (it only sees "Error executing tool ..."), so you don't leak internal details.
+- `ToolError` is the SDK's way to send a readable error back to the client as a result with `is_error` set to `True`. The SDK puts `Error executing tool <name>:` in front of your message, so the client sees `Error executing tool send_email: Access denied to tool: send_email`. Any other exception is hidden from the client on purpose (it sees only `Error executing tool <name>`, with no details), so you don't leak internal details.
 - Loading a new tool is still one `registry.register` line: the `for` loop publishes everything in the registry.
 - The server must never `print`: with stdio, standard output carries the protocol messages, and stray text would corrupt them. The SDK sends its own logs to standard error instead.
 
@@ -4725,7 +4725,7 @@ async with platform_session("intern-bot", "public") as session:
 print("Permission test passed.")
 ```
 
-Expected output: both restricted calls come back with `error? True` and the readable `ToolError` message from Step 3, `Access denied to tool: send_email` (and the same for `search_notes`). The public `get_weather` call works, and the last line says the test passed. If an `assert` fails, the check isn't in front of that tool: look at `expose` in Step 3.
+Expected output: both restricted calls come back with `error? True` and the readable `ToolError` message from Step 3, `Error executing tool send_email: Access denied to tool: send_email` (and the same for `search_notes`). The public `get_weather` call works, and the last line says the test passed. If an `assert` fails, the check isn't in front of that tool: look at `expose` in Step 3.
 
 Now check the audit log. The server wrote it, not the notebook, so this also proves the log works across the MCP boundary:
 

@@ -998,7 +998,7 @@ data_cleaning_project/
 Create a new notebook for this project (**File → New notebook**) and name it `schema_design_project`.
 
 **Step 2: Identify your entities.**
-An **entity** is a distinct "thing" your data describes, e.g., for a support-ticket dataset: `tickets`, `customers`, `labels`.
+An **entity** is a distinct "thing" your data describes, e.g., for a support-ticket dataset: `tickets` and `customers`. A ticket's label is a single value per ticket, so in this project it is stored as a `label` field on `tickets` rather than as its own entity.
 
 **Step 3: Define fields for each entity.**
 Add a **text cell** headed `schema` and write your notes in it.
@@ -1048,6 +1048,7 @@ CREATE TABLE IF NOT EXISTS tickets (
 );
 """
 conn = sqlite3.connect("schema_test.db")
+conn.execute("PRAGMA foreign_keys = ON")   # SQLite only enforces REFERENCES when this is on
 conn.executescript(schema)
 conn.execute("INSERT OR REPLACE INTO customers VALUES ('C1', 'Ada')")
 conn.execute("INSERT OR REPLACE INTO tickets VALUES "
@@ -1062,7 +1063,7 @@ except sqlite3.IntegrityError as error:
 print(conn.execute("SELECT * FROM tickets").fetchall())
 conn.close()
 ```
-The empty-text row is rejected with `NOT NULL constraint failed: tickets.text`, which shows the schema itself guards data quality, not just your cleaning code.
+The empty-text row is rejected with `NOT NULL constraint failed: tickets.text`, which shows the schema itself guards data quality, not just your cleaning code. SQLite ignores `REFERENCES` unless you switch on `PRAGMA foreign_keys` for each connection, which is why the code does that right after connecting; with it on, a ticket whose `customer_id` isn't in `customers` is rejected with `FOREIGN KEY constraint failed`.
 
 **Step 7: The schema.**
 Your tables and their foreign-key relationship look like this:
@@ -1313,20 +1314,24 @@ schema_design_project/
    "kicker": "Step 6 · Run it",
    "title": "The schema guards quality too",
    "file": "schema_design_project",
-   "code": "conn = sqlite3.connect(\"schema_test.db\")\nconn.executescript(schema)\nconn.execute(\"INSERT OR REPLACE INTO customers \"\n             \"VALUES ('C1', 'Ada')\")\nconn.execute(\"INSERT OR REPLACE INTO tickets VALUES\"\n    \" ('T001', 'I was charged twice', \"\n    \"'2026-09-01', 'billing_issue', 'C1', 'v1')\")\ntry:\n    conn.execute(\"INSERT INTO tickets (ticket_id, \"\n        \"text) VALUES ('T002', NULL)\")\nexcept sqlite3.IntegrityError as error:\n    print(\"Rejected as expected:\", error)\nprint(conn.execute(\n    \"SELECT * FROM tickets\").fetchall())",
+   "code": "conn = sqlite3.connect(\"schema_test.db\")\nconn.execute(\"PRAGMA foreign_keys = ON\")\nconn.executescript(schema)\nconn.execute(\"INSERT OR REPLACE INTO customers \"\n             \"VALUES ('C1', 'Ada')\")\nconn.execute(\"INSERT OR REPLACE INTO tickets VALUES\"\n    \" ('T001', 'I was charged twice', \"\n    \"'2026-09-01', 'billing_issue', 'C1', 'v1')\")\ntry:\n    conn.execute(\"INSERT INTO tickets (ticket_id, \"\n        \"text) VALUES ('T002', NULL)\")\nexcept sqlite3.IntegrityError as error:\n    print(\"Rejected as expected:\", error)\nprint(conn.execute(\n    \"SELECT * FROM tickets\").fetchall())",
    "beats": [
     {
      "say": "Run it with Python's built-in S Q Lite module. Nothing to install.",
      "line": [
       1,
-      2
+      3
      ]
+    },
+    {
+     "say": "Line two matters: S Q Lite only enforces foreign keys when you switch them on.",
+     "line": 2
     },
     {
      "say": "Insert Ada as customer C one.",
      "line": [
-      3,
-      4
+      4,
+      5
      ],
      "vars": {
       "customers": "1 row"
@@ -1335,9 +1340,9 @@ schema_design_project/
     {
      "say": "Then a valid ticket that points at her, version v one.",
      "line": [
-      5,
       6,
-      7
+      7,
+      8
      ],
      "vars": {
       "customers": "1 row",
@@ -1347,28 +1352,28 @@ schema_design_project/
     {
      "say": "Now try a ticket whose text is null, inside a try block.",
      "line": [
-      8,
       9,
-      10
+      10,
+      11
      ]
     },
     {
      "say": "When a rule is broken, S Q Lite raises an integrity error, and the except line catches it.",
-     "line": 11
+     "line": 12
     },
     {
      "say": "The database refuses it: not null constraint failed.",
      "line": [
-      11,
-      12
+      12,
+      13
      ],
      "out": "Rejected as expected: NOT NULL constraint failed: tickets.text"
     },
     {
      "say": "Only the valid ticket is stored. The schema itself guards data quality, not just your cleaning code.",
      "line": [
-      13,
-      14
+      14,
+      15
      ],
      "vars": {
       "customers": "1 row",

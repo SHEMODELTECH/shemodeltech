@@ -294,266 +294,386 @@ You can identify the security gates a request should pass (transport, authentica
    ]
   },
   {
-   "kind": "list",
-   "art": "bug",
+   "kind": "table",
    "kicker": "Topic 8.1 · OWASP Top 10:2025",
-   "title": "The five you'll meet most",
-   "items": [
+   "title": "The five you'll meet most in code review",
+   "columns": [
+    "Rank",
+    "Risk",
+    "Defence"
+   ],
+   "rows": [
     [
      "A01",
-     "Broken Access Control"
+     "Broken Access Control",
+     "Server-side checks"
     ],
     [
      "A02",
-     "Security Misconfiguration"
+     "Security Misconfig.",
+     "Harden, minimise"
     ],
     [
      "A03 · new",
-     "Software Supply Chain Failures"
+     "Supply Chain Failures",
+     "SBOM, pin, verify"
     ],
     [
      "A04",
-     "Cryptographic Failures"
+     "Cryptographic Failures",
+     "Strong crypto, keys"
     ],
     [
      "A05",
-     "Injection"
+     "Injection",
+     "Parameterised queries"
     ]
    ],
    "beats": [
     {
-     "say": "The OWASP Top 10 is the industry-standard awareness list of the most critical web application risks. The current edition is twenty twenty five.",
-     "show": 0
+     "say": "The OWASP Top 10 lists the most critical web application risks. The current edition is twenty twenty five.",
+     "sql": "OWASP Top 10:2025 · A01 to A10 · top five shown"
     },
     {
-     "say": "A zero one, broken access control, is still number one: users acting outside their permissions.",
-     "show": 1
+     "say": "Broken access control is still number one: users acting outside their permissions.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "A zero two, security misconfiguration: insecure defaults and error messages that leak internals.",
-     "show": 2
+     "say": "Security misconfiguration: insecure defaults, and errors that leak internals.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "A zero three, software supply chain failures, is new. A compromised or vulnerable package becomes your vulnerability.",
-     "show": 3
+     "say": "Software supply chain failures is new: a compromised package becomes your vulnerability.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "A zero four, cryptographic failures: weak or missing protection of sensitive data.",
-     "show": 4
+     "say": "Then cryptographic failures, and injection.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true
     },
     {
-     "say": "And A zero five, injection, when untrusted input is treated as a command or query. The goal is to know how to prevent each one.",
-     "show": 5
+     "say": "For each, the goal is prevention. And the list is a baseline, not a finish line.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "database",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 and 2",
    "title": "Fix the injection",
    "file": "users.js",
-   "code": "// Vulnerable: user input concatenated straight into the query\nconst q = \"SELECT * FROM users WHERE name = '\" + userInput + \"'\";\n\n// Safe: input is passed as a parameter, not part of the query text\nconst q = \"SELECT * FROM users WHERE name = ?\";\ndb.query(q, [userInput]);",
+   "code": "// Vulnerable: input concatenated into the query\nconst q = \"SELECT * FROM users WHERE name = '\"\n  + userInput + \"'\";\n\n// Safe: input is passed as a parameter\nconst q = \"SELECT * FROM users WHERE name = ?\";\ndb.query(q, [userInput]);",
    "beats": [
     {
-     "say": "The lab is review and fix. No attacking required.",
-     "show": 0
+     "say": "The lab is review and fix, no attacking. Here, user input is glued straight into the S Q L text.",
+     "line": [
+      2,
+      3
+     ]
     },
     {
-     "say": "Here, user input is glued straight into the S Q L text, so input could be read as part of the query.",
-     "show": 1
+     "say": "With the name Ada, that builds a normal query.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "userInput": "\"Ada\"",
+      "q": "SELECT * FROM users WHERE name = 'Ada'"
+     }
     },
     {
-     "say": "The fix is a parameterised query. Input is passed separately, as a parameter, and can never be treated as S Q L.",
-     "show": 1
+     "say": "Now the surname O'Brien. Its apostrophe closes the quoted name early.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "userInput": "\"O'Brien\"",
+      "q": "SELECT * FROM users WHERE name = 'O'Brien'"
+     }
+    },
+    {
+     "say": "So Brien is read as part of the query, not as data. Here it's only a syntax error, but input has crossed into code. That's injection.",
+     "line": [
+      2,
+      3
+     ],
+     "out": "query error: input became part of the SQL"
+    },
+    {
+     "say": "The fix: fixed query text, with a question mark placeholder.",
+     "line": 6,
+     "vars": {
+      "userInput": "\"O'Brien\"",
+      "q": "SELECT * FROM users WHERE name = ?"
+     }
+    },
+    {
+     "say": "The input travels separately, as a parameter, so it can never be treated as S Q L.",
+     "line": 7,
+     "vars": {
+      "userInput": "\"O'Brien\"",
+      "q": "SELECT * FROM users WHERE name = ?",
+      "params": "[\"O'Brien\"]"
+     },
+     "out": "rows where name is O'Brien"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "lock",
+   "kind": "walk",
    "kicker": "Lab · Steps 3 and 4",
    "title": "Fix the access check",
    "file": "admin.js",
-   "code": "// Vulnerable: trusts a client-supplied role\nif (request.body.role === \"admin\") { deleteUser(); }\n\n// Safe: authorization decided server-side from the authenticated session\nif (session.user.isAdmin) { deleteUser(); }",
+   "code": "// Vulnerable: trusts a client-supplied role\nif (request.body.role === \"admin\") { deleteUser(); }\n\n// Safe: decided server-side from the session\nif (session.user.isAdmin) { deleteUser(); }",
    "beats": [
     {
-     "say": "Next, broken access control.",
-     "show": 0
+     "say": "Next, broken access control. Bob is a regular user, but this check trusts a role his request sends.",
+     "line": 2,
+     "vars": {
+      "session.user": "bob",
+      "request.body.role": "\"admin\""
+     }
     },
     {
-     "say": "This code trusts a role the client sends. But the client can be manipulated.",
-     "show": 1
+     "say": "The client can be manipulated, so delete user runs for Bob.",
+     "line": 2,
+     "vars": {
+      "session.user": "bob",
+      "request.body.role": "\"admin\""
+     },
+     "out": "deleteUser() ran  ✗"
     },
     {
-     "say": "The fix decides authorization on the server, from the authenticated session.",
-     "show": 1
+     "say": "The fix asks the server's own session instead.",
+     "line": 5,
+     "vars": {
+      "session.user": "bob",
+      "session.user.isAdmin": "false"
+     }
     },
     {
-     "say": "That's the principle running through the whole list: never trust input, and enforce authorization server-side.",
-     "show": 1
+     "say": "Bob isn't an admin, so nothing happens. Never trust input, and enforce authorization on the server.",
+     "line": 5,
+     "vars": {
+      "session.user": "bob",
+      "session.user.isAdmin": "false"
+     },
+     "out": "deleteUser() skipped  ✓"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "package",
+   "kind": "diagram",
    "kicker": "Lab · Step 5",
-   "title": "Check your supply chain",
-   "file": "terminal",
-   "code": "npm audit\nnpm audit signatures\nnpm sbom --sbom-format cyclonedx > sbom.json",
+   "title": "Check your software supply chain",
+   "nodes": [
+    {
+     "id": "reg",
+     "label": "npm registry",
+     "x": 14,
+     "y": 25,
+     "sub": "packages, signatures",
+     "art": "cloud"
+    },
+    {
+     "id": "lock",
+     "label": "package-lock.json",
+     "x": 14,
+     "y": 75,
+     "sub": "pinned versions",
+     "art": "doc"
+    },
+    {
+     "id": "proj",
+     "label": "Your project",
+     "x": 50,
+     "y": 50,
+     "sub": "a Node app you own",
+     "art": "package"
+    },
+    {
+     "id": "sbom",
+     "label": "sbom.json",
+     "x": 86,
+     "y": 50,
+     "sub": "CycloneDX SBOM",
+     "art": "checklist"
+    }
+   ],
+   "edges": [
+    {
+     "from": "reg",
+     "to": "proj"
+    },
+    {
+     "from": "lock",
+     "to": "proj"
+    },
+    {
+     "from": "proj",
+     "to": "sbom"
+    }
+   ],
    "beats": [
     {
-     "say": "Now check the supply chain of a Node project you own.",
-     "show": 0
+     "say": "Your lockfile pins every dependency to an exact version, not whatever is newest.",
+     "show": 3,
+     "on": "lock",
+     "send": {
+      "from": "lock",
+      "to": "proj",
+      "label": "exact versions"
+     }
     },
     {
-     "say": "N P M audit scans for components with known flaws.",
-     "show": 1
+     "say": "N P M audit checks those versions for known flaws.",
+     "show": 3,
+     "on": "reg",
+     "send": {
+      "from": "proj",
+      "to": "reg",
+      "label": "npm audit"
+     }
     },
     {
-     "say": "Audit signatures verifies the registry signatures of what you installed.",
-     "show": 1
+     "say": "Audit signatures verifies the registry's signatures on what you installed.",
+     "show": 3,
+     "on": "proj",
+     "send": {
+      "from": "reg",
+      "to": "proj",
+      "label": "signatures OK"
+     }
     },
     {
-     "say": "And N P M S bom writes a Software Bill of Materials, a list of every component and version. The lockfile pins those versions, and the S bom records them.",
-     "show": 1
+     "say": "And N P M S bom writes a Software Bill of Materials: every component and version you ship.",
+     "show": 4,
+     "on": "sbom",
+     "send": {
+      "from": "proj",
+      "to": "sbom",
+      "label": "cyclonedx"
+     }
+    },
+    {
+     "say": "The lockfile pins versions. The S bom records them.",
+     "show": 4,
+     "on": [
+      "lock",
+      "sbom"
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "api",
+   "kind": "walk",
    "kicker": "Topic 8.2 · Secure APIs",
-   "title": "Every request passes every gate",
-   "steps": [
-    "Request over HTTPS",
-    "Authenticate",
-    "Authorize this object",
-    "Validate, rate limit",
-    "Handler runs"
-   ],
-   "beats": [
-    {
-     "say": "A P Is expose functionality and data directly, so they're one of the biggest attack surfaces.",
-     "show": 0
-    },
-    {
-     "say": "A secure A P I treats every request as untrusted. It travels over H T T P S.",
-     "show": 1
-    },
-    {
-     "say": "It must authenticate: is this a valid token?",
-     "show": 2
-    },
-    {
-     "say": "It must be authorized for this specific object.",
-     "show": 3
-    },
-    {
-     "say": "Its input is validated, and its rate is limited.",
-     "show": 4
-    },
-    {
-     "say": "Only then does the handler run.",
-     "show": 5
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "key",
-   "kicker": "Lab · Steps 2 to 4",
-   "title": "The gates in code",
+   "title": "Trace each curl test through the gates",
    "file": "api.py",
-   "code": "    # Gate 2: authentication (who are you?)\n    user = current_user()\n    if user is None:\n        return jsonify(error=\"Authentication required\"), 401\n\n    # ...\n\n    # Gate 4: object-level authorization (is THIS record yours?)\n    if record[\"owner\"] != user:\n        return jsonify(error=\"Forbidden\"), 403",
+   "code": "def get_record(record_id):\n    if is_rate_limited(request.remote_addr):\n        return jsonify(error=...), 429\n    user = current_user()\n    if user is None:\n        return jsonify(error=...), 401\n    if not re.fullmatch(r\"\\d{1,9}\", record_id):\n        return jsonify(error=...), 400\n    record = RECORDS.get(int(record_id))\n    if record is None:\n        return jsonify(error=...), 404\n    if record[\"owner\"] != user:\n        return jsonify(error=...), 403\n    return jsonify(record), 200",
    "beats": [
     {
-     "say": "In the lab, you run a tiny Flask A P I on your own computer. Two demo users get random tokens each time it starts.",
-     "show": 0
+     "say": "A P I s expose data directly, so every request is untrusted. In the lab, this Flask A P I runs on your computer. Record one two three is Alice's, one two four is Bob's.",
+     "line": 1
     },
     {
-     "say": "Here are two of its gates.",
-     "show": 1
+     "say": "Test one: no token. Gate one, the rate limit, passes. Gate two finds no user: four oh one.",
+     "line": [
+      2,
+      4,
+      5,
+      6
+     ],
+     "vars": {
+      "record_id": "\"123\"",
+      "calls in 10 s": 1,
+      "user": "None"
+     },
+     "out": "401 {\"error\": \"Authentication required\"}"
     },
     {
-     "say": "If there's no valid token, it returns four oh one.",
-     "show": 1
+     "say": "Test two: Alice's token, record one two three. Valid digits, the record exists, and she owns it: two hundred.",
+     "line": [
+      7,
+      9,
+      12,
+      14
+     ],
+     "vars": {
+      "record_id": "\"123\"",
+      "calls in 10 s": 2,
+      "user": "\"alice\"",
+      "owner": "\"alice\""
+     },
+     "out": "200 {\"id\": 123, \"note\": \"Alice's private note\", ...}"
     },
     {
-     "say": "And if the record isn't yours, four oh three. That object-level check is the one most often missing in real A P Is.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "test",
-   "kicker": "Lab · Steps 5 to 8",
-   "title": "Test each gate with curl",
-   "items": [
-    [
-     "No token",
-     "401"
-    ],
-    [
-     "✓ Alice → record 123",
-     "200"
-    ],
-    [
-     "✗ Alice → record 124",
-     "403"
-    ],
-    [
-     "ID \"abc\"",
-     "400"
-    ],
-    [
-     "6th call in 10 s",
-     "429"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Then test every gate with curl.",
-     "show": 0
+     "say": "Test three: Alice asks for one two four. She's authenticated, but it's Bob's: four oh three.",
+     "line": [
+      12,
+      13
+     ],
+     "vars": {
+      "record_id": "\"124\"",
+      "calls in 10 s": 3,
+      "user": "\"alice\"",
+      "owner": "\"bob\""
+     },
+     "out": "403 {\"error\": \"Forbidden\"}"
     },
     {
-     "say": "No token: four oh one.",
-     "show": 1
+     "say": "That object-level check is the one most often missing. Broken object-level authorization is the top A P I risk.",
+     "line": 12
     },
     {
-     "say": "Alice asks for her own record, one two three: two hundred, and the note.",
-     "show": 2
+     "say": "Test four: an I D of A B C isn't digits: four hundred.",
+     "line": [
+      7,
+      8
+     ],
+     "vars": {
+      "record_id": "\"abc\"",
+      "calls in 10 s": 4,
+      "user": "\"alice\""
+     },
+     "out": "400 {\"error\": \"Invalid record ID\"}"
     },
     {
-     "say": "Alice asks for Bob's record, one two four: four oh three.",
-     "show": 3
+     "say": "Then, after ten seconds, six quick calls. The first five get four oh one.",
+     "line": [
+      2,
+      6
+     ],
+     "vars": {
+      "record_id": "\"123\"",
+      "calls in 10 s": 5,
+      "user": "None"
+     },
+     "out": "401 · 401 · 401 · 401 · 401"
     },
     {
-     "say": "An I D of A B C: four hundred, invalid input.",
-     "show": 4
+     "say": "The sixth hits the limit at gate one: four twenty nine.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "record_id": "\"123\"",
+      "calls in 10 s": 5
+     },
+     "out": "429 {\"error\": \"Too many requests\"}"
     },
     {
-     "say": "And six quick calls in a row: the sixth gets four twenty nine, too many requests.",
-     "show": 5
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "Lab · Step 9",
-   "title": "The missing gate",
-   "quote": "What would an eavesdropper see in the Authorization header?",
-   "beats": [
-    {
-     "say": "One gate is missing on purpose. The practice server uses plain H T T P, because it only listens on your own computer.",
-     "show": 0
-    },
-    {
-     "say": "Write one sentence on why a real deployment must use H T T P S. Hint: what would an eavesdropper see in the Authorization header?",
-     "show": 1
+     "say": "One gate is missing on purpose: this is plain H T T P on your own machine. Write why a real deployment needs H T T P S. What would an eavesdropper see in the Authorization header?",
+     "line": 1
     }
    ]
   },
@@ -563,8 +683,8 @@ You can identify the security gates a request should pass (transport, authentica
    "kicker": "Quick check",
    "title": "What is broken object-level authorization?",
    "options": [
-    "An A P I with no login at all",
-    "An A P I that checks who you are, but not whether you're entitled to the specific object you asked for",
+    "An API with no login at all",
+    "An API that checks who you are, but not whether you're entitled to the specific object you asked for",
     "A token that has expired"
    ],
    "answer": 1,

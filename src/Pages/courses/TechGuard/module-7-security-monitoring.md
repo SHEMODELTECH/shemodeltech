@@ -273,297 +273,481 @@ You have walked a confirmed incident through all six IR phases with a concrete a
    ]
   },
   {
-   "kind": "flow",
-   "art": "pulse",
+   "kind": "diagram",
    "kicker": "Topic 7.1 · SIEM",
-   "title": "From logs to alerts",
-   "steps": [
-    "Log sources",
-    "Collect & normalise",
-    "Correlate",
-    "Alert"
+   "title": "From scattered logs to one alert",
+   "nodes": [
+    {
+     "id": "srv",
+     "label": "Linux server",
+     "x": 12,
+     "y": 25,
+     "sub": "sshd · auth.log",
+     "art": "server"
+    },
+    {
+     "id": "fw",
+     "label": "Firewall",
+     "x": 12,
+     "y": 75,
+     "sub": "network gear",
+     "art": "firewall"
+    },
+    {
+     "id": "norm",
+     "label": "Normalise",
+     "x": 40,
+     "y": 50,
+     "sub": "one common format",
+     "art": "gear"
+    },
+    {
+     "id": "cor",
+     "label": "Correlate",
+     "x": 66,
+     "y": 50,
+     "sub": "rules link events",
+     "art": "graph"
+    },
+    {
+     "id": "an",
+     "label": "Analyst",
+     "x": 90,
+     "y": 50,
+     "sub": "gets the alert",
+     "art": "bell"
+    }
+   ],
+   "edges": [
+    {
+     "from": "srv",
+     "to": "norm"
+    },
+    {
+     "from": "fw",
+     "to": "norm"
+    },
+    {
+     "from": "norm",
+     "to": "cor"
+    },
+    {
+     "from": "cor",
+     "to": "an"
+    }
    ],
    "beats": [
     {
-     "say": "S I E M stands for Security Information and Event Management.",
-     "show": 0
+     "say": "A S I E M, Security Information and Event Management, first aggregates logs from across the environment.",
+     "show": 3,
+     "on": "srv",
+     "send": {
+      "from": "srv",
+      "to": "norm",
+      "label": "Failed password"
+     }
     },
     {
-     "say": "It aggregates logs from servers, network gear, apps and cloud.",
-     "show": 1
+     "say": "Each source has its own format.",
+     "show": 3,
+     "on": "fw",
+     "send": {
+      "from": "fw",
+      "to": "norm",
+      "label": "firewall log"
+     }
     },
     {
-     "say": "It normalises their different formats into one structure, so a login looks the same wherever it came from.",
-     "show": 2
+     "say": "Normalisation parses them into one structure, so a login looks the same wherever it came from.",
+     "show": 3,
+     "on": "norm"
     },
     {
-     "say": "Correlation rules link events into a meaningful signal.",
-     "show": 3
+     "say": "Correlation rules link events into a signal, like many failures, then a success, from one source.",
+     "show": 4,
+     "on": "cor",
+     "send": {
+      "from": "norm",
+      "to": "cor",
+      "label": "user, IP, result"
+     }
     },
     {
-     "say": "And when a rule matches, it raises an alert for a person to investigate.",
-     "show": 4
+     "say": "When a rule matches, an alert goes to an analyst, prioritised by severity.",
+     "show": 5,
+     "on": "an",
+     "send": {
+      "from": "cor",
+      "to": "an",
+      "label": "ALERT · high"
+     }
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "bell",
-   "kicker": "Why correlation matters",
-   "title": "One event versus a pattern",
-   "quote": "Many failures, then a success, from the same source.",
-   "beats": [
-    {
-     "say": "One failed login is ignorable.",
-     "show": 0
-    },
-    {
-     "say": "Five hundred failed logins from one address, followed by a success, is an alert worth acting on.",
-     "show": 1
-    },
-    {
-     "say": "But a S I E M is only as good as its rules. Too many noisy ones, and analysts drown in false positives and start ignoring alerts. That's alert fatigue, so tuning is continuous work.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "walk",
    "kicker": "Lab · Steps 1 to 5",
-   "title": "A mini S I E M by hand",
+   "title": "A mini SIEM by hand",
    "file": "terminal",
-   "code": "grep \"Failed password\" auth.log\n\ngrep \"Failed password\" auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -rn\n\ngrep \"Accepted\" auth.log",
+   "code": "grep \"Failed password\" auth.log\n\ngrep \"Failed password\" auth.log \\\n  | awk '{print $(NF-3)}' \\\n  | sort | uniq -c | sort -rn\n\ngrep \"Accepted\" auth.log",
    "beats": [
     {
-     "say": "In the lab, you save a sample auth dot log from a fictional server, and build a S I E M by hand.",
-     "show": 0
+     "say": "In the lab, you search a sample auth dot log: one night on a fictional server."
     },
     {
-     "say": "Grep finds every failed password.",
-     "show": 1
+     "say": "Grep finds every failed password line. There are twenty.",
+     "line": 1,
+     "vars": {
+      "failed lines": 20
+     },
+     "out": [
+      "03:02:40 … Failed password for invalid user admin from 198.51.100.23 …",
+      "… 20 lines in all"
+     ]
     },
     {
-     "say": "Awk pulls out the source address, then sort and unique count failures per address. That's a correlation by hand.",
-     "show": 1
+     "say": "Awk counts fields from the end of each line. N F minus three is the source address.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "failed lines": 20,
+      "$(NF-3)": "203.0.113.45"
+     }
     },
     {
-     "say": "Then define a rule in words, like more than ten failures from one address is an alert, and look for any successful login that followed.",
-     "show": 1
+     "say": "Sort and unique dash c count failures per address, biggest first. That's correlation by hand.",
+     "line": 5,
+     "vars": {
+      "failed lines": 20
+     },
+     "out": [
+      "     14 203.0.113.45",
+      "      5 198.51.100.23",
+      "      1 192.0.2.10"
+     ]
+    },
+    {
+     "say": "Our rule: more than ten failures from one address is an alert. Only fourteen crosses it.",
+     "line": 5,
+     "vars": {
+      "failed lines": 20,
+      "rule": "> 10 per IP",
+      "alert": "203.0.113.45"
+     }
+    },
+    {
+     "say": "Then search for successful logins. That same address got in, as deploy.",
+     "line": 7,
+     "vars": {
+      "failed lines": 20,
+      "rule": "> 10 per IP",
+      "alert": "203.0.113.45"
+     },
+     "out": "03:14:51 … Accepted password for deploy from 203.0.113.45 …"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "search",
-   "kicker": "Lab · What you find",
-   "title": "Three sources, three stories",
-   "items": [
+   "kind": "table",
+   "kicker": "Concept · Correlation",
+   "title": "Failures, then a success, from one source",
+   "columns": [
+    "time",
+    "user",
+    "source IP",
+    "result"
+   ],
+   "rows": [
     [
-     "✗ 203.0.113.45",
-     "14 failures → login → sudo cat /etc/shadow"
+     "02:58:11",
+     "alex",
+     "192.0.2.10",
+     "accepted (key)"
     ],
     [
+     "03:02:40",
+     "admin (invalid)",
      "198.51.100.23",
-     "5 invalid usernames, gave up"
+     "failed"
     ],
     [
-     "✓ 192.0.2.10",
-     "alex mistyped once"
+     "03:14:02",
+     "root",
+     "203.0.113.45",
+     "failed"
+    ],
+    [
+     "03:14:47",
+     "deploy",
+     "203.0.113.45",
+     "failed"
+    ],
+    [
+     "03:14:51",
+     "deploy",
+     "203.0.113.45",
+     "accepted"
+    ],
+    [
+     "03:40:07",
+     "alex",
+     "192.0.2.10",
+     "failed"
+    ],
+    [
+     "03:40:12",
+     "alex",
+     "192.0.2.10",
+     "accepted"
     ]
    ],
    "beats": [
     {
-     "say": "The sample tells three stories.",
-     "show": 0
+     "say": "Normalised, every event has the same four fields. Here are seven from that night."
     },
     {
-     "say": "One address failed fourteen times, then logged in as deploy. About thirty seconds later, deploy used sudo to read the file of password hashes.",
-     "show": 1
+     "say": "The rule: from one source, more than ten failures, then a success.",
+     "sql": "per source IP: failed > 10, THEN accepted",
+     "col": 2
     },
     {
-     "say": "Another tried five usernames that don't exist, and gave up.",
-     "show": 2
+     "say": "The address ending in forty five matches: two of its fourteen failures, then a login.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And the third is the normal user, Alex, mistyping a password once.",
-     "show": 3
+     "say": "Thirty seconds later, deploy used sudo to read the file of password hashes.",
+     "hl": 4,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Alex also failed, then got in. But only once: a typo.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true
+    },
+    {
+     "say": "Alert on a single failure and that typo fires too. Noisy rules cause alert fatigue, so tuning never stops.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true,
+     "sql": "per source IP: failed >= 1  (too noisy)"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "people",
+   "kind": "diagram",
    "kicker": "Topic 7.2 · SOC",
    "title": "Who answers the alarm",
-   "steps": [
-    "Alert from the SIEM",
-    "Tier 1: triage",
-    "Tier 2: investigate",
-    "Tier 3: hunt"
+   "nodes": [
+    {
+     "id": "siem",
+     "label": "SIEM",
+     "x": 10,
+     "y": 50,
+     "sub": "the alarm",
+     "art": "bell"
+    },
+    {
+     "id": "t1",
+     "label": "Tier 1",
+     "x": 37,
+     "y": 25,
+     "sub": "triage",
+     "art": "funnel"
+    },
+    {
+     "id": "t2",
+     "label": "Tier 2",
+     "x": 63,
+     "y": 75,
+     "sub": "investigate",
+     "art": "search"
+    },
+    {
+     "id": "t3",
+     "label": "Tier 3 / IR",
+     "x": 90,
+     "y": 50,
+     "sub": "hunt, respond",
+     "art": "radar"
+    }
+   ],
+   "edges": [
+    {
+     "from": "siem",
+     "to": "t1"
+    },
+    {
+     "from": "t1",
+     "to": "t2"
+    },
+    {
+     "from": "t2",
+     "to": "t3"
+    }
    ],
    "beats": [
     {
-     "say": "If the S I E M is the alarm system, the Security Operations Center, the S O C, is the people who answer it.",
-     "show": 0
+     "say": "If the S I E M is the alarm, the S O C, the Security Operations Center, is the people who answer it.",
+     "show": 2,
+     "on": "t1",
+     "send": {
+      "from": "siem",
+      "to": "t1",
+      "label": "3 findings"
+     }
     },
     {
-     "say": "Alerts arrive from the S I E M.",
-     "show": 1
+     "say": "Tier 1 triages each finding: true positive, false positive, or needs more info, with a severity. Alex's typo is a false positive, closed here.",
+     "show": 2,
+     "on": "t1"
     },
     {
-     "say": "Tier 1 triages them: real threat, false positive, or needs escalation?",
-     "show": 2
+     "say": "The login after fourteen failures is high severity, beyond Tier 1, so it's escalated.",
+     "show": 3,
+     "on": "t2",
+     "send": {
+      "from": "t1",
+      "to": "t2",
+      "label": "escalate: High"
+     }
     },
     {
-     "say": "Tier 2 investigates the ones that look real.",
-     "show": 3
+     "say": "Tier 2 investigates and confirms a real incident. Tier 3 handles advanced response and threat hunting.",
+     "show": 4,
+     "on": "t3",
+     "send": {
+      "from": "t2",
+      "to": "t3",
+      "label": "confirmed"
+     }
     },
     {
-     "say": "Tier 3 handles advanced analysis and proactive threat hunting, so expensive expertise isn't spent on routine noise.",
-     "show": 4
+     "say": "Playbooks keep each step consistent, whoever is on shift. And M T T D and M T T R, mean time to detect and to respond, should keep falling.",
+     "show": 4,
+     "on": [
+      "t1",
+      "t2"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "funnel",
-   "kicker": "Lab · Triage",
-   "title": "Triage, escalate, write a playbook",
-   "items": [
-    [
-     "Triage",
-     "TP / FP / needs info + severity"
-    ],
-    [
-     "Escalate",
-     "Tier 1 or Tier 2, and why"
-    ],
-    [
-     "Playbook",
-     "Three steps, in order"
-    ],
-    [
-     "Metrics",
-     "MTTD · MTTR, lower is better"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Now triage your findings from the mini S I E M.",
-     "show": 0
-    },
-    {
-     "say": "Label each one true positive, false positive, or needs more info, with a severity and a one-line reason.",
-     "show": 1
-    },
-    {
-     "say": "Decide whether Tier 1 handles the most severe one, or escalates it to Tier 2.",
-     "show": 2
-    },
-    {
-     "say": "Write a playbook: three ordered steps for many failed logins followed by a success. Playbooks make response consistent, whoever is on shift.",
-     "show": 3
-    },
-    {
-     "say": "And think about M T T D and M T T R, mean time to detect, and mean time to respond. Lower is better.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "chain",
+   "kind": "array",
    "kicker": "Topic 7.3 · Incident response",
-   "title": "The six phases",
-   "items": [
-    [
-     "Preparation",
-     "Plan, tools, contacts"
-    ],
-    [
-     "Identification",
-     "Confirm and scope"
-    ],
-    [
-     "Containment",
-     "Stop the spread"
-    ],
-    [
-     "Eradication",
-     "Remove the root cause"
-    ],
-    [
-     "Recovery",
-     "Restore, verify clean"
-    ],
-    [
-     "Lessons Learned",
-     "Loops back to Preparation"
-    ]
+   "title": "Walk the brute-force incident through six phases",
+   "values": [
+    "Prepare",
+    "Identify",
+    "Contain",
+    "Eradicate",
+    "Recover",
+    "Lessons"
    ],
    "beats": [
     {
-     "say": "Once an incident is confirmed, incident response takes over, with a process instead of improvisation.",
-     "show": 0
+     "say": "Incident response handles the confirmed incident with a process, not improvisation: six SANS phases."
     },
     {
-     "say": "The SANS model has six phases. Preparation: the plan, tools and contacts, ready in advance.",
-     "show": 1
+     "say": "Preparation: the plan, tools and contacts, ready in advance.",
+     "hl": 0,
+     "ptr": {
+      "phase": 0
+     },
+     "note": "Plan, tools, contacts ready"
     },
     {
-     "say": "Identification: confirm it's real, and scope it.",
-     "show": 2
+     "say": "Identification confirms and scopes it: deploy was taken over, and the hash file was read.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "phase": 1
+     },
+     "note": "deploy compromised · hashes read"
     },
     {
-     "say": "Containment: stop the spread.",
-     "show": 3
+     "say": "Containment comes first, to stop the bleeding: block the address, disable deploy, and save the logs as evidence.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "phase": 2
+     },
+     "note": "Block IP, disable deploy · save logs"
     },
     {
-     "say": "Eradication: remove the root cause.",
-     "show": 4
+     "say": "Eradication removes the root cause, the guessed password, and confirms it's gone.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "phase": 3
+     },
+     "note": "Reset credentials · confirm gone"
     },
     {
-     "say": "Recovery: restore, and confirm clean.",
-     "show": 5
+     "say": "Recovery restores the server only once it's verified clean.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "phase": 4
+     },
+     "note": "Verify clean, then restore"
     },
     {
-     "say": "And Lessons Learned, which loops back to Preparation. NIST S P eight hundred sixty one, revision three, teaches the same ideas through the six functions of the NIST Cybersecurity Framework two point oh.",
-     "show": 6
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "pencil",
-   "kicker": "Lab · Tabletop",
-   "title": "Walk the brute-force incident",
-   "steps": [
-    "Scenario in one line",
-    "One action per phase",
-    "Contain, preserve evidence",
-    "Lesson → Preparation"
-   ],
-   "beats": [
-    {
-     "say": "The lab is a tabletop exercise. No real systems are touched.",
-     "show": 0
+     "say": "Lessons learned: one change, like requiring M F A, that loops back into preparation.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "phase": 5
+     },
+     "note": "e.g. require MFA → Preparation"
     },
     {
-     "say": "Write the scenario in one line: the brute-force attack that ended in a successful login.",
-     "show": 1
-    },
-    {
-     "say": "Write one concrete action for each of the six phases.",
-     "show": 2
-    },
-    {
-     "say": "For containment, pick a short-term action, and note how you'd preserve evidence while doing it.",
-     "show": 3
-    },
-    {
-     "say": "For lessons learned, write one change, like a new detection rule or an M F A requirement, and show how it feeds back into preparation.",
-     "show": 4
+     "say": "NIST S P eight hundred sixty one, revision three, teaches the same ideas through the six functions of NIST C S F two point oh.",
+     "ok": [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "hl": 0,
+     "ptr": {
+      "phase": 0
+     },
+     "note": "Lessons → Preparation"
     }
    ]
   },

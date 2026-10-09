@@ -245,257 +245,513 @@ You have two HTML reports from non-GUI runs, a table comparing p95, throughput, 
      "show": 1
     },
     {
-     "say": "A load test sends the same kind of traffic as a denial of service attack. It can crash a service other people rely on, and break the law.",
+     "say": "A load test looks like a denial of service attack. It can crash a service people rely on, and break the law. A public endpoint is not permission.",
      "show": 1
     },
     {
-     "say": "It's a public endpoint, is not permission. So every lab here targets O WASP Juice Shop, a practice app running on your own computer, on port three thousand.",
+     "say": "So every lab here targets O WASP Juice Shop, a practice app running on your own computer, on port three thousand.",
      "show": 1
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "blocks",
+   "kind": "diagram",
    "kicker": "Topic 5.1 · JMeter",
-   "title": "The parts of a test plan",
-   "steps": [
-    "Thread Group: N users",
-    "Sampler: HTTP request",
-    "Target system",
-    "Listener: results"
+   "title": "One request, from plan to result",
+   "nodes": [
+    {
+     "id": "tg",
+     "label": "Thread Group",
+     "x": 12,
+     "y": 25,
+     "sub": "10 users · 5 s ramp-up",
+     "art": "people"
+    },
+    {
+     "id": "s",
+     "label": "HTTP Request",
+     "x": 48,
+     "y": 25,
+     "sub": "the Sampler",
+     "art": "api"
+    },
+    {
+     "id": "js",
+     "label": "Juice Shop",
+     "x": 86,
+     "y": 50,
+     "sub": "localhost:3000",
+     "art": "server"
+    },
+    {
+     "id": "l",
+     "label": "Summary Report",
+     "x": 48,
+     "y": 78,
+     "sub": "the Listener",
+     "art": "dashboard"
+    }
+   ],
+   "edges": [
+    {
+     "from": "tg",
+     "to": "s"
+    },
+    {
+     "from": "s",
+     "to": "js"
+    },
+    {
+     "from": "s",
+     "to": "l"
+    }
    ],
    "beats": [
     {
-     "say": "Apache J Meter sends many requests at a system, simulating many users.",
-     "show": 0
+     "say": "In J Meter, a Thread Group is a group of simulated users. Each thread is one virtual user.",
+     "show": 1,
+     "on": "tg"
     },
     {
-     "say": "A Thread Group is a group of simulated users. Each thread is one virtual user.",
-     "show": 1
+     "say": "Each thread runs a Sampler: one request, here an H T T P request.",
+     "show": 2,
+     "on": "s",
+     "send": {
+      "from": "tg",
+      "to": "s",
+      "label": "each thread"
+     }
     },
     {
-     "say": "A Sampler is a single request each thread sends, like an H T T P request.",
-     "show": 2
+     "say": "It asks your local Juice Shop to search products for apple.",
+     "show": 3,
+     "on": "js",
+     "send": {
+      "from": "s",
+      "to": "js",
+      "label": "GET ?q=apple"
+     }
     },
     {
-     "say": "The target system is the server under test.",
-     "show": 3
+     "say": "Juice Shop replies.",
+     "show": 3,
+     "on": "s",
+     "send": {
+      "from": "js",
+      "to": "s",
+      "label": "200 · products"
+     }
     },
     {
-     "say": "And a Listener collects the results: response times, errors and throughput.",
-     "show": 4
+     "say": "A Listener, like Summary Report, records each time and status, then shows response times, errors and throughput.",
+     "show": 4,
+     "on": "l",
+     "send": {
+      "from": "s",
+      "to": "l",
+      "label": "time · status"
+     }
     },
     {
-     "say": "J Meter sends the raw H T T P requests without a browser, which is how one machine can simulate so many users.",
-     "show": 4
+     "say": "No browser is involved, which is how one machine can simulate so many users.",
+     "show": 4,
+     "on": [
+      "tg",
+      "s"
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "people",
-   "kicker": "Topic 5.1 · Lab",
-   "title": "Ten users, then fifty",
-   "steps": [
-    "10 users, 5 s ramp-up",
-    "GET /rest/products/search?q=apple",
-    "Add a Listener, run",
-    "50 users, compare"
+   "kind": "array",
+   "kicker": "Topic 5.1 · Ramp-up",
+   "title": "Ten users, started over five seconds",
+   "values": [
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "U5",
+    "U6",
+    "U7",
+    "U8",
+    "U9",
+    "U10"
    ],
    "beats": [
     {
-     "say": "In the lab, create a test plan with a Thread Group of ten users, and a ramp-up of five seconds.",
-     "show": 1
+     "say": "Ramp-up controls how gradually users start. Ten users over five seconds means a new one every half second.",
+     "note": "5 s ÷ 10 users = 0.5 s apart"
     },
     {
-     "say": "The ramp-up period controls how gradually those users start.",
-     "show": 1
+     "say": "At zero seconds, user one starts.",
+     "hl": 0,
+     "ptr": {
+      "t = 0 s": 0
+     },
+     "note": "t = 0 s → 1 running"
     },
     {
-     "say": "Add an H T T P request to localhost, port three thousand, path rest, products, search, q equals apple. That's Juice Shop's product search.",
-     "show": 2
+     "say": "By two seconds, five are running.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "ptr": {
+      "t = 2 s": 4
+     },
+     "note": "t = 2 s → 5 running"
     },
     {
-     "say": "Add a Listener, like Summary Report, and run it.",
-     "show": 3
+     "say": "At four and a half seconds, the tenth starts.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "ptr": {
+      "t = 4.5 s": 9
+     },
+     "note": "t = 4.5 s → all 10 running"
     },
     {
-     "say": "Then raise it to fifty users, and compare. Does response time climb? Do errors appear?",
-     "show": 4
+     "say": "Shrink the ramp-up to one second, and they all start almost at once. That's a spike.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "Ramp-up 1 s → 0.1 s apart"
     },
     {
-     "say": "Your numbers describe your laptop, not a production server. Just say so when you report them.",
-     "show": 4
+     "say": "In the lab, run ten users, then fifty, and compare response times and errors.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "note": "Run 1: 10 users · Run 2: 50 users"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "server",
+   "kind": "table",
    "kicker": "Topic 5.2 · Load testing",
-   "title": "Four kinds of load test",
-   "items": [
+   "title": "Pick the test that answers your question",
+   "columns": [
+    "Test",
+    "Load pattern",
+    "Answers"
+   ],
+   "rows": [
     [
      "Load",
-     "Expected traffic"
+     "Expected traffic",
+     "Fine on a normal day?"
     ],
     [
      "Stress",
-     "Beyond capacity · find the breaking point"
+     "200+ users, short ramp",
+     "Where does it break?"
     ],
     [
      "Spike",
-     "Sudden sharp jump"
+     "All start in 1–2 s",
+     "Survives a flash sale?"
     ],
     [
      "Soak",
-     "Sustained load · long duration"
+     "Moderate, for hours",
+     "Leaks over time?"
     ]
    ],
    "beats": [
     {
-     "say": "Load testing is a family of tests, and each answers a different question.",
-     "show": 0
+     "say": "There are four kinds of load test. Pick one by the business risk."
     },
     {
-     "say": "A load test checks behaviour under expected, realistic traffic.",
-     "show": 1
+     "say": "Expecting more normal traffic? A load test.",
+     "hl": 0,
+     "dim": true,
+     "sql": "Risk: more normal traffic"
     },
     {
-     "say": "A stress test pushes beyond capacity, to find the breaking point, and see whether it fails gracefully or catastrophically.",
-     "show": 2
+     "say": "Need the breaking point, and how it fails? A stress test.",
+     "hl": 1,
+     "dim": true,
+     "sql": "Risk: unknown breaking point"
     },
     {
-     "say": "A spike test simulates a sudden, sharp jump, like a flash sale or a viral post.",
-     "show": 3
+     "say": "A flash sale? A spike test, with a very short ramp-up.",
+     "hl": 2,
+     "dim": true,
+     "sql": "Risk: launch-day rush"
     },
     {
-     "say": "And a soak test runs a moderate load for a long time, to catch memory leaks and slow resource exhaustion.",
-     "show": 4
+     "say": "An always-on service? A soak test, to catch memory leaks over time.",
+     "hl": 3,
+     "dim": true,
+     "sql": "Risk: runs for days"
+    },
+    {
+     "say": "So report every result with its pattern, duration and environment.",
+     "col": 1,
+     "sql": "50 users · 2 minutes · my laptop"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "growth",
-   "kicker": "Topic 5.2 · Lab",
-   "title": "Same plan, new patterns",
-   "steps": [
-    "Stress: 200+ users",
-    "Spike: 1 to 2 s ramp-up",
-    "Write what each tells you"
-   ],
-   "beats": [
-    {
-     "say": "Reuse your plan, still pointed only at your local Juice Shop.",
-     "show": 0
-    },
-    {
-     "say": "Make it a stress test: two hundred or more users, with a short ramp-up. Watch for where errors start, or response times spike.",
-     "show": 1
-    },
-    {
-     "say": "Make it a spike test: all users start within one or two seconds. Compare that with a longer ramp-up.",
-     "show": 2
-    },
-    {
-     "say": "Then write a paragraph on what each run tested, and what it would and wouldn't tell a team deciding on a launch.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "big",
-   "art": "bars",
+   "kind": "table",
    "kicker": "Topic 5.3 · Reading results",
-   "title": "Report percentiles, not averages",
-   "big": "p95",
-   "sub": "95% of requests were faster than this",
-   "beats": [
-    {
-     "say": "Averages hide the problem.",
-     "show": 0
-    },
-    {
-     "say": "If most requests take two hundred milliseconds, but one in twenty takes six seconds, the average still looks fine while real users wait.",
-     "show": 0
-    },
-    {
-     "say": "So report percentiles. P ninety five is the response time that ninety five percent of requests were faster than.",
-     "show": 1
-    },
-    {
-     "say": "Alongside throughput, requests per second, and error rate, the share that failed.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "funnel",
-   "kicker": "Topic 5.3 · Concept",
-   "title": "Turning numbers into a finding",
-   "items": [
+   "title": "Averages hide the slow ones",
+   "columns": [
+    "Requests",
+    "Each took",
+    "Adds up to"
+   ],
+   "rows": [
     [
-     "Baseline",
-     "Normal run to compare against"
+     "19 of 20",
+     "200 ms",
+     "3,800 ms"
     ],
     [
-     "Bottleneck",
-     "The one limiting resource"
+     "1 of 20",
+     "6,000 ms",
+     "6,000 ms"
     ],
     [
-     "Saturation point",
-     "Throughput flat, latency climbing"
+     "All 20",
+     "—",
+     "9,800 ms"
     ]
    ],
    "beats": [
     {
-     "say": "A few more terms.",
-     "show": 0
+     "say": "Twenty requests: nineteen take two hundred milliseconds, one takes six seconds.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 1
     },
     {
-     "say": "A baseline is a run under normal conditions, so slower has a precise meaning.",
-     "show": 1
+     "say": "The average is four hundred and ninety milliseconds. Looks fine.",
+     "hl": 2,
+     "col": 2,
+     "sql": "average = 9,800 ÷ 20 = 490 ms"
     },
     {
-     "say": "A bottleneck is the one resource that limits everything else, like database connections, C P U or memory.",
-     "show": 2
+     "say": "But one user in twenty waited six seconds.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "So report percentiles. P ninety five is the time ninety five percent of requests were faster than.",
+     "hl": 1,
+     "col": 1,
+     "sql": "p95 = the time 95% of requests beat"
+    },
+    {
+     "say": "Plus throughput, requests per second, and error rate, the share that failed.",
+     "sql": "Report: p95 · throughput · error rate"
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Topic 5.3 · Finding",
+   "title": "Will checkout survive the sale?",
+   "points": [
+    [
+     20,
+     4
+    ],
+    [
+     40,
+     5
+    ],
+    [
+     60,
+     9
+    ],
+    [
+     80,
+     80
+    ]
+   ],
+   "xlabel": "load (× normal traffic)",
+   "ylabel": "checkout p95 (0 to 10 s)",
+   "beats": [
+    {
+     "say": "A shop asks: will checkout survive five times normal traffic? Each dot is one run."
+    },
+    {
+     "say": "The normal-load run is the baseline the others are compared against.",
+     "marks": [
+      [
+       20,
+       4
+      ]
+     ]
+    },
+    {
+     "say": "Up to three times normal load, p ninety five stays under the one second line.",
+     "line": [
+      0,
+      10
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "say": "At four times, it jumps to eight seconds, with four percent errors.",
+     "line": [
+      0,
+      10
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      2
+     ],
+     "marks": [
+      [
+       80,
+       80
+      ]
+     ]
+    },
+    {
+     "say": "The likely cause is database connections, the bottleneck. A good finding names that load, that metric, and that cause.",
+     "line": [
+      0,
+      10
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      2
+     ],
+     "marks": [
+      [
+       80,
+       80
+      ]
+     ]
     },
     {
      "say": "The saturation point is where throughput stops rising, while response times and errors keep climbing.",
-     "show": 3
-    },
-    {
-     "say": "A good finding names the load level, the metric that crossed the line, and the likely cause.",
-     "show": 3
+     "line": [
+      0,
+      10
+     ],
+     "groups": [
+      1,
+      1,
+      1,
+      2
+     ],
+     "marks": [
+      [
+       80,
+       80
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "table",
    "kicker": "Topic 5.3 · Lab",
-   "title": "Non-GUI runs with an HTML report",
-   "file": "terminal",
-   "code": "jmeter -n -t plan.jmx -l baseline.jtl -e -o baseline-report\n\n# higher load, new names\njmeter -n -t plan.jmx -l run2.jtl -e -o run2-report",
+   "title": "Read the non-GUI command, flag by flag",
+   "columns": [
+    "Flag",
+    "Value",
+    "Means"
+   ],
+   "rows": [
+    [
+     "-n",
+     "—",
+     "non-GUI mode"
+    ],
+    [
+     "-t",
+     "plan.jmx",
+     "the test plan to run"
+    ],
+    [
+     "-l",
+     "baseline.jtl",
+     "raw results file"
+    ],
+    [
+     "-e -o",
+     "baseline-report",
+     "build HTML report here"
+    ]
+   ],
    "beats": [
     {
-     "say": "For real tests, always run J Meter in non GUI mode. The GUI uses enough memory to distort results.",
-     "show": 0
+     "say": "Real runs use non GUI mode, because the GUI's memory use distorts results.",
+     "hl": 0,
+     "dim": true,
+     "sql": "jmeter -n -t plan.jmx -l baseline.jtl -e -o baseline-report"
     },
     {
-     "say": "Save your plan as plan dot j m x, and run a small baseline, writing an H T M L report.",
-     "show": 1
+     "say": "Dash t is your plan. Dash l saves every result.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
     },
     {
-     "say": "Record p ninety five, throughput and error rate. Then run at double the users, into new file and folder names, because J Meter won't write a report into a folder that already has files.",
-     "show": 1
+     "say": "Dash e and dash o build an H T M L report. Record its p ninety five, throughput and error rate.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "Finish with a one paragraph finding, using percentiles, not averages.",
-     "show": 1
+     "say": "Run again at double the users, with new names, since J Meter won't overwrite a report folder.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 1,
+     "sql": "jmeter -n -t plan.jmx -l run2.jtl -e -o run2-report"
     }
    ]
   },

@@ -302,7 +302,7 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
      "say": "Welcome to Module 9, DevOps security."
     },
     {
-     "say": "A C I C D pipeline commits, tests, packages and deploys code automatically. It holds the keys to production, so it's a prime target."
+     "say": "A C I C D pipeline tests and deploys code automatically. It holds the keys to production, so it's a prime target."
     },
     {
      "say": "DevSecOps means building security checks into the pipeline itself, so problems are caught on every change."
@@ -310,294 +310,618 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
    ]
   },
   {
-   "kind": "list",
-   "art": "package",
-   "kicker": "Before you start",
-   "title": "Install from official sources",
-   "items": [
-    [
-     "Gitleaks",
-     "Secrets"
-    ],
-    [
-     "Trivy",
-     "Container images"
-    ],
-    [
-     "Checkov",
-     "Infrastructure code"
-    ],
-    [
-     "✓ Verify",
-     "Official source + checksum"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "You'll install three free, open source scanners.",
-     "show": 0
-    },
-    {
-     "say": "Gitleaks, for secrets.",
-     "show": 1
-    },
-    {
-     "say": "Trivy, for container images.",
-     "show": 2
-    },
-    {
-     "say": "And Checkov, for infrastructure code, installed with pipx.",
-     "show": 3
-    },
-    {
-     "say": "Security tools are part of your supply chain too. Install them only from their official sources, and verify the checksum of what you downloaded.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "key",
+   "kind": "diagram",
    "kicker": "Topic 9.1 · Securing the pipeline",
-   "title": "Keep secrets out of code",
-   "items": [
-    [
-     "Committed secret",
-     "Treat as leaked: revoke and replace"
-    ],
-    [
-     "Pipeline secrets",
-     "${{ secrets.NAME }}"
-    ],
-    [
-     "permissions:",
-     "Least privilege"
-    ],
-    [
-     "Shift left",
-     "Gitleaks, Dependabot"
-    ]
+   "title": "A secret scan stops a leaked key",
+   "nodes": [
+    {
+     "id": "commit",
+     "label": "Commit",
+     "x": 12,
+     "y": 30,
+     "sub": "code pushed",
+     "art": "git"
+    },
+    {
+     "id": "scan",
+     "label": "Security checks",
+     "x": 38,
+     "y": 70,
+     "sub": "Gitleaks, Dependabot",
+     "art": "search"
+    },
+    {
+     "id": "tests",
+     "label": "Tests",
+     "x": 62,
+     "y": 30,
+     "sub": "must pass",
+     "art": "test"
+    },
+    {
+     "id": "deploy",
+     "label": "Deploy",
+     "x": 88,
+     "y": 70,
+     "sub": "pipeline secrets only",
+     "art": "rocket"
+    }
+   ],
+   "edges": [
+    {
+     "from": "commit",
+     "to": "scan"
+    },
+    {
+     "from": "scan",
+     "to": "tests"
+    },
+    {
+     "from": "tests",
+     "to": "deploy"
+    }
    ],
    "beats": [
     {
-     "say": "A secret is any credential that grants access: A P I keys, passwords, tokens, cloud keys.",
-     "show": 0
-    },
-    {
-     "say": "A secret committed to a repository should be treated as leaked, even if it's deleted later, because it stays in the history.",
-     "show": 1
-    },
-    {
-     "say": "Pipeline secrets, like GitHub Actions encrypted secrets, keep credentials out of code.",
-     "show": 2
-    },
-    {
-     "say": "A workflow should get only the permissions it needs, set with the permissions key.",
-     "show": 3
-    },
-    {
-     "say": "Secret scanning and dependency scanning catch problems early. That's shift left: moving checks earlier, where they're cheapest to fix.",
+     "say": "A secure pipeline: commit, security checks, tests, deploy.",
      "show": 4
+    },
+    {
+     "say": "A developer pastes a cloud key into a config file, and pushes it.",
+     "show": 4,
+     "on": "commit",
+     "send": {
+      "from": "commit",
+      "to": "scan",
+      "label": "push + key"
+     }
+    },
+    {
+     "say": "The secret scan fails the build within a minute.",
+     "show": 4,
+     "on": "scan",
+     "send": {
+      "from": "scan",
+      "to": "commit",
+      "label": "build failed"
+     }
+    },
+    {
+     "say": "Deleting the line isn't enough. The team revokes and replaces the key, then moves it into pipeline secrets.",
+     "show": 4,
+     "on": "commit"
+    },
+    {
+     "say": "The clean commit passes, and goes on to the tests.",
+     "show": 4,
+     "on": "scan",
+     "send": {
+      "from": "scan",
+      "to": "tests",
+      "label": "checks passed"
+     }
+    },
+    {
+     "say": "Deploy uses pipeline secrets only, never the code.",
+     "show": 4,
+     "on": "deploy",
+     "send": {
+      "from": "tests",
+      "to": "deploy",
+      "label": "tests passed"
+     }
+    },
+    {
+     "say": "Catching problems this early is called shift left. It's where fixes are cheapest.",
+     "show": 4,
+     "on": [
+      "commit",
+      "scan"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "git",
-   "kicker": "Lab · Steps 1 to 3",
-   "title": "Catch a committed secret",
-   "file": "terminal",
-   "code": "gitleaks git -v .",
+   "kind": "array",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "A deleted secret still lives in the history",
+   "values": [
+    "Initial commit",
+    "Add config.py",
+    "Remove API_KEY",
+    "Update README"
+   ],
    "beats": [
     {
-     "say": "In the lab, you create a private repository, and commit a made-up, random-looking key in config dot py on purpose.",
-     "show": 0
+     "say": "A repository's history: four commits, oldest first."
     },
     {
-     "say": "Then scan the repository and its history with Gitleaks.",
-     "show": 1
+     "say": "Commit two adds a key in config dot py.",
+     "hl": 1,
+     "note": "API_KEY added"
     },
     {
-     "say": "Gitleaks git scans every commit, which is how it finds secrets you've already deleted.",
-     "show": 1
+     "say": "Commit three deletes it.",
+     "hl": 2,
+     "note": "Key gone from the code"
     },
     {
-     "say": "For a plain folder that isn't a Git repository, use gitleaks dir instead.",
-     "show": 1
+     "say": "But gitleaks git scans every commit in the history.",
+     "ptr": {
+      "scan": 0
+     }
+    },
+    {
+     "say": "At commit two, it finds the key.",
+     "hl": 1,
+     "ptr": {
+      "scan": 1
+     },
+     "note": "Secret found in history"
+    },
+    {
+     "say": "So a committed secret counts as leaked, even after it's deleted.",
+     "hl": 1,
+     "gone": [
+      0,
+      2,
+      3
+     ],
+     "note": "Revoke and replace it"
+    },
+    {
+     "say": "For a plain folder that isn't a Git repository, use gitleaks dir.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "gitleaks dir = plain folder"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "lock",
+   "kind": "walk",
    "kicker": "Lab · Step 4",
-   "title": "Use a pipeline secret properly",
+   "title": "Use a pipeline secret without printing it",
    "file": ".github/workflows/check.yml",
-   "code": "name: Check\non: [push]\npermissions:\n  contents: read\njobs:\n  check:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - name: Confirm the secret is available\n        env:\n          DEMO_TOKEN: ${{ secrets.DEMO_TOKEN }}\n        run: test -n \"$DEMO_TOKEN\" && echo \"Secret is set\"",
+   "code": "on: [push]\npermissions:\n  contents: read\njobs:\n  check:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - name: Confirm the secret is available\n        env:\n          DEMO_TOKEN: ${{ secrets.DEMO_TOKEN }}\n        run: >-\n          test -n \"$DEMO_TOKEN\"\n          && echo \"Secret is set\"",
    "beats": [
     {
-     "say": "Now store a value properly, as a repository secret called demo token.",
-     "show": 0
+     "say": "The lab workflow runs on every push.",
+     "line": 1
     },
     {
-     "say": "The workflow sets permissions to read-only contents.",
-     "show": 1
+     "say": "Its token can only read the repository contents. That's least privilege.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "token": "contents: read"
+     }
     },
     {
-     "say": "It reads the secret at run time, and checks it's set, without printing it.",
-     "show": 1
+     "say": "It checks out the code. In real pipelines, pin each action to its full commit S H A, not a tag.",
+     "line": 8
     },
     {
-     "say": "For real pipelines, pin each action to its full commit S H A, not a tag.",
-     "show": 1
+     "say": "The secret isn't in the code. It's read at run time from the repository's encrypted secrets.",
+     "line": [
+      10,
+      11
+     ],
+     "vars": {
+      "DEMO_TOKEN": "***"
+     }
+    },
+    {
+     "say": "The test checks it's set, without printing it.",
+     "line": [
+      12,
+      13,
+      14
+     ],
+     "out": "Secret is set"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "virus",
+   "kind": "diagram",
    "kicker": "Topic 9.2 · A real supply-chain lesson",
    "title": "The Trivy compromise, March 2026",
-   "items": [
-    [
-     "Official source + checksum",
-     ""
-    ],
-    [
-     "Pin versions and commit SHAs",
-     ""
-    ],
-    [
-     "Rotate every reachable secret",
-     ""
-    ],
-    [
-     "Verify, don't trust the name",
-     ""
-    ]
+   "nodes": [
+    {
+     "id": "creds",
+     "label": "Stolen creds",
+     "x": 12,
+     "y": 30,
+     "sub": "release credentials",
+     "art": "key"
+    },
+    {
+     "id": "release",
+     "label": "Trivy releases",
+     "x": 38,
+     "y": 70,
+     "sub": "v0.69.4 + action tags",
+     "art": "package"
+    },
+    {
+     "id": "pipe",
+     "label": "Your pipeline",
+     "x": 62,
+     "y": 30,
+     "sub": "latest or a tag",
+     "art": "pipeline"
+    },
+    {
+     "id": "secrets",
+     "label": "Pipeline secrets",
+     "x": 88,
+     "y": 70,
+     "sub": "every one it held",
+     "art": "lock"
+    }
+   ],
+   "edges": [
+    {
+     "from": "creds",
+     "to": "release"
+    },
+    {
+     "from": "release",
+     "to": "pipe"
+    },
+    {
+     "from": "pipe",
+     "to": "secrets"
+    }
    ],
    "beats": [
     {
-     "say": "In March twenty twenty six, attackers used stolen release credentials to publish a malicious Trivy version, and to repoint the tags of its official GitHub Actions.",
-     "show": 0
-    },
-    {
-     "say": "Pipelines that pulled the latest, or used a movable tag, ran the attacker's code, with access to every secret they held.",
-     "show": 0
-    },
-    {
-     "say": "The defences: install only from official sources, and verify the checksum.",
-     "show": 1
-    },
-    {
-     "say": "Pin exact tool versions, and pin actions to a full commit S H A.",
-     "show": 2
-    },
-    {
-     "say": "If a compromised version ever ran, treat every secret it could reach as leaked. Revoke and replace them all.",
-     "show": 3
-    },
-    {
-     "say": "A security tool is still software in your supply chain. Trusting its name is not the same as verifying it.",
+     "say": "In March twenty twenty six, a real attack hit Trivy itself.",
      "show": 4
+    },
+    {
+     "say": "Attackers used stolen release credentials to publish a malicious version.",
+     "show": 4,
+     "on": "creds",
+     "send": {
+      "from": "creds",
+      "to": "release",
+      "label": "bad v0.69.4"
+     }
+    },
+    {
+     "say": "They also moved almost all tags of the official Trivy GitHub Actions to malicious code.",
+     "show": 4,
+     "on": "release",
+     "send": {
+      "from": "creds",
+      "to": "release",
+      "label": "moved tags"
+     }
+    },
+    {
+     "say": "Pipelines that pulled the latest, or used a tag, ran that code.",
+     "show": 4,
+     "on": "pipe",
+     "send": {
+      "from": "release",
+      "to": "pipe",
+      "label": "attacker code"
+     }
+    },
+    {
+     "say": "That code could reach every secret they held.",
+     "show": 4,
+     "on": [
+      "pipe",
+      "secrets"
+     ],
+     "send": {
+      "from": "secrets",
+      "to": "pipe",
+      "label": "all secrets"
+     }
+    },
+    {
+     "say": "Defences: install from official sources, verify the checksum, pin exact versions.",
+     "show": 4,
+     "on": "release"
+    },
+    {
+     "say": "Pin actions to a full commit S H A. A tag can move; a commit can't.",
+     "show": 4,
+     "on": "pipe"
+    },
+    {
+     "say": "If a compromised version ran, revoke and replace every secret it could reach.",
+     "show": 4,
+     "on": "secrets"
+    },
+    {
+     "say": "A security tool is still part of your supply chain. Trusting its name isn't verifying it.",
+     "show": 4,
+     "on": [
+      "creds",
+      "release",
+      "pipe",
+      "secrets"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "container",
-   "kicker": "Lab · Container security",
-   "title": "Slim, scanned, non-root",
+   "kind": "walk",
+   "kicker": "Lab · Steps 2 to 5",
+   "title": "Build a slim image that runs as non-root",
    "file": "Dockerfile",
    "code": "FROM python:3.12-slim\nRUN useradd --create-home appuser\nWORKDIR /home/appuser\nCOPY app.py .\nUSER appuser\nCMD [\"python\", \"app.py\"]",
    "beats": [
     {
-     "say": "Every container image starts from a base image, and each of its packages can carry known vulnerabilities.",
-     "show": 0
+     "say": "Scan python three twelve and its slim variant with Trivy. Fewer packages means fewer known vulnerabilities."
     },
     {
-     "say": "First, scan the full python three twelve image and the slim one with Trivy, and compare. Fewer packages means fewer vulnerabilities.",
-     "show": 1
+     "say": "So start from the slim image, pinned to a version, not latest. By default it runs as root.",
+     "line": 1,
+     "vars": {
+      "base": "python:3.12-slim",
+      "user": "root"
+     }
     },
     {
-     "say": "Then build this Dockerfile. It starts from the slim image, and adds a non-root user, so a compromised app has limited power.",
-     "show": 1
+     "say": "Create a normal user, app user.",
+     "line": 2
     },
     {
-     "say": "Build it, scan it, and docker run who am I should print app user.",
-     "show": 1
+     "say": "Work in its home folder, and copy in app dot py.",
+     "line": [
+      3,
+      4
+     ],
+     "vars": {
+      "workdir": "/home/appuser"
+     }
+    },
+    {
+     "say": "Switch to app user. Now nothing runs as root.",
+     "line": 5,
+     "vars": {
+      "user": "appuser"
+     }
+    },
+    {
+     "say": "Build it, scan it, and who am I prints app user. A compromised app now has limited power.",
+     "line": 6,
+     "out": "appuser"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "blueprint",
+   "kind": "diagram",
    "kicker": "Topic 9.3 · Infrastructure as code",
-   "title": "Catch the misconfiguration first",
-   "file": "main.tf",
-   "code": "resource \"aws_s3_bucket_public_access_block\" \"logs\" {\n  bucket                  = aws_s3_bucket.logs.id\n  block_public_acls       = true\n  block_public_policy     = true\n  ignore_public_acls      = true\n  restrict_public_buckets = true\n}",
+   "title": "Catch the open bucket before it exists",
+   "nodes": [
+    {
+     "id": "code",
+     "label": "main.tf",
+     "x": 12,
+     "y": 25,
+     "sub": "Terraform or OpenTofu",
+     "art": "blueprint"
+    },
+    {
+     "id": "scan",
+     "label": "Checkov",
+     "x": 45,
+     "y": 25,
+     "sub": "policy as code",
+     "art": "search"
+    },
+    {
+     "id": "review",
+     "label": "Review",
+     "x": 80,
+     "y": 25,
+     "sub": "pull request",
+     "art": "people"
+    },
+    {
+     "id": "apply",
+     "label": "Apply",
+     "x": 80,
+     "y": 75,
+     "sub": "pipeline creates it",
+     "art": "pipeline"
+    },
+    {
+     "id": "live",
+     "label": "Live cloud",
+     "x": 40,
+     "y": 75,
+     "sub": "the real bucket",
+     "art": "cloud"
+    }
+   ],
+   "edges": [
+    {
+     "from": "code",
+     "to": "scan"
+    },
+    {
+     "from": "scan",
+     "to": "review"
+    },
+    {
+     "from": "review",
+     "to": "apply"
+    },
+    {
+     "from": "apply",
+     "to": "live"
+    },
+    {
+     "from": "live",
+     "to": "code"
+    }
+   ],
    "beats": [
     {
-     "say": "Infrastructure as code describes servers, networks and storage in text files, with tools like Terraform or OpenTofu.",
-     "show": 0
+     "say": "Infrastructure as code describes servers and storage in text files, like this Terraform file.",
+     "show": 1,
+     "on": "code"
     },
     {
-     "say": "So a misconfiguration, the most common cause of cloud breaches, can be caught before anything is created.",
-     "show": 1
+     "say": "An engineer adds a log bucket, and forgets to block public access.",
+     "show": 2,
+     "on": "code",
+     "send": {
+      "from": "code",
+      "to": "scan",
+      "label": "logs bucket"
+     }
     },
     {
-     "say": "You write a bucket with no security settings, and Checkov flags it. Then you add a public access block with all four settings true.",
-     "show": 1
+     "say": "Checkov fails the pull request. Nothing exists yet.",
+     "show": 2,
+     "on": "scan",
+     "send": {
+      "from": "scan",
+      "to": "code",
+      "label": "FAILED checks"
+     }
     },
     {
-     "say": "Turn on versioning too, rerun the scan, and those two checks pass.",
-     "show": 1
+     "say": "It's fixed, the checks pass, and a second person reviews it.",
+     "show": 3,
+     "on": "review",
+     "send": {
+      "from": "scan",
+      "to": "review",
+      "label": "checks passed"
+     }
+    },
+    {
+     "say": "Then the pipeline creates the bucket, never exposed.",
+     "show": 5,
+     "on": [
+      "apply",
+      "live"
+     ],
+     "send": {
+      "from": "apply",
+      "to": "live",
+      "label": "create bucket"
+     }
+    },
+    {
+     "say": "A state file records what was created. It can hold sensitive values, so keep it out of Git.",
+     "show": 5,
+     "on": "apply"
+    },
+    {
+     "say": "A hand edit to the live bucket makes it differ from the code. That's drift.",
+     "show": 5,
+     "on": [
+      "live",
+      "code"
+     ],
+     "send": {
+      "from": "live",
+      "to": "code",
+      "label": "doesn't match"
+     }
+    },
+    {
+     "say": "Policy as code turns rules like no public buckets into automatic checks.",
+     "show": 5,
+     "on": "scan"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Lab · Steps 4 and 5",
-   "title": "Rules for your infrastructure",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Steps 2 and 3",
+   "title": "Fix two Checkov findings",
+   "columns": [
+    "Check",
+    "Wants",
+    "Before",
+    "After fix"
+   ],
+   "rows": [
     [
-     "Policy as code",
-     "Rules as automated checks"
+     "CKV2_AWS_6",
+     "Public access block",
+     "FAILED",
+     "PASSED"
     ],
     [
-     "Drift",
-     "Live ≠ code"
+     "CKV_AWS_21",
+     "Versioning on",
+     "FAILED",
+     "PASSED"
     ],
     [
-     "*.tfstate",
-     "Keep out of Git"
+     "Replication",
+     "Cross-region copy",
+     "FAILED",
+     "FAILED"
     ],
     [
-     "Three rules",
-     "Each with its Checkov check"
+     "Encryption",
+     "KMS key",
+     "FAILED",
+     "FAILED"
     ]
    ],
    "beats": [
     {
-     "say": "A few more ideas to finish.",
-     "show": 0
+     "say": "A bare bucket fails several checks. Here are four.",
+     "sql": "checkov -d iac-lab",
+     "col": 2
     },
     {
-     "say": "Policy as code turns rules like no public buckets into automated checks in the pipeline.",
-     "show": 1
+     "say": "One wants a public access block.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Drift is when the live environment no longer matches the code, because someone changed it by hand.",
-     "show": 2
+     "say": "One wants versioning.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "State files can contain sensitive values. Add them to dot git ignore, and never commit them to a public repository.",
-     "show": 3
+     "say": "Add a public access block with all four settings true, enable versioning, and scan again. Both now pass.",
+     "sql": "+ public access block, all four true\n+ versioning: Enabled",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 3
     },
     {
-     "say": "Finally, write three rules your infrastructure must always follow, and note which Checkov checks enforce each one.",
-     "show": 4
+     "say": "Replication and K M S encryption still fail.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Teams deliberately skip checks that don't apply, with a written reason.",
+     "hl": [
+      2,
+      3
+     ]
+    },
+    {
+     "say": "Last, write three rules, and the checks that enforce each.",
+     "col": 0
     }
    ]
   },
@@ -682,11 +1006,11 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
      "show": 0
     },
     {
-     "say": "Gitleaks has caught your fake committed secret,",
+     "say": "Gitleaks caught your fake secret,",
      "show": 1
     },
     {
-     "say": "you've used a pipeline secret with read-only permissions,",
+     "say": "a pipeline secret runs read-only,",
      "show": 2
     },
     {
@@ -694,19 +1018,19 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
      "show": 3
     },
     {
-     "say": "you've installed the scanners from official sources and verified a checksum,",
+     "say": "you've verified a checksum,",
      "show": 4
     },
     {
-     "say": "you can explain what the Trivy compromise teaches,",
+     "say": "you can explain the Trivy lesson,",
      "show": 5
     },
     {
-     "say": "you've compared a full and a slim base image,",
+     "say": "you've compared full and slim images,",
      "show": 6
     },
     {
-     "say": "you've built and scanned a non-root image,",
+     "say": "you've built a non-root image,",
      "show": 7
     },
     {
@@ -714,7 +1038,7 @@ You've scanned an insecure IaC file, fixed at least two misconfigurations until 
      "show": 8
     },
     {
-     "say": "and you've written three infrastructure rules with the checks that enforce them.",
+     "say": "and you've written three rules.",
      "show": 9
     },
     {

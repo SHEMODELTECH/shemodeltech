@@ -263,262 +263,562 @@ You have gathered passive information on a domain you own or are authorized to r
    ]
   },
   {
-   "kind": "quote",
-   "art": "scales",
+   "kind": "table",
    "kicker": "Read this first",
-   "title": "Authorization is the line",
-   "quote": "The only thing separating a penetration tester from an attacker is authorization.",
-   "beats": [
-    {
-     "say": "Before anything else.",
-     "show": 0
-    },
-    {
-     "say": "Running these tools against a system you don't own, without explicit written permission, is illegal in most countries.",
-     "show": 1
-    },
-    {
-     "say": "Every active lab here targets only your own Kali virtual machine, or your own local, intentionally vulnerable lab app. Never point these tools anywhere else, including public practice hosts.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "laptop",
-   "kicker": "Topic 3.1 · Kali Linux",
-   "title": "A tester's workbench",
-   "items": [
+   "title": "Same tool, different verdict",
+   "columns": [
+    "Target",
+    "Permission",
+    "Verdict"
+   ],
+   "rows": [
     [
-     "Virtual machine",
-     "Isolated, with a clean snapshot"
+     "Your Kali VM",
+     "You own it",
+     "In bounds"
     ],
     [
-     "Tool categories",
-     "Info gathering, exploitation, forensics…"
+     "Your local Juice Shop",
+     "You own it",
+     "In bounds"
     ],
     [
-     "Non-root user",
-     "sudo when needed"
+     "A client's network",
+     "Written scope",
+     "Legal pen test"
     ],
     [
-     "Dual-use",
-     "Authorization makes it legitimate"
+     "Someone else's host",
+     "None",
+     "Illegal"
+    ],
+    [
+     "Public practice host",
+     "Not yours",
+     "Off limits here"
     ]
    ],
    "beats": [
     {
-     "say": "Kali Linux is a Debian-based operating system from OffSec, built for penetration testing, auditing and forensics.",
-     "show": 0
+     "say": "The same scan, five targets. Only the permission changes.",
+     "col": 1
     },
     {
-     "say": "Run it as a virtual machine. That keeps testing contained, and lets you snapshot a clean state.",
-     "show": 1
+     "say": "Your own Kali virtual machine and your own local lab app are in bounds. You own them.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     },
     {
-     "say": "Its tools are grouped by category, like information gathering, vulnerability analysis, exploitation, password attacks and forensics.",
-     "show": 2
+     "say": "A real tester touches a client's systems only with written scope.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Modern Kali uses a non-root default user, and sudo when needed. Least privilege again.",
-     "show": 3
+     "say": "A system you don't own, with no written permission? Illegal in most countries.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And the tools are dual use. The same scanner serves an auditor or an attacker, so authorization and scope make the work legitimate.",
-     "show": 4
+     "say": "Even public practice hosts are off limits here. Authorization is the line between tester and attacker.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "diagram",
+   "kicker": "Topic 3.1 · Kali Linux",
+   "title": "A tester's workbench, kept in a box",
+   "nodes": [
+    {
+     "id": "host",
+     "label": "Your computer",
+     "x": 12,
+     "y": 50,
+     "sub": "main OS stays clean",
+     "art": "laptop"
+    },
+    {
+     "id": "kali",
+     "label": "Kali Linux VM",
+     "x": 42,
+     "y": 50,
+     "sub": "isolated · snapshot",
+     "art": "terminal"
+    },
+    {
+     "id": "info",
+     "label": "Info gathering",
+     "x": 82,
+     "y": 16,
+     "sub": "Nmap, whois",
+     "art": "radar"
+    },
+    {
+     "id": "exp",
+     "label": "Exploitation",
+     "x": 82,
+     "y": 50,
+     "sub": "Metasploit, Burp",
+     "art": "bug"
+    },
+    {
+     "id": "pw",
+     "label": "Password tools",
+     "x": 82,
+     "y": 84,
+     "sub": "John, forensic tools",
+     "art": "key"
+    }
+   ],
+   "edges": [
+    {
+     "from": "host",
+     "to": "kali"
+    },
+    {
+     "from": "kali",
+     "to": "info"
+    },
+    {
+     "from": "kali",
+     "to": "exp"
+    },
+    {
+     "from": "kali",
+     "to": "pw"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Kali Linux is a Debian-based system from OffSec, built for penetration testing and forensics.",
+     "show": 2,
+     "on": "kali"
+    },
+    {
+     "say": "Run it as a virtual machine, so testing stays contained and you can snapshot a clean state.",
+     "show": 2,
+     "on": [
+      "host",
+      "kali"
+     ]
+    },
+    {
+     "say": "Its tools are grouped by category: information gathering, like Nmap,",
+     "show": 3,
+     "on": "info"
+    },
+    {
+     "say": "exploitation, like Metasploit and Burp Suite,",
+     "show": 4,
+     "on": "exp"
+    },
+    {
+     "say": "and password and forensics tools, like John the Ripper.",
+     "show": 5,
+     "on": "pw"
+    },
+    {
+     "say": "It runs as a non-root user, with sudo when needed. And every tool is dual use, so authorization makes it legitimate.",
+     "show": 5,
+     "on": "kali"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
    "kicker": "Topic 3.1 · Lab",
-   "title": "Update, then scan yourself",
+   "title": "Update, then scan only yourself",
    "file": "terminal",
    "code": "sudo apt update && sudo apt full-upgrade -y\nsudo nmap 127.0.0.1",
    "beats": [
     {
-     "say": "Install Kali from the official image, take a clean snapshot, and update the toolset.",
-     "show": 0
+     "say": "Take a clean snapshot, then update the toolset.",
+     "line": 1
     },
     {
-     "say": "Then run one information gathering scan against your own virtual machine. One two seven dot zero dot zero dot one means this machine, so you're scanning nothing but yourself.",
-     "show": 1
+     "say": "Now scan one two seven dot zero dot zero dot one. That means this machine, so you scan only yourself.",
+     "line": 2,
+     "vars": {
+      "target": "127.0.0.1 (yourself)"
+     }
     },
     {
-     "say": "A fresh Kali often shows no open ports. That's a result too. Write one sentence on what it tells you.",
-     "show": 1
+     "say": "Nmap reports on the ports it checked.",
+     "line": 2,
+     "out": "Nmap scan report for localhost (127.0.0.1)"
+    },
+    {
+     "say": "A fresh Kali often has no open ports. That's a result too.",
+     "line": 2,
+     "vars": {
+      "open ports": 0
+     },
+     "out": "Not shown: 1000 closed tcp ports (reset)"
+    },
+    {
+     "say": "Nothing on this host is listening for connections.",
+     "line": 2
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
+   "kind": "array",
    "kicker": "Topic 3.2 · Pen testing",
-   "title": "A defined methodology",
-   "steps": [
+   "title": "A test moves through phases",
+   "values": [
     "Scope",
     "Recon",
     "Enumerate",
-    "Exploit (carefully)",
+    "Exploit",
+    "Post-exploit",
     "Report"
    ],
    "beats": [
     {
-     "say": "A penetration test is an authorized, simulated attack, to find and safely demonstrate weaknesses before a real attacker does.",
-     "show": 0
+     "say": "A penetration test is an authorized, simulated attack that finds weaknesses before a real attacker does."
     },
     {
-     "say": "It starts with scope: the rules of engagement, agreed in writing before any testing.",
-     "show": 1
+     "say": "It starts with scope: the rules of engagement, in writing.",
+     "hl": 0,
+     "ptr": {
+      "now": 0
+     },
+     "note": "Written authorization first"
     },
     {
-     "say": "Then recon, to gather information.",
-     "show": 2
+     "say": "Then reconnaissance, gathering information.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "now": 1
+     }
     },
     {
-     "say": "Enumeration, to scan and map the surface.",
-     "show": 3
+     "say": "Enumeration maps open ports and services.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "now": 2
+     }
     },
     {
-     "say": "Exploitation, to carefully demonstrate impact, stopping short of damage.",
-     "show": 4
+     "say": "Exploitation and post exploitation carefully show impact, stopping short of damage.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": [
+      3,
+      4
+     ],
+     "ptr": {
+      "now": 3
+     },
+     "note": "Prove the risk, cause no harm"
     },
     {
-     "say": "And the report, with findings and remediation. That's the true deliverable.",
-     "show": 5
+     "say": "Then the report, with findings and fixes. That's the true deliverable.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "now": 5
+     },
+     "note": "The report is the point"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "doc",
+   "kind": "table",
    "kicker": "Topic 3.2 · Key ideas",
-   "title": "Vulnerability, exploit, report",
-   "items": [
+   "title": "Five words testers use",
+   "columns": [
+    "Term",
+    "Means"
+   ],
+   "rows": [
     [
-     "Vulnerability vs exploit",
-     "The flaw vs using it"
+     "Vulnerability",
+     "A weakness or flaw"
     ],
     [
-     "Black · grey · white box",
-     "None · partial · full knowledge"
+     "Exploit",
+     "Actually using it"
     ],
     [
-     "A good finding",
-     "Reproducible + actionable"
+     "Black box",
+     "Tester knows nothing"
+    ],
+    [
+     "Grey box",
+     "Partial, like a user"
+    ],
+    [
+     "White box",
+     "Full, including source"
     ]
    ],
    "beats": [
     {
-     "say": "A few distinctions.",
-     "show": 0
+     "say": "Words you'll use in every report."
     },
     {
-     "say": "A vulnerability is a weakness. An exploit is the act of actually using it.",
-     "show": 1
+     "say": "A vulnerability is a weakness in a system.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Black box testers start with no knowledge, grey box with partial knowledge like a normal user, white box with full knowledge and source.",
-     "show": 2
+     "say": "An exploit is actually using that weakness.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     },
     {
-     "say": "And a finding only has value if it's reproducible and actionable. Not I got in, but this misconfiguration allowed this access, and here's how to close it.",
-     "show": 3
+     "say": "Black box testers start knowing nothing.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Grey box: partial knowledge, like a normal user.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "White box: full knowledge, including source.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "target",
+   "kind": "diagram",
    "kicker": "Topic 3.2 · Lab",
-   "title": "Your own lab target",
-   "steps": [
-    "Write the scope",
-    "nmap -sV your lab VM",
-    "Confirm one known issue",
-    "What · impact · fix"
+   "title": "From scope to a mini report",
+   "nodes": [
+    {
+     "id": "scope",
+     "label": "Scope document",
+     "x": 12,
+     "y": 22,
+     "sub": "host · IP · time window",
+     "art": "doc"
+    },
+    {
+     "id": "kali",
+     "label": "Your Kali VM",
+     "x": 40,
+     "y": 70,
+     "sub": "where you test from",
+     "art": "terminal"
+    },
+    {
+     "id": "target",
+     "label": "Your lab target",
+     "x": 88,
+     "y": 70,
+     "sub": "Juice Shop · port 3000",
+     "art": "bug"
+    },
+    {
+     "id": "report",
+     "label": "Mini report",
+     "x": 62,
+     "y": 22,
+     "sub": "what · impact · fix",
+     "art": "checklist"
+    },
+    {
+     "id": "home",
+     "label": "Home network",
+     "x": 88,
+     "y": 22,
+     "sub": "never bridged",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "scope",
+     "to": "kali"
+    },
+    {
+     "from": "kali",
+     "to": "target"
+    },
+    {
+     "from": "kali",
+     "to": "report"
+    }
    ],
    "beats": [
     {
-     "say": "Set up a target you own: Juice Shop inside Kali, bound to one two seven dot zero dot zero dot one, or Metasploitable on a host-only network, never bridged to your home network.",
-     "show": 0
+     "say": "Your target is one you own: Juice Shop inside Kali on your local address, or Metasploitable on a host-only network.",
+     "show": 3,
+     "on": [
+      "kali",
+      "target"
+     ]
     },
     {
-     "say": "First, write a one-page scope document: which host, what's in and out of scope, and the time window.",
-     "show": 1
+     "say": "Never bridge it to your home network. It's deliberately insecure.",
+     "show": 5,
+     "on": "home"
     },
     {
-     "say": "Map open ports and services on your own lab target with nmap dash s capital V.",
-     "show": 2
+     "say": "First, a one-page scope: which host and I P, what's in and out, and the time window.",
+     "show": 5,
+     "on": "scope",
+     "send": {
+      "from": "scope",
+      "to": "kali",
+      "label": "in scope: 1 host"
+     }
     },
     {
-     "say": "Identify one documented vulnerability, confirming it exists without weaponising anything.",
-     "show": 3
+     "say": "Map its ports and services with nmap dash s capital V.",
+     "show": 5,
+     "on": "target",
+     "send": {
+      "from": "kali",
+      "to": "target",
+      "label": "nmap -sV"
+     }
     },
     {
-     "say": "Then write a mini report: what it is, why it matters, and how to fix it.",
-     "show": 4
+     "say": "It reports what's listening, and which version. Enumerate one service, inside your scope.",
+     "show": 5,
+     "on": "target",
+     "send": {
+      "from": "target",
+      "to": "kali",
+      "label": "service, version"
+     }
+    },
+    {
+     "say": "Confirm one documented vulnerability exists, without weaponising anything.",
+     "show": 5,
+     "on": "target"
+    },
+    {
+     "say": "Then report it: what it is, why it matters, and how to fix it.",
+     "show": 5,
+     "on": "report",
+     "send": {
+      "from": "kali",
+      "to": "report",
+      "label": "1 finding"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "radar",
+   "kind": "table",
    "kicker": "Topic 3.3 · Reconnaissance",
-   "title": "Passive versus active",
-   "items": [
+   "title": "Building an attack-surface profile",
+   "columns": [
+    "Found",
+    "Recon",
+    "Using"
+   ],
+   "rows": [
     [
+     "Registration data",
      "Passive",
-     "WHOIS, DNS, OSINT · little trace"
+     "whois"
     ],
     [
+     "Name servers",
+     "Passive",
+     "dig NS"
+    ],
+    [
+     "Hosts, mail servers",
+     "Passive",
+     "dig A, AAAA, MX"
+    ],
+    [
+     "Every open TCP port",
      "Active",
-     "Scans, banners · detectable"
+     "nmap -p- (own VM)"
     ],
     [
-     "Defensive use",
-     "See what you're leaking"
+     "Software and versions",
+     "Active",
+     "nmap -sV banner"
     ]
    ],
    "beats": [
     {
-     "say": "Reconnaissance builds a picture of the target's attack surface: the hosts, open ports, services and subdomains an attacker could try to use.",
-     "show": 0
+     "say": "Reconnaissance maps the attack surface: hosts, ports, services and subdomains an attacker could use.",
+     "col": 0
     },
     {
-     "say": "Passive recon uses public sources, like WHOIS, D N S data and other open source intelligence, or OSINT. It leaves little or no trace.",
-     "show": 1
+     "say": "Passive recon reads public records, like WHOIS and D N S, for a domain you own or may research.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 1,
+     "sql": "whois yourdomain.com\ndig yourdomain.com NS"
     },
     {
-     "say": "Active recon probes the target directly, like port scanning or banner grabbing. More informative, but it can be logged and detected.",
-     "show": 2
+     "say": "Query each record type you need. Don't rely on dig any.",
+     "hl": 2,
+     "dim": true,
+     "col": 2,
+     "sql": "dig yourdomain.com MX"
     },
     {
-     "say": "It's a defensive skill too. Seeing what's easy to learn about your organisation tells you what to lock down.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "globe",
-   "kicker": "Topic 3.3 · Lab",
-   "title": "Public records, then your own VM",
-   "file": "terminal",
-   "code": "whois yourdomain.com\ndig yourdomain.com NS\ndig yourdomain.com MX\n\n# your own lab VM only\nnmap -p- <your-lab-VM-ip>\nnmap -sV --script=banner <your-lab-VM-ip>",
-   "beats": [
-    {
-     "say": "For passive recon, use a domain you own or are authorized to research, or only the public records of a domain like example dot com.",
-     "show": 0
+     "say": "Passive recon leaves little or no trace.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Query each record type you need, rather than relying on dig any.",
-     "show": 1
+     "say": "Active recon probes directly, so only your own lab machine. It tells you more, but can be logged.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 1,
+     "sql": "nmap -p- <your-lab-VM-ip>"
     },
     {
-     "say": "Active scans go only to your own lab virtual machine. Then assemble a short attack surface profile, marking what came from passive versus active recon.",
-     "show": 1
+     "say": "Banners show software versions. Old versions are often the first clue to a known flaw.",
+     "hl": 4,
+     "dim": true,
+     "col": 0,
+     "sql": "nmap -sV --script=banner <your-lab-VM-ip>"
+    },
+    {
+     "say": "Mark what came from passive versus active. Defenders use the same view to see what they're leaking.",
+     "col": 1
     }
    ]
   },

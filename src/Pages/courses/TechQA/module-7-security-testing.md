@@ -230,278 +230,585 @@ You have a map of Juice Shop's inputs, results from boundary and type testing on
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Topic 7.1 · Vulnerability testing",
    "title": "From scope to report",
-   "steps": [
-    "Scope",
-    "Automated scan",
-    "Findings",
-    "Verify & prioritize",
-    "Report"
+   "nodes": [
+    {
+     "id": "sc",
+     "label": "Scope",
+     "x": 10,
+     "y": 30,
+     "sub": "localhost:3000 only",
+     "art": "lock"
+    },
+    {
+     "id": "scan",
+     "label": "Automated scan",
+     "x": 30,
+     "y": 70,
+     "sub": "ZAP",
+     "art": "radar"
+    },
+    {
+     "id": "find",
+     "label": "Findings",
+     "x": 50,
+     "y": 30,
+     "sub": "flagged for review",
+     "art": "bug"
+    },
+    {
+     "id": "ver",
+     "label": "Verify + severity",
+     "x": 70,
+     "y": 70,
+     "sub": "real? how harmful?",
+     "art": "search"
+    },
+    {
+     "id": "rep",
+     "label": "Report",
+     "x": 90,
+     "y": 30,
+     "sub": "documented for fixing",
+     "art": "doc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "sc",
+     "to": "scan"
+    },
+    {
+     "from": "scan",
+     "to": "find"
+    },
+    {
+     "from": "find",
+     "to": "ver"
+    },
+    {
+     "from": "ver",
+     "to": "rep"
+    }
    ],
    "beats": [
     {
-     "say": "Vulnerability testing is systematic, not open-ended hacking.",
-     "show": 0
+     "say": "Vulnerability testing checks for known kinds of weakness. It's systematic, not open ended hacking.",
+     "show": 1,
+     "on": "sc"
     },
     {
-     "say": "Start with scope: exactly what you're authorized to test. Testing outside it, even by accident, can have serious legal consequences.",
-     "show": 1
+     "say": "It starts with scope: exactly what you may test. Here, only Juice Shop on your computer.",
+     "show": 1,
+     "on": "sc"
     },
     {
-     "say": "Run an automated scan, which checks for known categories of weakness.",
-     "show": 2
+     "say": "Going outside scope, even by accident, can have legal consequences.",
+     "show": 1,
+     "on": "sc"
     },
     {
-     "say": "The scanner flags findings for review.",
-     "show": 3
+     "say": "ZAP scans inside that scope.",
+     "show": 2,
+     "on": "scan",
+     "send": {
+      "from": "sc",
+      "to": "scan",
+      "label": "localhost:3000"
+     }
     },
     {
-     "say": "A human verifies each one, because scanners produce false positives, and assigns a severity.",
-     "show": 4
+     "say": "It flags possible problems.",
+     "show": 3,
+     "on": "find",
+     "send": {
+      "from": "scan",
+      "to": "find",
+      "label": "alerts"
+     }
     },
     {
-     "say": "Then it's reported for fixing.",
-     "show": 5
+     "say": "A human confirms each, since scanners give false positives, and sets a severity.",
+     "show": 4,
+     "on": "ver",
+     "send": {
+      "from": "find",
+      "to": "ver",
+      "label": "check each"
+     }
+    },
+    {
+     "say": "Confirmed findings go in the report.",
+     "show": 5,
+     "on": "rep",
+     "send": {
+      "from": "ver",
+      "to": "rep",
+      "label": "confirmed"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "bug",
-   "kicker": "Topic 7.1 · Concept",
-   "title": "Key terms",
-   "items": [
-    [
-     "OWASP Top 10",
-     "The standard reference"
-    ],
-    [
-     "Scanner (ZAP)",
-     "Flags potential issues"
-    ],
-    [
-     "Severity",
-     "Critical · high · medium · low"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "The O WASP Top Ten is a regularly updated list of the most critical web application risks, like injection and broken access control.",
-     "show": 1
-    },
-    {
-     "say": "A vulnerability scanner, like ZAP, probes for known weaknesses, and flags them for a human.",
-     "show": 2
-    },
-    {
-     "say": "Severity, critical, high, medium or low, reflects the potential harm, and drives how urgently it's fixed.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "radar",
+   "kind": "table",
    "kicker": "Topic 7.1 · Lab",
-   "title": "Scan your local Juice Shop",
-   "file": "terminal",
-   "code": "docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop",
-   "beats": [
-    {
-     "say": "Start Juice Shop with Docker. The one two seven part keeps it reachable only from your own computer, which matters because it's deliberately insecure.",
-     "show": 0
-    },
-    {
-     "say": "Open ZAP, choose Automated Scan, enter localhost port three thousand, and click Attack.",
-     "show": 1
-    },
-    {
-     "say": "Pick three findings from the Alerts tab. Map each to the O WASP Top Ten twenty twenty five, explain it in a sentence, and assign a justified severity.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "password",
-   "kicker": "Topic 7.2 · Authentication testing",
-   "title": "Does login hold up?",
-   "items": [
+   "title": "Map each alert, then rate it",
+   "columns": [
+    "Example ZAP alert",
+    "OWASP Top 10:2025",
+    "Severity"
+   ],
+   "rows": [
     [
-     "Credentials",
-     "Do errors leak which accounts exist?"
+     "CSP header not set",
+     "A02 Security Misconfig",
+     "Medium"
     ],
     [
-     "Sessions",
-     "Invalidated on logout?"
+     "SQL injection",
+     "A05 Injection",
+     "High"
     ],
     [
-     "Rate limiting",
-     "Repeated failures blocked?"
-    ],
-    [
-     "Password policy",
-     "NIST SP 800-63B-4"
+     "Cross-domain misconfig",
+     "A02 Security Misconfig",
+     "Medium"
     ]
    ],
    "beats": [
     {
-     "say": "Authentication is one of the highest value targets for attackers, so it gets its own tests.",
-     "show": 0
+     "say": "Start Juice Shop with Docker. The one two seven part keeps it reachable only from your computer. Then scan localhost port three thousand with ZAP.",
+     "sql": "docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop"
     },
     {
-     "say": "Credential testing: how it handles wrong passwords, and whether error messages reveal too much.",
-     "show": 1
+     "say": "Here are three example alerts. Yours will differ."
     },
     {
-     "say": "Session management: are sessions really invalidated on logout?",
-     "show": 2
+     "say": "First, find each one's O WASP Top Ten twenty twenty five category.",
+     "col": 1,
+     "sql": "owasp.org/Top10/2025"
     },
     {
-     "say": "Rate limiting: are repeated failed logins throttled or blocked?",
-     "show": 3
+     "say": "A missing security header is a setup mistake: security misconfiguration.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Password policy: are weak passwords really rejected? A useful yardstick is N I S T S P eight hundred sixty three B four.",
-     "show": 4
+     "say": "S Q L injection maps to injection.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "It asks for at least fifteen characters when the password is the only factor, eight with M F A, checks against breached passwords, and no forced complexity or routine expiry.",
-     "show": 4
+     "say": "Then set a severity. Injection could expose stored data, so it's high, and fixed first.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Severity tells the team what to fix first.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "lock",
+   "kind": "table",
+   "kicker": "Topic 7.2 · Authentication",
+   "title": "What a leaky login looks like",
+   "columns": [
+    "Login attempt",
+    "Message shown",
+    "What it reveals"
+   ],
+   "rows": [
+    [
+     "Real email, wrong pw",
+     "Wrong password",
+     "This email exists"
+    ],
+    [
+     "Unknown email",
+     "No such account",
+     "This email doesn't"
+    ],
+    [
+     "5 rapid failures",
+     "Locked? Slowed?",
+     "Unlimited guessing?"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Login is a top target for attackers, so it gets its own tests. Here's a leaky login."
+    },
+    {
+     "say": "Register a test account, then log in with the wrong password. Note the message.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Then try an email that doesn't exist.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Different wording tells anyone which emails are registered.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 2
+    },
+    {
+     "say": "Safe apps use one message for both.",
+     "hl": [
+      0,
+      1
+     ],
+     "sql": "Safe: one message for both\n\"Invalid email or password\""
+    },
+    {
+     "say": "Next, five quick failed logins. Lockout, delay, or nothing?",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Rate limiting stops endless guessing. Nothing slows you? That's a finding.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Topic 7.2 · Lab",
-   "title": "Does logout end the session?",
-   "file": "terminal",
-   "code": "curl -H \"Authorization: Bearer PASTE_TOKEN_HERE\" \\\n  http://localhost:3000/rest/user/whoami",
+   "title": "Does logout really end the session?",
+   "nodes": [
+    {
+     "id": "br",
+     "label": "Browser",
+     "x": 15,
+     "y": 28,
+     "sub": "DevTools: token",
+     "art": "browser"
+    },
+    {
+     "id": "srv",
+     "label": "Juice Shop",
+     "x": 82,
+     "y": 50,
+     "sub": "localhost:3000",
+     "art": "server"
+    },
+    {
+     "id": "cu",
+     "label": "Terminal",
+     "x": 15,
+     "y": 76,
+     "sub": "curl",
+     "art": "terminal"
+    }
+   ],
+   "edges": [
+    {
+     "from": "br",
+     "to": "srv"
+    },
+    {
+     "from": "cu",
+     "to": "srv"
+    }
+   ],
    "beats": [
     {
-     "say": "In the lab, register a test account on your local Juice Shop.",
-     "show": 0
+     "say": "Does logout really end a session?",
+     "show": 2
     },
     {
-     "say": "Compare the error for a wrong password with the error for an account that doesn't exist. Different wording reveals which emails are registered.",
-     "show": 1
+     "say": "Log in, and the server gives your browser a token.",
+     "show": 2,
+     "on": "br",
+     "send": {
+      "from": "srv",
+      "to": "br",
+      "label": "token"
+     }
     },
     {
-     "say": "Try five or so rapid failed logins, and watch for lockout or delay.",
-     "show": 1
+     "say": "Copy it from the DevTools Application tab.",
+     "show": 2,
+     "on": "br"
     },
     {
-     "say": "Then copy your token from DevTools, log out, and re-send it with curl. If it still shows your email, the token wasn't invalidated. That's a finding.",
-     "show": 1
+     "say": "Log out.",
+     "show": 2,
+     "on": "br",
+     "send": {
+      "from": "br",
+      "to": "srv",
+      "label": "log out"
+     }
     },
     {
-     "say": "Finally, try weak passwords like one two three, and compare with the N I S T yardstick.",
-     "show": 1
+     "say": "Then re-send the token with curl, asking who am I.",
+     "show": 3,
+     "on": "cu",
+     "send": {
+      "from": "cu",
+      "to": "srv",
+      "label": "whoami + token"
+     }
+    },
+    {
+     "say": "If your email comes back, logout didn't invalidate it. That's a finding.",
+     "show": 3,
+     "on": "srv",
+     "send": {
+      "from": "srv",
+      "to": "cu",
+      "label": "your email?"
+     }
+    },
+    {
+     "say": "Run tests like this on test systems, never real users' accounts.",
+     "show": 3,
+     "on": [
+      "br",
+      "srv",
+      "cu"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "form",
-   "kicker": "Topic 7.3 · Input validation",
-   "title": "Never trust what a user typed",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 7.2 · Lab",
+   "title": "Weak passwords against the yardstick",
+   "columns": [
+    "Password",
+    "Length",
+    "NIST 800-63B-4"
+   ],
+   "rows": [
     [
-     "Validation",
-     "Server checks type and range"
+     "123",
+     "3",
+     "Too short"
     ],
     [
-     "Output encoding",
-     "Shown as text, never run"
+     "password",
+     "8",
+     "Common, breached"
     ],
     [
-     "XSS",
-     "Unencoded input runs as script"
-    ],
-    [
-     "Injection",
-     "Fix: parameterised queries"
+     "12345",
+     "5",
+     "Too short, common"
     ]
    ],
    "beats": [
     {
-     "say": "Almost every serious web vulnerability starts with an app trusting what a user typed.",
-     "show": 0
+     "say": "Try registering with weak passwords: one two three, password, and one two three four five."
     },
     {
-     "say": "Validation checks input is what's expected, on the server as well as in the browser.",
-     "show": 1
+     "say": "N I S T S P eight hundred sixty three B four wants fifteen characters for a password alone, eight with M F A.",
+     "col": 1,
+     "sql": "Only factor: at least 15 characters\nWith MFA: at least 8\nBlock common or breached passwords"
     },
     {
-     "say": "Output encoding shows user text as text, never run as part of the page.",
-     "show": 2
+     "say": "So two are far too short.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Cross-site scripting, or X S S, happens when a page displays input without encoding, so it runs as script in other users' browsers.",
-     "show": 3
+     "say": "Password is eight, but so common it should be blocked.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Injection happens when input is pasted straight into a query. The fix is parameterised queries.",
-     "show": 4
+     "say": "It also drops forced complexity and expiry. Write a finding for any Juice Shop accepts.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "browser",
-   "kicker": "Topic 7.3 · Concept",
-   "title": "Browser checks prove nothing",
-   "quote": "Anyone can skip the browser's checks. The server must validate too.",
-   "beats": [
-    {
-     "say": "Browser-side checks improve the user experience, but prove nothing about security.",
-     "show": 0
-    },
-    {
-     "say": "Anyone can send a request that skips them, so the server must check too.",
-     "show": 1
-    },
-    {
-     "say": "And a tester's job is to show the flaw exists and report it clearly, not to exploit it further.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "search",
-   "kicker": "Topic 7.3 · Lab",
-   "title": "Map, probe, report",
-   "steps": [
-    "Map every input",
-    "Empty, long, wrong type, HTML",
-    "ZAP on localhost only",
-    "Bug report + fix"
+   "kind": "table",
+   "kicker": "Topic 7.3 · Input validation",
+   "title": "Probe an input four ways",
+   "columns": [
+    "Probe",
+    "Example value",
+    "Clean result"
+   ],
+   "rows": [
+    [
+     "Empty",
+     "(nothing)",
+     "Rejected with message"
+    ],
+    [
+     "Very long",
+     "a very long string",
+     "Rejected or limited"
+    ],
+    [
+     "Wrong type",
+     "letters as quantity",
+     "Rejected"
+    ],
+    [
+     "HTML",
+     "<b>test</b>",
+     "Shown as plain text"
+    ]
    ],
    "beats": [
     {
-     "say": "In the lab, still only on your local Juice Shop.",
-     "show": 0
+     "say": "Most serious flaws start with trusting user input. Map every input, then probe three."
     },
     {
-     "say": "Map every input: search, login, feedback, account fields.",
-     "show": 1
+     "say": "Empty should be rejected clearly.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "In three of them, try an empty value, a very long one, the wrong type, and a short piece of H T M L, like bold test.",
-     "show": 2
+     "say": "Very long should be rejected or limited.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Run ZAP against localhost only, and read the input alerts.",
-     "show": 3
+     "say": "The wrong type, rejected.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Write one security bug report: the input, steps, result, risk, and a recommended fix.",
-     "show": 4
+     "say": "And H T M L, like bold test, should show as plain text.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "If it shows in bold, output isn't encoded: a likely cross site scripting risk.",
+     "hl": 3,
+     "dim": true,
+     "col": 2,
+     "sql": "Shown in bold? Output isn't encoded\n= likely XSS risk"
+    },
+    {
+     "say": "Report it with steps, and stop. Show the flaw, don't exploit it.",
+     "hl": 3,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Topic 7.3 · Concept",
+   "title": "Why the server must check too",
+   "nodes": [
+    {
+     "id": "form",
+     "label": "Browser form",
+     "x": 12,
+     "y": 28,
+     "sub": "checks in the page",
+     "art": "form"
+    },
+    {
+     "id": "direct",
+     "label": "Direct request",
+     "x": 12,
+     "y": 76,
+     "sub": "skips the browser",
+     "art": "terminal"
+    },
+    {
+     "id": "val",
+     "label": "Server validation",
+     "x": 50,
+     "y": 52,
+     "sub": "type and range",
+     "art": "shield"
+    },
+    {
+     "id": "safe",
+     "label": "Safe handling",
+     "x": 88,
+     "y": 52,
+     "sub": "params + encoding",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "form",
+     "to": "val"
+    },
+    {
+     "from": "direct",
+     "to": "val"
+    },
+    {
+     "from": "val",
+     "to": "safe"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A browser form can check input first. That helps users.",
+     "show": 3,
+     "on": "form",
+     "send": {
+      "from": "form",
+      "to": "val",
+      "label": "checked input"
+     }
+    },
+    {
+     "say": "But anyone can skip it with a direct request, so it proves nothing about security.",
+     "show": 3,
+     "on": "direct",
+     "send": {
+      "from": "direct",
+      "to": "val",
+      "label": "unchecked input"
+     }
+    },
+    {
+     "say": "So the server validates type and range too.",
+     "show": 3,
+     "on": "val"
+    },
+    {
+     "say": "Parameterised queries keep input separate from the query.",
+     "show": 4,
+     "on": "safe",
+     "send": {
+      "from": "val",
+      "to": "safe",
+      "label": "data only"
+     }
+    },
+    {
+     "say": "Output encoding shows it as text, never code.",
+     "show": 4,
+     "on": "safe"
+    },
+    {
+     "say": "After a ZAP scan of localhost, your bug report names one of these fixes.",
+     "show": 4,
+     "on": [
+      "val",
+      "safe"
+     ]
     }
    ]
   },

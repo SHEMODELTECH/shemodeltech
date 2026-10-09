@@ -41,102 +41,282 @@ The modules build on each other, so take them in this order:
    ]
   },
   {
-   "kind": "list",
-   "art": "roadmap",
-   "kicker": "The track",
-   "title": "Modules 1 to 5",
-   "items": [
-    [
-     "1 · QA Fundamentals",
-     "SDLC, STLC, testing principles"
-    ],
-    [
-     "2 · Manual Testing",
-     "Test cases, bug reports, exploratory"
-    ],
-    [
-     "3 · Automation Testing",
-     "Selenium and Playwright"
-    ],
-    [
-     "4 · API Testing",
-     "Postman, Swagger, Newman"
-    ],
-    [
-     "5 · Performance Testing",
-     "Apache JMeter"
-    ]
+   "kind": "diagram",
+   "kicker": "What QA is for",
+   "title": "Who finds the problem first?",
+   "nodes": [
+    {
+     "id": "dev",
+     "label": "Developers",
+     "x": 15,
+     "y": 30,
+     "sub": "build features",
+     "art": "code"
+    },
+    {
+     "id": "app",
+     "label": "The software",
+     "x": 50,
+     "y": 30,
+     "sub": "a new build",
+     "art": "laptop"
+    },
+    {
+     "id": "users",
+     "label": "Users",
+     "x": 85,
+     "y": 30,
+     "sub": "the people it's for",
+     "art": "people"
+    },
+    {
+     "id": "qa",
+     "label": "Tester",
+     "x": 50,
+     "y": 80,
+     "sub": "that's you",
+     "art": "search"
+    }
+   ],
+   "edges": [
+    {
+     "from": "dev",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "users"
+    },
+    {
+     "from": "app",
+     "to": "qa"
+    },
+    {
+     "from": "qa",
+     "to": "dev"
+    }
    ],
    "beats": [
     {
-     "say": "The modules build on each other, so take them in order.",
-     "show": 0
+     "say": "Developers build a new feature into the software.",
+     "show": 2,
+     "on": "app",
+     "send": {
+      "from": "dev",
+      "to": "app",
+      "label": "new feature"
+     }
     },
     {
-     "say": "Module 1, Q A Fundamentals: how software gets built, how testing is planned alongside it, and the principles that decide what to test.",
-     "show": 1
+     "say": "If it goes straight out, the users are the ones who find the problems.",
+     "show": 3,
+     "on": "users",
+     "send": {
+      "from": "app",
+      "to": "users",
+      "label": "users hit a bug"
+     }
     },
     {
-     "say": "Module 2, Manual Testing: clear test cases, useful bug reports, and exploratory testing. All you need is a web browser.",
-     "show": 2
+     "say": "Q A puts a tester in between. You check the build first.",
+     "show": 4,
+     "on": "qa",
+     "send": {
+      "from": "app",
+      "to": "qa",
+      "label": "build to test"
+     }
     },
     {
-     "say": "Module 3, Automation Testing: turning repeatable checks into code with Selenium and Playwright.",
-     "show": 3
+     "say": "When something is wrong, you send the developers a bug report they can act on.",
+     "on": "dev",
+     "send": {
+      "from": "qa",
+      "to": "dev",
+      "label": "bug report"
+     }
     },
     {
-     "say": "Module 4, A P I Testing: testing the services behind an app with Postman and Swagger, and running suites from the terminal with Newman.",
-     "show": 4
-    },
-    {
-     "say": "Module 5, Performance Testing: measuring how software behaves under load with Apache J Meter.",
-     "show": 5
+     "say": "They fix it, and the software reaches users doing what it should.",
+     "on": "users",
+     "send": {
+      "from": "app",
+      "to": "users",
+      "label": "it works"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "path",
+   "kind": "array",
    "kicker": "The track",
-   "title": "Modules 6 to 9",
-   "items": [
+   "title": "Nine modules, each building on the last",
+   "values": [
+    "Fundamentals",
+    "Manual",
+    "Automation",
+    "API",
+    "Performance",
+    "Mobile",
+    "Security",
+    "CI/CD",
+    "AI agents"
+   ],
+   "beats": [
+    {
+     "say": "The track has nine modules. They build on each other, so take them in order."
+    },
+    {
+     "say": "Modules one and two are done by hand: Q A fundamentals, then manual test cases, bug reports and exploratory testing.",
+     "hl": [
+      0,
+      1
+     ],
+     "ptr": {
+      "start": 0
+     },
+     "note": "1–2 · by hand"
+    },
+    {
+     "say": "Modules three and four turn checks into code: automated browser tests, then A P I tests.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      2,
+      3
+     ],
+     "ptr": {
+      "next": 2
+     },
+     "note": "3–4 · tests as code"
+    },
+    {
+     "say": "Modules five to seven test how software behaves beyond the happy path: under load, on phones, and against attacks.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": [
+      4,
+      5,
+      6
+     ],
+     "ptr": {
+      "next": 4
+     },
+     "note": "5–7 · load, devices, attacks"
+    },
+    {
+     "say": "And modules eight and nine run your tests on every change, and test A I agents.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "hl": [
+      7,
+      8
+     ],
+     "ptr": {
+      "end": 8
+     },
+     "note": "8–9 · pipelines, AI agents"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "The track",
+   "title": "Which tools, and when",
+   "columns": [
+    "#",
+    "Module",
+    "Tools"
+   ],
+   "rows": [
     [
-     "6 · Mobile Testing",
+     "1–2",
+     "Fundamentals, Manual",
+     "Just a browser"
+    ],
+    [
+     "3",
+     "Automation",
+     "Selenium, Playwright"
+    ],
+    [
+     "4",
+     "API",
+     "Postman/Swagger/Newman"
+    ],
+    [
+     "5",
+     "Performance",
+     "Apache JMeter"
+    ],
+    [
+     "6",
+     "Mobile",
      "Android Studio, Xcode"
     ],
     [
-     "7 · Security Testing",
+     "7",
+     "Security",
      "ZAP by Checkmarx"
     ],
     [
-     "8 · CI/CD Testing",
-     "GitHub Actions"
-    ],
-    [
-     "9 · Testing AI Agents",
-     "Automated evaluation suite"
+     "8–9",
+     "CI/CD, AI agents",
+     "Actions; eval suite"
     ]
    ],
    "beats": [
     {
-     "say": "Module 6, Mobile Testing: Android apps with Android Studio, and i O S apps with Xcode on a Mac. No Mac? The Android topic covers the same skills.",
-     "show": 1
+     "say": "Each module needs only a few tools. Here they are, stage by stage.",
+     "col": 2
     },
     {
-     "say": "Module 7, Security Testing: finding common weaknesses with ZAP, against a practice app built for the purpose.",
-     "show": 2
+     "say": "For modules one and two, all you need is a web browser and two free practice sites.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Module 8, C I C D Testing: running your tests automatically on every change with GitHub Actions.",
-     "show": 3
+     "say": "Automation uses Selenium and Playwright.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "And Module 9, Testing A I Agents: checking agents complete tasks, call the right tools, and resist prompt injection.",
-     "show": 4
+     "say": "A P I testing uses Postman and Swagger, with Newman to run suites from the terminal.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Performance testing uses Apache J Meter. Mobile uses Android Studio, and Xcode on a Mac.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "Security uses ZAP. Then GitHub Actions runs your tests on every change, and module nine uses an automated evaluation suite.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true
     },
     {
      "say": "Every tool is free or has a free tier, and you only install a module's tools when you reach it.",
-     "show": 4
+     "sql": "Install a module's tools when you reach it"
     }
    ]
   },
@@ -177,27 +357,11 @@ The modules build on each other, so take them in this order:
      "show": 0
     },
     {
-     "say": "Concept: what it is, in plain language.",
-     "show": 1
-    },
-    {
-     "say": "Structure at a glance: the building blocks, often as a diagram.",
-     "show": 2
-    },
-    {
-     "say": "Where you'd actually use this: a real workplace scenario.",
+     "say": "Concept, then structure at a glance, then where you'd actually use it.",
      "show": 3
     },
     {
-     "say": "Lab: a hands-on exercise you complete yourself.",
-     "show": 4
-    },
-    {
-     "say": "Checkpoint: what you should be able to do before moving on.",
-     "show": 5
-    },
-    {
-     "say": "And a quiz: five questions, with answers.",
+     "say": "Then a hands-on lab, a checkpoint, and a five question quiz.",
      "show": 6
     }
    ]
@@ -305,7 +469,7 @@ Each module lists the tools it needs at the top. Every tool in this track is fre
  "scenes": [
   {
    "kind": "title",
-   "art": "loop",
+   "art": "path",
    "kicker": "Start here · How each module works",
    "title": "The same pattern, every topic",
    "beats": [
@@ -315,30 +479,119 @@ Each module lists the tools it needs at the top. Every tool in this track is fre
    ]
   },
   {
-   "kind": "list",
-   "art": "chain",
+   "kind": "array",
    "kicker": "The pattern",
    "title": "Six steps per topic",
-   "items": [
+   "values": [
+    "Concept",
+    "Structure",
+    "Use it",
+    "Lab",
+    "Checkpoint",
+    "Quiz"
+   ],
+   "beats": [
+    {
+     "say": "Here are the six steps of every topic, in order."
+    },
+    {
+     "say": "First, the concept: what it is, in plain language.",
+     "hl": 0,
+     "ptr": {
+      "you": 0
+     }
+    },
+    {
+     "say": "Then the structure at a glance: the building blocks, often as a diagram.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "you": 1
+     }
+    },
+    {
+     "say": "Next, where you'd actually use this: a real workplace scenario.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "you": 2
+     }
+    },
+    {
+     "say": "Then a lab: a hands-on exercise you complete yourself.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "you": 3
+     }
+    },
+    {
+     "say": "A checkpoint: what you should be able to do before moving on.",
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4,
+     "ptr": {
+      "you": 4
+     }
+    },
+    {
+     "say": "And finally a quiz: five questions, with answers.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "hl": 5,
+     "ptr": {
+      "you": 5
+     },
+     "note": "Then on to the next topic"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "The pattern in action",
+   "title": "One real topic: the SDLC",
+   "columns": [
+    "Step",
+    "In Topic 1.1 (SDLC)"
+   ],
+   "rows": [
     [
      "Concept",
-     "Plain language"
+     "Six phases of software"
     ],
     [
-     "Structure at a glance",
-     "Often a diagram"
+     "Structure",
+     "Diagram of the phases"
     ],
     [
-     "Where you'd use this",
-     "A real scenario"
+     "Use it",
+     "Where a project stands"
     ],
     [
      "Lab",
-     "Hands-on"
+     "Walk one requirement"
     ],
     [
      "Checkpoint",
-     "Before moving on"
+     "Name all six in order"
     ],
     [
      "Quiz",
@@ -347,58 +600,122 @@ Each module lists the tools it needs at the top. Every tool in this track is fre
    ],
    "beats": [
     {
-     "say": "First, the concept: what it is, in plain language.",
-     "show": 1
+     "say": "Here's the pattern filled in, using the very first topic of Module 1.",
+     "col": 1
     },
     {
-     "say": "Then the structure at a glance: the building blocks, often as a diagram.",
-     "show": 2
+     "say": "The concept: the six phases software moves through, from idea to retirement.",
+     "hl": 0
     },
     {
-     "say": "Where you'd actually use this: a real workplace scenario.",
-     "show": 3
+     "say": "The structure: a diagram of those phases, one handing off to the next.",
+     "hl": 1
     },
     {
-     "say": "A lab: a hands-on exercise you complete yourself.",
-     "show": 4
+     "say": "Where you'd use it: working out where a project stands when you join it.",
+     "hl": 2
     },
     {
-     "say": "A checkpoint: what you should be able to do before moving on.",
-     "show": 5
+     "say": "The lab: walk one requirement through all six phases.",
+     "hl": 3
     },
     {
-     "say": "And a quiz: five questions, with answers.",
-     "show": 6
+     "say": "Then the checkpoint, and the quiz, check you've got it before you move on.",
+     "hl": [
+      4,
+      5
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "package",
+   "kind": "diagram",
    "kicker": "Tools",
-   "title": "Only what you need, when you need it",
-   "items": [
-    [
-     "Free tools",
-     "Or free tiers that cover the labs"
-    ],
-    [
-     "Install as you go",
-     "Only when you reach the module"
-    ]
+   "title": "Install as you go",
+   "nodes": [
+    {
+     "id": "m6",
+     "label": "Module 6",
+     "x": 12,
+     "y": 50,
+     "sub": "mobile testing",
+     "art": "phone"
+    },
+    {
+     "id": "mac",
+     "label": "Have a Mac?",
+     "x": 50,
+     "y": 50,
+     "sub": "iOS needs one",
+     "art": "laptop"
+    },
+    {
+     "id": "ios",
+     "label": "iOS · Xcode",
+     "x": 86,
+     "y": 22,
+     "sub": "on a Mac",
+     "art": "phone"
+    },
+    {
+     "id": "and",
+     "label": "Android Studio",
+     "x": 86,
+     "y": 78,
+     "sub": "covers the same skills",
+     "art": "phone"
+    }
+   ],
+   "edges": [
+    {
+     "from": "m6",
+     "to": "mac"
+    },
+    {
+     "from": "mac",
+     "to": "ios"
+    },
+    {
+     "from": "mac",
+     "to": "and"
+    }
    ],
    "beats": [
     {
-     "say": "Each module lists the tools it needs at the top.",
-     "show": 0
+     "say": "Each module lists the tools it needs at the top. They're free, or have a free tier that covers the labs.",
+     "show": 1,
+     "on": "m6"
     },
     {
-     "say": "Every tool is free, or has a free tier that covers the labs, and you only install a module's tools when you reach it.",
-     "show": 1
+     "say": "You install them only when you reach that module. Take Module 6, mobile testing.",
+     "show": 2,
+     "on": "mac",
+     "send": {
+      "from": "m6",
+      "to": "mac",
+      "label": "pick a topic"
+     }
     },
     {
-     "say": "Module six's i O S topic needs a Mac. If you don't have one, the Android topic covers the same skills.",
-     "show": 2
+     "say": "Its i O S topic uses Xcode, which needs a Mac.",
+     "show": 3,
+     "on": "ios",
+     "send": {
+      "from": "mac",
+      "to": "ios",
+      "label": "yes"
+     }
+    },
+    {
+     "say": "No Mac? The Android topic, with Android Studio, covers the same skills.",
+     "show": 4,
+     "on": "and",
+     "send": {
+      "from": "mac",
+      "to": "and",
+      "label": "no Mac"
+     }
     }
    ]
   },
@@ -465,22 +782,151 @@ Only test software you own or have written permission to test. The performance a
    ]
   },
   {
+   "kind": "diagram",
+   "kicker": "The rule",
+   "title": "Point the tools only at the practice app",
+   "nodes": [
+    {
+     "id": "tools",
+     "label": "Your test tools",
+     "x": 14,
+     "y": 50,
+     "sub": "JMeter, ZAP",
+     "art": "gear"
+    },
+    {
+     "id": "lab",
+     "label": "Practice app",
+     "x": 74,
+     "y": 24,
+     "sub": "on your own computer",
+     "art": "laptop"
+    },
+    {
+     "id": "real",
+     "label": "Real site or app",
+     "x": 74,
+     "y": 78,
+     "sub": "never a target",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "tools",
+     "to": "lab"
+    },
+    {
+     "from": "tools",
+     "to": "real"
+    }
+   ],
+   "beats": [
+    {
+     "say": "In the performance and security labs, you'll use powerful tools like J Meter and ZAP.",
+     "show": 1,
+     "on": "tools"
+    },
+    {
+     "say": "They point at a deliberately vulnerable practice app, running only on your own computer.",
+     "show": 2,
+     "on": "lab",
+     "send": {
+      "from": "tools",
+      "to": "lab",
+      "label": "load test"
+     }
+    },
+    {
+     "say": "Hammer it, scan it, attack it. That's what it's built for.",
+     "on": "lab",
+     "send": {
+      "from": "tools",
+      "to": "lab",
+      "label": "security scan"
+     }
+    },
+    {
+     "say": "But never point those tools at a real site or app. That's off limits.",
+     "show": 3,
+     "on": "real"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "The rule",
+   "title": "Can I test it?",
+   "columns": [
+    "Target",
+    "OK?",
+    "Why"
+   ],
+   "rows": [
+    [
+     "An app you own",
+     "Yes",
+     "It's yours"
+    ],
+    [
+     "Client app, signed OK",
+     "Yes",
+     "Written permission"
+    ],
+    [
+     "Practice app, your PC",
+     "Yes",
+     "Built for this"
+    ],
+    [
+     "A real website",
+     "No",
+     "No permission"
+    ],
+    [
+     "Friend said go ahead",
+     "Not yet",
+     "Get it in writing"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Only test software you own, or have written permission to test. Let's apply it.",
+     "sql": "Own it, or written permission?"
+    },
+    {
+     "say": "Software you own: yes.",
+     "hl": 0
+    },
+    {
+     "say": "Someone else's app, where you have their permission in writing: yes.",
+     "hl": 1
+    },
+    {
+     "say": "The practice app on your own computer: yes, it's built for this.",
+     "hl": 2
+    },
+    {
+     "say": "A real website you don't own: no.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "And a spoken okay isn't written permission. Get it in writing first.",
+     "hl": 4,
+     "col": 2
+    }
+   ]
+  },
+  {
    "kind": "quote",
-   "art": "scales",
+   "art": "lock",
    "kicker": "The rule",
    "title": "Only test what you're allowed to",
    "quote": "Only test software you own or have written permission to test.",
    "beats": [
     {
      "say": "Only test software you own, or have written permission to test.",
-     "show": 1
-    },
-    {
-     "say": "The performance and security labs use a deliberately vulnerable practice app, running only on your own computer.",
-     "show": 1
-    },
-    {
-     "say": "Never point those tools at a real site or app.",
      "show": 1
     }
    ]
@@ -536,7 +982,7 @@ Courses build the skill; a badge proves it. When you've worked through the modul
  "scenes": [
   {
    "kind": "title",
-   "art": "trophy",
+   "art": "proof",
    "kicker": "Start here · After the track",
    "title": "From skill to proof",
    "beats": [
@@ -546,27 +992,129 @@ Courses build the skill; a badge proves it. When you've worked through the modul
    ]
   },
   {
-   "kind": "flow",
-   "art": "people",
+   "kind": "diagram",
    "kicker": "What's next",
    "title": "Earn your Quality Tester badge",
-   "steps": [
-    "Work through the modules",
-    "Join a project as a tester",
-    "Earn your Quality Tester badge"
+   "nodes": [
+    {
+     "id": "mods",
+     "label": "The modules",
+     "x": 12,
+     "y": 50,
+     "sub": "build the skill",
+     "art": "book"
+    },
+    {
+     "id": "proj",
+     "label": "A real project",
+     "x": 50,
+     "y": 50,
+     "sub": "on She Model Tech",
+     "art": "people"
+    },
+    {
+     "id": "badge",
+     "label": "Your badge",
+     "x": 88,
+     "y": 50,
+     "sub": "Quality Tester",
+     "art": "trophy"
+    }
+   ],
+   "edges": [
+    {
+     "from": "mods",
+     "to": "proj"
+    },
+    {
+     "from": "proj",
+     "to": "badge"
+    }
    ],
    "beats": [
     {
-     "say": "Work through the modules.",
-     "show": 1
+     "say": "First, work through the modules.",
+     "show": 1,
+     "on": "mods"
     },
     {
      "say": "Then join a project on She Model Tech as a tester.",
-     "show": 2
+     "show": 2,
+     "on": "proj",
+     "send": {
+      "from": "mods",
+      "to": "proj",
+      "label": "you join"
+     }
     },
     {
-     "say": "Your test cases, bug reports and automated checks become the work that earns your Quality Tester badge.",
-     "show": 3
+     "say": "Your test cases count toward the badge.",
+     "show": 3,
+     "on": "badge",
+     "send": {
+      "from": "proj",
+      "to": "badge",
+      "label": "test cases"
+     }
+    },
+    {
+     "say": "So do your bug reports.",
+     "on": "badge",
+     "send": {
+      "from": "proj",
+      "to": "badge",
+      "label": "bug reports"
+     }
+    },
+    {
+     "say": "And your automated checks. Together, that work earns your Quality Tester badge.",
+     "on": "badge",
+     "send": {
+      "from": "proj",
+      "to": "badge",
+      "label": "automated checks"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "What's next",
+   "title": "Where each piece of proof comes from",
+   "columns": [
+    "Your work",
+    "You learn it in"
+   ],
+   "rows": [
+    [
+     "Test cases",
+     "Modules 1 and 2"
+    ],
+    [
+     "Bug reports",
+     "Module 2"
+    ],
+    [
+     "Automated checks",
+     "Modules 3, 4 and 8"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Each piece of that work comes from a module you'll take.",
+     "col": 1
+    },
+    {
+     "say": "You start planning test cases in Module 1, and write them in Module 2.",
+     "hl": 0
+    },
+    {
+     "say": "Bug reports a developer can act on are Module 2.",
+     "hl": 1
+    },
+    {
+     "say": "And automated checks come from Modules 3 and 4, running on every change in Module 8.",
+     "hl": 2
     }
    ]
   },

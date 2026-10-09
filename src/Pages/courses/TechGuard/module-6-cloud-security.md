@@ -305,326 +305,624 @@ You can navigate GCP's resource hierarchy and IAM bindings, inspect a service ac
      "say": "Welcome to Module 6, cloud security."
     },
     {
-     "say": "You'll review three providers, A W S, Azure and Google Cloud, looking for the misconfigurations that cause most real breaches."
+     "say": "You'll review A W S, Azure and Google Cloud for the misconfigurations behind most breaches."
     },
     {
-     "say": "Everything here is observe and inspect, in an account you own, or with the sample configurations if you have no account."
+     "say": "It's all observe and inspect, in an account you own, or with the samples."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
+   "kind": "table",
    "kicker": "Concept",
    "title": "The shared responsibility model",
-   "items": [
+   "columns": [
+    "Security task",
+    "Who owns it"
+   ],
+   "rows": [
     [
-     "Provider secures",
-     "Hardware, network, virtualisation"
+     "Data centre hardware",
+     "Provider"
     ],
     [
-     "You secure",
-     "IAM, network rules, storage config, data"
+     "Physical network",
+     "Provider"
     ],
     [
-     "Most breaches",
-     "Customer-side misconfiguration"
+     "Hypervisor patching",
+     "Provider"
+    ],
+    [
+     "IAM permissions",
+     "You"
+    ],
+    [
+     "Firewall rules",
+     "You"
+    ],
+    [
+     "Bucket public access",
+     "You"
+    ],
+    [
+     "Your data",
+     "You"
     ]
    ],
    "beats": [
     {
-     "say": "One idea runs through all three providers: the shared responsibility model.",
-     "show": 0
+     "say": "One idea runs through it all: shared responsibility."
     },
     {
-     "say": "The provider secures the cloud itself: data centres, hardware, the network and the virtualisation layer.",
-     "show": 1
+     "say": "The provider secures the cloud itself.",
+     "sql": "Provider: security OF the cloud",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true
     },
     {
-     "say": "You secure what you put in it: your identities and permissions, your network rules, your storage settings and your data.",
-     "show": 2
+     "say": "You secure what you put in it.",
+     "sql": "You: security IN the cloud",
+     "hl": [
+      3,
+      4,
+      5,
+      6
+     ],
+     "dim": true
     },
     {
-     "say": "Most real breaches come not from the provider failing, but from customers misconfiguring their side.",
-     "show": 3
+     "say": "Most breaches come from this side: customer misconfiguration.",
+     "hl": [
+      3,
+      4,
+      5
+     ],
+     "dim": true
+    },
+    {
+     "say": "So always ask: whose side is this on?",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "diagram",
    "kicker": "Topic 6.1 · AWS",
    "title": "The pieces you configure",
-   "items": [
-    [
-     "IAM",
-     "Least privilege · roles over keys"
-    ],
-    [
-     "Security groups",
-     "Stateful firewall by port and source"
-    ],
-    [
-     "S3",
-     "Block public access"
-    ],
-    [
-     "CloudTrail",
-     "90-day history · a trail for long-term"
-    ]
+   "nodes": [
+    {
+     "id": "net",
+     "label": "Internet",
+     "x": 10,
+     "y": 50,
+     "sub": "anyone",
+     "art": "globe"
+    },
+    {
+     "id": "sg",
+     "label": "Security group",
+     "x": 36,
+     "y": 22,
+     "sub": "stateful firewall",
+     "art": "firewall"
+    },
+    {
+     "id": "role",
+     "label": "IAM role",
+     "x": 36,
+     "y": 80,
+     "sub": "short-lived creds",
+     "art": "key"
+    },
+    {
+     "id": "app",
+     "label": "Your instance",
+     "x": 62,
+     "y": 50,
+     "sub": "your app",
+     "art": "server"
+    },
+    {
+     "id": "s3",
+     "label": "S3 bucket",
+     "x": 90,
+     "y": 22,
+     "sub": "block public access",
+     "art": "database"
+    },
+    {
+     "id": "trail",
+     "label": "CloudTrail",
+     "x": 90,
+     "y": 80,
+     "sub": "logs API activity",
+     "art": "pulse"
+    }
+   ],
+   "edges": [
+    {
+     "from": "net",
+     "to": "sg"
+    },
+    {
+     "from": "sg",
+     "to": "app"
+    },
+    {
+     "from": "role",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "s3"
+    },
+    {
+     "from": "app",
+     "to": "trail"
+    }
    ],
    "beats": [
     {
-     "say": "On A W S, there are four building blocks to review.",
-     "show": 0
+     "say": "On A W S, four building blocks surround your instance.",
+     "show": 4,
+     "on": "app"
     },
     {
-     "say": "I A M controls identities and permissions. Follow least privilege, and prefer roles, which hand out short-lived credentials, over long-lived access keys.",
-     "show": 1
+     "say": "Internet traffic meets a security group, a stateful firewall on port and source.",
+     "show": 4,
+     "on": "sg",
+     "send": {
+      "from": "net",
+      "to": "sg",
+      "label": "port 443"
+     }
     },
     {
-     "say": "Security groups are stateful virtual firewalls, controlling traffic by port and source.",
-     "show": 2
+     "say": "Allowed traffic gets through.",
+     "show": 4,
+     "on": "app",
+     "send": {
+      "from": "sg",
+      "to": "app",
+      "label": "allowed"
+     }
     },
     {
-     "say": "S 3 buckets: one accidentally set to public has caused many well-known data leaks, so block public access matters.",
-     "show": 3
+     "say": "An I A M role gives it short-lived credentials. No static key to leak.",
+     "show": 4,
+     "on": "role",
+     "send": {
+      "from": "role",
+      "to": "app",
+      "label": "temp creds"
+     }
     },
     {
-     "say": "And CloudTrail records A P I activity. Its event history keeps ninety days, but for a long-term log you need to create a trail.",
-     "show": 4
+     "say": "It reads an S 3 bucket. Public buckets have caused many leaks, so block public access.",
+     "show": 5,
+     "on": "s3",
+     "send": {
+      "from": "app",
+      "to": "s3",
+      "label": "GetObject"
+     }
+    },
+    {
+     "say": "CloudTrail logs that A P I call. History keeps ninety days; long-term needs a trail.",
+     "show": 6,
+     "on": "trail",
+     "send": {
+      "from": "app",
+      "to": "trail",
+      "label": "API call logged"
+     }
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "warning",
+   "kind": "walk",
    "kicker": "Lab · No-account version",
-   "title": "Read the bucket policy",
+   "title": "Who can read this bucket?",
    "file": "bucket-policy.json",
-   "code": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Principal\": \"*\",\n      \"Action\": \"s3:GetObject\",\n      \"Resource\": \"arn:aws:s3:::example-customer-uploads/*\"\n    }\n  ]\n}",
+   "code": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Principal\": \"*\",\n      \"Action\": \"s3:GetObject\",\n      \"Resource\":\n        \"arn:aws:s3:::example-customer-uploads/*\"\n    }\n  ]\n}",
    "beats": [
     {
-     "say": "In the lab, you inspect I A M, an S 3 bucket, a security group and CloudTrail, then write one finding with its risk and its fix.",
-     "show": 0
+     "say": "Here's the sample bucket policy, on customer uploads.",
+     "line": [
+      1,
+      12
+     ]
     },
     {
-     "say": "The sample includes this bucket policy, on a bucket of customer uploads.",
-     "show": 1
+     "say": "A request from someone not logged in at all.",
+     "vars": {
+      "who": "anyone, no login",
+      "action": "s3:GetObject"
+     }
     },
     {
-     "say": "Principal star means anyone. Every customer upload is readable by anyone on the internet.",
-     "show": 1
+     "say": "Principal star means anyone, so they match.",
+     "line": [
+      5,
+      6
+     ]
     },
     {
-     "say": "The fix: remove the statement, and turn on Block Public Access.",
-     "show": 1
+     "say": "Get object matches too.",
+     "line": 7
+    },
+    {
+     "say": "And so does every object in the bucket.",
+     "line": [
+      8,
+      9
+     ],
+     "out": "GetObject by anyone -> Allow"
+    },
+    {
+     "say": "Every upload is readable by anyone on the internet.",
+     "line": 6,
+     "out": "Finding: all customer uploads are public"
+    },
+    {
+     "say": "Fix: remove the statement and turn on Block Public Access. Now they're denied.",
+     "line": [
+      4,
+      10
+     ],
+     "vars": {
+      "who": "anyone, no login",
+      "action": "s3:GetObject"
+     },
+     "out": "Fixed: GetObject by anyone -> Access Denied"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "search",
+   "kind": "table",
    "kicker": "Lab · AWS findings",
-   "title": "The other two samples",
-   "items": [
+   "title": "Risk and fix for each sample",
+   "columns": [
+    "Sample setting",
+    "Risk",
+    "Fix"
+   ],
+   "rows": [
     [
-     "✗ Action \"*\" on \"*\"",
-     "Full admin → only needed services"
+     "IAM: Action * on *",
+     "Full admin",
+     "Only needed services"
     ],
     [
-     "✗ SSH, MySQL from 0.0.0.0/0",
-     "Your IP · app server only"
+     "Bucket: Principal *",
+     "Uploads are public",
+     "Block Public Access"
     ],
     [
-     "✓ HTTPS from anywhere",
-     "Normal for a public site"
+     "SSH 22 from anywhere",
+     "Open to internet",
+     "Your IP only"
+    ],
+    [
+     "MySQL 3306 anywhere",
+     "Database exposed",
+     "App server only"
+    ],
+    [
+     "HTTPS 443 anywhere",
+     "Normal for a site",
+     "Keep"
+    ],
+    [
+     "No CloudTrail trail",
+     "No long-term log",
+     "Create a trail"
     ]
    ],
    "beats": [
     {
-     "say": "Two more samples to review.",
-     "show": 0
+     "say": "Each finding is a risk plus a fix."
     },
     {
-     "say": "A developer's I A M policy allows every action on every resource. That's full admin. Grant only the services they need.",
-     "show": 1
+     "say": "A developer policy allowing every action everywhere is full admin. Grant only needed services.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "S S H and the My S Q L database are open to the whole internet. Limit S S H to your own I P, and allow the database only from the app server.",
-     "show": 2
+     "say": "The bucket you just traced: block public access.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "But H T T P S open to everyone is normal for a public website.",
-     "show": 3
+     "say": "In security groups, zero dot zero dot zero dot zero slash zero means anywhere.",
+     "sql": "Source 0.0.0.0/0 = anywhere on the internet",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "S S H and My S Q L are open to everyone. Limit S S H to your I P, and the database to the app server.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
+    },
+    {
+     "say": "H T T P S for everyone is normal for a website.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "And no CloudTrail trail is itself a finding.",
+     "hl": 5,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "tree",
+   "kind": "diagram",
    "kicker": "Topic 6.2 · Azure",
    "title": "Roles inherit downward",
-   "steps": [
-    "Management group",
-    "Subscription",
-    "Resource group",
-    "Resource"
+   "nodes": [
+    {
+     "id": "mg",
+     "label": "Management group",
+     "x": 10,
+     "y": 25,
+     "sub": "top-level scope",
+     "art": "tree"
+    },
+    {
+     "id": "sub",
+     "label": "Subscription",
+     "x": 36,
+     "y": 72,
+     "sub": "Production",
+     "art": "cloud"
+    },
+    {
+     "id": "rg",
+     "label": "Resource group",
+     "x": 63,
+     "y": 25,
+     "sub": "one team's work",
+     "art": "boxes"
+    },
+    {
+     "id": "res",
+     "label": "Resource",
+     "x": 90,
+     "y": 72,
+     "sub": "a storage account",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "mg",
+     "to": "sub"
+    },
+    {
+     "from": "sub",
+     "to": "rg"
+    },
+    {
+     "from": "rg",
+     "to": "res"
+    }
    ],
    "beats": [
     {
-     "say": "On Azure, identity sits at the centre, through Microsoft Entra I D, where users, groups, M F A and sign-in live.",
+     "say": "On Azure, identity is the perimeter, managed in Microsoft Entra I D.",
      "show": 0
     },
     {
-     "say": "Azure R B A C assigns roles at four scopes, from management group,",
-     "show": 1
+     "say": "Roles are assigned at four scopes: management group,",
+     "show": 1,
+     "on": "mg"
     },
     {
-     "say": "to subscription,",
-     "show": 2
+     "say": "then a subscription,",
+     "show": 2,
+     "on": "sub"
     },
     {
-     "say": "to resource group,",
-     "show": 3
+     "say": "a resource group,",
+     "show": 3,
+     "on": "rg"
     },
     {
-     "say": "to a single resource.",
-     "show": 4
+     "say": "and resource.",
+     "show": 4,
+     "on": "res"
     },
     {
-     "say": "Assignments inherit downward, so a broad assignment has broad reach. Assign at the narrowest scope that works.",
-     "show": 4
+     "say": "In the sample, an intern is Owner of Production.",
+     "show": 4,
+     "on": "sub"
+    },
+    {
+     "say": "That inherits down to every resource group,",
+     "show": 4,
+     "on": "rg",
+     "send": {
+      "from": "sub",
+      "to": "rg",
+      "label": "Owner"
+     }
+    },
+    {
+     "say": "and every resource. They can delete everything.",
+     "show": 4,
+     "on": "res",
+     "send": {
+      "from": "rg",
+      "to": "res",
+      "label": "Owner"
+     }
+    },
+    {
+     "say": "Fix: a narrow role on just their resource group.",
+     "show": 4,
+     "on": "rg"
+    },
+    {
+     "say": "The reporting app gets it right: a reader role on one storage account.",
+     "show": 4,
+     "on": "res"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
-   "kicker": "Lab · Azure findings",
-   "title": "Review the sample subscription",
-   "items": [
+   "kind": "table",
+   "kicker": "Lab · Azure NSG",
+   "title": "Lowest priority number is checked first",
+   "columns": [
+    "Priority",
+    "Name",
+    "Port",
+    "Action"
+   ],
+   "rows": [
     [
-     "✗ Intern: Owner on production",
-     "Narrow role, one resource group"
+     "100",
+     "Allow-RDP",
+     "3389",
+     "Allow"
     ],
     [
-     "✓ Reporting app: Blob Data Reader",
-     "Least privilege, narrow scope"
+     "200",
+     "Allow-HTTPS",
+     "443",
+     "Allow"
     ],
     [
-     "✗ RDP 3389 from Any",
-     "Restrict source or Azure Bastion"
+     "4096",
+     "Deny-All",
+     "Any",
+     "Deny"
     ]
    ],
    "beats": [
     {
-     "say": "Azure also gives you Network Security Groups to filter traffic, Defender for Cloud with a secure score, and Key Vault for secrets.",
-     "show": 0
+     "say": "Network Security Groups check numbered rules, lowest first.",
+     "sql": "Lowest number first · every source is Any"
     },
     {
-     "say": "In the sample, an intern holds Owner on the whole production subscription. Fix: a narrow role on just the resource group they work in.",
-     "show": 1
+     "say": "Port four four three arrives. Rule one hundred doesn't match.",
+     "sql": "Incoming: port 443 from the internet",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "A reporting app reads one storage account. That's least privilege at a narrow scope.",
-     "show": 2
+     "say": "Rule two hundred does. Allowed, which is normal.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "And Remote Desktop, port thirty three eighty nine, is open to any source, a top target for password guessing. Restrict the source, or use Azure Bastion.",
-     "show": 3
+     "say": "Port twenty two falls through to Deny All.",
+     "sql": "Incoming: port 22 from the internet",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "But Remote Desktop, port thirty three eighty nine, is allowed from anywhere. A top password guessing target.",
+     "sql": "Incoming: port 3389 from the internet",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Fix: restrict the source, or use Azure Bastion.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Defender for Cloud's secure score flags issues like this.",
+     "hl": 0
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "idcard",
+   "kind": "table",
    "kicker": "Topic 6.3 · GCP",
-   "title": "Roles and service accounts",
-   "items": [
-    [
-     "✗ Basic",
-     "Owner / Editor / Viewer, broad"
-    ],
-    [
-     "✓ Predefined",
-     "Curated per service"
-    ],
-    [
-     "✓ Custom",
-     "Exactly the permissions you set"
-    ],
-    [
-     "Service accounts",
-     "Guard their keys like any credential"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Google Cloud has its own hierarchy: organisation, folders, projects, resources. I A M policies inherit down it too.",
-     "show": 0
-    },
-    {
-     "say": "Roles come in three kinds. Basic roles, Owner, Editor and Viewer, are broad and legacy.",
-     "show": 1
-    },
-    {
-     "say": "Predefined roles are curated for specific services.",
-     "show": 2
-    },
-    {
-     "say": "Custom roles contain exactly the permissions you choose. Predefined and custom support least privilege far better.",
-     "show": 3
-    },
-    {
-     "say": "Service accounts are identities for workloads, not people. A leaked service account key can be as damaging as a leaked admin password.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Lab · GCP findings",
    "title": "Review the sample project",
-   "items": [
+   "columns": [
+    "Who or rule",
+    "Grants",
+    "Finding"
+   ],
+   "rows": [
     [
-     "✗ web-app: roles/editor",
-     "Predefined role instead"
+     "web-app (service acct)",
+     "roles/editor",
+     "Basic role: too broad"
     ],
     [
-     "✓ report-job: objectViewer",
+     "report-job (svc acct)",
+     "storage.objectViewer",
      "Least privilege"
     ],
     [
-     "✗ Former contractor: Owner",
-     "Remove now"
+     "former-contractor",
+     "roles/owner",
+     "Failed leaver step"
     ],
     [
-     "✗ SSH from 0.0.0.0/0",
-     "Known ranges or IAP"
+     "allow-ssh-all",
+     "tcp:22 0.0.0.0/0",
+     "Limit to IAP/ranges"
+    ],
+    [
+     "allow-internal",
+     "all, 10.128.0.0/9",
+     "Internal range only"
     ]
    ],
    "beats": [
     {
-     "say": "Now the G C P sample.",
-     "show": 0
+     "say": "Google Cloud policies inherit down its hierarchy too. Grant at the lowest level.",
+     "sql": "Organisation > Folders > Projects > Resources"
     },
     {
-     "say": "The web app's service account has the basic Editor role, so a bug could change almost anything. Give it a predefined role for just what it uses.",
-     "show": 1
+     "say": "Basic roles are broad. Predefined and custom roles are far tighter.",
+     "sql": "Basic (broad) | Predefined | Custom"
     },
     {
-     "say": "The report job's narrow viewer role is a good least-privilege example.",
-     "show": 2
+     "say": "The web app has basic Editor, so a bug could change almost anything. Use a predefined role.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "A former contractor still holds Owner. That's a failed leaver step. Remove them now.",
-     "show": 3
+     "say": "The report job is good least privilege.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "And S S H open to the whole internet should be limited to known I P ranges, or Identity-Aware Proxy.",
-     "show": 4
+     "say": "A former contractor is still Owner: a failed leaver step. Remove them now.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Limit S S H to known I P ranges, or Identity-Aware Proxy.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Service account keys need care: a leaked one can be as bad as an admin password.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true
     }
    ]
   },
@@ -632,7 +930,7 @@ You can navigate GCP's resource hierarchy and IAM bindings, inspect a service ac
    "kind": "quiz",
    "art": "ask",
    "kicker": "Quick check",
-   "title": "Why are I A M roles generally preferred over long-lived access keys?",
+   "title": "Why are IAM roles generally preferred over long-lived access keys?",
    "options": [
     "Roles hand out short-lived, automatically rotated credentials, so there's no static key to leak",
     "Roles are cheaper than access keys",

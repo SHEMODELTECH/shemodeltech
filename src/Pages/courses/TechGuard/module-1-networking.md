@@ -352,286 +352,701 @@ You have configured a firewall with a default-deny baseline, explicitly allowed 
    ]
   },
   {
-   "kind": "list",
-   "art": "layers",
+   "kind": "diagram",
    "kicker": "Topic 1.1 · TCP/IP",
-   "title": "Two layers, two jobs",
-   "items": [
-    [
-     "IP",
-     "Addressing + routing"
-    ],
-    [
-     "TCP",
-     "Reliable, ordered delivery"
-    ],
-    [
-     "UDP",
-     "Fast, no guarantees"
-    ],
-    [
-     "Port",
-     "80 HTTP · 443 HTTPS · 22 SSH"
-    ],
-    [
-     "Handshake",
-     "SYN → SYN-ACK → ACK"
-    ]
+   "title": "Each layer wraps the one above it",
+   "nodes": [
+    {
+     "id": "app",
+     "label": "Application data",
+     "x": 12,
+     "y": 30,
+     "sub": "the message to send",
+     "art": "doc"
+    },
+    {
+     "id": "tcp",
+     "label": "TCP segment",
+     "x": 37,
+     "y": 70,
+     "sub": "+ ports, sequence nos",
+     "art": "boxes"
+    },
+    {
+     "id": "ip",
+     "label": "IP packet",
+     "x": 63,
+     "y": 30,
+     "sub": "+ source, destination",
+     "art": "package"
+    },
+    {
+     "id": "net",
+     "label": "The network",
+     "x": 88,
+     "y": 70,
+     "sub": "routed hop by hop",
+     "art": "globe"
+    }
+   ],
+   "edges": [
+    {
+     "from": "app",
+     "to": "tcp"
+    },
+    {
+     "from": "tcp",
+     "to": "ip"
+    },
+    {
+     "from": "ip",
+     "to": "net"
+    }
    ],
    "beats": [
     {
-     "say": "T C P slash I P is the set of protocols that lets any two devices talk, organised in layers.",
-     "show": 0
+     "say": "Start with the message you want to send. That's the application data.",
+     "show": 1,
+     "on": "app"
     },
     {
-     "say": "I P handles addressing and routing, getting a packet from source to destination, hop by hop.",
-     "show": 1
+     "say": "T C P wraps it in a segment, adding port numbers and sequence numbers.",
+     "show": 2,
+     "on": "tcp",
+     "send": {
+      "from": "app",
+      "to": "tcp",
+      "label": "message"
+     }
     },
     {
-     "say": "T C P sits on top and adds reliability. It opens a connection, numbers the data, confirms what arrived, and re-sends anything lost.",
-     "show": 2
+     "say": "I P wraps that in a packet, adding the source and destination addresses.",
+     "show": 3,
+     "on": "ip",
+     "send": {
+      "from": "tcp",
+      "to": "ip",
+      "label": "segment"
+     }
     },
     {
-     "say": "U D P is the connectionless alternative. Faster, but with no delivery guarantees. It's used for D N S lookups, video calls and online games.",
-     "show": 3
+     "say": "Then routers pass the packet along, hop by hop. Traceroute shows you each of those hops.",
+     "show": 4,
+     "on": "net",
+     "send": {
+      "from": "ip",
+      "to": "net",
+      "label": "packet"
+     }
     },
     {
-     "say": "And a port is a number for one service on a host, like four four three for H T T P S, or twenty two for S S H.",
-     "show": 4
+     "say": "This wrapping is called encapsulation, and the receiving device unwraps it in reverse.",
+     "show": 4,
+     "on": [
+      "app",
+      "tcp",
+      "ip",
+      "net"
+     ]
     },
     {
-     "say": "T C P opens every connection with a three-way handshake: syn, syn ack, ack.",
-     "show": 5
-    },
-    {
-     "say": "A SYN flood abuses it, starting thousands of handshakes and never finishing them, until half-open connections exhaust the target.",
-     "show": 5
+     "say": "Notice the split. I P only guarantees an attempt to route. T C P guarantees the data arrives complete and in order.",
+     "show": 4,
+     "on": [
+      "tcp",
+      "ip"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
-   "kicker": "Topic 1.1 · Lab",
-   "title": "Trace a real connection",
-   "file": "terminal",
-   "code": "ping -c 4 example.com\ntraceroute example.com\ncurl -v https://example.com\nss -tuln",
+   "kind": "diagram",
+   "kicker": "Topic 1.1 · TCP/IP",
+   "title": "The three-way handshake, and how a SYN flood abuses it",
+   "nodes": [
+    {
+     "id": "cli",
+     "label": "Your laptop",
+     "x": 14,
+     "y": 26,
+     "sub": "curl -v",
+     "art": "laptop"
+    },
+    {
+     "id": "srv",
+     "label": "Web server",
+     "x": 84,
+     "y": 50,
+     "sub": "port 443 · HTTPS",
+     "art": "server"
+    },
+    {
+     "id": "atk",
+     "label": "Attacker",
+     "x": 14,
+     "y": 76,
+     "sub": "many fake starts",
+     "art": "bug"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cli",
+     "to": "srv"
+    },
+    {
+     "from": "atk",
+     "to": "srv"
+    }
+   ],
    "beats": [
     {
-     "say": "In the lab, ping a host to test reachability, then traceroute to see each hop.",
-     "show": 0
+     "say": "To reach a web server on port four four three, T C P opens with a handshake. First, syn.",
+     "show": 2,
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "srv",
+      "label": "SYN"
+     }
     },
     {
-     "say": "Curl dash v opens a real T C P connection on port four four three. You see it established before any data moves.",
-     "show": 1
+     "say": "The server answers syn ack, and sets aside resources for you.",
+     "show": 2,
+     "on": "srv",
+     "send": {
+      "from": "srv",
+      "to": "cli",
+      "label": "SYN-ACK"
+     }
     },
     {
-     "say": "Then ss dash t u l n lists the ports your own machine is listening on. Pick one service, and say whether it uses T C P or U D P, and why.",
-     "show": 1
+     "say": "Your laptop sends ack, and the connection is open.",
+     "show": 2,
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "srv",
+      "label": "ACK"
+     }
+    },
+    {
+     "say": "Now data flows numbered. What arrives is acknowledged, and anything lost is re-sent.",
+     "show": 2,
+     "on": [
+      "cli",
+      "srv"
+     ],
+     "send": {
+      "from": "cli",
+      "to": "srv",
+      "label": "data, numbered"
+     }
+    },
+    {
+     "say": "U D P skips all of this and just sends, with no guarantee. It suits D N S lookups, video calls and games.",
+     "show": 2,
+     "on": "cli",
+     "send": {
+      "from": "cli",
+      "to": "srv",
+      "label": "UDP: just send"
+     }
+    },
+    {
+     "say": "A SYN flood abuses the handshake. It sends thousands of syns.",
+     "show": 3,
+     "on": "atk",
+     "send": {
+      "from": "atk",
+      "to": "srv",
+      "label": "SYN ×1000"
+     }
+    },
+    {
+     "say": "The server answers each one and waits.",
+     "show": 3,
+     "on": "srv",
+     "send": {
+      "from": "srv",
+      "to": "atk",
+      "label": "SYN-ACK ×1000"
+     }
+    },
+    {
+     "say": "The final ack never comes, and half-open connections pile up until the server runs out of resources.",
+     "show": 3,
+     "on": "srv"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "globe",
+   "kind": "diagram",
    "kicker": "Topic 1.2 · DNS",
-   "title": "The network's address book",
-   "steps": [
-    "Your device asks",
-    "Resolver",
-    "Root → TLD → authoritative",
-    "Answer, cached for its TTL"
+   "title": "Watch a resolver walk the hierarchy",
+   "nodes": [
+    {
+     "id": "dev",
+     "label": "Your device",
+     "x": 10,
+     "y": 50,
+     "sub": "wants example.com",
+     "art": "laptop"
+    },
+    {
+     "id": "res",
+     "label": "Resolver",
+     "x": 42,
+     "y": 50,
+     "sub": "e.g. 1.1.1.1",
+     "art": "server"
+    },
+    {
+     "id": "root",
+     "label": "Root server",
+     "x": 84,
+     "y": 16,
+     "sub": "knows the TLDs",
+     "art": "globe"
+    },
+    {
+     "id": "tld",
+     "label": ".com TLD server",
+     "x": 84,
+     "y": 50,
+     "sub": "knows .com domains",
+     "art": "network"
+    },
+    {
+     "id": "auth",
+     "label": "Authoritative",
+     "x": 84,
+     "y": 84,
+     "sub": "holds the record",
+     "art": "database"
+    }
+   ],
+   "edges": [
+    {
+     "from": "dev",
+     "to": "res"
+    },
+    {
+     "from": "res",
+     "to": "root"
+    },
+    {
+     "from": "res",
+     "to": "tld"
+    },
+    {
+     "from": "res",
+     "to": "auth"
+    }
    ],
    "beats": [
     {
-     "say": "D N S translates names like example dot com into the I P addresses T C P slash I P needs.",
-     "show": 0
+     "say": "D N S turns a name into an I P address. Your device asks a resolver.",
+     "show": 2,
+     "on": "dev",
+     "send": {
+      "from": "dev",
+      "to": "res",
+      "label": "example.com A?"
+     }
     },
     {
-     "say": "Your device asks a resolver, which does the lookup for you.",
-     "show": 1
+     "say": "The resolver starts at a root server, which points it to dot com.",
+     "show": 3,
+     "on": "root",
+     "send": {
+      "from": "root",
+      "to": "res",
+      "label": "ask .com"
+     }
     },
     {
-     "say": "The resolver walks the hierarchy: root servers, then T L D servers, then the authoritative server for the domain.",
-     "show": 2
+     "say": "The dot com T L D server points it to the authoritative server.",
+     "show": 4,
+     "on": "tld",
+     "send": {
+      "from": "tld",
+      "to": "res",
+      "label": "ask its server"
+     }
     },
     {
-     "say": "The answer comes back, and is cached for as many seconds as its T T L, its time to live.",
-     "show": 3
+     "say": "That server holds the actual record, and answers with the address and a T T L.",
+     "show": 5,
+     "on": "auth",
+     "send": {
+      "from": "auth",
+      "to": "res",
+      "label": "IP + TTL"
+     }
+    },
+    {
+     "say": "The resolver passes it back, and caches it for T T L seconds. Dig plus trace shows this whole walk.",
+     "show": 5,
+     "on": "res",
+     "send": {
+      "from": "res",
+      "to": "dev",
+      "label": "IP (cached)"
+     }
+    },
+    {
+     "say": "Ask again inside the T T L, and the answer comes straight from the cache.",
+     "show": 5,
+     "on": "res",
+     "send": {
+      "from": "res",
+      "to": "dev",
+      "label": "from cache"
+     }
+    },
+    {
+     "say": "That's also the risk. A poisoned record planted here lingers for as long as the T T L allows.",
+     "show": 5,
+     "on": "res"
+    },
+    {
+     "say": "D N S SEC signs records, so forged answers can be detected.",
+     "show": 5,
+     "on": [
+      "auth",
+      "res"
+     ]
+    },
+    {
+     "say": "And D N S query logs are evidence. They can reveal malware phoning home to a command and control domain.",
+     "show": 5,
+     "on": [
+      "dev",
+      "res"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
-   "kicker": "Topic 1.2 · Why it matters",
-   "title": "Target and evidence",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 1.2 · Lab",
+   "title": "One name, many record types",
+   "columns": [
+    "Type",
+    "Points to",
+    "Typical use"
+   ],
+   "rows": [
     [
-     "Attack target",
-     "Cache poisoning → DNSSEC"
+     "A",
+     "an IPv4 address",
+     "reach the website"
     ],
     [
-     "Evidence",
-     "Query logs show what a device reached for"
+     "AAAA",
+     "an IPv6 address",
+     "the same, over IPv6"
     ],
     [
-     "Lab",
-     "dig A / MX / TXT · dig +trace · read the TTL"
+     "CNAME",
+     "another name",
+     "an alias"
+    ],
+    [
+     "MX",
+     "a mail server",
+     "where email goes"
+    ],
+    [
+     "TXT",
+     "any text",
+     "domain verification"
     ]
    ],
    "beats": [
     {
-     "say": "D N S matters to security twice over.",
-     "show": 0
+     "say": "Each D N S record type answers a different question."
     },
     {
-     "say": "Cache poisoning tries to inject a false record, so a real name points to a malicious I P. D N S SEC signs records so forged answers can be detected.",
-     "show": 1
+     "say": "Type A gives the I P v four address.",
+     "sql": "dig example.com A",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "And D N S logs can reveal malware phoning home to a command and control domain, long before anything else does.",
-     "show": 2
+     "say": "Quad A is the same for I P v six. A C name points to another name.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
     },
     {
-     "say": "In the lab, use dig for A, M X and T X T records, run dig plus trace to watch the hierarchy, and read the T T L.",
-     "show": 3
+     "say": "M X says where the domain's email goes.",
+     "sql": "dig example.com MX",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "T X T holds free text, often to prove you own a domain.",
+     "sql": "dig example.com TXT",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "In dig's answer, the number before the record type is the T T L: how many seconds it may be cached.",
+     "sql": "example.com.  <TTL>  IN  A  <address>",
+     "col": 0
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "browser",
+   "kind": "walk",
    "kicker": "Topic 1.3 · HTTP",
-   "title": "Request and response",
-   "items": [
-    [
-     "Method",
-     "GET · POST · PUT · DELETE"
-    ],
-    [
-     "Status",
-     "2xx · 3xx · 4xx · 5xx"
-    ],
-    [
-     "Headers",
-     "Set-Cookie, Authorization, CSP, HSTS"
-    ],
-    [
-     "HTTPS",
-     "HTTP inside TLS"
-    ]
-   ],
+   "title": "Read a raw request and response",
+   "file": "curl -v https://example.com",
+   "code": "* Connected to example.com port 443\n* SSL connection using TLSv1.3\n> GET / HTTP/2\n> Host: example.com\n> User-Agent: curl/8.x\n> Accept: */*\n>\n< HTTP/2 200\n< content-type: text/html\n< ...more response headers\n<\n<!doctype html> ...the page itself",
    "beats": [
     {
-     "say": "H T T P is the protocol the web runs on: a client sends a request, the server sends a response. It's stateless, so the server doesn't inherently remember you.",
-     "show": 0
+     "say": "Curl dash v shows the whole exchange. First, the connection on port four four three.",
+     "line": 1
     },
     {
-     "say": "The method states the intent: get retrieves, post submits, put updates, delete removes.",
-     "show": 1
+     "say": "Then T L S encryption, which turns H T T P into H T T P S.",
+     "line": 2,
+     "vars": {
+      "TLS": "on"
+     }
     },
     {
-     "say": "The status code reports the outcome: two hundreds success, three hundreds redirect, four hundreds client error, five hundreds server error.",
-     "show": 2
+     "say": "Lines with a greater than sign are your request. First the method and path: GET slash.",
+     "line": 3,
+     "vars": {
+      "TLS": "on",
+      "method": "GET",
+      "path": "/"
+     }
     },
     {
-     "say": "Headers carry metadata, like cookies, auth tokens and security headers such as Content Security Policy and Strict Transport Security.",
-     "show": 3
+     "say": "Then headers: which host, which client, what it accepts. A blank line ends it. A GET has no body.",
+     "line": [
+      4,
+      5,
+      6,
+      7
+     ]
     },
     {
-     "say": "Plain H T T P is readable text, open to a man in the middle. H T T P S wraps it in T L S encryption.",
-     "show": 4
+     "say": "Lines with a less than sign are the response. Status two hundred: success.",
+     "line": 8,
+     "vars": {
+      "TLS": "on",
+      "method": "GET",
+      "path": "/",
+      "status": 200
+     }
+    },
+    {
+     "say": "Response headers carry metadata. Check here for security headers like Strict Transport Security.",
+     "line": [
+      9,
+      10
+     ]
+    },
+    {
+     "say": "Then the body, the page itself.",
+     "line": [
+      11,
+      12
+     ]
+    },
+    {
+     "say": "Ask for a missing page, and you get a four hundreds code, like four oh four.",
+     "vars": {
+      "TLS": "on",
+      "method": "GET",
+      "status": 404
+     },
+     "out": [
+      "$ curl -I https://httpbin.org/status/404",
+      "HTTP/2 404"
+     ]
+    },
+    {
+     "say": "Post some data, and the test server echoes back your form.",
+     "vars": {
+      "TLS": "on",
+      "method": "POST",
+      "status": 200
+     },
+     "out": [
+      "$ curl -X POST -d \"name=test\" https://httpbin.org/post",
+      "\"form\": {\"name\": \"test\"}"
+     ]
+    },
+    {
+     "say": "Over plain H T T P, all of this is readable text, open to a man in the middle.",
+     "line": [
+      3,
+      12
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "search",
-   "kicker": "Topic 1.3 · Lab",
-   "title": "Read the raw exchange",
-   "file": "terminal",
-   "code": "curl -v https://example.com\ncurl -I https://example.com\ncurl -I https://example.com/thispagedoesnotexist\ncurl -X POST -d \"name=test\" https://httpbin.org/post",
-   "beats": [
-    {
-     "say": "With curl dash v, lines starting with a greater than sign are your request, and a less than sign marks the response.",
-     "show": 0
-    },
-    {
-     "say": "Curl dash capital I fetches only the headers. Ask for a page that doesn't exist, and note the four hundreds code.",
-     "show": 1
-    },
-    {
-     "say": "Then send a post with data, and compare it to a get. Finally, inspect a real request in your browser's Network tab.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "firewall",
+   "kind": "table",
    "kicker": "Topic 1.4 · Firewalls",
-   "title": "Default-deny",
-   "items": [
+   "title": "Rules are checked top to bottom",
+   "columns": [
+    "#",
+    "Match",
+    "Action"
+   ],
+   "rows": [
     [
-     "Default-deny",
-     "Block unless allowed"
+     "1",
+     "in, tcp port 443",
+     "ALLOW"
     ],
     [
-     "Stateful",
-     "Tracks whole connections"
+     "2",
+     "in, from 10.0.0.0/8",
+     "ALLOW"
     ],
     [
-     "Ingress / egress",
-     "In and out"
+     "3",
+     "in, from 10.0.0.66",
+     "DENY"
     ],
     [
-     "Rule order",
-     "First match wins"
+     "default",
+     "anything else in",
+     "DENY"
     ]
    ],
    "beats": [
     {
-     "say": "A firewall decides which traffic passes, by rules written in the terms you've just learned: addresses, ports and protocols.",
-     "show": 0
+     "say": "Firewall rules match on addresses, ports and protocols. Here's an example set.",
+     "sql": "first match wins"
     },
     {
-     "say": "Default deny blocks everything not explicitly allowed, so a service is only reachable by deliberate choice.",
-     "show": 1
+     "say": "A visitor connects to port four four three. Rule one matches: allowed.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Stateful inspection tracks connections, so return traffic for a connection you started is allowed without a separate rule.",
-     "show": 2
+     "say": "Someone outside tries port twenty two. Nothing matches, so default deny drops it. Only what you deliberately opened is reachable.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "Ingress filters what comes in. Egress filters what goes out, which can stop a compromised machine phoning home.",
-     "show": 3
+     "say": "Now the host ten dot zero dot zero dot sixty six connects. Rule three is meant to block it.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "And order matters. Rules are checked top to bottom, first match wins, so a broad allow above a specific deny can undo it.",
-     "show": 4
+     "say": "But the broad allow in rule two matches first, so it's let in. Rule three is never reached.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
+    },
+    {
+     "say": "The fix: put the specific deny above the broad allow.",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 0
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "lock",
+   "kind": "walk",
    "kicker": "Topic 1.4 · Lab",
    "title": "Lock it down with ufw",
    "file": "terminal",
-   "code": "sudo ufw default deny incoming\nsudo ufw default allow outgoing\nsudo ufw allow 22/tcp\nsudo ufw enable\nsudo ufw status numbered\nsudo ufw allow 80/tcp\nsudo ufw delete allow 80/tcp",
+   "code": "sudo ufw status verbose\nsudo ufw default deny incoming\nsudo ufw default allow outgoing\nsudo ufw allow 22/tcp\nsudo ufw enable\nsudo ufw status numbered\nsudo ufw allow 80/tcp\nsudo ufw delete allow 80/tcp",
    "beats": [
     {
-     "say": "On Linux, set a default deny baseline for incoming traffic, and allow your own outgoing traffic.",
-     "show": 0
+     "say": "Check the firewall first. Here it's off.",
+     "line": 1,
+     "out": "Status: inactive"
     },
     {
-     "say": "Allow only what you need, like S S H on port twenty two. If you're on a remote server, allow S S H before enabling, so you don't lock yourself out.",
-     "show": 1
+     "say": "Set the baseline: deny all incoming traffic.",
+     "line": 2,
+     "vars": {
+      "incoming": "deny"
+     },
+     "out": "Default incoming policy changed to 'deny'"
     },
     {
-     "say": "Enable it, list the numbered rules, then add and delete a rule for port eighty to practise.",
-     "show": 1
+     "say": "Allow your own outgoing traffic. Stricter egress rules can also stop a compromised machine phoning home.",
+     "line": 3,
+     "vars": {
+      "incoming": "deny",
+      "outgoing": "allow"
+     },
+     "out": "Default outgoing policy changed to 'allow'"
+    },
+    {
+     "say": "Allow the one service you need, S S H on port twenty two. On a remote server, do this before enabling.",
+     "line": 4,
+     "vars": {
+      "incoming": "deny",
+      "outgoing": "allow",
+      "rules": "22/tcp"
+     },
+     "out": "Rules updated"
+    },
+    {
+     "say": "Turn it on, and the numbered list shows your one allow rule.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "status": "active",
+      "incoming": "deny",
+      "outgoing": "allow",
+      "rules": "22/tcp"
+     },
+     "out": [
+      "Firewall is active and enabled on system startup",
+      "[ 1] 22/tcp    ALLOW IN    Anywhere"
+     ]
+    },
+    {
+     "say": "Practise by allowing port eighty,",
+     "line": 7,
+     "vars": {
+      "status": "active",
+      "incoming": "deny",
+      "outgoing": "allow",
+      "rules": "22/tcp, 80/tcp"
+     },
+     "out": "Rule added"
+    },
+    {
+     "say": "then deleting it again.",
+     "line": 8,
+     "vars": {
+      "status": "active",
+      "incoming": "deny",
+      "outgoing": "allow",
+      "rules": "22/tcp"
+     },
+     "out": "Rule deleted"
+    },
+    {
+     "say": "Replies to connections you started still get in, because the firewall is stateful. It tracks each connection.",
+     "line": [
+      2,
+      3
+     ]
     }
    ]
   },
@@ -642,8 +1057,8 @@ You have configured a firewall with a default-deny baseline, explicitly allowed 
    "title": "How does a SYN flood abuse the TCP handshake?",
    "options": [
     "It sends SYN packets but never completes the handshake, leaving half-open connections",
-    "It forges D N S records for the target",
-    "It reads plain H T T P traffic in transit"
+    "It forges DNS records for the target",
+    "It reads plain HTTP traffic in transit"
    ],
    "answer": 0,
    "good": "That's right. It starts many handshakes with SYN packets but never sends the final ACK, and the half-open connections exhaust the target's resources.",
@@ -654,7 +1069,7 @@ You have configured a firewall with a default-deny baseline, explicitly allowed 
      "show": 0
     },
     {
-     "say": "How does a SYN flood abuse the TCP handshake?",
+     "say": "How does a SYN flood abuse the T C P handshake?",
      "show": 0
     },
     {

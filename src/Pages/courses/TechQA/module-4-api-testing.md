@@ -245,224 +245,495 @@ You have a saved collection with positive, negative, and response-time assertion
    ]
   },
   {
-   "kind": "flow",
-   "art": "server",
-   "kicker": "Topic 4.1 · Concept",
+   "kind": "diagram",
+   "kicker": "Topic 4.1 · Postman",
    "title": "Request, response, test",
-   "steps": [
-    "Request: method, URL, headers, body",
-    "API processes it",
-    "Response: status, headers, body",
-    "Test script checks it"
+   "nodes": [
+    {
+     "id": "pm",
+     "label": "Postman",
+     "x": 12,
+     "y": 50,
+     "sub": "your request",
+     "art": "laptop"
+    },
+    {
+     "id": "api",
+     "label": "JSONPlaceholder",
+     "x": 52,
+     "y": 22,
+     "sub": "free test API",
+     "art": "server"
+    },
+    {
+     "id": "tests",
+     "label": "Test script",
+     "x": 52,
+     "y": 80,
+     "sub": "JavaScript",
+     "art": "test"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pm",
+     "to": "api"
+    },
+    {
+     "from": "pm",
+     "to": "tests"
+    }
    ],
    "beats": [
     {
-     "say": "Postman sends requests straight to an A P I, with no front end in between.",
-     "show": 0
+     "say": "Postman sends a request straight to an A P I: a method, a U R L, headers, and sometimes a body.",
+     "show": 2,
+     "on": "pm",
+     "send": {
+      "from": "pm",
+      "to": "api",
+      "label": "GET /users/1"
+     }
     },
     {
-     "say": "A request has a method, like get or post, a U R L, headers, and sometimes a body.",
-     "show": 1
+     "say": "Back comes a status code, headers, and a J S O N body.",
+     "show": 2,
+     "on": "api",
+     "send": {
+      "from": "api",
+      "to": "pm",
+      "label": "200 · JSON"
+     }
     },
     {
-     "say": "The server processes it.",
-     "show": 2
+     "say": "Then a test script, written in JavaScript, checks the response automatically.",
+     "show": 3,
+     "on": "tests",
+     "send": {
+      "from": "pm",
+      "to": "tests",
+      "label": "run tests"
+     }
     },
     {
-     "say": "The response comes back with a status code, headers, and a body, usually J S O N.",
-     "show": 3
+     "say": "And reports which checks passed.",
+     "show": 3,
+     "on": "pm",
+     "send": {
+      "from": "tests",
+      "to": "pm",
+      "label": "2 passed"
+     }
     },
     {
-     "say": "Then a test script, written in JavaScript, checks it automatically. Save requests into a collection, and swap values like the base U R L with environment variables.",
-     "show": 4
+     "say": "Collections save requests to rerun together. Environment variables swap values like the base U R L.",
+     "show": 3,
+     "on": [
+      "pm",
+      "tests"
+     ]
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "test",
+   "kind": "walk",
    "kicker": "Topic 4.1 · Lab",
-   "title": "Your first Postman tests",
+   "title": "Run your first two tests, twice",
    "file": "Postman · Tests",
    "code": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response has an email field\", function () {\n    const body = pm.response.json();\n    pm.expect(body).to.have.property(\"email\");\n});",
    "beats": [
     {
-     "say": "In the lab, send a get request to user one on the free JSONPlaceholder test A P I.",
-     "show": 0
+     "say": "Send GET to slash users slash one.",
+     "vars": {
+      "URL": "/users/1"
+     }
     },
     {
-     "say": "Then add two tests: the status code is two hundred, and the body has an email field.",
-     "show": 1
+     "say": "The status is two hundred, so the first test passes.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "URL": "/users/1",
+      "status": 200
+     },
+     "out": "PASS Status code is 200"
     },
     {
-     "say": "Send again, check both pass, save it to a collection, and try user nine nine nine to see how the results change.",
-     "show": 1
+     "say": "The body is Leanne Graham's record, and it has an email, so the second passes too.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "URL": "/users/1",
+      "status": 200,
+      "body.email": "\"Sincere@april.biz\""
+     },
+     "out": "PASS Response has an email field"
+    },
+    {
+     "say": "Now try user nine nine nine, which doesn't exist.",
+     "vars": {
+      "URL": "/users/999"
+     }
+    },
+    {
+     "say": "Four oh four. The first test fails.",
+     "line": [
+      1,
+      2
+     ],
+     "vars": {
+      "URL": "/users/999",
+      "status": 404
+     },
+     "out": "FAIL Status code is 200 (got 404)"
+    },
+    {
+     "say": "The body is empty, with no email, so the second fails too.",
+     "line": [
+      6,
+      7
+     ],
+     "vars": {
+      "URL": "/users/999",
+      "status": 404,
+      "body": "{}"
+     },
+     "out": "FAIL Response has an email field"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "book",
-   "kicker": "Topic 4.2 · Concept",
-   "title": "OpenAPI and Swagger",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 4.2 · Swagger",
+   "title": "Compare the schema with the live response",
+   "columns": [
+    "Field",
+    "Schema type",
+    "Required",
+    "Live response"
+   ],
+   "rows": [
     [
-     "OpenAPI document",
-     "Endpoints, methods, responses"
+     "id",
+     "integer",
+     "no",
+     "present, integer"
     ],
     [
-     "Swagger UI",
-     "Interactive, try it out"
+     "name",
+     "string",
+     "yes",
+     "present, string"
     ],
     [
-     "Schema",
-     "Fields, types, required"
+     "category",
+     "object",
+     "no",
+     "present, object"
     ],
     [
-     "Machine-readable",
-     "Tools import it"
+     "photoUrls",
+     "array of strings",
+     "yes",
+     "present, array"
+    ],
+    [
+     "tags",
+     "array",
+     "no",
+     "present, array"
+    ],
+    [
+     "status",
+     "available/pending/sold",
+     "no",
+     "present, string"
     ]
    ],
    "beats": [
     {
-     "say": "Swagger, now largely known as the Open A P I Specification, is a standard way to describe an A P I in Yaml or J S O N.",
-     "show": 0
+     "say": "An Open A P I document describes every endpoint. Here is the Pet schema from the Petstore demo.",
+     "sql": "GET /pet/{petId}  →  Pet"
     },
     {
-     "say": "The document lists every endpoint: its path, method, parameters, and possible responses.",
-     "show": 1
+     "say": "It lists each field's type, and which are required: for a pet, name and photo U R Ls.",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Swagger U I turns it into an interactive page where you can send real requests.",
-     "show": 2
+     "say": "In Swagger U I, use Try it out on a pet, and put the live response beside the schema.",
+     "col": 3
     },
     {
-     "say": "A schema defines the exact shape of the data: which fields, their types, and which are required.",
-     "show": 3
+     "say": "Field by field, everything is present with the right type. So you write: it matched exactly.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "col": 3
     },
     {
-     "say": "And because it's structured data, tools like Postman can import it and generate requests.",
-     "show": 4
+     "say": "A missing required field or a wrong type would be a bug, in the A P I or in the docs.",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true,
+     "sql": "Mismatch = bug (API or docs)"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "venn",
-   "kicker": "Topic 4.2 · Lab",
-   "title": "Compare promise and reality",
-   "steps": [
-    "Open Petstore Swagger UI",
-    "Read the schema",
-    "Try it out",
-    "Compare field by field"
-   ],
-   "beats": [
-    {
-     "say": "Open the public Petstore Swagger U I.",
-     "show": 1
-    },
-    {
-     "say": "Read one endpoint's documented response schema, like get pet by I D.",
-     "show": 2
-    },
-    {
-     "say": "Use try it out with an I D from one to ten. The demo data is shared and reset, so if you get a four oh four, try another.",
-     "show": 3
-    },
-    {
-     "say": "Compare the real response with the schema, field by field, and write down your conclusion. A mismatch is a bug, in the A P I or the docs.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Topic 4.3 · Concept",
-   "title": "From exploring to a suite",
-   "items": [
-    [
-     "Assertions",
-     "Status, fields"
-    ],
-    [
-     "Positive + negative",
-     "Valid input ✓ · fails safely ✓"
-    ],
-    [
-     "Chaining",
-     "Pass a value forward"
-    ],
-    [
-     "Response time",
-     "Below an agreed limit"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Clicking send one request at a time is exploration. A suite runs every request with its own checks, in a fixed order, with one command.",
-     "show": 0
-    },
-    {
-     "say": "An assertion is one check, like the status code is two hundred.",
-     "show": 1
-    },
-    {
-     "say": "Positive tests confirm the right result for valid input. Negative tests confirm it fails safely, like a four oh four for a missing user.",
-     "show": 2
-    },
-    {
-     "say": "Chaining passes a value from one response into a later request.",
-     "show": 3
-    },
-    {
-     "say": "And a response time assertion fails when the A P I is slower than an agreed limit.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "chain",
+   "kind": "table",
    "kicker": "Topic 4.3 · Lab",
-   "title": "Chain two requests",
+   "title": "The Users API suite, in run order",
+   "columns": [
+    "Request",
+    "Assertion",
+    "Kind"
+   ],
+   "rows": [
+    [
+     "GET /users/1",
+     "status is 200",
+     "positive"
+    ],
+    [
+     "GET /users/1",
+     "id equals 1",
+     "positive"
+    ],
+    [
+     "GET /users/1",
+     "name is a string",
+     "positive"
+    ],
+    [
+     "GET /users/1",
+     "below 1000 ms",
+     "response time"
+    ],
+    [
+     "GET /users/9999",
+     "status is 404",
+     "negative"
+    ],
+    [
+     "GET /users",
+     "200, save userId",
+     "chain, step 1"
+    ],
+    [
+     "GET /users/{{userId}}",
+     "same user came back",
+     "chain, step 2"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "A suite runs fixed requests in order, each with its own checks, called assertions.",
+     "sql": "baseUrl = https://jsonplaceholder.typicode.com"
+    },
+    {
+     "say": "Three positive tests: valid input, right answer.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "One fails if the A P I takes a second or longer.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "A negative test asks for a missing user, and expects a safe four oh four.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "And two chained requests: the first saves a value, the second uses it.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Topic 4.3 · Lab",
+   "title": "Trace the chained requests",
    "file": "Postman · Post-response",
-   "code": "// GET {{baseUrl}}/users\npm.collectionVariables.set(\"userId\", pm.response.json()[0].id);\n\n// GET {{baseUrl}}/users/{{userId}}\npm.test(\"Returns the chained user\", () => {\n    pm.expect(pm.response.json().id)\n      .to.eql(Number(pm.collectionVariables.get(\"userId\")));\n});",
+   "code": "// 1) GET {{baseUrl}}/users\npm.test(\"Status is 200\",\n  () => pm.response.to.have.status(200));\npm.collectionVariables.set(\"userId\",\n  pm.response.json()[0].id);\n\n// 2) GET {{baseUrl}}/users/{{userId}}\npm.test(\"Returns the chained user\", () => {\n  pm.expect(pm.response.json().id).to.eql(\n    Number(pm.collectionVariables.get(\"userId\")));\n});",
    "beats": [
     {
-     "say": "In the lab's Users A P I collection, the list request saves the first user's I D into a collection variable.",
-     "show": 0
+     "say": "Request one gets the list of users. Status two hundred: pass.",
+     "line": [
+      1,
+      3
+     ],
+     "vars": {
+      "URL": "/users",
+      "status": 200
+     },
+     "out": "PASS Status is 200"
     },
     {
-     "say": "The next request uses user I D in curly braces in its U R L, and checks it got the same user back.",
-     "show": 1
+     "say": "The first user's i d is one, saved as the collection variable user I d.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "URL": "/users",
+      "status": 200,
+      "userId": 1
+     }
     },
     {
-     "say": "Variables are only filled in fields like the U R L, headers and body, not a request's name.",
-     "show": 1
+     "say": "Request two has user I d in its U R L, so Postman fills in one.",
+     "line": 7,
+     "vars": {
+      "userId": 1,
+      "URL": "/users/1"
+     }
+    },
+    {
+     "say": "The response's i d is one, the same as the saved value. Pass.",
+     "line": [
+      9,
+      10
+     ],
+     "vars": {
+      "userId": 1,
+      "URL": "/users/1",
+      "response id": 1
+     },
+     "out": "PASS Returns the chained user"
+    },
+    {
+     "say": "Variables fill the U R L, headers and body, but not a request's name.",
+     "line": 7
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "terminal",
+   "kind": "diagram",
    "kicker": "Topic 4.3 · Lab",
-   "title": "Run it from the terminal",
-   "file": "Terminal",
-   "code": "npm install -g newman\nnewman run users-api.postman_collection.json -e test.postman_environment.json",
+   "title": "The same suite, from the terminal",
+   "nodes": [
+    {
+     "id": "files",
+     "label": "Exported JSON",
+     "x": 12,
+     "y": 25,
+     "sub": "collection + env",
+     "art": "file"
+    },
+    {
+     "id": "ci",
+     "label": "CI/CD pipeline",
+     "x": 12,
+     "y": 78,
+     "sub": "on every change",
+     "art": "pipeline"
+    },
+    {
+     "id": "newman",
+     "label": "Newman",
+     "x": 50,
+     "y": 50,
+     "sub": "newman run",
+     "art": "terminal"
+    },
+    {
+     "id": "api",
+     "label": "JSONPlaceholder",
+     "x": 88,
+     "y": 50,
+     "sub": "the API under test",
+     "art": "server"
+    }
+   ],
+   "edges": [
+    {
+     "from": "files",
+     "to": "newman"
+    },
+    {
+     "from": "ci",
+     "to": "newman"
+    },
+    {
+     "from": "newman",
+     "to": "api"
+    }
+   ],
    "beats": [
     {
-     "say": "Run the whole collection with Postman's Collection Runner, and read the summary.",
-     "show": 0
+     "say": "After a pass in the Collection Runner, export the collection and environment as J S O N.",
+     "show": 1,
+     "on": "files"
     },
     {
-     "say": "Then export the collection and environment, install Newman with N P M, and run the same suite from a terminal.",
-     "show": 1
+     "say": "Install Newman with N P M, and point it at both files.",
+     "show": 3,
+     "on": "newman",
+     "send": {
+      "from": "files",
+      "to": "newman",
+      "label": "newman run"
+     }
     },
     {
-     "say": "That's what lets a C I C D pipeline run it on every change. The Postman C L I is an alternative that does the same job.",
-     "show": 1
+     "say": "It sends the same four requests, with no Postman app open.",
+     "show": 4,
+     "on": "api",
+     "send": {
+      "from": "newman",
+      "to": "api",
+      "label": "4 requests"
+     }
+    },
+    {
+     "say": "And prints a summary: seven assertions, none failed.",
+     "show": 4,
+     "on": "newman",
+     "send": {
+      "from": "api",
+      "to": "newman",
+      "label": "7 passed"
+     }
+    },
+    {
+     "say": "Because it's one command, a C I C D pipeline can run it on every change. The Postman C L I does the same job.",
+     "show": 4,
+     "on": "ci",
+     "send": {
+      "from": "ci",
+      "to": "newman",
+      "label": "run on push"
+     }
     }
    ]
   },

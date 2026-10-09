@@ -756,7 +756,7 @@ nano cpu_monitor.sh
 ```bash
 #!/bin/bash
 CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}')
-echo "CPU Usage: $CPU%"
+echo "CPU Usage (user): $CPU%"
 ```
 
 ```bash
@@ -764,7 +764,7 @@ chmod +x cpu_monitor.sh
 ./cpu_monitor.sh
 ```
 
-**CPU utilization** is the percentage of processing capacity currently in use; `top -bn1` takes a single, non-interactive snapshot instead of the live-updating view.
+**CPU utilization** is the percentage of processing capacity currently in use; `top -bn1` takes a single, non-interactive snapshot instead of the live-updating view. The `Cpu(s)` line splits usage into parts (`us` for user programs, `sy` for the system, `id` for idle, and so on), and `awk '{print $2}'` picks only the first one, the **user** share, which is why the script labels it "(user)". Total busy CPU is roughly 100 minus the `id` value.
 
 **Step 5: Build a standalone memory monitor.**
 
@@ -821,8 +821,8 @@ nano network_monitor.sh
 
 ```bash
 #!/bin/bash
-NETWORK=$(ss -tulwn | wc -l)
-echo "Network Connections: $NETWORK"
+NETWORK=$(ss -tulwn | tail -n +2 | wc -l)
+echo "Listening Sockets: $NETWORK"
 ```
 
 ```bash
@@ -830,7 +830,7 @@ chmod +x network_monitor.sh
 ./network_monitor.sh
 ```
 
-`ss -tulwn` lists which **ports** (numbered network doors) are open and listening for traffic.
+`ss -tulwn` lists which **ports** (numbered network doors) are open and listening for traffic. Its first line is a column header, so `tail -n +2` skips it before `wc -l` counts the lines; the result is the number of listening sockets, not every active connection.
 
 **Step 9: Build a standalone GPU monitor (if available).**
 This step only works on a machine with an NVIDIA GPU and its drivers installed. Cloud Shell and most laptops don't have one, so if `nvidia-smi` says "command not found," read the step and move on.
@@ -862,15 +862,15 @@ nano monitor.sh
 CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}')
 MEMORY=$(free | awk '/Mem:/ {printf("%.2f"), $3/$2 * 100}')
 DISK=$(df / | tail -1 | awk '{print $5}')
-NETWORK=$(ss -tulwn | wc -l)
+NETWORK=$(ss -tulwn | tail -n +2 | wc -l)
 
 echo "=========================="
 echo "AI SERVER MONITOR"
 echo "=========================="
-echo "CPU Usage: $CPU%"
+echo "CPU Usage (user): $CPU%"
 echo "Memory Usage: $MEMORY%"
 echo "Disk Usage: $DISK"
-echo "Network Connections: $NETWORK"
+echo "Listening Sockets: $NETWORK"
 echo "=========================="
 ```
 
@@ -879,7 +879,7 @@ chmod +x monitor.sh
 ./monitor.sh
 ```
 
-Bundling checks into one script turns five separate manual routines into a single reusable tool.
+Bundling checks into one script turns four separate manual routines (CPU, memory, disk, network) into a single reusable tool.
 
 **Step 11: Add a threshold alert.**
 Open `monitor.sh` again (`nano monitor.sh`) and add these lines at the end. They use `bc`, a calculator for decimals; if you get "bc: command not found," install it with `sudo apt install -y bc`.
@@ -1080,7 +1080,7 @@ monitoring_project/
    "kicker": "Steps 3 and 4",
    "title": "Make the script runnable, then run it",
    "file": "cpu_monitor.sh",
-   "code": "#!/bin/bash\nCPU=$(top -bn1 | grep \"Cpu(s)\" | awk '{print $2}')\necho \"CPU Usage: $CPU%\"\n\n# in the terminal:\n./cpu_monitor.sh\nchmod +x cpu_monitor.sh\n./cpu_monitor.sh",
+   "code": "#!/bin/bash\nCPU=$(top -bn1 | grep \"Cpu(s)\" | awk '{print $2}')\necho \"CPU Usage (user): $CPU%\"\n\n# in the terminal:\n./cpu_monitor.sh\nchmod +x cpu_monitor.sh\n./cpu_monitor.sh",
    "beats": [
     {
      "say": "The first line is the shebang. It tells Linux to run this file with bash.",
@@ -1115,7 +1115,7 @@ monitoring_project/
     {
      "say": "And echo prints the usage, with a percent sign added.",
      "line": 3,
-     "out": "CPU Usage: 3.1%"
+     "out": "CPU Usage (user): 3.1%"
     }
    ]
   },
@@ -1146,8 +1146,8 @@ monitoring_project/
     ],
     [
      "Network",
-     "ss -tulwn | wc -l",
-     "7"
+     "ss -tulwn | tail …",
+     "6 sockets"
     ],
     [
      "Processes",
@@ -1176,7 +1176,7 @@ monitoring_project/
      "dim": true
     },
     {
-     "say": "Network, with s s: the ports open and listening, counted with w c.",
+     "say": "Network, with s s: the ports open and listening. Tail skips the header line, then w c counts the sockets.",
      "hl": 3,
      "dim": true
     },

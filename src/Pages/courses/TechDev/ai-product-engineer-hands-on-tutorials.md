@@ -1012,21 +1012,25 @@ history = []  # only "user" and "assistant" messages go here
 
 def chat(user_message):
     history.append({"role": "user", "content": user_message})
-    response = requests.post(
-        "https://api.anthropic.com/v1/messages",
-        headers={
-            "x-api-key": os.environ["ANTHROPIC_API_KEY"],
-            "anthropic-version": "2023-06-01",
-            "content-type": "application/json",
-        },
-        json={
-            "model": "claude-sonnet-5-5",
-            "max_tokens": 300,
-            "system": SYSTEM_PROMPT,   # the system prompt is a top-level field
-            "messages": history,       # the full conversation so far
-        },
-    )
-    response.raise_for_status()
+    try:
+        response = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={
+                "model": "claude-sonnet-5-5",
+                "max_tokens": 300,
+                "system": SYSTEM_PROMPT,   # the system prompt is a top-level field
+                "messages": history,       # the full conversation so far
+            },
+        )
+        response.raise_for_status()
+    except requests.RequestException:
+        history.pop()   # the request failed: remove the unanswered user message
+        raise
     reply = response.json()["content"][0]["text"]
     history.append({"role": "assistant", "content": reply})
     return reply
@@ -1034,7 +1038,7 @@ def chat(user_message):
 print(chat("Hi! Where can I see my order status?"))
 print(chat("And how long do refunds usually take?"))
 ```
-A **system prompt** sets the AI's role and behavior before the conversation starts. In the Messages API it goes in the top-level `"system"` field, not inside the message history. To start a fresh conversation, run `history.clear()`.
+A **system prompt** sets the AI's role and behavior before the conversation starts. In the Messages API it goes in the top-level `"system"` field, not inside the message history. To start a fresh conversation, run `history.clear()`. If a request fails, the `except` block removes the user message it just added before re-raising the error, so a failed call never stays in the history and breaks the calls after it.
 
 **Step 4: Write a first version of your system prompt.**
 Base it on your Project 1 brief: what should this assistant do, and what should it avoid?
@@ -1046,7 +1050,7 @@ Run 3–4 exchanges in a row, checking that the assistant's later replies make s
 A **guardrail** is a rule that keeps the AI within intended bounds (e.g., "refuse to answer off-topic questions").
 
 **Step 7: Test edge cases.**
-Try: an off-topic question, an ambiguous question, and an empty message. The API rejects an empty message with an error, so add a check at the top of `chat()` (for example, `if not user_message.strip(): return "Please type a message."`) instead of letting it crash.
+Try: an off-topic question, an ambiguous question, and an empty message. The API rejects an empty message with an error, so add a check at the top of `chat()`, before the `history.append(...)` line (for example, `if not user_message.strip(): return "Please type a message."`), instead of letting it crash. Putting it first means an empty message never gets into the history.
 
 ### Final Project Structure
 

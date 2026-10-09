@@ -2468,6 +2468,8 @@ Every `tool_use` block must get a matching `tool_result` with the same `tool_use
 Run `run_agent(...)` against 5 different situations that should trigger different tools (or no tool at all), for example:
 - "Remind the team to restock blue mugs; we're almost out."
 - "FYI: the courier changes its pickup time to 3pm from Monday."
+- "Order #4790 arrived damaged. Make sure someone follows up with the customer."
+- "Reply to sam@example.com to confirm their order #3310 shipped today." (answer `y` or `n` when asked to confirm)
 - "What's 2 + 2?" (no tool needed)
 
 Note which tool the model picked each time and whether it was the right one.
@@ -3084,7 +3086,7 @@ def monitored_is_urgent(message_text):
         record_success()
         return result
     except Exception as e:
-        logging.error(f"AI decision failed after retries: {e}")
+        logging.error(f"AI decision failed: {e}")
         record_failure()
         return False  # same safe default as Project 4
 
@@ -3093,7 +3095,7 @@ if health_check():
 else:
     logging.error("Skipping run: health check failed")
 ```
-`record_success()` resets the counter, so the alert fires only for failures in a row. In a real system, the alert would also send you a message; here it writes an ERROR line you can search for. To use this in your workflow, change `safe_is_urgent` to `monitored_is_urgent` inside `run_workflow()`.
+The ERROR line says "failed", not "failed after retries", because a permanent error such as a wrong key (401) is raised straight away without any retries. `record_success()` resets the counter, so the alert fires only for failures in a row: once the third failure in a row happens, it fires again on every further consecutive failure (4th, 5th, and so on) until a call succeeds. In a real system, the alert would also send you a message; here it writes an ERROR line you can search for. To use this in your workflow, change `safe_is_urgent` to `monitored_is_urgent` inside `run_workflow()`.
 
 **Step 7: Test failure scenarios deliberately.**
 Temporarily break something and confirm your logs, retries, and alerts all behave as expected. For example, set a wrong key and call the monitored function three times:

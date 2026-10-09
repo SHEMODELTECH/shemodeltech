@@ -2892,6 +2892,8 @@ In VS Code, create `monitoring_plan.md` in the project folder. Based on Projects
 **Step 3: Extend your Project 2 logging with a flag field.**
 Go back to your Project 2 notebook (run the API key cell and its cells again if the session restarted). Replace the `log_call` cell with this version and run it:
 ```python
+import json, datetime
+
 def log_call(prompt, response, flagged=False, flag_reason=None, log_file="model_log.jsonl"):
     entry = {
         "timestamp": str(datetime.datetime.now()),
@@ -2901,6 +2903,7 @@ def log_call(prompt, response, flagged=False, flag_reason=None, log_file="model_
     with open(log_file, "a") as f:
         f.write(json.dumps(entry) + "\n")
 ```
+If the Colab session restarted since Project 2, the earlier `model_log.jsonl` entries are gone (Colab deletes session files on restart), so the log starts fresh with the calls you make from here on.
 
 **Step 4: Build a simple auto-flagging rule.**
 In the same notebook, add this cell and run it. It replaces `call_and_log` so every new call is checked and flagged automatically:
