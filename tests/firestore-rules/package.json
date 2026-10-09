@@ -4,7 +4,7 @@
   "description": "Tests for firestore.rules, run against the Firebase emulator. Kept separate from the app so Vercel never installs these tools. Run: npm install && npm test (needs Java 21).",
   "type": "module",
   "scripts": {
-    "test": "firebase emulators:exec --only firestore --project demo-smt \"node rules.test.mjs\""
+    "test": "cp ../../firestore.rules firestore.rules && firebase emulators:exec --only firestore --project demo-smt \"node rules.test.mjs\""
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^3.0.4",
