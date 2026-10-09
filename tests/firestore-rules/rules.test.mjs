@@ -226,5 +226,10 @@ check('users create with backdated createdAt', 'freshC', await signupCreate('fre
 console.log(`\n=== MODE=${MODE} rules=${RULES} ===`);
 rows.forEach((r) => console.log(r));
 console.log(`\nRESULT ${MODE}: ${pass} passed, ${fail} failed`);
+// On GitHub, show each failure as an error on the run's summary page (visible
+// without opening the full log).
+if (process.env.GITHUB_ACTIONS) {
+  rows.filter((r) => r.startsWith('FAIL')).forEach((r) => console.log(`::error title=Database rules test failed::${r.replace(/\s+/g, ' ')}`));
+}
 await env.cleanup();
 process.exit(fail ? 1 : 0);
