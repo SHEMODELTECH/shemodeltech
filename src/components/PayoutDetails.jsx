@@ -43,7 +43,7 @@ const PayoutDetails = () => {
     <div className="bg-white border border-gray-200 rounded-xl p-6">
       <h3 className="text-gray-900 font-bold text-base mb-1">Payout details</h3>
       <p className="text-gray-500 text-sm mb-4">
-        She Model Tech pays members on paid projects by <strong>PayPal</strong>. Add the email on your PayPal account,
+        She Model Tech pays members on paid projects by <strong>PayPal</strong>, or Wise as an alternative. Add the email on your PayPal (or Wise) account,
         in your own name. Don’t have one? Create a free account at paypal.com first.
       </p>
       <div className="grid sm:grid-cols-3 gap-3">

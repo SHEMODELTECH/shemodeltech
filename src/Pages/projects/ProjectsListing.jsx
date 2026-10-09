@@ -22,6 +22,7 @@ import { getPayRangeLabel } from '../../utils/paidProjects';
 import AIRecommendations from '../../components/AIRecommendations';
 import { useFeatures } from '../../utils/features';
 import { ShareDialogButton, shareUrl } from '../../components/ShareButtons';
+import { COMPANY_COHORTS_ENABLED } from '../../config/companyAccess';
 
 const industryTracks = [
   { value: 'healthcare', label: 'Healthcare / Medical' },
@@ -432,7 +433,7 @@ const ProjectsListing = () => {
                       {(project.isCompanyProject || project.isCompanyPost) ? (
                         <>
                           <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">
-                            {project.companyKind === 'freelance' ? 'Freelance · 1 person' : project.companyKind === 'cohort' ? 'Company cohort' : 'Company project'}
+                            {project.companyKind === 'freelance' ? 'Freelance · 1 person' : project.companyKind === 'cohort' && COMPANY_COHORTS_ENABLED ? 'Company cohort' : 'Company project'}
                           </span>
                           {project.endDate && (
                             <span className="px-2 py-0.5 bg-gray-100 rounded-md text-gray-900 text-[10px] font-medium">

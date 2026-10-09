@@ -25,12 +25,15 @@ import { formatMoney } from '../../utils/paidProjects';
 import PremiumBadge from '../../components/PremiumBadge';
 import { isVerifiedPartner } from '../../config/premium';
 import PaidApplicants from '../../components/PaidApplicants';
+import { COMPANY_COHORTS_ENABLED } from '../../config/companyAccess';
 
 const CompanyCohortDetail = () => {
   // Premium companies show the gold Verified Partner badge.
   const [hostIsPartner, setHostIsPartner] = useState(false);
   // She Model Tech's own paid projects are managed by any admin or editor.
-  const [hostIsStaff, setHostIsStaff] = useState(false);
+  // null until known, so a She Model Tech project never flashes the "no longer
+  // available" notice while the host is loading.
+  const [hostIsStaff, setHostIsStaff] = useState(null);
   const [viewerIsStaff, setViewerIsStaff] = useState(false);
   const { cohortId } = useParams();
   const { currentUser } = useAuth();
@@ -153,7 +156,12 @@ const CompanyCohortDetail = () => {
     );
   }
 
-  const open = cohort.status === COMPANY_COHORT_STATUS.HIRING;
+  // Company-hosted projects are switched off (config/companyAccess.js). An old
+  // one stays readable, so its host and existing applicants keep their status,
+  // applicants list and messages, but it takes no new applications.
+  // She Model Tech's own paid projects (hosted by staff) are unaffected.
+  const retired = !COMPANY_COHORTS_ENABLED && hostIsStaff === false;
+  const open = cohort.status === COMPANY_COHORT_STATUS.HIRING && !retired;
   const isHost = currentUser?.uid === cohort.companyId || (viewerIsStaff && hostIsStaff);
   // No badge yet (and not a read error): show the rule, disable role picking.
   const needsBadge =
@@ -293,6 +301,18 @@ const CompanyCohortDetail = () => {
               You’re on the team. {cohort.companyName} will contact you about the work; use <a href={`/messages?to=${cohort.companyId}`} className="text-pink-700 font-semibold underline">Messages</a> to reach them.
             </p>
           )}
+        </div>
+      ) : retired && !isHost ? (
+        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <p className="text-gray-900 text-sm font-semibold">This project is no longer taking applications</p>
+          <p className="text-gray-600 text-xs mt-1 leading-relaxed">
+            Companies no longer host projects on She Model Tech. You can still join a She Model
+            Tech project, earn badges, and find roles from companies on the Jobs board.
+          </p>
+          <div className="flex flex-wrap gap-x-5 gap-y-1 mt-2">
+            <Link to="/projects" className="text-pink-700 text-sm font-semibold hover:underline">Browse projects</Link>
+            <Link to="/jobs" className="text-pink-700 text-sm font-semibold hover:underline">See jobs</Link>
+          </div>
         </div>
       ) : !open ? (
         <p className="text-gray-500 text-sm">Applications are closed for this project.</p>

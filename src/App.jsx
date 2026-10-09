@@ -13,6 +13,7 @@ import { getUserDocCached } from './utils/firestoreHelpers';
 import AppShell from './components/AppShell';
 import Navbar from './components/Navbar';
 import ErrorBoundary from './components/ErrorBoundary';
+import { COMPANY_COHORTS_ENABLED } from './config/companyAccess';
 
 // Critical path - keep eager: only the landing page and the app shell.
 import LandingPage from './Pages/LandingPage';
@@ -493,7 +494,9 @@ function App() {
                 <Route path="/cohort" element={<Navigate to="/projects" replace />} />
                 {/* Old addresses from when projects were grouped into cohorts */}
                 <Route path="/cohort/apply-to-lead" element={<Navigate to="/apply-to-lead" replace />} />
-                <Route path="/company/host-cohort" element={<Navigate to="/projects/new-paid" replace />} />
+                {/* Company-hosted cohorts are switched off (COMPANY_COHORTS_ENABLED in
+                    config/companyAccess.js): send companies to their dashboard. */}
+                <Route path="/company/host-cohort" element={<Navigate to={COMPANY_COHORTS_ENABLED ? '/projects/new-paid' : '/dashboard'} replace />} />
                 <Route path="/company-cohorts" element={<Navigate to="/paid-projects" replace />} />
                 <Route path="/company-cohorts/:cohortId" element={<OldPaidProjectRedirect />} />
                 {/* Cohort: apply to lead (ranked choices, reviewed by admin/editor) */}

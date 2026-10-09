@@ -18,7 +18,7 @@ const PayoutReminder = ({ uid, profile }) => {
   return (
     <div className="rounded-xl border border-gray-300 bg-gray-50 p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
       <p className="m-0 text-sm text-gray-800">
-        <strong>Add your PayPal email so we can pay you.</strong> She Model Tech pays members on paid projects by PayPal.
+        <strong>Add your PayPal email so we can pay you.</strong> She Model Tech pays members on paid projects by PayPal, or Wise as an alternative.
       </p>
       <Link to="/settings?tab=account" className="text-sm font-semibold bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Add payout details</Link>
     </div>

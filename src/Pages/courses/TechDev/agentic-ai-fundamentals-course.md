@@ -3205,7 +3205,7 @@ for message in ["My laptop won't connect to Wi-Fi.", "Should I learn SQL before 
     print(f"[{label}] {reply}\n")
 ```
 
-**Step 3: A generator-critic loop.** The critic gets a concrete checklist and must reply in JSON, so your code can read its verdict. The `parse_verdict` function copes with replies that wrap the JSON in extra text, and treats an unreadable reply as "not approved".
+**Step 3: A generator-critic loop.** The critic gets a concrete checklist and must reply in JSON, so your code can read its verdict. The `parse_verdict` function copes with replies that wrap the JSON in extra text, and treats an unreadable reply as "not approved". The loop never returns a rewrite the critic hasn't seen: in the last round it stops after the critique instead of revising again, and it returns the draft together with the verdict, so your code can flag a draft that never passed.
 
 ```python
 import json
@@ -3239,17 +3239,20 @@ def critique(draft):
     return parse_verdict(reply)
 
 def generator_critic(topic, max_rounds=3):
+    """Return (draft, approved). The returned draft has always been checked by the critic."""
     draft = generate(topic)
     for round_number in range(1, max_rounds + 1):
         approved, feedback = critique(draft)
         print(f"Round {round_number}: approved={approved} | {feedback[:120]}")
-        if approved:
+        if approved or round_number == max_rounds:
             break
         draft = generate(topic, feedback=feedback, previous=draft)
-    return draft
+    return draft, approved
 
 usage_log.clear()
-final_draft = generator_critic("what an API is")
+final_draft, approved = generator_critic("what an API is")
+if not approved:
+    print("\nWarning: the critic never approved; this is the last checked draft.")
 print("\n" + final_draft)
 print("\nCost of generator-critic:", usage_summary())
 ```
@@ -3565,7 +3568,7 @@ You built a router whose output is checked against a fixed set of labels, and a 
      }
     },
     {
-     "say": "This time it's approved, so the loop stops. If it never approves, three rounds is the limit.",
+     "say": "This time it's approved, so the loop stops. If it never approves, it stops after the third check and returns that checked draft, flagged as not approved.",
      "on": "code",
      "send": {
       "from": "critic",
@@ -3663,8 +3666,7 @@ You built a router whose output is checked against a fixed set of labels, and a 
     "generate",
     "critique",
     "generate",
-    "critique",
-    "generate"
+    "critique"
    ],
    "beats": [
     {
@@ -3691,7 +3693,7 @@ You built a router whose output is checked against a fixed set of labels, and a 
      "note": "approved in round 2 → 4 calls"
     },
     {
-     "say": "If the critic never approves, three rounds means seven calls.",
+     "say": "If the critic never approves, three rounds means six calls. The last critique ends the loop, so nothing unchecked is returned.",
      "ok": [
       0,
       1,
@@ -3700,10 +3702,9 @@ You built a router whose output is checked against a fixed set of labels, and a 
      ],
      "hl": [
       4,
-      5,
-      6
+      5
      ],
-     "note": "max_rounds=3 → up to 7 calls"
+     "note": "max_rounds=3 → up to 6 calls"
     },
     {
      "say": "A single call with the same clear rules is just one.",
@@ -3715,8 +3716,7 @@ You built a router whose output is checked against a fixed set of labels, and a 
       2,
       3,
       4,
-      5,
-      6
+      5
      ],
      "note": "single call → 1 call"
     },
@@ -3730,8 +3730,7 @@ You built a router whose output is checked against a fixed set of labels, and a 
       2,
       3,
       4,
-      5,
-      6
+      5
      ],
      "note": "usage_summary() → \"N calls, … input tokens, … output tokens\""
     }
@@ -3951,7 +3950,7 @@ print(answer)
 
 Even if the model were fooled now, there's no email tool to misuse. That's least privilege doing its job.
 
-**Step 4: An allowlist and an approval gate.** Sometimes an agent really does need a risky tool. Then you check its inputs against an allowlist, and you ask a human before running it. The gate takes an `approver` function, so in Colab a person types yes or no, and in automated tests (Module 7) you can pass a function that always says no.
+**Step 4: An allowlist and an approval gate.** Sometimes an agent really does need a risky tool. Then you first check its inputs against an allowlist, and only if they're allowed do you ask a human before running it. The gate takes an `approver` function, so in Colab a person types yes or no, and in automated tests (Module 7) you can pass a function that always says no.
 
 ```python
 # Cell: guardrails (Module 6)
@@ -3972,9 +3971,15 @@ def ask_human(tool_name, tool_input):
     print(f"\nAgent wants to run {tool_name} with:\n{json.dumps(tool_input, indent=2)}")
     return input("Approve? (yes/no): ").strip().lower() == "yes"
 
-def require_approval(tool_name, func, approver=ask_human):
-    """Wrap a tool so it only runs after the approver says yes."""
+def require_approval(tool_name, func, approver=ask_human, check=None):
+    """Wrap a tool: run the allowlist check first, then ask the approver, then run the tool."""
     def gated(**tool_input):
+        if check:
+            try:
+                check(**tool_input)  # Not allowed at all? Reject it before anyone is asked.
+            except ValueError as error:
+                audit("rejected", tool=tool_name, input=tool_input, reason=str(error))
+                raise
         approved = approver(tool_name, tool_input)
         audit("approval", tool=tool_name, input=tool_input, approved=approved)
         if not approved:
@@ -3986,39 +3991,41 @@ def require_approval(tool_name, func, approver=ask_human):
 
 ALLOWED_EMAIL_DOMAINS = {"campustechhub.example"}
 
-def send_email_checked(to: str, subject: str, body: str) -> str:
-    """send_email with an allowlist and size limits, checked in code."""
+def check_email(to: str, subject: str, body: str) -> None:
+    """The allowlist and size limits, checked in code. Raises ValueError if not allowed."""
     domain = to.rsplit("@", 1)[-1].lower()
     if domain not in ALLOWED_EMAIL_DOMAINS:
         raise ValueError(f"Recipient domain '{domain}' is not allowed.")
     if len(body) > 1000:
         raise ValueError("Email body is too long (max 1000 characters).")
+
+def send_email_checked(to: str, subject: str, body: str) -> str:
+    """send_email that runs the checks again, so it stays safe even without the gate."""
+    check_email(to, subject, body)
     return send_email(to, subject, body)
 ```
 
 Try the pieces directly before giving them to an agent:
 
 ```python
-gated_email = require_approval("send_email", send_email_checked)
+gated_email = require_approval("send_email", send_email_checked, check=check_email)
 
-# Type "no" when asked: the action is blocked and logged
+# The allowlist runs first: an outside address is rejected before anyone is asked
+try:
+    gated_email(to="everyone@external-example.com", subject="List", body="Student list")
+except ValueError as error:
+    print("Rejected:", error)
+
+# An allowed address reaches the human. Type "no" when asked: the action is blocked and logged
 try:
     gated_email(to="help@campustechhub.example", subject="Printer", body="Tray 2 jams often.")
 except PermissionError as error:
     print("Blocked:", error)
 
-# The allowlist rejects outside addresses even if a human would approve
-always_yes = lambda tool_name, tool_input: True
-try:
-    require_approval("send_email", send_email_checked, approver=always_yes)(
-        to="everyone@external-example.com", subject="List", body="Student list")
-except ValueError as error:
-    print("Rejected:", error)
-
 print(open(AUDIT_LOG_FILE).read())
 ```
 
-Note the order of checks: a human approved the second email, but the allowlist still rejected it. Layers protect you when one of them fails.
+Note the order of checks: first the allowlist asks "is this allowed at all?", and only then does a human decide on an allowed but risky action. The outside address was rejected in code without a prompt, so nobody could approve it by mistake, and the rejection is still in the audit log. Layers protect you when one of them fails.
 
 **Step 5: Put the gate in an agent.** Errors from the gate and the allowlist go back to Claude as `is_error` tool results, because `call_tool` from Module 2 catches them.
 
@@ -4037,7 +4044,7 @@ answer, _ = run_agent(
     "Tray 2 of the front desk printer keeps jamming. Please email help@campustechhub.example to report it.",
     [SEARCH_TOOL, REPORT_TOOL],
     {"search_handbook": search_handbook_safe,
-     "send_email": require_approval("send_email", send_email_checked)},
+     "send_email": require_approval("send_email", send_email_checked, check=check_email)},
     system=SAFE_SYSTEM, trace=trace,
 )
 print(answer)
@@ -4071,11 +4078,11 @@ You planted an indirect injection and saw why relying on the model alone isn't e
 
 1. What is the difference between direct and indirect prompt injection?
 2. Why is removing the `send_email` tool from the Q&A agent a stronger defense than telling the model to ignore injected instructions?
-3. In Step 4, a human approved an email to an outside address but it was still rejected. Why is that a good thing?
+3. In Step 4, why does the allowlist check run before a human is asked to approve?
 4. Which OWASP Top 10 for LLM Applications risk is about an agent having more tools or permissions than it needs?
 5. Why does the approval gate take an `approver` function instead of always calling `input()`?
 
-*Answers: 1) Direct injection comes from the user's own message; indirect injection is hidden in content the agent reads, such as a retrieved document, web page or email. 2) Instructions to the model can fail, but a tool that doesn't exist can't be misused no matter what the model is tricked into wanting. 3) Guardrails are layered, so when one check fails (a hurried human), another (the allowlist in code) still blocks the action. 4) Excessive Agency. 5) So the same gate works with a person in Colab and with an automatic yes or no function in tests, without changing the tool code.*
+*Answers: 1) Direct injection comes from the user's own message; indirect injection is hidden in content the agent reads, such as a retrieved document, web page or email. 2) Instructions to the model can fail, but a tool that doesn't exist can't be misused no matter what the model is tricked into wanting. 3) An action that is never allowed should be refused by code every time, so a hurried human can't approve it by mistake; people only decide on actions that are allowed at all. 4) Excessive Agency. 5) So the same gate works with a person in Colab and with an automatic yes or no function in tests, without changing the tool code.*
 
 ```watch
 {
@@ -4349,54 +4356,54 @@ You planted an indirect injection and saw why relying on the model alone isn't e
   {
    "kind": "table",
    "kicker": "Lab · Step 4",
-   "title": "Two layers: a human, then an allowlist in code",
+   "title": "Two layers: an allowlist in code, then a human",
    "columns": [
     "Call",
-    "Approver",
     "Allowlist",
+    "Approver",
     "Result",
     "Audit log"
    ],
    "rows": [
     [
-     "to help@campustechhub.example",
-     "a human types no",
-     "not reached",
-     "Blocked: A human reviewer denied this action. Do not retry it.",
-     "approval · approved: false"
+     "to everyone@external-example.com",
+     "domain not allowed",
+     "never asked",
+     "Rejected: Recipient domain 'external-example.com' is not allowed.",
+     "rejected · domain not allowed"
     ],
     [
-     "to everyone@external-example.com",
-     "always_yes",
-     "domain not allowed",
-     "Rejected: Recipient domain 'external-example.com' is not allowed.",
-     "approval · approved: true"
+     "to help@campustechhub.example",
+     "allowed",
+     "a human types no",
+     "Blocked: A human reviewer denied this action. Do not retry it.",
+     "approval · approved: false"
     ]
    ],
    "beats": [
     {
-     "say": "When an agent really needs a risky tool, wrap it: an approval gate around a send email that checks its inputs.",
-     "sql": "gated_email = require_approval(\"send_email\", send_email_checked)"
+     "say": "When an agent really needs a risky tool, wrap it: an allowlist check first, then an approval gate.",
+     "sql": "require_approval(\"send_email\", send_email_checked, check=check_email)"
     },
     {
-     "say": "First test: an email to the hub's own address. The human types no.",
+     "say": "First test: an outside address. The allowlist in code asks: is this allowed at all?",
      "hl": 0,
      "col": 1
     },
     {
-     "say": "The gate raises a permission error, and the email never runs.",
+     "say": "It isn't, so it's rejected before anyone is asked. Nobody can approve it by mistake.",
      "hl": 0,
-     "col": 3
-    },
-    {
-     "say": "Second: an outside address, with an approver that always says yes.",
-     "hl": 1,
-     "col": 1
-    },
-    {
-     "say": "The human said yes, but the allowlist in code rejects the domain.",
-     "hl": 1,
      "col": 2
+    },
+    {
+     "say": "Second: an email to the hub's own address. The allowlist lets it through to a human.",
+     "hl": 1,
+     "col": 1
+    },
+    {
+     "say": "The human types no. The gate raises a permission error, and the email never runs.",
+     "hl": 1,
+     "col": 3
     },
     {
      "say": "Both decisions went into the audit log. Layers protect you when one fails.",
@@ -4426,26 +4433,26 @@ You planted an indirect injection and saw why relying on the model alone isn't e
      "art": "code"
     },
     {
-     "id": "gate",
-     "label": "Approval gate",
-     "x": 50,
-     "y": 50,
-     "sub": "require_approval",
-     "art": "lock"
-    },
-    {
      "id": "allow",
      "label": "Allowlist",
-     "x": 86,
-     "y": 22,
-     "sub": "send_email_checked",
+     "x": 50,
+     "y": 50,
+     "sub": "check_email",
      "art": "shield"
+    },
+    {
+     "id": "gate",
+     "label": "Approval gate",
+     "x": 86,
+     "y": 78,
+     "sub": "require_approval",
+     "art": "lock"
     },
     {
      "id": "outbox",
      "label": "OUTBOX",
      "x": 86,
-     "y": 78,
+     "y": 22,
      "sub": "a Python list",
      "art": "mail"
     }
@@ -4457,15 +4464,19 @@ You planted an indirect injection and saw why relying on the model alone isn't e
     },
     {
      "from": "loop",
-     "to": "gate"
-    },
-    {
-     "from": "gate",
      "to": "allow"
     },
     {
      "from": "allow",
+     "to": "gate"
+    },
+    {
+     "from": "gate",
      "to": "outbox"
+    },
+    {
+     "from": "gate",
+     "to": "loop"
     }
    ],
    "beats": [
@@ -4483,28 +4494,28 @@ You planted an indirect injection and saw why relying on the model alone isn't e
      }
     },
     {
-     "say": "The gate asks a person first.",
-     "on": "gate",
+     "say": "The allowlist checks first: it's the hub's own domain, so it's allowed.",
+     "on": "allow",
      "send": {
       "from": "loop",
+      "to": "allow",
+      "label": "campustechhub.example · allowed"
+     }
+    },
+    {
+     "say": "Only then does the gate ask a person.",
+     "on": "gate",
+     "send": {
+      "from": "allow",
       "to": "gate",
       "label": "Approve? (yes/no)"
      }
     },
     {
-     "say": "Run one: the person types yes. The allowlist accepts the domain,",
-     "on": "allow",
-     "send": {
-      "from": "gate",
-      "to": "allow",
-      "label": "approved"
-     }
-    },
-    {
-     "say": "and the email lands in the outbox.",
+     "say": "Run one: the person types yes, and the email lands in the outbox.",
      "on": "outbox",
      "send": {
-      "from": "allow",
+      "from": "gate",
       "to": "outbox",
       "label": "Email sent to help@campustechhub.example."
      }

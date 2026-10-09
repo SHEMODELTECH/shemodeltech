@@ -582,7 +582,7 @@ const ProjectDetail = () => {
                     </p>
                     <p className="text-gray-500 text-xs">
                       Pay is per person, set per role, and paid by She Model Tech after the work is done
-                      and reviewed. <strong>We pay by PayPal</strong>, so you’ll need a PayPal account in your
+                      and reviewed. <strong>We pay by PayPal</strong>, or Wise as an alternative, so you’ll need a PayPal (or Wise) account in your
                       own name (add its email in Settings → Account → Payout details). Members 18 and
                       older only. No badges are awarded on paid projects.
                     </p>

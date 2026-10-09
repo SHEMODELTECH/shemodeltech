@@ -25,7 +25,8 @@
     "generate:courses": "node scripts/generateCourses.js",
     "prestart": "node scripts/generateCourses.js",
     "start": "react-scripts start",
-    "prebuild": "node scripts/generateCourses.js",
+    "prebuild": "node scripts/generateCourses.js && node --no-warnings scripts/checks/content.mjs",
+    "check": "node scripts/generateCourses.js && node --no-warnings scripts/checks/content.mjs",
     "build": "node scripts/build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

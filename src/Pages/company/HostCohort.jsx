@@ -9,7 +9,7 @@
 // company doesn't pay its members).
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
@@ -20,10 +20,11 @@ import { formatMoney } from '../../utils/paidProjects';
 import { notifyMember } from '../../utils/staffAlerts';
 import { checkDates, minEndDate, todayISO } from '../../utils/dateRules';
 import { useFeatures } from '../../utils/features';
+import { COMPANY_COHORTS_ENABLED } from '../../config/companyAccess';
 
 const blankRole = () => ({ title: '', count: 1, payAmount: '', skills: '' });
 
-const HostCohort = () => {
+const HostCohortForm = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
@@ -376,5 +377,10 @@ const HostCohort = () => {
     </div>
   );
 };
+
+// Companies no longer host cohorts on She Model Tech. While the switch in
+// config/companyAccess.js is off, this page sends visitors to their dashboard.
+const HostCohort = () =>
+  COMPANY_COHORTS_ENABLED ? <HostCohortForm /> : <Navigate to="/dashboard" replace />;
 
 export default HostCohort;

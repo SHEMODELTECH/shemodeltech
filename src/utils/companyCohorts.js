@@ -58,6 +58,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { alertStaff } from './staffAlerts';
+import { COMPANY_COHORTS_ENABLED } from '../config/companyAccess';
 
 export const COMPANY_COHORT_STATUS = {
   DRAFT: 'draft',
@@ -82,6 +83,13 @@ export const WORK_RECORD_TYPE = 'verified_work_experience';
  */
 export const canHostCohort = (company) => {
   if (company?.role === 'admin' || company?.role === 'editor') return { allowed: true };
+  // Companies no longer host cohorts or projects (switch in config/companyAccess.js).
+  if (!COMPANY_COHORTS_ENABLED) {
+    return {
+      allowed: false,
+      reason: 'Companies don’t host projects on She Model Tech. Post a job or browse the Talent Board instead.',
+    };
+  }
   if (!company?.isCompany) {
     return { allowed: false, reason: 'Only company accounts can host a cohort.' };
   }

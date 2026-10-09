@@ -30,6 +30,16 @@
 
 import { MEMBERSHIP_ENFORCED, isInTrial } from './membership';
 
+// COMPANY-HOSTED COHORTS (OFF)
+// Companies do not host their own cohorts or projects on She Model Tech. They
+// hire through job posts and the Talent Board. The hosting code and any old
+// company_cohorts data are kept; this one switch hides the feature. Set it to
+// true to bring back: the /company/host-cohort page, company "cohort" kind
+// projects, and new applications to company-hosted paid projects.
+// She Model Tech's own cohorts (Admin > Create a cohort) and She Model Tech's
+// own paid projects are NOT affected by this switch.
+export const COMPANY_COHORTS_ENABLED = false;
+
 export const COMPANY_TIER = {
   FREE: 'free',
   PARTNER: 'partner', // active Talent Access subscription

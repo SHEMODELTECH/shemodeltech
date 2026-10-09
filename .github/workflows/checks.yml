@@ -1,0 +1,59 @@
+# Checks that run on GitHub every time code is pushed to main (or a pull
+# request is opened). If anything fails, the commit gets a red ✗ on GitHub and
+# you get an email. The quick content checks also run inside every Vercel
+# build (see "prebuild" in package.json), so broken course content never goes
+# live; this workflow adds the slower checks.
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Same install command as Vercel (vercel.json), so the checks test
+      # exactly what gets deployed.
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Course files are up to date
+        run: |
+          npm run generate:courses
+          if ! git diff --quiet -- lib/courseManifest.json; then
+            echo "::error::lib/courseManifest.json is out of date. Run 'npm run generate:courses' and commit the result."
+            git diff --stat -- lib/courseManifest.json
+            exit 1
+          fi
+
+      - name: Quizzes, certificate rules and video scripts
+        run: node --no-warnings scripts/checks/content.mjs
+
+      - name: Every Watch video plays to the end
+        run: npx react-scripts test --watchAll=false src/__tests__
+        env:
+          CI: true
+
+      - name: The site builds
+        run: npm run build
+        env:
+          CI: true

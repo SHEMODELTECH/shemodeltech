@@ -50,7 +50,7 @@ const PaymentAgreement = ({ open, projectTitle, roleTitle, pay, defaults = {}, o
           </>
         )}
 
-        <label className="block text-sm font-semibold text-gray-800 mt-3" htmlFor="pa-m">How would you like to be paid? <span className="font-normal text-gray-500">(She Model Tech pays by PayPal)</span></label>
+        <label className="block text-sm font-semibold text-gray-800 mt-3" htmlFor="pa-m">How would you like to be paid? <span className="font-normal text-gray-500">(She Model Tech pays by PayPal, or Wise as an alternative)</span></label>
         <select id="pa-m" className={input} value={method} onChange={(e) => setMethod(e.target.value)}>
           <option value="PayPal">PayPal (recommended)</option>
           <option value="Wise">Wise</option>

@@ -6,9 +6,10 @@ import { collection, getCountFromServer, getDocs, query, where } from 'firebase/
 import { toast } from 'react-toastify';
 import { db } from '../../firebase/config';
 import { setFeature, useFeatures } from '../../utils/features';
+import { COMPANY_COHORTS_ENABLED } from '../../config/companyAccess';
 
 const ROWS = [
-  ['paidProjects', 'Paid projects from companies', 'Companies post paid projects, company cohorts, and freelance work. Members need a badge to apply.', 'badgeHolders', 20, 'members with a badge'],
+  ['paidProjects', 'Paid projects from companies', `Companies post paid projects${COMPANY_COHORTS_ENABLED ? ', company cohorts,' : ''} and freelance work. Members need a badge to apply.`, 'badgeHolders', 20, 'members with a badge'],
   ['sponsorships', 'Sponsored cohorts', 'Companies sponsor a cohort and pay She Model Tech. While off, companies can only register interest.', 'completedCohorts', 2, 'completed cohorts'],
   ['jobPosting', 'Job posting (before tiers)', 'Lets companies post jobs while Company tiers is off. Once tiers are on, any tier can post and this switch no longer matters.', null, null, 'Usually leave off'],
   ['companyTiers', 'Company tiers', 'Supporter and Champion rules apply to companies. Companies without a tier become free companies (5 new conversations a month, no job posting). Set tiers first in Admin → Users.', null, null, 'Tiers assigned to your early partners'],
