@@ -46,6 +46,8 @@ await env.withSecurityRulesDisabled(async (ctx) => {
   await setDoc(doc(db, 'users', 'bob'), member('bob', { createdAt: OLD }));
   await setDoc(doc(db, 'users', 'staff1'), member('staff1', { role: 'admin', createdAt: OLD }));
   await setDoc(doc(db, 'users', 'newStaff'), member('newStaff', { role: 'editor', createdAt: NOW }));
+  // Staff are tested on the same gated writes, so they need a conversation too.
+  await setDoc(doc(db, 'conversations', 'newStaff_bob'), { participants: ['newStaff', 'bob'], lastMessage: '', unreadBy: {} });
   await setDoc(doc(db, 'projects', 'p1'), {
     projectTitle: 'Team app', submitterId: 'lead', members: [...Object.keys(PEOPLE), 'newStaff'], status: 'active', isPaid: false,
   });
