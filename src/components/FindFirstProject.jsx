@@ -1,29 +1,59 @@
 // src/components/FindFirstProject.jsx
-// "Recommended projects" on every member's dashboard: the open project that
-// best fits her profile, leaving out projects she's already on.
-
+// "Recommended for you" on every member's dashboard: up to three open projects
+// that fit her profile. The AI's best match comes first (with its reason),
+// then the closest profile matches, leaving out projects she's already on.
+// One card instead of two, so the dashboard stays short.
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { matchProjects } from '../utils/matchProjects';
+import { getAIRecommendations } from '../utils/aiRecommendations';
 
-const FindFirstProject = ({ profile, uid }) => {
+const SHOW = 3;
+
+const FindFirstProject = ({ profile, uid, currentUser }) => {
   const navigate = useNavigate();
-  const [matches, setMatches] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState(null);
 
   useEffect(() => {
     let active = true;
     (async () => {
-      // Single best match she isn't already on; "Browse all projects" covers the rest.
-      const results = (await matchProjects(profile || {}, 10))
+      // The AI match is a bonus: if it's unavailable, the profile matches still show.
+      const [ai, rules] = await Promise.all([
+        currentUser ? getAIRecommendations(currentUser).catch(() => null) : Promise.resolve(null),
+        matchProjects(profile || {}, 10).catch(() => []),
+      ]);
+      const list = [];
+      const seen = new Set();
+      const add = (it) => {
+        if (!it.id || seen.has(it.id) || list.length >= SHOW) return;
+        seen.add(it.id);
+        list.push(it);
+      };
+      const top = ai?.projects?.[0];
+      if (top) {
+        add({
+          id: top.id,
+          title: top.title,
+          blurb: top.reason || '',
+          tags: [top.needsLead && 'Needs a lead', top.paid && 'Paid', top.match && `${top.match}% match`].filter(Boolean),
+        });
+      }
+      rules
         .filter((p) => !uid || (!(p.members || []).includes(uid) && p.submitterId !== uid))
-        .slice(0, 1);
-      if (active) { setMatches(results); setLoading(false); }
+        .forEach((p) =>
+          add({
+            id: p.id,
+            title: p.projectTitle || p.title || 'Project',
+            blurb: (p.projectDescription || '').length > 110 ? `${p.projectDescription.slice(0, 110)}…` : p.projectDescription || '',
+            tags: (p._reasons || []).slice(0, 2),
+          })
+        );
+      if (active) setItems(list);
     })();
     return () => { active = false; };
-  }, [profile, uid]);
+  }, [profile, uid, currentUser]);
 
-  if (loading) {
+  if (items === null) {
     return (
       <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
         <div className="h-4 w-40 bg-gray-100 rounded animate-pulse mb-3" />
@@ -31,18 +61,18 @@ const FindFirstProject = ({ profile, uid }) => {
       </div>
     );
   }
-
-  if (!matches.length) return null;
+  if (!items.length) return null;
 
   return (
-    <div className="bg-pink-50 border border-pink-200 rounded-xl p-6 mb-6">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">Recommended projects</h2>
-      <p className="text-gray-600 text-sm mb-4">
-        Joining a team is the best way to grow: you build real work, earn verified badges, and get discovered. Here's a project that fits your profile.
-      </p>
-
+    <section className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6 mb-6" aria-labelledby="recommended-h">
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <h2 id="recommended-h" className="text-lg font-bold text-gray-900">Recommended for you</h2>
+        <button onClick={() => navigate('/projects')} className="text-sm font-semibold text-pink-700 hover:underline whitespace-nowrap">
+          All projects
+        </button>
+      </div>
       <div className="space-y-3">
-        {matches.map((p) => (
+        {items.map((p) => (
           <button
             key={p.id}
             onClick={() => navigate(`/projects/${p.id}`)}
@@ -50,12 +80,12 @@ const FindFirstProject = ({ profile, uid }) => {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-gray-900 font-semibold text-sm truncate">{p.projectTitle || p.title || 'Project'}</p>
-                <p className="text-gray-500 text-xs mt-0.5 line-clamp-2">{(p.projectDescription || '').slice(0, 110)}{(p.projectDescription || '').length > 110 ? '…' : ''}</p>
-                {p._reasons && p._reasons.length > 0 && (
+                <p className="text-gray-900 font-semibold text-sm truncate">{p.title}</p>
+                {p.blurb && <p className="text-gray-500 text-xs mt-0.5 line-clamp-2">{p.blurb}</p>}
+                {p.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
-                    {p._reasons.slice(0, 2).map((r, i) => (
-                      <span key={i} className="text-xs font-medium px-2 py-0.5 bg-pink-100 text-pink-700 rounded-full">{r}</span>
+                    {p.tags.map((t, i) => (
+                      <span key={i} className="text-xs font-medium px-2 py-0.5 bg-pink-50 text-pink-700 rounded-full">{t}</span>
                     ))}
                   </div>
                 )}
@@ -65,13 +95,7 @@ const FindFirstProject = ({ profile, uid }) => {
           </button>
         ))}
       </div>
-
-      <div className="flex items-center gap-4 mt-4">
-        <button onClick={() => navigate('/projects')} className="text-sm font-semibold text-pink-600 hover:text-pink-700">
-          Browse all projects
-        </button>
-      </div>
-    </div>
+    </section>
   );
 };
 

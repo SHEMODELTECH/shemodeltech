@@ -7,12 +7,12 @@ import { doc, getDoc, collection, query, where, getDocs, orderBy, limit } from '
 import { db } from '../../firebase/config';
 import FindFirstProject from '../../components/FindFirstProject';
 import CompanyVerificationBanner from '../../components/CompanyVerificationBanner';
-import AIRecommendations from '../../components/AIRecommendations';
 import DiscoverTrack from '../../components/DiscoverTrack';
 import TierBadge from '../../components/TierBadge';
 import GettingStarted from '../../components/GettingStarted';
 import { PromotedStrip } from '../../components/PriorityBanners';
 import EventsCard from '../../components/EventsCard';
+import ContinueLearning from '../../components/ContinueLearning';
 import OrgMembershipsCard from '../../components/OrgMembershipsCard';
 import { TIER_LABEL, companyTier } from '../../config/tiers';
 import PayoutReminder from '../../components/PayoutReminder';
@@ -209,26 +209,14 @@ const DashboardOverview = () => {
     );
   }
 
+  // Members with paid work see their earnings beside their badges.
+  const showEarnings = earnings.earnedTotal > 0 || earnings.pendingTotal > 0;
+
   return (
     <div className="max-w-6xl mx-auto">
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
 
-      {/* New members: five steps that tick off as she goes. */}
-      {!loading && currentUser && <GettingStarted uid={currentUser.uid} profile={profileData} />}
-
-      {/* Organizations you run or belong to */}
-
-      {/* The next event (all events are online) */}
-      {!loading && <EventsCard />}
-
-      {/* In-app promotion: featured jobs and projects (Premium) */}
-      {!loading && !profileData?.isCompany && <PromotedStrip />}
-
-      {/* Unverified companies: status and a direct line to the team */}
-      {!loading && profileData?.isCompany && <CompanyVerificationBanner profile={profileData} />}
-      {!loading && !profileData?.isCompany && currentUser && <PayoutReminder uid={currentUser.uid} profile={profileData} />}
-      {!loading && currentUser && <PushPrompt />}
-
+      {/* 1. Things that need her: set up a project she leads, payout details, notifications. */}
       {/* Approved lead: her project is hers to prepare before it starts. */}
       {!loading &&
         setupProjects.map((p) => (
@@ -255,25 +243,17 @@ const DashboardOverview = () => {
           </div>
         ))}
 
-      {/* Recommended projects: for every member, new or experienced. */}
-      {!loading && !profileData?.isCompany && <FindFirstProject profile={profileData} uid={currentUser?.uid} />}
+      {/* Unverified companies: status and a direct line to the team */}
+      {!loading && profileData?.isCompany && <CompanyVerificationBanner profile={profileData} />}
+      {!loading && !profileData?.isCompany && currentUser && <PayoutReminder uid={currentUser.uid} profile={profileData} />}
+      {!loading && currentUser && <PushPrompt />}
 
-      {/* AI-matched projects for this member (individuals only). */}
-      {/* AI-powered project matches: free for every member */}
-      {!loading && !profileData?.isCompany && <AIRecommendations currentUser={currentUser} />}
+      {/* 2. New members: five steps that tick off as she goes. */}
+      {!loading && currentUser && <GettingStarted uid={currentUser.uid} profile={profileData} />}
 
-      {/* Help users who haven't settled on a track (new to tech or unsure) discover one. */}
-      {!loading &&
-        !profileData?.isCompany &&
-        !profileData?.primarySkillTrack &&
-        ongoingProjects.length === 0 &&
-        completedProjects.length === 0 && (
-          <div className="mb-6">
-            <DiscoverTrack />
-          </div>
-        )}
+      {/* An event in the next 7 days she hasn't signed up for (otherwise nothing). */}
+      {!loading && <EventsCard />}
 
-      {/* Stats Cards */}
       {profileData?.isCompany ? (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <Link to="/premium" className="bg-white border border-gray-200 rounded-xl p-5 hover:border-pink-300">
@@ -293,29 +273,40 @@ const DashboardOverview = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Projects Completed</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.projectsCompleted}</p>
+        <>
+          {/* 3. Courses she's started, and how many she's finished. */}
+          <ContinueLearning profile={profileData} />
+
+          {/* 4. Her numbers, in one slim row. */}
+          <div className="mb-6 bg-white border border-gray-200 rounded-xl grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-gray-200 overflow-hidden">
+            {[
+              ['Projects completed', stats.projectsCompleted, null],
+              ['Ongoing projects', stats.ongoingProjects, null],
+              ['Badges earned', stats.badgesEarned, null],
+              ['Talent Board', stats.badgesEarned > 0 ? 'Listed' : 'Not yet', stats.badgesEarned > 0 ? 'Recruiters can find you' : 'Earn a badge to get listed'],
+            ].map(([label, value, note]) => (
+              <div key={label} className="p-4">
+                <p className="text-gray-500 text-xs sm:text-sm">{label}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-0.5">{value}</p>
+                {note && <p className="text-gray-400 text-xs mt-0.5">{note}</p>}
+              </div>
+            ))}
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Ongoing Projects</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.ongoingProjects}</p>
+
+          {/* 5. Up to three projects that fit her (AI pick first), then featured jobs and projects. */}
+          {!loading && <FindFirstProject profile={profileData} uid={currentUser?.uid} currentUser={currentUser} />}
+      {/* Help users who haven't settled on a track (new to tech or unsure) discover one. */}
+      {!loading &&
+        !profileData?.primarySkillTrack &&
+        ongoingProjects.length === 0 &&
+        completedProjects.length === 0 && (
+          <div className="mb-6">
+            <DiscoverTrack />
           </div>
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Badges Earned</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.badgesEarned}</p>
-          </div>
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <p className="text-gray-500 text-sm mb-1">Talent Board</p>
-            <p className="text-3xl font-bold text-gray-900">
-              {stats.badgesEarned > 0 ? 'Listed' : '-'}
-            </p>
-            <p className="text-gray-400 text-xs mt-1">
-              {stats.badgesEarned > 0 ? 'Recruiters can find you' : 'Earn a badge to get listed'}
-            </p>
-          </div>
-        </div>
+        )}
+
+          {!loading && <PromotedStrip />}
+        </>
       )}
 
       {/* Members: account on the left, badges in the right sidebar; companies: what members are building. */}
@@ -337,7 +328,7 @@ const DashboardOverview = () => {
         <div className={profileData?.isCompany ? 'space-y-6' : 'grid grid-cols-1 lg:grid-cols-3 gap-6 items-start'}>
           {/* Your Badges */}
           {!profileData?.isCompany && (
-            <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-start-3 lg:row-start-1 lg:row-span-2">
+            <div className={`bg-white border border-gray-200 rounded-xl p-6 ${showEarnings ? 'lg:col-start-3 lg:row-start-1' : 'lg:col-span-3'}`}>
               <h3 className="text-lg font-bold text-gray-900 mb-1">Your Badges</h3>
               <p className="text-gray-500 text-xs mb-4">
                 The badges you’ve earned. Each project you complete in a track adds to its level.
@@ -365,14 +356,14 @@ const DashboardOverview = () => {
               </div>
 
               {/* All 6 Badges */}
-              <div className="space-y-3">
+              <div className={showEarnings ? 'space-y-3' : 'grid gap-3 sm:grid-cols-2 lg:grid-cols-3'}>
                 {badgeData.filter((badge) => {
                   const key = (s) => (s || '').toString().toLowerCase();
                   return (profileData?.badges || []).some(
                     (b) => key(b.id) === key(badge.id) || key(b.title) === key(badge.title) || key(b.category) === key(badge.title) || key(b.category) === key(badge.id)
                   );
                 }).length === 0 && (
-                  <div className="rounded-lg border border-dashed border-gray-200 p-4 text-center">
+                  <div className="rounded-lg border border-dashed border-gray-200 p-4 text-center sm:col-span-2 lg:col-span-3">
                     <p className="text-sm font-semibold text-gray-800">No badges yet</p>
                     <p className="text-xs text-gray-500 mt-1">Badges show the skills you've proven on real projects. Each one is reviewed and verified, and it appears on your profile and the Talent Board.</p>
                   </div>
@@ -452,8 +443,8 @@ const DashboardOverview = () => {
             </div>
           )}
 
-          {/* Account & Earnings (members only) */}
-          {!profileData?.isCompany && (
+          {/* Earnings: only for members with paid work (earned or pending). */}
+          {!profileData?.isCompany && showEarnings && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-span-2">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-gray-900">My Account</h3>
@@ -510,24 +501,6 @@ const DashboardOverview = () => {
           </div>
           )}
 
-          {/* Plan (members; companies see their tier at the top) */}
-          {!profileData?.isCompany && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 lg:col-span-2">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Your account</h3>
-            <p className="text-pink-600 font-semibold text-lg mb-1">Free</p>
-            <p className="text-gray-400 text-xs mb-3">
-              She Model Tech is free for everyone. Unlimited collaborative projects, every badge
-              track, the Talent Board, unlimited messaging, and the Proof Wall. Nothing is held
-              back.
-            </p>
-            <Link
-              to="/settings?tab=membership"
-              className="text-pink-600 text-sm font-medium hover:underline"
-            >
-              See what&rsquo;s included
-            </Link>
-          </div>
-          )}
 
         </div>
       </div>
