@@ -1,5 +1,6 @@
 // src/firebase/config.js
 import { initializeApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { 
   getAuth, 
   setPersistence, 
@@ -26,6 +27,26 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// App Check (anti-bot): proves requests to the database come from the real
+// She Model Tech website, using an invisible reCAPTCHA v3 check. Scripts that
+// talk to Firebase directly get no token. Enforcement is switched on in the
+// Firebase console (App Check > APIs); until then tokens are only counted.
+// The site key is public by design (the secret key lives only in Firebase).
+// Runs only on shemodeltech.com (and its subdomains): localhost and Vercel
+// preview addresses aren't registered with reCAPTCHA, so they'd only get
+// failed checks. It must start before any other Firebase service is used.
+const APP_CHECK_SITE_KEY = '6LdAZOYtAAAAAH0m04gi_2h_94uL_b5pRDiwIfoo';
+if (typeof window !== 'undefined' && /(^|\.)shemodeltech\.com$/i.test(window.location.hostname)) {
+  try {
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),
+      isTokenAutoRefreshEnabled: true,
+    });
+  } catch (_) {
+    // Never block the app from starting; Firebase reports missing tokens.
+  }
+}
 
 export { app };
 export const auth = getAuth(app);
