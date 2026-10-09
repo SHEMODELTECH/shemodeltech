@@ -161,137 +161,343 @@ You ran the code above, saw each type printed correctly, and understand why `pri
    ]
   },
   {
-   "kind": "quote",
-   "art": "pencil",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "A variable is a name for a value",
-   "quote": "username = \"opeyemi\"",
+   "title": "A variable is a name that points to a value",
+   "nodes": [
+    {
+     "id": "u",
+     "label": "username",
+     "x": 18,
+     "y": 22,
+     "sub": "a name"
+    },
+    {
+     "id": "uv",
+     "label": "\"opeyemi\"",
+     "x": 78,
+     "y": 22,
+     "sub": "str",
+     "art": "pencil"
+    },
+    {
+     "id": "l",
+     "label": "login_count",
+     "x": 18,
+     "y": 50,
+     "sub": "a name"
+    },
+    {
+     "id": "lv",
+     "label": "12",
+     "x": 78,
+     "y": 50,
+     "sub": "int",
+     "art": "calc"
+    },
+    {
+     "id": "a",
+     "label": "account_balance",
+     "x": 18,
+     "y": 78,
+     "sub": "a name"
+    },
+    {
+     "id": "av",
+     "label": "245.5",
+     "x": 78,
+     "y": 78,
+     "sub": "float",
+     "art": "coin"
+    }
+   ],
+   "edges": [
+    {
+     "from": "u",
+     "to": "uv"
+    },
+    {
+     "from": "l",
+     "to": "lv"
+    },
+    {
+     "from": "a",
+     "to": "av"
+    }
+   ],
    "beats": [
     {
      "say": "A variable is a name that points to a value stored in memory.",
-     "show": 0
+     "show": 2
     },
     {
-     "say": "Write username equals opeyemi, and Python remembers that value under the name username.",
-     "show": 1
+     "say": "Write username equals opeyemi, and the name username now points at that text.",
+     "show": 2,
+     "on": [
+      "u",
+      "uv"
+     ],
+     "send": {
+      "from": "u",
+      "to": "uv",
+      "label": "username = \"opeyemi\""
+     }
     },
     {
-     "say": "You don't declare a type. Python works it out from the value you assign.",
-     "show": 1
+     "say": "Login count points at the whole number twelve.",
+     "show": 4,
+     "on": [
+      "l",
+      "lv"
+     ],
+     "send": {
+      "from": "l",
+      "to": "lv",
+      "label": "login_count = 12"
+     }
+    },
+    {
+     "say": "And account balance points at two hundred forty five point five.",
+     "show": 6,
+     "on": [
+      "a",
+      "av"
+     ],
+     "send": {
+      "from": "a",
+      "to": "av",
+      "label": "account_balance = 245.50"
+     }
+    },
+    {
+     "say": "You never wrote a type. Python read each value and decided: text, whole number, decimal.",
+     "show": 6,
+     "on": [
+      "uv",
+      "lv",
+      "av"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "blocks",
+   "kind": "table",
    "kicker": "Concept",
    "title": "The types you'll use most",
-   "items": [
+   "columns": [
+    "Type",
+    "Example",
+    "Meaning"
+   ],
+   "rows": [
     [
      "int",
-     "Whole numbers: 25"
+     "age = 25",
+     "Whole numbers"
     ],
     [
      "float",
-     "Decimals: 19.99"
+     "price = 19.99",
+     "Decimal numbers"
     ],
     [
      "str",
-     "Text: \"Alice\""
+     "name = \"Alice\"",
+     "Text"
     ],
     [
      "bool",
+     "is_active = True",
      "True or False"
     ],
     [
      "list",
-     "[\"a\", \"b\"]"
+     "tasks = [\"a\", \"b\"]",
+     "Ordered, changeable"
     ],
     [
      "dict",
-     "{\"name\": \"Alice\"}"
+     "user = {\"name\": \"Alice\"}",
+     "Key-value pairs"
     ],
     [
      "None",
-     "Explicitly no value"
+     "result = None",
+     "Explicitly \"no value\""
     ]
    ],
    "beats": [
     {
-     "say": "Here are the types you'll use most.",
-     "show": 0
+     "say": "Here are the seven types you'll meet most, each with an example.",
+     "col": 0
     },
     {
      "say": "An int is a whole number, like twenty five.",
-     "show": 1
+     "hl": 0
     },
     {
      "say": "A float has a decimal point, like nineteen ninety nine.",
-     "show": 2
+     "hl": 1
     },
     {
-     "say": "A string, s t r, is text, always in quotes.",
-     "show": 3
+     "say": "A string, s t r, is text, and it always sits inside quotes.",
+     "hl": 2
     },
     {
-     "say": "A bool is True or False.",
-     "show": 4
+     "say": "A bool is one of exactly two values: True or False.",
+     "hl": 3
     },
     {
-     "say": "A list is an ordered collection in square brackets, and a dict holds key and value pairs in curly brackets.",
-     "show": 6
+     "say": "A list keeps items in order in square brackets. A dict pairs keys with values in curly brackets.",
+     "hl": [
+      4,
+      5
+     ]
     },
     {
      "say": "And None means, on purpose, no value at all.",
-     "show": 7
+     "hl": 6,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "search",
+   "kind": "walk",
    "kicker": "Lab",
-   "title": "Ask Python what type it is",
-   "file": "Python",
-   "code": "username = \"opeyemi\"\nlogin_count = 12\naccount_balance = 245.50\nis_premium_member = True\nrecent_searches = [\"python\", \"docker\"]\n\nprint(type(login_count))   # <class 'int'>",
+   "title": "Ask Python what type each value is",
+   "file": "types.py",
+   "code": "username = \"opeyemi\"\nlogin_count = 12\naccount_balance = 245.50\nis_premium_member = True\nrecent_searches = [\"python\", \"docker\", \"databases\"]\n\nprint(type(username))\nprint(type(login_count))\nprint(type(account_balance))\nprint(type(is_premium_member))\nprint(type(recent_searches))",
    "beats": [
     {
-     "say": "In the lab, you create a few variables for a user.",
-     "show": 0
+     "say": "Line one stores the text opeyemi under the name username.",
+     "line": 1,
+     "vars": {
+      "username": "\"opeyemi\""
+     }
     },
     {
-     "say": "Then type of each one tells you what Python decided.",
-     "show": 1
+     "say": "Line two stores twelve. Line three stores two hundred forty five point five.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "login_count": 12,
+      "account_balance": 245.5
+     }
     },
     {
-     "say": "String for the username, int for the login count, float for the balance, bool for premium, and list for recent searches.",
-     "show": 1
+     "say": "Line four stores True, and line five stores a list of three searches.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "is_premium_member": true,
+      "recent_searches": "[\"python\", \"docker\", \"databases\"]"
+     }
+    },
+    {
+     "say": "Now we ask. Type of username: class s t r, a string.",
+     "line": 7,
+     "out": "<class 'str'>"
+    },
+    {
+     "say": "Twelve has no decimal point, so it's an int.",
+     "line": 8,
+     "out": "<class 'int'>"
+    },
+    {
+     "say": "Two hundred forty five point five has one, so it's a float.",
+     "line": 9,
+     "out": "<class 'float'>"
+    },
+    {
+     "say": "True is a bool.",
+     "line": 10,
+     "out": "<class 'bool'>"
+    },
+    {
+     "say": "And the square brackets made a list.",
+     "line": 11,
+     "out": "<class 'list'>"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "bug",
+   "kind": "walk",
    "kicker": "A common bug",
-   "title": "Numbers stored as text",
-   "file": "Python",
-   "code": "price_as_text = \"19.99\"\n# price_as_text + 5   -> crashes: text + number\nprice_as_number = float(price_as_text)\nprint(price_as_number + 5)   # 24.99",
+   "title": "A number stored as text",
+   "file": "price.py",
+   "code": "price_as_text = \"19.99\"\n# print(price_as_text + 5)   # this would crash\nprice_as_number = float(price_as_text)\nprint(price_as_number + 5)",
    "beats": [
     {
-     "say": "Here's a bug you'll meet in real apps.",
-     "show": 0
+     "say": "A price arrives as text: nineteen ninety nine, inside quotes.",
+     "line": 1,
+     "vars": {
+      "price_as_text": "\"19.99\""
+     }
     },
     {
-     "say": "A price arrives as the text nineteen ninety nine, in quotes.",
-     "show": 1
+     "say": "If line two ran, Python would stop with a type error. You can't add text and a number.",
+     "line": 2
     },
     {
-     "say": "Adding five to it crashes, because you can't add text and a number.",
-     "show": 1
+     "say": "So convert it first. Float turns the text into the decimal number nineteen ninety nine.",
+     "line": 3,
+     "vars": {
+      "price_as_number": 19.99
+     }
     },
     {
-     "say": "Convert it with float first, and the math works: twenty four ninety nine.",
-     "show": 1
+     "say": "Now the math works: twenty four ninety nine.",
+     "line": 4,
+     "out": "24.99"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "Zero, empty, and None are not the same",
+   "columns": [
+    "Value",
+    "Type",
+    "What it says"
+   ],
+   "rows": [
+    [
+     "0",
+     "int",
+     "A number exists, and it's zero"
+    ],
+    [
+     "\"\"",
+     "str",
+     "Text exists, but it's empty"
+    ],
+    [
+     "None",
+     "NoneType",
+     "There is no value at all"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "One last idea. These three look like nothing, but they mean different things."
+    },
+    {
+     "say": "Zero is a real number. A balance of zero still exists.",
+     "hl": 0
+    },
+    {
+     "say": "Two quotes with nothing inside is real text that happens to be empty.",
+     "hl": 1
+    },
+    {
+     "say": "None says there is no value at all, like a result that hasn't been worked out yet.",
+     "hl": 2,
+     "dim": true
     }
    ]
   },
@@ -314,7 +520,7 @@ You ran the code above, saw each type printed correctly, and understand why `pri
      "show": 0
     },
     {
-     "say": "Why would \"19.99\" + 5 cause an error?",
+     "say": "Why would nineteen ninety nine, in quotes, plus five cause an error?",
      "show": 0
     },
     {
@@ -444,114 +650,235 @@ You can predict the output of each print statement above before running it.
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
+   "kind": "table",
    "kicker": "Concept",
    "title": "Four kinds of operators",
-   "items": [
+   "columns": [
+    "Type",
+    "Examples",
+    "Purpose"
+   ],
+   "rows": [
     [
      "Arithmetic",
-     "+  -  *  /  //  %  **"
+     "+ - * / // % **",
+     "Math"
     ],
     [
      "Comparison",
-     "==  !=  >  <  >=  <="
+     "== != > < >= <=",
+     "Compare, gives a bool"
     ],
     [
      "Logical",
-     "and  or  not"
+     "and or not",
+     "Combine True/False"
     ],
     [
      "Assignment",
-     "=  +=  -=  *="
+     "= += -= *=",
+     "Set or update a variable"
     ]
    ],
    "beats": [
     {
-     "say": "There are four main kinds.",
-     "show": 0
+     "say": "There are four main kinds of operator.",
+     "col": 0
     },
     {
-     "say": "Arithmetic does math: plus, minus, times, divide, and more.",
-     "show": 1
+     "say": "Arithmetic does math: add, subtract, multiply, divide, and more.",
+     "hl": 0
     },
     {
-     "say": "Comparison compares two values and always gives back True or False.",
-     "show": 2
+     "say": "Comparison compares two values, and always gives back True or False.",
+     "hl": 1
     },
     {
-     "say": "Logical operators, and, or, and not, combine true or false conditions.",
-     "show": 3
+     "say": "Logical operators, and, or, and not, combine True or False answers.",
+     "hl": 2
     },
     {
-     "say": "And assignment sets or updates a variable, like plus equals.",
-     "show": 4
+     "say": "And assignment sets or updates a variable.",
+     "hl": 3
+    },
+    {
+     "say": "Let's watch each one run, using a shopping cart.",
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "coin",
+   "kind": "walk",
    "kicker": "Lab · Arithmetic",
    "title": "Work out a cart total",
-   "file": "Python",
-   "code": "cart_total = 45.00 + 12.50\ndiscount = cart_total * 0.10   # 10% off\nfinal_price = cart_total - discount\nprint(final_price)             # 51.75",
+   "file": "cart.py",
+   "code": "cart_total = 45.00 + 12.50\ndiscount = cart_total * 0.10   # 10% off\nfinal_price = cart_total - discount\nprint(final_price)",
    "beats": [
     {
-     "say": "A shopping cart. Forty five plus twelve fifty.",
-     "show": 0
+     "say": "Forty five plus twelve fifty. Cart total is fifty seven point five.",
+     "line": 1,
+     "vars": {
+      "cart_total": 57.5
+     }
     },
     {
-     "say": "Take ten percent off by multiplying by zero point one,",
-     "show": 1
+     "say": "Multiply by zero point one to get ten percent. The discount is five seventy five.",
+     "line": 2,
+     "vars": {
+      "discount": 5.75
+     }
     },
     {
-     "say": "then subtract the discount. The final price is fifty one seventy five.",
-     "show": 1
+     "say": "Subtract the discount from the total.",
+     "line": 3,
+     "vars": {
+      "final_price": 51.75
+     }
+    },
+    {
+     "say": "And print it: fifty one seventy five.",
+     "line": 4,
+     "out": "51.75"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "scales",
+   "kind": "walk",
    "kicker": "Lab · Comparison and logic",
    "title": "Answer yes-or-no questions",
-   "file": "Python",
-   "code": "user_age = 16\ncan_signup = user_age >= 18          # False\n\nis_logged_in = True\nis_premium = False\ncan_access = is_logged_in and is_premium   # False",
+   "file": "access.py",
+   "code": "user_age = 16\ncan_signup = user_age >= 18\nprint(can_signup)\n\nis_logged_in = True\nis_premium = False\ncan_access_feature = is_logged_in and is_premium\nprint(can_access_feature)",
    "beats": [
     {
-     "say": "Comparison. Is a sixteen year old at least eighteen? False.",
-     "show": 0
+     "say": "The user is sixteen.",
+     "line": 1,
+     "vars": {
+      "user_age": 16
+     }
     },
     {
-     "say": "Logic. Can someone use a premium feature? Only if they're logged in and premium.",
-     "show": 1
+     "say": "Is sixteen greater than or equal to eighteen? No. So can sign up holds False.",
+     "line": 2,
+     "vars": {
+      "can_signup": false
+     }
     },
     {
-     "say": "And needs both to be true. They're not premium, so the answer is False.",
-     "show": 1
+     "say": "Print shows False.",
+     "line": 3,
+     "out": "False"
+    },
+    {
+     "say": "Now two facts: logged in is True, premium is False.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "is_logged_in": true,
+      "is_premium": false
+     }
+    },
+    {
+     "say": "And needs both sides to be True. One side is False, so the answer is False.",
+     "line": 7,
+     "vars": {
+      "can_access_feature": false
+     }
+    },
+    {
+     "say": "Print shows False again.",
+     "line": 8,
+     "out": "False"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "growth",
-   "kicker": "Lab · Assignment shorthand",
-   "title": "+= adds and saves",
-   "big": "login_count += 1",
-   "sub": "same as login_count = login_count + 1",
+   "kind": "table",
+   "kicker": "Concept",
+   "title": "and needs both. or needs one.",
+   "columns": [
+    "is_logged_in",
+    "is_premium",
+    "and",
+    "or"
+   ],
+   "rows": [
+    [
+     "True",
+     "True",
+     "True",
+     "True"
+    ],
+    [
+     "True",
+     "False",
+     "False",
+     "True"
+    ],
+    [
+     "False",
+     "True",
+     "False",
+     "True"
+    ],
+    [
+     "False",
+     "False",
+     "False",
+     "False"
+    ]
+   ],
    "beats": [
     {
-     "say": "Finally, a handy shortcut.",
-     "show": 0
+     "say": "Here's every combination of the two facts."
     },
     {
-     "say": "Login count plus equals one means the same as login count equals login count plus one.",
-     "show": 1
+     "say": "And is only True in one row: when both sides are True.",
+     "col": 2,
+     "hl": 0
     },
     {
-     "say": "Start at zero, add one, and you get one.",
-     "show": 2
+     "say": "Or is True whenever at least one side is True. Three rows.",
+     "col": 3,
+     "hl": [
+      0,
+      1,
+      2
+     ]
+    },
+    {
+     "say": "Our user is logged in but not premium. And gives False, but or would have given True.",
+     "hl": 1,
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Assignment shorthand",
+   "title": "+= adds and saves",
+   "file": "logins.py",
+   "code": "login_count = 0\nlogin_count += 1   # same as: login_count = login_count + 1\nprint(login_count)",
+   "beats": [
+    {
+     "say": "Login count starts at zero.",
+     "line": 1,
+     "vars": {
+      "login_count": 0
+     }
+    },
+    {
+     "say": "Plus equals one reads the current value, adds one, and saves it back. Now it's one.",
+     "line": 2,
+     "vars": {
+      "login_count": 1
+     }
+    },
+    {
+     "say": "Print shows one.",
+     "line": 3,
+     "out": "1"
     }
    ]
   },
@@ -574,7 +901,7 @@ You can predict the output of each print statement above before running it.
      "show": 0
     },
     {
-     "say": "What's the difference between == and =?",
+     "say": "What's the difference between double equals and a single equals?",
      "show": 0
     },
     {
@@ -682,104 +1009,227 @@ You can trace through `get_shipping_cost` by hand for a new set of inputs and pr
    ]
   },
   {
-   "kind": "list",
-   "art": "bulb",
-   "kicker": "Where you'd use this",
-   "title": "Nearly every feature decides something",
-   "items": [
+   "kind": "walk",
+   "kicker": "Lab · Trace it",
+   "title": "Python checks from the top",
+   "file": "shipping.py",
+   "code": "def get_shipping_cost(cart_total, is_premium_member):\n    if is_premium_member:\n        return 0\n    elif cart_total >= 50:\n        return 0\n    elif cart_total >= 20:\n        return 5.00\n    else:\n        return 9.99\n\nprint(get_shipping_cost(cart_total=60, is_premium_member=False))\nprint(get_shipping_cost(cart_total=30, is_premium_member=False))\nprint(get_shipping_cost(cart_total=10, is_premium_member=True))\nprint(get_shipping_cost(cart_total=10, is_premium_member=False))",
+   "beats": [
+    {
+     "say": "Here are the shipping rules: premium, then fifty or more, then twenty or more, else the rest.",
+     "line": [
+      1,
+      9
+     ]
+    },
+    {
+     "say": "First call: a sixty dollar cart, not premium.",
+     "line": 11,
+     "vars": {
+      "cart_total": 60,
+      "is_premium_member": false
+     }
+    },
+    {
+     "say": "Premium? False, so skip that branch.",
+     "line": 2
+    },
+    {
+     "say": "Elif, else if, sixty is at least fifty? True.",
+     "line": 4
+    },
+    {
+     "say": "So it returns zero, and every rule below is skipped.",
+     "line": 5,
+     "out": "0"
+    },
+    {
+     "say": "Second call: a thirty dollar cart, not premium.",
+     "line": 12,
+     "vars": {
+      "cart_total": 30,
+      "is_premium_member": false
+     }
+    },
+    {
+     "say": "Premium? False. Thirty at least fifty? False.",
+     "line": [
+      2,
+      4
+     ]
+    },
+    {
+     "say": "Thirty at least twenty? True. Shipping is five dollars.",
+     "line": [
+      6,
+      7
+     ],
+     "out": "5.0"
+    },
+    {
+     "say": "Third call: ten dollars, but premium. The very first check is True. Free.",
+     "line": [
+      13,
+      2,
+      3
+     ],
+     "vars": {
+      "cart_total": 10,
+      "is_premium_member": true
+     },
+     "out": "0"
+    },
+    {
+     "say": "Last call: ten dollars, not premium. Every check fails, so else catches it: nine ninety nine.",
+     "line": [
+      14,
+      8,
+      9
+     ],
+     "vars": {
+      "cart_total": 10,
+      "is_premium_member": false
+     },
+     "out": "9.99"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Trace it",
+   "title": "Which rule wins for each call",
+   "columns": [
+    "cart_total",
+    "premium",
+    "first match",
+    "returns"
+   ],
+   "rows": [
     [
-     "Different messages by account status",
-     ""
+     "60",
+     "False",
+     "≥ 50",
+     "0"
     ],
     [
-     "Discounts above a threshold",
-     ""
+     "30",
+     "False",
+     "≥ 20",
+     "5.0"
     ],
     [
-     "Pages only for logged-in users",
-     ""
+     "10",
+     "True",
+     "premium",
+     "0"
+    ],
+    [
+     "10",
+     "False",
+     "else",
+     "9.99"
+    ],
+    [
+     "50",
+     "False",
+     "≥ 50",
+     "0"
     ]
    ],
    "beats": [
     {
-     "say": "Nearly every feature involves a decision.",
-     "show": 0
+     "say": "Here are the four calls side by side."
     },
     {
-     "say": "Show a different message depending on account status,",
-     "show": 1
+     "say": "Notice the ten dollar cart gets two different answers. The premium flag changes everything.",
+     "hl": [
+      2,
+      3
+     ],
+     "col": 1
     },
     {
-     "say": "give a discount only above a certain cart total,",
-     "show": 2
+     "say": "Now a new one: exactly fifty dollars, not premium.",
+     "hl": 4,
+     "dim": true
     },
     {
-     "say": "or block a page unless the user is logged in.",
-     "show": 3
+     "say": "Greater than or equal includes fifty itself, so the second rule matches. Free shipping.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab",
-   "title": "Shipping cost rules",
-   "file": "Python",
-   "code": "def get_shipping_cost(cart_total, is_premium_member):\n    if is_premium_member:\n        return 0\n    elif cart_total >= 50:\n        return 0\n    elif cart_total >= 20:\n        return 5.00\n    else:\n        return 9.99",
-   "beats": [
-    {
-     "say": "Here's a shipping cost function.",
-     "show": 0
-    },
-    {
-     "say": "If you're a premium member, shipping is free.",
-     "show": 1
-    },
-    {
-     "say": "Elif, short for else if, the cart is fifty or more, it's also free.",
-     "show": 1
-    },
-    {
-     "say": "Elif it's twenty or more, five dollars. Else, nine ninety nine.",
-     "show": 1
-    },
-    {
-     "say": "Python checks from the top, and the first rule that matches wins.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "path",
-   "kicker": "Trace it",
-   "title": "A $30 cart, not premium",
-   "steps": [
-    "Premium? No",
-    "≥ 50? No",
-    "≥ 20? Yes",
-    "$5.00"
+   "kind": "array",
+   "kicker": "Why order matters",
+   "title": "The first match wins",
+   "values": [
+    "premium?",
+    "≥ 50?",
+    "≥ 20?",
+    "else"
    ],
    "beats": [
     {
-     "say": "Let's trace a thirty dollar cart for someone who isn't premium.",
-     "show": 0
+     "say": "Think of the rules as a line of checks, tried from left to right."
+    },
+    {
+     "say": "A ten dollar premium cart: the first check is True, so it stops right there.",
+     "hl": 0,
+     "ptr": {
+      "check": 0
+     },
+     "note": "premium? True → return 0"
+    },
+    {
+     "say": "The other three never run at all.",
+     "hl": 0,
+     "gone": [
+      1,
+      2,
+      3
+     ],
+     "note": "rest skipped"
+    },
+    {
+     "say": "Now swap the middle two rules, and try a sixty dollar cart that isn't premium.",
+     "vals": [
+      "premium?",
+      "≥ 20?",
+      "≥ 50?",
+      "else"
+     ]
     },
     {
      "say": "Premium? No.",
-     "show": 1
+     "gone": [
+      0
+     ],
+     "ptr": {
+      "check": 0
+     }
     },
     {
-     "say": "Fifty or more? No.",
-     "show": 2
+     "say": "Twenty or more? Yes, so it charges five dollars, and never reaches the free shipping rule.",
+     "gone": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "check": 1
+     },
+     "note": "60 ≥ 20 → $5, but it should be free"
     },
     {
-     "say": "Twenty or more? Yes.",
-     "show": 3
-    },
-    {
-     "say": "So shipping is five dollars, and the rest is skipped.",
-     "show": 4
+     "say": "Same rules, different order, wrong answer. That's why the order of elif checks matters.",
+     "gone": [
+      0,
+      2,
+      3
+     ],
+     "hl": 1
     }
    ]
   },
@@ -802,7 +1252,7 @@ You can trace through `get_shipping_cost` by hand for a new set of inputs and pr
      "show": 0
     },
     {
-     "say": "Why is is_premium_member checked first?",
+     "say": "Why is is premium member checked first?",
      "show": 0
     },
     {
@@ -927,101 +1377,266 @@ You can explain why the `while` loop stops after exactly 3 attempts, tracing thr
    ]
   },
   {
-   "kind": "list",
-   "art": "array",
-   "kicker": "Concept",
-   "title": "Two kinds of loop",
-   "items": [
+   "kind": "walk",
+   "kicker": "Lab · for",
+   "title": "Add up a shopping cart",
+   "file": "cart.py",
+   "code": "cart = [\n    {\"name\": \"Book\", \"price\": 12.99},\n    {\"name\": \"Pen\", \"price\": 1.50},\n    {\"name\": \"Notebook\", \"price\": 4.00},\n]\n\ntotal = 0\nfor item in cart:\n    total += item[\"price\"]\nprint(f\"Total: {total}\")\nprint(f\"Total: {round(total, 2)}\")",
+   "beats": [
+    {
+     "say": "A for loop runs once for each item in a collection. Here, a cart of three items.",
+     "line": [
+      1,
+      5
+     ]
+    },
+    {
+     "say": "The total starts at zero.",
+     "line": 7,
+     "vars": {
+      "total": 0
+     }
+    },
+    {
+     "say": "First pass: the item is the book. Add twelve ninety nine.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "item[\"price\"]": 12.99,
+      "total": 12.99
+     }
+    },
+    {
+     "say": "Second pass: the pen. Add one fifty. Fourteen forty nine.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "item[\"price\"]": 1.5,
+      "total": 14.49
+     }
+    },
+    {
+     "say": "Third pass: the notebook. Add four.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "item[\"price\"]": 4.0,
+      "total": 18.490000000000002
+     }
+    },
+    {
+     "say": "No items left, so the loop ends. But look at the total: a long tail of digits.",
+     "line": 10,
+     "out": "Total: 18.490000000000002"
+    },
+    {
+     "say": "Computers store most decimals as close approximations. For money, round to two places.",
+     "line": 11,
+     "out": "Total: 18.49"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Lab · enumerate",
+   "title": "enumerate gives you the position too",
+   "values": [
+    "Book",
+    "Pen",
+    "Notebook"
+   ],
+   "beats": [
+    {
+     "say": "Sometimes you need each item's position as well. That's what enumerate gives you."
+    },
+    {
+     "say": "First pass: index zero, the book. We add one so it prints as number one.",
+     "hl": 0,
+     "ptr": {
+      "index": 0
+     },
+     "note": "prints 1. Book"
+    },
+    {
+     "say": "Next: index one, the pen.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "index": 1
+     },
+     "note": "prints 2. Pen"
+    },
+    {
+     "say": "Then index two, the notebook.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "index": 2
+     },
+     "note": "prints 3. Notebook"
+    },
+    {
+     "say": "Python counts positions from zero. That's why the code prints index plus one.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "print(f\"{index + 1}. {item['name']}\")"
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · while",
+   "title": "Retry until it works",
+   "file": "retry.py",
+   "code": "attempts = 0\nmax_attempts = 3\nsuccess = False\n\nwhile attempts < max_attempts and not success:\n    attempts += 1\n    print(f\"Attempt {attempts}\")\n    success = attempts == 3   # pretend the 3rd try works\n\nprint(\"Success!\" if success else \"Failed after all attempts\")",
+   "beats": [
+    {
+     "say": "A while loop repeats as long as its condition stays True. We start with zero attempts and no success.",
+     "line": [
+      1,
+      3
+     ],
+     "vars": {
+      "attempts": 0,
+      "max_attempts": 3,
+      "success": false
+     }
+    },
+    {
+     "say": "Check: zero is less than three, and we haven't succeeded. Go in.",
+     "line": 5
+    },
+    {
+     "say": "Attempts becomes one. Print attempt one. Does one equal three? No, still no success.",
+     "line": [
+      6,
+      8
+     ],
+     "vars": {
+      "attempts": 1,
+      "success": false
+     },
+     "out": "Attempt 1"
+    },
+    {
+     "say": "Check again: one is less than three, still no success. Second pass.",
+     "line": [
+      5,
+      8
+     ],
+     "vars": {
+      "attempts": 2,
+      "success": false
+     },
+     "out": "Attempt 2"
+    },
+    {
+     "say": "Third pass. Attempts is three, and three equals three, so success is True.",
+     "line": [
+      5,
+      8
+     ],
+     "vars": {
+      "attempts": 3,
+      "success": true
+     },
+     "out": "Attempt 3"
+    },
+    {
+     "say": "Check once more. Three is not less than three, and we've succeeded. Both say stop.",
+     "line": 5
+    },
+    {
+     "say": "The loop ends, and we print success.",
+     "line": 10,
+     "out": "Success!"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Trace it",
+   "title": "Why it stops after exactly 3 attempts",
+   "columns": [
+    "check",
+    "attempts",
+    "attempts < 3",
+    "not success",
+    "go in?"
+   ],
+   "rows": [
     [
-     "for",
-     "Once per item in a collection"
+     "1st",
+     "0",
+     "True",
+     "True",
+     "yes"
     ],
     [
-     "while",
-     "As long as a condition is true"
+     "2nd",
+     "1",
+     "True",
+     "True",
+     "yes"
+    ],
+    [
+     "3rd",
+     "2",
+     "True",
+     "True",
+     "yes"
+    ],
+    [
+     "4th",
+     "3",
+     "False",
+     "False",
+     "stop"
     ]
    ],
    "beats": [
     {
-     "say": "There are two kinds.",
-     "show": 0
+     "say": "Here's every time the while condition was checked."
     },
     {
-     "say": "A for loop runs once for each item in a collection, or a known number of times.",
-     "show": 1
+     "say": "The first three checks: both halves True, so the loop runs.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 4
     },
     {
-     "say": "A while loop keeps going as long as a condition stays true.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "calc",
-   "kicker": "Lab · for",
-   "title": "Add up a shopping cart",
-   "file": "Python",
-   "code": "total = 0\nfor item in cart:\n    total += item[\"price\"]\n\nprint(round(total, 2))   # 18.49",
-   "beats": [
-    {
-     "say": "A cart with a book, a pen, and a notebook.",
-     "show": 0
+     "say": "On the fourth check, attempts has reached three, so attempts less than three is False.",
+     "hl": 3,
+     "col": 2
     },
     {
-     "say": "For each item in the cart, add its price to the total.",
-     "show": 1
+     "say": "And success is now True, so not success is False too. And needs both, so the loop stops.",
+     "hl": 3,
+     "dim": true,
+     "col": 3
     },
     {
-     "say": "You might see eighteen point four nine, followed by a long tail of digits.",
-     "show": 1
-    },
-    {
-     "say": "Computers store most decimals as close approximations. For money, round to two places.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "stopwatch",
-   "kicker": "Lab · while",
-   "title": "Retry until it works",
-   "file": "Python",
-   "code": "attempts = 0\nsuccess = False\nwhile attempts < 3 and not success:\n    attempts += 1\n    success = attempts == 3   # pretend the 3rd try works",
-   "beats": [
-    {
-     "say": "Now a while loop, used for retrying.",
-     "show": 0
-    },
-    {
-     "say": "It keeps trying while there are attempts left, and it hasn't succeeded yet.",
-     "show": 1
-    },
-    {
-     "say": "Each pass adds one attempt. In this example, it succeeds on the third try and stops.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "Watch out",
-   "title": "The infinite loop",
-   "quote": "If the condition never changes, a while loop never stops.",
-   "beats": [
-    {
-     "say": "One warning.",
-     "show": 0
-    },
-    {
-     "say": "If nothing inside a while loop ever changes the condition, it runs forever.",
-     "show": 1
-    },
-    {
-     "say": "Forget attempts plus equals one, and attempts stays zero, so the loop never ends.",
-     "show": 1
+     "say": "Forget attempts plus equals one, and attempts stays zero forever. That's an infinite loop.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     }
    ]
   },
@@ -1044,7 +1659,7 @@ You can explain why the `while` loop stops after exactly 3 attempts, tracing thr
      "show": 0
     },
     {
-     "say": "What does enumerate() give you that a plain for loop doesn't?",
+     "say": "What does enumerate give you that a plain for loop doesn't?",
      "show": 0
     },
     {
@@ -1165,100 +1780,275 @@ You can explain what a default parameter is and identify where `process_order` r
    ]
   },
   {
-   "kind": "list",
-   "art": "target",
-   "kicker": "Why functions",
-   "title": "One place to fix things",
-   "items": [
-    [
-     "Calculate a discount",
-     ""
-    ],
-    [
-     "Validate an email",
-     ""
-    ],
-    [
-     "Send a welcome email",
-     ""
-    ]
-   ],
+   "kind": "walk",
+   "kicker": "Lab · Default values",
+   "title": "A default fills in what you leave out",
+   "file": "discount.py",
+   "code": "def calculate_discount(price, discount_percent=10):\n    discount_amount = price * (discount_percent / 100)\n    return price - discount_amount\n\nprint(calculate_discount(100))\nprint(calculate_discount(100, 25))",
    "beats": [
     {
-     "say": "Any repeated job belongs in a function,",
-     "show": 0
+     "say": "Def defines the function once. Nothing runs yet.",
+     "line": 1
     },
     {
-     "say": "like calculating a discount,",
-     "show": 1
+     "say": "First call: we pass only the price, one hundred.",
+     "line": 5
     },
     {
-     "say": "checking an email address,",
-     "show": 2
+     "say": "Discount percent wasn't given, so it uses its default: ten.",
+     "line": 1,
+     "vars": {
+      "price": 100,
+      "discount_percent": 10
+     }
     },
     {
-     "say": "or sending a welcome email.",
-     "show": 3
+     "say": "Ten percent of a hundred is ten.",
+     "line": 2,
+     "vars": {
+      "discount_amount": 10.0
+     }
     },
     {
-     "say": "Then when something needs fixing, you fix it in one place, not in every copy.",
-     "show": 3
+     "say": "Return a hundred minus ten. Print shows ninety point zero.",
+     "line": 3,
+     "out": "90.0"
+    },
+    {
+     "say": "Second call passes twenty five, which replaces the default.",
+     "line": [
+      5,
+      6
+     ],
+     "vars": {
+      "price": 100,
+      "discount_percent": 25,
+      "discount_amount": "—"
+     }
+    },
+    {
+     "say": "The discount is twenty five, and it returns seventy five.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "discount_amount": 25.0
+     },
+     "out": "75.0"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab",
-   "title": "Default values",
-   "file": "Python",
-   "code": "def calculate_discount(price, discount_percent=10):\n    discount_amount = price * (discount_percent / 100)\n    return price - discount_amount\n\nprint(calculate_discount(100))       # 90.0\nprint(calculate_discount(100, 25))   # 75.0",
+   "kind": "walk",
+   "kicker": "Lab · Return values",
+   "title": "A function that answers yes or no",
+   "file": "email.py",
+   "code": "def validate_email(email):\n    has_at_symbol = \"@\" in email\n    has_dot = \".\" in email\n    return has_at_symbol and has_dot\n\nprint(validate_email(\"alice@example.com\"))\nprint(validate_email(\"not-an-email\"))",
    "beats": [
     {
-     "say": "Here's calculate discount.",
-     "show": 0
+     "say": "We call validate email with alice at example dot com.",
+     "line": [
+      6,
+      1
+     ],
+     "vars": {
+      "email": "\"alice@example.com\""
+     }
     },
     {
-     "say": "Discount percent equals ten is a default. If you don't pass a discount, it uses ten percent.",
-     "show": 1
+     "say": "Is there an at sign in it? Yes.",
+     "line": 2,
+     "vars": {
+      "has_at_symbol": true
+     }
     },
     {
-     "say": "Calculate discount of a hundred gives ninety. Pass twenty five, and you get seventy five.",
-     "show": 1
+     "say": "Is there a dot? Yes.",
+     "line": 3,
+     "vars": {
+      "has_dot": true
+     }
+    },
+    {
+     "say": "Both True, so it returns True.",
+     "line": 4,
+     "out": "True"
+    },
+    {
+     "say": "Now the text not dash an dash email.",
+     "line": [
+      7,
+      1
+     ],
+     "vars": {
+      "email": "\"not-an-email\"",
+      "has_at_symbol": "—",
+      "has_dot": "—"
+     }
+    },
+    {
+     "say": "No at sign, and no dot either.",
+     "line": [
+      2,
+      3
+     ],
+     "vars": {
+      "has_at_symbol": false,
+      "has_dot": false
+     }
+    },
+    {
+     "say": "So it returns False.",
+     "line": 4,
+     "out": "False"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "chain",
-   "kicker": "Lab",
-   "title": "Functions that use functions",
-   "steps": [
-    "process_order",
-    "validate_email",
-    "calculate_discount",
-    "Order confirmed"
+   "kind": "diagram",
+   "kicker": "Lab · Reuse",
+   "title": "process_order calls the other two",
+   "nodes": [
+    {
+     "id": "call",
+     "label": "Your code",
+     "x": 12,
+     "y": 50,
+     "sub": "process_order(...)",
+     "art": "code"
+    },
+    {
+     "id": "po",
+     "label": "process_order",
+     "x": 48,
+     "y": 50,
+     "sub": "100, 15%, alice@…",
+     "art": "package"
+    },
+    {
+     "id": "ve",
+     "label": "validate_email",
+     "x": 86,
+     "y": 22,
+     "sub": "checks the email",
+     "art": "form"
+    },
+    {
+     "id": "cd",
+     "label": "calculate_discount",
+     "x": 86,
+     "y": 78,
+     "sub": "works out the price",
+     "art": "calc"
+    }
+   ],
+   "edges": [
+    {
+     "from": "call",
+     "to": "po"
+    },
+    {
+     "from": "po",
+     "to": "ve"
+    },
+    {
+     "from": "po",
+     "to": "cd"
+    }
    ],
    "beats": [
     {
-     "say": "Real code combines small functions.",
-     "show": 0
+     "say": "Real code builds big jobs out of small functions.",
+     "show": 4
     },
     {
-     "say": "Process order first calls validate email.",
-     "show": 1
+     "say": "We ask process order for a one hundred dollar order, fifteen percent off, for Alice.",
+     "on": "po",
+     "send": {
+      "from": "call",
+      "to": "po",
+      "label": "100, 15, alice@example.com"
+     }
     },
     {
-     "say": "If the email is valid, it calls calculate discount,",
-     "show": 2
+     "say": "First it hands the email to validate email.",
+     "on": "ve",
+     "send": {
+      "from": "po",
+      "to": "ve",
+      "label": "alice@example.com"
+     }
     },
     {
-     "say": "and returns a confirmation message.",
-     "show": 3
+     "say": "Back comes True, so the order can go ahead. A False would have stopped it right here.",
+     "on": "po",
+     "send": {
+      "from": "ve",
+      "to": "po",
+      "label": "True"
+     }
     },
     {
-     "say": "Each piece is written and tested once, then reused.",
-     "show": 3
+     "say": "Next it asks calculate discount for the price.",
+     "on": "cd",
+     "send": {
+      "from": "po",
+      "to": "cd",
+      "label": "100, 15"
+     }
+    },
+    {
+     "say": "Fifteen percent off a hundred: eighty five point zero.",
+     "on": "po",
+     "send": {
+      "from": "cd",
+      "to": "po",
+      "label": "85.0"
+     }
+    },
+    {
+     "say": "Process order builds the confirmation and returns it. No logic was written twice.",
+     "on": "call",
+     "send": {
+      "from": "po",
+      "to": "call",
+      "label": "Order confirmed: $85.0 …"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Reuse",
+   "title": "The same call, line by line",
+   "file": "orders.py",
+   "code": "def process_order(price, discount_percent, customer_email):\n    if not validate_email(customer_email):\n        return \"Invalid email, cannot process order\"\n    final_price = calculate_discount(price, discount_percent)\n    return f\"Order confirmed: ${final_price} charged to {customer_email}\"\n\nprint(process_order(100, 15, \"alice@example.com\"))",
+   "beats": [
+    {
+     "say": "Here's the code behind that picture.",
+     "line": 7,
+     "vars": {
+      "price": 100,
+      "discount_percent": 15,
+      "customer_email": "\"alice@example.com\""
+     }
+    },
+    {
+     "say": "Validate email gives True, so not True is False, and we skip the error message.",
+     "line": 2
+    },
+    {
+     "say": "Calculate discount returns eighty five point zero.",
+     "line": 4,
+     "vars": {
+      "final_price": 85.0
+     }
+    },
+    {
+     "say": "The f string drops the price and email into the message, and print shows it.",
+     "line": 5,
+     "out": "Order confirmed: $85.0 charged to alice@example.com"
     }
    ]
   },
@@ -1467,100 +2257,276 @@ You can explain the difference between what happens with and without a matching 
    ]
   },
   {
-   "kind": "code",
-   "art": "shield",
+   "kind": "walk",
    "kicker": "Lab",
    "title": "Catch a specific error",
-   "file": "Python",
-   "code": "def get_price_per_item(total_price, quantity):\n    try:\n        return total_price / quantity\n    except ZeroDivisionError:\n        print(\"Quantity cannot be zero\")\n        return None",
+   "file": "price_per_item.py",
+   "code": "def get_price_per_item(total_price, quantity):\n    try:\n        return total_price / quantity\n    except ZeroDivisionError:\n        print(\"Quantity cannot be zero\")\n        return None\n\nprint(get_price_per_item(100, 4))\nprint(get_price_per_item(100, 0))",
    "beats": [
     {
-     "say": "Here's a function that divides a total price by a quantity.",
-     "show": 0
+     "say": "First call: one hundred split across four items.",
+     "line": 8,
+     "vars": {
+      "total_price": 100,
+      "quantity": 4
+     }
     },
     {
-     "say": "If the quantity is zero, Python raises a zero division error.",
-     "show": 1
+     "say": "Inside try, the division works. Twenty five point zero comes back, and except is skipped.",
+     "line": [
+      2,
+      3
+     ],
+     "out": "25.0"
     },
     {
-     "say": "The except block catches it, prints a friendly message, and returns None, instead of crashing.",
-     "show": 1
+     "say": "Second call: the quantity is zero.",
+     "line": 9,
+     "vars": {
+      "total_price": 100,
+      "quantity": 0
+     }
+    },
+    {
+     "say": "Dividing by zero raises a zero division error, and Python stops that line immediately.",
+     "line": 3
+    },
+    {
+     "say": "It jumps to the matching except block, which prints a friendly message.",
+     "line": [
+      4,
+      5
+     ],
+     "out": "Quantity cannot be zero"
+    },
+    {
+     "say": "Then it returns None, so print shows None. The program keeps running.",
+     "line": 6,
+     "out": "None"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "cross",
+   "kind": "diagram",
+   "kicker": "Concept",
+   "title": "With and without a matching except",
+   "nodes": [
+    {
+     "id": "err",
+     "label": "int(\"twenty\")",
+     "x": 12,
+     "y": 50,
+     "sub": "raises ValueError",
+     "art": "bug"
+    },
+    {
+     "id": "chk",
+     "label": "Matching except?",
+     "x": 46,
+     "y": 50,
+     "sub": "except ValueError:",
+     "art": "search"
+    },
+    {
+     "id": "ok",
+     "label": "Handled",
+     "x": 86,
+     "y": 22,
+     "sub": "message, return None",
+     "art": "shield"
+    },
+    {
+     "id": "crash",
+     "label": "Program crashes",
+     "x": 86,
+     "y": 78,
+     "sub": "stops completely",
+     "art": "cross"
+    }
+   ],
+   "edges": [
+    {
+     "from": "err",
+     "to": "chk"
+    },
+    {
+     "from": "chk",
+     "to": "ok"
+    },
+    {
+     "from": "chk",
+     "to": "crash"
+    }
+   ],
+   "beats": [
+    {
+     "say": "When an error happens, Python looks for an except block that matches it.",
+     "show": 4
+    },
+    {
+     "say": "In parse age, int of the word twenty can't become a number, so it raises a value error.",
+     "on": "err",
+     "send": {
+      "from": "err",
+      "to": "chk",
+      "label": "ValueError"
+     }
+    },
+    {
+     "say": "Parse age has except value error, a match. It prints a message and returns None.",
+     "on": "ok",
+     "send": {
+      "from": "chk",
+      "to": "ok",
+      "label": "match"
+     }
+    },
+    {
+     "say": "Without a matching except, the error isn't caught, and the whole program crashes.",
+     "on": "crash",
+     "send": {
+      "from": "chk",
+      "to": "crash",
+      "label": "no match"
+     }
+    },
+    {
+     "say": "That's why you catch the specific error you expect, and let surprises show up so you can fix them.",
+     "on": [
+      "ok",
+      "crash"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Know your errors",
-   "title": "Common errors and what causes them",
-   "items": [
+   "title": "Which error does each line raise?",
+   "columns": [
+    "Line",
+    "Error",
+    "Why"
+   ],
+   "rows": [
     [
+     "int(\"abc\")",
      "ValueError",
-     "int(\"abc\")"
+     "Right type, impossible value"
     ],
     [
+     "\"total: \" + 5",
      "TypeError",
-     "\"total: \" + 5"
+     "Text plus a number"
     ],
     [
+     "{\"name\": \"Ada\"}[\"email\"]",
      "KeyError",
-     "user[\"email\"] with no email"
+     "No such key"
     ],
     [
+     "[10, 20, 30][5]",
      "IndexError",
-     "[10, 20, 30][5]"
+     "Only positions 0 to 2"
     ],
     [
+     "100 / 0",
      "ZeroDivisionError",
-     "100 / 0"
+     "Can't divide by zero"
     ]
    ],
    "beats": [
     {
-     "say": "It helps to know the common errors by name.",
-     "show": 0
+     "say": "Knowing the common errors by name tells you what to catch.",
+     "col": 1
     },
     {
-     "say": "A value error. The right type, but a value that can't work, like turning the word abc into a number.",
-     "show": 1
+     "say": "A value error: the right type, but a value that can't work, like turning abc into a number.",
+     "hl": 0
     },
     {
-     "say": "A type error. Mixing types that don't go together, like text plus a number.",
-     "show": 2
+     "say": "A type error: mixing types that don't go together, like text plus a number.",
+     "hl": 1
     },
     {
-     "say": "A key error. Asking a dictionary for a key it doesn't have.",
-     "show": 3
+     "say": "A key error: asking a dictionary for a key it doesn't have.",
+     "hl": 2
     },
     {
-     "say": "An index error. Asking a list for a position that doesn't exist.",
-     "show": 4
+     "say": "An index error: asking for position five in a list with only three items.",
+     "hl": 3
     },
     {
-     "say": "And a zero division error. Dividing by zero.",
-     "show": 5
+     "say": "And a zero division error: dividing by zero.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "code",
-   "kicker": "Lab",
+   "kind": "walk",
+   "kicker": "Lab · raise and finally",
    "title": "finally always runs",
-   "file": "Python",
-   "code": "def process_payment(amount):\n    try:\n        if amount <= 0:\n            raise ValueError(\"Amount must be positive\")\n        print(f\"Processing ${amount}\")\n    except ValueError as e:\n        print(f\"Payment failed: {e}\")\n    finally:\n        print(\"Payment attempt logged\")",
+   "file": "payment.py",
+   "code": "def process_payment(amount):\n    try:\n        if amount <= 0:\n            raise ValueError(\"Amount must be positive\")\n        print(f\"Processing ${amount}\")\n    except ValueError as e:\n        print(f\"Payment failed: {e}\")\n    finally:\n        print(\"Payment attempt logged\")\n\nprocess_payment(50)\nprocess_payment(-10)",
    "beats": [
     {
-     "say": "You can also raise your own errors, to enforce your rules.",
-     "show": 0
+     "say": "First, a payment of fifty.",
+     "line": 11,
+     "vars": {
+      "amount": 50
+     }
     },
     {
-     "say": "Process payment raises a value error if the amount isn't positive.",
-     "show": 1
+     "say": "Is fifty zero or less? No, so we don't raise anything.",
+     "line": 3
     },
     {
-     "say": "And the finally block runs every time, success or failure. Perfect for logging or cleaning up.",
-     "show": 1
+     "say": "It prints processing fifty dollars.",
+     "line": 5,
+     "out": "Processing $50"
+    },
+    {
+     "say": "No error, so except is skipped. But finally still runs.",
+     "line": [
+      8,
+      9
+     ],
+     "out": "Payment attempt logged"
+    },
+    {
+     "say": "Now a payment of minus ten.",
+     "line": 12,
+     "vars": {
+      "amount": -10
+     }
+    },
+    {
+     "say": "Minus ten is zero or less, so we raise our own value error, with a message.",
+     "line": [
+      3,
+      4
+     ]
+    },
+    {
+     "say": "Except catches it and stores it as e.",
+     "line": 6,
+     "vars": {
+      "e": "Amount must be positive"
+     }
+    },
+    {
+     "say": "It prints payment failed, with the message.",
+     "line": 7,
+     "out": "Payment failed: Amount must be positive"
+    },
+    {
+     "say": "And finally runs again. Success or failure, the attempt is always logged.",
+     "line": [
+      8,
+      9
+     ],
+     "out": "Payment attempt logged"
     }
    ]
   },
@@ -1583,7 +2549,7 @@ You can explain the difference between what happens with and without a matching 
      "show": 0
     },
     {
-     "say": "Why catch ZeroDivisionError specifically, not every error the same way?",
+     "say": "Why catch a zero division error specifically, instead of every error the same way?",
      "show": 0
     },
     {
@@ -1715,113 +2681,231 @@ You created your own two-file project, where `main.py` successfully imports and 
    ]
   },
   {
-   "kind": "list",
-   "art": "tree",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "Three words to know",
-   "items": [
+   "title": "Where reusable code comes from",
+   "columns": [
+    "Word",
+    "What it is",
+    "Example"
+   ],
+   "rows": [
     [
      "Module",
-     "One Python file"
+     "One Python file",
+     "pricing.py"
     ],
     [
      "Package",
-     "A folder of related modules"
+     "A folder of related modules",
+     "requests"
+    ],
+    [
+     "Standard library",
+     "Modules built into Python",
+     "math, random, datetime"
     ],
     [
      "pip",
-     "Installs packages others published"
+     "Installs packages others published",
+     "pip install requests"
     ]
    ],
    "beats": [
     {
-     "say": "Three words.",
-     "show": 0
+     "say": "A few words first.",
+     "col": 0
     },
     {
-     "say": "A module is a single Python file of reusable code.",
-     "show": 1
+     "say": "A module is a single Python file of reusable code, like pricing dot p y.",
+     "hl": 0
     },
     {
-     "say": "A package is a folder of related modules.",
-     "show": 2
+     "say": "A package is a folder of related modules, like requests.",
+     "hl": 1
+    },
+    {
+     "say": "Python ships with a standard library of modules, ready to import.",
+     "hl": 2
     },
     {
      "say": "And pip installs packages other people have published, so you don't reinvent solved problems.",
-     "show": 3
+     "hl": 3
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "blocks",
+   "kind": "walk",
    "kicker": "Lab · Built-in modules",
    "title": "Python comes with tools",
-   "file": "Python",
-   "code": "import math\nimport random\nfrom datetime import date\n\nprint(math.sqrt(16))                  # 4.0\nprint(random.choice([\"a\", \"b\", \"c\"]))\nprint(date.today())",
+   "file": "builtins.py",
+   "code": "import math\nimport random\nfrom datetime import date\n\nprint(math.sqrt(16))\nprint(random.choice([\"a\", \"b\", \"c\"]))\nprint(date.today())",
    "beats": [
     {
-     "say": "Python ships with many modules built in.",
-     "show": 0
+     "say": "Import loads a module, so you can use what's inside it.",
+     "line": [
+      1,
+      2
+     ]
     },
     {
-     "say": "Math gives you square root. Random picks a random item. Date tells you today's date.",
-     "show": 1
+     "say": "From date time import date brings in just one thing: date.",
+     "line": 3
     },
     {
-     "say": "You just import them and use them.",
-     "show": 1
+     "say": "Math dot square root of sixteen is four point zero.",
+     "line": 5,
+     "out": "4.0"
+    },
+    {
+     "say": "Random dot choice picks one item at random. This time, b. Yours may differ.",
+     "line": 6,
+     "out": "b"
+    },
+    {
+     "say": "And date dot today prints today's date, year, month, day.",
+     "line": 7,
+     "out": "2026-10-08"
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "package",
+   "kind": "diagram",
    "kicker": "Lab · Third-party packages",
-   "title": "Install with pip",
-   "file": "Terminal + Python",
-   "code": "pip install requests\n\nimport requests\nresponse = requests.get(\"https://api.github.com\")\nprint(response.status_code)   # 200",
-   "beats": [
+   "title": "pip install, then import",
+   "nodes": [
     {
-     "say": "For anything else, use pip.",
-     "show": 0
+     "id": "you",
+     "label": "Terminal",
+     "x": 12,
+     "y": 25,
+     "sub": "pip install requests",
+     "art": "terminal"
     },
     {
-     "say": "Pip install requests adds a popular package for talking to websites.",
-     "show": 1
+     "id": "pypi",
+     "label": "Package index",
+     "x": 50,
+     "y": 25,
+     "sub": "published packages",
+     "art": "package"
     },
     {
-     "say": "Then three lines fetch GitHub's API and print two hundred, which means success.",
-     "show": 1
+     "id": "app",
+     "label": "Your program",
+     "x": 50,
+     "y": 75,
+     "sub": "import requests",
+     "art": "code"
+    },
+    {
+     "id": "gh",
+     "label": "api.github.com",
+     "x": 88,
+     "y": 75,
+     "sub": "a web A P I",
+     "art": "globe"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "file",
-   "kicker": "Lab · Your own module",
-   "title": "Split your code into files",
-   "steps": [
-    "pricing.py",
-    "from pricing import calculate_discount",
-    "main.py uses it"
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "pypi"
+    },
+    {
+     "from": "pypi",
+     "to": "app"
+    },
+    {
+     "from": "app",
+     "to": "gh"
+    }
    ],
    "beats": [
     {
-     "say": "Now make your own module.",
-     "show": 0
+     "say": "For anything not built in, use pip.",
+     "show": 4
     },
     {
-     "say": "Put your pricing functions in a file called pricing dot p y.",
-     "show": 1
+     "say": "In the terminal, pip install requests asks the package index for it.",
+     "on": "you",
+     "send": {
+      "from": "you",
+      "to": "pypi",
+      "label": "pip install requests"
+     }
     },
     {
-     "say": "In main dot p y, write from pricing import calculate discount.",
-     "show": 2
+     "say": "The package downloads into your Python, ready to import.",
+     "on": "app",
+     "send": {
+      "from": "pypi",
+      "to": "app",
+      "label": "requests"
+     }
     },
     {
-     "say": "Now main can use it, as long as both files are in the same folder.",
-     "show": 3
+     "say": "Now requests dot get asks GitHub's A P I for a response.",
+     "on": "gh",
+     "send": {
+      "from": "app",
+      "to": "gh",
+      "label": "GET https://api.github.com"
+     }
+    },
+    {
+     "say": "Status code two hundred comes back, which means success.",
+     "on": "app",
+     "send": {
+      "from": "gh",
+      "to": "app",
+      "label": "200"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab · Your own module",
+   "title": "main.py imports from pricing.py",
+   "file": "pricing.py + main.py",
+   "code": "# pricing.py\ndef calculate_discount(price, discount_percent=10):\n    return price - (price * (discount_percent / 100))\n\ndef calculate_tax(price, tax_rate=0.08):\n    return price * (1 + tax_rate)\n\n# main.py\nfrom pricing import calculate_discount, calculate_tax\n\nprice = calculate_discount(100, 20)\nfinal = calculate_tax(price)\nprint(final)",
+   "beats": [
+    {
+     "say": "Two files in the same folder. Pricing dot p y holds two functions.",
+     "line": [
+      1,
+      6
+     ]
+    },
+    {
+     "say": "Main dot p y imports both by name. Python finds pricing dot p y right next to it.",
+     "line": 9
+    },
+    {
+     "say": "Calculate discount of one hundred, twenty percent off, runs the code in pricing. Eighty.",
+     "line": [
+      11,
+      3
+     ],
+     "vars": {
+      "price": 80.0
+     }
+    },
+    {
+     "say": "Calculate tax adds the default eight percent. Eighty times one point zero eight.",
+     "line": [
+      12,
+      6
+     ],
+     "vars": {
+      "final": 86.4
+     }
+    },
+    {
+     "say": "Print shows eighty six point four. Main never had to contain the pricing code.",
+     "line": 13,
+     "out": "86.4"
     }
    ]
   },
@@ -1971,100 +3055,253 @@ You can explain what `self` refers to, and why `RecurringTask` doesn't need to r
    ]
   },
   {
-   "kind": "list",
-   "art": "boxes",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "The vocabulary",
-   "items": [
+   "title": "One class, many objects",
+   "nodes": [
+    {
+     "id": "cls",
+     "label": "Task",
+     "x": 18,
+     "y": 50,
+     "sub": "the class: a blueprint",
+     "art": "blueprint"
+    },
+    {
+     "id": "t1",
+     "label": "task1",
+     "x": 78,
+     "y": 22,
+     "sub": "\"Write course notes\" · 1",
+     "art": "checklist"
+    },
+    {
+     "id": "t2",
+     "label": "task2",
+     "x": 78,
+     "y": 78,
+     "sub": "\"Review PR\" · 3",
+     "art": "checklist"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cls",
+     "to": "t1"
+    },
+    {
+     "from": "cls",
+     "to": "t2"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A class is a blueprint. Task describes what every task has, and what it can do.",
+     "show": 1,
+     "on": "cls"
+    },
+    {
+     "say": "Calling Task builds one object from it: task one, with priority one.",
+     "show": 2,
+     "on": "t1",
+     "send": {
+      "from": "cls",
+      "to": "t1",
+      "label": "Task(\"Write course notes\", priority=1)"
+     }
+    },
+    {
+     "say": "Call it again, and you get a second, separate object: task two.",
+     "show": 3,
+     "on": "t2",
+     "send": {
+      "from": "cls",
+      "to": "t2",
+      "label": "Task(\"Review PR\")"
+     }
+    },
+    {
+     "say": "Each object keeps its own data, called attributes, and shares the class's methods.",
+     "on": [
+      "t1",
+      "t2"
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "walk",
+   "kicker": "Lab",
+   "title": "Watch self fill in an object",
+   "file": "tasks.py",
+   "code": "class Task:\n    def __init__(self, title, priority=3):\n        self.title = title\n        self.priority = priority\n        self.done = False\n\n    def mark_complete(self):\n        self.done = True\n\ntask1 = Task(\"Write course notes\", priority=1)\ntask2 = Task(\"Review PR\")\n\ntask1.mark_complete()",
+   "beats": [
+    {
+     "say": "Creating task one calls init. Self is the brand new object being built.",
+     "line": [
+      10,
+      2
+     ],
+     "vars": {
+      "self": "task1"
+     }
+    },
+    {
+     "say": "Init stores the title and priority on self, and done starts as False.",
+     "line": [
+      3,
+      5
+     ],
+     "vars": {
+      "task1.title": "\"Write course notes\"",
+      "task1.priority": 1,
+      "task1.done": false
+     }
+    },
+    {
+     "say": "Task two gives no priority, so the default three is used. This time, self is task two.",
+     "line": [
+      11,
+      5
+     ],
+     "vars": {
+      "self": "task2",
+      "task2.title": "\"Review PR\"",
+      "task2.priority": 3,
+      "task2.done": false
+     }
+    },
+    {
+     "say": "Now task one dot mark complete. Inside the method, self is task one.",
+     "line": [
+      13,
+      7
+     ],
+     "vars": {
+      "self": "task1"
+     }
+    },
+    {
+     "say": "So only task one's done becomes True. Task two is untouched.",
+     "line": 8,
+     "vars": {
+      "task1.done": true
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Lab · __str__",
+   "title": "Each object prints its own data",
+   "columns": [
+    "object",
+    "title",
+    "priority",
+    "done",
+    "print shows"
+   ],
+   "rows": [
     [
-     "Class",
-     "The blueprint"
+     "task1",
+     "Write course notes",
+     "1",
+     "True",
+     "[done] Write course notes (priority 1)"
     ],
     [
-     "Object",
-     "One thing made from it"
-    ],
-    [
-     "Attributes and methods",
-     "Its data, and what it can do"
-    ],
-    [
-     "Encapsulation",
-     "Data and logic together"
-    ],
-    [
-     "Inheritance",
-     "Build on another class"
+     "task2",
+     "Review PR",
+     "3",
+     "False",
+     "[pending] Review PR (priority 3)"
     ]
    ],
    "beats": [
     {
-     "say": "A class is a blueprint.",
-     "show": 1
+     "say": "Here are the two objects after mark complete, side by side."
     },
     {
-     "say": "An object is one thing made from that blueprint.",
-     "show": 2
+     "say": "The str method decides how a task looks when you print it.",
+     "sql": "status = \"done\" if self.done else \"pending\"\nreturn f\"[{status}] {self.title} (priority {self.priority})\""
     },
     {
-     "say": "Attributes are an object's data, and methods are what it can do.",
-     "show": 3
+     "say": "Task one's done is True, so its status reads done.",
+     "hl": 0,
+     "col": 3
     },
     {
-     "say": "Encapsulation means keeping the data and the logic that uses it together.",
-     "show": 4
+     "say": "Task two's done is False, so it reads pending.",
+     "hl": 1,
+     "col": 3
     },
     {
-     "say": "And inheritance means one class can build on another, reusing and extending it.",
-     "show": 5
+     "say": "Same method, different self, different output. Without str, you'd see something like Task object at an address.",
+     "hl": [
+      0,
+      1
+     ],
+     "col": 4
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "checklist",
-   "kicker": "Lab",
-   "title": "A Task class",
-   "file": "Python",
-   "code": "class Task:\n    def __init__(self, title, priority=3):\n        self.title = title\n        self.priority = priority\n        self.done = False\n\n    def mark_complete(self):\n        self.done = True",
-   "beats": [
-    {
-     "say": "Here's a task class.",
-     "show": 0
-    },
-    {
-     "say": "Init runs when you create a task. It stores the title and priority, and starts with done set to false.",
-     "show": 1
-    },
-    {
-     "say": "Self means this particular task.",
-     "show": 1
-    },
-    {
-     "say": "Mark complete sets done to true, and the str method controls how a task looks when you print it.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "code",
-   "art": "tree",
+   "kind": "walk",
    "kicker": "Lab · Inheritance",
-   "title": "A more specific kind of task",
-   "file": "Python",
-   "code": "class RecurringTask(Task):\n    def __init__(self, title, priority=3, repeat_every_days=7):\n        super().__init__(title, priority)\n        self.repeat_every_days = repeat_every_days",
+   "title": "Build on Task instead of starting over",
+   "file": "recurring.py",
+   "code": "class RecurringTask(Task):\n    def __init__(self, title, priority=3, repeat_every_days=7):\n        super().__init__(title, priority)\n        self.repeat_every_days = repeat_every_days\n\n    def mark_complete(self):\n        super().mark_complete()\n        print(f\"Will reappear in {self.repeat_every_days} days\")\n\nweekly_task = RecurringTask(\"Water the plants\", repeat_every_days=7)\nweekly_task.mark_complete()",
    "beats": [
     {
-     "say": "Now inheritance. A recurring task is a task that comes back.",
-     "show": 0
+     "say": "Recurring task, in brackets Task, means it inherits everything Task has.",
+     "line": 1
     },
     {
-     "say": "It inherits everything from task. Super dot init reuses task's setup instead of rewriting it.",
-     "show": 1
+     "say": "We create a weekly task to water the plants.",
+     "line": [
+      10,
+      2
+     ],
+     "vars": {
+      "title": "\"Water the plants\"",
+      "priority": 3,
+      "repeat_every_days": 7
+     }
     },
     {
-     "say": "It also changes mark complete to say when the task will reappear, while still using the original.",
-     "show": 1
+     "say": "Super dot init runs Task's own setup: title, priority, and done set to False.",
+     "line": 3,
+     "vars": {
+      "self.title": "\"Water the plants\"",
+      "self.priority": 3,
+      "self.done": false
+     }
+    },
+    {
+     "say": "Then it adds the one thing that's new: repeat every seven days.",
+     "line": 4,
+     "vars": {
+      "self.repeat_every_days": 7
+     }
+    },
+    {
+     "say": "Now mark complete. Recurring task has its own version.",
+     "line": [
+      11,
+      6
+     ]
+    },
+    {
+     "say": "It first calls Task's original, so done becomes True.",
+     "line": 7,
+     "vars": {
+      "self.done": true
+     }
+    },
+    {
+     "say": "Then it adds its extra step.",
+     "line": 8,
+     "out": "Will reappear in 7 days"
     }
    ]
   },
@@ -2216,88 +3453,265 @@ You created a text file and a JSON file, then successfully read both back and pr
    ]
   },
   {
-   "kind": "code",
-   "art": "pencil",
+   "kind": "walk",
    "kicker": "Lab · Write and read",
-   "title": "Open files safely with with",
-   "file": "Python",
-   "code": "with open(\"tasks.txt\", \"w\") as f:\n    for task in tasks:\n        f.write(task + \"\\n\")\n\nwith open(\"tasks.txt\", \"r\") as f:\n    for line in f:\n        print(line.strip())",
+   "title": "Save a list, then read it back",
+   "file": "tasks_file.py",
+   "code": "tasks = [\"Write course notes\", \"Review PR\", \"Design logo\"]\n\nwith open(\"tasks.txt\", \"w\") as f:\n    for task in tasks:\n        f.write(task + \"\\n\")\n\nwith open(\"tasks.txt\", \"r\") as f:\n    for line in f:\n        print(line.strip())",
    "beats": [
     {
-     "say": "Use open together with with.",
-     "show": 0
+     "say": "Three tasks in a list.",
+     "line": 1
     },
     {
-     "say": "With closes the file properly, even if something goes wrong halfway through.",
-     "show": 1
+     "say": "Open tasks dot t x t in w, write mode. With will close it for us, even if something fails.",
+     "line": 3,
+     "vars": {
+      "tasks.txt": "empty"
+     }
     },
     {
-     "say": "Write mode, w, writes each task on its own line. Read mode, r, reads them back.",
-     "show": 1
+     "say": "Each pass writes one task, plus a backslash n, the line break.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "task": "\"Write course notes\"",
+      "tasks.txt": "1 line"
+     }
     },
     {
-     "say": "Strip removes the line break at the end of each line.",
-     "show": 1
+     "say": "Review P R, then design logo. Three lines saved.",
+     "line": [
+      4,
+      5
+     ],
+     "vars": {
+      "task": "\"Design logo\"",
+      "tasks.txt": "3 lines"
+     }
+    },
+    {
+     "say": "The with block ends, and the file is closed safely.",
+     "line": 7
+    },
+    {
+     "say": "Now read mode. Each line comes back with its line break still on the end.",
+     "line": 8,
+     "vars": {
+      "line": "\"Write course notes\\n\""
+     }
+    },
+    {
+     "say": "Strip removes it, and print shows the clean text.",
+     "line": 9,
+     "out": "Write course notes"
+    },
+    {
+     "say": "The loop does the same for the other two lines.",
+     "line": [
+      8,
+      9
+     ],
+     "vars": {
+      "line": "\"Design logo\\n\""
+     },
+     "out": [
+      "Review PR",
+      "Design logo"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "table",
    "kicker": "Careful",
-   "title": "w erases, a adds",
-   "items": [
+   "title": "The mode decides what happens to old content",
+   "columns": [
+    "Mode",
+    "Means",
+    "Existing content"
+   ],
+   "rows": [
+    [
+     "\"r\"",
+     "Read",
+     "Kept, only read"
+    ],
     [
      "\"w\"",
-     "Overwrite: erases existing content"
+     "Write",
+     "Erased first"
     ],
     [
      "\"a\"",
-     "Append: adds to the end"
-    ],
-    [
-     "\"r\"",
-     "Read only"
+     "Append",
+     "Kept, new text added at the end"
     ]
    ],
    "beats": [
     {
-     "say": "Be careful with modes.",
-     "show": 0
+     "say": "The second argument to open is the mode.",
+     "col": 0
+    },
+    {
+     "say": "R, read, only reads. Nothing changes.",
+     "hl": 0
     },
     {
      "say": "W, write, erases everything already in the file and starts fresh.",
-     "show": 1
+     "hl": 1,
+     "col": 2
     },
     {
-     "say": "A, append, adds to the end and keeps what's there.",
-     "show": 2
-    },
-    {
-     "say": "And r, read, only reads.",
-     "show": 3
+     "say": "A, append, keeps what's there and adds to the end.",
+     "hl": 2,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "code",
-   "art": "doc",
-   "kicker": "Lab · JSON",
-   "title": "Save structured data",
-   "file": "Python",
-   "code": "import json\n\nuser_data = {\"name\": \"Alice\", \"tasks_completed\": 12}\nwith open(\"user.json\", \"w\") as f:\n    json.dump(user_data, f)\n\nwith open(\"user.json\", \"r\") as f:\n    print(json.load(f)[\"name\"])   # Alice",
+   "kind": "array",
+   "kicker": "Lab · Append",
+   "title": "a adds, w would erase",
+   "values": [
+    "Write course notes",
+    "Review PR",
+    "Design logo"
+   ],
    "beats": [
     {
-     "say": "For structured data, use JSON.",
-     "show": 0
+     "say": "Here are the three lines in tasks dot t x t."
     },
     {
-     "say": "Json dump turns a Python dictionary into JSON text and saves it.",
-     "show": 1
+     "say": "Open it in append mode and write deploy to production.",
+     "vals": [
+      "Write course notes",
+      "Review PR",
+      "Design logo",
+      "Deploy to production"
+     ],
+     "hl": 3,
+     "note": "open(\"tasks.txt\", \"a\")"
     },
     {
-     "say": "Json load reads it back into a dictionary, so you can use it again. Here, it prints Alice.",
-     "show": 1
+     "say": "The new line goes on the end, and the first three stay.",
+     "vals": [
+      "Write course notes",
+      "Review PR",
+      "Design logo",
+      "Deploy to production"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3
+    },
+    {
+     "say": "If we'd used w instead, the file would be wiped first, leaving only the new line.",
+     "vals": [
+      "Deploy to production"
+     ],
+     "hl": 0,
+     "note": "open(\"tasks.txt\", \"w\") → old lines gone"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Lab · JSON",
+   "title": "Save a dictionary, load it back",
+   "nodes": [
+    {
+     "id": "dict",
+     "label": "user_data",
+     "x": 12,
+     "y": 30,
+     "sub": "Python dict",
+     "art": "code"
+    },
+    {
+     "id": "file",
+     "label": "user.json",
+     "x": 50,
+     "y": 30,
+     "sub": "JSON text on disk",
+     "art": "file"
+    },
+    {
+     "id": "loaded",
+     "label": "loaded_data",
+     "x": 88,
+     "y": 30,
+     "sub": "a dict again",
+     "art": "code"
+    },
+    {
+     "id": "out",
+     "label": "Alice",
+     "x": 88,
+     "y": 78,
+     "sub": "loaded_data[\"name\"]",
+     "art": "terminal"
+    }
+   ],
+   "edges": [
+    {
+     "from": "dict",
+     "to": "file"
+    },
+    {
+     "from": "file",
+     "to": "loaded"
+    },
+    {
+     "from": "loaded",
+     "to": "out"
+    }
+   ],
+   "beats": [
+    {
+     "say": "For structured data, like a user's details, use JSON.",
+     "show": 1,
+     "on": "dict"
+    },
+    {
+     "say": "Json dot dump turns the dictionary into JSON text and writes it to user dot json.",
+     "show": 2,
+     "on": "file",
+     "send": {
+      "from": "dict",
+      "to": "file",
+      "label": "json.dump → {\"name\": \"Alice\", …}"
+     }
+    },
+    {
+     "say": "Your program can stop now. The file stays on disk.",
+     "show": 2,
+     "on": "file"
+    },
+    {
+     "say": "Next time, json dot load reads the text back into a dictionary.",
+     "show": 3,
+     "on": "loaded",
+     "send": {
+      "from": "file",
+      "to": "loaded",
+      "label": "json.load"
+     }
+    },
+    {
+     "say": "So loaded data, name, prints Alice.",
+     "show": 4,
+     "on": "out",
+     "send": {
+      "from": "loaded",
+      "to": "out",
+      "label": "[\"name\"]"
+     }
     }
    ]
   },
@@ -2320,7 +3734,7 @@ You created a text file and a JSON file, then successfully read both back and pr
      "show": 0
     },
     {
-     "say": "What happens if you open a file that already has content in \"w\" mode?",
+     "say": "What happens if you open a file that already has content in w mode?",
      "show": 0
     },
     {

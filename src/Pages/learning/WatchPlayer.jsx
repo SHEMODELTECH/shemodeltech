@@ -16,7 +16,7 @@
 //       "beats": [ { "say": "One sentence of narration.", "show": 2 } ] } ] }
 //   "show" = how many items (list rows, flow steps, quote/code, big number) are
 //   visible from that sentence on.
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, useLayoutEffect } from 'react';
 import { WATCH_ART } from './watchArt';
 
 export const parseWatchScript = (html) => {
@@ -39,9 +39,228 @@ const VOICE_KEY = 'smt-watch-voice';
 const PlayIcon = () => <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" />;
 const PauseIcon = () => <path d="M7 5h4v14H7zM13 5h4v14h-4z" />;
 
-const Scene = ({ scene, shown, onAnswer, answered }) => {
+// ---- Explainer scenes: the idea itself, animated step by step with the narration ----
+// Every beat (sentence) can change what's on screen, so learners SEE how it works:
+//   diagram:  nodes + arrows; a beat can light up nodes ("on") and send a labelled
+//             packet along an arrow ("send": {from, to, label}).
+//   table:    real rows; a beat can show a query ("sql"), highlight rows ("hl"),
+//             fade the rest ("dim") and highlight a column ("col").
+//   walk:     code that runs line by line; a beat highlights lines ("line") and
+//             adds console output ("out", kept for later beats).
+//   array:    boxes of values; a beat can change values ("vals"), highlight boxes
+//             ("hl"), mark some done ("ok"), fade ruled-out ones ("gone") and place
+//             pointers ("ptr": {name: index}).
+//   chart:    points on axes; a beat can colour them by group ("groups"), draw a
+//             line ("line": [slope, intercept]) and mark centres ("marks").
+const upTo = (beats, bi, key) => {
+  for (let i = bi; i >= 0; i -= 1) if (beats[i] && beats[i][key] !== undefined) return beats[i][key];
+  return undefined;
+};
+const asSet = (v) => new Set(Array.isArray(v) ? v : v === undefined || v === null ? [] : [v]);
+
+const useBox = (ref) => {
+  const [box, setBox] = useState({ w: 800, h: 320 });
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    const read = () => setBox({ w: el.clientWidth || 800, h: el.clientHeight || 320 });
+    read();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const ro = new ResizeObserver(read);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  return box;
+};
+
+// Shrinks its content to fit the stage (long code, big tables, small phones).
+const Fit = ({ children }) => {
+  const outer = useRef(null);
+  const inner = useRef(null);
+  const [k, setK] = useState(1);
+  useLayoutEffect(() => {
+    const o = outer.current; const i = inner.current;
+    if (!o || !i) return undefined;
+    const fit = () => {
+      const h = i.scrollHeight; const w = i.scrollWidth;
+      if (!h || !w || !o.clientHeight) return;
+      setK(Math.max(0.4, Math.min(1, o.clientHeight / h, o.clientWidth / w)));
+    };
+    fit();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const ro = new ResizeObserver(fit);
+    ro.observe(o); ro.observe(i);
+    return () => ro.disconnect();
+  });
+  return (
+    <div ref={outer} className="wx-fit">
+      <div ref={inner} className="wx-fit-in" style={{ transform: k < 1 ? `scale(${k})` : undefined }}>{children}</div>
+    </div>
+  );
+};
+
+const Diagram = ({ scene, bi }) => {
+  const beats = scene.beats || [];
+  const b = beats[bi] || {};
+  const shown = b.show === undefined ? (scene.nodes || []).length : b.show;
+  const on = asSet(b.on);
+  const ref = useRef(null);
+  const box = useBox(ref);
+  // On tall screens (phones), lay the diagram out top-to-bottom instead.
+  const portrait = box.h > box.w * 0.95;
+  const k = Math.max(0.55, portrait ? Math.min(1, box.w / 300, box.h / 480) : Math.min(1, box.w / 700, box.h / 300));
+  const pos = {};
+  // (In portrait the columns are narrow, so pull nodes in from the edges.)
+  (scene.nodes || []).forEach((n) => {
+    pos[n.id] = portrait ? { ...n, x: 50 + (n.y - 50) * 0.84, y: 50 + (n.x - 50) * 0.9 } : n;
+  });
+  const send = b.send && pos[b.send.from] && pos[b.send.to] ? b.send : null;
+  // Tight on space (several rows of nodes in a short stage): drop the icons.
+  const rows = new Set(Object.values(pos).map((n) => Math.round(n.y / 8))).size;
+  const cols = new Set(Object.values(pos).map((n) => Math.round(n.x / 8))).size;
+  const compact = box.h / Math.max(rows, 1) < 110 || box.w / Math.max(cols, 1) < 130;
+  // Shrink nodes so neighbours in the same row (or column) never collide.
+  let room = k;
+  const list = Object.values(pos);
+  list.forEach((a, i) => list.slice(i + 1).forEach((c) => {
+    const dx = (Math.abs(a.x - c.x) / 100) * box.w; const dy = (Math.abs(a.y - c.y) / 100) * box.h;
+    if (dy < 70) room = Math.min(room, dx / 150);
+    if (dx < 150) room = Math.min(room, dy / 74);
+  }));
+  const kk = Math.max(0.5, room);
+  return (
+    <div className="wx-diagram" ref={ref} style={{ '--k': kk }}>
+      <svg className="wx-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        {(scene.edges || []).map((e, i) => {
+          const a = pos[e.from]; const c = pos[e.to];
+          if (!a || !c) return null;
+          const idx = (id) => scene.nodes.findIndex((n) => n.id === id);
+          const vis = idx(e.from) < shown && idx(e.to) < shown;
+          const live = send && ((send.from === e.from && send.to === e.to) || (send.from === e.to && send.to === e.from));
+          return <line key={i} x1={a.x} y1={a.y} x2={c.x} y2={c.y} className={`${vis ? '' : 'off'}${live ? ' live' : ''}`} vectorEffect="non-scaling-stroke" />;
+        })}
+      </svg>
+      {(scene.nodes || []).map((n, i) => (
+        <div key={n.id} className={`wx-node${i < shown ? '' : ' off'}${on.has(n.id) ? ' on' : ''}`} style={{ left: `${pos[n.id].x}%`, top: `${pos[n.id].y}%` }}>
+          {!compact && n.art && WATCH_ART[n.art] && <span className="wp-art wx-node-art" dangerouslySetInnerHTML={{ __html: WATCH_ART[n.art] }} />}
+          <b>{n.label}</b>{n.sub && <small>{n.sub}</small>}
+        </div>
+      ))}
+      {send && (
+        <span key={`${bi}-${send.from}-${send.to}`} className="wx-packet"
+          style={{ '--x1': `${pos[send.from].x}%`, '--y1': `${pos[send.from].y}%`, '--x2': `${pos[send.to].x}%`, '--y2': `${pos[send.to].y}%` }}>
+          {send.label}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const TableScene = ({ scene, bi }) => {
+  const beats = scene.beats || [];
+  const b = beats[bi] || {};
+  const hl = asSet(b.hl);
+  const sql = upTo(beats, bi, 'sql');
+  const col = b.col;
+  return (
+    <div className="wx-table">
+      {sql && <code className="wx-sql" key={sql}>{sql}</code>}
+      <table>
+        <thead><tr>{(scene.columns || []).map((c, i) => <th key={i} className={col === i ? 'col' : ''}>{c}</th>)}</tr></thead>
+        <tbody>
+          {(scene.rows || []).map((r, ri) => (
+            <tr key={ri} className={`${hl.has(ri) ? 'hl' : ''}${b.dim && !hl.has(ri) ? ' dim' : ''}`}>
+              {r.map((v, ci) => <td key={ci} className={col === ci ? 'col' : ''}>{v}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+const Walk = ({ scene, bi }) => {
+  const beats = scene.beats || [];
+  const b = beats[bi] || {};
+  const lines = String(scene.code || '').split('\n');
+  const cur = asSet(b.line); // a line number, or a list of line numbers
+  const out = [];
+  for (let i = 0; i <= bi; i += 1) if (beats[i] && beats[i].out) out.push(...[].concat(beats[i].out));
+  return (
+    <div className="wx-walk">
+      <pre className="wx-src">
+        {scene.file && <span className="wp-file">{scene.file}</span>}
+        {lines.map((l, i) => <div key={i} className={cur.has(i + 1) ? 'cur' : ''}><span className="ln">{i + 1}</span>{l || ' '}</div>)}
+      </pre>
+      {upTo(beats, bi, 'vars') && (
+        <div className="wx-vars">{Object.entries(upTo(beats, bi, 'vars')).map(([k, v]) => <span key={`${k}${v}`}><i>{k}</i> = <b>{String(v)}</b></span>)}</div>
+      )}
+      {(out.length > 0 || scene.console) && (
+        <pre className="wx-out" aria-label="Output">{out.map((o, i) => <div key={i} className={i >= out.length - [].concat(b.out || []).length ? 'new' : ''}>{o}</div>)}</pre>
+      )}
+    </div>
+  );
+};
+
+const ArrayScene = ({ scene, bi }) => {
+  const beats = scene.beats || [];
+  const b = beats[bi] || {};
+  const vals = upTo(beats, bi, 'vals') || scene.values || [];
+  const hl = asSet(b.hl);
+  const ok = asSet(upTo(beats, bi, 'ok'));
+  const gone = asSet(upTo(beats, bi, 'gone'));
+  const ptr = b.ptr || {};
+  return (
+    <div className="wx-array">
+      <div className="wx-cells">
+        {vals.map((v, i) => (
+          <div key={i} className={`wx-cell${hl.has(i) ? ' hl' : ''}${ok.has(i) ? ' ok' : ''}${gone.has(i) ? ' gone' : ''}`}>
+            <b>{v}</b><small>{i}</small>
+            <span className="wx-ptr">{Object.keys(ptr).filter((k) => ptr[k] === i).join(' ')}</span>
+          </div>
+        ))}
+      </div>
+      {b.note && <p className="wx-note" key={b.note}>{b.note}</p>}
+    </div>
+  );
+};
+
+const ChartScene = ({ scene, bi }) => {
+  const beats = scene.beats || [];
+  const b = beats[bi] || {};
+  const pts = scene.points || [];
+  const groups = upTo(beats, bi, 'groups');
+  const line = upTo(beats, bi, 'line');
+  const marks = upTo(beats, bi, 'marks') || [];
+  const X = (x) => 8 + x * 0.88; const Y = (y) => 92 - y * 0.84;
+  return (
+    <svg className="wx-chart" viewBox="0 0 100 100" aria-hidden="true">
+      <path className="ax" d="M8 6V92H98" />
+      {scene.xlabel && <text x="96" y="99" textAnchor="end">{scene.xlabel}</text>}
+      {scene.ylabel && <text x="10" y="5">{scene.ylabel}</text>}
+      {pts.map(([x, y], i) => <circle key={i} cx={X(x)} cy={Y(y)} r="2.2" className={`pt g${groups ? groups[i] : 0}`} />)}
+      {line && <line key={line.join()} className="fit" x1={X(0)} y1={Y(line[1])} x2={X(100)} y2={Y(line[0] * 100 + line[1])} />}
+      {marks.map(([x, y], i) => <path key={`${i}-${x}-${y}`} className={`mk g${i + 1}`} d={`M${X(x) - 3} ${Y(y)}h6M${X(x)} ${Y(y) - 3}v6`} />)}
+    </svg>
+  );
+};
+const VISUAL = { diagram: Diagram, table: TableScene, walk: Walk, array: ArrayScene, chart: ChartScene };
+
+export const Scene = ({ scene, shown, onAnswer, answered, bi = 0 }) => {
   const off = (i) => (i > shown ? ' off' : '');
   let body = null;
+  const Visual = VISUAL[scene.kind];
+  if (Visual) {
+    return (
+      <div className="wp-scene vis" key={scene.title}>
+        <div className="wp-vhead">
+          {scene.kicker && <div className="wp-kicker">{scene.kicker}</div>}
+          <h3 className="wp-title">{scene.title}</h3>
+        </div>
+        <div className="wp-vbody">{scene.kind === 'diagram' ? <Visual scene={scene} bi={bi} /> : <Fit><Visual scene={scene} bi={bi} /></Fit>}</div>
+      </div>
+    );
+  }
   if (scene.kind === 'list') {
     body = (
       <ul className={`wp-items${scene.crossed ? ' x' : ''}`}>
@@ -245,7 +464,7 @@ const WatchPlayer = ({ script, title, onFinished, nextText, finishLabel }) => {
     <div className="wp" role="region" aria-label={`Watch: ${title}`}>
       <style>{WATCH_CSS}</style>
       <div className="wp-stage">
-        <Scene scene={scene} shown={scene.kind === 'quiz' && !started ? 1 : shown} onAnswer={answer} answered={answered} />
+        <Scene scene={scene} bi={bi} shown={scene.kind === 'quiz' && !started ? 1 : shown} onAnswer={answer} answered={answered} />
         {cc && shownCaption && <div className="wp-cap" aria-live="polite"><span>{shownCaption}</span></div>}
         {!started && (
           <div className="wp-cover">
@@ -309,7 +528,7 @@ const WatchPlayer = ({ script, title, onFinished, nextText, finishLabel }) => {
 
 export default WatchPlayer;
 
-const WATCH_CSS = `
+export const WATCH_CSS = `
 .wp { --wp-accent:#D41470; --wp-soft:#FBE7F1; --wp-ink:#111827; --wp-muted:#6B7280; --wp-line:#E5E7EB; --wp-stage:#fff; --wp-tint:#FAF5F8;
   border:1px solid var(--wp-line); border-radius:18px; overflow:hidden; background:#fff; margin:0 0 20px; }
 .wp-stage { position:relative; aspect-ratio:16/9; background:var(--wp-stage); overflow:hidden; }
@@ -384,5 +603,60 @@ const WATCH_CSS = `
 .wp-art .fp.sk, .wp-art .fp.sa { fill:#fff; }
 .wp-art .fa.sk, .wp-art .fa.sp { fill:var(--wp-accent); } .wp-art .fs.sk, .wp-art .fs.sa { fill:var(--wp-soft); }
 .wp-art .fk.sa, .wp-art .fk.sp { fill:var(--wp-ink); } .wp-art .fl.sk, .wp-art .fl.sa { fill:var(--wp-line); }
+/* Explainer scenes */
+.wx-fit { width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:visible; }
+.wx-fit-in { width:100%; flex:none; transform-origin:center center; }
+.wx-fit .wx-walk, .wx-fit .wx-table { max-height:none; } .wx-fit .wx-src { overflow:visible; }
+.wx-fit .wx-chart { height:auto; width:100%; max-width:min(100%, 420px); margin:0 auto; display:block; }
+.wp-scene.vis { display:flex; flex-direction:column; gap:8px; align-items:stretch; padding:3% 4% 8%; }
+.wp-vhead { display:grid; gap:2px; } .wp-scene.vis .wp-title { font-size:clamp(15px,2.2vw,22px); }
+.wp-vbody { flex:1; min-height:0; position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.wx-diagram { position:relative; width:100%; height:100%; }
+.wx-edges { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.wx-edges line { stroke:var(--wp-line); stroke-width:3; transition:stroke .3s, opacity .4s; }
+.wx-edges line.live { stroke:var(--wp-accent); stroke-dasharray:6 5; animation:wx-dash 1s linear infinite; }
+.wx-edges line.off { opacity:0; }
+@keyframes wx-dash { to { stroke-dashoffset:-22; } }
+.wx-node { position:absolute; transform:translate(-50%,-50%) scale(var(--k,1)); background:#fff; border:2px solid var(--wp-line); border-radius:14px; padding:6px 10px; text-align:center; min-width:76px; max-width:180px; transition:border-color .3s, box-shadow .3s, opacity .4s, transform .4s; display:grid; justify-items:center; gap:2px; }
+.wx-node b { font-size:14px; line-height:1.2; color:var(--wp-ink); } .wx-node small { font-size:11.5px; line-height:1.25; color:var(--wp-muted); }
+.wx-node.on { border-color:var(--wp-accent); box-shadow:0 0 0 4px var(--wp-soft); transform:translate(-50%,-50%) scale(calc(var(--k,1) * 1.06)); }
+.wx-node.off { opacity:0; transform:translate(-50%,-40%) scale(var(--k,1)); }
+.wp-art.wx-node-art svg { width:40px; max-width:none; height:auto; display:block; }
+.wx-packet { position:absolute; transform:translate(-50%,-50%); background:var(--wp-accent); color:#fff; font-weight:700; font-size:clamp(10px,1.3vw,13px); padding:5px 10px; border-radius:999px; white-space:nowrap; box-shadow:0 4px 12px rgba(212,20,112,.3); z-index:2; animation:wx-send 1.6s ease-in-out forwards; margin-top:-26px; }
+@keyframes wx-send { 0% { left:var(--x1); top:var(--y1); opacity:0; } 12% { opacity:1; } 100% { left:var(--x2); top:var(--y2); opacity:1; } }
+.wx-table { width:100%; display:grid; gap:8px; align-content:center; max-height:100%; }
+.wx-sql { display:block; background:var(--wp-ink); color:#fff; border-radius:10px; padding:8px 12px; font-size:clamp(11px,1.4vw,14px); white-space:pre-wrap; animation:wx-in .4s ease both; }
+.wx-table table { width:100%; border-collapse:separate; border-spacing:0; font-size:clamp(11px,1.4vw,14px); }
+.wx-table th { text-align:left; color:var(--wp-muted); font-weight:700; padding:4px 10px; border-bottom:2px solid var(--wp-line); }
+.wx-table td { padding:4px 10px; border-bottom:1px solid var(--wp-line); color:var(--wp-ink); transition:background .3s, opacity .3s; }
+.wx-table tr.hl td { background:var(--wp-soft); font-weight:600; } .wx-table tr.hl td:first-child { box-shadow:inset 4px 0 0 var(--wp-accent); }
+.wx-table tr.dim td { opacity:.3; }
+.wx-table .col { color:var(--wp-accent); }
+.wx-walk { width:100%; max-height:100%; display:flex; flex-direction:column; gap:6px; }
+.wx-vars { flex:none; display:flex; flex-wrap:wrap; gap:6px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:clamp(10px,1.35vw,13px); }
+.wx-vars span { background:var(--wp-soft); border-radius:8px; padding:4px 10px; animation:wx-in .35s ease both; } .wx-vars i { font-style:normal; color:var(--wp-muted); } .wx-vars b { color:var(--wp-accent); }
+.wx-src { margin:0; flex:0 1 auto; min-height:0; background:#0f172a; color:#e2e8f0; border-radius:12px; padding:8px 0; font-size:clamp(10px,1.3vw,13.5px); line-height:1.45; overflow:hidden; font-family:ui-monospace,Menlo,Consolas,monospace; position:relative; }
+.wx-src .wp-file { margin:0 12px 4px; display:inline-block; }
+.wx-src div { padding:0 12px; white-space:pre-wrap; transition:background .25s; border-left:3px solid transparent; }
+.wx-src div.cur { background:rgba(212,20,112,.28); border-left-color:var(--wp-accent); }
+.wx-src .ln { display:inline-block; width:2.2em; color:#64748b; user-select:none; }
+.wx-out { margin:0; flex:none; background:#fff; border:1.5px solid var(--wp-line); border-radius:10px; padding:6px 12px; min-height:2em; font-size:clamp(10px,1.35vw,13.5px); font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--wp-ink); }
+.wx-out div.new { animation:wx-in .4s ease both; color:var(--wp-accent); font-weight:700; }
+@keyframes wx-in { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+.wx-array { display:grid; gap:14px; justify-items:center; width:100%; }
+.wx-cells { display:flex; gap:clamp(3px,1vw,10px); justify-content:center; width:100%; padding-top:20px; }
+.wx-cell { flex:1 1 0; min-width:0; max-width:62px; aspect-ratio:1/1.1; border:2px solid var(--wp-line); border-radius:10px; display:grid; place-items:center; position:relative; background:#fff; transition:all .35s; }
+.wx-cell b { font-size:clamp(13px,2vw,20px); color:var(--wp-ink); } .wx-cell small { position:absolute; bottom:-18px; font-size:11px; color:var(--wp-muted); }
+.wx-cell.hl { border-color:var(--wp-accent); background:var(--wp-soft); transform:translateY(-6px); }
+.wx-cell.ok { background:var(--wp-ink); border-color:var(--wp-ink); } .wx-cell.ok b { color:#fff; }
+.wx-cell.gone { opacity:.28; border-style:dashed; }
+.wx-ptr { position:absolute; top:-20px; font-size:11px; font-weight:800; color:var(--wp-accent); white-space:nowrap; }
+.wx-note { margin:10px 0 0; font-weight:700; color:var(--wp-ink); font-size:clamp(12px,1.6vw,15px); animation:wx-in .4s ease both; text-align:center; }
+.wx-chart { height:100%; width:auto; max-width:100%; aspect-ratio:1/1; overflow:visible; }
+.wx-chart .ax { stroke:var(--wp-ink); stroke-width:.8; fill:none; } .wx-chart text { font-size:4.5px; fill:var(--wp-muted); font-weight:600; }
+.wx-chart .pt { r:2.6px; fill:var(--wp-ink); transition:fill .4s; } .wx-chart .pt.g1 { fill:var(--wp-accent); } .wx-chart .pt.g2 { fill:#111827; } .wx-chart .pt.g3 { fill:#9CA3AF; }
+.wx-chart .fit { stroke:var(--wp-accent); stroke-width:1; animation:wx-in .5s ease both; }
+.wx-chart .mk { stroke-width:1.4; fill:none; animation:wx-in .4s ease both; } .wx-chart .mk.g1 { stroke:var(--wp-accent); } .wx-chart .mk.g2 { stroke:#111827; } .wx-chart .mk.g3 { stroke:#9CA3AF; }
+@media (max-width:640px) { .wp-scene.vis { padding:16px 14px 64px; } }
 @media (prefers-reduced-motion: reduce) { .wp *, .wp *::before, .wp *::after { animation:none !important; transition:none !important; } }
 `;

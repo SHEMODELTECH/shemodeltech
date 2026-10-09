@@ -272,293 +272,835 @@ You have a sprint's worth of backlog items estimated in story points, selected t
    ]
   },
   {
-   "kind": "list",
-   "art": "people",
+   "kind": "diagram",
    "kicker": "Topic 1 · Scrum",
-   "title": "Three accountabilities",
-   "items": [
+   "title": "Who does what in Scrum",
+   "nodes": [
+    {
+     "id": "po",
+     "label": "Product Owner",
+     "sub": "maximises value",
+     "x": 12,
+     "y": 28,
+     "art": "persona"
+    },
+    {
+     "id": "pb",
+     "label": "Product Backlog",
+     "sub": "→ Product Goal",
+     "x": 40,
+     "y": 28,
+     "art": "kanban"
+    },
+    {
+     "id": "sb",
+     "label": "Sprint Backlog",
+     "sub": "→ Sprint Goal",
+     "x": 70,
+     "y": 28,
+     "art": "checklist"
+    },
+    {
+     "id": "dev",
+     "label": "Developers",
+     "sub": "build the work",
+     "x": 70,
+     "y": 76,
+     "art": "people"
+    },
+    {
+     "id": "inc",
+     "label": "Increment",
+     "sub": "→ Definition of Done",
+     "x": 90,
+     "y": 52,
+     "art": "blocks"
+    },
+    {
+     "id": "sm",
+     "label": "Scrum Master",
+     "sub": "facilitator",
+     "x": 34,
+     "y": 76,
+     "art": "shield"
+    }
+   ],
+   "edges": [
+    {
+     "from": "po",
+     "to": "pb"
+    },
+    {
+     "from": "pb",
+     "to": "sb"
+    },
+    {
+     "from": "sb",
+     "to": "dev"
+    },
+    {
+     "from": "dev",
+     "to": "inc"
+    },
+    {
+     "from": "sm",
+     "to": "dev"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Scrum is a lightweight Agile framework. Meet its three accountabilities, and its three artifacts.",
+     "show": 0
+    },
+    {
+     "say": "First, the Product Owner, who maximises the value of the product.",
+     "show": 1,
+     "on": "po"
+    },
+    {
+     "say": "They order the Product Backlog, everything that could be built. Its commitment is the Product Goal.",
+     "show": 2,
+     "on": "pb",
+     "send": {
+      "from": "po",
+      "to": "pb",
+      "label": "orders by value"
+     }
+    },
+    {
+     "say": "Each Sprint, the top items move into the Sprint Backlog, committed to a Sprint Goal.",
+     "show": 3,
+     "on": "sb",
+     "send": {
+      "from": "pb",
+      "to": "sb",
+      "label": "top items"
+     }
+    },
+    {
+     "say": "The Developers take that plan and build the work.",
+     "show": 4,
+     "on": "dev",
+     "send": {
+      "from": "sb",
+      "to": "dev",
+      "label": "the plan"
+     }
+    },
+    {
+     "say": "They produce an Increment: usable, finished work, committed to the Definition of Done.",
+     "show": 5,
+     "on": "inc",
+     "send": {
+      "from": "dev",
+      "to": "inc",
+      "label": "finished work"
+     }
+    },
+    {
+     "say": "And the Scrum Master removes blockers. A facilitator, not a manager who assigns tasks.",
+     "show": 6,
+     "on": "sm",
+     "send": {
+      "from": "sm",
+      "to": "dev",
+      "label": "blocker removed"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Topic 1 · Scrum",
+   "title": "One Sprint, event by event",
+   "nodes": [
+    {
+     "id": "pb",
+     "label": "Product Backlog",
+     "sub": "ordered list",
+     "x": 12,
+     "y": 50,
+     "art": "kanban"
+    },
+    {
+     "id": "plan",
+     "label": "Sprint Planning",
+     "sub": "why · what · how",
+     "x": 34,
+     "y": 18,
+     "art": "calendar"
+    },
+    {
+     "id": "daily",
+     "label": "Daily Scrum",
+     "sub": "15 min, every day",
+     "x": 66,
+     "y": 18,
+     "art": "stopwatch"
+    },
+    {
+     "id": "review",
+     "label": "Sprint Review",
+     "sub": "with stakeholders",
+     "x": 88,
+     "y": 50,
+     "art": "presentation"
+    },
+    {
+     "id": "retro",
+     "label": "Retrospective",
+     "sub": "improve how we work",
+     "x": 50,
+     "y": 82,
+     "art": "sticky"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pb",
+     "to": "plan"
+    },
+    {
+     "from": "plan",
+     "to": "daily"
+    },
+    {
+     "from": "daily",
+     "to": "review"
+    },
+    {
+     "from": "review",
+     "to": "retro"
+    },
+    {
+     "from": "retro",
+     "to": "pb"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Scrum has five events. The Sprint is the container: a fixed period, commonly one or two weeks.",
+     "show": 5
+    },
+    {
+     "say": "It opens with Sprint Planning: why, what and how, pulled from the backlog.",
+     "on": "plan",
+     "send": {
+      "from": "pb",
+      "to": "plan",
+      "label": "top items"
+     }
+    },
+    {
+     "say": "Every day, a fifteen minute Daily Scrum checks progress toward the Sprint Goal.",
+     "on": "daily",
+     "send": {
+      "from": "plan",
+      "to": "daily",
+      "label": "Sprint Backlog + Goal"
+     }
+    },
+    {
+     "say": "At the end, the Sprint Review: a working session where stakeholders inspect the Increment.",
+     "on": "review",
+     "send": {
+      "from": "daily",
+      "to": "review",
+      "label": "Increment"
+     }
+    },
+    {
+     "say": "Then the Retrospective, to improve how the team works.",
+     "on": "retro",
+     "send": {
+      "from": "review",
+      "to": "retro",
+      "label": "what we learned"
+     }
+    },
+    {
+     "say": "What they learn updates the backlog, and the next Sprint starts. Same length every time.",
+     "on": "pb",
+     "send": {
+      "from": "retro",
+      "to": "pb",
+      "label": "next Sprint"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 1 · Scrum",
+   "title": "From Product Backlog to Sprint",
+   "columns": [
+    "#",
+    "Backlog item",
+    "Value"
+   ],
+   "rows": [
     [
-     "Product Owner",
-     "Maximises value · orders the backlog"
+     "1",
+     "Sign up with email",
+     "High"
     ],
     [
-     "Scrum Master",
-     "Facilitates · removes blockers"
+     "2",
+     "Add a plant",
+     "High"
     ],
     [
-     "Developers",
-     "Build each Increment"
+     "3",
+     "Watering reminders",
+     "High"
+    ],
+    [
+     "4",
+     "Plant care tips",
+     "Medium"
+    ],
+    [
+     "5",
+     "Identify a plant by photo",
+     "Medium"
+    ],
+    [
+     "6",
+     "Share a plant photo",
+     "Low"
+    ],
+    [
+     "7",
+     "Dark mode",
+     "Low"
     ]
    ],
    "beats": [
     {
-     "say": "Scrum is a lightweight Agile framework built around fixed-length iterations called Sprints. One month or less, commonly one or two weeks.",
-     "show": 0
+     "say": "Here's a Product Backlog for the plant care app: seven small items."
     },
     {
-     "say": "This module follows the official twenty twenty Scrum Guide, which has three accountabilities.",
-     "show": 0
+     "say": "The Product Owner has ordered it by value, most valuable at the top.",
+     "sql": "Ordered by value, highest first",
+     "col": 2
     },
     {
-     "say": "The Product Owner maximises the value of the product, and orders the Product Backlog.",
-     "show": 1
+     "say": "In Sprint Planning, the team pulls only what it can finish in a week: the top three.",
+     "sql": "Sprint Backlog ← items 1, 2, 3",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true
     },
     {
-     "say": "The Scrum Master helps the team use Scrum well, and removes blockers. A facilitator, not a manager who assigns tasks.",
-     "show": 2
+     "say": "One sentence says why they matter together. That's the Sprint Goal.",
+     "sql": "Sprint Goal: A new user can add their first plant\nand get reminded to water it.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true
     },
     {
-     "say": "And the Developers build each Increment.",
-     "show": 3
+     "say": "Mid Sprint, someone asks for dark mode. It's unrelated to the goal, so it waits.",
+     "sql": "Mid-Sprint request: Dark mode → stays in the Product Backlog",
+     "hl": 6
+    },
+    {
+     "say": "Scope can be renegotiated with the Product Owner, but never in a way that endangers the goal.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "calendar",
-   "kicker": "Topic 1 · Scrum",
-   "title": "Five events",
-   "steps": [
-    "Sprint Planning",
-    "Daily Scrum (15 min)",
-    "Sprint Review",
-    "Sprint Retrospective"
-   ],
-   "beats": [
-    {
-     "say": "There are five events. The Sprint itself contains the other four.",
-     "show": 0
-    },
-    {
-     "say": "Sprint Planning decides why, what and how for this Sprint.",
-     "show": 1
-    },
-    {
-     "say": "The Daily Scrum is a fifteen minute daily check on progress toward the Sprint Goal.",
-     "show": 2
-    },
-    {
-     "say": "The Sprint Review is a working session, not just a demo. The team and stakeholders inspect what was done, and agree what to do next.",
-     "show": 3
-    },
-    {
-     "say": "And the Retrospective improves how the team works.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "layers",
-   "kicker": "Topic 1 · Scrum",
-   "title": "Three artifacts, three commitments",
-   "items": [
-    [
-     "Product Backlog",
-     "→ Product Goal"
-    ],
-    [
-     "Sprint Backlog",
-     "→ Sprint Goal"
-    ],
-    [
-     "Increment",
-     "→ Definition of Done"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "There are three artifacts, each with a commitment.",
-     "show": 0
-    },
-    {
-     "say": "The Product Backlog, the ordered list of everything that could be built, is committed to the Product Goal.",
-     "show": 1
-    },
-    {
-     "say": "The Sprint Backlog, the goal, chosen items and plan for this Sprint, is committed to the Sprint Goal.",
-     "show": 2
-    },
-    {
-     "say": "And the Increment, a usable finished piece of work, is committed to the Definition of Done.",
-     "show": 3
-    },
-    {
-     "say": "The team commits to the Sprint Goal, not a fixed list. Scope can be renegotiated, as long as the goal isn't endangered.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "pencil",
-   "kicker": "Topic 1 · Lab",
-   "title": "Run a mock Sprint",
-   "steps": [
-    "Backlog: 8 to 10 items",
-    "Plan: 3 to 4 items + Sprint Goal",
-    "3 Daily Scrum notes",
-    "Review + retrospective"
-   ],
-   "beats": [
-    {
-     "say": "In the lab, you run a mock Sprint on a Trello or Jira board.",
-     "show": 0
-    },
-    {
-     "say": "Write eight to ten small backlog items, for the plant care app or your own idea.",
-     "show": 1
-    },
-    {
-     "say": "Plan the Sprint: move three or four items you could finish in a week, and write a one sentence Sprint Goal.",
-     "show": 2
-    },
-    {
-     "say": "Write three days of Daily Scrum notes.",
-     "show": 3
-    },
-    {
-     "say": "Then a mock review and retrospective.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "kanban",
+   "kind": "table",
    "kicker": "Topic 2 · Kanban",
-   "title": "Continuous flow",
-   "items": [
+   "title": "A Kanban board, day by day",
+   "columns": [
+    "Day",
+    "To Do",
+    "In Progress (max 2)",
+    "Review (max 2)",
+    "Done"
+   ],
+   "rows": [
     [
-     "Kanban board",
-     "Cards flow through columns"
+     "Start",
+     "A B C D E F",
+     "—",
+     "—",
+     "—"
     ],
     [
-     "WIP limits",
-     "Cap cards per column"
+     "Day 1",
+     "C D E F",
+     "A B",
+     "—",
+     "—"
     ],
     [
-     "Pull-based flow",
-     "Pull only when there's room"
+     "Day 2",
+     "D E F",
+     "B C",
+     "A",
+     "—"
     ],
     [
-     "Cycle time",
-     "Start to finish, per card"
+     "Day 3",
+     "E F",
+     "C D",
+     "A B",
+     "—"
+    ],
+    [
+     "Day 4",
+     "F",
+     "D E",
+     "B C",
+     "A"
+    ],
+    [
+     "Day 5",
+     "—",
+     "E F",
+     "C D",
+     "A B"
     ]
    ],
    "beats": [
     {
-     "say": "Kanban is more flexible. No fixed sprints: work flows continuously across a board.",
-     "show": 0
+     "say": "Kanban has no Sprints: work flows continuously. Each row is the same board, one day later.",
+     "hl": 0
     },
     {
-     "say": "Cards move through columns, like To Do, In Progress and Done.",
-     "show": 1
+     "say": "Six cards, A to F, wait in To Do. In Progress and Review each have a work in progress limit, a W I P limit, of two.",
+     "hl": 0,
+     "col": 2,
+     "sql": "WIP limit: In Progress 2 · Review 2"
     },
     {
-     "say": "Work in progress limits, or W I P limits, cap how many cards a column can hold.",
-     "show": 2
+     "say": "Day one. The team pulls A and B. The limit is hit, so C waits.",
+     "hl": 1,
+     "dim": true,
+     "col": 2,
+     "sql": "In Progress 2/2 → limit hit, C waits"
     },
     {
-     "say": "New work is pulled in only when there's room under the limit, not pushed in on a schedule.",
-     "show": 3
+     "say": "Day two. A moves to Review, freeing a slot, so C is pulled in. Pulled when there's room, not pushed.",
+     "hl": 2,
+     "dim": true,
+     "sql": "A → Review · slot free → pull C"
     },
     {
-     "say": "And cycle time measures how long a card takes from start to finish.",
-     "show": 4
+     "say": "Day three. B joins A in Review, and D is pulled. Now both limited columns are full.",
+     "hl": 3,
+     "dim": true,
+     "col": 3,
+     "sql": "In Progress 2/2 · Review 2/2"
+    },
+    {
+     "say": "So nobody starts E. The team helps review instead: stop starting, start finishing.",
+     "hl": 3,
+     "dim": true,
+     "sql": "Board full → finish before starting"
+    },
+    {
+     "say": "Day four. A is done. That frees Review for C, and In Progress for E.",
+     "hl": 4,
+     "dim": true,
+     "col": 4,
+     "sql": "A → Done · C → Review · pull E"
+    },
+    {
+     "say": "Day five. B is done, D moves to Review, and the last card, F, is pulled in.",
+     "hl": 5,
+     "dim": true,
+     "col": 4,
+     "sql": "B → Done · D → Review · pull F"
+    },
+    {
+     "say": "Cycle time is start to finish. A started on day one, and finished on day four: three days.",
+     "hl": [
+      1,
+      4
+     ],
+     "dim": true,
+     "sql": "Cycle time A = Day 4 − Day 1 = 3 days"
+    },
+    {
+     "say": "B finished on day five: four days. Track this over time to see if flow improves.",
+     "hl": [
+      1,
+      5
+     ],
+     "dim": true,
+     "sql": "Cycle time B = Day 5 − Day 1 = 4 days"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "warning",
+   "kind": "array",
    "kicker": "Topic 2 · Kanban",
    "title": "Start less, finish more",
-   "quote": "Without a WIP limit, everything is half-finished and nothing ships.",
+   "values": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F"
+   ],
    "beats": [
     {
-     "say": "W I P limits feel backwards at first. Surely starting more means finishing more?",
-     "show": 0
+     "say": "Why limit work? Each of six cards needs two days of work, and the team does two days of work each day.",
+     "note": "Each card: 2 days of work · Team: 2 days of work per day"
     },
     {
-     "say": "But without a limit, everything ends up half finished, and nothing ships. That's Kanban's central insight.",
-     "show": 1
+     "say": "With no limit, the team starts all six. After three days, every card is half done.",
+     "vals": [
+      "50%",
+      "50%",
+      "50%",
+      "50%",
+      "50%",
+      "50%"
+     ],
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "No limit · after 3 days → 0 cards shipped"
     },
     {
-     "say": "In the lab, set a limit of two on In Progress and Review, move cards through respecting it, and time two or three cards.",
-     "show": 1
+     "say": "Six days of work, and nothing has shipped.",
+     "gone": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "No limit · after 3 days → 0 cards shipped"
+    },
+    {
+     "say": "With a limit of two, A and B finish in two days. On day three, C and D are half done.",
+     "vals": [
+      "✓",
+      "✓",
+      "50%",
+      "50%",
+      "0%",
+      "0%"
+     ],
+     "gone": [],
+     "ok": [
+      0,
+      1
+     ],
+     "hl": [
+      2,
+      3
+     ],
+     "note": "WIP limit 2 · after 3 days → 2 cards shipped"
+    },
+    {
+     "say": "Same effort, but two cards shipped. That's Kanban's central insight.",
+     "ok": [
+      0,
+      1
+     ],
+     "note": "Same effort · limit 2 ships 2 · no limit ships 0"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "calc",
+   "kind": "chart",
    "kicker": "Topic 3 · Sprint Planning",
-   "title": "Estimate, then commit",
-   "items": [
+   "title": "Velocity: what the team really finishes",
+   "xlabel": "Sprint 1 → 4",
+   "ylabel": "story points done",
+   "points": [
     [
-     "Story points",
-     "Relative effort, not hours"
+     15,
+     40
     ],
     [
-     "Velocity",
-     "Points finished per Sprint"
+     35,
+     55
     ],
     [
-     "Lab",
-     "Pick ~10 points of work"
+     55,
+     45
+    ],
+    [
+     75,
+     60
     ]
    ],
    "beats": [
     {
-     "say": "Sprint Planning turns a long backlog into a small, realistic commitment.",
-     "show": 0
+     "say": "Back to Scrum planning. Story points are relative effort, not hours. A five is roughly five times harder than a one."
     },
     {
-     "say": "Story points are relative effort, not time. A five is roughly five times harder than a one, not five hours.",
-     "show": 1
+     "say": "The team's last four Sprints finished eight, eleven, nine and twelve points.",
+     "groups": [
+      1,
+      1,
+      1,
+      1
+     ]
     },
     {
-     "say": "Velocity is how many points the team has historically finished per Sprint.",
-     "show": 2
+     "say": "Forty points over four Sprints: a velocity of about ten.",
+     "groups": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "line": [
+      0,
+      50
+     ]
     },
     {
-     "say": "Both are common add-ons, but not part of the Scrum Guide. Scrum only asks the team to forecast.",
-     "show": 2
+     "say": "So next Sprint, the team forecasts about ten points. A forecast, not a promise.",
+     "marks": [
+      [
+       95,
+       50
+      ]
+     ]
     },
     {
-     "say": "In the lab, point your backlog on a one, two, three, five, eight scale, and assume a velocity of ten points.",
-     "show": 3
+     "say": "Points and velocity are common add-ons, not part of the Scrum Guide, and velocity shifts as the team changes.",
+     "marks": [
+      [
+       95,
+       50
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "target",
+   "kind": "table",
    "kicker": "Topic 3 · Sprint Planning",
-   "title": "Goal and Definition of Done",
-   "items": [
+   "title": "Fill the Sprint up to velocity",
+   "columns": [
+    "#",
+    "Backlog item",
+    "Points",
+    "Running total"
+   ],
+   "rows": [
     [
-     "Sprint Goal",
-     "The shared why"
+     "1",
+     "Sign up with email",
+     "3",
+     "3"
     ],
     [
-     "Definition of Done",
-     "✓ tested · ✓ reviewed · ✓ deployed to staging"
+     "2",
+     "Add a plant",
+     "2",
+     "5"
+    ],
+    [
+     "3",
+     "Watering reminders",
+     "5",
+     "10"
+    ],
+    [
+     "4",
+     "Plant care tips",
+     "3",
+     "13"
+    ],
+    [
+     "5",
+     "Identify a plant by photo",
+     "8",
+     "21"
     ]
    ],
    "beats": [
     {
-     "say": "Tie the chosen items together with a one sentence Sprint Goal, like: get new users through onboarding without confusion.",
-     "show": 1
+     "say": "Here's the same backlog, pointed on a one, two, three, five, eight scale.",
+     "col": 2
     },
     {
-     "say": "Then write a Definition of Done: three to five checks, like tested, reviewed by another team member, deployed to staging.",
-     "show": 2
+     "say": "Points compare items. Identify by photo is an eight, much harder than sign up, a three.",
+     "hl": [
+      0,
+      4
+     ],
+     "col": 2
     },
     {
-     "say": "Arguments about whether something is really finished almost always trace back to that checklist never being agreed up front.",
-     "show": 2
+     "say": "Velocity is ten, so the team adds items from the top until it reaches about ten.",
+     "sql": "Velocity ≈ 10 points",
+     "col": 3
+    },
+    {
+     "say": "Sign up, three. Add a plant, two. Watering reminders, five. That's exactly ten.",
+     "sql": "3 + 2 + 5 = 10  ✓ matches velocity",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Care tips would make thirteen. Too much, so it stays in the backlog.",
+     "sql": "10 + 3 = 13  ✗ over velocity",
+     "hl": 3,
+     "col": 3
+    },
+    {
+     "say": "The same three items, under the same Sprint Goal.",
+     "sql": "Sprint Goal: A new user can add their first plant\nand get reminded to water it.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 3 · Sprint Planning",
+   "title": "Is it really done?",
+   "columns": [
+    "Item",
+    "Tested",
+    "Reviewed",
+    "On staging",
+    "Done?"
+   ],
+   "rows": [
+    [
+     "Sign up with email",
+     "✓",
+     "✓",
+     "✓",
+     "Done"
+    ],
+    [
+     "Add a plant",
+     "✓",
+     "✓",
+     "✗",
+     "Not yet"
+    ],
+    [
+     "Watering reminders",
+     "✓",
+     "✗",
+     "✗",
+     "Not yet"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Mid Sprint, someone asks: what's done? Without a checklist, everyone answers differently."
+    },
+    {
+     "say": "So the team agrees a Definition of Done up front: tested, reviewed by a teammate, deployed to staging.",
+     "sql": "Definition of Done:\ntested · reviewed by a teammate · deployed to staging",
+     "col": 4
+    },
+    {
+     "say": "Sign up passes all three. Done, and part of the Increment.",
+     "hl": 0,
+     "dim": true,
+     "col": 4
+    },
+    {
+     "say": "Add a plant looks complete, but isn't on staging. Not done.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Watering reminders hasn't been reviewed. Not done either.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "No argument: the checklist decides. That's the dispute it prevents."
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Scrum or Kanban?",
+   "title": "Fixed Sprints or continuous flow",
+   "columns": [
+    "",
+    "Scrum",
+    "Kanban"
+   ],
+   "rows": [
+    [
+     "Timing",
+     "Fixed-length Sprints",
+     "Continuous flow"
+    ],
+    [
+     "New work enters",
+     "At Sprint Planning",
+     "When a WIP slot frees up"
+    ],
+    [
+     "Structure",
+     "3 accountabilities, 5 events",
+     "None required"
+    ],
+    [
+     "Fits best",
+     "Product built in increments",
+     "Unpredictable support work"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "So which one? Side by side."
+    },
+    {
+     "say": "Scrum plans in fixed Sprints. Kanban is a continuous flow.",
+     "hl": 0
+    },
+    {
+     "say": "Scrum takes new work at Sprint Planning. Kanban pulls it when there's room.",
+     "hl": 1
+    },
+    {
+     "say": "Scrum has built-in structure. Kanban requires none: more adaptable, less to lean on.",
+     "hl": 2
+    },
+    {
+     "say": "So Scrum fits products built in steady increments. Kanban fits unpredictable work, like support and bug triage.",
+     "hl": 3
     }
    ]
   },
