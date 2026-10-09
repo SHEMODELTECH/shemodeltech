@@ -210,257 +210,605 @@ You have a short survey built to measure a pattern surfaced by interviews, revie
    ]
   },
   {
-   "kind": "list",
-   "art": "persona",
+   "kind": "table",
    "kicker": "Topic 1 · Personas",
-   "title": "A research-based user",
-   "items": [
+   "title": "Draft a proto-persona",
+   "columns": [
+    "",
+    "Primary",
+    "Secondary"
+   ],
+   "rows": [
     [
-     "Persona",
-     "Name · role · goals · pain points"
+     "Name",
+     "Maya",
+     "Sam"
     ],
     [
-     "Primary vs secondary",
-     "Main segment vs smaller one"
+     "Who",
+     "Busy renter, 3 plants",
+     "Collector, 40 plants"
     ],
     [
-     "Pain points",
-     "What the product must solve"
+     "Goal",
+     "Keep plants alive",
+     "Track every plant"
+    ],
+    [
+     "Pain point",
+     "Forgets to water",
+     "Schedules all differ"
+    ],
+    [
+     "Pain point",
+     "Unsure about light",
+     "Spreadsheet is a chore"
+    ],
+    [
+     "Based on",
+     "ASSUMPTIONS",
+     "ASSUMPTIONS"
     ]
    ],
    "beats": [
     {
-     "say": "A persona is a fictional but research based picture of a type of user.",
-     "show": 0
+     "say": "A persona is a fictional, research based picture of a type of user. Let's draft one for the plant care app."
     },
     {
-     "say": "It has a name, role, goals, pain points and behaviours. Enough to make decisions concrete.",
-     "show": 1
+     "say": "With no research yet, we start from assumptions, clearly labelled.",
+     "sql": "Assumptions, not research:\nbusy 25 to 35s · rent · few plants · want a green home",
+     "hl": 5
     },
     {
-     "say": "A primary persona is the most important segment. A secondary persona is smaller, but still relevant.",
-     "show": 2
+     "say": "The primary proto-persona: Maya, a busy renter who wants to keep her three plants alive.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Pain points are the specific frustrations. They often point straight at what the product must solve.",
-     "show": 3
+     "say": "Her pain points: she forgets to water, and she's unsure about light.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "A secondary persona is a smaller segment: Sam, who tracks forty plants on different schedules.",
+     "hl": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Both are guesses, so we note what research must confirm.",
+     "sql": "Research needed: do people really forget to water?\nDo collectors outgrow spreadsheets?",
+     "hl": 5,
+     "col": 1
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "mess",
+   "kind": "array",
    "kicker": "Topic 1 · Personas",
-   "title": "The elastic user",
-   "quote": "The elastic user stretches to fit whatever each person wants to build.",
-   "beats": [
-    {
-     "say": "Without a persona, teams talk about a vague: the user.",
-     "show": 0
-    },
-    {
-     "say": "Alan Cooper called this the elastic user. A fuzzy figure that stretches to fit whatever each person wants to build.",
-     "show": 1
-    },
-    {
-     "say": "A clear persona stops the stretching. But it's only as good as the research behind it.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "sticky",
-   "kicker": "Topic 1 · Lab",
-   "title": "Draft proto-personas",
-   "steps": [
-    "3 to 5 labelled assumptions",
-    "Primary proto-persona",
-    "Secondary proto-persona",
-    "Research needed"
+   "title": "The elastic user stretches",
+   "values": [
+    "Water reminders",
+    "Light guide",
+    "Plant ID by photo",
+    "Social feed",
+    "Pot shop",
+    "Dark mode"
    ],
    "beats": [
     {
-     "say": "A proto-persona is a draft built from the team's assumptions, before research. Useful, as long as it's labelled that way.",
-     "show": 0
+     "say": "Here are six feature ideas from the team.",
+     "note": "Six ideas from the team"
     },
     {
-     "say": "In the lab, write three to five assumptions about who'd use your product, labelled as assumptions.",
-     "show": 1
+     "say": "For a vague user, every one fits. Alan Cooper called this the elastic user: it stretches to fit whatever each person wants.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "\"The user\" would want all of these"
     },
     {
-     "say": "Draft a primary proto-persona, with a name, role, goals and pain points.",
-     "show": 2
+     "say": "Check each against Maya instead. She forgets to water, so reminders stay.",
+     "ok": [
+      0
+     ],
+     "note": "Maya: forgets to water"
     },
     {
-     "say": "Draft a secondary one, and note how their needs differ.",
-     "show": 3
+     "say": "She's unsure about light, so the light guide stays too.",
+     "ok": [
+      0,
+      1
+     ],
+     "note": "Maya: unsure about light"
     },
     {
-     "say": "Then write what real research would confirm or correct each.",
-     "show": 4
+     "say": "The rest don't touch her pain points, so they drop.",
+     "ok": [
+      0,
+      1
+     ],
+     "gone": [
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "A clear persona stops the stretching"
+    },
+    {
+     "say": "But Maya is only as good as the research behind her. So, next, interviews.",
+     "ok": [
+      0,
+      1
+     ],
+     "gone": [
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "Revisit as research comes in"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "mic",
+   "kind": "table",
    "kicker": "Topic 2 · Interviews",
-   "title": "How you ask matters",
-   "items": [
+   "title": "Fix the interview guide",
+   "columns": [
+    "Draft question",
+    "Problem",
+    "Verdict"
+   ],
+   "rows": [
     [
-     "✓ Open",
-     "\"Walk me through the last time…\""
+     "Do you use plant apps?",
+     "Closed: yes or no",
+     "Rewrite"
     ],
     [
-     "✗ Leading",
-     "\"Don't you think this would help?\""
+     "Isn't watering a pain?",
+     "Leading",
+     "Rewrite"
     ],
     [
-     "✓ Past behaviour",
-     "Not \"Would you use this?\""
+     "Would you use alerts?",
+     "Predicts the future",
+     "Rewrite"
+    ],
+    [
+     "Tell me about a time…",
+     "Open, past behavior",
+     "Keep"
     ]
    ],
    "beats": [
     {
-     "say": "A user interview is a one on one conversation about real behaviour, in the person's own words.",
-     "show": 0
+     "say": "An interview guide is a loose list of questions, not a script. Let's review a first draft."
     },
     {
-     "say": "Ask open questions, like: walk me through the last time you tried to do this. Not: do you like it?",
-     "show": 1
+     "say": "Do you use plant apps? Closed. It only allows yes or no.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Avoid leading questions, like: don't you think this would be helpful? They bias the answer, even from an honest person.",
-     "show": 2
+     "say": "Open it up, so they answer in their own words.",
+     "hl": 0,
+     "dim": true,
+     "sql": "→ \"Walk me through how you look after your plants.\""
     },
     {
-     "say": "And ask about the past, not the future. People are often wrong about what they'd do.",
-     "show": 3
+     "say": "Isn't watering a pain? Leading. It suggests the answer, and biases even an honest person.",
+     "hl": 1,
+     "dim": true,
+     "col": 1,
+     "sql": "→ \"How do you keep track of watering?\""
+    },
+    {
+     "say": "Would you use alerts? A prediction, and people often get their own future wrong.",
+     "hl": 2,
+     "dim": true,
+     "col": 1,
+     "sql": "✗ asks for a guess about the future"
+    },
+    {
+     "say": "Ask about the past instead, like the last question, which we keep.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2,
+     "sql": "→ \"Tell me about the last time you forgot\nto water a plant. What happened?\""
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "chat",
-   "kicker": "Topic 2 · Lab",
-   "title": "Guide, interview, synthesise",
-   "steps": [
-    "6 to 8 open questions",
-    "Fix closed or leading ones",
-    "5 to 10 min practice interview",
-    "Synthesise + compare"
+   "kind": "table",
+   "kicker": "Topic 2 · Interviews",
+   "title": "Synthesis: from notes to findings",
+   "columns": [
+    "Who",
+    "Note",
+    "Theme"
    ],
-   "beats": [
-    {
-     "say": "An interview guide is a loose list of questions, not a rigid script, so you can follow interesting threads.",
-     "show": 0
-    },
-    {
-     "say": "Write six to eight open questions, like: tell me about the last time you forgot to water a plant.",
-     "show": 1
-    },
-    {
-     "say": "Rewrite any that are closed or leading.",
-     "show": 2
-    },
-    {
-     "say": "Run a five to ten minute practice interview with a friend or classmate.",
-     "show": 3
-    },
-    {
-     "say": "Then write a synthesis note, and compare it to your persona. One anecdote is a data point. A pattern across interviews is a finding.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "pie",
-   "kicker": "Topic 3 · Surveys",
-   "title": "Breadth, not depth",
-   "items": [
+   "rows": [
     [
-     "Quantitative + qualitative",
-     "Ratings and open text"
+     "P1",
+     "Forgot on a trip",
+     "Forgetting"
     ],
     [
-     "Response bias",
-     "Wording · options · order"
+     "P2",
+     "Overwatered a fern",
+     "How much water"
     ],
     [
-     "Response rate",
-     "Low = less representative"
+     "P3",
+     "Forgot during exams",
+     "Forgetting"
+    ],
+    [
+     "P4",
+     "Wants to buy pots here",
+     "One-off"
+    ],
+    [
+     "P5",
+     "Forgot after moving",
+     "Forgetting"
     ]
    ],
    "beats": [
     {
-     "say": "A survey trades an interview's depth for breadth. It's best at measuring how common a pattern interviews already found.",
-     "show": 0
+     "say": "Say we ran five interviews. Here's one note from each.",
+     "col": 1
     },
     {
-     "say": "Quantitative data is ratings and multiple choice. Qualitative is open text. Most surveys mix both.",
-     "show": 1
+     "say": "One person wants to buy pots. Vivid, but one anecdote is just a data point.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "Response bias is when the survey itself skews answers: leading wording, too few options, even question order.",
-     "show": 2
+     "say": "Synthesis tags each note with a theme, and looks across all of them.",
+     "col": 2
     },
     {
-     "say": "And a low response rate is a warning about how representative the results are.",
-     "show": 3
+     "say": "Three of five forgot to water. A pattern across interviews: that's a finding.",
+     "hl": [
+      0,
+      2,
+      4
+     ],
+     "dim": true,
+     "col": 2,
+     "sql": "Forgetting: 3 of 5 → finding"
+    },
+    {
+     "say": "Now compare with Maya. Forgetting is confirmed.",
+     "hl": [
+      0,
+      2,
+      4
+     ],
+     "dim": true,
+     "sql": "vs Maya: forgets to water → confirmed"
+    },
+    {
+     "say": "How much water is new, and nobody mentioned light. So the persona gets updated.",
+     "hl": 1,
+     "dim": true,
+     "sql": "vs Maya: forgets to water → confirmed\nhow much water → new · light → not heard"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "warning",
+   "kind": "table",
    "kicker": "Topic 3 · Surveys",
-   "title": "More responses won't fix a biased sample",
-   "big": "1,000 wrong < 100 right",
-   "sub": "Sample quality beats sample size",
-   "beats": [
-    {
-     "say": "A biased sample, like surveying only power users about a beginner feature, misleads no matter how many answer.",
-     "show": 0
-    },
-    {
-     "say": "One thousand responses from the wrong group are still less useful than one hundred from the right group.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "form",
-   "kicker": "Topic 3 · Lab",
-   "title": "Build and pilot a survey",
-   "steps": [
-    "5 to 7 questions",
-    "Check for bias",
-    "Define the sample",
-    "Pilot with 3 to 5 people"
+   "title": "Check the survey for bias",
+   "columns": [
+    "Question",
+    "Type",
+    "Bias check"
+   ],
+   "rows": [
+    [
+     "How many plants?",
+     "Quant: number",
+     "OK"
+    ],
+    [
+     "Forgot, past month?",
+     "Quant: 0, 1-2, 3+",
+     "OK"
+    ],
+    [
+     "How bad is forgetting?",
+     "Quant: rating",
+     "Leading"
+    ],
+    [
+     "Reminders: good/great?",
+     "Quant: 2 options",
+     "Unbalanced"
+    ],
+    [
+     "Anything else?",
+     "Qual: open text",
+     "OK, goes last"
+    ]
    ],
    "beats": [
     {
-     "say": "In the lab, pick one pattern from your interview.",
-     "show": 0
+     "say": "A survey measures how common that pattern is: breadth, not depth.",
+     "sql": "Measure: how many plant owners forget to water?"
     },
     {
-     "say": "Build a five to seven question survey, with one open question at the end.",
-     "show": 1
+     "say": "Most questions are quantitative: numbers and choices, easy to count.",
+     "col": 1,
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "dim": true
     },
     {
-     "say": "Review it for response bias.",
-     "show": 2
+     "say": "One open, qualitative question goes last: richer, but harder to analyse.",
+     "col": 1,
+     "hl": 4,
+     "dim": true
     },
     {
-     "say": "Define who you'd actually invite.",
-     "show": 3
+     "say": "Now check for response bias. How bad is forgetting? That's leading.",
+     "col": 2,
+     "hl": 2,
+     "dim": true,
+     "sql": "→ \"How much does forgetting affect your plants?\""
     },
     {
-     "say": "Then pilot it with three to five people. That's a clarity check, not results. Far too few to measure anything.",
-     "show": 4
+     "say": "Good or great? Too few options, and unbalanced.",
+     "col": 2,
+     "hl": 3,
+     "dim": true,
+     "sql": "→ Very poor · Poor · Neutral · Good · Very good"
+    },
+    {
+     "say": "Then pilot with three to five people: a clarity check, not results.",
+     "sql": "Pilot, 4 people: anything confusing? missing option? how long?"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Topic 3 · Surveys",
+   "title": "From invite to answer",
+   "nodes": [
+    {
+     "id": "intv",
+     "label": "Interviews",
+     "sub": "3 of 5 forget",
+     "x": 12,
+     "y": 30,
+     "art": "mic"
+    },
+    {
+     "id": "form",
+     "label": "Survey",
+     "sub": "5 questions",
+     "x": 40,
+     "y": 30,
+     "art": "form"
+    },
+    {
+     "id": "smp",
+     "label": "Sample",
+     "sub": "plant owners, all levels",
+     "x": 68,
+     "y": 30,
+     "art": "people"
+    },
+    {
+     "id": "rate",
+     "label": "Response rate",
+     "sub": "% who complete",
+     "x": 88,
+     "y": 72,
+     "art": "funnel"
+    },
+    {
+     "id": "ana",
+     "label": "Analysis",
+     "sub": "how common is it?",
+     "x": 50,
+     "y": 78,
+     "art": "bars"
+    }
+   ],
+   "edges": [
+    {
+     "from": "intv",
+     "to": "form"
+    },
+    {
+     "from": "form",
+     "to": "smp"
+    },
+    {
+     "from": "smp",
+     "to": "rate"
+    },
+    {
+     "from": "rate",
+     "to": "ana"
+    }
+   ],
+   "beats": [
+    {
+     "say": "Now the survey turns a finding into a number.",
+     "show": 5
+    },
+    {
+     "say": "The interviews hand it one pattern: forgetting to water.",
+     "on": "form",
+     "send": {
+      "from": "intv",
+      "to": "form",
+      "label": "pattern: forget"
+     }
+    },
+    {
+     "say": "The sample is who you invite: four hundred plant owners, at every level.",
+     "on": "smp",
+     "send": {
+      "from": "form",
+      "to": "smp",
+      "label": "400 invited"
+     }
+    },
+    {
+     "say": "One hundred complete it: a twenty five percent response rate.",
+     "on": "rate",
+     "send": {
+      "from": "smp",
+      "to": "rate",
+      "label": "100 complete"
+     }
+    },
+    {
+     "say": "A low rate is a warning about how representative results are.",
+     "on": "rate"
+    },
+    {
+     "say": "Sixty of them forgot to water last month. Sixty percent: it's common.",
+     "on": "ana",
+     "send": {
+      "from": "rate",
+      "to": "ana",
+      "label": "60 of 100 forget"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Topic 3 · Surveys",
+   "title": "More answers won't fix a biased sample",
+   "xlabel": "responses (0 → 1,000)",
+   "ylabel": "% who say they forget",
+   "points": [
+    [
+     10,
+     60
+    ],
+    [
+     10,
+     18
+    ],
+    [
+     25,
+     15
+    ],
+    [
+     50,
+     16
+    ],
+    [
+     100,
+     15
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now imagine a second survey, sent only to expert power users."
+    },
+    {
+     "say": "Our right sample of one hundred said sixty percent.",
+     "groups": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "line": [
+      0,
+      60
+     ]
+    },
+    {
+     "say": "A hundred power users say about eighteen percent.",
+     "groups": [
+      1,
+      2,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "Collect more, up to a thousand. The answer barely moves.",
+     "groups": [
+      1,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "It settles near fifteen percent. More answers just repeat the bias.",
+     "groups": [
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       100,
+       15
+      ]
+     ]
+    },
+    {
+     "say": "A thousand from the wrong group are worth less than a hundred from the right one.",
+     "groups": [
+      1,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       10,
+       60
+      ]
+     ]
     }
    ]
   },

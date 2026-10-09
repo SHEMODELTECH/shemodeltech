@@ -293,291 +293,580 @@ You have themes built from your own research notes, three evidence-backed insigh
    ]
   },
   {
-   "kind": "quote",
-   "art": "flask",
+   "kind": "table",
    "kicker": "Topic 5.1 · Framing questions",
-   "title": "Start with a good question",
-   "quote": "✗ \"What do users think?\"   ✓ \"Why do new users stop before finishing sign-up?\"",
-   "beats": [
-    {
-     "say": "Good research starts with a good question.",
-     "show": 0
-    },
-    {
-     "say": "What do users think, produces a pile of opinions.",
-     "show": 1
-    },
-    {
-     "say": "Why do new users stop before finishing sign-up, produces answers a team can act on.",
-     "show": 1
-    },
-    {
-     "say": "A research question is specific, answerable, and tied to a decision. If no decision depends on the answer, it's probably not worth doing yet.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "doc",
-   "kicker": "Concept",
-   "title": "Kinds of research, and a plan",
-   "items": [
+   "title": "Sharpen the question",
+   "columns": [
+    "Question",
+    "Specific",
+    "Answerable",
+    "Tied to decision"
+   ],
+   "rows": [
     [
-     "Desk research",
-     "What's already known · do it first"
+     "What do users think?",
+     "✗",
+     "✗",
+     "✗"
     ],
     [
-     "Primary research",
-     "Interviews, surveys, observation"
+     "Onboarding confusing?",
+     "✗",
+     "Partly",
+     "✓"
     ],
     [
-     "Qualitative vs. quantitative",
-     "Why and how vs. how many"
+     "Where's the drop-off?",
+     "✓",
+     "✓",
+     "✓"
     ],
     [
-     "Research plan",
-     "Question, decision, method, people, timeline"
+     "Why quit at that step?",
+     "✓",
+     "✓",
+     "✓"
     ]
    ],
    "beats": [
     {
-     "say": "Desk, or secondary, research reviews what already exists: reports, analytics, support tickets, competitor sites. Do it first.",
-     "show": 1
+     "say": "Good research starts with a decision. This team is about to redesign onboarding.",
+     "sql": "Decision: redesign onboarding?"
     },
     {
-     "say": "Primary research collects new information through interviews, surveys or observation.",
-     "show": 2
+     "say": "What do users think? That produces a pile of opinions. It fails all three tests.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Qualitative research explores why and how. Quantitative research measures how many and how much.",
-     "show": 3
+     "say": "Is onboarding confusing? Tied to the decision, but vague. Confusing where?",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And a one-page research plan records the question, the decision, the method, who you'll learn from, and the timeline.",
-     "show": 4
+     "say": "Sharper: where exactly do new users drop off? Desk research first: the analytics already answer it, for free.",
+     "sql": "Decision: redesign onboarding?\nDesk research · analytics: most leave at the identity-check step",
+     "hl": 2,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "That sharpens the rest: why do they quit at that step? Specific, answerable, and tied to the decision.",
+     "hl": 3,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Where, and how many, is quantitative. Why is qualitative. Write the question, decision, method, people and timeline into a one-page plan.",
+     "sql": "Plan: question · decision · method · who · timeline",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "checklist",
+   "kind": "table",
    "kicker": "Topic 5.2 · Desk research",
-   "title": "The credibility check",
-   "items": [
+   "title": "Check every source",
+   "columns": [
+    "Source",
+    "Type",
+    "Credibility note"
+   ],
+   "rows": [
     [
-     "Who",
-     "In a position to know?"
+     "Stats office table",
+     "Primary",
+     "Who: collected it"
     ],
     [
-     "When",
-     "Still current?"
+     "News article quote",
+     "Secondary",
+     "Evidence: trace it"
     ],
     [
-     "Evidence",
-     "Where do the numbers come from?"
+     "Nonprofit report",
+     "Primary",
+     "Bias: may flatter"
     ],
     [
-     "Bias",
-     "Selling something?"
+     "Blog summary",
+     "Secondary",
+     "Check the originals"
+    ],
+    [
+     "Competitor pricing",
+     "Primary",
+     "When: date you checked"
     ]
    ],
    "beats": [
     {
-     "say": "Ask four questions of every source.",
-     "show": 0
+     "say": "A nonprofit is deciding whether to launch a free mentoring program in a new city. Here are five sources it found.",
+     "col": 0
     },
     {
-     "say": "Who wrote it, and are they in a position to know?",
-     "show": 1
+     "say": "Primary sources are original evidence. Secondary sources describe someone else's.",
+     "col": 1
     },
     {
-     "say": "When was it published, and is it still current?",
-     "show": 2
+     "say": "Every source gets four questions: who, when, evidence, and bias.",
+     "sql": "Who? · When? · Evidence? · Bias?",
+     "col": 2
     },
     {
-     "say": "Evidence: does it show where its numbers come from?",
-     "show": 3
+     "say": "Who: the statistics office collected the population figures itself, so it's in a position to know.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Bias: is the author selling something?",
-     "show": 4
+     "say": "Evidence: a news article quoting that figure is secondary. Trace the number back to the table.",
+     "hl": [
+      1,
+      0
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Cite every fact with author, title, year, link and date accessed. A number without a source and a date is an opinion.",
-     "show": 4
+     "say": "Bias: a nonprofit's own report is original, but may present itself favourably.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "When: a pricing page changes, so note the date you checked it.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Cite every fact with author, title, year, link, and date accessed. A number without a source and a date is an opinion.",
+     "sql": "Cite: author · title · year · link · date accessed"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "funnel",
+   "kind": "table",
    "kicker": "Worked example · Top-down",
    "title": "Narrow a big number",
-   "items": [
+   "columns": [
+    "Step",
+    "Assumption",
+    "Result"
+   ],
+   "rows": [
     [
      "City population",
+     "600,000 (stats)",
      "600,000"
     ],
     [
-     "Aged 18 to 34 (25%)",
+     "Aged 18 to 34",
+     "25% (stats)",
      "150,000"
     ],
     [
-     "Interested in tech (10%, guess)",
+     "Interested in tech",
+     "10% (guess)",
      "15,000"
     ],
     [
-     "Join in year one (2%, guess)",
+     "Join in year one",
+     "2% (guess)",
      "about 300"
     ]
    ],
    "beats": [
     {
-     "say": "Market sizing estimates how many people a decision involves. These numbers are illustrative, not real data.",
-     "show": 0
+     "say": "How many mentees could year one serve? These numbers are illustrative, not real data.",
+     "sql": "Illustrative numbers only"
     },
     {
-     "say": "A nonprofit is sizing a free mentoring program. Top-down starts with a city of six hundred thousand.",
-     "show": 1
+     "say": "Top-down starts with a big published number: a city of six hundred thousand.",
+     "hl": 0,
+     "dim": true,
+     "col": 2,
+     "sql": "600,000 people"
     },
     {
-     "say": "Twenty five percent are aged eighteen to thirty four: a hundred and fifty thousand.",
-     "show": 2
+     "say": "Official statistics say twenty five percent are aged eighteen to thirty four: a hundred and fifty thousand.",
+     "hl": 1,
+     "dim": true,
+     "col": 2,
+     "sql": "600,000 × 25% = 150,000"
     },
     {
-     "say": "Ten percent interested in a tech career: fifteen thousand. That's a guess to check.",
-     "show": 3
+     "say": "Ten percent interested in a tech career: fifteen thousand. That's a guess, so label it.",
+     "hl": 2,
+     "dim": true,
+     "col": 1,
+     "sql": "150,000 × 10% = 15,000"
     },
     {
-     "say": "Two percent join in year one: about three hundred.",
-     "show": 4
+     "say": "Two percent join a free program in year one: about three hundred. Another guess.",
+     "hl": 3,
+     "dim": true,
+     "col": 1,
+     "sql": "15,000 × 2% = 300"
+    },
+    {
+     "say": "Two of four assumptions are guesses. The result is only as good as they are, and the brief should say so.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 1,
+     "sql": "Top-down ≈ 300 · rests on 2 guesses"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "calc",
+   "kind": "array",
    "kicker": "Worked example · Bottom-up",
    "title": "Multiply up from what you control",
-   "items": [
-    [
-     "Sessions",
-     "4 partners × 4 = 16"
-    ],
-    [
-     "People reached",
-     "16 × 40 = 640"
-    ],
-    [
-     "Sign-ups (25%)",
-     "160"
-    ],
-    [
-     "Mentor places",
-     "30 × 3 = 90 ← the real limit"
-    ]
+   "values": [
+    "4 partners",
+    "16 sessions",
+    "640 reached",
+    "160 sign-ups",
+    "90 places"
    ],
    "beats": [
     {
-     "say": "Bottom-up starts from things you can count.",
-     "show": 0
+     "say": "Bottom-up starts from things you can count. Four partner colleges and bootcamps.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     },
+     "note": "Source: conversations with partners"
     },
     {
-     "say": "Four partners, four info sessions each: sixteen sessions.",
-     "show": 1
+     "say": "Four info sessions per partner per year: sixteen sessions.",
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     },
+     "ok": [
+      0
+     ],
+     "note": "4 × 4 = 16"
     },
     {
-     "say": "Forty people a session reaches six hundred and forty.",
-     "show": 2
+     "say": "Forty people per session, from past events: six hundred and forty reached.",
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     },
+     "ok": [
+      0,
+      1
+     ],
+     "note": "16 × 40 = 640"
     },
     {
      "say": "Twenty five percent sign up: a hundred and sixty.",
-     "show": 3
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     },
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "note": "640 × 25% = 160"
     },
     {
      "say": "But thirty mentors with three mentees each gives only ninety places.",
-     "show": 4
+     "hl": 4,
+     "ptr": {
+      "step": 4
+     },
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "note": "30 × 3 = 90"
     },
     {
-     "say": "Both estimates are in the same rough range, and the real limit is mentor recruitment, not demand. Write every assumption down, and label the guesses.",
-     "show": 4
+     "say": "Three hundred top-down, a hundred and sixty bottom-up: the same rough range, which is reassuring.",
+     "hl": 3,
+     "note": "Top-down ≈ 300 · bottom-up 160"
+    },
+    {
+     "say": "And the real limit shows up: mentor recruitment, not mentee demand, decides how big year one can be.",
+     "hl": 4,
+     "ptr": {
+      "limit": 4
+     },
+     "note": "90 places → recruit mentors first"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "table",
-   "kicker": "Concept",
-   "title": "The competitor grid",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 5.2 · Desk research",
+   "title": "The competitor grid: find the gap",
+   "columns": [
+    "Option",
+    "Pricing",
+    "Audience",
+    "Weakness"
+   ],
+   "rows": [
     [
-     "Local meetup group",
-     "✗ Little support for beginners"
+     "Local meetup",
+     "Free, sponsor-funded",
+     "Working developers",
+     "Little beginner help"
     ],
     [
-     "Online mentoring platform",
-     "✗ Cost, no in-person community"
+     "Online platform",
+     "Monthly subscription",
+     "Career changers",
+     "Cost; not in person"
     ],
     [
-     "University career centre",
-     "✗ Not open to non-students"
+     "University centre",
+     "Free to students",
+     "Current students",
+     "Students only"
+    ],
+    [
+     "YouTube / a friend",
+     "Free",
+     "Anyone",
+     "No structure"
     ]
    ],
    "beats": [
     {
-     "say": "A competitor grid puts options in rows, and the same questions in columns: features, pricing, audience, strengths, weaknesses.",
-     "show": 0
+     "say": "A competitor grid puts options in rows, and the same questions in columns. These organisations are made up."
     },
     {
-     "say": "The example uses a local meetup group, which offers little structure for beginners.",
-     "show": 1
+     "say": "Include indirect alternatives too, like YouTube, or a friend who works in tech.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "An online mentoring platform, which costs money and has no in-person community.",
-     "show": 2
+     "say": "Now look for the gap. Which options are free? Three of them.",
+     "sql": "Free?",
+     "hl": [
+      0,
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And a university career centre, which isn't open to non-students.",
-     "show": 3
+     "say": "Which of those are open to non-students? The university centre drops out.",
+     "sql": "Free? → open to non-students?",
+     "hl": [
+      0,
+      3
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Include indirect alternatives too, like doing nothing. The gap here: nobody offers free, structured, in-person mentoring open to non-students.",
-     "show": 3
+     "say": "Do either give beginners structured, in-person mentoring? The meetup offers little beginner support, and YouTube has no structure.",
+     "sql": "Free? → open to non-students? → structured mentoring?",
+     "hl": [
+      0,
+      3
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "So nobody offers free, structured, in-person mentoring open to non-students. That's the gap.",
+     "sql": "Gap: free · structured · in person · open to non-students"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "sticky",
+   "kind": "chart",
    "kicker": "Topic 5.3 · Synthesis",
-   "title": "From notes to a readout",
-   "steps": [
-    "One observation per card",
-    "Group into themes",
-    "Insights + evidence",
-    "Readout + recommendations"
+   "title": "Affinity mapping: let themes emerge",
+   "xlabel": "",
+   "ylabel": "",
+   "points": [
+    [
+     15,
+     75
+    ],
+    [
+     25,
+     85
+    ],
+    [
+     20,
+     62
+    ],
+    [
+     30,
+     72
+    ],
+    [
+     70,
+     82
+    ],
+    [
+     80,
+     72
+    ],
+    [
+     74,
+     64
+    ],
+    [
+     45,
+     25
+    ],
+    [
+     58,
+     20
+    ]
    ],
    "beats": [
     {
-     "say": "Raw notes aren't findings.",
-     "show": 0
+     "say": "Raw notes aren't findings. Write each observation from your sources on its own card: nine cards from six sources.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Write one observation per card.",
-     "show": 1
+     "say": "Group them without deciding the themes in advance. Four cards say daytime sessions don't fit working adults.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Group them into themes, without deciding the themes in advance. That's affinity mapping.",
-     "show": 2
+     "say": "Three cards say cost keeps people away.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      0,
+      0
+     ]
     },
     {
-     "say": "Write insights: a finding, plus what it means, backed by evidence. Say four of six participants, not users.",
-     "show": 3
+     "say": "Two cards say people want to meet in person.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3
+     ]
     },
     {
-     "say": "Then a short readout: the question, the method, your insights, and recommendations, in that order.",
-     "show": 4
+     "say": "Then name each group. Three themes, and their sizes already hint at which matters most.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 5.3 · Synthesis",
+   "title": "From themes to a readout",
+   "columns": [
+    "Theme",
+    "Evidence",
+    "Recommendation"
+   ],
+   "rows": [
+    [
+     "Daytime doesn't fit",
+     "4 of 6 sources",
+     "Run evening sessions"
+    ],
+    [
+     "Cost keeps people out",
+     "3 of 6 sources",
+     "Keep it free"
+    ],
+    [
+     "Want in person",
+     "2 of 6 sources",
+     "Check: interviews"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Each theme becomes an insight: a finding, plus what it means.",
+     "col": 0
+    },
+    {
+     "say": "Working adults can't attend daytime sessions, so schedule evenings first.",
+     "sql": "Insight: working adults can't attend daytime sessions,\nso schedule evenings first.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Back every insight with evidence, and say how many it rests on. Four of six sources is more honest than everyone.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Turn each insight into one recommendation the team can act on.",
+     "col": 2
+    },
+    {
+     "say": "The in-person theme rests on only two sources, so label it as something to check with primary research.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Then share a short readout: the question, the method, your insights, and recommendations, in that order. Link the full notes.",
+     "sql": "Readout: question → method → insights → recommendations"
     }
    ]
   },

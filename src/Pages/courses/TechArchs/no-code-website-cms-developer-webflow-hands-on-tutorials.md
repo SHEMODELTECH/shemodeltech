@@ -467,7 +467,7 @@ A class is a named bundle of styles you apply to elements, and every element wit
 Style a paragraph (font, size, colour, line height) and give it the class `body-text`. Defining text once and reusing it keeps your typography consistent across the site.
 
 **Step 3: Understand combo classes.**
-A combo class adds a variation on top of a base class, like `button` plus `button-large`. It lets you build variations without duplicating styles.
+A combo class adds a variation on top of a base class, like `button` plus `button-primary` (a colour) or `button-large` (a size). It lets you build variations without duplicating styles.
 
 **Step 4: Build a button system.**
 Create a `button` class, then combo classes `button-primary` and `button-secondary` for colour variants. Now every button matches and updates together.
@@ -1608,7 +1608,7 @@ A CMS (content management system) stores content as structured records and gener
 A collection is a set of similar content items, like Blog Posts or Projects, each with defined fields. Choosing your collections is like choosing your data types: it defines the content your site can hold.
 
 **Step 3: Create a Projects collection.**
-In the CMS, create a collection `Projects` with fields for name (text), summary (text), image, and slug. These fields will feed both the list of projects and each project's own page. Creating a collection also creates its template page automatically.
+In the CMS, create a collection `Projects`. Webflow gives every collection a Name and a Slug field automatically, so use those for the project's name and URL part, and add just two fields of your own: summary (plain text) and image (image). These fields will feed both the list of projects and each project's own page. Creating a collection also creates its template page automatically.
 
 **Step 4: Add a few collection items.**
 Add three sample projects with real content, so you have something to build and test the templates against. The free plan caps the number of CMS items (check the current plan page), but three is well within it.

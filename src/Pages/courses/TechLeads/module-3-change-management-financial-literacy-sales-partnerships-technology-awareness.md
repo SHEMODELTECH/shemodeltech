@@ -278,297 +278,898 @@ You have one honest AI-claim assessment covering wrong answers, data, pre-launch
    ]
   },
   {
-   "kind": "flow",
-   "art": "people",
+   "kind": "diagram",
    "kicker": "Topic 3.1 · Change management",
-   "title": "A good solution isn't enough",
-   "steps": [
-    "The change",
-    "Expect resistance",
-    "Adoption strategy",
-    "Change champions",
-    "Real adoption"
-   ],
-   "beats": [
-    {
-     "say": "A change succeeds or fails on how people adopt it, not just on whether it was built correctly.",
-     "show": 0
-    },
-    {
-     "say": "Start with the change: a new tool, process, or structure.",
-     "show": 1
-    },
-    {
-     "say": "Expect resistance. It's normal, usually driven by uncertainty, loss of control, or past changes handled badly.",
-     "show": 2
-    },
-    {
-     "say": "Plan an adoption strategy: communication, training and incentives.",
-     "show": 3
-    },
-    {
-     "say": "Recruit change champions, credible early adopters who answer their peers' questions.",
-     "show": 4
-    },
-    {
-     "say": "That's how you reach real adoption.",
-     "show": 5
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "roadmap",
-   "kicker": "Lab",
    "title": "Plan a rollout that sticks",
-   "items": [
-    [
-     "Resistance",
-     "3–4 specific reasons"
-    ],
-    [
-     "Adoption strategy",
-     "Communication · training · incentive"
-    ],
-    [
-     "Champion",
-     "One credible early adopter"
-    ],
-    [
-     "Check-in",
-     "Is adoption holding?"
-    ]
+   "nodes": [
+    {
+     "id": "chg",
+     "label": "New rule",
+     "sub": "tested + 2nd reviewer",
+     "x": 10,
+     "y": 50,
+     "art": "checklist"
+    },
+    {
+     "id": "res",
+     "label": "Resistance",
+     "sub": "normal, so plan for it",
+     "x": 32,
+     "y": 16,
+     "art": "warning"
+    },
+    {
+     "id": "plan",
+     "label": "Adoption plan",
+     "sub": "talk · train · incentive",
+     "x": 66,
+     "y": 16,
+     "art": "megaphone"
+    },
+    {
+     "id": "champ",
+     "label": "Champion",
+     "sub": "Amara goes first",
+     "x": 90,
+     "y": 50,
+     "art": "star"
+    },
+    {
+     "id": "adopt",
+     "label": "Real adoption",
+     "sub": "people actually use it",
+     "x": 66,
+     "y": 84,
+     "art": "people"
+    },
+    {
+     "id": "check",
+     "label": "Check-in",
+     "sub": "two weeks later",
+     "x": 32,
+     "y": 84,
+     "art": "calendar"
+    }
+   ],
+   "edges": [
+    {
+     "from": "chg",
+     "to": "res"
+    },
+    {
+     "from": "res",
+     "to": "plan"
+    },
+    {
+     "from": "plan",
+     "to": "champ"
+    },
+    {
+     "from": "champ",
+     "to": "adopt"
+    },
+    {
+     "from": "adopt",
+     "to": "check"
+    },
+    {
+     "from": "check",
+     "to": "plan"
+    }
    ],
    "beats": [
     {
-     "say": "Try it on the Module 1 case: every change Jordan ships must be tested and reviewed by a second person first.",
+     "say": "A change succeeds or fails on adoption. Take the Module 1 case.",
      "show": 0
     },
     {
-     "say": "List three or four specific sources of resistance.",
-     "show": 1
+     "say": "After last week's bug reached users, a new rule: every change Jordan ships is tested, and reviewed by a second person.",
+     "show": 1,
+     "on": "chg"
     },
     {
-     "say": "Write one sentence each for communication, training and incentive.",
-     "show": 2
+     "say": "Expect resistance. It's a normal reaction, not a sign of a bad team.",
+     "show": 2,
+     "on": "res",
+     "send": {
+      "from": "chg",
+      "to": "res",
+      "label": "new rule"
+     }
     },
     {
-     "say": "Name one change champion, and why they'd be credible.",
-     "show": 3
+     "say": "Get specific. It'll slow me down: control. Who reviews, how fast: uncertainty. The last process faded: past experience.",
+     "on": "res"
     },
     {
-     "say": "And schedule a check-in, because a change announced once tends to quietly fade back to the old way.",
-     "show": 4
+     "say": "Answer them with an adoption plan. Explain why, train on the review checklist, and offer an incentive: fewer emergency fixes.",
+     "show": 3,
+     "on": "plan",
+     "send": {
+      "from": "res",
+      "to": "plan",
+      "label": "3 concerns"
+     }
+    },
+    {
+     "say": "Recruit a champion. Amara is reliable and credible, so she goes first and answers peer questions.",
+     "show": 4,
+     "on": "champ",
+     "send": {
+      "from": "plan",
+      "to": "champ",
+      "label": "goes first"
+     }
+    },
+    {
+     "say": "A peer's example often persuades more than an announcement from the lead.",
+     "show": 5,
+     "on": "adopt",
+     "send": {
+      "from": "champ",
+      "to": "adopt",
+      "label": "peer example"
+     }
+    },
+    {
+     "say": "Two weeks later, check in. Is every change still being reviewed?",
+     "show": 6,
+     "on": "check",
+     "send": {
+      "from": "adopt",
+      "to": "check",
+      "label": "still reviewing?"
+     }
+    },
+    {
+     "say": "If it's quietly slipping back, adjust the plan. A change announced once tends to fade.",
+     "on": "plan",
+     "send": {
+      "from": "check",
+      "to": "plan",
+      "label": "slipping: adjust"
+     }
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "calc",
+   "kind": "table",
    "kicker": "Topic 3.2 · Financial literacy",
-   "title": "Return on investment",
-   "big": "ROI = 50%",
-   "sub": "($15,000 − $10,000) ÷ $10,000",
-   "beats": [
-    {
-     "say": "R O I says whether a cost is worth it: gain minus cost, divided by cost.",
-     "show": 0
-    },
-    {
-     "say": "A tool costs ten thousand dollars a year, and saves two hundred hours, valued at seventy five dollars an hour. That's a gain of fifteen thousand.",
-     "show": 1
-    },
-    {
-     "say": "Fifteen thousand minus ten thousand, divided by ten thousand, is a return of fifty percent.",
-     "show": 2
-    },
-    {
-     "say": "An honest, labelled rough estimate beats a precise-looking number built on shaky assumptions.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "coin",
-   "kicker": "Concept",
-   "title": "The real cost",
-   "items": [
+   "title": "ROI, then the real cost",
+   "columns": [
+    "Line",
+    "Working",
+    "Amount"
+   ],
+   "rows": [
     [
-     "Upfront",
-     "The sticker price"
+     "Tool subscription",
+     "per year",
+     "$10,000"
     ],
     [
-     "Ongoing",
-     "Maintenance, support, subscription"
+     "Gain: hours saved",
+     "200 h × $75",
+     "$15,000"
+    ],
+    [
+     "ROI, sticker price",
+     "(15k − 10k) ÷ 10k",
+     "50%"
+    ],
+    [
+     "Setup time",
+     "40 h × $75",
+     "$3,000"
+    ],
+    [
+     "True cost, year one",
+     "10k + 3k",
+     "$13,000"
+    ],
+    [
+     "ROI, true cost",
+     "(15k − 13k) ÷ 13k",
+     "≈ 15%"
     ],
     [
      "Opportunity cost",
-     "What you give up"
-    ],
-    [
-     "CapEx vs. OpEx",
-     "Upfront vs. recurring"
+     "40 h off the roadmap",
+     "label it"
     ]
    ],
    "beats": [
     {
-     "say": "A cost analysis goes beyond the sticker price.",
-     "show": 0
+     "say": "R O I says whether a cost is worth it: gain minus cost, divided by cost.",
+     "sql": "ROI = (gain − cost) ÷ cost"
     },
     {
-     "say": "Count the upfront cost.",
-     "show": 1
+     "say": "The course example. A tool costs ten thousand dollars a year.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "The ongoing costs, like maintenance and support.",
-     "show": 2
+     "say": "It saves two hundred hours a year, valued at seventy five dollars an hour. That's a gain of fifteen thousand.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And the opportunity cost: what you can't do because you chose this.",
-     "show": 3
+     "say": "Fifteen thousand minus ten thousand, divided by ten thousand. That's fifty percent.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Then classify it. Cap ex is a large upfront cost, like hardware. Op ex is a recurring cost, like a subscription.",
-     "show": 4
+     "say": "But that's only the sticker price. Say setup takes forty hours of the team's time: three thousand dollars, up front.",
+     "hl": 3,
+     "dim": true,
+     "sql": "Cost analysis: upfront + ongoing + opportunity cost"
     },
     {
-     "say": "Finally, set a monthly budget check, so an overage is caught early, not at year end.",
-     "show": 4
+     "say": "So the true first year cost is thirteen thousand.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Fifteen thousand minus thirteen, divided by thirteen. About fifteen percent. Still positive, but a very different story.",
+     "hl": 5,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "And opportunity cost: those forty hours weren't spent on the roadmap. Name it, even without a number.",
+     "hl": 6,
+     "dim": true
+    },
+    {
+     "say": "Label every assumption. An honest rough estimate beats a precise looking one on shaky ground.",
+     "hl": [
+      2,
+      5
+     ],
+     "sql": "Assumptions: 200 h saved · $75/h · 40 h setup"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "network",
+   "kind": "chart",
+   "kicker": "Topic 3.2 · Financial literacy",
+   "title": "CapEx or OpEx? Total cost over time",
+   "xlabel": "months 0 → 60",
+   "ylabel": "total spent, $0 → $30k",
+   "points": [
+    [
+     0,
+     40
+    ],
+    [
+     20,
+     50
+    ],
+    [
+     40,
+     60
+    ],
+    [
+     60,
+     70
+    ],
+    [
+     80,
+     80
+    ],
+    [
+     100,
+     90
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     20,
+     20
+    ],
+    [
+     40,
+     40
+    ],
+    [
+     60,
+     60
+    ],
+    [
+     80,
+     80
+    ],
+    [
+     100,
+     100
+    ]
+   ],
+   "beats": [
+    {
+     "say": "The same need, two ways to pay. Here's the total spent on each, over five years.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "say": "Buy your own server: twelve thousand dollars up front. That's capital expenditure, cap ex.",
+     "groups": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "marks": [
+      [
+       0,
+       40
+      ]
+     ]
+    },
+    {
+     "say": "Then two hundred and fifty dollars a month to maintain it, so the line keeps climbing slowly.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "line": [
+      0.5,
+      40
+     ]
+    },
+    {
+     "say": "Or rent it from a cloud provider: five hundred dollars a month, nothing up front. That's operating expenditure, op ex.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      1,
+      0
+     ]
+    },
+    {
+     "say": "The lines cross at month forty eight, where each has cost twenty four thousand dollars.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       80,
+       80
+      ]
+     ]
+    },
+    {
+     "say": "Before that, cloud is cheaper. After it, owning wins, if usage stays flat.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       80,
+       80
+      ]
+     ]
+    },
+    {
+     "say": "Cloud trades some control for speed and scaling, and its bill grows with usage.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       80,
+       80
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 3.2 · Financial literacy",
+   "title": "Catch the overage in March, not December",
+   "columns": [
+    "Month",
+    "Plan",
+    "Actual",
+    "Running ±"
+   ],
+   "rows": [
+    [
+     "Jan",
+     "$500",
+     "$475",
+     "−$25"
+    ],
+    [
+     "Feb",
+     "$500",
+     "$500",
+     "−$25"
+    ],
+    [
+     "Mar",
+     "$500",
+     "$650",
+     "+$125"
+    ],
+    [
+     "Apr",
+     "$500",
+     "$725",
+     "+$350"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Now track that cloud bill. The budget is six thousand dollars a year: five hundred a month.",
+     "col": 1,
+     "sql": "Budget: $6,000 a year = $500 a month"
+    },
+    {
+     "say": "The monthly check: compare actual with plan, and flag any month more than ten percent over.",
+     "sql": "Monthly check: flag if Actual > Plan + 10% ($550)"
+    },
+    {
+     "say": "January: four hundred seventy five. Twenty five under.",
+     "hl": 0,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "February: exactly on plan. Still twenty five under in total.",
+     "hl": 1,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "March: six hundred fifty. That's a hundred fifty over, thirty percent. Flag it.",
+     "hl": 2,
+     "dim": true,
+     "col": 2,
+     "sql": "Mar: $650 > $550 → flag (+30%)"
+    },
+    {
+     "say": "Usage grew, so the bill grew. You've caught it with nine months left.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "April confirms the trend: two hundred twenty five over, three hundred fifty in total.",
+     "hl": 3,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "If April's pace held for the other eight months, you'd end the year about two thousand one hundred fifty over.",
+     "hl": 3,
+     "dim": true,
+     "sql": "$350 + 8 × $225 = $2,150 over by December"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Topic 3.3 · Sales and partnerships",
    "title": "How the business grows",
-   "items": [
-    [
-     "Business development",
-     "New markets, partners, revenue"
-    ],
-    [
-     "Client relations",
-     "Satisfied, informed, retained"
-    ],
-    [
-     "Technical pre-sales",
-     "Honest answers, no over-promising"
-    ],
-    [
-     "Dependency risk",
-     "Name it early, plan a mitigation"
-    ]
+   "nodes": [
+    {
+     "id": "bd",
+     "label": "Business dev",
+     "sub": "a new opportunity",
+     "x": 10,
+     "y": 50,
+     "art": "compass"
+    },
+    {
+     "id": "pre",
+     "label": "Pre-sales",
+     "sub": "an honest answer",
+     "x": 34,
+     "y": 18,
+     "art": "chat"
+    },
+    {
+     "id": "deal",
+     "label": "Deal",
+     "sub": "a promise we can keep",
+     "x": 64,
+     "y": 18,
+     "art": "doc"
+    },
+    {
+     "id": "rel",
+     "label": "Client relations",
+     "sub": "satisfied, retained",
+     "x": 90,
+     "y": 50,
+     "art": "people"
+    },
+    {
+     "id": "vendor",
+     "label": "Payment vendor",
+     "sub": "dependency risk",
+     "x": 64,
+     "y": 84,
+     "art": "plug"
+    },
+    {
+     "id": "mit",
+     "label": "Mitigation",
+     "sub": "alert + fallback",
+     "x": 34,
+     "y": 84,
+     "art": "shield"
+    }
+   ],
+   "edges": [
+    {
+     "from": "bd",
+     "to": "pre"
+    },
+    {
+     "from": "pre",
+     "to": "deal"
+    },
+    {
+     "from": "deal",
+     "to": "rel"
+    },
+    {
+     "from": "rel",
+     "to": "vendor"
+    },
+    {
+     "from": "vendor",
+     "to": "mit"
+    }
    ],
    "beats": [
     {
-     "say": "You don't need to become a salesperson, but understanding sales makes you a better partner to the people who are.",
+     "say": "You don't need to be a salesperson, just a good partner to the people who are.",
      "show": 0
     },
     {
-     "say": "Business development finds new opportunities. Sales closes specific deals.",
-     "show": 1
+     "say": "Business development finds new opportunities. Say two other community groups want to run their events on your sign-up page.",
+     "show": 1,
+     "on": "bd"
     },
     {
-     "say": "Client relations keeps customers satisfied and retained after the deal.",
-     "show": 2
+     "say": "Their organiser asks: can it handle five hundred sign-ups at once? That's technical pre-sales.",
+     "show": 2,
+     "on": "pre",
+     "send": {
+      "from": "bd",
+      "to": "pre",
+      "label": "500 at once?"
+     }
     },
     {
-     "say": "In technical pre-sales, an unrealistic promise becomes engineering's problem the moment it's signed. Give the honest answer.",
-     "show": 3
+     "say": "The honest answer: we've tested two hundred. We'll load test five hundred before we promise it.",
+     "on": "pre"
     },
     {
-     "say": "And name partnership dependency risk, like relying on one vendor or A P I, before it becomes a crisis, with a mitigation.",
-     "show": 4
+     "say": "Sales closes the deal on a promise engineering can keep. An over-promise becomes engineering's problem once it's signed.",
+     "show": 3,
+     "on": "deal",
+     "send": {
+      "from": "pre",
+      "to": "deal",
+      "label": "honest promise"
+     }
+    },
+    {
+     "say": "Client relations keeps them after the deal. Book a monthly check-in, before there's a complaint.",
+     "show": 4,
+     "on": "rel",
+     "send": {
+      "from": "deal",
+      "to": "rel",
+      "label": "signed"
+     }
+    },
+    {
+     "say": "Serving them surfaces a dependency: every payment runs through one external vendor.",
+     "show": 5,
+     "on": "vendor",
+     "send": {
+      "from": "rel",
+      "to": "vendor",
+      "label": "surfaces"
+     }
+    },
+    {
+     "say": "If that vendor changes its terms, or goes down, checkout stops for everyone.",
+     "on": "vendor"
+    },
+    {
+     "say": "So name the risk now, with a mitigation: an alert on failed payments, and bank transfer as a fallback.",
+     "show": 6,
+     "on": "mit",
+     "send": {
+      "from": "vendor",
+      "to": "mit",
+      "label": "plan B"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "neural",
+   "kind": "table",
    "kicker": "Topic 3.4 · Technology awareness",
-   "title": "Four rules for A I",
-   "items": [
+   "title": "Assess an AI proposal",
+   "columns": [
+    "Rule",
+    "Risk here",
+    "Plan"
+   ],
+   "rows": [
     [
      "Confidently wrong",
-     "Check facts, test code, review"
+     "Invents a start time",
+     "Link the event page"
     ],
     [
-     "Approved tools only",
-     "For confidential or personal data"
+     "Approved data only",
+     "Sign-up list pasted in",
+     "Public FAQ text only"
     ],
     [
      "Test before launch",
-     "20–50 real examples"
+     "Demo used 3 questions",
+     "40 real questions"
     ],
     [
      "Cost per use",
-     "× expected uses per month"
+     "$0.002 per answer",
+     "≈ $6 a month"
     ]
    ],
    "beats": [
     {
-     "say": "A tech lead needs enough A I literacy to judge a proposal honestly. Four practical rules.",
-     "show": 0
+     "say": "The proposal: we'll add an A I chatbot to answer questions about our community workshops. Run the four checks.",
+     "sql": "Proposal: an AI chatbot for workshop questions"
     },
     {
-     "say": "A I can be confidently wrong. That's called a hallucination, so treat output as a draft and have a person review it.",
-     "show": 1
+     "say": "One. A I can be confidently wrong, like inventing a start time: a hallucination. So answers link to the event page, and a person reviews them.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Don't paste confidential or personal data into a tool unless it's approved for that data.",
-     "show": 2
+     "say": "Two. Don't paste the sign-up list in. Give it public F A Q text only, unless the tool is approved for personal data.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Test a feature on twenty to fifty real examples before launch. A good demo on three hand-picked ones proves very little.",
-     "show": 3
+     "say": "Three. A demo on three hand picked questions proves little. Test forty real ones, with names removed.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "And A I costs money every time it's used. Estimate cost per use times expected uses per month.",
-     "show": 4
+     "say": "Thirty one right, seven wrong, two harmful. Thirty one out of forty is seventy seven and a half percent.",
+     "hl": 2,
+     "dim": true,
+     "col": 2,
+     "sql": "40 tested: 31 right · 7 wrong · 2 harmful\n31 ÷ 40 = 77.5%"
+    },
+    {
+     "say": "Against a ninety percent bar, it's not ready. Fix the failures and test again.",
+     "hl": 2,
+     "dim": true,
+     "sql": "Target 90% (36 of 40) → 77.5% is not ready"
+    },
+    {
+     "say": "Four. It costs money every time. A fifth of a cent per answer, times three thousand questions a month, is about six dollars.",
+     "hl": 3,
+     "dim": true,
+     "col": 2,
+     "sql": "$0.002 × 3,000 per month = $6 a month"
+    },
+    {
+     "say": "Cheap here. But re-estimate before thousands of users arrive.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "cloud",
-   "kicker": "Concept",
-   "title": "Cloud, data and security",
-   "items": [
-    [
-     "Cloud",
-     "Fast and scalable vs. control and ongoing cost"
-    ],
-    [
-     "Data",
-     "Quality and governance"
-    ],
-    [
-     "Cybersecurity",
-     "Phishing, weak access, unpatched software, third parties"
-    ]
+   "kind": "diagram",
+   "kicker": "Topic 3.4 · Technology awareness",
+   "title": "Where the four areas meet",
+   "nodes": [
+    {
+     "id": "bot",
+     "label": "Workshop chatbot",
+     "sub": "the AI feature",
+     "x": 50,
+     "y": 50,
+     "art": "robot"
+    },
+    {
+     "id": "cloud",
+     "label": "Cloud",
+     "sub": "rented, billed per use",
+     "x": 14,
+     "y": 20,
+     "art": "cloud"
+    },
+    {
+     "id": "data",
+     "label": "Data",
+     "sub": "quality · who can see it",
+     "x": 86,
+     "y": 20,
+     "art": "database"
+    },
+    {
+     "id": "sec",
+     "label": "Security",
+     "sub": "vendor = third party",
+     "x": 14,
+     "y": 80,
+     "art": "lock"
+    },
+    {
+     "id": "risk",
+     "label": "Cross-area risk",
+     "sub": "personal data leaks",
+     "x": 86,
+     "y": 80,
+     "art": "warning"
+    }
+   ],
+   "edges": [
+    {
+     "from": "cloud",
+     "to": "bot"
+    },
+    {
+     "from": "data",
+     "to": "bot"
+    },
+    {
+     "from": "sec",
+     "to": "bot"
+    },
+    {
+     "from": "bot",
+     "to": "risk"
+    }
    ],
    "beats": [
     {
-     "say": "Three more areas.",
-     "show": 0
+     "say": "These areas overlap constantly. Take the same chatbot.",
+     "show": 1,
+     "on": "bot"
     },
     {
-     "say": "Cloud means renting servers and services. You gain fast setup and easy scaling, and give up some control, for a bill that grows with usage.",
-     "show": 1
+     "say": "Cloud: it runs on a rented service. Fast to set up and scale, but less control, and a bill that grows with use.",
+     "show": 2,
+     "on": "cloud",
+     "send": {
+      "from": "cloud",
+      "to": "bot",
+      "label": "hosted model"
+     }
     },
     {
-     "say": "For data, ask about quality, is it accurate, and governance, who owns it and who can see it.",
-     "show": 2
+     "say": "Data: is the F A Q accurate and up to date? That's quality. Who owns it, and who may see it? That's governance.",
+     "show": 3,
+     "on": "data",
+     "send": {
+      "from": "data",
+      "to": "bot",
+      "label": "FAQ, dates"
+     }
     },
     {
-     "say": "For cybersecurity, know the common risks well enough to ask your security team good questions.",
-     "show": 3
+     "say": "Security: phishing, weak access, unpatched software, and third-party risk. The chatbot vendor is a third party.",
+     "show": 4,
+     "on": "sec",
+     "send": {
+      "from": "sec",
+      "to": "bot",
+      "label": "vendor access"
+     }
     },
     {
-     "say": "These areas overlap. An A I feature depends on cloud, data and security at once. The goal is calibrated confidence, not becoming a specialist.",
-     "show": 3
+     "say": "Now the risk that's easy to miss. Attendees type their emails into the chat, so personal data reaches a vendor nobody approved for it.",
+     "show": 5,
+     "on": "risk",
+     "send": {
+      "from": "bot",
+      "to": "risk",
+      "label": "personal data"
+     }
+    },
+    {
+     "say": "Look at one area at a time, and you'd miss it. Aim for calibrated confidence, not specialism.",
+     "on": [
+      "cloud",
+      "data",
+      "sec",
+      "risk"
+     ]
     }
    ]
   },

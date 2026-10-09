@@ -10,7 +10,7 @@
 //
 // SMT cohort Company cohort
 // Brief SMT generates Company writes
-// Timeline Fixed 8 weeks Company decides
+// Timeline Fixed 6 weeks Company decides
 // Lead SMT interviews+assigns Company hires the lead too
 // Applicants Lead reviews Company reviews
 // Final review SMT reviews + approves Company approves

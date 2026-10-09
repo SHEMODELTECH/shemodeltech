@@ -1982,6 +1982,16 @@ return $input.all().map(item => {
 ### Checkpoint
 You have a working n8n workflow triggered by a real webhook request, branching with an IF node, and including one Code node with custom JavaScript logic.
 
+### Which tool should you pick?
+You've now seen four tools with the same shape: a trigger, actions, and data mapping. Use this as a starting point when choosing one for a task:
+
+| Tool | Pick it when |
+|---|---|
+| Zapier | simple, linear tasks: fast, straight-line automations between popular apps |
+| Make | branches and decisions: the automation has real decision points |
+| Power Automate | Microsoft 365 work: the work lives in Microsoft 365 or on a Windows desktop |
+| n8n | self-hosting or code: cost at scale, keeping data on your own servers, or custom code matters |
+
 ### Quiz
 1. What is a "node" in n8n?
 2. What does "self-hosted" mean, and what does it give you compared to a purely cloud based platform?

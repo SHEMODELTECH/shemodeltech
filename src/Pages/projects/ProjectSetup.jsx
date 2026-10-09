@@ -505,7 +505,7 @@ const ProjectSetup = () => {
         <div>
           <label className={labelClass}>Project submission link <span className="text-red-500">*</span></label>
           <input type="url" value={form.submissionUrl} onChange={e => setForm(p => ({ ...p, submissionUrl: e.target.value }))} className={inputClass} placeholder="https://github.com/... (a folder with all the work, team, and final solutions)" />
-          <p className="text-gray-400 text-xs mt-1">A GitHub repo is recommended (free). This is the folder your team's work lives in and what gets reviewed.</p>
+          <p className="text-gray-400 text-xs mt-1">A GitHub repo (free) is required to submit the project for review. This is the folder your team's work lives in and what gets reviewed.</p>
         </div>
 
         <div>

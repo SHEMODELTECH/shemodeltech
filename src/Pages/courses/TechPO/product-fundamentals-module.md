@@ -245,276 +245,589 @@ You have written a vision statement, a supporting strategy, a small consistent r
    ]
   },
   {
-   "kind": "flow",
-   "art": "growth",
+   "kind": "chart",
    "kicker": "Topic 1 · Product lifecycle",
-   "title": "Four stages",
-   "steps": [
-    "Introduction",
-    "Growth",
-    "Maturity",
-    "Decline"
+   "title": "Four stages on one curve",
+   "xlabel": "time",
+   "ylabel": "adoption",
+   "points": [
+    [
+     5,
+     8
+    ],
+    [
+     15,
+     12
+    ],
+    [
+     25,
+     22
+    ],
+    [
+     35,
+     40
+    ],
+    [
+     45,
+     60
+    ],
+    [
+     55,
+     72
+    ],
+    [
+     65,
+     76
+    ],
+    [
+     75,
+     76
+    ],
+    [
+     85,
+     64
+    ],
+    [
+     95,
+     46
+    ]
    ],
    "beats": [
     {
-     "say": "Most products move through four stages, and the stage shapes what success even means.",
-     "show": 0
+     "say": "Here's a product's adoption over time, through four stages."
     },
     {
-     "say": "Introduction: few users, focused on proving the product solves a real problem.",
-     "show": 1
+     "say": "Introduction: just launched, few users. Prove it solves a real problem.",
+     "groups": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Growth: adoption speeds up, so you scale what works and fix issues that only appear at volume.",
-     "show": 2
+     "say": "Growth: adoption accelerates. Scale what works.",
+     "groups": [
+      1,
+      1,
+      2,
+      2,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Maturity: growth levels off, and the focus is retention, efficiency and defending your position.",
-     "show": 3
+     "say": "Maturity: growth levels off. Focus on retention and efficiency.",
+     "groups": [
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      0,
+      0
+     ]
     },
     {
-     "say": "Decline: usage drops, and the team decides whether to revive, maintain minimally, or sunset.",
-     "show": 4
+     "say": "Decline: usage drops. Revive, maintain minimally, or sunset.",
+     "groups": [
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      0,
+      0
+     ],
+     "marks": [
+      [
+       85,
+       64
+      ],
+      [
+       95,
+       46
+      ]
+     ]
+    },
+    {
+     "say": "Or, with a new market or feature, a second growth curve.",
+     "marks": [
+      [
+       85,
+       84
+      ],
+      [
+       95,
+       92
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "dashboard",
+   "kind": "table",
    "kicker": "Topic 1 · Product lifecycle",
-   "title": "The right metric for the stage",
-   "items": [
+   "title": "Place it, then pick the metric",
+   "columns": [
+    "What you observe",
+    "Stage",
+    "Watch"
+   ],
+   "rows": [
     [
+     "Launched last month",
      "Introduction",
      "Problem-solution fit"
     ],
     [
+     "Sign-ups double",
      "Growth",
-     "Adoption · retention"
+     "Weekly active users"
     ],
     [
+     "Users steady, flat",
      "Maturity",
-     "Efficiency · churn"
+     "Churn · efficiency"
+    ],
+    [
+     "Usage falling",
+     "Decline",
+     "Revive or sunset?"
     ]
    ],
    "beats": [
     {
-     "say": "The metric that matters changes by stage.",
-     "show": 0
+     "say": "To place a product, read the evidence.",
+     "col": 0
     },
     {
-     "say": "In introduction, you watch for problem solution fit.",
-     "show": 1
+     "say": "Launched last month: Introduction. Watch problem solution fit.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "In growth, adoption and retention, like weekly active users.",
-     "show": 2
+     "say": "Sign-ups doubling monthly: Growth. Watch weekly active users.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "In maturity, efficiency and churn.",
-     "show": 3
+     "say": "Users steady: Maturity. Watch churn.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Use the wrong stage's metric, and you'll draw the wrong conclusions. And a mature product can find a second growth curve through a new market or feature.",
-     "show": 3
+     "say": "Usage falling: Decline. Decide its future.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Judge a mature product by sign-up growth, and it looks like it's failing.",
+     "sql": "Wrong stage's metric → wrong conclusion",
+     "hl": [
+      1,
+      2
+     ],
+     "col": 2
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "pencil",
-   "kicker": "Topic 1 · Lab",
-   "title": "Place two real products",
-   "items": [
-    [
-     "Product you use",
-     "Stage + evidence"
-    ],
-    [
-     "One metric",
-     "For that stage"
-    ],
-    [
-     "A declining product",
-     "Signals noticed"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "In the lab, pick a real product you use, and place it in a stage using observable evidence, like how often it updates and whether new features still ship.",
-     "show": 1
-    },
-    {
-     "say": "Name one metric that stage's team would watch.",
-     "show": 2
-    },
-    {
-     "say": "Then find a product in decline or already sunset, noting the signals, like stopped updates or migration prompts.",
-     "show": 3
-    },
-    {
-     "say": "And compare what doing well means for each.",
-     "show": 3
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "bulb",
+   "kind": "array",
    "kicker": "Topic 2 · MVP",
-   "title": "A question, not a small product",
-   "quote": "An MVP answers a question. It isn't the full product, but smaller.",
+   "title": "Scope the MVP to one question",
+   "values": [
+    "Reminders",
+    "Plant ID",
+    "Care tips",
+    "Sharing",
+    "Shop",
+    "Accounts",
+    "Landing page"
+   ],
    "beats": [
     {
-     "say": "An M V P, a minimum viable product, is the smallest version that still lets you learn from real users.",
-     "show": 0
+     "say": "Idea: an app that reminds people to water houseplants. Here's everything we might build.",
+     "note": "Full plan: 7 pieces"
     },
     {
-     "say": "It's not low quality. It's deliberately scoped to test one hypothesis, as cheaply and quickly as possible.",
-     "show": 1
+     "say": "The common mistake: build all of it, just smaller.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "Full product, but smaller ✗"
     },
     {
-     "say": "A common mistake is building the full product, just smaller.",
-     "show": 1
+     "say": "An M V P tests one hypothesis: at least one in ten visitors to a landing page will sign up.",
+     "note": "Hypothesis: ≥ 1 in 10 visitors sign up"
+    },
+    {
+     "say": "That's about demand. Four features don't help answer it.",
+     "gone": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Not needed to test demand"
+    },
+    {
+     "say": "Even reminders and accounts aren't needed to show interest.",
+     "gone": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "note": "Not needed to test demand"
+    },
+    {
+     "say": "What's left: one page, one button, get notified when we launch. A fake door test.",
+     "gone": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "ok": [
+      6
+     ],
+     "note": "MVP: one page, one button"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "loop",
+   "kind": "diagram",
    "kicker": "Topic 2 · MVP",
    "title": "Build, measure, learn",
-   "steps": [
-    "Build",
-    "Measure",
-    "Learn"
+   "nodes": [
+    {
+     "id": "h",
+     "label": "Hypothesis",
+     "sub": "≥ 1 in 10 sign up",
+     "x": 15,
+     "y": 25,
+     "art": "flask"
+    },
+    {
+     "id": "b",
+     "label": "Build",
+     "sub": "fake door page",
+     "x": 85,
+     "y": 25,
+     "art": "layout"
+    },
+    {
+     "id": "m",
+     "label": "Measure",
+     "sub": "visits · sign-ups",
+     "x": 85,
+     "y": 78,
+     "art": "dashboard"
+    },
+    {
+     "id": "l",
+     "label": "Learn",
+     "sub": "decide what's next",
+     "x": 15,
+     "y": 78,
+     "art": "bulb"
+    }
+   ],
+   "edges": [
+    {
+     "from": "h",
+     "to": "b"
+    },
+    {
+     "from": "b",
+     "to": "m"
+    },
+    {
+     "from": "m",
+     "to": "l"
+    },
+    {
+     "from": "l",
+     "to": "h"
+    }
    ],
    "beats": [
     {
-     "say": "An M V P feeds a loop.",
-     "show": 0
+     "say": "An M V P feeds a loop. In the lab, it's a Trello board.",
+     "show": 4
     },
     {
-     "say": "Build the smallest version.",
-     "show": 1
+     "say": "Start from the hypothesis.",
+     "on": "h"
     },
     {
-     "say": "Measure how real users respond.",
-     "show": 2
+     "say": "Build the smallest test: the fake door page.",
+     "on": "b",
+     "send": {
+      "from": "h",
+      "to": "b",
+      "label": "one button"
+     }
     },
     {
-     "say": "Learn, and decide what to build next. Usually a new hypothesis and a new small test.",
-     "show": 3
+     "say": "Measure visits and sign-ups.",
+     "on": "m",
+     "send": {
+      "from": "b",
+      "to": "m",
+      "label": "visits, sign-ups"
+     }
     },
     {
-     "say": "Two common variations: a fake door test, a button or page that doesn't yet do anything real, and a concierge M V P, delivered by hand before it's automated.",
-     "show": 3
+     "say": "Learn from the sign-up rate.",
+     "on": "l",
+     "send": {
+      "from": "m",
+      "to": "l",
+      "label": "sign-up rate"
+     }
+    },
+    {
+     "say": "Usually that leads to a new hypothesis and small test, not a full build.",
+     "on": "h",
+     "send": {
+      "from": "l",
+      "to": "h",
+      "label": "next question"
+     }
+    },
+    {
+     "say": "Another variation, a concierge M V P, delivers the value by hand before automating it.",
+     "on": "b"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "flask",
-   "kicker": "Topic 2 · Lab",
-   "title": "A fake door test",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 2 · MVP",
+   "title": "Strong result or weak result?",
+   "columns": [
+    "Outcome",
+    "Visitors",
+    "Sign-ups",
+    "Rate"
+   ],
+   "rows": [
     [
-     "Hypothesis",
-     "1 in 10 visitors sign up"
+     "Strong result",
+     "200",
+     "30",
+     "15%"
     ],
     [
-     "Fake door",
-     "\"Get notified when we launch\""
-    ],
-    [
-     "Board",
-     "Build → Measure → Learn"
+     "Weak result",
+     "200",
+     "6",
+     "3%"
     ]
    ],
    "beats": [
     {
-     "say": "In the lab, write one specific hypothesis.",
-     "show": 0
+     "say": "Decide up front what each result would teach. Say two hundred people visit."
     },
     {
-     "say": "For example: at least one in ten houseplant owners who visit a landing page will sign up to hear when it launches.",
-     "show": 1
+     "say": "The bar is one in ten: ten percent.",
+     "sql": "Hypothesis holds if  sign-ups ÷ visitors ≥ 10%",
+     "col": 3
     },
     {
-     "say": "A fake door can only measure interest, so keep the hypothesis about demand.",
-     "show": 1
+     "say": "Thirty sign-ups is fifteen percent. Above the bar.",
+     "sql": "30 ÷ 200 = 15%  ✓ ≥ 10%",
+     "hl": 0,
+     "dim": true,
+     "col": 3
     },
     {
-     "say": "Sketch a landing page with one button: get notified when we launch.",
-     "show": 2
+     "say": "Real demand, so next, test real usage.",
+     "sql": "Learn: demand exists → test usage next",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Then move its card across a Build, Measure, Learn board, writing what a strong or weak result would teach you.",
-     "show": 3
+     "say": "Six sign-ups is three percent. Below it.",
+     "sql": "6 ÷ 200 = 3%  ✗ < 10%",
+     "hl": 1,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Rethink the idea before months of building. A cheap lesson.",
+     "sql": "Learn: weak demand → new hypothesis, not a full build",
+     "hl": 1,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "roadmap",
+   "kind": "table",
    "kicker": "Topic 3 · Product vision",
-   "title": "Vision, strategy, roadmap",
-   "items": [
+   "title": "Vision, strategy, then roadmap",
+   "columns": [
+    "Feature idea",
+    "Serves strategy?",
+    "Decision"
+   ],
+   "rows": [
     [
-     "Vision",
-     "Stable for years"
+     "Watering reminders",
+     "Yes · hobbyists",
+     "Roadmap"
     ],
     [
-     "Strategy",
-     "The chosen approach"
+     "Care tips by species",
+     "Yes · hobbyists",
+     "Roadmap"
     ],
     [
-     "Roadmap",
-     "Updated often"
+     "Plant photo journal",
+     "Yes · hobbyists",
+     "Roadmap"
+    ],
+    [
+     "Nursery bulk orders",
+     "No · shops come later",
+     "Say no, for now"
     ]
    ],
    "beats": [
     {
-     "say": "These three change at very different speeds.",
-     "show": 0
+     "say": "Now a vision: the long-term future you're working toward.",
+     "sql": "Vision: every houseplant thrives at home."
     },
     {
-     "say": "A vision is a short, memorable statement of the future you're working toward. It stays stable for years.",
-     "show": 1
+     "say": "Broad enough to stay stable for years.",
+     "sql": "Vision: every houseplant thrives at home.\nChanges: rarely, stable for years"
     },
     {
-     "say": "A strategy is the chosen approach to get there, like: win small businesses first, then expand to enterprise.",
-     "show": 2
+     "say": "A strategy is the chosen approach: hobbyists first, then shops and nurseries.",
+     "sql": "Strategy: hobbyist owners first, then shops and nurseries"
     },
     {
-     "say": "A roadmap is the concrete plan of what gets built and when. It changes often.",
-     "show": 3
+     "say": "The roadmap is concrete and updated often. Each item must serve the strategy.",
+     "sql": "Strategy: hobbyist owners first, then shops and nurseries",
+     "col": 1
     },
     {
-     "say": "Confusing a roadmap item with the vision is a common source of misalignment.",
-     "show": 3
+     "say": "These three serve hobbyists. On the roadmap.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Nursery bulk orders sound plausible, but shops come later. So, no for now.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Three speeds. Mistake a roadmap item for the vision, and teams misalign.",
+     "sql": "Vision: years · Strategy: shifts sometimes · Roadmap: often"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "target",
+   "kind": "table",
    "kicker": "Topic 3 · Product vision",
-   "title": "One north star metric",
-   "big": "North star",
-   "sub": "Real user value, hard to game",
+   "title": "Choose a north star metric",
+   "columns": [
+    "Candidate metric",
+    "Easy to inflate?",
+    "Real user value?"
+   ],
+   "rows": [
+    [
+     "App opens",
+     "Yes · spam alerts",
+     "No"
+    ],
+    [
+     "Reminders sent",
+     "Yes · send more",
+     "No"
+    ],
+    [
+     "Total sign-ups",
+     "Yes · ads",
+     "Barely"
+    ],
+    [
+     "Plants watered on time",
+     "Hard",
+     "Yes"
+    ]
+   ],
    "beats": [
     {
-     "say": "A north star metric is the single clearest sign of real progress toward the vision.",
-     "show": 0
+     "say": "Last, a north star metric: the clearest sign of real progress."
     },
     {
-     "say": "A good one reflects genuine value to users, not an activity count that's easy to inflate.",
-     "show": 1
+     "say": "App opens? Inflate it with more notifications.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "In the lab, write a vision, a strategy, three roadmap items, one feature you'd say no to, and a north star metric with your reasoning.",
-     "show": 2
+     "say": "Reminders sent? Just send more.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Sign-ups? Buy ads, though no plant does better.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Plants watered on time only rises if the app genuinely helps.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Real value, hard to game. Our north star.",
+     "sql": "North star: plants watered on time, per week",
+     "hl": 3,
+     "dim": true
     }
    ]
   },

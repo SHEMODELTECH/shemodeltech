@@ -346,7 +346,7 @@ const ProjectCompletion = () => {
         meta: 'Project completed and archived',
       });
 
-      // Award owner a TechLeads badge + certificate automatically.
+      // Award owner a TechPO badge + certificate automatically.
       // Skipped on paid projects - no badges of any kind are awarded on them.
       // Also skipped for company accounts: companies never earn badges
       // (safety net for any legacy free projects owned by a company).

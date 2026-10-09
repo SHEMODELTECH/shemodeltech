@@ -11,7 +11,7 @@
 //
 // Generation is deliberately a BUTTON, not a scheduled job. Auto-publishing
 // six unreviewed AI-written briefs into a live cohort means one weak brief
-// wastes five women's eight weeks. The convenience isn't worth that.
+// wastes five women's six weeks. The convenience isn't worth that.
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { sendPush } from '../../utils/pushNotifications';

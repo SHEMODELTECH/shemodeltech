@@ -1815,7 +1815,7 @@ Workflows
 **Time:** about 2 hours
 
 **Step 1: Understand the User type.**
-Bubble gives every app a built-in User data type for accounts, and you can add your own fields to it, like `name`. Because accounts are so common, you do not have to build login from scratch.
+Bubble gives every app a built-in User data type for accounts, and you can add your own fields to it, like `name`. Because accounts are so common, you do not have to build login from scratch. (Nothing in this project fills `name` yet; if you want it, add a Name input to the sign-up form and, in the Sign the user up action, click Change another field and set `name` to that input's value.)
 
 **Step 2: Build sign-up and log-in forms.**
 Add inputs for email and password (set the password input's content format to Password) and two buttons, Sign up and Log in. These two flows are the front door of almost every app.
@@ -1831,6 +1831,8 @@ Current User is whoever is logged in right now. You can attach data to them and 
 
 **Step 6: Link tasks to their owner.**
 Add a `creator` field of type User to the Task type, and in the Create a new Task action, set `creator` to Current User. Without an owner field you cannot later filter tasks by who created them.
+
+> **Heads-up:** the three sample tasks you added by hand in Module 2 were created before this field existed, so their `creator` is empty. Once you filter by creator (Step 7) and add the privacy rule (Step 8), they disappear from every list. To keep them, either open each one in Data → App data and set its `creator` to your test user, or delete them and re-create them through your app while logged in.
 
 **Step 7: Filter the list to the current user.**
 Change the repeating group's data source to Search for Tasks with the constraint creator = Current User. This single change is what makes each person see only their own tasks.
@@ -2263,7 +2265,7 @@ Use Bubble's responsive viewer to view your app at phone, tablet, and desktop wi
 **Step 2: Fix layout issues per breakpoint.**
 Adjust container widths, min-widths, and hidden elements so each width looks intentional. This is where an app goes from amateur to professional in the first few seconds.
 
-**Step 3: Add loading and empty states.**
+**Step 3: Add an empty state.**
 Show a friendly message when the task list is empty, such as "No tasks yet, add your first one". An empty screen looks like a bug; an empty state tells the user what to do next. One way: add a Text with that message and a condition so it is visible only when the repeating group's list of Tasks count is 0.
 
 **Step 4: Test every workflow deliberately.**
@@ -2288,7 +2290,7 @@ Send the link to two people, ask them to complete one task in the app, and note 
 Shareable app
 │
 ├── Responsive across phone / tablet / desktop
-├── Empty + loading states
+├── Empty state for the task list
 ├── Shared via version-test URL (Live deployment optional, paid plan)
 ├── product_readme.md
 └── feedback_notes.md
@@ -2296,7 +2298,7 @@ Shareable app
 
 ### What You Learned
 - ✅ Responsive testing and fixing layouts per width
-- ✅ Designing empty and loading states
+- ✅ Designing an empty state
 - ✅ Testing full user journeys in order
 - ✅ The difference between development and live versions
 - ✅ Sharing, documenting, and gathering feedback

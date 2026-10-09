@@ -239,258 +239,630 @@ You have a delegation matrix with real ownership and context notes, a sprint pla
    ]
   },
   {
-   "kind": "list",
-   "art": "megaphone",
+   "kind": "diagram",
    "kicker": "Topic 1.1 · Communication",
    "title": "One set of facts, many audiences",
-   "items": [
-    [
-     "Stakeholder translation",
-     "Technical detail → something to act on"
-    ],
-    [
-     "Status reporting",
-     "Progress, blockers, risk"
-    ],
-    [
-     "Active listening",
-     "Confirm before you respond"
-    ],
-    [
-     "Upward communication",
-     "Raise risk early"
-    ]
+   "nodes": [
+    {
+     "id": "team",
+     "label": "Team",
+     "sub": "Amara · Jordan · Priya",
+     "x": 12,
+     "y": 50,
+     "art": "people"
+    },
+    {
+     "id": "lead",
+     "label": "Tech lead",
+     "sub": "translates",
+     "x": 46,
+     "y": 50,
+     "art": "compass"
+    },
+    {
+     "id": "mgr",
+     "label": "Your manager",
+     "sub": "status, risk, asks",
+     "x": 84,
+     "y": 22,
+     "art": "network"
+    },
+    {
+     "id": "spon",
+     "label": "Sponsor",
+     "sub": "tradeoffs, timelines",
+     "x": 84,
+     "y": 78,
+     "art": "megaphone"
+    }
+   ],
+   "edges": [
+    {
+     "from": "team",
+     "to": "lead"
+    },
+    {
+     "from": "lead",
+     "to": "mgr"
+    },
+    {
+     "from": "lead",
+     "to": "spon"
+    }
    ],
    "beats": [
     {
-     "say": "A tech lead's words have to work for the team, their manager, product, and sometimes customers or executives.",
-     "show": 0
-    },
-    {
-     "say": "Stakeholder translation turns technical detail into something a non-technical person can act on.",
-     "show": 1
-    },
-    {
-     "say": "Status reporting is a regular, concise summary of progress, blockers and risk.",
-     "show": 2
-    },
-    {
-     "say": "Active listening means confirming you understood before you respond.",
-     "show": 3
-    },
-    {
-     "say": "And upward communication means surfacing risk or bad news to your own manager early, not letting them discover it later.",
+     "say": "A tech lead sits between audiences who each need different detail.",
      "show": 4
+    },
+    {
+     "say": "The sponsor asks: can the page also take payments?",
+     "on": "spon",
+     "send": {
+      "from": "spon",
+      "to": "lead",
+      "label": "add payments?"
+     }
+    },
+    {
+     "say": "Active listening: reflect back what you heard before giving your view.",
+     "on": "lead",
+     "send": {
+      "from": "lead",
+      "to": "spon",
+      "label": "so you need…?"
+     }
+    },
+    {
+     "say": "The team sizes it: about two extra weeks of building and testing.",
+     "on": "team",
+     "send": {
+      "from": "team",
+      "to": "lead",
+      "label": "+2 weeks"
+     }
+    },
+    {
+     "say": "Upward communication: tell your manager now, not the week it slips.",
+     "on": "mgr",
+     "send": {
+      "from": "lead",
+      "to": "mgr",
+      "label": "risk: +2 weeks"
+     }
+    },
+    {
+     "say": "Stakeholder translation: turn it into a decision the sponsor can act on.",
+     "on": "spon",
+     "send": {
+      "from": "lead",
+      "to": "spon",
+      "label": "decide by Friday"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "doc",
-   "kicker": "Worked example",
-   "title": "A stakeholder status update",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 1.1 · Communication",
+   "title": "The three-question test",
+   "columns": [
+    "Line",
+    "Says",
+    "Answers"
+   ],
+   "rows": [
     [
-     "Decision needed by Friday",
-     "On time without payments, or two weeks later with them"
+     "Headline",
+     "Week 3: amber, at risk",
+     "Status at a glance"
+    ],
+    [
+     "Decision by Friday",
+     "On time, or +payments",
+     "What's needed"
     ],
     [
      "What happened",
-     "Design done, form works, bug fixed"
+     "Design done, bug fixed",
+     "What happened"
     ],
     [
      "What's at risk",
-     "Payments need ~2 extra weeks"
+     "Payments: +2 weeks",
+     "What's at risk"
     ],
     [
      "Recommendation",
-     "Launch on time, payments in release two"
+     "On time, pay in v2",
+     "Backs the ask"
+    ],
+    [
+     "Next update",
+     "Monday",
+     "Sets the rhythm"
     ]
    ],
    "beats": [
     {
-     "say": "Every good status update answers three questions: what happened, what's at risk, and what's needed.",
-     "show": 0
+     "say": "Here's the stakeholder update for the sign-up page, line by line.",
+     "col": 1
     },
     {
-     "say": "Here's the sign-up page update. It opens with the ask: a decision needed by Friday.",
-     "show": 1
+     "say": "It must answer three questions, so nobody needs a follow-up.",
+     "sql": "Test: what happened? what's at risk? what's needed?",
+     "col": 2
     },
     {
-     "say": "What happened: the design is finished, the form works, and a duplicate email bug was fixed.",
-     "show": 2
+     "say": "What's needed comes first: a decision by Friday, launch on time, or add payments and launch two weeks later.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "What's at risk: adding payments needs about two extra weeks.",
-     "show": 3
+     "say": "What happened: design done, form working, a duplicate email bug fixed.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And the recommendation: launch on time, and add payments in a second release.",
-     "show": 4
+     "say": "What's at risk: payments need about two extra weeks.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "In the lab, write a detailed team version and a short stakeholder version of the same update.",
-     "show": 4
+     "say": "All three answered, plus a recommendation. It passes.",
+     "hl": [
+      1,
+      2,
+      3
+     ],
+     "dim": true,
+     "sql": "Test: what happened ✓  at risk ✓  needed ✓"
+    },
+    {
+     "say": "The team version keeps the technical detail. Stakeholders get the headline and the ask.",
+     "sql": "Team version: detailed, technical, shared context\nStakeholder version: 3 to 5 sentences, ask first"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "chat",
+   "kind": "table",
    "kicker": "Topic 1.2 · Coaching",
    "title": "Feedback with S B I",
-   "quote": "Situation → Behavior → Impact. Then ask: \"What would help you run the checklist under time pressure?\"",
-   "beats": [
-    {
-     "say": "Coaching is about growing people over time, not just getting today's work done.",
-     "show": 0
-    },
-    {
-     "say": "The S B I framework keeps feedback concrete: situation, behaviour, impact.",
-     "show": 1
-    },
-    {
-     "say": "In Thursday's release, you merged the form change without running the test checklist. A bug sent duplicate emails to about forty people.",
-     "show": 1
-    },
-    {
-     "say": "Notice there's no label like careless. Then follow with an open question: what would help you run the checklist under time pressure?",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "loop",
-   "kicker": "Concept",
-   "title": "The coaching cycle",
-   "steps": [
-    "Observe",
-    "S B I feedback",
-    "Growth plan",
-    "Follow-up"
+   "columns": [
+    "Part",
+    "Says",
+    "Check"
    ],
-   "beats": [
-    {
-     "say": "Coaching is a repeating cycle.",
-     "show": 0
-    },
-    {
-     "say": "Observe the work and the conversation.",
-     "show": 1
-    },
-    {
-     "say": "Give S B I feedback.",
-     "show": 2
-    },
-    {
-     "say": "Agree a growth plan: two or three skills, and how you'll know progress is happening.",
-     "show": 3
-    },
-    {
-     "say": "Then follow up. That step is what stops a growth plan being written once and forgotten.",
-     "show": 4
-    },
-    {
-     "say": "Coaching draws answers out through questions; mentoring shares your own answer. Lean on coaching to build their judgement.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "kanban",
-   "kicker": "Topic 1.3 · Team management",
-   "title": "Planning, ownership and learning",
-   "items": [
+   "rows": [
     [
-     "Delegation",
-     "Ownership + context + authority"
+     "First draft",
+     "\"You were careless\"",
+     "✗ a label"
     ],
     [
-     "Sprint planning",
-     "Priority vs. real capacity"
+     "Situation",
+     "Thursday's release",
+     "✓ specific"
     ],
     [
-     "Retrospectives",
-     "Process, not blame"
+     "Behavior",
+     "Merged w/o checklist",
+     "✓ observable"
     ],
     [
-     "Team health",
-     "Workload, morale, turnover risk"
+     "Impact",
+     "~40 duplicate emails",
+     "✓ a fact"
+    ],
+    [
+     "Impact",
+     "Lost Friday morning",
+     "✓ a fact"
+    ],
+    [
+     "Then ask",
+     "What would help…?",
+     "✓ open question"
     ]
    ],
    "beats": [
     {
-     "say": "Team management works at the group level.",
-     "show": 0
+     "say": "Jordan works fast but skips testing, and last week a bug reached users."
     },
     {
-     "say": "Delegation hands over ownership, with enough context and authority to really own it.",
-     "show": 1
+     "say": "First instinct: you were careless. That's a label: vague and personal.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Sprint planning decides what's next, sized against priority and real capacity.",
-     "show": 2
+     "say": "S B I keeps it concrete. Situation: Thursday's release.",
+     "hl": 1,
+     "dim": true,
+     "sql": "\"In Thursday's release,"
     },
     {
-     "say": "Retros ask what worked, what didn't, and what to change, without blaming individuals.",
-     "show": 3
+     "say": "Behavior: you merged the form change without running the test checklist.",
+     "hl": 2,
+     "dim": true,
+     "sql": "\"In Thursday's release, you merged the sign-up\nform change without running the test checklist."
     },
     {
-     "say": "And team health, like workload and morale, has to be watched for, because it rarely shows up as a ticket.",
-     "show": 4
+     "say": "Impact: about forty duplicate emails, and a Friday morning spent fixing it instead of the design review.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "sql": "A bug sent duplicate emails to about 40 people;\nFriday morning went on the fix, not the design review.\""
+    },
+    {
+     "say": "Then, instead of a fix, ask an open coaching question.",
+     "hl": 5,
+     "dim": true,
+     "sql": "\"What would help you run the checklist\nwhen you're under time pressure?\""
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "sticky",
-   "kicker": "Watch out",
-   "title": "Venting is not a retro",
-   "quote": "A retro is only useful if it changes the next planning cycle.",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Topic 1.2 · Coaching",
+   "title": "The coaching cycle, with Jordan",
+   "nodes": [
     {
-     "say": "A retro only matters if it changes the next plan.",
-     "show": 0
+     "id": "obs",
+     "label": "Observe",
+     "sub": "work, behavior, 1:1s",
+     "x": 15,
+     "y": 28,
+     "art": "eye"
     },
     {
-     "say": "A team that names the same issue retro after retro, with no change in how work is planned, is just venting.",
-     "show": 1
+     "id": "fb",
+     "label": "SBI feedback",
+     "sub": "plus an open question",
+     "x": 85,
+     "y": 28,
+     "art": "chat"
     },
     {
-     "say": "And the real test of delegation versus micromanagement: can the person make their own decisions, or do they only have steps to follow?",
-     "show": 1
+     "id": "plan",
+     "label": "Growth plan",
+     "sub": "skills + signals",
+     "x": 85,
+     "y": 76,
+     "art": "roadmap"
+    },
+    {
+     "id": "fu",
+     "label": "Follow-up",
+     "sub": "next 1:1",
+     "x": 15,
+     "y": 76,
+     "art": "calendar"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "table",
-   "kicker": "Lab",
-   "title": "Run the team cycle",
-   "steps": [
-    "Delegation matrix",
-    "Sprint plan vs. capacity",
-    "Retro → one change",
-    "Change shows up in the plan"
+   ],
+   "edges": [
+    {
+     "from": "obs",
+     "to": "fb"
+    },
+    {
+     "from": "fb",
+     "to": "plan"
+    },
+    {
+     "from": "plan",
+     "to": "fu"
+    },
+    {
+     "from": "fu",
+     "to": "obs"
+    }
    ],
    "beats": [
     {
-     "say": "In the lab, build a delegation matrix: three to five pieces of work, an owner, and the context each owner needs.",
-     "show": 1
-    },
-    {
-     "say": "Plan a sprint: five to eight tasks, rough-sized, cutting anything that doesn't fit.",
-     "show": 2
-    },
-    {
-     "say": "Run a retro that narrows to exactly one concrete change.",
-     "show": 3
-    },
-    {
-     "say": "Then check that change actually shows up in your plan.",
+     "say": "Coaching grows a person over time. It's a cycle.",
      "show": 4
+    },
+    {
+     "say": "Observe: the checklist was skipped under time pressure.",
+     "on": "obs",
+     "send": {
+      "from": "obs",
+      "to": "fb",
+      "label": "skipped tests"
+     }
+    },
+    {
+     "say": "Give the S B I feedback, and the open question.",
+     "on": "fb"
+    },
+    {
+     "say": "Coaching draws the answer out of Jordan; mentoring would hand over yours. Lean on coaching.",
+     "on": "plan",
+     "send": {
+      "from": "fb",
+      "to": "plan",
+      "label": "Jordan's idea"
+     }
+    },
+    {
+     "say": "Agree a growth plan: two or three skills, and signs of progress.",
+     "on": "plan"
+    },
+    {
+     "say": "Then put the follow-up on a real calendar.",
+     "on": "fu",
+     "send": {
+      "from": "plan",
+      "to": "fu",
+      "label": "1:1 in 2 weeks"
+     }
+    },
+    {
+     "say": "The follow-up stops the plan being forgotten. Then the cycle repeats.",
+     "on": "obs",
+     "send": {
+      "from": "fu",
+      "to": "obs",
+      "label": "repeat"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 1.3 · Team management",
+   "title": "A delegation matrix",
+   "columns": [
+    "Work",
+    "Owner",
+    "Needs to own it",
+    "Watch"
+   ],
+   "rows": [
+    [
+     "Page design",
+     "Amara",
+     "Final say on layout",
+     "Quiet in meetings"
+    ],
+    [
+     "Form + release",
+     "Jordan",
+     "Owns the checklist",
+     "Rushes, skips tests"
+    ],
+    [
+     "Page copy",
+     "Priya",
+     "Brief + done example",
+     "New, unsure of role"
+    ],
+    [
+     "Sponsor updates",
+     "You",
+     "Sponsor's ear",
+     "Your own load"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Delegation hands over ownership, not steps. Here's a matrix for the case team.",
+     "col": 1
+    },
+    {
+     "say": "For each piece of work: what context and authority does the owner need?",
+     "col": 2
+    },
+    {
+     "say": "Amara gets the final say on layout, so she needn't check in.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Priya is new. A brief and an example of done let her make her own calls.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "That's the real test of delegation versus micromanagement.",
+     "hl": 2,
+     "dim": true,
+     "sql": "Delegated = can they make their own decisions?"
+    },
+    {
+     "say": "Last, team health. Workload and morale rarely show up as tickets, so note one signal per person.",
+     "col": 3,
+     "sql": "Delegated = can they make their own decisions?"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Topic 1.3 · Team management",
+   "title": "Retro: narrow to one change",
+   "values": [
+    "✓ Design early",
+    "✓ Weekly update",
+    "✓ Pair on form",
+    "✗ Bug hit users",
+    "✗ Role unclear",
+    "✗ Late reviews"
+   ],
+   "beats": [
+    {
+     "say": "After a rough release, run a retro on process, not people.",
+     "note": "What worked · what didn't"
+    },
+    {
+     "say": "Three worked: early design, the weekly update, and pairing.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "note": "3 worked"
+    },
+    {
+     "say": "Three didn't: a bug reached users, an unclear role, and late reviews.",
+     "hl": [
+      3,
+      4,
+      5
+     ],
+     "note": "3 didn't"
+    },
+    {
+     "say": "Narrow to exactly one change. The bug did the most harm.",
+     "hl": 3,
+     "gone": [
+      0,
+      1,
+      2,
+      4,
+      5
+     ],
+     "note": "Pick exactly one"
+    },
+    {
+     "say": "So: run the test checklist before every merge.",
+     "vals": [
+      "✓ Design early",
+      "✓ Weekly update",
+      "✓ Pair on form",
+      "Checklist every merge",
+      "✗ Role unclear",
+      "✗ Late reviews"
+     ],
+     "ok": [
+      3
+     ],
+     "gone": [
+      0,
+      1,
+      2,
+      4,
+      5
+     ],
+     "note": "One concrete change"
+    },
+    {
+     "say": "The same issue retro after retro, with no change, isn't a retro. It's venting.",
+     "ok": [
+      3
+     ],
+     "gone": [
+      0,
+      1,
+      2,
+      4,
+      5
+     ],
+     "note": "Must show up in the next plan"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 1.3 · Team management",
+   "title": "Plan against real capacity",
+   "columns": [
+    "#",
+    "Task",
+    "Days",
+    "Total"
+   ],
+   "rows": [
+    [
+     "1",
+     "Checklist before merge",
+     "1",
+     "1"
+    ],
+    [
+     "2",
+     "Fix form errors",
+     "2",
+     "3"
+    ],
+    [
+     "3",
+     "Write page copy",
+     "3",
+     "6"
+    ],
+    [
+     "4",
+     "Accessibility pass",
+     "2",
+     "8"
+    ],
+    [
+     "5",
+     "Confirmation email",
+     "2",
+     "10"
+    ],
+    [
+     "6",
+     "Payments",
+     "10",
+     "20"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Sprint planning sizes work against priority and real capacity.",
+     "col": 2
+    },
+    {
+     "say": "Say the volunteers have ten days of capacity this sprint.",
+     "sql": "Capacity: 10 days",
+     "col": 3
+    },
+    {
+     "say": "The retro's change is task one. That's how you know the retro worked.",
+     "hl": 0,
+     "dim": true,
+     "sql": "Capacity: 10 days · retro change ✓ in plan"
+    },
+    {
+     "say": "Add tasks in priority order: one, three, six, eight, ten. Exactly at capacity.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 3,
+     "sql": "1 + 2 + 3 + 2 + 2 = 10 ✓ fits"
+    },
+    {
+     "say": "Payments would make it twenty.",
+     "hl": 5,
+     "col": 3,
+     "sql": "10 + 10 = 20 ✗ over capacity"
+    },
+    {
+     "say": "So cut it, rather than overcommit. It moves to a second release, as the update recommended.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "sql": "Payments → second release"
     }
    ]
   },

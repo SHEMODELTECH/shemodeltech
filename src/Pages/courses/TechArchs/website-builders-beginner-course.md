@@ -488,13 +488,13 @@ Sites where design fidelity matters and needs to match a specific brand exactly,
 
 3. **Create a combo class.** Give the Div Block a base class (e.g., `card`), then add a second, more specific class on top (e.g., `card featured`) and change only the background color on the combo class — confirm the base styling stays intact everywhere else `card` is used.
 
-4. **Create a CMS Collection.** In the CMS panel, create a new Collection called "Blog Posts" with fields: Title (text), Cover Image (image), Summary (text).
+4. **Create a CMS Collection.** In the CMS panel, create a new Collection called "Blog Posts" with fields: Title (text), Cover Image (image), Summary (text). Webflow already gives every Collection a Name field (plus a Slug), so rename Name to Title rather than adding a second title field.
 
 5. **Add two sample items** to the Collection with real placeholder content.
 
 6. **Add a Collection List to your page,** bind it to the "Blog Posts" Collection, and drag a Heading and Image inside the list's template, binding them to the Title and Cover Image fields.
 
-7. **Publish the site** to your free `.webflow.io` subdomain, and confirm both blog post items appear automatically on the live page.
+7. **Publish the site** to your free `.webflow.io` subdomain, and confirm both blog post items appear automatically on the live page. Later, when you add a new item in the CMS, the Collection List picks it up without any redesign, but it only shows on the live site after you publish again.
 
 ### Checkpoint
 You have a published Webflow page with a styled Div Block using a combo class, and a working CMS Collection List displaying real content items.
@@ -506,7 +506,7 @@ You have a published Webflow page with a styled Div Block using a combo class, a
 4. What is a Collection List, and why is it useful compared to manually placing each item?
 5. What happens when you add a new item to a Collection after a Collection List is already built and published?
 
-*Answers: 1) Webflow's basic container element, used to hold and arrange other elements on the page. 2) Layer an additional, more specific style on top of a reusable base class, without duplicating or overriding the base style everywhere it's used. 3) A structured content type with defined fields (like title, image, body) used for content that repeats, such as blog posts or team members. 4) An element that automatically displays items from a CMS Collection on the page — useful because new items appear automatically without redesigning the page manually. 5) The new item automatically appears in the Collection List on the live site, without any manual page editing required.*
+*Answers: 1) Webflow's basic container element, used to hold and arrange other elements on the page. 2) Layer an additional, more specific style on top of a reusable base class, without duplicating or overriding the base style everywhere it's used. 3) A structured content type with defined fields (like title, image, body) used for content that repeats, such as blog posts or team members. 4) An element that automatically displays items from a CMS Collection on the page — useful because new items appear automatically without redesigning the page manually. 5) The new item automatically appears in the Collection List, with no manual page editing required; it shows on the live site once you publish again.*
 
 ```watch
 {

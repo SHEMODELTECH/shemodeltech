@@ -10,6 +10,7 @@ import { isFeaturedTalent } from '../config/premium';
 import { mentorStatsByUid } from '../utils/mentorStats';
 import { db } from '../firebase/config';
 import AccessBanner from '../components/AccessBanner';
+import { BADGE_TRACKS, badgesInTrack } from '../config/badgeTracks';
 
 const badgeOptions = [
   { id: '', label: 'All Tracks' },
@@ -137,7 +138,10 @@ const TalentBoard = () => {
         !filterBadge ||
         (filterBadge === 'mentors'
           ? isMentor(t)
-          : (t.badges || []).some(b => b.badgeName?.includes(filterBadge) || b.badgeCategory === filterBadge));
+          // Profile badges store the track key in `category` (e.g. 'development')
+          // and a label in `title`; older ones used badgeCategory/badgeName.
+          : badgesInTrack(t, BADGE_TRACKS.find(x => x.name === filterBadge)?.key || filterBadge) > 0 ||
+            (t.badges || []).some(b => String(b.title ?? b.badgeName ?? '').includes(filterBadge)));
       return matchesSearch && matchesBadge;
     })
     .sort((a, b) => rank(b) - rank(a) || (a.displayName || '').localeCompare(b.displayName || ''));

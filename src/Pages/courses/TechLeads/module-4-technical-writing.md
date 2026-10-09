@@ -243,295 +243,487 @@ You have a before-and-after version of a real page, edited in passes, and a five
    ]
   },
   {
-   "kind": "list",
-   "art": "book",
+   "kind": "table",
    "kicker": "Topic 4.1 · Documentation",
    "title": "Start from the reader's goal",
-   "items": [
+   "columns": [
+    "Reader asks",
+    "Page type",
+    "Serves"
+   ],
+   "rows": [
     [
+     "I'm new: teach me",
      "Tutorial",
-     "Learn through a full example"
+     "Learn by full example"
     ],
     [
+     "Reset a password?",
      "How-to guide",
-     "Do one specific task"
+     "Do one task"
     ],
     [
+     "Timeout accepts what?",
      "Reference",
      "Look up a fact"
     ],
     [
+     "Why this vendor?",
      "Explanation",
      "Understand the why"
     ]
    ],
    "beats": [
     {
-     "say": "Good documentation starts from the reader's task, not the writer's knowledge. Different goals need different pages.",
-     "show": 0
+     "say": "Documentation starts from the reader's task. Here are four readers with different goals.",
+     "col": 0
     },
     {
-     "say": "A tutorial walks a beginner through a complete, working example.",
-     "show": 1
+     "say": "A beginner wants a complete, working example. That's a tutorial.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "A how-to guide gives the steps for one task, for someone who knows the basics.",
-     "show": 2
+     "say": "Someone who knows the tool wants to reset a password. A how-to guide: steps for one task.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "A reference page lists facts to look up, organised for scanning.",
-     "show": 3
+     "say": "What does the timeout setting accept? A fact to look up: a reference page.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And an explanation covers the why: background, design choices and trade-offs.",
-     "show": 4
+     "say": "Why did we choose this vendor? An explanation: background and trade-offs.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Mixing them is the most common reason documentation feels hard to use.",
-     "show": 4
+     "say": "One page, one goal. Mixing them is the most common reason documentation feels hard to use.",
+     "sql": "One reader goal → one page type"
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "test",
-   "kicker": "Concept",
+   "kind": "diagram",
+   "kicker": "Topic 4.1 · Documentation",
    "title": "Write it, then test it",
-   "steps": [
-    "Name the reader's goal",
-    "Pick the page type",
-    "Draft task-first",
-    "Someone new follows it"
+   "nodes": [
+    {
+     "id": "goal",
+     "label": "Reader's goal",
+     "sub": "one sentence",
+     "x": 12,
+     "y": 30,
+     "art": "persona"
+    },
+    {
+     "id": "type",
+     "label": "Page type",
+     "sub": "how-to guide",
+     "x": 40,
+     "y": 30,
+     "art": "book"
+    },
+    {
+     "id": "draft",
+     "label": "Draft",
+     "sub": "task-first steps",
+     "x": 68,
+     "y": 30,
+     "art": "pencil"
+    },
+    {
+     "id": "test",
+     "label": "Test",
+     "sub": "someone new follows it",
+     "x": 86,
+     "y": 76,
+     "art": "people"
+    }
+   ],
+   "edges": [
+    {
+     "from": "goal",
+     "to": "type"
+    },
+    {
+     "from": "type",
+     "to": "draft"
+    },
+    {
+     "from": "draft",
+     "to": "test"
+    },
+    {
+     "from": "test",
+     "to": "draft"
+    }
    ],
    "beats": [
     {
-     "say": "Before writing, name the reader and their goal in one sentence.",
-     "show": 1
+     "say": "First, name the reader and their goal in one sentence: a new team member who needs to submit expenses.",
+     "show": 1,
+     "on": "goal"
     },
     {
-     "say": "Choose the page type that serves that goal.",
-     "show": 2
+     "say": "That goal picks the page type. One specific task means a how-to guide.",
+     "show": 2,
+     "on": "type",
+     "send": {
+      "from": "goal",
+      "to": "type",
+      "label": "do one task"
+     }
     },
     {
-     "say": "Draft it task first. For a how-to: a title stating the task, one line of prerequisites, and numbered steps that each start with a verb.",
-     "show": 3
+     "say": "Draft it task first: a title that states the task, one line of prerequisites, then numbered steps that each start with a verb.",
+     "show": 3,
+     "on": "draft",
+     "send": {
+      "from": "type",
+      "to": "draft",
+      "label": "title + steps"
+     }
     },
     {
-     "say": "Then have someone who didn't write it follow it exactly, and revise every step where they paused or went wrong.",
-     "show": 4
+     "say": "Then someone who didn't write it follows it exactly, without your help.",
+     "show": 4,
+     "on": "test",
+     "send": {
+      "from": "draft",
+      "to": "test",
+      "label": "first try"
+     }
+    },
+    {
+     "say": "Every place they pause or go wrong, you revise.",
+     "on": "draft",
+     "send": {
+      "from": "test",
+      "to": "draft",
+      "label": "pauses found"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "git",
-   "kicker": "Lab · Step 4",
-   "title": "Your README on GitHub",
-   "items": [
-    [
-     "What this is",
-     ""
-    ],
-    [
-     "Who it's for",
-     ""
-    ],
-    [
-     "How to get started",
-     ""
-    ],
-    [
-     "Where to get help",
-     ""
-    ]
-   ],
+   "kind": "walk",
+   "kicker": "Lab · README",
+   "title": "A README, section by section",
+   "file": "README.md",
+   "code": "# Expense Report Template\n\n## What this is\nA shared sheet that totals your receipts.\n\n## Who it's for\nTeam members claiming travel or supplies.\n\n## How to get started\n1. Copy the template to your Drive.\n2. Add one row per receipt.\n\n## Where to get help\nAsk in the #finance channel.",
    "beats": [
     {
-     "say": "A read me is a project's front door.",
-     "show": 0
+     "say": "A read me is a project's front door. On GitHub, edit read me dot m d in the browser.",
+     "line": 1
     },
     {
-     "say": "On GitHub, create a new repository and tick Add a README file. Edit read me dot m d in the browser with the pencil icon.",
-     "show": 0
+     "say": "Section one, under its own heading: what this is.",
+     "line": [
+      3,
+      4
+     ],
+     "out": "✓ What this is"
     },
     {
-     "say": "Write four sections, each under its own heading: what this is.",
-     "show": 1
+     "say": "Section two: who it's for.",
+     "line": [
+      6,
+      7
+     ],
+     "out": "✓ Who it's for"
     },
     {
-     "say": "Who it's for.",
-     "show": 2
+     "say": "Section three: how to get started, as numbered steps that start with a verb.",
+     "line": [
+      9,
+      11
+     ],
+     "out": "✓ How to get started"
     },
     {
-     "say": "How to get started.",
-     "show": 3
+     "say": "And section four: where to get help.",
+     "line": [
+      13,
+      14
+     ],
+     "out": "✓ Where to get help"
     },
     {
-     "say": "And where to get help. Commit, and check how it renders.",
-     "show": 4
+     "say": "Commit the change, and check how the headings render on the repository page.",
+     "out": "Committed · rendered on the repo page"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
+   "kind": "table",
    "kicker": "Topic 4.2 · Writing for decisions",
-   "title": "The decision document",
-   "items": [
+   "title": "Options, written fairly",
+   "columns": [
+    "Option",
+    "Real advantage",
+    "Trade-off"
+   ],
+   "rows": [
     [
-     "Problem",
-     "Why decide now"
+     "Tool A",
+     "Cheapest",
+     "Few integrations"
     ],
     [
-     "Options",
-     "Two or more, written fairly"
+     "Tool B",
+     "Team already knows it",
+     "Basic reporting"
     ],
     [
-     "Criteria",
-     "How you'll compare"
-    ],
-    [
-     "Recommendation",
-     "With trade-offs"
-    ],
-    [
-     "The ask",
-     "What you need, by when"
+     "Tool C",
+     "Best reporting",
+     "Highest cost"
     ]
    ],
    "beats": [
     {
-     "say": "Written decision documents mean everyone reviews the same options, instead of following whoever spoke last.",
-     "show": 0
+     "say": "Your team keeps debating which project tracking tool to adopt. A decision document settles it.",
+     "sql": "Problem: we track work in three places,\nand keep re-arguing which tool to use."
     },
     {
-     "say": "State the problem.",
-     "show": 1
+     "say": "First the problem, then the options. Here are three made-up tools.",
+     "sql": "Problem: we track work in three places,\nand keep re-arguing which tool to use.",
+     "col": 0
     },
     {
-     "say": "The options, at least two, each described fairly, including a real advantage of the ones you don't recommend.",
-     "show": 2
+     "say": "Give each one a real advantage, even the ones you don't recommend.",
+     "col": 1
     },
     {
-     "say": "The criteria you'll compare them on.",
-     "show": 3
+     "say": "And name each trade-off. Fair options build trust.",
+     "col": 2
     },
     {
-     "say": "Your recommendation, with its trade-offs.",
-     "show": 4
+     "say": "Compare them on the criteria you agreed, then recommend one, with its trade-off stated.",
+     "sql": "Criteria: cost · learning curve · reporting\nRecommendation: Tool B (trade-off: basic reporting)",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "And the ask: approval, feedback, or awareness, and by when. Put the recommendation and the ask near the top.",
-     "show": 5
+     "say": "Then the ask: what you need, by when. Put both near the top; busy readers may stop after one paragraph.",
+     "sql": "Ask: approve Tool B by Friday",
+     "hl": 1,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "file",
-   "kicker": "Concept",
-   "title": "Records and notes",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 4.2 · Writing for decisions",
+   "title": "Notes that record decisions",
+   "columns": [
+    "Raw note",
+    "Keep?",
+    "Why"
+   ],
+   "rows": [
     [
-     "Decision record",
-     "What, who, why, when · under 150 words"
+     "Sam said C looks slow",
+     "Drop",
+     "Chatter, not decision"
     ],
     [
-     "Meeting notes",
-     "Decisions + actions with owner and date"
+     "Adopt Tool B",
+     "Keep",
+     "A decision"
+    ],
+    [
+     "Someone will train us",
+     "Fix",
+     "No owner, no date"
+    ],
+    [
+     "Ana trains team, 6 Nov",
+     "Keep",
+     "Owner + date"
     ]
    ],
    "beats": [
     {
-     "say": "Then keep a record.",
-     "show": 0
+     "say": "Useful meeting notes aren't a transcript. Let's filter four raw notes."
     },
     {
-     "say": "A decision record is a short, dated note: what was decided, by whom, and why. Without one, decisions tend to be re-argued within months.",
-     "show": 1
+     "say": "Sam said Tool C looks slow. That's chatter, not a decision. Drop it.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And useful meeting notes aren't a transcript. They capture decisions and action items, each with an owner and a date.",
-     "show": 2
+     "say": "Adopt Tool B. That's a decision. Keep it.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Someone will train us. An action, but with no owner and no date, it won't happen. Fix it.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Fixed: Ana trains the team by the sixth of November. An owner, and a date.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Then a decision record: dated, what was decided, by whom, and why. Without one, decisions get re-argued.",
+     "sql": "Decision record · 3 Oct\nAdopt Tool B · decided by the team lead\nWhy: team already knows it, lowest switching cost",
+     "hl": [
+      1,
+      3
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "search",
+   "kind": "array",
    "kicker": "Topic 4.3 · Editing for clarity",
-   "title": "Where writing becomes useful",
-   "items": [
+   "title": "Edit in passes: structure first",
+   "values": [
+    "Timeline",
+    "Background",
+    "Root cause",
+    "Impact",
+    "Next steps"
+   ],
+   "beats": [
+    {
+     "say": "Here's an incident report draft. Accurate, but its sections run in the order things happened.",
+     "note": "Draft order"
+    },
+    {
+     "say": "The key point, the impact, is buried fourth. Managers will miss it.",
+     "hl": 3,
+     "ptr": {
+      "main point": 3
+     },
+     "note": "Main point buried"
+    },
+    {
+     "say": "Structure pass: front-load. Write the main point in one sentence, and move it to the top.",
+     "vals": [
+      "Impact",
+      "Root cause",
+      "Next steps",
+      "Timeline",
+      "Background"
+     ],
+     "hl": 0,
+     "ptr": {
+      "main point": 0
+     },
+     "note": "Structure pass: main point first"
+    },
+    {
+     "say": "The background section adds nothing the reader needs, so it goes.",
+     "vals": [
+      "Impact",
+      "Root cause",
+      "Next steps",
+      "Timeline",
+      "Background"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "gone": 4,
+     "note": "Structure pass: cut what the reader doesn't need"
+    },
+    {
+     "say": "Polish its commas first, and that effort is wasted. So structure comes before sentences.",
+     "gone": 4,
+     "note": "Then paragraphs, then sentences"
+    }
+   ]
+  },
+  {
+   "kind": "table",
+   "kicker": "Topic 4.3 · Editing for clarity",
+   "title": "One sentence, edited pass by pass",
+   "columns": [
+    "Pass",
+    "What changed",
+    "Words"
+   ],
+   "rows": [
     [
-     "Plain language",
-     "Simplest accurate word"
+     "Draft",
+     "—",
+     "33"
     ],
     [
      "Active voice",
-     "Who does what"
+     "The team does it",
+     "25"
     ],
     [
-     "Front-loading",
-     "Main point first"
+     "Plain words",
+     "Cut 'utilisation of'",
+     "22"
     ],
     [
-     "Scannable structure",
-     "Headings, short paragraphs, lists"
-    ],
-    [
-     "Style guide",
-     "Consistent team choices"
+     "Front-load",
+     "Impact first, split",
+     "8 + 12"
     ]
    ],
    "beats": [
     {
-     "say": "First drafts get ideas down. Editing makes them useful.",
-     "show": 0
+     "say": "Now the sentence pass. Here's the opening sentence of that report: thirty three words, in one breath.",
+     "sql": "Following an investigation that was carried out by the team, it was\ndetermined that the utilisation of an expired certificate caused the\noutage, which meant customers could not log in for two hours.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Plain language: the simplest accurate word, with technical terms explained the first time.",
-     "show": 1
+     "say": "Active voice names who does what. It was determined becomes: the team investigated and found.",
+     "sql": "The team investigated and found that the utilisation of an expired\ncertificate caused the outage, which meant customers could not log in\nfor two hours.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Active voice: name who does what.",
-     "show": 2
+     "say": "Plain language uses the simplest accurate words. The utilisation of adds nothing, so it goes.",
+     "sql": "The team investigated and found that an expired certificate\ncaused the outage, which meant customers could not log in for two hours.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Front-loading: the main point first, in every section, paragraph and sentence.",
-     "show": 3
+     "say": "Front-load: the impact on customers comes first, as its own short sentence.",
+     "sql": "Customers could not log in for two hours.\nThe team investigated and found that an expired certificate\ncaused the outage.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Scannable structure: descriptive headings, short paragraphs, numbered steps.",
-     "show": 4
+     "say": "From thirty three words to two sentences of eight and twelve. Read it aloud: no stumbles.",
+     "sql": "Customers could not log in for two hours.\nThe team investigated and found that an expired certificate\ncaused the outage.",
+     "hl": [
+      0,
+      3
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And a style guide records your team's choices, so documents read consistently.",
-     "show": 5
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "doc",
-   "kicker": "Concept",
-   "title": "Edit in passes",
-   "quote": "\"The report was reviewed\" → \"The manager reviewed the report.\"",
-   "beats": [
-    {
-     "say": "Here's active voice in action.",
-     "show": 0
-    },
-    {
-     "say": "The report was reviewed becomes: the manager reviewed the report. Now it names who did it.",
-     "show": 1
-    },
-    {
-     "say": "Edit in passes: structure first, then sentences. Fixing commas on a page that needs reorganising wastes time.",
-     "show": 1
-    },
-    {
-     "say": "Then read it aloud, and split any sentence over twenty five words.",
-     "show": 1
+     "say": "Turn what you fixed into a five-rule style guide, so your team's pages read consistently.",
+     "sql": "Style guide: active voice · plain words · main point first\n· split sentences over 25 words · read it aloud"
     }
    ]
   },

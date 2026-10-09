@@ -218,28 +218,85 @@ You have a power/interest grid with each stakeholder placed and an action noted 
      "say": "This module covers the business side of tech leadership: strategy, business analysis, and getting buy-in from people who aren't in the room every day."
     },
     {
-     "say": "The sign-up page case from Module 1 works well here, especially the sponsor's request to take payments."
+     "say": "We'll use the sign-up page case from Module 1 throughout, especially the sponsor's request to take payments."
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "target",
+   "kind": "diagram",
    "kicker": "Topic 2.1 · Strategy",
-   "title": "Whether and why, not just how",
-   "items": [
-    [
-     "Digital transformation",
-     "Rethink the process, don't just digitise it"
-    ],
-    [
-     "Innovation",
-     "Make real time for new ideas"
-    ],
-    [
-     "Strategic alignment",
-     "Trace work to a business goal"
-    ]
+   "title": "Trace work back to a goal",
+   "nodes": [
+    {
+     "id": "goal",
+     "label": "Business goal",
+     "sub": "cover workshop costs",
+     "x": 10,
+     "y": 25,
+     "art": "target"
+    },
+    {
+     "id": "scan",
+     "label": "Opportunity scan",
+     "sub": "people could pay online",
+     "x": 38,
+     "y": 25,
+     "art": "search"
+    },
+    {
+     "id": "dec",
+     "label": "Decision",
+     "sub": "build, buy or partner?",
+     "x": 66,
+     "y": 25,
+     "art": "fork"
+    },
+    {
+     "id": "work",
+     "label": "Backlog work",
+     "sub": "add a checkout step",
+     "x": 90,
+     "y": 58,
+     "art": "kanban"
+    },
+    {
+     "id": "proto",
+     "label": "Prototype hour",
+     "sub": "test one new idea",
+     "x": 60,
+     "y": 84,
+     "art": "flask"
+    },
+    {
+     "id": "orphan",
+     "label": "Animated logo",
+     "sub": "no goal behind it",
+     "x": 20,
+     "y": 78,
+     "art": "cross"
+    }
+   ],
+   "edges": [
+    {
+     "from": "goal",
+     "to": "scan"
+    },
+    {
+     "from": "scan",
+     "to": "dec"
+    },
+    {
+     "from": "dec",
+     "to": "work"
+    },
+    {
+     "from": "work",
+     "to": "scan"
+    },
+    {
+     "from": "proto",
+     "to": "work"
+    }
    ],
    "beats": [
     {
@@ -247,223 +304,664 @@ You have a power/interest grid with each stakeholder placed and an action noted 
      "show": 0
     },
     {
-     "say": "Digital transformation rethinks a process around what technology now makes possible, not just digitising a paper form.",
-     "show": 1
+     "say": "It starts from a business goal. Say the workshop needs to cover its costs.",
+     "show": 1,
+     "on": "goal"
     },
     {
-     "say": "Innovation means deliberately making time for new ideas to be tested.",
-     "show": 2
+     "say": "Scan for where technology can help, or hurt. Here, attendees could pay online when they sign up.",
+     "show": 2,
+     "on": "scan",
+     "send": {
+      "from": "goal",
+      "to": "scan",
+      "label": "cover costs"
+     }
     },
     {
-     "say": "Strategic alignment means work traces back to a real business goal. If it can't, it's a candidate for cutting.",
-     "show": 3
+     "say": "That leads to a strategic decision: build it, buy it, partner for it, or skip it.",
+     "show": 3,
+     "on": "dec",
+     "send": {
+      "from": "scan",
+      "to": "dec",
+      "label": "take payments?"
+     }
+    },
+    {
+     "say": "Only then does it become backlog work: add a checkout step.",
+     "show": 4,
+     "on": "work",
+     "send": {
+      "from": "dec",
+      "to": "work",
+      "label": "buy a tool"
+     }
+    },
+    {
+     "say": "What the team learns while building signals back, and sharpens the next scan.",
+     "on": "scan",
+     "send": {
+      "from": "work",
+      "to": "scan",
+      "label": "fees too high?"
+     }
+    },
+    {
+     "say": "Innovation needs real time too, like a one hour prototype. If it works, it needs a route into the backlog, or it stays a side project forever.",
+     "show": 5,
+     "on": "proto",
+     "send": {
+      "from": "proto",
+      "to": "work",
+      "label": "into planning"
+     }
+    },
+    {
+     "say": "Now trace an animated logo back. It reaches no goal at all. That's strategic alignment failing, so it's a candidate for cutting.",
+     "show": 6,
+     "on": "orphan"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "fork",
-   "kicker": "Concept",
-   "title": "Build, buy or partner",
-   "items": [
+   "kind": "table",
+   "kicker": "Topic 2.1 · Strategy",
+   "title": "Build, buy or partner for payments?",
+   "columns": [
+    "",
+    "Build",
+    "Buy",
+    "Partner"
+   ],
+   "rows": [
     [
-     "Build",
-     "In-house"
+     "Cost",
+     "Weeks of dev time",
+     "A fee per payment",
+     "Share of revenue"
     ],
     [
-     "Buy",
-     "An existing product"
+     "Control",
+     "Full",
+     "Limited to settings",
+     "On their terms"
     ],
     [
-     "Partner",
-     "Through a partnership"
+     "Speed",
+     "Slowest",
+     "Days to set up",
+     "Depends on partner"
+    ],
+    [
+     "Risk",
+     "We'd handle card data",
+     "Vendor dependency",
+     "Their priorities"
     ]
    ],
    "beats": [
     {
-     "say": "A recurring strategic decision is whether to build, buy or partner.",
-     "show": 0
+     "say": "Here's the build, buy or partner decision, applied to the sponsor's payments request."
     },
     {
-     "say": "Build the capability in-house.",
-     "show": 1
+     "say": "Build it ourselves: full control, but weeks of developer time, and the slowest route.",
+     "col": 1
     },
     {
-     "say": "Buy an existing product.",
-     "show": 2
+     "say": "Buy a hosted payment service: a fee on each payment and limited control, but set up in days.",
+     "col": 2
     },
     {
-     "say": "Or access it through a partnership.",
-     "show": 3
+     "say": "Partner, say with the venue's ticketing system: they share the revenue, and the timing depends on them.",
+     "col": 3
     },
     {
-     "say": "Each has different cost, control and speed trade-offs. In the lab, write one sentence on each, then pick one with your reasoning.",
-     "show": 3
+     "say": "Compare row by row. Cost first.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "And close the loop on innovation: a tested idea needs a route back into planned work, or it stays a side project forever.",
-     "show": 3
+     "say": "Then control.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Then speed.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "And risk. Building means we'd handle card data ourselves.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Three volunteers and six weeks: buying wins. Write that reasoning down in one sentence.",
+     "col": 2,
+     "sql": "Choice: Buy. It's fast, and we never touch card data.\nCost: a fee per payment, and a vendor to depend on."
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "blueprint",
+   "kind": "table",
    "kicker": "Topic 2.2 · Business analysis",
-   "title": "From vague request to real scope",
-   "steps": [
-    "Vague request",
-    "Requirements gathering",
-    "As-is map",
-    "To-be map",
-    "Real scope = the gap"
+   "title": "From a vague ask to requirements",
+   "columns": [
+    "#",
+    "Requirement",
+    "Type"
    ],
-   "beats": [
-    {
-     "say": "Business analysis turns what the business needs into something a team can build.",
-     "show": 0
-    },
-    {
-     "say": "Start with a vague request, like make onboarding faster.",
-     "show": 1
-    },
-    {
-     "say": "Gather requirements by asking the right people the right questions.",
-     "show": 2
-    },
-    {
-     "say": "Draw the as-is map: how the process really works today, including the informal steps.",
-     "show": 3
-    },
-    {
-     "say": "Then the to-be map: the improved version.",
-     "show": 4
-    },
-    {
-     "say": "The gap between them is the real scope of the work.",
-     "show": 5
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "checklist",
-   "kicker": "Concept",
-   "title": "What it does, and how well",
-   "items": [
+   "rows": [
     [
-     "Functional",
-     "\"The system must…\""
+     "1",
+     "Charge the seat price",
+     "Functional"
     ],
     [
-     "Non-functional",
-     "Speed, reliability, security"
+     "2",
+     "Email a receipt",
+     "Functional"
+    ],
+    [
+     "3",
+     "Refund cancelled seats",
+     "Functional"
+    ],
+    [
+     "4",
+     "Checkout in under 3 s",
+     "Non-functional"
+    ],
+    [
+     "5",
+     "Never store card data",
+     "Non-functional"
+    ],
+    [
+     "6",
+     "200 sign-ups in hour 1",
+     "Non-functional"
     ]
    ],
    "beats": [
     {
-     "say": "Requirements come in two kinds.",
-     "show": 0
+     "say": "Business analysis turns a vague request into something a team can build. The request: can the page also take payments?",
+     "sql": "Request: \"Can the page also take payments?\""
     },
     {
-     "say": "Functional requirements say what the system must do.",
-     "show": 1
+     "say": "So gather requirements. Ask the people involved: what does a seat cost, what about refunds, how busy is launch day?",
+     "sql": "Ask: What does a seat cost? Refunds?\nHow many people sign up on launch day?"
     },
     {
-     "say": "Non-functional requirements say how well: speed, reliability, security.",
-     "show": 2
+     "say": "The answers give functional requirements: what the system must do. Charge the price, email a receipt, refund a cancelled seat.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Non-functional ones are skipped most often, and cause the most painful surprises, like a feature that falls over under real load.",
-     "show": 2
+     "say": "And non-functional ones: how well it must do it. Fast, secure, and able to take the launch rush.",
+     "hl": [
+      3,
+      4,
+      5
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "These are the ones most often skipped.",
+     "hl": [
+      3,
+      4,
+      5
+     ],
+     "dim": true
+    },
+    {
+     "say": "Skip row six, and checkout works in testing, then falls over when two hundred people arrive in the first hour.",
+     "hl": 5,
+     "dim": true,
+     "sql": "Skipped non-functional = works in testing,\nfails under real load"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "network",
-   "kicker": "Topic 2.3 · Stakeholder management",
+   "kind": "array",
+   "kicker": "Topic 2.2 · Business analysis",
+   "title": "As-is, to-be, and the gap",
+   "values": [
+    "Sign up",
+    "Email invoice",
+    "Bank transfer",
+    "Check bank",
+    "Update sheet",
+    "Confirm seat"
+   ],
+   "beats": [
+    {
+     "say": "Now map how fees are collected today. Ask the people who actually do it, step by step.",
+     "note": "As-is: how it really works today"
+    },
+    {
+     "say": "Someone signs up. An organiser emails an invoice. The attendee pays by bank transfer.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "note": "As-is: how it really works today"
+    },
+    {
+     "say": "Then the informal steps nobody mentions: the treasurer checks the bank, and updates a spreadsheet, before anyone confirms the seat.",
+     "hl": [
+      3,
+      4,
+      5
+     ],
+     "note": "Informal steps: check bank · update spreadsheet"
+    },
+    {
+     "say": "That's where the delay really lives. Seats wait days for the treasurer's check.",
+     "hl": 3,
+     "ptr": {
+      "delay": 3
+     },
+     "note": "The real bottleneck: waiting for the bank check"
+    },
+    {
+     "say": "Just digitising it, a P D F invoice by email, keeps all six steps. Transformation rethinks the process instead.",
+     "note": "Digitise ≠ transform"
+    },
+    {
+     "say": "The to-be map: sign up, pay at checkout, and the seat is confirmed automatically.",
+     "vals": [
+      "Sign up",
+      "Pay at checkout",
+      "—",
+      "—",
+      "—",
+      "Auto-confirm"
+     ],
+     "ok": [
+      0
+     ],
+     "hl": [
+      1,
+      5
+     ],
+     "gone": [
+      2,
+      3,
+      4
+     ],
+     "note": "To-be: three steps, no waiting"
+    },
+    {
+     "say": "The gap between the maps is the real scope: a checkout step, automatic confirmation, and three manual steps retired.",
+     "vals": [
+      "Sign up",
+      "Pay at checkout",
+      "—",
+      "—",
+      "—",
+      "Auto-confirm"
+     ],
+     "ok": [
+      0
+     ],
+     "hl": [
+      1,
+      5
+     ],
+     "gone": [
+      2,
+      3,
+      4
+     ],
+     "note": "Scope = the gap, not \"take payments\""
+    }
+   ]
+  },
+  {
+   "kind": "chart",
+   "kicker": "Topic 2.3 · Stakeholders",
    "title": "The power and interest grid",
-   "items": [
+   "xlabel": "interest in the decision →",
+   "ylabel": "power over it →",
+   "points": [
     [
-     "Manage closely",
-     "High power · high interest"
+     82,
+     85
     ],
     [
-     "Keep satisfied",
-     "High power · low interest"
+     22,
+     78
     ],
     [
-     "Keep informed",
-     "Low power · high interest"
+     78,
+     22
     ],
     [
-     "Monitor",
-     "Low power · low interest"
+     20,
+     18
     ]
    ],
    "beats": [
     {
-     "say": "Stakeholder mapping places each person by their power over a decision and their interest in it.",
-     "show": 0
+     "say": "Who needs to agree to payments? Plot each stakeholder: interest across, power up.",
+     "groups": [
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "High power, high interest: manage closely. Involve them early and often.",
-     "show": 1
+     "say": "The middle line splits high power from low. Interest splits down the middle too.",
+     "groups": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "line": [
+      0,
+      50
+     ]
     },
     {
-     "say": "High power, low interest: keep satisfied, with brief, occasional updates.",
-     "show": 2
+     "say": "Top right, the sponsor: high power, high interest. Manage closely, and get their input before deciding.",
+     "groups": [
+      1,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Low power, high interest: keep informed, and use them for feedback and early warnings.",
-     "show": 3
+     "say": "Top left, the finance head who approves spend but rarely asks. Keep satisfied, with brief updates.",
+     "groups": [
+      1,
+      2,
+      0,
+      0
+     ]
     },
     {
-     "say": "Low power, low interest: monitor, with a light touch.",
-     "show": 4
+     "say": "Bottom right, the treasurer, who'll reconcile payments every day but can't approve them. Keep informed, and listen for early warnings.",
+     "groups": [
+      1,
+      2,
+      3,
+      0
+     ]
     },
     {
-     "say": "A V P who funds the project but rarely asks about it is keep satisfied. The support lead who'll live with the tool is keep informed.",
-     "show": 4
+     "say": "Bottom left, the newsletter editor. Monitor, with a light touch.",
+     "groups": [
+      1,
+      2,
+      3,
+      0
+     ]
+    },
+    {
+     "say": "The highest influence is the sponsor. That's who your case is for.",
+     "groups": [
+      1,
+      2,
+      3,
+      0
+     ],
+     "marks": [
+      [
+       82,
+       85
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "scales",
-   "kicker": "Concept",
-   "title": "Present and negotiate",
-   "items": [
-    [
-     "Lead with the ask",
-     "✗ \"First we looked at X…\""
-    ],
-    [
-     "Interests, not positions",
-     "What they actually need"
-    ],
-    [
-     "Know your BATNA",
-     "Your fallback if there's no deal"
-    ]
+   "kind": "array",
+   "kicker": "Topic 2.3 · Stakeholders",
+   "title": "Lead with the ask",
+   "values": [
+    "How we worked",
+    "What we compared",
+    "The ask",
+    "The details"
    ],
    "beats": [
     {
-     "say": "Then make the case.",
-     "show": 0
+     "say": "Here's a case built around the presenter's process. First we looked at this, then we compared that.",
+     "hl": [
+      0,
+      1
+     ],
+     "note": "Process first"
     },
     {
-     "say": "Lead with the ask, not your methodology. It's a common slip to bury it in the third sentence.",
-     "show": 1
+     "say": "The ask arrives in sentence three. A busy sponsor has tuned out by then.",
+     "hl": 2,
+     "ptr": {
+      "ask": 2
+     },
+     "note": "Ask buried in sentence 3"
     },
     {
-     "say": "Negotiate around interests, not positions: what each side actually needs, not their opening ask.",
-     "show": 2
+     "say": "Flip it. Sentence one is the ask: launch on time, and add payments in release two.",
+     "vals": [
+      "The ask",
+      "Why it matters",
+      "Key numbers",
+      "Details if asked"
+     ],
+     "ok": [
+      0
+     ],
+     "ptr": {
+      "ask": 0
+     },
+     "note": "Ask first"
     },
     {
-     "say": "And know your Batna, your best alternative to a negotiated agreement, before you start. Without it, you can't tell whether a deal is good.",
-     "show": 3
+     "say": "Then why it matters, then the key numbers: about two extra weeks to add payments now.",
+     "vals": [
+      "The ask",
+      "Why it matters",
+      "Key numbers",
+      "Details if asked"
+     ],
+     "ok": [
+      0
+     ],
+     "hl": [
+      1,
+      2
+     ],
+     "ptr": {
+      "ask": 0
+     },
+     "note": "Just enough to be credible"
+    },
+    {
+     "say": "Keep the rest back, and bring it out only if they ask.",
+     "vals": [
+      "The ask",
+      "Why it matters",
+      "Key numbers",
+      "Details if asked"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "ask": 0
+     },
+     "note": "Three to five sentences in all"
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Topic 2.3 · Stakeholders",
+   "title": "Interests, not positions",
+   "nodes": [
+    {
+     "id": "you",
+     "label": "You",
+     "sub": "position: launch on time",
+     "x": 10,
+     "y": 32,
+     "art": "persona"
+    },
+    {
+     "id": "sp",
+     "label": "Sponsor",
+     "sub": "position: payments now",
+     "x": 90,
+     "y": 32,
+     "art": "persona"
+    },
+    {
+     "id": "batna",
+     "label": "Your BATNA",
+     "sub": "launch, bank transfer",
+     "x": 50,
+     "y": 14,
+     "art": "shield"
+    },
+    {
+     "id": "si",
+     "label": "Their interest",
+     "sub": "fees in before the day",
+     "x": 90,
+     "y": 82,
+     "art": "coin"
+    },
+    {
+     "id": "yi",
+     "label": "Your interest",
+     "sub": "a tested, safe launch",
+     "x": 10,
+     "y": 82,
+     "art": "test"
+    },
+    {
+     "id": "deal",
+     "label": "Agreement",
+     "sub": "on time + release two",
+     "x": 50,
+     "y": 58,
+     "art": "scales"
+    }
+   ],
+   "edges": [
+    {
+     "from": "you",
+     "to": "sp"
+    },
+    {
+     "from": "batna",
+     "to": "deal"
+    },
+    {
+     "from": "sp",
+     "to": "si"
+    },
+    {
+     "from": "you",
+     "to": "yi"
+    },
+    {
+     "from": "si",
+     "to": "deal"
+    },
+    {
+     "from": "yi",
+     "to": "deal"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The sponsor pushes back. Two opening positions: you want to launch on time, they want payments now.",
+     "show": 2,
+     "send": {
+      "from": "you",
+      "to": "sp",
+      "label": "launch on time"
+     }
+    },
+    {
+     "say": "Before you negotiate, write down your Batna, your best alternative to a negotiated agreement.",
+     "show": 3,
+     "on": "batna"
+    },
+    {
+     "say": "Here, if there's no deal, you launch on time and collect fees by bank transfer, as today.",
+     "show": 3,
+     "on": "batna"
+    },
+    {
+     "say": "Now ask why they want payments. Say their real interest is collecting fees before the workshop.",
+     "show": 4,
+     "on": "si",
+     "send": {
+      "from": "sp",
+      "to": "si",
+      "label": "why?"
+     }
+    },
+    {
+     "say": "Your interest is a tested launch, with no repeat of last week's bug.",
+     "show": 5,
+     "on": "yi",
+     "send": {
+      "from": "you",
+      "to": "yi",
+      "label": "why?"
+     }
+    },
+    {
+     "say": "An agreement can serve both: launch on time, and ship payments in release two, before fees are due.",
+     "show": 6,
+     "on": "deal",
+     "send": {
+      "from": "si",
+      "to": "deal",
+      "label": "fees in time"
+     }
+    },
+    {
+     "say": "Your interest is met too.",
+     "on": "deal",
+     "send": {
+      "from": "yi",
+      "to": "deal",
+      "label": "tested launch"
+     }
+    },
+    {
+     "say": "Compare it with your Batna. It's better than walking away, so you can say yes with confidence.",
+     "on": [
+      "deal",
+      "batna"
+     ],
+     "send": {
+      "from": "batna",
+      "to": "deal",
+      "label": "compare"
+     }
     }
    ]
   },
@@ -486,7 +984,7 @@ You have a power/interest grid with each stakeholder placed and an action noted 
      "show": 0
     },
     {
-     "say": "What is a BATNA, and why know it before negotiating?",
+     "say": "What is a Batna, and why know it before negotiating?",
      "show": 0
     },
     {

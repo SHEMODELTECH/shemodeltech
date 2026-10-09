@@ -15,6 +15,12 @@ A resume tells you what someone says they can do. A badge tells you what they ha
 
 Every badge on the platform was earned by contributing to a real project in a specific role. The member did the work, delivered something, and had that contribution reviewed, so nothing on a profile is self-awarded. When you see a badge, you are reading a record of completed, reviewed work, which removes most of the guesswork that makes early-career hiring risky.
 
+Here is how that review works. When the team's work is done, the project lead submits it, with its GitHub repository, to She Model Tech. She Model Tech approves it, asks for changes, or rejects it. Only after She Model Tech approves the project can the lead award badges, and a rejected project awards none. Each member picks the badge track the project counts toward when applying; the lead can change it, with a reason the member sees.
+
+### Ratings
+
+Once the project is approved, the lead rates each member's contribution: **poor**, **fair**, **good**, or **excellent**. A poor rating means no badge for that project. Fair, good, and excellent earn the badge, and the rating is shown on the badge on the member's profile, so every badge you see also tells you how well that person contributed.
+
 A badge is not a certificate from a course, and it is not a test score. Someone can watch a hundred tutorials and still have zero badges, because badges only come from shipping work with a team. A member with three badges has finished three real projects, which is a stronger signal than any number of finished courses.
 
 ```watch
@@ -35,79 +41,293 @@ A badge is not a certificate from a course, and it is not a test score. Someone 
    ]
   },
   {
-   "kind": "list",
-   "art": "venn",
+   "kind": "table",
    "kicker": "The difference",
    "title": "Resume versus badge",
-   "items": [
+   "columns": [
+    "Question",
+    "Resume",
+    "Badge"
+   ],
+   "rows": [
     [
-     "Resume",
-     "What someone says they can do"
+     "Who writes it?",
+     "The candidate",
+     "Earned, not written"
     ],
     [
-     "✓ Badge",
-     "What they've done, reviewed"
+     "Based on",
+     "Claims",
+     "Real project work"
+    ],
+    [
+     "Checked?",
+     "Unverified",
+     "Lead + She Model Tech"
+    ],
+    [
+     "Tells you",
+     "What they say",
+     "What they did"
     ]
    ],
    "beats": [
     {
      "say": "A resume tells you what someone says they can do.",
-     "show": 1
+     "col": 1
     },
     {
-     "say": "A badge tells you what they've already done, on a real project, reviewed by She Model Tech.",
-     "show": 2
+     "say": "A badge tells you what they've already done, on a real project.",
+     "col": 2
+    },
+    {
+     "say": "The big difference is the check. The work was reviewed before the badge appeared.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "shield",
-   "kicker": "No self-awarding",
-   "title": "A record of reviewed work",
-   "quote": "Nothing on a profile is self-awarded.",
+   "kind": "diagram",
+   "kicker": "How it works",
+   "title": "How real work becomes a badge",
+   "nodes": [
+    {
+     "id": "pick",
+     "label": "Member applies",
+     "x": 10,
+     "y": 30,
+     "sub": "picks one track",
+     "art": "idcard"
+    },
+    {
+     "id": "team",
+     "label": "Team builds",
+     "x": 32,
+     "y": 72,
+     "sub": "6-week cohort project",
+     "art": "people"
+    },
+    {
+     "id": "review",
+     "label": "Project review",
+     "x": 55,
+     "y": 30,
+     "sub": "by She Model Tech",
+     "art": "search"
+    },
+    {
+     "id": "rate",
+     "label": "Lead rates work",
+     "x": 75,
+     "y": 72,
+     "sub": "for each member",
+     "art": "star"
+    },
+    {
+     "id": "badge",
+     "label": "Badge",
+     "x": 92,
+     "y": 30,
+     "sub": "on her profile",
+     "art": "trophy"
+    }
+   ],
+   "edges": [
+    {
+     "from": "pick",
+     "to": "team"
+    },
+    {
+     "from": "team",
+     "to": "review"
+    },
+    {
+     "from": "review",
+     "to": "rate"
+    },
+    {
+     "from": "rate",
+     "to": "badge"
+    }
+   ],
    "beats": [
     {
-     "say": "Every badge was earned by contributing to a real project in a specific role.",
-     "show": 0
+     "say": "A member applies to a She Model Tech cohort project, and picks the badge track it counts toward.",
+     "show": 1,
+     "on": "pick"
     },
     {
-     "say": "The member did the work, delivered something, and had it reviewed. Nothing on a profile is self-awarded.",
-     "show": 1
+     "say": "She joins a team with a lead, and they build for six weeks.",
+     "show": 2,
+     "on": "team",
+     "send": {
+      "from": "pick",
+      "to": "team",
+      "label": "TechDev track"
+     }
     },
     {
-     "say": "That removes most of the guesswork that makes early-career hiring risky.",
-     "show": 1
+     "say": "When the work is done, the lead submits it, with its GitHub repository, to She Model Tech.",
+     "show": 3,
+     "on": "review",
+     "send": {
+      "from": "team",
+      "to": "review",
+      "label": "GitHub repo"
+     }
+    },
+    {
+     "say": "She Model Tech approves it, asks for changes, or rejects it. No approval, no badges.",
+     "show": 3,
+     "on": "review"
+    },
+    {
+     "say": "Once it's approved, the lead rates each member's contribution, and confirms her track.",
+     "show": 4,
+     "on": "rate",
+     "send": {
+      "from": "review",
+      "to": "rate",
+      "label": "approved"
+     }
+    },
+    {
+     "say": "The badge lands on her profile, with that rating. Nothing is self-awarded.",
+     "show": 5,
+     "on": "badge",
+     "send": {
+      "from": "rate",
+      "to": "badge",
+      "label": "badge · Good"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "cross",
-   "kicker": "What a badge isn't",
-   "title": "Not a course, not a test",
-   "items": [
+   "kind": "table",
+   "kicker": "Ratings",
+   "title": "Every badge carries a rating",
+   "columns": [
+    "Lead's rating",
+    "Badge?",
+    "Shown on badge"
+   ],
+   "rows": [
     [
-     "✗ Course certificate",
-     "Tutorials earn zero badges"
+     "Excellent",
+     "Yes",
+     "Excellent"
     ],
     [
-     "✓ Shipped team work",
-     "3 badges = 3 real projects"
+     "Good",
+     "Yes",
+     "Good"
+    ],
+    [
+     "Fair",
+     "Yes",
+     "Fair"
+    ],
+    [
+     "Poor",
+     "No badge",
+     "—"
     ]
    ],
    "beats": [
     {
-     "say": "A badge is not a certificate from a course, and it's not a test score.",
-     "show": 0
+     "say": "The lead rates each member's contribution on four steps.",
+     "col": 0
     },
     {
-     "say": "Someone can watch a hundred tutorials and still have zero badges.",
-     "show": 1
+     "say": "Excellent, good or fair: the badge is awarded, and the rating shows on it.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 2,
+     "sql": "Badge awarded only if the rating is not Poor"
     },
     {
-     "say": "Badges only come from shipping work with a team. Three badges means three finished real projects.",
-     "show": 2
+     "say": "Poor: no badge for that project at all.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "So every badge you see also tells you how well that person contributed.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "What a badge isn't",
+   "title": "Learning earns zero badges",
+   "values": [
+    "Tutorial",
+    "Course",
+    "Tutorial",
+    "Project 1",
+    "Course",
+    "Project 2",
+    "Tutorial",
+    "Project 3"
+   ],
+   "beats": [
+    {
+     "say": "Here's one member's year: tutorials, courses, and projects."
+    },
+    {
+     "say": "Tutorials and courses teach, but they don't earn badges. A badge isn't a certificate or a test score.",
+     "gone": [
+      0,
+      1,
+      2,
+      4,
+      6
+     ],
+     "note": "Learning: 0 badges"
+    },
+    {
+     "say": "Only finished, reviewed team projects count.",
+     "gone": [
+      0,
+      1,
+      2,
+      4,
+      6
+     ],
+     "ok": [
+      3,
+      5,
+      7
+     ],
+     "note": "3 projects → 3 badges"
+    },
+    {
+     "say": "Three badges means three real projects, a stronger signal than any number of courses.",
+     "gone": [
+      0,
+      1,
+      2,
+      4,
+      6
+     ],
+     "ok": [
+      3,
+      5,
+      7
+     ],
+     "note": "Proof over pedigree"
     }
    ]
   },
@@ -185,7 +405,7 @@ Every badge belongs to one of six tracks. Each track is a family of related tech
 - **TechArchs** (Low/No-Code Developer): builds working products on no-code and low-code platforms, and automates workflows.
 - **TechQA** (Quality Tester): ensures software quality through testing, reviews, and quality control.
 - **TechGuard** (Network and Cybersecurity): protects systems and networks, and runs cloud administration and DevOps.
-- **TechPO** (Product / Project Owner): owns product vision, requirements, and the backlog, and steers projects to completion. Every project lead earns a TechPO badge.
+- **TechPO** (Product / Project Owner): owns product vision, requirements, and the backlog, and steers projects to completion. The lead of every free project earns a TechPO badge (never on paid projects, and never for company accounts).
 - **TechLeads** (Non-Technical Roles): fills delivery and non-coding roles such as project management, technical writing, and research.
 
 A member can hold badges in more than one track. Someone with TechDev and TechLeads badges has proven both hands-on building and delivery skills, which is the kind of range a small team often needs.
@@ -208,88 +428,247 @@ A member can hold badges in more than one track. Someone with TechDev and TechLe
    ]
   },
   {
-   "kind": "list",
-   "art": "code",
-   "kicker": "Building tracks",
-   "title": "Develop, build, test, protect",
-   "items": [
+   "kind": "table",
+   "kicker": "The six tracks",
+   "title": "Six families of tech roles",
+   "columns": [
+    "Track",
+    "Role family",
+    "Proven work"
+   ],
+   "rows": [
     [
      "TechDev",
-     "Writes and ships software"
+     "Coding developer",
+     "Writes, ships software"
     ],
     [
      "TechArchs",
-     "Low/no-code builds, automation"
+     "Low/no-code developer",
+     "No-code builds, flows"
     ],
     [
      "TechQA",
-     "Testing and quality control"
+     "Quality tester",
+     "Testing, reviews, QC"
     ],
     [
      "TechGuard",
-     "Security, cloud admin, DevOps"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "Tech Dev, coding developers, who write and ship software across frontend, backend, mobile, and full-stack.",
-     "show": 1
-    },
-    {
-     "say": "Tech Archs, low and no-code developers, who build products on no-code and low-code platforms, and automate workflows.",
-     "show": 2
-    },
-    {
-     "say": "Tech Q A, quality testers, through testing, reviews, and quality control.",
-     "show": 3
-    },
-    {
-     "say": "Tech Guard, network and cybersecurity, plus cloud administration and Dev Ops.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "people",
-   "kicker": "Owning and delivering",
-   "title": "Product and delivery tracks",
-   "items": [
+     "Network + security",
+     "Network, cloud, DevOps"
+    ],
     [
      "TechPO",
-     "Vision, backlog · every lead earns one"
+     "Product/project owner",
+     "Vision, backlog"
     ],
     [
      "TechLeads",
-     "PM, technical writing, research"
+     "Non-technical roles",
+     "PM, writing, research"
     ]
    ],
    "beats": [
     {
-     "say": "Tech P O, product or project owners, who own vision, requirements and the backlog. Every project lead earns a Tech P O badge.",
-     "show": 1
+     "say": "Tech Dev: coding developers, who write and ship software across frontend, backend, mobile, and full-stack.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "Tech Leads, non-technical roles, like project management, technical writing, and research.",
-     "show": 2
+     "say": "Tech Archs: low and no-code developers, who build products and automate workflows.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Tech Q A: quality testers, through testing, reviews, and quality control.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Tech Guard: network and cybersecurity, plus cloud administration and Dev Ops.",
+     "hl": 3,
+     "dim": true
+    },
+    {
+     "say": "Tech P O: product or project owners, who own the vision, requirements and backlog.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "And Tech Leads: non-technical roles, like project management, technical writing, and research.",
+     "hl": 5,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "venn",
-   "kicker": "Range",
-   "title": "More than one track",
-   "big": "TechDev + TechLeads",
-   "sub": "building and delivery, proven",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "On a project",
+   "title": "One project, several tracks",
+   "nodes": [
     {
-     "say": "A member can hold badges in more than one track.",
-     "show": 0
+     "id": "proj",
+     "label": "Cohort project",
+     "x": 50,
+     "y": 50,
+     "sub": "reviewed + approved",
+     "art": "rocket"
     },
     {
-     "say": "Tech Dev plus Tech Leads shows both hands-on building and delivery skills, the range a small team often needs.",
-     "show": 1
+     "id": "lead",
+     "label": "Lead",
+     "x": 15,
+     "y": 20,
+     "sub": "earns TechPO",
+     "art": "flag"
+    },
+    {
+     "id": "dev",
+     "label": "Developer",
+     "x": 85,
+     "y": 20,
+     "sub": "picked TechDev",
+     "art": "code"
+    },
+    {
+     "id": "qa",
+     "label": "Tester",
+     "x": 15,
+     "y": 80,
+     "sub": "picked TechQA",
+     "art": "test"
+    },
+    {
+     "id": "writer",
+     "label": "Tech writer",
+     "x": 85,
+     "y": 80,
+     "sub": "picked TechLeads",
+     "art": "pencil"
+    }
+   ],
+   "edges": [
+    {
+     "from": "proj",
+     "to": "lead"
+    },
+    {
+     "from": "proj",
+     "to": "dev"
+    },
+    {
+     "from": "proj",
+     "to": "qa"
+    },
+    {
+     "from": "proj",
+     "to": "writer"
+    }
+   ],
+   "beats": [
+    {
+     "say": "One cohort project usually covers several tracks.",
+     "show": 1,
+     "on": "proj"
+    },
+    {
+     "say": "Each member picks one track for the project when applying.",
+     "show": 5,
+     "on": [
+      "dev",
+      "qa",
+      "writer"
+     ]
+    },
+    {
+     "say": "When the project is approved, the developer earns a Tech Dev badge.",
+     "show": 5,
+     "on": "dev",
+     "send": {
+      "from": "proj",
+      "to": "dev",
+      "label": "TechDev badge"
+     }
+    },
+    {
+     "say": "The tester, Tech Q A.",
+     "show": 5,
+     "on": "qa",
+     "send": {
+      "from": "proj",
+      "to": "qa",
+      "label": "TechQA badge"
+     }
+    },
+    {
+     "say": "The technical writer, Tech Leads.",
+     "show": 5,
+     "on": "writer",
+     "send": {
+      "from": "proj",
+      "to": "writer",
+      "label": "TechLeads badge"
+     }
+    },
+    {
+     "say": "And the lead of every free project earns a Tech P O badge automatically.",
+     "show": 5,
+     "on": "lead",
+     "send": {
+      "from": "proj",
+      "to": "lead",
+      "label": "TechPO badge"
+     }
+    },
+    {
+     "say": "If someone's work fit a different track, the lead can change it, with a reason the member sees.",
+     "show": 5,
+     "on": "writer"
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Range",
+   "title": "Badges in more than one track",
+   "values": [
+    "TechDev",
+    "TechLeads",
+    "TechDev",
+    "TechDev",
+    "TechLeads"
+   ],
+   "beats": [
+    {
+     "say": "Here are one member's five badges, in the order she earned them."
+    },
+    {
+     "say": "Three are Tech Dev: proven hands-on building.",
+     "hl": [
+      0,
+      2,
+      3
+     ],
+     "note": "TechDev: 3 badges"
+    },
+    {
+     "say": "Two are Tech Leads: proven delivery.",
+     "hl": [
+      1,
+      4
+     ],
+     "note": "TechLeads: 2 badges"
+    },
+    {
+     "say": "Building and delivery, both proven. That's the range a small team often needs.",
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Two tracks, both proven"
     }
    ]
   },
@@ -385,22 +764,25 @@ Always pair the level with the track. An advanced TechQA member is a strong test
    ]
   },
   {
-   "kind": "list",
-   "art": "pyramid",
+   "kind": "table",
    "kicker": "Levels",
-   "title": "Four levels per track",
-   "items": [
+   "title": "Four levels, counted per track",
+   "columns": [
+    "Level",
+    "Badges in one track"
+   ],
+   "rows": [
     [
      "Novice",
-     "1–2 badges"
+     "1 to 2"
     ],
     [
      "Associate",
-     "3–6"
+     "3 to 6"
     ],
     [
      "Advanced",
-     "7–11"
+     "7 to 11"
     ],
     [
      "Expert",
@@ -409,71 +791,154 @@ Always pair the level with the track. An advanced TechQA member is a strong test
    ],
    "beats": [
     {
+     "say": "A level is just a count of badges in one track.",
+     "sql": "Level = number of badges in that one track"
+    },
+    {
      "say": "Novice, one to two badges.",
-     "show": 1
+     "hl": 0,
+     "dim": true
     },
     {
      "say": "Associate, three to six.",
-     "show": 2
+     "hl": 1,
+     "dim": true
     },
     {
      "say": "Advanced, seven to eleven.",
-     "show": 3
+     "hl": 2,
+     "dim": true
     },
     {
      "say": "Expert, twelve or more.",
-     "show": 4
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "A higher level means more delivered and reviewed work in that specific area.",
-     "show": 4
+     "say": "Time on the platform doesn't count. Only delivered, reviewed work in that track.",
+     "col": 1
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "scales",
+   "kind": "array",
+   "kicker": "Worked example",
+   "title": "Advanced in one track, Novice in another",
+   "values": [
+    "TechQA",
+    "TechQA",
+    "TechQA",
+    "TechDev",
+    "TechQA",
+    "TechQA",
+    "TechQA",
+    "TechQA"
+   ],
+   "beats": [
+    {
+     "say": "Here are one member's eight badges, oldest first."
+    },
+    {
+     "say": "Her first two are Tech Q A. That makes her a Novice tester.",
+     "hl": [
+      0,
+      1
+     ],
+     "note": "TechQA: 2 → Novice"
+    },
+    {
+     "say": "A third Tech Q A badge moves her up to Associate.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "note": "TechQA: 3 → Associate"
+    },
+    {
+     "say": "Then one Tech Dev badge. It's counted separately: Novice in Tech Dev.",
+     "hl": 3,
+     "note": "TechDev: 1 → Novice"
+    },
+    {
+     "say": "Four more Tech Q A badges make seven. She's Advanced in Tech Q A.",
+     "hl": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6,
+      7
+     ],
+     "note": "TechQA: 7 → Advanced"
+    },
+    {
+     "say": "So for a coding role, read her Tech Dev level: Novice, not Advanced.",
+     "hl": 3,
+     "gone": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6,
+      7
+     ],
+     "note": "Coding depth: TechDev Novice"
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Using level",
    "title": "Match level to the stakes",
-   "items": [
+   "columns": [
+    "Your need",
+    "Read this track",
+    "What to weigh"
+   ],
+   "rows": [
     [
      "Small, scoped task",
-     "Lower level can be ideal"
+     "Matching track",
+     "Interview; any level"
     ],
     [
-     "High-stakes work",
-     "Weight level in the exact track"
+     "Can't-fail project",
+     "Exact track",
+     "Higher level"
+    ],
+    [
+     "Coding role",
+     "TechDev",
+     "TechDev level only"
+    ],
+    [
+     "Testing role",
+     "TechQA",
+     "TechQA level only"
     ]
    ],
    "beats": [
     {
-     "say": "A member can be advanced in one track and a beginner in another. That's normal and useful.",
-     "show": 0
-    },
-    {
      "say": "For a small, well-scoped task, an eager lower-level member who interviews well can be ideal.",
-     "show": 1
+     "hl": 0,
+     "dim": true
     },
     {
      "say": "For something you can't afford to get wrong, weight the level in the exact track the work falls under.",
-     "show": 2
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "warning",
-   "kicker": "The most common misread",
-   "title": "Pair level with track",
-   "quote": "A high level is only high for the track it sits in.",
-   "beats": [
-    {
-     "say": "Always pair the level with the track.",
-     "show": 0
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "An advanced Tech Q A member is a strong tester, but that says nothing about their coding depth.",
-     "show": 1
+     "say": "And always pair level with track. A high level is only high for the track it sits in.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2
     }
    ]
   },
@@ -547,13 +1012,13 @@ Always pair the level with the track. An advanced TechQA member is a strong test
 
 Members earn badges on **cohort projects** run by She Model Tech: 6-week team projects with a lead, where She Model Tech reviews the finished work. Companies don't run projects on the platform; you hire through **job posts**.
 
-- **Browse the Talent Board** to find members by track and level, and open their profiles to see each badge and the project behind it.
-- **Message members** you're interested in. Free company accounts can start a limited number of new conversations each month; company tiers include unlimited messaging.
+- **Browse the Talent Board** to find members: filter by track, or search by name or specialisation, then open their profiles to see each badge, its level, its contribution rating, and the project behind it.
+- **Message members** you're interested in. Free company accounts can start 5 new conversations a month; company tiers include unlimited messaging.
 - **Post a job** (full-time, part-time, contract, or internship) with your own application link or email and the dates applications are open. Job posting is included in company tiers and needs a verified company account. Verification is free.
 
 Members apply through your link or email, so your own hiring process stays the same. Read their badges to judge fit, then interview as you normally would.
 
-You may also see **paid projects** on member profiles. These are run and paid for by She Model Tech for members 18 and older who already hold at least one badge. They don't award badges, but they show the member has delivered paid team work.
+You may also see **paid projects** on member profiles. These are run and paid for by She Model Tech for members 18 and older. They don't award badges, but they show the member has delivered paid team work.
 
 ```watch
 {
@@ -576,79 +1041,242 @@ You may also see **paid projects** on member profiles. These are run and paid fo
    ]
   },
   {
-   "kind": "flow",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Hiring",
-   "title": "Three steps",
-   "steps": [
-    "Browse the Talent Board",
-    "Message members",
-    "Post a job"
+   "title": "From cohort project to your hire",
+   "nodes": [
+    {
+     "id": "smt",
+     "label": "She Model Tech",
+     "x": 10,
+     "y": 30,
+     "sub": "runs cohort projects",
+     "art": "rocket"
+    },
+    {
+     "id": "board",
+     "label": "Talent Board",
+     "x": 35,
+     "y": 75,
+     "sub": "filter by track",
+     "art": "search"
+    },
+    {
+     "id": "you",
+     "label": "Your company",
+     "x": 60,
+     "y": 30,
+     "sub": "verified account",
+     "art": "idcard"
+    },
+    {
+     "id": "member",
+     "label": "Member",
+     "x": 88,
+     "y": 25,
+     "sub": "badges on profile",
+     "art": "persona"
+    },
+    {
+     "id": "job",
+     "label": "Job post",
+     "x": 85,
+     "y": 80,
+     "sub": "your link or email",
+     "art": "megaphone"
+    }
+   ],
+   "edges": [
+    {
+     "from": "smt",
+     "to": "board"
+    },
+    {
+     "from": "board",
+     "to": "you"
+    },
+    {
+     "from": "you",
+     "to": "member"
+    },
+    {
+     "from": "you",
+     "to": "job"
+    },
+    {
+     "from": "job",
+     "to": "member"
+    }
    ],
    "beats": [
     {
-     "say": "Browse the Talent Board to find members by track and level, and open profiles to see each badge and the project behind it.",
-     "show": 1
+     "say": "Reviewed badges from cohort projects appear on members' profiles, and on the Talent Board.",
+     "show": 2,
+     "on": "board",
+     "send": {
+      "from": "smt",
+      "to": "board",
+      "label": "badges"
+     }
     },
     {
-     "say": "Message members you're interested in. Free company accounts can start a limited number of new conversations each month, and company tiers include unlimited messaging.",
-     "show": 2
+     "say": "You filter the Talent Board by track, then open profiles to see each badge, its level, and the project behind it.",
+     "show": 3,
+     "on": "you",
+     "send": {
+      "from": "board",
+      "to": "you",
+      "label": "profiles"
+     }
     },
     {
-     "say": "Post a job: full-time, part-time, contract, or internship, with your own application link or email and the dates applications are open.",
-     "show": 3
+     "say": "Message the members you're interested in.",
+     "show": 4,
+     "on": "member",
+     "send": {
+      "from": "you",
+      "to": "member",
+      "label": "message"
+     }
+    },
+    {
+     "say": "Or post a job: full-time, part-time, contract, or internship, with the dates applications are open.",
+     "show": 5,
+     "on": "job",
+     "send": {
+      "from": "you",
+      "to": "job",
+      "label": "job post"
+     }
+    },
+    {
+     "say": "Members apply through your own link or email, so your hiring process stays the same.",
+     "show": 5,
+     "on": "member",
+     "send": {
+      "from": "member",
+      "to": "job",
+      "label": "applies"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "megaphone",
-   "kicker": "Job posts",
-   "title": "What you need",
-   "items": [
+   "kind": "table",
+   "kicker": "Accounts",
+   "title": "Free account or company tier",
+   "columns": [
+    "Feature",
+    "Free company",
+    "Company tier"
+   ],
+   "rows": [
     [
-     "Company tier",
-     "Includes job posting"
+     "Browse Talent Board",
+     "Yes",
+     "Yes"
     ],
     [
-     "Verified account",
-     "Verification is free"
+     "New conversations",
+     "5 a month",
+     "Unlimited"
     ],
     [
-     "Your own process",
-     "Members apply via your link or email"
+     "Post a job",
+     "No",
+     "Yes, once verified"
+    ],
+    [
+     "Verification",
+     "Free",
+     "Free"
     ]
    ],
    "beats": [
     {
+     "say": "Any company account can browse the Talent Board.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "A free account can start five new conversations a month. Company tiers include unlimited messaging.",
+     "hl": 1,
+     "dim": true
+    },
+    {
      "say": "Job posting is included in company tiers, and needs a verified company account.",
-     "show": 1
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Verification is free.",
-     "show": 2
-    },
-    {
-     "say": "Members apply through your link or email, so your own hiring process stays the same. Read their badges, then interview as usual.",
-     "show": 3
+     "say": "And verification itself is free.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "coin",
+   "kind": "table",
    "kicker": "On profiles",
-   "title": "Paid projects",
-   "big": "Paid projects",
-   "sub": "no badge, but proof of paid team work",
+   "title": "Cohort projects and paid projects",
+   "columns": [
+    "",
+    "Cohort project",
+    "Paid project"
+   ],
+   "rows": [
+    [
+     "Run by",
+     "She Model Tech",
+     "She Model Tech"
+    ],
+    [
+     "Awards a badge?",
+     "Yes, after review",
+     "No, never"
+    ],
+    [
+     "Members paid?",
+     "No",
+     "Yes"
+    ],
+    [
+     "Who can join",
+     "Any member",
+     "18 and older"
+    ],
+    [
+     "Shows you",
+     "Reviewed skill",
+     "Paid team work"
+    ]
+   ],
    "beats": [
     {
-     "say": "You may also see paid projects on member profiles.",
-     "show": 0
+     "say": "Badges come from cohort projects, after She Model Tech reviews the work.",
+     "col": 1
     },
     {
-     "say": "They're run and paid for by She Model Tech for members eighteen and older with at least one badge. They don't award badges, but they show paid team work.",
-     "show": 1
+     "say": "You may also see paid projects on profiles. She Model Tech runs and pays for those too.",
+     "col": 2
+    },
+    {
+     "say": "Paid projects never award badges.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "They're open to members eighteen and older.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "What they show you is that the member has delivered paid team work.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
     }
    ]
   },
@@ -726,12 +1354,14 @@ You now have every piece, and here is a reliable order for reading a profile:
 2. Look at the level in the track you care about. This tells you how much proven depth they have there.
 3. Look at the number of badges. This tells you how consistently they deliver real, shipped work.
 
+Each badge also shows the lead's contribution rating, which adds one more piece of evidence.
+
 In under a minute you can move from a name to a grounded, evidence-based read on whether someone fits your role. When a profile fits, message the member or point them to your job post.
 
 ### What You Learned
 - ✅ Why proven work beats stated credentials on She Model Tech
 - ✅ The six tracks and the work each one represents
-- ✅ How badge levels show depth within a track
+- ✅ How badge levels show depth within a track, and what contribution ratings add
 - ✅ How to hire: the Talent Board, messages, and job posts
 - ✅ A fast, reliable order for reading any member profile
 
@@ -755,45 +1385,201 @@ In under a minute you can move from a name to a grounded, evidence-based read on
    ]
   },
   {
-   "kind": "flow",
-   "art": "search",
+   "kind": "array",
    "kicker": "Reading a profile",
    "title": "A reliable order",
-   "steps": [
-    "Tracks: the kind of work",
-    "Level: depth in your track",
-    "Badge count: consistency"
+   "values": [
+    "Tracks",
+    "Level in your track",
+    "Badge count",
+    "Act"
    ],
    "beats": [
     {
-     "say": "First, look at which tracks the member holds badges in. That's the kind of work they can do.",
-     "show": 1
+     "say": "First, the tracks: the kind of work they can do.",
+     "hl": 0,
+     "ptr": {
+      "step": 0
+     },
+     "note": "What kind of work?"
     },
     {
-     "say": "Second, look at the level in the track you care about. That's how much proven depth they have there.",
-     "show": 2
+     "say": "Second, the level in the track you care about: how much proven depth they have there.",
+     "ok": [
+      0
+     ],
+     "hl": 1,
+     "ptr": {
+      "step": 1
+     },
+     "note": "How deep, in your track?"
     },
     {
-     "say": "Third, look at the number of badges. That's how consistently they deliver real, shipped work.",
-     "show": 3
+     "say": "Third, the number of badges: how consistently they deliver real, shipped work.",
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2,
+     "ptr": {
+      "step": 2
+     },
+     "note": "How consistent?"
+    },
+    {
+     "say": "Then act on what you've read.",
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3,
+     "ptr": {
+      "step": 3
+     },
+     "note": "Message or job post"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "stopwatch",
+   "kind": "table",
+   "kicker": "Worked example",
+   "title": "Reading one profile for a developer role",
+   "columns": [
+    "Track",
+    "Badges",
+    "Level"
+   ],
+   "rows": [
+    [
+     "TechDev",
+     "4",
+     "Associate"
+    ],
+    [
+     "TechLeads",
+     "2",
+     "Novice"
+    ],
+    [
+     "TechQA",
+     "1",
+     "Novice"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Say you're hiring a developer, and you open this profile.",
+     "sql": "Hiring: developer"
+    },
+    {
+     "say": "Step one, tracks: she's proven development, delivery, and testing work.",
+     "col": 0
+    },
+    {
+     "say": "Step two, your track: four Tech Dev badges, so she's an Associate there.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Step three, the count: seven badges in all, so she delivers consistently.",
+     "col": 1,
+     "sql": "4 + 2 + 1 = 7 badges"
+    },
+    {
+     "say": "Each badge also shows the lead's contribution rating, which adds one more piece of evidence.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "col": 1
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Result",
-   "title": "Under a minute",
-   "big": "< 1 minute",
-   "sub": "from a name to an evidence-based read",
+   "title": "From a name to a next step",
+   "nodes": [
+    {
+     "id": "profile",
+     "label": "Profile",
+     "x": 12,
+     "y": 50,
+     "sub": "a name",
+     "art": "idcard"
+    },
+    {
+     "id": "read",
+     "label": "Your read",
+     "x": 48,
+     "y": 50,
+     "sub": "tracks, level, count",
+     "art": "search"
+    },
+    {
+     "id": "msg",
+     "label": "Message her",
+     "x": 86,
+     "y": 20,
+     "sub": "start a conversation",
+     "art": "chat"
+    },
+    {
+     "id": "job",
+     "label": "Your job post",
+     "x": 86,
+     "y": 80,
+     "sub": "apply on your site",
+     "art": "megaphone"
+    }
+   ],
+   "edges": [
+    {
+     "from": "profile",
+     "to": "read"
+    },
+    {
+     "from": "read",
+     "to": "msg"
+    },
+    {
+     "from": "read",
+     "to": "job"
+    }
+   ],
    "beats": [
     {
      "say": "In under a minute, you move from a name to a grounded, evidence-based read on fit.",
-     "show": 0
+     "show": 2,
+     "on": "read",
+     "send": {
+      "from": "profile",
+      "to": "read",
+      "label": "under 1 minute"
+     }
     },
     {
-     "say": "When a profile fits, message the member, or point them to your job post.",
-     "show": 1
+     "say": "When a profile fits, message the member,",
+     "show": 3,
+     "on": "msg",
+     "send": {
+      "from": "read",
+      "to": "msg",
+      "label": "hello"
+     }
+    },
+    {
+     "say": "or point them to your job post.",
+     "show": 4,
+     "on": "job",
+     "send": {
+      "from": "read",
+      "to": "job",
+      "label": "apply link"
+     }
     }
    ]
   },

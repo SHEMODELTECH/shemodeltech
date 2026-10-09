@@ -211,288 +211,699 @@ You have reviewed your own wireframe or flow against all four principles, consis
    ]
   },
   {
-   "kind": "list",
-   "art": "layout",
+   "kind": "table",
    "kicker": "Topic 1 · Wireframes",
-   "title": "Structure, not polish",
-   "items": [
+   "title": "Wireframe the reminder screen",
+   "columns": [
+    "Region",
+    "Low-fi sketch",
+    "Annotation"
+   ],
+   "rows": [
     [
-     "Low fidelity",
-     "Boxes, lines, placeholder text"
+     "Header",
+     "[Plant name]",
+     "—"
     ],
     [
-     "Placeholder content",
-     "Gray boxes · Lorem ipsum"
+     "Photo",
+     "gray box",
+     "—"
     ],
     [
-     "Annotations",
-     "\"This button opens a modal\""
+     "Next watering",
+     "Lorem ipsum",
+     "—"
+    ],
+    [
+     "Main button",
+     "[ Water now ]",
+     "—"
+    ],
+    [
+     "Care tips",
+     "gray bar",
+     "—"
     ]
    ],
    "beats": [
     {
-     "say": "A wireframe is a low detail sketch of a screen: what's on it, and roughly where. No colours, fonts or finished visuals.",
-     "show": 0
+     "say": "Let's wireframe the plant care app's reminder screen: what's on it, and roughly where.",
+     "col": 0
     },
     {
-     "say": "Low fidelity uses boxes, lines and placeholder text. High fidelity, sometimes called a mockup, looks close to finished.",
-     "show": 1
+     "say": "Low fidelity means boxes, lines and placeholder text. No colours or fonts.",
+     "sql": "Low fidelity: boxes · lines · placeholder text",
+     "col": 1
     },
     {
-     "say": "Placeholder content, like gray boxes or lorem ipsum, keeps the focus on structure.",
-     "show": 2
+     "say": "The photo is a gray box, the text is lorem ipsum. Placeholders keep the focus on structure.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And annotations explain behaviour you can't see, like: this button opens a modal.",
-     "show": 3
+     "say": "But a static sketch can't show what tapping does.",
+     "hl": 4,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "So we add annotations. Tapping care tips expands the care instructions.",
+     "sql": "Care tips → \"tap to expand care instructions\"",
+     "hl": 4,
+     "col": 2
+    },
+    {
+     "say": "Tapping water now resets the countdown.",
+     "sql": "Water now → \"resets the next-watering countdown\"",
+     "hl": 3,
+     "col": 2
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "warning",
+   "kind": "table",
+   "kicker": "Topic 1 · Wireframes",
+   "title": "Two layouts, compared",
+   "columns": [
+    "",
+    "A · List",
+    "B · Cards"
+   ],
+   "rows": [
+    [
+     "Plants per screen",
+     "About 6 rows",
+     "1 big card"
+    ],
+    [
+     "Next watering",
+     "Small, per row",
+     "Large, top of card"
+    ],
+    [
+     "Photo",
+     "Tiny thumbnail",
+     "Large gray box"
+    ],
+    [
+     "Best for",
+     "Many plants",
+     "A few plants"
+    ]
+   ],
+   "beats": [
+    {
+     "say": "Next, a meaningfully different second layout."
+    },
+    {
+     "say": "Layout A is a list of about six plants. Layout B gives each plant one big card.",
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "In the list, the next watering is small text. On the card, it's large, at the top.",
+     "hl": 1,
+     "dim": true
+    },
+    {
+     "say": "Trade-offs: the list suits many plants, but reminders are easier to miss.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Cards make reminders obvious, but mean more scrolling. Both were cheap to try.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
    "kicker": "Topic 1 · Wireframes",
    "title": "Stay low-fidelity longer",
-   "quote": "Low-fidelity gets structural feedback. High-fidelity gets \"I don't like this colour.\"",
-   "beats": [
+   "nodes": [
     {
-     "say": "Beginners often jump straight to colourful, high fidelity designs.",
-     "show": 0
+     "id": "lo",
+     "label": "Low-fi wireframe",
+     "sub": "boxes and lines",
+     "x": 15,
+     "y": 25,
+     "art": "layout"
     },
     {
-     "say": "But feedback on a polished mockup tends to be about visuals, like, I don't like this colour, even when structural feedback is what you need.",
-     "show": 1
+     "id": "team",
+     "label": "Stakeholders",
+     "sub": "give feedback",
+     "x": 50,
+     "y": 50,
+     "art": "people"
     },
     {
-     "say": "And a confusing layout found late means redoing all that polish.",
-     "show": 1
+     "id": "hi",
+     "label": "High-fi mockup",
+     "sub": "colours and fonts",
+     "x": 15,
+     "y": 78,
+     "art": "palette"
+    },
+    {
+     "id": "s",
+     "label": "Structural",
+     "sub": "is the layout right?",
+     "x": 85,
+     "y": 25,
+     "art": "blueprint"
+    },
+    {
+     "id": "v",
+     "label": "Visual",
+     "sub": "I don't like the colour",
+     "x": 85,
+     "y": 78,
+     "art": "cross"
     }
-   ]
-  },
-  {
-   "kind": "flow",
-   "art": "blueprint",
-   "kicker": "Topic 1 · Lab",
-   "title": "Two wireframes, compared",
-   "steps": [
-    "Pick one screen",
-    "Gray boxes only",
-    "Add 3 to 4 annotations",
-    "Second layout + trade-offs"
+   ],
+   "edges": [
+    {
+     "from": "lo",
+     "to": "team"
+    },
+    {
+     "from": "hi",
+     "to": "team"
+    },
+    {
+     "from": "team",
+     "to": "s"
+    },
+    {
+     "from": "team",
+     "to": "v"
+    }
    ],
    "beats": [
     {
-     "say": "In the lab, start a new Figma file.",
-     "show": 0
-    },
-    {
-     "say": "Pick one screen, like the plant care app's reminder screen.",
-     "show": 1
-    },
-    {
-     "say": "Sketch it with only gray boxes, simple lines and placeholder text.",
+     "say": "Why not jump to a polished design? Compare the feedback.",
      "show": 2
     },
     {
-     "say": "Add three or four annotations.",
-     "show": 3
+     "say": "Show stakeholders the wireframe.",
+     "show": 2,
+     "on": "lo",
+     "send": {
+      "from": "lo",
+      "to": "team",
+      "label": "gray boxes"
+     }
     },
     {
-     "say": "Then make a second, meaningfully different layout, and write two sentences on the trade-offs.",
-     "show": 4
+     "say": "The feedback is structural: should this button be higher up?",
+     "show": 4,
+     "on": "s",
+     "send": {
+      "from": "team",
+      "to": "s",
+      "label": "move button up?"
+     }
+    },
+    {
+     "say": "Show a high fidelity mockup instead.",
+     "show": 4,
+     "on": "hi",
+     "send": {
+      "from": "hi",
+      "to": "team",
+      "label": "full colour"
+     }
+    },
+    {
+     "say": "The feedback turns visual: I don't like this colour.",
+     "show": 5,
+     "on": "v",
+     "send": {
+      "from": "team",
+      "to": "v",
+      "label": "change colour"
+     }
+    },
+    {
+     "say": "And a layout problem found now means redoing the polish. Stay low fidelity longer.",
+     "show": 5,
+     "on": [
+      "lo",
+      "s"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "path",
+   "kind": "diagram",
    "kicker": "Topic 2 · User flows",
-   "title": "From here to the goal",
-   "items": [
-    [
-     "Start and end",
-     "One complete task"
-    ],
-    [
-     "Decision point",
-     "\"Is the user logged in?\""
-    ],
-    [
-     "Happy path vs error path",
-     "Ideal route vs things going wrong"
-    ],
-    [
-     "Drop-off point",
-     "Where users give up"
-    ]
+   "title": "Map the whole flow",
+   "nodes": [
+    {
+     "id": "start",
+     "label": "Start",
+     "sub": "tap Add plant",
+     "x": 10,
+     "y": 25,
+     "art": "cursor"
+    },
+    {
+     "id": "name",
+     "label": "Enter name",
+     "sub": "e.g. Monstera",
+     "x": 38,
+     "y": 25,
+     "art": "form"
+    },
+    {
+     "id": "dec",
+     "label": "Name exists?",
+     "sub": "decision point",
+     "x": 66,
+     "y": 25,
+     "art": "fork"
+    },
+    {
+     "id": "err",
+     "label": "Error message",
+     "sub": "error path",
+     "x": 38,
+     "y": 78,
+     "art": "warning"
+    },
+    {
+     "id": "sched",
+     "label": "Set schedule",
+     "sub": "every 7 days",
+     "x": 90,
+     "y": 52,
+     "art": "calendar"
+    },
+    {
+     "id": "end",
+     "label": "End",
+     "sub": "reminder set",
+     "x": 66,
+     "y": 82,
+     "art": "flag"
+    }
+   ],
+   "edges": [
+    {
+     "from": "start",
+     "to": "name"
+    },
+    {
+     "from": "name",
+     "to": "dec"
+    },
+    {
+     "from": "dec",
+     "to": "sched"
+    },
+    {
+     "from": "sched",
+     "to": "end"
+    },
+    {
+     "from": "dec",
+     "to": "err"
+    },
+    {
+     "from": "err",
+     "to": "name"
+    }
    ],
    "beats": [
     {
-     "say": "A wireframe answers what's on this screen. A user flow answers how someone gets to their goal, and what could go wrong.",
+     "say": "A user flow shows how someone reaches a goal. Task: set a watering reminder for a new plant.",
      "show": 0
     },
     {
-     "say": "One flow is one complete task, with a clear start and end point.",
-     "show": 1
+     "say": "A clear start: the user taps add plant.",
+     "show": 1,
+     "on": "start"
     },
     {
-     "say": "A decision point is a branch, like: is the user logged in?",
-     "show": 2
+     "say": "They type the plant's name.",
+     "show": 2,
+     "on": "name",
+     "send": {
+      "from": "start",
+      "to": "name",
+      "label": "new plant"
+     }
     },
     {
-     "say": "The happy path is the ideal route. An error path covers things going wrong, like a failed login.",
-     "show": 3
+     "say": "A decision point: does that name already exist?",
+     "show": 3,
+     "on": "dec",
+     "send": {
+      "from": "name",
+      "to": "dec",
+      "label": "Monstera"
+     }
     },
     {
-     "say": "And a drop-off point is where users commonly give up.",
-     "show": 4
+     "say": "If so, the error path shows a message.",
+     "show": 4,
+     "on": "err",
+     "send": {
+      "from": "dec",
+      "to": "err",
+      "label": "already exists"
+     }
+    },
+    {
+     "say": "And sends them back to try again.",
+     "show": 4,
+     "on": "name",
+     "send": {
+      "from": "err",
+      "to": "name",
+      "label": "try again"
+     }
+    },
+    {
+     "say": "On the happy path, they set a schedule.",
+     "show": 5,
+     "on": "sched",
+     "send": {
+      "from": "dec",
+      "to": "sched",
+      "label": "name is new"
+     }
+    },
+    {
+     "say": "And reach a clear end: reminder set.",
+     "show": 6,
+     "on": "end",
+     "send": {
+      "from": "sched",
+      "to": "end",
+      "label": "saved"
+     }
+    },
+    {
+     "say": "The likely drop-off point: hit that error loop twice, and users may give up.",
+     "show": 6,
+     "on": [
+      "err",
+      "name"
+     ]
+    },
+    {
+     "say": "A fix: suggest a free name, like Monstera two. The happy path alone would hide this.",
+     "show": 6,
+     "on": "err",
+     "send": {
+      "from": "err",
+      "to": "name",
+      "label": "Monstera 2?"
+     }
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "fork",
-   "kicker": "Topic 2 · Lab",
-   "title": "Map more than the happy path",
-   "steps": [
-    "Pick a multi-screen task",
-    "Draw the happy path",
-    "Add a decision + error path",
-    "Spot a drop-off, suggest a fix"
-   ],
-   "beats": [
-    {
-     "say": "Mapping only the happy path is a common mistake. Real users hit errors and change their minds.",
-     "show": 0
-    },
-    {
-     "say": "In the lab, pick a multi-screen task, like setting a watering reminder for a new plant.",
-     "show": 1
-    },
-    {
-     "say": "Draw the happy path as boxes and arrows.",
-     "show": 2
-    },
-    {
-     "say": "Add a decision point and an error path, like: plant name already exists.",
-     "show": 3
-    },
-    {
-     "say": "Then mark one likely drop-off point, and suggest a design change to reduce it.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "cursor",
+   "kind": "table",
    "kicker": "Topic 3 · UX principles",
-   "title": "Four principles",
-   "items": [
+   "title": "Review the screen, principle by principle",
+   "columns": [
+    "Principle",
+    "What we found",
+    "Fix"
+   ],
+   "rows": [
     [
      "Consistency",
-     "Same look, same behaviour"
+     "2 button styles",
+     "One style everywhere"
     ],
     [
      "Feedback",
-     "A visible response to every action"
-    ],
-    [
-     "Affordance + signifier",
-     "What it does + the cue it can"
-    ],
-    [
-     "Cognitive load",
-     "Fewer choices at once"
-    ]
-   ],
-   "beats": [
-    {
-     "say": "U X principles are defaults. Break one only with a deliberate reason.",
-     "show": 0
-    },
-    {
-     "say": "Consistency: similar elements look and behave the same everywhere.",
-     "show": 1
-    },
-    {
-     "say": "Feedback: the product clearly responds, like a pressed button, a loading spinner, or a confirmation.",
-     "show": 2
-    },
-    {
-     "say": "Affordance and signifier: what an element lets you do, and the visible cue that says you can.",
-     "show": 3
-    },
-    {
-     "say": "And cognitive load: the mental effort an interface takes. Cut unnecessary choices, steps and information.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "quote",
-   "art": "bulb",
-   "kicker": "Topic 3 · UX principles",
-   "title": "Affordance versus signifier",
-   "quote": "A button affords pressing. Its raised look is the signifier.",
-   "beats": [
-    {
-     "say": "These two ideas come from designer Don Norman.",
-     "show": 0
-    },
-    {
-     "say": "A button affords pressing. Its raised look or shadow is the signifier.",
-     "show": 1
-    },
-    {
-     "say": "Strip the signifiers into flat, ambiguous elements, and users can't tell what's interactive, even though the affordance is still there.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "search",
-   "kicker": "Topic 3 · Lab",
-   "title": "Review your own design",
-   "items": [
-    [
-     "Consistency",
-     "One fix"
-    ],
-    [
-     "Feedback",
-     "One action's response"
+     "Water now: no response",
+     "Show \"Watered ✓\""
     ],
     [
      "Signifier",
-     "One element checked"
+     "Tips bar looks flat",
+     "Add a ▸ arrow"
     ],
     [
      "Cognitive load",
-     "Busiest screen trimmed"
+     "9 choices on screen",
+     "Keep 4, rest in More"
     ]
    ],
    "beats": [
     {
-     "say": "In the lab, return to your wireframe or flow, and review it against all four.",
-     "show": 0
+     "say": "U X principles are defaults: break one only on purpose. Let's review our screen against four.",
+     "col": 0
     },
     {
-     "say": "Note one inconsistency to fix.",
+     "say": "Consistency: two different button styles.",
+     "hl": 0,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Fix: one style everywhere.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Feedback: tap water now, and nothing visibly happens.",
+     "hl": 1,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Fix: show a confirmation.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Signifier: the tips bar looks like flat text.",
+     "hl": 2,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Fix: add an arrow.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Cognitive load: nine choices at once.",
+     "hl": 3,
+     "dim": true,
+     "col": 1
+    },
+    {
+     "say": "Fix: keep four, tuck the rest into a More menu.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    }
+   ]
+  },
+  {
+   "kind": "diagram",
+   "kicker": "Topic 3 · UX principles",
+   "title": "Affordance versus signifier",
+   "nodes": [
+    {
+     "id": "user",
+     "label": "User",
+     "sub": "looking at the screen",
+     "x": 12,
+     "y": 50,
+     "art": "persona"
+    },
+    {
+     "id": "flat",
+     "label": "Flat tips bar",
+     "sub": "affords: tap",
+     "x": 50,
+     "y": 22,
+     "art": "cross"
+    },
+    {
+     "id": "arrow",
+     "label": "Tips bar with ▸",
+     "sub": "affords: tap + signifier",
+     "x": 50,
+     "y": 78,
+     "art": "cursor"
+    },
+    {
+     "id": "open",
+     "label": "Tips expand",
+     "sub": "feedback",
+     "x": 88,
+     "y": 78,
+     "art": "book"
+    }
+   ],
+   "edges": [
+    {
+     "from": "user",
+     "to": "flat"
+    },
+    {
+     "from": "user",
+     "to": "arrow"
+    },
+    {
+     "from": "arrow",
+     "to": "open"
+    }
+   ],
+   "beats": [
+    {
+     "say": "From designer Don Norman: an affordance is what an element lets you do.",
      "show": 1
     },
     {
-     "say": "Describe the visible feedback for one action.",
-     "show": 2
+     "say": "Our flat tips bar affords tapping.",
+     "show": 2,
+     "on": "flat"
     },
     {
-     "say": "Check one interactive element has a clear signifier.",
-     "show": 3
+     "say": "But nothing shows it, so users never tap.",
+     "show": 2,
+     "on": "flat",
+     "send": {
+      "from": "user",
+      "to": "flat",
+      "label": "tappable?"
+     }
     },
     {
-     "say": "And count the choices on your busiest screen, then suggest one way to reduce them.",
-     "show": 4
+     "say": "A signifier is the visible cue. Add an arrow.",
+     "show": 3,
+     "on": "arrow"
+    },
+    {
+     "say": "Now the user taps with confidence.",
+     "show": 3,
+     "on": "arrow",
+     "send": {
+      "from": "user",
+      "to": "arrow",
+      "label": "tap"
+     }
+    },
+    {
+     "say": "And the tips expand: feedback. The principles work together.",
+     "show": 4,
+     "on": "open",
+     "send": {
+      "from": "arrow",
+      "to": "open",
+      "label": "expanded"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "array",
+   "kicker": "Topic 3 · UX principles",
+   "title": "Cut the choices on the busiest screen",
+   "values": [
+    "Water now",
+    "Snooze",
+    "Skip",
+    "Edit",
+    "Share",
+    "Tips",
+    "Photo",
+    "History",
+    "Delete"
+   ],
+   "beats": [
+    {
+     "say": "Cognitive load is mental effort. Count the choices on the busiest screen.",
+     "note": "Busiest screen: 9 choices at once"
+    },
+    {
+     "say": "Nine buttons, all competing.",
+     "hl": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "note": "9 choices"
+    },
+    {
+     "say": "This screen is for watering, so water now and snooze stay.",
+     "ok": [
+      0,
+      1
+     ],
+     "note": "Main task: watering"
+    },
+    {
+     "say": "Tips and edit stay too.",
+     "ok": [
+      0,
+      1,
+      3,
+      5
+     ],
+     "note": "Keep 4"
+    },
+    {
+     "say": "The other five move into a More menu.",
+     "ok": [
+      0,
+      1,
+      3,
+      5
+     ],
+     "gone": [
+      2,
+      4,
+      6,
+      7,
+      8
+     ],
+     "note": "5 moved into a More menu"
+    },
+    {
+     "say": "Nine down to four, and no features lost.",
+     "ok": [
+      0,
+      1,
+      3,
+      5
+     ],
+     "gone": [
+      2,
+      4,
+      6,
+      7,
+      8
+     ],
+     "note": "9 → 4 choices · same features"
     }
    ]
   },

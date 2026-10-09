@@ -252,273 +252,652 @@ You have a tool recommendation with reasoning for a specific team, one working b
    ]
   },
   {
-   "kind": "list",
-   "art": "bars",
+   "kind": "table",
    "kicker": "Topic 1 · Analytics",
-   "title": "Pick the numbers that matter",
-   "items": [
+   "title": "Two or three numbers that matter",
+   "columns": [
+    "Metric",
+    "Kind",
+    "Question it answers"
+   ],
+   "rows": [
     [
-     "KPIs",
-     "2 to 3, chosen deliberately"
+     "Onboarding completion",
+     "KPI",
+     "Do users finish it?"
     ],
     [
-     "Product metrics",
-     "Activation · retention · engagement · churn"
+     "Activation",
+     "KPI · product",
+     "Reach first value?"
     ],
     [
-     "Context",
-     "WAU up, retention down?"
+     "Week-1 retention",
+     "KPI · product",
+     "Do they come back?"
+    ],
+    [
+     "Engagement",
+     "product",
+     "How much they use it"
+    ],
+    [
+     "Churn",
+     "product",
+     "Who leaves?"
+    ],
+    [
+     "Total page views",
+     "vanity",
+     "Nothing to act on"
     ]
    ],
    "beats": [
     {
-     "say": "You can't tell whether a decision worked by opinion alone.",
-     "show": 0
+     "say": "Start with a goal. For a study app's new onboarding flow: more new users finish it, and stick around.",
+     "sql": "Goal: more new users finish onboarding and stay"
     },
     {
-     "say": "K P Is, key performance indicators, are the small set of metrics that matter most for one goal. Pick too many, and it's the same as picking none.",
-     "show": 1
+     "say": "Here are six numbers you could track."
     },
     {
-     "say": "Product metrics are the broader set: activation, retention, engagement and churn.",
-     "show": 2
+     "say": "Pick just three as K P Is, key performance indicators: completion, activation, and week one retention.",
+     "hl": [
+      0,
+      1,
+      2
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "And watch for metrics that mislead alone. Weekly active users can look great while retention quietly declines.",
-     "show": 3
+     "say": "Activation, retention, engagement and churn are the broader product metrics. Each answers a different question.",
+     "hl": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Flag the one you'd worry about most. If week one retention falls, new users aren't staying.",
+     "hl": 2,
+     "dim": true
+    },
+    {
+     "say": "Page views is a vanity number. It moves, but no decision follows.",
+     "hl": 5,
+     "dim": true
+    },
+    {
+     "say": "Make all six a priority, and it's the same as picking none.",
+     "hl": [
+      0,
+      1,
+      2
+     ]
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "flask",
+   "kind": "chart",
    "kicker": "Topic 1 · Analytics",
-   "title": "A/B test, then check significance",
-   "steps": [
-    "Two versions",
-    "What you'll measure",
-    "Win condition",
-    "Check significance"
-   ],
-   "beats": [
-    {
-     "say": "An A B test runs two versions at the same time, with different users, so a result comes from the change, not something like seasonality.",
-     "show": 0
-    },
-    {
-     "say": "Describe the two versions.",
-     "show": 1
-    },
-    {
-     "say": "Decide what you'll measure.",
-     "show": 2
-    },
-    {
-     "say": "Define what counts as a win.",
-     "show": 3
-    },
-    {
-     "say": "Then check statistical significance. A small sample can look meaningful but be a coin flip.",
-     "show": 4
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "pencil",
-   "kicker": "Topic 1 · Lab",
-   "title": "Your analytics lab",
-   "items": [
+   "title": "Weekly actives up, retention down",
+   "xlabel": "week 1 → 5",
+   "ylabel": "WAU (hundreds) · retention %",
+   "points": [
     [
-     "2 to 3 KPIs",
-     "Each justified"
+     10,
+     50
     ],
     [
-     "Product metrics",
-     "One flagged"
+     30,
+     55
     ],
     [
-     "A/B test",
-     "With a win condition"
+     50,
+     60
     ],
     [
-     "Misleading metric",
-     "Needs context"
+     70,
+     65
+    ],
+    [
+     90,
+     70
+    ],
+    [
+     10,
+     40
+    ],
+    [
+     30,
+     36
+    ],
+    [
+     50,
+     32
+    ],
+    [
+     70,
+     28
+    ],
+    [
+     90,
+     24
     ]
    ],
    "beats": [
     {
-     "say": "In the lab, pick a feature and justify two or three K P Is.",
-     "show": 1
+     "say": "Five weeks of the same study app's dashboard.",
+     "groups": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "List the relevant product metrics, and flag the one you'd worry about most if it fell.",
-     "show": 2
+     "say": "The top dots are weekly active users, in hundreds: five thousand, climbing to seven thousand.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Design an A B test with a clear win condition.",
-     "show": 3
+     "say": "Up forty percent. On its own, the dashboard looks great.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "line": [
+      0.25,
+      47.5
+     ]
     },
     {
-     "say": "And find a real dashboard metric that's misleading without a second metric beside it.",
-     "show": 4
+     "say": "Now add retention: the share of new users still active a week later.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "It's quietly falling, from forty percent to twenty four.",
+     "groups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "line": [
+      -0.2,
+      42
+     ]
+    },
+    {
+     "say": "A marketing push keeps adding new users, who count as active, while fewer of them stay. Never read weekly actives without retention beside it.",
+     "marks": [
+      [
+       90,
+       70
+      ],
+      [
+       90,
+       24
+      ]
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "roadmap",
-   "kicker": "Topic 2 · Roadmapping",
-   "title": "The hard part is saying no",
-   "quote": "Without a method, the roadmap becomes whoever asked last, or loudest.",
+   "kind": "table",
+   "kicker": "Topic 1 · Analytics",
+   "title": "A/B test: real win, or coin flip?",
+   "columns": [
+    "",
+    "A · current",
+    "B · new"
+   ],
+   "rows": [
+    [
+     "Onboarding",
+     "4 steps",
+     "3 steps"
+    ],
+    [
+     "Pilot users",
+     "20",
+     "20"
+    ],
+    [
+     "Pilot completed",
+     "12 (60%)",
+     "14 (70%)"
+    ],
+    [
+     "Full-test users",
+     "2,000",
+     "2,000"
+    ],
+    [
+     "Full completed",
+     "1,200 (60%)",
+     "1,400 (70%)"
+    ]
+   ],
    "beats": [
     {
-     "say": "A roadmap is a plan for what gets built, in what order, and why.",
-     "show": 0
+     "say": "Test one change. Half of new users get the current four step onboarding, half get a new three step one, at the same time.",
+     "hl": 0
     },
     {
-     "say": "The hardest part isn't listing ideas. It's saying no to good ideas because something else matters more right now.",
-     "show": 1
+     "say": "Same weeks, so things like seasonality hit both groups equally. Any difference comes from the change.",
+     "hl": 0,
+     "col": 2
     },
     {
-     "say": "Without a stated method, a roadmap quietly becomes: whoever asked most recently, or loudest.",
-     "show": 1
+     "say": "Write the win condition first: B's completion rate beats A's, and the gap is statistically significant.",
+     "sql": "Win: B completion > A completion\nAND the gap is statistically significant"
+    },
+    {
+     "say": "After two days, twenty users each. A: twelve finished, sixty percent. B: fourteen, seventy percent.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true
+    },
+    {
+     "say": "Ten points better! But with only twenty per group, a gap that big shows up by pure chance about half the time.",
+     "hl": [
+      1,
+      2
+     ],
+     "dim": true,
+     "sql": "20 per group → gap could easily be noise → don't ship yet"
+    },
+    {
+     "say": "So keep it running. Two thousand users each, and still sixty versus seventy percent.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true
+    },
+    {
+     "say": "With two thousand per group, a ten point gap is very unlikely to be noise. It's significant, so ship B.",
+     "hl": [
+      3,
+      4
+     ],
+     "dim": true,
+     "col": 2,
+     "sql": "2,000 per group → significant → ship B"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "calc",
+   "kind": "table",
    "kicker": "Topic 2 · Roadmapping",
-   "title": "Scoring with RICE",
-   "items": [
-    [
-     "Fix slow sign-up",
-     "6,000 × 1 × 0.9 ÷ 1 = 5,400 ✓"
-    ],
+   "title": "Scoring a backlog with RICE",
+   "columns": [
+    "Idea",
+    "Reach × Impact × Conf",
+    "÷ Effort",
+    "RICE"
+   ],
+   "rows": [
     [
      "Dark mode",
-     "4,000 × 0.5 × 0.8 ÷ 2 = 800"
+     "4,000 × 0.5 × 0.8",
+     "÷ 2",
+     "800"
+    ],
+    [
+     "Offline flashcards",
+     "1,500 × 2 × 0.5",
+     "÷ 6",
+     "250"
+    ],
+    [
+     "Fix slow sign-up",
+     "6,000 × 1 × 0.9",
+     "÷ 1",
+     "5,400"
+    ],
+    [
+     "AI study coach",
+     "3,000 × 3 × 0.3",
+     "÷ 12",
+     "225"
     ]
    ],
    "beats": [
     {
-     "say": "RICE stands for reach, impact, confidence and effort.",
-     "show": 0
+     "say": "Four ideas for the study app, and only room for one right now. Saying no is the hard part."
     },
     {
-     "say": "The score is reach, times impact, times confidence, divided by effort. Confidence becomes a decimal, so eighty percent is zero point eight.",
-     "show": 0
+     "say": "RICE scores each one: reach, times impact, times confidence, divided by effort in person months.",
+     "sql": "RICE = Reach × Impact × Confidence ÷ Effort\nConfidence as a decimal: 80% → 0.8"
     },
     {
-     "say": "Fixing slow sign up reaches six thousand users, impact one, ninety percent confidence, one person month. That's five thousand four hundred.",
-     "show": 1
+     "say": "Dark mode: four thousand users, times a half, times zero point eight, is sixteen hundred. Divided by two months: eight hundred.",
+     "hl": 0,
+     "col": 3
     },
     {
-     "say": "Dark mode reaches four thousand, impact a half, eighty percent, two person months. Just eight hundred.",
-     "show": 2
+     "say": "Offline flashcards: fifteen hundred, times two, times a half, is fifteen hundred. Over six months: two hundred and fifty.",
+     "hl": 1,
+     "col": 3
     },
     {
-     "say": "So the fix ranks higher.",
-     "show": 2
+     "say": "Fixing slow sign up reaches six thousand, impact one, ninety percent, in one month: five thousand four hundred.",
+     "hl": 2,
+     "col": 3
+    },
+    {
+     "say": "The A I study coach has big impact, but thirty percent confidence and twelve months of effort. Just two hundred and twenty five.",
+     "hl": 3,
+     "col": 2
+    },
+    {
+     "say": "Low confidence drags the exciting idea down, and a small fix that reaches everyone wins.",
+     "hl": 2,
+     "dim": true,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "funnel",
-   "kicker": "Topic 2 · Lab",
-   "title": "Rank, scope, explain",
-   "steps": [
-    "List 5 to 6 ideas",
-    "Score and rank",
-    "Scope the MVP",
-    "Explain to a stakeholder",
-    "Re-rank on a new signal"
+   "kind": "array",
+   "kicker": "Topic 2 · Roadmapping",
+   "title": "Rank it, defend it, revisit it",
+   "values": [
+    "Sign-up 5,400",
+    "Dark mode 800",
+    "Offline 250",
+    "AI coach 225"
    ],
    "beats": [
     {
-     "say": "In the lab, list five or six ideas.",
-     "show": 1
+     "say": "Sort by score, and that's the roadmap order.",
+     "ptr": {
+      "next": 0
+     },
+     "note": "Highest RICE first"
     },
     {
-     "say": "Score and rank them with RICE, or a value versus effort grid.",
-     "show": 2
+     "say": "The sign up fix goes first. Its M V P: cut the form to three fields. Social login is explicitly out of scope.",
+     "ok": [
+      0
+     ],
+     "note": "MVP: 3-field form · out of scope: social login"
     },
     {
-     "say": "Scope the top idea into an M V P, with explicit out of scope items and two or three follow-ons.",
-     "show": 3
+     "say": "A stakeholder asks why dark mode waits. The answer uses the criteria, not we just decided.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      1
+     ],
+     "note": "Dark mode: 4,000 users, half impact, 2 months"
     },
     {
-     "say": "Write the one sentence why for a stakeholder whose idea didn't make it.",
-     "show": 4
+     "say": "Dark mode reaches fewer users, with half the impact, for twice the effort. Eight hundred against five thousand four hundred.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      1
+     ],
+     "note": "800 vs 5,400"
     },
     {
-     "say": "Then ask how a new signal, like a competitor launch, would change the order.",
-     "show": 5
+     "say": "Then a new signal. A competitor launches offline study, and a survey says four and a half thousand users want it.",
+     "ok": [
+      0
+     ],
+     "hl": [
+      2
+     ],
+     "note": "New signal: reach 4,500 · confidence 80%"
+    },
+    {
+     "say": "Re-score: forty five hundred, times two, times zero point eight, over six. Twelve hundred.",
+     "vals": [
+      "Sign-up 5,400",
+      "Dark mode 800",
+      "Offline 1,200",
+      "AI coach 225"
+     ],
+     "ok": [
+      0
+     ],
+     "hl": [
+      2
+     ],
+     "note": "4,500 × 2 × 0.8 ÷ 6 = 1,200"
+    },
+    {
+     "say": "Offline flashcards now passes dark mode, into second place. Same method, new inputs, a defensible new order.",
+     "vals": [
+      "Sign-up 5,400",
+      "Offline 1,200",
+      "Dark mode 800",
+      "AI coach 225"
+     ],
+     "ok": [
+      0
+     ],
+     "hl": [
+      1
+     ],
+     "note": "New order · same criteria"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "kanban",
+   "kind": "table",
    "kicker": "Topic 3 · Collaboration",
-   "title": "Four tools, different shapes",
-   "items": [
+   "title": "Match the tool to the team",
+   "columns": [
+    "Team",
+    "Needs",
+    "Best fit"
+   ],
+   "rows": [
     [
-     "Jira",
-     "Structured, engineering-heavy"
+     "5-person startup",
+     "Simple, quick setup",
+     "Trello"
     ],
     [
-     "Trello",
-     "Lightweight visual Kanban"
+     "Large eng org",
+     "Sprints, strict states",
+     "Jira"
     ],
     [
-     "Asana",
-     "In between · cross-functional"
+     "Eng + marketing launch",
+     "Cross-team tasks",
+     "Asana"
     ],
     [
-     "Notion",
-     "Docs and knowledge"
+     "Any of the above",
+     "Specs, decisions, wiki",
+     "Notion, alongside"
     ]
    ],
    "beats": [
     {
-     "say": "Plans only matter if the team can see and act on them.",
-     "show": 0
+     "say": "Plans only matter if the team can see and act on them. Start from what each team actually needs.",
+     "col": 1
     },
     {
-     "say": "Jira is built for structured, engineering heavy work: tickets, sprints, backlogs, detailed workflow states.",
-     "show": 1
+     "say": "A five person startup with a simple flow: Trello, a lightweight visual Kanban board.",
+     "hl": 0,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Trello is a lightweight, visual Kanban board, for simpler workflows and smaller teams.",
-     "show": 2
+     "say": "A large engineering org running sprints, with detailed workflow states: Jira.",
+     "hl": 1,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "Asana sits between them, often used by cross functional teams.",
-     "show": 3
+     "say": "Engineering and marketing launching together: Asana, more structure than Trello, less engineering overhead than Jira.",
+     "hl": 2,
+     "dim": true,
+     "col": 2
     },
     {
-     "say": "And Notion is strongest for docs, planning and knowledge. Many teams pair it with one of the others.",
-     "show": 4
+     "say": "And for specs, decisions and planning docs: Notion, usually alongside one of the others.",
+     "hl": 3,
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Full Jira for the five person startup? The overhead outweighs the benefit.",
+     "hl": [
+      0,
+      1
+     ],
+     "sql": "Match the tool to the need,\nnot the \"best\" tool in the abstract"
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "scales",
-   "kicker": "Topic 3 · Lab",
-   "title": "Match the tool to the need",
-   "quote": "Match the tool to the team's actual need, not the \"best\" tool in the abstract.",
-   "beats": [
+   "kind": "diagram",
+   "kicker": "Topic 3 · Collaboration",
+   "title": "A working board, plus the docs",
+   "nodes": [
     {
-     "say": "More structure than a team needs, like full Jira for a five person team, creates overhead that outweighs the benefit.",
-     "show": 0
+     "id": "spec",
+     "label": "Notion · MVP spec",
+     "sub": "why · in/out of scope",
+     "x": 14,
+     "y": 25,
+     "art": "book"
     },
     {
-     "say": "In the lab, recommend a tool for a specific team, build a board with three or four tasks, move one through a status change, and note where Notion would fit alongside it.",
-     "show": 1
+     "id": "todo",
+     "label": "To Do",
+     "sub": "3 tasks",
+     "x": 30,
+     "y": 72,
+     "art": "kanban"
+    },
+    {
+     "id": "doing",
+     "label": "In Progress",
+     "sub": "being built",
+     "x": 58,
+     "y": 72,
+     "art": "laptop"
+    },
+    {
+     "id": "done",
+     "label": "Done",
+     "sub": "shipped",
+     "x": 86,
+     "y": 72,
+     "art": "flag"
+    }
+   ],
+   "edges": [
+    {
+     "from": "spec",
+     "to": "todo"
+    },
+    {
+     "from": "todo",
+     "to": "doing"
+    },
+    {
+     "from": "doing",
+     "to": "done"
+    }
+   ],
+   "beats": [
+    {
+     "say": "The startup builds the sign up fix. The M V P spec lives in Notion.",
+     "show": 1,
+     "on": "spec"
+    },
+    {
+     "say": "Their Trello board gets three tasks from it: cut the form, speed up the email check, and time each sign up.",
+     "show": 2,
+     "on": "todo",
+     "send": {
+      "from": "spec",
+      "to": "todo",
+      "label": "3 tasks"
+     }
+    },
+    {
+     "say": "Someone starts cutting the form. The card moves to In Progress.",
+     "show": 3,
+     "on": "doing",
+     "send": {
+      "from": "todo",
+      "to": "doing",
+      "label": "Cut form"
+     }
+    },
+    {
+     "say": "When it's finished, it moves to Done. A status change the whole team can see.",
+     "show": 4,
+     "on": "done",
+     "send": {
+      "from": "doing",
+      "to": "done",
+      "label": "Cut form"
+     }
+    },
+    {
+     "say": "The why stays in Notion: RICE scores, and the out of scope list, linked from the card instead of crammed onto the board.",
+     "show": 4,
+     "on": "spec"
     }
    ]
   },

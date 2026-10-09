@@ -261,266 +261,626 @@ You have an audience analysis, a five-slide presentation with statement headline
    ]
   },
   {
-   "kind": "list",
-   "art": "calendar",
+   "kind": "table",
    "kicker": "Topic 6.1 · Meetings",
-   "title": "Meetings that reach an outcome",
-   "items": [
+   "title": "A purpose, then a timed agenda",
+   "columns": [
+    "#",
+    "Topic",
+    "Time"
+   ],
+   "rows": [
     [
-     "Purpose",
-     "An outcome, not a topic"
+     "1",
+     "Recap where we are",
+     "5 min"
     ],
     [
-     "Agenda",
-     "Timed, shared in advance"
+     "2",
+     "Compare date options",
+     "15 min"
     ],
     [
-     "Facilitator",
-     "Time, voices, focus"
+     "3",
+     "Decide the date",
+     "5 min"
     ],
     [
-     "Parking lot",
-     "Off-topic, for later"
-    ],
-    [
-     "Action items",
-     "Owner + due date"
+     "4",
+     "Confirm actions",
+     "5 min"
     ]
    ],
    "beats": [
     {
-     "say": "An hour with eight people costs a full working day, so meetings need a clear purpose.",
-     "show": 0
+     "say": "An hour with eight people costs a full working day. Discuss the launch is a topic, with nothing to finish.",
+     "sql": "Purpose: Discuss the launch  ✗"
     },
     {
-     "say": "State the purpose as an outcome.",
-     "show": 1
+     "say": "Rewrite it as an outcome: decide on the launch date.",
+     "sql": "Purpose: Decide on the launch date  ✓"
     },
     {
-     "say": "Share a timed agenda in advance, so people arrive prepared.",
-     "show": 2
+     "say": "Each agenda topic gets a time limit, and the agenda goes out at least a day ahead.",
+     "hl": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "col": 2
     },
     {
-     "say": "A facilitator keeps time, makes sure every voice is heard, and steers back to the purpose.",
-     "show": 3
-    },
-    {
-     "say": "A parking lot holds important but off-topic points for later.",
-     "show": 4
-    },
-    {
-     "say": "And every meeting ends with action items, each with an owner and a due date.",
-     "show": 5
+     "say": "The last five minutes confirm actions. And if a written update would do, cancel the meeting.",
+     "hl": 3,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "target",
+   "kind": "diagram",
    "kicker": "Concept",
-   "title": "Purpose as an outcome",
-   "quote": "✗ \"Discuss the launch\"   ✓ \"Decide on the launch date\"",
+   "title": "From purpose to owned actions",
+   "nodes": [
+    {
+     "id": "purp",
+     "label": "Purpose",
+     "x": 10,
+     "y": 30,
+     "sub": "the outcome needed",
+     "art": "target"
+    },
+    {
+     "id": "agenda",
+     "label": "Agenda",
+     "x": 36,
+     "y": 72,
+     "sub": "shared in advance",
+     "art": "calendar"
+    },
+    {
+     "id": "fac",
+     "label": "Facilitator",
+     "x": 62,
+     "y": 30,
+     "sub": "time, voices, focus",
+     "art": "people"
+    },
+    {
+     "id": "park",
+     "label": "Parking lot",
+     "x": 62,
+     "y": 85,
+     "sub": "off-topic, for later",
+     "art": "sticky"
+    },
+    {
+     "id": "act",
+     "label": "Action items",
+     "x": 90,
+     "y": 70,
+     "sub": "owner + due date",
+     "art": "checklist"
+    }
+   ],
+   "edges": [
+    {
+     "from": "purp",
+     "to": "agenda"
+    },
+    {
+     "from": "agenda",
+     "to": "fac"
+    },
+    {
+     "from": "fac",
+     "to": "park"
+    },
+    {
+     "from": "fac",
+     "to": "act"
+    }
+   ],
    "beats": [
     {
-     "say": "Here's the difference.",
-     "show": 0
+     "say": "It starts with the purpose: the outcome the meeting must reach.",
+     "show": 1,
+     "on": "purp"
     },
     {
-     "say": "Discuss the launch, becomes: decide on the launch date.",
-     "show": 1
+     "say": "The purpose shapes the agenda, which goes out early so people arrive prepared.",
+     "show": 2,
+     "on": "agenda",
+     "send": {
+      "from": "purp",
+      "to": "agenda",
+      "label": "decide the date"
+     }
     },
     {
-     "say": "If a written update could meet the purpose, cancel the meeting and send the update.",
-     "show": 1
+     "say": "The facilitator keeps time, invites quieter people in, and steers back to the purpose.",
+     "show": 3,
+     "on": "fac",
+     "send": {
+      "from": "agenda",
+      "to": "fac",
+      "label": "timed topics"
+     }
     },
     {
-     "say": "And ending five minutes early to confirm actions is worth more than five more minutes of discussion.",
-     "show": 1
+     "say": "Someone raises an important but off-topic point. It goes to the parking lot, to handle later.",
+     "show": 4,
+     "on": "park",
+     "send": {
+      "from": "fac",
+      "to": "park",
+      "label": "off-topic point"
+     }
+    },
+    {
+     "say": "The meeting ends with decisions and action items, each with an owner and a due date.",
+     "show": 5,
+     "on": "act",
+     "send": {
+      "from": "fac",
+      "to": "act",
+      "label": "owner + date"
+     }
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "roadmap",
+   "kind": "table",
    "kicker": "Topic 6.2 · Tracking delivery",
-   "title": "From plan to done",
-   "items": [
+   "title": "Tasks, owners and dependencies",
+   "columns": [
+    "Task",
+    "Owner",
+    "Waits on"
+   ],
+   "rows": [
     [
-     "Work breakdown",
-     "Tasks small enough to assign"
+     "Design checkout UI",
+     "Design",
+     "—"
     ],
     [
-     "Dependency",
-     "Where delays spread"
+     "Build checkout",
+     "Dev team",
+     "Design checkout UI"
     ],
     [
-     "Milestone",
-     "e.g. \"beta ready\""
+     "Payment partner API",
+     "Partner",
+     "—"
+    ],
+    [
+     "Integrate payments",
+     "Dev team",
+     "Partner API"
+    ],
+    [
+     "Milestone: beta ready",
+     "Delivery lead",
+     "Tasks 1 to 4"
     ]
    ],
    "beats": [
     {
-     "say": "Most failed projects don't fail suddenly. They fail through small delays and risks nobody tracked.",
-     "show": 0
+     "say": "Here's a checkout launch, broken into tasks small enough to estimate and assign.",
+     "col": 0
     },
     {
-     "say": "A work breakdown splits a project into tasks small enough to estimate and assign.",
-     "show": 1
+     "say": "Each task has one owner.",
+     "col": 1
     },
     {
-     "say": "A dependency is a task that can't start or finish until another does. That's where delays spread.",
-     "show": 2
+     "say": "Some tasks wait on others. Building checkout can't start until design finishes the screens.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 2,
+     "sql": "Dependency: can't start or finish until another task does"
     },
     {
-     "say": "A milestone, like beta ready, checks progress against the plan.",
-     "show": 3
+     "say": "And integrating payments waits on the partner's A P I.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 2
+    },
+    {
+     "say": "Beta ready is a milestone, a point to check progress against the plan.",
+     "hl": 4,
+     "dim": true
+    },
+    {
+     "say": "If the partner slips two weeks, the delay spreads: to integration, and then to beta.",
+     "hl": [
+      2,
+      3,
+      4
+     ],
+     "dim": true,
+     "sql": "Partner API +2 weeks → integration → beta ready"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "warning",
+   "kind": "table",
    "kicker": "Concept",
-   "title": "The RAID log",
-   "items": [
+   "title": "One RAID log, four kinds of entry",
+   "columns": [
+    "Type",
+    "Entry",
+    "Owner",
+    "Rating"
+   ],
+   "rows": [
     [
      "Risk",
-     "Might go wrong"
+     "Partner API may slip",
+     "Delivery lead",
+     "Likely · High"
     ],
     [
      "Assumption",
-     "Believed, not confirmed"
+     "~500 users in month 1",
+     "Product",
+     "—"
     ],
     [
      "Issue",
-     "Already happened"
+     "Test server down (Tue)",
+     "Dev lead",
+     "—"
     ],
     [
      "Dependency",
-     "Waits on another task"
+     "Design before dev",
+     "Design",
+     "—"
     ]
    ],
    "beats": [
     {
-     "say": "A raid log tracks four things in one place, each with an owner.",
-     "show": 0
+     "say": "A raid log keeps four kinds of entry in one place, each with an owner.",
+     "col": 0
     },
     {
      "say": "A risk might go wrong: the payment partner might not finish their A P I before launch.",
-     "show": 1
+     "hl": 0,
+     "dim": true
+    },
+    {
+     "say": "Every risk gets a likelihood, an impact, and a plan.",
+     "hl": 0,
+     "dim": true,
+     "col": 3,
+     "sql": "Plan: weekly check-in with the partner"
     },
     {
      "say": "An assumption is believed but not confirmed: about five hundred users in the first month.",
-     "show": 2
+     "hl": 1,
+     "dim": true
     },
     {
      "say": "An issue has already happened: the test server has been down since Tuesday.",
-     "show": 3
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "And a dependency: design must finish checkout screens before development can start.",
-     "show": 4
+     "say": "A dependency: design must finish the checkout screens before development can start.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "Rate every risk's likelihood and impact, give it a plan, raise it early, and review the log weekly.",
-     "show": 4
+     "say": "A risk might happen; an issue already has. Raise risks early.",
+     "hl": [
+      0,
+      2
+     ],
+     "dim": true
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "people",
+   "kind": "diagram",
+   "kicker": "Where you'd use this",
+   "title": "A slip spotted a month ahead",
+   "nodes": [
+    {
+     "id": "plan",
+     "label": "Plan",
+     "x": 12,
+     "y": 30,
+     "sub": "tasks + milestones",
+     "art": "roadmap"
+    },
+    {
+     "id": "track",
+     "label": "Track",
+     "x": 37,
+     "y": 72,
+     "sub": "progress on a board",
+     "art": "kanban"
+    },
+    {
+     "id": "raid",
+     "label": "RAID log",
+     "x": 63,
+     "y": 30,
+     "sub": "reviewed weekly",
+     "art": "warning"
+    },
+    {
+     "id": "report",
+     "label": "Status update",
+     "x": 88,
+     "y": 72,
+     "sub": "happened, risk, need",
+     "art": "presentation"
+    }
+   ],
+   "edges": [
+    {
+     "from": "plan",
+     "to": "track"
+    },
+    {
+     "from": "track",
+     "to": "raid"
+    },
+    {
+     "from": "raid",
+     "to": "report"
+    },
+    {
+     "from": "raid",
+     "to": "plan"
+    }
+   ],
+   "beats": [
+    {
+     "say": "A launch depends on a partner's integration, logged as a dependency with a named owner.",
+     "show": 4,
+     "on": "plan",
+     "send": {
+      "from": "plan",
+      "to": "track",
+      "label": "dependency"
+     }
+    },
+    {
+     "say": "Every week, the owner checks in with the partner.",
+     "show": 4,
+     "on": "track",
+     "send": {
+      "from": "track",
+      "to": "raid",
+      "label": "weekly check-in"
+     }
+    },
+    {
+     "say": "One check-in shows a two-week slip, a month before launch. It goes in the log now, as a risk.",
+     "show": 4,
+     "on": "raid",
+     "send": {
+      "from": "track",
+      "to": "raid",
+      "label": "2-week slip"
+     }
+    },
+    {
+     "say": "The status update says what happened, what's at risk, and what's needed.",
+     "show": 4,
+     "on": "report",
+     "send": {
+      "from": "raid",
+      "to": "report",
+      "label": "status update"
+     }
+    },
+    {
+     "say": "Because the warning came early, the team re-plans instead of missing the launch date.",
+     "show": 4,
+     "on": "plan",
+     "send": {
+      "from": "raid",
+      "to": "plan",
+      "label": "re-plan"
+     }
+    }
+   ]
+  },
+  {
+   "kind": "table",
    "kicker": "Topic 6.3 · Presenting",
-   "title": "Built around the audience",
-   "items": [
+   "title": "Audience analysis for the checkout fix",
+   "columns": [
+    "Question",
+    "Checkout example"
+   ],
+   "rows": [
     [
-     "Audience analysis",
-     "Know, care, can decide"
+     "Who's there?",
+     "Leaders"
+    ],
+    [
+     "What they know",
+     "Not the tech detail"
+    ],
+    [
+     "What they care about",
+     "Lost sales"
+    ],
+    [
+     "What they can decide",
+     "Approve the fix"
     ],
     [
      "Key message",
-     "One sentence"
-    ],
-    [
-     "Lead with the ask",
-     "Never save it for the end"
-    ],
-    [
-     "Supporting case",
-     "Situation, complication, resolution"
-    ],
-    [
-     "One idea per slide",
-     "Statement headlines"
-    ],
-    [
-     "Demo backup",
-     "Screenshots or a recording"
+     "Slow pages lose carts"
     ]
    ],
    "beats": [
     {
-     "say": "Audience analysis asks who'll be there, what they know, what they care about, and what they can decide.",
-     "show": 1
+     "say": "To get budget for a checkout fix, start with the audience: leaders.",
+     "hl": 0,
+     "dim": true
     },
     {
-     "say": "The key message is the one sentence you want them to remember.",
-     "show": 2
+     "say": "What they know: they don't need twenty slides of technical detail.",
+     "hl": 1,
+     "dim": true
     },
     {
-     "say": "Lead with the ask, the same rule as in a decision document.",
-     "show": 3
+     "say": "What they care about: lost sales.",
+     "hl": 2,
+     "dim": true
     },
     {
-     "say": "Then support it with situation, complication, resolution.",
-     "show": 4
+     "say": "What they can decide: approve the fix. That becomes your ask.",
+     "hl": 3,
+     "dim": true
     },
     {
-     "say": "Use one idea per slide, with headlines that state the point, like checkout errors fell forty percent.",
-     "show": 5
-    },
-    {
-     "say": "And for a demo, rehearse it and keep a backup, like screenshots or a recording.",
-     "show": 6
+     "say": "And the key message is the one sentence you want them to remember.",
+     "hl": 4,
+     "dim": true
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "presentation",
+   "kind": "array",
    "kicker": "Lab",
-   "title": "A five-slide presentation",
-   "steps": [
-    "Ask: approve the checkout fix",
-    "2,000 orders a day",
-    "Slow pages lose ~8% of carts",
-    "Cache data, shrink images",
-    "Cost: 2 engineers, 3 weeks"
+   "title": "Five slides: lead with the ask",
+   "values": [
+    "2,000 orders/day",
+    "8% of carts lost",
+    "Cache + shrink",
+    "2 eng, 3 weeks",
+    "Ask: approve fix"
    ],
    "beats": [
     {
-     "say": "Here's a five-slide case for a checkout fix.",
-     "show": 0
+     "say": "A common mistake: evidence first, with the ask saved for the last slide.",
+     "hl": 4,
+     "note": "Ask buried at the end"
     },
     {
-     "say": "Slide one, the ask: decision needed today, approve the fix.",
-     "show": 1
+     "say": "Move the ask to slide one: decision needed today, approve the checkout fix.",
+     "vals": [
+      "Ask: approve fix",
+      "2,000 orders/day",
+      "8% of carts lost",
+      "Cache + shrink",
+      "2 eng, 3 weeks"
+     ],
+     "hl": 0,
+     "note": "Slide 1: the ask"
     },
     {
      "say": "Situation: checkout handles two thousand orders a day.",
-     "show": 2
+     "vals": [
+      "Ask: approve fix",
+      "2,000 orders/day",
+      "8% of carts lost",
+      "Cache + shrink",
+      "2 eng, 3 weeks"
+     ],
+     "ok": [
+      0
+     ],
+     "hl": 1
     },
     {
      "say": "Complication: slow pages now lose about eight percent of carts.",
-     "show": 3
+     "vals": [
+      "Ask: approve fix",
+      "2,000 orders/day",
+      "8% of carts lost",
+      "Cache + shrink",
+      "2 eng, 3 weeks"
+     ],
+     "ok": [
+      0,
+      1
+     ],
+     "hl": 2
     },
     {
      "say": "Resolution: cache product data and shrink images.",
-     "show": 4
+     "vals": [
+      "Ask: approve fix",
+      "2,000 orders/day",
+      "8% of carts lost",
+      "Cache + shrink",
+      "2 eng, 3 weeks"
+     ],
+     "ok": [
+      0,
+      1,
+      2
+     ],
+     "hl": 3
     },
     {
-     "say": "At a cost of two engineers for three weeks. Rehearse it aloud, timed, until a listener can repeat your key message.",
-     "show": 5
+     "say": "At a cost of two engineers for three weeks.",
+     "vals": [
+      "Ask: approve fix",
+      "2,000 orders/day",
+      "8% of carts lost",
+      "Cache + shrink",
+      "2 eng, 3 weeks"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "hl": 4
+    },
+    {
+     "say": "One idea per slide, with headlines that state the point.",
+     "vals": [
+      "Ask: approve fix",
+      "2,000 orders/day",
+      "8% of carts lost",
+      "Cache + shrink",
+      "2 eng, 3 weeks"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Headlines are statements, not topics"
+    },
+    {
+     "say": "Rehearse it aloud, timed, and keep a backup for any demo.",
+     "vals": [
+      "Ask: approve fix",
+      "2,000 orders/day",
+      "8% of carts lost",
+      "Cache + shrink",
+      "2 eng, 3 weeks"
+     ],
+     "ok": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "note": "Rehearse · keep a demo backup"
     }
    ]
   },

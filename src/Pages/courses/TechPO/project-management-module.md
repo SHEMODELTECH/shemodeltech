@@ -270,293 +270,740 @@ You have a budget tracker with allocated, actual, and remaining columns, a conti
    ]
   },
   {
-   "kind": "list",
-   "art": "doc",
+   "kind": "table",
    "kicker": "Topic 1 · Scope",
    "title": "Draw the boundary",
-   "items": [
+   "columns": [
+    "Item",
+    "Section"
+   ],
+   "rows": [
     [
-     "In scope",
-     "Concrete deliverables"
+     "Add a plant + photo",
+     "In scope"
     ],
     [
-     "Out of scope",
-     "Explicitly excluded"
+     "Watering reminders",
+     "In scope"
     ],
     [
-     "Scope creep",
-     "Small additions that add up"
+     "\"Improve the UI\"",
+     "✗ Vague"
     ],
     [
-     "Change request",
-     "A formal, costed decision"
+     "Login + password reset",
+     "In scope"
+    ],
+    [
+     "Social login",
+     "Out of scope"
+    ],
+    [
+     "Plant ID by photo",
+     "Out of scope"
+    ],
+    [
+     "Android version",
+     "Out of scope"
     ]
    ],
    "beats": [
     {
-     "say": "Scope defines exactly what a project will, and won't, deliver. Everything else is measured against it.",
-     "show": 0
+     "say": "Here's a scope document for the plant care app. Everything else gets measured against it."
     },
     {
-     "say": "In scope items are the committed deliverables, written concretely enough that done is unambiguous.",
-     "show": 1
+     "say": "In scope: the committed deliverables, written so concretely that done is obvious.",
+     "hl": [
+      0,
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Out of scope items are explicitly excluded. Writing them down prevents the most painful disputes later.",
-     "show": 2
+     "say": "Out of scope, written down on purpose: social login, plant I D by photo, and an Android version.",
+     "hl": [
+      4,
+      5,
+      6
+     ],
+     "dim": true,
+     "col": 1
     },
     {
-     "say": "Scope creep is the gradual, unapproved growth of a project, through small additions that add up.",
-     "show": 3
+     "say": "Now nobody can assume them later. That prevents the most painful disputes.",
+     "hl": [
+      4,
+      5,
+      6
+     ],
+     "dim": true
     },
     {
-     "say": "And a change request is the formal way to change scope, with a real decision about time and money.",
-     "show": 4
+     "say": "This line is vague: improve the U I. When is that done? Nobody can say.",
+     "hl": 2,
+     "dim": true,
+     "sql": "✗ Improve the user interface"
+    },
+    {
+     "say": "So rewrite it concretely: redesign the login screen to include a password reset link.",
+     "hl": 3,
+     "dim": true,
+     "sql": "✓ Redesign the login screen to include\na password-reset link"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "pencil",
-   "kicker": "Topic 1 · Lab",
-   "title": "Vague versus concrete",
-   "items": [
-    [
-     "✗ Vague",
-     "Improve the user interface"
-    ],
-    [
-     "✓ Concrete",
-     "Redesign login with a password-reset link"
-    ],
-    [
-     "Change request",
-     "\"Can we also add social login?\""
-    ]
+   "kind": "diagram",
+   "kicker": "Topic 1 · Scope",
+   "title": "\"Can we also just add...?\"",
+   "nodes": [
+    {
+     "id": "req",
+     "label": "Stakeholder",
+     "sub": "a small request",
+     "x": 10,
+     "y": 50,
+     "art": "persona"
+    },
+    {
+     "id": "cr",
+     "label": "Change request",
+     "sub": "add, cost, decide",
+     "x": 35,
+     "y": 50,
+     "art": "doc"
+    },
+    {
+     "id": "time",
+     "label": "Timeline",
+     "sub": "+2 days of work",
+     "x": 62,
+     "y": 22,
+     "art": "calendar"
+    },
+    {
+     "id": "cost",
+     "label": "Budget",
+     "sub": "+$2,000",
+     "x": 62,
+     "y": 78,
+     "art": "coin"
+    },
+    {
+     "id": "dec",
+     "label": "Decision",
+     "sub": "approve · defer · reject",
+     "x": 88,
+     "y": 50,
+     "art": "scales"
+    }
+   ],
+   "edges": [
+    {
+     "from": "req",
+     "to": "cr"
+    },
+    {
+     "from": "cr",
+     "to": "time"
+    },
+    {
+     "from": "cr",
+     "to": "cost"
+    },
+    {
+     "from": "time",
+     "to": "dec"
+    },
+    {
+     "from": "cost",
+     "to": "dec"
+    }
    ],
    "beats": [
     {
-     "say": "In the lab, write a scope document with four to six in scope deliverables, and three or four out of scope.",
-     "show": 0
+     "say": "Two weeks in, a stakeholder asks: can we also just add social login while we're at it?",
+     "show": 1,
+     "on": "req"
     },
     {
-     "say": "Write one deliverable vaguely on purpose, like: improve the user interface.",
-     "show": 1
+     "say": "It sounds small. But it's out of scope, so it becomes a change request, not a quiet addition.",
+     "show": 2,
+     "on": "cr",
+     "send": {
+      "from": "req",
+      "to": "cr",
+      "label": "add social login"
+     }
     },
     {
-     "say": "Then rewrite it concretely: redesign the login screen to include a password reset link.",
-     "show": 2
+     "say": "Size it: about two more days of work on login.",
+     "show": 3,
+     "on": "time",
+     "send": {
+      "from": "cr",
+      "to": "time",
+      "label": "+2 days"
+     }
     },
     {
-     "say": "Then answer a creeping request, like: can we also just add social login, with a change request to approve, defer or reject.",
-     "show": 3
+     "say": "The team costs a thousand dollars a day, so that's two thousand dollars.",
+     "show": 4,
+     "on": "cost",
+     "send": {
+      "from": "cr",
+      "to": "cost",
+      "label": "+$2,000"
+     }
+    },
+    {
+     "say": "With the cost on the table, someone decides. Here: defer it to version two.",
+     "show": 5,
+     "on": "dec",
+     "send": {
+      "from": "cost",
+      "to": "dec",
+      "label": "defer to v2"
+     }
+    },
+    {
+     "say": "Not all creep is bad. A valuable addition can be approved, as long as it's weighed, not slipped in.",
+     "show": 5,
+     "on": [
+      "cr",
+      "dec"
+     ]
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "calendar",
+   "kind": "table",
    "kicker": "Topic 2 · Timeline",
-   "title": "Dependencies and the critical path",
-   "items": [
+   "title": "Durations and dependencies",
+   "columns": [
+    "Task",
+    "Days",
+    "Needs",
+    "Ends day"
+   ],
+   "rows": [
     [
-     "Milestone",
-     "\"Design approved\" · \"Beta launch\""
+     "A Design screens",
+     "3",
+     "—",
+     "3"
     ],
     [
-     "Dependency",
-     "B waits for A"
+     "B Database setup",
+     "2",
+     "A",
+     "5"
     ],
     [
-     "Critical path",
-     "Longest chain sets the deadline"
+     "C Add-plant screen",
+     "4",
+     "B",
+     "9"
+    ],
+    [
+     "D Reminder service",
+     "5",
+     "B",
+     "10"
+    ],
+    [
+     "E Login + reset",
+     "3",
+     "A",
+     "6"
+    ],
+    [
+     "F Testing",
+     "3",
+     "C, D, E",
+     "13"
+    ],
+    [
+     "G Launch",
+     "1",
+     "F",
+     "14"
     ]
    ],
    "beats": [
     {
-     "say": "A timeline is more than dates. It reflects how tasks depend on each other.",
-     "show": 0
+     "say": "Break the in scope work into seven tasks, each estimated in days.",
+     "col": 1
     },
     {
-     "say": "A milestone is a significant checkpoint, like design approved, or beta launch.",
-     "show": 1
+     "say": "Then note the dependencies: what must finish before each task can start.",
+     "col": 2
     },
     {
-     "say": "A dependency is when one task can't start or finish until another does.",
-     "show": 2
+     "say": "Adding every duration gives twenty one days. But that assumes everything runs in one line.",
+     "col": 1,
+     "sql": "3 + 2 + 4 + 5 + 3 + 3 + 1 = 21 days?"
     },
     {
-     "say": "The critical path is the longest chain of dependent tasks. It sets the earliest finish date.",
-     "show": 3
+     "say": "Design ends on day three. Database waits for it, and ends on day five.",
+     "hl": [
+      0,
+      1
+     ],
+     "dim": true,
+     "col": 3,
+     "sql": "Ends day = latest prerequisite's end + own days"
     },
     {
-     "say": "Delay a task on it, and the whole project slips. Delay one off it, and it often doesn't.",
-     "show": 3
+     "say": "Login only needs design, so it runs in parallel, ending on day six.",
+     "hl": 4,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "The add plant screen and reminders both start after day five, and end on days nine and ten.",
+     "hl": [
+      2,
+      3
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Testing waits for all three, so it ends on day thirteen, and launch on day fourteen.",
+     "hl": [
+      5,
+      6
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Fourteen days, not twenty one.",
+     "sql": "Earliest finish: day 14, not day 21",
+     "hl": 6,
+     "col": 3
     }
    ]
   },
   {
-   "kind": "flow",
-   "art": "calc",
-   "kicker": "Topic 2 · Lab",
-   "title": "Build a realistic estimate",
-   "steps": [
-    "6 to 8 tasks",
-    "Durations + dependencies",
-    "Find the critical path",
-    "Add a 15 to 20% buffer"
+   "kind": "array",
+   "kicker": "Topic 2 · Timeline",
+   "title": "Find the critical path",
+   "values": [
+    "A 3d",
+    "B 2d",
+    "C 4d",
+    "D 5d",
+    "E 3d",
+    "F 3d",
+    "G 1d"
    ],
    "beats": [
     {
-     "say": "Beginners add up every task in sequence. But independent tasks run in parallel.",
-     "show": 0
+     "say": "Which chain of tasks actually sets day fourteen? That's the critical path.",
+     "note": "Longest chain of dependent tasks = the deadline"
     },
     {
-     "say": "In the lab, break your scope into six to eight tasks.",
-     "show": 1
+     "say": "Design, database, reminders, testing, launch. Three, plus two, plus five, plus three, plus one: fourteen.",
+     "ok": [
+      0,
+      1,
+      3,
+      5,
+      6
+     ],
+     "note": "A → B → D → F → G = 3+2+5+3+1 = 14 days"
     },
     {
-     "say": "Estimate each in days, and note dependencies.",
-     "show": 2
+     "say": "The add plant screen ends a day before reminders, so it has one day of slack.",
+     "ok": [
+      0,
+      1,
+      3,
+      5,
+      6
+     ],
+     "hl": [
+      2
+     ],
+     "note": "C ends day 9 · D ends day 10 → 1 day slack"
     },
     {
-     "say": "Trace the critical path, and name one task off it.",
-     "show": 3
+     "say": "Login ends on day six, but testing can't start until after day ten. Four days of slack.",
+     "ok": [
+      0,
+      1,
+      3,
+      5,
+      6
+     ],
+     "hl": [
+      4
+     ],
+     "note": "E ends day 6 · F starts after day 10 → 4 days slack"
     },
     {
-     "say": "Then add a buffer, say fifteen to twenty percent. A plan with zero buffer is a best case, not a realistic one.",
-     "show": 4
+     "say": "Delay the add plant screen by a day: it still ends by day ten. The deadline doesn't move.",
+     "vals": [
+      "A 3d",
+      "B 2d",
+      "C 5d",
+      "D 5d",
+      "E 3d",
+      "F 3d",
+      "G 1d"
+     ],
+     "ok": [
+      0,
+      1,
+      3,
+      5,
+      6
+     ],
+     "hl": [
+      2
+     ],
+     "note": "C +1 day → ends day 10 → launch still day 14"
+    },
+    {
+     "say": "But delay reminders by one day, and testing starts late. Launch slips to day fifteen.",
+     "vals": [
+      "A 3d",
+      "B 2d",
+      "C 4d",
+      "D 6d",
+      "E 3d",
+      "F 3d",
+      "G 1d"
+     ],
+     "ok": [
+      0,
+      1,
+      5,
+      6
+     ],
+     "hl": [
+      3
+     ],
+     "note": "D +1 day → on the critical path → launch day 15"
+    },
+    {
+     "say": "Estimates are never exact, so add a buffer. Twenty percent of fourteen is two point eight: round up to three, and commit to day seventeen.",
+     "vals": [
+      "A 3d",
+      "B 2d",
+      "C 4d",
+      "D 5d",
+      "E 3d",
+      "F 3d",
+      "G 1d"
+     ],
+     "ok": [
+      0,
+      1,
+      3,
+      5,
+      6
+     ],
+     "hl": [],
+     "note": "Buffer 20% × 14 = 2.8 → 3 days → day 17"
     }
    ]
   },
   {
-   "kind": "list",
-   "art": "shield",
+   "kind": "table",
    "kicker": "Topic 3 · Risk",
-   "title": "Decide before it happens",
-   "items": [
+   "title": "A risk register, scored",
+   "columns": [
+    "Risk",
+    "Likelihood",
+    "Impact",
+    "Score"
+   ],
+   "rows": [
     [
-     "Risk register",
-     "Likelihood · impact · response"
+     "Reminders take 2×",
+     "High (3)",
+     "High (3)",
+     "9"
     ],
     [
-     "Mitigation",
-     "Reduce it in advance"
+     "Key dev unavailable",
+     "Med (2)",
+     "High (3)",
+     "6"
     ],
     [
-     "Contingency plan",
-     "If it happens anyway"
+     "Push API changes",
+     "Low (1)",
+     "High (3)",
+     "3"
     ],
     [
-     "Risk owner",
-     "One named person"
+     "Test phones late",
+     "Med (2)",
+     "Med (2)",
+     "4"
+    ],
+    [
+     "Typo in internal doc",
+     "High (3)",
+     "Low (1)",
+     "3"
+    ],
+    [
+     "Designer out sick",
+     "Low (1)",
+     "Med (2)",
+     "2"
     ]
    ],
    "beats": [
     {
-     "say": "Risk management means deciding how to respond before something goes wrong, not in the middle of a crisis.",
-     "show": 0
+     "say": "What could go wrong? Decide before it happens. Six risks for the plant app go in a risk register."
     },
     {
-     "say": "A risk register lists each risk with its likelihood, impact and planned response.",
-     "show": 1
+     "say": "Rate each one's likelihood: low, medium or high.",
+     "col": 1
     },
     {
-     "say": "A mitigation acts in advance to reduce likelihood or impact.",
-     "show": 2
+     "say": "And its impact if it happens.",
+     "col": 2
     },
     {
-     "say": "A contingency plan is the response if it happens anyway.",
-     "show": 3
+     "say": "Multiply them, counting low as one, medium as two, and high as three.",
+     "col": 3,
+     "sql": "Score = likelihood × impact   (Low 1 · Med 2 · High 3)"
     },
     {
-     "say": "And every risk needs an owner. Otherwise it's everyone's problem in theory, and no one's in practice.",
-     "show": 4
+     "say": "The top three: reminders taking twice as long scores nine, a key developer unavailable six, test phones arriving late four.",
+     "hl": [
+      0,
+      1,
+      3
+     ],
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "A typo in an internal doc is likely, but harmless. It scores three, and needs little attention.",
+     "hl": 4,
+     "dim": true,
+     "col": 3
+    },
+    {
+     "say": "Reminders are on the critical path, so mitigate in advance: prototype them in week one.",
+     "hl": 0,
+     "dim": true,
+     "sql": "Mitigation: build a reminder prototype in week 1"
+    },
+    {
+     "say": "And a contingency, in case it happens anyway: ship email reminders first, and move push to the next version. The dev lead owns it.",
+     "hl": 0,
+     "dim": true,
+     "sql": "Contingency: if reminders aren't working by day 10,\nship email reminders; push moves to v1.1\nOwner: dev lead"
+    },
+    {
+     "say": "Then revisit the register as the project moves. One written once quickly becomes useless.",
+     "hl": [
+      0,
+      1,
+      3
+     ]
     }
    ]
   },
   {
-   "kind": "quote",
-   "art": "table",
-   "kicker": "Topic 3 · Lab",
-   "title": "Your risk register",
-   "quote": "Risk · Likelihood · Impact · Mitigation · Owner",
-   "beats": [
-    {
-     "say": "In the lab, brainstorm five or six realistic risks, like a key team member becoming unavailable.",
-     "show": 0
-    },
-    {
-     "say": "Rate likelihood and impact as low, medium or high, and highlight the top two or three.",
-     "show": 1
-    },
-    {
-     "say": "Write mitigations for those, and a full contingency plan, with a named owner, for the single biggest one.",
-     "show": 1
-    },
-    {
-     "say": "And revisit the register as the project moves. One written once quickly becomes useless.",
-     "show": 1
-    }
-   ]
-  },
-  {
-   "kind": "list",
-   "art": "coin",
+   "kind": "table",
    "kicker": "Topic 4 · Budget",
-   "title": "Watch the burn rate",
-   "items": [
+   "title": "Allocated, actual, remaining",
+   "columns": [
+    "Category",
+    "Allocated",
+    "Actual · day 8",
+    "Remaining"
+   ],
+   "rows": [
     [
-     "Allocated vs actual",
-     "Approved vs really spent"
+     "Labor · 14 days",
+     "$14,000",
+     "$9,000",
+     "$5,000"
     ],
     [
-     "Burn rate",
-     "Spend over time"
+     "Tools & vendors",
+     "$3,000",
+     "$1,000",
+     "$2,000"
     ],
     [
-     "Contingency reserve",
-     "Often 10 to 20%"
+     "Contingency · 15%",
+     "$3,000",
+     "$0",
+     "$3,000"
+    ],
+    [
+     "Total",
+     "$20,000",
+     "$10,000",
+     "$10,000"
     ]
    ],
    "beats": [
     {
-     "say": "A budget turns scope and timeline into a financial commitment.",
-     "show": 0
+     "say": "A budget turns scope and time into money. The team costs a thousand dollars a day, so fourteen days is fourteen thousand.",
+     "hl": 0,
+     "col": 1
     },
     {
-     "say": "Allocated budget is the total approved. Actual spend is what's really gone so far.",
-     "show": 1
+     "say": "Tools and vendors, like a push notification service: three thousand.",
+     "hl": 1,
+     "col": 1
     },
     {
-     "say": "Burn rate is how fast it's being spent. It matters more than the money left on paper.",
-     "show": 2
+     "say": "Then a contingency reserve, fifteen percent of the total: three thousand. Like the buffer, it covers three days of team time.",
+     "hl": 2,
+     "col": 1
     },
     {
-     "say": "And a contingency reserve, often ten to twenty percent, is set aside for the unexpected, like a timeline's buffer.",
-     "show": 3
+     "say": "Twenty thousand allocated in all.",
+     "hl": 3,
+     "col": 1
+    },
+    {
+     "say": "Now it's day eight. Labor has already cost nine thousand, against eight thousand planned.",
+     "hl": 0,
+     "col": 2
+    },
+    {
+     "say": "In total, ten thousand spent, and ten thousand remaining. On paper, that looks fine.",
+     "hl": 3,
+     "col": 3,
+     "sql": "Remaining = Allocated − Actual"
     }
    ]
   },
   {
-   "kind": "big",
-   "art": "warning",
-   "kicker": "Topic 4 · Lab",
+   "kind": "chart",
+   "kicker": "Topic 4 · Budget",
    "title": "Spending outpaces progress",
-   "big": "50% spent · 30% done",
-   "sub": "A warning sign, even with budget left",
+   "xlabel": "day 0 → 16",
+   "ylabel": "% budget spent · % tasks done",
+   "points": [
+    [
+     10,
+     0
+    ],
+    [
+     30,
+     25
+    ],
+    [
+     50,
+     50
+    ],
+    [
+     30,
+     14
+    ],
+    [
+     50,
+     29
+    ]
+   ],
    "beats": [
     {
-     "say": "In the lab, build a tracker with allocated, actual spend and remaining, plus a fifteen percent contingency line.",
-     "show": 0
+     "say": "Burn rate is spend so far, divided by time. By day four, five thousand dollars: a quarter of the budget.",
+     "groups": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
     },
     {
-     "say": "Simulate two checkpoints, and compare burn rate with progress.",
-     "show": 1
+     "say": "By day eight, ten thousand: half.",
+     "groups": [
+      1,
+      1,
+      1,
+      0,
+      0
+     ]
     },
     {
-     "say": "Fifty percent of the budget spent, but only thirty percent of tasks done, is a warning sign, even with money left.",
-     "show": 2
+     "say": "That's twelve hundred and fifty dollars a day. At that rate, the money runs out on day sixteen.",
+     "groups": [
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     "line": [
+      1.25,
+      -12.5
+     ],
+     "marks": [
+      [
+       90,
+       100
+      ]
+     ]
+    },
+    {
+     "say": "Now progress. By day four, one task of seven was done. By day eight, just two: about thirty percent.",
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Fifty percent spent, thirty percent done. That's the warning sign, even with ten thousand left.",
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      2
+     ],
+     "marks": [
+      [
+       50,
+       50
+      ],
+      [
+       50,
+       29
+      ]
+     ]
+    },
+    {
+     "say": "So act now: find out why labor is running hot, then cut scope with a change request, or plan to use the reserve on purpose.",
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "say": "Scope, time, risk and money. Pull on one, and the others move.",
+     "groups": [
+      1,
+      1,
+      1,
+      2,
+      2
+     ]
     }
    ]
   },

@@ -991,7 +991,7 @@ const ProjectWorkspace = () => {
                 </div>
               ) : (
                 <div className="bg-gray-50 border border-gray-300 rounded-lg p-3 mb-1">
-                  <p className="text-gray-900 text-xs font-medium">As project lead, a submission link is required. Use a GitHub repository (free and recommended) or another platform of your choice, so the team's work can be reviewed and badges can be verified on completion.</p>
+                  <p className="text-gray-900 text-xs font-medium">As project lead, a submission link is required. Use a GitHub repository (free, and required to submit the project for review), so the team's work can be reviewed and badges can be verified on completion.</p>
                 </div>
               )}
               <div>

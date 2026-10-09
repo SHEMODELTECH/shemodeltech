@@ -531,6 +531,8 @@ A rollup summarises linked records, such as totalling all orders for a customer.
 **Step 4: Add a rollup to Customers.**
 In `Customers`, add a rollup field `total_spent` that uses the linked Orders, the `amount` field, and the summary function `SUM(values)`. A per-customer total is exactly the kind of at-a-glance metric a tool should surface.
 
+> **Note:** this rollup sums *every* linked order, including cancelled ones, which is why Ada shows $410 (her cancelled $80 order is counted). If you want spend to exclude cancelled orders, open the rollup's settings, turn on the option to only include linked records that meet certain conditions, and add the condition `status` is not `cancelled`; Ada would then show $330.
+
 **Step 5: Understand Airtable automations.**
 An automation runs actions when something happens in the base, like sending an email when a status changes. It handles routine reactions so team members do not have to remember to. The free plan limits automation runs per month (check the current plan page), which is plenty for testing.
 
@@ -1993,7 +1995,7 @@ Show a manager summary to admins (for example, Statistic components with total o
 An audit trail records who changed what and when. When something goes wrong in a shared tool, it is how you find out what happened and by whom.
 
 **Step 8: Add basic logging of changes.**
-In Airtable, create a `Change log` table with fields `action` (single line text), `order_number` (single line text), `user_email` (email), and `logged_at` (created time). In Retool, create a query `logChange` with action "Create record" on that table, setting `user_email` to `{{ current_user.email }}` and the order number from the selected row. Run it from the success handlers of `updateOrder` (action "update") and `deleteOrder` (action "delete"). A simple change log gives you accountability and makes the tool more trustworthy for a team.
+In Airtable, create a `Change log` table with fields `action` (single line text), `order_number` (single line text), `user_email` (email), and `logged_at` (created time). In Retool, create a query `logChange` with action "Create record" on that table, setting `user_email` to `{{ current_user.email }}` and `order_number` to `{{ logOrderNumber.value }}`. Capture the order number *before* the write runs: add a variable (called temporary state in older Retool versions) named `logOrderNumber`, and give the Delete button and the edit form's submit a first event handler that sets `logOrderNumber` to `{{ table1.selectedRow.order_number }}`, followed by the handler that runs the query. Then run `logChange` from the success handlers of `updateOrder` (action "update") and `deleteOrder` (action "delete"). Don't read `table1.selectedRow` inside those success handlers: once `getOrders` refreshes (especially after a delete), the selected row can point at a different order, and the log would record the wrong number. A simple change log gives you accountability and makes the tool more trustworthy for a team.
 
 ### Project Structure
 ```text
