@@ -4,6 +4,8 @@
 //   All projects · My projects · Project Vault · Payment disputes · Manage
 // Manage is staff-only: it opens the project tools, which have their own
 // smaller row (Manage projects · Lead applications · Create a project).
+// On phones Vault and Disputes use short labels, so every tab (including
+// Manage for staff) fits without scrolling sideways.
 // Payment disputes only shows for members who've had paid work (approved on a
 // paid project, or leading one); staff always see it. Companies don't run
 // projects, so they get no tabs.
@@ -78,15 +80,15 @@ const ProjectTabs = () => {
   const tabs = [
     { to: '/projects', label: 'All projects', active: pathname === '/projects' },
     ...(!staff ? [{ to: '/projects/owner-dashboard', label: 'My projects' }] : []),
-    { to: '/project-vault', label: 'Project Vault' },
+    { to: '/project-vault', label: 'Project Vault', short: 'Vault' },
     // Only for members with paid work (and staff); also kept while she's on it.
-    ...(staff || paid || pathname === '/disputes' ? [{ to: '/disputes', label: 'Payment disputes' }] : []),
+    ...(staff || paid || pathname === '/disputes' ? [{ to: '/disputes', label: 'Payment disputes', short: 'Disputes' }] : []),
     ...(staff ? [{ to: '/admin/projects', label: 'Manage', active: inManage }] : []),
   ];
 
   return (
     <nav aria-label="Projects" className="-mt-1 mb-6">
-      <div className="flex gap-5 sm:gap-7 overflow-x-auto border-b border-gray-200">
+      <div className="flex gap-4 sm:gap-7 overflow-x-auto border-b border-gray-200">
         {tabs.map((t) => {
           const active = t.active ?? (pathname === t.to || pathname.startsWith(`${t.to}/`));
           return (
@@ -98,7 +100,12 @@ const ProjectTabs = () => {
                 active ? 'text-pink-600 border-pink-600' : 'text-gray-600 border-transparent hover:text-pink-600'
               }`}
             >
-              {t.label}
+              {t.short ? (
+                <>
+                  <span className="sm:hidden">{t.short}</span>
+                  <span className="hidden sm:inline">{t.label}</span>
+                </>
+              ) : t.label}
             </Link>
           );
         })}
