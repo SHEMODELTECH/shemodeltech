@@ -1,7 +1,7 @@
 // src/utils/emailVerification.js
 // Confirmed email (anti-spam). firestore.rules (isVerified) only lets a member
 // post, message and apply once her email is confirmed. Exempt: accounts whose
-// profile was created before 10 Oct 2026 (or has no createdAt), and staff.
+// profile was created before 2026-10-09 06:25 UTC (or has no createdAt), and staff.
 // Google sign-ins are already confirmed.
 //
 // This file mirrors that rule for the app: who should see the "Confirm your
@@ -10,8 +10,8 @@
 // and a friendly message when a write is refused because of it.
 import { auth } from '../firebase/config';
 
-// Same date as timestamp.date(2026, 10, 10) in firestore.rules (UTC midnight).
-export const VERIFY_REQUIRED_FROM = Date.UTC(2026, 9, 10);
+// Same moment as timestamp.value(1791527100000) in firestore.rules (2026-10-09 06:25 UTC).
+export const VERIFY_REQUIRED_FROM = 1791527100000;
 
 export const CONFIRM_EMAIL_MESSAGE =
   'Please confirm your email first. Open the link we emailed you, then try again.';

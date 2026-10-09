@@ -86,7 +86,8 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  // Confirmed email (anti-spam). Posting content others see, contacting
  // people, and applying need a confirmed email address. Exempt: members
- // whose profile was created before 10 Oct 2026 (or has no createdAt;
+ // whose profile was created before 2026-10-09 06:25 UTC (when this rule went live)
+ // (or has no createdAt;
  // grandfathered), and staff (admins and editors). Google sign-ins are
  // already confirmed. Reading, learning, and editing your own profile
  // never need it.
@@ -98,7 +99,7 @@ service cloud.firestore {
  // ---------------------------------------------------------------
  function isGrandfathered() {
  let c = myUserDoc().get('createdAt', null);
- return c == null || !(c is timestamp) || c < timestamp.date(2026, 10, 10);
+ return c == null || !(c is timestamp) || c < timestamp.value(1791527100000);
  }
  function isVerified() {
  return isSignedIn() && (
