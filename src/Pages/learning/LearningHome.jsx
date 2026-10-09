@@ -263,7 +263,7 @@ const LearningHome = ({ mine = false }) => {
         </section>
       )}
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-12">
         {/* Filters: at the top, so levels and tracks are the first thing under the search. */}
         <section id="lr-filters" className="pt-6 scroll-mt-24" aria-label="Filter courses">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
@@ -422,33 +422,6 @@ const LearningHome = ({ mine = false }) => {
           )
         )}
 
-        {/* How learning leads to badges */}
-        {!mine && (
-          <section className="mt-16 rounded-2xl bg-gray-50 border border-gray-100 p-6 sm:p-8">
-            <h2 className="text-xl font-bold text-gray-900">From courses to real work</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-5">
-              {[
-                ['Learn', 'Take any course, free, at your own pace.'],
-                ['Build with a team', 'Join a project in your track and deliver real work.'],
-                ['Earn the badge', 'Your work is reviewed and the badge goes on your profile.'],
-                ['Get seen', 'Your badges and projects show on your profile and the Talent Board, where companies hiring in tech can find you.'],
-              ].map(([t, d], i) => (
-                <div key={t} className="flex gap-3">
-                  <span className="w-7 h-7 flex-shrink-0 rounded-full bg-pink-100 text-pink-700 text-sm font-bold flex items-center justify-center">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t}</p>
-                    <p className="text-sm text-gray-600 mt-0.5">{d}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Link to="/projects" className="inline-block mt-6 text-sm font-semibold text-pink-700 hover:underline">
-              Browse projects
-            </Link>
-          </section>
-        )}
       </div>
 
       <style>{LR_CSS}</style>
